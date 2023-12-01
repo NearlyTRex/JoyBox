@@ -153,17 +153,17 @@ unit_type_hours = "hours"
 
 # Environment variables
 environment_path = "PATH"
-environment_local_cache_root_dir = "ARCADE_LOCAL_CACHE_ROOT_DIR"
-environment_remote_cache_root_dir = "ARCADE_REMOTE_CACHE_ROOT_DIR"
-environment_sync_root_dir = "ARCADE_SYNC_ROOT_DIR"
-environment_repositories_root_dir = "ARCADE_REPOSITORIES_ROOT_DIR"
-environment_storage_root_dir = "ARCADE_STORAGE_ROOT_DIR"
-environment_network_share_base_location = "ARCADE_NETWORK_SHARE_BASE_LOCATION"
-environment_network_share_storage_folder = "ARCADE_NETWORK_SHARE_STORAGE_FOLDER"
-environment_network_share_cache_folder = "ARCADE_NETWORK_SHARE_CACHE_FOLDER"
-environment_network_share_username = "ARCADE_NETWORK_SHARE_USERNAME"
-environment_network_share_password = "ARCADE_NETWORK_SHARE_PASSWORD"
-environment_launchrom_program = "ARCADE_LAUNCHROM_PROGRAM"
+environment_local_cache_root_dir = "JOYMELLOW_LOCAL_CACHE_ROOT_DIR"
+environment_remote_cache_root_dir = "JOYMELLOW_REMOTE_CACHE_ROOT_DIR"
+environment_sync_root_dir = "JOYMELLOW_SYNC_ROOT_DIR"
+environment_repositories_root_dir = "JOYMELLOW_REPOSITORIES_ROOT_DIR"
+environment_storage_root_dir = "JOYMELLOW_STORAGE_ROOT_DIR"
+environment_network_share_base_location = "JOYMELLOW_NETWORK_SHARE_BASE_LOCATION"
+environment_network_share_storage_folder = "JOYMELLOW_NETWORK_SHARE_STORAGE_FOLDER"
+environment_network_share_cache_folder = "JOYMELLOW_NETWORK_SHARE_CACHE_FOLDER"
+environment_network_share_username = "JOYMELLOW_NETWORK_SHARE_USERNAME"
+environment_network_share_password = "JOYMELLOW_NETWORK_SHARE_PASSWORD"
+environment_launchrom_program = "JOYMELLOW_LAUNCHROM_PROGRAM"
 environment_vars = [
     environment_local_cache_root_dir,
     environment_remote_cache_root_dir,
