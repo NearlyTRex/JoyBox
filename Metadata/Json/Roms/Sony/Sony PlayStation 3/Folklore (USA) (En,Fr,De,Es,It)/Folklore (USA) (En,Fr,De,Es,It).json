@@ -1,0 +1,8 @@
+{
+    "files": [
+        "Folklore (USA) (En,Fr,De,Es,It).chd",
+        "Folklore (USA) (En,Fr,De,Es,It).dkey"
+    ],
+    "launch_file": "PS3_GAME/USRDIR/EBOOT.BIN",
+    "transform_file": "Folklore (USA) (En,Fr,De,Es,It).chd"
+}

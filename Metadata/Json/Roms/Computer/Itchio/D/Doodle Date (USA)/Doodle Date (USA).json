@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Doodle Date (USA).exe"
+    ],
+    "transform_file": "Doodle Date (USA).exe"
+}

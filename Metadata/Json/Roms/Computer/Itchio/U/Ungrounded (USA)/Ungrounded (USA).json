@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Ungrounded (USA).exe"
+    ],
+    "transform_file": "Ungrounded (USA).exe"
+}

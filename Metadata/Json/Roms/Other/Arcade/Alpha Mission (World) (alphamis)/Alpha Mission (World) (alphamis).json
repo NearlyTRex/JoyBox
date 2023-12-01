@@ -1,0 +1,25 @@
+{
+    "files": [
+        "alphamis/mb7122h.12f",
+        "alphamis/mb7122h.13f",
+        "alphamis/mb7122h.14f",
+        "alphamis/p1.8d",
+        "alphamis/p10.14h",
+        "alphamis/p11.11h",
+        "alphamis/p12.9h",
+        "alphamis/p13.8h",
+        "alphamis/p14.1h",
+        "alphamis/p2.7d",
+        "alphamis/p3.5d",
+        "alphamis/p4.3d",
+        "alphamis/p5.2d",
+        "alphamis/p6.1d",
+        "alphamis/p7.4f",
+        "alphamis/p8.3f",
+        "alphamis/p9.2f",
+        "alphamis/pal16l8a-1.bin",
+        "alphamis/pal16l8a-2.bin",
+        "alphamis/pal16r6a.15b"
+    ],
+    "launch_name": "alphamis"
+}

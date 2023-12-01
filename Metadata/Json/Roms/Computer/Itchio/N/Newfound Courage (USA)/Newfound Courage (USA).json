@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Newfound Courage (USA).exe"
+    ],
+    "transform_file": "Newfound Courage (USA).exe"
+}

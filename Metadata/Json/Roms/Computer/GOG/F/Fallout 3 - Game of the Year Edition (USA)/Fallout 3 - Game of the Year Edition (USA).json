@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_fallout_3_1.7.0.3_(12034).exe"
+    ],
+    "transform_file": "setup_fallout_3_1.7.0.3_(12034).exe"
+}

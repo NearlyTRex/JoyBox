@@ -1,0 +1,9 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/sw_ja_manual.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_star_wars_jedi_knight_-_jedi_academy_1.01_(a)_(10331).exe"
+    ],
+    "transform_file": "setup_star_wars_jedi_knight_-_jedi_academy_1.01_(a)_(10331).exe"
+}

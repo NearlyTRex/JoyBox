@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Taco Tom 2 (USA).exe"
+    ],
+    "transform_file": "Taco Tom 2 (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Sophie's Cubes (USA).exe"
+    ],
+    "transform_file": "Sophie's Cubes (USA).exe"
+}

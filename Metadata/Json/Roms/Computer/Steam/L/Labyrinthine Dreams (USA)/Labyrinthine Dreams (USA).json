@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Labyrinthine Dreams (USA).exe"
+    ],
+    "transform_file": "Labyrinthine Dreams (USA).exe"
+}

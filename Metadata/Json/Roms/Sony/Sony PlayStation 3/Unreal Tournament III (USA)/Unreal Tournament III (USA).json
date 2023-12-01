@@ -1,0 +1,8 @@
+{
+    "files": [
+        "Unreal Tournament III (USA).chd",
+        "Unreal Tournament III (USA).dkey"
+    ],
+    "launch_file": "PS3_GAME/USRDIR/EBOOT.BIN",
+    "transform_file": "Unreal Tournament III (USA).chd"
+}

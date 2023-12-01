@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Gunducky Industries (USA).exe"
+    ],
+    "transform_file": "Gunducky Industries (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Floating Point (USA).exe"
+    ],
+    "transform_file": "Floating Point (USA).exe"
+}

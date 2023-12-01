@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Plunge (USA).exe"
+    ],
+    "transform_file": "Plunge (USA).exe"
+}

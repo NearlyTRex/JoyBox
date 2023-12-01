@@ -1,0 +1,30 @@
+{
+    "files": [
+        "bzone/036174-01.b1",
+        "bzone/036175-01.m1",
+        "bzone/036176-01.l1",
+        "bzone/036177-01.k1",
+        "bzone/036178-01.j1",
+        "bzone/036179-01.h1",
+        "bzone/036180-01.f1",
+        "bzone/036408-01.k7",
+        "bzone/036409-01.n1",
+        "bzone/036410-01.lm1",
+        "bzone/036411-01.k1",
+        "bzone/036412-01.j1",
+        "bzone/036413-01.h1",
+        "bzone/036414-01.e1",
+        "bzone/036414-02.e1",
+        "bzone/036421-01.a3",
+        "bzone/036422-01.bc3",
+        "bzone/bz1a7800",
+        "bzone/bz1b7000",
+        "bzone/bz1c6800",
+        "bzone/bz1d6000",
+        "bzone/bz1e5800",
+        "bzone/bz1f5000",
+        "bzone/bz1g4800",
+        "bzone/bz3b3800"
+    ],
+    "launch_name": "bzone"
+}

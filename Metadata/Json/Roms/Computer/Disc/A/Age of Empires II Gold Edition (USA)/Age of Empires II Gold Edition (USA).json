@@ -1,0 +1,7 @@
+{
+    "installer_exe": [
+        "$DISC_ONE_ROOT/AOESETUP.EXE",
+        "$DISC_TWO_ROOT/AOCSETUP.EXE"
+    ],
+    "transform_file": "Age of Empires II Gold Edition (USA).m3u"
+}

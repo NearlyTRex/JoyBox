@@ -1,0 +1,19 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Risk of Rain (USA).exe"
+    ],
+    "main_game_exe": [
+        "Risk of Rain/Risk of Rain.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Risk of Rain/Risk of Rain.exe": "Risk of Rain"
+    },
+    "sync": {
+        "data": [
+            "*.ini",
+            "steam_autocloud.vdf"
+        ],
+        "search": "Risk of Rain/Risk of Rain.exe"
+    },
+    "transform_file": "Risk of Rain (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Wide Ocean Big Jacket (USA).exe"
+    ],
+    "transform_file": "Wide Ocean Big Jacket (USA).exe"
+}

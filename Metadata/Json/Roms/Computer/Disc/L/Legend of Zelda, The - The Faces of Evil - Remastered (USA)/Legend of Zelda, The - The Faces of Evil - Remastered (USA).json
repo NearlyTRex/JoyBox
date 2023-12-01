@@ -1,0 +1,28 @@
+{
+    "main_game_exe": [
+        "Zelda Faces of Evil/FOER.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Zelda Faces of Evil/FOER.exe": "Zelda Faces of Evil"
+    },
+    "sandbox": {
+        "wine": {
+            "overrides": {
+                "game": [
+                    "d3d9,d3d10core,d3d11,dxgi=n,b"
+                ]
+            },
+            "use_dxvk": true
+        }
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$HDD_MAIN_ROOT/Zelda Faces of Evil",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Legend of Zelda, The - The Faces of Evil - Remastered (USA).chd"
+}

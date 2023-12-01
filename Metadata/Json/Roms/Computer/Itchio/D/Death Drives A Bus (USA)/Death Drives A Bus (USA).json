@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Death Drives A Bus (USA).exe"
+    ],
+    "transform_file": "Death Drives A Bus (USA).exe"
+}

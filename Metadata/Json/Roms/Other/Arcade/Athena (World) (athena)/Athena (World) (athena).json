@@ -1,0 +1,25 @@
+{
+    "files": [
+        "athena/1.1c",
+        "athena/2.1b",
+        "athena/3.2c",
+        "athena/athenab/p1.4p",
+        "athena/athenab/p2.4m",
+        "athena/p1.4p",
+        "athena/p10.2b",
+        "athena/p11.2d",
+        "athena/p2.4m",
+        "athena/p3.8p",
+        "athena/p4.8m",
+        "athena/p5.6g",
+        "athena/p6.6k",
+        "athena/p7.2p",
+        "athena/p8.2s",
+        "athena/p9.2t",
+        "athena/sathena/p1.4p",
+        "athena/sathena/p2.4m",
+        "athena/sathena/p3.8p",
+        "athena/sathena/p4.8m"
+    ],
+    "launch_name": "athena"
+}

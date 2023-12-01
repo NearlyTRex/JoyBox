@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Recettear - An Item Shop's Tale (USA).exe"
+    ],
+    "transform_file": "Recettear - An Item Shop's Tale (USA).exe"
+}

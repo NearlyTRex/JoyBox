@@ -1,0 +1,9 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/hacknet_labyrinths_1515459649.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Hacknet_v5.069B_Standalone_WIN.exe"
+    ],
+    "transform_file": "Hacknet_v5.069B_Standalone_WIN.exe"
+}

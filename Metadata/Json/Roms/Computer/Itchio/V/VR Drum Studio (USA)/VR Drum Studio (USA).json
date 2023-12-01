@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/VR Drum Studio (USA).exe"
+    ],
+    "transform_file": "VR Drum Studio (USA).exe"
+}

@@ -1,0 +1,14 @@
+{
+    "installer_exe": "$DISC_ONE_ROOT/Setup.exe",
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_TWO_ROOT",
+                "skip_existing": true,
+                "to": "$DISC_ONE_ROOT",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Land of the Dead - Road to Fiddler's Green (USA).m3u"
+}

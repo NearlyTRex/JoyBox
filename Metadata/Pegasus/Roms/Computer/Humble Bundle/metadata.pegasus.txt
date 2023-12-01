@@ -1,0 +1,1876 @@
+collection: Computer - Humble Bundle
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Computer - Humble Bundle" {file.path}
+
+
+game: Amnesia - The Dark Descent (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/A/Amnesia - The Dark Descent (USA)/Amnesia - The Dark Descent (USA).json
+developer: Frictional Games
+publisher: Frictional Games
+genre: Action;Adventure;Horror
+description:
+  In Amnesia: The Dark Descent, the player takes on the role of Daniel, an
+  amnesiac man trapped in the mansion of a Prussian Baron named Alexander. The
+  only clues to Daniel's true identity are mementos and notes left behind by
+  Daniel himself, who reminds himself to find and kill Alexander. Gameplay has the
+  player searching for Daniel's diaries and other notes and journals of the poor
+  souls who have crossed Baron Alexander. The player must solve the mystery of the
+  mansion while running from a Shadow that is constantly chasing the player
+  throughout the game.
+  .
+  The game takes place from a first person perspective, however there are no
+  weapons. Daniel cannot fight monsters and the only choice is to run or hide.
+  Along with self-preservation, the players must keep the hero sane. In order to
+  stay sane, he must keep moving and pushing the plot forward, as well as making
+  sure there is always light. It is often necessary to scour every corner for oil
+  and tinderboxes. Oil will allow Daniel to use a lamp to provide him with light
+  and tinderboxes can be used to light candles and torches strewn throughout the
+  mansion. If Daniel remains in the dark for too long, he will gradually lose his
+  sanity. As Daniel loses sanity, the world will distort and become hard to
+  navigate and the monsters will be able to sense the player. The player must
+  evade the monsters entirely, but this will affect Daniel's sanity as to hide
+  from the monsters, the player must also hide in the dark. The player must also
+  never look at the monsters because if Daniel stares at them too long, his sanity
+  will be fully compromised.
+  .
+  The player must solve various puzzles and the game is very much a fully
+  interactive adventure game. Interaction with the environment is performed by
+  using a physics based method where the mouse is emulated as a hand, meaning the
+  player will need to rotate it to turn wheels or use it to grab drawers and pull
+  them open by moving the mouse. It is also possible to pick up objects and throw
+  them to distract the shadow or solve certain physical puzzles.
+release: 2010-09-08
+players: 1
+assets.boxfront: BoxFront/Amnesia - The Dark Descent (USA).jpg
+assets.boxback: BoxBack/Amnesia - The Dark Descent (USA).jpg
+assets.background: Background/Amnesia - The Dark Descent (USA).jpg
+assets.screenshot: Screenshot/Amnesia - The Dark Descent (USA).jpg
+assets.video: Video/Amnesia - The Dark Descent (USA).mp4
+x-co-op: No
+
+
+game: Among the Sleep (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/A/Among the Sleep (USA)/Among the Sleep (USA).json
+developer: Krillbite Studio
+publisher: Krillbite Studio
+genre: Adventure;Horror
+description:
+  Among the Sleep is a first person horror adventure, in which you play a two year
+  old child. After waking up in the middle of the night to mysterious sounds, you
+  start exploring the dark looking for comfort.
+  .
+  The game explores horror through atmosphere and exploration, not with scores and
+  combat systems. In Among the Sleep you’re vulnerable, scared, and trying to make
+  sense of the world.
+release: 2014-05-29
+players: 1
+assets.boxfront: BoxFront/Among the Sleep (USA).jpg
+assets.boxback: BoxBack/Among the Sleep (USA).jpg
+assets.background: Background/Among the Sleep (USA).jpg
+assets.screenshot: Screenshot/Among the Sleep (USA).jpg
+assets.video: Video/Among the Sleep (USA).mp4
+x-co-op: No
+
+
+game: Bastion (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/B/Bastion (USA)/Bastion (USA).json
+developer: Supergiant Games
+publisher: Warner Bros. Interactive Entertainment
+genre: Action;Role-Playing
+description:
+  Bastion is an isometric action/role playing game. It's the story of a city known
+  as Caelondia after it has been destroyed by a disaster called "Calamity". The
+  game follows a silent protagonist known as "The Kid" who tries to create a safe
+  haven (Bastion) with the help of Rucks, who is also the narrator of the game.
+  The kid has to defeat the game's many foes with a variety of melee and ranged
+  weapons and also special skills. The Bastion, which acts as some sort of
+  headquarters in the game, can be upgraded with useful buildings as the player
+  progresses.
+  .
+  As the Kid travels through the world, he will discover new weapons, upgrade
+  materials, mementos and fragments. Mementos can be discussed with other
+  characters residing in the Bastion and may reveal more about the world. The Kid
+  can only hold two weapons and one special skill at a time, which may require
+  switching them with others, considering the player's preferences and the
+  enemies' weaknesses. The fragments are the game's main currency and they can be
+  collected after destroying objects, defeating enemies and, sometimes, by simply
+  finding them. The player can later use them in the Bastion in order to purchase
+  upgrades and useful trinkets.
+  .
+  The Bastion encloses a total of six buildings which the Kid can restore and
+  utilize. In the Distillery, the player can assign spirits (drinks) to a maximum
+  of ten slots, providing various passive bonuses during the gameplay. At the
+  beginning, only one slot is available for use, the rest being unlocked one by
+  one every time the Kid levels up. The Arsenal stores all the weapons that the
+  protagonist gathers during his adventures; the player can switch weapons and
+  special skills here. The weapons are enhanced and upgraded in the Forge, and
+  this is possible only after collecting the required upgrade materials in the
+  world. The Memorial offers various challenges, which if completed reward the
+  player with additional fragments. In Lost-and-Found, the player can spend
+  fragments in order to restore upgrade materials and unlock idols and spirits.
+  Finally, the game difficulty can be increased by invoking the gods in the
+  Shrine.
+  .
+  One of the notable features in the game is dynamic narration. Narrating in the
+  game is based on the player's actions. For example, when the kid has fallen from
+  a height the narrator gives a comment about the incident.
+release: 2011-08-16
+players: 1
+assets.boxfront: BoxFront/Bastion (USA).jpg
+assets.boxback: BoxBack/Bastion (USA).jpg
+assets.background: Background/Bastion (USA).jpg
+assets.screenshot: Screenshot/Bastion (USA).jpg
+assets.video: Video/Bastion (USA).mp4
+x-co-op: No
+
+
+game: Beat Hazard Ultra (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/B/Beat Hazard Ultra (USA)/Beat Hazard Ultra (USA).json
+developer: ShadowRage
+publisher: ShadowRage
+genre: Action;Shooter;Shoot-'Em-Up;Top-Down
+description:
+  Beat Hazard Ultra DLC adds awesome new features to Beat Hazard, taking the
+  game to the next level. More games mode, enemies and bosses. Play online
+  Head to Head or Co-op. Unlock and upgrade perks and customize your set-up
+  to suit your play style.
+  .
+  Key features:
+  .
+  - Power-up with 3 new tactical weapons: Micro Missiles, Reflect Shield
+  and Ultra Beam.\n
+  - Online play; Co-op and Head to Head\n
+  - New bosses and enemy ships\n
+  - New perk system with 3 kick ass weapon upgrades\n
+  - Boss Rush Mode\n
+  - New achievements & Leaderboards\n
+  - 1.5 hours of cool new Indie tracks\n
+  - And now turn it up to 200% visual feedback! Yikes! (Or turn it down
+  to 50% if you wish)\n
+release: 2009-10-28
+players: 2
+assets.boxfront: BoxFront/Beat Hazard Ultra (USA).jpg
+assets.boxback: BoxBack/Beat Hazard Ultra (USA).jpg
+assets.background: Background/Beat Hazard Ultra (USA).jpg
+assets.screenshot: Screenshot/Beat Hazard Ultra (USA).jpg
+assets.video: Video/Beat Hazard Ultra (USA).mp4
+x-co-op: Yes
+
+
+game: Beatbuddy - Tale of the Guardians (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/B/Beatbuddy - Tale of the Guardians (USA)/Beatbuddy - Tale of the Guardians (USA).json
+developer: Threaks
+publisher: Reverb Publishing
+genre: Action;Adventure;Music
+description:
+  Awakened from his slumber, Beatbuddy journeys through lush hand-painted
+  environments on a quest to save his companions and his own immortality.
+  Beatbuddy interacts with the living breathing environment that pulses to the
+  beat of an original soundtrack, aiding him as he unlocks new paths and solves
+  puzzles.
+release: 2013-08-06
+players: 1
+assets.boxfront: BoxFront/Beatbuddy - Tale of the Guardians (USA).jpg
+assets.boxback: BoxBack/Beatbuddy - Tale of the Guardians (USA).jpg
+assets.background: Background/Beatbuddy - Tale of the Guardians (USA).jpg
+assets.screenshot: Screenshot/Beatbuddy - Tale of the Guardians (USA).jpg
+assets.video: Video/Beatbuddy - Tale of the Guardians (USA).mp4
+x-co-op: No
+
+
+game: Braid (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/B/Braid (USA)/Braid (USA).json
+developer: Number None
+publisher: Number None
+genre: Platform;Puzzle
+description:
+  Braid is a puzzle-platformer, drawn in a painterly style, where the player
+  manipulates the flow of time in strange and unusual ways. From a house in the
+  city, journey to a series of worlds and solve puzzles to rescue an abducted
+  princess. In each world, you have a different power to affect the way time
+  behaves, and it is time's strangeness that creates the puzzles. Braid treats
+  your time and attention as precious; there is no filler in this game. Every
+  puzzle shows you something new and interesting about the game world.
+release: 2009-04-10
+players: 1
+assets.boxfront: BoxFront/Braid (USA).jpg
+assets.boxback: BoxBack/Braid (USA).jpg
+assets.background: Background/Braid (USA).jpg
+assets.screenshot: Screenshot/Braid (USA).jpg
+assets.video: Video/Braid (USA).mp4
+x-co-op: No
+
+
+game: Brutal Legend (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/B/Brutal Legend (USA)/Brutal Legend (USA).json
+developer: Double Fine Productions
+publisher: Double Fine Productions
+genre: Action;Music;Sandbox;Strategy;Beat 'em Up
+description:
+  From the mind of Tim Schafer (Psychonauts, Grim Fandango) comes Brütal Legend,
+  the ultimate heavy metal action game starring Jack Black (School of Rock,
+  Tenacious D). You are heavy metal roadie Eddie Riggs, hurled back in time to the
+  mythical Age of Metal when the world was formed and ruled by the power of Rock!
+  Armed with a broadaxe, a guitar, and a big block V8 you set off on an epic quest
+  to assemble an army of headbangers, hot rods, barbarians, demonic dominatrix,
+  and the undead. With the wings of a demon and the power of a Rock God, you must
+  lead humanity in an epic war against its barbaric overlords, and carve your name
+  forever into the Brutal Legend.
+  .
+  In Brütal Legend, you'll roam through a massive open-world born from the hell
+  fires of heavy metal. In this world you can rev up any vehicle, rock its
+  weapons, and crush the enemies of metal. You'll also learn to devastate with
+  your guitar, playing face-melting solos that actually melt the faces of your
+  enemies, command savage armies, bang skulls in hand-to-hand combat, and rise
+  like a bat out of hell to command blood-drenched action from above. As if that
+  wasn't enough, you can slay your friends and foes online, then play guitar licks
+  on their graves! Of course, Brutal Legend is only complete with the most
+  ultimate heavy metal soundtrack ever assembled in a game.
+release: 2013-02-26
+players: 1
+assets.boxfront: BoxFront/Brutal Legend (USA).jpg
+assets.boxback: BoxBack/Brutal Legend (USA).jpg
+assets.background: Background/Brutal Legend (USA).jpg
+assets.screenshot: Screenshot/Brutal Legend (USA).jpg
+assets.video: Video/Brutal Legend (USA).mp4
+x-co-op: No
+
+
+game: Crawl (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/C/Crawl (USA)/Crawl (USA).json
+developer: Powerhoof
+publisher: Powerhoof
+genre: Action;Role-Playing;Beat 'em Up;Party
+description:
+  Crawl is the dungeon crawler where your friends control the monsters! Battle
+  through randomly generated dungeons full of cruel traps and horrid beasts- all
+  controlled by the other players. If a friend kills you they take your place and
+  it's their turn to crawl! It's a race to gain enough XP and loot to face them
+  all as they control the flailing limbs of the hulking final boss!
+  .
+  A NEW SPIN ON DUNGEON CRAWLING\n
+  - Every trap and monster can be controlled by your real-life buddies!\n
+  - Play solo or with up to 4 in local-multiplayer.\n
+  - Vicious single player AI, challenges to master, and items to unlock.
+  .
+  TURBO CHARGED ROLE PLAYING\n
+  - Level up and amass a huge variety of weapons, spells and items in each 30
+  minute game.\n
+  - Evolve over 60 unique monsters from mere vermin into powerful demons and
+  undead warriors.\n
+  - Play with Controllers, Keyboard or Mouse
+release: 2014-08-06
+players: 4
+assets.boxfront: BoxFront/Crawl (USA).jpg
+assets.boxback: BoxBack/Crawl (USA).jpg
+assets.background: Background/Crawl (USA).jpg
+assets.screenshot: Screenshot/Crawl (USA).jpg
+assets.video: Video/Crawl (USA).mp4
+x-co-op: Yes
+
+
+game: Crayon Physics Deluxe (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/C/Crayon Physics Deluxe (USA)/Crayon Physics Deluxe (USA).json
+developer: Kloonigames
+publisher: Kloonigames
+genre: Puzzle
+description:
+  Crayon Physics Deluxe is a 2D physics puzzle / sandbox game, in which you get to
+  experience what it would be like if your drawings would be magically transformed
+  into real physical objects. Solve puzzles with your artistic vision and creative
+  use of physics.
+release: 2009-01-07
+players: 1
+assets.boxfront: BoxFront/Crayon Physics Deluxe (USA).jpg
+assets.boxback: BoxBack/Crayon Physics Deluxe (USA).jpg
+assets.background: Background/Crayon Physics Deluxe (USA).jpg
+assets.screenshot: Screenshot/Crayon Physics Deluxe (USA).jpg
+assets.video: Video/Crayon Physics Deluxe (USA).mp4
+x-co-op: No
+
+
+game: Crimsonland (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/C/Crimsonland (USA)/Crimsonland (USA).json
+developer: 10tons Ltd.
+publisher: Reflexive Entertainment
+genre: Action;Shooter
+description:
+  Crimsonland is an enhanced version of the 2003 game Crimsonland. It is a
+  top-down arcade arena shooter that is similar in design to the original game.
+  The player controls a character that needs to survive in an arena against wave
+  of enemies. Just like the original game there are various weapons and power-ups,
+  but with an overhaul for the visual style.
+  .
+  There are two main game modes: Quests and Survival. Quests consists of six sets
+  of ten levels that need to be completed one by one to progress. They have a
+  fixed ending reached when a progression bar near the top is completely filled.
+  By killing monsters the character gains experience and eventually unlocks about
+  30 weapons and 55 perks. There are three difficulty levels. Survival consists of
+  five separate modes (Survival, Rush, Blitz, Weapon Picker, and Nukefism) each
+  with their own rules for weapons and perks. Some start with an assault rifle,
+  others let you pick weapons and perks at the beginning or after leveling up, or
+  offer limited ammo, etc. In each of these modes the goal is to survive as long
+  as possible without an ending.
+  .
+  The arenas are always slightly larger than a single-screen environment and
+  enemies appear from all directions. The character can be moved around and can
+  also shoot in any direction. The cross-hair counts down the remaining ammo and
+  then the weapon needs to be reloaded. A blue circle surrounding the character
+  shows the remaining health. Various power-ups and weapons can be picked up by
+  destroying enemies, but only one weapon can be carried at all times. There are
+  also bomb power-ups that destroy all enemies in the vicinity
+  .
+  The game has online leaderboards and supports four-player cooperative games in a
+  local multiplayer mode.
+release: 2003-04-18
+players: 4
+assets.boxfront: BoxFront/Crimsonland (USA).jpg
+assets.boxback: BoxBack/Crimsonland (USA).jpg
+assets.background: Background/Crimsonland (USA).jpg
+assets.screenshot: Screenshot/Crimsonland (USA).jpg
+assets.video: Video/Crimsonland (USA).mp4
+x-co-op: Yes
+
+
+game: Crowntakers (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/C/Crowntakers (USA)/Crowntakers (USA).json
+developer: Bulwark Studios
+publisher: Kasedo Games
+genre: Role-Playing;Strategy
+description:
+  In an ever-changing world, heroes are the only constants.
+  .
+  Dark times are imminent: the king’s abduction throws a once peaceful land into
+  turmoil. Being the chosen one elected by the king himself through one of your
+  dreams, you embark on an adventurous journey to free him from the hands of the
+  evil duke and go down in history as the kingdom’s greatest hero. But time is of
+  the essence...
+  .
+  Crowntakers combines turn-based strategy with RPG elements and takes you at the
+  behest of the crown into a medieval fantasy world full of challenging encounters
+  and epic adventures. With its randomly generated world, Crowntakers offers a
+  varied gaming experience every time you set out to fight evil. As a hero on a
+  mission, you’ll have to assemble a group of brave mercenaries to take on cruel
+  enemies like barbarians, ferocious animals or deceitful thieves. Embark on
+  challenging quests, gather vital resources and finally banish evil from the
+  world.
+release: 2014-11-07
+players: 1
+assets.boxfront: BoxFront/Crowntakers (USA).jpg
+assets.boxback: BoxBack/Crowntakers (USA).jpg
+assets.background: Background/Crowntakers (USA).jpg
+assets.screenshot: Screenshot/Crowntakers (USA).jpg
+assets.video: Video/Crowntakers (USA).mp4
+x-co-op: No
+
+
+game: Curse of the Crescent Isle DX (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/C/Curse of the Crescent Isle DX (USA)/Curse of the Crescent Isle DX (USA).json
+developer: Adam Mowery
+publisher: Self-Published
+genre: Platform
+description:
+  A curse has befallen the Crescent Isle and it's up to you to save them. Luckily
+  the curse has transformed your people into helpful monsters such as drills,
+  blobs, icicles, and gravity flipping...things. With your monster subjects in
+  hand you'll have to drill through rocks, maneuver through spiky terrain, freeze
+  water to pass over the sea, and restore your kingdom to its former glory.
+  .
+  Key features:\n
+  Story Mode\n
+  Speedrun Mode\n
+  Boss Rush Mode\n
+  Sound Test\n
+  Local Co-op\n
+  Updated graphics and sound (from the Xbox 360 version)\n
+  Updated game engine with improved physics (ish)
+release: 2015-08-21
+players: 1
+assets.boxfront: BoxFront/Curse of the Crescent Isle DX (USA).jpg
+assets.boxback: BoxBack/Curse of the Crescent Isle DX (USA).jpg
+assets.background: Background/Curse of the Crescent Isle DX (USA).jpg
+assets.screenshot: Screenshot/Curse of the Crescent Isle DX (USA).jpg
+assets.video: Video/Curse of the Crescent Isle DX (USA).mp4
+x-co-op: No
+
+
+game: Day of the Tentacle Remastered (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/D/Day of the Tentacle Remastered (USA)/Day of the Tentacle Remastered (USA).json
+developer: LucasArts
+publisher: Double Fine Productions
+genre: Adventure
+description:
+  Originally released by LucasArts in 1993 as a sequel to Ron Gilbert’s ground
+  breaking Maniac Mansion, Day of the Tentacle is a mind-bending, time travel,
+  cartoon puzzle adventure game in which three unlikely friends work together to
+  prevent an evil mutated purple tentacle from taking over the world!
+  .
+  Now, over twenty years later, Day of the Tentacle is back in a remastered
+  edition that features all new hand-drawn, high resolution artwork, with
+  remastered audio, music and sound effects (which the original 90s marketing
+  blurb described as ‘zany!’).
+release: 2016-03-22
+players: 1
+assets.boxfront: BoxFront/Day of the Tentacle Remastered (USA).jpg
+assets.boxback: BoxBack/Day of the Tentacle Remastered (USA).jpg
+assets.background: Background/Day of the Tentacle Remastered (USA).jpg
+assets.screenshot: Screenshot/Day of the Tentacle Remastered (USA).jpg
+assets.video: Video/Day of the Tentacle Remastered (USA).mp4
+x-co-op: No
+
+
+game: Doodle God (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/D/Doodle God (USA)/Doodle God (USA).json
+developer: JoyBits Ltd.
+publisher: JoyBits Ltd.
+genre: Puzzle
+description:
+  Every Element & Reaction Have Been Beautifully Redrawn with this amazing 8-bit
+  skin to original Doodle God. If You Loved Doodle God - try this unique version
+  of one of the most original games in the world.
+  .
+  Go back to the 80s in this addictive, ALL ages, puzzle world building game. Mix
+  and match different element combinations to build the universe of your dreams.
+  The entire game has been beautifully redrawn in pixel graphics with an awesome
+  new 8-bit soundtrack that takes you back to the very beginning of video games.\n
+  Of course the universe was not created in a day.
+  .
+  You’ll have to work your up from a simple microorganism to create animals,
+  tools, storms and even build armies before you have what it takes to build the
+  universe! But beware, the power of creation may have unintended consequences,
+  inventing the wheel might just trigger a zombie plague... Don’t worry, you are not
+  alone on this cosmic journey! Every time you successfully create a new item
+  you’ll be rewarded with the wit and wisdom of some of the greatest philosophers
+  and comedians of all time. Unleash your inner god with Doodle God™!
+  .
+  The World’s Best Puzzle Game Just Got Pixelated!
+release: 2016-11-18
+players: 1
+assets.boxfront: BoxFront/Doodle God (USA).jpg
+assets.boxback: BoxBack/Doodle God (USA).jpg
+assets.background: Background/Doodle God (USA).jpg
+assets.screenshot: Screenshot/Doodle God (USA).jpg
+assets.video: Video/Doodle God (USA).mp4
+x-co-op: No
+
+
+game: Dungeon Defenders (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/D/Dungeon Defenders (USA)/Dungeon Defenders (USA).json
+developer: Trendy Entertainment
+publisher: Trendy Entertainment
+genre: Action;Role-Playing;Strategy
+description:
+  Dungeon Defenders is a Tower Defense Action-RPG where you must save the land of
+  Etheria from an Ancient Evil! Create a hero from one of four distinct classes to
+  fight back wave after wave of enemies by summoning defenses and directly
+  participating in the action-packed combat!
+  .
+  Customize and level your character, forge equipment, gather loot, collect pets
+  and more! Take your hero through multiple difficulty modes and
+  challenge/survival missions to earn more experience & even better treasure. Join
+  your friends with 4-player online and local (splitscreen) co-op to plan your
+  strategies together or compete in PvP Deathmatch.
+release: 2011-10-19
+players: 4
+assets.boxfront: BoxFront/Dungeon Defenders (USA).jpg
+assets.boxback: BoxBack/Dungeon Defenders (USA).jpg
+assets.background: Background/Dungeon Defenders (USA).jpg
+assets.screenshot: Screenshot/Dungeon Defenders (USA).jpg
+assets.video: Video/Dungeon Defenders (USA).mp4
+x-co-op: Yes
+
+
+game: Dungeons of Dredmor Complete (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/D/Dungeons of Dredmor Complete (USA)/Dungeons of Dredmor Complete (USA).json
+developer: Gaslamp Games
+publisher: Gaslamp Games
+genre: Role-Playing;Roguelike
+description:
+  Long ago, the Dark Lord Dredmor was bound in the darkest dungeons beneath the
+  earth by great and mighty heroes. Centuries later, the magical bonds that hold
+  him in place are loosening and his power grows ever stronger. The land cries out
+  for a new hero, a powerful warrior or a mystic wizard like those spoken of in
+  the prophecies of yore.
+release: 2011-07-13
+players: 1
+assets.boxfront: BoxFront/Dungeons of Dredmor Complete (USA).jpg
+assets.boxback: BoxBack/Dungeons of Dredmor Complete (USA).jpg
+assets.background: Background/Dungeons of Dredmor Complete (USA).jpg
+assets.screenshot: Screenshot/Dungeons of Dredmor Complete (USA).jpg
+assets.video: Video/Dungeons of Dredmor Complete (USA).mp4
+x-co-op: No
+
+
+game: Dynamite Jack (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/D/Dynamite Jack (USA)/Dynamite Jack (USA).json
+developer: Hassey Enterprises
+publisher: Hassey Enterprises
+genre: Stealth
+description:
+  Dynamite Jack must blast his way to freedom! Jack, a brave space marine, armed
+  with only bombs and a flashlight, must escape the Anathema Mines! Use stealth to
+  sneak past guards and bombs to obliterate enemies in this intense top-down
+  action-adventure.
+release: 2012-05-10
+players: 1
+assets.boxfront: BoxFront/Dynamite Jack (USA).jpg
+assets.boxback: BoxBack/Dynamite Jack (USA).jpg
+assets.background: Background/Dynamite Jack (USA).jpg
+assets.screenshot: Screenshot/Dynamite Jack (USA).jpg
+assets.video: Video/Dynamite Jack (USA).mp4
+x-co-op: No
+
+
+game: Eets Munchies (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/E/Eets Munchies (USA)/Eets Munchies (USA).json
+developer: Klei Entertainment
+publisher: Klei Entertainment
+genre: Puzzle
+description:
+  A beautiful puzzle game for the whole family! Eets Munchies is a reimagining of
+  the award-winning puzzle game by Klei Entertainment. Featuring gorgeous
+  animation and ridiculous creatures, players help an adorable hungry creature
+  devour cake in increasingly devious puzzles.
+release: 2014-03-11
+players: 1
+assets.boxfront: BoxFront/Eets Munchies (USA).jpg
+assets.boxback: BoxBack/Eets Munchies (USA).jpg
+assets.background: Background/Eets Munchies (USA).jpg
+assets.screenshot: Screenshot/Eets Munchies (USA).jpg
+assets.video: Video/Eets Munchies (USA).mp4
+x-co-op: No
+
+
+game: FTL - Faster than Light (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/F/FTL - Faster than Light (USA)/FTL - Faster than Light (USA).json
+developer: Subset Games
+publisher: Subset Games
+genre: Role-Playing;Strategy;Vehicle Simulation
+description:
+  FTL: Faster Than Light is a tactical spaceship combat simulator, however rather
+  than commanding a ship directly, the player manages and commands the crew of a
+  ship in addition to several ship systems (power, weapons, shields, etc).
+  Navigating the ship across a sector of space is turn-based, but ship-to-ship
+  combat plays out in real-time. The game can be paused to make it easier to order
+  the crew about in the heat of battle. Crew members can be sent to different
+  stations (ship rooms) by selecting a crew member and clicking on his destination
+  inside the ship. The ship layout is presented in a simple top down layout
+  consisting of various rooms and corridors. There are more things the crew can
+  do, such as fight fires, seal hull breaches and defend against invaders who beam
+  aboard. Crew experience plays a vital role in the long run, as only a highly
+  skilled crew can survive the later more difficult levels.
+  .
+  The game begins with a rather basic ship (several other models can be unlocked
+  by completing achievements) and several crew members with no skills. The mission
+  is to escape the pursuing Rebel forces by navigating eight sectors and reach the
+  Federation Base in order to deliver vital information concerning the Rebels. The
+  game is quite difficult and just reaching sector 5 unlocks an achievement. Along
+  the way, you may encounters friendly or hostile forces consisting of Rebel
+  patrols, Federation allies, distress beacons and traders who can supply improved
+  weapons or special ship augmentations. For a price of course. Eventually the
+  Rebels will advance far enough into a sector to make escape almost impossible,
+  so while it is useful to explore as much as possible, making sure you can escape
+  intact is vital.
+  .
+  The entire universe is randomly generated each time so no two attempts will be
+  alike. The player also won't know exactly what sectors they will have to
+  navigate until they get closer. Most encounters are randomly generated as well
+  though the game steadily becomes more and more difficult with each passing
+  sector.
+  .
+  Unlocking achievements allows the game to be played with a different starting
+  ship and crew. Some require a completely different approach. For example the
+  Engi cruiser has weak offensive weaponry but can often disable enemy weapons and
+  keep the enemy harmless while it either uses remote drones to attack or powers
+  up it's engine and escapes.
+  .
+  Faster Than Light is all about tactics and planing ahead. Though it features
+  many different weapons and ship systems, it's up to the player to come up with
+  tactics that will use such upgrades effectively rather than just get bigger guns
+  and fight bigger enemies. To win the game it is necessary to learn which tactics
+  work and survive long enough to reach the Federation forces and help them defeat
+  the Rebels.
+release: 2012-09-14
+players: 1
+assets.boxfront: BoxFront/FTL - Faster than Light (USA).jpg
+assets.boxback: BoxBack/FTL - Faster than Light (USA).jpg
+assets.background: Background/FTL - Faster than Light (USA).jpg
+assets.screenshot: Screenshot/FTL - Faster than Light (USA).jpg
+assets.video: Video/FTL - Faster than Light (USA).mp4
+x-co-op: No
+
+
+game: Faerie Solitaire (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/F/Faerie Solitaire (USA)/Faerie Solitaire (USA).json
+developer: Subsoap
+publisher: Subsoap
+genre: Puzzle
+description:
+  Have magical fun in the addicting Card game, Faerie Solitaire! Find and raise a
+  Faerie pet and repopulate the magical land of Avalon using the resources found
+  by clearing each level.
+  .
+  Earn enough gold to purchase unique powerups and specialized upgrades, making
+  each stage a breeze. Chain together combos to fill up your energy meter and save
+  the Faeries!
+  .
+  With 8 worlds, 40 levels, over 400 hands to play through, loads of upgrades to
+  buy, and one exciting adventure, Faerie Solitaire will have you hooked for
+  months, giving you the very best value over any other game available today.
+release: 2010-09-17
+players: 1
+assets.boxfront: BoxFront/Faerie Solitaire (USA).jpg
+assets.boxback: BoxBack/Faerie Solitaire (USA).jpg
+assets.background: Background/Faerie Solitaire (USA).jpg
+assets.screenshot: Screenshot/Faerie Solitaire (USA).jpg
+assets.video: Video/Faerie Solitaire (USA).mp4
+x-co-op: No
+
+
+game: Fez (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/F/Fez (USA)/Fez (USA).json
+developer: Polytron
+publisher: Polytron
+genre: Platform;Puzzle
+description:
+  Gomez is a 2D creature living in a 2D world. Or is he? When the existence of a
+  mysterious 3rd dimension is revealed to him, Gomez is sent out on a journey that
+  will take him to the very end of time and space. Use your ability to navigate 3D
+  structures from 4 distinct classic 2D perspectives. Explore a serene and
+  beautiful open-ended world full of secrets, puzzles and hidden treasures.
+  Unearth the mysteries of the past and discover the truth about reality and
+  perception, in this phenomenal puzzle-platformer!
+release: 2013-05-01
+players: 1
+assets.boxfront: BoxFront/Fez (USA).jpg
+assets.boxback: BoxBack/Fez (USA).jpg
+assets.background: Background/Fez (USA).jpg
+assets.screenshot: Screenshot/Fez (USA).jpg
+assets.video: Video/Fez (USA).mp4
+x-co-op: No
+
+
+game: Fotonica (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/F/Fotonica (USA)/Fotonica (USA).json
+developer: Santa Ragione
+publisher: Santa Ragione
+genre: Action
+description:
+  Ever wondered what running at 140mph feels like? FOTONICA is a first-person game
+  about the thrill of speed and traveling flawlessly through complex environments.
+  .
+  FOTONICA is simple, but is not easy: it follows a tradition of arcade games that
+  are easy to pick up and almost impossible to master. A multi-layered level
+  design across eight different tracks, together with a procedural endless mode
+  make for a game that is incredibly deep. Think you can outrun your friends? Try
+  the split-screen versus challenges.
+  .
+  The visuals are a treat for the nostalgic player but also for those hungry for
+  new aesthetics. Every pixel is drawn to convey the maximum sense of speed, an
+  exhilarating journey through light and void.
+release: 2014-11-06
+players: 4
+assets.boxfront: BoxFront/Fotonica (USA).jpg
+assets.boxback: BoxBack/Fotonica (USA).jpg
+assets.background: Background/Fotonica (USA).jpg
+assets.screenshot: Screenshot/Fotonica (USA).jpg
+assets.video: Video/Fotonica (USA).mp4
+x-co-op: Yes
+
+
+game: Grim Fandango Remastered (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/G/Grim Fandango Remastered (USA)/Grim Fandango Remastered (USA).json
+developer: Double Fine Productions, Inc.
+publisher: Double Fine Productions, Inc.
+genre: Adventure
+description:
+  Based on various legends of Mexican folklore, Grim Fandango is packed to the
+  hilt with dancing skeletons, crime, romance, and much more. You play Manny
+  Calavera, a mid-level worker at the Department of Death (the DOD) who's trying
+  to work off his sins in life so that he can get to his final reward. As a
+  reaper, Manny frees incoming souls from their shrouds, finds out what kind of
+  underworld travel packages their goodness in life has earned them, and then
+  sends them on their way. Unfortunately, business hasn't been very good for Manny
+  of late. As the game begins, Calavera is told that he must sell a premium travel
+  package to a soul or lose his job. In his search, Manny uncovers a hideous plot,
+  a beautiful woman, and a crew of loyal friends (not necessarily in that order).
+  .
+  Based on the acclaimed 1998 classic, this remake of Tim Schafer's original
+  adventure title employs the stunning technology used to bring Broken Age to life
+  for a fresh new way to experience Grim Fandango.
+release: 2015-01-27
+players: 1
+assets.boxfront: BoxFront/Grim Fandango Remastered (USA).jpg
+assets.boxback: BoxBack/Grim Fandango Remastered (USA).jpg
+assets.background: Background/Grim Fandango Remastered (USA).jpg
+assets.screenshot: Screenshot/Grim Fandango Remastered (USA).jpg
+assets.video: Video/Grim Fandango Remastered (USA).mp4
+x-co-op: No
+
+
+game: Hacknet (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/H/Hacknet (USA)/Hacknet (USA).json
+developer: Team Fractal Alligator
+publisher: Surprise Attack
+genre: Puzzle
+description:
+  Hacknet is an immersive, terminal-based hacking simulator for PC. Dive down a
+  rabbit hoIe as you follow the instructions of a recently deceased hacker, whose
+  death may not have been the accident the media reports. Using old school command
+  prompts and real hacking processes, you’ll solve the mystery with minimal
+  hand-holding and a rich world full of secrets to explore.
+  .
+  Bit, a hacker responsible for creating the most invasive security system on the
+  planet, is dead. When he fails to reconnect to his system for 14 days, his
+  failsafe kicks in, sending instructions in automated emails to a lone user. As
+  that user, it’s up to you to unravel the mystery and ensure that Hacknet-OS
+  doesn't fall into the wrong hands.
+  .
+  Exploring the volatile nature of personal privacy, the prevalence of corporate
+  greed, and the hidden powers of hackers on the internet, Hacknet delivers a true
+  hacking simulation, while offering a support system that allows total beginners
+  get a grasp of the real-world applications and commands found throughout the
+  game.
+release: 2015-08-13
+players: 1
+assets.boxfront: BoxFront/Hacknet (USA).jpg
+assets.boxback: BoxBack/Hacknet (USA).jpg
+assets.background: Background/Hacknet (USA).jpg
+assets.screenshot: Screenshot/Hacknet (USA).jpg
+assets.video: Video/Hacknet (USA).mp4
+x-co-op: No
+
+
+game: Hand of Fate (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/H/Hand of Fate (USA)/Hand of Fate (USA).json
+developer: Defiant Development
+publisher: Defiant Development
+genre: Action;Role-Playing
+description:
+  In Hand of Fate, players collect equipment, items, artifacts and enemies as
+  in-game collectible cards in a card based RPG; then play their deck, bringing to
+  video game life a beautiful 3D world in which gamers make difficult decisions.
+  Sometimes their choices have unexpected consequences and players must crush
+  their foes utilizing a third person action-adventure combat system. The more
+  bosses a player defeats, the more cards they obtain.
+release: 2015-02-17
+players: 1
+assets.boxfront: BoxFront/Hand of Fate (USA).jpg
+assets.boxback: BoxBack/Hand of Fate (USA).jpg
+assets.background: Background/Hand of Fate (USA).jpg
+assets.screenshot: Screenshot/Hand of Fate (USA).jpg
+assets.video: Video/Hand of Fate (USA).mp4
+x-co-op: No
+
+
+game: Home - A Unique Horror Adventure (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/H/Home - A Unique Horror Adventure (USA)/Home - A Unique Horror Adventure (USA).json
+developer: Benjamin Rivers
+publisher: Benjamin Rivers
+genre: Adventure;General
+description:
+  Home is a unique horror adventure set in a beautifully-realized pixel world.
+  It's a murder mystery with a twist - because you decide what ultimately happens.
+release: 2012-06-01
+players: 1
+assets.boxfront: BoxFront/Home - A Unique Horror Adventure (USA).jpg
+assets.boxback: BoxBack/Home - A Unique Horror Adventure (USA).jpg
+assets.background: Background/Home - A Unique Horror Adventure (USA).jpg
+assets.screenshot: Screenshot/Home - A Unique Horror Adventure (USA).jpg
+assets.video: Video/Home - A Unique Horror Adventure (USA).mp4
+x-co-op: No
+
+
+game: Knock-Knock (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/K/Knock-Knock (USA)/Knock-Knock (USA).json
+developer: Ice-pick Lodge
+publisher: Ice-Pick Lodge
+genre: Horror
+description:
+  There is an unusual cabin deep in the woods. It had served as a laboratory and a
+  dwelling for three generations of Lodgers.
+  .
+  But as of late the latest Lodger has been noticing weird changes in familiar
+  surroundings; things are missing, noises and rattle heard. Something odd is
+  coming out of the woods. Come night, it seems like someone's made himself at
+  home in the twilight of rooms, attics, and cellars.
+  .
+  You need to stay awake and sane till dawn.
+  .
+  The Lodger is wandering the rooms, evading the unknown, counting minutes till
+  morning. But it's only in the night that he can solve the main puzzle and find
+  the answers. What's going on? Are the Guests real, or are they just figments of
+  his insomniac imagination? What'd happened to the forest? What's happening to
+  the cabin? Is there a line between reality and imagination?
+  .
+  Gameplay details:
+  .
+  - Hide! Play hide-and-seek with denizens of your nightmares.
+  .
+  - Don't look now! The goal of each night is to reach dawn while still sane.
+  .
+  - Fill in the gaps. The house aids the Lodger. You only have to fix it up and
+  keep it in order.
+  .
+  - Seek. The Lodger has lost something very important. The reason for what is
+  happening is somewhere inside. Everything that is happening can be explained,
+  you only need to find the key and bring it to light.
+  .
+  - Wait. In this game you need to watch and listen carefully. Inspect and
+  scrutinize. You only have to last until the sunrise.
+  .
+  - Follow the rules of the game! Of course you must first understand the game
+  being played with you.
+release: 2013-10-04
+players: 1
+assets.boxfront: BoxFront/Knock-Knock (USA).jpg
+assets.boxback: BoxBack/Knock-Knock (USA).jpg
+assets.background: Background/Knock-Knock (USA).jpg
+assets.screenshot: Screenshot/Knock-Knock (USA).jpg
+assets.video: Video/Knock-Knock (USA).mp4
+x-co-op: No
+
+
+game: Limbo (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/L/Limbo (USA)/Limbo (USA).json
+developer: Playdead
+publisher: Playdead
+genre: Platform;Puzzle
+description:
+  Uncertain of his sister's fate, a boy enters LIMBO.
+  .
+  Winner of more than 90 awards, including GameInformer's Best Downloadable,
+  GameSpot's Best Puzzle Game, Kotaku's The Best Indie Game, GameReactor's Digital
+  Game of the Year, Spike TV's Best Independent Game, X-Play's Best Downloadable
+  Game and IGN's Best Horror Game.
+release: 2011-08-02
+players: 1
+assets.boxfront: BoxFront/Limbo (USA).jpg
+assets.boxback: BoxBack/Limbo (USA).jpg
+assets.background: Background/Limbo (USA).jpg
+assets.screenshot: Screenshot/Limbo (USA).jpg
+assets.video: Video/Limbo (USA).mp4
+x-co-op: No
+
+
+game: Lone Survivor - The Director's Cut (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/L/Lone Survivor - The Director's Cut (USA)/Lone Survivor - The Director's Cut (USA).json
+developer: superflat games
+publisher: Curve Studios
+genre: Horror
+description:
+  Lone Survivor is an independent survival horror video game developed by
+  Superflat Games. It was originally released for Microsoft Windows and OS X in
+  2012. It was later ported to the PlayStation 3 and PlayStation Vita and released
+  on the PlayStation Network in 2013 as Lone Survivor: The Director's Cut.
+  .
+  The Director's Cut came out on Microsoft Windows and OS X as a free update on 31
+  October 2013. In October 2014 the game was also made available for the
+  PlayStation 4 and Wii U. The title will be released in physical format on
+  PlayStation 4 and PlayStation Vita on December 30, 2016 through Limited Run
+  Games.
+  .
+  Gameplay\n
+  ---------------\n
+  Lone Survivor is a post-apocalyptic survival horror game with retro-styled 2D
+  graphics in which the player controls a nameless protagonist following
+  directions provided by the character's apparent hallucinations. When exploring
+  the game world the player will discover items, keys and food. The correct use of
+  each item and key must be determined in order to solve the game's puzzles.
+  Certain food types can be improved by cooking and/or combining them with others.
+  Two-way mirrors found in the game world are used to teleport back to the
+  survivor's apartment. Players possess a flashlight with which to navigate the
+  game world; using the flashlight drains batteries; replacements can be found by
+  scavenging. Mutants must be avoided or killed; a pistol must be found in order
+  to attack mutants, but ammunition is scarce. When the pistol's magazine is empty
+  the survivor automatically loads a new magazine, leaving him open to attack
+  during the process. Mutants are attracted to light and noises, but the player
+  can sneak past by hiding in the shadows. The game features a map for players to
+  navigate with, however the game does not pause when the game's menus or map are
+  accessed, leaving the survivor vulnerable.
+  .
+  The survivor's apartment serves as a hub; the player must return with food in
+  order to survive, as well as sleep. Sleeping prevents madness and is also
+  required to save the player's progress. It is possible to combat lack of sleep
+  with pills; these further damage the survivor mentally but the resultant
+  hallucination may result in extra supplies appearing in the survivor's backpack.
+  Progression through the game requires exploration, which fills out the map;
+  sometimes specific items must be located in order to proceed further. Failing to
+  locate these items can result in resources being spent without new areas being
+  opened up, making future attempts more difficult.
+  .
+  The player's interactions with the game's world and inhabitants result in
+  different endings upon completion of the game. These are shown during the game's
+  end credits, emphasizing how the player received that particular ending. A
+  single playthrough of the game can last between three and eight hours.
+release: 2013-10-31
+players: 1
+assets.boxfront: BoxFront/Lone Survivor - The Director's Cut (USA).jpg
+assets.boxback: BoxBack/Lone Survivor - The Director's Cut (USA).jpg
+assets.background: Background/Lone Survivor - The Director's Cut (USA).jpg
+assets.screenshot: Screenshot/Lone Survivor - The Director's Cut (USA).jpg
+assets.video: Video/Lone Survivor - The Director's Cut (USA).mp4
+x-co-op: No
+
+
+game: Loot Rascals (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/L/Loot Rascals (USA)/Loot Rascals (USA).json
+developer: Hollow Ponds
+publisher: Hollow Ponds
+genre: Adventure
+description:
+  Only you can rescue Big Barry - your huge robot head pal - from a space theme
+  park that’s been invaded by a tentacled pan-dimensional godbeast.
+  .
+  Explore an alien planet, beat a menagerie of strange baddies and win Loot Cards
+  which give you special abilities. Choosing which to equip requires strategic
+  thinking - the way you lay them out is crucial, and some must be sacrificed
+  because cards are also the precious resources you need to heal and use powerful
+  abilities.
+  .
+  Careful though because baddies can loot you! The cards they steal drop into
+  other players’ games. When you defeat an Elite Baddie you’ll get another
+  player’s card: will you return it or keep it for yourself?
+  .
+  Either way, prepare for a visit from that player's Holographic Helper to shower
+  you with thanks or terrible vengeance - Loot Rascals is a tale of friendship,
+  loss, and redemption!
+  .
+  Every game is different in this procedurally generated roguelike: gather Loot
+  Cards, show the Thing Below who’s boss, and fly Big Barry to victory!
+release: 2017-03-07
+players: 1
+assets.boxfront: BoxFront/Loot Rascals (USA).jpg
+assets.boxback: BoxBack/Loot Rascals (USA).jpg
+assets.background: Background/Loot Rascals (USA).jpg
+assets.screenshot: Screenshot/Loot Rascals (USA).jpg
+assets.video: Video/Loot Rascals (USA).mp4
+x-co-op: No
+
+
+game: MANOS - The Hands of Fate (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/M/MANOS - The Hands of Fate (USA)/MANOS - The Hands of Fate (USA).json
+developer: FreakZone Games
+publisher: FreakZone Games
+genre: Platform
+description:
+  "This game will be bigger than Skyrim!” - Bill Corbett, Rifftrax/Mystery Science
+  Theatre 3000
+  .
+  Remember how every film had it's own platform game adaptation? When every man,
+  woman, child, animal and inanimate object were out to get your character? When
+  the streets were filled with bats, ghosts and Frankenstein monsters? MANOS:
+  Director’s Cut will take you back to the absurd adaptations of the past!
+  .
+  Lost on their vacation, Mike and his family have wandered the desert trying to
+  find a place to stay, only to wind up in the mysterious Valley Lodge. Maintained
+  by Torgo, an unusual man/satyr who "takes care of the place while The Master is
+  away", the hotel is swimming with paranormal activity which Mike has to brave
+  through to find his now missing family. Who is The Master, and what does he want
+  with Mike's family? Armed with his trusty revolver, Mike will have to wander the
+  haunted halls, venture out into the desert, uncover a dark temple and battle the
+  forces of darkness to find out!
+  .
+  The worst movie of all time is now a video game!\n
+  Homages to all of your least favourite terrible movies and games!\n
+  Retro-style cut-scenes telling the not-so-classic story of MANOS, with art by
+  Matt Kap, the pixel artist from The Binding of Isaac: Rebirth and Castle in the
+  Darkness.\n
+  Unlockable PLAY AS TORGO mode
+release: 2015-07-30
+players: 1
+assets.boxfront: BoxFront/MANOS - The Hands of Fate (USA).jpg
+assets.boxback: BoxBack/MANOS - The Hands of Fate (USA).jpg
+assets.background: Background/MANOS - The Hands of Fate (USA).jpg
+assets.screenshot: Screenshot/MANOS - The Hands of Fate (USA).jpg
+assets.video: Video/MANOS - The Hands of Fate (USA).mp4
+x-co-op: No
+
+
+game: Mark of the Ninja (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/M/Mark of the Ninja (USA)/Mark of the Ninja (USA).json
+developer: Klei Entertainment
+publisher: Microsoft Studios
+genre: Action;Stealth
+description:
+  In Mark of the Ninja, you'll know what it is to truly be a ninja. You must be
+  silent, agile and clever to outwit your opponents in a world of gorgeous scenery
+  and flowing animation. Marked with cursed tattoos giving you heightened senses,
+  every situation presents you with options. Will you be an unknown, invisible
+  ghost, or a brutal, silent assassin?
+  .
+  Upgrade new tools and techniques that suit your play style and complete optional
+  objectives to unlock entirely new ways to approach the game. Finish the main
+  story to unlock a New Game Plus mode with even more options and challenges.
+release: 2012-10-16
+players: 1
+assets.boxfront: BoxFront/Mark of the Ninja (USA).jpg
+assets.boxback: BoxBack/Mark of the Ninja (USA).jpg
+assets.background: Background/Mark of the Ninja (USA).jpg
+assets.screenshot: Screenshot/Mark of the Ninja (USA).jpg
+assets.video: Video/Mark of the Ninja (USA).mp4
+x-co-op: No
+
+
+game: Mibibli's Quest (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/M/Mibibli's Quest (USA)/Mibibli's Quest (USA).json
+developer: Ryan Melmoth
+publisher: Ryan Melmoth
+genre: Platform
+description:
+  Mibibli's Quest is a retro-style surrealistic platformer game. Join everybody's
+  favorite poorly-drawn 8-bit character, Mibibli, as it blasts his way through
+  over 20 crazy and eclectic levels designed to challenge even the fiercest
+  wayward retro warrior. Conquer caves, dance through raves, wander the suburbs,
+  and blow up eggs... travel through time and explore your nightmares along the
+  way! Collect power ups and find the secrets that are scattered throughout this
+  world. Each level has it's own collection of enemies, unique gimmicks, and
+  bizarre characters to meet. Pay heed to their quizzical insights and use it to
+  demolish bosses and ultimately defeat Mibibli's arch-nemesis, Crocodibli!
+  .
+  This unique, colorful, and eccentric game has been described as "Mega Man" meets
+  "Space Funeral." The soundtrack was inspired by catchy retro NES tunes, but is
+  interspersed by instrumental oddities. Submersive and subversive, it is truly a
+  gaming experience that will leave a lasting impression on your mind!
+release: 2016-08-04
+players: 4
+assets.boxfront: BoxFront/Mibibli's Quest (USA).jpg
+assets.boxback: BoxBack/Mibibli's Quest (USA).jpg
+assets.background: Background/Mibibli's Quest (USA).jpg
+assets.screenshot: Screenshot/Mibibli's Quest (USA).jpg
+assets.video: Video/Mibibli's Quest (USA).mp4
+x-co-op: No
+
+
+game: Monster Loves You! (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/M/Monster Loves You! (USA)/Monster Loves You! (USA).json
+developer: Dejobaan Games
+publisher: Radial Games Corp
+genre: Adventure;Role-Playing
+description:
+  Live the life of a Monster, from birth to elderhood and beyond, making decisions
+  that affect the world of Monsters and Humans.
+  .
+  You live in the village of Omen, and your favorite snack is the fingers of small
+  children. As a Monster, you pop up in the most interesting places — what do you
+  do when three angry bears discover a young child in their cabin? Or when you spy
+  a wolf hunting down that woman with the red cloak?
+  .
+  As a Monsterling, your choices are simple ones. Do you chase those poor little
+  mice (+1 Ferocity) or protect them from the dogs (+1 Kindness)? Do you come
+  clean about that fungus your friends ate (+1 Honesty) or cover for them (+1
+  Bravery)? As a youth, your choices determine your personality.
+  .
+  But all youngins must grow up. Monsters and Humans have been at odds for
+  centuries, and there are Human villages on the other side of the enchanted
+  woods. When Human children get lost in those dark and winding thickets, do you
+  terrorize them for fun (+1 Ferocity)? Do you help return them to Human
+  civilization to prove that not all Monsters are to be feared and hated (+1
+  Kindness)? Or do you fatten them up for Human foie gras — a Monster delicacy?
+  All this, to the backdrop of increasing tensions between Monster- and Humankind.
+release: 2013-03-18
+players: 1
+assets.boxfront: BoxFront/Monster Loves You! (USA).jpg
+assets.boxback: BoxBack/Monster Loves You! (USA).jpg
+assets.background: Background/Monster Loves You! (USA).jpg
+assets.screenshot: Screenshot/Monster Loves You! (USA).jpg
+assets.video: Video/Monster Loves You! (USA).mp4
+x-co-op: No
+
+
+game: Neverending Nightmares (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/N/Neverending Nightmares (USA)/Neverending Nightmares (USA).json
+developer: Infinitap Games
+publisher: Infinitap Games
+genre: Horror
+description:
+  Neverending Nightmares is a psychological horror game inspired by the
+  developer's actual battle with mental illness. In the game, you take on the role
+  of Thomas who awakens from a terrible nightmare only to find that he is still
+  dreaming. As he descends deeper through the layers of hellish dreamscapes, he
+  must hide from horrifying apparitions and outrun his inner demons. He must
+  discover which of the horrors he encounters are a manifestation of his own
+  psychological state and figure out what reality will be when he finally wakes
+  up.
+  .
+  Terrifying nightmare worlds inspired by real life struggles with OCD and
+  depression.\n
+  Black and white artwork creates a distinctive moody and dark atmosphere.\n
+  Branching narrative features 3 completely different endings.\n
+  A dynamic lighting system gives the ever present darkness a character of its
+  own.\n
+  IGF nominated composer Skyler McGlothlin delivers a haunting and oppressive dark
+  ambient score.
+release: 2014-09-26
+players: 1
+assets.boxfront: BoxFront/Neverending Nightmares (USA).jpg
+assets.boxback: BoxBack/Neverending Nightmares (USA).jpg
+assets.background: Background/Neverending Nightmares (USA).jpg
+assets.screenshot: Screenshot/Neverending Nightmares (USA).jpg
+assets.video: Video/Neverending Nightmares (USA).mp4
+x-co-op: No
+
+
+game: NightSky (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/N/NightSky (USA)/NightSky (USA).json
+developer: Nicalis
+publisher: Nicalis
+genre: Platform;Strategy
+description:
+  Nominated as a IGF Seamus McNally Finalist, NightSky is an ambient action-puzzle
+  game that offers a gameplay experience unlike any other—cerebral challenges fill
+  uniquely designed picturesque worlds. The player must maneuver a sphere by using
+  realistic physics to advance; each of these worlds is broken into different
+  areas. The original soundtrack by experimental jazz musician, Chris Schlarb will
+  further heighten the surreal experience.
+release: 2011-01-06
+players: 1
+assets.boxfront: BoxFront/NightSky (USA).jpg
+assets.boxback: BoxBack/NightSky (USA).jpg
+assets.background: Background/NightSky (USA).jpg
+assets.screenshot: Screenshot/NightSky (USA).jpg
+assets.video: Video/NightSky (USA).mp4
+x-co-op: No
+
+
+game: OddPlanet (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/O/OddPlanet (USA)/OddPlanet (USA).json
+developer: Piotr Krol
+publisher: Piotr Krol
+genre: Action;Platformer;2D
+description:
+  OddPlanet is a side-scrolling adventure game inspired by Limbo and Oddworld. You
+  will guide a lone little girl through the hostile environments of an alien
+  planet and help her survive. She will share her feelings and thoughts. Prepare
+  to experience atmospheric sounds, music in stereo and meet fascinating creatures
+  in this beautiful, hand-painted world.
+release: 2013-04-27
+players: 1
+assets.boxfront: BoxFront/OddPlanet (USA).jpg
+assets.boxback: BoxBack/OddPlanet (USA).jpg
+assets.background: Background/OddPlanet (USA).jpg
+assets.screenshot: Screenshot/OddPlanet (USA).jpg
+assets.video: Video/OddPlanet (USA).mp4
+x-co-op: No
+
+
+game: Our Darker Purpose (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/O/Our Darker Purpose (USA)/Our Darker Purpose (USA).json
+developer: Avidly Wild Games
+publisher: Avidly Wild Games
+genre: Role-Playing
+description:
+  Journey to the dark heart of the Edgewood Home for Lost Children in this
+  fiendishly difficult action RPG!
+  .
+  When her teacher stepped out of the classroom a month ago, Cordy never imagined
+  he would be gone for good. Now her fellow students have turned on each other as
+  the school descends into chaos. Cordy must battle feral classmates and dangerous
+  creatures as she ascends to the cruel Administrators’ offices atop the Edgewood
+  Home for Lost Children.
+  .
+  Our Darker Purpose is a top-down, rogue-like action RPG that combines the
+  ingenuity of genre-defining classics with the expansiveness and accessibility of
+  modern day action adventure games. The gameplay is steeped in a variety of
+  influences ranging from A Link to the Past to The Binding of Isaac to Diablo. We
+  love games with great mechanics and awesome, bizarre storylines, and that’s what
+  we’re creating with Our Darker Purpose.
+  .
+  Each playthrough features a unique set of procedurally generated levels. Death
+  is permanent, but your accomplishments earn you resources to buy lesson and
+  upgrades in the afterlife... and your education lasts forever. Every game
+  teaches you more about the Edgewood Home for Lost Children, the disappearance of
+  the adults, and the darker purpose of the Administrators.
+release: 2014-01-29
+players: 1
+assets.boxfront: BoxFront/Our Darker Purpose (USA).jpg
+assets.boxback: BoxBack/Our Darker Purpose (USA).jpg
+assets.background: Background/Our Darker Purpose (USA).jpg
+assets.screenshot: Screenshot/Our Darker Purpose (USA).jpg
+assets.video: Video/Our Darker Purpose (USA).mp4
+x-co-op: No
+
+
+game: Pitiri 1977 (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/P/Pitiri 1977 (USA)/Pitiri 1977 (USA).json
+developer: ILIKESCIFI Games
+publisher: ILIKESCIFI Games
+genre: Action;General
+description:
+  Pitiri 1977 is an adventure-platformer with much exploration in both world and
+  story, and is paying tribute to its classic pioneers not only by its gameplay,
+  but also by its background story. A narrative, that is set in 1977 (the glorious
+  year of Star Wars IV, the Atari 2600, the Voyager One spacecraft & Led Zeppelin's
+  "Presence"), in an imposing world, created by using hand-painted graphics,
+  characters, solid physics and a 1970s soundtrack, gradually opened up by the
+  player's acquired abilities.
+  .
+  You play as a kid with supernatural powers, whose brother has been kidnapped
+  by an unknown evil. On your quest to get your brother back, you venture
+  through a twisted 70s science fiction utopia that lies beyond the known...
+release: 2012-01-21
+players: 1
+assets.boxfront: BoxFront/Pitiri 1977 (USA).jpg
+assets.boxback: BoxBack/Pitiri 1977 (USA).jpg
+assets.background: Background/Pitiri 1977 (USA).jpg
+assets.screenshot: Screenshot/Pitiri 1977 (USA).jpg
+assets.video: Video/Pitiri 1977 (USA).mp4
+x-co-op: No
+
+
+game: Pony Island (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/P/Pony Island (USA)/Pony Island (USA).json
+developer: Daniel Mullins Games
+publisher: Daniel Mullins Games
+genre: Action;Puzzle
+description:
+  Pony Island is officially described as a "suspense puzzle game in disguise". At
+  the centre is an action game called Pony Island. It is a simple 2D
+  side-scrolling game where the player uses the left mouse button to make a pony
+  jump to clear gates as it moves forward by itself. Similar to the concept of
+  Frog Fractions however, that is only a starting point for a much broader
+  experience. As the game breaks down, the player slowly delves deeper into the
+  game that turns out to be an arcade machine devised by a sinister force. The
+  game Pony Island is a recurring theme that returns in many different forms, with
+  different protagonists, colours and enemies, but also improved abilities such as
+  wings to float in the air and a laser to destroy creatures.
+  .
+  The player has to investigate the computer running the game, revealing secrets
+  by manipulating items, text chatting with the creator of the game as well as an
+  entity that wants to free the trapped souls, browsing documents and programs,
+  logging into different accounts and so on. This is the adventure aspect of the
+  game, which is largely linear, but requires the player to interact with the
+  interface and the many errors and code in unusual ways to progress, often
+  deliberately breaking game mechanics. There is also another dimension to the
+  game, to find out who the protagonist is, playing the arcade cabinet. Optionally
+  four hidden visions can be unlocked. There are 24 hidden arcade tickets in the
+  game and collecting them all leads to a different ending.
+  .
+  Another important game element is the pseudohacking. Many moments in the game
+  let the player break the rules devised by the creator by hacking directly into
+  the game code. This is presented as a puzzle sequence with a series of
+  instructions performed in a continuous loop. The player has to drag icons to
+  manipulate the processes: duplicating them, guiding them in a certain direction,
+  using a teleporter to skip or repeat certain instructions and so on, until a
+  goal is met. These are puzzle sequences based on logic and no programming
+  knowledge is required.
+  .
+  The game often deliberately breaks the fourth wall and attempts to confuse the
+  player. It was originally created as a Game Jam entry for Ludum Dare 31 (theme:
+  "Entire Game On One Screen") in 2014 and was then developed into a full game.
+release: 2016-01-04
+players: 1
+assets.boxfront: BoxFront/Pony Island (USA).jpg
+assets.boxback: BoxBack/Pony Island (USA).jpg
+assets.background: Background/Pony Island (USA).jpg
+assets.screenshot: Screenshot/Pony Island (USA).jpg
+assets.video: Video/Pony Island (USA).mp4
+x-co-op: No
+
+
+game: Psychonauts (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/P/Psychonauts (USA)/Psychonauts (USA).json
+developer: Double Fine Productions
+publisher: Majesco
+genre: Action;Adventure;Platform
+description:
+  At a summer camp for up-and-coming psychics, a young boy with an unusually high
+  level of psychic ability inexplicably shows up. The boy, named Raz, is allowed
+  to stay at the camp until his father comes to pick him up, but his arrival
+  coincides with very strange circumstances. Soon, evidence that someone is
+  psychically tampering with the campers' minds reveals itself, and Raz is the
+  only one who can stop it. Raz must project himself into the psyches of several
+  different people in order to figure out what is going on and who is behind the
+  recent occurrences.
+  .
+  Psychonauts is a 3D platform game with a rather unorthodox style. The
+  characters' inner worlds are the game's levels. Each world reflects the
+  personality of the person whose psyche it represents, often resulting in unique,
+  surreal creations, and influencing the gameplay style. For example, the psyche
+  of a giant lungfish is presented as a large city populated by fish people, in
+  which Raz himself becomes a giant monster who can destroy entire buildings; the
+  psyche of a mental patient is a huge board game, where Raz has to command armies
+  in order to defeat Napoleon, etc.
+  .
+  There are also many gameplay elements and tasks which are common for all the
+  levels. These include Raz fighting the (not very numerous) regular enemies,
+  defeating level bosses, collecting currency, "figments of imagination" needed to
+  upgrade his powers, and bonus items such as complete sets of the character's
+  memories and others. Many of the game's puzzles require the usage of psychic
+  powers, which Raz obtains in a more or less strict order. These powers range
+  from combat abilities such as Psy Shield to Telekinesis (moving objects without
+  touching them) and Clairvoyance (reading other people's minds).
+  .
+  The camp itself serves as the game's "hub", in which the player can explore,
+  interact with characters, search for secret areas and items, and so on.
+release: 2005-04-26
+players: 1
+assets.boxfront: BoxFront/Psychonauts (USA).jpg
+assets.boxback: BoxBack/Psychonauts (USA).jpg
+assets.background: Background/Psychonauts (USA).jpg
+assets.screenshot: Screenshot/Psychonauts (USA).jpg
+assets.video: Video/Psychonauts (USA).mp4
+x-co-op: No
+
+
+game: Rocketbirds - Hardboiled Chicken (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/R/Rocketbirds - Hardboiled Chicken (USA)/Rocketbirds - Hardboiled Chicken (USA).json
+developer: Ratloop Asia
+publisher: Reverb Publishing
+genre: Action;Platform
+description:
+  Rocketbirds: Hardboiled Chicken expands upon browser-based game Rocketbirds:
+  Revolution! and features four new levels, cut scenes, weapons and a brand new
+  co-op campaign. Set in Albatropolis, a land full of birds taken over by a
+  totalitarian penguin regime, you play as Hardboiled Chicken and must assassinate
+  the evil penguin leader Putzki. His mission will unlock the secrets to his past
+  and uncover the real enemies of Albatropolis. In single-player mode you play as
+  Hardboiled Chicken and destroy your enemies with weapons you collect and unlock
+  in each chapter which include a pistol, machine gun, shotgun and grenades. The
+  game is a 2-D side scrolling platformer with gameplay that revolves around
+  solving puzzles and killing enemies. There are also jetpack sections in which
+  you must shoot other enemies out of the sky.
+  .
+  The 2 player local co-op campaign lets you play as a pair of Budgie commandos on
+  a mission to save the general’s daughter. The same areas are visited as in the
+  single player but they are all modified slightly and the puzzles involve both
+  players working together. There are six playable characters and each one has a
+  different weapon.
+  .
+  It is playable in stereoscopic 3-D. The original soundtrack was made by the Los
+  Angeles based Sci-Fi rock band New World Revolution.
+release: 2012-10-15
+players: 2
+assets.boxfront: BoxFront/Rocketbirds - Hardboiled Chicken (USA).jpg
+assets.boxback: BoxBack/Rocketbirds - Hardboiled Chicken (USA).jpg
+assets.background: Background/Rocketbirds - Hardboiled Chicken (USA).jpg
+assets.screenshot: Screenshot/Rocketbirds - Hardboiled Chicken (USA).jpg
+assets.video: Video/Rocketbirds - Hardboiled Chicken (USA).mp4
+x-co-op: Yes
+
+
+game: Satellite Reign (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/S/Satellite Reign (USA)/Satellite Reign (USA).json
+developer: 5 Lives Studios
+publisher: 5 Lives Studios
+genre: Action;Role-Playing;Sandbox;Strategy
+description:
+  A spiritual successor to Syndicate, Satellite Reign takes place in a futuristic
+  world control by global syndicates. You lead a hit team working for one of those
+  corporations in a series of missions to undermine your boss rivals.
+  .
+  The game is open world and viewed from an isometric perspective. You control a
+  four man (or woman) team, each with his own unique abilities (soldier, hacker,
+  support and infiltrator).
+  .
+  In addition to your various missions against other corporations (such as
+  stealing data, sabotaging and kidnapping their personnel) you could also
+  influence the world itself - for example, sabotaging the operations of the
+  police, or tapping the ATMs to siphon funds.
+release: 2015-08-28
+players: 1
+assets.boxfront: BoxFront/Satellite Reign (USA).jpg
+assets.boxback: BoxBack/Satellite Reign (USA).jpg
+assets.background: Background/Satellite Reign (USA).jpg
+assets.screenshot: Screenshot/Satellite Reign (USA).jpg
+assets.video: Video/Satellite Reign (USA).mp4
+x-co-op: No
+
+
+game: Screencheat (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/S/Screencheat (USA)/Screencheat (USA).json
+developer: Samurai Punk
+publisher: Surprise Attack
+genre: Shooter
+description:
+  Screencheat is a multiplayer first-person shooter video game, in which every
+  player's character model is invisible. However, each player is shown the
+  viewpoints of their opponent and must use this feature to deduce their
+  opponent's location. The maps are brightly colored in order to make it easier to
+  figure out where a player is. Screencheat includes several different gamemodes.
+  Some, including Deathmatch, King of the Hill, and Capture the Flag, are
+  multiplayer FPS standards. The game also has some unique gamemodes, such as One
+  Shot, where you can only reload after your opponent shoots, and Murder Mystery
+  in which you have to kill a specific opponent with a specific weapon.
+release: 2014-10-21
+players: 4
+assets.boxfront: BoxFront/Screencheat (USA).jpg
+assets.boxback: BoxBack/Screencheat (USA).jpg
+assets.background: Background/Screencheat (USA).jpg
+assets.screenshot: Screenshot/Screencheat (USA).jpg
+assets.video: Video/Screencheat (USA).mp4
+x-co-op: No
+
+
+game: Secret of the Magic Crystals Complete (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/S/Secret of the Magic Crystals Complete (USA)/Secret of the Magic Crystals Complete (USA).json
+developer: Artwaregames Inc.
+publisher: Artwaregames Inc.
+genre: Simulation;Virtual;Pet
+description:
+  In this game your horse-breeding farm is animated in a fantasy surroundings.
+  The game enables you to breed legendary horses such as Pegasus, Unicorn,
+  Fire-steed, Ice-steed and Demon-steed. You can buy more than 700 objects, and
+  you can make all kinds of horseshoes as well as lots of magical potions for
+  your horses through the game. If they are exhausted or ill, you are able to
+  cure and look after them. Your horses and colts need lots of care and that's
+  the way they recover their strengths. You can train your horses on four
+  different fields in five levels of difficulty. You can even breed them in
+  order to have more talented horses. Different horse races help you to gather
+  25 kinds of cups and you can send your horses to complete 30 exciting missions.
+release: 2010-02-03
+players: 1
+assets.boxfront: BoxFront/Secret of the Magic Crystals Complete (USA).jpg
+assets.boxback: BoxBack/Secret of the Magic Crystals Complete (USA).jpg
+assets.background: Background/Secret of the Magic Crystals Complete (USA).jpg
+assets.screenshot: Screenshot/Secret of the Magic Crystals Complete (USA).jpg
+assets.video: Video/Secret of the Magic Crystals Complete (USA).mp4
+x-co-op: No
+
+
+game: Solar 2 (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/S/Solar 2 (USA)/Solar 2 (USA).json
+developer: Murudai
+publisher: Murudai
+genre: Adventure;Life Simulation;Puzzle;Sandbox
+description:
+  In most games you see stars in the background, you shoot asteroids or you live
+  on planets. But in Solar 2 you ARE these objects! Enter a universe where you
+  must prove yourself to the resident god-like figure by doing its many bizarre
+  and varied tasks. Or just ignore it and see how big you can grow!
+  .
+  Solar 2 is an open-world, sandbox game set in an infinite abstract universe.
+  Play constructively: grow your system, nurture life on your planets and attack
+  enemy life in huge space battles. Play destructively: crash into other objects
+  and cause chaos, use your orbiting objects like wrecking balls, steal planets
+  from other systems.
+release: 2011-06-17
+players: 1
+assets.boxfront: BoxFront/Solar 2 (USA).jpg
+assets.boxback: BoxBack/Solar 2 (USA).jpg
+assets.background: Background/Solar 2 (USA).jpg
+assets.screenshot: Screenshot/Solar 2 (USA).jpg
+assets.video: Video/Solar 2 (USA).mp4
+x-co-op: No
+
+
+game: Splice (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/S/Splice (USA)/Splice (USA).json
+developer: Cipher Prime Studios
+publisher: Cipher Prime Studios
+genre: Puzzle
+description:
+  Splice is an experimental and artistic puzzler. Immerse yourself in its
+  microbial world and start splicing! Every level ("strand") consists of a number
+  of cells that you will need to rearrange into a target structure in several
+  moves ("splices"). Exploration and experimentation are key in determining how
+  the curious little cells react to each other. Predict the sequence of splices
+  you'll have to make in order to successfully arrange each strand. Re-sequence,
+  mutate, and splice your way through this unique puzzle experience, and you'll
+  exercise your ability to visualize sequential series of shapes over time. Solve
+  your way to the final strands and you'll be left with a heady sense of mental
+  accomplishment!
+  .
+  Splice is the fourth title out of Cipher Prime Studios, and was the Best Puzzle
+  Game winner of the 2011 Intel Level Up contest.
+release: 2012-06-13
+players: 1
+assets.boxfront: BoxFront/Splice (USA).jpg
+assets.boxback: BoxBack/Splice (USA).jpg
+assets.background: Background/Splice (USA).jpg
+assets.screenshot: Screenshot/Splice (USA).jpg
+assets.video: Video/Splice (USA).mp4
+x-co-op: No
+
+
+game: Splotches (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/S/Splotches (USA)/Splotches (USA).json
+developer: Jolly Crouton Media Ltd.
+publisher: Jolly Crouton Media Ltd.
+genre: Puzzle
+description:
+  Splotches a tricksy puzzle game about exploding paint. Mix together the primary
+  colors red, yellow, and blue in any order to make a Brownsplosion. Spread the
+  colors across conveyor belts, through portals, over filters, and into buckets on
+  your quest to destroy the mythical Rainbow Orb.
+  .
+  Includes over 100 spluzzles, and a spluzzle maker!
+release: 2018-12-03
+players: 1
+assets.boxfront: BoxFront/Splotches (USA).jpg
+assets.boxback: BoxBack/Splotches (USA).jpg
+assets.background: Background/Splotches (USA).jpg
+assets.screenshot: Screenshot/Splotches (USA).jpg
+assets.video: Video/Splotches (USA).mp4
+x-co-op: No
+
+
+game: Spookening, The (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/S/Spookening, The (USA)/Spookening, The (USA).json
+developer: Modesty
+publisher: Modesty
+genre: Action;General
+description:
+  Clifftown is haunted. The innocent villagers never asked for any of this
+  spookening to happen, but neither did you ask to die each and every night with
+  the knowledge that the villagers "Soular Power" could bring you back to life.
+  .
+  In The Spookening you enter as Hero Hermans ghost. Can you change Hermans fate,
+  and give him a chance for another day among the living?
+  .
+  By learning the rules of the world beyond, you will gain the skill and the wit
+  to take precious "soular power" from the living. By using this power and pouring
+  it into your former meat shell you get a chance to live once more.
+  .
+  But things on the other side are seldom this easy. Other beings from beyond view
+  you as a trespasser and will protect their turf. Vengeful spirits form when your
+  scaring goes too far, and demons living in the shadows will be after you.
+  .
+  Save yourself! At any cost?
+release: 2013-03-29
+players: 1
+assets.boxfront: BoxFront/Spookening, The (USA).jpg
+assets.boxback: BoxBack/Spookening, The (USA).jpg
+assets.background: Background/Spookening, The (USA).jpg
+assets.screenshot: Screenshot/Spookening, The (USA).jpg
+assets.video: Video/Spookening, The (USA).mp4
+x-co-op: No
+
+
+game: Strata (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/S/Strata (USA)/Strata (USA).json
+developer: Graveck
+publisher: Graveck
+genre: Puzzle
+description:
+  A truly unique puzzle experience that embraces simplicity, elegance, and
+  challenge. Strata paints a simple yet challenging puzzle game onto a
+  sophisticated canvas of color and sound. Test the limits of your brain by
+  completing complex weaves of color to solve the puzzles.
+  .
+  The goal of Strata is to strategically layer colored ribbons to match a pattern.
+  Using forethought and strategy you must sequence your moves correctly. Over time
+  patterns emerge and your tactics may evolve, but Strata will keep you on your
+  toes with increasingly difficult puzzles.
+release: 2013-09-12
+players: 1
+assets.boxfront: BoxFront/Strata (USA).jpg
+assets.boxback: BoxBack/Strata (USA).jpg
+assets.background: Background/Strata (USA).jpg
+assets.screenshot: Screenshot/Strata (USA).jpg
+assets.video: Video/Strata (USA).mp4
+x-co-op: No
+
+
+game: Super Hexagon (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/S/Super Hexagon (USA)/Super Hexagon (USA).json
+developer: Terry Cavanagh
+publisher: Terry Cavanagh
+genre: Action;Puzzle
+description:
+  Super Hexagon is a minimal action game by Terry Cavanagh (creator of VVVVVV) —
+  guide your triangle around a rotating hexagon and avoid the incoming lines. In
+  this deceptively simple game, you’ll have to deal with a spinning screen and
+  rapidly changing colors synced to brain-pumping music.
+release: 2012-11-27
+players: 1
+assets.boxfront: BoxFront/Super Hexagon (USA).jpg
+assets.boxback: BoxBack/Super Hexagon (USA).jpg
+assets.background: Background/Super Hexagon (USA).jpg
+assets.screenshot: Screenshot/Super Hexagon (USA).jpg
+assets.video: Video/Super Hexagon (USA).mp4
+x-co-op: No
+
+
+game: Super Meat Boy (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/S/Super Meat Boy (USA)/Super Meat Boy (USA).json
+developer: Team Meat
+publisher: Team Meat
+genre: Action;Platform
+description:
+  Super Meat Boy is a tough as nails platformer where you play as an animated cube
+  of meat who's trying to save his girlfriend (who happens to be made of bandages)
+  from an evil fetus in a jar wearing a tux.
+  .
+  .
+  Our meaty hero will leap from walls, over seas of buzz saws, through crumbling
+  caves and pools of old needles. Sacrificing his own well being to save his
+  damsel in distress. Super Meat Boy brings the old school difficulty of classic
+  NES titles like Mega Man 2, Ghost and Goblins and Super Mario Bros. 2 (The
+  Japanese one) and stream lines them down to the essential no BS straight forward
+  twitch reflex platforming.
+  .
+  .
+  Ramping up in difficulty from hard to soul crushing SMB will drag Meat boy
+  though haunted hospitals, salt factories and even hell itself. And if 300+
+  single player levels weren't enough SMB also throws in epic boss fights, a level
+  editor and tons of unlock able secrets, warp zones and hidden characters.
+release: 2010-11-30
+players: 1
+assets.boxfront: BoxFront/Super Meat Boy (USA).jpg
+assets.boxback: BoxBack/Super Meat Boy (USA).jpg
+assets.background: Background/Super Meat Boy (USA).jpg
+assets.screenshot: Screenshot/Super Meat Boy (USA).jpg
+assets.video: Video/Super Meat Boy (USA).mp4
+x-co-op: No
+
+
+game: Superbrothers - Sword & Sworcery EP (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/S/Superbrothers - Sword & Sworcery EP (USA)/Superbrothers - Sword & Sworcery EP (USA).json
+developer: Capybara Games
+publisher: Capybara Games
+genre: Adventure
+description:
+  Superbrothers: Sword & Sworcery EP is an exploratory action adventure with an
+  emphasis on audiovisual style. Traverse a mythic little realm, use a sword to do
+  battle & evoke sworcery to solve mystical musical mysteries. Co-operate with
+  friends via Twitter, experience a videogame world that is affected by moon
+  phases & help a wandering warrior monk complete her woeful errand.
+  .
+  Superbrothers: Sword & Sworcery EP features an album's worth of original music
+  by noted composer Jim Guthrie as well as artwork & designs by Superbrothers Inc,
+  crafted & engineered by videogame wizards at Capy in Toronto, Canada.
+release: 2010-12-01
+players: 1
+assets.boxfront: BoxFront/Superbrothers - Sword & Sworcery EP (USA).jpg
+assets.boxback: BoxBack/Superbrothers - Sword & Sworcery EP (USA).jpg
+assets.background: Background/Superbrothers - Sword & Sworcery EP (USA).jpg
+assets.screenshot: Screenshot/Superbrothers - Sword & Sworcery EP (USA).jpg
+assets.video: Video/Superbrothers - Sword & Sworcery EP (USA).mp4
+x-co-op: No
+
+
+game: TinyKeep (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/T/TinyKeep (USA)/TinyKeep (USA).json
+developer: Phigames
+publisher: Digital Tribe
+genre: Action;Role-Playing
+description:
+  In TinyKeep players will embrace the role of a hopeless prisoner held deep in a
+  forgotten dungeon who one day wakes up to find themselves mysteriously released.
+  Their savior is nowhere to be seen, but the cell door is broken and ajar,
+  tempting them with the sweet scent of freedom. With nothing but a flickering
+  lantern and a strange letter left behind by their in-mate, they must venture
+  into the darkness and escape TinyKeep!
+  .
+  Lure monsters into traps, knock over fire torches to set the dungeon alight and
+  set prisoners free to help you on your way. Enemies will work together in groups
+  to hunt you down, and some will flee from threats. You can also take advantage
+  of monster rivalries and lead them against each other, while you wait behind a
+  corner as the resulting chaos ensues. There are many ways to survive in
+  TinyKeep.
+  .
+  Features:
+  .
+  - Procedurally generated random dungeons – no playthrough is ever the same!
+  .
+  - Watch your step as it can be your last! Extremely challenging Permadeath
+  gameplay
+  .
+  - Explore a variety of beautiful but deadly environments. From the cold slimy
+  walls of the dungeon to the hot fiery pits of hell, TinyKeep is a visual treat.
+  .
+  - Battle a variety of intelligent enemies, each one determined to make your
+  escape as difficult as possible. Creatures work together to chase you down, flee
+  from threats and fight each other for dominance.
+  .
+  - Use traps and environmental hazards to your advantage - fire, spike pits and
+  rotating crushers hurt your enemies as well as you!
+  .
+  - Collect coins from fallen foes to purchase random player-altering Buffs that
+  just might give you the advantage you need to make it out alive.
+  .
+  - Rescue other captives to fight along side you, but beware as you never know
+  which ones have gone crazy trapped up in the Keep.
+  .
+  - Experience 3 separate endings to the game, depending on how you play.
+  .
+  - Hours of gameplay with Secrets that extend the experience – Discover items and
+  weapons that can slow down time, render you invincible or provide secret saves.
+  .
+  - New Game+ mode for players that prefer the extra challenge!
+release: 2014-09-29
+players: 1
+assets.boxfront: BoxFront/TinyKeep (USA).jpg
+assets.boxback: BoxBack/TinyKeep (USA).jpg
+assets.background: Background/TinyKeep (USA).jpg
+assets.screenshot: Screenshot/TinyKeep (USA).jpg
+assets.video: Video/TinyKeep (USA).mp4
+x-co-op: No
+
+
+game: Trine 2 - Complete Story (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/T/Trine 2 - Complete Story (USA)/Trine 2 - Complete Story (USA).json
+developer: Frozenbyte
+publisher: Frozenbyte
+genre: Platform;Puzzle
+description:
+  Trine 2: Complete Story fully integrates the Goblin Menace expansion campaign
+  and the all-new unlockable Dwarven Caverns level into one mighty fairytale.
+  .
+  Trine 2 is a sidescrolling game of action, puzzles and platforming where you
+  play as one of Three Heroes who make their way through dangers untold in a
+  fantastical fairytale world.
+  .
+  Join Amadeus the Wizard, Pontius the Knight and Zoya the Thief in their
+  adventure full of friendship, magic and betrayal.
+release: 2013-06-06
+players: 1
+assets.boxfront: BoxFront/Trine 2 - Complete Story (USA).jpg
+assets.boxback: BoxBack/Trine 2 - Complete Story (USA).jpg
+assets.background: Background/Trine 2 - Complete Story (USA).jpg
+assets.screenshot: Screenshot/Trine 2 - Complete Story (USA).jpg
+assets.video: Video/Trine 2 - Complete Story (USA).mp4
+x-co-op: No
+
+
+game: TumbleSeed (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/T/TumbleSeed (USA)/TumbleSeed (USA).json
+developer: Benedict Fritz
+publisher: aeiowu
+genre: Action
+description:
+  TumbleSeed is an indie action video game, created by developer Benedict Fritz
+  and designer Greg Wohlwend, in which the player balances a rolling seed on an
+  ascending, horizontally slanted vine past procedurally generated obstacles to
+  reach the top of a mountain. It is based on the mechanical arcade game Ice Cold
+  Beer and built partially through the Cards Against Humanity game incubation
+  program. TumbleSeed was released in May 2017 to generally favorable reviews on
+  macOS, Nintendo Switch, PlayStation 4, and Windows platforms. Critics, in
+  particular, appreciated their haptic sense of the rolling seed from the Nintendo
+  Switch's sensitive HD Rumble. Many reviewers noted TumbleSeed's intense and
+  sometimes uneven difficulty, which the developers hoped to address in a
+  post-release update. They credited this stigma and a tepid critical reception
+  for the game's slow sales, but were proud of their work.
+release: 2017-05-02
+players: 1
+assets.boxfront: BoxFront/TumbleSeed (USA).jpg
+assets.boxback: BoxBack/TumbleSeed (USA).jpg
+assets.background: Background/TumbleSeed (USA).jpg
+assets.screenshot: Screenshot/TumbleSeed (USA).jpg
+assets.video: Video/TumbleSeed (USA).mp4
+x-co-op: No
+
+
+game: Vertical Drop Heroes HD (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/V/Vertical Drop Heroes HD (USA)/Vertical Drop Heroes HD (USA).json
+developer: Nerdook Productions
+publisher: Digerati Distribution
+genre: Action;Platform;Role-Playing
+description:
+  Vertical Drop Heroes is a procedural platformer RPG hybrid with roguelike
+  elements, where your hero adventures through randomly generated stages. Armed
+  with a variety of skills and traits, you must use your cunning and reflexes to
+  survive the dangers of each stage, until you face the final boss and uncover the
+  truth behind the game!
+  .
+  FEATURES
+  .
+  - Randomly generated stages, enemies and bosses, resulting in a very replayable
+  game\n
+  - Artwork, coding and animation done by one person (me) in that unique Nerdook
+  style\n
+  - Split screen, local co-op, as well as local network coop!\n
+  - Destructible terrain and multiple uses for each skill gives you plenty of
+  options to approach the different situations generated\n
+  - Tons of skills, abilities, traits and powers that you can unlock in the game,
+  creating a different hero each time\n
+  - Unique combat system where proper planning is more important than quick
+  reflexes\n
+  - Persistent upgrades allow you to carry forward progress between games, with a
+  choice between increasingly expensive persistent upgrades or generally cheaper
+  temporary upgrades\n
+  - Every enemy and boss has been designed to provide challenge and variety
+  .
+  BACKGROUND\n
+  This is a HD remake of GIGANTIC proportions for Vertical Drop Heroes, the
+  original webgame with over 2 million plays... from Nerdook, a one-man developer
+  with a portfolio of games that has accumulated more than 50 million plays
+  worldwide! Bigger and better in every way, Vertical Drop Heroes HD revamps the
+  entire game into an epic, randomly generated platformer RPG!
+release: 2014-07-25
+players: 2
+assets.boxfront: BoxFront/Vertical Drop Heroes HD (USA).jpg
+assets.boxback: BoxBack/Vertical Drop Heroes HD (USA).jpg
+assets.background: Background/Vertical Drop Heroes HD (USA).jpg
+assets.screenshot: Screenshot/Vertical Drop Heroes HD (USA).jpg
+assets.video: Video/Vertical Drop Heroes HD (USA).mp4
+x-co-op: Yes
+
+
+game: Vincere Totus Astrum (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/V/Vincere Totus Astrum (USA)/Vincere Totus Astrum (USA).json
+developer: Gamesare Studios
+publisher: Gamesare Studios
+genre: Simulation;General
+description:
+  Vincere Totus Astrum or "To Conquer all Stars" is the first "Casual 4x Strategy
+  Game" on iOS devices. Prepare to conquer the known galaxy in this easy to pick
+  fast paced game of galactic intrigue!Blending galaxy conquering with quick and
+  easy gameplay. Pick one of five races and set out to expand your one world into
+  a vast empire. Research new techs, build colony ships, and begin to spread out,
+  but be careful you aren't the only race on the rise. The Universe is a small
+  place and you will have to either negotiate, trade or battle other empires into
+  submission.Prepare to lay your claim amongst the galaxy as you attempt "To
+  Conquer all Stars"
+release: 2011-04-25
+players: 1
+assets.boxfront: BoxFront/Vincere Totus Astrum (USA).jpg
+assets.boxback: BoxBack/Vincere Totus Astrum (USA).jpg
+assets.background: Background/Vincere Totus Astrum (USA).jpg
+assets.screenshot: Screenshot/Vincere Totus Astrum (USA).jpg
+assets.video: Video/Vincere Totus Astrum (USA).mp4
+x-co-op: No
+
+
+game: Virus Named Tom, A (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/V/Virus Named Tom, A (USA)/Virus Named Tom, A (USA).json
+developer: Misfits Attic
+publisher: Misfits Attic
+genre: Action;Puzzle
+description:
+  An Action-puzzler. The puzzle comes from rearrange circuits to spread the virus.
+  The Action comes from dodging anti-virus drones while doing it. It's one of the
+  few puzzle games out there where you can play co-operatively (with up to 3
+  friends). But if you tire of working together, there is a battle mode where you
+  can take on your friends to see who is the supreme virus.
+release: 2012-08-01
+players: 4
+assets.boxfront: BoxFront/Virus Named Tom, A (USA).jpg
+assets.boxback: BoxBack/Virus Named Tom, A (USA).jpg
+assets.background: Background/Virus Named Tom, A (USA).jpg
+assets.screenshot: Screenshot/Virus Named Tom, A (USA).jpg
+assets.video: Video/Virus Named Tom, A (USA).mp4
+x-co-op: Yes
+
+
+game: Warlock of Firetop Mountain, The (USA)
+file: $ROM_JSON_ROOT/Computer/Humble Bundle/W/Warlock of Firetop Mountain, The (USA)/Warlock of Firetop Mountain, The (USA).json
+developer: Tin Man Games
+publisher: Tin Man Games
+genre: Role-Playing
+description:
+  The Warlock of Firetop Mountain is a tabletop adventure come to life! This
+  fantasy solo RPG combines unique, simultaneous turn-based combat with a journey
+  that changes based on each figurine you take into Firetop Mountain! Which hero
+  will you take into Zagor's lair THIS time?
+  .
+  The original 1982 Fighting Fantasy gamebook paperback, written by Ian
+  Livingstone and Steve Jackson, has been transformed into an epic table-top
+  adventure game, with new areas to explore, characters to meet, and of course,
+  monsters to slay! Zagor's home assembles right before your eyes as you travel
+  deep into the belly of the mountain.
+  .
+  Each character has their own motivations for being in Firetop Mountain, changing
+  the way the gamebook is written and choices presented. Combat is fought using
+  the digital miniatures in a simultaneous, turn-based system called GridBluff,
+  and the game includes over 100 unique hero and monster figurines to discover.
+release: 2016-08-31
+players: 1
+assets.boxfront: BoxFront/Warlock of Firetop Mountain, The (USA).jpg
+assets.boxback: BoxBack/Warlock of Firetop Mountain, The (USA).jpg
+assets.background: Background/Warlock of Firetop Mountain, The (USA).jpg
+assets.screenshot: Screenshot/Warlock of Firetop Mountain, The (USA).jpg
+assets.video: Video/Warlock of Firetop Mountain, The (USA).mp4
+x-co-op: No
+
+

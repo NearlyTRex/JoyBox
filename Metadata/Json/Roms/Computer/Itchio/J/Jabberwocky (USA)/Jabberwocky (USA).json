@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Jabberwocky (USA).exe"
+    ],
+    "transform_file": "Jabberwocky (USA).exe"
+}

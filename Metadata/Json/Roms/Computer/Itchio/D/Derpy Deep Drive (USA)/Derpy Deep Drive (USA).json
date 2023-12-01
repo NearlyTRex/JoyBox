@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Derpy Deep Drive (USA).exe"
+    ],
+    "transform_file": "Derpy Deep Drive (USA).exe"
+}

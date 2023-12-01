@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/BulletHell Planes (USA).exe"
+    ],
+    "transform_file": "BulletHell Planes (USA).exe"
+}

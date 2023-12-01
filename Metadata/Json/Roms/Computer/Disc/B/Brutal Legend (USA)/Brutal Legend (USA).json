@@ -1,0 +1,18 @@
+{
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_TWO_ROOT",
+                "skip_existing": true,
+                "to": "$DISC_ONE_ROOT",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_ONE_ROOT",
+                "to": "$HDD_MAIN_ROOT/Brutal Legend",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Brutal Legend (USA).m3u"
+}

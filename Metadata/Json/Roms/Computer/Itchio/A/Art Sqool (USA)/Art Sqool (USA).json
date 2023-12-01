@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Art Sqool (USA).exe"
+    ],
+    "transform_file": "Art Sqool (USA).exe"
+}

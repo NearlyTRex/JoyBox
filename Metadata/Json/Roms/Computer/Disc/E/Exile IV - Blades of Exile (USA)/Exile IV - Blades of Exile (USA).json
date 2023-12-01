@@ -1,0 +1,30 @@
+{
+    "is_win31": true,
+    "main_game_win31_exe": [
+        "EXILE4/BLADES.EXE"
+    ],
+    "main_game_win31_exe_cwd": {
+        "EXILE4/BLADES.EXE": "EXILE4"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_ONE_ROOT",
+                "to": "$DOS_MAIN_ROOT/C/EXILE4",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT",
+                "to": "$DOS_MAIN_ROOT/C",
+                "type": "copy"
+            }
+        ]
+    },
+    "sync": {
+        "data": [
+            "*.SAV"
+        ],
+        "search": "EXILE4/BLADES.EXE"
+    },
+    "transform_file": "Exile IV - Blades of Exile (USA).m3u"
+}

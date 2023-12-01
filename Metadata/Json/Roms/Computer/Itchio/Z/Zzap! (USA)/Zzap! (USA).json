@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Zzap! (USA).exe"
+    ],
+    "transform_file": "Zzap! (USA).exe"
+}

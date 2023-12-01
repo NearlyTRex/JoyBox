@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Midnight Manor (USA).exe"
+    ],
+    "transform_file": "Midnight Manor (USA).exe"
+}

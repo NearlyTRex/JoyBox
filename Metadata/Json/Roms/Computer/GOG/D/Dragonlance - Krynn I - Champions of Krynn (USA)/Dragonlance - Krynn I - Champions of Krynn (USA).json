@@ -1,0 +1,11 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/ks_champions_adv_jour_pdf.zip",
+        "$SETUP_MAIN_ROOT/extra/ks_champions_cluebook_pdf.zip",
+        "$SETUP_MAIN_ROOT/extra/ks_champions_manual_pdf.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_champions_of_krynn_1.2_(28043).exe"
+    ],
+    "transform_file": "setup_champions_of_krynn_1.2_(28043).exe"
+}

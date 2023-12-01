@@ -1,0 +1,27 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Resident Evil 0 HD (USA).exe"
+    ],
+    "main_game_exe": [
+        "Resident Evil 0 HD/re0hd.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Resident Evil 0 HD/re0hd.exe": "Resident Evil 0 HD"
+    },
+    "sandbox": {
+        "wine": {
+            "overrides": {
+                "game": [
+                    "d3d9,d3d10core,d3d11,dxgi=n,b"
+                ]
+            },
+            "tricks": {
+                "game": [
+                    "wmp11"
+                ]
+            },
+            "use_dxvk": true
+        }
+    },
+    "transform_file": "Resident Evil 0 HD (USA).exe"
+}

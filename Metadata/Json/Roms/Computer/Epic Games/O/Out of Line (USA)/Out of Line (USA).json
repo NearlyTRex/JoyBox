@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Out of Line (USA).exe"
+    ],
+    "transform_file": "Out of Line (USA).exe"
+}

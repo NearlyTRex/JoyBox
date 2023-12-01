@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Penguins Arena (USA).exe"
+    ],
+    "transform_file": "Penguins Arena (USA).exe"
+}

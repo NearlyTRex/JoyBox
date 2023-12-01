@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Anodyne (USA).exe"
+    ],
+    "transform_file": "Anodyne (USA).exe"
+}

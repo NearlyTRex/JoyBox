@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Compel (USA).exe"
+    ],
+    "transform_file": "Compel (USA).exe"
+}

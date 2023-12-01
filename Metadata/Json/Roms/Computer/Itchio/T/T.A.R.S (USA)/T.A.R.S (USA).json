@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/T.A.R.S (USA).exe"
+    ],
+    "transform_file": "T.A.R.S (USA).exe"
+}

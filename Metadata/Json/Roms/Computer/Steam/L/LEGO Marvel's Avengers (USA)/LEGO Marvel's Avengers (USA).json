@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/LEGO Marvel's Avengers (USA).exe"
+    ],
+    "transform_file": "LEGO Marvel's Avengers (USA).exe"
+}

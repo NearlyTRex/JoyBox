@@ -1,0 +1,14 @@
+{
+    "installer_exe": "$DISC_MAIN_ROOT/AOESETUP.EXE",
+    "steps": {
+        "postinstall": [
+            {
+                "from": "$SETUP_MAIN_ROOT/fix/*",
+                "to": "$HDD_MAIN_ROOT/Program Files (x86)/Microsoft Games/Age of Empires",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Age of Empires Gold Edition (USA).chd",
+    "winver": "winxp"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Invisible, Inc. (USA).exe"
+    ],
+    "transform_file": "Invisible, Inc. (USA).exe"
+}

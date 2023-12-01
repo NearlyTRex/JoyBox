@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Rym 9000 (USA).exe"
+    ],
+    "transform_file": "Rym 9000 (USA).exe"
+}

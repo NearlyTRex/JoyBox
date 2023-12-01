@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Tumbleblox (USA).exe"
+    ],
+    "transform_file": "Tumbleblox (USA).exe"
+}

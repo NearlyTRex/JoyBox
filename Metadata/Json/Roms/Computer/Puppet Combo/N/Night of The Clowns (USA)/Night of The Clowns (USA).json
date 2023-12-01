@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Night of The Clowns (USA).exe"
+    ],
+    "transform_file": "Night of The Clowns (USA).exe"
+}

@@ -1,0 +1,9 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/call_of_cthulhu_wallpaper.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_call_of_cthulhu_4.15.2_(64bit)_(33442).exe"
+    ],
+    "transform_file": "setup_call_of_cthulhu_4.15.2_(64bit)_(33442).exe"
+}

@@ -1,0 +1,18 @@
+{
+    "main_game_exe": [
+        "Speculum Mortis/Speculum.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Speculum Mortis/Speculum.exe": "Speculum Mortis"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$HDD_MAIN_ROOT/Speculum Mortis",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Speculum Mortis - Regret (USA).chd"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Arlo The Rabbit (USA).exe"
+    ],
+    "transform_file": "Arlo The Rabbit (USA).exe"
+}

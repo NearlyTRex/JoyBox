@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Bit Rat - Singularity (USA).exe"
+    ],
+    "transform_file": "Bit Rat - Singularity (USA).exe"
+}

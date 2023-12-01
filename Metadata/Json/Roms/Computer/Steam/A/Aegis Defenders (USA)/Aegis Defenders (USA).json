@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Aegis Defenders (USA).exe"
+    ],
+    "transform_file": "Aegis Defenders (USA).exe"
+}

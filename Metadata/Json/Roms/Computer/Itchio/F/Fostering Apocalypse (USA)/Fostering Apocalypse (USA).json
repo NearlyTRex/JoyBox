@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Fostering Apocalypse (USA).exe"
+    ],
+    "transform_file": "Fostering Apocalypse (USA).exe"
+}

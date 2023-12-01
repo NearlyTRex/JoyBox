@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Model Builder (USA).exe"
+    ],
+    "transform_file": "Model Builder (USA).exe"
+}

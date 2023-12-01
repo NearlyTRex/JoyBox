@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Sunset (USA).exe"
+    ],
+    "transform_file": "Sunset (USA).exe"
+}

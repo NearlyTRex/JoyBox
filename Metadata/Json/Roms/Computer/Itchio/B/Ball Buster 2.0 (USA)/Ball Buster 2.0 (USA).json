@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Ball Buster 2.0 (USA).exe"
+    ],
+    "transform_file": "Ball Buster 2.0 (USA).exe"
+}

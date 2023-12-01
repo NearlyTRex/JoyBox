@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Saving You (USA).exe"
+    ],
+    "transform_file": "Saving You (USA).exe"
+}

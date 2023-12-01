@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/BloodBlast VR (USA).exe"
+    ],
+    "transform_file": "BloodBlast VR (USA).exe"
+}

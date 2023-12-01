@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Wytchwood (USA).exe"
+    ],
+    "transform_file": "Wytchwood (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/DEEEER Simulator (USA).exe"
+    ],
+    "transform_file": "DEEEER Simulator (USA).exe"
+}

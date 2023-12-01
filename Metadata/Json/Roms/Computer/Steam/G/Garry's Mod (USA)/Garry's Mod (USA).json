@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Garry's Mod (USA).exe"
+    ],
+    "transform_file": "Garry's Mod (USA).exe"
+}

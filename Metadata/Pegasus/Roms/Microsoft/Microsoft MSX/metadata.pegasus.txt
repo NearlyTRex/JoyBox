@@ -1,0 +1,493 @@
+collection: Microsoft MSX
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Microsoft MSX" {file.path}
+
+
+game: Antarctic Adventure (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Antarctic Adventure (Japan)/Antarctic Adventure (Japan).json
+developer: Konami
+publisher: Konami
+genre: Action
+description:
+  The player takes the role of an Antarctic penguin, racing to disparate research
+  stations owned by different countries in Antarctica. Penta must reach the next
+  station before time runs out while avoiding sea lions and breaks in the ice.
+  Throughout the levels, fish jump out of ice holes and can be caught for bonus
+  points. The game, like many early video games, has no ending – when the player
+  reaches the last station, the game starts from the first level again, but with
+  increased difficulty.
+release: 1983-12-01
+players: 1
+assets.boxfront: BoxFront/Antarctic Adventure (Japan).jpg
+assets.boxback: BoxBack/Antarctic Adventure (Japan).jpg
+assets.background: Background/Antarctic Adventure (Japan).jpg
+assets.screenshot: Screenshot/Antarctic Adventure (Japan).jpg
+assets.video: Video/Antarctic Adventure (Japan).mp4
+x-co-op: No
+
+
+game: Athletic Land (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Athletic Land (Japan)/Athletic Land (Japan).json
+developer: Konami
+publisher: Konami
+genre: Action
+description:
+  On your mark! Get set! GO! Your physical prowess is tested to the limit all
+  hazards. You can almost hear the wild shouts of the crowd ring in your ears as
+  they urge you on to the goal line. Exciting fun for all ages!
+release: 1984-05-01
+players: 2
+assets.boxfront: BoxFront/Athletic Land (Japan).jpg
+assets.boxback: BoxBack/Athletic Land (Japan).jpg
+assets.background: Background/Athletic Land (Japan).jpg
+assets.screenshot: Screenshot/Athletic Land (Japan).jpg
+assets.video: Video/Athletic Land (Japan).mp4
+x-co-op: No
+
+
+game: Hyper Sports 2 (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Hyper Sports 2 (Japan)/Hyper Sports 2 (Japan).json
+developer: Konami
+publisher: Konami
+genre: Sports
+description:
+  Three tough events await in this joystick-waggling action game. The full
+  sequence of events is - skeet shooting, archery and weightlifting. You must
+  complete each event in order to be allowed onto the next one.
+release: 1984-11-01
+players: 2
+assets.boxfront: BoxFront/Hyper Sports 2 (Japan).jpg
+assets.boxback: BoxBack/Hyper Sports 2 (Japan).jpg
+assets.background: Background/Hyper Sports 2 (Japan).jpg
+assets.screenshot: Screenshot/Hyper Sports 2 (Japan).jpg
+assets.video: Video/Hyper Sports 2 (Japan).mp4
+x-co-op: No
+
+
+game: Hyper Sports 3 (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Hyper Sports 3 (Japan)/Hyper Sports 3 (Japan).json
+developer: Konami
+publisher: Konami
+genre: Sports
+description:
+  Four new challenging sports events await in this third and last installment of
+  the Hyper Sports series. The sports to play in this edition are cycling, the
+  triple jump, curling and pole jumping. To continue to the next event you must
+  complete each event within the events qualification criteria.
+release: 1985-09-01
+players: 2
+assets.boxfront: BoxFront/Hyper Sports 3 (Japan).jpg
+assets.boxback: BoxBack/Hyper Sports 3 (Japan).jpg
+assets.background: Background/Hyper Sports 3 (Japan).jpg
+assets.screenshot: Screenshot/Hyper Sports 3 (Japan).jpg
+assets.video: Video/Hyper Sports 3 (Japan).mp4
+x-co-op: No
+
+
+game: Knightmare - Majou Densetsu (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Knightmare - Majou Densetsu (Japan)/Knightmare - Majou Densetsu (Japan).json
+developer: Konami
+publisher: Konami
+genre: Shooter
+description:
+  Knightmare is a 1986 MSX vertical scrolling shooter computer game. The player is
+  a knight, Popolon, who has to fight his way through several levels to defeat
+  Hudnos and rescue Aphrodite.
+  .
+  Knightmare was an innovative upward-scrolling shoot 'em up game on the MSX
+  system. The top-view graphics were considered very sophisticated for its time,
+  similar to other MSX games such as Nemesis and Penguin Adventure.
+release: 1986-01-01
+players: 1
+assets.boxfront: BoxFront/Knightmare - Majou Densetsu (Japan).jpg
+assets.boxback: BoxBack/Knightmare - Majou Densetsu (Japan).jpg
+assets.background: Background/Knightmare - Majou Densetsu (Japan).jpg
+assets.screenshot: Screenshot/Knightmare - Majou Densetsu (Japan).jpg
+assets.video: Video/Knightmare - Majou Densetsu (Japan).mp4
+x-co-op: No
+
+
+game: Konami's Billiards (Europe)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Konami's Billiards (Europe)/Konami's Billiards (Europe).json
+developer: Konami
+publisher: Konami
+genre: Sports
+description:
+  Billiards is a pool simulations game. Pocket ball, one of the most famous
+  versions of billiards in the world, is now available on your computer screen.
+  Discover the excitement of balls colliding, the silence and concentration of the
+  billiard room. This game has a dual player mode.
+release: 1984-01-01
+players: 2
+assets.boxfront: BoxFront/Konami's Billiards (Europe).jpg
+assets.boxback: BoxBack/Konami's Billiards (Europe).jpg
+assets.background: Background/Konami's Billiards (Europe).jpg
+assets.screenshot: Screenshot/Konami's Billiards (Europe).jpg
+assets.video: Video/Konami's Billiards (Europe).mp4
+x-co-op: No
+
+
+game: Konami's Boxing (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Konami's Boxing (Japan)/Konami's Boxing (Japan).json
+developer: Konami
+publisher: Konami
+genre: Fighting;Sports
+description:
+  Go the distance! Battle your way to the world heavyweight boxing championship!!
+release: 1985-04-01
+players: 2
+assets.boxfront: BoxFront/Konami's Boxing (Japan).jpg
+assets.boxback: BoxBack/Konami's Boxing (Japan).jpg
+assets.background: Background/Konami's Boxing (Japan).jpg
+assets.screenshot: Screenshot/Konami's Boxing (Japan).jpg
+assets.video: Video/Konami's Boxing (Japan).mp4
+x-co-op: No
+
+
+game: Konami's Golf (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Konami's Golf (Japan)/Konami's Golf (Japan).json
+developer: Konami
+publisher: Konami
+genre: Sports
+description:
+  Visual simulation just like the real thing! Realistic detail in a true-to-life
+  golf game. Use your golfing skills to get a hole-in-one!
+release: 1985-04-01
+players: 2
+assets.boxfront: BoxFront/Konami's Golf (Japan).jpg
+assets.boxback: BoxBack/Konami's Golf (Japan).jpg
+assets.background: Background/Konami's Golf (Japan).jpg
+assets.screenshot: Screenshot/Konami's Golf (Japan).jpg
+assets.video: Video/Konami's Golf (Japan).mp4
+x-co-op: No
+
+
+game: Konami's Ping-Pong (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Konami's Ping-Pong (Japan)/Konami's Ping-Pong (Japan).json
+developer: Konami
+publisher: Konami
+genre: Sports
+description:
+  Ping Pong recreates the fast-paced sport of table tennis. To win each match you
+  must get to 10 points with a 2 point lead - if the scores reach 10-9 the game
+  goes on until someone has a 2 point lead or reaches 15, in a similar manner to
+  tennis. There are nine skill levels to beat, with increasing abilities as the
+  game goes on. The human player has the advantage of serving first, and as the
+  serve reverses every five points, you are guaranteed to have more chances to
+  serve than your opponent (remember the significance of 10 and 15 in the
+  scoring). The points system rewards long rallies and large winning margins, as
+  you get points for each hit, for each point won, and for each point of the
+  winning margin.
+release: 1985-04-01
+players: 2
+assets.boxfront: BoxFront/Konami's Ping-Pong (Japan).jpg
+assets.boxback: BoxBack/Konami's Ping-Pong (Japan).jpg
+assets.background: Background/Konami's Ping-Pong (Japan).jpg
+assets.screenshot: Screenshot/Konami's Ping-Pong (Japan).jpg
+assets.video: Video/Konami's Ping-Pong (Japan).mp4
+x-co-op: No
+
+
+game: Magical Tree (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Magical Tree (Japan)/Magical Tree (Japan).json
+developer: Konami
+publisher: Konami
+genre: Platform
+description:
+  Magical Tree (マジカル ツリー, Majikaru tsurī) is a vertically scrolling platform game
+  developed by Konami for the MSX home computer, and published in 1984. Konami
+  published a Brazilian Portuguese version, Árvore Mágica, in 1985.
+release: 1985-01-01
+players: 2
+assets.boxfront: BoxFront/Magical Tree (Japan).jpg
+assets.boxback: BoxBack/Magical Tree (Japan).jpg
+assets.background: Background/Magical Tree (Japan).jpg
+assets.screenshot: Screenshot/Magical Tree (Japan).jpg
+assets.video: Video/Magical Tree (Japan).mp4
+x-co-op: No
+
+
+game: Mopiranger (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Mopiranger (Japan)/Mopiranger (Japan).json
+developer: Konami
+publisher: Konami
+genre: Action
+description:
+  The peaceful land of the Mopira have been invaded by the Razons. In this
+  platform game you 'll play Mopiranger and you have to save the young Moplits,
+  who have been kidnapped by the dastardly Razons. The levels are build in a
+  maze-like pattern in which you have to find and rescue the young Moplits from
+  the hostile Razons. Using the obstacles present in the game you can block the
+  Razons, but also lock yourself in...
+release: 1985-01-01
+players: 1
+assets.boxfront: BoxFront/Mopiranger (Japan).jpg
+assets.boxback: BoxBack/Mopiranger (Japan).jpg
+assets.background: Background/Mopiranger (Japan).jpg
+assets.screenshot: Screenshot/Mopiranger (Japan).jpg
+assets.video: Video/Mopiranger (Japan).mp4
+x-co-op: No
+
+
+game: Mugen Senshi Valis - The Fantasm Soldier (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Mugen Senshi Valis - The Fantasm Soldier (Japan)/Mugen Senshi Valis - The Fantasm Soldier (Japan).json
+developer: Telenet Japan
+publisher: Telenet Japan Co., Ltd.
+genre: Action
+description:
+  Yuuko Asou starts another school day as normal. When school ends, it suddenly
+  starts to rain, so Yuuko tries to find refuge. In doing so, she encounters a
+  fellow student, Reiko Kirishima, who talks with her and leaves her with many
+  unanswered questions. Inmediately afterward, Yuuko is attacked by a monster but
+  a sword appears which she uses to protect herself. She tries to run home only to
+  see that the entire city is being attacked by monsters. After defeating them,
+  queen Valia appears in front of Yuuko telling her that the sword named Valis
+  summoned her to save the dream world, Vecanti, from the claws of the evil
+  emperor Rogles, so she can also save the human world.
+release: 1986-12-20
+players: 1
+assets.boxfront: BoxFront/Mugen Senshi Valis - The Fantasm Soldier (Japan).jpg
+assets.boxback: BoxBack/Mugen Senshi Valis - The Fantasm Soldier (Japan).jpg
+assets.background: Background/Mugen Senshi Valis - The Fantasm Soldier (Japan).jpg
+assets.screenshot: Screenshot/Mugen Senshi Valis - The Fantasm Soldier (Japan).jpg
+assets.video: Video/Mugen Senshi Valis - The Fantasm Soldier (Japan).mp4
+x-co-op: No
+
+
+game: Nemesis (Japan, Europe)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Nemesis (Japan, Europe)/Nemesis (Japan, Europe).json
+developer: Konami
+publisher: Konami
+genre: Shooter
+description:
+  Gradius (グラディウス, Guradiusu) is a 1985 horizontally scrolling shoot 'em up video
+  game developed and published by Konami, originally released as a coin-operated
+  arcade game in 1985. It was the first game in the Gradius series of shoot 'em
+  ups. In Gradius, the player maneuvers a spacecraft known as the Vic Viper that
+  must defend itself from the various alien enemies. The game features a power-up
+  system called the "power meter", based upon collecting capsules to 'purchase'
+  additional weapons.
+release: 1985-05-29
+players: 2
+assets.boxfront: BoxFront/Nemesis (Japan, Europe).jpg
+assets.boxback: BoxBack/Nemesis (Japan, Europe).jpg
+assets.background: Background/Nemesis (Japan, Europe).jpg
+assets.screenshot: Screenshot/Nemesis (Japan, Europe).jpg
+assets.video: Video/Nemesis (Japan, Europe).mp4
+x-co-op: No
+
+
+game: Nemesis 2 (Japan, Europe)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Nemesis 2 (Japan, Europe)/Nemesis 2 (Japan, Europe).json
+developer: Konami
+publisher: Konami
+genre: Shooter
+description:
+  In the year 6664 Dr. Venom, the director of the Space Science Agency, was exiled
+  to the planet Sard for his involvement in a failed rebellion and illegal
+  scientific activities. One year later, he joined forces with the Bacterion
+  invaders, escaped Sard, and took control of the space surrounding the planet
+  Gradius. In 6666, the local government sends Colonel James Burton on the newest
+  hyperspace fighter known as Metalion. The goal is clear: stop Dr. Venom and the
+  Bacterion army before they conquer the planet.
+  .
+  Nemesis 2 (Gradius 2 in Japan) is a side-scrolling shoot-em-up. The gameplay is
+  for the most part similar to that of Gradius. The player-controlled ship can
+  alternate between three main weapons: Missile, Double, and Laser. Extra weapons
+  such as various types of lasers, napalm missiles, reflex ring, and back beam can
+  be collected as power-ups and equipped. In addition, special power-ups can be
+  acquired, their effects ranging from slowing down enemies to turning the
+  Metalion into an invincible drill-like machine for a brief amount of time. Boss
+  battles are followed by optional mini-stages, which grant the player new weapons
+  if completed successfully.
+release: 1987-01-01
+players: 2
+assets.boxfront: BoxFront/Nemesis 2 (Japan, Europe).jpg
+assets.boxback: BoxBack/Nemesis 2 (Japan, Europe).jpg
+assets.background: Background/Nemesis 2 (Japan, Europe).jpg
+assets.screenshot: Screenshot/Nemesis 2 (Japan, Europe).jpg
+assets.video: Video/Nemesis 2 (Japan, Europe).mp4
+x-co-op: No
+
+
+game: Nemesis 3 - The Eve of Destruction (Japan, Europe)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Nemesis 3 - The Eve of Destruction (Japan, Europe)/Nemesis 3 - The Eve of Destruction (Japan, Europe).json
+developer: Konami
+publisher: Konami
+genre: Shooter
+description:
+  Gofer no Yabou: Episode II (ゴーファーの野望エピソードII lit. Gofer's Ambition Episode II) is
+  a side-scrolling shooter developed and published by Konami for the MSX home
+  computer in 1988. It was published in Europe as Nemesis 3: The Eve of
+  Destruction later on the same year. The game is part of the long running Gradius
+  series, and is a spin-off of the arcade game Gradius II: Gofer no Yabou. It is
+  the second game of the series to be released exclusively for the MSX after
+  Gradius 2. In terms of the story; the game is a sequel to Gradius II and
+  Salamander. The game takes place almost 200 years after the crisis with Dr.
+  Venom and James Burton has died in the year 6718. The Vic Viper is replaced by a
+  new ship called the Vixen (4 classes); piloted by David Burton, a direct
+  descendent of James who is assisted by his AI Gaudie.
+release: 1988-01-01
+players: 2
+assets.boxfront: BoxFront/Nemesis 3 - The Eve of Destruction (Japan, Europe).jpg
+assets.boxback: BoxBack/Nemesis 3 - The Eve of Destruction (Japan, Europe).jpg
+assets.background: Background/Nemesis 3 - The Eve of Destruction (Japan, Europe).jpg
+assets.screenshot: Screenshot/Nemesis 3 - The Eve of Destruction (Japan, Europe).jpg
+assets.video: Video/Nemesis 3 - The Eve of Destruction (Japan, Europe).mp4
+x-co-op: No
+
+
+game: Road Fighter (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Road Fighter (Japan)/Road Fighter (Japan).json
+developer: Konami
+publisher: Konami
+genre: Racing
+description:
+  A top view racing game. You have to reach the finish line before time runs out.
+  Don't crash into the wall, cars or trucks. Because if you do you will lose
+  gasoline. You can get additional gasoline by picking up fuel items. Especially
+  avoid the purple cars, they do change lanes! And remember... oil makes road
+  slippery...
+release: 1985-01-01
+players: 1
+assets.boxfront: BoxFront/Road Fighter (Japan).jpg
+assets.boxback: BoxBack/Road Fighter (Japan).jpg
+assets.background: Background/Road Fighter (Japan).jpg
+assets.screenshot: Screenshot/Road Fighter (Japan).jpg
+assets.video: Video/Road Fighter (Japan).mp4
+x-co-op: No
+
+
+game: Sky Jaguar (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Sky Jaguar (Japan)/Sky Jaguar (Japan).json
+developer: Konami
+publisher: Konami
+genre: Shooter
+description:
+  Vertical shooter. When a weakened and vulnerable Earth is invaded by the vicious
+  Zephyr army, the planet's only hope is a fleet of powerful ships, the Sky
+  Jaguars. It'll take sharp reflexes and amazing skills to survive the Zephyrians'
+  unrelenting assault... can you last long enough to discover and destroy the
+  enemy's hidden headquarters?
+release: 1984-01-01
+players: 1
+assets.boxfront: BoxFront/Sky Jaguar (Japan).jpg
+assets.boxback: BoxBack/Sky Jaguar (Japan).jpg
+assets.background: Background/Sky Jaguar (Japan).jpg
+assets.screenshot: Screenshot/Sky Jaguar (Japan).jpg
+assets.video: Video/Sky Jaguar (Japan).mp4
+x-co-op: No
+
+
+game: Super Cobra (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Super Cobra (Japan)/Super Cobra (Japan).json
+developer: Konami
+publisher: Konami
+genre: Shooter
+description:
+  Super Cobra (スーパーコブラ, Sūpā Kobura) is a 1981 arcade game, the sequel to popular
+  horizontally scrolling shooter Scramble, Super Cobra was developed by Konami and
+  manufactured and distributed by Stern in North America. It is similar in concept
+  to its predecessor, but much more difficult.
+release: 1981-03-01
+players: 2
+assets.boxfront: BoxFront/Super Cobra (Japan).jpg
+assets.boxback: BoxBack/Super Cobra (Japan).jpg
+assets.background: Background/Super Cobra (Japan).jpg
+assets.screenshot: Screenshot/Super Cobra (Japan).jpg
+assets.video: Video/Super Cobra (Japan).mp4
+x-co-op: No
+
+
+game: Twin Bee (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Twin Bee (Japan)/Twin Bee (Japan).json
+developer: Konami
+publisher: Konami
+genre: Shooter
+description:
+  TwinBee is a vertical scrolling shooter. The players control cartoon-like
+  spacecrafts with anthropomorphic arms, player one being TwinBee and player two
+  being WinBee. The spacecrafts can be moved in all 8 directions, with one button
+  for regular shooting flying enemies and one button for dropping ground bombs.
+  .
+  Power-ups in the form of bells can be collected by shooting clouds. The color of
+  the bell will change if it is shot by the player, assuming one of the possible
+  colors:
+  .
+  Yellow: grants bonus points;\n
+  White: upgrades player's guns to a twin cannon;\n
+  Blue: increases player's speed (up to five levels);\n
+  Green: creates image copies of the craft for more firepower;\n
+  Red: provides a shield to sustain damage.
+  .
+  The green and red bells cannot be combined. Alternate power ups can be collected
+  from the ground, such as an alternate bell which upgrades the craft with a three
+  way gun and a star which destroys all enemies on screen.
+  .
+  One shot in the middle section of the craft will destroy it. Shots which hit one
+  of the craft's arms will destroy only the arm. If both arms are lost, the craft
+  won't be able to shoot bombs anymore and will have to be repaired by an
+  ambulance.
+  .
+  In the two-player mode, TwinBee (cyan craft) and WinBee (red craft) have the
+  same speed and they can join "hand-to-hand" and fire a super blast. Also in two
+  player mode, if one craft is hit by the other from behind, it will fire four
+  multi-directional shots.
+release: 1986-01-01
+players: 2
+assets.boxfront: BoxFront/Twin Bee (Japan).jpg
+assets.boxback: BoxBack/Twin Bee (Japan).jpg
+assets.background: Background/Twin Bee (Japan).jpg
+assets.screenshot: Screenshot/Twin Bee (Japan).jpg
+assets.video: Video/Twin Bee (Japan).mp4
+x-co-op: No
+
+
+game: Yie Ar Kung-Fu (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Yie Ar Kung-Fu (Japan)/Yie Ar Kung-Fu (Japan).json
+developer: Konami
+publisher: Konami
+genre: Fighting
+description:
+  Yie Ar Kung-Fu follows the quest of a martial artist named Oolong to become the
+  Grand Master of Kung-Fu, honoring the memory of his illustrious father. To do
+  that, Oolong will have to face some of the most skillful martial artists in
+  one-on-one battles. The battles take place on side-view screens. The hero has
+  two moves at his disposal: punching and kicking. These moves must be executed by
+  pressing a corresponding button together with a directional button or arrow key.
+  Oolong also has the advantage of being able to jump higher than most of his
+  opponents. The latter utilize unique moves to stop the hero, including
+  sumo-style leaping motions, shuriken-throwing, nunchaku-swinging, etc.
+release: 1985-08-14
+players: 1
+assets.boxfront: BoxFront/Yie Ar Kung-Fu (Japan).jpg
+assets.boxback: BoxBack/Yie Ar Kung-Fu (Japan).jpg
+assets.background: Background/Yie Ar Kung-Fu (Japan).jpg
+assets.screenshot: Screenshot/Yie Ar Kung-Fu (Japan).jpg
+assets.video: Video/Yie Ar Kung-Fu (Japan).mp4
+x-co-op: No
+
+
+game: Yie Ar Kung-Fu II - The Emperor Yie-Gah (Japan)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft MSX/Yie Ar Kung-Fu II - The Emperor Yie-Gah (Japan)/Yie Ar Kung-Fu II - The Emperor Yie-Gah (Japan).json
+developer: Konami
+publisher: Konami
+genre: Adventure;Fighting
+description:
+  Yie Ar Kung-Fu 2: The Emperor Yie-Gah is a sequel to the MSX / Famicom (NES)
+  version of Yie Ar Kung-Fu, rather than the versions directly based on the arcade
+  release. The game follows the quest of Lee Young, the main character from the
+  previous game, to become a kung-fu master. This involves fighting with a wide
+  range of opponents in a traditional one-on-one 2D environment. Lee Young has a
+  wide range of attack moves he can use to lower his opponent's life bar,
+  including traditional punching and kicking attacks as well as jumping ones.
+  Opponents are well equipped with unique weapons and attacks.
+release: 1985-12-09
+players: 2
+assets.boxfront: BoxFront/Yie Ar Kung-Fu II - The Emperor Yie-Gah (Japan).jpg
+assets.boxback: BoxBack/Yie Ar Kung-Fu II - The Emperor Yie-Gah (Japan).jpg
+assets.background: Background/Yie Ar Kung-Fu II - The Emperor Yie-Gah (Japan).jpg
+assets.screenshot: Screenshot/Yie Ar Kung-Fu II - The Emperor Yie-Gah (Japan).jpg
+assets.video: Video/Yie Ar Kung-Fu II - The Emperor Yie-Gah (Japan).mp4
+x-co-op: No
+
+

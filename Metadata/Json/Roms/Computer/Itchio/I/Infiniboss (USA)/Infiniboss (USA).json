@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Infiniboss (USA).exe"
+    ],
+    "transform_file": "Infiniboss (USA).exe"
+}

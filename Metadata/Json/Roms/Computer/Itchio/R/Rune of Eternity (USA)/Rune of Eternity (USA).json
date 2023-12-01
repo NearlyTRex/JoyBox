@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Rune of Eternity (USA).exe"
+    ],
+    "transform_file": "Rune of Eternity (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Elephantasy (USA).exe"
+    ],
+    "transform_file": "Elephantasy (USA).exe"
+}

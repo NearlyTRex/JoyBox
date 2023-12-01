@@ -1,0 +1,19 @@
+Atari 5200 || Asteroids (USA) (Proto) || $ROM_JSON_ROOT/Other/Atari 5200/Asteroids (USA) (Proto)/Asteroids (USA) (Proto).json
+Atari 5200 || Bounty Bob Strikes Back! (USA) || $ROM_JSON_ROOT/Other/Atari 5200/Bounty Bob Strikes Back! (USA)/Bounty Bob Strikes Back! (USA).json
+Atari 5200 || Centipede (USA) || $ROM_JSON_ROOT/Other/Atari 5200/Centipede (USA)/Centipede (USA).json
+Atari 5200 || Countermeasure (USA) || $ROM_JSON_ROOT/Other/Atari 5200/Countermeasure (USA)/Countermeasure (USA).json
+Atari 5200 || Final Legacy (USA) (Proto) || $ROM_JSON_ROOT/Other/Atari 5200/Final Legacy (USA) (Proto)/Final Legacy (USA) (Proto).json
+Atari 5200 || Microgammon SB (USA) (Proto) || $ROM_JSON_ROOT/Other/Atari 5200/Microgammon SB (USA) (Proto)/Microgammon SB (USA) (Proto).json
+Atari 5200 || Millipede (USA) (Proto) || $ROM_JSON_ROOT/Other/Atari 5200/Millipede (USA) (Proto)/Millipede (USA) (Proto).json
+Atari 5200 || Miner 2049er Starring Bounty Bob (USA) || $ROM_JSON_ROOT/Other/Atari 5200/Miner 2049er Starring Bounty Bob (USA)/Miner 2049er Starring Bounty Bob (USA).json
+Atari 5200 || Miniature Golf (USA) (Proto) || $ROM_JSON_ROOT/Other/Atari 5200/Miniature Golf (USA) (Proto)/Miniature Golf (USA) (Proto).json
+Atari 5200 || Missile Command (USA) || $ROM_JSON_ROOT/Other/Atari 5200/Missile Command (USA)/Missile Command (USA).json
+Atari 5200 || Pac-Man (USA) || $ROM_JSON_ROOT/Other/Atari 5200/Pac-Man (USA)/Pac-Man (USA).json
+Atari 5200 || RealSports Baseball (USA) || $ROM_JSON_ROOT/Other/Atari 5200/RealSports Baseball (USA)/RealSports Baseball (USA).json
+Atari 5200 || RealSports Basketball (USA) || $ROM_JSON_ROOT/Other/Atari 5200/RealSports Basketball (USA)/RealSports Basketball (USA).json
+Atari 5200 || RealSports Football (USA) || $ROM_JSON_ROOT/Other/Atari 5200/RealSports Football (USA)/RealSports Football (USA).json
+Atari 5200 || RealSports Soccer (USA) || $ROM_JSON_ROOT/Other/Atari 5200/RealSports Soccer (USA)/RealSports Soccer (USA).json
+Atari 5200 || RealSports Tennis (USA) || $ROM_JSON_ROOT/Other/Atari 5200/RealSports Tennis (USA)/RealSports Tennis (USA).json
+Atari 5200 || Star Raiders (USA) || $ROM_JSON_ROOT/Other/Atari 5200/Star Raiders (USA)/Star Raiders (USA).json
+Atari 5200 || Super Breakout (USA) || $ROM_JSON_ROOT/Other/Atari 5200/Super Breakout (USA)/Super Breakout (USA).json
+Atari 5200 || Xari Arena (USA) (Proto) || $ROM_JSON_ROOT/Other/Atari 5200/Xari Arena (USA) (Proto)/Xari Arena (USA) (Proto).json

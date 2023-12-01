@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/LEGO Batman 2 - DC Super Heroes (USA).exe"
+    ],
+    "transform_file": "LEGO Batman 2 - DC Super Heroes (USA).exe"
+}

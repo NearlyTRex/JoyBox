@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Spiders (USA).exe"
+    ],
+    "transform_file": "Spiders (USA).exe"
+}

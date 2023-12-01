@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Flash Point - Fire Rescue (USA).exe"
+    ],
+    "transform_file": "Flash Point - Fire Rescue (USA).exe"
+}

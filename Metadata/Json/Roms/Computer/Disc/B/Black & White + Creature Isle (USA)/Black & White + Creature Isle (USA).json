@@ -1,0 +1,88 @@
+{
+    "installer_exe": [
+        "$DISC_ONE_ROOT/Autorun.exe",
+        "$DISC_TWO_ROOT/Autorun.exe",
+        "$DISC_THREE_ROOT/Horse/Setup.exe",
+        "$DISC_THREE_ROOT/Leopard/Setup.exe"
+    ],
+    "steps": {
+        "postinstall": [
+            {
+                "from": "$DISC_ONE_ROOT/Audio/Music/align/*",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/Program Files (x86)/Lionhead Studios Ltd/Black & White/Audio/Music/align",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_ONE_ROOT/Audio/Music/chant/*",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/Program Files (x86)/Lionhead Studios Ltd/Black & White/Audio/Music/chant",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_ONE_ROOT/Audio/Music/citadel/*",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/Program Files (x86)/Lionhead Studios Ltd/Black & White/Audio/Music/citadel",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_ONE_ROOT/Audio/Music/outro/*",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/Program Files (x86)/Lionhead Studios Ltd/Black & White/Audio/Music/outro",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_ONE_ROOT/Audio/Music/script/*",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/Program Files (x86)/Lionhead Studios Ltd/Black & White/Audio/Music/script",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT/Audio/Music/align/*",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/Program Files (x86)/Lionhead Studios Ltd/Black & White/Audio/Music/align",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT/Audio/Music/chant/*",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/Program Files (x86)/Lionhead Studios Ltd/Black & White/Audio/Music/chant",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT/Audio/Music/citadel/*",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/Program Files (x86)/Lionhead Studios Ltd/Black & White/Audio/Music/citadel",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT/Audio/Music/outro/*",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/Program Files (x86)/Lionhead Studios Ltd/Black & White/Audio/Music/outro",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT/Audio/Music/script/*",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/Program Files (x86)/Lionhead Studios Ltd/Black & White/Audio/Music/script",
+                "type": "copy"
+            }
+        ],
+        "preinstall": [
+            {
+                "dir": "$DISC_ONE_ROOT/Audio/Music",
+                "type": "lowercase"
+            },
+            {
+                "dir": "$DISC_TWO_ROOT/Audio/Music",
+                "type": "lowercase"
+            }
+        ]
+    },
+    "transform_file": "Black & White + Creature Isle (USA).m3u",
+    "update": [
+        "$SETUP_MAIN_ROOT/update/black_white_patch_v1_20.exe",
+        "$SETUP_MAIN_ROOT/update/BWFanPatchInstaller.exe",
+        "$SETUP_MAIN_ROOT/update/BWCIFanPatchInstaller.exe"
+    ]
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Project - Snowblind (USA).exe"
+    ],
+    "transform_file": "Project - Snowblind (USA).exe"
+}

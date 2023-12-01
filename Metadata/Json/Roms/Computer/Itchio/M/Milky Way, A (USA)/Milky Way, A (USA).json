@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Milky Way, A (USA).exe"
+    ],
+    "transform_file": "Milky Way, A (USA).exe"
+}

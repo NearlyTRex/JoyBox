@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Mercenaries (USA, Europe).chd",
+        "Mercenaries (USA, Europe).dmi.bin",
+        "Mercenaries (USA, Europe).lyt",
+        "Mercenaries (USA, Europe).pfi.bin",
+        "Mercenaries (USA, Europe).ss.bin"
+    ],
+    "launch_file": "Mercenaries (USA, Europe).iso",
+    "transform_file": "Mercenaries (USA, Europe).chd"
+}

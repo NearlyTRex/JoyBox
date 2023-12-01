@@ -1,0 +1,40 @@
+Coleco ColecoVision || Antarctic Adventure (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Antarctic Adventure (USA, Europe)/Antarctic Adventure (USA, Europe).json
+Coleco ColecoVision || Aquattack (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Aquattack (USA)/Aquattack (USA).json
+Coleco ColecoVision || Brain Strainers (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Brain Strainers (USA)/Brain Strainers (USA).json
+Coleco ColecoVision || Bump 'n' Jump (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Bump 'n' Jump (USA, Europe)/Bump 'n' Jump (USA, Europe).json
+Coleco ColecoVision || Choplifter! (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Choplifter! (USA)/Choplifter! (USA).json
+Coleco ColecoVision || Cosmic Avenger (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Cosmic Avenger (USA, Europe)/Cosmic Avenger (USA, Europe).json
+Coleco ColecoVision || Evolution (Canada) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Evolution (Canada)/Evolution (Canada).json
+Coleco ColecoVision || Fathom (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Fathom (USA)/Fathom (USA).json
+Coleco ColecoVision || Flipper Slipper (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Flipper Slipper (USA, Europe)/Flipper Slipper (USA, Europe).json
+Coleco ColecoVision || Fortune Builder (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Fortune Builder (USA)/Fortune Builder (USA).json
+Coleco ColecoVision || Frantic Freddy (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Frantic Freddy (USA)/Frantic Freddy (USA).json
+Coleco ColecoVision || Frenzy (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Frenzy (USA, Europe)/Frenzy (USA, Europe).json
+Coleco ColecoVision || Gateway to Apshai (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Gateway to Apshai (USA, Europe)/Gateway to Apshai (USA, Europe).json
+Coleco ColecoVision || Gust Buster (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Gust Buster (USA)/Gust Buster (USA).json
+Coleco ColecoVision || Heist, The (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Heist, The (USA)/Heist, The (USA).json
+Coleco ColecoVision || Jumpman Junior (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Jumpman Junior (USA, Europe)/Jumpman Junior (USA, Europe).json
+Coleco ColecoVision || Jungle Hunt (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Jungle Hunt (USA)/Jungle Hunt (USA).json
+Coleco ColecoVision || Miner 2049er Starring Bounty Bob (USA, Europe) (v1.1) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Miner 2049er Starring Bounty Bob (USA, Europe) (v1.1)/Miner 2049er Starring Bounty Bob (USA, Europe) (v1.1).json
+Coleco ColecoVision || Moonsweeper (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Moonsweeper (USA, Europe)/Moonsweeper (USA, Europe).json
+Coleco ColecoVision || Mountain King (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Mountain King (USA)/Mountain King (USA).json
+Coleco ColecoVision || Nova Blast (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Nova Blast (USA, Europe)/Nova Blast (USA, Europe).json
+Coleco ColecoVision || Oil's Well (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Oil's Well (USA)/Oil's Well (USA).json
+Coleco ColecoVision || Omega Race (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Omega Race (USA, Europe)/Omega Race (USA, Europe).json
+Coleco ColecoVision || Pepper II (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Pepper II (USA, Europe)/Pepper II (USA, Europe).json
+Coleco ColecoVision || Quest for Quintana Roo (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Quest for Quintana Roo (USA)/Quest for Quintana Roo (USA).json
+Coleco ColecoVision || Rolloverture (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Rolloverture (USA)/Rolloverture (USA).json
+Coleco ColecoVision || Sammy Lightfoot (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Sammy Lightfoot (USA)/Sammy Lightfoot (USA).json
+Coleco ColecoVision || Sir Lancelot (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Sir Lancelot (USA)/Sir Lancelot (USA).json
+Coleco ColecoVision || Slurpy (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Slurpy (USA)/Slurpy (USA).json
+Coleco ColecoVision || Smurf Rescue (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Smurf Rescue (USA, Europe)/Smurf Rescue (USA, Europe).json
+Coleco ColecoVision || Space Fury (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Space Fury (USA, Europe)/Space Fury (USA, Europe).json
+Coleco ColecoVision || Space Panic (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Space Panic (USA, Europe)/Space Panic (USA, Europe).json
+Coleco ColecoVision || Squish'em Featuring Sam (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Squish'em Featuring Sam (USA)/Squish'em Featuring Sam (USA).json
+Coleco ColecoVision || Super Cross Force (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Super Cross Force (USA, Europe)/Super Cross Force (USA, Europe).json
+Coleco ColecoVision || Threshold (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Threshold (USA)/Threshold (USA).json
+Coleco ColecoVision || Tournament Tennis (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Tournament Tennis (USA)/Tournament Tennis (USA).json
+Coleco ColecoVision || Venture (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Venture (USA, Europe)/Venture (USA, Europe).json
+Coleco ColecoVision || War Room (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/War Room (USA)/War Room (USA).json
+Coleco ColecoVision || Wing War (USA) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Wing War (USA)/Wing War (USA).json
+Coleco ColecoVision || Zaxxon (USA, Europe) || $ROM_JSON_ROOT/Other/Coleco ColecoVision/Zaxxon (USA, Europe)/Zaxxon (USA, Europe).json

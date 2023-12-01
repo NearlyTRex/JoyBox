@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Little Bug (USA).exe"
+    ],
+    "transform_file": "Little Bug (USA).exe"
+}

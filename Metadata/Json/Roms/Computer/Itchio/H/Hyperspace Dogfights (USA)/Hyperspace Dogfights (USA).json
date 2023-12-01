@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Hyperspace Dogfights (USA).exe"
+    ],
+    "transform_file": "Hyperspace Dogfights (USA).exe"
+}

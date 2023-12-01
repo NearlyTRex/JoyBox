@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Daemon 9 (USA).exe"
+    ],
+    "transform_file": "Daemon 9 (USA).exe"
+}

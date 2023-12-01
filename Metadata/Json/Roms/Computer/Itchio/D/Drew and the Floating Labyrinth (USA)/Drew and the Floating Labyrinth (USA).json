@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Drew and the Floating Labyrinth (USA).exe"
+    ],
+    "transform_file": "Drew and the Floating Labyrinth (USA).exe"
+}

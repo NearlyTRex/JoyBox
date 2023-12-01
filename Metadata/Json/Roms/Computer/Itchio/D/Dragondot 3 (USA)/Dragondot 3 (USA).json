@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dragondot 3 (USA).exe"
+    ],
+    "transform_file": "Dragondot 3 (USA).exe"
+}

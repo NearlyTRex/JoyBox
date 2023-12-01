@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Bendy and the Ink Machine (USA).exe"
+    ],
+    "transform_file": "Bendy and the Ink Machine (USA).exe"
+}

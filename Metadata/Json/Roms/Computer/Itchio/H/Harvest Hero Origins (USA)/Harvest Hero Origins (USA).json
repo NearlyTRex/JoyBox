@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Harvest Hero Origins (USA).exe"
+    ],
+    "transform_file": "Harvest Hero Origins (USA).exe"
+}

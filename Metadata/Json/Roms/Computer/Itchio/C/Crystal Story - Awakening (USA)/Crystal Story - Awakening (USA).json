@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Crystal Story - Awakening (USA).exe"
+    ],
+    "transform_file": "Crystal Story - Awakening (USA).exe"
+}

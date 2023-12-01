@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Monster Loves You! (USA).exe"
+    ],
+    "transform_file": "Monster Loves You! (USA).exe"
+}

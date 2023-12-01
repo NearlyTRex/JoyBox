@@ -1,0 +1,9 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/Arctic-Adventure-English-Manual-1.0.pdf"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Arctic-Adventure-English-Setup-1.0.exe"
+    ],
+    "transform_file": "Arctic-Adventure-English-Setup-1.0.exe"
+}

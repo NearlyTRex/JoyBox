@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/SEGA Bass Fishing (USA).exe"
+    ],
+    "transform_file": "SEGA Bass Fishing (USA).exe"
+}

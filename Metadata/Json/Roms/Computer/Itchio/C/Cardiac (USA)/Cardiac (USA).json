@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Cardiac (USA).exe"
+    ],
+    "transform_file": "Cardiac (USA).exe"
+}

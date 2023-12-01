@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Quest of Graal DX (USA).exe"
+    ],
+    "transform_file": "Quest of Graal DX (USA).exe"
+}

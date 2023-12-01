@@ -1,0 +1,22 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Injustice - Gods Among Us Ultimate Edition (USA).exe"
+    ],
+    "main_game_exe": [
+        "Injustice - Gods Among Us Ultimate Edition/Injustice.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Injustice - Gods Among Us Ultimate Edition/Injustice.exe": "Injustice - Gods Among Us Ultimate Edition"
+    },
+    "sandbox": {
+        "wine": {
+            "overrides": {
+                "game": [
+                    "d3d9,d3d10core,d3d11,dxgi=n,b"
+                ]
+            },
+            "use_dxvk": true
+        }
+    },
+    "transform_file": "Injustice - Gods Among Us Ultimate Edition (USA).exe"
+}

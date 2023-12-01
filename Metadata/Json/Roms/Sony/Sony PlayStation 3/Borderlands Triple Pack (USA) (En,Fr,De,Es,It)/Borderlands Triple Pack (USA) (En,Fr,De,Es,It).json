@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Borderlands Triple Pack (USA) (En,Fr,De,Es,It) (Add-On Installation Disc).chd",
+        "Borderlands Triple Pack (USA) (En,Fr,De,Es,It) (Add-On Installation Disc).dkey",
+        "Borderlands Triple Pack (USA) (En,Fr,De,Es,It) (Gameplay Disc).chd",
+        "Borderlands Triple Pack (USA) (En,Fr,De,Es,It) (Gameplay Disc).dkey",
+        "Borderlands Triple Pack (USA) (En,Fr,De,Es,It).m3u"
+    ],
+    "launch_file": "PS3_GAME/USRDIR/EBOOT.BIN",
+    "transform_file": "Borderlands Triple Pack (USA) (En,Fr,De,Es,It) (Gameplay Disc).chd"
+}

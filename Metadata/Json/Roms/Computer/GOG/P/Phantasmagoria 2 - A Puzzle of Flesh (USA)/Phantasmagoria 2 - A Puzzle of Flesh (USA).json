@@ -1,0 +1,11 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/Phantasmagoria2_avatar.zip",
+        "$SETUP_MAIN_ROOT/extra/Phantasmagoria2_wallpaper.zip",
+        "$SETUP_MAIN_ROOT/extra/phantasmagoria2_manual.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_phantasmagoria_2_-_a_puzzle_of_flesh_1.0.06_sound_fix_(41959).exe"
+    ],
+    "transform_file": "setup_phantasmagoria_2_-_a_puzzle_of_flesh_1.0.06_sound_fix_(41959).exe"
+}

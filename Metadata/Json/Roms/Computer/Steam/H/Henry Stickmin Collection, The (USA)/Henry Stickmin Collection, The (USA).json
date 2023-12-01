@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Henry Stickmin Collection, The (USA).exe"
+    ],
+    "main_game_exe": [
+        "The Henry Stickmin Collection/HenryStickmin.exe"
+    ],
+    "main_game_exe_cwd": {
+        "The Henry Stickmin Collection/HenryStickmin.exe": "The Henry Stickmin Collection"
+    },
+    "transform_file": "Henry Stickmin Collection, The (USA).exe"
+}

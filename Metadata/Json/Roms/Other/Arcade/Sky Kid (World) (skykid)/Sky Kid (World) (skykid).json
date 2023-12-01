@@ -1,0 +1,25 @@
+{
+    "files": [
+        "skykid/cus60-60a1.mcu",
+        "skykid/cus63-63a1.mcu",
+        "skykid/sk1-1.2n",
+        "skykid/sk1-1c.6b",
+        "skykid/sk1-2.2p",
+        "skykid/sk1-3.2r",
+        "skykid/sk1-4.5n",
+        "skykid/sk1-5.6n",
+        "skykid/sk1_1.6b",
+        "skykid/sk1_2.6c",
+        "skykid/sk1_3.6d",
+        "skykid/sk1_4.3c",
+        "skykid/sk1_5.7e",
+        "skykid/sk1_6.6l",
+        "skykid/sk1_7.10m",
+        "skykid/sk1_8.10n",
+        "skykid/sk1a.6b",
+        "skykid/sk2_2.6c",
+        "skykid/sk2_4.3c",
+        "skykid/sk2a.6c"
+    ],
+    "launch_name": "skykid"
+}

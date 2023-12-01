@@ -1,0 +1,5 @@
+{
+    "installer_exe": "$DISC_MAIN_ROOT/handoffate_humble_win32_21517.exe",
+    "installer_type": "7zip",
+    "transform_file": "Hand of Fate (USA).chd"
+}

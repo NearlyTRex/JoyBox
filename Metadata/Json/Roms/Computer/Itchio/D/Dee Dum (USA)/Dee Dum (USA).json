@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dee Dum (USA).exe"
+    ],
+    "transform_file": "Dee Dum (USA).exe"
+}

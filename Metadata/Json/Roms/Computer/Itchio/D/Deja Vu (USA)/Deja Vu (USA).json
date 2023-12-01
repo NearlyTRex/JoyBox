@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Deja Vu (USA).exe"
+    ],
+    "transform_file": "Deja Vu (USA).exe"
+}

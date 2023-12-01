@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Evergate (USA).exe"
+    ],
+    "transform_file": "Evergate (USA).exe"
+}

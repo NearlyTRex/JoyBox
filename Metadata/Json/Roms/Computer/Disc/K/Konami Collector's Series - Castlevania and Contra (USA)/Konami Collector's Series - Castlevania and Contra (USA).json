@@ -1,0 +1,13 @@
+{
+    "installer_exe": "$DISC_MAIN_ROOT/STARTUP.EXE",
+    "steps": {
+        "postinstall": [
+            {
+                "from": "$SETUP_MAIN_ROOT/fix/*",
+                "to": "$HDD_MAIN_ROOT/Program Files (x86)/KONAMI Software/Castlevania & Contra",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Konami Collector's Series - Castlevania and Contra (USA).chd"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Ultimate Zombie Death Ball (USA).exe"
+    ],
+    "transform_file": "Ultimate Zombie Death Ball (USA).exe"
+}

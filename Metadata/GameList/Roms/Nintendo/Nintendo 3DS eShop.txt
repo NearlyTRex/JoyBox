@@ -1,0 +1,129 @@
+Nintendo 3DS eShop || 3D After Burner II (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D After Burner II (USA) (eShop)/3D After Burner II (USA) (eShop).json
+Nintendo 3DS eShop || 3D Classics Excitebike (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Classics Excitebike (USA) (eShop)/3D Classics Excitebike (USA) (eShop).json
+Nintendo 3DS eShop || 3D Classics Kid Icarus (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Classics Kid Icarus (USA) (eShop)/3D Classics Kid Icarus (USA) (eShop).json
+Nintendo 3DS eShop || 3D Classics Kirby's Adventure (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Classics Kirby's Adventure (USA) (eShop)/3D Classics Kirby's Adventure (USA) (eShop).json
+Nintendo 3DS eShop || 3D Ecco the Dolphin (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Ecco the Dolphin (USA) (eShop)/3D Ecco the Dolphin (USA) (eShop).json
+Nintendo 3DS eShop || 3D Fantasy Zone (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Fantasy Zone (USA) (eShop)/3D Fantasy Zone (USA) (eShop).json
+Nintendo 3DS eShop || 3D Galaxy Force II (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Galaxy Force II (USA) (eShop)/3D Galaxy Force II (USA) (eShop).json
+Nintendo 3DS eShop || 3D Gunstar Heroes (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Gunstar Heroes (USA) (eShop)/3D Gunstar Heroes (USA) (eShop).json
+Nintendo 3DS eShop || 3D Out Run (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Out Run (USA) (eShop)/3D Out Run (USA) (eShop).json
+Nintendo 3DS eShop || 3D Shinobi III (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Shinobi III (USA) (eShop)/3D Shinobi III (USA) (eShop).json
+Nintendo 3DS eShop || 3D Sonic The Hedgehog 2 (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Sonic The Hedgehog 2 (USA) (eShop)/3D Sonic The Hedgehog 2 (USA) (eShop).json
+Nintendo 3DS eShop || 3D Space Harrier (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Space Harrier (USA) (eShop)/3D Space Harrier (USA) (eShop).json
+Nintendo 3DS eShop || 3D Streets of Rage (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Streets of Rage (USA) (eShop)/3D Streets of Rage (USA) (eShop).json
+Nintendo 3DS eShop || 3D Streets of Rage 2 (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Streets of Rage 2 (USA) (eShop)/3D Streets of Rage 2 (USA) (eShop).json
+Nintendo 3DS eShop || 3D Super Hang-On (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Super Hang-On (USA) (eShop)/3D Super Hang-On (USA) (eShop).json
+Nintendo 3DS eShop || 3D Thunder Blade (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Thunder Blade (USA) (eShop)/3D Thunder Blade (USA) (eShop).json
+Nintendo 3DS eShop || 80's Overdrive (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/80's Overdrive (USA) (eShop)/80's Overdrive (USA) (eShop).json
+Nintendo 3DS eShop || AiRace Speed (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/AiRace Speed (USA) (eShop)/AiRace Speed (USA) (eShop).json
+Nintendo 3DS eShop || AiRace Xeno (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/AiRace Xeno (USA) (eShop)/AiRace Xeno (USA) (eShop).json
+Nintendo 3DS eShop || Alien on the Run (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Alien on the Run (USA) (eShop)/Alien on the Run (USA) (eShop).json
+Nintendo 3DS eShop || Apollo Justice - Ace Attorney (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Apollo Justice - Ace Attorney (USA) (eShop)/Apollo Justice - Ace Attorney (USA) (eShop).json
+Nintendo 3DS eShop || Attack of the Friday Monsters! A Tokyo Tale (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Attack of the Friday Monsters! A Tokyo Tale (USA) (eShop)/Attack of the Friday Monsters! A Tokyo Tale (USA) (eShop).json
+Nintendo 3DS eShop || Automaton Lung (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Automaton Lung (USA) (eShop)/Automaton Lung (USA) (eShop).json
+Nintendo 3DS eShop || Block-a-Pix Color (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Block-a-Pix Color (USA) (eShop)/Block-a-Pix Color (USA) (eShop).json
+Nintendo 3DS eShop || BoxBoxBoy! (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/BoxBoxBoy! (USA) (eShop)/BoxBoxBoy! (USA) (eShop).json
+Nintendo 3DS eShop || BoxBoy! (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/BoxBoy! (USA) (eShop)/BoxBoy! (USA) (eShop).json
+Nintendo 3DS eShop || Brave Dungeon (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Brave Dungeon (USA) (eShop)/Brave Dungeon (USA) (eShop).json
+Nintendo 3DS eShop || Bye-Bye BoxBoy! (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Bye-Bye BoxBoy! (USA) (eShop)/Bye-Bye BoxBoy! (USA) (eShop).json
+Nintendo 3DS eShop || Cave Story (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Cave Story (USA) (eShop)/Cave Story (USA) (eShop).json
+Nintendo 3DS eShop || Chain Blaster (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Chain Blaster (USA) (eShop)/Chain Blaster (USA) (eShop).json
+Nintendo 3DS eShop || Chibi-Robo! Photo Finder (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Chibi-Robo! Photo Finder (USA) (eShop)/Chibi-Robo! Photo Finder (USA) (eShop).json
+Nintendo 3DS eShop || Corpse Party (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Corpse Party (USA) (eShop)/Corpse Party (USA) (eShop).json
+Nintendo 3DS eShop || Crashmo (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Crashmo (USA) (eShop)/Crashmo (USA) (eShop).json
+Nintendo 3DS eShop || Crimson Shroud (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Crimson Shroud (USA) (eShop)/Crimson Shroud (USA) (eShop).json
+Nintendo 3DS eShop || Dedede's Drum Dash Deluxe (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Dedede's Drum Dash Deluxe (USA) (eShop)/Dedede's Drum Dash Deluxe (USA) (eShop).json
+Nintendo 3DS eShop || Dementium Remastered (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Dementium Remastered (USA) (eShop)/Dementium Remastered (USA) (eShop).json
+Nintendo 3DS eShop || Denpa Men 2, The - Beyond the Waves (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Denpa Men 2, The - Beyond the Waves (USA) (eShop)/Denpa Men 2, The - Beyond the Waves (USA) (eShop).json
+Nintendo 3DS eShop || Denpa Men 3, The - The Rise of Digitoll (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Denpa Men 3, The - The Rise of Digitoll (USA) (eShop)/Denpa Men 3, The - The Rise of Digitoll (USA) (eShop).json
+Nintendo 3DS eShop || Denpa Men, The - They Came By Wave (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Denpa Men, The - They Came By Wave (USA) (eShop)/Denpa Men, The - They Came By Wave (USA) (eShop).json
+Nintendo 3DS eShop || Dillon's Rolling Western (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Dillon's Rolling Western (USA) (eShop)/Dillon's Rolling Western (USA) (eShop).json
+Nintendo 3DS eShop || Dillon's Rolling Western - The Last Ranger (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Dillon's Rolling Western - The Last Ranger (USA) (eShop)/Dillon's Rolling Western - The Last Ranger (USA) (eShop).json
+Nintendo 3DS eShop || Dr. Mario Miracle Cure (World) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Dr. Mario Miracle Cure (World) (eShop)/Dr. Mario Miracle Cure (World) (eShop).json
+Nintendo 3DS eShop || Excave (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Excave (USA) (eShop)/Excave (USA) (eShop).json
+Nintendo 3DS eShop || Excave II - Wizard of the Underworld (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Excave II - Wizard of the Underworld (USA) (eShop)/Excave II - Wizard of the Underworld (USA) (eShop).json
+Nintendo 3DS eShop || Excave III - Tower of Destiny (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Excave III - Tower of Destiny (USA) (eShop)/Excave III - Tower of Destiny (USA) (eShop).json
+Nintendo 3DS eShop || Flipnote Studio 3D (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Flipnote Studio 3D (USA) (eShop)/Flipnote Studio 3D (USA) (eShop).json
+Nintendo 3DS eShop || Fluidity - Spin Cycle (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Fluidity - Spin Cycle (USA) (eShop)/Fluidity - Spin Cycle (USA) (eShop).json
+Nintendo 3DS eShop || Fractured Soul (USA) (eshop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Fractured Soul (USA) (eshop)/Fractured Soul (USA) (eshop).json
+Nintendo 3DS eShop || Fragrant Story (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Fragrant Story (USA) (eShop)/Fragrant Story (USA) (eShop).json
+Nintendo 3DS eShop || Go! Go! Kokopolo (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Go! Go! Kokopolo (USA) (eShop)/Go! Go! Kokopolo (USA) (eShop).json
+Nintendo 3DS eShop || Gotta Protectors (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Gotta Protectors (USA) (eShop)/Gotta Protectors (USA) (eShop).json
+Nintendo 3DS eShop || Gunman Clive (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Gunman Clive (USA) (eShop)/Gunman Clive (USA) (eShop).json
+Nintendo 3DS eShop || Gunman Clive 2 (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Gunman Clive 2 (USA) (eShop)/Gunman Clive 2 (USA) (eShop).json
+Nintendo 3DS eShop || Gurumin 3D - A Monstrous Adventure (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Gurumin 3D - A Monstrous Adventure (USA) (eShop)/Gurumin 3D - A Monstrous Adventure (USA) (eShop).json
+Nintendo 3DS eShop || HarmoKnight (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/HarmoKnight (USA) (eShop)/HarmoKnight (USA) (eShop).json
+Nintendo 3DS eShop || Harold Reborn (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Harold Reborn (USA) (eShop)/Harold Reborn (USA) (eShop).json
+Nintendo 3DS eShop || Harold's Walk (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Harold's Walk (USA) (eShop)/Harold's Walk (USA) (eShop).json
+Nintendo 3DS eShop || Ice Station Z (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Ice Station Z (USA) (eShop)/Ice Station Z (USA) (eShop).json
+Nintendo 3DS eShop || Ironfall Invasion (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Ironfall Invasion (USA) (eShop)/Ironfall Invasion (USA) (eShop).json
+Nintendo 3DS eShop || Jett Rocket II - The Wrath of Taikai (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Jett Rocket II - The Wrath of Taikai (USA) (eShop)/Jett Rocket II - The Wrath of Taikai (USA) (eShop).json
+Nintendo 3DS eShop || Kersploosh! (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Kersploosh! (USA) (eShop)/Kersploosh! (USA) (eShop).json
+Nintendo 3DS eShop || Ketzal's Corridors (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Ketzal's Corridors (USA) (eShop)/Ketzal's Corridors (USA) (eShop).json
+Nintendo 3DS eShop || Kirby Fighters Deluxe (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Kirby Fighters Deluxe (USA) (eShop)/Kirby Fighters Deluxe (USA) (eShop).json
+Nintendo 3DS eShop || Kirby's Blowout Blast (World) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Kirby's Blowout Blast (World) (eShop)/Kirby's Blowout Blast (World) (eShop).json
+Nintendo 3DS eShop || Kokuga (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Kokuga (USA) (eShop)/Kokuga (USA) (eShop).json
+Nintendo 3DS eShop || Legend of Dark Witch 2, The - The Price of Desire (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Legend of Dark Witch 2, The - The Price of Desire (USA) (eShop)/Legend of Dark Witch 2, The - The Price of Desire (USA) (eShop).json
+Nintendo 3DS eShop || Legend of Dark Witch 3, The - Wisdom and Lunacy (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Legend of Dark Witch 3, The - Wisdom and Lunacy (USA) (eShop)/Legend of Dark Witch 3, The - Wisdom and Lunacy (USA) (eShop).json
+Nintendo 3DS eShop || Legend of Dark Witch, The (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Legend of Dark Witch, The (USA) (eShop)/Legend of Dark Witch, The (USA) (eShop).json
+Nintendo 3DS eShop || Legend of Kusakari, The (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Legend of Kusakari, The (USA) (eShop)/Legend of Kusakari, The (USA) (eShop).json
+Nintendo 3DS eShop || Liberation Maiden (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Liberation Maiden (USA) (eShop)/Liberation Maiden (USA) (eShop).json
+Nintendo 3DS eShop || Link-a-Pix Color (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Link-a-Pix Color (USA) (eShop)/Link-a-Pix Color (USA) (eShop).json
+Nintendo 3DS eShop || Mario Party - Star Rush - Party Guest (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Mario Party - Star Rush - Party Guest (USA) (eShop)/Mario Party - Star Rush - Party Guest (USA) (eShop).json
+Nintendo 3DS eShop || Mario and Donkey Kong - Minis on the Move (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Mario and Donkey Kong - Minis on the Move (USA) (eShop)/Mario and Donkey Kong - Minis on the Move (USA) (eShop).json
+Nintendo 3DS eShop || Mario vs. Donkey Kong - Tipping Stars (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Mario vs. Donkey Kong - Tipping Stars (USA) (eShop)/Mario vs. Donkey Kong - Tipping Stars (USA) (eShop).json
+Nintendo 3DS eShop || Mini Mario & Friends (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Mini Mario & Friends (USA) (eShop)/Mini Mario & Friends (USA) (eShop).json
+Nintendo 3DS eShop || Monster Hunter 3 Ultimate Data Transfer Program (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Monster Hunter 3 Ultimate Data Transfer Program (USA) (eShop)/Monster Hunter 3 Ultimate Data Transfer Program (USA) (eShop).json
+Nintendo 3DS eShop || Monster Hunter Generations Ultimate Data Transfer App (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Monster Hunter Generations Ultimate Data Transfer App (USA) (eShop)/Monster Hunter Generations Ultimate Data Transfer App (USA) (eShop).json
+Nintendo 3DS eShop || Moon Chronicles (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Moon Chronicles (USA) (eShop)/Moon Chronicles (USA) (eShop).json
+Nintendo 3DS eShop || Nano Assault EX (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Nano Assault EX (USA) (eShop)/Nano Assault EX (USA) (eShop).json
+Nintendo 3DS eShop || Ninja Battle Heroes (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Ninja Battle Heroes (USA) (eShop)/Ninja Battle Heroes (USA) (eShop).json
+Nintendo 3DS eShop || Nintendo Badge Arcade (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Nintendo Badge Arcade (USA) (eShop)/Nintendo Badge Arcade (USA) (eShop).json
+Nintendo 3DS eShop || Noitu Love Devolution (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Noitu Love Devolution (USA) (eShop)/Noitu Love Devolution (USA) (eShop).json
+Nintendo 3DS eShop || Otosan - Nintendo 3DS Edition (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Otosan - Nintendo 3DS Edition (USA) (eShop)/Otosan - Nintendo 3DS Edition (USA) (eShop).json
+Nintendo 3DS eShop || Phoenix Wright - Ace Attorney - Dual Destinies (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Phoenix Wright - Ace Attorney - Dual Destinies (USA) (eShop)/Phoenix Wright - Ace Attorney - Dual Destinies (USA) (eShop).json
+Nintendo 3DS eShop || Phoenix Wright - Ace Attorney - Spirit of Justice (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Phoenix Wright - Ace Attorney - Spirit of Justice (USA) (eShop)/Phoenix Wright - Ace Attorney - Spirit of Justice (USA) (eShop).json
+Nintendo 3DS eShop || Phoenix Wright - Ace Attorney Trilogy (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Phoenix Wright - Ace Attorney Trilogy (USA) (eShop)/Phoenix Wright - Ace Attorney Trilogy (USA) (eShop).json
+Nintendo 3DS eShop || Photos with Mario (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Photos with Mario (USA) (eShop)/Photos with Mario (USA) (eShop).json
+Nintendo 3DS eShop || Pic-a-Pix Color (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pic-a-Pix Color (USA) (eShop)/Pic-a-Pix Color (USA) (eShop).json
+Nintendo 3DS eShop || Picross e (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e (USA) (eShop)/Picross e (USA) (eShop).json
+Nintendo 3DS eShop || Picross e2 (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e2 (USA) (eShop)/Picross e2 (USA) (eShop).json
+Nintendo 3DS eShop || Picross e3 (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e3 (USA) (eShop)/Picross e3 (USA) (eShop).json
+Nintendo 3DS eShop || Picross e4 (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e4 (USA) (eShop)/Picross e4 (USA) (eShop).json
+Nintendo 3DS eShop || Picross e5 (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e5 (USA) (eShop)/Picross e5 (USA) (eShop).json
+Nintendo 3DS eShop || Picross e6 (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e6 (USA) (eShop)/Picross e6 (USA) (eShop).json
+Nintendo 3DS eShop || Picross e7 (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e7 (USA) (eShop)/Picross e7 (USA) (eShop).json
+Nintendo 3DS eShop || Pixel Paint (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pixel Paint (USA) (eShop)/Pixel Paint (USA) (eShop).json
+Nintendo 3DS eShop || PixelMaker Studio (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/PixelMaker Studio (USA) (eShop)/PixelMaker Studio (USA) (eShop).json
+Nintendo 3DS eShop || Pocket Card Jockey (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pocket Card Jockey (USA) (eShop)/Pocket Card Jockey (USA) (eShop).json
+Nintendo 3DS eShop || Pokemon Bank (World) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pokemon Bank (World) (eShop)/Pokemon Bank (World) (eShop).json
+Nintendo 3DS eShop || Pokemon Battle Trozei (World) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pokemon Battle Trozei (World) (eShop)/Pokemon Battle Trozei (World) (eShop).json
+Nintendo 3DS eShop || Pokemon Dream Radar (World) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pokemon Dream Radar (World) (eShop)/Pokemon Dream Radar (World) (eShop).json
+Nintendo 3DS eShop || Pokemon Picross (World) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pokemon Picross (World) (eShop)/Pokemon Picross (World) (eShop).json
+Nintendo 3DS eShop || Pokemon Rumble World (World) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pokemon Rumble World (World) (eShop)/Pokemon Rumble World (World) (eShop).json
+Nintendo 3DS eShop || Pokemon Shuffle (World) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pokemon Shuffle (World) (eShop)/Pokemon Shuffle (World) (eShop).json
+Nintendo 3DS eShop || Pushmo (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pushmo (USA) (eShop)/Pushmo (USA) (eShop).json
+Nintendo 3DS eShop || RPGMaker Fes Player (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/RPGMaker Fes Player (USA) (eShop)/RPGMaker Fes Player (USA) (eShop).json
+Nintendo 3DS eShop || River City - Knights of Justice (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/River City - Knights of Justice (USA) (eShop)/River City - Knights of Justice (USA) (eShop).json
+Nintendo 3DS eShop || Runny Egg (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Runny Egg (USA) (eShop)/Runny Egg (USA) (eShop).json
+Nintendo 3DS eShop || Rusty's Real Deal Baseball (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Rusty's Real Deal Baseball (USA) (eShop)/Rusty's Real Deal Baseball (USA) (eShop).json
+Nintendo 3DS eShop || Sadame (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Sadame (USA) (eShop)/Sadame (USA) (eShop).json
+Nintendo 3DS eShop || Sakura Samurai - Art of the Sword (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Sakura Samurai - Art of the Sword (USA) (eShop)/Sakura Samurai - Art of the Sword (USA) (eShop).json
+Nintendo 3DS eShop || Save Data Transfer Tool (World) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Save Data Transfer Tool (World) (eShop)/Save Data Transfer Tool (World) (eShop).json
+Nintendo 3DS eShop || Senran Kagura Burst (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Senran Kagura Burst (USA) (eShop)/Senran Kagura Burst (USA) (eShop).json
+Nintendo 3DS eShop || Severed (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Severed (USA) (eShop)/Severed (USA) (eShop).json
+Nintendo 3DS eShop || Silver Falls - 3 Down Stars (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Silver Falls - 3 Down Stars (USA) (eShop)/Silver Falls - 3 Down Stars (USA) (eShop).json
+Nintendo 3DS eShop || Silver Falls - Gaiden - Deathly Delusion Destroyers (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Silver Falls - Gaiden - Deathly Delusion Destroyers (USA) (eShop)/Silver Falls - Gaiden - Deathly Delusion Destroyers (USA) (eShop).json
+Nintendo 3DS eShop || Silver Falls - Guardians and Metal Exterminators (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Silver Falls - Guardians and Metal Exterminators (USA) (eShop)/Silver Falls - Guardians and Metal Exterminators (USA) (eShop).json
+Nintendo 3DS eShop || Silver Falls - Undertakers (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Silver Falls - Undertakers (USA) (eShop)/Silver Falls - Undertakers (USA) (eShop).json
+Nintendo 3DS eShop || Smash Controller (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Smash Controller (USA) (eShop)/Smash Controller (USA) (eShop).json
+Nintendo 3DS eShop || SmileBASIC (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/SmileBASIC (USA) (eShop)/SmileBASIC (USA) (eShop).json
+Nintendo 3DS eShop || Starship Damrey, The (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Starship Damrey, The (USA) (eShop)/Starship Damrey, The (USA) (eShop).json
+Nintendo 3DS eShop || Steel Diver Sub Wars (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Steel Diver Sub Wars (USA) (eShop)/Steel Diver Sub Wars (USA) (eShop).json
+Nintendo 3DS eShop || Stretchmo (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Stretchmo (USA) (eShop)/Stretchmo (USA) (eShop).json
+Nintendo 3DS eShop || Swapdoodle (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Swapdoodle (USA) (eShop)/Swapdoodle (USA) (eShop).json
+Nintendo 3DS eShop || Swapnote (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Swapnote (USA) (eShop)/Swapnote (USA) (eShop).json
+Nintendo 3DS eShop || Team Kirby Clash Deluxe (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Team Kirby Clash Deluxe (USA) (eShop)/Team Kirby Clash Deluxe (USA) (eShop).json
+Nintendo 3DS eShop || Tokyo Crash Mobs (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Tokyo Crash Mobs (USA) (eShop)/Tokyo Crash Mobs (USA) (eShop).json
+Nintendo 3DS eShop || Wakedas (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Wakedas (USA) (eShop)/Wakedas (USA) (eShop).json
+Nintendo 3DS eShop || Weapon Shop de Omasse (USA) (eShop) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Weapon Shop de Omasse (USA) (eShop)/Weapon Shop de Omasse (USA) (eShop).json

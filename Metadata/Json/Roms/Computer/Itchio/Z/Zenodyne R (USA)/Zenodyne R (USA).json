@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Zenodyne R (USA).exe"
+    ],
+    "transform_file": "Zenodyne R (USA).exe"
+}

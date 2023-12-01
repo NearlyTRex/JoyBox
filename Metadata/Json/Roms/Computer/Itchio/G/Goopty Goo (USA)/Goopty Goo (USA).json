@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Goopty Goo (USA).exe"
+    ],
+    "transform_file": "Goopty Goo (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Explobers (USA).exe"
+    ],
+    "transform_file": "Explobers (USA).exe"
+}

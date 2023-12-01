@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Depth of Extinction (USA).exe"
+    ],
+    "transform_file": "Depth of Extinction (USA).exe"
+}

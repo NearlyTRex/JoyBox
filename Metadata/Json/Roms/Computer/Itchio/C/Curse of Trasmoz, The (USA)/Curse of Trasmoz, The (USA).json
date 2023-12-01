@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Curse of Trasmoz, The (USA).exe"
+    ],
+    "transform_file": "Curse of Trasmoz, The (USA).exe"
+}

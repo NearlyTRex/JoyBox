@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Guide of the Butterfly (USA).exe"
+    ],
+    "transform_file": "Guide of the Butterfly (USA).exe"
+}

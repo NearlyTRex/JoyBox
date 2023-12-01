@@ -1,0 +1,25 @@
+{
+    "files": [
+        "searchar/bh.5",
+        "searchar/bh.7",
+        "searchar/bh.8",
+        "searchar/bh.c1",
+        "searchar/bh.c2",
+        "searchar/bh.c3",
+        "searchar/bh.c4",
+        "searchar/bh.c5",
+        "searchar/bh.c6",
+        "searchar/bh.v1",
+        "searchar/bhw.1",
+        "searchar/bhw.2",
+        "searchar/bhw.3",
+        "searchar/bhw.4",
+        "searchar/searcharj/bh2ver3j.9c",
+        "searchar/searcharj/bh3ver3j.10c",
+        "searchar/searcharu/bh.1",
+        "searchar/searcharu/bh.2",
+        "searchar/searcharu/bh.3",
+        "searchar/searcharu/bh.4"
+    ],
+    "launch_name": "searchar"
+}

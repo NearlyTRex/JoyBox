@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dangerous Duels (USA).exe"
+    ],
+    "transform_file": "Dangerous Duels (USA).exe"
+}

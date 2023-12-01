@@ -1,0 +1,391 @@
+collection: Nintendo Super Game Boy
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Super Game Boy" {file.path}
+
+
+game: Donkey Kong (Japan, USA) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Donkey Kong (Japan, USA) (SGB Enhanced)/Donkey Kong (Japan, USA) (SGB Enhanced).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Platform;Puzzle
+description:
+  Donkey Kong returns to Game Boy! This famous ape has kidnapped Pauline and
+  climbed to the top of a perilous skyscraper.
+  .
+  Challenged by many perils and unending puzzles, Mario must reach his arch rival.
+  As he makes his way Mario will need to gather disappearing keys to unlock doors
+  of hidden rooms. Donkey Kong devises evil tricks to confuse and trap him. Our
+  heroic plumber has his hands full this time!
+  .
+  Donkey Kong is a platform game developed in 1994 by Nintendo for the Game Boy
+  handheld video game system, which also contains puzzle elements. Donkey Kong is
+  loosely based on the 1981 arcade game of the same name and its sequel Donkey
+  Kong Jr. The game was known under the working title Donkey Kong '94 before the
+  release.
+  .
+  Like in the original arcade and NES version, the player takes control of Mario
+  and must rescue Pauline from Donkey Kong (who are both given updated character
+  designs for this game). Donkey Kong Jr. makes a guest appearance in the game on
+  some levels, helping his father hinder Mario's progress.\n
+  This was the first Game Boy title designed with enhanced features when played on
+  the Super Game Boy. It features gameplay elements from Donkey Kong, Donkey Kong
+  Jr., and Super Mario Bros. 2.
+release: 1994-06-14
+players: 1
+assets.boxfront: BoxFront/Donkey Kong (Japan, USA) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Donkey Kong (Japan, USA) (SGB Enhanced).jpg
+assets.background: Background/Donkey Kong (Japan, USA) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Donkey Kong (Japan, USA) (SGB Enhanced).jpg
+assets.video: Video/Donkey Kong (Japan, USA) (SGB Enhanced).mp4
+x-co-op: No
+
+
+game: Donkey Kong Land (USA, Europe) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Donkey Kong Land (USA, Europe) (SGB Enhanced)/Donkey Kong Land (USA, Europe) (SGB Enhanced).json
+developer: Rare
+publisher: Nintendo
+genre: Platform
+description:
+  Monkey mayhem comes to Game Boy with all-new Kong adventures! Donkey Kong teams
+  up with his sidekick, Diddy Kong, for new adventures and gorilla antics. Facing
+  high-flying pigs, deadly Zingers, and reptilian Kremlings our duo swings back
+  into action!
+  .
+  Challenged by incredible perils they clamor their way through the mysterious
+  pirate ship, perils in the snow, an unbelievable aquatic temple, and crazy
+  capers in the sky. Grab a vine and join the thrills in the Land of Kong!
+release: 1995-06-26
+players: 1
+assets.boxfront: BoxFront/Donkey Kong Land (USA, Europe) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Donkey Kong Land (USA, Europe) (SGB Enhanced).jpg
+assets.background: Background/Donkey Kong Land (USA, Europe) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Donkey Kong Land (USA, Europe) (SGB Enhanced).jpg
+assets.video: Video/Donkey Kong Land (USA, Europe) (SGB Enhanced).mp4
+x-co-op: No
+
+
+game: Donkey Kong Land 2 (USA, Europe) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Donkey Kong Land 2 (USA, Europe) (SGB Enhanced)/Donkey Kong Land 2 (USA, Europe) (SGB Enhanced).json
+developer: Rare
+publisher: Nintendo
+genre: Platform
+description:
+  Wage battle against Kaptain K. Rool and his vast army of Kremlings. K. Rool
+  kidnapped Donkey Kong and he's demanding the entire Banana Hoard as ransom. It's
+  up to Diddy Kong and Dixie Kong to rescue their kidnapped pal. A wild assortment
+  of friendly animals like Rambi the Rhino, Squitter the Spider, Squawks the
+  Parrot, Rattly the Rattlesnake and Enguarde the Swordfish help the two little
+  monkeys in their adventurous mission. Each exciting level is filled with special
+  traps, hidden items and dastardly Kremlings! Prepare yourself for the biggest
+  Game Boy adventure yet!
+  .
+  Donkey Kong Land 2 is the first sequel to Donkey Kong Land for the Nintendo Game
+  Boy and was released in 1996.
+  .
+  The story mainly complies to its SNES counterpart; K. Rool kidnapped Donkey
+  Kong, demanding the entire Banana Hoard as ransom, so it's up to Diddy Kong and
+  Dixie Kong to rescue their kidnapped pal. A wild assortment of friendly animals
+  like Rambi the Rhino, Squitter the Spider, Squawks the Parrot, Rattly the
+  Rattlesnake and Enguarde the Swordfish help the two little monkeys in their
+  adventurous mission. Each exciting level is filled with special traps, hidden
+  items and dastardly Kremlings! Prepare yourself for the biggest Game Boy
+  adventure yet!
+release: 1996-09-01
+players: 1
+assets.boxfront: BoxFront/Donkey Kong Land 2 (USA, Europe) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Donkey Kong Land 2 (USA, Europe) (SGB Enhanced).jpg
+assets.background: Background/Donkey Kong Land 2 (USA, Europe) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Donkey Kong Land 2 (USA, Europe) (SGB Enhanced).jpg
+assets.video: Video/Donkey Kong Land 2 (USA, Europe) (SGB Enhanced).mp4
+x-co-op: No
+
+
+game: Donkey Kong Land III (USA, Europe) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Donkey Kong Land III (USA, Europe) (SGB Enhanced)/Donkey Kong Land III (USA, Europe) (SGB Enhanced).json
+developer: Rare
+publisher: Nintendo
+genre: Platform
+description:
+  Fame-and-fortune seekers have flooded Donkey Kong Country in search of the
+  fabled Lost World. You command Dixie Kong and Kiddy Kong through 36 Kong-sized
+  levels of action and adventure. Use your animal friends - Squitter the spider,
+  Squawks the parrot, Ellie the elephant, Enguarde the swordfish and Parry the
+  parallel bird - to help you prove your adventuring skills and find the Lost
+  World before someone else does!
+release: 1997-10-01
+players: 1
+assets.boxfront: BoxFront/Donkey Kong Land III (USA, Europe) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Donkey Kong Land III (USA, Europe) (SGB Enhanced).jpg
+assets.background: Background/Donkey Kong Land III (USA, Europe) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Donkey Kong Land III (USA, Europe) (SGB Enhanced).jpg
+assets.video: Video/Donkey Kong Land III (USA, Europe) (SGB Enhanced).mp4
+x-co-op: No
+
+
+game: Game & Watch Gallery (USA) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Game & Watch Gallery (USA) (SGB Enhanced)/Game & Watch Gallery (USA) (SGB Enhanced).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action
+description:
+  Original and updated versions of four Game & Watch hand held games!
+  .
+  Classic versions will take you back to the '80s and a simpler time in video
+  games. Modern versions feature your favorite characters and will bring you to
+  the present with improved play control and sound effects.
+  .
+  -Enjoy four different games!\n
+  Manhole - Don't let pedestrians fall.\n
+  Fire - Rescue the jumpers.\n
+  Octopus - Retrive the sunken treasure.\n
+  Oil Panic - Catch the dripping oil.
+  .
+  -New Interrupt Save feature lets you stop and restart anytime!
+  .
+  -Battery-backed memory saves all your scores!
+release: 1997-02-01
+players: 1
+assets.boxfront: BoxFront/Game & Watch Gallery (USA) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Game & Watch Gallery (USA) (SGB Enhanced).jpg
+assets.background: Background/Game & Watch Gallery (USA) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Game & Watch Gallery (USA) (SGB Enhanced).jpg
+assets.video: Video/Game & Watch Gallery (USA) (SGB Enhanced).mp4
+x-co-op: No
+
+
+game: Kirby's Block Ball (USA, Europe) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Kirby's Block Ball (USA, Europe) (SGB Enhanced)/Kirby's Block Ball (USA, Europe) (SGB Enhanced).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action
+description:
+  Kirby's back with fast-paced, four-way action!
+  .
+  It's a breakaway bash in this wild new Kirby game of Block Ball! By destroying
+  the blocks on the screen, you clear stages and obtain powers that help you in
+  your final confrontation with King Dedede.
+  .
+  Paddles on all four sides of the screen make this an intense four-way action
+  contest. Your quick reactions and your careful use of Kirby's powers will
+  determine your ultimate fate!
+release: 1995-12-14
+players: 1
+assets.boxfront: BoxFront/Kirby's Block Ball (USA, Europe) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Kirby's Block Ball (USA, Europe) (SGB Enhanced).jpg
+assets.background: Background/Kirby's Block Ball (USA, Europe) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Kirby's Block Ball (USA, Europe) (SGB Enhanced).jpg
+assets.video: Video/Kirby's Block Ball (USA, Europe) (SGB Enhanced).mp4
+x-co-op: No
+
+
+game: Kirby's Dream Land 2 (USA, Europe) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Kirby's Dream Land 2 (USA, Europe) (SGB Enhanced)/Kirby's Dream Land 2 (USA, Europe) (SGB Enhanced).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Action;Platform
+description:
+  The Rainbow Bridges have disappeared! Help Kirby solve the mystery. Search the
+  seven Rainbow Islands while battling King DeDeDe and his horde of evil minions!
+  Meet Rick the Hamster, Kine the Fish and Coo the Owl. Each holds important
+  abilities that can multiply the magnitude of Kirby's powers. Earn the mysterious
+  Rainbow Sword and prepare to face Kirby's most menacing rival ever - the evil
+  Dark Matter!
+release: 1995-05-01
+players: 1
+assets.boxfront: BoxFront/Kirby's Dream Land 2 (USA, Europe) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Kirby's Dream Land 2 (USA, Europe) (SGB Enhanced).jpg
+assets.background: Background/Kirby's Dream Land 2 (USA, Europe) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Kirby's Dream Land 2 (USA, Europe) (SGB Enhanced).jpg
+assets.video: Video/Kirby's Dream Land 2 (USA, Europe) (SGB Enhanced).mp4
+x-co-op: No
+
+
+game: Kirby's Star Stacker (USA, Europe) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Kirby's Star Stacker (USA, Europe) (SGB Enhanced)/Kirby's Star Stacker (USA, Europe) (SGB Enhanced).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Puzzle
+description:
+  Join Kirby as he stacks the falling stars with help from his friends, Rick the
+  Hamster, Kine the Sunfish, and Coo the Owl. Watch out for King Dedede. He is out
+  to stop you! With a few quick moves and some well-timed strategy, you can
+  quickly outwit him and move on to the next challenging level. Kirby's Star
+  Stacker features pure puzzle fun for everyone. From above, blocks rain down
+  constantly. From below, whole lines appear with unrelenting clock-like
+  regularity. Simply sandwich the stars between Kirby's pals and you'll soon be on
+  your way to the high score.
+release: 1997-06-04
+players: 1
+assets.boxfront: BoxFront/Kirby's Star Stacker (USA, Europe) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Kirby's Star Stacker (USA, Europe) (SGB Enhanced).jpg
+assets.background: Background/Kirby's Star Stacker (USA, Europe) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Kirby's Star Stacker (USA, Europe) (SGB Enhanced).jpg
+assets.video: Video/Kirby's Star Stacker (USA, Europe) (SGB Enhanced).mp4
+x-co-op: No
+
+
+game: Mario's Picross (USA, Europe) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Mario's Picross (USA, Europe) (SGB Enhanced)/Mario's Picross (USA, Europe) (SGB Enhanced).json
+developer: Jupiter Corporation
+publisher: Nintendo
+genre: Puzzle
+description:
+  This challenging puzzler requires logic to reveal mysterious hidden pictures!
+  .
+  Help Mario unlock the mystery of Picross. The secrets lie in the numeric codes
+  at the top and on the left side of each window. Decipher these numbers and
+  uncover a hidden picture in every mind-bending puzzle.
+  .
+  It will take quick wits and a speedy pace to solve the clues before the clock
+  runs out. Chisel away boxes strategically and reveal the hidden image in record
+  time. Be careful - every mistake will cost you precious minutes.
+  .
+  There are more than 250 brain-bending puzzles to solve. Different levels of
+  difficulty provide mind-melting puzzle action for players of any skill level.
+release: 1995-03-14
+players: 1
+assets.boxfront: BoxFront/Mario's Picross (USA, Europe) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Mario's Picross (USA, Europe) (SGB Enhanced).jpg
+assets.background: Background/Mario's Picross (USA, Europe) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Mario's Picross (USA, Europe) (SGB Enhanced).jpg
+assets.video: Video/Mario's Picross (USA, Europe) (SGB Enhanced).mp4
+x-co-op: No
+
+
+game: Mega Man V (USA) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Mega Man V (USA) (SGB Enhanced)/Mega Man V (USA) (SGB Enhanced).json
+developer: Minakuchi Engineering
+publisher: Capcom
+genre: Action;Platform
+description:
+  They came from outer space!
+  .
+  From the cosmic reaches of outer space, comes mankind's greatest threat. Hordes
+  of alien robots have swarmed down from the heavens all the Earth's weapons are
+  powerless to stop their ravenous rampage. Now the only hope to stop these alien
+  invaders lies with one man - Mega Man!
+  .
+  Blast off for new worlds of excitement as Mega Man launches an all-out attack on
+  the alien armada! Rocket into battle and dodge the deadly rings of SATURN and
+  face the molten menace of MERCURY! Search the galaxy for alien gems and
+  construct the ultimate "Mega Arm" weapon and blast these invaders all the way
+  back to Alpha Centauri!
+release: 1994-07-22
+players: 1
+assets.boxfront: BoxFront/Mega Man V (USA) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Mega Man V (USA) (SGB Enhanced).jpg
+assets.background: Background/Mega Man V (USA) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Mega Man V (USA) (SGB Enhanced).jpg
+assets.video: Video/Mega Man V (USA) (SGB Enhanced).mp4
+x-co-op: No
+
+
+game: Mole Mania (USA, Europe) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Mole Mania (USA, Europe) (SGB Enhanced)/Mole Mania (USA, Europe) (SGB Enhanced).json
+developer: Pax Softnica
+publisher: Nintendo
+genre: Puzzle
+description:
+  Join Muddy Mole in a race to destroy enemies and obstacles in an attempt to
+  defeat the evil farmer, Jinbei. Blast strategic exits using black balls and
+  tunnel your way to the next action-packed level. Help Muddy solve the incredible
+  puzzles of Jinbei Land and reunite him with his beloved mole family. You'll dig
+  the fast pace and challenging fun of Mole Mania!
+release: 1996-07-21
+players: 1
+assets.boxfront: BoxFront/Mole Mania (USA, Europe) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Mole Mania (USA, Europe) (SGB Enhanced).jpg
+assets.background: Background/Mole Mania (USA, Europe) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Mole Mania (USA, Europe) (SGB Enhanced).jpg
+assets.video: Video/Mole Mania (USA, Europe) (SGB Enhanced).mp4
+x-co-op: No
+
+
+game: Mystical Ninja Starring Goemon (USA) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Mystical Ninja Starring Goemon (USA) (SGB Enhanced)/Mystical Ninja Starring Goemon (USA) (SGB Enhanced).json
+developer: KCE Nagoya
+publisher: Konami
+genre: Action;Adventure
+description:
+  A giant UFO has appeared over Oedo Castle, and the Mystical Ninja is off to save
+  the world again! Control Goemon and his giant robot, Impact, Ebisimaru, a truly
+  twisted ninja, Yae, the part-time militant mermaid, and Sasuke, a mechanical
+  warrior. This brave band must travel from town to town, collecting information
+  and purchasing helpful items in their quest to defeat the dreaded Peach Mountain
+  Shoguns.
+release: 1998-04-01
+players: 1
+assets.boxfront: BoxFront/Mystical Ninja Starring Goemon (USA) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Mystical Ninja Starring Goemon (USA) (SGB Enhanced).jpg
+assets.background: Background/Mystical Ninja Starring Goemon (USA) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Mystical Ninja Starring Goemon (USA) (SGB Enhanced).jpg
+assets.video: Video/Mystical Ninja Starring Goemon (USA) (SGB Enhanced).mp4
+x-co-op: No
+
+
+game: Tamagotchi (USA, Europe) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Tamagotchi (USA, Europe) (SGB Enhanced)/Tamagotchi (USA, Europe) (SGB Enhanced).json
+developer: Tom Create
+publisher: Bandai
+genre: Life Simulation
+description:
+  An egg arrives from a far-off planet in outer space. This egg contains a
+  'Tamagotchi', a baby alien that cannot fend for itself, and requires your
+  attention and care. Look after the Tamagotchi and help it grow up.
+  .
+  Tamagotchi is a game based on the popular virtual pet of the same name. In it,
+  you select an egg from the laboratory, and then it hatches in its room. From
+  there, you are fully responsible for its care. Everything from feeding,
+  medicine, playing with it, cleaning up its poo and scolding or praising it when
+  appropriate - you must do it all.
+  .
+  Unlike the actual Tamagotchi toy, the Game Boy version is not in realtime - you
+  can adjust the Tamagotchi's growth speed in the game options. You can also look
+  after up to three Tamagotchis simultaneously. The Game Boy version also features
+  three different games to play with your pet - depending on the game you select,
+  it will improve their mood, their intelligence, or their physical fitness. The
+  three games are:
+  .
+  Smile Game - Your pet will look left and right. Try to guess which direction it
+  will face next.\n
+  Study Game - Help your Tamagotchi study. Simple math questions will appear and
+  you must help it answer them.\n
+  Sports Game - Keep your Tamagotchi fit. Baseballs will rain down from the sky.
+  Get your pet to them before they hit the floor to score a point.
+  .
+  Another feature exclusive to the Game Boy version are Tournaments. You can enter
+  your pet in Race, Beauty and Knowledge tournaments. You can increase your
+  chances of winning in these by training your pet, but make sure that when you
+  enter them that it's not sick or spoiled, as it will not perform as well as it
+  could. Win a tournament and your Tamagotchi will be placed in the Hall of Fame.
+release: 1997-10-01
+players: 1
+assets.boxfront: BoxFront/Tamagotchi (USA, Europe) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Tamagotchi (USA, Europe) (SGB Enhanced).jpg
+assets.background: Background/Tamagotchi (USA, Europe) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Tamagotchi (USA, Europe) (SGB Enhanced).jpg
+assets.video: Video/Tamagotchi (USA, Europe) (SGB Enhanced).mp4
+x-co-op: No
+
+
+game: Wario Blast featuring Bomberman! (USA, Europe) (SGB Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Game Boy/Wario Blast featuring Bomberman! (USA, Europe) (SGB Enhanced)/Wario Blast featuring Bomberman! (USA, Europe) (SGB Enhanced).json
+developer: Hudson Soft
+publisher: Nintendo
+genre: Action
+description:
+  OH, NO! Wario has stumbled upon the secret gateway into Bomberland! Now the
+  greedy warmonger wants to claim the land, its inhabitants, and treasures as his
+  own. Entering the underground labyrinth, he meets the resistance of the
+  Madbombers - explosives experts who have some TNT tricks and surprises to toss
+  at Wario. The battle heats up as Wario and Bomberman each try to outwit the
+  other, level by level in a dynamite duel!
+release: 1994-11-15
+players: 2
+assets.boxfront: BoxFront/Wario Blast featuring Bomberman! (USA, Europe) (SGB Enhanced).jpg
+assets.boxback: BoxBack/Wario Blast featuring Bomberman! (USA, Europe) (SGB Enhanced).jpg
+assets.background: Background/Wario Blast featuring Bomberman! (USA, Europe) (SGB Enhanced).jpg
+assets.screenshot: Screenshot/Wario Blast featuring Bomberman! (USA, Europe) (SGB Enhanced).jpg
+assets.video: Video/Wario Blast featuring Bomberman! (USA, Europe) (SGB Enhanced).mp4
+x-co-op: No
+
+

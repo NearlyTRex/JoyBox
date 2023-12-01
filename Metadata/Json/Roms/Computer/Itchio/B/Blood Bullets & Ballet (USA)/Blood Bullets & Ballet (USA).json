@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Blood Bullets & Ballet (USA).exe"
+    ],
+    "transform_file": "Blood Bullets & Ballet (USA).exe"
+}

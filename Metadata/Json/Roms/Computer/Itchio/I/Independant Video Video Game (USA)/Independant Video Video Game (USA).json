@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Independant Video Video Game (USA).exe"
+    ],
+    "transform_file": "Independant Video Video Game (USA).exe"
+}

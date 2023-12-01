@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/POM Simulator 9000 (USA).exe"
+    ],
+    "transform_file": "POM Simulator 9000 (USA).exe"
+}

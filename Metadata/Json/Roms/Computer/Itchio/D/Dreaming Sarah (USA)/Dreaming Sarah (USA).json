@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dreaming Sarah (USA).exe"
+    ],
+    "transform_file": "Dreaming Sarah (USA).exe"
+}

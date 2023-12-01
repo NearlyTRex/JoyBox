@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Blue Rose Reprise (USA).exe"
+    ],
+    "transform_file": "Blue Rose Reprise (USA).exe"
+}

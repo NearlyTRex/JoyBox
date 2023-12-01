@@ -1,0 +1,253 @@
+Arcade || 1941 - Counter Attack (World) (1941) || $ROM_JSON_ROOT/Other/Arcade/1941 - Counter Attack (World) (1941)/1941 - Counter Attack (World) (1941).json
+Arcade || 1942 (World) (1942) || $ROM_JSON_ROOT/Other/Arcade/1942 (World) (1942)/1942 (World) (1942).json
+Arcade || 1943 - The Battle of Midway (Europe) (1943) || $ROM_JSON_ROOT/Other/Arcade/1943 - The Battle of Midway (Europe) (1943)/1943 - The Battle of Midway (Europe) (1943).json
+Arcade || 1943 Kai - Midway Kaisen (Japan) (1943kai) || $ROM_JSON_ROOT/Other/Arcade/1943 Kai - Midway Kaisen (Japan) (1943kai)/1943 Kai - Midway Kaisen (Japan) (1943kai).json
+Arcade || 1944 - The Loop Master (Europe) (1944) || $ROM_JSON_ROOT/Other/Arcade/1944 - The Loop Master (Europe) (1944)/1944 - The Loop Master (Europe) (1944).json
+Arcade || 19XX - The War Against Destiny (Europe) (19xx) || $ROM_JSON_ROOT/Other/Arcade/19XX - The War Against Destiny (Europe) (19xx)/19XX - The War Against Destiny (Europe) (19xx).json
+Arcade || 720 Degrees (World) (720) || $ROM_JSON_ROOT/Other/Arcade/720 Degrees (World) (720)/720 Degrees (World) (720).json
+Arcade || APB - All Points Bulletin (World) (apb) || $ROM_JSON_ROOT/Other/Arcade/APB - All Points Bulletin (World) (apb)/APB - All Points Bulletin (World) (apb).json
+Arcade || Akka Arrh (World) (Proto) (akkaarrh) || $ROM_JSON_ROOT/Other/Arcade/Akka Arrh (World) (Proto) (akkaarrh)/Akka Arrh (World) (Proto) (akkaarrh).json
+Arcade || Alien Syndrome (World) (aliensyn) || $ROM_JSON_ROOT/Other/Arcade/Alien Syndrome (World) (aliensyn)/Alien Syndrome (World) (aliensyn).json
+Arcade || Alpha Mission (World) (alphamis) || $ROM_JSON_ROOT/Other/Arcade/Alpha Mission (World) (alphamis)/Alpha Mission (World) (alphamis).json
+Arcade || Altered Beast (World) (altbeast) || $ROM_JSON_ROOT/Other/Arcade/Altered Beast (World) (altbeast)/Altered Beast (World) (altbeast).json
+Arcade || Arch Rivals (World) (archrivl) || $ROM_JSON_ROOT/Other/Arcade/Arch Rivals (World) (archrivl)/Arch Rivals (World) (archrivl).json
+Arcade || Armored Warriors (Europe) (armwar) || $ROM_JSON_ROOT/Other/Arcade/Armored Warriors (Europe) (armwar)/Armored Warriors (Europe) (armwar).json
+Arcade || Art of Fighting (World) (aof) || $ROM_JSON_ROOT/Other/Arcade/Art of Fighting (World) (aof)/Art of Fighting (World) (aof).json
+Arcade || Asteroids (World) (asteroid) || $ROM_JSON_ROOT/Other/Arcade/Asteroids (World) (asteroid)/Asteroids (World) (asteroid).json
+Arcade || Asteroids Deluxe (World) (astdelux) || $ROM_JSON_ROOT/Other/Arcade/Asteroids Deluxe (World) (astdelux)/Asteroids Deluxe (World) (astdelux).json
+Arcade || Atari Baseball (World) (abaseb) || $ROM_JSON_ROOT/Other/Arcade/Atari Baseball (World) (abaseb)/Atari Baseball (World) (abaseb).json
+Arcade || Atari Basketball (World) (bsktball) || $ROM_JSON_ROOT/Other/Arcade/Atari Basketball (World) (bsktball)/Atari Basketball (World) (bsktball).json
+Arcade || Atari Football (World) (atarifb) || $ROM_JSON_ROOT/Other/Arcade/Atari Football (World) (atarifb)/Atari Football (World) (atarifb).json
+Arcade || Atari Soccer (World) (soccer) || $ROM_JSON_ROOT/Other/Arcade/Atari Soccer (World) (soccer)/Atari Soccer (World) (soccer).json
+Arcade || Athena (World) (athena) || $ROM_JSON_ROOT/Other/Arcade/Athena (World) (athena)/Athena (World) (athena).json
+Arcade || Avalanche (World) (avalnche) || $ROM_JSON_ROOT/Other/Arcade/Avalanche (World) (avalnche)/Avalanche (World) (avalnche).json
+Arcade || Avengers (USA) (avengers) || $ROM_JSON_ROOT/Other/Arcade/Avengers (USA) (avengers)/Avengers (USA) (avengers).json
+Arcade || Baseball Stars 2 (World) (bstars2) || $ROM_JSON_ROOT/Other/Arcade/Baseball Stars 2 (World) (bstars2)/Baseball Stars 2 (World) (bstars2).json
+Arcade || Battle Circuit (Europe) (batcir) || $ROM_JSON_ROOT/Other/Arcade/Battle Circuit (Europe) (batcir)/Battle Circuit (Europe) (batcir).json
+Arcade || Battle Zone (World) (bzone) || $ROM_JSON_ROOT/Other/Arcade/Battle Zone (World) (bzone)/Battle Zone (World) (bzone).json
+Arcade || Battletoads (World) (btoads) || $ROM_JSON_ROOT/Other/Arcade/Battletoads (World) (btoads)/Battletoads (World) (btoads).json
+Arcade || Beast Busters (World) (bbusters) || $ROM_JSON_ROOT/Other/Arcade/Beast Busters (World) (bbusters)/Beast Busters (World) (bbusters).json
+Arcade || Bermuda Triangle (World) (bermudat) || $ROM_JSON_ROOT/Other/Arcade/Bermuda Triangle (World) (bermudat)/Bermuda Triangle (World) (bermudat).json
+Arcade || Bionic Commando (Europe) (bionicc) || $ROM_JSON_ROOT/Other/Arcade/Bionic Commando (Europe) (bionicc)/Bionic Commando (Europe) (bionicc).json
+Arcade || Black Tiger (World) (blktiger) || $ROM_JSON_ROOT/Other/Arcade/Black Tiger (World) (blktiger)/Black Tiger (World) (blktiger).json
+Arcade || Black Widow (World) (bwidow) || $ROM_JSON_ROOT/Other/Arcade/Black Widow (World) (bwidow)/Black Widow (World) (bwidow).json
+Arcade || Blaster (World) (blaster) || $ROM_JSON_ROOT/Other/Arcade/Blaster (World) (blaster)/Blaster (World) (blaster).json
+Arcade || Block Block (World) (block) || $ROM_JSON_ROOT/Other/Arcade/Block Block (World) (block)/Block Block (World) (block).json
+Arcade || Bosconian - Star Destroyer (World) (bosco) || $ROM_JSON_ROOT/Other/Arcade/Bosconian - Star Destroyer (World) (bosco)/Bosconian - Star Destroyer (World) (bosco).json
+Arcade || Bubbles (World) (bubbles) || $ROM_JSON_ROOT/Other/Arcade/Bubbles (World) (bubbles)/Bubbles (World) (bubbles).json
+Arcade || Burning Fight (World) (burningf) || $ROM_JSON_ROOT/Other/Arcade/Burning Fight (World) (burningf)/Burning Fight (World) (burningf).json
+Arcade || Buster Bros. (USA) (bbros) || $ROM_JSON_ROOT/Other/Arcade/Buster Bros. (USA) (bbros)/Buster Bros. (USA) (bbros).json
+Arcade || Canyon Bomber (World) (canyon) || $ROM_JSON_ROOT/Other/Arcade/Canyon Bomber (World) (canyon)/Canyon Bomber (World) (canyon).json
+Arcade || Capcom Sports Club (Europe) (csclub) || $ROM_JSON_ROOT/Other/Arcade/Capcom Sports Club (Europe) (csclub)/Capcom Sports Club (Europe) (csclub).json
+Arcade || Captain Commando (World) (captcomm) || $ROM_JSON_ROOT/Other/Arcade/Captain Commando (World) (captcomm)/Captain Commando (World) (captcomm).json
+Arcade || Carrier Air Wing (World) (cawing) || $ROM_JSON_ROOT/Other/Arcade/Carrier Air Wing (World) (cawing)/Carrier Air Wing (World) (cawing).json
+Arcade || Centipede (World) (centiped) || $ROM_JSON_ROOT/Other/Arcade/Centipede (World) (centiped)/Centipede (World) (centiped).json
+Arcade || Championship Sprint (World) (csprint) || $ROM_JSON_ROOT/Other/Arcade/Championship Sprint (World) (csprint)/Championship Sprint (World) (csprint).json
+Arcade || Chopper I (USA) (chopper) || $ROM_JSON_ROOT/Other/Arcade/Chopper I (USA) (chopper)/Chopper I (USA) (chopper).json
+Arcade || Circus Charlie (World) (circusc) || $ROM_JSON_ROOT/Other/Arcade/Circus Charlie (World) (circusc)/Circus Charlie (World) (circusc).json
+Arcade || Cloak & Dagger (World) (cloak) || $ROM_JSON_ROOT/Other/Arcade/Cloak & Dagger (World) (cloak)/Cloak & Dagger (World) (cloak).json
+Arcade || Commando (World) (commando) || $ROM_JSON_ROOT/Other/Arcade/Commando (World) (commando)/Commando (World) (commando).json
+Arcade || Congo Bongo (World) (congo) || $ROM_JSON_ROOT/Other/Arcade/Congo Bongo (World) (congo)/Congo Bongo (World) (congo).json
+Arcade || Crystal Castles (World) (ccastles) || $ROM_JSON_ROOT/Other/Arcade/Crystal Castles (World) (ccastles)/Crystal Castles (World) (ccastles).json
+Arcade || Cyberball (World) (cyberbal) || $ROM_JSON_ROOT/Other/Arcade/Cyberball (World) (cyberbal)/Cyberball (World) (cyberbal).json
+Arcade || Cyberbots - Fullmetal Madness (Europe) (cybots) || $ROM_JSON_ROOT/Other/Arcade/Cyberbots - Fullmetal Madness (Europe) (cybots)/Cyberbots - Fullmetal Madness (Europe) (cybots).json
+Arcade || Darkstalkers - The Night Warriors (Europe) (dstlk) || $ROM_JSON_ROOT/Other/Arcade/Darkstalkers - The Night Warriors (Europe) (dstlk)/Darkstalkers - The Night Warriors (Europe) (dstlk).json
+Arcade || Defender (World) (defender) || $ROM_JSON_ROOT/Other/Arcade/Defender (World) (defender)/Defender (World) (defender).json
+Arcade || Destroyer (World) (destroyr) || $ROM_JSON_ROOT/Other/Arcade/Destroyer (World) (destroyr)/Destroyer (World) (destroyr).json
+Arcade || Dig Dug (World) (digdug) || $ROM_JSON_ROOT/Other/Arcade/Dig Dug (World) (digdug)/Dig Dug (World) (digdug).json
+Arcade || Dig Dug II (World) (digdug2) || $ROM_JSON_ROOT/Other/Arcade/Dig Dug II (World) (digdug2)/Dig Dug II (World) (digdug2).json
+Arcade || Dominos (World) (dominos) || $ROM_JSON_ROOT/Other/Arcade/Dominos (World) (dominos)/Dominos (World) (dominos).json
+Arcade || Dragon Buster (World) (drgnbstr) || $ROM_JSON_ROOT/Other/Arcade/Dragon Buster (World) (drgnbstr)/Dragon Buster (World) (drgnbstr).json
+Arcade || Dynasty Wars (USA) (dynwar) || $ROM_JSON_ROOT/Other/Arcade/Dynasty Wars (USA) (dynwar)/Dynasty Wars (USA) (dynwar).json
+Arcade || Eco Fighters (World) (ecofghtr) || $ROM_JSON_ROOT/Other/Arcade/Eco Fighters (World) (ecofghtr)/Eco Fighters (World) (ecofghtr).json
+Arcade || Exed Exes (World) (exedexes) || $ROM_JSON_ROOT/Other/Arcade/Exed Exes (World) (exedexes)/Exed Exes (World) (exedexes).json
+Arcade || Fantasy (USA) (fantasyu) || $ROM_JSON_ROOT/Other/Arcade/Fantasy (USA) (fantasyu)/Fantasy (USA) (fantasyu).json
+Arcade || Fantasy Zone (World) (fantzone) || $ROM_JSON_ROOT/Other/Arcade/Fantasy Zone (World) (fantzone)/Fantasy Zone (World) (fantzone).json
+Arcade || Fantasy Zone II DX (Japan) (fantzn2x) || $ROM_JSON_ROOT/Other/Arcade/Fantasy Zone II DX (Japan) (fantzn2x)/Fantasy Zone II DX (Japan) (fantzn2x).json
+Arcade || Fatal Fury - King of Fighters (World) (fatfury1) || $ROM_JSON_ROOT/Other/Arcade/Fatal Fury - King of Fighters (World) (fatfury1)/Fatal Fury - King of Fighters (World) (fatfury1).json
+Arcade || Final Fight (World) (ffight) || $ROM_JSON_ROOT/Other/Arcade/Final Fight (World) (ffight)/Final Fight (World) (ffight).json
+Arcade || Fire Truck ~ Smokey Joe (World) (firetrk) || $ROM_JSON_ROOT/Other/Arcade/Fire Truck ~ Smokey Joe (World) (firetrk)/Fire Truck ~ Smokey Joe (World) (firetrk).json
+Arcade || Food Fight (World) (foodf) || $ROM_JSON_ROOT/Other/Arcade/Food Fight (World) (foodf)/Food Fight (World) (foodf).json
+Arcade || Forgotten Worlds (World) (forgottn) || $ROM_JSON_ROOT/Other/Arcade/Forgotten Worlds (World) (forgottn)/Forgotten Worlds (World) (forgottn).json
+Arcade || Galaga '88 (World) (galaga88) || $ROM_JSON_ROOT/Other/Arcade/Galaga '88 (World) (galaga88)/Galaga '88 (World) (galaga88).json
+Arcade || Galaga (World) (galaga) || $ROM_JSON_ROOT/Other/Arcade/Galaga (World) (galaga)/Galaga (World) (galaga).json
+Arcade || Galaxian (World) (galaxian) || $ROM_JSON_ROOT/Other/Arcade/Galaxian (World) (galaxian)/Galaxian (World) (galaxian).json
+Arcade || Gauntlet (World) (gauntlet) || $ROM_JSON_ROOT/Other/Arcade/Gauntlet (World) (gauntlet)/Gauntlet (World) (gauntlet).json
+Arcade || Gauntlet II (World) (gaunt2) || $ROM_JSON_ROOT/Other/Arcade/Gauntlet II (World) (gaunt2)/Gauntlet II (World) (gaunt2).json
+Arcade || Ghosts 'n Goblins (World) (gng) || $ROM_JSON_ROOT/Other/Arcade/Ghosts 'n Goblins (World) (gng)/Ghosts 'n Goblins (World) (gng).json
+Arcade || Ghouls 'n Ghosts (World) (ghouls) || $ROM_JSON_ROOT/Other/Arcade/Ghouls 'n Ghosts (World) (ghouls)/Ghouls 'n Ghosts (World) (ghouls).json
+Arcade || Giga Wing (USA) (gigawing) || $ROM_JSON_ROOT/Other/Arcade/Giga Wing (USA) (gigawing)/Giga Wing (USA) (gigawing).json
+Arcade || Gravitar (World) (gravitar) || $ROM_JSON_ROOT/Other/Arcade/Gravitar (World) (gravitar)/Gravitar (World) (gravitar).json
+Arcade || Grobda (World) (grobda) || $ROM_JSON_ROOT/Other/Arcade/Grobda (World) (grobda)/Grobda (World) (grobda).json
+Arcade || Guerrilla War (USA) (gwar) || $ROM_JSON_ROOT/Other/Arcade/Guerrilla War (USA) (gwar)/Guerrilla War (USA) (gwar).json
+Arcade || Gun.Smoke (World) (gunsmoke) || $ROM_JSON_ROOT/Other/Arcade/Gun.Smoke (World) (gunsmoke)/Gun.Smoke (World) (gunsmoke).json
+Arcade || Gyruss (World) (gyruss) || $ROM_JSON_ROOT/Other/Arcade/Gyruss (World) (gyruss)/Gyruss (World) (gyruss).json
+Arcade || Hard Drivin' (World) (harddriv) || $ROM_JSON_ROOT/Other/Arcade/Hard Drivin' (World) (harddriv)/Hard Drivin' (World) (harddriv).json
+Arcade || Haunted Castle (World) (hcastle) || $ROM_JSON_ROOT/Other/Arcade/Haunted Castle (World) (hcastle)/Haunted Castle (World) (hcastle).json
+Arcade || Hyper Street Fighter II - The Anniversary Edition (USA) (hsf2) || $ROM_JSON_ROOT/Other/Arcade/Hyper Street Fighter II - The Anniversary Edition (USA) (hsf2)/Hyper Street Fighter II - The Anniversary Edition (USA) (hsf2).json
+Arcade || I, Robot (World) (irobot) || $ROM_JSON_ROOT/Other/Arcade/I, Robot (World) (irobot)/I, Robot (World) (irobot).json
+Arcade || Ikari III - The Rescue (World) (ikari3) || $ROM_JSON_ROOT/Other/Arcade/Ikari III - The Rescue (World) (ikari3)/Ikari III - The Rescue (World) (ikari3).json
+Arcade || Ikari Warriors (USA) (ikari) || $ROM_JSON_ROOT/Other/Arcade/Ikari Warriors (USA) (ikari)/Ikari Warriors (USA) (ikari).json
+Arcade || Joust (World) (joust) || $ROM_JSON_ROOT/Other/Arcade/Joust (World) (joust)/Joust (World) (joust).json
+Arcade || Joust 2 - Survival of the Fittest (World) (joust2) || $ROM_JSON_ROOT/Other/Arcade/Joust 2 - Survival of the Fittest (World) (joust2)/Joust 2 - Survival of the Fittest (World) (joust2).json
+Arcade || Kicker ~ Shao-lin's Road (kicker) || $ROM_JSON_ROOT/Other/Arcade/Kicker ~ Shao-lin's Road (kicker)/Kicker ~ Shao-lin's Road (kicker).json
+Arcade || King & Balloon (USA) (kingball) || $ROM_JSON_ROOT/Other/Arcade/King & Balloon (USA) (kingball)/King & Balloon (USA) (kingball).json
+Arcade || King of Dragons, The (World) (kod) || $ROM_JSON_ROOT/Other/Arcade/King of Dragons, The (World) (kod)/King of Dragons, The (World) (kod).json
+Arcade || King of Fighters '94, The (World) (kof94) || $ROM_JSON_ROOT/Other/Arcade/King of Fighters '94, The (World) (kof94)/King of Fighters '94, The (World) (kof94).json
+Arcade || King of the Monsters (World) (kotm) || $ROM_JSON_ROOT/Other/Arcade/King of the Monsters (World) (kotm)/King of the Monsters (World) (kotm).json
+Arcade || Klax (World) (klax) || $ROM_JSON_ROOT/Other/Arcade/Klax (World) (klax)/Klax (World) (klax).json
+Arcade || Knights of the Round (World) (knights) || $ROM_JSON_ROOT/Other/Arcade/Knights of the Round (World) (knights)/Knights of the Round (World) (knights).json
+Arcade || Kozmik Kroozr (World) (kroozr) || $ROM_JSON_ROOT/Other/Arcade/Kozmik Kroozr (World) (kroozr)/Kozmik Kroozr (World) (kroozr).json
+Arcade || Last Duel (USA) (lastduel) || $ROM_JSON_ROOT/Other/Arcade/Last Duel (USA) (lastduel)/Last Duel (USA) (lastduel).json
+Arcade || Last Resort (World) (lresort) || $ROM_JSON_ROOT/Other/Arcade/Last Resort (World) (lresort)/Last Resort (World) (lresort).json
+Arcade || Led Storm Rally 2011 (World) (leds2011) || $ROM_JSON_ROOT/Other/Arcade/Led Storm Rally 2011 (World) (leds2011)/Led Storm Rally 2011 (World) (leds2011).json
+Arcade || Legendary Wings (USA) (lwings) || $ROM_JSON_ROOT/Other/Arcade/Legendary Wings (USA) (lwings)/Legendary Wings (USA) (lwings).json
+Arcade || Liberator (World) (liberatr) || $ROM_JSON_ROOT/Other/Arcade/Liberator (World) (liberatr)/Liberator (World) (liberatr).json
+Arcade || Lunar Lander (World) (llander) || $ROM_JSON_ROOT/Other/Arcade/Lunar Lander (World) (llander)/Lunar Lander (World) (llander).json
+Arcade || Magic Sword - Heroic Fantasy (World) (msword) || $ROM_JSON_ROOT/Other/Arcade/Magic Sword - Heroic Fantasy (World) (msword)/Magic Sword - Heroic Fantasy (World) (msword).json
+Arcade || Magician Lord (World) (maglord) || $ROM_JSON_ROOT/Other/Arcade/Magician Lord (World) (maglord)/Magician Lord (World) (maglord).json
+Arcade || Major Havoc (World) (mhavoc) || $ROM_JSON_ROOT/Other/Arcade/Major Havoc (World) (mhavoc)/Major Havoc (World) (mhavoc).json
+Arcade || Mappy (USA) (mappy) || $ROM_JSON_ROOT/Other/Arcade/Mappy (USA) (mappy)/Mappy (USA) (mappy).json
+Arcade || Marble Madness (World) (marble) || $ROM_JSON_ROOT/Other/Arcade/Marble Madness (World) (marble)/Marble Madness (World) (marble).json
+Arcade || Maze Invaders (World) (Proto) (mazeinv) || $ROM_JSON_ROOT/Other/Arcade/Maze Invaders (World) (Proto) (mazeinv)/Maze Invaders (World) (Proto) (mazeinv).json
+Arcade || Mega Man - The Power Battle (USA) (megaman) || $ROM_JSON_ROOT/Other/Arcade/Mega Man - The Power Battle (USA) (megaman)/Mega Man - The Power Battle (USA) (megaman).json
+Arcade || Mega Man 2 - The Power Fighters (USA) (megaman2) || $ROM_JSON_ROOT/Other/Arcade/Mega Man 2 - The Power Fighters (USA) (megaman2)/Mega Man 2 - The Power Fighters (USA) (megaman2).json
+Arcade || Mega Twins (World) (mtwins) || $ROM_JSON_ROOT/Other/Arcade/Mega Twins (World) (mtwins)/Mega Twins (World) (mtwins).json
+Arcade || Mercs (World) (mercs) || $ROM_JSON_ROOT/Other/Arcade/Mercs (World) (mercs)/Mercs (World) (mercs).json
+Arcade || Metal Slug - Super Vehicle-001 (World) (mslug) || $ROM_JSON_ROOT/Other/Arcade/Metal Slug - Super Vehicle-001 (World) (mslug)/Metal Slug - Super Vehicle-001 (World) (mslug).json
+Arcade || Metal Slug 2 - Super Vehicle-001 II (World) (mslug2) || $ROM_JSON_ROOT/Other/Arcade/Metal Slug 2 - Super Vehicle-001 II (World) (mslug2)/Metal Slug 2 - Super Vehicle-001 II (World) (mslug2).json
+Arcade || Metal Slug 3 (World) (mslug3) || $ROM_JSON_ROOT/Other/Arcade/Metal Slug 3 (World) (mslug3)/Metal Slug 3 (World) (mslug3).json
+Arcade || Metal Slug 4 (World) (mslug4) || $ROM_JSON_ROOT/Other/Arcade/Metal Slug 4 (World) (mslug4)/Metal Slug 4 (World) (mslug4).json
+Arcade || Metal Slug 5 (World) (mslug5) || $ROM_JSON_ROOT/Other/Arcade/Metal Slug 5 (World) (mslug5)/Metal Slug 5 (World) (mslug5).json
+Arcade || Metal Slug 6 (World) (mslug6) || $ROM_JSON_ROOT/Other/Arcade/Metal Slug 6 (World) (mslug6)/Metal Slug 6 (World) (mslug6).json
+Arcade || Metal Slug X (World) (mslugx) || $ROM_JSON_ROOT/Other/Arcade/Metal Slug X (World) (mslugx)/Metal Slug X (World) (mslugx).json
+Arcade || Millipede (World) (milliped) || $ROM_JSON_ROOT/Other/Arcade/Millipede (World) (milliped)/Millipede (World) (milliped).json
+Arcade || Missile Command (World) (missile) || $ROM_JSON_ROOT/Other/Arcade/Missile Command (World) (missile)/Missile Command (World) (missile).json
+Arcade || Monte Carlo (World) (montecar) || $ROM_JSON_ROOT/Other/Arcade/Monte Carlo (World) (montecar)/Monte Carlo (World) (montecar).json
+Arcade || Mortal Kombat (World) (mk) || $ROM_JSON_ROOT/Other/Arcade/Mortal Kombat (World) (mk)/Mortal Kombat (World) (mk).json
+Arcade || Mortal Kombat 3 (World) (mk3) || $ROM_JSON_ROOT/Other/Arcade/Mortal Kombat 3 (World) (mk3)/Mortal Kombat 3 (World) (mk3).json
+Arcade || Mortal Kombat II (World) (mk2) || $ROM_JSON_ROOT/Other/Arcade/Mortal Kombat II (World) (mk2)/Mortal Kombat II (World) (mk2).json
+Arcade || Motos (World) (motos) || $ROM_JSON_ROOT/Other/Arcade/Motos (World) (motos)/Motos (World) (motos).json
+Arcade || Ms. Pac-Man (World) (mspacman) || $ROM_JSON_ROOT/Other/Arcade/Ms. Pac-Man (World) (mspacman)/Ms. Pac-Man (World) (mspacman).json
+Arcade || Munch Mobile (USA) (mnchmobl) || $ROM_JSON_ROOT/Other/Arcade/Munch Mobile (USA) (mnchmobl)/Munch Mobile (USA) (mnchmobl).json
+Arcade || Narc (World) (narc) || $ROM_JSON_ROOT/Other/Arcade/Narc (World) (narc)/Narc (World) (narc).json
+Arcade || Nemesis (World) (nemesis) || $ROM_JSON_ROOT/Other/Arcade/Nemesis (World) (nemesis)/Nemesis (World) (nemesis).json
+Arcade || Neo Turf Masters ~ Big Tournament Golf (World) (turfmast) || $ROM_JSON_ROOT/Other/Arcade/Neo Turf Masters ~ Big Tournament Golf (World) (turfmast)/Neo Turf Masters ~ Big Tournament Golf (World) (turfmast).json
+Arcade || New Rally-X (World) (nrallyx) || $ROM_JSON_ROOT/Other/Arcade/New Rally-X (World) (nrallyx)/New Rally-X (World) (nrallyx).json
+Arcade || Night Warriors - Darkstalkers' Revenge (Europe) (nwarr) || $ROM_JSON_ROOT/Other/Arcade/Night Warriors - Darkstalkers' Revenge (Europe) (nwarr)/Night Warriors - Darkstalkers' Revenge (Europe) (nwarr).json
+Arcade || Ozma Wars (World) (ozmawars) || $ROM_JSON_ROOT/Other/Arcade/Ozma Wars (World) (ozmawars)/Ozma Wars (World) (ozmawars).json
+Arcade || P.O.W. - Prisoners of War (USA) (pow) || $ROM_JSON_ROOT/Other/Arcade/P.O.W. - Prisoners of War (USA) (pow)/P.O.W. - Prisoners of War (USA) (pow).json
+Arcade || Pac-Man (World) (Midway) (pacman) || $ROM_JSON_ROOT/Other/Arcade/Pac-Man (World) (Midway) (pacman)/Pac-Man (World) (Midway) (pacman).json
+Arcade || Paddle Mania (World) (paddlema) || $ROM_JSON_ROOT/Other/Arcade/Paddle Mania (World) (paddlema)/Paddle Mania (World) (paddlema).json
+Arcade || Pang! 3 (Europe) (pang3) || $ROM_JSON_ROOT/Other/Arcade/Pang! 3 (Europe) (pang3)/Pang! 3 (Europe) (pang3).json
+Arcade || Paperboy (World) (paperboy) || $ROM_JSON_ROOT/Other/Arcade/Paperboy (World) (paperboy)/Paperboy (World) (paperboy).json
+Arcade || Pirate Ship Higemaru (World) (higemaru) || $ROM_JSON_ROOT/Other/Arcade/Pirate Ship Higemaru (World) (higemaru)/Pirate Ship Higemaru (World) (higemaru).json
+Arcade || Pit-Fighter (World) (pitfight) || $ROM_JSON_ROOT/Other/Arcade/Pit-Fighter (World) (pitfight)/Pit-Fighter (World) (pitfight).json
+Arcade || Pnickies (Japan) (pnickj) || $ROM_JSON_ROOT/Other/Arcade/Pnickies (Japan) (pnickj)/Pnickies (Japan) (pnickj).json
+Arcade || Pong (World) (pong) || $ROM_JSON_ROOT/Other/Arcade/Pong (World) (pong)/Pong (World) (pong).json
+Arcade || Poolshark (World) (poolshrk) || $ROM_JSON_ROOT/Other/Arcade/Poolshark (World) (poolshrk)/Poolshark (World) (poolshrk).json
+Arcade || Pooyan (World) (pooyan) || $ROM_JSON_ROOT/Other/Arcade/Pooyan (World) (pooyan)/Pooyan (World) (pooyan).json
+Arcade || Prehistoric Isle in 1930 (World) (prehisle) || $ROM_JSON_ROOT/Other/Arcade/Prehistoric Isle in 1930 (World) (prehisle)/Prehistoric Isle in 1930 (World) (prehisle).json
+Arcade || Primal Rage (World) (primrage) || $ROM_JSON_ROOT/Other/Arcade/Primal Rage (World) (primrage)/Primal Rage (World) (primrage).json
+Arcade || Progear (USA) (progear) || $ROM_JSON_ROOT/Other/Arcade/Progear (USA) (progear)/Progear (USA) (progear).json
+Arcade || Psycho Soldier (USA) (psychos) || $ROM_JSON_ROOT/Other/Arcade/Psycho Soldier (USA) (psychos)/Psycho Soldier (USA) (psychos).json
+Arcade || Quantum (World) (quantum) || $ROM_JSON_ROOT/Other/Arcade/Quantum (World) (quantum)/Quantum (World) (quantum).json
+Arcade || Quiz & Dragons - Capcom Quiz Game (USA) (qad) || $ROM_JSON_ROOT/Other/Arcade/Quiz & Dragons - Capcom Quiz Game (USA) (qad)/Quiz & Dragons - Capcom Quiz Game (USA) (qad).json
+Arcade || Rally-X (World) (rallyx) || $ROM_JSON_ROOT/Other/Arcade/Rally-X (World) (rallyx)/Rally-X (World) (rallyx).json
+Arcade || Rampage (World) (rampage) || $ROM_JSON_ROOT/Other/Arcade/Rampage (World) (rampage)/Rampage (World) (rampage).json
+Arcade || Rampage - World Tour (World) (rmpgwt) || $ROM_JSON_ROOT/Other/Arcade/Rampage - World Tour (World) (rmpgwt)/Rampage - World Tour (World) (rmpgwt).json
+Arcade || Rampart (World) (rampart) || $ROM_JSON_ROOT/Other/Arcade/Rampart (World) (rampart)/Rampart (World) (rampart).json
+Arcade || Red Baron (World) (redbaron) || $ROM_JSON_ROOT/Other/Arcade/Red Baron (World) (redbaron)/Red Baron (World) (redbaron).json
+Arcade || Road Blasters (World) (roadblst) || $ROM_JSON_ROOT/Other/Arcade/Road Blasters (World) (roadblst)/Road Blasters (World) (roadblst).json
+Arcade || Road Fighter (World) (roadf) || $ROM_JSON_ROOT/Other/Arcade/Road Fighter (World) (roadf)/Road Fighter (World) (roadf).json
+Arcade || Robotron - 2084 (World) (robotron) || $ROM_JSON_ROOT/Other/Arcade/Robotron - 2084 (World) (robotron)/Robotron - 2084 (World) (robotron).json
+Arcade || Roc'n Rope (World) (rocnrope) || $ROM_JSON_ROOT/Other/Arcade/Roc'n Rope (World) (rocnrope)/Roc'n Rope (World) (rocnrope).json
+Arcade || Rolling Thunder (World) (rthunder) || $ROM_JSON_ROOT/Other/Arcade/Rolling Thunder (World) (rthunder)/Rolling Thunder (World) (rthunder).json
+Arcade || Rolling Thunder 2 (World) (rthun2) || $ROM_JSON_ROOT/Other/Arcade/Rolling Thunder 2 (World) (rthun2)/Rolling Thunder 2 (World) (rthun2).json
+Arcade || Root Beer Tapper (World) (rbtapper) || $ROM_JSON_ROOT/Other/Arcade/Root Beer Tapper (World) (rbtapper)/Root Beer Tapper (World) (rbtapper).json
+Arcade || SAR - Search And Rescue (World) (searchar) || $ROM_JSON_ROOT/Other/Arcade/SAR - Search And Rescue (World) (searchar)/SAR - Search And Rescue (World) (searchar).json
+Arcade || Salamander (World) (salamand) || $ROM_JSON_ROOT/Other/Arcade/Salamander (World) (salamand)/Salamander (World) (salamand).json
+Arcade || Samurai Shodown ~ Samurai Spirits (World) (samsho) || $ROM_JSON_ROOT/Other/Arcade/Samurai Shodown ~ Samurai Spirits (World) (samsho)/Samurai Shodown ~ Samurai Spirits (World) (samsho).json
+Arcade || Sasuke vs. Commander (World) (sasuke) || $ROM_JSON_ROOT/Other/Arcade/Sasuke vs. Commander (World) (sasuke)/Sasuke vs. Commander (World) (sasuke).json
+Arcade || Satan's Hollow (World) (shollow) || $ROM_JSON_ROOT/Other/Arcade/Satan's Hollow (World) (shollow)/Satan's Hollow (World) (shollow).json
+Arcade || Saturday Night Slam Masters (World) (slammast) || $ROM_JSON_ROOT/Other/Arcade/Saturday Night Slam Masters (World) (slammast)/Saturday Night Slam Masters (World) (slammast).json
+Arcade || Scramble (World) (scramble) || $ROM_JSON_ROOT/Other/Arcade/Scramble (World) (scramble)/Scramble (World) (scramble).json
+Arcade || Section Z (World) (sectionz) || $ROM_JSON_ROOT/Other/Arcade/Section Z (World) (sectionz)/Section Z (World) (sectionz).json
+Arcade || Sengoku ~ Sengoku Denshou (World) (sengoku) || $ROM_JSON_ROOT/Other/Arcade/Sengoku ~ Sengoku Denshou (World) (sengoku)/Sengoku ~ Sengoku Denshou (World) (sengoku).json
+Arcade || Shinobi (Japan) (shinobi) || $ROM_JSON_ROOT/Other/Arcade/Shinobi (Japan) (shinobi)/Shinobi (Japan) (shinobi).json
+Arcade || Shock Troopers (World) (shocktro) || $ROM_JSON_ROOT/Other/Arcade/Shock Troopers (World) (shocktro)/Shock Troopers (World) (shocktro).json
+Arcade || Side Arms - Hyper Dyne (World) (sidearms) || $ROM_JSON_ROOT/Other/Arcade/Side Arms - Hyper Dyne (World) (sidearms)/Side Arms - Hyper Dyne (World) (sidearms).json
+Arcade || Sinistar (World) (sinistar) || $ROM_JSON_ROOT/Other/Arcade/Sinistar (World) (sinistar)/Sinistar (World) (sinistar).json
+Arcade || Sky Diver (World) (skydiver) || $ROM_JSON_ROOT/Other/Arcade/Sky Diver (World) (skydiver)/Sky Diver (World) (skydiver).json
+Arcade || Sky Kid (World) (skykid) || $ROM_JSON_ROOT/Other/Arcade/Sky Kid (World) (skykid)/Sky Kid (World) (skykid).json
+Arcade || Smash T.V. (World) (smashtv) || $ROM_JSON_ROOT/Other/Arcade/Smash T.V. (World) (smashtv)/Smash T.V. (World) (smashtv).json
+Arcade || Son Son (World) (sonson) || $ROM_JSON_ROOT/Other/Arcade/Son Son (World) (sonson)/Son Son (World) (sonson).json
+Arcade || Sonic Championship (USA) (schamp) || $ROM_JSON_ROOT/Other/Arcade/Sonic Championship (USA) (schamp)/Sonic Championship (USA) (schamp).json
+Arcade || Space Duel (World) (spacduel) || $ROM_JSON_ROOT/Other/Arcade/Space Duel (World) (spacduel)/Space Duel (World) (spacduel).json
+Arcade || Space Harrier (World) (sharrier) || $ROM_JSON_ROOT/Other/Arcade/Space Harrier (World) (sharrier)/Space Harrier (World) (sharrier).json
+Arcade || Speed Rumbler, The (World) (srumbler) || $ROM_JSON_ROOT/Other/Arcade/Speed Rumbler, The (World) (srumbler)/Speed Rumbler, The (World) (srumbler).json
+Arcade || Splat! (World) (splat) || $ROM_JSON_ROOT/Other/Arcade/Splat! (World) (splat)/Splat! (World) (splat).json
+Arcade || Splatter House (World) (splatter) || $ROM_JSON_ROOT/Other/Arcade/Splatter House (World) (splatter)/Splatter House (World) (splatter).json
+Arcade || Sprint 1 (World) (sprint1) || $ROM_JSON_ROOT/Other/Arcade/Sprint 1 (World) (sprint1)/Sprint 1 (World) (sprint1).json
+Arcade || Sprint 8 (World) (sprint8) || $ROM_JSON_ROOT/Other/Arcade/Sprint 8 (World) (sprint8)/Sprint 8 (World) (sprint8).json
+Arcade || Spy Hunter (World) (spyhunt) || $ROM_JSON_ROOT/Other/Arcade/Spy Hunter (World) (spyhunt)/Spy Hunter (World) (spyhunt).json
+Arcade || Spy Hunter II (World) (spyhunt2) || $ROM_JSON_ROOT/Other/Arcade/Spy Hunter II (World) (spyhunt2)/Spy Hunter II (World) (spyhunt2).json
+Arcade || Stargate (World) (stargate) || $ROM_JSON_ROOT/Other/Arcade/Stargate (World) (stargate)/Stargate (World) (stargate).json
+Arcade || Street Fighter (USA) (sf) || $ROM_JSON_ROOT/Other/Arcade/Street Fighter (USA) (sf)/Street Fighter (USA) (sf).json
+Arcade || Street Fighter Alpha - Warriors' Dreams (Europe) (sfa) || $ROM_JSON_ROOT/Other/Arcade/Street Fighter Alpha - Warriors' Dreams (Europe) (sfa)/Street Fighter Alpha - Warriors' Dreams (Europe) (sfa).json
+Arcade || Street Fighter Alpha 2 (Europe) (sfa2) || $ROM_JSON_ROOT/Other/Arcade/Street Fighter Alpha 2 (Europe) (sfa2)/Street Fighter Alpha 2 (Europe) (sfa2).json
+Arcade || Street Fighter Alpha 3 (Europe) (sfa3) || $ROM_JSON_ROOT/Other/Arcade/Street Fighter Alpha 3 (Europe) (sfa3)/Street Fighter Alpha 3 (Europe) (sfa3).json
+Arcade || Street Fighter II - The World Warrior (World) (sf2) || $ROM_JSON_ROOT/Other/Arcade/Street Fighter II - The World Warrior (World) (sf2)/Street Fighter II - The World Warrior (World) (sf2).json
+Arcade || Street Fighter II' - Champion Edition (World) (sf2ce) || $ROM_JSON_ROOT/Other/Arcade/Street Fighter II' - Champion Edition (World) (sf2ce)/Street Fighter II' - Champion Edition (World) (sf2ce).json
+Arcade || Street Fighter II' - Hyper Fighting (World) (sf2hf) || $ROM_JSON_ROOT/Other/Arcade/Street Fighter II' - Hyper Fighting (World) (sf2hf)/Street Fighter II' - Hyper Fighting (World) (sf2hf).json
+Arcade || Street Fighter III - 2nd Impact - Giant Attack (USA) (sfiii2) || $ROM_JSON_ROOT/Other/Arcade/Street Fighter III - 2nd Impact - Giant Attack (USA) (sfiii2)/Street Fighter III - 2nd Impact - Giant Attack (USA) (sfiii2).json
+Arcade || Street Fighter III - 3rd Strike - Fight for the Future (Europe) (sfiii3) || $ROM_JSON_ROOT/Other/Arcade/Street Fighter III - 3rd Strike - Fight for the Future (Europe) (sfiii3)/Street Fighter III - 3rd Strike - Fight for the Future (Europe) (sfiii3).json
+Arcade || Street Fighter III - New Generation (Europe) (sfiii) || $ROM_JSON_ROOT/Other/Arcade/Street Fighter III - New Generation (Europe) (sfiii)/Street Fighter III - New Generation (Europe) (sfiii).json
+Arcade || Street Smart (USA) (streetsm) || $ROM_JSON_ROOT/Other/Arcade/Street Smart (USA) (streetsm)/Street Smart (USA) (streetsm).json
+Arcade || Strider (USA) (strider) || $ROM_JSON_ROOT/Other/Arcade/Strider (USA) (strider)/Strider (USA) (strider).json
+Arcade || Super Breakout (World) (sbrkout) || $ROM_JSON_ROOT/Other/Arcade/Super Breakout (World) (sbrkout)/Super Breakout (World) (sbrkout).json
+Arcade || Super Bug (World) (superbug) || $ROM_JSON_ROOT/Other/Arcade/Super Bug (World) (superbug)/Super Bug (World) (superbug).json
+Arcade || Super Buster Bros. (USA) (sbbros) || $ROM_JSON_ROOT/Other/Arcade/Super Buster Bros. (USA) (sbbros)/Super Buster Bros. (USA) (sbbros).json
+Arcade || Super Cobra (World) (scobra) || $ROM_JSON_ROOT/Other/Arcade/Super Cobra (World) (scobra)/Super Cobra (World) (scobra).json
+Arcade || Super Gem Fighter Mini Mix (USA) (sgemf) || $ROM_JSON_ROOT/Other/Arcade/Super Gem Fighter Mini Mix (USA) (sgemf)/Super Gem Fighter Mini Mix (USA) (sgemf).json
+Arcade || Super Puzzle Fighter II Turbo (Europe) (spf2t) || $ROM_JSON_ROOT/Other/Arcade/Super Puzzle Fighter II Turbo (Europe) (spf2t)/Super Puzzle Fighter II Turbo (Europe) (spf2t).json
+Arcade || Super Sidekicks 3 - The Next Glory (World) (ssideki3) || $ROM_JSON_ROOT/Other/Arcade/Super Sidekicks 3 - The Next Glory (World) (ssideki3)/Super Sidekicks 3 - The Next Glory (World) (ssideki3).json
+Arcade || Super Sprint (World) (ssprint) || $ROM_JSON_ROOT/Other/Arcade/Super Sprint (World) (ssprint)/Super Sprint (World) (ssprint).json
+Arcade || Super Street Fighter II - The New Challengers (World) (ssf2) || $ROM_JSON_ROOT/Other/Arcade/Super Street Fighter II - The New Challengers (World) (ssf2)/Super Street Fighter II - The New Challengers (World) (ssf2).json
+Arcade || Super Street Fighter II Turbo (World) (ssf2t) || $ROM_JSON_ROOT/Other/Arcade/Super Street Fighter II Turbo (World) (ssf2t)/Super Street Fighter II Turbo (World) (ssf2t).json
+Arcade || T.N.K III (USA) (tnk3) || $ROM_JSON_ROOT/Other/Arcade/T.N.K III (USA) (tnk3)/T.N.K III (USA) (tnk3).json
+Arcade || Tank Force (USA) (tankfrce) || $ROM_JSON_ROOT/Other/Arcade/Tank Force (USA) (tankfrce)/Tank Force (USA) (tankfrce).json
+Arcade || Teenage Mutant Ninja Turtles (World) (tmnt) || $ROM_JSON_ROOT/Other/Arcade/Teenage Mutant Ninja Turtles (World) (tmnt)/Teenage Mutant Ninja Turtles (World) (tmnt).json
+Arcade || Teenage Mutant Ninja Turtles - Turtles in Time (World) (tmnt2) || $ROM_JSON_ROOT/Other/Arcade/Teenage Mutant Ninja Turtles - Turtles in Time (World) (tmnt2)/Teenage Mutant Ninja Turtles - Turtles in Time (World) (tmnt2).json
+Arcade || Tempest (World) (tempest) || $ROM_JSON_ROOT/Other/Arcade/Tempest (World) (tempest)/Tempest (World) (tempest).json
+Arcade || Three Wonders (World) (3wonders) || $ROM_JSON_ROOT/Other/Arcade/Three Wonders (World) (3wonders)/Three Wonders (World) (3wonders).json
+Arcade || Thunder Cross (World) (thunderx) || $ROM_JSON_ROOT/Other/Arcade/Thunder Cross (World) (thunderx)/Thunder Cross (World) (thunderx).json
+Arcade || Tiger Road (USA) (tigeroad) || $ROM_JSON_ROOT/Other/Arcade/Tiger Road (USA) (tigeroad)/Tiger Road (USA) (tigeroad).json
+Arcade || Timber (World) (timber) || $ROM_JSON_ROOT/Other/Arcade/Timber (World) (timber)/Timber (World) (timber).json
+Arcade || Time Pilot (World) (timeplt) || $ROM_JSON_ROOT/Other/Arcade/Time Pilot (World) (timeplt)/Time Pilot (World) (timeplt).json
+Arcade || Time Soldiers (USA) (timesold) || $ROM_JSON_ROOT/Other/Arcade/Time Soldiers (USA) (timesold)/Time Soldiers (USA) (timesold).json
+Arcade || Toobin' (World) (toobin) || $ROM_JSON_ROOT/Other/Arcade/Toobin' (World) (toobin)/Toobin' (World) (toobin).json
+Arcade || Top Hunter - Roddy & Cathy (World) (tophuntr) || $ROM_JSON_ROOT/Other/Arcade/Top Hunter - Roddy & Cathy (World) (tophuntr)/Top Hunter - Roddy & Cathy (World) (tophuntr).json
+Arcade || Total Carnage (World) (totcam) || $ROM_JSON_ROOT/Other/Arcade/Total Carnage (World) (totcam)/Total Carnage (World) (totcam).json
+Arcade || Tower of Druaga, The (World) (todruaga) || $ROM_JSON_ROOT/Other/Arcade/Tower of Druaga, The (World) (todruaga)/Tower of Druaga, The (World) (todruaga).json
+Arcade || Trojan (USA) (trojan) || $ROM_JSON_ROOT/Other/Arcade/Trojan (USA) (trojan)/Trojan (USA) (trojan).json
+Arcade || TwinBee (World) (twinbee) || $ROM_JSON_ROOT/Other/Arcade/TwinBee (World) (twinbee)/TwinBee (World) (twinbee).json
+Arcade || Typhoon (World) (ajax) || $ROM_JSON_ROOT/Other/Arcade/Typhoon (World) (ajax)/Typhoon (World) (ajax).json
+Arcade || Vampire Savior - The Lord of Vampire (Europe) (vsav) || $ROM_JSON_ROOT/Other/Arcade/Vampire Savior - The Lord of Vampire (Europe) (vsav)/Vampire Savior - The Lord of Vampire (Europe) (vsav).json
+Arcade || Vampire Savior 2 - The Lord of Vampire (Japan) (vsav2) || $ROM_JSON_ROOT/Other/Arcade/Vampire Savior 2 - The Lord of Vampire (Japan) (vsav2)/Vampire Savior 2 - The Lord of Vampire (Japan) (vsav2).json
+Arcade || Varth - Operation Thunderstorm (World) (varth) || $ROM_JSON_ROOT/Other/Arcade/Varth - Operation Thunderstorm (World) (varth)/Varth - Operation Thunderstorm (World) (varth).json
+Arcade || Victory Road (World) (victroad) || $ROM_JSON_ROOT/Other/Arcade/Victory Road (World) (victroad)/Victory Road (World) (victroad).json
+Arcade || Vindicators (World) (vindictr) || $ROM_JSON_ROOT/Other/Arcade/Vindicators (World) (vindictr)/Vindicators (World) (vindictr).json
+Arcade || Vulcan Venture (World) (vulcan) || $ROM_JSON_ROOT/Other/Arcade/Vulcan Venture (World) (vulcan)/Vulcan Venture (World) (vulcan).json
+Arcade || Vulgus (World) (vulgus) || $ROM_JSON_ROOT/Other/Arcade/Vulgus (World) (vulgus)/Vulgus (World) (vulgus).json
+Arcade || Wacko (World) (wacko) || $ROM_JSON_ROOT/Other/Arcade/Wacko (World) (wacko)/Wacko (World) (wacko).json
+Arcade || Warlords! (World) (warlords) || $ROM_JSON_ROOT/Other/Arcade/Warlords! (World) (warlords)/Warlords! (World) (warlords).json
+Arcade || Warriors of Fate (World) (wof) || $ROM_JSON_ROOT/Other/Arcade/Warriors of Fate (World) (wof)/Warriors of Fate (World) (wof).json
+Arcade || Wizard of Wor (World) (wow) || $ROM_JSON_ROOT/Other/Arcade/Wizard of Wor (World) (wow)/Wizard of Wor (World) (wow).json
+Arcade || World Heroes (World) (wh1) || $ROM_JSON_ROOT/Other/Arcade/World Heroes (World) (wh1)/World Heroes (World) (wh1).json
+Arcade || World Wars (World) (worldwar) || $ROM_JSON_ROOT/Other/Arcade/World Wars (World) (worldwar)/World Wars (World) (worldwar).json
+Arcade || Xenophobe (World) (xenophob) || $ROM_JSON_ROOT/Other/Arcade/Xenophobe (World) (xenophob)/Xenophobe (World) (xenophob).json
+Arcade || Xevious (World) (xevious) || $ROM_JSON_ROOT/Other/Arcade/Xevious (World) (xevious)/Xevious (World) (xevious).json
+Arcade || Xybots (World) (xybots) || $ROM_JSON_ROOT/Other/Arcade/Xybots (World) (xybots)/Xybots (World) (xybots).json
+Arcade || Yie Ar Kung-Fu (World) (yiear) || $ROM_JSON_ROOT/Other/Arcade/Yie Ar Kung-Fu (World) (yiear)/Yie Ar Kung-Fu (World) (yiear).json
+Arcade || Zaxxon (World) (zaxxon) || $ROM_JSON_ROOT/Other/Arcade/Zaxxon (World) (zaxxon)/Zaxxon (World) (zaxxon).json

@@ -1,0 +1,102 @@
+Sony PlayStation Vita || Alone With You (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Alone With You (USA)/Alone With You (USA).json
+Sony PlayStation Vita || Another World - 20th Anniversary Edition (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Another World - 20th Anniversary Edition (USA)/Another World - 20th Anniversary Edition (USA).json
+Sony PlayStation Vita || Antiquia Lost (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Antiquia Lost (USA)/Antiquia Lost (USA).json
+Sony PlayStation Vita || Aqua Kitty - Milk Mine Defender DX (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Aqua Kitty - Milk Mine Defender DX (USA)/Aqua Kitty - Milk Mine Defender DX (USA).json
+Sony PlayStation Vita || Army Corps of Hell (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Army Corps of Hell (USA)/Army Corps of Hell (USA).json
+Sony PlayStation Vita || Asdivine Hearts (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Asdivine Hearts (USA)/Asdivine Hearts (USA).json
+Sony PlayStation Vita || Bard's Gold (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Bard's Gold (USA)/Bard's Gold (USA).json
+Sony PlayStation Vita || Bastion (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Bastion (USA)/Bastion (USA).json
+Sony PlayStation Vita || Bit.Trip Presents... Runner2 - Future Legend of Rhythm Alien (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Bit.Trip Presents... Runner2 - Future Legend of Rhythm Alien (USA)/Bit.Trip Presents... Runner2 - Future Legend of Rhythm Alien (USA).json
+Sony PlayStation Vita || Bit.Trip, The (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Bit.Trip, The (USA)/Bit.Trip, The (USA).json
+Sony PlayStation Vita || Chronus Arc (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Chronus Arc (USA)/Chronus Arc (USA).json
+Sony PlayStation Vita || Claire - Extended Cut (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Claire - Extended Cut (USA)/Claire - Extended Cut (USA).json
+Sony PlayStation Vita || Croixleur Sigma (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Croixleur Sigma (USA)/Croixleur Sigma (USA).json
+Sony PlayStation Vita || Curses 'N Chaos (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Curses 'N Chaos (USA)/Curses 'N Chaos (USA).json
+Sony PlayStation Vita || Damascus Gear - Operation Osaka (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Damascus Gear - Operation Osaka (USA)/Damascus Gear - Operation Osaka (USA).json
+Sony PlayStation Vita || Damascus Gear - Operation Tokyo (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Damascus Gear - Operation Tokyo (USA)/Damascus Gear - Operation Tokyo (USA).json
+Sony PlayStation Vita || Dariusburst - Chronicle Saviours (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Dariusburst - Chronicle Saviours (USA)/Dariusburst - Chronicle Saviours (USA).json
+Sony PlayStation Vita || Deadbolt (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Deadbolt (USA)/Deadbolt (USA).json
+Sony PlayStation Vita || Deception IV - The Nightmare Princess (Asia) (En) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Deception IV - The Nightmare Princess (Asia) (En)/Deception IV - The Nightmare Princess (Asia) (En).json
+Sony PlayStation Vita || Deemo - The Last Recital (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Deemo - The Last Recital (USA)/Deemo - The Last Recital (USA).json
+Sony PlayStation Vita || Defender's Quest (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Defender's Quest (USA)/Defender's Quest (USA).json
+Sony PlayStation Vita || Dragon Fantasy (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Dragon Fantasy (USA)/Dragon Fantasy (USA).json
+Sony PlayStation Vita || Dragon Fantasy - Book II - The Black Tome of Ice (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Dragon Fantasy - Book II - The Black Tome of Ice (USA)/Dragon Fantasy - Book II - The Black Tome of Ice (USA).json
+Sony PlayStation Vita || Dragon Sinker (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Dragon Sinker (USA)/Dragon Sinker (USA).json
+Sony PlayStation Vita || Earth Defense Force 2 - Invaders From Planet Space (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Earth Defense Force 2 - Invaders From Planet Space (USA)/Earth Defense Force 2 - Invaders From Planet Space (USA).json
+Sony PlayStation Vita || Exile's End (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Exile's End (USA)/Exile's End (USA).json
+Sony PlayStation Vita || Exist Archive - The Other Side of the Sky (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Exist Archive - The Other Side of the Sky (USA)/Exist Archive - The Other Side of the Sky (USA).json
+Sony PlayStation Vita || Factotum 90 (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Factotum 90 (USA)/Factotum 90 (USA).json
+Sony PlayStation Vita || Fernz Gate (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Fernz Gate (USA)/Fernz Gate (USA).json
+Sony PlayStation Vita || Forma.8 (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Forma.8 (USA)/Forma.8 (USA).json
+Sony PlayStation Vita || Freedom Wars (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Freedom Wars (USA)/Freedom Wars (USA).json
+Sony PlayStation Vita || Guacamelee! (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Guacamelee! (USA)/Guacamelee! (USA).json
+Sony PlayStation Vita || Gunhouse (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Gunhouse (USA)/Gunhouse (USA).json
+Sony PlayStation Vita || Home - A Unique Horror Adventure (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Home - A Unique Horror Adventure (USA)/Home - A Unique Horror Adventure (USA).json
+Sony PlayStation Vita || House in Fata Morgana, The (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/House in Fata Morgana, The (USA)/House in Fata Morgana, The (USA).json
+Sony PlayStation Vita || Hue (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Hue (USA)/Hue (USA).json
+Sony PlayStation Vita || LEGO Batman 2 - DC Super Heroes (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Batman 2 - DC Super Heroes (USA)/LEGO Batman 2 - DC Super Heroes (USA).json
+Sony PlayStation Vita || LEGO Batman 3 - Beyond Gotham (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Batman 3 - Beyond Gotham (USA)/LEGO Batman 3 - Beyond Gotham (USA).json
+Sony PlayStation Vita || LEGO Jurassic World (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Jurassic World (USA)/LEGO Jurassic World (USA).json
+Sony PlayStation Vita || LEGO Marvel Super Heroes - Universe in Peril (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Marvel Super Heroes - Universe in Peril (USA)/LEGO Marvel Super Heroes - Universe in Peril (USA).json
+Sony PlayStation Vita || LEGO Marvel's Avengers (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Marvel's Avengers (USA)/LEGO Marvel's Avengers (USA).json
+Sony PlayStation Vita || LEGO Movie Videogame, The (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Movie Videogame, The (USA)/LEGO Movie Videogame, The (USA).json
+Sony PlayStation Vita || LEGO Ninjago - Shadow of Ronin (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Ninjago - Shadow of Ronin (USA)/LEGO Ninjago - Shadow of Ronin (USA).json
+Sony PlayStation Vita || LEGO Star Wars - The Force Awakens (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Star Wars - The Force Awakens (USA)/LEGO Star Wars - The Force Awakens (USA).json
+Sony PlayStation Vita || La-Mulana EX (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/La-Mulana EX (USA)/La-Mulana EX (USA).json
+Sony PlayStation Vita || LittleBigPlanet PS Vita (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LittleBigPlanet PS Vita (USA)/LittleBigPlanet PS Vita (USA).json
+Sony PlayStation Vita || London Detective Mysteria (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/London Detective Mysteria (USA)/London Detective Mysteria (USA).json
+Sony PlayStation Vita || Lone Survivor - The Director's Cut (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Lone Survivor - The Director's Cut (USA)/Lone Survivor - The Director's Cut (USA).json
+Sony PlayStation Vita || Mecho Tales (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Mecho Tales (USA)/Mecho Tales (USA).json
+Sony PlayStation Vita || Murasma Rebirth (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Murasma Rebirth (USA)/Murasma Rebirth (USA).json
+Sony PlayStation Vita || Musynx (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Musynx (USA)/Musynx (USA).json
+Sony PlayStation Vita || Mystery Chronicle - One Way Heroics (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Mystery Chronicle - One Way Heroics (USA)/Mystery Chronicle - One Way Heroics (USA).json
+Sony PlayStation Vita || NOVA-111 (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/NOVA-111 (USA)/NOVA-111 (USA).json
+Sony PlayStation Vita || NeuroVoider (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/NeuroVoider (USA)/NeuroVoider (USA).json
+Sony PlayStation Vita || Oceanhorn - Monster of Uncharted Seas (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Oceanhorn - Monster of Uncharted Seas (USA)/Oceanhorn - Monster of Uncharted Seas (USA).json
+Sony PlayStation Vita || Octodad - Dadliest Catch (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Octodad - Dadliest Catch (USA)/Octodad - Dadliest Catch (USA).json
+Sony PlayStation Vita || Operation Abyss - New Tokyo Legacy (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Operation Abyss - New Tokyo Legacy (USA)/Operation Abyss - New Tokyo Legacy (USA).json
+Sony PlayStation Vita || Operation Babel - New Tokyo Legacy (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Operation Babel - New Tokyo Legacy (USA)/Operation Babel - New Tokyo Legacy (USA).json
+Sony PlayStation Vita || Organ Trail - Complete Edition (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Organ Trail - Complete Edition (USA)/Organ Trail - Complete Edition (USA).json
+Sony PlayStation Vita || PSYCHO-PASS - Mandatory Happiness (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/PSYCHO-PASS - Mandatory Happiness (USA)/PSYCHO-PASS - Mandatory Happiness (USA).json
+Sony PlayStation Vita || Papers, Please (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Papers, Please (USA)/Papers, Please (USA).json
+Sony PlayStation Vita || Persona 4 Golden (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Persona 4 Golden (USA)/Persona 4 Golden (USA).json
+Sony PlayStation Vita || Pix the Cat (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Pix the Cat (USA)/Pix the Cat (USA).json
+Sony PlayStation Vita || Plague Road (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Plague Road (USA)/Plague Road (USA).json
+Sony PlayStation Vita || Proteus (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Proteus (USA)/Proteus (USA).json
+Sony PlayStation Vita || Race the Sun (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Race the Sun (USA)/Race the Sun (USA).json
+Sony PlayStation Vita || Ragnarok Odyssey (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Ragnarok Odyssey (USA)/Ragnarok Odyssey (USA).json
+Sony PlayStation Vita || Rainbow Moon (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Rainbow Moon (USA)/Rainbow Moon (USA).json
+Sony PlayStation Vita || Ray Gigant (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Ray Gigant (USA)/Ray Gigant (USA).json
+Sony PlayStation Vita || Resistance - Burning Skies (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Resistance - Burning Skies (USA)/Resistance - Burning Skies (USA).json
+Sony PlayStation Vita || Revenant Saga (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Revenant Saga (USA)/Revenant Saga (USA).json
+Sony PlayStation Vita || Risk of Rain (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Risk of Rain (USA)/Risk of Rain (USA).json
+Sony PlayStation Vita || Rock Boshers DX - Directors Cut (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Rock Boshers DX - Directors Cut (USA)/Rock Boshers DX - Directors Cut (USA).json
+Sony PlayStation Vita || Rocketbirds - Hardboiled Chicken (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Rocketbirds - Hardboiled Chicken (USA)/Rocketbirds - Hardboiled Chicken (USA).json
+Sony PlayStation Vita || Sayonara Umihara Kawase++ (Europe) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Sayonara Umihara Kawase++ (Europe)/Sayonara Umihara Kawase++ (Europe).json
+Sony PlayStation Vita || Senran Kagura - Bon Appetit! Full Course (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Senran Kagura - Bon Appetit! Full Course (USA)/Senran Kagura - Bon Appetit! Full Course (USA).json
+Sony PlayStation Vita || Silent Hill - Book of Memories (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Silent Hill - Book of Memories (USA)/Silent Hill - Book of Memories (USA).json
+Sony PlayStation Vita || Siralim (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Siralim (USA)/Siralim (USA).json
+Sony PlayStation Vita || Siralim 2 (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Siralim 2 (USA)/Siralim 2 (USA).json
+Sony PlayStation Vita || Skullgirls - 2nd Encore (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Skullgirls - 2nd Encore (USA)/Skullgirls - 2nd Encore (USA).json
+Sony PlayStation Vita || Sky Force Anniversary (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Sky Force Anniversary (USA)/Sky Force Anniversary (USA).json
+Sony PlayStation Vita || Soul Sacrifice (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Soul Sacrifice (USA)/Soul Sacrifice (USA).json
+Sony PlayStation Vita || Spelunky (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Spelunky (USA)/Spelunky (USA).json
+Sony PlayStation Vita || Stealth Inc - A Clone in the Dark Ultimate Edition (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Stealth Inc - A Clone in the Dark Ultimate Edition (USA)/Stealth Inc - A Clone in the Dark Ultimate Edition (USA).json
+Sony PlayStation Vita || Steins;Gate (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Steins;Gate (USA)/Steins;Gate (USA).json
+Sony PlayStation Vita || Stranger of Sword City (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Stranger of Sword City (USA)/Stranger of Sword City (USA).json
+Sony PlayStation Vita || Super Hydorah (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Super Hydorah (USA)/Super Hydorah (USA).json
+Sony PlayStation Vita || Super Mutant Alien Assault (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Super Mutant Alien Assault (USA)/Super Mutant Alien Assault (USA).json
+Sony PlayStation Vita || Swapper, The (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Swapper, The (USA)/Swapper, The (USA).json
+Sony PlayStation Vita || Swindle, The (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Swindle, The (USA)/Swindle, The (USA).json
+Sony PlayStation Vita || Sword Art Online - Hollow Fragment (Asia) (En,Zh-Hans) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Sword Art Online - Hollow Fragment (Asia) (En,Zh-Hans)/Sword Art Online - Hollow Fragment (Asia) (En,Zh-Hans).json
+Sony PlayStation Vita || Sword Art Online - Lost Song (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Sword Art Online - Lost Song (USA)/Sword Art Online - Lost Song (USA).json
+Sony PlayStation Vita || Tales From Space - Mutant Blobs Attack!!! (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Tales From Space - Mutant Blobs Attack!!! (USA)/Tales From Space - Mutant Blobs Attack!!! (USA).json
+Sony PlayStation Vita || Tales of Hearts R (USA) (En,Ja,Fr,De,Es,It) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Tales of Hearts R (USA) (En,Ja,Fr,De,Es,It)/Tales of Hearts R (USA) (En,Ja,Fr,De,Es,It).json
+Sony PlayStation Vita || Tearaway (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Tearaway (USA)/Tearaway (USA).json
+Sony PlayStation Vita || Teslagrad (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Teslagrad (USA)/Teslagrad (USA).json
+Sony PlayStation Vita || Thomas Was Alone (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Thomas Was Alone (USA)/Thomas Was Alone (USA).json
+Sony PlayStation Vita || Uncharted - Golden Abyss (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Uncharted - Golden Abyss (USA)/Uncharted - Golden Abyss (USA).json
+Sony PlayStation Vita || Volume (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Volume (USA)/Volume (USA).json
+Sony PlayStation Vita || Xenon Valkyrie+ (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Xenon Valkyrie+ (USA)/Xenon Valkyrie+ (USA).json
+Sony PlayStation Vita || Ys - Memories of Celceta (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Ys - Memories of Celceta (USA)/Ys - Memories of Celceta (USA).json
+Sony PlayStation Vita || Ys Origin (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Ys Origin (USA)/Ys Origin (USA).json

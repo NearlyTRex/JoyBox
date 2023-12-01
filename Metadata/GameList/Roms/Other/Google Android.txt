@@ -1,0 +1,108 @@
+Google Android || 12 Orbits (USA) || $ROM_JSON_ROOT/Other/Google Android/12 Orbits (USA)/12 Orbits (USA).json
+Google Android || 2D Flight Simulator (USA) || $ROM_JSON_ROOT/Other/Google Android/2D Flight Simulator (USA)/2D Flight Simulator (USA).json
+Google Android || 8 Bit Space (USA) || $ROM_JSON_ROOT/Other/Google Android/8 Bit Space (USA)/8 Bit Space (USA).json
+Google Android || Air Dasher (USA) || $ROM_JSON_ROOT/Other/Google Android/Air Dasher (USA)/Air Dasher (USA).json
+Google Android || Alt-Frequencies (USA) || $ROM_JSON_ROOT/Other/Google Android/Alt-Frequencies (USA)/Alt-Frequencies (USA).json
+Google Android || Amelie (USA) || $ROM_JSON_ROOT/Other/Google Android/Amelie (USA)/Amelie (USA).json
+Google Android || Another Lost Phone - Laura's Story (USA) || $ROM_JSON_ROOT/Other/Google Android/Another Lost Phone - Laura's Story (USA)/Another Lost Phone - Laura's Story (USA).json
+Google Android || Beat Hazard Ultra (USA) || $ROM_JSON_ROOT/Other/Google Android/Beat Hazard Ultra (USA)/Beat Hazard Ultra (USA).json
+Google Android || Beatbuddy - Tale of the Guardians (USA) || $ROM_JSON_ROOT/Other/Google Android/Beatbuddy - Tale of the Guardians (USA)/Beatbuddy - Tale of the Guardians (USA).json
+Google Android || Blast Rush (USA) || $ROM_JSON_ROOT/Other/Google Android/Blast Rush (USA)/Blast Rush (USA).json
+Google Android || Bloons TD 5 (USA) || $ROM_JSON_ROOT/Other/Google Android/Bloons TD 5 (USA)/Bloons TD 5 (USA).json
+Google Android || Breaker (USA) || $ROM_JSON_ROOT/Other/Google Android/Breaker (USA)/Breaker (USA).json
+Google Android || By Your Side (USA) || $ROM_JSON_ROOT/Other/Google Android/By Your Side (USA)/By Your Side (USA).json
+Google Android || Carmageddon (USA) || $ROM_JSON_ROOT/Other/Google Android/Carmageddon (USA)/Carmageddon (USA).json
+Google Android || Catlandia - Crisis at Fort Pawprint (USA) || $ROM_JSON_ROOT/Other/Google Android/Catlandia - Crisis at Fort Pawprint (USA)/Catlandia - Crisis at Fort Pawprint (USA).json
+Google Android || Chess Mix (USA) || $ROM_JSON_ROOT/Other/Google Android/Chess Mix (USA)/Chess Mix (USA).json
+Google Android || Codemancer (USA) || $ROM_JSON_ROOT/Other/Google Android/Codemancer (USA)/Codemancer (USA).json
+Google Android || Crayon Physics Deluxe (USA) || $ROM_JSON_ROOT/Other/Google Android/Crayon Physics Deluxe (USA)/Crayon Physics Deluxe (USA).json
+Google Android || Crimsonland (USA) || $ROM_JSON_ROOT/Other/Google Android/Crimsonland (USA)/Crimsonland (USA).json
+Google Android || Crowntakers (USA) || $ROM_JSON_ROOT/Other/Google Android/Crowntakers (USA)/Crowntakers (USA).json
+Google Android || Darkest Wave (USA) || $ROM_JSON_ROOT/Other/Google Android/Darkest Wave (USA)/Darkest Wave (USA).json
+Google Android || Dastardly Dairy Debacle, The (USA) || $ROM_JSON_ROOT/Other/Google Android/Dastardly Dairy Debacle, The (USA)/Dastardly Dairy Debacle, The (USA).json
+Google Android || Death of the Corpse Wizard, The (USA) || $ROM_JSON_ROOT/Other/Google Android/Death of the Corpse Wizard, The (USA)/Death of the Corpse Wizard, The (USA).json
+Google Android || Demonizer (USA) || $ROM_JSON_ROOT/Other/Google Android/Demonizer (USA)/Demonizer (USA).json
+Google Android || Desert Mothers (USA) || $ROM_JSON_ROOT/Other/Google Android/Desert Mothers (USA)/Desert Mothers (USA).json
+Google Android || Detective Case and Clown Bot in Murder in The Hotel Lisbon (USA) || $ROM_JSON_ROOT/Other/Google Android/Detective Case and Clown Bot in Murder in The Hotel Lisbon (USA)/Detective Case and Clown Bot in Murder in The Hotel Lisbon (USA).json
+Google Android || Distortion Nation (USA) || $ROM_JSON_ROOT/Other/Google Android/Distortion Nation (USA)/Distortion Nation (USA).json
+Google Android || Don't Move (USA) || $ROM_JSON_ROOT/Other/Google Android/Don't Move (USA)/Don't Move (USA).json
+Google Android || Doodle God (USA) || $ROM_JSON_ROOT/Other/Google Android/Doodle God (USA)/Doodle God (USA).json
+Google Android || Dungeon Defenders (USA) || $ROM_JSON_ROOT/Other/Google Android/Dungeon Defenders (USA)/Dungeon Defenders (USA).json
+Google Android || Dynamite Jack (USA) || $ROM_JSON_ROOT/Other/Google Android/Dynamite Jack (USA)/Dynamite Jack (USA).json
+Google Android || Eves Drop (USA) || $ROM_JSON_ROOT/Other/Google Android/Eves Drop (USA)/Eves Drop (USA).json
+Google Android || Explobers Go (USA) || $ROM_JSON_ROOT/Other/Google Android/Explobers Go (USA)/Explobers Go (USA).json
+Google Android || Explobers Pocket (USA) || $ROM_JSON_ROOT/Other/Google Android/Explobers Pocket (USA)/Explobers Pocket (USA).json
+Google Android || FOTONICA (USA) || $ROM_JSON_ROOT/Other/Google Android/FOTONICA (USA)/FOTONICA (USA).json
+Google Android || Fateful Lore (USA) || $ROM_JSON_ROOT/Other/Google Android/Fateful Lore (USA)/Fateful Lore (USA).json
+Google Android || Feud (USA) || $ROM_JSON_ROOT/Other/Google Android/Feud (USA)/Feud (USA).json
+Google Android || Food Flinger VR (USA) || $ROM_JSON_ROOT/Other/Google Android/Food Flinger VR (USA)/Food Flinger VR (USA).json
+Google Android || Galactic Bar Fight VR (USA) || $ROM_JSON_ROOT/Other/Google Android/Galactic Bar Fight VR (USA)/Galactic Bar Fight VR (USA).json
+Google Android || Geography, The (USA) || $ROM_JSON_ROOT/Other/Google Android/Geography, The (USA)/Geography, The (USA).json
+Google Android || God of Blades (USA) || $ROM_JSON_ROOT/Other/Google Android/God of Blades (USA)/God of Blades (USA).json
+Google Android || Golf Peaks (USA) || $ROM_JSON_ROOT/Other/Google Android/Golf Peaks (USA)/Golf Peaks (USA).json
+Google Android || Gunhouse (USA) || $ROM_JSON_ROOT/Other/Google Android/Gunhouse (USA)/Gunhouse (USA).json
+Google Android || Guppy (USA) || $ROM_JSON_ROOT/Other/Google Android/Guppy (USA)/Guppy (USA).json
+Google Android || Hammer Bomb (USA) || $ROM_JSON_ROOT/Other/Google Android/Hammer Bomb (USA)/Hammer Bomb (USA).json
+Google Android || He Plays the Piano (USA) || $ROM_JSON_ROOT/Other/Google Android/He Plays the Piano (USA)/He Plays the Piano (USA).json
+Google Android || Idioctopus (USA) || $ROM_JSON_ROOT/Other/Google Android/Idioctopus (USA)/Idioctopus (USA).json
+Google Android || Inbento (USA) || $ROM_JSON_ROOT/Other/Google Android/Inbento (USA)/Inbento (USA).json
+Google Android || Inkanians - Ouya Edition (USA) || $ROM_JSON_ROOT/Other/Google Android/Inkanians - Ouya Edition (USA)/Inkanians - Ouya Edition (USA).json
+Google Android || Jabberwocky (USA) || $ROM_JSON_ROOT/Other/Google Android/Jabberwocky (USA)/Jabberwocky (USA).json
+Google Android || Kaiju Big Battel - Fighto Fantasy (USA) || $ROM_JSON_ROOT/Other/Google Android/Kaiju Big Battel - Fighto Fantasy (USA)/Kaiju Big Battel - Fighto Fantasy (USA).json
+Google Android || Karambola (USA) || $ROM_JSON_ROOT/Other/Google Android/Karambola (USA)/Karambola (USA).json
+Google Android || Karateka Classic (USA) || $ROM_JSON_ROOT/Other/Google Android/Karateka Classic (USA)/Karateka Classic (USA).json
+Google Android || Knock-Knock (USA) || $ROM_JSON_ROOT/Other/Google Android/Knock-Knock (USA)/Knock-Knock (USA).json
+Google Android || Love (USA) || $ROM_JSON_ROOT/Other/Google Android/Love (USA)/Love (USA).json
+Google Android || Love - Ouya Edition (USA) || $ROM_JSON_ROOT/Other/Google Android/Love - Ouya Edition (USA)/Love - Ouya Edition (USA).json
+Google Android || Love 2 - Kuso (USA) || $ROM_JSON_ROOT/Other/Google Android/Love 2 - Kuso (USA)/Love 2 - Kuso (USA).json
+Google Android || Love 2 - Kuso - Ouya Edition (USA) || $ROM_JSON_ROOT/Other/Google Android/Love 2 - Kuso - Ouya Edition (USA)/Love 2 - Kuso - Ouya Edition (USA).json
+Google Android || Lullaby of Colors, A (USA) || $ROM_JSON_ROOT/Other/Google Android/Lullaby of Colors, A (USA)/Lullaby of Colors, A (USA).json
+Google Android || Luminous Labyrinth (USA) || $ROM_JSON_ROOT/Other/Google Android/Luminous Labyrinth (USA)/Luminous Labyrinth (USA).json
+Google Android || Lyne (USA) || $ROM_JSON_ROOT/Other/Google Android/Lyne (USA)/Lyne (USA).json
+Google Android || MANOS - The Hands of Fate (USA) || $ROM_JSON_ROOT/Other/Google Android/MANOS - The Hands of Fate (USA)/MANOS - The Hands of Fate (USA).json
+Google Android || Madball (USA) || $ROM_JSON_ROOT/Other/Google Android/Madball (USA)/Madball (USA).json
+Google Android || Magical Tale, A - Cavern Crawler (USA) || $ROM_JSON_ROOT/Other/Google Android/Magical Tale, A - Cavern Crawler (USA)/Magical Tale, A - Cavern Crawler (USA).json
+Google Android || Manna for Our Malices (USA) || $ROM_JSON_ROOT/Other/Google Android/Manna for Our Malices (USA)/Manna for Our Malices (USA).json
+Google Android || Micron (USA) || $ROM_JSON_ROOT/Other/Google Android/Micron (USA)/Micron (USA).json
+Google Android || Millikan's Reach (USA) || $ROM_JSON_ROOT/Other/Google Android/Millikan's Reach (USA)/Millikan's Reach (USA).json
+Google Android || Mnemonic MV (USA) || $ROM_JSON_ROOT/Other/Google Android/Mnemonic MV (USA)/Mnemonic MV (USA).json
+Google Android || Mole (USA) || $ROM_JSON_ROOT/Other/Google Android/Mole (USA)/Mole (USA).json
+Google Android || Monster Loves You! (USA) || $ROM_JSON_ROOT/Other/Google Android/Monster Loves You! (USA)/Monster Loves You! (USA).json
+Google Android || Neverending Nightmares (USA) || $ROM_JSON_ROOT/Other/Google Android/Neverending Nightmares (USA)/Neverending Nightmares (USA).json
+Google Android || NightSky (USA) || $ROM_JSON_ROOT/Other/Google Android/NightSky (USA)/NightSky (USA).json
+Google Android || Normal Lost Phone, A (USA) || $ROM_JSON_ROOT/Other/Google Android/Normal Lost Phone, A (USA)/Normal Lost Phone, A (USA).json
+Google Android || Nuvoloso (USA) || $ROM_JSON_ROOT/Other/Google Android/Nuvoloso (USA)/Nuvoloso (USA).json
+Google Android || Omeganaut (USA) || $ROM_JSON_ROOT/Other/Google Android/Omeganaut (USA)/Omeganaut (USA).json
+Google Android || Orbis - Throw Them All! (USA) || $ROM_JSON_ROOT/Other/Google Android/Orbis - Throw Them All! (USA)/Orbis - Throw Them All! (USA).json
+Google Android || Organ Trail (USA) || $ROM_JSON_ROOT/Other/Google Android/Organ Trail (USA)/Organ Trail (USA).json
+Google Android || Petty Puny Planet (USA) || $ROM_JSON_ROOT/Other/Google Android/Petty Puny Planet (USA)/Petty Puny Planet (USA).json
+Google Android || Plant Down (USA) || $ROM_JSON_ROOT/Other/Google Android/Plant Down (USA)/Plant Down (USA).json
+Google Android || Provider (USA) || $ROM_JSON_ROOT/Other/Google Android/Provider (USA)/Provider (USA).json
+Google Android || Pulstario (USA) || $ROM_JSON_ROOT/Other/Google Android/Pulstario (USA)/Pulstario (USA).json
+Google Android || Pulstario - Ouya Edition (USA) || $ROM_JSON_ROOT/Other/Google Android/Pulstario - Ouya Edition (USA)/Pulstario - Ouya Edition (USA).json
+Google Android || Punch Quest (USA) || $ROM_JSON_ROOT/Other/Google Android/Punch Quest (USA)/Punch Quest (USA).json
+Google Android || QWOP (USA) || $ROM_JSON_ROOT/Other/Google Android/QWOP (USA)/QWOP (USA).json
+Google Android || Quest of Dungeons (USA) || $ROM_JSON_ROOT/Other/Google Android/Quest of Dungeons (USA)/Quest of Dungeons (USA).json
+Google Android || Ravensword - Shadowlands (USA) || $ROM_JSON_ROOT/Other/Google Android/Ravensword - Shadowlands (USA)/Ravensword - Shadowlands (USA).json
+Google Android || Roly-Polo (USA) || $ROM_JSON_ROOT/Other/Google Android/Roly-Polo (USA)/Roly-Polo (USA).json
+Google Android || Secret of the Magic Crystals (USA) || $ROM_JSON_ROOT/Other/Google Android/Secret of the Magic Crystals (USA)/Secret of the Magic Crystals (USA).json
+Google Android || Seduce Me - The Complete Story (USA) || $ROM_JSON_ROOT/Other/Google Android/Seduce Me - The Complete Story (USA)/Seduce Me - The Complete Story (USA).json
+Google Android || Six Match (USA) || $ROM_JSON_ROOT/Other/Google Android/Six Match (USA)/Six Match (USA).json
+Google Android || Snake's Tale, A (USA) || $ROM_JSON_ROOT/Other/Google Android/Snake's Tale, A (USA)/Snake's Tale, A (USA).json
+Google Android || Solar 2 (USA) || $ROM_JSON_ROOT/Other/Google Android/Solar 2 (USA)/Solar 2 (USA).json
+Google Android || Splice (USA) || $ROM_JSON_ROOT/Other/Google Android/Splice (USA)/Splice (USA).json
+Google Android || Spookening, The (USA) || $ROM_JSON_ROOT/Other/Google Android/Spookening, The (USA)/Spookening, The (USA).json
+Google Android || Star Command (USA) || $ROM_JSON_ROOT/Other/Google Android/Star Command (USA)/Star Command (USA).json
+Google Android || Stophat (USA) || $ROM_JSON_ROOT/Other/Google Android/Stophat (USA)/Stophat (USA).json
+Google Android || Super Hexagon (USA) || $ROM_JSON_ROOT/Other/Google Android/Super Hexagon (USA)/Super Hexagon (USA).json
+Google Android || Superbrothers - Sword & Sworcery EP (USA) || $ROM_JSON_ROOT/Other/Google Android/Superbrothers - Sword & Sworcery EP (USA)/Superbrothers - Sword & Sworcery EP (USA).json
+Google Android || Surprise Mechanic - The Gaming Trivia (USA) || $ROM_JSON_ROOT/Other/Google Android/Surprise Mechanic - The Gaming Trivia (USA)/Surprise Mechanic - The Gaming Trivia (USA).json
+Google Android || Switch 'N' Shoot (USA) || $ROM_JSON_ROOT/Other/Google Android/Switch 'N' Shoot (USA)/Switch 'N' Shoot (USA).json
+Google Android || Talk To Me (USA) || $ROM_JSON_ROOT/Other/Google Android/Talk To Me (USA)/Talk To Me (USA).json
+Google Android || Tallowmere (USA) || $ROM_JSON_ROOT/Other/Google Android/Tallowmere (USA)/Tallowmere (USA).json
+Google Android || That Which Binds Us (USA) || $ROM_JSON_ROOT/Other/Google Android/That Which Binds Us (USA)/That Which Binds Us (USA).json
+Google Android || Time Surfer (USA) || $ROM_JSON_ROOT/Other/Google Android/Time Surfer (USA)/Time Surfer (USA).json
+Google Android || Timebomb (USA) || $ROM_JSON_ROOT/Other/Google Android/Timebomb (USA)/Timebomb (USA).json
+Google Android || TinyKeep (USA) || $ROM_JSON_ROOT/Other/Google Android/TinyKeep (USA)/TinyKeep (USA).json
+Google Android || Walking Tourist (USA) || $ROM_JSON_ROOT/Other/Google Android/Walking Tourist (USA)/Walking Tourist (USA).json
+Google Android || Zombies, Run! 5k Training (USA) || $ROM_JSON_ROOT/Other/Google Android/Zombies, Run! 5k Training (USA)/Zombies, Run! 5k Training (USA).json

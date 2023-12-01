@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Elden - Path of the Forgotten (USA).exe"
+    ],
+    "transform_file": "Elden - Path of the Forgotten (USA).exe"
+}

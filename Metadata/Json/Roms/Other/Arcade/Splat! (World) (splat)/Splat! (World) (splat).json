@@ -1,0 +1,20 @@
+{
+    "files": [
+        "splat/decoder_rom_4.3g",
+        "splat/decoder_rom_6.3c",
+        "splat/splat_rom_10b_16-3011-10.a7",
+        "splat/splat_rom_11b_16-3011-11.c7",
+        "splat/splat_rom_12b_16-3011-12.e7",
+        "splat/splat_rom_1b_16-3011-1.e4",
+        "splat/splat_rom_2b_16-3011-2.c4",
+        "splat/splat_rom_3b_16-3011-3.a4",
+        "splat/splat_rom_4b_16-3011-4.e5",
+        "splat/splat_rom_5b_16-3011-5.c5",
+        "splat/splat_rom_6b_16-3011-6.a5",
+        "splat/splat_rom_7b_16-3011-7.e6",
+        "splat/splat_rom_8b_16-3011-8.c6",
+        "splat/splat_rom_9b_16-3011-9.a6",
+        "splat/video_sound_rom_13_std.ic12"
+    ],
+    "launch_name": "splat"
+}

@@ -1,0 +1,11 @@
+{
+    "installer_dos_exe": "$DISC_MAIN_ROOT/INSTALL.EXE",
+    "is_dos": true,
+    "main_game_dos_exe": [
+        "CAPSTONE/WHAVEN/WHAVEN.BAT"
+    ],
+    "main_game_dos_exe_cwd": {
+        "CAPSTONE/WHAVEN/WHAVEN.BAT": "CAPSTONE/WHAVEN"
+    },
+    "transform_file": "Witchaven (USA).chd"
+}

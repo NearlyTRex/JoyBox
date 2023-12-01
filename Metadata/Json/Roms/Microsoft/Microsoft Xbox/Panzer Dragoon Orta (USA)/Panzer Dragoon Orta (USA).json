@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Panzer Dragoon Orta (USA).chd",
+        "Panzer Dragoon Orta (USA).dmi.bin",
+        "Panzer Dragoon Orta (USA).lyt",
+        "Panzer Dragoon Orta (USA).pfi.bin",
+        "Panzer Dragoon Orta (USA).ss.bin"
+    ],
+    "launch_file": "Panzer Dragoon Orta (USA).iso",
+    "transform_file": "Panzer Dragoon Orta (USA).chd"
+}

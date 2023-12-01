@@ -1,0 +1,4 @@
+{
+    "installer_exe": "$DISC_MAIN_ROOT/Torchlight.exe",
+    "transform_file": "Torchlight (USA).chd"
+}

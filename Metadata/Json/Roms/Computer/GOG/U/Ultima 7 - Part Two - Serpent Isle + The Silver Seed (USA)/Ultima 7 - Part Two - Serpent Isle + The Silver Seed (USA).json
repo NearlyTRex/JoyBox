@@ -1,0 +1,14 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/ultima_7_cluebook_.zip",
+        "$SETUP_MAIN_ROOT/extra/ultima_7_design_documents.zip",
+        "$SETUP_MAIN_ROOT/extra/ultima_7_guides.zip",
+        "$SETUP_MAIN_ROOT/extra/ultima_7_manuals.zip",
+        "$SETUP_MAIN_ROOT/extra/ultima_7_maps_.zip",
+        "$SETUP_MAIN_ROOT/extra/ultima_7_reference_cards.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_ultima_vii_-_serpent_isle_1.0_(22309).exe"
+    ],
+    "transform_file": "setup_ultima_vii_-_serpent_isle_1.0_(22309).exe"
+}

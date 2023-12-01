@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Long Gone Days (USA).exe"
+    ],
+    "transform_file": "Long Gone Days (USA).exe"
+}

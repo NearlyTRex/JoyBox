@@ -1,0 +1,11 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/unreal_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/unreal_tournament_wallpapers.zip",
+        "$SETUP_MAIN_ROOT/extra/ut_manual.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_ut_goty_2.0.0.5.exe"
+    ],
+    "transform_file": "setup_ut_goty_2.0.0.5.exe"
+}

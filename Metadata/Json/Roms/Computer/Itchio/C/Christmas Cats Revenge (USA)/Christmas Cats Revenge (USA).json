@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Christmas Cats Revenge (USA).exe"
+    ],
+    "transform_file": "Christmas Cats Revenge (USA).exe"
+}

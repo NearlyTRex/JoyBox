@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_metro_2033_redux_1.03_(33180).exe"
+    ],
+    "transform_file": "setup_metro_2033_redux_1.03_(33180).exe"
+}

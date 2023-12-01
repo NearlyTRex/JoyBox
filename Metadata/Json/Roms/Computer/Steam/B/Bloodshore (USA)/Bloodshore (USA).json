@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Bloodshore (USA).exe"
+    ],
+    "main_game_exe": [
+        "Bloodshore/Bloodshore.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Bloodshore/Bloodshore.exe": "Bloodshore"
+    },
+    "transform_file": "Bloodshore (USA).exe"
+}

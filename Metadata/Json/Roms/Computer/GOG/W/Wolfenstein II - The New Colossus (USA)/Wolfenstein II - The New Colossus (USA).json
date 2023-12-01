@@ -1,0 +1,12 @@
+{
+    "dlc": [
+        "$SETUP_MAIN_ROOT/dlc/setup_wolfenstein_ii_the_freedom_chronicles_-_episode_0_6.5.0.1331_(64bit)_(42660).exe",
+        "$SETUP_MAIN_ROOT/dlc/setup_wolfenstein_ii_the_freedom_chronicles_-_episode_1_6.5.0.1331_(64bit)_(42660).exe",
+        "$SETUP_MAIN_ROOT/dlc/setup_wolfenstein_ii_the_freedom_chronicles_-_episode_2_6.5.0.1331_(64bit)_(42660).exe",
+        "$SETUP_MAIN_ROOT/dlc/setup_wolfenstein_ii_the_freedom_chronicles_-_episode_3_6.5.0.1331_(64bit)_(42660).exe"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_wolfenstein_ii_the_new_colossus_6.5.0.1331_(64bit)_(42660).exe"
+    ],
+    "transform_file": "setup_wolfenstein_ii_the_new_colossus_6.5.0.1331_(64bit)_(42660).exe"
+}

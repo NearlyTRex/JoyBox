@@ -1,0 +1,189 @@
+collection: Commodore Amiga
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Commodore Amiga" {file.path}
+
+
+game: B.C. Kid (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore Amiga/B.C. Kid (Europe)/B.C. Kid (Europe).json
+developer: Factor 5 GmbH
+publisher: Ubisoft Entertainment
+genre: Platform
+description:
+  B.C. Kid, or Bonk's Adventure is a 2D platform video game developed by Red
+  Company and Atlus that was released in 1989-1990 for the TurboGrafx-16. In Japan
+  it was released as PC Genjin (PC?) in 1989, a play on the Japanese name for the
+  system, 'PC Engine'. The game was re-released for the TurboGrafx-16 in the U.S.
+  in 1992 on the Gate of Thunder 4-in-1 game CD-ROM. The game was later ported to
+  the NES, Game Boy, Amiga, arcade systems under different titles (FC Genjin, GB
+  Genjin and BC Genjin). It is also available through Nintendo's Virtual Console
+  service, on the PlayStation Store and there is a version for mobile phones in
+  Japan.
+  .
+  Bonk attacks enemies by "bonking" them with his large, invincible forehead. Bonk
+  starts the game with three hearts' worth of health, which are depleted to blue
+  as Bonk takes damage, and three extra lives. Bonk's health can be restored in
+  increments by collecting fruits and vegetables.
+  .
+  Bonk can also collect pieces of meat as power-ups; these lend him special
+  abilities and make him stronger. There are three stages of power-up: his normal
+  self, a second stage during which he can stun enemies by pounding on the ground,
+  and a third stage where he becomes temporarily invulnerable. Meat can be found
+  in two varieties: big meat and small meat. The effects of meat are additive but
+  wear off over time. A small meat gives Bonk the second stage of meat power and a
+  large one takes him to stage three. Eating a small meat while in stage two will
+  also put Bonk into the third, invincible stage of meat power. When the third
+  stage effect wears off he returns to the second state and remains there for a
+  while before turning back to the regular Bonk. Eating either size of meat while
+  in the third stage of meat power-up will reset the timer on Bonk's meat power.
+  .
+  Bonk can occasionally collect red heart power-ups that refill an entire heart
+  worth of health, or even more rarely, a large red heart, which restores all of
+  Bonk's missing health. There are also two rare, blue heart power-ups in the game
+  which will increase Bonk's maximum health by one heart.
+  .
+  Bonking an enemy will typically knock it backward and slightly into the air.
+  Defeating an enemy yields points and also releases a small "smiley" power-up.
+  Bonk's smileys are totaled at the end of each stage after defeating the boss of
+  that stage. The player is given additional points and a caveman type
+  congratulation based on how many smileys were collected.
+release: 1992-01-01
+players: 1
+assets.boxfront: BoxFront/B.C. Kid (Europe).jpg
+assets.boxback: BoxBack/B.C. Kid (Europe).jpg
+assets.background: Background/B.C. Kid (Europe).jpg
+assets.screenshot: Screenshot/B.C. Kid (Europe).jpg
+assets.video: Video/B.C. Kid (Europe).mp4
+x-co-op: No
+
+
+game: Katakis (Europe) (v1.1)
+file: $ROM_JSON_ROOT/Other/Commodore Amiga/Katakis (Europe) (v1.1)/Katakis (Europe) (v1.1).json
+developer: Factor 5 GmbH
+publisher: Rainbow Arts Software
+genre: Action;Shooter
+description:
+  Throughout time, man has been a victim of his own intelligence and his
+  insatiable thirst for knowledge.
+  .
+  The Planet Katakis is a horrifying example. Scientists created Machines which
+  became so sophisticated that they longer depended on man - So began a rule of
+  tyranny. The Denarian people tried in vain to destroy the Machines with a mighty
+  ballistic missile, but from the ashes of the nuclear fires the Machines rose up
+  more powerful than ever.
+  .
+  Trapped in an underground stronghold, now the Katakisans only hope for freedom
+  is the KS-H75 Eagle Fighter, an ultra refined space glider. Control the Eagle
+  Fighter in this epic crusade against evil... and win freedom at last for
+  Katakis.
+release: 1988-01-03
+players: 2
+assets.boxfront: BoxFront/Katakis (Europe) (v1.1).jpg
+assets.boxback: BoxBack/Katakis (Europe) (v1.1).jpg
+assets.background: Background/Katakis (Europe) (v1.1).jpg
+assets.screenshot: Screenshot/Katakis (Europe) (v1.1).jpg
+assets.video: Video/Katakis (Europe) (v1.1).mp4
+x-co-op: No
+
+
+game: R-Type (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore Amiga/R-Type (Europe)/R-Type (Europe).json
+developer: Irem Corp.
+publisher: Electronic Dreams Software
+genre: Shooter
+description:
+  R-Type is a side scrolling shoot-em-up arcade game produced by Irem in 1987. The
+  player controls a space fighter named the R-9 to defend humanity against a
+  mysterious powerful alien life-form known as the "Bydo". The game is notable for
+  programming which was ambitious for the time, with a wide range of both power-
+  ups and enemies, as well as levels of varying design and length, and sprites
+  larger than a single screen.
+release: 1989-05-01
+players: 1
+assets.boxfront: BoxFront/R-Type (Europe).jpg
+assets.boxback: BoxBack/R-Type (Europe).jpg
+assets.background: Background/R-Type (Europe).jpg
+assets.screenshot: Screenshot/R-Type (Europe).jpg
+assets.video: Video/R-Type (Europe).mp4
+x-co-op: No
+
+
+game: Turrican (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore Amiga/Turrican (Europe)/Turrican (Europe).json
+developer: Factor 5
+publisher: Innerprise Software
+genre: Action;Platformer;2D
+description:
+  From beyond the edge of darkness, evil incarnate is back. He is Morgul, master
+  of all the fears and nightmares of mankind. As a world trembles in sleepless
+  terror, a single warrior emerges - you are Turrican! Battle through the five
+  worlds of darkness encountering thunder and storm, mechanical monsters, hidden
+  rooms, awesome end of level guardians, reptilian beasts, and anywhere... the
+  unexpected! Featuring 13 levels with over 1,300 screens, 10 hi-tech weapons
+  systems, multi-directional scrolling, 20 musically excellent soundtracks,
+  countless special effects and bonus features, and 50 different aliens and 8
+  gigantic end-level monsters.
+release: 1990
+players: 1
+assets.boxfront: BoxFront/Turrican (Europe).jpg
+assets.boxback: BoxBack/Turrican (Europe).jpg
+assets.background: Background/Turrican (Europe).jpg
+assets.screenshot: Screenshot/Turrican (Europe).jpg
+assets.video: Video/Turrican (Europe).mp4
+x-co-op: No
+
+
+game: Turrican 3 (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore Amiga/Turrican 3 (Europe)/Turrican 3 (Europe).json
+developer: Factor 5
+publisher: Renegade
+genre: Action;General
+description:
+  Time has passed since mankind last heard of The Machine. Bren McGuire is on a
+  United Planets Freedom Forces mission when suddenly he sees his worst nightmares
+  come true again. Years ago, he was the only survivor of the starship Avalon 1
+  when The Machine took out his comrades in an attempt to take over the galaxy.
+  Back then, Bren sought revenge against his enemy and finally destroyed him in
+  the planet of Landorin. Nobody expected a return of The Machine, but now, after
+  many people enjoyed freedom and peace in the galaxy, the dark forces under his
+  command are starting to assemble again.
+  .
+  .
+  In a sweep of terror, The Machine destroys dozens of planets and enslaves
+  hundreds of peaceful people. The old memories arise again when Bren hears the
+  last message of a young and beautiful girl. Desperately she cries for help, as
+  her planet is being taken over by the soldiers of The Machine. As Bren receives
+  the message, he slips into his Turrican assault suit and swears final revenge.
+  .
+  .
+  Once again, Bren McGuire, now the current leader of the Freedom Forces, is the
+  only hope in a crucial mission to definitely destroy the grasp of evil
+  represented by The Machine. A lone warrior against the evil hordes of The
+  Machine, Bren jumps out of his ship to face the ultimate challenge.
+release: 1993
+players: 1
+assets.boxfront: BoxFront/Turrican 3 (Europe).jpg
+assets.boxback: BoxBack/Turrican 3 (Europe).jpg
+assets.background: Background/Turrican 3 (Europe).jpg
+assets.screenshot: Screenshot/Turrican 3 (Europe).jpg
+assets.video: Video/Turrican 3 (Europe).mp4
+x-co-op: No
+
+
+game: Turrican II - The Final Fight (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore Amiga/Turrican II - The Final Fight (Europe)/Turrican II - The Final Fight (Europe).json
+developer: Factor 5
+publisher: Rainbow Arts
+genre: Action;General
+description:
+  TURRICAN fought an epic battle against Morgul and won a stunning victory against
+  great odds. Once again he embarks on a rescue mission. Five worlds and twelve
+  levels await him in his final fight against the remnants of Morgul's creation.
+release: 1991
+players: 1
+assets.boxfront: BoxFront/Turrican II - The Final Fight (Europe).jpg
+assets.boxback: BoxBack/Turrican II - The Final Fight (Europe).jpg
+assets.background: Background/Turrican II - The Final Fight (Europe).jpg
+assets.screenshot: Screenshot/Turrican II - The Final Fight (Europe).jpg
+assets.video: Video/Turrican II - The Final Fight (Europe).mp4
+x-co-op: No
+
+

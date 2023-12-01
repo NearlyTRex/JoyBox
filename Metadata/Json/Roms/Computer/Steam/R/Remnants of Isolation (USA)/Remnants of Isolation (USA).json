@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Remnants of Isolation (USA).exe"
+    ],
+    "transform_file": "Remnants of Isolation (USA).exe"
+}

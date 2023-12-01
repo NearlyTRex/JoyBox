@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Crackdown (World) (En,Ja,Fr,De,Es,It,Zh,Ko,Cs,Hu).chd",
+        "Crackdown (World) (En,Ja,Fr,De,Es,It,Zh,Ko,Cs,Hu).dmi.bin",
+        "Crackdown (World) (En,Ja,Fr,De,Es,It,Zh,Ko,Cs,Hu).lyt",
+        "Crackdown (World) (En,Ja,Fr,De,Es,It,Zh,Ko,Cs,Hu).pfi.bin",
+        "Crackdown (World) (En,Ja,Fr,De,Es,It,Zh,Ko,Cs,Hu).ss.bin"
+    ],
+    "launch_file": "Crackdown (World) (En,Ja,Fr,De,Es,It,Zh,Ko,Cs,Hu).iso",
+    "transform_file": "Crackdown (World) (En,Ja,Fr,De,Es,It,Zh,Ko,Cs,Hu).chd"
+}

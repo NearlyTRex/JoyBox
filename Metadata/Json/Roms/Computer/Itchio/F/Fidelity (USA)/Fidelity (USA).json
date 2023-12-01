@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Fidelity (USA).exe"
+    ],
+    "transform_file": "Fidelity (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Beatbuddy - Tale of the Guardians (USA).exe"
+    ],
+    "transform_file": "Beatbuddy - Tale of the Guardians (USA).exe"
+}

@@ -1,0 +1,22 @@
+{
+    "installer_exe": "$DISC_MAIN_ROOT/autorun.exe",
+    "main_game_exe": [
+        "Program Files (x86)/Paradox Interactive/Majesty 2/Majesty2.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Program Files (x86)/Paradox Interactive/Majesty 2/Majesty2.exe": "Program Files (x86)/Paradox Interactive/Majesty 2"
+    },
+    "sandbox": {
+        "wine": {
+            "tricks": {
+                "game": [
+                    "d3dx9"
+                ]
+            }
+        }
+    },
+    "transform_file": "Majesty 2 - The Fantasy Kingdom Sim (USA).chd",
+    "update": [
+        "$SETUP_MAIN_ROOT/update/Majesty2_patch_1.5.355_en.exe"
+    ]
+}

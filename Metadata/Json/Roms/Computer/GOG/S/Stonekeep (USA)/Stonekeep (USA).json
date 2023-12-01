@@ -1,0 +1,13 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/stonekeep_handbuch.zip",
+        "$SETUP_MAIN_ROOT/extra/stonekeep_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/stonekeep_manuel.zip",
+        "$SETUP_MAIN_ROOT/extra/stonekeep_novella.zip",
+        "$SETUP_MAIN_ROOT/extra/stonekeep_thera_awakening_de.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_stonekeep_2.1.0.13.exe"
+    ],
+    "transform_file": "setup_stonekeep_2.1.0.13.exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Vektor 2089 (USA).exe"
+    ],
+    "transform_file": "Vektor 2089 (USA).exe"
+}

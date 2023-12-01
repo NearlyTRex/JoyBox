@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dungeon Nightmares II - The Memory (USA).exe"
+    ],
+    "transform_file": "Dungeon Nightmares II - The Memory (USA).exe"
+}

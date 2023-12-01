@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Bleed 2 (USA).exe"
+    ],
+    "transform_file": "Bleed 2 (USA).exe"
+}

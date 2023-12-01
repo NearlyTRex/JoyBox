@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Inkanians (USA).exe"
+    ],
+    "transform_file": "Inkanians (USA).exe"
+}

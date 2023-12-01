@@ -1,0 +1,9 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/vtm_bloodlines_manual.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_vampire_the_masquerade_-_bloodlines_1.2_(up_11.511.410.2)_(68368).exe"
+    ],
+    "transform_file": "setup_vampire_the_masquerade_-_bloodlines_1.2_(up_11.511.410.2)_(68368).exe"
+}

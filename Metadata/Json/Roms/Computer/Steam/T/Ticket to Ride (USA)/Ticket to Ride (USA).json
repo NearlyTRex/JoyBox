@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Ticket to Ride (USA).exe"
+    ],
+    "transform_file": "Ticket to Ride (USA).exe"
+}

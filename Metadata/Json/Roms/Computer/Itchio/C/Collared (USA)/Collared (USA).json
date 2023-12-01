@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Collared (USA).exe"
+    ],
+    "transform_file": "Collared (USA).exe"
+}

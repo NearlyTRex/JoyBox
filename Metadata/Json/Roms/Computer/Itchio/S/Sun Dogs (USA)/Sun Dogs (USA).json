@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Sun Dogs (USA).exe"
+    ],
+    "transform_file": "Sun Dogs (USA).exe"
+}

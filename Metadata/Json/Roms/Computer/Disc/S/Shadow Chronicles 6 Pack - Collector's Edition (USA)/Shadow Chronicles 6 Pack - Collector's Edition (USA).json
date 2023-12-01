@@ -1,0 +1,20 @@
+{
+    "installer_exe": "$DISC_MAIN_ROOT/SC6PackSetup.exe",
+    "main_game_exe": [
+        "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Ghost Encounters - Deadwood/GhostEncounters.exe",
+        "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Mystery of the Crystal Portal/Portal.exe",
+        "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Odysseus - Long Way Home/game.exe",
+        "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Shadows - Price for Our Sins/Shadows.exe",
+        "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Shiver - Poltergeist CE/SHIVER_PoltergeistCE.exe",
+        "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/The Veil of Mystery/TheVailOfMystery.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Ghost Encounters - Deadwood/GhostEncounters.exe": "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Ghost Encounters - Deadwood",
+        "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Mystery of the Crystal Portal/Portal.exe": "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Mystery of the Crystal Portal",
+        "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Odysseus - Long Way Home/game.exe": "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Odysseus - Long Way Home",
+        "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Shadows - Price for Our Sins/Shadows.exe": "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Shadows - Price for Our Sins",
+        "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Shiver - Poltergeist CE/SHIVER_PoltergeistCE.exe": "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/Shiver - Poltergeist CE",
+        "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/The Veil of Mystery/TheVailOfMystery.exe": "Program Files (x86)/Viva Media/Shadow Chronicles 6-Pack/The Veil of Mystery"
+    },
+    "transform_file": "Shadow Chronicles 6 Pack - Collector's Edition (USA).chd"
+}

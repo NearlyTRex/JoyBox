@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Cannon Father (USA).exe"
+    ],
+    "transform_file": "Cannon Father (USA).exe"
+}

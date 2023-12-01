@@ -1,0 +1,18 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Spooky's Jump Scare Mansion (USA).exe"
+    ],
+    "main_game_exe": [
+        "Spooky's Jump Scare Mansion/SPOOKY.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Spooky's Jump Scare Mansion/SPOOKY.exe": "Spooky's Jump Scare Mansion"
+    },
+    "sync": {
+        "data": [
+            "save_data_main.ini"
+        ],
+        "search": "Spooky's Jump Scare Mansion/SPOOKY.exe"
+    },
+    "transform_file": "Spooky's Jump Scare Mansion (USA).exe"
+}

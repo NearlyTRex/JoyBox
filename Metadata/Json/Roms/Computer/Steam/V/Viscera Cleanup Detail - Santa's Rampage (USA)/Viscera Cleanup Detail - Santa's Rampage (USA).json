@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Viscera Cleanup Detail - Santa's Rampage (USA).exe"
+    ],
+    "transform_file": "Viscera Cleanup Detail - Santa's Rampage (USA).exe"
+}

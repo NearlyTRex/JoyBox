@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Insufficient Adjectives (USA).exe"
+    ],
+    "transform_file": "Insufficient Adjectives (USA).exe"
+}

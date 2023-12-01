@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Mega Man Legacy Collection 2 (USA).exe"
+    ],
+    "transform_file": "Mega Man Legacy Collection 2 (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Hot Pot Panic (USA).exe"
+    ],
+    "transform_file": "Hot Pot Panic (USA).exe"
+}

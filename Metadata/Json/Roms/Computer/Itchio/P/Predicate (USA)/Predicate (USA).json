@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Predicate (USA).exe"
+    ],
+    "transform_file": "Predicate (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Sophie's Safecracking Simulator (USA).exe"
+    ],
+    "transform_file": "Sophie's Safecracking Simulator (USA).exe"
+}

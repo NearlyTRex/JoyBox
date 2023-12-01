@@ -1,0 +1,14 @@
+{
+    "is_scumm": true,
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "skip_existing": true,
+                "to": "$SCUMM_MAIN_ROOT",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "DreamWeb (USA).chd"
+}

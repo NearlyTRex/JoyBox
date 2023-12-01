@@ -1,0 +1,13 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/trine_2_artbooks.zip",
+        "$SETUP_MAIN_ROOT/extra/trine_2_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/trine_2_goblin_menace_ost.zip",
+        "$SETUP_MAIN_ROOT/extra/trine_2_ost.zip",
+        "$SETUP_MAIN_ROOT/extra/trine_2_wallpapers.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_trine_2_-_complete_story_2.01_build_447_(15973).exe"
+    ],
+    "transform_file": "setup_trine_2_-_complete_story_2.01_build_447_(15973).exe"
+}

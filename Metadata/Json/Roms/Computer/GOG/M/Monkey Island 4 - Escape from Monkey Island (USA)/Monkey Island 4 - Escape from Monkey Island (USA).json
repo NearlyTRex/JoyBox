@@ -1,0 +1,9 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/escape_from_monkey_island_manual.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_escape_from_monkey_islandtm_1.1_(20987).exe"
+    ],
+    "transform_file": "setup_escape_from_monkey_islandtm_1.1_(20987).exe"
+}

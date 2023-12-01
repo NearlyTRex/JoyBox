@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Star Wars - Jedi Knight - Dark Forces II (USA).exe"
+    ],
+    "transform_file": "Star Wars - Jedi Knight - Dark Forces II (USA).exe"
+}

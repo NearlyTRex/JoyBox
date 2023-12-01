@@ -1,0 +1,601 @@
+collection: Computer - Zoom
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Computer - Zoom" {file.path}
+
+
+game: Alien Carnage - Halloween Harry (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/A/Alien Carnage - Halloween Harry (USA)/Alien Carnage - Halloween Harry (USA).json
+developer: Interactive Binary Illusions
+publisher: Apogee Software, Ltd.
+genre: Action;Platformer;2D
+description:
+  There's no shortage of action in this fast-paced, brilliantly animated firepower
+  extravaganza! Grab mega-weapons as you go, including the devastating Omega bomb,
+  and build an arsenal that'll have the aliens shakin' in their slimy shoes!
+release: 1993-10-10
+players: 1
+assets.boxfront: BoxFront/Alien Carnage - Halloween Harry (USA).jpg
+assets.boxback: BoxBack/Alien Carnage - Halloween Harry (USA).jpg
+assets.background: Background/Alien Carnage - Halloween Harry (USA).jpg
+assets.screenshot: Screenshot/Alien Carnage - Halloween Harry (USA).jpg
+assets.video: Video/Alien Carnage - Halloween Harry (USA).mp4
+x-co-op: No
+
+
+game: Aliens Versus Predator - Gold Edition (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/A/Aliens Versus Predator - Gold Edition (USA)/Aliens Versus Predator - Gold Edition (USA).json
+developer: Rebellion
+publisher: Fox Interactive
+genre: Action;Horror;Shooter
+description:
+  Aliens Versus Predator is a sci-fi first-person shooter based on the associated
+  two film franchises. The game has three playable species, and each has its own
+  single-player campaign with different missions and plotlines.
+  .
+  - Aliens... Their only weapons are their own body parts: claws for close combat,
+  their deadly tail, and their inner mouth that can crack through an enemy's skull
+  (for an instant kill) if close enough. They are deadly at close range, and can
+  heal by eating corpses or the heads of unsuspecting enemies. They can't be hurt
+  through falls, and an alternate vision mode allows them to see clearly ahead
+  through darkness. Their strength lies in flexibility and speed, and an ability
+  to cling to walls and run along any surface - allowing a skilled player to
+  escape or ambush from literally any 3D direction.
+  .
+  - Humans... U.S. Marines, as portrayed by Michael Biehn in the film 'Aliens'.
+  Marines have strong firepower that ranges from the self-tracking SmartGun, all
+  the way to rocket launchers and devistating six-barrel miniguns (as seen in
+  'Predator'). The Marines are the most familiar species to play as, with the
+  gameplay style of typical FPS hero. However, their frailty at close range, and
+  missions that leave them stranded, alone, surrounded by bloodthirsty
+  extraterrestrials, make their experience closer to survival horror.
+  .
+  - Predators... Their power is their strength, and their sight. They have at
+  least four ways of seeing the environment - standard vision, heat vision
+  (highlighting Marines), electromagnetic vision (highlighting Aliens), and
+  "Pred-Tech" (for highlighting fellow Predators and their technology). Their
+  weapons are the most precise, deadly, and ranged of those in the game, being
+  ideally suited to stealth-based gameplay. Predators also have the ability to
+  zoom their view in and out when seeking someone, thus allowing them to snipe
+  from afar. Their cloaking ability also renders them nearly invisible to enemy
+  Marines.
+  .
+  There are several multiplayer modes. For a difficult game, you can pit all the
+  players against the horde of computer creatures (which includes experimental
+  robotic Aliens and tough Predalien hybrids). Alternatively, players can choose
+  their favorite species and face each other in an arena-style deathmatch.
+  .
+  Aliens Versus Predator: Gold Edition is a compilation with the following
+  content:
+  .
+  - Aliens Versus Predator\n
+  - Aliens Versus Predator: Millennium Expansion Pack\n
+  - A strategy guide
+  .
+  Parts of the game were also reworked for this edition.
+release: 2000-03-28
+players: 1
+assets.boxfront: BoxFront/Aliens Versus Predator - Gold Edition (USA).jpg
+assets.boxback: BoxBack/Aliens Versus Predator - Gold Edition (USA).jpg
+assets.background: Background/Aliens Versus Predator - Gold Edition (USA).jpg
+assets.screenshot: Screenshot/Aliens Versus Predator - Gold Edition (USA).jpg
+assets.video: Video/Aliens Versus Predator - Gold Edition (USA).mp4
+x-co-op: No
+
+
+game: Arctic Adventure (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/A/Arctic Adventure (USA)/Arctic Adventure (USA).json
+developer: Apogee Software, Ltd.
+publisher: Apogee Software, Ltd.
+genre: Action;Platformer;2D
+description:
+  Like Pharaoh's Tomb, Arctic Adventure is a CGA game containing 80 all-new
+  diabolical levels, packed with mind-bending arcade action designed to keep you
+  from ever succeeding. Nevada will face freezing waters, diabolical traps,
+  slippery ice patches, falling stalactites, runaway snowballs and even abominable
+  snowmen! There are many, many more obstacles for Nevada to overcome in this
+  highly adventurous series.
+release: 1991-10-09
+players: 1
+assets.boxfront: BoxFront/Arctic Adventure (USA).jpg
+assets.boxback: BoxBack/Arctic Adventure (USA).jpg
+assets.background: Background/Arctic Adventure (USA).jpg
+assets.screenshot: Screenshot/Arctic Adventure (USA).jpg
+assets.video: Video/Arctic Adventure (USA).mp4
+x-co-op: No
+
+
+game: Bio Menace (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/B/Bio Menace (USA)/Bio Menace (USA).json
+developer: Apogee Software, Ltd.
+publisher: Apogee Software, Ltd.
+genre: Action;Platformer;2D
+description:
+  You are Snake Logan, a top CIA operative who likes to do things his own way.
+  Metro City has fallen under the attack of hideous mutants and your mission is to
+  fly recon over the city and report back. While circling over the city you're
+  shot down by hostile forces and forced to crash land on the streets of Metro.
+  .
+  Intelligence reports indicate that a man calling himself Dr. Mangle is
+  responsible for the mutants and the destruction of Metro. You will have to
+  battle your way through levels packed with evil mutants and robotic guards to
+  finally infiltrate Mangle's fortress and defeat him.
+release: 1993-08-03
+players: 1
+assets.boxfront: BoxFront/Bio Menace (USA).jpg
+assets.boxback: BoxBack/Bio Menace (USA).jpg
+assets.background: Background/Bio Menace (USA).jpg
+assets.screenshot: Screenshot/Bio Menace (USA).jpg
+assets.video: Video/Bio Menace (USA).mp4
+x-co-op: No
+
+
+game: Curse - The Eye of Isis (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/C/Curse - The Eye of Isis (USA)/Curse - The Eye of Isis (USA).json
+developer: Asylum Entertainment
+publisher: DreamCatcher Interactive
+genre: Action;Adventure;Horror
+description:
+  Someone has stolen an artifact from the British Museum - a sacred (and CURSED)
+  Egyptian statuette called the "Eye of Isis". You are called in to investigate
+  its disappearance, find and return it to the pyramid where it once resided. The
+  deadly curse must be stopped, and time is of the essence!
+  .
+  Curse: The Eye of Isis is a horror action game. Choose to play either Dr. Darien
+  Dane or his assistant, Victoria Sutton. Each character has different scenarios
+  to complete to reach the same objective. Travel to seven different locations,
+  battling undead monsters (zombies, mummies, etc. and their bosses) as well as
+  animated deadly objects. Locate and use a variety of weapons including a
+  shotgun, rifle, pistol, truncheon, crossbow, flame-thrower and mortar gun. Find
+  clues, characters and puzzles to help you discover the location of the sacred
+  statue.
+  .
+  During the game, realtime 3D cut scenes, interactions with NPCs as well as
+  visual and audio messages provide more information to advance the story line.
+  Gameplay is in 3rd person with action scenes reverting to 1st person.
+release: 2003-10-21
+players: 1
+assets.boxfront: BoxFront/Curse - The Eye of Isis (USA).jpg
+assets.boxback: BoxBack/Curse - The Eye of Isis (USA).jpg
+assets.background: Background/Curse - The Eye of Isis (USA).jpg
+assets.screenshot: Screenshot/Curse - The Eye of Isis (USA).jpg
+assets.video: Video/Curse - The Eye of Isis (USA).mp4
+x-co-op: No
+
+
+game: Dark Ages (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/D/Dark Ages (USA)/Dark Ages (USA).json
+developer: Scenario Software
+publisher: Apogee Software, Ltd.
+genre: Action;General
+description:
+  Dark Ages was the first shareware game to support the Adlib & Sound Blaster
+  music cards. If featured a movie style soundtrack of eight unique songs and
+  themes.
+  .
+  Each volume of Dark Ages has its own unique appearance, with different goals,
+  level designs and locations. Each volume has 10 huge scrolling levels packed
+  with devious traps, creatures and treasures.
+  .
+  Game Features
+  .
+  Built in instructions\n
+  Save and restore\n
+  Permanent high scores\n
+  Sound on/off\n
+  Flexible keyboard configuration\n
+  Three skill levels
+  .
+  Bonus Info
+  .
+  The EGA/VGA graphics are colorful and stunning, with fast scrolling screens
+  and high-speed animation. Dark Ages has such demanding graphics and animation
+  that it requires an 80286 (or 80386) machine to run at proper speed,
+  otherwise it may run too slowly. (NOTE: Dark Ages runs too fast on 486 or
+  higher computers. You will need to slow them down to play).
+release: 1991-10-18
+players: 1
+assets.boxfront: BoxFront/Dark Ages (USA).jpg
+assets.boxback: BoxBack/Dark Ages (USA).jpg
+assets.background: Background/Dark Ages (USA).jpg
+assets.screenshot: Screenshot/Dark Ages (USA).jpg
+assets.video: Video/Dark Ages (USA).mp4
+x-co-op: No
+
+
+game: Death Rally (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/D/Death Rally (USA)/Death Rally (USA).json
+developer: Remedy Entertainment
+publisher: GT Interactive
+genre: Racing;Arcade;Automobile
+description:
+  Enter the corrupt racing world of Death Rally, where defensive driving means
+  annihilating your opponents. You'll become ravenous for the power and glory that
+  comes with being the best at Death Rally, but first you must pay your dues. Put
+  the pedal to the metal and smash, blast, and obliterate the competition, to earn
+  the chance to face the undefeated master, "The Adversary." Make deals with loan
+  sharks and mob bosses to get the cash you need to build the ultimate battle
+  racing machine. Remember, no trick is too dirty, no spectator too innocent, in
+  your savage quest for the checkered flag.
+release: 1996-12-31
+players: 2
+assets.boxfront: BoxFront/Death Rally (USA).jpg
+assets.boxback: BoxBack/Death Rally (USA).jpg
+assets.background: Background/Death Rally (USA).jpg
+assets.screenshot: Screenshot/Death Rally (USA).jpg
+assets.video: Video/Death Rally (USA).mp4
+x-co-op: No
+
+
+game: Killing Time (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/K/Killing Time (USA)/Killing Time (USA).json
+developer: ONEONE1
+publisher: SakuraGame
+genre: Adventure;Visual Novel
+description:
+  A sophisticated shooter laced with gallows humor. Killing Time is no shallow
+  grave. Its depth is well-conceived. Puzzle solving and strategic thinking are
+  placed at a premium. The visceral violence is complimented by paranormal
+  graphics and a super(natural) storyline. Killing Time is a fright-fest for
+  the true aficionado of first-person corridor mayhem.
+  .
+  OST in MP3 format is included! (Check inside the folder called "Bonus")
+  .
+  Features:
+  .
+  Listen to the remembrances of the 7 video-real apparitions and ghostly
+  guests. They offer clues as to what past heinous acts actually transpired in
+  the cursed mansion.\n
+  Look up and down - turn around with a complete 360 view. The
+  three-dimensional mansion offers outdoor areas, staircases and intricately
+  detailed ceilings and floors.\n
+  The original music makes this old haunt strongly inviting, eh? But beware.\n
+  Every room, every passage in the estate holds dreadful dangers.\n
+  Enjoy continuous gameplay with no load time between areas.
+release: 2017-09-20
+players: 1
+assets.boxfront: BoxFront/Killing Time (USA).jpg
+assets.boxback: BoxBack/Killing Time (USA).jpg
+assets.background: Background/Killing Time (USA).jpg
+assets.screenshot: Screenshot/Killing Time (USA).jpg
+assets.video: Video/Killing Time (USA).mp4
+x-co-op: No
+
+
+game: Major Stryker (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/M/Major Stryker (USA)/Major Stryker (USA).json
+developer: Apogee Software, Ltd.
+publisher: Apogee Software, Ltd.
+genre: Action
+description:
+  Major Stryker is the first Apogee game with "triple-parallax scrolling", adding
+  to the illusion of depth and danger. Your mission is to pilot a high-powered,
+  armored space ship through dozens of stunning scenarios, such as space stations,
+  lava caves and alien cities.
+release: 1993-01-23
+players: 1
+assets.boxfront: BoxFront/Major Stryker (USA).jpg
+assets.boxback: BoxBack/Major Stryker (USA).jpg
+assets.background: Background/Major Stryker (USA).jpg
+assets.screenshot: Screenshot/Major Stryker (USA).jpg
+assets.video: Video/Major Stryker (USA).mp4
+x-co-op: No
+
+
+game: Monuments of Mars (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/M/Monuments of Mars (USA)/Monuments of Mars (USA).json
+developer: Scenario Software
+publisher: Apogee Software, Ltd.
+genre: Action;Platformer;2D
+description:
+  You are the last hope. Can you explore the strange Martian stuctures and
+  reveal their secrts? Can you survive to discover what happens to the men who
+  manned the previous missions?
+  .
+  Features
+  .
+  Survive the Red Planet: Over 20 levels filled with otherwordly hazards and
+  enemies.
+  .
+  Live Forever: Unlimited lives - never see a Game Over screen again!
+  .
+  The Mystery of Mars: A mysterious and fascinating story.
+  .
+  Total Recall: Game saves, high-score table and keyboard configuration.
+  .
+  Controller Support: Partial Xbox 360 Controller support.
+release: 1991
+players: 1
+assets.boxfront: BoxFront/Monuments of Mars (USA).jpg
+assets.boxback: BoxBack/Monuments of Mars (USA).jpg
+assets.background: Background/Monuments of Mars (USA).jpg
+assets.screenshot: Screenshot/Monuments of Mars (USA).jpg
+assets.video: Video/Monuments of Mars (USA).mp4
+x-co-op: No
+
+
+game: Necronomicon - The Dawning of Darkness (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/N/Necronomicon - The Dawning of Darkness (USA)/Necronomicon - The Dawning of Darkness (USA).json
+developer: Wanadoo
+publisher: DreamCatcher Interactive
+genre: Adventure;Point-and-Click
+description:
+  1927, United States, East Coast. William H. Stanton's life suddenly takes a
+  terrifying turn for the worst. What horrific secret lies behind the mysterious
+  occult experiments performed by the alchemist Herschel? The Necronomicon gives
+  you the keys to the world of the deceased.
+release: 2000-10-23
+players: 1
+assets.boxfront: BoxFront/Necronomicon - The Dawning of Darkness (USA).jpg
+assets.boxback: BoxBack/Necronomicon - The Dawning of Darkness (USA).jpg
+assets.background: Background/Necronomicon - The Dawning of Darkness (USA).jpg
+assets.screenshot: Screenshot/Necronomicon - The Dawning of Darkness (USA).jpg
+assets.video: Video/Necronomicon - The Dawning of Darkness (USA).mp4
+x-co-op: No
+
+
+game: Pharaoh's Tomb (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/P/Pharaoh's Tomb (USA)/Pharaoh's Tomb (USA).json
+developer: Micro F/X Software
+publisher: Apogee Software, Ltd.
+genre: Action;Platformer;2D
+description:
+  haraoh's Tomb is a DOS platform game created by George Broussard and published
+  by Apogee Software.
+  .
+  The game features CGA graphics based on the FAST (Fluid Animation Software
+  Technology) engine. Notoriously, objects' positions are determined by their
+  bounding volumes, not their pixel precise positions on screen.
+  .
+  The protagonist, Nevada Smith (a play on Indiana Jones), is an archaeologist and
+  adventurer who is exploring an Egyptian pyramid, hoping to find the Pharaoh's
+  Tomb and get evidence of his findings.
+  .
+  Gameplay is straightforward. In each level, the player navigates and avoids
+  obstacles by jumping or falling, evading or killing enemies, and find keys to
+  exit each level. Nevada Smith has no life bar, and is killed instantly when he
+  touches enemies or traps. Lethal obstacles include pyramid themed traps, such as
+  blocks that fire projectiles when Smith passes in front of them, wall spikes,
+  ceiling spikes and floor spikes. Navigational challenges include moving
+  platforms and elevators. Bonus points are randomly concealed in some bricks,
+  which are awarded when hit from below. The game contains many dead-ends as
+  'traps' where Smith can become permanently stuck, forcing the player to either
+  quit or reload a saved game. Collecting 100 coins or 5 masks earns the player an
+  extra life.
+release: 1990-01-17
+players: 1
+assets.boxfront: BoxFront/Pharaoh's Tomb (USA).jpg
+assets.boxback: BoxBack/Pharaoh's Tomb (USA).jpg
+assets.background: Background/Pharaoh's Tomb (USA).jpg
+assets.screenshot: Screenshot/Pharaoh's Tomb (USA).jpg
+assets.video: Video/Pharaoh's Tomb (USA).mp4
+x-co-op: No
+
+
+game: Postal - Classic and Uncut (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/P/Postal - Classic and Uncut (USA)/Postal - Classic and Uncut (USA).json
+developer: Running With Scissors
+publisher: Ripcord Games
+genre: Shooter
+description:
+  Take control of The Postal Dude in his infamous first outing as he battles to
+  survive in a world gone mad! POSTAL is a classic isometric shooter filled to the
+  brim with fast-paced explosive action.
+release: 1997-11-14
+players: 1
+assets.boxfront: BoxFront/Postal - Classic and Uncut (USA).jpg
+assets.boxback: BoxBack/Postal - Classic and Uncut (USA).jpg
+assets.background: Background/Postal - Classic and Uncut (USA).jpg
+assets.screenshot: Screenshot/Postal - Classic and Uncut (USA).jpg
+assets.video: Video/Postal - Classic and Uncut (USA).mp4
+x-co-op: No
+
+
+game: Shadow Warrior - Classic and Complete (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/S/Shadow Warrior - Classic and Complete (USA)/Shadow Warrior - Classic and Complete (USA).json
+developer: 3D Realms
+publisher: GT Interactive
+genre: Action;Shooter;First-Person;Arcade
+description:
+  "Who wants some Wang?"
+  .
+  Lo Wang is Shadow Warrior.
+  .
+  #1 Assassin.
+  .
+  #1 Yakuza abuser.
+  .
+  #1 Freak fragger.
+  .
+  #1 Mutant mutilator.
+  .
+  #1 Reason to be scared of the dark.
+  .
+  So say sayonara to all the Ninja wannabes that have gone before and put on your
+  combat sandals...Lo Wang is coming to the Land of the Rising Sun to turn out the
+  lights.
+  .
+  Experience total bloody immersion. If you can't touch, kill or drive
+  something... then blow it away! Whether you're wielding katanas, an Uzi, or a
+  freshly plundered Guardian head...you've got your work cut out for you. Enter
+  the world's most interactive 3D environment...and cut yourself some sushi!
+release: 1997-05-13
+players: 1
+assets.boxfront: BoxFront/Shadow Warrior - Classic and Complete (USA).jpg
+assets.boxback: BoxBack/Shadow Warrior - Classic and Complete (USA).jpg
+assets.background: Background/Shadow Warrior - Classic and Complete (USA).jpg
+assets.screenshot: Screenshot/Shadow Warrior - Classic and Complete (USA).jpg
+assets.video: Video/Shadow Warrior - Classic and Complete (USA).mp4
+x-co-op: No
+
+
+game: StarGunner (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/S/StarGunner (USA)/StarGunner (USA).json
+developer: WizardWorks
+publisher: Apogee Software, Ltd.
+genre: Action;Shooter;Shoot-'Em-Up;Horizontal
+description:
+  In the far distant future, an epic war for survival takes place. Deep within the
+  Andromeda galaxy, the people of Zile grow restless and greedy. The Zilions
+  secretly prepare for a massive strike against the nearby planet Ytima. Fearing
+  such an attack the Ytimians train an elite squad of "Stargunners." Their
+  mission: To strike the planet Zile first, and cripple the Zilions three
+  strongholds, where the Zilion war fleets await the launch order. If the
+  Stargunners can surprise the Zilions on their own planet, and destroy most of
+  their fleet, then good will triumph at least one more time.
+  .
+  Get them before they get you - there won't be a second chance...
+  .
+  *This sci-fi scrolling shooter brings you some of the most intense action ever
+  seen on the PC, taking you through stellar, terran, and aquatic battlefields, as
+  your mission progresses.
+  .
+  *Over 75 unique fully rendered and animated enemy craft, plus 33 dangerous end-
+  level bosses, morphing and adapting as you battle them.
+  .
+  *Hundreds of secret goodies hidden throughout the levels, including weapons and
+  shields power-ups.
+release: 1996-11-19
+players: 1
+assets.boxfront: BoxFront/StarGunner (USA).jpg
+assets.boxback: BoxBack/StarGunner (USA).jpg
+assets.background: Background/StarGunner (USA).jpg
+assets.screenshot: Screenshot/StarGunner (USA).jpg
+assets.video: Video/StarGunner (USA).mp4
+x-co-op: No
+
+
+game: Terminal Velocity (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/T/Terminal Velocity (USA)/Terminal Velocity (USA).json
+developer: Terminal Reality
+publisher: 3D Realms
+genre: Simulation;Space;Combat
+description:
+  Take flight in this pure action game loaded with full-throttle excitement! Climb
+  into Terminal Velocity now and you'll never go back to flight simulators that
+  offer combat as an "option." Terminal Velocity IS combat! And without the
+  difficult controls presented by all flight simulator style games.
+  .
+  Imagine flying at blazing speeds above an alien planet, demolishing ground
+  targets with plasma beams, banking through a narrow canyon with enemy fighters
+  hammering your shield with intense laser fire, dodging meteors crashing to the
+  surface, diving into a tight tunnel leading to the planet's core, and
+  confronting a huge mechanical beast ready to blast you away with heat seeking
+  rockets!
+release: 1995-05-01
+players: 4
+assets.boxfront: BoxFront/Terminal Velocity (USA).jpg
+assets.boxback: BoxBack/Terminal Velocity (USA).jpg
+assets.background: Background/Terminal Velocity (USA).jpg
+assets.screenshot: Screenshot/Terminal Velocity (USA).jpg
+assets.video: Video/Terminal Velocity (USA).mp4
+x-co-op: No
+
+
+game: Warzone 2100 (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/W/Warzone 2100 (USA)/Warzone 2100 (USA).json
+developer: Pumpkin Software
+publisher: Eidos Interactive
+genre: Strategy
+description:
+  In the late 21st century, NASDA (the North American Strategic Defense Agency)
+  developed and deployed a massive missile defense system, including a network of
+  nuclear-equipped satellites and ground-based launch sites. However, during a
+  routine maintenance check, something went terribly wrong...
+  .
+  While most of the survivors form scavenger bands to survive, one group of
+  people, who refer to themselves as "The Project", seeks to rebuild civilization
+  using pre-war technology.
+  .
+  Warzone 2100 is a real-time strategy game, originally developed by Pumpkin
+  Studios and published by Eidos Interactive, now developed by the Warzone 2100
+  Project. Compared to other real-time strategy games, it has a greater focus on
+  artillery, radar, and counter-battery technologies, more frequent in-game
+  cinematic updates as game play progresses, a massive research tree, as well as a
+  vehicle design system.
+  .
+  Outside of the story, Warzone 2100 only has a single faction. This limits some
+  of the variety that can be expected from real-time strategy games, although the
+  single faction is very complex. Essentially, Warzone 2100 plays much like Earth
+  2150 with 3D units and terrain, customizable vehicles, a lack of traditional
+  infantry, use of "research" to acquire new technologies, and the differentiation
+  of vehicles types.
+release: 1999-04-10
+players: 4
+assets.boxfront: BoxFront/Warzone 2100 (USA).jpg
+assets.boxback: BoxBack/Warzone 2100 (USA).jpg
+assets.background: Background/Warzone 2100 (USA).jpg
+assets.screenshot: Screenshot/Warzone 2100 (USA).jpg
+assets.video: Video/Warzone 2100 (USA).mp4
+x-co-op: Yes
+
+
+game: Xenophage - Alien Bloodsport (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/X/Xenophage - Alien Bloodsport (USA)/Xenophage - Alien Bloodsport (USA).json
+developer: Argo Games
+publisher: Apogee Software, Ltd.
+genre: Action;Fighting;2D
+description:
+  Because of the aggressive tendencies shown by your semi-sentient species, the
+  Council has bestowed upon you the honor of relieving their boredom by
+  fighting for the propagation rights of the species of your world. The combat
+  will be weaponless. The matches will take place in a holographic simulation
+  of you or your opponent's homeworld, and will be farcast to the Council
+  Chamber. If you fight well enough, you will be given the honor of defeat at
+  the hands of the Grand Champion. Failure to fight will result in automatic
+  forfeiture of propagation rights.
+  .
+  Game Features
+  .
+  8 characters, 2 champions, and a nasty surprise.\n
+  High resolution (SVGA) 640x480 mode for much greater detail.\n
+  The fully rendered foes are the largest, most detailed characters even seen
+  in a fighting game, nearly as tall as the entire screen.\n
+  Innovative panoramic screen panning, zooming and real-time scaling, shadows
+  and special effects.\n
+  Interactive, animated environments, with special dangers!\n
+  Special moves, combos, resurrections, and humiliations.\n
+  Story mode, Free Play mode, and Training mode.\n
+  The Blood Flow Meter lets you adjust the gore.\n
+  Flesh ripping, blood sucking, claw slashing, tail whipping, karate kicking,
+  fist ramming, body slamming, blood spurting action - need we say more?
+release: 1996-04-26
+players: 2
+assets.boxfront: BoxFront/Xenophage - Alien Bloodsport (USA).jpg
+assets.boxback: BoxBack/Xenophage - Alien Bloodsport (USA).jpg
+assets.background: Background/Xenophage - Alien Bloodsport (USA).jpg
+assets.screenshot: Screenshot/Xenophage - Alien Bloodsport (USA).jpg
+assets.video: Video/Xenophage - Alien Bloodsport (USA).mp4
+x-co-op: No
+
+
+game: Z - The Game (USA)
+file: $ROM_JSON_ROOT/Computer/Zoom/Z/Z - The Game (USA)/Z - The Game (USA).json
+developer: Tic Toc Games
+publisher: KISS ltd
+genre: Strategy
+description:
+  Z is a real-time strategy game in which you fight for control of the sectors,
+  some of which contains manufactories that can gain you additional units. Touch
+  the "flag" in the sector and it's yours. Capture the sector before the new unit
+  comes out of the manufactory and the new unit is yours. With six different
+  robots (different armaments, armor, and speed), multiple vehicles (from jeeps to
+  tanks) the robots can utilize, your ultimate objective is to destroy the
+  opponent's base, and prevent him from doing the same to you.
+  .
+  The game differs from many other RTSs by emphasizing territorial control (and
+  the manufactories) instead of getting kills and gathering a big army. You have
+  to finely balance defense and offense. If you wait too long, the enemy will grab
+  all the manufactories first. If you go too fast, you'll get hammered for
+  stretching yourself too thin. You can hijack enemy vehicles by shooting the
+  driver off. If you send a group of soldiers toward an objective and they find a
+  vehicle, one of them will split off to grab the vehicle; you don't really need
+  to micromanage each soldier.
+release: 2014-07-04
+players: 1
+assets.boxfront: BoxFront/Z - The Game (USA).jpg
+assets.boxback: BoxBack/Z - The Game (USA).jpg
+assets.background: Background/Z - The Game (USA).jpg
+assets.screenshot: Screenshot/Z - The Game (USA).jpg
+assets.video: Video/Z - The Game (USA).mp4
+x-co-op: No
+
+

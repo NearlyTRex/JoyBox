@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Pico-8 (USA).exe"
+    ],
+    "transform_file": "Pico-8 (USA).exe"
+}

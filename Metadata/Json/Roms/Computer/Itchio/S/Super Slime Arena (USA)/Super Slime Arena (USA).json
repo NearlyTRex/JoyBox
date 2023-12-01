@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Super Slime Arena (USA).exe"
+    ],
+    "transform_file": "Super Slime Arena (USA).exe"
+}

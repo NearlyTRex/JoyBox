@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Fumiko! (USA).exe"
+    ],
+    "transform_file": "Fumiko! (USA).exe"
+}

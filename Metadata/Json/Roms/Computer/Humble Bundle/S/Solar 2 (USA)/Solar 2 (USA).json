@@ -1,0 +1,10 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/solar2_ost_mp3_1409159048.zip",
+        "$SETUP_MAIN_ROOT/extra/solar_2_ost_flac_1409159048.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Solar2_v1.24_x86.exe"
+    ],
+    "transform_file": "Solar2_v1.24_x86.exe"
+}

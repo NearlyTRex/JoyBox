@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Wordsum Blitz (USA).exe"
+    ],
+    "transform_file": "Wordsum Blitz (USA).exe"
+}

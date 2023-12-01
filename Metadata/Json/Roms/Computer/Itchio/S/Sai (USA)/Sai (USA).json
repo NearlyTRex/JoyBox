@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Sai (USA).exe"
+    ],
+    "transform_file": "Sai (USA).exe"
+}

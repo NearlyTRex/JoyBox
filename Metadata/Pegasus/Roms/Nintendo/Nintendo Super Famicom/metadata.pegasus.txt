@@ -1,0 +1,1857 @@
+collection: Nintendo Super Famicom
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Super Famicom" {file.path}
+
+
+game: Akumajou Dracula (Japan) (Castlevania Anniversary Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Akumajou Dracula (Japan) (Castlevania Anniversary Collection)/Akumajou Dracula (Japan) (Castlevania Anniversary Collection).json
+developer: Konami
+publisher: Konami
+genre: Action;Platform
+description:
+  A century of Transylvanian tranquility is about to come to a shocking end. Once
+  again the mortifying screams of helpless villagers shake the ground as they
+  huddle against new nightmarish horrors unleashed by the Duke of Darkness, Count
+  Dracula. And this time he has a tombstone with your name on it, Simon Belmont.
+  .
+  You must descend into Castle of the Undead and its gruesome ground, accompanied
+  by the most chilling sound effects to ever tingle your spine. Inside, a freshly
+  dug 11 levels maze features the treacherous Terrace of Terror, the dangerous
+  Rotating Dungeon, the Sunken Ruins of Lost Spirits, torture chambers and
+  creature filled caves. Use your whip like a grappling hook and swing past
+  hundreds of traps and a host of ghost freaks, living corpses and hidden goblins.
+  All while dodging or destroying the unpredictable spitting lizards, carnivorous
+  coffins, and more.
+  .
+  Find the concealed weapons needed to defeat everything from eerie phantoms to
+  haunted furniture. Then prepare to find yourself face-to-thing with hideous
+  torments like the Tongue Lasher, the Darkest Knight, the Bone-Afide Horseman and
+  the Granite Crusher. When your nerves get shot, use your password and take a
+  breather. But forge on, Simon Belmont, because if you though Dracula was down
+  for the count, he's only just begun to fright!
+release: 1991-10-31
+players: 1
+assets.boxfront: BoxFront/Akumajou Dracula (Japan) (Castlevania Anniversary Collection).jpg
+assets.boxback: BoxBack/Akumajou Dracula (Japan) (Castlevania Anniversary Collection).jpg
+assets.background: Background/Akumajou Dracula (Japan) (Castlevania Anniversary Collection).jpg
+assets.screenshot: Screenshot/Akumajou Dracula (Japan) (Castlevania Anniversary Collection).jpg
+assets.video: Video/Akumajou Dracula (Japan) (Castlevania Anniversary Collection).mp4
+x-co-op: No
+
+
+game: Bahamut Lagoon (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Bahamut Lagoon (Japan)/Bahamut Lagoon (Japan).json
+developer: Squaresoft
+publisher: Squaresoft
+genre: Role-Playing;Strategy
+description:
+  Bahamut Lagoon combines RPG mechanics with squad-based combat. Characters have
+  HP, MP (SP for fighter characters), EXP, equipment, stats and class-specific,
+  SP-draining special elemental abilities very much like traditional console RPGs.
+  The player can explore his surroundings, talk to people and visit shops when not
+  in battle, though to a limited degree as there is no world map and no way to
+  leave the current area.
+  .
+  The game's core is its turn-based battles fought on a 2d grid. Characters are
+  assembled into parties of four and the player allowed a maximum of six parties,
+  which are usually well outnumbered. The two opposing sides act in alternating
+  turns so that each party can move once and/or attack once a turn. Attacks are
+  divided into distant and close-up combat. In the former, a party uses a special
+  ability (e.g. casting fireballs, throwing lightning, healing allies) of one of
+  its members at a distance. The range and possible area of effect damage vary per
+  ability. If the attacking party has two or more characters with the same
+  ability, they join in the action to multiply its effectiveness. Distant combat
+  results in less money and generally less damage, but the target cannot
+  retaliate. Distant attacks can also affect the field; fire and ice ignite or
+  extinguish forests and melt or freeze ice, etc. Close-up, each unit in two
+  adjacent opposing parties can act once. Very much like Final Fantasy SNES
+  combat, they can attack an enemy, use an item or a special ability (though these
+  can't be combined and most only affect one target instead of all) or defend.
+  .
+  Dragons are the player's ace in the hole. They have their own stats and gain
+  experience like normal characters do. In battle, each party has a dragon
+  attached to it and draws a large portion of its strength from that of its
+  dragon: if a party's dragon is slain, the party will lose the ability to use
+  special attacks and class-specific abilities for the remainder of the map. The
+  beast acts as a very powerful autonomous unit that moves after its party does
+  and it cannot be controlled beyond very simple commands, e.g. "Come!" Out of
+  battle, dragons will eat anything and raising them by feeding them items is an
+  important part of the game. Feeding can improve their stats as well as affect
+  their behavior on the field, and the dragons develop into new forms as they
+  grow.
+  .
+  The player can change the characters in each of the parties, their formation as
+  well as what dragon represents them at will.
+release: 1996-02-09
+players: 1
+assets.boxfront: BoxFront/Bahamut Lagoon (Japan).jpg
+assets.boxback: BoxBack/Bahamut Lagoon (Japan).jpg
+assets.background: Background/Bahamut Lagoon (Japan).jpg
+assets.screenshot: Screenshot/Bahamut Lagoon (Japan).jpg
+x-co-op: No
+
+
+game: Bahamut Lagoon (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Bahamut Lagoon (Japan) (English Patch)/Bahamut Lagoon (Japan) (English Patch).json
+developer: Squaresoft
+publisher: Squaresoft
+genre: Role-Playing;Strategy
+description:
+  Bahamut Lagoon combines RPG mechanics with squad-based combat. Characters have
+  HP, MP (SP for fighter characters), EXP, equipment, stats and class-specific,
+  SP-draining special elemental abilities very much like traditional console RPGs.
+  The player can explore his surroundings, talk to people and visit shops when not
+  in battle, though to a limited degree as there is no world map and no way to
+  leave the current area.
+  .
+  The game's core is its turn-based battles fought on a 2d grid. Characters are
+  assembled into parties of four and the player allowed a maximum of six parties,
+  which are usually well outnumbered. The two opposing sides act in alternating
+  turns so that each party can move once and/or attack once a turn. Attacks are
+  divided into distant and close-up combat. In the former, a party uses a special
+  ability (e.g. casting fireballs, throwing lightning, healing allies) of one of
+  its members at a distance. The range and possible area of effect damage vary per
+  ability. If the attacking party has two or more characters with the same
+  ability, they join in the action to multiply its effectiveness. Distant combat
+  results in less money and generally less damage, but the target cannot
+  retaliate. Distant attacks can also affect the field; fire and ice ignite or
+  extinguish forests and melt or freeze ice, etc. Close-up, each unit in two
+  adjacent opposing parties can act once. Very much like Final Fantasy SNES
+  combat, they can attack an enemy, use an item or a special ability (though these
+  can't be combined and most only affect one target instead of all) or defend.
+  .
+  Dragons are the player's ace in the hole. They have their own stats and gain
+  experience like normal characters do. In battle, each party has a dragon
+  attached to it and draws a large portion of its strength from that of its
+  dragon: if a party's dragon is slain, the party will lose the ability to use
+  special attacks and class-specific abilities for the remainder of the map. The
+  beast acts as a very powerful autonomous unit that moves after its party does
+  and it cannot be controlled beyond very simple commands, e.g. "Come!" Out of
+  battle, dragons will eat anything and raising them by feeding them items is an
+  important part of the game. Feeding can improve their stats as well as affect
+  their behavior on the field, and the dragons develop into new forms as they
+  grow.
+  .
+  The player can change the characters in each of the parties, their formation as
+  well as what dragon represents them at will.
+release: 1996-02-09
+players: 1
+assets.boxfront: BoxFront/Bahamut Lagoon (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Bahamut Lagoon (Japan) (English Patch).jpg
+assets.background: Background/Bahamut Lagoon (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Bahamut Lagoon (Japan) (English Patch).jpg
+assets.video: Video/Bahamut Lagoon (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Chou Mahou Tairiku Wozz (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Chou Mahou Tairiku Wozz (Japan)/Chou Mahou Tairiku Wozz (Japan).json
+developer: Red Entertainment
+publisher: Bullet-Proof Software
+genre: Role-Playing
+description:
+  The magic world of Wozz, populated by magicians, alchemists, and other kinds of
+  people - including simple town and village inhabitants - was a seemingly
+  peaceful place, until one day, a poisonous rain started turning its inhabitants
+  into monsters. The chief wizard realizes that the demon Balaam is trying to link
+  the world of Wozz with the world of humans. Only a human hero can stop Balaam,
+  and the wizard's teleporting magic brings... three young humans: the Japanese
+  girl Reona Kitazato, and two boys: the American Shot Phoenix and the Chinese
+  Chun Chingtao. Will those youngsters be able to stop Balaam?
+  .
+  The game is a traditional Japanese-style RPG similar to Breath of Fire:
+  turn-based battles are viewed from an isometric perspective. You control all
+  three characters as a party, but in the beginning of the game you choose one of
+  them as the main character, and therefore will see the game from his/her
+  perspective. In case the characters split up, you'll be able to control only the
+  one you chose.
+release: 1995-08-04
+players: 1
+assets.boxfront: BoxFront/Chou Mahou Tairiku Wozz (Japan).jpg
+assets.boxback: BoxBack/Chou Mahou Tairiku Wozz (Japan).jpg
+assets.background: Background/Chou Mahou Tairiku Wozz (Japan).jpg
+assets.screenshot: Screenshot/Chou Mahou Tairiku Wozz (Japan).jpg
+x-co-op: No
+
+
+game: Chou Mahou Tairiku Wozz (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Chou Mahou Tairiku Wozz (Japan) (English Patch)/Chou Mahou Tairiku Wozz (Japan) (English Patch).json
+developer: Red Entertainment
+publisher: Bullet-Proof Software
+genre: Role-Playing
+description:
+  The magic world of Wozz, populated by magicians, alchemists, and other kinds of
+  people - including simple town and village inhabitants - was a seemingly
+  peaceful place, until one day, a poisonous rain started turning its inhabitants
+  into monsters. The chief wizard realizes that the demon Balaam is trying to link
+  the world of Wozz with the world of humans. Only a human hero can stop Balaam,
+  and the wizard's teleporting magic brings... three young humans: the Japanese
+  girl Reona Kitazato, and two boys: the American Shot Phoenix and the Chinese
+  Chun Chingtao. Will those youngsters be able to stop Balaam?
+  .
+  The game is a traditional Japanese-style RPG similar to Breath of Fire:
+  turn-based battles are viewed from an isometric perspective. You control all
+  three characters as a party, but in the beginning of the game you choose one of
+  them as the main character, and therefore will see the game from his/her
+  perspective. In case the characters split up, you'll be able to control only the
+  one you chose.
+release: 1995-08-04
+players: 1
+assets.boxfront: BoxFront/Chou Mahou Tairiku Wozz (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Chou Mahou Tairiku Wozz (Japan) (English Patch).jpg
+assets.background: Background/Chou Mahou Tairiku Wozz (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Chou Mahou Tairiku Wozz (Japan) (English Patch).jpg
+assets.video: Video/Chou Mahou Tairiku Wozz (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Chrono Trigger (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Chrono Trigger (Japan)/Chrono Trigger (Japan).json
+developer: Squaresoft
+publisher: Squaresoft
+genre: Role-Playing
+description:
+  The millennium. A portal is opened. The chain of time is broken. A young man is
+  transported into the past, altering the course of history and the outcome of the
+  future. He has to find his way home, but first he must travel to the outer edges
+  of time to repair the world's chronology. On the way he encounters strange
+  friends and foes, utilizes incredible devices and vehicles, and penetrates and
+  neutralizes the fortresses of the past, present, and future. A paradox has been
+  created. If he does not restore the order of time, nothing will ever be the
+  same. He is the one who will become a hero. He is Crono.
+release: 1995-03-11
+players: 1
+assets.boxfront: BoxFront/Chrono Trigger (Japan).jpg
+assets.boxback: BoxBack/Chrono Trigger (Japan).jpg
+assets.background: Background/Chrono Trigger (Japan).jpg
+assets.screenshot: Screenshot/Chrono Trigger (Japan).jpg
+x-co-op: No
+
+
+game: Contra Spirits (World) (Contra Anniversary Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Contra Spirits (World) (Contra Anniversary Collection)/Contra Spirits (World) (Contra Anniversary Collection).json
+developer: Konami
+publisher: Konami
+genre: Platform;Shooter
+description:
+  Welcome to 2636, the year the Notorious One gets even, with an unprecendented
+  alien onsalught orchestrated to push 16-bit technology and its commandos to
+  their ultimate reaches.
+  .
+  Plunge through a molten hot massacre on a high speed voyage to the guts of the
+  archenemy alien. Scope out the side and top perspectives and backgrounds that do
+  a 360 to engulf you in 3-D sensation.
+  .
+  Pick off solar slimedogs like the Mutant Megasquitos and the Psycho Cyclers
+  while you scale over walls, swing from girders and ropes, hitch rides on a
+  missile, whatever it takes. Sweat through six gut splitting stages, including
+  the Battle of the Blazing Sky and the Mucho Grande Badlands.\n
+  The graphics are so real the explosions will nearly knock you off your feet. And
+  the Boss Enemies are so gigantic, your screen can hardly hold them. You'll need
+  to wrap both hands around artillery powerful enough to make today's weapons look
+  like squirt guns. The Contra legacy is alive and dangerous!
+release: 1992-02-28
+players: 2
+assets.boxfront: BoxFront/Contra Spirits (World) (Contra Anniversary Collection).jpg
+assets.boxback: BoxBack/Contra Spirits (World) (Contra Anniversary Collection).jpg
+assets.background: Background/Contra Spirits (World) (Contra Anniversary Collection).jpg
+assets.screenshot: Screenshot/Contra Spirits (World) (Contra Anniversary Collection).jpg
+x-co-op: Yes
+
+
+game: Cyber Knight (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Cyber Knight (Japan)/Cyber Knight (Japan).json
+developer: Advance Communication Company
+publisher: Tonkin House
+genre: Role-Playing
+description:
+  In the 24th century, mankind has gone into space. The crew of the starship
+  Swordfish are in an engagement with space pirates when the battle takes a turn
+  for the worse. In desperation, the crew activate their jump drive without a
+  destination... and end up flung across the galaxy to the galactic core. The
+  Swordfish however is badly damaged with many casualties including the captain.
+  Only 26 of the crew survive, and of them only 6 are qualified for combat: The
+  commander, two soldiers, a mechanic and a doctor and six giant "Module"
+  mechanized suits available for them. These survivors locate planet Farworld,
+  apparently colonized by humans. There they discover the colony is under attack
+  by a relentless mechanical aliens dubbed "Berserkers". The crew of the swordfish
+  must fight back against the Berserkers and explore the galaxy for some means to
+  return home.
+  .
+  Cyber Knight is an RPG with a science-fiction theme of being lost in an alien
+  galaxy. The game takes place in a top-down view for movement on planets and
+  areas, a side-view for combat sequences and a first person menu system when
+  aboard the Swordfish starship. The Swordfish can travel between stars, scanning
+  worlds for information. If the ship is able to land on a planet, three crew
+  members piloting three Modules (giant robots) can be selected to debark and
+  explore the planet. Many planets will have towns or people living on them which
+  can be talked to in order to uncover information. Different quests are assigned
+  in order to find the items necessary to progress. There is no system of currency
+  or buying items. Instead, many defeated Berserkers leave behind "NeoParts",
+  which can be brought back to the Swordfish's lab. Analysis of these Neo parts
+  unlocks enhances statistics (endurance, agility, accuracy, etc) for the Modules
+  and new weapons for them to carry. The six modules are unique in statistics, and
+  also the six pilots each carry different skills.
+  .
+  Combat takes place in turn-based combat on a 6x6 squares field. Seen from the
+  side view, the three modules can be positioned in relation to enemies in order
+  to attack, using a variety of melee and long-ranged weaponry. Ammunition is
+  unlimited, but each module also carries a number of "options" that are
+  consumable attacks. Each Module has two sets of hitpoints: one for the pilot and
+  one for the module itself. If either one of these reaches zero, the module is
+  destroyed. In order to heal, the party carries 10 each of repair kits and first
+  aid kits, which must when not in combat. These kits, as well as options and
+  defeated pilots or modules can be restored by returning to the Swordfish.
+release: 1992-10-30
+players: 1
+assets.boxfront: BoxFront/Cyber Knight (Japan).jpg
+assets.boxback: BoxBack/Cyber Knight (Japan).jpg
+assets.background: Background/Cyber Knight (Japan).jpg
+assets.screenshot: Screenshot/Cyber Knight (Japan).jpg
+x-co-op: No
+
+
+game: Cyber Knight (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Cyber Knight (Japan) (English Patch)/Cyber Knight (Japan) (English Patch).json
+developer: Advance Communication Company
+publisher: Tonkin House
+genre: Role-Playing
+description:
+  In the 24th century, mankind has gone into space. The crew of the starship
+  Swordfish are in an engagement with space pirates when the battle takes a turn
+  for the worse. In desperation, the crew activate their jump drive without a
+  destination... and end up flung across the galaxy to the galactic core. The
+  Swordfish however is badly damaged with many casualties including the captain.
+  Only 26 of the crew survive, and of them only 6 are qualified for combat: The
+  commander, two soldiers, a mechanic and a doctor and six giant "Module"
+  mechanized suits available for them. These survivors locate planet Farworld,
+  apparently colonized by humans. There they discover the colony is under attack
+  by a relentless mechanical aliens dubbed "Berserkers". The crew of the swordfish
+  must fight back against the Berserkers and explore the galaxy for some means to
+  return home.
+  .
+  Cyber Knight is an RPG with a science-fiction theme of being lost in an alien
+  galaxy. The game takes place in a top-down view for movement on planets and
+  areas, a side-view for combat sequences and a first person menu system when
+  aboard the Swordfish starship. The Swordfish can travel between stars, scanning
+  worlds for information. If the ship is able to land on a planet, three crew
+  members piloting three Modules (giant robots) can be selected to debark and
+  explore the planet. Many planets will have towns or people living on them which
+  can be talked to in order to uncover information. Different quests are assigned
+  in order to find the items necessary to progress. There is no system of currency
+  or buying items. Instead, many defeated Berserkers leave behind "NeoParts",
+  which can be brought back to the Swordfish's lab. Analysis of these Neo parts
+  unlocks enhances statistics (endurance, agility, accuracy, etc) for the Modules
+  and new weapons for them to carry. The six modules are unique in statistics, and
+  also the six pilots each carry different skills.
+  .
+  Combat takes place in turn-based combat on a 6x6 squares field. Seen from the
+  side view, the three modules can be positioned in relation to enemies in order
+  to attack, using a variety of melee and long-ranged weaponry. Ammunition is
+  unlimited, but each module also carries a number of "options" that are
+  consumable attacks. Each Module has two sets of hitpoints: one for the pilot and
+  one for the module itself. If either one of these reaches zero, the module is
+  destroyed. In order to heal, the party carries 10 each of repair kits and first
+  aid kits, which must when not in combat. These kits, as well as options and
+  defeated pilots or modules can be restored by returning to the Swordfish.
+release: 1992-10-30
+players: 1
+assets.boxfront: BoxFront/Cyber Knight (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Cyber Knight (Japan) (English Patch).jpg
+assets.background: Background/Cyber Knight (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Cyber Knight (Japan) (English Patch).jpg
+assets.video: Video/Cyber Knight (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Cyber Knight (Japan) (English+Easy Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Cyber Knight (Japan) (English+Easy Patch)/Cyber Knight (Japan) (English+Easy Patch).json
+developer: Advance Communication Company
+publisher: Tonkin House
+genre: Role-Playing
+description:
+  In the 24th century, mankind has gone into space. The crew of the starship
+  Swordfish are in an engagement with space pirates when the battle takes a turn
+  for the worse. In desperation, the crew activate their jump drive without a
+  destination... and end up flung across the galaxy to the galactic core. The
+  Swordfish however is badly damaged with many casualties including the captain.
+  Only 26 of the crew survive, and of them only 6 are qualified for combat: The
+  commander, two soldiers, a mechanic and a doctor and six giant "Module"
+  mechanized suits available for them. These survivors locate planet Farworld,
+  apparently colonized by humans. There they discover the colony is under attack
+  by a relentless mechanical aliens dubbed "Berserkers". The crew of the swordfish
+  must fight back against the Berserkers and explore the galaxy for some means to
+  return home.
+  .
+  Cyber Knight is an RPG with a science-fiction theme of being lost in an alien
+  galaxy. The game takes place in a top-down view for movement on planets and
+  areas, a side-view for combat sequences and a first person menu system when
+  aboard the Swordfish starship. The Swordfish can travel between stars, scanning
+  worlds for information. If the ship is able to land on a planet, three crew
+  members piloting three Modules (giant robots) can be selected to debark and
+  explore the planet. Many planets will have towns or people living on them which
+  can be talked to in order to uncover information. Different quests are assigned
+  in order to find the items necessary to progress. There is no system of currency
+  or buying items. Instead, many defeated Berserkers leave behind "NeoParts",
+  which can be brought back to the Swordfish's lab. Analysis of these Neo parts
+  unlocks enhances statistics (endurance, agility, accuracy, etc) for the Modules
+  and new weapons for them to carry. The six modules are unique in statistics, and
+  also the six pilots each carry different skills.
+  .
+  Combat takes place in turn-based combat on a 6x6 squares field. Seen from the
+  side view, the three modules can be positioned in relation to enemies in order
+  to attack, using a variety of melee and long-ranged weaponry. Ammunition is
+  unlimited, but each module also carries a number of "options" that are
+  consumable attacks. Each Module has two sets of hitpoints: one for the pilot and
+  one for the module itself. If either one of these reaches zero, the module is
+  destroyed. In order to heal, the party carries 10 each of repair kits and first
+  aid kits, which must when not in combat. These kits, as well as options and
+  defeated pilots or modules can be restored by returning to the Swordfish.
+release: 1992-10-30
+players: 1
+assets.boxfront: BoxFront/Cyber Knight (Japan) (English+Easy Patch).jpg
+assets.boxback: BoxBack/Cyber Knight (Japan) (English+Easy Patch).jpg
+assets.background: Background/Cyber Knight (Japan) (English+Easy Patch).jpg
+assets.screenshot: Screenshot/Cyber Knight (Japan) (English+Easy Patch).jpg
+assets.video: Video/Cyber Knight (Japan) (English+Easy Patch).mp4
+x-co-op: No
+
+
+game: Cyber Knight II - Chikyuu Teikoku no Yabou (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan)/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan).json
+developer: Atelier Double
+publisher: Tonkinhouse
+genre: Role-Playing
+description:
+  Following the events of the first Cyber Knight in the 24th century, the crew of
+  the Swordfish have returned to Earth after defeating the mechanical "Berzerkers"
+  far across space. However during their time away, the Earth Federation has been
+  taken over by the ambitious General Forrest, who seeks to wage war on the
+  independent systems and conquer them. Recognizing the potential weapons that
+  could be made from the Berzerker science data, Forrest impounds the Swordfish
+  and jails it's crew. The Berzerker data is used to create "Overtech" and bring
+  to life "Metalliforms", self-replicating war machines. The Swordfish crew
+  manages to escape, thanks to a mysterious agent "CJ", and are recruited into the
+  resistance against the Earth Federation. Given a new spaceship, the Galvodirge,
+  they must travel the galaxy to different human civilizations and devise a plan
+  to stop Earth's attack.
+  .
+  Cyber Knight II is an RPG with science-fiction themes. As in the first game,
+  much of the game takes place in a top-down view for movement on planets and
+  areas, a side-view for combat sequences and a first person menu system when
+  aboard the Galvodirge starship. The Galvodirge can travel between stars,
+  scanning worlds for information. If the ship is able to land on a planet, the
+  crew can debark either on foot or using combat modules (mechs). Some areas are
+  only accessible using modules and others (such as towns) do not allow the use of
+  these war machines. Many planets will have towns or people living on them which
+  can be talked to in order to uncover information. Different quests are assigned
+  in order to find the items necessary to progress. There is no system of currency
+  or buying items. Instead, many defeated enemies leave behind "NeoParts", which
+  can be brought back to the Swordfish's lab. Analysis of these Neo parts unlocks
+  enhances statistics (endurance, agility, accuracy, etc) for the Modules and new
+  weapons for them to carry.
+release: 1994-08-26
+players: 1
+assets.boxfront: BoxFront/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan).jpg
+assets.boxback: BoxBack/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan).jpg
+assets.background: Background/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan).jpg
+assets.screenshot: Screenshot/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan).jpg
+x-co-op: No
+
+
+game: Cyber Knight II - Chikyuu Teikoku no Yabou (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan) (English Patch)/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan) (English Patch).json
+developer: Atelier Double
+publisher: Tonkinhouse
+genre: Role-Playing
+description:
+  Following the events of the first Cyber Knight in the 24th century, the crew of
+  the Swordfish have returned to Earth after defeating the mechanical "Berzerkers"
+  far across space. However during their time away, the Earth Federation has been
+  taken over by the ambitious General Forrest, who seeks to wage war on the
+  independent systems and conquer them. Recognizing the potential weapons that
+  could be made from the Berzerker science data, Forrest impounds the Swordfish
+  and jails it's crew. The Berzerker data is used to create "Overtech" and bring
+  to life "Metalliforms", self-replicating war machines. The Swordfish crew
+  manages to escape, thanks to a mysterious agent "CJ", and are recruited into the
+  resistance against the Earth Federation. Given a new spaceship, the Galvodirge,
+  they must travel the galaxy to different human civilizations and devise a plan
+  to stop Earth's attack.
+  .
+  Cyber Knight II is an RPG with science-fiction themes. As in the first game,
+  much of the game takes place in a top-down view for movement on planets and
+  areas, a side-view for combat sequences and a first person menu system when
+  aboard the Galvodirge starship. The Galvodirge can travel between stars,
+  scanning worlds for information. If the ship is able to land on a planet, the
+  crew can debark either on foot or using combat modules (mechs). Some areas are
+  only accessible using modules and others (such as towns) do not allow the use of
+  these war machines. Many planets will have towns or people living on them which
+  can be talked to in order to uncover information. Different quests are assigned
+  in order to find the items necessary to progress. There is no system of currency
+  or buying items. Instead, many defeated enemies leave behind "NeoParts", which
+  can be brought back to the Swordfish's lab. Analysis of these Neo parts unlocks
+  enhances statistics (endurance, agility, accuracy, etc) for the Modules and new
+  weapons for them to carry.
+release: 1994-08-26
+players: 1
+assets.boxfront: BoxFront/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan) (English Patch).jpg
+assets.background: Background/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan) (English Patch).jpg
+assets.video: Video/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Dragon Quest I & II (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest I & II (Japan)/Dragon Quest I & II (Japan).json
+developer: Enix Corporation
+publisher: Enix Corporation
+genre: Role-Playing
+description:
+  This is a remake of two first Dragon Quest titles, the second version of both
+  Dragon Quest and Dragon Quest II, preceding the Game Boy Color compilation of
+  Dragon Warrior I & II.
+  .
+  This remake includes updated graphics that retain the original look, sound of
+  higher quality, and some changes in the gameplay and in the game world: certain
+  locations are larger, some menu commands (such as "Stairs") are omitted, and
+  there is a larger variety of items.
+  .
+  Though the two titles have since been separated for mobile phone releases, the
+  changes implemented in the original Super Famicom bundle package have become
+  permanent additions and improvements seen in every version of the games since.
+release: 1993-12-18
+players: 1
+assets.boxfront: BoxFront/Dragon Quest I & II (Japan).jpg
+assets.boxback: BoxBack/Dragon Quest I & II (Japan).jpg
+assets.background: Background/Dragon Quest I & II (Japan).jpg
+assets.screenshot: Screenshot/Dragon Quest I & II (Japan).jpg
+x-co-op: No
+
+
+game: Dragon Quest I & II (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest I & II (Japan) (English Patch)/Dragon Quest I & II (Japan) (English Patch).json
+developer: Enix Corporation
+publisher: Enix Corporation
+genre: Role-Playing
+description:
+  This is a remake of two first Dragon Quest titles, the second version of both
+  Dragon Quest and Dragon Quest II, preceding the Game Boy Color compilation of
+  Dragon Warrior I & II.
+  .
+  This remake includes updated graphics that retain the original look, sound of
+  higher quality, and some changes in the gameplay and in the game world: certain
+  locations are larger, some menu commands (such as "Stairs") are omitted, and
+  there is a larger variety of items.
+  .
+  Though the two titles have since been separated for mobile phone releases, the
+  changes implemented in the original Super Famicom bundle package have become
+  permanent additions and improvements seen in every version of the games since.
+release: 1993-12-18
+players: 1
+assets.boxfront: BoxFront/Dragon Quest I & II (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Dragon Quest I & II (Japan) (English Patch).jpg
+assets.background: Background/Dragon Quest I & II (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Dragon Quest I & II (Japan) (English Patch).jpg
+assets.video: Video/Dragon Quest I & II (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Dragon Quest III - Soshite Densetsu e... (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest III - Soshite Densetsu e... (Japan)/Dragon Quest III - Soshite Densetsu e... (Japan).json
+developer: Heart Beat
+publisher: Enix
+genre: Role-Playing
+description:
+  Your father, the brave Ortega, is dead. He set off to destroy the Archfiend
+  Baramos but fell in glorious battle. Unless stopped, Baramos will unleash a
+  torrent of evil that will destroy the world. You must stop Baramos and discover
+  the legend of Dragon Quest! Your journey starts in Aliahan. Only you decide
+  where it ends...
+  .
+  Originally not released outside of Japan, this version has earned itself several
+  fan translations over the years.
+release: 1996-12-06
+players: 1
+assets.boxfront: BoxFront/Dragon Quest III - Soshite Densetsu e... (Japan).jpg
+assets.boxback: BoxBack/Dragon Quest III - Soshite Densetsu e... (Japan).jpg
+assets.background: Background/Dragon Quest III - Soshite Densetsu e... (Japan).jpg
+assets.screenshot: Screenshot/Dragon Quest III - Soshite Densetsu e... (Japan).jpg
+x-co-op: No
+
+
+game: Dragon Quest III - Soshite Densetsu e... (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest III - Soshite Densetsu e... (Japan) (English Patch)/Dragon Quest III - Soshite Densetsu e... (Japan) (English Patch).json
+developer: Heart Beat
+publisher: Enix
+genre: Role-Playing
+description:
+  Your father, the brave Ortega, is dead. He set off to destroy the Archfiend
+  Baramos but fell in glorious battle. Unless stopped, Baramos will unleash a
+  torrent of evil that will destroy the world. You must stop Baramos and discover
+  the legend of Dragon Quest! Your journey starts in Aliahan. Only you decide
+  where it ends...
+  .
+  Originally not released outside of Japan, this version has earned itself several
+  fan translations over the years.
+release: 1996-12-06
+players: 1
+assets.boxfront: BoxFront/Dragon Quest III - Soshite Densetsu e... (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Dragon Quest III - Soshite Densetsu e... (Japan) (English Patch).jpg
+assets.background: Background/Dragon Quest III - Soshite Densetsu e... (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Dragon Quest III - Soshite Densetsu e... (Japan) (English Patch).jpg
+assets.video: Video/Dragon Quest III - Soshite Densetsu e... (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Dragon Quest V - Tenkuu no Hanayome (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest V - Tenkuu no Hanayome (Japan)/Dragon Quest V - Tenkuu no Hanayome (Japan).json
+developer: Chunsoft
+publisher: Enix
+genre: Role-Playing
+description:
+  The hero of this game is the son of a brave warrior named Papas. It appears that
+  his mother died just after giving birth to him, and his father took him on a
+  long journey when he was a little baby, searching for something. Now the boy is
+  six years old, and Papas brings him to his hometown. After some time, they learn
+  that Henry, the prince of Reinhart, was kidnapped by bandits. Papas and his son
+  attempt to rescue him, but this only leads to a tragic event and the boy's
+  imprisonment. Only many years later will the hero discover who or what his
+  father was searching for, and come to realize his own role in the events that
+  dictate the fate of the world.
+  .
+  Dragon Quest V is a Japanese-style role-playing game with random enemy
+  encounters and turn-based combat viewed from first-person perspective. Though
+  the party only includes three active human combatants, the game allows the
+  player to recruit monsters into it. Some of the enemies will randomly request to
+  join the party. The player can then add them to the roster and use them in
+  battles, where they behave just like any other combatant, using their own
+  abilities and even leveling up.
+  .
+  The game follows the story of Papas' son stretched over many years, from his
+  childhood to adulthood. The player will be able to choose a wife for the main
+  character from two available female characters. This decision influences some of
+  the subsequent events and features. The hero eventually becomes a parent, and
+  his new family plays a pivotal role in the plot.
+release: 1992-09-27
+players: 1
+assets.boxfront: BoxFront/Dragon Quest V - Tenkuu no Hanayome (Japan).jpg
+assets.boxback: BoxBack/Dragon Quest V - Tenkuu no Hanayome (Japan).jpg
+assets.background: Background/Dragon Quest V - Tenkuu no Hanayome (Japan).jpg
+assets.screenshot: Screenshot/Dragon Quest V - Tenkuu no Hanayome (Japan).jpg
+x-co-op: No
+
+
+game: Dragon Quest V - Tenkuu no Hanayome (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest V - Tenkuu no Hanayome (Japan) (English Patch)/Dragon Quest V - Tenkuu no Hanayome (Japan) (English Patch).json
+developer: Chunsoft
+publisher: Enix
+genre: Role-Playing
+description:
+  The hero of this game is the son of a brave warrior named Papas. It appears that
+  his mother died just after giving birth to him, and his father took him on a
+  long journey when he was a little baby, searching for something. Now the boy is
+  six years old, and Papas brings him to his hometown. After some time, they learn
+  that Henry, the prince of Reinhart, was kidnapped by bandits. Papas and his son
+  attempt to rescue him, but this only leads to a tragic event and the boy's
+  imprisonment. Only many years later will the hero discover who or what his
+  father was searching for, and come to realize his own role in the events that
+  dictate the fate of the world.
+  .
+  Dragon Quest V is a Japanese-style role-playing game with random enemy
+  encounters and turn-based combat viewed from first-person perspective. Though
+  the party only includes three active human combatants, the game allows the
+  player to recruit monsters into it. Some of the enemies will randomly request to
+  join the party. The player can then add them to the roster and use them in
+  battles, where they behave just like any other combatant, using their own
+  abilities and even leveling up.
+  .
+  The game follows the story of Papas' son stretched over many years, from his
+  childhood to adulthood. The player will be able to choose a wife for the main
+  character from two available female characters. This decision influences some of
+  the subsequent events and features. The hero eventually becomes a parent, and
+  his new family plays a pivotal role in the plot.
+release: 1992-09-27
+players: 1
+assets.boxfront: BoxFront/Dragon Quest V - Tenkuu no Hanayome (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Dragon Quest V - Tenkuu no Hanayome (Japan) (English Patch).jpg
+assets.background: Background/Dragon Quest V - Tenkuu no Hanayome (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Dragon Quest V - Tenkuu no Hanayome (Japan) (English Patch).jpg
+assets.video: Video/Dragon Quest V - Tenkuu no Hanayome (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Dragon Quest VI - Maboroshi no Daichi (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest VI - Maboroshi no Daichi (Japan)/Dragon Quest VI - Maboroshi no Daichi (Japan).json
+developer: Heart Beat
+publisher: Enix
+genre: Role-Playing
+description:
+  You and two of your friends decide to attack the Archenemy - the evil Mudo - in
+  his castle. But as you reach his throne, he attacks you and send the three
+  friends into three different places...
+  .
+  Was this just a dream? You have just fallen out of your bed dreaming! It's time
+  to go to the village elder, to get a seemingly simple assignment - to sell some
+  goods at a bazaar in the nearest town. But soon the hero will discover his dream
+  was not so far away from reality...
+  .
+  "Dragon Quest VI" is the last SNES game of the Dragon Quest series (called
+  "Dragon Warrior" in US). It is a party RPG with turn-based combat and battles
+  viewed from 1st person perspective. Not much has changed since the NES days of
+  Dragon Quest - gameplay style, setting, and even menu layout seem almost
+  identical to those of the early classics. Like its immediate predecessor  Dragon
+  Quest V, this game was never released outside Japan.
+release: 1995-12-09
+players: 1
+assets.boxfront: BoxFront/Dragon Quest VI - Maboroshi no Daichi (Japan).jpg
+assets.boxback: BoxBack/Dragon Quest VI - Maboroshi no Daichi (Japan).jpg
+assets.background: Background/Dragon Quest VI - Maboroshi no Daichi (Japan).jpg
+assets.screenshot: Screenshot/Dragon Quest VI - Maboroshi no Daichi (Japan).jpg
+x-co-op: No
+
+
+game: Dragon Quest VI - Maboroshi no Daichi (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest VI - Maboroshi no Daichi (Japan) (English Patch)/Dragon Quest VI - Maboroshi no Daichi (Japan) (English Patch).json
+developer: Heart Beat
+publisher: Enix
+genre: Role-Playing
+description:
+  You and two of your friends decide to attack the Archenemy - the evil Mudo - in
+  his castle. But as you reach his throne, he attacks you and send the three
+  friends into three different places...
+  .
+  Was this just a dream? You have just fallen out of your bed dreaming! It's time
+  to go to the village elder, to get a seemingly simple assignment - to sell some
+  goods at a bazaar in the nearest town. But soon the hero will discover his dream
+  was not so far away from reality...
+  .
+  "Dragon Quest VI" is the last SNES game of the Dragon Quest series (called
+  "Dragon Warrior" in US). It is a party RPG with turn-based combat and battles
+  viewed from 1st person perspective. Not much has changed since the NES days of
+  Dragon Quest - gameplay style, setting, and even menu layout seem almost
+  identical to those of the early classics. Like its immediate predecessor  Dragon
+  Quest V, this game was never released outside Japan.
+release: 1995-12-09
+players: 1
+assets.boxfront: BoxFront/Dragon Quest VI - Maboroshi no Daichi (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Dragon Quest VI - Maboroshi no Daichi (Japan) (English Patch).jpg
+assets.background: Background/Dragon Quest VI - Maboroshi no Daichi (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Dragon Quest VI - Maboroshi no Daichi (Japan) (English Patch).jpg
+assets.video: Video/Dragon Quest VI - Maboroshi no Daichi (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Dual Orb - Seirei Tama Densetsu (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dual Orb - Seirei Tama Densetsu (Japan)/Dual Orb - Seirei Tama Densetsu (Japan).json
+developer: Prism Kikaku
+publisher: I'Max
+genre: Role-Playing
+description:
+  In an alternate reality, in a parallel world, there are humans just like in the
+  universe we dwell in. Those humans used to co-exist peacefully with animals,
+  fairies, and dragons - other inhabitants of the world. The dragons were the
+  wisest, most ancient, and most powerful race of all. But humans feared their
+  wisdom and their strength, and lost contact to them, destroying the balance in
+  the world. Now, only a few dragons remained, and their whereabouts are shrouded
+  in mystery...
+  .
+  You control Ralph, a young fighter apprentice who lives with his old master in a
+  small house near a village. It is the day of your graduation, and the master
+  sends you to meet a very important person. When you arrive at this person's hut,
+  you are spoken to by the spirit of a mighty dragon, the creator of the universe!
+  You, the young adventurer, is chosen to stop an evil spirit who tries to destroy
+  the universe, and as a token you receive a magic Orb, which contains the soul of
+  the great dragon. And there your adventure begins...
+  .
+  Dual Orb is a traditional Japanese-style RPG with turn-based combat viewed from
+  first-person perspective. As Ralph ventures further on his journey, he discovers
+  companions who will help him on his quest, and join his party.
+release: 1993-04-16
+players: 1
+assets.boxfront: BoxFront/Dual Orb - Seirei Tama Densetsu (Japan).jpg
+assets.boxback: BoxBack/Dual Orb - Seirei Tama Densetsu (Japan).jpg
+assets.background: Background/Dual Orb - Seirei Tama Densetsu (Japan).jpg
+assets.screenshot: Screenshot/Dual Orb - Seirei Tama Densetsu (Japan).jpg
+assets.video: Video/Dual Orb - Seirei Tama Densetsu (Japan).mp4
+x-co-op: No
+
+
+game: Dual Orb II (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dual Orb II (Japan)/Dual Orb II (Japan).json
+developer: I'Max
+publisher: I'Max
+genre: Role-Playing
+description:
+  Long time ago, a flourishing civilization was destroyed by the rage of a mighty
+  dragon. The Earth was set in flames, and no one escaped the destruction - no one
+  except one man, who managed to launch himself forward, thousand years into the
+  future. There, he was found by people of Kardosa Empire, who soon understood
+  they have in their hands a human who possesses the secret of a superior ancient
+  technology, that was unknown to the primitive civilization of the present...
+  .
+  You play the role of Aleth, the son of the High Priest in the small kingdom of
+  Garade, whom leads a peaceful life with his friend Lagnus, Prince of Garade. One
+  day Aleth accidentally gains possession of a precious artifact which is sought
+  after by the Kardosa Empire. Aleth and Lagnus get involve in a conflict which
+  will soon lead them to great discoveries of the secrets of the ancient
+  civilization, of the great destruction that occurred thousand years ago, and of
+  their own true identities...
+  .
+  The game is a console-style RPG: your party meets randomly encountered enemies
+  and bosses, and fights them in turn-based combat viewed from isometric
+  perspective. You upgrade armor by buying it, and also can buy weapons, but
+  weapons can also be upgraded for money to different levels, to create powerful
+  attacks called "techs".
+release: 1994-01-01
+players: 1
+assets.boxfront: BoxFront/Dual Orb II (Japan).jpg
+assets.boxback: BoxBack/Dual Orb II (Japan).jpg
+assets.background: Background/Dual Orb II (Japan).jpg
+assets.screenshot: Screenshot/Dual Orb II (Japan).jpg
+x-co-op: No
+
+
+game: Dual Orb II (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dual Orb II (Japan) (English Patch)/Dual Orb II (Japan) (English Patch).json
+developer: I'Max
+publisher: I'Max
+genre: Role-Playing
+description:
+  Long time ago, a flourishing civilization was destroyed by the rage of a mighty
+  dragon. The Earth was set in flames, and no one escaped the destruction - no one
+  except one man, who managed to launch himself forward, thousand years into the
+  future. There, he was found by people of Kardosa Empire, who soon understood
+  they have in their hands a human who possesses the secret of a superior ancient
+  technology, that was unknown to the primitive civilization of the present...
+  .
+  You play the role of Aleth, the son of the High Priest in the small kingdom of
+  Garade, whom leads a peaceful life with his friend Lagnus, Prince of Garade. One
+  day Aleth accidentally gains possession of a precious artifact which is sought
+  after by the Kardosa Empire. Aleth and Lagnus get involve in a conflict which
+  will soon lead them to great discoveries of the secrets of the ancient
+  civilization, of the great destruction that occurred thousand years ago, and of
+  their own true identities...
+  .
+  The game is a console-style RPG: your party meets randomly encountered enemies
+  and bosses, and fights them in turn-based combat viewed from isometric
+  perspective. You upgrade armor by buying it, and also can buy weapons, but
+  weapons can also be upgraded for money to different levels, to create powerful
+  attacks called "techs".
+release: 1994-01-01
+players: 1
+assets.boxfront: BoxFront/Dual Orb II (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Dual Orb II (Japan) (English Patch).jpg
+assets.background: Background/Dual Orb II (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Dual Orb II (Japan) (English Patch).jpg
+assets.video: Video/Dual Orb II (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Emerald Dragon (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Emerald Dragon (Japan)/Emerald Dragon (Japan).json
+developer: Alfa System
+publisher: Media Works
+genre: Role-Playing
+description:
+  In Emerald Dragon the player takes control of Atrushan, a blue dragon who lives
+  in the Dragon World. One day, he and his friends discover a ship wreck near a
+  mountain. After examining the wreck, the dragons find a human child - a little
+  girl. The wise White Dragon, the leader of the dragons, tells them that her name
+  is Tamryn and that she will play an important role in their lives. The girl
+  doesn't remember anything, and grows up together with the dragons. But when she
+  turns fifteen, she decides to go back to her homeland - the Human World. Soon
+  after Tamryn has left, Atrushan realizes he can't bear the separation, and asks
+  the White Dragon to allow him to go and find Tamryn in the Human World. But a
+  mysterious evil curse has been placed on the dragons - they can't appear among
+  the humans in their true form. Atrushan agrees to become a human and goes to the
+  Human World - to find Tamryn, and also a way to remove the curse...
+  .
+  The game has many traditional Japanese-style RPG gameplay elements: Atrushan and
+  his party travel around the game world, visit towns, descend into dungeons, and
+  level up in an automatic fashion. One of the game's distinguishing features is
+  its battle system. Characters are able to freely move over the battle field; the
+  range of their movement depends on their agility rating. Only Atrushan can be
+  given precise instruction during each turn. The player is able to position the
+  characters strategically near or far away from the enemy, attack from different
+  sides, and assign general strategies to the party members. Another notable
+  feature of the game is the absence of a "world map": the game's locations are
+  seamlessly connected with each other.
+release: 1995-07-28
+players: 1
+assets.boxfront: BoxFront/Emerald Dragon (Japan).jpg
+assets.boxback: BoxBack/Emerald Dragon (Japan).jpg
+assets.background: Background/Emerald Dragon (Japan).jpg
+assets.screenshot: Screenshot/Emerald Dragon (Japan).jpg
+x-co-op: No
+
+
+game: Emerald Dragon (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Emerald Dragon (Japan) (English Patch)/Emerald Dragon (Japan) (English Patch).json
+developer: Alfa System
+publisher: Media Works
+genre: Role-Playing
+description:
+  In Emerald Dragon the player takes control of Atrushan, a blue dragon who lives
+  in the Dragon World. One day, he and his friends discover a ship wreck near a
+  mountain. After examining the wreck, the dragons find a human child - a little
+  girl. The wise White Dragon, the leader of the dragons, tells them that her name
+  is Tamryn and that she will play an important role in their lives. The girl
+  doesn't remember anything, and grows up together with the dragons. But when she
+  turns fifteen, she decides to go back to her homeland - the Human World. Soon
+  after Tamryn has left, Atrushan realizes he can't bear the separation, and asks
+  the White Dragon to allow him to go and find Tamryn in the Human World. But a
+  mysterious evil curse has been placed on the dragons - they can't appear among
+  the humans in their true form. Atrushan agrees to become a human and goes to the
+  Human World - to find Tamryn, and also a way to remove the curse...
+  .
+  The game has many traditional Japanese-style RPG gameplay elements: Atrushan and
+  his party travel around the game world, visit towns, descend into dungeons, and
+  level up in an automatic fashion. One of the game's distinguishing features is
+  its battle system. Characters are able to freely move over the battle field; the
+  range of their movement depends on their agility rating. Only Atrushan can be
+  given precise instruction during each turn. The player is able to position the
+  characters strategically near or far away from the enemy, attack from different
+  sides, and assign general strategies to the party members. Another notable
+  feature of the game is the absence of a "world map": the game's locations are
+  seamlessly connected with each other.
+release: 1995-07-28
+players: 1
+assets.boxfront: BoxFront/Emerald Dragon (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Emerald Dragon (Japan) (English Patch).jpg
+assets.background: Background/Emerald Dragon (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Emerald Dragon (Japan) (English Patch).jpg
+assets.video: Video/Emerald Dragon (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Feda - The Emblem of Justice (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Feda - The Emblem of Justice (Japan)/Feda - The Emblem of Justice (Japan).json
+developer: Max Entertainment
+publisher: Yanoman
+genre: Role-Playing;Strategy
+description:
+  In a fantasy world, a soldier from the imperial forces deserts after witnessing
+  the massacre of innocent villagers by his unit. He is sent to jail to be
+  executed, but manages to escape with the help of two former unit colleagues. The
+  group flees through the country-side, while being pursued by imperial soldiers.
+  On their way, they join forces with other rebels to fight against the enemy,
+  while uncovering hidden secrets and evil plots by the Empire.
+  .
+  FEDA: Emblem of Justice is a strategy RPG similar to Shining Force and other
+  titles with preset characters and linear gameplay. The player commands a party
+  of varying size and characters with diverse skills.
+  .
+  In the main battle sections, the player and the CPU-controlled enemy take turns
+  moving the troops and giving orders. A menu at the bottom of the screen shows
+  all the possible actions, where soldiers can defend, move, attack, or use an
+  inventory item on each turn. The range of their movements and weapons vary
+  according to their nature. A crossbow character can shoot from the back, while
+  most sword and knife users have to be adjacent to their targets. Magic offensive
+  powers have different ranges as well, reaching enemies that are far away from
+  the attacking character. Health points can be recovered by eating rations or by
+  magic, where a healer can restore points to several characters at once.
+  .
+  Each party member has separate health and magic points, as well as other
+  statistics like defense and attack power. They receive experience points after
+  slaying an enemy or casting a spell, and extra points at the end of the battle.
+  Their skills increase after surpassing 100 points.
+  .
+  The map screen shows the party and groups of enemies traveling through the
+  landscape in turns. The menu has options for moving the group or camping. In the
+  encampment, one of the characters around the fire pit saves the game, while
+  another inside the tent provides system options to change the interface color,
+  adjust sound volume and rename the party members.
+  .
+  In some locations like temples, villages and towns, the party has to explore the
+  place and talk to the citizens to move on to the next section. In later battles,
+  the player has to make a moral choice about attacking mutated humans. At the end
+  of each battle, the party is assigned a dark or light emblem, and certain party
+  members choose to leave or stay in the group based on its alignment.
+release: 1994-10-28
+players: 1
+assets.boxfront: BoxFront/Feda - The Emblem of Justice (Japan).jpg
+assets.boxback: BoxBack/Feda - The Emblem of Justice (Japan).jpg
+assets.background: Background/Feda - The Emblem of Justice (Japan).jpg
+assets.screenshot: Screenshot/Feda - The Emblem of Justice (Japan).jpg
+x-co-op: No
+
+
+game: Feda - The Emblem of Justice (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Feda - The Emblem of Justice (Japan) (English Patch)/Feda - The Emblem of Justice (Japan) (English Patch).json
+developer: Max Entertainment
+publisher: Yanoman
+genre: Role-Playing;Strategy
+description:
+  In a fantasy world, a soldier from the imperial forces deserts after witnessing
+  the massacre of innocent villagers by his unit. He is sent to jail to be
+  executed, but manages to escape with the help of two former unit colleagues. The
+  group flees through the country-side, while being pursued by imperial soldiers.
+  On their way, they join forces with other rebels to fight against the enemy,
+  while uncovering hidden secrets and evil plots by the Empire.
+  .
+  FEDA: Emblem of Justice is a strategy RPG similar to Shining Force and other
+  titles with preset characters and linear gameplay. The player commands a party
+  of varying size and characters with diverse skills.
+  .
+  In the main battle sections, the player and the CPU-controlled enemy take turns
+  moving the troops and giving orders. A menu at the bottom of the screen shows
+  all the possible actions, where soldiers can defend, move, attack, or use an
+  inventory item on each turn. The range of their movements and weapons vary
+  according to their nature. A crossbow character can shoot from the back, while
+  most sword and knife users have to be adjacent to their targets. Magic offensive
+  powers have different ranges as well, reaching enemies that are far away from
+  the attacking character. Health points can be recovered by eating rations or by
+  magic, where a healer can restore points to several characters at once.
+  .
+  Each party member has separate health and magic points, as well as other
+  statistics like defense and attack power. They receive experience points after
+  slaying an enemy or casting a spell, and extra points at the end of the battle.
+  Their skills increase after surpassing 100 points.
+  .
+  The map screen shows the party and groups of enemies traveling through the
+  landscape in turns. The menu has options for moving the group or camping. In the
+  encampment, one of the characters around the fire pit saves the game, while
+  another inside the tent provides system options to change the interface color,
+  adjust sound volume and rename the party members.
+  .
+  In some locations like temples, villages and towns, the party has to explore the
+  place and talk to the citizens to move on to the next section. In later battles,
+  the player has to make a moral choice about attacking mutated humans. At the end
+  of each battle, the party is assigned a dark or light emblem, and certain party
+  members choose to leave or stay in the group based on its alignment.
+release: 1994-10-28
+players: 1
+assets.boxfront: BoxFront/Feda - The Emblem of Justice (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Feda - The Emblem of Justice (Japan) (English Patch).jpg
+assets.background: Background/Feda - The Emblem of Justice (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Feda - The Emblem of Justice (Japan) (English Patch).jpg
+assets.video: Video/Feda - The Emblem of Justice (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Live A Live (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Live A Live (Japan)/Live A Live (Japan).json
+developer: Square Co., Ltd.
+publisher: Square Co., Ltd.
+genre: Role-Playing
+description:
+  Live A Live's story is split across seven seemingly unrelated chapters that can
+  be played in any order, based on popular genres such as Western, science
+  fiction, and mecha. Each chapter has its own plot, setting, and characters.
+  Although the basic gameplay is the same throughout the game, each chapter adds a
+  new factor to the basic formula, such as the stealth elements in the ninja
+  chapter. After the first seven chapters are completed, two final chapters take
+  place to establish the connection between the seven previous and resolve the
+  story.
+release: 1994-09-02
+players: 1
+assets.boxfront: BoxFront/Live A Live (Japan).jpg
+assets.boxback: BoxBack/Live A Live (Japan).jpg
+assets.background: Background/Live A Live (Japan).jpg
+assets.screenshot: Screenshot/Live A Live (Japan).jpg
+x-co-op: No
+
+
+game: Live A Live (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Live A Live (Japan) (English Patch)/Live A Live (Japan) (English Patch).json
+developer: Square Co., Ltd.
+publisher: Square Co., Ltd.
+genre: Role-Playing
+description:
+  Live A Live's story is split across seven seemingly unrelated chapters that can
+  be played in any order, based on popular genres such as Western, science
+  fiction, and mecha. Each chapter has its own plot, setting, and characters.
+  Although the basic gameplay is the same throughout the game, each chapter adds a
+  new factor to the basic formula, such as the stealth elements in the ninja
+  chapter. After the first seven chapters are completed, two final chapters take
+  place to establish the connection between the seven previous and resolve the
+  story.
+release: 1994-09-02
+players: 1
+assets.boxfront: BoxFront/Live A Live (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Live A Live (Japan) (English Patch).jpg
+assets.background: Background/Live A Live (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Live A Live (Japan) (English Patch).jpg
+assets.video: Video/Live A Live (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Monstania (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Monstania (Japan)/Monstania (Japan).json
+developer: Amccus
+publisher: Pack-In-Video
+genre: Role-Playing
+description:
+  The hero of the game is Fron, a sixteen-year old boy who lives on the island of
+  Monstania. One day, strolling in the forest, he notices a strange light. The
+  light lead him to a clearing, and then suddenly disappeared. But Fron realized
+  what was the meaning of that light - it was a fairy! Of course, everybody knew
+  that fairies had been long extinct, but Fron never believed in that. All his
+  life he wanted to meet a real fairy, and now, when the opportunity has come, he
+  firmly decides to find her. His girlfriend Tia helps him on the dangerous
+  journey, during which they meet a mysterious little girl named Chitta, and get
+  involved in a grand adventure, that will ultimately lead them to the battle
+  against the dark force that threatens the whole Monstania!
+  .
+  "Monstania" has a somewhat unusual gameplay within the frames of console RPGs.
+  You don't explore the world in the game: it is entirely linear and takes you to
+  the next destination by itself (only at a few points you can choose where to go
+  next by selecting an appropriate answer). Once within the location, you cannot
+  leave it until you complete all your objectives there, which then take you to
+  the next location. The objective is usually a large strategic battle. You
+  navigate your party members on the battle field, attack with melee and
+  long-ranged weapons, and use special technique which require action points.
+  Unlike most other turn-based strategy games, an enemy makes a move immediately
+  after you did the same with one of your characters, without waiting for the
+  "enemy turn". The RPG element is not very significant: your characters level up
+  automatically after each battle. There are also some puzzles to solve in certain
+  locations.
+release: 1996-09-27
+players: 1
+assets.boxfront: BoxFront/Monstania (Japan).jpg
+assets.boxback: BoxBack/Monstania (Japan).jpg
+assets.background: Background/Monstania (Japan).jpg
+assets.screenshot: Screenshot/Monstania (Japan).jpg
+x-co-op: No
+
+
+game: Monstania (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Monstania (Japan) (English Patch)/Monstania (Japan) (English Patch).json
+developer: Amccus
+publisher: Pack-In-Video
+genre: Role-Playing
+description:
+  The hero of the game is Fron, a sixteen-year old boy who lives on the island of
+  Monstania. One day, strolling in the forest, he notices a strange light. The
+  light lead him to a clearing, and then suddenly disappeared. But Fron realized
+  what was the meaning of that light - it was a fairy! Of course, everybody knew
+  that fairies had been long extinct, but Fron never believed in that. All his
+  life he wanted to meet a real fairy, and now, when the opportunity has come, he
+  firmly decides to find her. His girlfriend Tia helps him on the dangerous
+  journey, during which they meet a mysterious little girl named Chitta, and get
+  involved in a grand adventure, that will ultimately lead them to the battle
+  against the dark force that threatens the whole Monstania!
+  .
+  "Monstania" has a somewhat unusual gameplay within the frames of console RPGs.
+  You don't explore the world in the game: it is entirely linear and takes you to
+  the next destination by itself (only at a few points you can choose where to go
+  next by selecting an appropriate answer). Once within the location, you cannot
+  leave it until you complete all your objectives there, which then take you to
+  the next location. The objective is usually a large strategic battle. You
+  navigate your party members on the battle field, attack with melee and
+  long-ranged weapons, and use special technique which require action points.
+  Unlike most other turn-based strategy games, an enemy makes a move immediately
+  after you did the same with one of your characters, without waiting for the
+  "enemy turn". The RPG element is not very significant: your characters level up
+  automatically after each battle. There are also some puzzles to solve in certain
+  locations.
+release: 1996-09-27
+players: 1
+assets.boxfront: BoxFront/Monstania (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Monstania (Japan) (English Patch).jpg
+assets.background: Background/Monstania (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Monstania (Japan) (English Patch).jpg
+assets.video: Video/Monstania (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Mystic Ark (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Mystic Ark (Japan)/Mystic Ark (Japan).json
+developer: Enix
+publisher: Produce
+genre: Role-Playing
+description:
+  Seven heroes from seven different Worlds. Seven heroes who were brought to a
+  mysterious temple on a remote island and transformed into statues. Seven heroes
+  who are chosen to bring harmony back to the universe: Miriene the witch
+  (wizard), Lux the tetsujin (a race of iron people), Reeshina the grappler
+  (monk), Tokio the ninja, Kamio the ogre, and Mesia the priestess. The seventh
+  hero is you, the protagonist of the game - the knight Remeer or the female
+  warrior Ferris. Your first task will be to release your companions from the
+  statues they are locked in. You must travel to the Cat World and to retrieve an
+  important artifact. But your main objective is to visit all the seven Worlds and
+  to find seven mystic arks - the items that will re-unite those Worlds and bring
+  peace to them.
+  .
+  "Mystic Ark" is a RPG closely connected to  7th Saga. You travel on overworld
+  map, visit towns, buy equipment, and descend into dungeons. The combat is
+  turn-based and viewed from a third-person "over-the-shoulder" perspective. The
+  battles are not random: the enemies can be seen as white dots on your radar, and
+  if you don't want to fight, you can sometimes outrun or avoid them. The game
+  also contains elements of pure adventure: often you must investigate objects
+  closely and use items from your inventory on them.
+release: 1995-07-14
+players: 1
+assets.boxfront: BoxFront/Mystic Ark (Japan).jpg
+assets.boxback: BoxBack/Mystic Ark (Japan).jpg
+assets.background: Background/Mystic Ark (Japan).jpg
+assets.screenshot: Screenshot/Mystic Ark (Japan).jpg
+x-co-op: No
+
+
+game: Mystic Ark (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Mystic Ark (Japan) (English Patch)/Mystic Ark (Japan) (English Patch).json
+developer: Enix
+publisher: Produce
+genre: Role-Playing
+description:
+  Seven heroes from seven different Worlds. Seven heroes who were brought to a
+  mysterious temple on a remote island and transformed into statues. Seven heroes
+  who are chosen to bring harmony back to the universe: Miriene the witch
+  (wizard), Lux the tetsujin (a race of iron people), Reeshina the grappler
+  (monk), Tokio the ninja, Kamio the ogre, and Mesia the priestess. The seventh
+  hero is you, the protagonist of the game - the knight Remeer or the female
+  warrior Ferris. Your first task will be to release your companions from the
+  statues they are locked in. You must travel to the Cat World and to retrieve an
+  important artifact. But your main objective is to visit all the seven Worlds and
+  to find seven mystic arks - the items that will re-unite those Worlds and bring
+  peace to them.
+  .
+  "Mystic Ark" is a RPG closely connected to  7th Saga. You travel on overworld
+  map, visit towns, buy equipment, and descend into dungeons. The combat is
+  turn-based and viewed from a third-person "over-the-shoulder" perspective. The
+  battles are not random: the enemies can be seen as white dots on your radar, and
+  if you don't want to fight, you can sometimes outrun or avoid them. The game
+  also contains elements of pure adventure: often you must investigate objects
+  closely and use items from your inventory on them.
+release: 1995-07-14
+players: 1
+assets.boxfront: BoxFront/Mystic Ark (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Mystic Ark (Japan) (English Patch).jpg
+assets.background: Background/Mystic Ark (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Mystic Ark (Japan) (English Patch).jpg
+assets.video: Video/Mystic Ark (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Nekketsu Tairiku Burning Heroes (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Nekketsu Tairiku Burning Heroes (Japan)/Nekketsu Tairiku Burning Heroes (Japan).json
+developer: J-Force
+publisher: Enix
+genre: Role-Playing
+description:
+  The young fighter Ryu was thrown out of his father's home, and this childhood
+  trauma has been dominating his life ever since. His only wish is to surpass his
+  father and to show him he has become a better fighter than him. Laila is a
+  cheerful treasure hunter. She dreams only of valuable things, adventure,
+  travels, and life in the capital city. Gaou is experiencing a personal tragedy:
+  he wants to discover the mystery of the disappearance of a woman he loved,
+  Asuka, aided by his best friend Froz. Naaga is a girl who wears a heavy armor,
+  which - as she thinks - will prevent her from losing any battle. At present, she
+  has problems since she owes a million gold pieces to her guild. What do those
+  heroes have in common? As their ways cross, they will find out they are in fact
+  pursuing one and the same goal...
+  .
+  Burning Heroes lets you start as either one of the four characters. Each one
+  starts in a different place and is seemingly absorbed in his/her personal quest,
+  but as the game progresses, the four heroes meet each other. You should also
+  find and "unlock" four other playable characters as you advance in the game. The
+  gameplay system is similar to other Japanese-style RPGs: you fight random
+  enemies and bosses in turn-based combat, viewed from third-person perspective,
+  like in Final Fantasy games. As you get hit in a battle, your "passion"
+  (literally "hot blood", nekketsu in Japanese) level rises, and the more damage
+  you take, the quicker you reach 100%. Once the passion bar is full, you can
+  summon a powerful monster and to unleash a devastating attack on the entire
+  enemy party.
+release: 1995-03-17
+players: 1
+assets.boxfront: BoxFront/Nekketsu Tairiku Burning Heroes (Japan).jpg
+assets.boxback: BoxBack/Nekketsu Tairiku Burning Heroes (Japan).jpg
+assets.background: Background/Nekketsu Tairiku Burning Heroes (Japan).jpg
+assets.screenshot: Screenshot/Nekketsu Tairiku Burning Heroes (Japan).jpg
+x-co-op: No
+
+
+game: Nekketsu Tairiku Burning Heroes (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Nekketsu Tairiku Burning Heroes (Japan) (English Patch)/Nekketsu Tairiku Burning Heroes (Japan) (English Patch).json
+developer: J-Force
+publisher: Enix
+genre: Role-Playing
+description:
+  The young fighter Ryu was thrown out of his father's home, and this childhood
+  trauma has been dominating his life ever since. His only wish is to surpass his
+  father and to show him he has become a better fighter than him. Laila is a
+  cheerful treasure hunter. She dreams only of valuable things, adventure,
+  travels, and life in the capital city. Gaou is experiencing a personal tragedy:
+  he wants to discover the mystery of the disappearance of a woman he loved,
+  Asuka, aided by his best friend Froz. Naaga is a girl who wears a heavy armor,
+  which - as she thinks - will prevent her from losing any battle. At present, she
+  has problems since she owes a million gold pieces to her guild. What do those
+  heroes have in common? As their ways cross, they will find out they are in fact
+  pursuing one and the same goal...
+  .
+  Burning Heroes lets you start as either one of the four characters. Each one
+  starts in a different place and is seemingly absorbed in his/her personal quest,
+  but as the game progresses, the four heroes meet each other. You should also
+  find and "unlock" four other playable characters as you advance in the game. The
+  gameplay system is similar to other Japanese-style RPGs: you fight random
+  enemies and bosses in turn-based combat, viewed from third-person perspective,
+  like in Final Fantasy games. As you get hit in a battle, your "passion"
+  (literally "hot blood", nekketsu in Japanese) level rises, and the more damage
+  you take, the quicker you reach 100%. Once the passion bar is full, you can
+  summon a powerful monster and to unleash a devastating attack on the entire
+  enemy party.
+release: 1995-03-17
+players: 1
+assets.boxfront: BoxFront/Nekketsu Tairiku Burning Heroes (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Nekketsu Tairiku Burning Heroes (Japan) (English Patch).jpg
+assets.background: Background/Nekketsu Tairiku Burning Heroes (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Nekketsu Tairiku Burning Heroes (Japan) (English Patch).jpg
+assets.video: Video/Nekketsu Tairiku Burning Heroes (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Rockman X (Japan) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Rockman X (Japan) (Rev 1)/Rockman X (Japan) (Rev 1).json
+developer: Capcom
+publisher: Nintendo
+genre: Action;Platform
+description:
+  Near the end of his life, Dr. Light succeeds in creating the first of a new
+  series of robots which will change the world. Able to think and make decisions,
+  this new robot holds great danger as well as great possibilities. Fearful of the
+  possible consequences of unleashing his creation on the world, Dr. Light decides
+  to seal him in a capsule and test his systems until they are totally reliable.
+  The future will have to decide his fate...
+  .
+  Released from the capsule by Dr. Cain, "X" is born into the world of the future
+  where the robot rebellions are a thing of the past. But when Dr. Cain tries to
+  implement Dr. Light's designs into a new series of Reploids, something goes
+  hideously wrong. Now the future lies on the brink of destruction and a new Mega
+  Man must emerge to face Sigma and his forces before the human race is wiped from
+  the planet!
+release: 1993-12-17
+players: 1
+assets.boxfront: BoxFront/Rockman X (Japan) (Rev 1).jpg
+assets.boxback: BoxBack/Rockman X (Japan) (Rev 1).jpg
+assets.background: Background/Rockman X (Japan) (Rev 1).jpg
+assets.screenshot: Screenshot/Rockman X (Japan) (Rev 1).jpg
+x-co-op: No
+
+
+game: Rockman X2 (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Rockman X2 (Japan)/Rockman X2 (Japan).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Platform
+description:
+  Just because Sigma was defeated, doesn't mean the war is over!
+  .
+  Six months after Mega Man X's defeat of Sigma, the rebuilt Maverick Hunters, now
+  led by X, are finally containing the last scattered pockets of Maverick
+  resistance. Suddenly, as if from nowhere, eight new Maverick Commanders emerge
+  to lead a resurgence in Maverick activity across the earth. As if things
+  couldn't get worse a new organization, the X-Hunters, determined to kill Mega
+  Man X and avenge their master Sigma, appear and challenge X. And they have the
+  juiciest bait to force Mega Man X to fight them, the body parts of X's dead
+  friend and mentor Zero.
+  .
+  Determined to prevent the desecration of his best friend, Mega Man X leaps into
+  battle once more. But things aren't as they seem, and the ghosts of the past are
+  never as easily forgotten as it might seem.
+release: 1995-01-27
+players: 1
+assets.boxfront: BoxFront/Rockman X2 (Japan).jpg
+assets.boxback: BoxBack/Rockman X2 (Japan).jpg
+assets.background: Background/Rockman X2 (Japan).jpg
+assets.screenshot: Screenshot/Rockman X2 (Japan).jpg
+x-co-op: No
+
+
+game: Rockman X3 (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Rockman X3 (Japan)/Rockman X3 (Japan).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Platform
+description:
+  Mega Man X and his trusty partner Zero have a new force to reckon with. Who or
+  what has caused a riot of Mavericks to break out in the experimental utopia
+  known as Doppler Town?
+  .
+  Named after the scientist reploid, Doppler Town was supposed to be a place where
+  humans and reploids could live in harmony. After discovering a virus that was
+  turning reploids to Mavericks, Doppler's anti-virus was a big success. But
+  Doppler itself became infected with the virus and assembled a team to take out
+  the Maverick Hunter Units. The Doppler Effect is about to unfold, with Mega Man
+  X and Zero the only cure for the deadly virus!
+release: 1996-01-26
+players: 1
+assets.boxfront: BoxFront/Rockman X3 (Japan).jpg
+assets.boxback: BoxBack/Rockman X3 (Japan).jpg
+assets.background: Background/Rockman X3 (Japan).jpg
+assets.screenshot: Screenshot/Rockman X3 (Japan).jpg
+x-co-op: No
+
+
+game: Rudra no Hihou (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Rudra no Hihou (Japan)/Rudra no Hihou (Japan).json
+developer: Square
+publisher: Square
+genre: Role-Playing
+description:
+  The Earth is ruled by heavenly powers, who destroy it and create it again every
+  4000 years, to end the live of powerful races and to let new ones appear. Many
+  years ago, four great races dominated the Earth: the wise Danans, the beautiful
+  Mermaids, the proud Reptiles, and the strong Giants. But those races had to give
+  place to a newly born race: the humans. During the era of the humans, the
+  planet's air has become filled with smog and the water dirty with pollutants.
+  The cult of the Rudra have appeared and begun fortelling the end of the world.
+  As the 4000 year deadline approaches, three characters each embark on their
+  separate yet intertwined quests.
+  .
+  Sion is a young warrior who wants to take part in a ritual tournament and become
+  the strongest of the kingdom. However a capture of one of the Cultists of Rudras
+  soon complicates his training.\n
+  Surlet is a wise magician who is interested in archeology and history of the
+  Earth. He is also a pupil of the famous professor Muench who recently made a
+  very important discovery regarding ancient ruins\n
+  Riza is a young druid who lives with her grandfather in a quiet village. She was
+  born with a mysterious jade on her forehead, and now feels the urge to save the
+  world from an inevitable, yet unknown disaster.
+  .
+  Rudra no Hiho is a turn-based RPG, similar in gameplay and graphics to the
+  better known Final Fantasy VI. Whenever players load the game cartridge, they
+  are able to choose which of the three characters they wish to play. This allows
+  any one of these quests to be saved and put aside for any amount of time,
+  allowing the player to change between characters as they so desire. Regardless
+  of which character is chosen, the game is displayed as a top-view on the
+  overworld and in towns. Players can move around to different locations, search
+  treasure chests and talk to townspeople. On the overworld and in dungeons,
+  random encounters can occur. During battles the game is displayed from a
+  side-view and is turn-based between the player's characters and monsters.
+  Players are able to Fight with their weapon, use mantras (magic), use items,
+  defend or run away. Defeat of monsters will result in the party earning
+  experience points and money, which can be spent to buy new weapons, armor and
+  items.
+  .
+  The game's mantra (magic) system is unique in that all spells are formed up of
+  syllables, each with it's own effect (for instance, the syllable "Ig" represents
+  fire and the syllable "ga" augments any mantra's power over it's basic form.
+  Therefore "Igga" is a more powerful version than "Ig" alone). Syllables must be
+  arranged in proper combinations in order to form effective magic spells. Hints
+  towards some of these combinations can be found inside treasure chests or by
+  talking to townspeople.
+release: 1996-04-05
+players: 1
+assets.boxfront: BoxFront/Rudra no Hihou (Japan).jpg
+assets.boxback: BoxBack/Rudra no Hihou (Japan).jpg
+assets.background: Background/Rudra no Hihou (Japan).jpg
+assets.screenshot: Screenshot/Rudra no Hihou (Japan).jpg
+x-co-op: No
+
+
+game: Rudra no Hihou (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Rudra no Hihou (Japan) (English Patch)/Rudra no Hihou (Japan) (English Patch).json
+developer: Square
+publisher: Square
+genre: Role-Playing
+description:
+  The Earth is ruled by heavenly powers, who destroy it and create it again every
+  4000 years, to end the live of powerful races and to let new ones appear. Many
+  years ago, four great races dominated the Earth: the wise Danans, the beautiful
+  Mermaids, the proud Reptiles, and the strong Giants. But those races had to give
+  place to a newly born race: the humans. During the era of the humans, the
+  planet's air has become filled with smog and the water dirty with pollutants.
+  The cult of the Rudra have appeared and begun fortelling the end of the world.
+  As the 4000 year deadline approaches, three characters each embark on their
+  separate yet intertwined quests.
+  .
+  Sion is a young warrior who wants to take part in a ritual tournament and become
+  the strongest of the kingdom. However a capture of one of the Cultists of Rudras
+  soon complicates his training.\n
+  Surlet is a wise magician who is interested in archeology and history of the
+  Earth. He is also a pupil of the famous professor Muench who recently made a
+  very important discovery regarding ancient ruins\n
+  Riza is a young druid who lives with her grandfather in a quiet village. She was
+  born with a mysterious jade on her forehead, and now feels the urge to save the
+  world from an inevitable, yet unknown disaster.
+  .
+  Rudra no Hiho is a turn-based RPG, similar in gameplay and graphics to the
+  better known Final Fantasy VI. Whenever players load the game cartridge, they
+  are able to choose which of the three characters they wish to play. This allows
+  any one of these quests to be saved and put aside for any amount of time,
+  allowing the player to change between characters as they so desire. Regardless
+  of which character is chosen, the game is displayed as a top-view on the
+  overworld and in towns. Players can move around to different locations, search
+  treasure chests and talk to townspeople. On the overworld and in dungeons,
+  random encounters can occur. During battles the game is displayed from a
+  side-view and is turn-based between the player's characters and monsters.
+  Players are able to Fight with their weapon, use mantras (magic), use items,
+  defend or run away. Defeat of monsters will result in the party earning
+  experience points and money, which can be spent to buy new weapons, armor and
+  items.
+  .
+  The game's mantra (magic) system is unique in that all spells are formed up of
+  syllables, each with it's own effect (for instance, the syllable "Ig" represents
+  fire and the syllable "ga" augments any mantra's power over it's basic form.
+  Therefore "Igga" is a more powerful version than "Ig" alone). Syllables must be
+  arranged in proper combinations in order to form effective magic spells. Hints
+  towards some of these combinations can be found inside treasure chests or by
+  talking to townspeople.
+release: 1996-04-05
+players: 1
+assets.boxfront: BoxFront/Rudra no Hihou (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Rudra no Hihou (Japan) (English Patch).jpg
+assets.background: Background/Rudra no Hihou (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Rudra no Hihou (Japan) (English Patch).jpg
+assets.video: Video/Rudra no Hihou (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Shin Megami Tensei (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Shin Megami Tensei (Japan)/Shin Megami Tensei (Japan).json
+developer: Atlus
+publisher: Atlus
+genre: Role-Playing
+description:
+  The story is set in Tokyo in the year 199X. Demons from the nether-realm of
+  Makai have found their way back to Earth, and as such have upset the balance of
+  power. A charismatic Japanese leader attempts a coup d'état using these demons
+  as a potent military force, forcing America to intervene with its military. The
+  player, as the hero, becomes involved when sent a Devil Summoning Program via
+  email which allows him to converse with and recruit demons to fight for him,
+  storing them as digital data on his computer.
+  .
+  In the aftermath of the ensuing destruction, the hero must decide what kind of
+  world should be created on its ruins. Will he side with the angels and create a
+  kingdom of absolute order that would last for a thousand years, or will he side
+  with the demons and bring about an eternal anarchy, or will he choose neither,
+  and destroy everyone who opposes him?
+release: 1992-10-30
+players: 1
+assets.boxfront: BoxFront/Shin Megami Tensei (Japan).jpg
+assets.boxback: BoxBack/Shin Megami Tensei (Japan).jpg
+assets.background: Background/Shin Megami Tensei (Japan).jpg
+assets.screenshot: Screenshot/Shin Megami Tensei (Japan).jpg
+x-co-op: No
+
+
+game: Shin Megami Tensei (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Shin Megami Tensei (Japan) (English Patch)/Shin Megami Tensei (Japan) (English Patch).json
+developer: Atlus
+publisher: Atlus
+genre: Role-Playing
+description:
+  The story is set in Tokyo in the year 199X. Demons from the nether-realm of
+  Makai have found their way back to Earth, and as such have upset the balance of
+  power. A charismatic Japanese leader attempts a coup d'état using these demons
+  as a potent military force, forcing America to intervene with its military. The
+  player, as the hero, becomes involved when sent a Devil Summoning Program via
+  email which allows him to converse with and recruit demons to fight for him,
+  storing them as digital data on his computer.
+  .
+  In the aftermath of the ensuing destruction, the hero must decide what kind of
+  world should be created on its ruins. Will he side with the angels and create a
+  kingdom of absolute order that would last for a thousand years, or will he side
+  with the demons and bring about an eternal anarchy, or will he choose neither,
+  and destroy everyone who opposes him?
+release: 1992-10-30
+players: 1
+assets.boxfront: BoxFront/Shin Megami Tensei (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Shin Megami Tensei (Japan) (English Patch).jpg
+assets.background: Background/Shin Megami Tensei (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Shin Megami Tensei (Japan) (English Patch).jpg
+assets.video: Video/Shin Megami Tensei (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Shin Megami Tensei II (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Shin Megami Tensei II (Japan)/Shin Megami Tensei II (Japan).json
+developer: Atlus
+publisher: Atlus
+genre: Role-Playing
+description:
+  Fifty years have passed since the hero of Shin Megami Tensei followed the
+  neutral path, defeated the leaders of Law and Chaos, and founded a state where
+  followers of both ideologies could live freely. But his reign of freedom doesn't
+  last long. The Messian faith gains power, expanding the Cathedral into a new
+  enclosed environment named Tokyo Millennium. The Gaians rise up, but their
+  rebellion is repressed by the Messians' elite warrior class, the Temple Knights.
+  People flock into the encapsulated city, submitting themselves to the strict
+  hierarchy imposed by the Messian Center, where only the privileged living in the
+  Center district are safe from demonic assaults.
+  .
+  A few years later, a retired arena fighter Okamoto rescues a man named Hawk, who
+  was fighting for his life against a demon. He trains him to fight in the arena
+  of the Valhalla district, hoping that he would win the tournament, which will
+  grant them both citizenship in the Center district. When Hawk succeeds, he is
+  brought before a Messian bishop, and learns the shocking truth about his own
+  origins and the role he is supposed to play in the grand scheme of events. A new
+  battle for a better future begins.
+  .
+  Shin Megami Tensei II retains all the gameplay features of the previous game.
+  The player is able to summon demons, fuse them to create more powerful ones,
+  make them participate in battles, talk to random enemies and receive information
+  from them, etc. The combat is turn-based, and the player explores the complex,
+  maze-like dungeons from a first-person perspective view. Like in the first game,
+  the Law, Chaos, and Neutral alignments play an important role: during the course
+  of the game, the player will have to make choices that influence the alignment
+  of the protagonist, steering the storyline into different directions.
+  .
+  New features include a "magic succession" system, which allows demons to carry
+  over their original magic spells when they are fused into new ones, a few
+  additional spells and abilities, and the possibility to play at the casino and
+  win unique items.
+release: 1994-03-18
+players: 1
+assets.boxfront: BoxFront/Shin Megami Tensei II (Japan).jpg
+assets.boxback: BoxBack/Shin Megami Tensei II (Japan).jpg
+assets.background: Background/Shin Megami Tensei II (Japan).jpg
+assets.screenshot: Screenshot/Shin Megami Tensei II (Japan).jpg
+x-co-op: No
+
+
+game: Shin Megami Tensei II (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Shin Megami Tensei II (Japan) (English Patch)/Shin Megami Tensei II (Japan) (English Patch).json
+developer: Atlus
+publisher: Atlus
+genre: Role-Playing
+description:
+  Fifty years have passed since the hero of Shin Megami Tensei followed the
+  neutral path, defeated the leaders of Law and Chaos, and founded a state where
+  followers of both ideologies could live freely. But his reign of freedom doesn't
+  last long. The Messian faith gains power, expanding the Cathedral into a new
+  enclosed environment named Tokyo Millennium. The Gaians rise up, but their
+  rebellion is repressed by the Messians' elite warrior class, the Temple Knights.
+  People flock into the encapsulated city, submitting themselves to the strict
+  hierarchy imposed by the Messian Center, where only the privileged living in the
+  Center district are safe from demonic assaults.
+  .
+  A few years later, a retired arena fighter Okamoto rescues a man named Hawk, who
+  was fighting for his life against a demon. He trains him to fight in the arena
+  of the Valhalla district, hoping that he would win the tournament, which will
+  grant them both citizenship in the Center district. When Hawk succeeds, he is
+  brought before a Messian bishop, and learns the shocking truth about his own
+  origins and the role he is supposed to play in the grand scheme of events. A new
+  battle for a better future begins.
+  .
+  Shin Megami Tensei II retains all the gameplay features of the previous game.
+  The player is able to summon demons, fuse them to create more powerful ones,
+  make them participate in battles, talk to random enemies and receive information
+  from them, etc. The combat is turn-based, and the player explores the complex,
+  maze-like dungeons from a first-person perspective view. Like in the first game,
+  the Law, Chaos, and Neutral alignments play an important role: during the course
+  of the game, the player will have to make choices that influence the alignment
+  of the protagonist, steering the storyline into different directions.
+  .
+  New features include a "magic succession" system, which allows demons to carry
+  over their original magic spells when they are fused into new ones, a few
+  additional spells and abilities, and the possibility to play at the casino and
+  win unique items.
+release: 1994-03-18
+players: 1
+assets.boxfront: BoxFront/Shin Megami Tensei II (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Shin Megami Tensei II (Japan) (English Patch).jpg
+assets.background: Background/Shin Megami Tensei II (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Shin Megami Tensei II (Japan) (English Patch).jpg
+assets.video: Video/Shin Megami Tensei II (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Silva Saga II - The Legend of Light and Darkness (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Silva Saga II - The Legend of Light and Darkness (Japan)/Silva Saga II - The Legend of Light and Darkness (Japan).json
+developer: SETA Corporation
+publisher: SETA Corporation
+genre: Role-Playing
+description:
+  Silva Saga II: The Legend of Light and Darkness (シルヴァ・サーガ２?) is a role-playing
+  video game developed and published by SETA Corporation, which was released
+  exclusively in Japan in 1993. It is a direct sequel to Silva Saga for the Family
+  Computer.
+  .
+  The player will find similarities with Dragon Quest. Players search out the
+  soldier of light who travels on a journey to defeat the Zolde, son of the Zuhl.
+  Up to 12 mercenaries and deity statues can be combined as well as organized.
+release: 1993-06-25
+players: 1
+assets.boxfront: BoxFront/Silva Saga II - The Legend of Light and Darkness (Japan).jpg
+assets.boxback: BoxBack/Silva Saga II - The Legend of Light and Darkness (Japan).jpg
+assets.background: Background/Silva Saga II - The Legend of Light and Darkness (Japan).jpg
+assets.screenshot: Screenshot/Silva Saga II - The Legend of Light and Darkness (Japan).jpg
+x-co-op: No
+
+
+game: Silva Saga II - The Legend of Light and Darkness (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Silva Saga II - The Legend of Light and Darkness (Japan) (English Patch)/Silva Saga II - The Legend of Light and Darkness (Japan) (English Patch).json
+developer: SETA Corporation
+publisher: SETA Corporation
+genre: Role-Playing
+description:
+  Silva Saga II: The Legend of Light and Darkness (シルヴァ・サーガ２?) is a role-playing
+  video game developed and published by SETA Corporation, which was released
+  exclusively in Japan in 1993. It is a direct sequel to Silva Saga for the Family
+  Computer.
+  .
+  The player will find similarities with Dragon Quest. Players search out the
+  soldier of light who travels on a journey to defeat the Zolde, son of the Zuhl.
+  Up to 12 mercenaries and deity statues can be combined as well as organized.
+release: 1993-06-25
+players: 1
+assets.boxfront: BoxFront/Silva Saga II - The Legend of Light and Darkness (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Silva Saga II - The Legend of Light and Darkness (Japan) (English Patch).jpg
+assets.background: Background/Silva Saga II - The Legend of Light and Darkness (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Silva Saga II - The Legend of Light and Darkness (Japan) (English Patch).jpg
+assets.video: Video/Silva Saga II - The Legend of Light and Darkness (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Super E.D.F. (Japan) (En)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Super E.D.F. (Japan) (En)/Super E.D.F. (Japan) (En).json
+developer: Jaleco
+publisher: Jaleco
+genre: Shooter
+description:
+  A SUPER SAGA OF 23RD CENTURY SATELLITE WARFARE!
+  .
+  The graphics will dozzle you, the speed will astound you... but if you don't
+  think fast and shoot faster, you won't have a chance against the alien
+  firestorm. Because in EARTH DEFENSE FORCE, the best defense is always a great
+  offense. So get ready to hit first and hit fast in the hardest-hitting adventure
+  to hit the Super NES screen!
+release: 1991-10-25
+players: 1
+assets.boxfront: BoxFront/Super E.D.F. (Japan) (En).jpg
+assets.boxback: BoxBack/Super E.D.F. (Japan) (En).jpg
+assets.background: Background/Super E.D.F. (Japan) (En).jpg
+assets.screenshot: Screenshot/Super E.D.F. (Japan) (En).jpg
+x-co-op: No
+
+
+game: Torneco no Daibouken - Fushigi no Dungeon (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Torneco no Daibouken - Fushigi no Dungeon (Japan)/Torneco no Daibouken - Fushigi no Dungeon (Japan).json
+developer: ChunSoft
+publisher: ChunSoft
+genre: Role-Playing;Roguelike
+description:
+  Torneko (aka Taloon) from Dragon Quest IV was a merchant and treasure hunter
+  who always dreamed of owning his own shop. Having defeating the evil along
+  with other heroes, he returned to Endor to work peacefully. Some time has
+  passed and after growing successful in this town, Torneko grew anxious.
+  Hearing rumors one day about a "Mysterious Dungeon", Torneko meets with the
+  king to ask permission to set up a new shop, closer to this Mysterious
+  Dungeon. By exploring this cavern and returning safely with the prizes,
+  Torneko hopes to become the most successful merchant in the world.
+  .
+  Torneko no Daibōken: Fushigi no Dungeon is a overhead view game similar to
+  Hack, what might be called a "dungeon crawl". Torneko must venture into the
+  mysterious dungeon gathering treasure. He may equip any weapons and shields
+  he finds there, as well as gather up items such as spell scrolls, staffs and
+  herbs with a variety of effect. A variety of enemies, familiar to the Dragon
+  Quest series, await him. If Torneko successfully exits the dungeon, he is
+  able to sell any of the items he has collected. This money then goes to
+  improve the quality of his shop and living quarters. As the game progresses,
+  Torneko is able to store special items in the vault, which he is then able to
+  bring with him on subsequent trips to the dungeon.
+release: 1993-09-19
+players: 1
+assets.boxfront: BoxFront/Torneco no Daibouken - Fushigi no Dungeon (Japan).jpg
+assets.boxback: BoxBack/Torneco no Daibouken - Fushigi no Dungeon (Japan).jpg
+assets.background: Background/Torneco no Daibouken - Fushigi no Dungeon (Japan).jpg
+assets.screenshot: Screenshot/Torneco no Daibouken - Fushigi no Dungeon (Japan).jpg
+x-co-op: No
+
+
+game: Torneco no Daibouken - Fushigi no Dungeon (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Torneco no Daibouken - Fushigi no Dungeon (Japan) (English Patch)/Torneco no Daibouken - Fushigi no Dungeon (Japan) (English Patch).json
+developer: ChunSoft
+publisher: ChunSoft
+genre: Role-Playing;Roguelike
+description:
+  Torneko (aka Taloon) from Dragon Quest IV was a merchant and treasure hunter
+  who always dreamed of owning his own shop. Having defeating the evil along
+  with other heroes, he returned to Endor to work peacefully. Some time has
+  passed and after growing successful in this town, Torneko grew anxious.
+  Hearing rumors one day about a "Mysterious Dungeon", Torneko meets with the
+  king to ask permission to set up a new shop, closer to this Mysterious
+  Dungeon. By exploring this cavern and returning safely with the prizes,
+  Torneko hopes to become the most successful merchant in the world.
+  .
+  Torneko no Daibōken: Fushigi no Dungeon is a overhead view game similar to
+  Hack, what might be called a "dungeon crawl". Torneko must venture into the
+  mysterious dungeon gathering treasure. He may equip any weapons and shields
+  he finds there, as well as gather up items such as spell scrolls, staffs and
+  herbs with a variety of effect. A variety of enemies, familiar to the Dragon
+  Quest series, await him. If Torneko successfully exits the dungeon, he is
+  able to sell any of the items he has collected. This money then goes to
+  improve the quality of his shop and living quarters. As the game progresses,
+  Torneko is able to store special items in the vault, which he is then able to
+  bring with him on subsequent trips to the dungeon.
+release: 1993-09-19
+players: 1
+assets.boxfront: BoxFront/Torneco no Daibouken - Fushigi no Dungeon (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Torneco no Daibouken - Fushigi no Dungeon (Japan) (English Patch).jpg
+assets.background: Background/Torneco no Daibouken - Fushigi no Dungeon (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Torneco no Daibouken - Fushigi no Dungeon (Japan) (English Patch).jpg
+assets.video: Video/Torneco no Daibouken - Fushigi no Dungeon (Japan) (English Patch).mp4
+x-co-op: No
+
+
+game: Treasure Hunter G (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Treasure Hunter G (Japan)/Treasure Hunter G (Japan).json
+developer: Sting
+publisher: Squaresoft
+genre: Role-Playing;Strategy
+description:
+  Brothers Red and Blue G. decide to leave their idyllic village in search of
+  their long lost father, who left the kids years ago to go treasure hunting.
+  Unfortunately, as soon as they begin their quest, they become entangled with a
+  mysterious girl on the run from evil monsters who holds the key to the
+  resurrection of a great demon. Now its up to the brothers to save the world if
+  they ever want to find their father.
+  .
+  Treasure Hunter G is a top-down RPG in which you control your party of four
+  characters as they explore the fantasy/sci-fi game world in search for quests
+  and grinding their stats while the plot advances. The game is divided in a
+  world-map screen, a top-down "town" mode and a turn-based fight mode in which
+  the characters are taken to generic tiled top-down arenas in which they select
+  each character and move or attack depending on their action points.
+  .
+  Enemies can be seen on the map instead of jumping at you at random intervals,
+  and you can freely decide whether to engage them or simply circle them around.
+  The game uses a combination of hand-drawn sprites and CGI pre-rendered one
+  (mostly for the main characters) with a distinct cute or Super Deformed design
+  (as usual for most console RPGs).
+release: 1996-05-24
+players: 1
+assets.boxfront: BoxFront/Treasure Hunter G (Japan).jpg
+assets.boxback: BoxBack/Treasure Hunter G (Japan).jpg
+assets.background: Background/Treasure Hunter G (Japan).jpg
+assets.screenshot: Screenshot/Treasure Hunter G (Japan).jpg
+x-co-op: No
+
+
+game: Treasure Hunter G (Japan) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Treasure Hunter G (Japan) (English Patch)/Treasure Hunter G (Japan) (English Patch).json
+developer: Sting
+publisher: Squaresoft
+genre: Role-Playing;Strategy
+description:
+  Brothers Red and Blue G. decide to leave their idyllic village in search of
+  their long lost father, who left the kids years ago to go treasure hunting.
+  Unfortunately, as soon as they begin their quest, they become entangled with a
+  mysterious girl on the run from evil monsters who holds the key to the
+  resurrection of a great demon. Now its up to the brothers to save the world if
+  they ever want to find their father.
+  .
+  Treasure Hunter G is a top-down RPG in which you control your party of four
+  characters as they explore the fantasy/sci-fi game world in search for quests
+  and grinding their stats while the plot advances. The game is divided in a
+  world-map screen, a top-down "town" mode and a turn-based fight mode in which
+  the characters are taken to generic tiled top-down arenas in which they select
+  each character and move or attack depending on their action points.
+  .
+  Enemies can be seen on the map instead of jumping at you at random intervals,
+  and you can freely decide whether to engage them or simply circle them around.
+  The game uses a combination of hand-drawn sprites and CGI pre-rendered one
+  (mostly for the main characters) with a distinct cute or Super Deformed design
+  (as usual for most console RPGs).
+release: 1996-05-24
+players: 1
+assets.boxfront: BoxFront/Treasure Hunter G (Japan) (English Patch).jpg
+assets.boxback: BoxBack/Treasure Hunter G (Japan) (English Patch).jpg
+assets.background: Background/Treasure Hunter G (Japan) (English Patch).jpg
+assets.screenshot: Screenshot/Treasure Hunter G (Japan) (English Patch).jpg
+assets.video: Video/Treasure Hunter G (Japan) (English Patch).mp4
+x-co-op: No
+
+

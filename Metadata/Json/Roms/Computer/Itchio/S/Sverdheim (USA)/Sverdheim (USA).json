@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Sverdheim (USA).exe"
+    ],
+    "transform_file": "Sverdheim (USA).exe"
+}

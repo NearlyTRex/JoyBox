@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dragons in Space (USA).exe"
+    ],
+    "transform_file": "Dragons in Space (USA).exe"
+}

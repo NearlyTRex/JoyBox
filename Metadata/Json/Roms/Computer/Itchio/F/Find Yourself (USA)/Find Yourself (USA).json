@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Find Yourself (USA).exe"
+    ],
+    "transform_file": "Find Yourself (USA).exe"
+}

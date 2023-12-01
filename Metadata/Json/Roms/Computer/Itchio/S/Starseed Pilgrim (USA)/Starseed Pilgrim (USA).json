@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Starseed Pilgrim (USA).exe"
+    ],
+    "transform_file": "Starseed Pilgrim (USA).exe"
+}

@@ -1,0 +1,11 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/indiana_jones_foa_guide.zip",
+        "$SETUP_MAIN_ROOT/extra/indiana_jones_foa_instructions.zip",
+        "$SETUP_MAIN_ROOT/extra/indiana_jones_foa_reference_card.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_indiana_jones_and_the_fate_of_atlantis_1.0_(20270).exe"
+    ],
+    "transform_file": "setup_indiana_jones_and_the_fate_of_atlantis_1.0_(20270).exe"
+}

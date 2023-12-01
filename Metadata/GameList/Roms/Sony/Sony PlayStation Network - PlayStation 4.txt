@@ -1,0 +1,38 @@
+Sony PlayStation Network - PlayStation 4 || Abzu (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Abzu (USA)/Abzu (USA).json
+Sony PlayStation Network - PlayStation 4 || Allumette (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Allumette (USA)/Allumette (USA).json
+Sony PlayStation Network - PlayStation 4 || Astro Bot - Rescue Mission (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Astro Bot - Rescue Mission (USA)/Astro Bot - Rescue Mission (USA).json
+Sony PlayStation Network - PlayStation 4 || Dead Rising (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Dead Rising (USA)/Dead Rising (USA).json
+Sony PlayStation Network - PlayStation 4 || Dead Rising 2 (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Dead Rising 2 (USA)/Dead Rising 2 (USA).json
+Sony PlayStation Network - PlayStation 4 || Enter the Gungeon (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Enter the Gungeon (USA)/Enter the Gungeon (USA).json
+Sony PlayStation Network - PlayStation 4 || Fallout Shelter (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Fallout Shelter (USA)/Fallout Shelter (USA).json
+Sony PlayStation Network - PlayStation 4 || Friday the 13th - The Game (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Friday the 13th - The Game (USA)/Friday the 13th - The Game (USA).json
+Sony PlayStation Network - PlayStation 4 || Gary the Gull (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Gary the Gull (USA)/Gary the Gull (USA).json
+Sony PlayStation Network - PlayStation 4 || Grim Fandango Remastered (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Grim Fandango Remastered (USA)/Grim Fandango Remastered (USA).json
+Sony PlayStation Network - PlayStation 4 || Horizon Zero Dawn - Complete Edition (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Horizon Zero Dawn - Complete Edition (USA)/Horizon Zero Dawn - Complete Edition (USA).json
+Sony PlayStation Network - PlayStation 4 || Invasion! (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Invasion! (USA)/Invasion! (USA).json
+Sony PlayStation Network - PlayStation 4 || Keep Talking and Nobody Explodes (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Keep Talking and Nobody Explodes (USA)/Keep Talking and Nobody Explodes (USA).json
+Sony PlayStation Network - PlayStation 4 || King's Tale - Final Fantasy XV, A (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/King's Tale - Final Fantasy XV, A (USA)/King's Tale - Final Fantasy XV, A (USA).json
+Sony PlayStation Network - PlayStation 4 || Mega Man Legacy Collection (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Mega Man Legacy Collection (USA)/Mega Man Legacy Collection (USA).json
+Sony PlayStation Network - PlayStation 4 || Moss (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Moss (USA)/Moss (USA).json
+Sony PlayStation Network - PlayStation 4 || Nuclear Throne (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Nuclear Throne (USA)/Nuclear Throne (USA).json
+Sony PlayStation Network - PlayStation 4 || P.T. - Silent Hills (Europe) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/P.T. - Silent Hills (Europe)/P.T. - Silent Hills (Europe).json
+Sony PlayStation Network - PlayStation 4 || P.T. - Silent Hills (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/P.T. - Silent Hills (USA)/P.T. - Silent Hills (USA).json
+Sony PlayStation Network - PlayStation 4 || Paper Beast (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Paper Beast (USA)/Paper Beast (USA).json
+Sony PlayStation Network - PlayStation 4 || PlayStation VR Demo Disc 2 (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/PlayStation VR Demo Disc 2 (USA)/PlayStation VR Demo Disc 2 (USA).json
+Sony PlayStation Network - PlayStation 4 || Playroom VR, The (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Playroom VR, The (USA)/Playroom VR, The (USA).json
+Sony PlayStation Network - PlayStation 4 || RPG Maker MV Player (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/RPG Maker MV Player (USA)/RPG Maker MV Player (USA).json
+Sony PlayStation Network - PlayStation 4 || Ratchet & Clank (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Ratchet & Clank (USA)/Ratchet & Clank (USA).json
+Sony PlayStation Network - PlayStation 4 || Resident Evil (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Resident Evil (USA)/Resident Evil (USA).json
+Sony PlayStation Network - PlayStation 4 || Resident Evil - Code - Veronica X (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Resident Evil - Code - Veronica X (USA)/Resident Evil - Code - Veronica X (USA).json
+Sony PlayStation Network - PlayStation 4 || Rez Infinite (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Rez Infinite (USA)/Rez Infinite (USA).json
+Sony PlayStation Network - PlayStation 4 || Rollercoaster Dreams (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Rollercoaster Dreams (USA)/Rollercoaster Dreams (USA).json
+Sony PlayStation Network - PlayStation 4 || Spider-Man - Far From Home VR (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Spider-Man - Far From Home VR (USA)/Spider-Man - Far From Home VR (USA).json
+Sony PlayStation Network - PlayStation 4 || Spider-Man - Homecoming VR (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Spider-Man - Homecoming VR (USA)/Spider-Man - Homecoming VR (USA).json
+Sony PlayStation Network - PlayStation 4 || Statik (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Statik (USA)/Statik (USA).json
+Sony PlayStation Network - PlayStation 4 || Subnautica (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Subnautica (USA)/Subnautica (USA).json
+Sony PlayStation Network - PlayStation 4 || SuperHyperCube (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/SuperHyperCube (USA)/SuperHyperCube (USA).json
+Sony PlayStation Network - PlayStation 4 || Tearaway Unfolded Soundtrack (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Tearaway Unfolded Soundtrack (USA)/Tearaway Unfolded Soundtrack (USA).json
+Sony PlayStation Network - PlayStation 4 || Thumper (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Thumper (USA)/Thumper (USA).json
+Sony PlayStation Network - PlayStation 4 || Tumble VR (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Tumble VR (USA)/Tumble VR (USA).json
+Sony PlayStation Network - PlayStation 4 || Valkyria Chronicles Remastered (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Valkyria Chronicles Remastered (USA)/Valkyria Chronicles Remastered (USA).json
+Sony PlayStation Network - PlayStation 4 || Witness, The (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Witness, The (USA)/Witness, The (USA).json

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Fugue (USA).exe"
+    ],
+    "transform_file": "Fugue (USA).exe"
+}

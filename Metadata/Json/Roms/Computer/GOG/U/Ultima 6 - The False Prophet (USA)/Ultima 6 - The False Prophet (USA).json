@@ -1,0 +1,14 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/ultima_456_cluebooks.zip",
+        "$SETUP_MAIN_ROOT/extra/ultima_456_lorebooks.zip",
+        "$SETUP_MAIN_ROOT/extra/ultima_456_manuals.zip",
+        "$SETUP_MAIN_ROOT/extra/ultima_456_maps.zip",
+        "$SETUP_MAIN_ROOT/extra/ultima_456_reference_card.zip",
+        "$SETUP_MAIN_ROOT/extra/ultima_4_cassette.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_ultima_vi_-_the_false_prophet_1.0_cs_(28045).exe"
+    ],
+    "transform_file": "setup_ultima_vi_-_the_false_prophet_1.0_cs_(28045).exe"
+}

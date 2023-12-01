@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Desolate Roads (USA).exe"
+    ],
+    "transform_file": "Desolate Roads (USA).exe"
+}

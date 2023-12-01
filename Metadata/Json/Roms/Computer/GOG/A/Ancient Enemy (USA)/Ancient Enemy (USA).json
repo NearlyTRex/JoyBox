@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_ancient_enemy_v1.03_(48157).exe"
+    ],
+    "transform_file": "setup_ancient_enemy_v1.03_(48157).exe"
+}

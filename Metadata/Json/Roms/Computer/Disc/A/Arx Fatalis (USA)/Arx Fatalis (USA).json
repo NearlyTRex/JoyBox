@@ -1,0 +1,8 @@
+{
+    "installer_exe": "$DISC_MAIN_ROOT/setup.exe",
+    "transform_file": "Arx Fatalis (USA).chd",
+    "update": [
+        "$SETUP_MAIN_ROOT/update/ArxFatalis_1.21_MULTILANG.exe",
+        "$SETUP_MAIN_ROOT/update/arx-libertatis-1.2.1-windows.exe"
+    ]
+}

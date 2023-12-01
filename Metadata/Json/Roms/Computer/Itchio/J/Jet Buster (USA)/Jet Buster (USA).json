@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Jet Buster (USA).exe"
+    ],
+    "transform_file": "Jet Buster (USA).exe"
+}

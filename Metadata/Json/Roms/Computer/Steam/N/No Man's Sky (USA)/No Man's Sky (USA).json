@@ -1,0 +1,22 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/No Man's Sky (USA).exe"
+    ],
+    "main_game_exe": [
+        "No Man's Sky/Binaries/NMS.exe"
+    ],
+    "main_game_exe_cwd": {
+        "No Man's Sky/Binaries/NMS.exe": "No Man's Sky/Binaries"
+    },
+    "sandbox": {
+        "wine": {
+            "overrides": {
+                "game": [
+                    "d3d9,d3d10core,d3d11,dxgi=n,b"
+                ]
+            },
+            "use_dxvk": true
+        }
+    },
+    "transform_file": "No Man's Sky (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Simulacra (USA).exe"
+    ],
+    "transform_file": "Simulacra (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Bouncy Cars (USA).exe"
+    ],
+    "transform_file": "Bouncy Cars (USA).exe"
+}

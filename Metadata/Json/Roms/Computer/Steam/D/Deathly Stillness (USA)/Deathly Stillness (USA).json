@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Deathly Stillness (USA).exe"
+    ],
+    "transform_file": "Deathly Stillness (USA).exe"
+}

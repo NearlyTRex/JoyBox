@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Rhythm 'n Bullets - VR (USA).exe"
+    ],
+    "transform_file": "Rhythm 'n Bullets - VR (USA).exe"
+}

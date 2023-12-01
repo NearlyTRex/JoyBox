@@ -1,0 +1,24 @@
+NEC TurboGrafx CD & PC-Engine CD || Akumajou Dracula X - Chi no Rondo (Japan) (FABT, FACT) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Akumajou Dracula X - Chi no Rondo (Japan) (FABT, FACT)/Akumajou Dracula X - Chi no Rondo (Japan) (FABT, FACT).json
+NEC TurboGrafx CD & PC-Engine CD || Bomberman - Panic Bomber (Japan) (FABT) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Bomberman - Panic Bomber (Japan) (FABT)/Bomberman - Panic Bomber (Japan) (FABT).json
+NEC TurboGrafx CD & PC-Engine CD || Chou Aniki (Japan) (FAAT, FACT) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Chou Aniki (Japan) (FAAT, FACT)/Chou Aniki (Japan) (FAAT, FACT).json
+NEC TurboGrafx CD & PC-Engine CD || Cosmic Fantasy II (USA) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Cosmic Fantasy II (USA)/Cosmic Fantasy II (USA).json
+NEC TurboGrafx CD & PC-Engine CD || Far East of Eden - Tengai Makyou II - Manji Maru (Japan) (Rev 1) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Far East of Eden - Tengai Makyou II - Manji Maru (Japan) (Rev 1)/Far East of Eden - Tengai Makyou II - Manji Maru (Japan) (Rev 1).json
+NEC TurboGrafx CD & PC-Engine CD || Ginga Fukei Densetsu Sapphire (Japan) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Ginga Fukei Densetsu Sapphire (Japan)/Ginga Fukei Densetsu Sapphire (Japan).json
+NEC TurboGrafx CD & PC-Engine CD || Gradius II - Gofer no Yabou (Japan) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Gradius II - Gofer no Yabou (Japan)/Gradius II - Gofer no Yabou (Japan).json
+NEC TurboGrafx CD & PC-Engine CD || Lords of Thunder (USA) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Lords of Thunder (USA)/Lords of Thunder (USA).json
+NEC TurboGrafx CD & PC-Engine CD || Mugen Senshi Valis - The Legend of a Fantasm Soldier (Japan) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Mugen Senshi Valis - The Legend of a Fantasm Soldier (Japan)/Mugen Senshi Valis - The Legend of a Fantasm Soldier (Japan).json
+NEC TurboGrafx CD & PC-Engine CD || Seirei Senshi Spriggan (Japan) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Seirei Senshi Spriggan (Japan)/Seirei Senshi Spriggan (Japan).json
+NEC TurboGrafx CD & PC-Engine CD || Snatcher CD-ROMantic (Japan) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Snatcher CD-ROMantic (Japan)/Snatcher CD-ROMantic (Japan).json
+NEC TurboGrafx CD & PC-Engine CD || Spriggan Mark 2 - Re Terraform Project (Japan) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Spriggan Mark 2 - Re Terraform Project (Japan)/Spriggan Mark 2 - Re Terraform Project (Japan).json
+NEC TurboGrafx CD & PC-Engine CD || Star Parodier (Japan) (Rev 2) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Star Parodier (Japan) (Rev 2)/Star Parodier (Japan) (Rev 2).json
+NEC TurboGrafx CD & PC-Engine CD || Super Darius (Japan) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Super Darius (Japan)/Super Darius (Japan).json
+NEC TurboGrafx CD & PC-Engine CD || Tokimeki Memorial (Japan) (Rev 3) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Tokimeki Memorial (Japan) (Rev 3)/Tokimeki Memorial (Japan) (Rev 3).json
+NEC TurboGrafx CD & PC-Engine CD || Valis II (Japan) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Valis II (Japan)/Valis II (Japan).json
+NEC TurboGrafx CD & PC-Engine CD || Valis II (USA) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Valis II (USA)/Valis II (USA).json
+NEC TurboGrafx CD & PC-Engine CD || Valis III (Japan) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Valis III (Japan)/Valis III (Japan).json
+NEC TurboGrafx CD & PC-Engine CD || Valis III (USA) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Valis III (USA)/Valis III (USA).json
+NEC TurboGrafx CD & PC-Engine CD || Valis IV (Japan) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Valis IV (Japan)/Valis IV (Japan).json
+NEC TurboGrafx CD & PC-Engine CD || Ys Book I & II (USA) (Rev 2) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Ys Book I & II (USA) (Rev 2)/Ys Book I & II (USA) (Rev 2).json
+NEC TurboGrafx CD & PC-Engine CD || Ys I & II (Japan) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Ys I & II (Japan)/Ys I & II (Japan).json
+NEC TurboGrafx CD & PC-Engine CD || Ys III (Japan) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Ys III (Japan)/Ys III (Japan).json
+NEC TurboGrafx CD & PC-Engine CD || Ys IV - The Dawn of Ys (Japan) (Rev 3) || $ROM_JSON_ROOT/Other/NEC TurboGrafx CD & PC-Engine CD/Ys IV - The Dawn of Ys (Japan) (Rev 3)/Ys IV - The Dawn of Ys (Japan) (Rev 3).json

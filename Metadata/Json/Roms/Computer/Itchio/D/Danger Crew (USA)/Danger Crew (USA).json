@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Danger Crew (USA).exe"
+    ],
+    "transform_file": "Danger Crew (USA).exe"
+}

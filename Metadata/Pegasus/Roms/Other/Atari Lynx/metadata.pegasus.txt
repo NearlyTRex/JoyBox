@@ -1,0 +1,353 @@
+collection: Atari Lynx
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Atari Lynx" {file.path}
+
+
+game: Basketbrawl (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Basketbrawl (USA, Europe)/Basketbrawl (USA, Europe).json
+developer: Atari
+publisher: Atari, Inc.
+genre: Fighting;Sports
+description:
+  Vinnie and Slash are bleeding from knife wounds and the ref is out cold! No
+  wonder the gang members nicknamed this game "Basketbrawl." To them it's not a
+  game--it's a street fight!
+release: 1992-03-01
+players: 1
+assets.boxfront: BoxFront/Basketbrawl (USA, Europe).jpg
+assets.boxback: BoxBack/Basketbrawl (USA, Europe).jpg
+assets.background: Background/Basketbrawl (USA, Europe).jpg
+assets.screenshot: Screenshot/Basketbrawl (USA, Europe).jpg
+assets.video: Video/Basketbrawl (USA, Europe).mp4
+x-co-op: No
+
+
+game: Block Out (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Block Out (USA, Europe)/Block Out (USA, Europe).json
+developer: P.Z.Karen Co. Development Group
+publisher: Atari
+genre: Puzzle
+description:
+  Easy to play, difficult to master, impossible to quit!
+  .
+  Welcome to the world of Blockout! One of the most absorbing games ever devised.
+  Drop as many 3-D blocks as you can into a pit without reaching the top. The
+  better you do, the faster the blocks will fall. It takes skill to rotate each
+  block into its best position without leaving any unfilled holes. This is 3-D
+  puzzle action at its best!
+release: 1991-01-01
+players: 1
+assets.boxfront: BoxFront/Block Out (USA, Europe).jpg
+assets.boxback: BoxBack/Block Out (USA, Europe).jpg
+assets.background: Background/Block Out (USA, Europe).jpg
+assets.screenshot: Screenshot/Block Out (USA, Europe).jpg
+assets.video: Video/Block Out (USA, Europe).mp4
+x-co-op: No
+
+
+game: Chip's Challenge (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Chip's Challenge (USA, Europe)/Chip's Challenge (USA, Europe).json
+developer: Epyx
+publisher: Atari
+genre: Puzzle
+description:
+  Before Chip can join the Bit Busters computer club and hang out with the girl of
+  his dreams, Melinda the Mental Marvel, he must solve all 144 challenging
+  puzzles.
+  .
+  Your bird's-eye view can help Chip rush through the puzzles and mazes before
+  he's deleted by monsters, traps, and the passage of time. Show Chip how to use
+  blocks of soil to overcome water traps and cherry bombs, find keys, and pick up
+  the computer chips which Chip needs to solve some puzzles.
+  .
+  Can you help Chip win the cold heart of his one true love and become an official
+  Bit Buster? If you can't, no one can!
+release: 1989-01-01
+players: 1
+assets.boxfront: BoxFront/Chip's Challenge (USA, Europe).jpg
+assets.boxback: BoxBack/Chip's Challenge (USA, Europe).jpg
+assets.background: Background/Chip's Challenge (USA, Europe).jpg
+assets.screenshot: Screenshot/Chip's Challenge (USA, Europe).jpg
+assets.video: Video/Chip's Challenge (USA, Europe).mp4
+x-co-op: No
+
+
+game: Crystal Mines II (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Crystal Mines II (USA, Europe)/Crystal Mines II (USA, Europe).json
+developer: Color Dreams
+publisher: Atari
+genre: Puzzle
+description:
+  Great treasure still lies deep in the abandoned Crystal Mines. But over the
+  years, underground demons have made them deadly. Guide your robot through the
+  mines, destroying demons and gathering great wealth. Or fail, and become
+  history.
+release: 1992-01-01
+players: 1
+assets.boxfront: BoxFront/Crystal Mines II (USA, Europe).jpg
+assets.boxback: BoxBack/Crystal Mines II (USA, Europe).jpg
+assets.background: Background/Crystal Mines II (USA, Europe).jpg
+assets.screenshot: Screenshot/Crystal Mines II (USA, Europe).jpg
+assets.video: Video/Crystal Mines II (USA, Europe).mp4
+x-co-op: No
+
+
+game: Gates of Zendocon, The (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Gates of Zendocon, The (USA, Europe)/Gates of Zendocon, The (USA, Europe).json
+developer: Epyx, Inc.
+publisher: Atari Corporation
+genre: Shooter
+description:
+  The evil spider Zendocon has trapped you in its web of universes. Your mission
+  is to defeat Zendocon's droids and brave the 51 universes to fight Zendocon
+  itself to the death!
+  .
+  Gates of Zendocon is a side-scrolling shooter very similar to the original
+  arcade shooter of this type, Scramble. Unlike Scramble, however, there are 51
+  game areas in total, but the player fights through a subset of them through
+  branches, choosing the next area to visit.
+  .
+  Some aliens will join you when shot (power-ups). Alien bases in each area allow
+  you to repair your weapons and shield, but landing at the wrong time will cause
+  your ship to explode and lose all power-ups.
+release: 1989-01-01
+players: 1
+assets.boxfront: BoxFront/Gates of Zendocon, The (USA, Europe).jpg
+assets.boxback: BoxBack/Gates of Zendocon, The (USA, Europe).jpg
+assets.background: Background/Gates of Zendocon, The (USA, Europe).jpg
+assets.screenshot: Screenshot/Gates of Zendocon, The (USA, Europe).jpg
+assets.video: Video/Gates of Zendocon, The (USA, Europe).mp4
+x-co-op: No
+
+
+game: Gauntlet - The Third Encounter (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Gauntlet - The Third Encounter (USA, Europe)/Gauntlet - The Third Encounter (USA, Europe).json
+developer: Epyx
+publisher: Atari
+genre: Action
+description:
+  Generations ago an enchanted Star Gem crashed to Earth at the base of an ancient
+  castle. Loathsome creatures crept from the castle and carried the Gem into the
+  depths of the fortress.\n
+  All attempts to retrieve the Star Gem failed. The adventurers were destroyed.\n
+  The creatures in the castle gain magical strength from the Star Gem. Unless the
+  Gem is taken from them, the evil ones will soon have the strength to venture
+  forth and destroy mankind! You and your friends must take up the quest to
+  rescure the Star Gem...and your world!
+release: 1990-01-01
+players: 4
+assets.boxfront: BoxFront/Gauntlet - The Third Encounter (USA, Europe).jpg
+assets.boxback: BoxBack/Gauntlet - The Third Encounter (USA, Europe).jpg
+assets.background: Background/Gauntlet - The Third Encounter (USA, Europe).jpg
+assets.screenshot: Screenshot/Gauntlet - The Third Encounter (USA, Europe).jpg
+assets.video: Video/Gauntlet - The Third Encounter (USA, Europe).mp4
+x-co-op: Yes
+
+
+game: Ishido - The Way of Stones (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Ishido - The Way of Stones (USA, Europe)/Ishido - The Way of Stones (USA, Europe).json
+developer: Atari
+publisher: Atari
+genre: Strategy
+description:
+  Introducing Ishido, the ancient and intricate Game of the Stones. You must place
+  stones on the game board, matching colors and patterns according to
+  centuries-old rules. It requires great skill and concentration--but if you can
+  unlock the secret of the Oracle, its wisdom will help you!
+release: 1991-01-01
+players: 1
+assets.boxfront: BoxFront/Ishido - The Way of Stones (USA, Europe).jpg
+assets.boxback: BoxBack/Ishido - The Way of Stones (USA, Europe).jpg
+assets.background: Background/Ishido - The Way of Stones (USA, Europe).jpg
+assets.screenshot: Screenshot/Ishido - The Way of Stones (USA, Europe).jpg
+assets.video: Video/Ishido - The Way of Stones (USA, Europe).mp4
+x-co-op: No
+
+
+game: Klax (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Klax (USA, Europe)/Klax (USA, Europe).json
+developer: Atari Games Corporation
+publisher: Atari Corporation
+genre: Puzzle
+description:
+  An action/puzzle game, the object is to catch assorted color falling tiles and
+  create rows, columns, or diagonals of a single color. Each level requires a
+  different pattern to be made, and the tiles fall faster, more at a time, and in
+  an increasing number of colors as the game progresses.
+release: 1990-01-01
+players: 2
+assets.boxfront: BoxFront/Klax (USA, Europe).jpg
+assets.boxback: BoxBack/Klax (USA, Europe).jpg
+assets.background: Background/Klax (USA, Europe).jpg
+assets.screenshot: Screenshot/Klax (USA, Europe).jpg
+assets.video: Video/Klax (USA, Europe).mp4
+x-co-op: No
+
+
+game: Malibu Bikini Volleyball (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Malibu Bikini Volleyball (USA, Europe)/Malibu Bikini Volleyball (USA, Europe).json
+developer: Hand Made Software
+publisher: Atari, Inc.
+genre: Sports
+description:
+  Welcome to Malibu: Volleyball capital of the world. This is where the best come
+  to play--and show off their tans. If you want in, sign up. But keep your eyes on
+  the ball...there'll be plenty of time for bikini-watching after the match!
+release: 1993-05-13
+players: 4
+assets.boxfront: BoxFront/Malibu Bikini Volleyball (USA, Europe).jpg
+assets.boxback: BoxBack/Malibu Bikini Volleyball (USA, Europe).jpg
+assets.background: Background/Malibu Bikini Volleyball (USA, Europe).jpg
+assets.screenshot: Screenshot/Malibu Bikini Volleyball (USA, Europe).jpg
+assets.video: Video/Malibu Bikini Volleyball (USA, Europe).mp4
+x-co-op: No
+
+
+game: Scrapyard Dog (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Scrapyard Dog (USA, Europe)/Scrapyard Dog (USA, Europe).json
+developer: Creative Software Designs
+publisher: Atari
+genre: Adventure
+description:
+  Our friend Louis loved his dog. But why would some thugs kidnap this poor puppy?
+  The thugs want the deed to the scrapyard, that's why. Will Louie stand for this?
+  It's up to you and Louie to survive over 15 levels of danger and find the
+  ultimate bad guy, Mr. Big.
+release: 1991-08-01
+players: 1
+assets.boxfront: BoxFront/Scrapyard Dog (USA, Europe).jpg
+assets.boxback: BoxBack/Scrapyard Dog (USA, Europe).jpg
+assets.background: Background/Scrapyard Dog (USA, Europe).jpg
+assets.screenshot: Screenshot/Scrapyard Dog (USA, Europe).jpg
+assets.video: Video/Scrapyard Dog (USA, Europe).mp4
+x-co-op: No
+
+
+game: Shanghai (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Shanghai (USA, Europe)/Shanghai (USA, Europe).json
+developer: Activision
+publisher: Atari
+genre: Puzzle
+description:
+  Obsession awaits. The game of ivory tiles, played by seafarers, scoundrels, and
+  emperors of the far east for centuries, is brought to you in modern form for the
+  Lynx - as Shanghai.
+  .
+  Ancient tiles are stacked randomly in mystical shapes awaiting your challenge.
+  144 tiles beckon your skill and strategy in matching pairs, eliminating them
+  from the board, while revealing new tiles underneath.
+  .
+  Accept the challenge alone or with a friend in a cooperative or competitive
+  two-player game against the Dragon, the Hawk, the Bear - any of seven different
+  puzzle boards.
+  .
+  For 3000 years the dragon of tiles has challenged the Orient. Now it challenges
+  you!
+release: 1990-01-01
+players: 1
+assets.boxfront: BoxFront/Shanghai (USA, Europe).jpg
+assets.boxback: BoxBack/Shanghai (USA, Europe).jpg
+assets.background: Background/Shanghai (USA, Europe).jpg
+assets.screenshot: Screenshot/Shanghai (USA, Europe).jpg
+assets.video: Video/Shanghai (USA, Europe).mp4
+x-co-op: No
+
+
+game: Super Asteroids, Missile Command (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Super Asteroids, Missile Command (USA, Europe)/Super Asteroids, Missile Command (USA, Europe).json
+developer: Atari
+publisher: Atari
+genre: Shooter
+description:
+  Super Asteroids & Missile Command (also known as Super Asteroids and Super
+  Missile Command as seen on the title screen) is an Atari Lynx video game that
+  combines the classic video games Asteroids and Missile Command into a single
+  game cartridge.
+  .
+  Released in 1995 according to Moby Games, The graphics and sound are enhanced
+  from their original incarnations. This game was only released in North America
+  and Europe. Being the final game ever released by Atari for the Atari Lynx, this
+  game would ultimately begin an era where Atari would produce games for other
+  console systems as opposed to their own.
+  .
+  Super Asteroids pits the player against a never ending supply of
+  extraterrestrial debris and enemy UFOs trained to kill any human spacecraft. He
+  must destroy everything while snatching power-ups. Super Missile Command has the
+  player defend various of his space colonies from incoming missiles, satellites,
+  and enemy fighters. Intermissions allow players to buy better missiles and
+  defense system to bolster up his defense of his space colonies.
+release: 1995-08-02
+players: 1
+assets.boxfront: BoxFront/Super Asteroids, Missile Command (USA, Europe).jpg
+assets.boxback: BoxBack/Super Asteroids, Missile Command (USA, Europe).jpg
+assets.background: Background/Super Asteroids, Missile Command (USA, Europe).jpg
+assets.screenshot: Screenshot/Super Asteroids, Missile Command (USA, Europe).jpg
+assets.video: Video/Super Asteroids, Missile Command (USA, Europe).mp4
+x-co-op: No
+
+
+game: Todd's Adventures in Slime World (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Todd's Adventures in Slime World (USA, Europe)/Todd's Adventures in Slime World (USA, Europe).json
+developer: Epyx
+publisher: Atari
+genre: Action;Platform
+description:
+  You are Todd, the explorer of new worlds. It's your adventure to travel deep
+  into Slime World, the gooiest, drippiest place around. There are scary blobs to
+  shoot and lots of objects and weapons to find. "Link up" with up to seven of
+  your fellow slimers for an awesome multiplayer adventure.
+release: 1990-01-01
+players: 4
+assets.boxfront: BoxFront/Todd's Adventures in Slime World (USA, Europe).jpg
+assets.boxback: BoxBack/Todd's Adventures in Slime World (USA, Europe).jpg
+assets.background: Background/Todd's Adventures in Slime World (USA, Europe).jpg
+assets.screenshot: Screenshot/Todd's Adventures in Slime World (USA, Europe).jpg
+assets.video: Video/Todd's Adventures in Slime World (USA, Europe).mp4
+x-co-op: Yes
+
+
+game: Turbo Sub (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Turbo Sub (USA, Europe)/Turbo Sub (USA, Europe).json
+developer: Atari
+publisher: Atari
+genre: Shooter
+description:
+  Turbo Sub released in 1985 as an arcade shooter game by Entertainment Sciences.
+  Then later in 1991 for the Atari Lynx. The arcade version was a one player game
+  set in the future where you control a submersible ship against a horde of
+  aliens. The Atari Lynx version is the same but can be played with two players
+  and tells us the story is set in the 28th century on Earth. The planet has been
+  invaded and the goal of the game is that the player must destroy all the aliens.
+release: 1991-08-08
+players: 1
+assets.boxfront: BoxFront/Turbo Sub (USA, Europe).jpg
+assets.boxback: BoxBack/Turbo Sub (USA, Europe).jpg
+assets.background: Background/Turbo Sub (USA, Europe).jpg
+assets.screenshot: Screenshot/Turbo Sub (USA, Europe).jpg
+assets.video: Video/Turbo Sub (USA, Europe).mp4
+x-co-op: No
+
+
+game: Warbirds (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Atari Lynx/Warbirds (USA, Europe)/Warbirds (USA, Europe).json
+developer: Atari
+publisher: Atari
+genre: Shooter
+description:
+  It's the First World War and the conquest of the sky is your mission. Battle
+  your way to that target with WarBirds, the totally three-dimensional, fly by the
+  seat of your pants, dog fight game.
+  .
+  Pick from any of six missions from Milk Run to The Swarm to dog fight one-on-one
+  or fill the sky with war planes. Fight against a computer-controlled squadron or
+  link with up to four Lynx friends to determine who is the Greatest World War I
+  Flying Ace.
+release: 1991-08-08
+players: 1
+assets.boxfront: BoxFront/Warbirds (USA, Europe).jpg
+assets.boxback: BoxBack/Warbirds (USA, Europe).jpg
+assets.background: Background/Warbirds (USA, Europe).jpg
+assets.screenshot: Screenshot/Warbirds (USA, Europe).jpg
+assets.video: Video/Warbirds (USA, Europe).mp4
+x-co-op: No
+
+

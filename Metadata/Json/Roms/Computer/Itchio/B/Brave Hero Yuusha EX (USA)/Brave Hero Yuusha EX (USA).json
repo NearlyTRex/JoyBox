@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Brave Hero Yuusha EX (USA).exe"
+    ],
+    "transform_file": "Brave Hero Yuusha EX (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dusk Child (USA).exe"
+    ],
+    "transform_file": "Dusk Child (USA).exe"
+}

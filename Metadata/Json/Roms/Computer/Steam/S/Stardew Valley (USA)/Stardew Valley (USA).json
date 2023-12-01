@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Stardew Valley (USA).exe"
+    ],
+    "transform_file": "Stardew Valley (USA).exe"
+}

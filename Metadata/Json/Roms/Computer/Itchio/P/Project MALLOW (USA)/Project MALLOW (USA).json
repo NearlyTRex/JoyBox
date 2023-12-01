@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Project MALLOW (USA).exe"
+    ],
+    "transform_file": "Project MALLOW (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_kingsway_1.2.1_(64096).exe"
+    ],
+    "transform_file": "setup_kingsway_1.2.1_(64096).exe"
+}

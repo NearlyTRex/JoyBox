@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Greg the Clumsy Ghost (USA).exe"
+    ],
+    "transform_file": "Greg the Clumsy Ghost (USA).exe"
+}

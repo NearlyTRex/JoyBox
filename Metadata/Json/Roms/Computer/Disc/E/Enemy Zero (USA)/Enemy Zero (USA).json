@@ -1,0 +1,5 @@
+{
+    "installer_exe": "$SETUP_MAIN_ROOT/EnemyZeroSetup_21.exe",
+    "transform_file": "Enemy Zero (USA).m3u",
+    "winver": "win10"
+}

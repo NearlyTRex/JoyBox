@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Nuclear Throne (USA).exe"
+    ],
+    "main_game_exe": [
+        "Nuclear Throne/nuclearthrone.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Nuclear Throne/nuclearthrone.exe": "Nuclear Throne"
+    },
+    "transform_file": "Nuclear Throne (USA).exe"
+}

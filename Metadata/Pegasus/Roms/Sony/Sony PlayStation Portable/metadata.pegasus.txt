@@ -1,0 +1,3696 @@
+collection: Sony PlayStation Portable
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation Portable" {file.path}
+
+
+game: 3rd Birthday, The (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/3rd Birthday, The (USA)/3rd Birthday, The (USA).json
+developer: HexaDrive
+publisher: Square Enix
+genre: Action;Adventure
+description:
+  The 3rd Birthday is a third-person role-playing shooter co-developed by Square
+  Enix's "1st Production Department" and HexaDrive, and published by Square Enix
+  for the PlayStation Portable. It was released in Japan in 2010 and in North
+  America and Europe in 2011. The game is both the third entry in the Parasite Eve
+  video game series, based on the titular Japanese novel, and a spin-off, having
+  only a loose connection to events from past games. The game features a
+  third-person shooter-based combat system with role-playing mechanics. A key
+  mechanic is the Overdive ability, which allows the player to possess
+  pre-positioned human allies and inflict damage upon enemies.
+  .
+  The game takes place in 2013, a year after creatures known as the Twisted have
+  appeared from beneath Manhattan and decimated the city. To fight back against
+  the Twisted, an investigatory team called the Counter Twisted Investigation
+  (CTI) is formed. Among their number is series protagonist Aya Brea, who was
+  found unconscious and suffering amnesia two years before the game's events.
+  Using her Overdive ability, Aya travels into the past to alter the outcome of
+  battles against the Twisted. At the same time, Aya attempts to find out the
+  origin of the Twisted and regain her memories.
+release: 2011-03-29
+players: 1
+assets.boxfront: BoxFront/3rd Birthday, The (USA).jpg
+assets.boxback: BoxBack/3rd Birthday, The (USA).jpg
+assets.background: Background/3rd Birthday, The (USA).jpg
+assets.screenshot: Screenshot/3rd Birthday, The (USA).jpg
+assets.video: Video/3rd Birthday, The (USA).mp4
+x-co-op: No
+
+
+game: 7th Dragon 2020 (Japan) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/7th Dragon 2020 (Japan) (v1.01)/7th Dragon 2020 (Japan) (v1.01).json
+developer: Image Epoch
+publisher: Sega
+genre: Role-Playing
+description:
+  In the year 2020, dragon invaders from space came to destroy the planet Earth
+  and make it uninhabitable by spreading a harmful exterrestial plant species
+  called "Flowaro".
+  .
+  The player takes control of a newly formed counterattack team in Japan under the
+  control of a organization, Murakumo, and fights against the dragon invaders to
+  drive them out of the planet.
+release: 2011-11-23
+players: 1
+assets.boxfront: BoxFront/7th Dragon 2020 (Japan) (v1.01).jpg
+assets.boxback: BoxBack/7th Dragon 2020 (Japan) (v1.01).jpg
+assets.background: Background/7th Dragon 2020 (Japan) (v1.01).jpg
+assets.screenshot: Screenshot/7th Dragon 2020 (Japan) (v1.01).jpg
+assets.video: Video/7th Dragon 2020 (Japan) (v1.01).mp4
+x-co-op: No
+
+
+game: 7th Dragon 2020-II (Japan)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/7th Dragon 2020-II (Japan)/7th Dragon 2020-II (Japan).json
+developer: imageepoch Inc.
+publisher: Sega
+genre: Role-Playing
+description:
+  The sequel game will take place in 2021, one year after the first game. Dragons
+  have begun to invade Tokyo again after a brief respite of peace. Players will
+  again form parties from members of the special force "Murakumo" to fight the
+  dragons.
+  .
+  The game will feature an improved character creation system that will include 40
+  different voice actors and actresses to choose from in addition to appearance
+  and occupation. The game also is adding the new "idol" occupation, which allows
+  players to give orders to other party members. Players can create their own
+  original characters with any of these voices:
+release: 2013-04-18
+players: 1
+assets.boxfront: BoxFront/7th Dragon 2020-II (Japan).jpg
+assets.boxback: BoxBack/7th Dragon 2020-II (Japan).jpg
+assets.background: Background/7th Dragon 2020-II (Japan).jpg
+assets.screenshot: Screenshot/7th Dragon 2020-II (Japan).jpg
+assets.video: Video/7th Dragon 2020-II (Japan).mp4
+x-co-op: No
+
+
+game: Aedis Eclipse - Generation of Chaos (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Aedis Eclipse - Generation of Chaos (USA)/Aedis Eclipse - Generation of Chaos (USA).json
+developer: Never-Land Company
+publisher: NIS
+genre: Role-Playing;Strategy
+description:
+  The second Generation of Chaos strategy title on PSP (based on GoC V on PS2)
+  takes place in this world divided into three warring planes. Each world has its
+  own main character and story; therefore, players can experience three different
+  stories at once. Depending on which world the player begins with, the difficulty
+  level will differ. The lower world is regarded as the beginner's stage with many
+  tutorials to guide the player through the game. The higher the world you choose
+  to play with, the more difficult it becomes. Battle in each mode using a
+  combination of incredible team customization and item crafting in a multi-unit
+  battle system, with a focus on fast-loading and constant battles to give players
+  a nearly seamless RPG experience.
+release: 2007-04-24
+players: 1
+assets.boxfront: BoxFront/Aedis Eclipse - Generation of Chaos (USA).jpg
+assets.boxback: BoxBack/Aedis Eclipse - Generation of Chaos (USA).jpg
+assets.background: Background/Aedis Eclipse - Generation of Chaos (USA).jpg
+assets.screenshot: Screenshot/Aedis Eclipse - Generation of Chaos (USA).jpg
+assets.video: Video/Aedis Eclipse - Generation of Chaos (USA).mp4
+x-co-op: No
+
+
+game: Ape Escape - On the Loose (USA) (v1.03)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ape Escape - On the Loose (USA) (v1.03)/Ape Escape - On the Loose (USA) (v1.03).json
+developer: Sony Japan Studio
+publisher: Sony
+genre: Action;Adventure;Platform
+description:
+  A remake of the first entry in the Ape Escape series, Ape Escape: On the Loose
+  arrives on the PSP with multiplayer functionality and a variety of minigames.
+  The adventure begins when Specter--a monkey-turned-maniacal-mastermind--and his
+  army of monkeys travel back in time to change history and take over the world.
+  Now it's up to you to pursue Specter and capture more than 200 monkeys in eight
+  different worlds, which span more than 20 levels.
+release: 2005-03-17
+players: 2
+assets.boxfront: BoxFront/Ape Escape - On the Loose (USA) (v1.03).jpg
+assets.boxback: BoxBack/Ape Escape - On the Loose (USA) (v1.03).jpg
+assets.background: Background/Ape Escape - On the Loose (USA) (v1.03).jpg
+assets.screenshot: Screenshot/Ape Escape - On the Loose (USA) (v1.03).jpg
+assets.video: Video/Ape Escape - On the Loose (USA) (v1.03).mp4
+x-co-op: No
+
+
+game: Archer Maclean's Mercury (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Archer Maclean's Mercury (USA)/Archer Maclean's Mercury (USA).json
+developer: Awesome Studios
+publisher: Ignition Entertainment
+genre: Puzzle;General
+description:
+  From the mind of developer Archer Maclean comes Mercury, a puzzle game that lets
+  you guide the metallic substance through a series of challenging puzzles.
+  Without spilling too much, you must control your colored mercury blobs around 3D
+  mazes simply by tilting the level. Negotiate obstacles and hazards, solve
+  puzzles, and compete against time and percentage limits while avoiding traps and
+  predators. In addition to the single-player mode, Archer Maclean's Mercury also
+  features multiplayer battle and ghost modes.
+release: 2005-04-06
+players: 1
+assets.boxfront: BoxFront/Archer Maclean's Mercury (USA).jpg
+assets.boxback: BoxBack/Archer Maclean's Mercury (USA).jpg
+assets.background: Background/Archer Maclean's Mercury (USA).jpg
+assets.screenshot: Screenshot/Archer Maclean's Mercury (USA).jpg
+assets.video: Video/Archer Maclean's Mercury (USA).mp4
+x-co-op: No
+
+
+game: Atari Classics Evolved (USA) (v1.02)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Atari Classics Evolved (USA) (v1.02)/Atari Classics Evolved (USA) (v1.02).json
+developer: Stainless Games Ltd
+publisher: Atari
+genre: Action;Racing;Sports
+description:
+  Atari Classics Evolved will feature such timeless games as Asteroids, Asteroids
+  Deluxe, Battlezone, Centipede, Lunar Lander, Millipede, Missile Command, Super
+  Breakout, Tempest, Warlords and Pong. These titles, presented in both an
+  original and an evolved version, will maintain the original gameplay while
+  adding beautifully rendered up-to-date graphics.
+release: 2007-12-19
+players: 2
+assets.boxfront: BoxFront/Atari Classics Evolved (USA) (v1.02).jpg
+assets.boxback: BoxBack/Atari Classics Evolved (USA) (v1.02).jpg
+assets.background: Background/Atari Classics Evolved (USA) (v1.02).jpg
+assets.screenshot: Screenshot/Atari Classics Evolved (USA) (v1.02).jpg
+assets.video: Video/Atari Classics Evolved (USA) (v1.02).mp4
+x-co-op: No
+
+
+game: Blade Dancer - Lineage of Light (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Blade Dancer - Lineage of Light (USA) (v1.01)/Blade Dancer - Lineage of Light (USA) (v1.01).json
+developer: Hit Maker
+publisher: NIS America
+genre: Action;Adventure;Role-Playing;Strategy
+description:
+  Brandish your blade and dance of the edge of destiny!
+  .
+  A mysterious girl with no memory of her past. A knight in black armour appears
+  from nowhere on the legendary island of Foo where the Prismatic Moon shines. The
+  legend of "Blade Dancer" will be revived.
+  .
+  Full 3D Adventure Field: Explore towns, fields and dungeons, all in a
+  large-scale, fully 3D environment.
+  .
+  In Depth Item Crafting: Appraise an item you obtain to and discover its recipe
+  to create new items.
+  .
+  Exciting Real Time Battles: A completely real-time battle system. Experience a
+  new type of battle in a fight to charge your Lunar Gauge and execute special
+  abilities.
+  .
+  Find Your Ultimate Weapons!!
+release: 2006-07-18
+players: 4
+assets.boxfront: BoxFront/Blade Dancer - Lineage of Light (USA) (v1.01).jpg
+assets.boxback: BoxBack/Blade Dancer - Lineage of Light (USA) (v1.01).jpg
+assets.background: Background/Blade Dancer - Lineage of Light (USA) (v1.01).jpg
+assets.screenshot: Screenshot/Blade Dancer - Lineage of Light (USA) (v1.01).jpg
+assets.video: Video/Blade Dancer - Lineage of Light (USA) (v1.01).mp4
+x-co-op: Yes
+
+
+game: Blazing Souls Accelate (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Blazing Souls Accelate (USA)/Blazing Souls Accelate (USA).json
+developer: Neverland
+publisher: Aksys Games
+genre: Role-Playing;Strategy
+description:
+  The story begins with Zero the protagonist making his living as an independent
+  contractor. One day he is investigating a certain site. It is there that he
+  finds a mysterious stone infused with a powerful magic known as the Core
+  Elemental. As he takes on more and more jobs to investigate other locations, he
+  discovers more and more Core Elemental stones. On his travels, he begins to
+  encounter the Human Genomes-new creatures created by God to replace mankind.
+release: 2010-10-18
+players: 1
+assets.boxfront: BoxFront/Blazing Souls Accelate (USA).jpg
+assets.boxback: BoxBack/Blazing Souls Accelate (USA).jpg
+assets.background: Background/Blazing Souls Accelate (USA).jpg
+assets.screenshot: Screenshot/Blazing Souls Accelate (USA).jpg
+assets.video: Video/Blazing Souls Accelate (USA).mp4
+x-co-op: No
+
+
+game: Brandish - The Dark Revenant (Japan)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Brandish - The Dark Revenant (Japan)/Brandish - The Dark Revenant (Japan).json
+developer: Falcom
+publisher: Xseed Games
+genre: Role-Playing
+description:
+  Over 40 Massive Dungeon Floors Designed to Kill You
+  .
+  Explore ancient ruins, cursed caverns, otherworldly planes and more, each
+  riddled with false floors, false walls, spikes, poison traps, boulders,
+  teleporters and other deadly surprises. Solve brain-busting puzzles, battle
+  unique enemies and forge ever onward!\n
+  Innovative World-Turning Mechanice\n
+  Immersive Atmosphere through Innovative “World-Turning” Mechanic
+  .
+  Like a first-person dungeon crawler with a third-person viewpoint, the camera is
+  always positioned behind Ares with the world smoothly rotating into place
+  whenever he turns, creating a feeling of total immersion and really pulling
+  players into the action.\n
+  Bonus Content Dela Mode\n
+  Bonus Content including Expert-Level “Dela Mode”
+  .
+  Beat the game as Ares to challenge an additional 10 floors as the sorceress
+  Dela, complete with harder enemies, crueler traps and a whole new perspective on
+  the story!\n
+  Engaging Mini-Games\n
+  Engaging Mini-Games with Exclusive Prizes
+  .
+  Play the slots or challenge lost souls to an original card game called “Blade,”
+  then use your winnings to buy unique items that can aid you in escaping these
+  deadly ruins.
+release: 2015-01-13
+players: 1
+assets.boxfront: BoxFront/Brandish - The Dark Revenant (Japan).jpg
+assets.boxback: BoxBack/Brandish - The Dark Revenant (Japan).jpg
+assets.background: Background/Brandish - The Dark Revenant (Japan).jpg
+assets.screenshot: Screenshot/Brandish - The Dark Revenant (Japan).jpg
+x-co-op: No
+
+
+game: Brave Story - New Traveler (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Brave Story - New Traveler (USA)/Brave Story - New Traveler (USA).json
+developer: Game Republic
+publisher: Xseed
+genre: Role-Playing
+description:
+  On a day that starts out like any other, an 11-year-old boy's life is changed
+  forever when his friend Miki suddenly collapses from an unknown illness. Without
+  the means to save her, he grows increasingly distraught when suddenly, a strange
+  voice offers him a second chance: "Beyond the door you can change your destiny!"
+  He soon leaves the real world and journeys to the world of Vision, where, as a
+  novice "Traveler," he will surmount myriad ordeals in hopes of ultimately
+  meeting with the Goddess of Fortune to have a single wish granted.
+release: 2007-07-31
+players: 1
+assets.boxfront: BoxFront/Brave Story - New Traveler (USA).jpg
+assets.boxback: BoxBack/Brave Story - New Traveler (USA).jpg
+assets.background: Background/Brave Story - New Traveler (USA).jpg
+assets.screenshot: Screenshot/Brave Story - New Traveler (USA).jpg
+assets.video: Video/Brave Story - New Traveler (USA).mp4
+x-co-op: No
+
+
+game: Breath of Fire III (Europe)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Breath of Fire III (Europe)/Breath of Fire III (Europe).json
+developer: Capcom
+publisher: Capcom
+genre: Role-Playing
+description:
+  Capcom's third installment of its epic RPG. Breath of Fire III is the first
+  installment of the Breath of Fire Series to appear on the Playstation (And later
+  ported to the PSP).
+  .
+  Set free by the the workers of Dauna Mine, Ryu of the Brood learns to both
+  understand his power, and to understand the history of his extinct kind. By both
+  utilizing Ryu's unique power and the abilities of those whom assist him, players
+  will uncover the history of the Brood, learn more about the characters, and the
+  very reason why the Brood were wiped out.
+  .
+  Players control Ryu and his allies on their journey, each of Ryu's friends have
+  abilities only they can use, and they will have to work together to make their
+  way through the obstacles and enemies that they encounter; creativity is key to
+  your success in this game!
+  .
+  Ryu eventually is able to utilize his power of the Brood, allowing him to ascend
+  into various dragon-like forms. This is done using a gene-splicing system that
+  dictates what sort of form Ryu will take.
+  .
+  Breath of Fire III also includes a Master System, which permits Ryu and his
+  allies to learn from various people to augment their abilities differently as
+  they gain experience; these trainers can also teach abilities to those whom
+  train hard under them.
+release: 2005-08-25
+players: 1
+assets.boxfront: BoxFront/Breath of Fire III (Europe).jpg
+assets.boxback: BoxBack/Breath of Fire III (Europe).jpg
+assets.background: Background/Breath of Fire III (Europe).jpg
+assets.screenshot: Screenshot/Breath of Fire III (Europe).jpg
+assets.video: Video/Breath of Fire III (Europe).mp4
+x-co-op: No
+
+
+game: Bust-A-Move - Deluxe (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Bust-A-Move - Deluxe (USA)/Bust-A-Move - Deluxe (USA).json
+developer: Majesco
+publisher: Majesco
+genre: Puzzle
+description:
+  Bust-a-Move Deluxe is the second game in the franchise to appear on the PSP.
+  True to the classic puzzle gameplay, players launch bubbles of different colours
+  from the bottom of the screen to match at least three like colours to clear
+  parts of the field before it is forced down. This version offers 300 puzzles in
+  the Classic mode and adds some new modes.
+  .
+  In the Ghost mode, bubbles pass through any objects until they hit and wall, and
+  then stick to another orb. If you fail to clear a set of bubbles, a heart meter
+  increases. When it reaches five, the game is over. Clear plenty of bubbles and a
+  ghost will appear on the opponent's screen, masking the colours. There are also
+  8 Challenge Puzzle modes, with six rounds each, adding extra strategy through
+  balancing the board, hiding colours for a while, a cannon placed on a
+  horizontally-moving conveyor belt, varying colours, single-shot puzzles,
+  distorted time and speed, or a focus on skill shots by playing for points.
+  Multiplayer is also supported.
+  .
+  Next to the known characters Bub, Bob, Monsta and Dorank, 6 new playable
+  characters include Goon, Chick'n, Banebow and Propella and unlockables.
+release: 2006-04-04
+players: 2
+assets.boxfront: BoxFront/Bust-A-Move - Deluxe (USA).jpg
+assets.boxback: BoxBack/Bust-A-Move - Deluxe (USA).jpg
+assets.background: Background/Bust-A-Move - Deluxe (USA).jpg
+assets.screenshot: Screenshot/Bust-A-Move - Deluxe (USA).jpg
+assets.video: Video/Bust-A-Move - Deluxe (USA).mp4
+x-co-op: No
+
+
+game: Capcom Classics Collection Reloaded (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Capcom Classics Collection Reloaded (USA)/Capcom Classics Collection Reloaded (USA).json
+developer: Capcom Co., Ltd.
+publisher: Capcom Entertainment, Inc.
+genre: Action;Adventure;Fighting;Role-Playing;Shooter;Strategy
+description:
+  Capcom Classics Collection Reloaded offers arcade classics which can all be
+  enjoyed alone or via multiplayer using the PSP system's wireless ad hoc mode.
+  Game sharing abilities not only pushes Reloaded over the compilation echelon,
+  but presents the opportunity to be challenged just like the good ole arcade
+  days. For those wanting to experience the games in their original presentation,
+  the screen settings can be changed to suit just that. Relive Capcom's history
+  and savor bonus features by earning credits towards Reloaded's themed slot
+  machine to unlock a buffet of goods including original art, playing tips and
+  secret codes. More than 15 arcade-perfect classics on a single UMD including Eco
+  Fighers, King of Dragons, and Knights of the Round. A wealth of added features
+  including game history, playing tips, original artwork, and new secret codes.
+  Customizable controls to suit any gaming style.
+  .
+  Contains the following games:\n
+  - 1942\n
+  - 1943\n
+  - 1943: Midway Kaisen\n
+  - Commando\n
+  - Eco Fighters\n
+  - Exed Exes\n
+  - Ghosts 'N Goblins\n
+  - Ghouls 'N Ghosts\n
+  - Gun.Smoke\n
+  - HiGeMaru\n
+  - Knights of the Round\n
+  - Mercs\n
+  - Son Son\n
+  - Street Fighter II\n
+  - Street Fighter II Champion Edition\n
+  - Street Fighter II Turbo: Hyper Fighting\n
+  - Super Ghouls 'N Ghosts (SNES version)\n
+  - The King of Dragons\n
+  - Vulgus
+release: 2006-10-24
+players: 2
+assets.boxfront: BoxFront/Capcom Classics Collection Reloaded (USA).jpg
+assets.boxback: BoxBack/Capcom Classics Collection Reloaded (USA).jpg
+assets.background: Background/Capcom Classics Collection Reloaded (USA).jpg
+assets.screenshot: Screenshot/Capcom Classics Collection Reloaded (USA).jpg
+assets.video: Video/Capcom Classics Collection Reloaded (USA).mp4
+x-co-op: Yes
+
+
+game: Capcom Classics Collection Remixed (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Capcom Classics Collection Remixed (USA)/Capcom Classics Collection Remixed (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Adventure;Fighting;Role-Playing;Shooter;Sports;Strategy
+description:
+  Capcom serves up a collection of classic games in Capcom Classics Collection.
+  You can relive more than 20 classic titles including 1942, Final Fight, Ghosts
+  'n Goblins, and Commando. The games can be played in either one- or two-player
+  mode. Capcom Classics Collection also includes bonus material, such as remixed
+  soundtracks, game tips, and original artwork.
+  .
+  The games included:
+  .
+  1941: Counter Attack\n
+  Avengers\n
+  Bionic Commando\n
+  Black Tiger\n
+  Block Block\n
+  Captain Commando\n
+  Final Fight\n
+  Forgotten Worlds\n
+  Last Duel\n
+  Legendary Wings\n
+  Magic Sword\n
+  Mega Twins\n
+  Quiz & Dragons\n
+  Section-Z\n
+  SideArms\n
+  The Speed Rumbler\n
+  Street Fighter\n
+  Strider\n
+  Three Wonders\n
+  Varth
+release: 2005-03-21
+players: 2
+assets.boxfront: BoxFront/Capcom Classics Collection Remixed (USA).jpg
+assets.boxback: BoxBack/Capcom Classics Collection Remixed (USA).jpg
+assets.background: Background/Capcom Classics Collection Remixed (USA).jpg
+assets.screenshot: Screenshot/Capcom Classics Collection Remixed (USA).jpg
+assets.video: Video/Capcom Classics Collection Remixed (USA).mp4
+x-co-op: Yes
+
+
+game: Capcom Puzzle World (USA) (v1.02)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Capcom Puzzle World (USA) (v1.02)/Capcom Puzzle World (USA) (v1.02).json
+developer: Capcom
+publisher: Capcom
+genre: Puzzle
+description:
+  Capcom Puzzle World is a compilation of Capcom's retro arcade puzzle hits. There
+  are some bonus features to unlock and play with. The games included are:
+  .
+  Block Block\n
+  Buster Bros.\n
+  Buster Buddies\n
+  Super Buster Bros.\n
+  Super Puzzle Fighter II Turbo (with bonus features based on two Japanese-only
+  versions of the game)
+  .
+  Some games have multiplayer support, with both head-to-head and cooperative
+  2-player gameplay, and the ability to take screenshots. Block Block can be
+  played with several aspect ratios including normal, stretch and the original
+  vertical orientation.
+release: 2007-02-06
+players: 2
+assets.boxfront: BoxFront/Capcom Puzzle World (USA) (v1.02).jpg
+assets.boxback: BoxBack/Capcom Puzzle World (USA) (v1.02).jpg
+assets.background: Background/Capcom Puzzle World (USA) (v1.02).jpg
+assets.screenshot: Screenshot/Capcom Puzzle World (USA) (v1.02).jpg
+assets.video: Video/Capcom Puzzle World (USA) (v1.02).mp4
+x-co-op: No
+
+
+game: Castlevania - The Dracula X Chronicles (USA) (v1.02)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Castlevania - The Dracula X Chronicles (USA) (v1.02)/Castlevania - The Dracula X Chronicles (USA) (v1.02).json
+developer: Konami
+publisher: Konami
+genre: Action;Platform
+description:
+  The legendary action game Castlevania: Rondo of Blood (the "lost" chapter never
+  seen before outside of Japan) is reborn on the PSP system with incredible 3D
+  graphics and timeless side scrolling gameplay in Castlevania: The Dracula X
+  Chronicles. Gamers take up the Vampire Killer whip as Richter Belmont as they
+  seek to destroy the maniacal Dracula once and for all in this pivotal piece of
+  the ongoing Castlevania saga. Castlevania: The Dracula X Chronicles also
+  includes unlockable versions of the original Rondo of Blood and Symphony of the
+  Night games, delivering incredible gameplay and value while updating two of the
+  most beloved video games of all time for a new generation of gamers.
+release: 2007-10-23
+players: 1
+assets.boxfront: BoxFront/Castlevania - The Dracula X Chronicles (USA) (v1.02).jpg
+assets.boxback: BoxBack/Castlevania - The Dracula X Chronicles (USA) (v1.02).jpg
+assets.background: Background/Castlevania - The Dracula X Chronicles (USA) (v1.02).jpg
+assets.screenshot: Screenshot/Castlevania - The Dracula X Chronicles (USA) (v1.02).jpg
+assets.video: Video/Castlevania - The Dracula X Chronicles (USA) (v1.02).mp4
+x-co-op: No
+
+
+game: Class of Heroes (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Class of Heroes (USA) (v1.01)/Class of Heroes (USA) (v1.01).json
+developer: Zerodiv
+publisher: Atlus
+genre: Role-Playing
+description:
+  Why did they appear? What were they created for? The answer still eludes us.
+  What we do know, is that the mysterious labyrinths appeared\n
+  decades ago, and with them, the world was changed forever. Their true form
+  unknown and ever-changing, they sprawl across the world like a web, connecting
+  towns and villages, mountains, lakes, and deserts.
+  .
+  Many adventurers delved into these labyrinths dreaming of riches, and those
+  fortunate enough to return did so with tales and treasures untold. It was only
+  natural that the children of our world began to look upon these heroes with
+  their unconditional admiration. And as they say, imitation is the sincerest form
+  of flattery.
+  .
+  Here at our campus, we strive to equip young men and women with the tools
+  they’ll need to become full-fledged adventurers. To all the bright-eyed students
+  stepping through our gates for their first term: Welcome. We hope your studies
+  here are as enriching and productive as you’ve dreamed they would be.
+  .
+  -Principal Feinman
+release: 2009-06-09
+players: 1
+assets.boxfront: BoxFront/Class of Heroes (USA) (v1.01).jpg
+assets.boxback: BoxBack/Class of Heroes (USA) (v1.01).jpg
+assets.background: Background/Class of Heroes (USA) (v1.01).jpg
+assets.screenshot: Screenshot/Class of Heroes (USA) (v1.01).jpg
+assets.video: Video/Class of Heroes (USA) (v1.01).mp4
+x-co-op: No
+
+
+game: Crazy Taxi - Fare Wars (USA) (En,Fr,De,Es,It) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Crazy Taxi - Fare Wars (USA) (En,Fr,De,Es,It) (v1.01)/Crazy Taxi - Fare Wars (USA) (En,Fr,De,Es,It) (v1.01).json
+developer: Hitmaker
+publisher: Sega
+genre: Racing
+description:
+  Crazy Taxi: Fare Wars is a 2007 racing video game developed by Sniper Studios
+  and Black Hole Entertainment, and part of the Crazy Taxi series. A compilation
+  of Crazy Taxi and Crazy Taxi 2, Black Hole Entertainment ported the original
+  games from the Dreamcast to the PlayStation Portable, while Sniper Studios added
+  a new multiplayer mode. A new single-player campaign was foregone due to budget
+  and time constraints. In the multiplayer, players compete against one another
+  for customers and fare money. While Crazy Taxi received numerous ports, Fare
+  Wars gained notoriety as the sole port of Crazy Taxi 2 outside of the Dreamcast
+  version. It was released in North America, Australia, and Europe in August and
+  September 2007, followed by a Japanese release in August 2008.
+  .
+  The game received mixed reviews from critics, who praised the gameplay of the
+  original games, albeit calling it dated, as well as the new multiplayer mode.
+  However, they criticized compromises made to bring the two Dreamcast games to
+  the system of the less powerful PlayStation Portable, such as lower frame rate
+  and higher loading times, the removal of the original games' licensed
+  soundtracks, and control issues. The game's developers noted difficulty in
+  porting the games to such limiting hardware.
+  .
+  Gameplay\n
+  Crazy Taxi: Fare Wars combines the games Crazy Taxi and Crazy Taxi 2, leaving
+  their respective original gameplay intact. In the single-player mode, the
+  player, controlling one of several yellow cab drivers, each with their own
+  unique cab, must drive around the city, picking up passengers and racing
+  recklessly to get them to where they need to go in the fastest time. When each
+  passenger is dropped off, the player earns a fare and extra time on the limited
+  countdown clock, while extra money can be earned by performing stunts.
+  .
+  The ports also carry over the games' minigame modes, Crazy Box and Crazy
+  Pyramid. In the former, players can access nine minigames, including bowling and
+  bursting balloons with their taxi. The latter, while similar, includes minigames
+  that utilize the "Crazy Hop" feature included in the sequel, which allows the
+  taxi to leap through the use of hydraulics.
+  .
+  Fare Wars adds three new multiplayer modes. In Time Trials mode, players can use
+  ad-hoc multiplayer to compete to see who earns the most money within a certain
+  time limit. In C-R-A-Z-Y mode, one player attempts to beat the other player's
+  score for an individual fare, while in the final mode, Head to Head, two players
+  compete to win on the same map. If one player hits the opponent's car, they can
+  steal the passenger from their opponent.
+release: 2007-08-07
+players: 1
+assets.boxfront: BoxFront/Crazy Taxi - Fare Wars (USA) (En,Fr,De,Es,It) (v1.01).jpg
+assets.boxback: BoxBack/Crazy Taxi - Fare Wars (USA) (En,Fr,De,Es,It) (v1.01).jpg
+assets.background: Background/Crazy Taxi - Fare Wars (USA) (En,Fr,De,Es,It) (v1.01).jpg
+assets.screenshot: Screenshot/Crazy Taxi - Fare Wars (USA) (En,Fr,De,Es,It) (v1.01).jpg
+assets.video: Video/Crazy Taxi - Fare Wars (USA) (En,Fr,De,Es,It) (v1.01).mp4
+x-co-op: No
+
+
+game: Crimson Gem Saga (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Crimson Gem Saga (USA)/Crimson Gem Saga (USA).json
+developer: Ironnos
+publisher: Atlus
+genre: Role-Playing
+description:
+  Killian von Rohcoff's life has started out bad, and is about to get worse. He
+  shakes off a hangover to get to his graduation only to find out he's finished
+  second to his hated rival. Then when he finally gets a lead on a job, it ends up
+  getting him robbed and nearly killed...and that's just the beginning. Soon
+  Killian and his new "acquaintances" will end up getting caught up in much larger
+  events that revolve around an ancient artifact called the Wicked Stone.
+  .
+  Crimson Gem Saga is a turn-based RPG and a follow-up to Astonishia Story, with
+  overworld travel being done on an isometric plane. The game has some minor
+  action elements sprinkled into the turn-based gameplay, like critical combo
+  chains and an ambush system. Characters level up individually, but all draw from
+  a group pool of skill points in order to unlock and gain new skill abilities,
+  some of which are combination attacks. In essence, the core gameplay is very
+  similar to a Japanese RPGs, despite the fact that the game was developed by a
+  Korean company.
+release: 2009-05-26
+players: 1
+assets.boxfront: BoxFront/Crimson Gem Saga (USA).jpg
+assets.boxback: BoxBack/Crimson Gem Saga (USA).jpg
+assets.background: Background/Crimson Gem Saga (USA).jpg
+assets.screenshot: Screenshot/Crimson Gem Saga (USA).jpg
+assets.video: Video/Crimson Gem Saga (USA).mp4
+x-co-op: No
+
+
+game: Crisis Core - Final Fantasy VII (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Crisis Core - Final Fantasy VII (USA)/Crisis Core - Final Fantasy VII (USA).json
+developer: Square Enix
+publisher: Square Enix
+genre: Action;Role-Playing
+description:
+  Crisis Core is an action role-playing game in which the player controls Zack
+  Fair. The player moves Zack through and between open areas, allowing him to talk
+  with non-player characters, interact with the environment, and engage monsters
+  in battle. At save points, the player may opt to take one of the available side
+  missions, and if so, Zack is moved to a special area to complete the mission,
+  which usually involves defeating one or more monsters. If the mission is
+  successfully completed, the player is rewarded with beneficial items, and often
+  new missions become available. Whether the player is successful in the side
+  mission or not, upon completion, Zack is returned to the save point in the main
+  game.
+release: 2008-03-24
+players: 1
+assets.boxfront: BoxFront/Crisis Core - Final Fantasy VII (USA).jpg
+assets.boxback: BoxBack/Crisis Core - Final Fantasy VII (USA).jpg
+assets.background: Background/Crisis Core - Final Fantasy VII (USA).jpg
+assets.screenshot: Screenshot/Crisis Core - Final Fantasy VII (USA).jpg
+assets.video: Video/Crisis Core - Final Fantasy VII (USA).mp4
+x-co-op: No
+
+
+game: Daxter (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Daxter (USA)/Daxter (USA).json
+developer: Ready at Dawn
+publisher: Sony Computer Entertainment
+genre: Action;Platform
+description:
+  Daxter is centered around the world of the lovable orange ottsel made popular in
+  the Jak and Daxter franchise. The story unfolds as Daxter searches for Jak, who
+  was imprisoned during the events that led to the start of "Jak II." Daxter, now
+  on his own in an unfamiliar place, quickly realizes that being small and furry
+  won't help his chances of survival. To help stamp out a mysterious metalbug
+  infestation, Daxter takes on a job as a pest exterminator, enabling him to
+  explore parts of Haven City in an effort to collect the clues that will lead him
+  to Jak.
+  .
+  Daxter allows gamers to play from his perspective offering a distinctive set of
+  moves with agile abilities that allows players to climb walls, creep up on
+  enemies, fit in small places and maneuver vehicles. Taking a job as a pest
+  exterminator, to fight an ongoing invasion of metal-bugs, Daxter comes equip
+  with gadgets to rid the city of these metal nuisances. Get close up and personal
+  by using your flimsy bug swatter to squash an army of attacking insects or your
+  spray gun to hover around a variety of environments while picking up various
+  upgrades.
+release: 2006-03-14
+players: 24
+assets.boxfront: BoxFront/Daxter (USA).jpg
+assets.boxback: BoxBack/Daxter (USA).jpg
+assets.background: Background/Daxter (USA).jpg
+assets.screenshot: Screenshot/Daxter (USA).jpg
+assets.video: Video/Daxter (USA).mp4
+x-co-op: No
+
+
+game: Dead Head Fred (USA) (v1.02)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Dead Head Fred (USA) (v1.02)/Dead Head Fred (USA) (v1.02).json
+developer: Vicious Cycle Software
+publisher: D3 Publisher
+genre: Action;Adventure
+description:
+  In Dead Head Fred, players take on the persona of private detective Fred Neuman.
+  Savagely murdered and then resurrected in a bizarre scientific experiment, Fred
+  is without his memory or his head! The game immerses players in the vicious
+  action as they collect, upgrade and switch heads on the fly to strategically
+  fight malformed mutants, ghoulish gangsters, and maniacal mob bosses in a unique
+  and compelling story of revenge and redemption.
+release: 2007-08-28
+players: 1
+assets.boxfront: BoxFront/Dead Head Fred (USA) (v1.02).jpg
+assets.boxback: BoxBack/Dead Head Fred (USA) (v1.02).jpg
+assets.background: Background/Dead Head Fred (USA) (v1.02).jpg
+assets.screenshot: Screenshot/Dead Head Fred (USA) (v1.02).jpg
+assets.video: Video/Dead Head Fred (USA) (v1.02).mp4
+x-co-op: No
+
+
+game: Dissidia - Final Fantasy (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Dissidia - Final Fantasy (USA)/Dissidia - Final Fantasy (USA).json
+developer: Square Enix
+publisher: Square Enix
+genre: Fighting;Role-Playing
+description:
+  Cosmos, the goddess of harmony. Chaos, the god of discord. Reigning from distant
+  realms, the two gods had gathered warriors from all lands to lead them in savage
+  war. Cosmos and Chaos were of equal strength. It was believed the conflict would
+  last forever. However, the balance is now broken. Those who answered Chaos's
+  call created an inexhaustible force. And under vicious attack without relent,
+  the warriors fighting for Cosmos started to fall one by one. The conflict that
+  has continued for eons is now about to end in Chaos's favor. The world has been
+  torn asunder, sinking into a vortex of disorder. As for the few surviving
+  warriors- their fates have yet to be determined.
+release: 2009-08-25
+players: 2
+assets.boxfront: BoxFront/Dissidia - Final Fantasy (USA).jpg
+assets.boxback: BoxBack/Dissidia - Final Fantasy (USA).jpg
+assets.background: Background/Dissidia - Final Fantasy (USA).jpg
+assets.screenshot: Screenshot/Dissidia - Final Fantasy (USA).jpg
+assets.video: Video/Dissidia - Final Fantasy (USA).mp4
+x-co-op: No
+
+
+game: Dissidia 012 - Duodecim Final Fantasy (USA) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Dissidia 012 - Duodecim Final Fantasy (USA) (En,Fr,De,Es,It)/Dissidia 012 - Duodecim Final Fantasy (USA) (En,Fr,De,Es,It).json
+developer: Square Enix
+publisher: Square Enix
+genre: Fighting;Role-Playing
+description:
+  The prequel to Square Enix's 2009 title Dissidia: Final Fantasy, Dissidia 012
+  also contains the original's story remade to fit the new mechanics. Dissidia 012
+  tells the tale of the twelfth cycle of the ongoing War of the Gods, and the
+  heroes summoned to the realm for that cycle.
+  .
+  The goal of the game is to defeat a given opponent, or a gauntlet of opponents,
+  depending on the free-play style chosen, or to complete a series of dungeons
+  containing opponents in story-mode. Largely the same as its predecessor,
+  gameplay-wise, it nonetheless contains modifications such as the Assist system,
+  through which you can call another character to execute attacks on your
+  opponent, or take a hit for you. The story mode also has the addition of a
+  free-roam game world, retaining the tile-based system of its predecessor only
+  for dungeons entered from the gameworld via "gateways". As before, it retains
+  the character level-up and equipment/skill customisation elements.
+  .
+  A rather large character roster now includes characters from Final Fantasy I to
+  Final Fantasy XIII and every game in between.
+release: 2011-03-22
+players: 2
+assets.boxfront: BoxFront/Dissidia 012 - Duodecim Final Fantasy (USA) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Dissidia 012 - Duodecim Final Fantasy (USA) (En,Fr,De,Es,It).jpg
+assets.background: Background/Dissidia 012 - Duodecim Final Fantasy (USA) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Dissidia 012 - Duodecim Final Fantasy (USA) (En,Fr,De,Es,It).jpg
+x-co-op: No
+
+
+game: Dot Hack - Link (Japan)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Dot Hack - Link (Japan)/Dot Hack - Link (Japan).json
+developer: Cyberconnect2
+publisher: Namco Bandai Games
+genre: Action;Role-Playing
+description:
+  The first game in the .hack series for PSP (and the planned final game for the
+  franchise), .hack//LINK logs player into a new version of its virtual landscape
+  called The World R:X (the "R" stands for "Revision"). Set 10 years after the
+  last .Hack, players take control of Tokio Kuryu, a second year junior-high
+  student. Presented through manga-style visuals, the game's story promises to
+  clear up the mysteries from past entries. Over 100 characters from past .hack
+  games, anime, manga, and books will make an appearance.
+  .
+  Gameplay promises to retain the basics of past titles, with players facing off
+  in battle against enemies as they explore dungeons. The difference here is that
+  you move around in a party of two, with the CPU-controlling the other character.
+  The game will include 33 such CPU-controlled characters. For the PSP game, the
+  battle system has been changed to a more action-heavy combat system.
+release: 2010-03-04
+players: 1
+assets.boxfront: BoxFront/Dot Hack - Link (Japan).jpg
+assets.boxback: BoxBack/Dot Hack - Link (Japan).jpg
+assets.background: Background/Dot Hack - Link (Japan).jpg
+assets.screenshot: Screenshot/Dot Hack - Link (Japan).jpg
+assets.video: Video/Dot Hack - Link (Japan).mp4
+x-co-op: No
+
+
+game: Dungeon Siege - Throne of Agony (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Dungeon Siege - Throne of Agony (USA)/Dungeon Siege - Throne of Agony (USA).json
+developer: SuperVillain Studios
+publisher: 2K Games
+genre: Action;Role-Playing
+description:
+  Throne of Agony is the sequel to Dungeon Siege II and it picks up the story
+  where the previous game and its add-on left off; after the 2nd cataclysm altered
+  the world of Aranna. Along with the familiar hack 'n slash dungeon crawling
+  gameplay, it also has new playable characters and a non-linear, single player
+  campaign, and co-operative multi-player. There are two different game modes:
+  Normal and Elite. Player can choose from multiple characters, which are
+  customized as they level up into Hero classes and Legendary classes.
+  .
+  There are numerous pets and companions to play with. Gameplay involves switching
+  between unique pets and companions to use their special powers. Face over 100
+  monsters (some from the Dungeon Siege world as well as many new creatures).
+  .
+  Cooperative campaign allows you to play with a friend where each player can
+  bring a pet or companion. The game also has multi-player "Battle Arenas" for
+  players who don't have time for a full campaign.
+release: 2006-10-30
+players: 2
+assets.boxfront: BoxFront/Dungeon Siege - Throne of Agony (USA).jpg
+assets.boxback: BoxBack/Dungeon Siege - Throne of Agony (USA).jpg
+assets.background: Background/Dungeon Siege - Throne of Agony (USA).jpg
+assets.screenshot: Screenshot/Dungeon Siege - Throne of Agony (USA).jpg
+assets.video: Video/Dungeon Siege - Throne of Agony (USA).mp4
+x-co-op: No
+
+
+game: Dungeons & Dragons Tactics (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Dungeons & Dragons Tactics (USA) (v1.01)/Dungeons & Dragons Tactics (USA) (v1.01).json
+developer: Kuju Entertainment
+publisher: Atari
+genre: Role-Playing;Strategy
+description:
+  Dungeons & Dragons Tactics is a fantasy role-playing game, utilizing the 3.5
+  Edition core rule set, which takes place in the eastern border reaches of the
+  Lindesi, a group of kingdoms governed by a human High-King far to the West,
+  .
+  Players begin a campaign by selecting or creating a character to be the hero,
+  then selecting, or creating a group of companions to form the party. At the
+  start, you may only have five companions in your party, but as the campaign
+  continues, you may recruit up to eleven companions. You may select pre-generated
+  characters, create your own group of characters for the party, or even use the
+  quick-start option which will automatically provide you with a set of
+  pre-generated characters. If the main hero you create or select for the campaign
+  dies, the campaign will end. You may select from all eleven core character
+  classes: barbarian, bard, cleric, druid, fighter, monk, paladin, ranger, rogue,
+  sorcerer, and wizard, plus the psionic warrior and psion. Additional party
+  members you may recruit during the adventure are found in the marketplace, for
+  example, you may recruit clerics and paladins at the Temple, and fighters,
+  barbarians and psychic warriors may be recruited at the Mercenary Hall.
+  .
+  The adventure is played by moving the party icon along the map, where you make
+  choices on which locations to enter, and with whom you may interact, but combat
+  is handled in turn-based tactics fashion, on a grid with five-foot squares,
+  where initiative determines the order when each character moves, and each
+  character during their turn may perform actions according to the 3.5 Edition
+  combat rules. Each character, however, has several options during their turn
+  from the Action menu. Spells and psionics are also available for the appropriate
+  characters. For those unfamiliar with the 3.5 Edition rule set, the manual has a
+  glossary of D&D rules terms and there is a glossary available from the main menu
+  in the game.
+  .
+  Wireless multiplayer mode allows you to host or join a game with up to four
+  players, featuring game modes such as Dungeon Bash, or Deathmatch Battle, but
+  you are only permitted to use pre-generated characters.
+release: 2007-08-14
+players: 4
+assets.boxfront: BoxFront/Dungeons & Dragons Tactics (USA) (v1.01).jpg
+assets.boxback: BoxBack/Dungeons & Dragons Tactics (USA) (v1.01).jpg
+assets.background: Background/Dungeons & Dragons Tactics (USA) (v1.01).jpg
+assets.screenshot: Screenshot/Dungeons & Dragons Tactics (USA) (v1.01).jpg
+assets.video: Video/Dungeons & Dragons Tactics (USA) (v1.01).mp4
+x-co-op: No
+
+
+game: EA Replay (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/EA Replay (USA) (v1.01)/EA Replay (USA) (v1.01).json
+developer: Team Fusion
+publisher: Electronic Arts
+genre: Action;Flight Simulator;Racing;Shooter;Sports
+description:
+  This is a compilation of some of Electronic Arts' early titles (1990-1995)
+  emulating the SNES and Genesis versions. The games included are:
+  .
+  B.O.B.\n
+  Budokan\n
+  Desert Strike\n
+  Jungle Strike\n
+  Haunting Starring Polterguy\n
+  Mutant League Football\n
+  Road Rash\n
+  Road Rash II\n
+  Road Rash 3\n
+  Syndicate\n
+  Ultima: The Black Gate\n
+  Virtual Pinball\n
+  Wing Commander\n
+  Wing Commander: The Secret Missions
+  .
+  In some of the games (Road Rash II, Mutant League Football and Budokan) you can
+  go head-to-head in multiplayer. There is also unlockable original game art, the
+  Road Rash games have new music, and you can save your games at any point.
+release: 2006-11-14
+players: 2
+assets.boxfront: BoxFront/EA Replay (USA) (v1.01).jpg
+assets.boxback: BoxBack/EA Replay (USA) (v1.01).jpg
+assets.background: Background/EA Replay (USA) (v1.01).jpg
+assets.screenshot: Screenshot/EA Replay (USA) (v1.01).jpg
+assets.video: Video/EA Replay (USA) (v1.01).mp4
+x-co-op: Yes
+
+
+game: Elder Scrolls Travels, The - Oblivion (USA) (Proto) (2007-04-27)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Elder Scrolls Travels, The - Oblivion (USA) (Proto) (2007-04-27)/Elder Scrolls Travels, The - Oblivion (USA) (Proto) (2007-04-27).json
+developer: The Climax Group
+publisher: Bethesda Softworks
+genre: Action;Adventure;Role-Playing
+description:
+  The Elder Scrolls Travels: Oblivion is a cancelled action RPG in The Elder
+  Scrolls series that was planned to be released for PSP, based on the main
+  Oblivion game released for PC, Playstation 3 and Xbox 360 in 2006. The game was
+  in development at Climax Group London (former Syrox Developments, from Kingston
+  upon Thames, UK) with some help from Climax Group Los Angeles  in 2005 / 2006,
+  with new characters, inventory system, combat system, levels and more features
+  exclusive for this PSP version.
+  .
+  Because of the Playstation Portable hardware limitations, Elder Scrolls Travels:
+  Oblivion was going to be a more linear game than the original Bethesda Game
+  Studios version. There was a hub world which contained various vendors, NPCs and
+  story characters, and player would have used a teleportation crystal to go to
+  each of the explorable areas of the game.
+  .
+  However, the game was never released. There has never been any official reason
+  given for its cancellation or even official confirmation that it was canceled.
+  Bethesda Softworks has declined to speak on the matter.
+  .
+  On 17 May 2016, footage as well as copies of beta builds of the game from June
+  2006 and January 2007 were leaked. The footage was taken down by ZeniMax, but
+  restored shortly after.
+release: 2007-04-27
+players: 1
+assets.boxfront: BoxFront/Elder Scrolls Travels, The - Oblivion (USA) (Proto) (2007-04-27).jpg
+assets.boxback: BoxBack/Elder Scrolls Travels, The - Oblivion (USA) (Proto) (2007-04-27).jpg
+assets.background: Background/Elder Scrolls Travels, The - Oblivion (USA) (Proto) (2007-04-27).jpg
+assets.screenshot: Screenshot/Elder Scrolls Travels, The - Oblivion (USA) (Proto) (2007-04-27).jpg
+x-co-op: No
+
+
+game: EyePet (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/EyePet (USA) (En,Fr,Es,Pt)/EyePet (USA) (En,Fr,Es,Pt).json
+developer: Spiral House Ltd.
+publisher: Sony Computer Entertainment America, Inc.
+genre: Life Simulation
+description:
+  EyePet is a pet simulation game with minigames and customization. Modeled after
+  the original PS3 game it changes a few things for the portable format. The game
+  requires a PSP camera and a "magic card" (included within the game package) to
+  play. By pointing the PSP with the camera attached on the magic card the player
+  makes the cute creature appear on screen. The player can play a variety of games
+  with the pet, such as bowling, fishing or jumping on trampolines. The game
+  encourages playing in different environments; by doing so the player has a
+  chance of finding "treasures" - customization items. In a separate in-game area
+  called Pet home the player may take care of the pet - feed it, wash it etc. and
+  also change its appearance to their liking.
+release: 2010-11-02
+players: 1
+assets.boxfront: BoxFront/EyePet (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/EyePet (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/EyePet (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/EyePet (USA) (En,Fr,Es,Pt).jpg
+assets.video: Video/EyePet (USA) (En,Fr,Es,Pt).mp4
+x-co-op: No
+
+
+game: Fat Princess - Fistful of Cake (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Fat Princess - Fistful of Cake (USA) (En,Fr,Es)/Fat Princess - Fistful of Cake (USA) (En,Fr,Es).json
+developer: SuperVillain Studios
+publisher: Sony
+genre: Action;Strategy
+description:
+  Fast-paced and strategic, Fat Princess: Fistful of Cake pits two hordes of
+  players against each other in a comic medieval battle on the PSP. The player's
+  goal is to rescue a beloved princess from the enemy castle. There is a catch,
+  though; the adversary has been feeding her magical cake to make her heavier to
+  carry. Therefore, it will take much of the army working together to carry her
+  across the battlefield. Team balance and strategy is crucial in Fat Princess:
+  Fistful of Cake because players can switch between five different character
+  classes, literally, at the drop of a hat. The name of the game is cooperation,
+  whether it is flinging another player over the enemy's walls with a teeterboard,
+  healing him while he charges into battle, or adding muscle to carry the hearty
+  princess to safety. The comical, quirky, and loveable cast of characters in Fat
+  Princess: Fistful of Cake has been developed specifically for optimization on
+  the PSP. Now players can have their cake and take it on the go, too.
+release: 2010-05-04
+players: 4
+assets.boxfront: BoxFront/Fat Princess - Fistful of Cake (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Fat Princess - Fistful of Cake (USA) (En,Fr,Es).jpg
+assets.background: Background/Fat Princess - Fistful of Cake (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Fat Princess - Fistful of Cake (USA) (En,Fr,Es).jpg
+assets.video: Video/Fat Princess - Fistful of Cake (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Final Fantasy - 20th Anniversary Edition (USA) (En,Ja) (System 3.03)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy - 20th Anniversary Edition (USA) (En,Ja) (System 3.03)/Final Fantasy - 20th Anniversary Edition (USA) (En,Ja) (System 3.03).json
+developer: Square Enix
+publisher: Square Enix
+genre: Role-Playing
+description:
+  An evil shroud covers the world in darkness. You must restore the powers of
+  earth, wind, fire and water to the Four Orbs. Create your own band of 4 Light
+  Warriors from fighters, thieves, martial artists, and magicians. You'll need all
+  their skills to triumph in this massive role-playing adventure. Your treacherous
+  journey takes you to all parts of a strange new world. Explore dangerous castles
+  and dark caverns where dadly perils and great rewards, await at every turn.
+  Hundreds of ferocious monsters block your path. With patience, skill, and
+  cunning, you can defeat them.
+release: 2007-06-26
+players: 1
+assets.boxfront: BoxFront/Final Fantasy - 20th Anniversary Edition (USA) (En,Ja) (System 3.03).jpg
+assets.boxback: BoxBack/Final Fantasy - 20th Anniversary Edition (USA) (En,Ja) (System 3.03).jpg
+assets.background: Background/Final Fantasy - 20th Anniversary Edition (USA) (En,Ja) (System 3.03).jpg
+assets.screenshot: Screenshot/Final Fantasy - 20th Anniversary Edition (USA) (En,Ja) (System 3.03).jpg
+x-co-op: No
+
+
+game: Final Fantasy II - 20th Anniversary Edition (USA) (En,Ja)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy II - 20th Anniversary Edition (USA) (En,Ja)/Final Fantasy II - 20th Anniversary Edition (USA) (En,Ja).json
+developer: Square Enix
+publisher: Square Enix
+genre: Role-Playing
+description:
+  In FINAL FANTASY II, a malevolent emperor has called upon monsters from a
+  demonic realm to take over the world, ending what seemed to be an eternal period
+  of peace. Thousands of lives succumb to their attacks, leaving many children
+  orphaned. From the destruction rise four young survivors who will take it upon
+  themselves to stop the merciless ruler and avenge the death of their parents.
+  .
+  Remastered exclusively for the PSP system, this all-new anniversary edition
+  features all-new character art, updated graphics, new dungeons, full 16:9
+  widescreen presentation and an updated camera view that gives players a new
+  vantage point on such a timeless classic RPG.
+release: 2007-07-24
+players: 1
+assets.boxfront: BoxFront/Final Fantasy II - 20th Anniversary Edition (USA) (En,Ja).jpg
+assets.boxback: BoxBack/Final Fantasy II - 20th Anniversary Edition (USA) (En,Ja).jpg
+assets.background: Background/Final Fantasy II - 20th Anniversary Edition (USA) (En,Ja).jpg
+assets.screenshot: Screenshot/Final Fantasy II - 20th Anniversary Edition (USA) (En,Ja).jpg
+x-co-op: No
+
+
+game: Final Fantasy III (Japan) (En,Ja) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy III (Japan) (En,Ja) (v1.01)/Final Fantasy III (Japan) (En,Ja) (v1.01).json
+developer: Square Enix
+publisher: Square Enix
+genre: Role-Playing
+description:
+  Protected by the crystals of light, the once peaceful land has forever been
+  changed by the great tremor. Without warning, the earthquake pulled the crystals
+  into the earth, upsetting the world's fragile balance. It seems as if all hope
+  is lost—but as the Gulgan prophecy foretold, four souls blessed with the light
+  shall once again restore balance to the world...
+  .
+  Near the small village of Ur, fate guides Luneth to a sentient crystal that
+  changes his life forever. As the light of the crystal fades, Luneth embarks on a
+  journey to seek three others who share his destiny to search for the remaining
+  crystals, and fight the battle of light and darkness...
+  .
+  This PlayStation Portable version of Final Fantasy III (based off the 2006
+  Nintendo DS remake) features lush 3D graphic enhancements as well as additional
+  bonus content.
+release: 2012-09-25
+players: 1
+assets.boxfront: BoxFront/Final Fantasy III (Japan) (En,Ja) (v1.01).jpg
+assets.boxback: BoxBack/Final Fantasy III (Japan) (En,Ja) (v1.01).jpg
+assets.background: Background/Final Fantasy III (Japan) (En,Ja) (v1.01).jpg
+assets.screenshot: Screenshot/Final Fantasy III (Japan) (En,Ja) (v1.01).jpg
+assets.video: Video/Final Fantasy III (Japan) (En,Ja) (v1.01).mp4
+x-co-op: No
+
+
+game: Final Fantasy IV - The Complete Collection (USA) (En,Ja,Fr)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy IV - The Complete Collection (USA) (En,Ja,Fr)/Final Fantasy IV - The Complete Collection (USA) (En,Ja,Fr).json
+developer: Square Enix
+publisher: Square Enix
+genre: Role-Playing
+description:
+  Final Fantasy IV: The Complete Collection is a compilation that includes the
+  original game Final Fantasy IV, along with Final Fantasy IV: The After Years,
+  for PlayStation Portable. In addition, it includes a new story to link the two
+  games, called «Interlude». The graphics are kept in 2D, as in the reissues of
+  Final Fantasy and Final Fantasy II, also for the PSP. It was released in Japan
+  on March 24, 2011, later in the United States on April 19, arrived in Europe on
+  April 22 of the same year, and in Australia on April 28 for PlayStation Network.
+release: 2011-03-24
+players: 1
+assets.boxfront: BoxFront/Final Fantasy IV - The Complete Collection (USA) (En,Ja,Fr).jpg
+assets.boxback: BoxBack/Final Fantasy IV - The Complete Collection (USA) (En,Ja,Fr).jpg
+assets.background: Background/Final Fantasy IV - The Complete Collection (USA) (En,Ja,Fr).jpg
+assets.screenshot: Screenshot/Final Fantasy IV - The Complete Collection (USA) (En,Ja,Fr).jpg
+assets.video: Video/Final Fantasy IV - The Complete Collection (USA) (En,Ja,Fr).mp4
+x-co-op: No
+
+
+game: Final Fantasy Reishiki (Japan)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy Reishiki (Japan)/Final Fantasy Reishiki (Japan).json
+developer: Square Enix
+publisher: Square Enix
+genre: Action;Role-Playing
+description:
+  Final Fantasy: Type-0 is an RPG in the Final Fantasy series. It is part of the
+  Fabula Nova Crystallis project and, although not having much to do with Final
+  Fantasy XIII, shares its mythology.
+  .
+  The game is a RPG in which the characters travel to get missions and attack
+  enemy strongholds to complete them. In each mission, three characters out of 14
+  are selected, each having their own style, weapons and abilities. The battle
+  system is an Active System Battle (ATB) that allows the control of many
+  characters, Characters who were KO'd in battle must be revived in town before
+  being used again. Each character have a unique summon that can be used for 5
+  minutes in battle and can be levelled-up. The ATB kai, as it is called, allows
+  for up to three players to connect via ad-hoc and send each other emergency
+  back-up.
+  .
+  Final Fantasy: Type-0 is set in the world of Orience, divided in four kingdoms:
+  the Suzaku Fiefdom of Rubrum, the Milites Empire, the Lorican Alliance, and the
+  Kingdom of Concordia, each having its own emblem based on four Japanese
+  mythological beasts: the phoenix Suzaku, the Turtle Genbu, the tiger Byakko and
+  the dragon Seiryuu. Every kingdom is in possession of a crystal that an mark
+  humans as their servants, called l'Cie. Character growth is based on the Alto
+  Crystarium system, using energy called phantoma to increase the character's
+  abilities.
+  .
+  The later released PC, PS4 and Xbox One versions are called Final Fantasy:
+  Type-0 HD. They are available worldwide instead of the Japan-only PSP version.
+  The content is almost completely identical, with a focus on localization and
+  improvised visuals. It does not have the multiplayer functionality of the PSP
+  version, but adds additional difficulty levels.
+release: 2011-10-27
+players: 1
+assets.boxfront: BoxFront/Final Fantasy Reishiki (Japan).jpg
+assets.boxback: BoxBack/Final Fantasy Reishiki (Japan).jpg
+assets.background: Background/Final Fantasy Reishiki (Japan).jpg
+assets.screenshot: Screenshot/Final Fantasy Reishiki (Japan).jpg
+x-co-op: No
+
+
+game: Final Fantasy Reishiki (Japan) (Translated)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy Reishiki (Japan) (Translated)/Final Fantasy Reishiki (Japan) (Translated).json
+developer: Square Enix
+publisher: Square Enix
+genre: Action;Role-Playing
+description:
+  Final Fantasy: Type-0 is an RPG in the Final Fantasy series. It is part of the
+  Fabula Nova Crystallis project and, although not having much to do with Final
+  Fantasy XIII, shares its mythology.
+  .
+  The game is a RPG in which the characters travel to get missions and attack
+  enemy strongholds to complete them. In each mission, three characters out of 14
+  are selected, each having their own style, weapons and abilities. The battle
+  system is an Active System Battle (ATB) that allows the control of many
+  characters, Characters who were KO'd in battle must be revived in town before
+  being used again. Each character have a unique summon that can be used for 5
+  minutes in battle and can be levelled-up. The ATB kai, as it is called, allows
+  for up to three players to connect via ad-hoc and send each other emergency
+  back-up.
+  .
+  Final Fantasy: Type-0 is set in the world of Orience, divided in four kingdoms:
+  the Suzaku Fiefdom of Rubrum, the Milites Empire, the Lorican Alliance, and the
+  Kingdom of Concordia, each having its own emblem based on four Japanese
+  mythological beasts: the phoenix Suzaku, the Turtle Genbu, the tiger Byakko and
+  the dragon Seiryuu. Every kingdom is in possession of a crystal that an mark
+  humans as their servants, called l'Cie. Character growth is based on the Alto
+  Crystarium system, using energy called phantoma to increase the character's
+  abilities.
+  .
+  The later released PC, PS4 and Xbox One versions are called Final Fantasy:
+  Type-0 HD. They are available worldwide instead of the Japan-only PSP version.
+  The content is almost completely identical, with a focus on localization and
+  improvised visuals. It does not have the multiplayer functionality of the PSP
+  version, but adds additional difficulty levels.
+release: 2011-10-27
+players: 1
+assets.boxfront: BoxFront/Final Fantasy Reishiki (Japan) (Translated).jpg
+assets.boxback: BoxBack/Final Fantasy Reishiki (Japan) (Translated).jpg
+assets.background: Background/Final Fantasy Reishiki (Japan) (Translated).jpg
+assets.screenshot: Screenshot/Final Fantasy Reishiki (Japan) (Translated).jpg
+x-co-op: No
+
+
+game: Final Fantasy Tactics - The War of the Lions (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy Tactics - The War of the Lions (USA)/Final Fantasy Tactics - The War of the Lions (USA).json
+developer: Square Enix
+publisher: Square Enix
+genre: Role-Playing;Strategy
+description:
+  Final Fantasy Tactics was a big move for the whole Final Fantasy franchise into
+  different fields. Tactics combines traditional elements of the Final Fantasy
+  series with a completely different game mechanics and battle system. It was the
+  1st game during the Final Fantasy 32-bit era using a 3D, isometric, rotatable
+  playing field, with bitmap sprite characters and a turn based strategy system.
+  .
+  In the game you build up a team by recruiting many available characters you meet
+  during your travels and stocking up plenty of items, to defeat various enemies
+  waiting on your path. The game features a very complex character class(job)
+  system where each character begins his way with a job such as Squire or Chemist.
+  Successfully participating in battles, characters can later select one of more
+  advanced jobs, with a total of 19 to choose from. In addition there are certain
+  monsters and computer controlled "guests" with their own jobs and special
+  abilities available to learn. In total, over 400 abilities are available which
+  leads to nearly endless combinations.
+  .
+  The PSP version of the game mostly reiterates the original for the PSOne. Visual
+  presentation is almost a 1:1 copy, looking like the old version with a zoomed-in
+  camera to make it fit the PSP screen. Port developer Tose added cel-shaded
+  introduction movies and numerous animation sequences played after each chapter
+  ends. Some maps were completely remade as well, but you still cannot skip event
+  scenes.
+  .
+  Also the PSP version features two new playable characters: Balthier, from Final
+  Fantasy XII and Luso from Final Fantasy Tactics A2. Two new job classes have
+  been added - the completely new Onion Knight and the Dark Knight class which was
+  available on the PSOne only after using a cheat code. There are two wireless
+  multiplayer options available once you've reached the world map (just go into a
+  bar in any town). One is Coliseum (Versus Battle Mode), the second is
+  Cooperative Challenge (team mission).
+release: 2007-10-09
+players: 1
+assets.boxfront: BoxFront/Final Fantasy Tactics - The War of the Lions (USA).jpg
+assets.boxback: BoxBack/Final Fantasy Tactics - The War of the Lions (USA).jpg
+assets.background: Background/Final Fantasy Tactics - The War of the Lions (USA).jpg
+assets.screenshot: Screenshot/Final Fantasy Tactics - The War of the Lions (USA).jpg
+assets.video: Video/Final Fantasy Tactics - The War of the Lions (USA).mp4
+x-co-op: No
+
+
+game: FlatOut - Head On (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/FlatOut - Head On (USA) (v1.01)/FlatOut - Head On (USA) (v1.01).json
+developer: Six by Nine Ltd
+publisher: Empire Interactive
+genre: Racing
+description:
+  FlatOut: Head On is a continuation of the FlatOut universe featuring the same
+  set of drivers from FlatOut and FlatOut 2 along with the same game modes.
+  .
+  There is the tradition championship mode where players race in a series of
+  events in a tournament style, completing races to earn points, at the end of the
+  tournament points are tallied and if they player can finish in either first,
+  second or third place overall, they can unlock the next event. There are also
+  minigames as well such as hurling the driver in a game of basketball, bowling
+  and baseball to name a few.
+  .
+  There are also a Party Mode where eight-players sharing a PSP can compete in a
+  series of stunts to earn points to out do each other. There is also online
+  capabilities utilizing Ad-hoc in a 4-way single race.
+release: 2008-04-04
+players: 1
+assets.boxfront: BoxFront/FlatOut - Head On (USA) (v1.01).jpg
+assets.boxback: BoxBack/FlatOut - Head On (USA) (v1.01).jpg
+assets.background: Background/FlatOut - Head On (USA) (v1.01).jpg
+assets.screenshot: Screenshot/FlatOut - Head On (USA) (v1.01).jpg
+assets.video: Video/FlatOut - Head On (USA) (v1.01).mp4
+x-co-op: No
+
+
+game: Frantix - A Puzzle Adventure (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Frantix - A Puzzle Adventure (USA) (v1.01)/Frantix - A Puzzle Adventure (USA) (v1.01).json
+developer: Killer Game
+publisher: Sony Online Entertainment
+genre: Puzzle;General
+description:
+  Frantix is one of the first character-based 3D puzzle-solving adventures for the
+  PSP system. Frantix offers frenzied puzzle-solving action, beautiful 3D
+  graphics, more than 150 challenging levels for players to enjoy, power pick-ups,
+  and a diverse array of monsters and unique obstacles. The game features quick-
+  paced action, surreal environments and challenging levels with deadly traps and
+  dangerous hazards for a fun and captivating gameplay experience.
+release: 2005-09-19
+players: 1
+assets.boxfront: BoxFront/Frantix - A Puzzle Adventure (USA) (v1.01).jpg
+assets.boxback: BoxBack/Frantix - A Puzzle Adventure (USA) (v1.01).jpg
+assets.background: Background/Frantix - A Puzzle Adventure (USA) (v1.01).jpg
+assets.screenshot: Screenshot/Frantix - A Puzzle Adventure (USA) (v1.01).jpg
+assets.video: Video/Frantix - A Puzzle Adventure (USA) (v1.01).mp4
+x-co-op: No
+
+
+game: Grand Knight History (Japan)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Grand Knight History (Japan)/Grand Knight History (Japan).json
+developer: Vanillaware
+publisher: XSEED Games
+genre: Role-Playing;Japanese-Style
+description:
+  While these three nations vie for continental domination, one captain must
+  choose a nation with which to align him/herself, then recruit teams of able-
+  bodied soldiers and train them into battle-ready knights to send off into the
+  ever-changing online war campaign. It is up to players to choose an allegiance
+  with one of the three factions, then progress through offline questing and
+  intense 30-hour online skirmishes, all making use of deep, strategic RPG combat
+  and expansive customization. Race, sex, appearance, job class, sub-class and
+  weapon type are all freely alterable for every team member, so no two knights
+  are ever the same; and unique massively-multiplayer online functionality allows
+  players to test their knights against others from all corners of North America,
+  without even requiring a constant internet connection.
+release: 2011-09-01
+players: 1
+assets.boxfront: BoxFront/Grand Knight History (Japan).jpg
+assets.boxback: BoxBack/Grand Knight History (Japan).jpg
+assets.background: Background/Grand Knight History (Japan).jpg
+assets.screenshot: Screenshot/Grand Knight History (Japan).jpg
+x-co-op: No
+
+
+game: Growlanser - Wayfarer of Time (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Growlanser - Wayfarer of Time (USA)/Growlanser - Wayfarer of Time (USA).json
+developer: Career Soft
+publisher: Atlus
+genre: Role-Playing;Strategy
+description:
+  Never before released outside of Japan and widely considered the best entry in
+  the long-running franchise, this PSP system iteration of the fourth chapter in
+  the Growlanser saga delivers visuals remastered for PSP system's 16:9
+  widescreen, a vastly expanded script with tons of new characters to meet and
+  quests to complete, a wealth of new ending possibilities, and much more, making
+  it the first and only version of the game North American fans will ever want!
+release: 2011-08-18
+players: 1
+assets.boxfront: BoxFront/Growlanser - Wayfarer of Time (USA).jpg
+assets.boxback: BoxBack/Growlanser - Wayfarer of Time (USA).jpg
+assets.background: Background/Growlanser - Wayfarer of Time (USA).jpg
+assets.screenshot: Screenshot/Growlanser - Wayfarer of Time (USA).jpg
+assets.video: Video/Growlanser - Wayfarer of Time (USA).mp4
+x-co-op: No
+
+
+game: Gungnir (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Gungnir (USA)/Gungnir (USA).json
+developer: Sting
+publisher: Atlus
+genre: Role-Playing;Strategy
+description:
+  In a land ravaged by disparity where the impoverished must battle for survival,
+  the fate of all is thrust into uncertainty when rebels happen upon custody of a
+  young female noble and a magical spear of immeasurable power falls from the
+  heavens. Now, hunted by incumbent powers desperate to reclaim the girl and armed
+  with a weapon capable of reshaping the realm, the Resistance must wage war to
+  deliver themselves from the tyranny of their oppressors.\n
+  As original as its narrative, Gungnir's strategy RPG mechanics offer a number of
+  fresh twists on an expertly honed formula. Building upon the traditional action
+  queue of turn-based strategy RPGs, actions in Gungnir all have a numerical wait
+  interval associated with them. Faster actions bear smaller numbers, allowing
+  them to precede slower preexisting attacks. Should the player wish, they may
+  sacrifice tactical points, which afford them more combat options, in order to
+  accelerate actions. This classic balance of risk and reward, a staple of Sting
+  titles, enriches the Gungnir's deep strategic battles and gives the player far
+  more critical decisions to weigh.
+release: 2011-05-19
+players: 1
+assets.boxfront: BoxFront/Gungnir (USA).jpg
+assets.boxback: BoxBack/Gungnir (USA).jpg
+assets.background: Background/Gungnir (USA).jpg
+assets.screenshot: Screenshot/Gungnir (USA).jpg
+assets.video: Video/Gungnir (USA).mp4
+x-co-op: No
+
+
+game: Half-Minute Hero (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Half-Minute Hero (USA)/Half-Minute Hero (USA).json
+developer: Opus
+publisher: Xseed Games
+genre: Action;Role-Playing
+description:
+  For centuries, an epic battle between humans and evil lords has been raging,
+  destroying everything in its path. Throughout that time, heroes and legends have
+  risen above the chaos, only to eventually disappear into the pages of history.
+  The would-be hero, the narcissistic evil lord, the crossbow-wielding
+  princess...These three were the champions of their eras and even now, still have
+  one last part to play. The civilized world continues to be laid siege to by
+  relentless evil adversaries and all that remains are the ruins of castles and
+  the bodies of the faithful knights who once proudly protected them. As the last
+  wandering sage and final hope for humanity, it is up to the protagonist to
+  somehow transcend time and death to unite these legends and their unique powers
+  in one last battle against the ultimate evil lord.
+release: 2009-10-13
+players: 1
+assets.boxfront: BoxFront/Half-Minute Hero (USA).jpg
+assets.boxback: BoxBack/Half-Minute Hero (USA).jpg
+assets.background: Background/Half-Minute Hero (USA).jpg
+assets.screenshot: Screenshot/Half-Minute Hero (USA).jpg
+assets.video: Video/Half-Minute Hero (USA).mp4
+x-co-op: No
+
+
+game: Hexyz Force (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Hexyz Force (USA)/Hexyz Force (USA).json
+developer: Sting
+publisher: Atlus
+genre: Role-Playing
+description:
+  One side of Berge was bathed in constant light, and is known as Lustrous Berge.
+  The other half is cloaked in constant darkness, and is known as Dark Berge. A
+  miasma-filled chasm called the Black Precipice divides the two halves and has
+  been in place for so long that most residents of the world don’t even know that
+  the other half exists... And now, events loom that threaten both halves of the
+  world. Fate has chosen a champion from each half, and now, the player must
+  choose which champion to play as. The stage has been set. Will it be the best of
+  times, or the worst of times?
+  .
+  In Hexyz Force, players choose one of the two main characters, either young
+  priestess Cecilia "Ceci" Armaclite or veteran knight Levant von Schweitzer. Both
+  paths tell different parts of the story, so the game is effectively two RPGs in
+  one. Combat is initiated on the field map, but much like another Atlus PSP
+  title, battles can be avoided by dodging the enemies on the field.
+  .
+  If combat is entered, the game turns into a standard turn-based RPG, but with a
+  rock-paper-scissors elemental system called the Divine Aspects. Each weapon is
+  linked to an element, and if the attacks follow the proper pattern, a damage
+  gauge will build that will multiply the damage once the chain breaks. Both the
+  enemy and the player have access to the gauge, so the enemy can use it to unload
+  huge damage onto the player.
+  .
+  As is the case with most Sting RPGs, weapons are destructible items. The game
+  also has a weapon crafting and fusion system that replaces shops. Players get
+  components to create items from battle or by collecting them from Harvest Points
+  that are spread around the world.
+release: 2010-06-02
+players: 1
+assets.boxfront: BoxFront/Hexyz Force (USA).jpg
+assets.boxback: BoxBack/Hexyz Force (USA).jpg
+assets.background: Background/Hexyz Force (USA).jpg
+assets.screenshot: Screenshot/Hexyz Force (USA).jpg
+assets.video: Video/Hexyz Force (USA).mp4
+x-co-op: No
+
+
+game: Infected (USA) (v1.02)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Infected (USA) (v1.02)/Infected (USA) (v1.02).json
+developer: Planet Moon Studios
+publisher: Majesco Games
+genre: Action;Shooter
+description:
+  Infected is a fast-paced third person comedy zombie shooter. The focus is on a
+  humorous plot and combo-based zombie killing.
+  .
+  It's Christmas time in New York and Zombies have come to ruin the festivities.
+  As New York Cop Agent Stevens, you find out that not only are you immune to the
+  zombie virus, but your blood is actually so powerful, it will make a zombie
+  explode.
+  .
+  The main focus of the gameplay is shooting holes in the zombies until they are
+  weak enough for you to fire a vial of your own blood into them, causing an
+  explosion. Weaken enough zombies, fire a blood vial into one, and watch the
+  chain reaction as exploding zombies send your anti-zombie blood onto other
+  zombies.
+  .
+  The game was one of the first online PSP games, and featured a mode where
+  defeating an opponent would give them your virus, and force their avatar online
+  to look like your avatar. If they in turn defeated someone, your virus would be
+  passed onto them as well. At any time you could look at a world map to see where
+  on earth your strain of virus had travelled.
+release: 2005-11-15
+players: 4
+assets.boxfront: BoxFront/Infected (USA) (v1.02).jpg
+assets.boxback: BoxBack/Infected (USA) (v1.02).jpg
+assets.background: Background/Infected (USA) (v1.02).jpg
+assets.screenshot: Screenshot/Infected (USA) (v1.02).jpg
+assets.video: Video/Infected (USA) (v1.02).mp4
+x-co-op: No
+
+
+game: Invizimals (USA) (En,Fr,Es) (v1.02)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Invizimals (USA) (En,Fr,Es) (v1.02)/Invizimals (USA) (En,Fr,Es) (v1.02).json
+developer: Novarama
+publisher: Sony Computer Entertainment
+genre: Action
+description:
+  inviZimals turns your PSP system into a virtual creature hunter that lets you
+  hunt and capture the monsters living in the world around you. Follow the clues
+  as you track them around the world. After they’re captured, battle your
+  inviZimals against your friends or train them to become stronger. You’ve never
+  seen a game quite like this.
+  .
+  Hunt - Use the bundled Camera for the PSP system to hunt down invisible monsters
+  as you race around the world to grab them before others do.\n
+  Capture - Use a wide range of techniques to capture them in your world: yell
+  into the microphone to scare them, slap your hand down to trap them or shoot
+  them from the sky.\n
+  Battle - Pit your inviZimals against the computer or enjoy multiplayer fights
+  with friends.\n
+  Evolve - Learn new attacks and power up so you can level up your monster.
+release: 2010-10-12
+players: 1
+assets.boxfront: BoxFront/Invizimals (USA) (En,Fr,Es) (v1.02).jpg
+assets.boxback: BoxBack/Invizimals (USA) (En,Fr,Es) (v1.02).jpg
+assets.background: Background/Invizimals (USA) (En,Fr,Es) (v1.02).jpg
+assets.screenshot: Screenshot/Invizimals (USA) (En,Fr,Es) (v1.02).jpg
+assets.video: Video/Invizimals (USA) (En,Fr,Es) (v1.02).mp4
+x-co-op: No
+
+
+game: Invizimals - Shadow Zone (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Invizimals - Shadow Zone (USA) (En,Fr,Es,Pt)/Invizimals - Shadow Zone (USA) (En,Fr,Es,Pt).json
+developer: Novarama
+publisher: Sony Computer Entertainment
+genre: Action
+description:
+  Invizimals allows players to interact with their environment, using the PSP
+  Camera to look for invisible creatures that lurk around every corner. Using the
+  PSP on-screen sensor, players can track down the mysterious Invizimals and lay
+  down magical traps to capture as many of them as possible.
+  .
+  Invizimals: Shadow Zone adds onto the franchise with a story that picks up
+  several months after the events of the first Invizimals game. It features new,
+  deeper and more involved captures with over 100 new Invizimals to hunt and
+  battle with. You can also team up with a friend for co-op captures using AdHoc
+  or Infrastructure connectivity. You can even modify and share your Invizimals by
+  changing their names, colors and choose from a greater range of attack moves.
+  The game will also feature a full blown rank and prestige system as well as you
+  being able to travel to new exotic locations as you investigate how Invizimals
+  shaped ancient mythology.
+release: 2011-10-25
+players: 1
+assets.boxfront: BoxFront/Invizimals - Shadow Zone (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/Invizimals - Shadow Zone (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/Invizimals - Shadow Zone (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/Invizimals - Shadow Zone (USA) (En,Fr,Es,Pt).jpg
+assets.video: Video/Invizimals - Shadow Zone (USA) (En,Fr,Es,Pt).mp4
+x-co-op: No
+
+
+game: Jackass - The Game (USA) (v1.02)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Jackass - The Game (USA) (v1.02)/Jackass - The Game (USA) (v1.02).json
+developer: Sidhe Interactive
+publisher: Red Mile Entertainment
+genre: Action;Adventure
+description:
+  The Jackass crew (minus Bam Margera) is in a jam, while getting ready to begin
+  shooting for their much anticipated TV return, their one and only camera man is
+  injured and it is up to you to get the show going. Take over as your favorite
+  Jackass characters in a series of stunts to earn money to complete the episodes
+  and get footage for the new season.
+  .
+  To earn money, complete certain tasks or injure yourself which will pay big
+  money, once you earn enough money, your episode will be complete and you can
+  move on to another. Completing episodes will unlock other characters, you get to
+  start out with the core players (Johnny Knoxville, Steve-O, Ryan Dunn and Chris
+  Pontius), while Wee-Man has his own mini-games, called Wee-Games which have ones
+  like Roof Top Cart Stop, Poo Shower and Wee Tattoo.
+  .
+  Once you complete a stunt in MTV Story mode, you can replay it in Challenge mode
+  and replay the level with new challenges, doing so will earn you more money that
+  you can earn in Jackass-Mart, to unlock costumes, props, more characters to play
+  and classic clips from the TV show. You can also go head to head with a buddy in
+  the Wee Games or compete in a Round Robin up to four players (PS2). The PSP
+  version offers multiplayer through WiFi. Crazy game with a ton of fun stunts to
+  play and has an insane injury system which ranges from anything like turf burn
+  all the way up to broken necks.
+  .
+  The PSP version supports the editing and exporting of replays. The PS2 version
+  contains more detailed environments, including pedestrians to annoy during the
+  stunts, and an expanded Bail-Out feature, where points are scored based on how
+  many injuries the character sustains.
+release: 2007-09-27
+players: 4
+assets.boxfront: BoxFront/Jackass - The Game (USA) (v1.02).jpg
+assets.boxback: BoxBack/Jackass - The Game (USA) (v1.02).jpg
+assets.background: Background/Jackass - The Game (USA) (v1.02).jpg
+assets.screenshot: Screenshot/Jackass - The Game (USA) (v1.02).jpg
+assets.video: Video/Jackass - The Game (USA) (v1.02).mp4
+x-co-op: No
+
+
+game: Jeanne d'Arc (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Jeanne d'Arc (USA)/Jeanne d'Arc (USA).json
+developer: Level-5
+publisher: Sony Computer Entertainment
+genre: Role-Playing;Strategy
+description:
+  It is the 15th century, the time of the Hundred Years' War between England and
+  France. A young French girl from the village of Domremy trying to assist her
+  father with his daily labors discovers a mysterious object: an armlet that binds
+  magically on her wrist. Soon the village is being attacked and finding the first
+  sword she can, she steps forth to encounter the enemy, some humanoid beasts.
+  Taking strength from the armlet, hearing a mysterious voice and having for
+  assistance her close friends, she manages to defeat them and embarks on a long
+  quest to help her countrymen and vanquish the evil forces invading France.
+  .
+  Jeanne d'Arc is a turn-based strategy RPG game of the Japanese variety, that
+  fuses medieval history with fantasy and the craziness of Japanese anime. This is
+  a well known story retold through tactical battles one after another, while game
+  dialog along with hand drawn cutscenes twist the story into different
+  territories from the original.
+  .
+  It is a story of teen friendship and dedication, remorseless war, evil magic,
+  unavoidable death, heartache abandonment and purifying hope. Jeanne joins the
+  army and along with 14 other companions with different skills and personalities
+  march to face England's Henry VI's troops. With her are other armlet wielders,
+  able to use them and transform into fearsome warriors able to strike down evil
+  at its core. The game features a map to move through locations where the battles
+  which push the story forward happen along with free stages that add nothing more
+  than fun, strong items and difficult bosses.
+release: 2007-08-21
+players: 1
+assets.boxfront: BoxFront/Jeanne d'Arc (USA).jpg
+assets.boxback: BoxBack/Jeanne d'Arc (USA).jpg
+assets.background: Background/Jeanne d'Arc (USA).jpg
+assets.screenshot: Screenshot/Jeanne d'Arc (USA).jpg
+assets.video: Video/Jeanne d'Arc (USA).mp4
+x-co-op: No
+
+
+game: Kingdom of Paradise (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Kingdom of Paradise (USA)/Kingdom of Paradise (USA).json
+developer: Climax Entertainment
+publisher: Sony
+genre: Role-Playing
+description:
+  Kingdom of Paradise is a 3D martial arts role-playing game based on Eastern
+  mythology. You can collect various fighting skills and items to tailor the
+  fighting style of your character. There are more than 150 skills and items to
+  collect, including some that can be downloaded via wireless Infrastructure Mode.
+  In addition to the single-player story mode, you can also challenge other gamers
+  via ad hoc wireless.
+release: 2005-11-15
+players: 2
+assets.boxfront: BoxFront/Kingdom of Paradise (USA).jpg
+assets.boxback: BoxBack/Kingdom of Paradise (USA).jpg
+assets.background: Background/Kingdom of Paradise (USA).jpg
+assets.screenshot: Screenshot/Kingdom of Paradise (USA).jpg
+assets.video: Video/Kingdom of Paradise (USA).mp4
+x-co-op: No
+
+
+game: LEGO Batman - The Video Game (Europe) (En,Fr,De,Es,It,Da)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LEGO Batman - The Video Game (Europe) (En,Fr,De,Es,It,Da)/LEGO Batman - The Video Game (Europe) (En,Fr,De,Es,It,Da).json
+developer: Traveller's Tales
+publisher: Warner Bros
+genre: Platform
+description:
+  Continuing the tradition of adapting known franchises such as Star Wars and
+  Indiana Jones with visuals based on LEGO, this game takes on the Batman
+  universe. The basic concept is the same, with characters and objects built up
+  using LEGO blocks, but here shown against surroundings drawn in a regular
+  fashion. Most of the environments are side-scrolling with a fixed camera
+  perspective, but in 3D with quite some depth.
+  .
+  It is not based on a certain movie or comic, but on the franchise as a whole
+  with a new story. The animations and sequences are rather quirky and share
+  nothing with the darker atmosphere of the contemporary Batman movies. A cast of
+  villains has escaped from Arkham Asylum and now roam through Gotham City
+  wreaking havoc. The first half of the game, players control Batman and his
+  sidekick Robin to take on all enemies with typical brawler gameplay. Enemies
+  will often respawn endlessly until the player figures out how to progress. The
+  environments can be explored using a number of gadgets such as the batarang and
+  the grappling hook, and players can switch between the two characters at any
+  time. They can both fight and the inactive character is always controlled by the
+  computer AI. Both characters have unique powers they can access by changing
+  their suits. Batman can then glide through the air or plant bombs, while Robin
+  has for instance a technology suit that allows his to walk on metal surfaces in
+  any direction. They can also drive certain vehicles.
+  .
+  Both characters operate out of the Batcave that acts as a central hub to store
+  trophies and access missions. Many of the missions have small puzzle elements
+  with buttons or passages that need to be cleared. Objects and characters explode
+  into smaller LEGO blocks and at certain sections the hero need to build
+  structures with blocks to create new objects. After completing a mission in the
+  story mode, it becomes available in a separate free play mode.
+  .
+  In the second part of the game players take control of the different villains
+  such as Poison Ivy, The Joker, Mr Freeze, The Riddler, Killer Moth, Hush,
+  Clayface, Man-Bat and more. They all have different powers and their section of
+  the game always ends at the moment they are confronted by Batman and Robin. This
+  way, the game shows how they set up their plans prior to the fights in the first
+  part of the game. The characters collect coins, objects and hearts. Even though
+  they can die, they immediately respawn.
+  .
+  Multi player options vary between platforms. Home console and Windows versions
+  allow drop in/drop out co-op. The PSP release fares worst of all and does not
+  contain any kind of multiplayer option.
+release: 2008-09-23
+players: 1
+assets.boxfront: BoxFront/LEGO Batman - The Video Game (Europe) (En,Fr,De,Es,It,Da).jpg
+assets.boxback: BoxBack/LEGO Batman - The Video Game (Europe) (En,Fr,De,Es,It,Da).jpg
+assets.background: Background/LEGO Batman - The Video Game (Europe) (En,Fr,De,Es,It,Da).jpg
+assets.screenshot: Screenshot/LEGO Batman - The Video Game (Europe) (En,Fr,De,Es,It,Da).jpg
+assets.video: Video/LEGO Batman - The Video Game (Europe) (En,Fr,De,Es,It,Da).mp4
+x-co-op: No
+
+
+game: LEGO Harry Potter - Years 1-4 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LEGO Harry Potter - Years 1-4 (USA)/LEGO Harry Potter - Years 1-4 (USA).json
+developer: TT Fusion Ltd.
+publisher: Warner Bros. Interactive Entertainment
+genre: Action;Adventure
+description:
+  LEGO Harry Potter Years 1-4 combines two of the most beloved franchises to
+  deliver a magical, fun-filled adventure. Based on Harry’s first four books and
+  films - fans can experience Harry’s first four years at Hogwarts School of
+  Witchcraft and Wizardry in a new an exciting way. Players will build the
+  adventure from Privet Drive to the Triwizard Tournament in an interactive
+  journey that takes them through some of the most detailed and expansive
+  environments ever created for a LEGO game. Featuring potion-making,
+  spell-casting, puzzle-solving, and more, players of all ages can relive the
+  adventures like never before with the humor and creative customization that is
+  unique to LEGO videogames.
+release: 2010-06-29
+players: 1
+assets.boxfront: BoxFront/LEGO Harry Potter - Years 1-4 (USA).jpg
+assets.boxback: BoxBack/LEGO Harry Potter - Years 1-4 (USA).jpg
+assets.background: Background/LEGO Harry Potter - Years 1-4 (USA).jpg
+assets.screenshot: Screenshot/LEGO Harry Potter - Years 1-4 (USA).jpg
+assets.video: Video/LEGO Harry Potter - Years 1-4 (USA).mp4
+x-co-op: No
+
+
+game: LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es,Pt)/LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es,Pt).json
+developer: TT Games
+publisher: Warner Bros. Interactive Entertainment
+genre: Action;Adventure
+description:
+  LEGO Harry Potter: Years 5-7 is an Action-Adventure game that combines fun,
+  familiar and family-friendly LEGO video game play mechanics with the storyline
+  and characters of the latter half of the Harry Potter universe. The game is
+  built on the events from the movie series ranging from Harry Potter and the
+  Order of the Phoenix through Harry Potter and the Deathly Hallows - Part 2.
+  Features include: 24 story events, and 16 lessons, new charms, spells and
+  dueling skills and new characters.\n
+  LEGO Harry Potter: Years 5-7 builds upon the magical gameplay, lessons and
+  potion-making skills learned in LEGO Harry Potter: Years 1-4 to equip gamers
+  with tools necessary to challenge a host of new foes and some familiar ones
+  (including He Who Must Not Be Named). The game is action-packed from start to
+  finish, including loads of new lessons, spells and bonus content for hours of
+  family-friendly gaming.
+release: 2011-11-11
+players: 1
+assets.boxfront: BoxFront/LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es,Pt).jpg
+assets.video: Video/LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es,Pt).mp4
+x-co-op: No
+
+
+game: LEGO Indiana Jones - The Original Adventures (USA) (En,Fr,Es) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LEGO Indiana Jones - The Original Adventures (USA) (En,Fr,Es) (v1.01)/LEGO Indiana Jones - The Original Adventures (USA) (En,Fr,Es) (v1.01).json
+developer: Traveller's Tales
+publisher: LucasArts
+genre: Action;Adventure;Platform
+description:
+  LEGO Indiana Jones: The Original Adventures takes the fun and creative
+  construction of LEGO and combines it with the wits, daring and non-stop action
+  from the original cinematic adventures that enthralled audiences everywhere
+  (Indiana Jones and the Raiders of the Lost Ark, Indiana Jones and the Temple of
+  Doom and Indiana Jones and the Last Crusade). With a unique tongue-in-cheek take
+  on the original adventures, LEGO Indiana Jones follows Dr. Jones escapades
+  through the jungles of South America to the mountaintops of India. Fans can
+  build, battle and brawl their way through their favorite cinematic moments, from
+  Indy's entanglements with snakes to his dashing boulder run. Pop culture's most
+  iconic archeologist whips through all the classic moments with the help of a
+  host of supporting characters including Marion Ravenwood and Short Round.
+  Players can also mix and match the body parts of more than 60 playable
+  characters to create new heroes just as they could in the LEGO Star Wars games
+release: 2008-06-03
+players: 1
+assets.boxfront: BoxFront/LEGO Indiana Jones - The Original Adventures (USA) (En,Fr,Es) (v1.01).jpg
+assets.boxback: BoxBack/LEGO Indiana Jones - The Original Adventures (USA) (En,Fr,Es) (v1.01).jpg
+assets.background: Background/LEGO Indiana Jones - The Original Adventures (USA) (En,Fr,Es) (v1.01).jpg
+assets.screenshot: Screenshot/LEGO Indiana Jones - The Original Adventures (USA) (En,Fr,Es) (v1.01).jpg
+assets.video: Video/LEGO Indiana Jones - The Original Adventures (USA) (En,Fr,Es) (v1.01).mp4
+x-co-op: No
+
+
+game: LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es) (v1.01)/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es) (v1.01).json
+developer: TT Fusion Ltd.
+publisher: LucasArts
+genre: Action
+description:
+  LEGO Indiana Jones 2 for handheld platforms is similar in gameplay to the game
+  on consoles, but has simpler graphics and completely different levels. Unlike
+  the console game, the handheld version focuses on the fourth Indiana Jones
+  movie, with elements from the earlier films only appearing in mini-game format
+  and some unlockable bonuses.
+  .
+  The story of Kingdom of the Crystal Skull is retold in three acts of four
+  chapters each, with comic-book-style cutscenes between levels. The levels
+  themselves follow the usual LEGO game format: players control several characters
+  and can switch between them at will. Different characters have different
+  abilities which must be used in combination to overcome challenges and solve
+  puzzles. For instance, Indy can use his whip, Marion and other female characters
+  can cross special ledges and Indy's son Mutt can use his knife to cut ropes and
+  can also climb walls. A major part of the game is the collecting of LEGO studs,
+  red and gold bricks and other hidden items, which unlock various bonuses like
+  additional characters. Finding pages of Indy's journal unlocks one of 16
+  mini-games.
+  .
+  The mini-games are inspired by certain scenes from all four movies, including
+  the rolling boulder run from Raiders of the Lost Ark, the mine cart chase from
+  Temple of Doom and the three trials from Last Crusade. The games usually task
+  the player to survive for a certain time or to collect a certain number of studs
+  before dying or reaching the end of the level.
+release: 2009-11-17
+players: 1
+assets.boxfront: BoxFront/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es) (v1.01).jpg
+assets.boxback: BoxBack/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es) (v1.01).jpg
+assets.background: Background/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es) (v1.01).jpg
+assets.screenshot: Screenshot/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es) (v1.01).jpg
+assets.video: Video/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es) (v1.01).mp4
+x-co-op: No
+
+
+game: Legend of Heroes II, The - Prophecy of the Moonlight Witch (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Legend of Heroes II, The - Prophecy of the Moonlight Witch (USA)/Legend of Heroes II, The - Prophecy of the Moonlight Witch (USA).json
+developer: Nihon Falcom Corp.
+publisher: Namco
+genre: Role-Playing
+description:
+  This role-playing title featuring meticulously detailed characters and an epic
+  coming-of-age story introduces two courageous young heroes who must save a
+  magical world in peril. With the return of the "pet system" and the environments
+  from the original The Legend of Heroes: A Tear of Vermillion, The Legend of
+  Heroes II: Prophecy of the Moonlight Witch offers easy-pick-up-and-play game
+  mechanics and improved enemies that gauge the player's strength before
+  attacking. The game opens with childhood friends Jurio and Chris as they embark
+  on a pilgrimage to five shrines surrounding their village. During their journey,
+  they learn of the dangers of the Raual Wave that threatens to destroy everything
+  in its path. Can Jurio and Chris, with the help of their friends, stop the Raual
+  Wave emanating from Queen Isabella's castle? Will they discover the identity of
+  the mysterious Moonlight Witch who predicted it all? Players can join in the
+  adventure with this elegant turn-based role-playing title developed by the
+  legendary Nihon Falcom.
+release: 2006-06-20
+players: 1
+assets.boxfront: BoxFront/Legend of Heroes II, The - Prophecy of the Moonlight Witch (USA).jpg
+assets.boxback: BoxBack/Legend of Heroes II, The - Prophecy of the Moonlight Witch (USA).jpg
+assets.background: Background/Legend of Heroes II, The - Prophecy of the Moonlight Witch (USA).jpg
+assets.screenshot: Screenshot/Legend of Heroes II, The - Prophecy of the Moonlight Witch (USA).jpg
+assets.video: Video/Legend of Heroes II, The - Prophecy of the Moonlight Witch (USA).mp4
+x-co-op: No
+
+
+game: Legend of Heroes III, The - Song of the Ocean (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Legend of Heroes III, The - Song of the Ocean (USA) (v1.01)/Legend of Heroes III, The - Song of the Ocean (USA) (v1.01).json
+developer: Nihon Falcom Corp.
+publisher: Namco
+genre: Role-Playing
+description:
+  Song of the Ocean is the third installment in Nihon Falcom's RPG PSP trilogy, a
+  third remake based on the games in the early nineties. Despite the number 3 (as
+  the third part of the Gagharv Trilogy), it is in fact a remake of the fifth
+  title in the series, Umi no Oriuta. This part is a standalone story that takes
+  place in the realm of Weltluna, which was once the center of an ancient
+  civilization known as the Water Tribe, and the game closes the Gagharv trilogy.
+  It draws upon a number of the conventions from the previous titles and provides
+  30-50 hours of gameplay.
+  .
+  You control Forto, who sets off on an adventure to locate a song left behind by
+  a legendary composer. The game features an improved battle system, which allows
+  you to change party members during battle. While you travel you will meet a
+  variety of characters, of whom six will be able to join your party. The game
+  also features an extra bonus if you have save data from either of the first two
+  Legend of Heroes games on your memory card.
+  .
+  From time to time, you will come across areas where you can teleport to a
+  special section. There, you can team up with characters from the previous games
+  and go on optional adventures for experience, money, and items - an addition
+  that rewards players who have been following the series from the beginning.
+release: 2007-01-23
+players: 1
+assets.boxfront: BoxFront/Legend of Heroes III, The - Song of the Ocean (USA) (v1.01).jpg
+assets.boxback: BoxBack/Legend of Heroes III, The - Song of the Ocean (USA) (v1.01).jpg
+assets.background: Background/Legend of Heroes III, The - Song of the Ocean (USA) (v1.01).jpg
+assets.screenshot: Screenshot/Legend of Heroes III, The - Song of the Ocean (USA) (v1.01).jpg
+assets.video: Video/Legend of Heroes III, The - Song of the Ocean (USA) (v1.01).mp4
+x-co-op: No
+
+
+game: Legend of Heroes, The - A Tear of Vermillion (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Legend of Heroes, The - A Tear of Vermillion (USA) (v1.01)/Legend of Heroes, The - A Tear of Vermillion (USA) (v1.01).json
+developer: Nihon Falcom Corp.
+publisher: Bandai Games
+genre: Role-Playing
+description:
+  The Legend of Heroes is old-school JRPG with new-school sensibilities and
+  graphics. The old-school elements of the game are its turn-based combat,
+  linearity, long dialogue scenes, a digital pet system and lots of similar things
+  that seem to date from the 1995-ish RPG era. There are no random fighting
+  encounters however. In this game you control Avin in his search for his younger
+  sister Eimelle. They were separated when their cathedral was raided by religious
+  zealots.
+  .
+  A Tear of Vermillion is a remake of the Japanese PC game Legend of heroes IV:
+  Akai Shizuku. The word Gagharv (in the Japanese title of the remake) refers to
+  the chasm that separates the continent Tirasweel, where the games takes place,
+  from the rest of the world. Improvements Bandai made for this remake are
+  completely re-done 3D graphics, new battle interface, and quicker load times.
+release: 2005-11-15
+players: 1
+assets.boxfront: BoxFront/Legend of Heroes, The - A Tear of Vermillion (USA) (v1.01).jpg
+assets.boxback: BoxBack/Legend of Heroes, The - A Tear of Vermillion (USA) (v1.01).jpg
+assets.background: Background/Legend of Heroes, The - A Tear of Vermillion (USA) (v1.01).jpg
+assets.screenshot: Screenshot/Legend of Heroes, The - A Tear of Vermillion (USA) (v1.01).jpg
+assets.video: Video/Legend of Heroes, The - A Tear of Vermillion (USA) (v1.01).mp4
+x-co-op: No
+
+
+game: Lemmings (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Lemmings (USA) (v1.01)/Lemmings (USA) (v1.01).json
+developer: Team17 Software
+publisher: Sony Computer Entertainment
+genre: Puzzle
+description:
+  Controlling an army of lemmings, the aim is to get as many of these cute
+  characters as you can from the entrance point to the exit point of a level
+  within a time limit. Easy to learn, difficult to master; Lemmings is a test of
+  strategy and fast thinking as you make 'on the spot', life or death decisions
+  for your band of trusting little creatures. Use the unique skills of your
+  Lemmings team to overcome the hazards ahead: The 'Bomber' explodes at will, the
+  'Floater' can survive high falls and the 'Basher' digs horizontally just when
+  you need it. The 'Climber' is at hand for those tricky mountain ranges, the
+  'Blocker' creates an obstacle in the path ahead and the 'Builder' is there to
+  construct walkways for his friends. Stretch your strategies across 100 plus
+  levels as you lead your lemmings across an immense variety of challenging
+  backdrops. The levels are arranged into five striking themes, each with its own
+  unique visual flavour. So, whether it's going underground into the sewers or
+  marching through fields and forests, the lemmings always have new terrain to
+  explore.
+release: 2006-05-23
+players: 1
+assets.boxfront: BoxFront/Lemmings (USA) (v1.01).jpg
+assets.boxback: BoxBack/Lemmings (USA) (v1.01).jpg
+assets.background: Background/Lemmings (USA) (v1.01).jpg
+assets.screenshot: Screenshot/Lemmings (USA) (v1.01).jpg
+assets.video: Video/Lemmings (USA) (v1.01).mp4
+x-co-op: No
+
+
+game: LittleBigPlanet (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LittleBigPlanet (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl)/LittleBigPlanet (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl).json
+developer: Media Molecule
+publisher: Sony Computer Entertainment
+genre: Platform;Sandbox
+description:
+  Travel to the world of LittleBigPlanet, where dreams and imagination run wild!
+  Become a Sackperson, and dress them up as you wish with all sorts of gear that
+  you come across in the game worlds. Explore the levels made by the Creator
+  Curators, or create your own and send them to the world!
+  .
+  LittleBigPlanet is a platform game based on the PlayStation 3 game of the same
+  name. In it, you control a Sackperson, with the base goal of reaching the level
+  exit. However, many physics-based objects and puzzles are encountered along the
+  way. There are also many tricks, traps and enemies. Aside from being able to
+  jump, your Sackperson can also hop between the two levels of depth (unlike the
+  PlayStation 3 version, which features three levels) in the level to walk in
+  front or behind objects, grab objects to push or pull them, or even hitch a ride
+  on a tethered jetpack and fly about the area.
+  .
+  A huge feature of LittleBigPlanet is the ability to create and share levels with
+  millions of other players around the world. You can make your own levels with
+  objects you've collected in the single player mode, and then use those objects
+  to make anything you like - whether it be a platform level, action game, music
+  box - anything! The level creator allows for a lot of freedom and also offers
+  detailed tutorials on how to use and place objects, as well as tweak their
+  variables. The PSP version of LittleBigPlanet is not able to play four player
+  simultaneous multiplayer like the PS3 version - instead it is a single player
+  only game.
+release: 2009-11-17
+players: 1
+assets.boxfront: BoxFront/LittleBigPlanet (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl).jpg
+assets.boxback: BoxBack/LittleBigPlanet (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl).jpg
+assets.background: Background/LittleBigPlanet (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl).jpg
+assets.screenshot: Screenshot/LittleBigPlanet (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl).jpg
+assets.video: Video/LittleBigPlanet (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl).mp4
+x-co-op: No
+
+
+game: LocoRoco (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LocoRoco (USA)/LocoRoco (USA).json
+developer: SCE Japan Studio
+publisher: SCEA
+genre: Action;Platformer;2D
+description:
+  LocoRoco is an innovative 2D platform/action game available exclusively for the
+  PSP. Featuring unique controls utilizing the "L" and "R" shoulder buttons,
+  players are tasked with controlling via "tilting or bumping" the landscape of
+  the LocoRoco in order to help them navigate through the level and keep them out
+  of harm's way. With more than 40 stages, players control and guide the LocoRoco
+  through vibrant, thriving and lush worlds filled with slippery slopes, swing
+  ropes , and more. Featuring six different types of LocoRoco that include their
+  own voices and actions, players will be enchanted by captivating music that
+  communicates the joyous world of these LocoRoco. In addition, LocoRoco features
+  the rewarding LocoHouse, three mini-games , and wireless features. The peaceful
+  world of the LocoRoco are under attack by the not-so-nice Moja Corps. These evil
+  outer space creatures want nothing but to capture the blissful LocoRoco and take
+  them from their land of blowing flowers, lively creatures and pastel scenery. As
+  the planet where the LocoRoco inhabit, players must tilt, roll and bounce the
+  LocoRoco to safety.
+release: 2006-06-23
+players: 4
+assets.boxfront: BoxFront/LocoRoco (USA).jpg
+assets.boxback: BoxBack/LocoRoco (USA).jpg
+assets.background: Background/LocoRoco (USA).jpg
+assets.screenshot: Screenshot/LocoRoco (USA).jpg
+assets.video: Video/LocoRoco (USA).mp4
+x-co-op: No
+
+
+game: LocoRoco 2 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LocoRoco 2 (USA)/LocoRoco 2 (USA).json
+developer: Sony Computer Entertainment Japan
+publisher: Sony Computer Entertainment
+genre: Platform;Puzzle
+description:
+  The LocoRoco are in danger again, the evil Moja have returned and this time
+  they've brought with them a terrible song that sucks the life out of living
+  things! The LocoRoco must once again save their planet - this time by making
+  lots of sweet music. LocoRoco 2 is easy to play, instantly addictive and
+  guaranteed to make you feel all warm and fuzzy while you hum along to the
+  soundtrack! Explore 25 new stages, including hidden challenges, and meet a
+  colourful cast of new characters. Enhance your LocoRoco through music and song,
+  learning new actions to overcome the Moja. Perform new actions such as climbing
+  inside shells to destroy thorns, jumping from grass blade to grass blade and
+  swimming underwater. Expand your fun with six new mini games, including an
+  Ad-hoc four player game.
+release: 2008-11-21
+players: 4
+assets.boxfront: BoxFront/LocoRoco 2 (USA).jpg
+assets.boxback: BoxBack/LocoRoco 2 (USA).jpg
+assets.background: Background/LocoRoco 2 (USA).jpg
+assets.screenshot: Screenshot/LocoRoco 2 (USA).jpg
+assets.video: Video/LocoRoco 2 (USA).mp4
+x-co-op: No
+
+
+game: Lord of Arcana (USA) (En,Fr)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Lord of Arcana (USA) (En,Fr)/Lord of Arcana (USA) (En,Fr).json
+developer: Access Games
+publisher: Square Enix
+genre: Action;Role-Playing
+description:
+  Lord of Arcana is an action game in which the player (as a customizable
+  character) is taken to the world of Horodyn, where he will have to acquire the
+  Arcana power. To do so, he will need to hone his skills by completing quests
+  from the village of Porto Carillo's slayers guild. The quests consist of
+  defeating specific foes, gathering material, and so on. As the player becomes
+  stronger, the Arcana Stones from the nearby Arayd Temple will awaken, allowing
+  the Master Guardians to be challenged, and their power claimed.
+  .
+  The quests happen in set locations such as forests, caves and deserts. Upon
+  defeating monsters in these quests, various materials can be obtained (either
+  from the field, after battles or by destroying Monster Parts) and be used to
+  craft equipment in the village. Apart from usable items like potions and charms,
+  a variety of weapons, armors, orbs and cards can be equipped.
+  .
+  Weapons: five types of weapons exist, each with their specific strengths ans
+  weaknesses. Changing weapon will be useful depending on which opponent the
+  player wants to face.
+  .
+  Armors: The armors, shield and headgear. They can bestow great protection and
+  sometimes have slots to equip orbs.
+  .
+  Orbs: They have a wide array of powers. Some can be used to boost elemental
+  attacks or defenses, some allow quicker movement or makes the weak points of
+  monsters visible.
+  .
+  Cards: Needed to cast magic. There are regular spells and the more powerful
+  Ultimate Magics, which summons the Arcana Guardians to perform some incredible
+  feats.
+  .
+  The Guild also act as a place where multiple players can join and quest together
+  via the PSP's ad hoc mode. The available quests are the ones that the host
+  player can access in regular gameplay.
+release: 2011-01-25
+players: 1
+assets.boxfront: BoxFront/Lord of Arcana (USA) (En,Fr).jpg
+assets.boxback: BoxBack/Lord of Arcana (USA) (En,Fr).jpg
+assets.background: Background/Lord of Arcana (USA) (En,Fr).jpg
+assets.screenshot: Screenshot/Lord of Arcana (USA) (En,Fr).jpg
+assets.video: Video/Lord of Arcana (USA) (En,Fr).mp4
+x-co-op: Yes
+
+
+game: Lumines (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Lumines (USA) (v1.01)/Lumines (USA) (v1.01).json
+developer: Q Entertainment
+publisher: Buena Vista Games
+genre: Music;Puzzle
+description:
+  Lumines II is the sequel to the extremely addictive puzzle-based video game,
+  Lumines. Gamers control squares made of four smaller block pieces that are
+  dropped into the playing field one at a time to form same-color squares. The
+  vertical "timeline" sweeps across the playing field from left to right and wipes
+  the same-color squares from the playing field. Unmatched blocks pile up, and the
+  game ends when the pile gets to the top of the playing screen. Advance through
+  many action-packed levels, each with its own musical theme and sound effects.
+release: 2006-11-06
+players: 2
+assets.boxfront: BoxFront/Lumines (USA) (v1.01).jpg
+assets.boxback: BoxBack/Lumines (USA) (v1.01).jpg
+assets.background: Background/Lumines (USA) (v1.01).jpg
+assets.screenshot: Screenshot/Lumines (USA) (v1.01).jpg
+x-co-op: No
+
+
+game: Lunar - Silver Star Harmony (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Lunar - Silver Star Harmony (USA)/Lunar - Silver Star Harmony (USA).json
+developer: Game Arts
+publisher: Xseed Games
+genre: Role-Playing
+description:
+  For ages past the Dragonmasters have served the Goddess Althena and safeguarded
+  the world of Lunar, but for 15 years the title has lain unclaimed and the
+  Goddess silent in her tower. During this time a young boy who dreamed of one day
+  claiming that honor set off with his friends to chase the legend, and none too
+  soon as the rumblings of disaster began to ripple across the peaceful land. As
+  the Dragonmaster and final hope for humanity, it is up to Alex to somehow
+  transcend the power of one of the world’s greatest heroes and restore Lunar
+  before all is lost.
+  .
+  This timeless tale of love, betrayal and redemption, expertly woven into its
+  involving gameplay and cinematic presentation, is reborn on the PSP® system as
+  Lunar: Silver Star Harmony with all new graphics, added gameplay features, and a
+  re-mastered soundtrack so that a whole new generation of fans can experience
+  this legendary first entry of the Lunar universe, while added story elements
+  will be sure to please returning fans as well.
+release: 2010-03-02
+players: 1
+assets.boxfront: BoxFront/Lunar - Silver Star Harmony (USA).jpg
+assets.boxback: BoxBack/Lunar - Silver Star Harmony (USA).jpg
+assets.background: Background/Lunar - Silver Star Harmony (USA).jpg
+assets.screenshot: Screenshot/Lunar - Silver Star Harmony (USA).jpg
+assets.video: Video/Lunar - Silver Star Harmony (USA).mp4
+x-co-op: No
+
+
+game: Luxor - Pharaoh's Challenge (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Luxor - Pharaoh's Challenge (USA) (v1.01)/Luxor - Pharaoh's Challenge (USA) (v1.01).json
+developer: MumboJumbo
+publisher: MumboJumbo
+genre: Puzzle
+description:
+  A Thrilling Egyptian Action-Puzzle Adventure!
+  .
+  Embark on a thrilling adventure through the lands of ancient Egypt in the latest
+  installment of the hit LUXOR series. Enjoy 88 gorgeously-rendered levels of
+  brilliantly crisp and stunning graphics portraying pyramids, temples and many
+  more of Egypt’s amazing marvels. Guide your mystical winged-shooter, swooping
+  back and forth, as you destroy an onslaught of magical spheres before they reach
+  the pyramid lying at the end of their path. To help eliminate enemy spheres,
+  LUXOR: Pharaoh’s Challenge features more explosive power-ups than ever before!
+  .
+  Prove your expertise by earning 25 spectacular skill badges\n
+  Ranking system progressively increases power-up effectiveness\n
+  13 powerful blessings can be activated to make any level manageable
+release: 2007-12-18
+players: 1
+assets.boxfront: BoxFront/Luxor - Pharaoh's Challenge (USA) (v1.01).jpg
+assets.boxback: BoxBack/Luxor - Pharaoh's Challenge (USA) (v1.01).jpg
+assets.background: Background/Luxor - Pharaoh's Challenge (USA) (v1.01).jpg
+assets.screenshot: Screenshot/Luxor - Pharaoh's Challenge (USA) (v1.01).jpg
+assets.video: Video/Luxor - Pharaoh's Challenge (USA) (v1.01).mp4
+x-co-op: No
+
+
+game: Marvel - Ultimate Alliance (USA) (v2.00)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Marvel - Ultimate Alliance (USA) (v2.00)/Marvel - Ultimate Alliance (USA) (v2.00).json
+developer: Raven Software
+publisher: Activision
+genre: Action;Role-Playing
+description:
+  Dr. Doom has united supervillains as the Masters of Evil. Now for the first time
+  ever, over 20 Marvel superheroes including Spider-Man, Captain America,
+  Wolverine, Ghost Rider, Blade and Silver Surfer have come together to stop Doom.
+  Mix and match your choice of Marvel superheroes, in teams of four as you travel
+  across the Marvel Universe to stop this threat. Certain teams such as The
+  Fantastic Four and The New Avengers provide additional bonuses.
+  .
+  Some heroes must be unlocked first. The game also features RPG elements, such as
+  leveling up. When a hero gains a level, they earn points you can use to upgrade
+  their skills. You also collect Shield Coins, which can be spent on boosts for
+  your hero team.
+  .
+  You explore various legendary Marvel locales, from Asgard, to Prince Namor's
+  Atlantis, where you take on foes with punches, kicks and super powers. Super
+  powers drain energy, however, so use them wisely. Combos can be achieved by
+  combining super powers. Energy is restored by collecting blue orbs from fallen
+  foes.
+  .
+  Boss battles are like the comics themselves: titanic battles that often not only
+  test brawn but your brain as well. With over 20 playable heroes plus all the
+  cameos, there are over 100 heroes and villains.
+  .
+  The game modes feature either single player, co-op, or online play. In general,
+  Marvel Ultimate Alliance's gameplay can be considered an improved version of
+  2004's X-Men: Legends. The different versions are fairly identical. The PSP
+  release has three more game modes, while Wii, PS3 and Xbox 360 have additional
+  levels.
+release: 2006-10-24
+players: 4
+assets.boxfront: BoxFront/Marvel - Ultimate Alliance (USA) (v2.00).jpg
+assets.boxback: BoxBack/Marvel - Ultimate Alliance (USA) (v2.00).jpg
+assets.background: Background/Marvel - Ultimate Alliance (USA) (v2.00).jpg
+assets.screenshot: Screenshot/Marvel - Ultimate Alliance (USA) (v2.00).jpg
+assets.video: Video/Marvel - Ultimate Alliance (USA) (v2.00).mp4
+x-co-op: Yes
+
+
+game: Me & My Katamari (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Me & My Katamari (USA)/Me & My Katamari (USA).json
+developer: Namco
+publisher: Electronic Arts
+genre: Action;Puzzle
+description:
+  Taking a break from celestial construction, the King of All Cosmos takes the
+  royal family on vacation to a tropical island paradise, where they become tasked
+  with the responsibility of creating new katamari islands for homeless animals.
+  An epic undertaking of this time, earthly proportions, the King calls upon his
+  pint-sized son, the Prince, and all of his cousins for help. New features found
+  in Me and My Katamari include: Wireless play for up to four people on the PSP
+  system; A cast of playable characters that includes the Prince and his cousins -
+  a mix of familiar faces and new additions; A host of customization options for
+  player characters, including new masks and headgear, as well as the ability to
+  wear them on the head, face and body; A new island interface that highlights
+  player options and the different stages represented by animals in need of new
+  homes.
+release: 2005-12-25
+players: 1
+assets.boxfront: BoxFront/Me & My Katamari (USA).jpg
+assets.boxback: BoxBack/Me & My Katamari (USA).jpg
+assets.background: Background/Me & My Katamari (USA).jpg
+assets.screenshot: Screenshot/Me & My Katamari (USA).jpg
+assets.video: Video/Me & My Katamari (USA).mp4
+x-co-op: No
+
+
+game: MediEvil - Resurrection (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/MediEvil - Resurrection (USA)/MediEvil - Resurrection (USA).json
+developer: SCEE
+publisher: SCEA
+genre: Action;Adventure;Horror
+description:
+  The PSP installment in this series takes place 100 years after the evil sorcerer
+  Zarok was defeated at the Battle of Gallowmere. Now Zarok has returned with his
+  undead army to conquer the land. It's up to you, as Sir Daniel Fortesque, to
+  defeat Zarok and his minions with your varied combat moves and weapons. Seek out
+  the voodoo witch to learn more about your abilities and environments. In
+  addition to a single-player campaign, MediEval features several multiplayer
+  minigames.
+release: 2005-09-13
+players: 1
+assets.boxfront: BoxFront/MediEvil - Resurrection (USA).jpg
+assets.boxback: BoxBack/MediEvil - Resurrection (USA).jpg
+assets.background: Background/MediEvil - Resurrection (USA).jpg
+assets.screenshot: Screenshot/MediEvil - Resurrection (USA).jpg
+assets.video: Video/MediEvil - Resurrection (USA).mp4
+x-co-op: No
+
+
+game: Mega Man - Maverick Hunter X (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Mega Man - Maverick Hunter X (USA) (v1.01)/Mega Man - Maverick Hunter X (USA) (v1.01).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Platform;Shooter
+description:
+  A remake of the 1993 Super Nintendo game, Mega Man Maverick Hunter X builds upon
+  the Mega Man engine with newly rendered 3D models, visually enhanced
+  environments, a new soundtrack, and new sound effects as well. Maverick Hunter X
+  also sports new cutscenes that precede every boss battle and an all-new
+  unlockable movie that details the origins of series villain Sigma. As with
+  previous Mega Man titles a stage select system lets players tackle levels in any
+  order and replay them limitless times. By defeating bosses X acquires weapons
+  which can be used to unlock new paths through other stages. Armor parts are also
+  hidden throughout the game and provide players with abilities that can be used
+  to access additional areas and items. With combinations of jumps dodges wall
+  jumps and a high speed dash ability the action reaches the frantic heights which
+  the X series has become known for.
+release: 2006-01-31
+players: 1
+assets.boxfront: BoxFront/Mega Man - Maverick Hunter X (USA) (v1.01).jpg
+assets.boxback: BoxBack/Mega Man - Maverick Hunter X (USA) (v1.01).jpg
+assets.background: Background/Mega Man - Maverick Hunter X (USA) (v1.01).jpg
+assets.screenshot: Screenshot/Mega Man - Maverick Hunter X (USA) (v1.01).jpg
+assets.video: Video/Mega Man - Maverick Hunter X (USA) (v1.01).mp4
+x-co-op: No
+
+
+game: Mega Man - Powered Up (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Mega Man - Powered Up (USA)/Mega Man - Powered Up (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Platform
+description:
+  Mega Man is on a quest to restore peace in the world after Dr. Wily takes
+  control of several robots in hopes to rule the planet. Completely re-designed
+  for the PSP with new bosses and puzzles to master, Mega Man Powered Up is the
+  only action platformer that lets gamers create their own levels and share with
+  friends. Totally redesigned level structure - every level features modified map
+  structures as well as varied item locations. Intuitive level editor option
+  allows endless possibilities. Players can design their own stages creating
+  challenges that are only limited by their own imagination. Customize everything
+  from enemy and object placement to music. Mega Man Challenge 100 - take a break
+  from the main story mode by putting skills to the test in 100 different short
+  stages, each with its own objectives and challenges. Play as any of the eight
+  boss robots in the game - utilize their unique abilities and characteristics to
+  zip past obstacles.
+release: 2006-03-02
+players: 4
+assets.boxfront: BoxFront/Mega Man - Powered Up (USA).jpg
+assets.boxback: BoxBack/Mega Man - Powered Up (USA).jpg
+assets.background: Background/Mega Man - Powered Up (USA).jpg
+assets.screenshot: Screenshot/Mega Man - Powered Up (USA).jpg
+assets.video: Video/Mega Man - Powered Up (USA).mp4
+x-co-op: No
+
+
+game: Metal Slug Anthology (USA) (v1.03)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Metal Slug Anthology (USA) (v1.03)/Metal Slug Anthology (USA) (v1.03).json
+developer: Terminal Reality
+publisher: SNK Playmore
+genre: Shooter
+description:
+  Metal Slug 1-6 and X are included in the release, and the games have not been
+  altered in any way. This is the same with the characters and abilities, which
+  have all been kept the same.
+  .
+  The games themselves are done via emulation of the Neo Geo AES versions, except
+  for Metal Slug 6, which is a port of the arcade version.
+release: 2007-02-20
+players: 2
+assets.boxfront: BoxFront/Metal Slug Anthology (USA) (v1.03).jpg
+assets.boxback: BoxBack/Metal Slug Anthology (USA) (v1.03).jpg
+assets.background: Background/Metal Slug Anthology (USA) (v1.03).jpg
+assets.screenshot: Screenshot/Metal Slug Anthology (USA) (v1.03).jpg
+assets.video: Video/Metal Slug Anthology (USA) (v1.03).mp4
+x-co-op: Yes
+
+
+game: Metal Slug XX (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Metal Slug XX (USA) (v1.01)/Metal Slug XX (USA) (v1.01).json
+developer: SNK Playmore
+publisher: Atlus
+genre: Action;Shooter
+description:
+  Metal Slug XX is an entry in the long-running series of side-scrolling shooters.
+  It is a revised version of Metal Slug 7. The Peregrine Falcons, Marco, Eri,
+  Clark, Tarma, Fio and Ralf, are once again running-and-gunning in colorfully
+  hand-drawn levels, throwing grenades, driving vehicles and slashing enemies.
+  .
+  Metal Slug XX includes various single-player features in the form of a Combat
+  School that lets players return to previously completed missions while executing
+  various objectives; a POW List that shows how many POWs were rescued in each
+  level; and single-player Rankings. Players can also cooperate in Ad-Hoc while
+  gunning down hordes of humorous foes using familiar weapons in seven distinct
+  levels that will see our heroes traverse deserts, mountains, caves and lava pits
+  to finally put an end to their longtime enemy.
+  .
+  This revised version includes additional content including co-op multiplayer and
+  downloadable content, as well as the character Leona Heidern.
+release: 2010-02-23
+players: 2
+assets.boxfront: BoxFront/Metal Slug XX (USA) (v1.01).jpg
+assets.boxback: BoxBack/Metal Slug XX (USA) (v1.01).jpg
+assets.background: Background/Metal Slug XX (USA) (v1.01).jpg
+assets.screenshot: Screenshot/Metal Slug XX (USA) (v1.01).jpg
+assets.video: Video/Metal Slug XX (USA) (v1.01).mp4
+x-co-op: Yes
+
+
+game: Midway Arcade Treasures - Extended Play (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Midway Arcade Treasures - Extended Play (USA)/Midway Arcade Treasures - Extended Play (USA).json
+developer: Digital Eclipse
+publisher: Midway Home Entertainment, Inc.
+genre: Action;Fighting;Platform;Puzzle;Racing;Shooter;Sports;Strategy
+description:
+  This PSP exclusive edition of Midway Arcade Treasures brings together a number
+  of titles previously seen in the series, now for the first time in portable
+  form. Titles include:
+  .
+  •    720\n
+  •    Arch Rivals\n
+  •    Championship Sprint\n
+  •    Cyberball 2072\n
+  •    Defender\n
+  •    Gauntlet\n
+  •    Joust\n
+  •    Klax\n
+  •    Mortal Kombat\n
+  •    Marble Madness\n
+  •    Mortal Kombat II\n
+  •    Mortal Kombat 3\n
+  •    Paperboy\n
+  •    Rampage\n
+  •    Rampart\n
+  •    Sinistar\n
+  •    Spy Hunter\n
+  •    Toobin\n
+  •    Wizard of Wor\n
+  •    Xenophobe\n
+  •    Xybots
+release: 2005-12-13
+players: 4
+assets.boxfront: BoxFront/Midway Arcade Treasures - Extended Play (USA).jpg
+assets.boxback: BoxBack/Midway Arcade Treasures - Extended Play (USA).jpg
+assets.background: Background/Midway Arcade Treasures - Extended Play (USA).jpg
+assets.screenshot: Screenshot/Midway Arcade Treasures - Extended Play (USA).jpg
+assets.video: Video/Midway Arcade Treasures - Extended Play (USA).mp4
+x-co-op: Yes
+
+
+game: Mimana - IYAR Chronicle (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Mimana - IYAR Chronicle (USA)/Mimana - IYAR Chronicle (USA).json
+developer: GungHo
+publisher: Aksys Games
+genre: Action;Role-Playing
+description:
+  In Mimana Iyar Chronicle, players are cast into the role of Crais Sewell, an
+  anti-social, drunk, unemployed swordsman. As he loses his last cents and gets
+  into a huge debt with the Mercenaries' Guild, he's offered a chance to repay his
+  debt, by offering his services as bodyguard to a little girl known as Sophie,
+  who wants to find seven gems scattered around the world. Walk into a few
+  dungeons, break a few pots, whack a few gelatinous cubes, find the gems, how
+  hard can it be?
+  .
+  While the main exploring part of the game takes place in an isometric view, the
+  random encounters the party will face take place in a side-scrolling panel.
+  While the player controls Crais directly, in real-time, the other party member's
+  behavior can be adjusted through menus. Stringing combos together can make Crais
+  go into Just Attack mode, where every attack causes critical damage.
+release: 2010-03-30
+players: 1
+assets.boxfront: BoxFront/Mimana - IYAR Chronicle (USA).jpg
+assets.boxback: BoxBack/Mimana - IYAR Chronicle (USA).jpg
+assets.background: Background/Mimana - IYAR Chronicle (USA).jpg
+assets.screenshot: Screenshot/Mimana - IYAR Chronicle (USA).jpg
+assets.video: Video/Mimana - IYAR Chronicle (USA).mp4
+x-co-op: No
+
+
+game: ModNation Racers (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/ModNation Racers (USA)/ModNation Racers (USA).json
+developer: Sony
+publisher: Sony
+genre: Racing
+description:
+  ModNation Racers is a mix of the kart racing aspect of Mario Kart and the
+  customization of LittleBigPlanet. The player starts out as a up and comer by the
+  name of T.A.G. in the MRC (ModNation Racing Championship) series with his mother
+  as a sponsor and a washed-out racer for a crew chief, meeting various
+  interesting characters, both good and bad, through his ballooning career. The
+  initial race gets the player acquainted with the controls and some aspects of
+  the game including weapons such as rockets, sonic weapons, lightning weapons and
+  boost power-ups. These weapons can be picked up by item pods scattered
+  throughout the track and each weapon has three levels which starts out at level
+  one and will upgrade for each item pod picked up. After the initial race, the
+  player will be directed to the ModSpot, the central hub for MNR for players to
+  get together.
+  .
+  At the ModSpot the player is introduced to the creation aspect of the game,
+  using the creation station the player can modify their racers and karts. The
+  player can unlock more items through the career mode by winning matches and
+  completing certain challenges such as taking down three opponents, activate
+  three traps, etc. They can also pick up tokens scattered on each track (five
+  tokens for each track in total) and using them at a vending machine and like a
+  slot machine, picking either 1 token, 2 tokens or 5 tokens and randomly getting
+  an item depending upon the tokens used.
+  .
+  Players can also create their own tracks using various tools to sculpt the
+  landscape to their liking and create their ultimate dream track. The players can
+  share their creations with the world by publishing them, using a share center
+  they can upload their created racers, karts and tracks and likewise download
+  other players creations as well. Also at the ModSpot the player can view the Top
+  Mod and Top Karts of the week, see who is in the current room, view to players
+  of the week, enter the creation studios and even set up races with friends on
+  official tracks or custom tracks by players.
+release: 2010-05-25
+players: 4
+assets.boxfront: BoxFront/ModNation Racers (USA).jpg
+assets.boxback: BoxBack/ModNation Racers (USA).jpg
+assets.background: Background/ModNation Racers (USA).jpg
+assets.screenshot: Screenshot/ModNation Racers (USA).jpg
+assets.video: Video/ModNation Racers (USA).mp4
+x-co-op: No
+
+
+game: Monster Hunter Freedom Unite (USA) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Monster Hunter Freedom Unite (USA) (En,Fr,De,Es,It)/Monster Hunter Freedom Unite (USA) (En,Fr,De,Es,It).json
+developer: Capcom Production Studio 1
+publisher: Capcom Entertainment, Inc.
+genre: Action;Role-Playing
+description:
+  Japan's most successful PSP title, Monster Hunter Portable 2G, is heading to
+  Europe and US. Renamed Monster Hunter Freedom Unite, this latest installment in
+  the epic Monster Hunter series delivers over 500 hours of gameplay spanning some
+  400 missions. Added with previously unreleased monsters, weapons and missions
+  and you have the biggest Monster Hunter game to date.
+  .
+  Using the Ad-Hoc connection players can adventure with up to three friends for a
+  savaging multiplayer hunting party. From devising the strategy to executing the
+  attack, players will need to work together in order to hunt down the ferocious
+  beasts and progress through the wide range of quests on offer. Players will be
+  rewarded for their use of deep fighting combat systems, encouraging them to seek
+  out the more experienced hunters and team up in order to learn from their
+  experience.
+  .
+  Even in single player mode Hunters won't be alone thanks to the introduction of
+  the new AI Felyne feature. Accompanying players on quests your furry ally will
+  helping them battle monsters and gather extra resources.
+release: 2008-03-27
+players: 4
+assets.boxfront: BoxFront/Monster Hunter Freedom Unite (USA) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Monster Hunter Freedom Unite (USA) (En,Fr,De,Es,It).jpg
+assets.background: Background/Monster Hunter Freedom Unite (USA) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Monster Hunter Freedom Unite (USA) (En,Fr,De,Es,It).jpg
+assets.video: Video/Monster Hunter Freedom Unite (USA) (En,Fr,De,Es,It).mp4
+x-co-op: Yes
+
+
+game: Namco Museum - Battle Collection (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Namco Museum - Battle Collection (USA) (v1.01)/Namco Museum - Battle Collection (USA) (v1.01).json
+developer: Namco Tales Studio
+publisher: Namco
+genre: Action
+description:
+  Namco Museum Battle Collection is an assortment of Namco’s more popular arcade
+  classics brought to the PSP. There are 17 original arcade games that include:
+  .
+  Pac-Man\n
+  Ms. Pac-Man\n
+  Galaga\n
+  Galaxian\n
+  Rally-X\n
+  New Rally-X\n
+  Dig Dug\n
+  Xevious\n
+  Bosconian\n
+  Motos\n
+  Mappy\n
+  Grobda\n
+  Rolling Thunder\n
+  The Tower of Druaga\n
+  Dig Dug II\n
+  Dragon Buster\n
+  King & Balloon
+  .
+  Also included are 4 updated classics that include:
+  .
+  Pac-Man Arrangement\n
+  Galaga Arrangement\n
+  Rally-X Arrangement
+  .
+  These updated classics feature new graphics with the same game-play with new
+  features added.
+  .
+  Namco Museum Battle Collection allows game sharing in original mode (classic
+  arcade games) which allows you to send the first level of 10 of the original
+  titles to another PSP without the other PSP needing to have a disc inserted.
+  Some of the original games have options available that were in the original
+  arcade games like adjusting the score at which you gain another life, the number
+  of lives you start off with, sound tests, screen tests and even the ability to
+  rotate the screen horizontally or vertically. Some other options include the
+  ability to use the analog stick fire missiles (Galaga and Galaxian), open doors
+  (Mappy), use sword (Tower of Druaga) etc. and the ability to turn off screen
+  refinement to recreate the graphics used in the original games.
+  .
+  Wireless multi-player features joining up to 3 of your friends in a versus match
+  in Pac-Man Arrangement, Galaga Arrangement or New Rally-X Arrangement and play
+  in co-op mode in Dig Dug Arrangement.
+release: 2005-08-23
+players: 4
+assets.boxfront: BoxFront/Namco Museum - Battle Collection (USA) (v1.01).jpg
+assets.boxback: BoxBack/Namco Museum - Battle Collection (USA) (v1.01).jpg
+assets.background: Background/Namco Museum - Battle Collection (USA) (v1.01).jpg
+assets.screenshot: Screenshot/Namco Museum - Battle Collection (USA) (v1.01).jpg
+assets.video: Video/Namco Museum - Battle Collection (USA) (v1.01).mp4
+x-co-op: Yes
+
+
+game: PQ - Practical Intelligence Quotient (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/PQ - Practical Intelligence Quotient (USA) (v1.01)/PQ - Practical Intelligence Quotient (USA) (v1.01).json
+developer: Now Production
+publisher: D3
+genre: Puzzle
+description:
+  Based upon psychological research, your PQ score will be determined by how
+  quickly and effectively you solve each life-like situation. Test your wits, bend
+  your brain, and match wits with the minds of users worldwide. A 3D puzzle game
+  that tests players problem solving skills, PQ uses the PSP® system's
+  Infrastructure Mode and allows players to post their PQ score on the worldwide
+  ranking site to see how they rank against other players around the world.
+release: 2006-01-10
+players: 1
+assets.boxfront: BoxFront/PQ - Practical Intelligence Quotient (USA) (v1.01).jpg
+assets.boxback: BoxBack/PQ - Practical Intelligence Quotient (USA) (v1.01).jpg
+assets.background: Background/PQ - Practical Intelligence Quotient (USA) (v1.01).jpg
+assets.screenshot: Screenshot/PQ - Practical Intelligence Quotient (USA) (v1.01).jpg
+assets.video: Video/PQ - Practical Intelligence Quotient (USA) (v1.01).mp4
+x-co-op: No
+
+
+game: PQ2 - Practical Intelligence Quotient 2 (USA) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/PQ2 - Practical Intelligence Quotient 2 (USA) (v1.01)/PQ2 - Practical Intelligence Quotient 2 (USA) (v1.01).json
+developer: Now Production
+publisher: D3Publisher
+genre: Puzzle
+description:
+  PQ2: Practical Intelligence Quotient 2 is based on testing the model of human
+  intelligence developed by Dr. Masuo Koyasu at Kyoto University.
+  .
+  PQ2: Practical Intelligence Quotient 2 shares many features with the first PQ
+  game and similar platform-like puzzle games. In each stage, the player controls
+  a human avatar in a virtual reality world, climbing and dropping from levels,
+  lifting, dropping, pushing and pulling boxes in order to activate switches and
+  lifts, block laser beams, and to create stairways in order to reach an exit
+  point. The player must also avoid guards that make rounds on the level.
+  .
+  The main game is presented as an intelligence test of 100 stages. The player is
+  given a total cumulative time of 5 hours to complete all 100 puzzles; time is
+  only counted while the player is performing the puzzles, and the player can save
+  and come back at any time without time penalty. The player's score is based on
+  the number of "moves" (excluding walking around) on the stage, the time it took
+  to complete it, and the number of attempts at that stage. A player can skip a
+  stage with a scoring penalty; levels not completed in the 5 hour limit are also
+  penalized against the player. Once completed, the player can upload their score
+  to worldwide scoring tables to compare their results.
+release: 2007-06-18
+players: 1
+assets.boxfront: BoxFront/PQ2 - Practical Intelligence Quotient 2 (USA) (v1.01).jpg
+assets.boxback: BoxBack/PQ2 - Practical Intelligence Quotient 2 (USA) (v1.01).jpg
+assets.background: Background/PQ2 - Practical Intelligence Quotient 2 (USA) (v1.01).jpg
+assets.screenshot: Screenshot/PQ2 - Practical Intelligence Quotient 2 (USA) (v1.01).jpg
+assets.video: Video/PQ2 - Practical Intelligence Quotient 2 (USA) (v1.01).mp4
+x-co-op: No
+
+
+game: Phantasy Star Portable (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Phantasy Star Portable (USA)/Phantasy Star Portable (USA).json
+developer: Alfa System
+publisher: Sega
+genre: Role-Playing
+description:
+  Sega's long-running RPG goes handheld for the first time in North America with
+  Phantasy Star Portable, a story set between the events of Phantasy Star Universe
+  and Ambition of the Illuminus. Players return to the Gurhal system where they
+  join the new character Vivienne in an attempt to investigate and clear out an
+  area contaminated after the perceived eradication of the alien SEED menace.
+  Gamers can choose from a wide variety of options when creating a custom avatar,
+  and then set about meeting new characters and collecting more than 150 items.
+  Multiplayer fans can also join up to three friends for wireless co-operative
+  exploration and combat.
+release: 2009-03-03
+players: 4
+assets.boxfront: BoxFront/Phantasy Star Portable (USA).jpg
+assets.boxback: BoxBack/Phantasy Star Portable (USA).jpg
+assets.background: Background/Phantasy Star Portable (USA).jpg
+assets.screenshot: Screenshot/Phantasy Star Portable (USA).jpg
+assets.video: Video/Phantasy Star Portable (USA).mp4
+x-co-op: Yes
+
+
+game: Phantasy Star Portable 2 Infinity (Japan) (v1.02)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Phantasy Star Portable 2 Infinity (Japan) (v1.02)/Phantasy Star Portable 2 Infinity (Japan) (v1.02).json
+developer: AlfaSystem Co., Ltd.
+publisher: Sega
+genre: Role-Playing
+description:
+  Phantasy Star Online was released for Dreamcast in 2000. To celebrate the 10th
+  anniversary, this latest entry integrates elements and features of the prequels.
+  In addition to the new "Duman" race, new features will be introduced to enhance
+  play values such as "Reincarnation System" to develop characters up to infinity
+  and the "Mission Code" to customize missions. The ultra-high-level "Infinity
+  Rank Mission" will be also added, as well as new monsters and bosses appearing
+  one after another. The number of weapon items will finally reach 3,000. The
+  design of the default characters will be all new, and new clothes\n
+  and parts will provide the users more choices in character customization than
+  ever before. The RPG game with infinite play values is coming up, pushing the
+  boundary of a portable game.
+release: 2011-02-24
+players: 4
+assets.boxfront: BoxFront/Phantasy Star Portable 2 Infinity (Japan) (v1.02).jpg
+assets.boxback: BoxBack/Phantasy Star Portable 2 Infinity (Japan) (v1.02).jpg
+assets.background: Background/Phantasy Star Portable 2 Infinity (Japan) (v1.02).jpg
+assets.screenshot: Screenshot/Phantasy Star Portable 2 Infinity (Japan) (v1.02).jpg
+x-co-op: Yes
+
+
+game: Power Stone Collection (Europe)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Power Stone Collection (Europe)/Power Stone Collection (Europe).json
+developer: Capcom
+publisher: Capcom
+genre: Fighting;Platform
+description:
+  This is a compilation of enhanced versions of Power Stone and Power Stone 2.
+  This collection includes bonuses like the Bomber Battle minigame, visual layout
+  fixes, new weapons, extra characters in Power Stone 1, and new unlockables.
+release: 2006-10-31
+players: 4
+assets.boxfront: BoxFront/Power Stone Collection (Europe).jpg
+assets.boxback: BoxBack/Power Stone Collection (Europe).jpg
+assets.background: Background/Power Stone Collection (Europe).jpg
+assets.screenshot: Screenshot/Power Stone Collection (Europe).jpg
+assets.video: Video/Power Stone Collection (Europe).mp4
+x-co-op: No
+
+
+game: Prinny - Can I Really Be the Hero (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Prinny - Can I Really Be the Hero (USA)/Prinny - Can I Really Be the Hero (USA).json
+developer: Nippon Ichi Software
+publisher: NIS America
+genre: Action;Platform
+description:
+  Prinny will be the most heart-pounding and challenging side-scrolling action
+  game ever. Players will control an unlucky penguin dude called a Prinny and
+  slash their way through various Netherworlds. For this tough-as-nails action
+  game, you're given 1000 units to accomplish your mission, but even with those
+  1000 units you will have to use everything you find on the battlefield to
+  survive. Lift and throw objects, stomp enemies, even pilot tanks and planes to
+  bombard whatever gets in your way!
+release: 2009-02-17
+players: 1
+assets.boxfront: BoxFront/Prinny - Can I Really Be the Hero (USA).jpg
+assets.boxback: BoxBack/Prinny - Can I Really Be the Hero (USA).jpg
+assets.background: Background/Prinny - Can I Really Be the Hero (USA).jpg
+assets.screenshot: Screenshot/Prinny - Can I Really Be the Hero (USA).jpg
+assets.video: Video/Prinny - Can I Really Be the Hero (USA).mp4
+x-co-op: No
+
+
+game: Prinny 2 - Dawn of Operation Panties, Dood! (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Prinny 2 - Dawn of Operation Panties, Dood! (USA)/Prinny 2 - Dawn of Operation Panties, Dood! (USA).json
+developer: Nippon Ichi Software
+publisher: NIS America
+genre: Action;Platform
+description:
+  Prinny 2: Dawn of Operation Panties, Dood! is the sequel to the PSP game Prinny:
+  Can I Really Be the Hero?. The game features the same gameplay as the original
+  with several new abilities and features.
+  .
+  Etna is still in charge of the Netherworld while Laharl is working on his
+  reincarnation. One night, Etna goes berserk due to the fact that someone broke
+  into the Overlord's Castle and stole her panties. After causing mayhem, Etna
+  sends 1000 Prinnies out to find the culprit and return her stolen underwear.
+release: 2011-01-11
+players: 1
+assets.boxfront: BoxFront/Prinny 2 - Dawn of Operation Panties, Dood! (USA).jpg
+assets.boxback: BoxBack/Prinny 2 - Dawn of Operation Panties, Dood! (USA).jpg
+assets.background: Background/Prinny 2 - Dawn of Operation Panties, Dood! (USA).jpg
+assets.screenshot: Screenshot/Prinny 2 - Dawn of Operation Panties, Dood! (USA).jpg
+assets.video: Video/Prinny 2 - Dawn of Operation Panties, Dood! (USA).mp4
+x-co-op: No
+
+
+game: Pursuit Force (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Pursuit Force (USA)/Pursuit Force (USA).json
+developer: BigBig Studios
+publisher: SCE
+genre: Action
+description:
+  Five different gangs are terrorizing the cities, namely Warlords, Capelli
+  Family, Killer66, Vixens, and Convicts. Cities are in chaos as the regular
+  police is helpless. Therefore, a special unit is formed to deal with such a
+  threat, a special unit called the Pursuit Force. You are part of that unit.
+  .
+  Your task is to hunt down the criminals and let none escape. To do so, you will
+  drive your fast car on the streets while being perfectly able to switch the
+  vehicles on the run. Yes, on the run, you can jump from car to car during high
+  speed, usually jumping on the different cars from the criminals and taking them
+  out one by one. But there's more to that than just driving different cars, you
+  can drive motorcycles, trucks, boats, even commandeer a helicopter, though there
+  are occasions you'll have to deal with the criminals on foot.
+  .
+  You can select Time Trial, Race, or Career mode. The latter one plays story-wise
+  which gives you certain variety of cases to choose from. As you get promoted
+  while successfully solving the cases, new cases will become available depending
+  upon your rank, from mere Officer to police Commander. This is a highly
+  fast-paced game with non-stop action, as most missions leave very little room
+  for mistakes.
+release: 2006-03-07
+players: 1
+assets.boxfront: BoxFront/Pursuit Force (USA).jpg
+assets.boxback: BoxBack/Pursuit Force (USA).jpg
+assets.background: Background/Pursuit Force (USA).jpg
+assets.screenshot: Screenshot/Pursuit Force (USA).jpg
+assets.video: Video/Pursuit Force (USA).mp4
+x-co-op: No
+
+
+game: Puzzle Quest - Challenge of the Warlords (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Puzzle Quest - Challenge of the Warlords (USA)/Puzzle Quest - Challenge of the Warlords (USA).json
+developer: Vicious Cycle
+publisher: D3Publisher
+genre: Puzzle;Role-Playing
+description:
+  Set in the Warlords universe, Puzzle Quest challenges gamers to create, develop
+  and customize the ultimate hero to save the land of Etheria from the evil Lord
+  Bane. In order to advance, players battle in turn-based, head-to-head
+  "match-three" style puzzle games in one of three distinct gameplay modes:
+  Single-player allows gamers to battle against the computer AI as they embark on
+  over 150 challenging quests, Instant Action allows gamers to jump in and
+  immediately play continuous battles to level-up characters without participating
+  in quests, and Multiplayer allows gamers to battle live opponents via wireless
+  connectivity. Victory will advance the player's hero, magical arsenal, creature
+  companions and more - ultimately rewarding gamers at nearly every turn and
+  providing endless hours of replayablity.
+release: 2007-03-20
+players: 1
+assets.boxfront: BoxFront/Puzzle Quest - Challenge of the Warlords (USA).jpg
+assets.boxback: BoxBack/Puzzle Quest - Challenge of the Warlords (USA).jpg
+assets.background: Background/Puzzle Quest - Challenge of the Warlords (USA).jpg
+assets.screenshot: Screenshot/Puzzle Quest - Challenge of the Warlords (USA).jpg
+assets.video: Video/Puzzle Quest - Challenge of the Warlords (USA).mp4
+x-co-op: No
+
+
+game: Ragnarok Tactics (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ragnarok Tactics (USA)/Ragnarok Tactics (USA).json
+developer: ApolloSoft
+publisher: Aksys Games
+genre: Role-Playing;Strategy
+description:
+  Many centuries after the legendary Holy War that forced humanity to erect a
+  magical barrier to keep both gods and demons from overrunning their world, the
+  Branshaldo Empire and the Aura Republic engaged in an extended war for control
+  of the Grantria Peninsula. The conflict eventually ground to a halt and an
+  uneasy truce was reached, as neither nation had the resources to continue
+  fighting. Even so, the animosity between the two parties never faded, but
+  smoldered beneath the surface, always threatening to explode into flames. In the
+  resulting tenuous peace, the people of the peninsula began to resume their
+  normal lives, always aware that the war could resume at any time.\n
+  It was against this backdrop that the protagonist begins their fight against
+  rival factions, hordes of ravening monsters controlled by enigmatic puppet
+  masters, and even their own dark impulses...
+release: 2012-11-06
+players: 2
+assets.boxfront: BoxFront/Ragnarok Tactics (USA).jpg
+assets.boxback: BoxBack/Ragnarok Tactics (USA).jpg
+assets.background: Background/Ragnarok Tactics (USA).jpg
+assets.screenshot: Screenshot/Ragnarok Tactics (USA).jpg
+assets.video: Video/Ragnarok Tactics (USA).mp4
+x-co-op: No
+
+
+game: Rengoku - The Tower of Purgatory (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Rengoku - The Tower of Purgatory (USA)/Rengoku - The Tower of Purgatory (USA).json
+developer: Neverland
+publisher: Konami
+genre: Action;Adventure
+description:
+  In Rengoku, the player takes control of a android called A.D.A.M. (Autonomous
+  Dueling Armed Machine) who, along with his fellow androids, was created by
+  mankind for war purposes, but once peace is achieved, the androids are placed in
+  a tower called Purgatory, using them to compete in a series of gladiator-type
+  fights.
+  .
+  The A.D.A.M. that the player takes control of develops an electronic soul and
+  tries to escape, the humans, realizing this, set loose the other androids in the
+  tower on a mission to destroy him. The gameplay is mostly a shooting game, mixed
+  with a bit of RPG elements. There are several levels to complete, each becoming
+  harder and with more androids to destroy, destroying them will make the android
+  stronger and have the ability to upgrade its weaponry.
+  .
+  Starting out with bare hands and eventually upgrading to weapons, but unlike
+  other games, the guns are mounted to the android himself with the ability to
+  have weapons coming from its hands, arms, legs and even its forehead with the
+  ability to use multiple weapons at one time.
+release: 2005-04-26
+players: 4
+assets.boxfront: BoxFront/Rengoku - The Tower of Purgatory (USA).jpg
+assets.boxback: BoxBack/Rengoku - The Tower of Purgatory (USA).jpg
+assets.background: Background/Rengoku - The Tower of Purgatory (USA).jpg
+assets.screenshot: Screenshot/Rengoku - The Tower of Purgatory (USA).jpg
+assets.video: Video/Rengoku - The Tower of Purgatory (USA).mp4
+x-co-op: No
+
+
+game: Resistance - Retribution (USA) (En,Ja,Fr,Es)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Resistance - Retribution (USA) (En,Ja,Fr,Es)/Resistance - Retribution (USA) (En,Ja,Fr,Es).json
+developer: Bend Studio
+publisher: Sony Computer Entertainment
+genre: Action
+description:
+  Resistance: Retribution takes place weeks after the events of the PS3 title
+  Resistance: Fall of Man. The player is James Grayson, a former British Marine.
+  Grayson finds his brother infected by the Chimera virus and goes on to destroy
+  every conversion centre he can find. The Maquis enlist Grayson, and it's his job
+  to retake Europe from the Chimera. The game is presented as a third-person
+  shooter and makes use of a cover system that allows the player to hide behind
+  objects. While hiding from Chimera, Grayson is able to pop out quickly and
+  attack the enemy. Covers are locked automatically when Grayson goes near them
+  and aiming assistance is also provided.
+  .
+  Players who own a copy of Resistance 2 and play Resistance: Retribution on a PSP
+  2000 or 3000 can connect the AV output to a television to play the game with a
+  DualShock 3 controller. Also when owning both games, they can be linked using a
+  USB cable to open up the Infected mode. It provides an alternate history, mixing
+  events of the two games. Grayson is recruited by Specter Lieutenant David
+  LaSalle (from Resistance 2) and is infected with a mutated version of the
+  Chimeran virus. In this game mode, Grayson wears a Specter uniform and has
+  glowing Chimeran eyes. He can regenerate health, gets access to new weapons and
+  breathes underwater. He is also able to reach hidden passages and pick up intel,
+  unlocking plasma grenades and even a further expanded story. This game mode ends
+  when the game is quit and progress cannot be saved.
+  .
+  Multiplayer consists of battles through Ad Hoc and Infrastructure with
+  statistics tracking on MyResistance.net. The included game modes are deathmatch,
+  team deathmatch, containment, capture the flag and assimilation.
+release: 2009-03-17
+players: 1
+assets.boxfront: BoxFront/Resistance - Retribution (USA) (En,Ja,Fr,Es).jpg
+assets.boxback: BoxBack/Resistance - Retribution (USA) (En,Ja,Fr,Es).jpg
+assets.background: Background/Resistance - Retribution (USA) (En,Ja,Fr,Es).jpg
+assets.screenshot: Screenshot/Resistance - Retribution (USA) (En,Ja,Fr,Es).jpg
+assets.video: Video/Resistance - Retribution (USA) (En,Ja,Fr,Es).mp4
+x-co-op: No
+
+
+game: Riviera - The Promised Land (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Riviera - The Promised Land (USA)/Riviera - The Promised Land (USA).json
+developer: Sting
+publisher: Atlus
+genre: Role-Playing
+description:
+  During the great Ragnarok war, the gods of Asgard were overrun by demons from
+  Utgard. In order to save the rest of the world from demons, the gods sacrificed
+  their lives to create Grim Angels, black-winged warriors armed with sacred
+  weapons known as "Diviners". The Grim Angels defeated the demons, and turned
+  Utgard into a beautiful land, Riviera.
+  .
+  Thousand years later, a rumor concerning the demons' return begins to spread.
+  Hector, one of the seven Magi entrusted by the gods to watch over Riviera, sends
+  the Grim Angels Ein and Ledah there, ordering them to activate the
+  "Retribution", a power that would eliminate the demons but also destroy Riviera.
+  Ein is defeated by Ursula, Riviera's guardian, and wakes up with amnesia,
+  unaware of his past and the role he will have to play in the future of the land.
+  .
+  Riviera: The Promised Land is a Japanese-style role-playing game. Unlike most
+  RPGs, it does not allow the player to physically navigate a character to explore
+  the game world. Instead, the player activates "triggers", i.e. events that lead
+  to cutscenes, combat, items, etc., by spending special trigger points earned
+  during battles. This is done by investigating areas, moving from screen to
+  screen.
+  .
+  Once a turn-based battle is triggered, the player selects three active
+  combatants out of the available five, selects a formation for the party (attack-
+  or magic-oriented), and chooses which four items to bring into the battle. The
+  items activate skills for various characters; if a character has been trained
+  with that item, he or she can use powerful "OverSkills" by gradually filling the
+  OverDrive gauge. Items can be used a limited amount of times before they break.
+  .
+  The game also contains dating gameplay elements. The player can make decisions
+  for Ein concerning his female companions, raising or lowering their trust level
+  and eventually reaching one of the multiple endings determined by the
+  relationships between Ein and the young women in his party.
+release: 2007-07-10
+players: 1
+assets.boxfront: BoxFront/Riviera - The Promised Land (USA).jpg
+assets.boxback: BoxBack/Riviera - The Promised Land (USA).jpg
+assets.background: Background/Riviera - The Promised Land (USA).jpg
+assets.screenshot: Screenshot/Riviera - The Promised Land (USA).jpg
+assets.video: Video/Riviera - The Promised Land (USA).mp4
+x-co-op: No
+
+
+game: SNK Arcade Classics Vol. 1 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/SNK Arcade Classics Vol. 1 (USA)/SNK Arcade Classics Vol. 1 (USA).json
+developer: Terminal Reality
+publisher: SNK Neogeo USA Consumer
+genre: Action
+description:
+  This compilation includes sixteen classic SNK arcade games on a single disc:
+  .
+  Art of Fighting\n
+  Baseball Stars 2\n
+  Burning Fight\n
+  Fatal Fury\n
+  King of the Monsters\n
+  Last Resort\n
+  Magician Lord\n
+  Metal Slug\n
+  Neo Turf Masters\n
+  Samurai Shodown\n
+  Sengoku\n
+  Shock Troopers\n
+  Super Sidekicks 3\n
+  The King of Fighters '94\n
+  Top Hunter\n
+  World Heroes (unlockable game)
+  .
+  The games are straight-forward arcade ports, with the addition of certain
+  "goals" for the games, which act like achievements. Clearing these goals unlocks
+  hidden features in the disc, such as artwork, music, move lists (for the
+  fighting games) and gameplay videos (which showcase hidden locations within the
+  games.)
+release: 2008-04-29
+players: 2
+assets.boxfront: BoxFront/SNK Arcade Classics Vol. 1 (USA).jpg
+assets.boxback: BoxBack/SNK Arcade Classics Vol. 1 (USA).jpg
+assets.background: Background/SNK Arcade Classics Vol. 1 (USA).jpg
+assets.screenshot: Screenshot/SNK Arcade Classics Vol. 1 (USA).jpg
+assets.video: Video/SNK Arcade Classics Vol. 1 (USA).mp4
+x-co-op: Yes
+
+
+game: Shadow of Destiny (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Shadow of Destiny (USA)/Shadow of Destiny (USA).json
+developer: Konami Computer Entertainment Tokyo
+publisher: Konami
+genre: Adventure
+description:
+  Set in a fictional German town named Lebensbaum (Life's Tree), Shadow of
+  Memories revolves around a 22-year-old man named Eike Kusch, who dies in the
+  beginning of the game from being stabbed after leaving a small diner. However,
+  he is resurrected by Homunculus (voiced by Charles Martinet in English), a djinn
+  or genie, who offers to send him back in time to prevent his death and gives him
+  the time-traveling digipad. Eike explores four eras—2001, 1980, 1902 and 1580—as
+  he attempts to unmask his killer and figure out a way of stopping his own murder
+  at various points in the present. Along the way he encounters several
+  characters: Dana, a modern-day waitress whom he accidentally brings back to the
+  year 1580 and loses; the present-day fortune teller, who tells Eike the hour of
+  his death; Eckart Brum, the curator of a private art museum who lost his wife
+  and infant daughter in a shooting; Dr. Wolfgang Wagner, an alchemist living in
+  1580 with his wife, Helena, and their two children, Hugo and Margarette; and
+  Alfred Brum, the great-grandfather of Eckart.
+  .
+  Given a red stone by Dana, Eike follows the Homunculus' instructions to give the
+  stone to Wagner. Time-traveling ten days later, Eike discovers that the result
+  of Wagner's experiment destroyed the lab and caused Hugo, already upset by his
+  mother's death due to a lingering illness, to build a time machine and track
+  Eike down with the intent of killing him. Depending on the player's actions,
+  Hugo holds either Margarette or Dana hostage in the present and plans to use the
+  red stone, revealed to be the Philosopher's stone, to resurrect his mother.
+release: 2010-01-26
+players: 1
+assets.boxfront: BoxFront/Shadow of Destiny (USA).jpg
+assets.boxback: BoxBack/Shadow of Destiny (USA).jpg
+assets.background: Background/Shadow of Destiny (USA).jpg
+assets.screenshot: Screenshot/Shadow of Destiny (USA).jpg
+assets.video: Video/Shadow of Destiny (USA).mp4
+x-co-op: No
+
+
+game: Shin Megami Tensei - Persona (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Shin Megami Tensei - Persona (USA)/Shin Megami Tensei - Persona (USA).json
+developer: Atlus
+publisher: Atlus
+genre: Role-Playing
+description:
+  EXPERIENCE CHAPTER ONE OF THE FAMED PERSONA RPG SERIES: Completely rebalanced
+  and remade, SMT: Persona allows younger fans of the series to find out what
+  everyone's been talking about for years, and gives long-time SMT supporters a
+  wholly different take on an all-time classic. The Key features are rebalanced,
+  relocalized, and remade. Fully re-translated and featuring all new musical
+  compositions from Shoji Meguro, famed composer of Persona 3 and 4, SMT: Persona
+  is the perfect example of how a remake should be done. This definitive version
+  includes content never before seen in North America. Reformatted to take
+  advantage of the PSP hardware, this remake includes a new widescreen aspect
+  ratio, redone music and sound, and all new animation, presenting the story
+  better than ever before. Long known for its daring, often morally-charged
+  stories, the SMT series has established itself as one of the premiere RPG series
+  in terms of plot and characters, and SMT: Persona is no exception.
+release: 2009-09-22
+players: 1
+assets.boxfront: BoxFront/Shin Megami Tensei - Persona (USA).jpg
+assets.boxback: BoxBack/Shin Megami Tensei - Persona (USA).jpg
+assets.background: Background/Shin Megami Tensei - Persona (USA).jpg
+assets.screenshot: Screenshot/Shin Megami Tensei - Persona (USA).jpg
+assets.video: Video/Shin Megami Tensei - Persona (USA).mp4
+x-co-op: No
+
+
+game: Shin Megami Tensei - Persona 2 - Innocent Sin (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Shin Megami Tensei - Persona 2 - Innocent Sin (USA)/Shin Megami Tensei - Persona 2 - Innocent Sin (USA).json
+developer: Atlus
+publisher: Atlus
+genre: Role-Playing
+description:
+  Rumor becomes reality...
+  .
+  The story takes place in Sumaru City, Japan. Its protagonist attends Seven
+  Sisters High School, whose emblem is considered a status symbol, even amongst
+  other schools. Soon, though, a rumor that Sevens' emblem was actually cursed,
+  and that wearing it would disfigure one's face, had spread around the city.
+  .
+  Even worse, the rumor came true...
+  .
+  And it was only the beginning of a string of rumors becoming reality, one after
+  another...
+  .
+  Before long, the protagonist's party members discover the power to summon
+  another side of them called 'Personas,' which they use to investigate the
+  strange incidents around the city, all while facing their own personal demons as
+  well. Time is once again on the march...\n
+  The only Persona game to never see a formal release in North America is finally
+  here, with new quests, refinements, and more! Contact enemy demons to gain
+  items, tarot cards, and vital information only they have. Negotiate carefully:
+  every demon reacts differently!
+release: 2011-09-20
+players: 1
+assets.boxfront: BoxFront/Shin Megami Tensei - Persona 2 - Innocent Sin (USA).jpg
+assets.boxback: BoxBack/Shin Megami Tensei - Persona 2 - Innocent Sin (USA).jpg
+assets.background: Background/Shin Megami Tensei - Persona 2 - Innocent Sin (USA).jpg
+assets.screenshot: Screenshot/Shin Megami Tensei - Persona 2 - Innocent Sin (USA).jpg
+assets.video: Video/Shin Megami Tensei - Persona 2 - Innocent Sin (USA).mp4
+x-co-op: No
+
+
+game: Shin Megami Tensei - Persona 3 Portable (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Shin Megami Tensei - Persona 3 Portable (USA)/Shin Megami Tensei - Persona 3 Portable (USA).json
+developer: Atlus
+publisher: Atlus
+genre: Role-Playing
+description:
+  Shin Megami Tensei: Persona 3 Portable is a single player,  team-based RPG that
+  brings the thought-provokingly addictive fun that made Persona 3 a runaway hit
+  on PlayStation 2 to PlayStation Portable. The game contains most of the content
+  from the original Persona 3 as well as some elements of Persona 3: FES, and
+  features the new and abilities to play as a female character and to directly
+  control your teammates in combat. Additional functionality includes Skill Cards,
+  part-time jobs, one-button menu shortcuts, streamlined team equipment changes
+  and shortened load screens optimized for PSP.
+release: 2010-07-06
+players: 1
+assets.boxfront: BoxFront/Shin Megami Tensei - Persona 3 Portable (USA).jpg
+assets.boxback: BoxBack/Shin Megami Tensei - Persona 3 Portable (USA).jpg
+assets.background: Background/Shin Megami Tensei - Persona 3 Portable (USA).jpg
+assets.screenshot: Screenshot/Shin Megami Tensei - Persona 3 Portable (USA).jpg
+assets.video: Video/Shin Megami Tensei - Persona 3 Portable (USA).mp4
+x-co-op: No
+
+
+game: Sid Meier's Pirates! (USA) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Sid Meier's Pirates! (USA) (En,Fr,De,Es,It)/Sid Meier's Pirates! (USA) (En,Fr,De,Es,It).json
+developer: Full Fat
+publisher: 2K Games
+genre: Adventure;Strategy
+description:
+  In Sid Meier's Pirates!, a strategy/adventure game, players take the role of a
+  Pirate Captain in the 17th century Caribbean - amassing fortune and fame in an
+  attempt to seize a rightful place as one of the most revered and feared pirates
+  in history. Players test their skills as a sea captain exploring the high seas
+  and dueling in land and sea battles in a richly detailed 3D world. Additional
+  features for the PSP system include wireless Ad-Hoc multiplayer for up to four
+  players, widescreen graphics, new treasure hunts and more.
+release: 2007-01-22
+players: 1
+assets.boxfront: BoxFront/Sid Meier's Pirates! (USA) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Sid Meier's Pirates! (USA) (En,Fr,De,Es,It).jpg
+assets.background: Background/Sid Meier's Pirates! (USA) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Sid Meier's Pirates! (USA) (En,Fr,De,Es,It).jpg
+assets.video: Video/Sid Meier's Pirates! (USA) (En,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Star Ocean - First Departure (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Star Ocean - First Departure (USA)/Star Ocean - First Departure (USA).json
+developer: tri-Ace
+publisher: Square Enix
+genre: Role-Playing
+description:
+  A PSP remake of Star Ocean, which was never released in the U.S., First
+  Departure adds several new elements, including all new backgrounds and a tweaked
+  battle system, while still preserving the exciting storyline and themes of the
+  original.
+  .
+  It is Space Date 346, and in a sleepy town on the planet Roak, defense-force
+  members Roddick, Millie, and Dorn are on yet another dull patrol when a
+  mysterious plague begins turning people to stone. Fortunately, Ronyx and Ilia,
+  members of a Terran Alliance reconnaissance mission, beam down to the surface
+  just in time. They explain that the plague is actually a biological weapon, and
+  they take the defense-force to the space vessel to discuss how to save Roak from
+  this mysterious attack.
+release: 2008-10-21
+players: 1
+assets.boxfront: BoxFront/Star Ocean - First Departure (USA).jpg
+assets.boxback: BoxBack/Star Ocean - First Departure (USA).jpg
+assets.background: Background/Star Ocean - First Departure (USA).jpg
+assets.screenshot: Screenshot/Star Ocean - First Departure (USA).jpg
+assets.video: Video/Star Ocean - First Departure (USA).mp4
+x-co-op: No
+
+
+game: Star Ocean - Second Evolution (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Star Ocean - Second Evolution (USA)/Star Ocean - Second Evolution (USA).json
+developer: tri-Ace
+publisher: Square Enix
+genre: Role-Playing
+description:
+  Space Date 366: A young Federation officer finds himself transported to a
+  mystical planet, where he is suddenly anointed as the Hero of Light. He begins a
+  journey to fulfill a prophecy and save a newfound race. Continuing the franchise
+  for Star Ocean fans, this PSP release of the classic RPG delivers the same epic
+  storytelling and dazzling art style. Set 20 years after the events of its
+  predecessor, Star Ocean 2 receives special treatment in its PSP incarnation to
+  further entice gamers to relive the adventure. The title takes the next step
+  with fully animated movies, all-new character designs, extra playable
+  characters, fully voiced dialogue, and more.
+release: 2009-01-20
+players: 1
+assets.boxfront: BoxFront/Star Ocean - Second Evolution (USA).jpg
+assets.boxback: BoxBack/Star Ocean - Second Evolution (USA).jpg
+assets.background: Background/Star Ocean - Second Evolution (USA).jpg
+assets.screenshot: Screenshot/Star Ocean - Second Evolution (USA).jpg
+assets.video: Video/Star Ocean - Second Evolution (USA).mp4
+x-co-op: No
+
+
+game: Tactics Ogre - Let Us Cling Together (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Tactics Ogre - Let Us Cling Together (USA)/Tactics Ogre - Let Us Cling Together (USA).json
+developer: Square Enix
+publisher: Square Enix
+genre: Role-Playing;Strategy
+description:
+  The creators of Final Fantasy Tactics bring you the next evolution in Tactics
+  games from Square Enix in Tactics Ogre: Let Us Cling Together! A dream team lead
+  by Yasumi Matsuno has reunited to bring a perfect vision of their lost tale of
+  political intrigue, conquest, and rebellion to vivid life. Experience an epic
+  story where your choices determine the fate of the Walister Resistance.
+release: 2011-02-14
+players: 1
+assets.boxfront: BoxFront/Tactics Ogre - Let Us Cling Together (USA).jpg
+assets.boxback: BoxBack/Tactics Ogre - Let Us Cling Together (USA).jpg
+assets.background: Background/Tactics Ogre - Let Us Cling Together (USA).jpg
+assets.screenshot: Screenshot/Tactics Ogre - Let Us Cling Together (USA).jpg
+assets.video: Video/Tactics Ogre - Let Us Cling Together (USA).mp4
+x-co-op: No
+
+
+game: Tales of Destiny 2 (Japan)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Tales of Destiny 2 (Japan)/Tales of Destiny 2 (Japan).json
+developer: Wolf Team
+publisher: Namco
+genre: Role-Playing
+description:
+  Not to be confused with Tales of Destiny II (original name Tales of Eternia),
+  this installment in the Tales Of... series, unreleased in the West, is one of
+  the few "true" sequels within the franchise, directly connected in its setting
+  and plot to Tales of Destiny.
+  .
+  The story takes place eighteen years after the events depicted in Tales of
+  Destiny. Kyle, the son of the previous game's hero, is trying to find support
+  for an orphanage operated by his parents. On his journey, he comes into contact
+  with a powerful energy source known as Lens. A girl steps out of it, telling
+  Kyle that she is on a quest to find a true hero. Naturally, Kyle is that hero;
+  and very soon, he will have to prove it, when a mysterious woman uses the power
+  of the Lens to revert history, sending Kyle into an alternate universe, in which
+  the ancient Aeth'er Wars were won by a different side...
+  .
+  Gameplay-wise, Tales of Destiny 2 is very similar to its predecessors in the
+  series. As before, most of the game is played in a Japanese RPG fashion, with
+  town and dungeon exploration, and random combat. The trademark side-scrolling
+  action-based battles of the series remain intact in this installment; for the
+  first time, a zoom feature allows a more detailed view of combat.
+  .
+  Player-controlled characters learn skills of different tiers, which can be
+  chained into combos. Performing combos increases the damage inflicted on the
+  enemy, and provides bonus experience. Powerful special techniques cost TP
+  (technical points) as well as SP (spirit points) to execute.
+release: 2007-02-15
+players: 1
+assets.boxfront: BoxFront/Tales of Destiny 2 (Japan).jpg
+assets.boxback: BoxBack/Tales of Destiny 2 (Japan).jpg
+assets.background: Background/Tales of Destiny 2 (Japan).jpg
+assets.screenshot: Screenshot/Tales of Destiny 2 (Japan).jpg
+assets.video: Video/Tales of Destiny 2 (Japan).mp4
+x-co-op: No
+
+
+game: Tales of Eternia (Europe) (v2.02)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Tales of Eternia (Europe) (v2.02)/Tales of Eternia (Europe) (v2.02).json
+developer: Namco
+publisher: Ubisoft
+genre: Role-Playing
+description:
+  Follow the amazing adventures of two friends, Reid and Farah, in the legendary
+  RPG Tales of Eternia
+  .
+  Reid Hershel, Farah Oersted, and a mysterious girl named Meredy must embark on a
+  journey to learn the truth on the fate of their world. The story begins when
+  Reid and Farrah attend to the crash of a spaceship near their hometown, Rashea.
+  As they investigate the place of the incident, a weird blue animal leads them to
+  a young girl injured by the crash who speaks an unknown language. Further on,
+  Reid and Farah learn that the mysterious girl, named Meredy, came here to
+  prevent a deadly collision between her planet, Celestia, and Reid and Farah's
+  world, Inferia. With the help of some friends picked up along the way, Reid,
+  Farah, and Meredy set out on a quest to collect a set of spiritual beings, their
+  only hope to save both of their planets from a terrible disaster.
+  .
+  * Control 1 character out of a party of 4 through magnificent 2D environments
+  and 3D world maps.\n
+  * Master the "Tales of" Linear Motion Battle System; built around different
+  striking techniques, real-time combos and spells.\n
+  * Discover a bunch of challenging mini games perfectly implemented to the story
+  that will make the characters earn unique features.
+release: 2006-02-10
+players: 1
+assets.boxfront: BoxFront/Tales of Eternia (Europe) (v2.02).jpg
+assets.boxback: BoxBack/Tales of Eternia (Europe) (v2.02).jpg
+assets.background: Background/Tales of Eternia (Europe) (v2.02).jpg
+assets.screenshot: Screenshot/Tales of Eternia (Europe) (v2.02).jpg
+assets.video: Video/Tales of Eternia (Europe) (v2.02).mp4
+x-co-op: No
+
+
+game: Tales of Phantasia - Narikiri Dungeon X (Japan) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Tales of Phantasia - Narikiri Dungeon X (Japan) (v1.01)/Tales of Phantasia - Narikiri Dungeon X (Japan) (v1.01).json
+developer: Bandai Namco Games
+publisher: Bandai Namco
+genre: Action;Role-Playing
+description:
+  Tales of Phantasia: Narikiri Dungeon X is a Role-Playing game, developed and
+  published by Bandai Namco Games, which was released in Japan in 2010. It
+  includes Tales of Phantasia & Tales of Phantasia X.
+release: 2010-08-05
+players: 2
+assets.boxfront: BoxFront/Tales of Phantasia - Narikiri Dungeon X (Japan) (v1.01).jpg
+assets.boxback: BoxBack/Tales of Phantasia - Narikiri Dungeon X (Japan) (v1.01).jpg
+assets.background: Background/Tales of Phantasia - Narikiri Dungeon X (Japan) (v1.01).jpg
+assets.screenshot: Screenshot/Tales of Phantasia - Narikiri Dungeon X (Japan) (v1.01).jpg
+x-co-op: Yes
+
+
+game: Tales of Rebirth (Japan) (v1.02)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Tales of Rebirth (Japan) (v1.02)/Tales of Rebirth (Japan) (v1.02).json
+developer: Namco Tales Studio
+publisher: Bandai Namco Games
+genre: Action;Role-Playing
+description:
+  In this installment of Tales of... series, you play the role of the 18-year old
+  Veigue, an orphan who grew up in a village together with Claire. One day Claire
+  is kidnapped by a group of soldiers who belong to a mysterious organization.
+  Veigue and his friends embark on a journey to save Claire, but soon the plot
+  evolves into a conflict between humans and Gajumas, beast-like creatures with
+  their own culture, and Veigue and his friends must restore peace in the world.
+  .
+  The game abandons the free-roaming combat of Tales of Symphonia, and returns to
+  2D combat style of earlier Tales of... games. You can move on three horizontal
+  lines during the battles, and attack enemies in real time. Other party members
+  can be controlled by the AI, but you also can choose to assign general commands
+  to them. The game includes other challenges such as cooking healing items for
+  yourself.
+  .
+  Tales of Rebirth features real time 3D backgrounds with 2D animé-style character
+  and enemy sprites.
+release: 2008-03-19
+players: 1
+assets.boxfront: BoxFront/Tales of Rebirth (Japan) (v1.02).jpg
+assets.boxback: BoxBack/Tales of Rebirth (Japan) (v1.02).jpg
+assets.background: Background/Tales of Rebirth (Japan) (v1.02).jpg
+assets.screenshot: Screenshot/Tales of Rebirth (Japan) (v1.02).jpg
+assets.video: Video/Tales of Rebirth (Japan) (v1.02).mp4
+x-co-op: No
+
+
+game: Tales of VS. (Japan) (v1.02)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Tales of VS. (Japan) (v1.02)/Tales of VS. (Japan) (v1.02).json
+developer: Namco Tales Studio
+publisher: Namco Bandai
+genre: Fighting
+description:
+  Tales of VS. (テイルズ オブ バーサス, Teirusu Obu Bāsasu) (pronounced as "Tales of
+  Versus") is a crossover fighting game featuring various characters across the
+  Tales video game series. It was developed by Matrix Software and published by
+  Namco Bandai Games for the PlayStation Portable on August 6, 2009 in Japan. It
+  was not localized for release in any other regions.
+release: 2009-08-06
+players: 2
+assets.boxfront: BoxFront/Tales of VS. (Japan) (v1.02).jpg
+assets.boxback: BoxBack/Tales of VS. (Japan) (v1.02).jpg
+assets.background: Background/Tales of VS. (Japan) (v1.02).jpg
+assets.screenshot: Screenshot/Tales of VS. (Japan) (v1.02).jpg
+assets.video: Video/Tales of VS. (Japan) (v1.02).mp4
+x-co-op: No
+
+
+game: Ultimate Ghosts 'n Goblins (Europe) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ultimate Ghosts 'n Goblins (Europe) (En,Fr,De,Es,It)/Ultimate Ghosts 'n Goblins (Europe) (En,Fr,De,Es,It).json
+developer: Tose Co., Ltd.
+publisher: Capcom Entertainment, Inc.
+genre: Action;Horror;Platform
+description:
+  An exclusive PSP edition of Capcom's legendary platforming game, directed by the
+  original's creator Tokurou Fujiwara. The game makes use of a 3D graphics engine,
+  giving depth to the visuals, but plays in a side-scrolling perspective and
+  similar art design to stay true to the original. Your goal is to work your way
+  through side-scrolling stages, defeating enemies and using your best platforming
+  skills. The game lets you build up your skills as you progress. You start off
+  with just a basic jump, but eventually gain a double jump and even the ability
+  to fly. You'll also earn lots of magic spells along the way. The game promises a
+  greater number of spells and weapons than ever before. New for Goku Makaimura is
+  non-linear gameplay. You're no longer on a fixed path from start to end. The
+  levels include branching points and even warp points. By using a warp point, you
+  can warp back to previous levels and collecting items that you might have
+  missed.
+release: 2006-08-29
+players: 1
+assets.boxfront: BoxFront/Ultimate Ghosts 'n Goblins (Europe) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Ultimate Ghosts 'n Goblins (Europe) (En,Fr,De,Es,It).jpg
+assets.background: Background/Ultimate Ghosts 'n Goblins (Europe) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Ultimate Ghosts 'n Goblins (Europe) (En,Fr,De,Es,It).jpg
+assets.video: Video/Ultimate Ghosts 'n Goblins (Europe) (En,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Untold Legends - Brotherhood of the Blade (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Untold Legends - Brotherhood of the Blade (USA)/Untold Legends - Brotherhood of the Blade (USA).json
+developer: Sony Online Entertainment
+publisher: Sony Online Entertainment
+genre: Role-Playing
+description:
+  Journey to a world beyond the realms of imagination and engage in battles to
+  save Aven, a timeless city of safe haven and the last remaining stronghold of
+  Good in a world of Evil. As a dark threat looms and a gathering of unknown
+  forces grows stronger, heroes have been called and the Brotherhood of the Blade
+  has been formed. It is up to you and your chosen brothers to unravel the
+  mysteries of this looming peril. Untold Legends: Brotherhood of the Blade offers
+  on-the-go action-RPG combat, intense multiplayer battles and a completely
+  original adventure for you to uncover.
+release: 2005-03-22
+players: 4
+assets.boxfront: BoxFront/Untold Legends - Brotherhood of the Blade (USA).jpg
+assets.boxback: BoxBack/Untold Legends - Brotherhood of the Blade (USA).jpg
+assets.background: Background/Untold Legends - Brotherhood of the Blade (USA).jpg
+assets.screenshot: Screenshot/Untold Legends - Brotherhood of the Blade (USA).jpg
+assets.video: Video/Untold Legends - Brotherhood of the Blade (USA).mp4
+x-co-op: No
+
+
+game: Valkyria Chronicles II (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Valkyria Chronicles II (USA)/Valkyria Chronicles II (USA).json
+developer: Sega
+publisher: Sega
+genre: Strategy;Turn-Based;Tactics
+description:
+  The story of Valkyria Chronicles 2 takes place two years after the conclusion of
+  the original game. A group of young Gallian Military Academy cadets find
+  themselves plunged into a bitter civil war when the newly formed Gallian
+  Revolutionary Army stages a coup. As the epic drama unfolds in the game, players
+  will experience stories of friendship, love and growing pains during a time of
+  war and revolution.
+release: 2010-01-21
+players: 1
+assets.boxfront: BoxFront/Valkyria Chronicles II (USA).jpg
+assets.boxback: BoxBack/Valkyria Chronicles II (USA).jpg
+assets.background: Background/Valkyria Chronicles II (USA).jpg
+assets.screenshot: Screenshot/Valkyria Chronicles II (USA).jpg
+assets.video: Video/Valkyria Chronicles II (USA).mp4
+x-co-op: No
+
+
+game: Valkyrie Profile - Lenneth (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Valkyrie Profile - Lenneth (USA)/Valkyrie Profile - Lenneth (USA).json
+developer: TOSE
+publisher: Square Enix
+genre: Role-Playing
+description:
+  Asgard, the realm of the gods, remains locked in an eternal struggle between the
+  benevolent Aesir and the demonic Vanir. With the end of the world approaching,
+  Odin, Lord of Asgard, summons Lenneth Valkyrie to his side. Possessing the
+  ability to hear the thoughts and feelings of men and women in their dying
+  moments, he charges Valkyrie to search Midgard, the world of mortals, to recruit
+  and train the souls of worthy warriors to join the ranks of the Aesir in the
+  Sacred War. Valkyrie Profile: Lenneth brings the classic PlayStation® game
+  console title, originally released in 2000, to the PSP system with completely
+  new CG cut scenes. tri-Ace, the developers behind the acclaimed Star Ocean
+  series and "Radiata Stories", introduce new fans to the spectacular combo
+  attacks, unique side-scrolling environment, and gripping storyline that first
+  captivated players six years ago. To give players a deeper understanding of the
+  plot and to complement the game's dramatic storyline, additional CG cutscenes
+  have been incorporated. Some of these new scenes contain links to the story of
+  "Valkyrie Profile 2: Silmeria".
+release: 2006-07-18
+players: 1
+assets.boxfront: BoxFront/Valkyrie Profile - Lenneth (USA).jpg
+assets.boxback: BoxBack/Valkyrie Profile - Lenneth (USA).jpg
+assets.background: Background/Valkyrie Profile - Lenneth (USA).jpg
+assets.screenshot: Screenshot/Valkyrie Profile - Lenneth (USA).jpg
+assets.video: Video/Valkyrie Profile - Lenneth (USA).mp4
+x-co-op: No
+
+
+game: WTF - Work Time Fun (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/WTF - Work Time Fun (USA)/WTF - Work Time Fun (USA).json
+developer: Sony Computer Entertainment Japan
+publisher: D3Publisher of America, Inc.
+genre: Party
+description:
+  Created specifically for the PSP system, WTF is a crazy collection of fun and
+  addictive mini-games that drive the player to perform sometimes trivial,
+  sometimes mind-bending, but always fun jobs in pursuit of the almighty dollar.
+  The latest in a long line of unique Japanese games that have gained popularity
+  in the United States, WTF delivers gamers compelling, bite-sized morsels of
+  frenzied arcade-style action unlike anything ever seen on the PSP system.
+release: 2006-10-17
+players: 1
+assets.boxfront: BoxFront/WTF - Work Time Fun (USA).jpg
+assets.boxback: BoxBack/WTF - Work Time Fun (USA).jpg
+assets.background: Background/WTF - Work Time Fun (USA).jpg
+assets.screenshot: Screenshot/WTF - Work Time Fun (USA).jpg
+assets.video: Video/WTF - Work Time Fun (USA).mp4
+x-co-op: No
+
+
+game: What Did I Do to Deserve This, My Lord! 2 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/What Did I Do to Deserve This, My Lord! 2 (USA)/What Did I Do to Deserve This, My Lord! 2 (USA).json
+developer: Acquire
+publisher: Nippon Ichi Software
+genre: Strategy
+description:
+  Become the God of Destruction! Build a thriving natural ecosystem, a twisting,
+  tunneling dungeon underneath the earth, and fill it with hordes of terrible
+  monsters to protect the evil overlord, Badman. Ensure that he is safe from
+  armies of nasty humans, eager to ransack the place, steal your loot, and prevent
+  Badman from taking over the world!
+  .
+  Holy Invasion of Privacy, Badman! is a strategy game in the vein of the Bullfrog
+  game, Dungeon Keeper. Players use their pickaxe to dig deep into the earth to
+  protect the villain, Badman, from harm. Their goal is to create monsters by
+  digging up nutrient-filled blocks, which produce monsters. The more nutrients
+  inside the block, the more powerful the monster is. By creating all sorts of
+  powerful monsters, you'll increase your 'Battle Power', which indicates how
+  powerful Badman's entire army is.
+  .
+  Players only have a limited amount of 'Dig Power' available. After this runs
+  out, they cannot dig through the earth any more, and must rely on the monsters
+  to take care of the dungeon. More Dig Power can be earned for each level by not
+  using all the Dig Power you were given, or by earning bonus Dig Power at the end
+  of the level.
+release: 2010-05-10
+players: 1
+assets.boxfront: BoxFront/What Did I Do to Deserve This, My Lord! 2 (USA).jpg
+assets.boxback: BoxBack/What Did I Do to Deserve This, My Lord! 2 (USA).jpg
+assets.background: Background/What Did I Do to Deserve This, My Lord! 2 (USA).jpg
+assets.screenshot: Screenshot/What Did I Do to Deserve This, My Lord! 2 (USA).jpg
+assets.video: Video/What Did I Do to Deserve This, My Lord! 2 (USA).mp4
+x-co-op: No
+
+
+game: Wild Arms XF (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Wild Arms XF (USA)/Wild Arms XF (USA).json
+developer: Media Vision
+publisher: Sony
+genre: Role-Playing;Strategy
+description:
+  Wild Arms XF is a 2D turn-based tactical role-playing game, creating a gameplay
+  experience somewhere between Dungeons & Dragons and chess. Players are given
+  control of a small squad of characters (six or less) and placed on a grid-based
+  map resembling a geographical location (a swamp, a town, a river), upon which
+  they fight battles to progress through the game. As with most T/RPGs, positional
+  advantage can be critical to victory, and players are encouraged to outmaneuver
+  their enemies as well as outgun them. The game emphasizes positioning and
+  maneuvering by the inclusion of "Formation Arts," which increase attack damage
+  when an enemy is surrounded by your characters in a line, a triangle or a
+  circle. Wild Arms XF is a member of the small subsection of T/RPGs whose
+  battlefields are based around hexagonal tiles instead of squares. "Combination
+  Arts" return from previous Wild ARMs titles, allowing characters to target an
+  enemy in a waiting state and then deliver their attacks simultaneously with the
+  next ally to attack their target. If the player succeeds in executing an
+  uninterrupted series of commands, the damage inflicted upon enemies will
+  increase significantly. On the other hand, the enemy gets the same advantage.
+release: 2008-03-11
+players: 1
+assets.boxfront: BoxFront/Wild Arms XF (USA).jpg
+assets.boxback: BoxBack/Wild Arms XF (USA).jpg
+assets.background: Background/Wild Arms XF (USA).jpg
+assets.screenshot: Screenshot/Wild Arms XF (USA).jpg
+assets.video: Video/Wild Arms XF (USA).mp4
+x-co-op: No
+
+
+game: Ys - The Ark of Napishtim (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ys - The Ark of Napishtim (USA)/Ys - The Ark of Napishtim (USA).json
+developer: Falcom
+publisher: Konami
+genre: Action;Role-Playing
+description:
+  The story begins after Adol's ship is attacked by a fleet of Romun ships. Forced
+  to sail into an unknown area, they encounter a large storm. Adol is swept off
+  the vessel while trying to rescue a fellow sailor and washed ashore by the
+  vortex that surrounds the Canaan Islands. He is found, unconscious, by the
+  daughters of the chieftain of the nearby Rehda village, Olha and Isha. The girls
+  take him to their village and lay him to rest in their father's house. Adol
+  hears them talking about him and wakes up briefly, afterwards going back to
+  sleep because of his exhaustion. His adventure then begins.
+release: 2006-02-28
+players: 1
+assets.boxfront: BoxFront/Ys - The Ark of Napishtim (USA).jpg
+assets.boxback: BoxBack/Ys - The Ark of Napishtim (USA).jpg
+assets.background: Background/Ys - The Ark of Napishtim (USA).jpg
+assets.screenshot: Screenshot/Ys - The Ark of Napishtim (USA).jpg
+assets.video: Video/Ys - The Ark of Napishtim (USA).mp4
+x-co-op: No
+
+
+game: Ys - The Oath in Felghana (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ys - The Oath in Felghana (USA)/Ys - The Oath in Felghana (USA).json
+developer: Falcom
+publisher: Xseed Games
+genre: Action;Role-Playing
+description:
+  Ys: The Oath in Felghana is a re-imagined remake celebrating the 20th
+  anniversary of the classic third game from the long-running Ys series, Ys III:
+  Wanderers From Ys. Its rebirth on PSP includes a complete graphical overhaul,
+  fully revamped gameplay, intense 3D action, and additional story elements
+  culminating with full voice-overs during story sequences. Other additional
+  features include a rearranged soundtrack, adjustable difficulty levels, and an
+  art gallery, all ensuring that this beautifully re-imagined classic can be
+  enjoyed equally by Wanderers veterans and series newcomers alike.
+release: 2010-11-02
+players: 1
+assets.boxfront: BoxFront/Ys - The Oath in Felghana (USA).jpg
+assets.boxback: BoxBack/Ys - The Oath in Felghana (USA).jpg
+assets.background: Background/Ys - The Oath in Felghana (USA).jpg
+assets.screenshot: Screenshot/Ys - The Oath in Felghana (USA).jpg
+assets.video: Video/Ys - The Oath in Felghana (USA).mp4
+x-co-op: No
+
+
+game: Ys I & II Chronicles (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ys I & II Chronicles (USA)/Ys I & II Chronicles (USA).json
+developer: Falcom
+publisher: Xseed Games
+genre: Action;Role-Playing
+description:
+  Ys I & II consists of enhanced remakes of the first two games released in the Ys
+  series, Ys I: Ancient Ys Vanished and Ys II: Ancient Ys Vanished – The Final
+  Chapter.
+  .
+  In both games the player controls a red-haired swordsman named Adol Christin. In
+  the first game he must seek out the six Books of Ys. These books contain the
+  history of the ancient, vanished land of Ys, and will give him the knowledge he
+  needs to defeat the evil forces currently sweeping the land of Esteria.
+  .
+  In Ys II, Adol is transported to the floating civilization of Ys, and begins a
+  quest to unravel the secrets of the land, and finally rid it and Esteria of
+  evil. All English translations of Ys II were part of a compilation; no
+  standalone version has been localized.
+release: 2011-02-21
+players: 1
+assets.boxfront: BoxFront/Ys I & II Chronicles (USA).jpg
+assets.boxback: BoxBack/Ys I & II Chronicles (USA).jpg
+assets.background: Background/Ys I & II Chronicles (USA).jpg
+assets.screenshot: Screenshot/Ys I & II Chronicles (USA).jpg
+assets.video: Video/Ys I & II Chronicles (USA).mp4
+x-co-op: No
+
+
+game: Ys Seven (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ys Seven (USA)/Ys Seven (USA).json
+developer: Falcom
+publisher: Xseed Games
+genre: Role-Playing
+description:
+  The kingdom of Altago is rebuilding their kingdom around a newfound peace after
+  years of war against the merciless armies of Romn. The classic adventuresome
+  duo, Adol and Dogi, arrive in the harbor of Altago City, and quickly find
+  themselves in a scuffle with the Dragon Knights, the kingdom's military police
+  body, when attempting to save a local girl from harassment by one of their
+  commanding officers. Upset by the interruption and subsequent humiliation, the
+  commander arrests Adol and Dogi, charging them with espionage.
+  .
+  The king of Altago, having known of the duo's pending arrival from an old
+  trusted friend, quickly releases the pair from prison and summons them to his
+  chambers. He tells the men about an ancient shrine that was uncovered after a
+  recent earthquake, and asks for their help in investigating this mysterious new
+  find. Adol and Dogi oblige, unaware that they are about to take the first steps
+  on a long journey to save all of Altago from long-forgotten ancient forces, and
+  to reunite the estranged five tribes who serve and protect the Five Great
+  Dragons deified beings who may well be the world's last hope.
+  .
+  Ys Seven is the latest installment in the long-running Ys series which first
+  debuted on PC in 1987. This is the first iteration to be built specifically for
+  the PSP system, taking full advantage of the widescreen format and hardware. The
+  battle system consists of a three-member battle party with enemies engaged on
+  the field map in real-time for fast-paced combat. Old fans of the series and new
+  players alike will be immersed into the rich vibrant world containing over 30
+  hours of gameplay.
+release: 2010-08-17
+players: 1
+assets.boxfront: BoxFront/Ys Seven (USA).jpg
+assets.boxback: BoxBack/Ys Seven (USA).jpg
+assets.background: Background/Ys Seven (USA).jpg
+assets.screenshot: Screenshot/Ys Seven (USA).jpg
+assets.video: Video/Ys Seven (USA).mp4
+x-co-op: No
+
+

@@ -1,0 +1,69 @@
+Commodore 64 || Alleykat (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Alleykat (Europe)/Alleykat (Europe).json
+Commodore 64 || Anarchy (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Anarchy (Europe)/Anarchy (Europe).json
+Commodore 64 || Arc of Yesod, The (USA) || $ROM_JSON_ROOT/Other/Commodore 64/Arc of Yesod, The (USA)/Arc of Yesod, The (USA).json
+Commodore 64 || Avenger (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Avenger (USA, Europe)/Avenger (USA, Europe).json
+Commodore 64 || Barnsley Badger (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Barnsley Badger (Europe)/Barnsley Badger (Europe).json
+Commodore 64 || Battle Valley (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Battle Valley (Europe)/Battle Valley (Europe).json
+Commodore 64 || Boulder Dash (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Boulder Dash (USA, Europe)/Boulder Dash (USA, Europe).json
+Commodore 64 || Break Dance (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Break Dance (Europe)/Break Dance (Europe).json
+Commodore 64 || Chip's Challenge (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Chip's Challenge (USA, Europe)/Chip's Challenge (USA, Europe).json
+Commodore 64 || Coil Cop (USA) || $ROM_JSON_ROOT/Other/Commodore 64/Coil Cop (USA)/Coil Cop (USA).json
+Commodore 64 || Confuzion (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Confuzion (Europe)/Confuzion (Europe).json
+Commodore 64 || Cosmic Causeway - Trailblazer II (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Cosmic Causeway - Trailblazer II (Europe)/Cosmic Causeway - Trailblazer II (Europe).json
+Commodore 64 || Cyberdyne Warrior (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Cyberdyne Warrior (Europe)/Cyberdyne Warrior (Europe).json
+Commodore 64 || Cybernoid - The Fighting Machine (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Cybernoid - The Fighting Machine (USA, Europe)/Cybernoid - The Fighting Machine (USA, Europe).json
+Commodore 64 || Cybernoid II (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Cybernoid II (Europe)/Cybernoid II (Europe).json
+Commodore 64 || Deflektor (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Deflektor (Europe)/Deflektor (Europe).json
+Commodore 64 || Destroyer (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Destroyer (USA, Europe)/Destroyer (USA, Europe).json
+Commodore 64 || Epyx Games Collection (USA, Europe) (Multicart) || $ROM_JSON_ROOT/Other/Commodore 64/Epyx Games Collection (USA, Europe) (Multicart)/Epyx Games Collection (USA, Europe) (Multicart).json
+Commodore 64 || Epyx Games Collection (USA, Europe) (Multicart) (EasyFlash) || $ROM_JSON_ROOT/Other/Commodore 64/Epyx Games Collection (USA, Europe) (Multicart) (EasyFlash)/Epyx Games Collection (USA, Europe) (Multicart) (EasyFlash).json
+Commodore 64 || Everyone's a Wally (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Everyone's a Wally (USA, Europe)/Everyone's a Wally (USA, Europe).json
+Commodore 64 || Farming Simulator (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Farming Simulator (USA, Europe)/Farming Simulator (USA, Europe).json
+Commodore 64 || Firelord (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Firelord (Europe)/Firelord (Europe).json
+Commodore 64 || Galencia Mini (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Galencia Mini (Europe)/Galencia Mini (Europe).json
+Commodore 64 || Gateway to Apshai (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Gateway to Apshai (USA, Europe)/Gateway to Apshai (USA, Europe).json
+Commodore 64 || Gribbly's Day Out (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Gribbly's Day Out (USA, Europe)/Gribbly's Day Out (USA, Europe).json
+Commodore 64 || Heartland (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Heartland (Europe)/Heartland (Europe).json
+Commodore 64 || Herobotix (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Herobotix (Europe)/Herobotix (Europe).json
+Commodore 64 || Hessian (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Hessian (USA, Europe)/Hessian (USA, Europe).json
+Commodore 64 || Highway Encounter (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Highway Encounter (Europe)/Highway Encounter (Europe).json
+Commodore 64 || Hunter's Moon (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Hunter's Moon (Europe)/Hunter's Moon (Europe).json
+Commodore 64 || Hysteria (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Hysteria (Europe)/Hysteria (Europe).json
+Commodore 64 || IO - Into Oblivion (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/IO - Into Oblivion (Europe)/IO - Into Oblivion (Europe).json
+Commodore 64 || Impossible Mission (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Impossible Mission (USA, Europe)/Impossible Mission (USA, Europe).json
+Commodore 64 || Impossible Mission II (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Impossible Mission II (USA, Europe)/Impossible Mission II (USA, Europe).json
+Commodore 64 || Jumpman (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Jumpman (USA, Europe)/Jumpman (USA, Europe).json
+Commodore 64 || Jumpman Junior (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Jumpman Junior (USA, Europe)/Jumpman Junior (USA, Europe).json
+Commodore 64 || Mega-Apocalypse (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Mega-Apocalypse (Europe)/Mega-Apocalypse (Europe).json
+Commodore 64 || Mission A.D. (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Mission A.D. (Europe)/Mission A.D. (Europe).json
+Commodore 64 || Monty on the Run (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Monty on the Run (Europe)/Monty on the Run (Europe).json
+Commodore 64 || Netherworld (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Netherworld (USA, Europe)/Netherworld (USA, Europe).json
+Commodore 64 || Nobby the Ardvark (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Nobby the Ardvark (USA, Europe)/Nobby the Ardvark (USA, Europe).json
+Commodore 64 || Nodes of Yesod (USA) || $ROM_JSON_ROOT/Other/Commodore 64/Nodes of Yesod (USA)/Nodes of Yesod (USA).json
+Commodore 64 || PET Snake Redux (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/PET Snake Redux (USA, Europe)/PET Snake Redux (USA, Europe).json
+Commodore 64 || Paradroid (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Paradroid (USA, Europe)/Paradroid (USA, Europe).json
+Commodore 64 || Pitstop II (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Pitstop II (Europe)/Pitstop II (Europe).json
+Commodore 64 || Ranarama (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Ranarama (Europe)/Ranarama (Europe).json
+Commodore 64 || Robin of the Wood (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Robin of the Wood (Europe)/Robin of the Wood (Europe).json
+Commodore 64 || Silicon Warrior (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Silicon Warrior (USA, Europe)/Silicon Warrior (USA, Europe).json
+Commodore 64 || Skate Crazy (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Skate Crazy (USA, Europe)/Skate Crazy (USA, Europe).json
+Commodore 64 || Skool Daze (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Skool Daze (Europe)/Skool Daze (Europe).json
+Commodore 64 || Snare (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Snare (USA, Europe)/Snare (USA, Europe).json
+Commodore 64 || Soulless (USA) || $ROM_JSON_ROOT/Other/Commodore 64/Soulless (USA)/Soulless (USA).json
+Commodore 64 || Speedball (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Speedball (USA, Europe)/Speedball (USA, Europe).json
+Commodore 64 || Speedball 2 (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Speedball 2 (USA, Europe)/Speedball 2 (USA, Europe).json
+Commodore 64 || Spindizzy (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Spindizzy (USA, Europe)/Spindizzy (USA, Europe).json
+Commodore 64 || Street Sports Baseball (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Street Sports Baseball (USA, Europe)/Street Sports Baseball (USA, Europe).json
+Commodore 64 || Street Sports Basketball (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Street Sports Basketball (USA, Europe)/Street Sports Basketball (USA, Europe).json
+Commodore 64 || Street Sports Soccer (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Street Sports Soccer (USA, Europe)/Street Sports Soccer (USA, Europe).json
+Commodore 64 || Super Cycle (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Super Cycle (USA, Europe)/Super Cycle (USA, Europe).json
+Commodore 64 || Sword of Fargoal, The (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Sword of Fargoal, The (USA, Europe)/Sword of Fargoal, The (USA, Europe).json
+Commodore 64 || Temple of Apshai Trilogy (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Temple of Apshai Trilogy (USA, Europe)/Temple of Apshai Trilogy (USA, Europe).json
+Commodore 64 || Thing on a Spring (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Thing on a Spring (USA, Europe)/Thing on a Spring (USA, Europe).json
+Commodore 64 || Tower Toppler (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Tower Toppler (USA, Europe)/Tower Toppler (USA, Europe).json
+Commodore 64 || Trailblazer (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Trailblazer (USA, Europe)/Trailblazer (USA, Europe).json
+Commodore 64 || Uridium (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Uridium (USA, Europe)/Uridium (USA, Europe).json
+Commodore 64 || Vegetables Deluxe C64 (USA) || $ROM_JSON_ROOT/Other/Commodore 64/Vegetables Deluxe C64 (USA)/Vegetables Deluxe C64 (USA).json
+Commodore 64 || West Bank (USA, Europe) || $ROM_JSON_ROOT/Other/Commodore 64/West Bank (USA, Europe)/West Bank (USA, Europe).json
+Commodore 64 || Who Dares Wins II (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Who Dares Wins II (Europe)/Who Dares Wins II (Europe).json
+Commodore 64 || Zynaps (Europe) || $ROM_JSON_ROOT/Other/Commodore 64/Zynaps (Europe)/Zynaps (Europe).json

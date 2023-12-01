@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Siberia (USA).exe"
+    ],
+    "transform_file": "Siberia (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/That Puzzle Game Everyone Knows (USA).exe"
+    ],
+    "transform_file": "That Puzzle Game Everyone Knows (USA).exe"
+}

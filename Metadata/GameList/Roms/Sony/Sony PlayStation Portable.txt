@@ -1,0 +1,118 @@
+Sony PlayStation Portable || 3rd Birthday, The (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/3rd Birthday, The (USA)/3rd Birthday, The (USA).json
+Sony PlayStation Portable || 7th Dragon 2020 (Japan) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/7th Dragon 2020 (Japan) (v1.01)/7th Dragon 2020 (Japan) (v1.01).json
+Sony PlayStation Portable || 7th Dragon 2020-II (Japan) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/7th Dragon 2020-II (Japan)/7th Dragon 2020-II (Japan).json
+Sony PlayStation Portable || Aedis Eclipse - Generation of Chaos (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Aedis Eclipse - Generation of Chaos (USA)/Aedis Eclipse - Generation of Chaos (USA).json
+Sony PlayStation Portable || Ape Escape - On the Loose (USA) (v1.03) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ape Escape - On the Loose (USA) (v1.03)/Ape Escape - On the Loose (USA) (v1.03).json
+Sony PlayStation Portable || Archer Maclean's Mercury (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Archer Maclean's Mercury (USA)/Archer Maclean's Mercury (USA).json
+Sony PlayStation Portable || Atari Classics Evolved (USA) (v1.02) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Atari Classics Evolved (USA) (v1.02)/Atari Classics Evolved (USA) (v1.02).json
+Sony PlayStation Portable || Blade Dancer - Lineage of Light (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Blade Dancer - Lineage of Light (USA) (v1.01)/Blade Dancer - Lineage of Light (USA) (v1.01).json
+Sony PlayStation Portable || Blazing Souls Accelate (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Blazing Souls Accelate (USA)/Blazing Souls Accelate (USA).json
+Sony PlayStation Portable || Brandish - The Dark Revenant (Japan) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Brandish - The Dark Revenant (Japan)/Brandish - The Dark Revenant (Japan).json
+Sony PlayStation Portable || Brave Story - New Traveler (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Brave Story - New Traveler (USA)/Brave Story - New Traveler (USA).json
+Sony PlayStation Portable || Breath of Fire III (Europe) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Breath of Fire III (Europe)/Breath of Fire III (Europe).json
+Sony PlayStation Portable || Bust-A-Move - Deluxe (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Bust-A-Move - Deluxe (USA)/Bust-A-Move - Deluxe (USA).json
+Sony PlayStation Portable || Capcom Classics Collection Reloaded (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Capcom Classics Collection Reloaded (USA)/Capcom Classics Collection Reloaded (USA).json
+Sony PlayStation Portable || Capcom Classics Collection Remixed (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Capcom Classics Collection Remixed (USA)/Capcom Classics Collection Remixed (USA).json
+Sony PlayStation Portable || Capcom Puzzle World (USA) (v1.02) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Capcom Puzzle World (USA) (v1.02)/Capcom Puzzle World (USA) (v1.02).json
+Sony PlayStation Portable || Castlevania - The Dracula X Chronicles (USA) (v1.02) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Castlevania - The Dracula X Chronicles (USA) (v1.02)/Castlevania - The Dracula X Chronicles (USA) (v1.02).json
+Sony PlayStation Portable || Class of Heroes (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Class of Heroes (USA) (v1.01)/Class of Heroes (USA) (v1.01).json
+Sony PlayStation Portable || Crazy Taxi - Fare Wars (USA) (En,Fr,De,Es,It) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Crazy Taxi - Fare Wars (USA) (En,Fr,De,Es,It) (v1.01)/Crazy Taxi - Fare Wars (USA) (En,Fr,De,Es,It) (v1.01).json
+Sony PlayStation Portable || Crimson Gem Saga (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Crimson Gem Saga (USA)/Crimson Gem Saga (USA).json
+Sony PlayStation Portable || Crisis Core - Final Fantasy VII (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Crisis Core - Final Fantasy VII (USA)/Crisis Core - Final Fantasy VII (USA).json
+Sony PlayStation Portable || Daxter (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Daxter (USA)/Daxter (USA).json
+Sony PlayStation Portable || Dead Head Fred (USA) (v1.02) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Dead Head Fred (USA) (v1.02)/Dead Head Fred (USA) (v1.02).json
+Sony PlayStation Portable || Dissidia - Final Fantasy (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Dissidia - Final Fantasy (USA)/Dissidia - Final Fantasy (USA).json
+Sony PlayStation Portable || Dissidia 012 - Duodecim Final Fantasy (USA) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Dissidia 012 - Duodecim Final Fantasy (USA) (En,Fr,De,Es,It)/Dissidia 012 - Duodecim Final Fantasy (USA) (En,Fr,De,Es,It).json
+Sony PlayStation Portable || Dot Hack - Link (Japan) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Dot Hack - Link (Japan)/Dot Hack - Link (Japan).json
+Sony PlayStation Portable || Dungeon Siege - Throne of Agony (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Dungeon Siege - Throne of Agony (USA)/Dungeon Siege - Throne of Agony (USA).json
+Sony PlayStation Portable || Dungeons & Dragons Tactics (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Dungeons & Dragons Tactics (USA) (v1.01)/Dungeons & Dragons Tactics (USA) (v1.01).json
+Sony PlayStation Portable || EA Replay (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/EA Replay (USA) (v1.01)/EA Replay (USA) (v1.01).json
+Sony PlayStation Portable || Elder Scrolls Travels, The - Oblivion (USA) (Proto) (2007-04-27) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Elder Scrolls Travels, The - Oblivion (USA) (Proto) (2007-04-27)/Elder Scrolls Travels, The - Oblivion (USA) (Proto) (2007-04-27).json
+Sony PlayStation Portable || EyePet (USA) (En,Fr,Es,Pt) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/EyePet (USA) (En,Fr,Es,Pt)/EyePet (USA) (En,Fr,Es,Pt).json
+Sony PlayStation Portable || Fat Princess - Fistful of Cake (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Fat Princess - Fistful of Cake (USA) (En,Fr,Es)/Fat Princess - Fistful of Cake (USA) (En,Fr,Es).json
+Sony PlayStation Portable || Final Fantasy - 20th Anniversary Edition (USA) (En,Ja) (System 3.03) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy - 20th Anniversary Edition (USA) (En,Ja) (System 3.03)/Final Fantasy - 20th Anniversary Edition (USA) (En,Ja) (System 3.03).json
+Sony PlayStation Portable || Final Fantasy II - 20th Anniversary Edition (USA) (En,Ja) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy II - 20th Anniversary Edition (USA) (En,Ja)/Final Fantasy II - 20th Anniversary Edition (USA) (En,Ja).json
+Sony PlayStation Portable || Final Fantasy III (Japan) (En,Ja) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy III (Japan) (En,Ja) (v1.01)/Final Fantasy III (Japan) (En,Ja) (v1.01).json
+Sony PlayStation Portable || Final Fantasy IV - The Complete Collection (USA) (En,Ja,Fr) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy IV - The Complete Collection (USA) (En,Ja,Fr)/Final Fantasy IV - The Complete Collection (USA) (En,Ja,Fr).json
+Sony PlayStation Portable || Final Fantasy Reishiki (Japan) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy Reishiki (Japan)/Final Fantasy Reishiki (Japan).json
+Sony PlayStation Portable || Final Fantasy Reishiki (Japan) (Translated) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy Reishiki (Japan) (Translated)/Final Fantasy Reishiki (Japan) (Translated).json
+Sony PlayStation Portable || Final Fantasy Tactics - The War of the Lions (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Final Fantasy Tactics - The War of the Lions (USA)/Final Fantasy Tactics - The War of the Lions (USA).json
+Sony PlayStation Portable || FlatOut - Head On (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/FlatOut - Head On (USA) (v1.01)/FlatOut - Head On (USA) (v1.01).json
+Sony PlayStation Portable || Frantix - A Puzzle Adventure (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Frantix - A Puzzle Adventure (USA) (v1.01)/Frantix - A Puzzle Adventure (USA) (v1.01).json
+Sony PlayStation Portable || Grand Knight History (Japan) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Grand Knight History (Japan)/Grand Knight History (Japan).json
+Sony PlayStation Portable || Growlanser - Wayfarer of Time (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Growlanser - Wayfarer of Time (USA)/Growlanser - Wayfarer of Time (USA).json
+Sony PlayStation Portable || Gungnir (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Gungnir (USA)/Gungnir (USA).json
+Sony PlayStation Portable || Half-Minute Hero (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Half-Minute Hero (USA)/Half-Minute Hero (USA).json
+Sony PlayStation Portable || Hexyz Force (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Hexyz Force (USA)/Hexyz Force (USA).json
+Sony PlayStation Portable || Infected (USA) (v1.02) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Infected (USA) (v1.02)/Infected (USA) (v1.02).json
+Sony PlayStation Portable || Invizimals (USA) (En,Fr,Es) (v1.02) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Invizimals (USA) (En,Fr,Es) (v1.02)/Invizimals (USA) (En,Fr,Es) (v1.02).json
+Sony PlayStation Portable || Invizimals - Shadow Zone (USA) (En,Fr,Es,Pt) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Invizimals - Shadow Zone (USA) (En,Fr,Es,Pt)/Invizimals - Shadow Zone (USA) (En,Fr,Es,Pt).json
+Sony PlayStation Portable || Jackass - The Game (USA) (v1.02) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Jackass - The Game (USA) (v1.02)/Jackass - The Game (USA) (v1.02).json
+Sony PlayStation Portable || Jeanne d'Arc (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Jeanne d'Arc (USA)/Jeanne d'Arc (USA).json
+Sony PlayStation Portable || Kingdom of Paradise (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Kingdom of Paradise (USA)/Kingdom of Paradise (USA).json
+Sony PlayStation Portable || LEGO Batman - The Video Game (Europe) (En,Fr,De,Es,It,Da) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LEGO Batman - The Video Game (Europe) (En,Fr,De,Es,It,Da)/LEGO Batman - The Video Game (Europe) (En,Fr,De,Es,It,Da).json
+Sony PlayStation Portable || LEGO Harry Potter - Years 1-4 (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LEGO Harry Potter - Years 1-4 (USA)/LEGO Harry Potter - Years 1-4 (USA).json
+Sony PlayStation Portable || LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es,Pt) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es,Pt)/LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es,Pt).json
+Sony PlayStation Portable || LEGO Indiana Jones - The Original Adventures (USA) (En,Fr,Es) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LEGO Indiana Jones - The Original Adventures (USA) (En,Fr,Es) (v1.01)/LEGO Indiana Jones - The Original Adventures (USA) (En,Fr,Es) (v1.01).json
+Sony PlayStation Portable || LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es) (v1.01)/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es) (v1.01).json
+Sony PlayStation Portable || Legend of Heroes II, The - Prophecy of the Moonlight Witch (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Legend of Heroes II, The - Prophecy of the Moonlight Witch (USA)/Legend of Heroes II, The - Prophecy of the Moonlight Witch (USA).json
+Sony PlayStation Portable || Legend of Heroes III, The - Song of the Ocean (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Legend of Heroes III, The - Song of the Ocean (USA) (v1.01)/Legend of Heroes III, The - Song of the Ocean (USA) (v1.01).json
+Sony PlayStation Portable || Legend of Heroes, The - A Tear of Vermillion (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Legend of Heroes, The - A Tear of Vermillion (USA) (v1.01)/Legend of Heroes, The - A Tear of Vermillion (USA) (v1.01).json
+Sony PlayStation Portable || Lemmings (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Lemmings (USA) (v1.01)/Lemmings (USA) (v1.01).json
+Sony PlayStation Portable || LittleBigPlanet (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LittleBigPlanet (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl)/LittleBigPlanet (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl).json
+Sony PlayStation Portable || LocoRoco (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LocoRoco (USA)/LocoRoco (USA).json
+Sony PlayStation Portable || LocoRoco 2 (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/LocoRoco 2 (USA)/LocoRoco 2 (USA).json
+Sony PlayStation Portable || Lord of Arcana (USA) (En,Fr) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Lord of Arcana (USA) (En,Fr)/Lord of Arcana (USA) (En,Fr).json
+Sony PlayStation Portable || Lumines (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Lumines (USA) (v1.01)/Lumines (USA) (v1.01).json
+Sony PlayStation Portable || Lunar - Silver Star Harmony (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Lunar - Silver Star Harmony (USA)/Lunar - Silver Star Harmony (USA).json
+Sony PlayStation Portable || Luxor - Pharaoh's Challenge (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Luxor - Pharaoh's Challenge (USA) (v1.01)/Luxor - Pharaoh's Challenge (USA) (v1.01).json
+Sony PlayStation Portable || Marvel - Ultimate Alliance (USA) (v2.00) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Marvel - Ultimate Alliance (USA) (v2.00)/Marvel - Ultimate Alliance (USA) (v2.00).json
+Sony PlayStation Portable || Me & My Katamari (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Me & My Katamari (USA)/Me & My Katamari (USA).json
+Sony PlayStation Portable || MediEvil - Resurrection (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/MediEvil - Resurrection (USA)/MediEvil - Resurrection (USA).json
+Sony PlayStation Portable || Mega Man - Maverick Hunter X (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Mega Man - Maverick Hunter X (USA) (v1.01)/Mega Man - Maverick Hunter X (USA) (v1.01).json
+Sony PlayStation Portable || Mega Man - Powered Up (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Mega Man - Powered Up (USA)/Mega Man - Powered Up (USA).json
+Sony PlayStation Portable || Metal Slug Anthology (USA) (v1.03) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Metal Slug Anthology (USA) (v1.03)/Metal Slug Anthology (USA) (v1.03).json
+Sony PlayStation Portable || Metal Slug XX (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Metal Slug XX (USA) (v1.01)/Metal Slug XX (USA) (v1.01).json
+Sony PlayStation Portable || Midway Arcade Treasures - Extended Play (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Midway Arcade Treasures - Extended Play (USA)/Midway Arcade Treasures - Extended Play (USA).json
+Sony PlayStation Portable || Mimana - IYAR Chronicle (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Mimana - IYAR Chronicle (USA)/Mimana - IYAR Chronicle (USA).json
+Sony PlayStation Portable || ModNation Racers (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/ModNation Racers (USA)/ModNation Racers (USA).json
+Sony PlayStation Portable || Monster Hunter Freedom Unite (USA) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Monster Hunter Freedom Unite (USA) (En,Fr,De,Es,It)/Monster Hunter Freedom Unite (USA) (En,Fr,De,Es,It).json
+Sony PlayStation Portable || Namco Museum - Battle Collection (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Namco Museum - Battle Collection (USA) (v1.01)/Namco Museum - Battle Collection (USA) (v1.01).json
+Sony PlayStation Portable || PQ - Practical Intelligence Quotient (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/PQ - Practical Intelligence Quotient (USA) (v1.01)/PQ - Practical Intelligence Quotient (USA) (v1.01).json
+Sony PlayStation Portable || PQ2 - Practical Intelligence Quotient 2 (USA) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/PQ2 - Practical Intelligence Quotient 2 (USA) (v1.01)/PQ2 - Practical Intelligence Quotient 2 (USA) (v1.01).json
+Sony PlayStation Portable || Phantasy Star Portable (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Phantasy Star Portable (USA)/Phantasy Star Portable (USA).json
+Sony PlayStation Portable || Phantasy Star Portable 2 Infinity (Japan) (v1.02) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Phantasy Star Portable 2 Infinity (Japan) (v1.02)/Phantasy Star Portable 2 Infinity (Japan) (v1.02).json
+Sony PlayStation Portable || Power Stone Collection (Europe) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Power Stone Collection (Europe)/Power Stone Collection (Europe).json
+Sony PlayStation Portable || Prinny - Can I Really Be the Hero (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Prinny - Can I Really Be the Hero (USA)/Prinny - Can I Really Be the Hero (USA).json
+Sony PlayStation Portable || Prinny 2 - Dawn of Operation Panties, Dood! (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Prinny 2 - Dawn of Operation Panties, Dood! (USA)/Prinny 2 - Dawn of Operation Panties, Dood! (USA).json
+Sony PlayStation Portable || Pursuit Force (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Pursuit Force (USA)/Pursuit Force (USA).json
+Sony PlayStation Portable || Puzzle Quest - Challenge of the Warlords (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Puzzle Quest - Challenge of the Warlords (USA)/Puzzle Quest - Challenge of the Warlords (USA).json
+Sony PlayStation Portable || Ragnarok Tactics (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ragnarok Tactics (USA)/Ragnarok Tactics (USA).json
+Sony PlayStation Portable || Rengoku - The Tower of Purgatory (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Rengoku - The Tower of Purgatory (USA)/Rengoku - The Tower of Purgatory (USA).json
+Sony PlayStation Portable || Resistance - Retribution (USA) (En,Ja,Fr,Es) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Resistance - Retribution (USA) (En,Ja,Fr,Es)/Resistance - Retribution (USA) (En,Ja,Fr,Es).json
+Sony PlayStation Portable || Riviera - The Promised Land (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Riviera - The Promised Land (USA)/Riviera - The Promised Land (USA).json
+Sony PlayStation Portable || SNK Arcade Classics Vol. 1 (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/SNK Arcade Classics Vol. 1 (USA)/SNK Arcade Classics Vol. 1 (USA).json
+Sony PlayStation Portable || Shadow of Destiny (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Shadow of Destiny (USA)/Shadow of Destiny (USA).json
+Sony PlayStation Portable || Shin Megami Tensei - Persona (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Shin Megami Tensei - Persona (USA)/Shin Megami Tensei - Persona (USA).json
+Sony PlayStation Portable || Shin Megami Tensei - Persona 2 - Innocent Sin (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Shin Megami Tensei - Persona 2 - Innocent Sin (USA)/Shin Megami Tensei - Persona 2 - Innocent Sin (USA).json
+Sony PlayStation Portable || Shin Megami Tensei - Persona 3 Portable (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Shin Megami Tensei - Persona 3 Portable (USA)/Shin Megami Tensei - Persona 3 Portable (USA).json
+Sony PlayStation Portable || Sid Meier's Pirates! (USA) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Sid Meier's Pirates! (USA) (En,Fr,De,Es,It)/Sid Meier's Pirates! (USA) (En,Fr,De,Es,It).json
+Sony PlayStation Portable || Star Ocean - First Departure (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Star Ocean - First Departure (USA)/Star Ocean - First Departure (USA).json
+Sony PlayStation Portable || Star Ocean - Second Evolution (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Star Ocean - Second Evolution (USA)/Star Ocean - Second Evolution (USA).json
+Sony PlayStation Portable || Tactics Ogre - Let Us Cling Together (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Tactics Ogre - Let Us Cling Together (USA)/Tactics Ogre - Let Us Cling Together (USA).json
+Sony PlayStation Portable || Tales of Destiny 2 (Japan) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Tales of Destiny 2 (Japan)/Tales of Destiny 2 (Japan).json
+Sony PlayStation Portable || Tales of Eternia (Europe) (v2.02) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Tales of Eternia (Europe) (v2.02)/Tales of Eternia (Europe) (v2.02).json
+Sony PlayStation Portable || Tales of Phantasia - Narikiri Dungeon X (Japan) (v1.01) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Tales of Phantasia - Narikiri Dungeon X (Japan) (v1.01)/Tales of Phantasia - Narikiri Dungeon X (Japan) (v1.01).json
+Sony PlayStation Portable || Tales of Rebirth (Japan) (v1.02) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Tales of Rebirth (Japan) (v1.02)/Tales of Rebirth (Japan) (v1.02).json
+Sony PlayStation Portable || Tales of VS. (Japan) (v1.02) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Tales of VS. (Japan) (v1.02)/Tales of VS. (Japan) (v1.02).json
+Sony PlayStation Portable || Ultimate Ghosts 'n Goblins (Europe) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ultimate Ghosts 'n Goblins (Europe) (En,Fr,De,Es,It)/Ultimate Ghosts 'n Goblins (Europe) (En,Fr,De,Es,It).json
+Sony PlayStation Portable || Untold Legends - Brotherhood of the Blade (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Untold Legends - Brotherhood of the Blade (USA)/Untold Legends - Brotherhood of the Blade (USA).json
+Sony PlayStation Portable || Valkyria Chronicles II (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Valkyria Chronicles II (USA)/Valkyria Chronicles II (USA).json
+Sony PlayStation Portable || Valkyrie Profile - Lenneth (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Valkyrie Profile - Lenneth (USA)/Valkyrie Profile - Lenneth (USA).json
+Sony PlayStation Portable || WTF - Work Time Fun (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/WTF - Work Time Fun (USA)/WTF - Work Time Fun (USA).json
+Sony PlayStation Portable || What Did I Do to Deserve This, My Lord! 2 (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/What Did I Do to Deserve This, My Lord! 2 (USA)/What Did I Do to Deserve This, My Lord! 2 (USA).json
+Sony PlayStation Portable || Wild Arms XF (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Wild Arms XF (USA)/Wild Arms XF (USA).json
+Sony PlayStation Portable || Ys - The Ark of Napishtim (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ys - The Ark of Napishtim (USA)/Ys - The Ark of Napishtim (USA).json
+Sony PlayStation Portable || Ys - The Oath in Felghana (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ys - The Oath in Felghana (USA)/Ys - The Oath in Felghana (USA).json
+Sony PlayStation Portable || Ys I & II Chronicles (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ys I & II Chronicles (USA)/Ys I & II Chronicles (USA).json
+Sony PlayStation Portable || Ys Seven (USA) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable/Ys Seven (USA)/Ys Seven (USA).json

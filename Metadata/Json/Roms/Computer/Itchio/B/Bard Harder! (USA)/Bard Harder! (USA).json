@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Bard Harder! (USA).exe"
+    ],
+    "transform_file": "Bard Harder! (USA).exe"
+}

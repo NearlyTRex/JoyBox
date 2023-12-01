@@ -1,0 +1,11 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/mm_1_cluebook.zip",
+        "$SETUP_MAIN_ROOT/extra/mm_1_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/mm_1_map.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_might_and_magic_-_book_i_1.0_(28044).exe"
+    ],
+    "transform_file": "setup_might_and_magic_-_book_i_1.0_(28044).exe"
+}

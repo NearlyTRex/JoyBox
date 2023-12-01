@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dis Pontibus (USA).exe"
+    ],
+    "transform_file": "Dis Pontibus (USA).exe"
+}

@@ -1,0 +1,9 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/sw_jo_manual.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_star_wars_jedi_knight_ii_-_jedi_outcast_1.04_(17964).exe"
+    ],
+    "transform_file": "setup_star_wars_jedi_knight_ii_-_jedi_outcast_1.04_(17964).exe"
+}

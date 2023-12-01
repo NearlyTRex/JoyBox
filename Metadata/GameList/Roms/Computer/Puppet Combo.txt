@@ -1,0 +1,45 @@
+Computer - Puppet Combo || Babysitter Bloodbath (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/B/Babysitter Bloodbath (USA)/Babysitter Bloodbath (USA).json
+Computer - Puppet Combo || Blood Maniac (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/B/Blood Maniac (USA)/Blood Maniac (USA).json
+Computer - Puppet Combo || Bloodwash (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/B/Bloodwash (USA)/Bloodwash (USA).json
+Computer - Puppet Combo || Booty Creek Cheek Freak, The (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/B/Booty Creek Cheek Freak, The (USA)/Booty Creek Cheek Freak, The (USA).json
+Computer - Puppet Combo || Buzz-Saw Blood House (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/B/Buzz-Saw Blood House (USA)/Buzz-Saw Blood House (USA).json
+Computer - Puppet Combo || Christmas Massacre (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/C/Christmas Massacre (USA)/Christmas Massacre (USA).json
+Computer - Puppet Combo || Day 7 (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/D/Day 7 (USA)/Day 7 (USA).json
+Computer - Puppet Combo || Deadly Night (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/D/Deadly Night (USA)/Deadly Night (USA).json
+Computer - Puppet Combo || Ding Dong Dead (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/D/Ding Dong Dead (USA)/Ding Dong Dead (USA).json
+Computer - Puppet Combo || Enigma of Salazar House, The (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/E/Enigma of Salazar House, The (USA)/Enigma of Salazar House, The (USA).json
+Computer - Puppet Combo || Evil Clowns (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/E/Evil Clowns (USA)/Evil Clowns (USA).json
+Computer - Puppet Combo || Feed Me Billy (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/F/Feed Me Billy (USA)/Feed Me Billy (USA).json
+Computer - Puppet Combo || Feed Me Billy Demake (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/F/Feed Me Billy Demake (USA)/Feed Me Billy Demake (USA).json
+Computer - Puppet Combo || Feed Me More Billy (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/F/Feed Me More Billy (USA)/Feed Me More Billy (USA).json
+Computer - Puppet Combo || Glass Staircase, The (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/G/Glass Staircase, The (USA)/Glass Staircase, The (USA).json
+Computer - Puppet Combo || Horror of Salazar House, The (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/H/Horror of Salazar House, The (USA)/Horror of Salazar House, The (USA).json
+Computer - Puppet Combo || Meat Cleaver Mutilator (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/M/Meat Cleaver Mutilator (USA)/Meat Cleaver Mutilator (USA).json
+Computer - Puppet Combo || Minotaur (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/M/Minotaur (USA)/Minotaur (USA).json
+Computer - Puppet Combo || Murder House (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/M/Murder House (USA)/Murder House (USA).json
+Computer - Puppet Combo || Night At the Gates of Hell (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/N/Night At the Gates of Hell (USA)/Night At the Gates of Hell (USA).json
+Computer - Puppet Combo || Night Ripper, The (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/N/Night Ripper, The (USA)/Night Ripper, The (USA).json
+Computer - Puppet Combo || Night Shift (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/N/Night Shift (USA)/Night Shift (USA).json
+Computer - Puppet Combo || Night Watch (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/N/Night Watch (USA)/Night Watch (USA).json
+Computer - Puppet Combo || Night of The Clowns (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/N/Night of The Clowns (USA)/Night of The Clowns (USA).json
+Computer - Puppet Combo || Nun Massacre (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/N/Nun Massacre (USA)/Nun Massacre (USA).json
+Computer - Puppet Combo || Pancake House (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/P/Pancake House (USA)/Pancake House (USA).json
+Computer - Puppet Combo || Photography Horror Game (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/P/Photography Horror Game (USA)/Photography Horror Game (USA).json
+Computer - Puppet Combo || Planet of Bloodthirsty Santa (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/P/Planet of Bloodthirsty Santa (USA)/Planet of Bloodthirsty Santa (USA).json
+Computer - Puppet Combo || Power Drill Massacre (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/P/Power Drill Massacre (USA)/Power Drill Massacre (USA).json
+Computer - Puppet Combo || Power Drill Massacre Arcade (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/P/Power Drill Massacre Arcade (USA)/Power Drill Massacre Arcade (USA).json
+Computer - Puppet Combo || Rewind or Die (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/R/Rewind or Die (USA)/Rewind or Die (USA).json
+Computer - Puppet Combo || Riverside Incident, The (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/R/Riverside Incident, The (USA)/Riverside Incident, The (USA).json
+Computer - Puppet Combo || Samhain (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/S/Samhain (USA)/Samhain (USA).json
+Computer - Puppet Combo || Scary Tales Vol. 1 (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/S/Scary Tales Vol. 1 (USA)/Scary Tales Vol. 1 (USA).json
+Computer - Puppet Combo || Search Party (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/S/Search Party (USA)/Search Party (USA).json
+Computer - Puppet Combo || Ski Freak (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/S/Ski Freak (USA)/Ski Freak (USA).json
+Computer - Puppet Combo || Spiders (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/S/Spiders (USA)/Spiders (USA).json
+Computer - Puppet Combo || Stay Out of the House (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/S/Stay Out of the House (USA)/Stay Out of the House (USA).json
+Computer - Puppet Combo || Summoning, The (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/S/Summoning, The (USA)/Summoning, The (USA).json
+Computer - Puppet Combo || Texas Butcher (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/T/Texas Butcher (USA)/Texas Butcher (USA).json
+Computer - Puppet Combo || These Trees Are Spectral Fingers (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/T/These Trees Are Spectral Fingers (USA)/These Trees Are Spectral Fingers (USA).json
+Computer - Puppet Combo || Tonight It Follows (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/T/Tonight It Follows (USA)/Tonight It Follows (USA).json
+Computer - Puppet Combo || Unfinished Worlds Vol 1 (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/U/Unfinished Worlds Vol 1 (USA)/Unfinished Worlds Vol 1 (USA).json
+Computer - Puppet Combo || Unfinished Worlds Vol 2 (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/U/Unfinished Worlds Vol 2 (USA)/Unfinished Worlds Vol 2 (USA).json
+Computer - Puppet Combo || Unfinished Worlds Vol 3 (USA) || $ROM_JSON_ROOT/Computer/Puppet Combo/U/Unfinished Worlds Vol 3 (USA)/Unfinished Worlds Vol 3 (USA).json

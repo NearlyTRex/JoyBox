@@ -1,0 +1,18 @@
+{
+    "main_game_exe": [
+        "Brutal Doom/gzdoom.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Brutal Doom/gzdoom.exe": "Brutal Doom"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$HDD_MAIN_ROOT/Brutal Doom",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Brutal Doom - Hell on Earth Starter Pack (USA).chd"
+}

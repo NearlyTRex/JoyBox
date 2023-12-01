@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/HexaCycle (USA).exe"
+    ],
+    "transform_file": "HexaCycle (USA).exe"
+}

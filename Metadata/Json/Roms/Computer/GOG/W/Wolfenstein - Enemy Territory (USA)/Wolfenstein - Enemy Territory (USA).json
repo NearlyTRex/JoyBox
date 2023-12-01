@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_wolfenstein_enemy_territory_1.0_(58735).exe"
+    ],
+    "transform_file": "setup_wolfenstein_enemy_territory_1.0_(58735).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Catlateral Damage (USA).exe"
+    ],
+    "transform_file": "Catlateral Damage (USA).exe"
+}

@@ -1,0 +1,1 @@
+Magnavox Odyssey 2 || Invaders from Hyperspace (USA) || $ROM_JSON_ROOT/Other/Magnavox Odyssey 2/Invaders from Hyperspace (USA)/Invaders from Hyperspace (USA).json

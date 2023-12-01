@@ -1,0 +1,4 @@
+Atari 800 || Bounty Bob Strikes Back! (USA) || $ROM_JSON_ROOT/Other/Atari 800/Bounty Bob Strikes Back! (USA)/Bounty Bob Strikes Back! (USA).json
+Atari 800 || Caverns of Mars (USA) || $ROM_JSON_ROOT/Other/Atari 800/Caverns of Mars (USA)/Caverns of Mars (USA).json
+Atari 800 || Food Fight (USA) || $ROM_JSON_ROOT/Other/Atari 800/Food Fight (USA)/Food Fight (USA).json
+Atari 800 || Yoomp! (World) || $ROM_JSON_ROOT/Other/Atari 800/Yoomp! (World)/Yoomp! (World).json

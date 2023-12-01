@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/CotCIDX-windows_content_1.4.exe"
+    ],
+    "transform_file": "CotCIDX-windows_content_1.4.exe"
+}

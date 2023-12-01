@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Land of Glass, The (USA).exe"
+    ],
+    "transform_file": "Land of Glass, The (USA).exe"
+}

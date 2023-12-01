@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Just Another Day at the Office (USA).exe"
+    ],
+    "transform_file": "Just Another Day at the Office (USA).exe"
+}

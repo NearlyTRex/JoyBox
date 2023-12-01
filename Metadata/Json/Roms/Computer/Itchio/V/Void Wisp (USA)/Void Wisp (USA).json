@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Void Wisp (USA).exe"
+    ],
+    "transform_file": "Void Wisp (USA).exe"
+}

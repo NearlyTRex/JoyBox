@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Fish Fly Fever (USA).exe"
+    ],
+    "transform_file": "Fish Fly Fever (USA).exe"
+}

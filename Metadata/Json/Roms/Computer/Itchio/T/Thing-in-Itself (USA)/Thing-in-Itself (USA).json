@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Thing-in-Itself (USA).exe"
+    ],
+    "transform_file": "Thing-in-Itself (USA).exe"
+}

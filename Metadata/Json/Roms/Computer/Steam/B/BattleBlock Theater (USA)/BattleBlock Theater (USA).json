@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/BattleBlock Theater (USA).exe"
+    ],
+    "transform_file": "BattleBlock Theater (USA).exe"
+}

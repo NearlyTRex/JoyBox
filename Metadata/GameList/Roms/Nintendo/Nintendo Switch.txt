@@ -1,0 +1,277 @@
+Nintendo Switch || 2064 - Read Only Memories INTEGRAL (USA) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/2064 - Read Only Memories INTEGRAL (USA) (En,Ja)/2064 - Read Only Memories INTEGRAL (USA) (En,Ja).json
+Nintendo Switch || Abarenbo Tengu & Zombie Nation (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Abarenbo Tengu & Zombie Nation (Europe)/Abarenbo Tengu & Zombie Nation (Europe).json
+Nintendo Switch || Abzu (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Abzu (Europe)/Abzu (Europe).json
+Nintendo Switch || Adventure Pals, The (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Adventure Pals, The (Europe)/Adventure Pals, The (Europe).json
+Nintendo Switch || Aegis Defenders (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Aegis Defenders (USA)/Aegis Defenders (USA).json
+Nintendo Switch || Afterparty (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Afterparty (USA)/Afterparty (USA).json
+Nintendo Switch || Among the Sleep - Enhanced Edition (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Among the Sleep - Enhanced Edition (Europe)/Among the Sleep - Enhanced Edition (Europe).json
+Nintendo Switch || Angry Video Game Nerd 1 & 2 Deluxe (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Angry Video Game Nerd 1 & 2 Deluxe (USA)/Angry Video Game Nerd 1 & 2 Deluxe (USA).json
+Nintendo Switch || Arcade Classics Anniversary Collection (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Arcade Classics Anniversary Collection (USA)/Arcade Classics Anniversary Collection (USA).json
+Nintendo Switch || Arcade Paradise (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Arcade Paradise (USA)/Arcade Paradise (USA).json
+Nintendo Switch || Assault Android Cactus+ (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Assault Android Cactus+ (Europe)/Assault Android Cactus+ (Europe).json
+Nintendo Switch || Atari 50 - The Anniversary Celebration (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Atari 50 - The Anniversary Celebration (USA)/Atari 50 - The Anniversary Celebration (USA).json
+Nintendo Switch || Away - Journey to the Unexpected (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Away - Journey to the Unexpected (USA)/Away - Journey to the Unexpected (USA).json
+Nintendo Switch || Axiom Verge (USA, Europe) (En,Ja,Fr,De,Es,It,Pt,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Axiom Verge (USA, Europe) (En,Ja,Fr,De,Es,It,Pt,Ru)/Axiom Verge (USA, Europe) (En,Ja,Fr,De,Es,It,Pt,Ru).json
+Nintendo Switch || Axiom Verge 2 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Axiom Verge 2 (USA)/Axiom Verge 2 (USA).json
+Nintendo Switch || Bad North (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Bad North (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru) (Rev 1)/Bad North (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru) (Rev 1).json
+Nintendo Switch || Battle Axe (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Battle Axe (USA)/Battle Axe (USA).json
+Nintendo Switch || Battle Princess Madelyn Royal Edition (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Battle Princess Madelyn Royal Edition (USA)/Battle Princess Madelyn Royal Edition (USA).json
+Nintendo Switch || Binding of Isaac, The - Afterbirth+ (USA) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Binding of Isaac, The - Afterbirth+ (USA) (En,Ja)/Binding of Isaac, The - Afterbirth+ (USA) (En,Ja).json
+Nintendo Switch || Black Bird (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Black Bird (USA)/Black Bird (USA).json
+Nintendo Switch || Blair Witch (Japan) (En,Ja,Zh-Hans) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Blair Witch (Japan) (En,Ja,Zh-Hans)/Blair Witch (Japan) (En,Ja,Zh-Hans).json
+Nintendo Switch || Blasphemous (USA) (En,Fr,De,Es,It,Pt,Zh-Hans,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Blasphemous (USA) (En,Fr,De,Es,It,Pt,Zh-Hans,Ru)/Blasphemous (USA) (En,Fr,De,Es,It,Pt,Zh-Hans,Ru).json
+Nintendo Switch || Blaster Master Zero (USA) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Blaster Master Zero (USA) (En,Ja)/Blaster Master Zero (USA) (En,Ja).json
+Nintendo Switch || Blaster Master Zero 2 (USA) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Blaster Master Zero 2 (USA) (En,Ja)/Blaster Master Zero 2 (USA) (En,Ja).json
+Nintendo Switch || Blaster Master Zero 3 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Blaster Master Zero 3 (USA)/Blaster Master Zero 3 (USA).json
+Nintendo Switch || Blazing Chrome (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Blazing Chrome (USA)/Blazing Chrome (USA).json
+Nintendo Switch || Bloodrayne - ReVamped (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Bloodrayne - ReVamped (USA)/Bloodrayne - ReVamped (USA).json
+Nintendo Switch || Bloodrayne 2 - ReVamped (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Bloodrayne 2 - ReVamped (USA)/Bloodrayne 2 - ReVamped (USA).json
+Nintendo Switch || Bloodrayne Betrayal - Fresh Bites (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Bloodrayne Betrayal - Fresh Bites (USA)/Bloodrayne Betrayal - Fresh Bites (USA).json
+Nintendo Switch || Bloodstained - Curse of the Moon (USA) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Bloodstained - Curse of the Moon (USA) (En,Ja)/Bloodstained - Curse of the Moon (USA) (En,Ja).json
+Nintendo Switch || Bloodstained - Curse of the Moon 2 (USA) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Bloodstained - Curse of the Moon 2 (USA) (En,Ja)/Bloodstained - Curse of the Moon 2 (USA) (En,Ja).json
+Nintendo Switch || Blossom Tales - The Sleeping King (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Blossom Tales - The Sleeping King (USA)/Blossom Tales - The Sleeping King (USA).json
+Nintendo Switch || Bomb Chicken (USA) (En,Ja,Fr,De,Es,It,Nl,Pt,Zh,Ko,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Bomb Chicken (USA) (En,Ja,Fr,De,Es,It,Nl,Pt,Zh,Ko,Ru)/Bomb Chicken (USA) (En,Ja,Fr,De,Es,It,Nl,Pt,Zh,Ko,Ru).json
+Nintendo Switch || Broken Age (USA) (En,Fr,De,Es,It,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Broken Age (USA) (En,Fr,De,Es,It,Ru)/Broken Age (USA) (En,Fr,De,Es,It,Ru).json
+Nintendo Switch || Brothers - A Tale of Two Sons (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Brothers - A Tale of Two Sons (Europe)/Brothers - A Tale of Two Sons (Europe).json
+Nintendo Switch || Bubble Bobble 4 Friends (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Bubble Bobble 4 Friends (Europe)/Bubble Bobble 4 Friends (Europe).json
+Nintendo Switch || Bug Fables - The Everlasting Sapling (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Bug Fables - The Everlasting Sapling (USA)/Bug Fables - The Everlasting Sapling (USA).json
+Nintendo Switch || Cadence of Hyrule - Crypt of the NecroDancer (USA, Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Cadence of Hyrule - Crypt of the NecroDancer (USA, Europe)/Cadence of Hyrule - Crypt of the NecroDancer (USA, Europe).json
+Nintendo Switch || Call of Cthulhu - The Official Video Game (USA, Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Call of Cthulhu - The Official Video Game (USA, Europe)/Call of Cthulhu - The Official Video Game (USA, Europe).json
+Nintendo Switch || Carrion (USA) (En,Ja,Fr,De,Es,Zh,Ko,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Carrion (USA) (En,Ja,Fr,De,Es,Zh,Ko,Ru)/Carrion (USA) (En,Ja,Fr,De,Es,Zh,Ko,Ru).json
+Nintendo Switch || Castlevania - Anniversary Collection (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Castlevania - Anniversary Collection (USA)/Castlevania - Anniversary Collection (USA).json
+Nintendo Switch || Cat Quest (USA, Europe) (En,Ja,Fr,De,Es,It,Zh,Ru,Th) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Cat Quest (USA, Europe) (En,Ja,Fr,De,Es,It,Zh,Ru,Th)/Cat Quest (USA, Europe) (En,Ja,Fr,De,Es,It,Zh,Ru,Th).json
+Nintendo Switch || Catlateral Damage - Remeowstered (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Catlateral Damage - Remeowstered (USA)/Catlateral Damage - Remeowstered (USA).json
+Nintendo Switch || Celeste (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Celeste (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru) (Rev 1)/Celeste (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru) (Rev 1).json
+Nintendo Switch || Chasm (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Chasm (USA)/Chasm (USA).json
+Nintendo Switch || Child of Light - Ultimate Edition + Valiant Hearts (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Child of Light - Ultimate Edition + Valiant Hearts (Europe)/Child of Light - Ultimate Edition + Valiant Hearts (Europe).json
+Nintendo Switch || Chroma Squad (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Chroma Squad (Europe)/Chroma Squad (Europe).json
+Nintendo Switch || Chrono Cross - The Radical Dreamers Edition (Asia) (En,Zh,Ko) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Chrono Cross - The Radical Dreamers Edition (Asia) (En,Zh,Ko)/Chrono Cross - The Radical Dreamers Edition (Asia) (En,Zh,Ko).json
+Nintendo Switch || Coffee Talk (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Coffee Talk (Europe)/Coffee Talk (Europe).json
+Nintendo Switch || Collection of Mana (USA, Europe) (En,Fr,De) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Collection of Mana (USA, Europe) (En,Fr,De)/Collection of Mana (USA, Europe) (En,Fr,De).json
+Nintendo Switch || Coma, The - Recut (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Coma, The - Recut (USA)/Coma, The - Recut (USA).json
+Nintendo Switch || Contra Anniversary Collection (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Contra Anniversary Collection (USA)/Contra Anniversary Collection (USA).json
+Nintendo Switch || Corpse Killer - 25th Anniversary Edition (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Corpse Killer - 25th Anniversary Edition (USA)/Corpse Killer - 25th Anniversary Edition (USA).json
+Nintendo Switch || Cosmic Star Heroine (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Cosmic Star Heroine (USA)/Cosmic Star Heroine (USA).json
+Nintendo Switch || Creaks (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Creaks (Europe)/Creaks (Europe).json
+Nintendo Switch || CrossCode (USA, Europe) (En,Ja,De,Zh-Hans,Ko) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/CrossCode (USA, Europe) (En,Ja,De,Zh-Hans,Ko)/CrossCode (USA, Europe) (En,Ja,De,Zh-Hans,Ko).json
+Nintendo Switch || Crossing Souls (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Crossing Souls (USA)/Crossing Souls (USA).json
+Nintendo Switch || Cthulhu Saves Christmas (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Cthulhu Saves Christmas (USA)/Cthulhu Saves Christmas (USA).json
+Nintendo Switch || Dandara - Trials of Fear Edition (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Dandara - Trials of Fear Edition (Europe)/Dandara - Trials of Fear Edition (Europe).json
+Nintendo Switch || Danmaku Unlimited 3 (USA) (En,Fr) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Danmaku Unlimited 3 (USA) (En,Fr)/Danmaku Unlimited 3 (USA) (En,Fr).json
+Nintendo Switch || Darius Cozmic Collection Console (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Darius Cozmic Collection Console (Europe)/Darius Cozmic Collection Console (Europe).json
+Nintendo Switch || Dark Devotion (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Dark Devotion (USA)/Dark Devotion (USA).json
+Nintendo Switch || Darkside Detective, The (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Darkside Detective, The (Europe)/Darkside Detective, The (Europe).json
+Nintendo Switch || Darkwood (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Darkwood (Europe)/Darkwood (Europe).json
+Nintendo Switch || Darq - Complete Edition (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Darq - Complete Edition (USA)/Darq - Complete Edition (USA).json
+Nintendo Switch || Deponia Collection (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Deponia Collection (Europe)/Deponia Collection (Europe).json
+Nintendo Switch || Diablo III - Eternal Collection (USA, Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Diablo III - Eternal Collection (USA, Europe)/Diablo III - Eternal Collection (USA, Europe).json
+Nintendo Switch || Divinity Original Sin II - Definitive Edition (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Divinity Original Sin II - Definitive Edition (USA)/Divinity Original Sin II - Definitive Edition (USA).json
+Nintendo Switch || Dogworld (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Dogworld (Europe)/Dogworld (Europe).json
+Nintendo Switch || Doom 64 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Doom 64 (USA)/Doom 64 (USA).json
+Nintendo Switch || Door Kickers - Action Squad (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Door Kickers - Action Squad (Europe)/Door Kickers - Action Squad (Europe).json
+Nintendo Switch || Double Dragon & Kunio-Kun Retro Brawler Bundle (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Double Dragon & Kunio-Kun Retro Brawler Bundle (USA)/Double Dragon & Kunio-Kun Retro Brawler Bundle (USA).json
+Nintendo Switch || Double Dragon IV (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Double Dragon IV (USA)/Double Dragon IV (USA).json
+Nintendo Switch || Double Dragon Neon (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Double Dragon Neon (USA)/Double Dragon Neon (USA).json
+Nintendo Switch || Double Switch - 25th Anniversary Edition (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Double Switch - 25th Anniversary Edition (USA)/Double Switch - 25th Anniversary Edition (USA).json
+Nintendo Switch || Downwell (USA) (En,Ja,Fr,De,Es,It,Pt,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Downwell (USA) (En,Ja,Fr,De,Es,It,Pt,Ru)/Downwell (USA) (En,Ja,Fr,De,Es,It,Pt,Ru).json
+Nintendo Switch || Dragon Quest 1+2+3 Collection (Asia) (En,Zh,Ko) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Dragon Quest 1+2+3 Collection (Asia) (En,Zh,Ko)/Dragon Quest 1+2+3 Collection (Asia) (En,Zh,Ko).json
+Nintendo Switch || Dragon Quest Builders (USA, Europe) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Dragon Quest Builders (USA, Europe) (En,Fr,De,Es,It)/Dragon Quest Builders (USA, Europe) (En,Fr,De,Es,It).json
+Nintendo Switch || Dragon Quest Builders 2 (USA, Europe) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Dragon Quest Builders 2 (USA, Europe) (En,Fr,De,Es,It)/Dragon Quest Builders 2 (USA, Europe) (En,Fr,De,Es,It).json
+Nintendo Switch || Dragon's Lair Trilogy (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Dragon's Lair Trilogy (USA)/Dragon's Lair Trilogy (USA).json
+Nintendo Switch || Duck Game (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Duck Game (USA)/Duck Game (USA).json
+Nintendo Switch || Dusk (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Dusk (USA)/Dusk (USA).json
+Nintendo Switch || Dust - An Elysian Tail (USA) (En,Ja,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Dust - An Elysian Tail (USA) (En,Ja,Fr,De,Es,It)/Dust - An Elysian Tail (USA) (En,Ja,Fr,De,Es,It).json
+Nintendo Switch || Earthlock (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Earthlock (Europe)/Earthlock (Europe).json
+Nintendo Switch || Enter the Gungeon (USA) (En,Ja,Fr,De,Es,It,Pt,Zh-Hans,Ko,Ru) (Rev 2) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Enter the Gungeon (USA) (En,Ja,Fr,De,Es,It,Pt,Zh-Hans,Ko,Ru) (Rev 2)/Enter the Gungeon (USA) (En,Ja,Fr,De,Es,It,Pt,Zh-Hans,Ko,Ru) (Rev 2).json
+Nintendo Switch || Escapists, The - Complete Edition (USA) (En,Fr,De,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Escapists, The - Complete Edition (USA) (En,Fr,De,Es)/Escapists, The - Complete Edition (USA) (En,Fr,De,Es).json
+Nintendo Switch || Etrian Odyssey Origins Collection (Asia) (En,Ja,Zh) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Etrian Odyssey Origins Collection (Asia) (En,Ja,Zh)/Etrian Odyssey Origins Collection (Asia) (En,Ja,Zh).json
+Nintendo Switch || Evoland Legendary Edition (Europe) (En,Ja,Fr,De) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Evoland Legendary Edition (Europe) (En,Ja,Fr,De)/Evoland Legendary Edition (Europe) (En,Ja,Fr,De).json
+Nintendo Switch || Fairune Collection (Europe) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Fairune Collection (Europe) (En,Ja)/Fairune Collection (Europe) (En,Ja).json
+Nintendo Switch || Fairy Fencer F - Advent Dark Force (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Fairy Fencer F - Advent Dark Force (USA)/Fairy Fencer F - Advent Dark Force (USA).json
+Nintendo Switch || Fallen Legion - Rise to Glory (USA, Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Fallen Legion - Rise to Glory (USA, Europe)/Fallen Legion - Rise to Glory (USA, Europe).json
+Nintendo Switch || Fatal Frame - Maiden of Black Water (Japan) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Fatal Frame - Maiden of Black Water (Japan) (En,Ja)/Fatal Frame - Maiden of Black Water (Japan) (En,Ja).json
+Nintendo Switch || Fatal Frame - Mask of the Lunar Eclipse (Asia) (En,Ja,Zh) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Fatal Frame - Mask of the Lunar Eclipse (Asia) (En,Ja,Zh)/Fatal Frame - Mask of the Lunar Eclipse (Asia) (En,Ja,Zh).json
+Nintendo Switch || Fight Crab (Japan) (En,Ja,Zh) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Fight Crab (Japan) (En,Ja,Zh) (Rev 1)/Fight Crab (Japan) (En,Ja,Zh) (Rev 1).json
+Nintendo Switch || Final Fantasy IX (Asia) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Final Fantasy IX (Asia) (En,Ja)/Final Fantasy IX (Asia) (En,Ja).json
+Nintendo Switch || Final Fantasy VII + Final Fantasy VIII Remastered Twin Pack (Asia) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Final Fantasy VII + Final Fantasy VIII Remastered Twin Pack (Asia) (En,Ja)/Final Fantasy VII + Final Fantasy VIII Remastered Twin Pack (Asia) (En,Ja).json
+Nintendo Switch || Final Fantasy X + X-2 HD Remaster (Japan) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Final Fantasy X + X-2 HD Remaster (Japan) (En,Ja)/Final Fantasy X + X-2 HD Remaster (Japan) (En,Ja).json
+Nintendo Switch || Final Fantasy XII - The Zodiac Age (World) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Final Fantasy XII - The Zodiac Age (World)/Final Fantasy XII - The Zodiac Age (World).json
+Nintendo Switch || Fitness Boxing (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Fitness Boxing (USA)/Fitness Boxing (USA).json
+Nintendo Switch || Fitness Boxing 2 - Rhythm & Exercise (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Fitness Boxing 2 - Rhythm & Exercise (USA)/Fitness Boxing 2 - Rhythm & Exercise (USA).json
+Nintendo Switch || Flame in the Flood, The (Europe) (En,Fr,De,Es,Pt,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Flame in the Flood, The (Europe) (En,Fr,De,Es,Pt,Ru)/Flame in the Flood, The (Europe) (En,Fr,De,Es,Pt,Ru).json
+Nintendo Switch || Flinthook (USA) (En,Ja,Fr) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Flinthook (USA) (En,Ja,Fr)/Flinthook (USA) (En,Ja,Fr).json
+Nintendo Switch || Flower Collectors, The + The Lion's Song (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Flower Collectors, The + The Lion's Song (Europe)/Flower Collectors, The + The Lion's Song (Europe).json
+Nintendo Switch || Forgotton Anne (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Forgotton Anne (USA)/Forgotton Anne (USA).json
+Nintendo Switch || Fox n Forests (Europe) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Fox n Forests (Europe) (En,Fr,De,Es,It)/Fox n Forests (Europe) (En,Fr,De,Es,It).json
+Nintendo Switch || Freedom Finger (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Freedom Finger (Europe)/Freedom Finger (Europe).json
+Nintendo Switch || Freedom Planet (USA) (En,Ja,Fr,De,Es,Ko) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Freedom Planet (USA) (En,Ja,Fr,De,Es,Ko) (Rev 1)/Freedom Planet (USA) (En,Ja,Fr,De,Es,Ko) (Rev 1).json
+Nintendo Switch || Gardens Between, The (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Gardens Between, The (Europe)/Gardens Between, The (Europe).json
+Nintendo Switch || Ghost of a Tale (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Ghost of a Tale (Europe)/Ghost of a Tale (Europe).json
+Nintendo Switch || Giga Wrecker Alt. (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Giga Wrecker Alt. (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru)/Giga Wrecker Alt. (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru).json
+Nintendo Switch || Golf Story (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Golf Story (USA)/Golf Story (USA).json
+Nintendo Switch || Gone Home (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Gone Home (USA)/Gone Home (USA).json
+Nintendo Switch || Graceful Explosion Machine (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Graceful Explosion Machine (Europe)/Graceful Explosion Machine (Europe).json
+Nintendo Switch || Grandia HD Collection (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Grandia HD Collection (USA)/Grandia HD Collection (USA).json
+Nintendo Switch || Gris (USA) (En,Ja,Fr,De,Es,Pt,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Gris (USA) (En,Ja,Fr,De,Es,Pt,Ru)/Gris (USA) (En,Ja,Fr,De,Es,Pt,Ru).json
+Nintendo Switch || Guns, Gore & Cannoli 1 & 2 (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Guns, Gore & Cannoli 1 & 2 (Europe)/Guns, Gore & Cannoli 1 & 2 (Europe).json
+Nintendo Switch || Gunvolt Chronicles - Luminous Avenger iX (USA) (En,Ja,Zh,Ko) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Gunvolt Chronicles - Luminous Avenger iX (USA) (En,Ja,Zh,Ko)/Gunvolt Chronicles - Luminous Avenger iX (USA) (En,Ja,Zh,Ko).json
+Nintendo Switch || Has-Been Heroes (World) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Has-Been Heroes (World) (En,Fr,De,Es,It)/Has-Been Heroes (World) (En,Fr,De,Es,It).json
+Nintendo Switch || Hole New World, A (Europe) (En,Ja,Fr,De,Es,It) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Hole New World, A (Europe) (En,Ja,Fr,De,Es,It) (Rev 1)/Hole New World, A (Europe) (En,Ja,Fr,De,Es,It) (Rev 1).json
+Nintendo Switch || Hollow Knight (USA, Europe) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Hollow Knight (USA, Europe) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru) (Rev 1)/Hollow Knight (USA, Europe) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru) (Rev 1).json
+Nintendo Switch || Holy Potatoes! Compendium (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Holy Potatoes! Compendium (USA)/Holy Potatoes! Compendium (USA).json
+Nintendo Switch || Human - Fall Flat (Europe) (En,Fr,De,Es,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Human - Fall Flat (Europe) (En,Fr,De,Es,Ru)/Human - Fall Flat (Europe) (En,Fr,De,Es,Ru).json
+Nintendo Switch || ITTA (Europe) (En,Ja,Fr,De,Es,Pt,Zh-Hans,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/ITTA (Europe) (En,Ja,Fr,De,Es,Pt,Zh-Hans,Ru)/ITTA (Europe) (En,Ja,Fr,De,Es,Pt,Zh-Hans,Ru).json
+Nintendo Switch || Iconoclasts (USA) (En,Ja,Fr,De,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Iconoclasts (USA) (En,Ja,Fr,De,Es)/Iconoclasts (USA) (En,Ja,Fr,De,Es).json
+Nintendo Switch || Ion Fury (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Ion Fury (USA)/Ion Fury (USA).json
+Nintendo Switch || Ittle Dew (Asia) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Ittle Dew (Asia) (En,Ja)/Ittle Dew (Asia) (En,Ja).json
+Nintendo Switch || Joe Dever's Lone Wolf (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Joe Dever's Lone Wolf (Europe)/Joe Dever's Lone Wolf (Europe).json
+Nintendo Switch || Just Dance 2019 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Just Dance 2019 (USA)/Just Dance 2019 (USA).json
+Nintendo Switch || Just Dance 2020 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Just Dance 2020 (USA)/Just Dance 2020 (USA).json
+Nintendo Switch || Just Dance 2021 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Just Dance 2021 (USA)/Just Dance 2021 (USA).json
+Nintendo Switch || Just Dance 2022 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Just Dance 2022 (USA)/Just Dance 2022 (USA).json
+Nintendo Switch || Kero Blaster (Asia) (En,Ja,Fr,De,Es,It,Pt,Zh,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Kero Blaster (Asia) (En,Ja,Fr,De,Es,It,Pt,Zh,Ru)/Kero Blaster (Asia) (En,Ja,Fr,De,Es,It,Pt,Zh,Ru).json
+Nintendo Switch || Kingdom - New Lands (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Kingdom - New Lands (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru)/Kingdom - New Lands (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru).json
+Nintendo Switch || Knights of Pen and Paper +1 Deluxier Edition (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Knights of Pen and Paper +1 Deluxier Edition (Europe)/Knights of Pen and Paper +1 Deluxier Edition (Europe).json
+Nintendo Switch || Knights of Pen and Paper 2 - Deluxiest Edition (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Knights of Pen and Paper 2 - Deluxiest Edition (Europe)/Knights of Pen and Paper 2 - Deluxiest Edition (Europe).json
+Nintendo Switch || Kunai (USA, Europe) (En,Fr,De,Es,It,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Kunai (USA, Europe) (En,Fr,De,Es,It,Ru)/Kunai (USA, Europe) (En,Fr,De,Es,It,Ru).json
+Nintendo Switch || LEGO Worlds (World) (En,Ja,Fr,De,Es,It,Nl,Pt,Zh,Ko,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/LEGO Worlds (World) (En,Ja,Fr,De,Es,It,Nl,Pt,Zh,Ko,Ru)/LEGO Worlds (World) (En,Ja,Fr,De,Es,It,Nl,Pt,Zh,Ko,Ru).json
+Nintendo Switch || Last Day of June (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Last Day of June (Europe)/Last Day of June (Europe).json
+Nintendo Switch || Layers of Fear - Legacy (USA) (En,Fr,De,Es,It,Pt,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Layers of Fear - Legacy (USA) (En,Fr,De,Es,It,Pt,Ru)/Layers of Fear - Legacy (USA) (En,Fr,De,Es,It,Pt,Ru).json
+Nintendo Switch || Legend of Zelda, The - Breath of the Wild (World) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Legend of Zelda, The - Breath of the Wild (World)/Legend of Zelda, The - Breath of the Wild (World).json
+Nintendo Switch || Legend of Zelda, The - Link's Awakening (World) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Legend of Zelda, The - Link's Awakening (World)/Legend of Zelda, The - Link's Awakening (World).json
+Nintendo Switch || Legend of Zelda, The - Skyward Sword HD (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Legend of Zelda, The - Skyward Sword HD (USA)/Legend of Zelda, The - Skyward Sword HD (USA).json
+Nintendo Switch || Legend of Zelda, The - Tears of the Kingdom (World) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Legend of Zelda, The - Tears of the Kingdom (World)/Legend of Zelda, The - Tears of the Kingdom (World).json
+Nintendo Switch || Little Inferno (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Little Inferno (Europe)/Little Inferno (Europe).json
+Nintendo Switch || Lonely Mountains - Downhill (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Lonely Mountains - Downhill (Europe)/Lonely Mountains - Downhill (Europe).json
+Nintendo Switch || Lovers in a Dangerous Spacetime (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Lovers in a Dangerous Spacetime (Europe)/Lovers in a Dangerous Spacetime (Europe).json
+Nintendo Switch || Lumines Remastered (USA) (En,Ja,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Lumines Remastered (USA) (En,Ja,Fr,De,Es,It)/Lumines Remastered (USA) (En,Ja,Fr,De,Es,It).json
+Nintendo Switch || Machinarium (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Machinarium (Europe)/Machinarium (Europe).json
+Nintendo Switch || Mechstermination Force (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Mechstermination Force (Europe)/Mechstermination Force (Europe).json
+Nintendo Switch || Mercenaries Wings - The False Phoenix (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Mercenaries Wings - The False Phoenix (USA)/Mercenaries Wings - The False Phoenix (USA).json
+Nintendo Switch || Mercenary Kings (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Mercenary Kings (USA)/Mercenary Kings (USA).json
+Nintendo Switch || Messenger, The (USA) (En,Ja,Fr,De,Es,Pt,Zh-Hant,Zh-Hans,Ko,Ru) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Messenger, The (USA) (En,Ja,Fr,De,Es,Pt,Zh-Hant,Zh-Hans,Ko,Ru) (Rev 1)/Messenger, The (USA) (En,Ja,Fr,De,Es,Pt,Zh-Hant,Zh-Hans,Ko,Ru) (Rev 1).json
+Nintendo Switch || Metal Unit (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Metal Unit (Europe)/Metal Unit (Europe).json
+Nintendo Switch || Metroid Dread (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Metroid Dread (USA)/Metroid Dread (USA).json
+Nintendo Switch || Mighty Gunvolt Burst (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Mighty Gunvolt Burst (USA)/Mighty Gunvolt Burst (USA).json
+Nintendo Switch || Mighty Switch Force! Collection (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Mighty Switch Force! Collection (USA)/Mighty Switch Force! Collection (USA).json
+Nintendo Switch || Minit (USA) (En,Ja,Fr,De,Es,It,Pt,Zh-Hant,Zh-Hans,Ko,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Minit (USA) (En,Ja,Fr,De,Es,It,Pt,Zh-Hant,Zh-Hans,Ko,Ru)/Minit (USA) (En,Ja,Fr,De,Es,It,Pt,Zh-Hant,Zh-Hans,Ko,Ru).json
+Nintendo Switch || Missing, The - J.J. Macfield and the Island of Memories (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Missing, The - J.J. Macfield and the Island of Memories (USA)/Missing, The - J.J. Macfield and the Island of Memories (USA).json
+Nintendo Switch || Momodora - Reverie Under the Moonlight (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Momodora - Reverie Under the Moonlight (USA)/Momodora - Reverie Under the Moonlight (USA).json
+Nintendo Switch || Monster Prom XXL (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Monster Prom XXL (Europe)/Monster Prom XXL (Europe).json
+Nintendo Switch || Ms. Splosion Man (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Ms. Splosion Man (USA)/Ms. Splosion Man (USA).json
+Nintendo Switch || Mummy Demastered, The (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Mummy Demastered, The (USA)/Mummy Demastered, The (USA).json
+Nintendo Switch || Mutant Mudds Collection (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Mutant Mudds Collection (Europe)/Mutant Mudds Collection (Europe).json
+Nintendo Switch || My Friend Pedro - Blood Bullets Bananas (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/My Friend Pedro - Blood Bullets Bananas (USA)/My Friend Pedro - Blood Bullets Bananas (USA).json
+Nintendo Switch || N++ (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/N++ (Europe)/N++ (Europe).json
+Nintendo Switch || Namco Museum Arcade Pac (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Namco Museum Arcade Pac (USA)/Namco Museum Arcade Pac (USA).json
+Nintendo Switch || Namcot Collection (Japan) (En,Ja,Zh-Hant,Ko) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Namcot Collection (Japan) (En,Ja,Zh-Hant,Ko)/Namcot Collection (Japan) (En,Ja,Zh-Hant,Ko).json
+Nintendo Switch || NeoGeo Pocket Color Selection Vol. 1 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/NeoGeo Pocket Color Selection Vol. 1 (USA)/NeoGeo Pocket Color Selection Vol. 1 (USA).json
+Nintendo Switch || NeoGeo Pocket Color Selection Vol. 2 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/NeoGeo Pocket Color Selection Vol. 2 (USA)/NeoGeo Pocket Color Selection Vol. 2 (USA).json
+Nintendo Switch || Night Trap - 25th Anniversary Edition (USA) (En,Fr) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Night Trap - 25th Anniversary Edition (USA) (En,Fr)/Night Trap - 25th Anniversary Edition (USA) (En,Fr).json
+Nintendo Switch || Nurse Love Obsession (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Nurse Love Obsession (USA)/Nurse Love Obsession (USA).json
+Nintendo Switch || Oceanhorn - Monster of Uncharted Seas (USA) (En,Ja,Fr,De,Es,It,Zh,Ko,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Oceanhorn - Monster of Uncharted Seas (USA) (En,Ja,Fr,De,Es,It,Zh,Ko,Ru)/Oceanhorn - Monster of Uncharted Seas (USA) (En,Ja,Fr,De,Es,It,Zh,Ko,Ru).json
+Nintendo Switch || Octahedron (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Octahedron (Europe)/Octahedron (Europe).json
+Nintendo Switch || Old School Musical (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Old School Musical (Europe)/Old School Musical (Europe).json
+Nintendo Switch || Outlast (USA) (En,Ja,Fr,De,Es,It,Pt,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Outlast (USA) (En,Ja,Fr,De,Es,It,Pt,Ru)/Outlast (USA) (En,Ja,Fr,De,Es,It,Pt,Ru).json
+Nintendo Switch || Outlast 2 (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Outlast 2 (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ru)/Outlast 2 (USA) (En,Ja,Fr,De,Es,It,Pt,Zh,Ru).json
+Nintendo Switch || Oxenfree (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Oxenfree (USA)/Oxenfree (USA).json
+Nintendo Switch || Panzer Dragoon - Remake (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Panzer Dragoon - Remake (USA)/Panzer Dragoon - Remake (USA).json
+Nintendo Switch || Panzer Paladin (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Panzer Paladin (USA)/Panzer Paladin (USA).json
+Nintendo Switch || PixelJunk Monsters 2 (USA) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/PixelJunk Monsters 2 (USA) (En,Ja)/PixelJunk Monsters 2 (USA) (En,Ja).json
+Nintendo Switch || Pokemon - Let's Go, Pikachu! (World) (En,Ja,Fr,De,Es,It,Zh,Ko) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Pokemon - Let's Go, Pikachu! (World) (En,Ja,Fr,De,Es,It,Zh,Ko)/Pokemon - Let's Go, Pikachu! (World) (En,Ja,Fr,De,Es,It,Zh,Ko).json
+Nintendo Switch || Pokemon Shield (World) (En,Ja,Fr,De,Es,It,Zh,Ko) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Pokemon Shield (World) (En,Ja,Fr,De,Es,It,Zh,Ko)/Pokemon Shield (World) (En,Ja,Fr,De,Es,It,Zh,Ko).json
+Nintendo Switch || Q.U.B.E. 2 (Europe) (En,Fr,De,Es,It,Pt,Zh,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Q.U.B.E. 2 (Europe) (En,Fr,De,Es,It,Pt,Zh,Ru)/Q.U.B.E. 2 (Europe) (En,Fr,De,Es,It,Pt,Zh,Ru).json
+Nintendo Switch || Quake (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Quake (USA)/Quake (USA).json
+Nintendo Switch || RIVE - Ultimate Edition + Swap This! (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/RIVE - Ultimate Edition + Swap This! (Europe)/RIVE - Ultimate Edition + Swap This! (Europe).json
+Nintendo Switch || RPG Tkool MV Trinity (Japan) (En,Ja,De,Es,It,Pt,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/RPG Tkool MV Trinity (Japan) (En,Ja,De,Es,It,Pt,Ru)/RPG Tkool MV Trinity (Japan) (En,Ja,De,Es,It,Pt,Ru).json
+Nintendo Switch || Regions Of Ruin (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Regions Of Ruin (USA)/Regions Of Ruin (USA).json
+Nintendo Switch || Remothered - Double Pack (Japan) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Remothered - Double Pack (Japan) (En,Ja)/Remothered - Double Pack (Japan) (En,Ja).json
+Nintendo Switch || Return of the Obra Dinn (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Return of the Obra Dinn (USA)/Return of the Obra Dinn (USA).json
+Nintendo Switch || Ring Fit Adventure (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Ring Fit Adventure (USA)/Ring Fit Adventure (USA).json
+Nintendo Switch || River City Girls (USA) (En,Ja,Fr,De,Es,It,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/River City Girls (USA) (En,Ja,Fr,De,Es,It,Ru)/River City Girls (USA) (En,Ja,Fr,De,Es,It,Ru).json
+Nintendo Switch || River City Girls 2 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/River City Girls 2 (USA)/River City Girls 2 (USA).json
+Nintendo Switch || River City Girls Zero (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/River City Girls Zero (USA)/River City Girls Zero (USA).json
+Nintendo Switch || Rockman - Legacy Collection (World) (En,Ja,Fr,De,Es,It,Pt,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Rockman - Legacy Collection (World) (En,Ja,Fr,De,Es,It,Pt,Ru)/Rockman - Legacy Collection (World) (En,Ja,Fr,De,Es,It,Pt,Ru).json
+Nintendo Switch || Rockman - Legacy Collection 2 (Japan) (En,Ja,Fr,De,Es,It,Zh-Hant) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Rockman - Legacy Collection 2 (Japan) (En,Ja,Fr,De,Es,It,Zh-Hant)/Rockman - Legacy Collection 2 (Japan) (En,Ja,Fr,De,Es,It,Zh-Hant).json
+Nintendo Switch || Rockman 11 (World) (En,Ja,Fr,De,Es,It,Zh) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Rockman 11 (World) (En,Ja,Fr,De,Es,It,Zh)/Rockman 11 (World) (En,Ja,Fr,De,Es,It,Zh).json
+Nintendo Switch || Rockman X - Anniversary Collection (World) (En,Ja,Fr,De,Es,It,Zh-Hant) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Rockman X - Anniversary Collection (World) (En,Ja,Fr,De,Es,It,Zh-Hant)/Rockman X - Anniversary Collection (World) (En,Ja,Fr,De,Es,It,Zh-Hant).json
+Nintendo Switch || Rockman X - Anniversary Collection 2 (Japan) (En,Ja,Fr,De,Es,It,Zh-Hant) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Rockman X - Anniversary Collection 2 (Japan) (En,Ja,Fr,De,Es,It,Zh-Hant)/Rockman X - Anniversary Collection 2 (Japan) (En,Ja,Fr,De,Es,It,Zh-Hant).json
+Nintendo Switch || Rockman Zero ZX Legacy Collection (World) (En,Ja,Fr,De,Es,It,Zh-Hant,Zh-Hans) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Rockman Zero ZX Legacy Collection (World) (En,Ja,Fr,De,Es,It,Zh-Hant,Zh-Hans)/Rockman Zero ZX Legacy Collection (World) (En,Ja,Fr,De,Es,It,Zh-Hant,Zh-Hans).json
+Nintendo Switch || Rogue Legacy (USA) (En,Fr,De,Es,Zh,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Rogue Legacy (USA) (En,Fr,De,Es,Zh,Ru)/Rogue Legacy (USA) (En,Fr,De,Es,Zh,Ru).json
+Nintendo Switch || Roki (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Roki (Europe)/Roki (Europe).json
+Nintendo Switch || Romancing SaGa 3 (World) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Romancing SaGa 3 (World) (En,Ja)/Romancing SaGa 3 (World) (En,Ja).json
+Nintendo Switch || Ruiner (USA) (En,Ja,Fr,De,Es,It,Pt,Zh-Hant,Zh-Hans,Ko) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Ruiner (USA) (En,Ja,Fr,De,Es,It,Pt,Zh-Hant,Zh-Hans,Ko)/Ruiner (USA) (En,Ja,Fr,De,Es,It,Pt,Zh-Hant,Zh-Hans,Ko).json
+Nintendo Switch || Sam & Max - Beyond Time and Space (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Sam & Max - Beyond Time and Space (USA)/Sam & Max - Beyond Time and Space (USA).json
+Nintendo Switch || Sam & Max Save the World (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Sam & Max Save the World (USA)/Sam & Max Save the World (USA).json
+Nintendo Switch || Samurai Shodown Neogeo Collection (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Samurai Shodown Neogeo Collection (USA)/Samurai Shodown Neogeo Collection (USA).json
+Nintendo Switch || Saturday Morning RPG (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Saturday Morning RPG (USA)/Saturday Morning RPG (USA).json
+Nintendo Switch || Sayonara Wild Hearts (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Sayonara Wild Hearts (USA)/Sayonara Wild Hearts (USA).json
+Nintendo Switch || Scott Pilgrim vs. The World - The Game (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Scott Pilgrim vs. The World - The Game (USA)/Scott Pilgrim vs. The World - The Game (USA).json
+Nintendo Switch || Sea of Solitude - The Director's Cut (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Sea of Solitude - The Director's Cut (USA)/Sea of Solitude - The Director's Cut (USA).json
+Nintendo Switch || Sea of Stars (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Sea of Stars (USA)/Sea of Stars (USA).json
+Nintendo Switch || Sexy Brutale, The (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Sexy Brutale, The (Europe)/Sexy Brutale, The (Europe).json
+Nintendo Switch || Shadowgate (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Shadowgate (USA)/Shadowgate (USA).json
+Nintendo Switch || Shantae (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Shantae (USA)/Shantae (USA).json
+Nintendo Switch || Shantae - Half-Genie Hero - Ultimate Edition! (USA, Europe) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Shantae - Half-Genie Hero - Ultimate Edition! (USA, Europe) (En,Fr,De,Es,It)/Shantae - Half-Genie Hero - Ultimate Edition! (USA, Europe) (En,Fr,De,Es,It).json
+Nintendo Switch || Shantae - Risky's Revenge - Director's Cut (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Shantae - Risky's Revenge - Director's Cut (USA)/Shantae - Risky's Revenge - Director's Cut (USA).json
+Nintendo Switch || Shantae and the Pirate's Curse (USA) (En,Ja,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Shantae and the Pirate's Curse (USA) (En,Ja,Fr,De,Es,It)/Shantae and the Pirate's Curse (USA) (En,Ja,Fr,De,Es,It).json
+Nintendo Switch || Shantae and the Seven Sirens (USA) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Shantae and the Seven Sirens (USA) (En,Fr,De,Es,It)/Shantae and the Seven Sirens (USA) (En,Fr,De,Es,It).json
+Nintendo Switch || Shelter Generations (Europe) (En,Zh) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Shelter Generations (Europe) (En,Zh)/Shelter Generations (Europe) (En,Zh).json
+Nintendo Switch || Slime-san Superslime Edition (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Slime-san Superslime Edition (USA)/Slime-san Superslime Edition (USA).json
+Nintendo Switch || Smoke and Sacrifice (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Smoke and Sacrifice (Europe)/Smoke and Sacrifice (Europe).json
+Nintendo Switch || Space Invaders Invincible Collection (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Space Invaders Invincible Collection (Europe)/Space Invaders Invincible Collection (Europe).json
+Nintendo Switch || Spelunker HD Deluxe (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Spelunker HD Deluxe (Europe)/Spelunker HD Deluxe (Europe).json
+Nintendo Switch || Star Ocean - The Second Story R (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Star Ocean - The Second Story R (USA)/Star Ocean - The Second Story R (USA).json
+Nintendo Switch || Star Wars - Jedi Knight - Jedi Academy (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Star Wars - Jedi Knight - Jedi Academy (USA)/Star Wars - Jedi Knight - Jedi Academy (USA).json
+Nintendo Switch || Star Wars - Jedi Knight II - Jedi Outcast (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Star Wars - Jedi Knight II - Jedi Outcast (USA)/Star Wars - Jedi Knight II - Jedi Outcast (USA).json
+Nintendo Switch || Stardew Valley (USA, Europe) (En,Ja,Fr,De,Es,It,Zh,Ko,Ru,Tr,Hu) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Stardew Valley (USA, Europe) (En,Ja,Fr,De,Es,It,Zh,Ko,Ru,Tr,Hu)/Stardew Valley (USA, Europe) (En,Ja,Fr,De,Es,It,Zh,Ko,Ru,Tr,Hu).json
+Nintendo Switch || SteamWorld Dig 1+2 (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/SteamWorld Dig 1+2 (Europe)/SteamWorld Dig 1+2 (Europe).json
+Nintendo Switch || SteamWorld Heist - Ultimate Edition (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/SteamWorld Heist - Ultimate Edition (Europe)/SteamWorld Heist - Ultimate Edition (Europe).json
+Nintendo Switch || SteamWorld Quest - Hand of Gilgamech (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/SteamWorld Quest - Hand of Gilgamech (Europe)/SteamWorld Quest - Hand of Gilgamech (Europe).json
+Nintendo Switch || Stranger Things 3 - The Game (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Stranger Things 3 - The Game (USA)/Stranger Things 3 - The Game (USA).json
+Nintendo Switch || Streets of Rage 4 (USA) (En,Fr,De,Es,It,Pt,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Streets of Rage 4 (USA) (En,Fr,De,Es,It,Pt,Ru)/Streets of Rage 4 (USA) (En,Fr,De,Es,It,Pt,Ru).json
+Nintendo Switch || Streets of Red - Devil's Dare Deluxe (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Streets of Red - Devil's Dare Deluxe (USA)/Streets of Red - Devil's Dare Deluxe (USA).json
+Nintendo Switch || Super Bomberman R (World) (En,Ja,Fr,De,Es,It,Nl,Pt,Zh,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Super Bomberman R (World) (En,Ja,Fr,De,Es,It,Nl,Pt,Zh,Ru)/Super Bomberman R (World) (En,Ja,Fr,De,Es,It,Nl,Pt,Zh,Ru).json
+Nintendo Switch || Super Mario 3D All-Stars (World) (En,Ja,Fr,De,Es,It,Zh,Ko) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Super Mario 3D All-Stars (World) (En,Ja,Fr,De,Es,It,Zh,Ko)/Super Mario 3D All-Stars (World) (En,Ja,Fr,De,Es,It,Zh,Ko).json
+Nintendo Switch || Super Mario Odyssey (World) (En,Ja,Fr,De,Es,It,Nl,Zh,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Super Mario Odyssey (World) (En,Ja,Fr,De,Es,It,Nl,Zh,Ru)/Super Mario Odyssey (World) (En,Ja,Fr,De,Es,It,Nl,Zh,Ru).json
+Nintendo Switch || Super Mario RPG (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Super Mario RPG (USA)/Super Mario RPG (USA).json
+Nintendo Switch || Super Meat Boy (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Super Meat Boy (USA)/Super Meat Boy (USA).json
+Nintendo Switch || Super Smash Bros. Ultimate (World) (Rev 5) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Super Smash Bros. Ultimate (World) (Rev 5)/Super Smash Bros. Ultimate (World) (Rev 5).json
+Nintendo Switch || Swords of Ditto, The - Mormo's Curse (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Swords of Ditto, The - Mormo's Curse (USA)/Swords of Ditto, The - Mormo's Curse (USA).json
+Nintendo Switch || Teenage Mutant Ninja Turtles - Shredder's Revenge (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Teenage Mutant Ninja Turtles - Shredder's Revenge (USA)/Teenage Mutant Ninja Turtles - Shredder's Revenge (USA).json
+Nintendo Switch || Teenage Mutant Ninja Turtles - The Cowabunga Collection (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Teenage Mutant Ninja Turtles - The Cowabunga Collection (USA)/Teenage Mutant Ninja Turtles - The Cowabunga Collection (USA).json
+Nintendo Switch || Terraria (USA) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Terraria (USA) (En,Fr,De,Es,It)/Terraria (USA) (En,Fr,De,Es,It).json
+Nintendo Switch || Thea - The Awakening (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Thea - The Awakening (USA)/Thea - The Awakening (USA).json
+Nintendo Switch || There Is No Game - Wrong Dimension (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/There Is No Game - Wrong Dimension (USA)/There Is No Game - Wrong Dimension (USA).json
+Nintendo Switch || Thimbleweed Park (USA) (En,Fr,De,Es,It,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Thimbleweed Park (USA) (En,Fr,De,Es,It,Ru)/Thimbleweed Park (USA) (En,Fr,De,Es,It,Ru).json
+Nintendo Switch || Timespinner (USA) (En,Ja,Fr,De,Es,Pt,Zh,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Timespinner (USA) (En,Ja,Fr,De,Es,Pt,Zh,Ru)/Timespinner (USA) (En,Ja,Fr,De,Es,Pt,Zh,Ru).json
+Nintendo Switch || ToeJam & Earl - Back in the Groove! (USA) (En,Fr,De,Es,It,Pt) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/ToeJam & Earl - Back in the Groove! (USA) (En,Fr,De,Es,It,Pt)/ToeJam & Earl - Back in the Groove! (USA) (En,Fr,De,Es,It,Pt).json
+Nintendo Switch || Toki Tori Collection (Europe) (En,Ja,Fr,De,Es,It,Nl) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Toki Tori Collection (Europe) (En,Ja,Fr,De,Es,It,Nl)/Toki Tori Collection (Europe) (En,Ja,Fr,De,Es,It,Nl).json
+Nintendo Switch || TowerFall (USA) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/TowerFall (USA) (Rev 1)/TowerFall (USA) (Rev 1).json
+Nintendo Switch || Transistor (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Transistor (USA)/Transistor (USA).json
+Nintendo Switch || Tricky Towers (Europe) (En,Ja,Fr,De,Es,It,Nl,Pt,Zh-Hant,Ko,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Tricky Towers (Europe) (En,Ja,Fr,De,Es,It,Nl,Pt,Zh-Hant,Ko,Ru)/Tricky Towers (Europe) (En,Ja,Fr,De,Es,It,Nl,Pt,Zh-Hant,Ko,Ru).json
+Nintendo Switch || Trover Saves the Universe (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Trover Saves the Universe (USA)/Trover Saves the Universe (USA).json
+Nintendo Switch || Turok (USA) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Turok (USA) (En,Fr,De,Es,It)/Turok (USA) (En,Fr,De,Es,It).json
+Nintendo Switch || Turok 2 - Seeds of Evil (USA) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Turok 2 - Seeds of Evil (USA) (En,Fr,De,Es,It)/Turok 2 - Seeds of Evil (USA) (En,Fr,De,Es,It).json
+Nintendo Switch || Turrican Anthology Vol. 1 (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Turrican Anthology Vol. 1 (Europe)/Turrican Anthology Vol. 1 (Europe).json
+Nintendo Switch || Turrican Anthology Vol. 2 (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Turrican Anthology Vol. 2 (Europe)/Turrican Anthology Vol. 2 (Europe).json
+Nintendo Switch || Ultracore (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Ultracore (Europe)/Ultracore (Europe).json
+Nintendo Switch || Undertale (Japan, USA) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Undertale (Japan, USA) (En,Ja)/Undertale (Japan, USA) (En,Ja).json
+Nintendo Switch || Unrailed! (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Unrailed! (Europe)/Unrailed! (Europe).json
+Nintendo Switch || Untitled Goose Game (USA, Europe) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Untitled Goose Game (USA, Europe) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru)/Untitled Goose Game (USA, Europe) (En,Ja,Fr,De,Es,It,Pt,Zh,Ko,Ru).json
+Nintendo Switch || VA-11 Hall-A - Cyberpunk Bartender Action (USA) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/VA-11 Hall-A - Cyberpunk Bartender Action (USA) (En,Ja)/VA-11 Hall-A - Cyberpunk Bartender Action (USA) (En,Ja).json
+Nintendo Switch || Valis - The Fantasm Soldier Collection (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Valis - The Fantasm Soldier Collection (USA)/Valis - The Fantasm Soldier Collection (USA).json
+Nintendo Switch || Valis - The Fantasm Soldier Collection II (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Valis - The Fantasm Soldier Collection II (USA)/Valis - The Fantasm Soldier Collection II (USA).json
+Nintendo Switch || Vitamin Connection (USA) (En,Ja,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Vitamin Connection (USA) (En,Ja,Fr,De,Es,It)/Vitamin Connection (USA) (En,Ja,Fr,De,Es,It).json
+Nintendo Switch || Wandersong (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Wandersong (USA)/Wandersong (USA).json
+Nintendo Switch || West of Loathing (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/West of Loathing (USA)/West of Loathing (USA).json
+Nintendo Switch || Windjammers (USA) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Windjammers (USA) (En,Fr,De,Es,It)/Windjammers (USA) (En,Fr,De,Es,It).json
+Nintendo Switch || Wizard of Legend (USA) (En,Ja,Fr,De,Es,Zh-Hans,Ko,Ru) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Wizard of Legend (USA) (En,Ja,Fr,De,Es,Zh-Hans,Ko,Ru)/Wizard of Legend (USA) (En,Ja,Fr,De,Es,Zh-Hans,Ko,Ru).json
+Nintendo Switch || World of Goo (Europe) (En,Fr,De,Es,It,Nl) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/World of Goo (Europe) (En,Fr,De,Es,It,Nl)/World of Goo (Europe) (En,Fr,De,Es,It,Nl).json
+Nintendo Switch || Wulverblade (Europe) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Wulverblade (Europe) (En,Ja)/Wulverblade (Europe) (En,Ja).json
+Nintendo Switch || Xenoblade Chronicles - Definitive Edition (World) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Xenoblade Chronicles - Definitive Edition (World)/Xenoblade Chronicles - Definitive Edition (World).json
+Nintendo Switch || Yes, Your Grace (Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Yes, Your Grace (Europe)/Yes, Your Grace (Europe).json
+Nintendo Switch || Ys Origin (USA, Europe) (En,Ja,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Ys Origin (USA, Europe) (En,Ja,Fr,De,Es,It)/Ys Origin (USA, Europe) (En,Ja,Fr,De,Es,It).json
+Nintendo Switch || Ys VIII - Lacrimosa of DANA (USA, Europe) (En,Fr) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Ys VIII - Lacrimosa of DANA (USA, Europe) (En,Fr)/Ys VIII - Lacrimosa of DANA (USA, Europe) (En,Fr).json
+Nintendo Switch || Zombies Ate My Neighbors & Ghoul Patrol (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/Zombies Ate My Neighbors & Ghoul Patrol (USA)/Zombies Ate My Neighbors & Ghoul Patrol (USA).json
+Nintendo Switch || realMyst - Masterpiece Edition (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Switch/realMyst - Masterpiece Edition (USA)/realMyst - Masterpiece Edition (USA).json

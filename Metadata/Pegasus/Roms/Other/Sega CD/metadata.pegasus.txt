@@ -1,0 +1,596 @@
+collection: Sega CD
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sega CD" {file.path}
+
+
+game: Bram Stoker's Dracula (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Bram Stoker's Dracula (USA)/Bram Stoker's Dracula (USA).json
+developer: Psygnosis Limited
+publisher: Sony Imagesoft
+genre: Action;Fighting;Horror
+description:
+  This SegaCD game is a side-scrolling action title that makes use of digitized
+  backgrounds (sometimes with interesting effects), digitized actors/objects,
+  voice breifings before each level and full motion video cutscenes from the film.
+  .
+  The top of the screen is taken up by a stylish display showing the player's
+  score, health bar and the health bar of the enemy boss of the level (should
+  there be one). Players, controlling Jonathan Harker can move left and right on
+  the screen, jump in the air, perform a high kick and rapidly punch. Using these
+  skills, Jonathan must defeat all manner of enemies including bats, zombies,
+  vampires, . Powerups can be found at various points, usually descending from the
+  top of the screen. These include: an invulnerability powerup which also
+  instantly kills enemies, a heath restore powerup.
+release: 1993-11-01
+players: 1
+assets.boxfront: BoxFront/Bram Stoker's Dracula (USA).jpg
+assets.boxback: BoxBack/Bram Stoker's Dracula (USA).jpg
+assets.background: Background/Bram Stoker's Dracula (USA).jpg
+assets.screenshot: Screenshot/Bram Stoker's Dracula (USA).jpg
+assets.video: Video/Bram Stoker's Dracula (USA).mp4
+x-co-op: No
+
+
+game: Cliffhanger (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Cliffhanger (USA)/Cliffhanger (USA).json
+developer: Malibu Interactive
+publisher: Sony Imagesoft
+genre: Action;Fighting
+description:
+  Standard side-scrolling fighter based off of the Stallone film of the same name.
+  Sly must fight thugs and the elements as he tracks down suitcases of stolen cash
+  dropped around the peaks of the Rockies. Combat follows the Final Fight
+  standard, broken up by some mountain climbing and running (or 3-D snowboarding
+  on the Sega CD) from avalanches.
+release: 1993-12-04
+players: 1
+assets.boxfront: BoxFront/Cliffhanger (USA).jpg
+assets.boxback: BoxBack/Cliffhanger (USA).jpg
+assets.background: Background/Cliffhanger (USA).jpg
+assets.screenshot: Screenshot/Cliffhanger (USA).jpg
+assets.video: Video/Cliffhanger (USA).mp4
+x-co-op: No
+
+
+game: Dungeon Explorer (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Dungeon Explorer (USA)/Dungeon Explorer (USA).json
+developer: Hudson Soft
+publisher: Sega
+genre: Action;Role-Playing
+description:
+  Dungeon Explorer is an action role-playing game. It supports up to four players
+  with a choice of six different character classes: monk, knight, elf, mage, beast
+  and ninja. The game starts in the area surrounding a save point. This area
+  functions as a central hub to access all the six dungeons. If a character leaves
+  it, the food counter starts decreasing. If it reaches zero, the life points
+  start diminishing until the character dies. Food can be found as potions or pots
+  around the mazes. Returning the character to the save point area replenishes all
+  the counters and cures all conditions (like poisoning and confusion). The gold
+  collected in the game can be spent on equipment upgrades at the weapons shop.
+  The tavern allows the player to switch characters.
+release: 1995-05-01
+players: 4
+assets.boxfront: BoxFront/Dungeon Explorer (USA).jpg
+assets.boxback: BoxBack/Dungeon Explorer (USA).jpg
+assets.background: Background/Dungeon Explorer (USA).jpg
+assets.screenshot: Screenshot/Dungeon Explorer (USA).jpg
+assets.video: Video/Dungeon Explorer (USA).mp4
+x-co-op: Yes
+
+
+game: Dungeon Master II - Skullkeep (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Dungeon Master II - Skullkeep (USA)/Dungeon Master II - Skullkeep (USA).json
+developer: FTL Games
+publisher: JVC
+genre: Role-Playing
+description:
+  The game fuses real-time battles with puzzle solving and travelling, although
+  the game now auto-maps. Rain and magic usage effects are incorporated into the
+  engine. The first part of the game is spent above ground, visiting villages with
+  shops and temples, and trawling through forests.
+release: 1994-03-25
+players: 1
+assets.boxfront: BoxFront/Dungeon Master II - Skullkeep (USA).jpg
+assets.boxback: BoxBack/Dungeon Master II - Skullkeep (USA).jpg
+assets.background: Background/Dungeon Master II - Skullkeep (USA).jpg
+assets.screenshot: Screenshot/Dungeon Master II - Skullkeep (USA).jpg
+assets.video: Video/Dungeon Master II - Skullkeep (USA).mp4
+x-co-op: No
+
+
+game: Ecco - The Tides of Time (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Ecco - The Tides of Time (USA)/Ecco - The Tides of Time (USA).json
+developer: Novotrade
+publisher: Sega
+genre: Action;Platformer;2D
+description:
+  Ecco is faster, more powerful but engulfed in danger! The ruthless Vortex has
+  shattered Ecco's mentor, the mystical Asterite. Ecco and Trellia, a stunning
+  dolphin of the future, must cross 100 million years of time to restore the
+  Asterite and save life on Earth! Over 40 levels of spectacular aquatic
+  adventure, plus five stages of challenging 3D travel through vast oceans. Touch
+  video glyphs to reveal the mesmerizing, computer-animated history of Ecco's
+  quest to find his family. Ecco morphs! Ram a metasphere to become a powerful
+  shark! Change into a seagull and fly! Safely pulse past dangers as a jellyfish!
+release: 1994-08-25
+players: 1
+assets.boxfront: BoxFront/Ecco - The Tides of Time (USA).jpg
+assets.boxback: BoxBack/Ecco - The Tides of Time (USA).jpg
+assets.background: Background/Ecco - The Tides of Time (USA).jpg
+assets.screenshot: Screenshot/Ecco - The Tides of Time (USA).jpg
+assets.video: Video/Ecco - The Tides of Time (USA).mp4
+x-co-op: No
+
+
+game: Ecco the Dolphin (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Ecco the Dolphin (USA)/Ecco the Dolphin (USA).json
+developer: Novotrade
+publisher: Sega
+genre: Action;Platformer;2D
+description:
+  Life is a surging tide of adventure for Ecco, the powerful young dolphin. A
+  sudden storm tears Ecco's family from their home. Now Ecco, all alone, must
+  plunge into a treacherous quest to save the dolphins - and quite possibly the
+  world! Tackle all the bold adventure of the Genesis game transformed into the
+  brilliance of Sega CD! Leap and dive through incredible sea animations to
+  magical undersea music and sounds. Explore over 30 levels of lethal dangers -
+  including frenzied sharks, stinging jellyfish and deadly rip tides. Travel back
+  in time to battle prehistoric sea creatures! Beam out sonar waves to discover
+  hidden routes. Solve the cryptic messages in crystal Glyphs. Find the sunken
+  library where Glyphs reveal the secrets of the deep!
+release: 1993-07-29
+players: 1
+assets.boxfront: BoxFront/Ecco the Dolphin (USA).jpg
+assets.boxback: BoxBack/Ecco the Dolphin (USA).jpg
+assets.background: Background/Ecco the Dolphin (USA).jpg
+assets.screenshot: Screenshot/Ecco the Dolphin (USA).jpg
+assets.video: Video/Ecco the Dolphin (USA).mp4
+x-co-op: No
+
+
+game: Eye of the Beholder (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Eye of the Beholder (USA)/Eye of the Beholder (USA).json
+developer: Westwood
+publisher: Sega
+genre: Role-Playing
+description:
+  Eye of the Beholder is a dungeon crawler RPG with a first-person perspective
+  based on the 2nd Edition AD&D rules. The starting party consists of four
+  characters and up to two NPCs can join later. Combat and magic happen in real
+  time. Fight over a dozen different monster varieties and cast over 40 spells. A
+  point-and-click interface makes exploring, fighting, spellcasting and handling
+  objects easy.
+release: 1994-04-22
+players: 1
+assets.boxfront: BoxFront/Eye of the Beholder (USA).jpg
+assets.boxback: BoxBack/Eye of the Beholder (USA).jpg
+assets.background: Background/Eye of the Beholder (USA).jpg
+assets.screenshot: Screenshot/Eye of the Beholder (USA).jpg
+assets.video: Video/Eye of the Beholder (USA).mp4
+x-co-op: No
+
+
+game: Final Fight CD (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Final Fight CD (USA)/Final Fight CD (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Beat-'Em-Up;2D
+description:
+  When the Mad Gear Gang is around, you know laws are being broken. Enter the good
+  guys, Haggar, Cody and Guy, with killer roundhouse kicks, back fists, uppercuts
+  and body slams. All raging to the coolest CD quality tunes. When the going gets
+  tough, grab a pipe, knife or sword, and take a slice out of crime!
+release: 1989-12-01
+players: 2
+assets.boxfront: BoxFront/Final Fight CD (USA).jpg
+assets.boxback: BoxBack/Final Fight CD (USA).jpg
+assets.background: Background/Final Fight CD (USA).jpg
+assets.screenshot: Screenshot/Final Fight CD (USA).jpg
+assets.video: Video/Final Fight CD (USA).mp4
+x-co-op: Yes
+
+
+game: Heart of the Alien - Out of This World Parts I and II (USA) (RE)
+file: $ROM_JSON_ROOT/Other/Sega CD/Heart of the Alien - Out of This World Parts I and II (USA) (RE)/Heart of the Alien - Out of This World Parts I and II (USA) (RE).json
+developer: Delphine
+publisher: Virgin
+genre: Adventure
+description:
+  Heart of the Alien is the sequel to the game Out of this World, also known as
+  Another World. The story picks up immediately after the end of the first game.
+  You begin as Lester and his alien friend, "Buddy," land their pterodactyl in the
+  ruins of Buddy's village. Lester was knocked unconscious in their escape, so
+  Buddy lays him down on a cot to rest. The people who used to live in Buddy's
+  village remain enslaved, so he decides to go on a mission to free them. Thus,
+  you control Buddy as he sets off to free the people and find a way to send
+  Lester home.
+release: 1994-06-01
+players: 1
+assets.boxfront: BoxFront/Heart of the Alien - Out of This World Parts I and II (USA) (RE).jpg
+assets.boxback: BoxBack/Heart of the Alien - Out of This World Parts I and II (USA) (RE).jpg
+assets.background: Background/Heart of the Alien - Out of This World Parts I and II (USA) (RE).jpg
+assets.screenshot: Screenshot/Heart of the Alien - Out of This World Parts I and II (USA) (RE).jpg
+assets.video: Video/Heart of the Alien - Out of This World Parts I and II (USA) (RE).mp4
+x-co-op: No
+
+
+game: Heimdall (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Heimdall (USA)/Heimdall (USA).json
+developer: The 8th Day
+publisher: JVC
+genre: Role-Playing
+description:
+  You play as Heimdall, a demi-god based in Norse mythology. Heimdall's job is to
+  protect the entrance to Asgard, the home of the gods, from all evil, including
+  the terrible Ragnarok, when all the evil forces come together to try and destroy
+  the gods and ultimately everything.
+  .
+  Unfortunately Ragnarok is on its way and if that wasn't bad enough, Loki, god of
+  mischief, has hidden Thor's hammer, Odin's sword and Frey's spear in three
+  worlds. You, as the newly mortalized Heimdall, must visit each of these worlds
+  to collect the god's weapons.
+  .
+  The first is Midgard (or Earth), the second is Utgard (the world of the giants)
+  and the third is Asgard itself, the home of the gods. Each world has around 15
+  islands and each island has countless rooms.
+release: 1994-03-18
+players: 1
+assets.boxfront: BoxFront/Heimdall (USA).jpg
+assets.boxback: BoxBack/Heimdall (USA).jpg
+assets.background: Background/Heimdall (USA).jpg
+assets.screenshot: Screenshot/Heimdall (USA).jpg
+assets.video: Video/Heimdall (USA).mp4
+x-co-op: No
+
+
+game: Mansion of Hidden Souls (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Mansion of Hidden Souls (USA)/Mansion of Hidden Souls (USA).json
+developer: System Sacom
+publisher: Sega
+genre: Adventure
+description:
+  Mansion of Hidden Souls is an adventure game created entirely with full-motion
+  video. It takes place in a pre-rendered mansion that the player explores from a
+  first-person perspective. As they wander from room to room, the action unfolds
+  via video sequences.
+  .
+  The player takes on the role of Jonathan, a boy whose sister has wandered into
+  the spooky mansion. When she entered the mansion, she disappeared! What's more,
+  the mansion is full of talking butterflies. The player must search the whole
+  mansion to unlock its secrets and find Jonathan's sister.
+release: 1993-12-10
+players: 1
+assets.boxfront: BoxFront/Mansion of Hidden Souls (USA).jpg
+assets.boxback: BoxBack/Mansion of Hidden Souls (USA).jpg
+assets.background: Background/Mansion of Hidden Souls (USA).jpg
+assets.screenshot: Screenshot/Mansion of Hidden Souls (USA).jpg
+assets.video: Video/Mansion of Hidden Souls (USA).mp4
+x-co-op: No
+
+
+game: Night Striker (Japan, Korea)
+file: $ROM_JSON_ROOT/Other/Sega CD/Night Striker (Japan, Korea)/Night Striker (Japan, Korea).json
+developer: Taito Corporation
+publisher: Taito Corporation
+genre: Action;Shooter;Rail
+description:
+  Night Striker is a third-person shooter reminiscent of Space Harrier. Laser
+  optics expert Dr. Lindvery Maska and his daughter have been kidnapped by a
+  terrorist group, and Dick Dagras, head of the Special Service Agency, is
+  mobilizing a group of elite soldiers experienced in the use of special
+  armored flying cars, in order to rescue Dr. Maska and destroy this terrorist
+  group.
+  .
+  The player flies through each stage, controlling their armored car and
+  shooting down waves of enemies. A boss appears at the end of each stage, and
+  after this the player must choose what path to take in the next stage, as in
+  Darius. Instead of lives, the player has a shield that takes damage from
+  each hit, but is recharged at the end of each stage.
+  .
+  The Sega CD version of the game features remixed CD-audio, and the Saturn
+  version features a set of exclusive bonus levels.
+release: 1993-05-28
+players: 1
+assets.boxfront: BoxFront/Night Striker (Japan, Korea).jpg
+assets.boxback: BoxBack/Night Striker (Japan, Korea).jpg
+assets.background: Background/Night Striker (Japan, Korea).jpg
+assets.screenshot: Screenshot/Night Striker (Japan, Korea).jpg
+assets.video: Video/Night Striker (Japan, Korea).mp4
+x-co-op: No
+
+
+game: Night Trap (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Night Trap (USA)/Night Trap (USA).json
+developer: Digital Pictures
+publisher: Sega
+genre: Action;General
+description:
+  As an official member of S.C.A.T. (Sega Control Attack Team) your mission's a
+  time-bomb. Five beautiful co-eds are being stalked in an eerie estate. Hooded
+  intruders are invading the mansion with blood on their minds. Watch the
+  murderous action from hidden cameras in 8 different rooms. Catch the intruders
+  as they track their victims. Miss your chance and the co-eds are gone forever!
+release: 1992-10-15
+players: 1
+assets.boxfront: BoxFront/Night Trap (USA).jpg
+assets.boxback: BoxBack/Night Trap (USA).jpg
+assets.background: Background/Night Trap (USA).jpg
+assets.screenshot: Screenshot/Night Trap (USA).jpg
+x-co-op: No
+
+
+game: Ninja Warriors, The (Japan)
+file: $ROM_JSON_ROOT/Other/Sega CD/Ninja Warriors, The (Japan)/Ninja Warriors, The (Japan).json
+developer: Taito Corporation
+publisher: Romstar
+genre: Action;Beat-'Em-Up;2D
+description:
+  In 1993, to be an individual is to be, er... DEAD! The totally evil master geek
+  (sorry... politician) BANGLER has serious power going down in town. All the Fuzz
+  and Squaddies are his but so is the Underworld. You are MULK, pal... and as THE
+  totally wicked revolutionary (for 'THE' read 'ONLY'), you are gonna build two
+  assassination machines - The Ninja Warriors - and attempt to chill out this
+  Bangler guy with knives, shurikens and some bad posse hip movement! Multiple
+  levels of non-stop, furious two-player Oriental upbeat action!
+release: 1988-02-01
+players: 2
+assets.boxfront: BoxFront/Ninja Warriors, The (Japan).jpg
+assets.boxback: BoxBack/Ninja Warriors, The (Japan).jpg
+assets.background: Background/Ninja Warriors, The (Japan).jpg
+assets.screenshot: Screenshot/Ninja Warriors, The (Japan).jpg
+assets.video: Video/Ninja Warriors, The (Japan).mp4
+x-co-op: No
+
+
+game: Rise of the Dragon (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Rise of the Dragon (USA)/Rise of the Dragon (USA).json
+developer: Dynamix
+publisher: Sega
+genre: Adventure
+description:
+  Rise of the Dragon is a futuristic first-person adventure game. The game's
+  visuals are reminiscent of a comic book, with digitized photos of actors and
+  hand-painted backgrounds. Unlike most other adventure games of the time, it
+  relies less on inventory puzzles and more on specific choices made by the
+  player. The game has an internal clock and requires the player to plan the
+  protagonist's moves ahead in order to be in the right place at the right time.
+  Dialogues with multiple choices are utilized as a gameplay tool; a wrong choice
+  will often lead to a premature end of the adventure.
+release: 1992-09-25
+players: 1
+assets.boxfront: BoxFront/Rise of the Dragon (USA).jpg
+assets.boxback: BoxBack/Rise of the Dragon (USA).jpg
+assets.background: Background/Rise of the Dragon (USA).jpg
+assets.screenshot: Screenshot/Rise of the Dragon (USA).jpg
+assets.video: Video/Rise of the Dragon (USA).mp4
+x-co-op: No
+
+
+game: Robo Aleste (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Robo Aleste (USA)/Robo Aleste (USA).json
+developer: Compile
+publisher: Tengen
+genre: Action;Shooter;Shoot-'Em-Up;Vertical
+description:
+  For almost a century now, the bloodthirsty Chugoku Warloads of the west have
+  ruled and ravaged your once-supreme Oda Clan. No more! As the most decorated
+  officer in the White Fang Ninja Force, it's up to you to command the infamous
+  Robo Aleste War Machine and avenge the barbarous wrath of the anti-Oda alliance!
+  Come home a hero...or don't come home at all!
+release: 1992-11-27
+players: 1
+assets.boxfront: BoxFront/Robo Aleste (USA).jpg
+assets.boxback: BoxBack/Robo Aleste (USA).jpg
+assets.background: Background/Robo Aleste (USA).jpg
+assets.screenshot: Screenshot/Robo Aleste (USA).jpg
+assets.video: Video/Robo Aleste (USA).mp4
+x-co-op: No
+
+
+game: Sega Classics Arcade Collection (USA) (RE) (4-in-1)
+file: $ROM_JSON_ROOT/Other/Sega CD/Sega Classics Arcade Collection (USA) (RE) (4-in-1)/Sega Classics Arcade Collection (USA) (RE) (4-in-1).json
+developer: Sega
+publisher: Sega
+genre: Action;Puzzle
+description:
+  Sega Classics Arcade Collection is a compilation of four (or five) Sega Mega
+  Drive games for the Sega Mega-CD. It was a pack-in game bundled with launch Mega
+  CDs in the United Kingdom and North America, and was released separately in
+  other regions.
+  .
+  Two variants of Sega Classics Arcade Collection exist; an earlier version seen
+  in North America and Japan, which contains Golden Axe, Streets of Rage, Columns
+  and The Revenge of Shinobi, and a later version seen in Europe and later North
+  American bundles, which throws in Super Monaco GP. In North America the older
+  "4-in-1" variant came in the same box as Sherlock Holmes: Consulting Detective
+  Vol. I, while the later "5-in-1" one came with Ecco the Dolphin.
+  .
+  Each game is mostly identical to their Mega Drive counterparts, though have
+  minor changes thanks to the Mega CD's enhancements. All digitised speech samples
+  have been replaced with higher quality audio, the first level in Golden Axe uses
+  different instruments and Super Monaco GP has extra drums. The Revenge of
+  Shinobi is based on a later version than its cartridge counterparts, altering
+  some of the bosses which infringe copyrights. For unknown reasons, Golden Axe is
+  only a one-player game in this compilation.
+  .
+  Despite being the Mega CD's selling point, only two games have an updated CD
+  soundtrack (Golden Axe in the form of music recorded from its arcade board, and
+  Columns which has a new title theme). This means only a small fraction of the
+  disc is used.
+release: 1992-11-01
+players: 1
+assets.boxfront: BoxFront/Sega Classics Arcade Collection (USA) (RE) (4-in-1).jpg
+assets.boxback: BoxBack/Sega Classics Arcade Collection (USA) (RE) (4-in-1).jpg
+assets.background: Background/Sega Classics Arcade Collection (USA) (RE) (4-in-1).jpg
+assets.screenshot: Screenshot/Sega Classics Arcade Collection (USA) (RE) (4-in-1).jpg
+assets.video: Video/Sega Classics Arcade Collection (USA) (RE) (4-in-1).mp4
+x-co-op: No
+
+
+game: Sewer Shark (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Sewer Shark (USA)/Sewer Shark (USA).json
+developer: Digital Pictures
+publisher: Sony Imagesoft
+genre: Shooter;Vehicle Simulation
+description:
+  Sewer Shark takes place sometime in the future, where environmental destruction
+  has forced most of humanity to live underground. The player takes the role of a
+  rookie pilot in a band of "sewer jockies", whose job is to exterminate dangerous
+  mutated creatures to keep a vast network of sewers clean for the resort area
+  "Solar City", an island paradise ruled by the evil Commissioner Stenchler
+  (Robert Costanzo). The player's co-pilot, Ghost (David Underwood), evaluates the
+  player's performance throughout the game, while a small robot named Catfish
+  scouts ahead and gives directions. The player is later assisted by Falco, a
+  female jockey who believes that there is a hidden route to the surface. Falco is
+  later captured by Stenchler, who threatens to turn her into one of his mindless
+  minions. This plot is thwarted when Ghost and the player reach Solar City.
+release: 1992-12-01
+players: 1
+assets.boxfront: BoxFront/Sewer Shark (USA).jpg
+assets.boxback: BoxBack/Sewer Shark (USA).jpg
+assets.background: Background/Sewer Shark (USA).jpg
+assets.screenshot: Screenshot/Sewer Shark (USA).jpg
+assets.video: Video/Sewer Shark (USA).mp4
+x-co-op: No
+
+
+game: Sherlock Holmes - Consulting Detective (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Sherlock Holmes - Consulting Detective (USA)/Sherlock Holmes - Consulting Detective (USA).json
+developer: ICOM
+publisher: Sega
+genre: Adventure
+description:
+  Sherlock Holmes: Consulting Detective can be described as a hybrid of adventure
+  game and simulation. Gameplay process involves traveling to various locations in
+  London, interrogating suspects, gathering clues, checking out the newspapers,
+  and eventually presenting all the evidence to the judge; if the latter finds the
+  circumstances incriminating, he will accept the results of the investigation,
+  and the case will be considered solved. Though the basic gameplay is rather
+  typical for adventure games, the amount of real detective work and the focus of
+  the game on purely case-related actions rather than exploration and manipulation
+  of items makes it comparable to a simulation of a criminal investigation.
+release: 1992-11-01
+players: 1
+assets.boxfront: BoxFront/Sherlock Holmes - Consulting Detective (USA).jpg
+assets.boxback: BoxBack/Sherlock Holmes - Consulting Detective (USA).jpg
+assets.background: Background/Sherlock Holmes - Consulting Detective (USA).jpg
+assets.screenshot: Screenshot/Sherlock Holmes - Consulting Detective (USA).jpg
+assets.video: Video/Sherlock Holmes - Consulting Detective (USA).mp4
+x-co-op: No
+
+
+game: Shining Force CD (USA) (5R, 6R)
+file: $ROM_JSON_ROOT/Other/Sega CD/Shining Force CD (USA) (5R, 6R)/Shining Force CD (USA) (5R, 6R).json
+developer: Camelot Software Planning
+publisher: Sega
+genre: Strategy;Turn-Based;Tactics
+description:
+  Join the Shining Force in their valiant struggle to beat back the power-mad King
+  Iom and his invading army! To defeat his evil horde and save the Kingdom of
+  Cypress, it will take cunning strategy, magic spells, and even hand-to-hand
+  combat!
+release: 1994-07-21
+players: 1
+assets.boxfront: BoxFront/Shining Force CD (USA) (5R, 6R).jpg
+assets.boxback: BoxBack/Shining Force CD (USA) (5R, 6R).jpg
+assets.background: Background/Shining Force CD (USA) (5R, 6R).jpg
+assets.screenshot: Screenshot/Shining Force CD (USA) (5R, 6R).jpg
+assets.video: Video/Shining Force CD (USA) (5R, 6R).mp4
+x-co-op: No
+
+
+game: Silpheed (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Silpheed (USA)/Silpheed (USA).json
+developer: Game Arts
+publisher: Sierra Entertainment
+genre: Action;Shooter;Shoot-'Em-Up;Vertical
+description:
+  The earth-based "Grayzon" computer defense system has been 'net-jacked'.
+  Mankind's future in space is in your hands! This highly modified SA-77
+  "Silpheed" tactical fighter spacecraft is up to the challenge... are you? The
+  best space-shooter ever, 11 fast, tough, action-filled battle stages. Amazingly
+  detailed polygon graphics and CD quality music and sound. Left and right main
+  weapons, plus choice of optional weapons systems: Graviton Bomb, EM Defense
+  System, Photon Torpedo or Anti-Matter Bomb.
+release: 1987-12-01
+players: 1
+assets.boxfront: BoxFront/Silpheed (USA).jpg
+assets.boxback: BoxBack/Silpheed (USA).jpg
+assets.background: Background/Silpheed (USA).jpg
+assets.screenshot: Screenshot/Silpheed (USA).jpg
+assets.video: Video/Silpheed (USA).mp4
+x-co-op: No
+
+
+game: Software Toolworks' Star Wars Chess, The (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Software Toolworks' Star Wars Chess, The (USA)/Software Toolworks' Star Wars Chess, The (USA).json
+developer: Software Toolworks
+publisher: Mindscape
+genre: Strategy
+description:
+  Star Wars Chess is a chess game where the pieces are characters from the Star
+  Wars universe. When pieces are taken, an animated battle is shown, much like in
+  Battle Chess.
+release: 1994-05-01
+players: 2
+assets.boxfront: BoxFront/Software Toolworks' Star Wars Chess, The (USA).jpg
+assets.boxback: BoxBack/Software Toolworks' Star Wars Chess, The (USA).jpg
+assets.background: Background/Software Toolworks' Star Wars Chess, The (USA).jpg
+assets.screenshot: Screenshot/Software Toolworks' Star Wars Chess, The (USA).jpg
+assets.video: Video/Software Toolworks' Star Wars Chess, The (USA).mp4
+x-co-op: No
+
+
+game: Sonic CD (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Sonic CD (USA)/Sonic CD (USA).json
+developer: Sonic Team
+publisher: Sega
+genre: Adventure;Platform
+description:
+  Sonic travels to the distant shores of Never Lake for the once-a-year appearance
+  of Little Planet - a mysterious world where past, present, and future collide
+  through the power of the Time Stones that lie hidden within it.
+  .
+  Sonic arrives only to find the once beautiful world imprisoned beneath a twisted
+  metallic shell. His arch-nemesis, Dr. Eggman, has come for the Time Stones and
+  with them, will soon have the power to control time itself!
+  .
+  In order to put an end to Dr. Eggman’s nefarious schemes, Sonic must use the
+  power of Little Planet to travel through time; breaking Dr. Eggman’s hold over
+  the future by destroying his machines in the past and recovering the missing
+  Time Stones!
+release: 1993-09-23
+players: 1
+assets.boxfront: BoxFront/Sonic CD (USA).jpg
+assets.boxback: BoxBack/Sonic CD (USA).jpg
+assets.background: Background/Sonic CD (USA).jpg
+assets.screenshot: Screenshot/Sonic CD (USA).jpg
+assets.video: Video/Sonic CD (USA).mp4
+x-co-op: No
+
+
+game: Star Wars - Rebel Assault (USA)
+file: $ROM_JSON_ROOT/Other/Sega CD/Star Wars - Rebel Assault (USA)/Star Wars - Rebel Assault (USA).json
+developer: LucasArts
+publisher: LucasArts
+genre: Shooter
+description:
+  The game follows the adventures of a young pilot known as Rookie One, a farmer
+  from Tatooine in the style of Luke Skywalker. The game largely takes place
+  during the events of Episode IV: A New Hope, however the sequences on Hoth from
+  The Empire Strikes Back are included.\n
+  The game begins with Rookie One's training (you), followed by an attack on the
+  Star Destroyer Devastator, after its capture of the Tantive IV in the events of
+  the film. The story then leads the player to sequences to defend the Rebel Base
+  on Hoth from the attack shown in the Empire Strikes Back, and finally ends in
+  the assault on the Death Star of the film, with the player taking the place of
+  Luke Skywalker in destroying the battle station.
+release: 1994-03-01
+players: 1
+assets.boxfront: BoxFront/Star Wars - Rebel Assault (USA).jpg
+assets.boxback: BoxBack/Star Wars - Rebel Assault (USA).jpg
+assets.background: Background/Star Wars - Rebel Assault (USA).jpg
+assets.screenshot: Screenshot/Star Wars - Rebel Assault (USA).jpg
+assets.video: Video/Star Wars - Rebel Assault (USA).mp4
+x-co-op: No
+
+

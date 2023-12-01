@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Absolute Blue (USA).exe"
+    ],
+    "transform_file": "Absolute Blue (USA).exe"
+}

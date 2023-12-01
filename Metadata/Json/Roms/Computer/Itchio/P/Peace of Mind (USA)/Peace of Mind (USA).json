@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Peace of Mind (USA).exe"
+    ],
+    "transform_file": "Peace of Mind (USA).exe"
+}

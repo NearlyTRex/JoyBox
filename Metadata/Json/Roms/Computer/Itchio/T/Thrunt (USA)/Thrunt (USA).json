@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Thrunt (USA).exe"
+    ],
+    "transform_file": "Thrunt (USA).exe"
+}

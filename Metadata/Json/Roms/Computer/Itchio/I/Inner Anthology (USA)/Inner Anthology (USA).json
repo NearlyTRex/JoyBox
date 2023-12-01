@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Inner Anthology (USA).exe"
+    ],
+    "transform_file": "Inner Anthology (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Order A Pizza - A Visual Novel (USA).exe"
+    ],
+    "transform_file": "Order A Pizza - A Visual Novel (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Knights of the Card Table (USA).exe"
+    ],
+    "transform_file": "Knights of the Card Table (USA).exe"
+}

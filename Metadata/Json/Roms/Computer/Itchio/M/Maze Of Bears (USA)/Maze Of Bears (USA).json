@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Maze Of Bears (USA).exe"
+    ],
+    "transform_file": "Maze Of Bears (USA).exe"
+}

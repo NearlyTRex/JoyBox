@@ -1,0 +1,23 @@
+{
+    "files": [
+        "timber/82s123.12d",
+        "timber/tima7.bin",
+        "timber/tima8.bin",
+        "timber/tima9.bin",
+        "timber/timbg0.bin",
+        "timber/timbg1.bin",
+        "timber/timfg0.bin",
+        "timber/timfg1.bin",
+        "timber/timfg2.bin",
+        "timber/timfg3.bin",
+        "timber/timfg4.bin",
+        "timber/timfg5.bin",
+        "timber/timfg6.bin",
+        "timber/timfg7.bin",
+        "timber/timpg0.bin",
+        "timber/timpg1.bin",
+        "timber/timpg2.bin",
+        "timber/timpg3.bin"
+    ],
+    "launch_name": "timber"
+}

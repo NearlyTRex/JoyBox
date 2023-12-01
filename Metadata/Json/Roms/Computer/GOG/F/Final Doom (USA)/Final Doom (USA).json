@@ -1,0 +1,9 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/final_doom_manual.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_final_doom_1.9_(28044).exe"
+    ],
+    "transform_file": "setup_final_doom_1.9_(28044).exe"
+}

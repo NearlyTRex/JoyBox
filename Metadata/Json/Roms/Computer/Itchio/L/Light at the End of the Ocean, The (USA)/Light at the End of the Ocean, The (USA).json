@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Light at the End of the Ocean, The (USA).exe"
+    ],
+    "transform_file": "Light at the End of the Ocean, The (USA).exe"
+}

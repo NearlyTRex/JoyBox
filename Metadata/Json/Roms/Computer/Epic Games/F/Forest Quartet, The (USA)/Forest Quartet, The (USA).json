@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Forest Quartet, The (USA).exe"
+    ],
+    "transform_file": "Forest Quartet, The (USA).exe"
+}

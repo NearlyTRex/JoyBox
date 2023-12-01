@@ -1,0 +1,10 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/ftl_fasterthanlight_advancededition_ost_mp3_1413237875.zip",
+        "$SETUP_MAIN_ROOT/extra/ftl_ost_mp3_1378496815.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/FTL_v1.6.12_Install.exe"
+    ],
+    "transform_file": "FTL_v1.6.12_Install.exe"
+}

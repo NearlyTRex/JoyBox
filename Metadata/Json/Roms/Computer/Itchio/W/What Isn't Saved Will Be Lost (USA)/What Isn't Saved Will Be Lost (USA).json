@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/What Isn't Saved Will Be Lost (USA).exe"
+    ],
+    "transform_file": "What Isn't Saved Will Be Lost (USA).exe"
+}

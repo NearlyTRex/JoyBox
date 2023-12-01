@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/LEGO The Hobbit (USA).exe"
+    ],
+    "transform_file": "LEGO The Hobbit (USA).exe"
+}

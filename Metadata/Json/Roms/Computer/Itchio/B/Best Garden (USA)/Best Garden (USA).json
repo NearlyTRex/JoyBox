@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Best Garden (USA).exe"
+    ],
+    "transform_file": "Best Garden (USA).exe"
+}

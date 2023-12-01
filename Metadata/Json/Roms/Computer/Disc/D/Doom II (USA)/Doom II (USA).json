@@ -1,0 +1,25 @@
+{
+    "main_game_exe": [
+        "DoomII/gzdoom.exe"
+    ],
+    "main_game_exe_cwd": {
+        "DoomII/gzdoom.exe": "DoomII"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT/DOOM2CD/DOOM2.WAD",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/DoomII/DOOM2.WAD",
+                "type": "copy"
+            },
+            {
+                "from": "$SETUP_MAIN_ROOT/fix/gzdoom-4-10-0-Windows-64bit.zip",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/DoomII",
+                "type": "extract"
+            }
+        ]
+    },
+    "transform_file": "Doom II (USA).chd"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Death and Taxes (USA).exe"
+    ],
+    "transform_file": "Death and Taxes (USA).exe"
+}

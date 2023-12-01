@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Broken Signal (USA).exe"
+    ],
+    "transform_file": "Broken Signal (USA).exe"
+}

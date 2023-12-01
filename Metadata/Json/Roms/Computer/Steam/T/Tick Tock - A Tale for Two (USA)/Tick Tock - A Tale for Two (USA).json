@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Tick Tock - A Tale for Two (USA).exe"
+    ],
+    "transform_file": "Tick Tock - A Tale for Two (USA).exe"
+}

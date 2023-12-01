@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_bio_menace_1.1_(28043).exe"
+    ],
+    "transform_file": "setup_bio_menace_1.1_(28043).exe"
+}

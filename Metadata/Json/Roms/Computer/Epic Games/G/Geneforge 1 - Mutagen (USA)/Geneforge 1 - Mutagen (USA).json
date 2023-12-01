@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Geneforge 1 - Mutagen (USA).exe"
+    ],
+    "transform_file": "Geneforge 1 - Mutagen (USA).exe"
+}

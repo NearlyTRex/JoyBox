@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Sector 781 (USA).exe"
+    ],
+    "transform_file": "Sector 781 (USA).exe"
+}

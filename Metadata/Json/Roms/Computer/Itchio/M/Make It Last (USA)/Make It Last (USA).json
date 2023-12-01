@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Make It Last (USA).exe"
+    ],
+    "transform_file": "Make It Last (USA).exe"
+}

@@ -1,0 +1,13 @@
+Nintendo Game Boy Advance e-Reader || NES-e - Balloon Fight-e (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Advance e-Reader/NES-e - Balloon Fight-e (USA)/NES-e - Balloon Fight-e (USA).json
+Nintendo Game Boy Advance e-Reader || NES-e - Baseball-e (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Advance e-Reader/NES-e - Baseball-e (USA)/NES-e - Baseball-e (USA).json
+Nintendo Game Boy Advance e-Reader || NES-e - Clu Clu Land-e (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Advance e-Reader/NES-e - Clu Clu Land-e (USA)/NES-e - Clu Clu Land-e (USA).json
+Nintendo Game Boy Advance e-Reader || NES-e - Donkey Kong 3-e (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Advance e-Reader/NES-e - Donkey Kong 3-e (USA)/NES-e - Donkey Kong 3-e (USA).json
+Nintendo Game Boy Advance e-Reader || NES-e - Donkey Kong Jr.-e (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Advance e-Reader/NES-e - Donkey Kong Jr.-e (USA)/NES-e - Donkey Kong Jr.-e (USA).json
+Nintendo Game Boy Advance e-Reader || NES-e - Donkey Kong-e (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Advance e-Reader/NES-e - Donkey Kong-e (USA)/NES-e - Donkey Kong-e (USA).json
+Nintendo Game Boy Advance e-Reader || NES-e - Excitebike-e (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Advance e-Reader/NES-e - Excitebike-e (USA)/NES-e - Excitebike-e (USA).json
+Nintendo Game Boy Advance e-Reader || NES-e - Golf-e (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Advance e-Reader/NES-e - Golf-e (USA)/NES-e - Golf-e (USA).json
+Nintendo Game Boy Advance e-Reader || NES-e - Ice Climber-e (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Advance e-Reader/NES-e - Ice Climber-e (USA)/NES-e - Ice Climber-e (USA).json
+Nintendo Game Boy Advance e-Reader || NES-e - Mario Bros.-e (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Advance e-Reader/NES-e - Mario Bros.-e (USA)/NES-e - Mario Bros.-e (USA).json
+Nintendo Game Boy Advance e-Reader || NES-e - Pinball-e (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Advance e-Reader/NES-e - Pinball-e (USA)/NES-e - Pinball-e (USA).json
+Nintendo Game Boy Advance e-Reader || NES-e - Tennis-e (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Advance e-Reader/NES-e - Tennis-e (USA)/NES-e - Tennis-e (USA).json
+Nintendo Game Boy Advance e-Reader || NES-e - Urban Champion-e (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Advance e-Reader/NES-e - Urban Champion-e (USA)/NES-e - Urban Champion-e (USA).json

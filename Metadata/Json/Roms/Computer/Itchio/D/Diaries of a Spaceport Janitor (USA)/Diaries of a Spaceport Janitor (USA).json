@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Diaries of a Spaceport Janitor (USA).exe"
+    ],
+    "transform_file": "Diaries of a Spaceport Janitor (USA).exe"
+}

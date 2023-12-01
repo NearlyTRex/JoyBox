@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Flufftopia (USA).exe"
+    ],
+    "transform_file": "Flufftopia (USA).exe"
+}

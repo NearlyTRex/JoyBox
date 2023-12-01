@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/PuPaiPo Space Deluxe (USA).exe"
+    ],
+    "transform_file": "PuPaiPo Space Deluxe (USA).exe"
+}

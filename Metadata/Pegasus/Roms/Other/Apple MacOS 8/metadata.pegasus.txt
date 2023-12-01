@@ -1,0 +1,54 @@
+collection: Apple MacOS 8
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Apple MacOS 8" {file.path}
+
+
+game: Harry the Handsome Executive (USA)
+file: $ROM_JSON_ROOT/Other/Apple MacOS 8/Harry the Handsome Executive (USA)/Harry the Handsome Executive (USA).json
+developer: Ambrosia
+publisher: Ambrosia
+genre: Action
+description:
+  From the time we enter grade school until our matriculation, we are
+  indoctrinated with a drive to "make it" -- to ascend the corporate ladder,
+  earn a large salary, and produce successful offspring. This game won't
+  help you with any of that. It can, however, train you in the ways of the
+  swivel chair, the most versatile piece of furniture since the ottoman
+  with built-in soda fridge.
+  .
+  Join Harry the Handsome Executive as he scoots and kicks his swivel chair
+  through the halls of ScumCo in this delightful action game developed by
+  Ben Spees. The path to job security is fraught with many perils! Harry
+  must avoid discomfort caused by dart-throwing middle managers, rebellious
+  customer service drones, crazed chemists, and a host of other enemies.
+  All the while, he must maintain corporate favor or risk the feared pink
+  slip.
+release: 1997-09-18
+players: 1
+assets.boxfront: BoxFront/Harry the Handsome Executive (USA).jpg
+assets.boxback: BoxBack/Harry the Handsome Executive (USA).jpg
+assets.background: Background/Harry the Handsome Executive (USA).jpg
+assets.screenshot: Screenshot/Harry the Handsome Executive (USA).jpg
+x-co-op: No
+
+
+game: Robo-Theif - Crisis at New York City (USA)
+file: $ROM_JSON_ROOT/Other/Apple MacOS 8/Robo-Theif - Crisis at New York City (USA)/Robo-Theif - Crisis at New York City (USA).json
+developer: Unknown
+publisher: Unknown
+genre: Adventure
+description:
+  Get ready to save the United States of America from destruction as one of the
+  most famous US secret agents in this Adventure/Role playing game.
+  .
+  You work for Dr. Millard, who is in charge of controlling what happens around
+  the world by sending his agents on different missions. You haven't been home
+  for a long time, but this time they need the best, and that's you.
+release: 2000-01-01
+players: 1
+assets.boxfront: BoxFront/Robo-Theif - Crisis at New York City (USA).jpg
+assets.boxback: BoxBack/Robo-Theif - Crisis at New York City (USA).jpg
+assets.background: Background/Robo-Theif - Crisis at New York City (USA).jpg
+assets.screenshot: Screenshot/Robo-Theif - Crisis at New York City (USA).jpg
+x-co-op: No
+
+

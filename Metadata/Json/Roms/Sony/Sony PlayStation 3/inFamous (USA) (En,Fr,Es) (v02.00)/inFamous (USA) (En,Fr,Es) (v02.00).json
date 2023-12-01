@@ -1,0 +1,8 @@
+{
+    "files": [
+        "inFamous (USA) (En,Fr,Es) (v02.00).chd",
+        "inFamous (USA) (En,Fr,Es) (v02.00).dkey"
+    ],
+    "launch_file": "PS3_GAME/USRDIR/EBOOT.BIN",
+    "transform_file": "inFamous (USA) (En,Fr,Es) (v02.00).chd"
+}

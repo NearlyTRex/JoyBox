@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Manse on Soracca, The (USA).exe"
+    ],
+    "transform_file": "Manse on Soracca, The (USA).exe"
+}

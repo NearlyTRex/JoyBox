@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Bomb Dolls (USA).exe"
+    ],
+    "transform_file": "Bomb Dolls (USA).exe"
+}

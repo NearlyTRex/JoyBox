@@ -1,0 +1,29 @@
+collection: Sega CD 32X
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sega CD 32X" {file.path}
+
+
+game: Corpse Killer (USA) (Sega CD 32X)
+file: $ROM_JSON_ROOT/Other/Sega CD 32X/Corpse Killer (USA) (Sega CD 32X)/Corpse Killer (USA) (Sega CD 32X).json
+developer: Digital Pictures
+publisher: Digital Pictures
+genre: Shooter
+description:
+  Corpse Killer is a full-motion-video (FMV) shoot-'em up. It seems the evil
+  genius Dr. Hellman has found a way to raise the dead and created an island of
+  zombies. The player is an elite special forces soldier who has been parachuted
+  onto the island; it is up to them to shoot their way through the undead hordes
+  and stop Dr. Hellman.
+  .
+  The game is played from a first-person perspective. Various zombies pop up in
+  front of a video background and the player must shoot them down either by moving
+  a mouse cursor on screen or by using a light gun.
+release: 1994-11-01
+players: 1
+assets.boxfront: BoxFront/Corpse Killer (USA) (Sega CD 32X).jpg
+assets.boxback: BoxBack/Corpse Killer (USA) (Sega CD 32X).jpg
+assets.background: Background/Corpse Killer (USA) (Sega CD 32X).jpg
+assets.screenshot: Screenshot/Corpse Killer (USA) (Sega CD 32X).jpg
+assets.video: Video/Corpse Killer (USA) (Sega CD 32X).mp4
+x-co-op: No
+
+

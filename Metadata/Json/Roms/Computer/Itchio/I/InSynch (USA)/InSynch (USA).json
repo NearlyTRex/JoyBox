@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/InSynch (USA).exe"
+    ],
+    "transform_file": "InSynch (USA).exe"
+}

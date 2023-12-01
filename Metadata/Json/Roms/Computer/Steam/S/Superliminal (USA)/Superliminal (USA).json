@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Superliminal (USA).exe"
+    ],
+    "main_game_exe": [
+        "Superliminal/SuperliminalSteam.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Superliminal/SuperliminalSteam.exe": "Superliminal"
+    },
+    "transform_file": "Superliminal (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/StrataWindowsj4.exe"
+    ],
+    "transform_file": "StrataWindowsj4.exe"
+}

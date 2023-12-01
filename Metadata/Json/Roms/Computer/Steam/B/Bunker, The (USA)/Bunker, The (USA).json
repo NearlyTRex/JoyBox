@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Bunker, The (USA).exe"
+    ],
+    "transform_file": "Bunker, The (USA).exe"
+}

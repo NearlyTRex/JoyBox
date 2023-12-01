@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Stories - The Path of Destinies (USA).exe"
+    ],
+    "transform_file": "Stories - The Path of Destinies (USA).exe"
+}

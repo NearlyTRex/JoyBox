@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Space Madness (USA).exe"
+    ],
+    "transform_file": "Space Madness (USA).exe"
+}

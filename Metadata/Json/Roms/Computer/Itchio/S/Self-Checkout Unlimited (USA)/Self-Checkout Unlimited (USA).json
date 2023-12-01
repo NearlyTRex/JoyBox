@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Self-Checkout Unlimited (USA).exe"
+    ],
+    "transform_file": "Self-Checkout Unlimited (USA).exe"
+}

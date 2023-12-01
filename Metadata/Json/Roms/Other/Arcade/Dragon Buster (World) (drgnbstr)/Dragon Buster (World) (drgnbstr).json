@@ -1,0 +1,19 @@
+{
+    "files": [
+        "drgnbstr/cus60-60a1.mcu",
+        "drgnbstr/db1-1.2n",
+        "drgnbstr/db1-2.2p",
+        "drgnbstr/db1-3.2r",
+        "drgnbstr/db1-4.5n",
+        "drgnbstr/db1-5.6n",
+        "drgnbstr/db1_1.6b",
+        "drgnbstr/db1_2b.6c",
+        "drgnbstr/db1_3.6d",
+        "drgnbstr/db1_4.3c",
+        "drgnbstr/db1_5.7e",
+        "drgnbstr/db1_6.6l",
+        "drgnbstr/db1_7.10m",
+        "drgnbstr/db1_8.10n"
+    ],
+    "launch_name": "drgnbstr"
+}

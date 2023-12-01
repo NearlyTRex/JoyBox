@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Hedera (USA).exe"
+    ],
+    "transform_file": "Hedera (USA).exe"
+}

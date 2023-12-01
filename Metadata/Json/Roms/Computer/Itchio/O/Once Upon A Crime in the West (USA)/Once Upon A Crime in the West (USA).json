@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Once Upon A Crime in the West (USA).exe"
+    ],
+    "transform_file": "Once Upon A Crime in the West (USA).exe"
+}

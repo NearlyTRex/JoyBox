@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Crawl (USA).exe"
+    ],
+    "main_game_exe": [
+        "Crawl/Crawl.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Crawl/Crawl.exe": "Crawl"
+    },
+    "transform_file": "Crawl (USA).exe"
+}

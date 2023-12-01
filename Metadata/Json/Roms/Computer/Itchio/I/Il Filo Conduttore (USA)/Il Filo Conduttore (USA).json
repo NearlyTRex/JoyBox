@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Il Filo Conduttore (USA).exe"
+    ],
+    "transform_file": "Il Filo Conduttore (USA).exe"
+}

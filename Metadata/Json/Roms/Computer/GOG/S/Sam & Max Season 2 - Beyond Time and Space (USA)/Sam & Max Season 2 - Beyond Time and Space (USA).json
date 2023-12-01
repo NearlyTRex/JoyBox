@@ -1,0 +1,14 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/snm_season_2_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/snm_season_2_designer_notes.zip",
+        "$SETUP_MAIN_ROOT/extra/snm_season_2_soundtrack.zip",
+        "$SETUP_MAIN_ROOT/extra/snm_season_2_trailers.zip",
+        "$SETUP_MAIN_ROOT/extra/snm_season_2_wallpapers.zip",
+        "$SETUP_MAIN_ROOT/extra/snm_season_2_xmas_special.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_sam_and_max_beyond_time_and_space_2.0.0.10.exe"
+    ],
+    "transform_file": "setup_sam_and_max_beyond_time_and_space_2.0.0.10.exe"
+}

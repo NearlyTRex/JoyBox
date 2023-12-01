@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Alone in the Dark Prologue (USA).exe"
+    ],
+    "main_game_exe": [
+        "Alone in the Dark Prologue/AitDPrologue.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Alone in the Dark Prologue/AitDPrologue.exe": "Alone in the Dark Prologue"
+    },
+    "transform_file": "Alone in the Dark Prologue (USA).exe"
+}

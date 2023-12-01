@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Darkest Wave (USA).exe"
+    ],
+    "transform_file": "Darkest Wave (USA).exe"
+}

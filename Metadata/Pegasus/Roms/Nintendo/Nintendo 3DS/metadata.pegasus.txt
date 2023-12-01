@@ -1,0 +1,1723 @@
+collection: Nintendo 3DS
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo 3DS" {file.path}
+
+
+game: Animal Crossing - New Leaf (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Animal Crossing - New Leaf (USA) (En,Fr,Es)/Animal Crossing - New Leaf (USA) (En,Fr,Es).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Life Simulation
+description:
+  Animal Crossing: New Leaf is a social simulation game. You take on the role as
+  the new mayor in a small village populated by animals. Game play consists of
+  improving the village with new buildings and decorations, collecting furniture
+  and items for your own house as well as donating fossils, fish, insects and art
+  to the local museum.
+  .
+  There's more to discover than ever before in the Animal Crossing™: New
+  Leaf—Welcome amiibo game! This updated version of Animal Crossing™: New Leaf
+  adds in support for all Animal Crossing series amiibo figures and cards.
+release: 2012-11-08
+players: 4
+assets.boxfront: BoxFront/Animal Crossing - New Leaf (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Animal Crossing - New Leaf (USA) (En,Fr,Es).jpg
+assets.background: Background/Animal Crossing - New Leaf (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Animal Crossing - New Leaf (USA) (En,Fr,Es).jpg
+assets.video: Video/Animal Crossing - New Leaf (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: Atooi Collection (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Atooi Collection (USA)/Atooi Collection (USA).json
+developer: Renegade Kid
+publisher: Limited Run Games
+genre: Fighting;Platform;Puzzle;Shooter
+description:
+  Atooi Collection was Limited Run Games' 001 release on Nintendo 3DS, which went
+  live August 7, 2020. Only 6000 copies were made.
+  .
+  A single cartridge features the following critically-acclaimed games: Mutant
+  Mudds Deluxe, Bomb Monkey, Xeodrifter, Mutant Mudds Super Challenge, and Chicken
+  Wiggle.
+  .
+  Ever since we first released Mutant Mudds in 2012, we have dreamed of releasing
+  it physically on Nintendo 3DS. Due to the high cost and risky nature of the
+  retail business, this dream seemed as though it would never come true.
+  .
+  When Limited Run Games reached out to us with interest in publishing our games
+  physically on Nintendo 3DS, we were floored. We are very grateful to Josh,
+  Douglas, and the rest of the team for having faith in our games to release them
+  physically on Nintendo 3DS.
+  .
+  Atooi Collection represents our deep appreciation of retro pixel games, and we
+  are thrilled to have them all featured in one amazing collection. The time we
+  spent creating these five games were magical and fun for us. We hope you have as
+  much fun playing them as we did making them!
+release: 2020-08-07
+players: 1
+assets.boxfront: BoxFront/Atooi Collection (USA).jpg
+assets.boxback: BoxBack/Atooi Collection (USA).jpg
+assets.background: Background/Atooi Collection (USA).jpg
+assets.screenshot: Screenshot/Atooi Collection (USA).jpg
+x-co-op: No
+
+
+game: Code Name - S.T.E.A.M. (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Code Name - S.T.E.A.M. (USA)/Code Name - S.T.E.A.M. (USA).json
+developer: Intelligent Systems
+publisher: Nintendo
+genre: Strategy
+description:
+  Launch S.T.E.A.M., an elite team of steam-powered special-forces soldiers, to
+  save the world from an alien menace. In this new blend of action and strategy,
+  our commandos use steam power stored in special backpacks to move into position
+  and fire an arsenal of distinct weapons. Pick your team members and load out,
+  then use strategy to decide the best way to approach this steampunk-inspired
+  battlefield.
+release: 2015-03-13
+players: 2
+assets.boxfront: BoxFront/Code Name - S.T.E.A.M. (USA).jpg
+assets.boxback: BoxBack/Code Name - S.T.E.A.M. (USA).jpg
+assets.background: Background/Code Name - S.T.E.A.M. (USA).jpg
+assets.screenshot: Screenshot/Code Name - S.T.E.A.M. (USA).jpg
+assets.video: Video/Code Name - S.T.E.A.M. (USA).mp4
+x-co-op: Yes
+
+
+game: Disney Epic Mickey - Power of Illusion (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Disney Epic Mickey - Power of Illusion (USA) (En,Fr,Es,Pt)/Disney Epic Mickey - Power of Illusion (USA) (En,Fr,Es,Pt).json
+developer: Dream Rift
+publisher: Disney Interactive
+genre: Platform
+description:
+  Inspired by the classic Castle of Illusion Starring Mickey Mouse, this game
+  features new ways for Mickey Mouse to interact with a 3D game world using paint
+  and paint thinner.
+release: 2012-11-18
+players: 1
+assets.boxfront: BoxFront/Disney Epic Mickey - Power of Illusion (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/Disney Epic Mickey - Power of Illusion (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/Disney Epic Mickey - Power of Illusion (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/Disney Epic Mickey - Power of Illusion (USA) (En,Fr,Es,Pt).jpg
+assets.video: Video/Disney Epic Mickey - Power of Illusion (USA) (En,Fr,Es,Pt).mp4
+x-co-op: No
+
+
+game: Dragon Quest VII - Fragments of the Forgotten Past (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Dragon Quest VII - Fragments of the Forgotten Past (USA)/Dragon Quest VII - Fragments of the Forgotten Past (USA).json
+developer: ArtePiazza
+publisher: Square Enix
+genre: Role-Playing
+description:
+  Travel to the past to save the present as you restore forgotten lands and battle
+  an unknown evil in this classic DRAGON QUEST adventure completely rebuilt from
+  the ground up for the Nintendo 3DS system. Customize your party with over 30
+  vocations and level up in turn-based battles to learn new spells and abilities
+  in this timeless quest!
+  .
+  .
+  .
+  Featuring character and monster designs from acclaimed artist Akira Toriyama, in
+  the Dragon Quest VII game, you'll explore an ever-changing world filled with
+  mystery, intrigue, and danger. On your quest you'll meet a captivating cast of
+  characters that will help you change time as you solve their problems and save
+  their lives. Expand and share your adventure even more with the StreetPass™
+  feature—send and receive traveller's tablets to explore new dungeons that
+  contain rare monsters and unique equipment.
+release: 2016-09-16
+players: 1
+assets.boxfront: BoxFront/Dragon Quest VII - Fragments of the Forgotten Past (USA).jpg
+assets.boxback: BoxBack/Dragon Quest VII - Fragments of the Forgotten Past (USA).jpg
+assets.background: Background/Dragon Quest VII - Fragments of the Forgotten Past (USA).jpg
+assets.screenshot: Screenshot/Dragon Quest VII - Fragments of the Forgotten Past (USA).jpg
+assets.video: Video/Dragon Quest VII - Fragments of the Forgotten Past (USA).mp4
+x-co-op: No
+
+
+game: Dragon Quest VIII - Journey of the Cursed King (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Dragon Quest VIII - Journey of the Cursed King (USA)/Dragon Quest VIII - Journey of the Cursed King (USA).json
+developer: Square Enix
+publisher: Square Enix
+genre: Role-Playing
+description:
+  This is a portable version of the classic RPG, with added content and other 3DS
+  enhancements.
+  .
+  Set off on an unforgettable adventure with Yangus, the bandit with a heart of
+  gold, Jessica, the high-born magical minx, and Angelo, knight and lothario, by
+  your side! Players are able to capture monsters that inhabit the battlefield in
+  this role-playing adventure. These beasts differ from the creatures you'd
+  normally encounter in battles, as they have special names and abilities unique
+  to them. Once a monster has been scouted, it's added to a growing arsenal of
+  creatures that can then be assembled into teams of three for use as support
+  characters in battle.
+release: 2017-01-20
+players: 1
+assets.boxfront: BoxFront/Dragon Quest VIII - Journey of the Cursed King (USA).jpg
+assets.boxback: BoxBack/Dragon Quest VIII - Journey of the Cursed King (USA).jpg
+assets.background: Background/Dragon Quest VIII - Journey of the Cursed King (USA).jpg
+assets.screenshot: Screenshot/Dragon Quest VIII - Journey of the Cursed King (USA).jpg
+assets.video: Video/Dragon Quest VIII - Journey of the Cursed King (USA).mp4
+x-co-op: No
+
+
+game: Final Fantasy Explorers (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Final Fantasy Explorers (USA)/Final Fantasy Explorers (USA).json
+developer: Racjin
+publisher: Square Enix
+genre: Role-Playing
+description:
+  Final Fantasy Explorers (ファイナルファンタジー エクスプローラーズ Fainaru Fantajī Ekusupurōrāzu?)
+  is an action role-playing video game for the Nintendo 3DS. It features character
+  job-oriented combat against classic Final Fantasy monsters and summons. It was
+  released in Japan in December 18, 2014, and is planned for worldwide in January
+  2016.
+release: 2014-12-18
+players: 4
+assets.boxfront: BoxFront/Final Fantasy Explorers (USA).jpg
+assets.boxback: BoxBack/Final Fantasy Explorers (USA).jpg
+assets.background: Background/Final Fantasy Explorers (USA).jpg
+assets.screenshot: Screenshot/Final Fantasy Explorers (USA).jpg
+assets.video: Video/Final Fantasy Explorers (USA).mp4
+x-co-op: Yes
+
+
+game: Hyrule Warriors Legends (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Hyrule Warriors Legends (USA)/Hyrule Warriors Legends (USA).json
+developer: Team Ninja
+publisher: Nintendo
+genre: Action
+description:
+  Cut down entire legions of enemies as fan-favorite Legend of Zelda characters
+  using powerful moves as Hyrule Warriors comes to the Nintendo 3DS. Control
+  multiple characters to enhance your strategies and enjoy new story elements with
+  playable characters from The Legend of Zelda: The Wind Waker, such as Tetra,
+  King Daphnes, and more.
+  .
+  War rages as the delicate balance of the Triforce is disrupted. The kingdom of
+  Hyrule is once again being torn apart by a dark power, this time lead by
+  Sorceress Cia. Now it's up to the legendary hero Link to face hordes of enemies
+  and find the missing Princess Zelda. Advance the story to unlock new playable
+  characters, each with unique moves and weapon types. Collect Rupees and other
+  useful items to upgrade weapons and craft badges, which you can use to bolster
+  each warrior's abilities.
+release: 2016-03-25
+players: 1
+assets.boxfront: BoxFront/Hyrule Warriors Legends (USA).jpg
+assets.boxback: BoxBack/Hyrule Warriors Legends (USA).jpg
+assets.background: Background/Hyrule Warriors Legends (USA).jpg
+assets.screenshot: Screenshot/Hyrule Warriors Legends (USA).jpg
+assets.video: Video/Hyrule Warriors Legends (USA).mp4
+x-co-op: No
+
+
+game: Kirby - Planet Robobot (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Kirby - Planet Robobot (USA)/Kirby - Planet Robobot (USA).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Action;Platform
+description:
+  Harness the power of the Robobot Armor!
+  .
+  Harness the power of a mysterious mech to stop ruthless invaders from
+  mechanizing Kirby's home world. Smash through tough obstacles, lift heavy
+  objects with ease, and scan enemies to shape-shift into new Modes with powerful
+  abilities in this supercharged action-platformer!
+  .
+  That's right, Kirby's Robobot Armor can shape-shift into different modes by
+  scanning enemies to copy their moves like the new Jet Mode. Not to mention,
+  Kirby can copy abilities the old-fashioned way too by inhaling them! After
+  saving the world, team up with three friends to defeat foes in Team Kirby Clash,
+  an RPG-styled 4-player brawl where you choose from varied roles and level them
+  up.
+release: 2016-06-10
+players: 4
+assets.boxfront: BoxFront/Kirby - Planet Robobot (USA).jpg
+assets.boxback: BoxBack/Kirby - Planet Robobot (USA).jpg
+assets.background: Background/Kirby - Planet Robobot (USA).jpg
+assets.screenshot: Screenshot/Kirby - Planet Robobot (USA).jpg
+assets.video: Video/Kirby - Planet Robobot (USA).mp4
+x-co-op: Yes
+
+
+game: Kirby - Triple Deluxe (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Kirby - Triple Deluxe (USA) (En,Fr,Es)/Kirby - Triple Deluxe (USA) (En,Fr,Es).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Platform
+description:
+  Pink? Check. Puffy? Check. Powerful? You have no idea.
+  .
+  Devour trees, obstacles, and huge chunks of stages with Kirby’s Hypernova
+  ability and inhale enemies to copy epic new moves like Archer. It’s a grand new
+  Kirby™ adventure PLUS a new multiplayer battle mode, Kirby Fighters!
+  .
+  When a mysterious being kidnaps King Dedede atop a giant Dreamstalk, only Kirby
+  can save the day! Jump from the foreground to the background in dynamic 3D
+  side-scrolling environments while using new and returning copy abilities to
+  defeat enemies. Duke it out in Kirby Fighters, a fierce 4-player battle mode
+  where you fight using a chosen ability like Sword or Ninja. The last Kirby
+  standing reigns supreme. Whether you’re new to Kirby or an old fan, the Kirby:
+  Triple Deluxe game offers a triple threat - action, adventure, and a battle
+  mode!
+release: 2014-01-11
+players: 1
+assets.boxfront: BoxFront/Kirby - Triple Deluxe (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Kirby - Triple Deluxe (USA) (En,Fr,Es).jpg
+assets.background: Background/Kirby - Triple Deluxe (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Kirby - Triple Deluxe (USA) (En,Fr,Es).jpg
+assets.video: Video/Kirby - Triple Deluxe (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Kirby's Extra Epic Yarn (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Kirby's Extra Epic Yarn (USA) (En,Fr,Es)/Kirby's Extra Epic Yarn (USA) (En,Fr,Es).json
+developer: HAL Laboratory
+publisher: Ninendo
+genre: Platform
+description:
+  Kirby's Epic Yarn is a platform video game developed by Good-Feel and HAL
+  Laboratory and published by Nintendo for the Wii video game console. It is the
+  tenth installment of the Kirby series and was released in October 2010 in Japan
+  and North America and in February 2011 in Australia and Europe. It is the first
+  entry in the Kirby series on a home console since 2003's Kirby Air Ride and its
+  first home console platform game since 2000's Kirby 64: The Crystal Shards.
+  .
+  The game follows Kirby, who has been transformed into yarn and sent to Patch
+  Land, a world made completely out of fabric. He must help Prince Fluff by
+  collecting seven pieces of magic yarn that are used to stitch Patch Land
+  together in order to stop the game's antagonist, Yin Yarn. Kirby's Epic Yarn
+  utilizes a unique craft-based visual style; the game's characters and
+  environments consist entirely of yarn, fabric, and other craft materials. Unlike
+  most games in the Kirby series, Kirby is unable to inhale or fly, instead
+  relying on the ability to morph into other objects, such as a parachute, a car,
+  and a submarine, as well as larger objects such as a tank and a steam train.
+  .
+  The third game developed by Good-Feel in tandem with Nintendo, Kirby's Epic Yarn
+  was originally proposed by Madoka Yamauchi, who came up with the idea of a
+  "world of yarn" as a video game. It began development as "Keito no Fluff", a
+  game starring Prince Fluff as the main protagonist, before the starring
+  character was eventually switched to Kirby. The game's graphical style was
+  created via digital images of real-life fabrics which were placed over polygons.
+  The game's music was composed by Tomoya Tomita.
+  .
+  Before the game's release, Kirby's Epic Yarn won numerous awards at E3 2010
+  including Game of the Show from GameSpot. It was released later that year to
+  largely positive reviews, receiving an Editor's Choice award from IGN, who
+  ranked it as #95 in their "Top 100 Modern Games". As of April 2011, it has sold
+  1.59 million copies worldwide. It was re-released digitally via the Wii U eShop
+  in Europe and Australia on May 21, 2015, in North America on July 28, 2016, and
+  in Japan on August 9, 2016. A spiritual successor to Kirby's Epic Yarn titled
+  Yoshi's Woolly World was released in 2015 for the Wii U. A port of the game for
+  the Nintendo 3DS entitled Kirby's Extra Epic Yarn was released on March 8, 2019.
+release: 2019-03-08
+players: 1
+assets.boxfront: BoxFront/Kirby's Extra Epic Yarn (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Kirby's Extra Epic Yarn (USA) (En,Fr,Es).jpg
+assets.background: Background/Kirby's Extra Epic Yarn (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Kirby's Extra Epic Yarn (USA) (En,Fr,Es).jpg
+assets.video: Video/Kirby's Extra Epic Yarn (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Legend of Legacy, The (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Legend of Legacy, The (USA)/Legend of Legacy, The (USA).json
+developer: FuRyu
+publisher: Atlus
+genre: Role-Playing
+description:
+  With 7 different perspectives from which to experience the adventure, whose
+  story will you unravel first?
+  .
+  A mysterious island emerges, prompting adventurers to head towards it in hopes
+  of obtaining glory, treasure, and more. But what does it truly hold? Join the 7
+  characters in The Legend of Legacy and unravel the mystery of Avalon's past.
+  .
+  Explore Avalon and discover each character's motivation in traveling to the
+  island. With 7 different perspectives from which to experience the adventure,
+  whose story will you unravel first? Perhaps the Elementalist who uses spirits as
+  his guide? Or will you sympathize with the frog prince, searching for more of
+  his kind? Pick your characters wisely, as team formations and specific combat
+  roles are crucial in battle!
+  .
+  The Legend of Legacy staff roster includes familiar names like character
+  designer Tomomi Kobayashi, renowned composer Masashi Hamauzu, writer Masato
+  Kato, game designer Kyoji Koizumi, and Masataka Matsuura. With such a legendary
+  staff breathing life into the game, get ready to embark on the quest of a
+  lifetime!
+release: 2015-10-13
+players: 1
+assets.boxfront: BoxFront/Legend of Legacy, The (USA).jpg
+assets.boxback: BoxBack/Legend of Legacy, The (USA).jpg
+assets.background: Background/Legend of Legacy, The (USA).jpg
+assets.screenshot: Screenshot/Legend of Legacy, The (USA).jpg
+assets.video: Video/Legend of Legacy, The (USA).mp4
+x-co-op: No
+
+
+game: Legend of Zelda, The - A Link Between Worlds (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Legend of Zelda, The - A Link Between Worlds (USA) (En,Fr,Es)/Legend of Zelda, The - A Link Between Worlds (USA) (En,Fr,Es).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action;Adventure
+description:
+  Two worlds collide in an all-new adventure set in the world of Super NES classic
+  The Legend of Zelda: A Link to the Past. In this newly spun tale, Link
+  transforms into a living painting to cross into a dark, parallel dimension
+  mirroring Hyrule. Conquer the puzzles, traps, and hidden rooms of deadly
+  dungeons to save both worlds from certain doom!
+  .
+  Brought to life in 3D, this beloved, top-down world is the perfect backdrop for
+  a sweeping new tale. Dungeons sink deep below the screen as Link and his attacks
+  pop out, highlighting the nonstop action. The pace is faster than ever,
+  especially since you can swap items on the Nintendo 3DS touch screen. Shoot an
+  arrow, toss a boomerang, bomb a wall, then merge into a painting to slide
+  between two worlds - all in a matter of seconds. With gameplay, visuals, and
+  controls this smooth and consistent, no Zelda adventure has ever been so
+  action-packed.
+release: 2013-11-22
+players: 1
+assets.boxfront: BoxFront/Legend of Zelda, The - A Link Between Worlds (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - A Link Between Worlds (USA) (En,Fr,Es).jpg
+assets.background: Background/Legend of Zelda, The - A Link Between Worlds (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - A Link Between Worlds (USA) (En,Fr,Es).jpg
+assets.video: Video/Legend of Zelda, The - A Link Between Worlds (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Legend of Zelda, The - Majora's Mask 3D (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Legend of Zelda, The - Majora's Mask 3D (USA) (En,Fr,Es)/Legend of Zelda, The - Majora's Mask 3D (USA) (En,Fr,Es).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action;Adventure
+description:
+  In three days, the moon will fall and the land of Termina will meet with a
+  terrible fate. Can you save it in time? Relive the world’s final 72 hours, solve
+  elaborate puzzles, conquer dungeons, battle giant bosses, and befriend the
+  doomed people of Termina in one of Nintendo’s most suspenseful apocalyptic
+  adventures ever.
+  .
+  The Legend of Zelda: Majora’s Mask 3D is a remastered and enhanced version of
+  the Nintendo classic that’s unlike any other Legend of Zelda adventure. In this
+  shadowy tale, a masked Skull Kid drags Link™ into the world of Termina, where
+  the moon is falling from the sky. Lucky for Termina, Link can reverse time and
+  relive his last 72 hours in limitless ways. Each time, he’ll don any of his 20+
+  masks, help different citizens, battle different bosses, and ultimately change
+  the fate of a world. This is the definitive version of a dark classic.
+release: 2015-02-13
+players: 1
+assets.boxfront: BoxFront/Legend of Zelda, The - Majora's Mask 3D (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Majora's Mask 3D (USA) (En,Fr,Es).jpg
+assets.background: Background/Legend of Zelda, The - Majora's Mask 3D (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Majora's Mask 3D (USA) (En,Fr,Es).jpg
+assets.video: Video/Legend of Zelda, The - Majora's Mask 3D (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Legend of Zelda, The - Ocarina of Time 3D (USA) (En,Fr,Es) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Legend of Zelda, The - Ocarina of Time 3D (USA) (En,Fr,Es) (Rev 1)/Legend of Zelda, The - Ocarina of Time 3D (USA) (En,Fr,Es) (Rev 1).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action;Adventure
+description:
+  The Legend of Zelda: Ocarina of Time 3D brings a completely re-mastered version
+  of an epic entry in the beloved The Legend of Zelda game series to Nintendos
+  newest hand-held system, Nintendo 3DS. The game couples phenomenally enhanced
+  graphics with stunning, glasses-free 3D visuals to bring to life the daring
+  adventures of its hero, Link. A streamlined touch-screen interface and newly
+  implemented motion controls provide a fresh and intuitive feel as players
+  immerse themselves in the tale of the creation of Hyrule and the struggle for
+  control of its all-powerful ancient relic. The game will also feature new
+  challenges not included in the original game. The Legend of Zelda veterans can
+  look forward to the Master Quest a second quest with revamped puzzles and
+  redesigned dungeons that feature the same graphical and interface upgrades as
+  the main game. The Legend of Zelda: Ocarina of Time 3D is a masterful
+  improvement on one of the landmark releases in video game history.
+release: 2011-06-19
+players: 1
+assets.boxfront: BoxFront/Legend of Zelda, The - Ocarina of Time 3D (USA) (En,Fr,Es) (Rev 1).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Ocarina of Time 3D (USA) (En,Fr,Es) (Rev 1).jpg
+assets.background: Background/Legend of Zelda, The - Ocarina of Time 3D (USA) (En,Fr,Es) (Rev 1).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Ocarina of Time 3D (USA) (En,Fr,Es) (Rev 1).jpg
+assets.video: Video/Legend of Zelda, The - Ocarina of Time 3D (USA) (En,Fr,Es) (Rev 1).mp4
+x-co-op: No
+
+
+game: Legend of Zelda, The - Tri Force Heroes (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Legend of Zelda, The - Tri Force Heroes (USA) (En,Fr,Es)/Legend of Zelda, The - Tri Force Heroes (USA) (En,Fr,Es).json
+developer: Grezzo
+publisher: Nintendo
+genre: Action;Adventure
+description:
+  Three players take on the role of individual Link characters and team up to work
+  cooperatively to solve puzzles and battle bosses in dungeons. The game features
+  the same top-down view and visual style of The Legend of Zelda: A Link Between
+  Worlds. Players must work together, as all hearts are shared by the group as a
+  whole. All three Links can stack on top of one another to create a Totem to
+  reach new locations to solve puzzles or fight enemies. Different outfits offer
+  unique abilities.
+release: 2015-10-23
+players: 3
+assets.boxfront: BoxFront/Legend of Zelda, The - Tri Force Heroes (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Tri Force Heroes (USA) (En,Fr,Es).jpg
+assets.background: Background/Legend of Zelda, The - Tri Force Heroes (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Tri Force Heroes (USA) (En,Fr,Es).jpg
+assets.video: Video/Legend of Zelda, The - Tri Force Heroes (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: Luigi's Mansion (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Luigi's Mansion (USA)/Luigi's Mansion (USA).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Action;Adventure
+description:
+  Spooky-good ghost-hunting fun starring Luigi
+  .
+  G-g-ghosts! Time to suck those suckers up because Luigi is back in the first
+  portable version of this spooky classic. After winning a mansion in a contest he
+  didn’t enter, he must beat its many bosses and puzzles. Follow a map on the
+  touchscreen, shine a flashlight, blow fire, shoot water, stun ghosts, and trap
+  them...before Mario is trapped forever! All this ghost-catching tomfoolery pays
+  off! As you suck ‘em up with your Poltergust 3000, you could also rake in
+  millions in hidden, in-game riches for our hard-luck hero. Make sure to search
+  every area using the Game Boy Horror’s map on your touchscreen and activate its
+  Boo Radar to track down every Boo in the mansion or spot ghosts’ weak points.
+  After beating and capturing boss ghosts, you can select their portraits from the
+  gallery to best your own score in tense rematches—a new feature in the Nintendo
+  3DS version!
+release: 2018-10-12
+players: 2
+assets.boxfront: BoxFront/Luigi's Mansion (USA).jpg
+assets.boxback: BoxBack/Luigi's Mansion (USA).jpg
+assets.background: Background/Luigi's Mansion (USA).jpg
+assets.screenshot: Screenshot/Luigi's Mansion (USA).jpg
+assets.video: Video/Luigi's Mansion (USA).mp4
+x-co-op: Yes
+
+
+game: Luigi's Mansion - Dark Moon (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Luigi's Mansion - Dark Moon (USA) (En,Fr,Es)/Luigi's Mansion - Dark Moon (USA) (En,Fr,Es).json
+developer: Next Level Games
+publisher: Nintendo
+genre: Action
+description:
+  The paranormal needs putting back to normal. Nothing Luigi can't handle!
+  ...Right?\n
+  He may be a bit of a scaredy-cat, but armed with Professor E. Gadd's Poltergust
+  5000, Luigi is ready for action. Explore the haunted mansions of Evershade
+  VAlley and take on paranormal pranksters in this spooky adventure!\n
+  • Catch ghosts and uncover secrets using new gadgets such as the Poltergust
+  5000, the Dark-Light Device and more.\n
+  • Team up with friends and other players worldwide in online multiplayer.
+release: 2013-03-24
+players: 4
+assets.boxfront: BoxFront/Luigi's Mansion - Dark Moon (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Luigi's Mansion - Dark Moon (USA) (En,Fr,Es).jpg
+assets.background: Background/Luigi's Mansion - Dark Moon (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Luigi's Mansion - Dark Moon (USA) (En,Fr,Es).jpg
+x-co-op: Yes
+
+
+game: Mario & Luigi - Bowser's Inside Story + Bowser Jr.'s Journey (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Mario & Luigi - Bowser's Inside Story + Bowser Jr.'s Journey (USA)/Mario & Luigi - Bowser's Inside Story + Bowser Jr.'s Journey (USA).json
+developer: AlphaDream
+publisher: Nintendo
+genre: Action;Adventure;Role-Playing
+description:
+  Mario & Luigi: Bowser's Inside Story + Bowser Jr.'s Journey (known as Mario &
+  Luigi RPG3 DX in Japan) is a game for the Nintendo 3DS. It is an enhanced remake
+  of the 2009 Nintendo DS game Mario & Luigi: Bowser's Inside Story. The remake
+  also features another story where Bowser Jr. takes action on an adventure,
+  similar to Minion Quest: The Search for Bowser, with two important differences:
+  a slot for an additional First Officer who will have its own actions just like
+  Bowser Jr. as well as formations for the troops. The game is the second enhanced
+  remake of the Mario & Luigi series, the fourth game in the series to be released
+  for the Nintendo 3DS, and the seventh game in the series overall.
+release: 2018-12-27
+players: 1
+assets.boxfront: BoxFront/Mario & Luigi - Bowser's Inside Story + Bowser Jr.'s Journey (USA).jpg
+assets.boxback: BoxBack/Mario & Luigi - Bowser's Inside Story + Bowser Jr.'s Journey (USA).jpg
+assets.background: Background/Mario & Luigi - Bowser's Inside Story + Bowser Jr.'s Journey (USA).jpg
+assets.screenshot: Screenshot/Mario & Luigi - Bowser's Inside Story + Bowser Jr.'s Journey (USA).jpg
+assets.video: Video/Mario & Luigi - Bowser's Inside Story + Bowser Jr.'s Journey (USA).mp4
+x-co-op: No
+
+
+game: Mario & Luigi - Dream Team (USA) (En,Fr,Es) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Mario & Luigi - Dream Team (USA) (En,Fr,Es) (Rev 1)/Mario & Luigi - Dream Team (USA) (En,Fr,Es) (Rev 1).json
+developer: AlphaDream
+publisher: Nintendo
+genre: Role-Playing
+description:
+  Mario and Luigi embark on the adventure of their dreams in a hilarious action
+  RPG that combines the resort world of Pi'illo Island with the wild landscapes of
+  Luigi's imagination, where anything can happen. Meet a host of hilarious
+  characters as you strive to rescue Princess Peach and help Prince Dreambert free
+  his petrified Pi'illo people from the bat-king Antasma's curse.
+  .
+  Features:
+  .
+  * Spawn hundreds of Luigis that mold into different forms like bouncy towers,
+  wrecking balls and giant hammers for special attacks or to pass obstacles.\n
+  * Poke, tickle and move a sleeping Luigi on the lower touch screen to alter the
+  dream world on the upper screen.\n
+  * Master two worlds by switching between controlling both brothers when battling
+  in the real world and controlling Mario and an army of Luigis in dream-world
+  battles.\n
+  * With the Nintendo 3DS system turned sideways like a book, experience
+  larger-than-life Giant Battles with a gargantuan-size Luigi on one screen and
+  the enemy on the other screen.\n
+  * Find new items and gear to customize Mario & Luigi to fit your play style.\n
+  * To help players through the adventure, the game offers various support
+  features, like a Hint System that offers tips on surviving a particular
+  engagement, or an Easy Mode to make a particular battle easier.
+release: 2013-08-11
+players: 1
+assets.boxfront: BoxFront/Mario & Luigi - Dream Team (USA) (En,Fr,Es) (Rev 1).jpg
+assets.boxback: BoxBack/Mario & Luigi - Dream Team (USA) (En,Fr,Es) (Rev 1).jpg
+assets.background: Background/Mario & Luigi - Dream Team (USA) (En,Fr,Es) (Rev 1).jpg
+assets.screenshot: Screenshot/Mario & Luigi - Dream Team (USA) (En,Fr,Es) (Rev 1).jpg
+assets.video: Video/Mario & Luigi - Dream Team (USA) (En,Fr,Es) (Rev 1).mp4
+x-co-op: No
+
+
+game: Mario & Luigi - Paper Jam (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Mario & Luigi - Paper Jam (USA)/Mario & Luigi - Paper Jam (USA).json
+developer: AlphaDream
+publisher: Nintendo
+genre: Role-Playing
+description:
+  Mario and Luigi join forces with Paper Mario for a trio adventure!
+  .
+  Luigi stumbles across a mysterious book and accidentally unleashes paper-thin
+  versions of Princess Peach, Toad, and many others. Now he and Mario must team up
+  with Paper Mario to help their paper friends get back to their own world!
+  .
+  Triple action, triple fun!
+  .
+  - Trio Moves: Work together to traverse great distances and smash huge
+  obstacles!\n
+  - Trio Attacks: Flatten enemies with three times the power!\n
+  - Papercraft Battles: Fight for your life in battles with giant papercraft
+  models!\n
+  - Battle Cards: Battle cards help launch attacks and restore health during
+  battle.\n
+  - Character Cards: You can use amiibo to make special character cards with even
+  stronger effects!
+release: 2016-01-22
+players: 1
+assets.boxfront: BoxFront/Mario & Luigi - Paper Jam (USA).jpg
+assets.boxback: BoxBack/Mario & Luigi - Paper Jam (USA).jpg
+assets.background: Background/Mario & Luigi - Paper Jam (USA).jpg
+assets.screenshot: Screenshot/Mario & Luigi - Paper Jam (USA).jpg
+assets.video: Video/Mario & Luigi - Paper Jam (USA).mp4
+x-co-op: No
+
+
+game: Mario & Luigi - Superstar Saga + Bowser's Minions (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Mario & Luigi - Superstar Saga + Bowser's Minions (USA) (En,Fr,Es)/Mario & Luigi - Superstar Saga + Bowser's Minions (USA) (En,Fr,Es).json
+developer: AlphaDream
+publisher: Nintendo
+genre: Adventure;Role-Playing
+description:
+  Save Princess Peach's voice, the Beanbean Kingdom and ... Bowser?!
+  .
+  The game that launched the Mario & Luigi series returns looking better than ever
+  before. In this renewed classic, Mario and Luigi journey to the Beanbean Kingdom
+  with Bowser to restore Princess Peach’s voice. Control Mario and Luigi
+  simultaneously, making use of their unique Bros. Moves to solve puzzles and
+  emerge victorious in action-packed battles. Pay heed to the enemy’s patterns and
+  time your reactions right to land satisfying counterblows. Included in this
+  remake is the Minion Quest: The Search for Bowser mode, which tells the story of
+  the game from the perspective of Bowser’s minions. Recruit characters to grow
+  your own Minion army as you fight to locate your missing leader!
+  .
+  Features:
+  .
+  * Mario and Luigi have access to different techniques, known as Bros. Moves,
+  necessary for solving puzzles on their adventure. Switch between the two
+  characters at will to pave your way and progress through new areas.
+  .
+  * Time your button presses to skillfully dodge enemy blows, land devastating
+  counters, and inflict increased damage in battle. Utilize Bros. Attacks that
+  dish out massive damage!
+  .
+  * In the brand new mode titled Minion Quest: The Search for Bowser, become the
+  unlikely hero, Captain Goomba. Journey together with ShyGuy, Boo and other
+  familiar Baddies.
+  .
+  * The Minion Quest storyline takes place during Mario & Luigi’s classic
+  adventure. Find out what really transpired behind-the-scenes!
+  .
+  * Compatible with amiibo figures from the Super Mario series, including Mario
+  and Luigi amiibo figures. Also coming soon are brand new Goomba and Koopa Troopa
+  amiibo. The Goomba, Koopa Troopa and Boo amiibo figures will each have
+  read/write compatibility.
+release: 2017-10-05
+players: 1
+assets.boxfront: BoxFront/Mario & Luigi - Superstar Saga + Bowser's Minions (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Mario & Luigi - Superstar Saga + Bowser's Minions (USA) (En,Fr,Es).jpg
+assets.background: Background/Mario & Luigi - Superstar Saga + Bowser's Minions (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Mario & Luigi - Superstar Saga + Bowser's Minions (USA) (En,Fr,Es).jpg
+assets.video: Video/Mario & Luigi - Superstar Saga + Bowser's Minions (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Mario Kart 7 (USA) (En,Fr,Es) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Mario Kart 7 (USA) (En,Fr,Es) (Rev 1)/Mario Kart 7 (USA) (En,Fr,Es) (Rev 1).json
+developer: Nintendo
+publisher: Nintendo
+genre: Racing
+description:
+  The newest installment of the fan-favorite Mario Kart franchise brings Mushroom
+  Kingdom racing fun into glorious 3D. For the first time, drivers explore new
+  competitive kart possibilities, such as soaring through the skies or plunging to
+  the depths of the sea. New courses, strategic new abilities and customizable
+  karts bring the racing excitement to new heights.
+release: 2011-12-04
+players: 8
+assets.boxfront: BoxFront/Mario Kart 7 (USA) (En,Fr,Es) (Rev 1).jpg
+assets.boxback: BoxBack/Mario Kart 7 (USA) (En,Fr,Es) (Rev 1).jpg
+assets.background: Background/Mario Kart 7 (USA) (En,Fr,Es) (Rev 1).jpg
+assets.screenshot: Screenshot/Mario Kart 7 (USA) (En,Fr,Es) (Rev 1).jpg
+assets.video: Video/Mario Kart 7 (USA) (En,Fr,Es) (Rev 1).mp4
+x-co-op: No
+
+
+game: Mega Man Legacy Collection (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Mega Man Legacy Collection (USA)/Mega Man Legacy Collection (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action
+description:
+  Mega Man Legacy Collection is a celebration of the 8-bit history of Capcom's
+  iconic Blue Bomber. Featuring faithful reproductions of the series' origins with
+  the original six Mega Man games, the Legacy Collection will remind long-time
+  fans and introduce newcomers to what made Mega Man such a popular and iconic
+  character.
+  .
+  In addition to the six Mega Man games, Mega Man Legacy Collection features new
+  ways to experience the classic games with the Museum Mode and new Challenge
+  Mode. Challenge Mode remixes gameplay segments from all six games, with plenty
+  of scaling difficulty objectives for experienced players to conquer yet serving
+  as a good starting point for new players, too. Museum Mode contains a
+  comprehensive collection of history, high-res art and original concept pieces -
+  a mega treat for any fan of Mega Man and video game history.
+  .
+  Features:
+  .
+  Six classic games in one - Play a piece of video game history with the original
+  six Mega Man games and experience the origins of the classic series.
+  .
+  8-bit style with HD flair - The games retain their retro 8-bit style with an
+  added HD finish, giving a crisp, clean look to the charming, classic sprites.
+  .
+  Challenge remix mode for new and veteran players - The robust new Challenge Mode
+  remixes gameplay from all six games for a new type of challenge. It provides
+  both increasingly difficult trials for experienced players and also teaches
+  newcomers to become familiar with the style of the games and tackle some of the
+  trickier areas.
+  .
+  Museum of the era - The Museum Mode features a massive repository of history and
+  art collected from the era of the games in this collection. Take a look back at
+  the history of Mega Man with loads of information, high-res art, concept pieces,
+  sketches and more in the Museum.
+  .
+  Developed with an all-new engine - Using the newly developed Eclipse Engine,
+  Capcom and Digital Eclipse are able to archive these six pieces of video game
+  history with faithful reproductions of the originals for a new generation of
+  gamers.
+  .
+  Leaderboards and video replays - Fans will be able to watch video replays of the
+  top players on the leaderboards, showcasing a whole new generation of Mega Man
+  talent!
+  .
+  Also Available
+  .
+  Mega Man Legacy Collection: Collectors Edition
+  .
+  Collectors Edition includes two Nintendo 3DS Mega Man themes, 18-song sample
+  compilation soundtrack, four Mega Man stickers, six Mega Man postcards and
+  exclusive gold Mega Man amiibo Figure.
+release: 2016-02-23
+players: 1
+assets.boxfront: BoxFront/Mega Man Legacy Collection (USA).jpg
+assets.boxback: BoxBack/Mega Man Legacy Collection (USA).jpg
+assets.background: Background/Mega Man Legacy Collection (USA).jpg
+assets.screenshot: Screenshot/Mega Man Legacy Collection (USA).jpg
+assets.video: Video/Mega Man Legacy Collection (USA).mp4
+x-co-op: No
+
+
+game: Metroid - Samus Returns (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Metroid - Samus Returns (USA) (En,Fr,Es)/Metroid - Samus Returns (USA) (En,Fr,Es).json
+developer: MercurySteam
+publisher: Nintendo
+genre: Action;Adventure;Platform
+description:
+  Metroid: Samus Returns is a side-scrolling action-adventure video game developed
+  collaboratively by MercurySteam and Nintendo, with the latter also publishing it
+  for the Nintendo 3DS handheld game console. A part of the science fiction
+  Metroid series, the game is a reimagining of the 1991 Game Boy game Metroid II:
+  Return of Samus, and was released worldwide on 15 September 2017. It follows
+  series protagonist Samus Aran, who is sent by the Galactic Federation to
+  exterminate the parasitic Metroids on their home planet of SR388.\n
+  The game features a story and structure similar to Metroid II but with new
+  controls, visuals, and gameplay. It also introduces some features that are new
+  to the 2D Metroid games, such as melee counterattacks, an ability to fire freely
+  at any angle, and a selection of different abilities. The development on Samus
+  Returns began in 2015, with longtime Metroid developer Yoshio Sakamoto producing
+  it. The game was met with positive reception from video game journalists, who
+  praised its visuals and improved gameplay over the original game, with many
+  viewing it as a return to form for the series.
+release: 2017-09-15
+players: 1
+assets.boxfront: BoxFront/Metroid - Samus Returns (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Metroid - Samus Returns (USA) (En,Fr,Es).jpg
+assets.background: Background/Metroid - Samus Returns (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Metroid - Samus Returns (USA) (En,Fr,Es).jpg
+assets.video: Video/Metroid - Samus Returns (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Metroid Prime - Federation Force (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Metroid Prime - Federation Force (USA) (En,Fr,Es)/Metroid Prime - Federation Force (USA) (En,Fr,Es).json
+developer: Next Level Games
+publisher: Nintendo
+genre: Shooter
+description:
+  Metroid Prime: Federation Force 3DS. Join a four-player local or online squad in
+  this co-operative sci-fi shooter set in the Metroid universe. Hop in a
+  specialized battle Mech suit and battle alongside your teammates to take down
+  enemy forces and complete objective- based missions. Then, take a break and play
+  a fun, pick-up game of Blast Ball with fellow troops.
+release: 2016-08-19
+players: 4
+assets.boxfront: BoxFront/Metroid Prime - Federation Force (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Metroid Prime - Federation Force (USA) (En,Fr,Es).jpg
+assets.background: Background/Metroid Prime - Federation Force (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Metroid Prime - Federation Force (USA) (En,Fr,Es).jpg
+assets.video: Video/Metroid Prime - Federation Force (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: Monster Hunter 3 Ultimate (USA) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Monster Hunter 3 Ultimate (USA) (En,Fr,De,Es,It)/Monster Hunter 3 Ultimate (USA) (En,Fr,De,Es,It).json
+developer: Capcom Production Studio 1
+publisher: Capcom USA, Inc.
+genre: Action;Adventure;Role-Playing
+description:
+  The popular fantasy action franchise Monster Hunter is now one of the most
+  iconic gaming series in the world selling over 21 million copies worldwide since
+  the series began in 2004. Players take on the role of a hunter and are sent to
+  explore a settlement within the Monster Hunter universe, completing quests on
+  their journey to seek and slay monsters whilst improving their skills and
+  earning equipment upgrades. With many challenging monsters and over 200 quests
+  the latest edition to the series is set to be the most expansive offering to
+  date. Monster Hunter 3 Ultimate utilizes the functionalities of the Nintendo 3DS
+  system to provide players with a truly intuitive hunting experience. The touch
+  screen feature allows players to quickly access in-game books, weapons, field
+  maps and mini games whilst the high quality graphics 3D visuals of Nintendo 3DS
+  powered by the latest iteration of Capcom's MT Framework deliver a unique and
+  stunning world for players to explore. Taking advantage of the portability of
+  Nintendo 3DS, players can exchange their guild card that contains all their
+  hunter's information with other players via StreetPass. Players can experience
+  the world of Monster Hunter alone or in four player local play using Nintendo
+  3DS. Finding nearby hunters to adventure on quests with is now even easier via
+  the local Nintendo 3DS search feature. Wii U players will be able to enjoy the
+  hunt with Nintendo 3DS players via a local wireless connection. Gamers that own
+  both a Wii U and Nintendo 3DS can take advantage of the inter compatibility of
+  save data between the two consoles, taking the hunt from the living room
+  wherever they go.
+release: 2013-03-19
+players: 4
+assets.boxfront: BoxFront/Monster Hunter 3 Ultimate (USA) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Monster Hunter 3 Ultimate (USA) (En,Fr,De,Es,It).jpg
+assets.background: Background/Monster Hunter 3 Ultimate (USA) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Monster Hunter 3 Ultimate (USA) (En,Fr,De,Es,It).jpg
+assets.video: Video/Monster Hunter 3 Ultimate (USA) (En,Fr,De,Es,It).mp4
+x-co-op: Yes
+
+
+game: Monster Hunter 4 Ultimate (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Monster Hunter 4 Ultimate (USA)/Monster Hunter 4 Ultimate (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Role-Playing
+description:
+  Monster Hunter 4 Ultimate (called Monster Hunter 4G in Japan) is the newest
+  installment in the popular Monster Hunter series, which has sold more than 28
+  million units worldwide to date. In Monster Hunter 4 Ultimate, players will take
+  on the role of a hunter that joins up with a traveling caravan to explore new
+  lands and towns along the way. This grand adventure will include hundreds of
+  quests to take on a variety of extraordinary creatures that yield valuable
+  resources used for weapons and equipment. Launching on Nintendo 3DS, Monster
+  Hunter 4 Ultimate represents the biggest leap forward ever for the series with
+  more new content and exciting features than ever before. Also, for the first
+  time ever for the Monster Hunter series on a handheld system, players will be
+  able to join up with friends over the internet via the Nintendo Wi-Fi
+  Connection, as well as the previously available local wireless option.
+release: 2014-02-13
+players: 4
+assets.boxfront: BoxFront/Monster Hunter 4 Ultimate (USA).jpg
+assets.boxback: BoxBack/Monster Hunter 4 Ultimate (USA).jpg
+assets.background: Background/Monster Hunter 4 Ultimate (USA).jpg
+assets.screenshot: Screenshot/Monster Hunter 4 Ultimate (USA).jpg
+assets.video: Video/Monster Hunter 4 Ultimate (USA).mp4
+x-co-op: No
+
+
+game: Monster Hunter Generations (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Monster Hunter Generations (USA)/Monster Hunter Generations (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Role-Playing
+description:
+  Monster Hunter Generations is the most customizable Monster Hunter experience to
+  date, featuring a blend of brand new areas and monsters, and returning fan-
+  favorites that have been updated and adapted to the newest generation of
+  gameplay.
+  .
+  Monster Hunter Generations introduces new gameplay mechanics including Styles
+  and Hunter Arts that can further refine a very personalized playstyle. Mount
+  monsters from mid-air using the Aerial style or make the most out of the
+  advantageous Hunter Arts abilities with the Striker style. Hunter Arts are
+  visually striking, indispensable combat skills and power-ups that hunters using
+  any style or weapon can equip.
+  .
+  Along the hunter's journey, players must defend each of the game's four villages
+  from new major threats -- the Fated Four. With hundreds of quests in store,
+  there are tons of challenges to tackle in a solo adventure, and also via local
+  or online play with up to three other hunters.
+release: 2016-07-15
+players: 1
+assets.boxfront: BoxFront/Monster Hunter Generations (USA).jpg
+assets.boxback: BoxBack/Monster Hunter Generations (USA).jpg
+assets.background: Background/Monster Hunter Generations (USA).jpg
+assets.screenshot: Screenshot/Monster Hunter Generations (USA).jpg
+assets.video: Video/Monster Hunter Generations (USA).mp4
+x-co-op: No
+
+
+game: New Super Mario Bros. 2 (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/New Super Mario Bros. 2 (USA) (En,Fr,Es)/New Super Mario Bros. 2 (USA) (En,Fr,Es).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Platform
+description:
+  Mario Hits the Mushroom Kingdom Jackpot! Bowser has once again kidnapped
+  Princess Peach, but this time, Mario has another objective. The Mushroom Kingdom
+  is bursting with more gold coins than before. Each level is littered with gold
+  as coins rain down from overhead pipes, trails of coins are left behind special
+  gold enemies and gold pipes transport Mario into coin-filled caverns. It's up to
+  players to collect as many coins as possible throughout their adventure.\n
+  • The game records all the coins players collect throughout the game, so
+  completing a level is only part of the fun. Every level is filled with golden
+  opportunities, such as gold rings that turn enemies into valuable gold versions
+  and a Gold Flower that gives Mario the ability to turn almost anything in his
+  path into coins.\n
+  • Coin Rush Mode allows players to collect as many coins as possible across
+  three levels and challenge friends to beat their record via StreetPass.\n
+  • The return of Raccoon Mario gives Mario the ability to fly and access hidden
+  areas.
+release: 2012-07-28
+players: 1
+assets.boxfront: BoxFront/New Super Mario Bros. 2 (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/New Super Mario Bros. 2 (USA) (En,Fr,Es).jpg
+assets.background: Background/New Super Mario Bros. 2 (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/New Super Mario Bros. 2 (USA) (En,Fr,Es).jpg
+assets.video: Video/New Super Mario Bros. 2 (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Paper Mario - Sticker Star (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Paper Mario - Sticker Star (USA) (En,Fr,Es)/Paper Mario - Sticker Star (USA) (En,Fr,Es).json
+developer: Intelligent Systems
+publisher: Nintendo
+genre: Role-Playing
+description:
+  On the day of the annual Sticker Fest, Bowser decides to pull a prank and
+  scatters six Royal Stickers across the land. To retrieve these mysterious,
+  magical stickers, which are now stuck onto Bowser and his underlings, Mario sets
+  off on an adventure with Kersti, a sticker fairy, visiting prairies, deserts,
+  forests, snowy mountains and volcanoes around the world.
+release: 2012-11-11
+players: 1
+assets.boxfront: BoxFront/Paper Mario - Sticker Star (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Paper Mario - Sticker Star (USA) (En,Fr,Es).jpg
+assets.background: Background/Paper Mario - Sticker Star (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Paper Mario - Sticker Star (USA) (En,Fr,Es).jpg
+assets.video: Video/Paper Mario - Sticker Star (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Pokemon Alpha Sapphire (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Pokemon Alpha Sapphire (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2)/Pokemon Alpha Sapphire (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).json
+developer: Game Freak
+publisher: Nintendo
+genre: Adventure;Role-Playing
+description:
+  Prepare for an epic adventure exploring a world filled with Pokémon in Pokémon
+  Alpha Sapphire for the Nintendo 3DS family of systems. Your adventure takes
+  place in Hoenn, a region that consists of a main island that stretches widely
+  from east to west, along with countless small islets that dot the deep blue sea
+  around it. A live volcano steams constantly in the heart of this green-covered
+  island. Look forward to a region rich with natural beauty, a variety of Pokémon,
+  and extraordinary people! During your journey through Hoenn, you’ll be able to
+  build and invite friends to visit your personal Super-Secret Base! Come up with
+  your own Secret Base design, including selecting and placing Decorations however
+  you like. You can also use Super-Secret Bases to play a capture-the-flag
+  activity. Stop Team Aqua from going after the Legendary Pokémon Kyogre. Also
+  look out for Omega Ruby and all new Mega Evolutions as well.
+release: 2014-11-21
+players: 4
+assets.boxfront: BoxFront/Pokemon Alpha Sapphire (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).jpg
+assets.boxback: BoxBack/Pokemon Alpha Sapphire (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).jpg
+assets.background: Background/Pokemon Alpha Sapphire (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).jpg
+assets.screenshot: Screenshot/Pokemon Alpha Sapphire (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).jpg
+assets.video: Video/Pokemon Alpha Sapphire (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).mp4
+x-co-op: No
+
+
+game: Pokemon Omega Ruby (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Pokemon Omega Ruby (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2)/Pokemon Omega Ruby (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).json
+developer: Nintendo of America
+publisher: Nintendo of America
+genre: Action;Adventure;Strategy
+description:
+  Prepare for an epic adventure exploring a world filled with Pokémon in Pokémon
+  Omega Ruby for the Nintendo 3DS family of systems. Your adventure takes place in
+  Hoenn, a region that consists of a main island that stretches widely from east
+  to west, along with countless small islets that dot the deep blue sea around it.
+  A live volcano steams constantly in the heart of this green-covered island. Look
+  forward to a region rich with natural beauty, a variety of Pokémon, and
+  extraordinary people! During your journey through Hoenn, you’ll be able to build
+  and invite friends to visit your personal Super-Secret Base! Come up with your
+  own Secret Base design, including selecting and placing Decorations however you
+  like. You can also use Super-Secret Bases to play a capture-the-flag
+  activity.Stop Team Magma from going after the Legendary Pokémon Groudon. And
+  look out for Alpha Sapphire. Plus a all new MEGA EVOLUTIONS as well.
+release: 2014-11-21
+players: 4
+assets.boxfront: BoxFront/Pokemon Omega Ruby (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).jpg
+assets.boxback: BoxBack/Pokemon Omega Ruby (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).jpg
+assets.background: Background/Pokemon Omega Ruby (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).jpg
+assets.screenshot: Screenshot/Pokemon Omega Ruby (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).jpg
+assets.video: Video/Pokemon Omega Ruby (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).mp4
+x-co-op: No
+
+
+game: Pokemon Ultra Moon (USA) (En,Ja,Fr,De,Es,It,Zh,Ko)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Pokemon Ultra Moon (USA) (En,Ja,Fr,De,Es,It,Zh,Ko)/Pokemon Ultra Moon (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).json
+developer: Game Freak
+publisher: Nintendo
+genre: Role-Playing
+description:
+  A new light shines on the Alola region! Take on the role of a Pokémon Trainer
+  and unravel the mystery of the Legendary Pokémon Necrozma’s new forms: Dusk Mane
+  Necrozma in the Pokémon Ultra Sun game and Dawn Wings Necrozma in the Pokémon
+  Ultra Moon game. You can encounter and battle 400+ Pokémon, including new forms.
+  A brand-new showdown awaits!
+  .
+  Discover the Legendary Pokémon Solgaleo and Lunala’s new Z-Moves and their
+  mysterious connection to the Legendary Pokémon Necrozma. Then venture into Ultra
+  Wormholes to explore the Ultra Beasts’ home world, encounter every Legendary
+  Pokémon, and uncover Ultra Megalopolis, a dark world where Necrozma has stolen
+  the light. On the bright side, the Alola region has new activities, and fresh
+  landscapes to explore with some assistance from your powered-up Rotom Dex.
+  You’ll need all the help you can get if you’re going to stop Giovanni, Ghetsis,
+  and the rest of Team Rainbow Rocket from taking over the Alola region!
+release: 2017-11-17
+players: 4
+assets.boxfront: BoxFront/Pokemon Ultra Moon (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).jpg
+assets.boxback: BoxBack/Pokemon Ultra Moon (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).jpg
+assets.background: Background/Pokemon Ultra Moon (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).jpg
+assets.screenshot: Screenshot/Pokemon Ultra Moon (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).jpg
+assets.video: Video/Pokemon Ultra Moon (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).mp4
+x-co-op: No
+
+
+game: Pokemon Ultra Sun (USA) (En,Ja,Fr,De,Es,It,Zh,Ko)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Pokemon Ultra Sun (USA) (En,Ja,Fr,De,Es,It,Zh,Ko)/Pokemon Ultra Sun (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).json
+developer: Game Freak
+publisher: Nintendo
+genre: Role-Playing
+description:
+  Pokémon Ultra Sun and Pokémon Ultra Moon are role-playing video games developed
+  by Game Freak, published by The Pokémon Company, and distributed by Nintendo for
+  Nintendo 3DS. Announced in June 2017, the titles are enhanced versions of
+  Pokémon Sun and Moon with a modified storyline, similar to previous "upper
+  versions" like Yellow, Emerald, Crystal, and Platinum. The games are the second
+  installments in the seventh generation of the main series and the last planned
+  installment of the main series Pokémon games for Nintendo 3DS.
+  .
+  The games are set in the Hawaii-based Alola region with an alternate storyline
+  and introduce several new characters, Pokémon, forms, and gameplay features. As
+  with previous titles in the series, the game follows a young trainer in a
+  Pokémon-training journey across the region. The games feature new forms of the
+  legendary Pokémon Necrozma, known as Dusk Mane Necrozma and Dawn Wings Necrozma,
+  as version mascots. The games were released worldwide on November 17, 2017.
+release: 2017-11-17
+players: 4
+assets.boxfront: BoxFront/Pokemon Ultra Sun (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).jpg
+assets.boxback: BoxBack/Pokemon Ultra Sun (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).jpg
+assets.background: Background/Pokemon Ultra Sun (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).jpg
+assets.screenshot: Screenshot/Pokemon Ultra Sun (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).jpg
+assets.video: Video/Pokemon Ultra Sun (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).mp4
+x-co-op: No
+
+
+game: Pokemon X (USA) (En,Ja,Fr,De,Es,It,Ko)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Pokemon X (USA) (En,Ja,Fr,De,Es,It,Ko)/Pokemon X (USA) (En,Ja,Fr,De,Es,It,Ko).json
+developer: Game Freak
+publisher: Nintendo
+genre: Role-Playing
+description:
+  Pokémon X and Pokémon Y are 2013 role-playing video games developed by Game
+  Freak, published by The Pokémon Company and Nintendo for the Nintendo 3DS. They
+  are the first installments in the sixth generation of the main Pokémon video
+  game series. First announced in January 2013 by former Nintendo president Satoru
+  Iwata through a special Nintendo Direct, Pokémon X and Pokémon Y were released
+  worldwide in October 2013, making them the first Nintendo-published retail games
+  to have a simultaneous global release in all key regions.
+release: 2013-10-12
+players: 1
+assets.boxfront: BoxFront/Pokemon X (USA) (En,Ja,Fr,De,Es,It,Ko).jpg
+assets.boxback: BoxBack/Pokemon X (USA) (En,Ja,Fr,De,Es,It,Ko).jpg
+assets.background: Background/Pokemon X (USA) (En,Ja,Fr,De,Es,It,Ko).jpg
+assets.screenshot: Screenshot/Pokemon X (USA) (En,Ja,Fr,De,Es,It,Ko).jpg
+assets.video: Video/Pokemon X (USA) (En,Ja,Fr,De,Es,It,Ko).mp4
+x-co-op: No
+
+
+game: Pokemon Y (USA) (En,Ja,Fr,De,Es,It,Ko)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Pokemon Y (USA) (En,Ja,Fr,De,Es,It,Ko)/Pokemon Y (USA) (En,Ja,Fr,De,Es,It,Ko).json
+developer: Game Freak
+publisher: Nintendo
+genre: Role-Playing
+description:
+  Become a Pokémon Trainer and set out for adventure in a vast and wondrous new
+  region filled with new Pokémon to catch, trade, and battle. Your adventure in
+  Pokémon Y takes place in the Kalos region, home to beautiful skies and forests!
+  The Kalos region is full of interesting places to visit and explore! All-new
+  Pokémon and past favorites come to life with detailed graphics and intense 3D
+  battles and in the new Pokémon-Amie mode you can pet, feed, and play with your
+  Pokémon to form a deeper bond, which may benefit you in future battles.
+release: 2013-10-12
+players: 1
+assets.boxfront: BoxFront/Pokemon Y (USA) (En,Ja,Fr,De,Es,It,Ko).jpg
+assets.boxback: BoxBack/Pokemon Y (USA) (En,Ja,Fr,De,Es,It,Ko).jpg
+assets.background: Background/Pokemon Y (USA) (En,Ja,Fr,De,Es,It,Ko).jpg
+assets.screenshot: Screenshot/Pokemon Y (USA) (En,Ja,Fr,De,Es,It,Ko).jpg
+assets.video: Video/Pokemon Y (USA) (En,Ja,Fr,De,Es,It,Ko).mp4
+x-co-op: No
+
+
+game: Poochy & Yoshi's Woolly World (USA) (En,Fr,Es) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Poochy & Yoshi's Woolly World (USA) (En,Fr,Es) (Rev 1)/Poochy & Yoshi's Woolly World (USA) (En,Fr,Es) (Rev 1).json
+developer: Good-Feel
+publisher: Nintendo
+genre: Platform
+description:
+  Discover a handicraft world bursting at the seams with creativity, as you guide
+  Yarn Yoshi or Yarn Poochy through clever side-scrolling stages. Unravel secrets,
+  toss yarn to weave platforms, and power up with woolly transformations. All
+  stages from the Wii U version are joined by new ones starring Poochy and more
+  Nintendo 3DS exclusive features! It's a mad dash for beads in new Poochy stages:
+  dodge stumps, mush down snowy paths, chase Lakitu, and unearth hidden paths and
+  items. Sniffing out secrets is always a charm in Mellow Mode, thanks to the
+  curious Poochy Pups. As you find collectables, you'll unlock rewards, from extra
+  stages to new Patterned Yoshi. You can also design and play as your very own
+  Yarn Yoshi, or share it with friends via the StreetPass function! When you want
+  a break from exploring, peek into the lives of Yarn Poochy and Yarn Yoshi in
+  hilarious stop-motion shorts. It's time to get crafty!
+release: 2017-01-19
+players: 1
+assets.boxfront: BoxFront/Poochy & Yoshi's Woolly World (USA) (En,Fr,Es) (Rev 1).jpg
+assets.boxback: BoxBack/Poochy & Yoshi's Woolly World (USA) (En,Fr,Es) (Rev 1).jpg
+assets.background: Background/Poochy & Yoshi's Woolly World (USA) (En,Fr,Es) (Rev 1).jpg
+assets.screenshot: Screenshot/Poochy & Yoshi's Woolly World (USA) (En,Fr,Es) (Rev 1).jpg
+assets.video: Video/Poochy & Yoshi's Woolly World (USA) (En,Fr,Es) (Rev 1).mp4
+x-co-op: No
+
+
+game: Project X Zone (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Project X Zone (USA)/Project X Zone (USA).json
+developer: Banpresto
+publisher: Namco Bandai Games
+genre: Action;Role-Playing;Strategy
+description:
+  Developed by Banpresto and Monolith Soft, Project X Zone features over 50
+  characters from 29 historic game franchises by three of Japan's most prolific
+  video game companies. In Project X Zone players will use a team of two
+  characters known as a Pair Unit to explore the world within the game. An
+  additional character known as a Solo Unit can be combined with the Pair Unit to
+  assist in battles with Solo Attacks as well as augment the attacks available for
+  players to execute. Throughout the game, epic battles are waiting to erupt at a
+  moment's notice. Players will have to master an array of screen-busting moves
+  including Solo Attacks, Support Attacks, Cross Hits, and Finishing Moves in
+  order to defeat a multitude of foes
+release: 2013-06-25
+players: 1
+assets.boxfront: BoxFront/Project X Zone (USA).jpg
+assets.boxback: BoxBack/Project X Zone (USA).jpg
+assets.background: Background/Project X Zone (USA).jpg
+assets.screenshot: Screenshot/Project X Zone (USA).jpg
+assets.video: Video/Project X Zone (USA).mp4
+x-co-op: No
+
+
+game: Project X Zone 2 (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Project X Zone 2 (USA)/Project X Zone 2 (USA).json
+developer: Banpresto
+publisher: Namco Bandai Games
+genre: Role-Playing;Strategy
+description:
+  In the sequel to the original world crossing adventure, legendary characters
+  from Japan's most prolific video game publishers come together to create the
+  biggest mashup strategy game ever! Developed by MONOLITH SOFTWARE INC., Project
+  X Zone 2 gives gamers the opportunity to play as their favorite characters from
+  a multitude of franchises and form teams of characters hailing from classic and
+  current franchises and engage enemies through strategic turn-based battles.
+  .
+  Featuring characters from YAKUZA: Dead Souls, the Sakura Wars series, Virtua
+  Fighter series, and more from SEGA, characters from Capcom's franchises
+  including the Resident Evil series, Devil May Cry series, and Megaman X series,
+  and characters from the TEKKEN series, Tales of Vesperia, and .hack// series
+  from BANDAI NAMCO!
+release: 2016-02-16
+players: 1
+assets.boxfront: BoxFront/Project X Zone 2 (USA).jpg
+assets.boxback: BoxBack/Project X Zone 2 (USA).jpg
+assets.background: Background/Project X Zone 2 (USA).jpg
+assets.screenshot: Screenshot/Project X Zone 2 (USA).jpg
+assets.video: Video/Project X Zone 2 (USA).mp4
+x-co-op: No
+
+
+game: Puzzle & Dragons Z + Puzzle & Dragons Super Mario Bros. Edition (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Puzzle & Dragons Z + Puzzle & Dragons Super Mario Bros. Edition (USA)/Puzzle & Dragons Z + Puzzle & Dragons Super Mario Bros. Edition (USA).json
+developer: GungHo Online Entertainment
+publisher: Nintendo
+genre: Puzzle
+description:
+  Two puzzling RPG adventures await you! Rescue Princess Peach from Bowser or
+  defeat the evil group Paradox by battling enemies with the awesome power of
+  orbs. Drag and match orbs, or chain together combos to deal massive blows to
+  your enemies. Then bolster your forces with hundreds of unique monsters in this
+  two-in-one game pack.
+  .
+  In Puzzle & Dragons Super Mario Bros. Edition, you get to travel to different
+  worlds as you assemble a team of Mushroom Kingdom baddies, like Goombas or Koopa
+  Troopas, and recruit much-loved Mario characters, including Toad and Yoshi! Or
+  in Puzzle & Dragons Z, battle the 5 powerful sky dragons to rebuild the world
+  and customize your team with a plethora of different monsters. Allies gained in
+  both games have the chance to evolve into more advanced forms and learn powerful
+  new skills.
+release: 2015-05-22
+players: 1
+assets.boxfront: BoxFront/Puzzle & Dragons Z + Puzzle & Dragons Super Mario Bros. Edition (USA).jpg
+assets.boxback: BoxBack/Puzzle & Dragons Z + Puzzle & Dragons Super Mario Bros. Edition (USA).jpg
+assets.background: Background/Puzzle & Dragons Z + Puzzle & Dragons Super Mario Bros. Edition (USA).jpg
+assets.screenshot: Screenshot/Puzzle & Dragons Z + Puzzle & Dragons Super Mario Bros. Edition (USA).jpg
+assets.video: Video/Puzzle & Dragons Z + Puzzle & Dragons Super Mario Bros. Edition (USA).mp4
+x-co-op: No
+
+
+game: RPG Maker Fes (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/RPG Maker Fes (USA) (En,Fr,Es)/RPG Maker Fes (USA) (En,Fr,Es).json
+developer: Kadokawa Games
+publisher: NIS America, Inc.
+genre: Role-Playing;General
+description:
+  Create the RPG you always dreamed of with RPG Maker Fes!
+  .
+  RPG Maker Fes is a game creation software that lets you create your own RPGs, at
+  anytime and anywhere, on the Nintendo 3DS system without any programming
+  knowledge.
+  .
+  Moreover, all your completed RPGs can be uploaded and then downloaded to be
+  played by other Nintendo 3DS users for free!
+  .
+  In order to download and play other users' creations, please visit the Nintendo
+  eShop and download the free software RPG Maker Player.
+release: 2017-06-27
+players: 1
+assets.boxfront: BoxFront/RPG Maker Fes (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/RPG Maker Fes (USA) (En,Fr,Es).jpg
+assets.background: Background/RPG Maker Fes (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/RPG Maker Fes (USA) (En,Fr,Es).jpg
+assets.video: Video/RPG Maker Fes (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It)/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Horror
+description:
+  Taking place in 2005, between the events of Resident Evil 4 and Resident Evil 5,
+  the action centers on BSAA (Bioterrorism Security Assessment Alliance) member
+  Jill Valentine and introduces her new partner, Parker Luciani. The story is set
+  principally on board a supposedly abandoned cruise ship in the Mediterranean,
+  where Jill and Parker have been sent to search for Chris Redfield, based on his
+  last known GPS coordinates. Far from being empty, the ship hides danger around
+  every corner as Jill and Parker explore the confined space of the ship and must
+  face a menacing new horror that emerges from the darkness.
+  .
+  Adding a new unique horror setting to the series, Resident Evil: Revelations
+  gives players the chance to venture underwater as they try to escape the
+  terrifying creatures that are roaming the ship. But even the water does not
+  provide safety as the creatures continue to attack from the depths while Jill
+  and Parker make a desperate bid to make it off the ship alive.
+release: 2012-02-07
+players: 2
+assets.boxfront: BoxFront/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.background: Background/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.video: Video/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It).mp4
+x-co-op: Yes
+
+
+game: Resident Evil - The Mercenaries 3D (USA) (En,Fr)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Resident Evil - The Mercenaries 3D (USA) (En,Fr)/Resident Evil - The Mercenaries 3D (USA) (En,Fr).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Shooter
+description:
+  For the first time Resident Evil: The Mercenaries 3D delivers the intense
+  Mercenaries gameplay experience on a handheld console. Featuring re-mastered
+  stages from Resident Evil 4 and Resident Evil 5, it's a race against time as
+  players try to defeat as many enemies as possible before the countdown reaches
+  zero. The fast-paced, combat intensive action of Resident Evil: The Mercenaries
+  3D is available both as a solo experience or gamers across the world can team up
+  and enjoy two-player co-op via network play.
+release: 2011-06-28
+players: 2
+assets.boxfront: BoxFront/Resident Evil - The Mercenaries 3D (USA) (En,Fr).jpg
+assets.boxback: BoxBack/Resident Evil - The Mercenaries 3D (USA) (En,Fr).jpg
+assets.background: Background/Resident Evil - The Mercenaries 3D (USA) (En,Fr).jpg
+assets.screenshot: Screenshot/Resident Evil - The Mercenaries 3D (USA) (En,Fr).jpg
+x-co-op: Yes
+
+
+game: SEGA 3D Classics Collection (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/SEGA 3D Classics Collection (USA)/SEGA 3D Classics Collection (USA).json
+developer: Sega
+publisher: Sega
+genre: Action
+description:
+  A collection of 9 classic SEGA games in one game! From the arcades straight to
+  your Nintendo 3DS, experience the classics that defined the genres in gameplay.
+  Choose a game to suit your mood! Shooting, racing, action, puzzle, and more!
+  .
+  With:\n
+  -Power Drift\n
+  -Puyo Puyo 2\n
+  -Maze Walker\n
+  -Fantasy Zone II: The Tears of Opa-Opa\n
+  -Fantazy Zone II W\n
+  -Sonic The Hedgehog\n
+  -Thunder Blade\n
+  -Galaxy Force II\n
+  -Altered Beast
+release: 2016-04-26
+players: 1
+assets.boxfront: BoxFront/SEGA 3D Classics Collection (USA).jpg
+assets.boxback: BoxBack/SEGA 3D Classics Collection (USA).jpg
+assets.background: Background/SEGA 3D Classics Collection (USA).jpg
+assets.screenshot: Screenshot/SEGA 3D Classics Collection (USA).jpg
+assets.video: Video/SEGA 3D Classics Collection (USA).mp4
+x-co-op: No
+
+
+game: Shovel Knight (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Shovel Knight (USA)/Shovel Knight (USA).json
+developer: Yacht Club Games
+publisher: Yacht Club Games
+genre: Adventure;Platform
+description:
+  Shovel Knight is a 2014 action platformer video game developed and published by
+  independent developer Yacht Club Games for the Nintendo 3DS, Wii U, and personal
+  computer platforms. The game was released worldwide on June 26, 2014. Shovel
+  Knight was directed by former WayForward Technologies member Sean Velasco, and
+  includes music composed by Jake Kaufman and Manami Matsumae.
+  .
+  Prior to the game, adventurers Shovel Knight and Shield Knight fought alongside
+  one another, journeying across the world and seeking treasure. However, when the
+  two explore the Tower of Fate, the two fall to the dark magic power of a cursed
+  amulet. When Shovel Knight reawakens, the Tower has been sealed and Shield
+  Knight is nowhere to be seen. Grieving for his beloved, Shovel Knight gives up
+  adventuring and secludes himself. However, during his absence, the Enchantress
+  rises to power, spreading evil across the land. Upon hearing that the
+  Enchantress has unsealed the Tower of Fate, Shovel Knight takes up his shovel
+  again and ventures towards it, hoping to find and rescue Shield Knight. In order
+  to do so, Shovel Knight must fight the eight members of "The Order of No
+  Quarter," who have been dispatched by the Enchantress to impede him.
+release: 2014-06-26
+players: 1
+assets.boxfront: BoxFront/Shovel Knight (USA).jpg
+assets.boxback: BoxBack/Shovel Knight (USA).jpg
+assets.background: Background/Shovel Knight (USA).jpg
+assets.screenshot: Screenshot/Shovel Knight (USA).jpg
+assets.video: Video/Shovel Knight (USA).mp4
+x-co-op: No
+
+
+game: Spirit Camera - The Cursed Memoir (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Spirit Camera - The Cursed Memoir (USA)/Spirit Camera - The Cursed Memoir (USA).json
+developer: Tecmo Koei Games
+publisher: Nintendo
+genre: Horror
+description:
+  Spirit Camera: The Cursed Memoir introduces a mysterious girl named Maya who has
+  been hiding in the shadows of an old house. Players must help Maya break free
+  from a terrifying curse by aiding her escape from the clutches of a malevolent
+  woman in black. By using the Nintendo 3DS system's built-in camera, players can
+  view Maya in their own surroundings as the game's eerie events unfold.
+release: 2012-04-13
+players: 1
+assets.boxfront: BoxFront/Spirit Camera - The Cursed Memoir (USA).jpg
+assets.boxback: BoxBack/Spirit Camera - The Cursed Memoir (USA).jpg
+assets.background: Background/Spirit Camera - The Cursed Memoir (USA).jpg
+assets.screenshot: Screenshot/Spirit Camera - The Cursed Memoir (USA).jpg
+x-co-op: No
+
+
+game: Star Fox 64 3D (USA) (En,Fr,Es) (Rev 3)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Star Fox 64 3D (USA) (En,Fr,Es) (Rev 3)/Star Fox 64 3D (USA) (En,Fr,Es) (Rev 3).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action;Shooter
+description:
+  The Star Fox team triumphantly returns to one of its greatest missions with this
+  remake of Star Fox 64 in full 3D, featuring a complete graphical update.
+  .
+  The entire Star Fox universe spreads out realistically into the depths of the
+  Nintendo 3DS screen while the 3D visuals give the player a clearer grasp of
+  distance and position. This makes the game more approachable and intuitive,
+  thereby allowing players to focus on the action.
+release: 2011-09-09
+players: 4
+assets.boxfront: BoxFront/Star Fox 64 3D (USA) (En,Fr,Es) (Rev 3).jpg
+assets.boxback: BoxBack/Star Fox 64 3D (USA) (En,Fr,Es) (Rev 3).jpg
+assets.background: Background/Star Fox 64 3D (USA) (En,Fr,Es) (Rev 3).jpg
+assets.screenshot: Screenshot/Star Fox 64 3D (USA) (En,Fr,Es) (Rev 3).jpg
+assets.video: Video/Star Fox 64 3D (USA) (En,Fr,Es) (Rev 3).mp4
+x-co-op: No
+
+
+game: Steel Diver (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Steel Diver (USA) (En,Fr,Es)/Steel Diver (USA) (En,Fr,Es).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Action;Strategy
+description:
+  Steel Diver, a submarine game that involves strategy and combat. The 3D visuals
+  give players the sensation that they are looking into a miniature aquarium as
+  they control the subs speed, depth and pitch, and fire torpedoes.
+release: 2011-03-27
+players: 2
+assets.boxfront: BoxFront/Steel Diver (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Steel Diver (USA) (En,Fr,Es).jpg
+assets.background: Background/Steel Diver (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Steel Diver (USA) (En,Fr,Es).jpg
+assets.video: Video/Steel Diver (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Super Mario 3D Land (USA) (En,Fr,Es) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Super Mario 3D Land (USA) (En,Fr,Es) (Rev 1)/Super Mario 3D Land (USA) (En,Fr,Es) (Rev 1).json
+developer: Nintendo
+publisher: Nintendo
+genre: Platform
+description:
+  Super Mario 3D Land is a platform game that has been described by game designer
+  Shigeru Miyamoto as a "3D Mario that plays as a 2D Mario game." As such, Super
+  Mario 3D Land combines the elements of traditional side-scrolling Mario titles,
+  such as linear-based levels, with those of the modern open world Mario titles,
+  such as moving Mario in three dimensions and performing a variety of actions.
+  .
+  Similar to the classic side-scrolling Mario games, the objective of each level
+  is to reach and grab the "Goal Pole" located at the end of the course before the
+  time limit expires. Super Mario 3D Land utilizes a similar health system to
+  those games, in which Mario shrinks upon taking damage from enemies or hazards,
+  and damage while as "Small Mario" results in losing a life.
+release: 2011-11-13
+players: 1
+assets.boxfront: BoxFront/Super Mario 3D Land (USA) (En,Fr,Es) (Rev 1).jpg
+assets.boxback: BoxBack/Super Mario 3D Land (USA) (En,Fr,Es) (Rev 1).jpg
+assets.background: Background/Super Mario 3D Land (USA) (En,Fr,Es) (Rev 1).jpg
+assets.screenshot: Screenshot/Super Mario 3D Land (USA) (En,Fr,Es) (Rev 1).jpg
+assets.video: Video/Super Mario 3D Land (USA) (En,Fr,Es) (Rev 1).mp4
+x-co-op: No
+
+
+game: Super Mario Maker for Nintendo 3DS (USA) (En,Fr,Es) (Rev 3)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Super Mario Maker for Nintendo 3DS (USA) (En,Fr,Es) (Rev 3)/Super Mario Maker for Nintendo 3DS (USA) (En,Fr,Es) (Rev 3).json
+developer: Nintendo
+publisher: Nintendo
+genre: Platform
+description:
+  The ultimate evolution of Super Mario Bros. is here!
+  .
+  The Mario experience of your dreams has arrived and is bursting with
+  creativity... including yours! Play a near-limitless number of intensely
+  creative Super Mario levels from players around the world. Its easy enough to
+  create your own levels with the Wii U GamePad controller that it may feel like
+  youre simply sketching out your ideas on paper, but you can now bring enemies
+  and objects into a playable course in ways you could only dream of before. What
+  was impossible in traditional Mario games is now impossibly fun, so let your
+  imagination run wild!
+  .
+  Features:
+  .
+  * Play a near-limitless number of Mario levels created by Nintendo and players
+  around the world.
+  .
+  * Create your own Mario levels by using the Wii U GamePad controller touch
+  screen to add enemies, blocks, pipes and more.
+  .
+  * Break the conventions of traditional Super Mario gameplay by blending enemies,
+  traps and items into unexpected twists, like Piranha Plant-shooting cannons,
+  power-up-tossing Lakitus, or even Hammer Bros. riding on Bowser while bouncing
+  on trampolines.
+  .
+  * Touch control, instant editing and a robust online ranking and search system
+  makes creating, playing and sharing a seamless process.
+  .
+  * Switch between four distinct themes, each with different art styles and
+  features: Super Mario Bros., Super Mario Bros. 3, Super Mario World, and New
+  Super Mario Bros. U.
+  .
+  * Transform into different characters at random with the new Mystery Mushroom
+  item. Expand the roster of possible characters by completing 100 Mario Challenge
+  mode or tapping compatible amiibo.
+  .
+  * Tap a 30th Anniversary Mario amiibo figure to the Wii U GamePad controller to
+  add a Big Mushroom power-up to your course!
+release: 2016-12-02
+players: 1
+assets.boxfront: BoxFront/Super Mario Maker for Nintendo 3DS (USA) (En,Fr,Es) (Rev 3).jpg
+assets.boxback: BoxBack/Super Mario Maker for Nintendo 3DS (USA) (En,Fr,Es) (Rev 3).jpg
+assets.background: Background/Super Mario Maker for Nintendo 3DS (USA) (En,Fr,Es) (Rev 3).jpg
+assets.screenshot: Screenshot/Super Mario Maker for Nintendo 3DS (USA) (En,Fr,Es) (Rev 3).jpg
+assets.video: Video/Super Mario Maker for Nintendo 3DS (USA) (En,Fr,Es) (Rev 3).mp4
+x-co-op: No
+
+
+game: Super Monkey Ball 3D (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Super Monkey Ball 3D (USA) (En,Fr,Es)/Super Monkey Ball 3D (USA) (En,Fr,Es).json
+developer: Sega
+publisher: Sega
+genre: Platform;Puzzle
+description:
+  Taking advantage of the power of the Nintendo 3DS, players can let themselves
+  loose in each new vibrant world as they twist and turn whilst aiming to collect
+  every banana in the fastest time possible. This latest installment contains
+  three brand-new compelling gameplay choices including single-player puzzle
+  levels, Monkey Race and Monkey Fight. These new game modes give players the
+  chance to compete via wireless connection with up to four players in the best 3D
+  social experience possible in the palm of their hands. In addition, Super Monkey
+  Ball fans will be able to choose between the Nintendo 3DS motion sensor or the
+  Slide Pad to navigate the puzzle mazes with complete precision.
+release: 2011-03-27
+players: 1
+assets.boxfront: BoxFront/Super Monkey Ball 3D (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Super Monkey Ball 3D (USA) (En,Fr,Es).jpg
+assets.background: Background/Super Monkey Ball 3D (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Super Monkey Ball 3D (USA) (En,Fr,Es).jpg
+assets.video: Video/Super Monkey Ball 3D (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Super Smash Bros. for Nintendo 3DS (USA) (En,Fr,Es) (Rev 2)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Super Smash Bros. for Nintendo 3DS (USA) (En,Fr,Es) (Rev 2)/Super Smash Bros. for Nintendo 3DS (USA) (En,Fr,Es) (Rev 2).json
+developer: Tri-crescendo
+publisher: Nintendo
+genre: Fighting
+description:
+  Super Smash Bros. for Nintendo 3DS is the first portable entry in the renowned
+  series, in which game worlds collide.
+  .
+  Up to four players battle each other locally or online using some of Nintendo’s
+  most well-known and iconic characters across beautifully designed stages
+  inspired by classic portable Nintendo games. It’s a genuine, massive Super Smash
+  Bros. experience that’s available to play on the go, anytime, anywhere.
+release: 2014-10-03
+players: 4
+assets.boxfront: BoxFront/Super Smash Bros. for Nintendo 3DS (USA) (En,Fr,Es) (Rev 2).jpg
+assets.boxback: BoxBack/Super Smash Bros. for Nintendo 3DS (USA) (En,Fr,Es) (Rev 2).jpg
+assets.background: Background/Super Smash Bros. for Nintendo 3DS (USA) (En,Fr,Es) (Rev 2).jpg
+assets.screenshot: Screenshot/Super Smash Bros. for Nintendo 3DS (USA) (En,Fr,Es) (Rev 2).jpg
+assets.video: Video/Super Smash Bros. for Nintendo 3DS (USA) (En,Fr,Es) (Rev 2).mp4
+x-co-op: Yes
+
+
+game: Super Street Fighter IV - 3D Edition (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Super Street Fighter IV - 3D Edition (USA) (En,Fr,Es)/Super Street Fighter IV - 3D Edition (USA) (En,Fr,Es).json
+developer: Capcom
+publisher: Capcom
+genre: Fighting
+description:
+  The ultimate version of Street Fighter makes its seamless transition to the
+  Nintendo 3DS with Super Street Fighter IV: 3D Edition. The console experience is
+  now in the palm of your hand with rich new features that utilize the
+  capabilities of the Nintendo 3DS to its fullest. Packed with 35 playable
+  characters, bonus stages and cinematic Ultra combos, Super Street Fighter IV: 3D
+  Edition expands the action by allowing you to fight your friends around the
+  world using Wi-Fi. New to the franchise are the figurine mode, which utilizes
+  the Street Pass feature to add a collectible meta-game, and the 3D over-the-
+  shoulder camera option that takes fighting to new depths. For those new to the
+  franchise, a simple mode has been added allowing players to pull off challenging
+  moves with a single touch of the screen.
+release: 2011-03-27
+players: 1
+assets.boxfront: BoxFront/Super Street Fighter IV - 3D Edition (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Super Street Fighter IV - 3D Edition (USA) (En,Fr,Es).jpg
+assets.background: Background/Super Street Fighter IV - 3D Edition (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Super Street Fighter IV - 3D Edition (USA) (En,Fr,Es).jpg
+assets.video: Video/Super Street Fighter IV - 3D Edition (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Tales of the Abyss (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Tales of the Abyss (USA)/Tales of the Abyss (USA).json
+developer: Namco Tales Studio
+publisher: Namco Bandai Games
+genre: Role-Playing
+description:
+  Tales of the Abyss, the critically-acclaimed PlayStation 2 computer
+  entertainment system role playing game, is updated for the Nintendo 3DS system.
+  The upcoming title delivers full 3D support and use of the dual screens to bring
+  players closer to the action. Tales of the Abyss tells the story of Luke fon
+  Fabre, sole heir to a family of aristocrats, as he is suddenly thrust into the
+  outside world on an epic adventure. Naïve and spoiled by years of isolation,
+  Luke struggles to learn of friendship, sacrifice, duty and of choice. With the
+  fates of many in his hands, Luke's actions could ultimately save the world or
+  bring about its very destruction.
+release: 2012-02-14
+players: 1
+assets.boxfront: BoxFront/Tales of the Abyss (USA).jpg
+assets.boxback: BoxBack/Tales of the Abyss (USA).jpg
+assets.background: Background/Tales of the Abyss (USA).jpg
+assets.screenshot: Screenshot/Tales of the Abyss (USA).jpg
+x-co-op: No
+
+
+game: Tetris Axis (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Tetris Axis (USA) (En,Fr,Es)/Tetris Axis (USA) (En,Fr,Es).json
+developer: Human Soft
+publisher: Nintendo
+genre: Action
+description:
+  Tetris for Nintendo 3DS will allow fans to experience the game like never before
+  in 3D! With over 20 eye-catching game modes, Tetris for Nintendo 3DS delivers a
+  rich mix of both traditional and innovative ways to enjoy playing the Tetris
+  game.
+release: 2011-10-02
+players: 1
+assets.boxfront: BoxFront/Tetris Axis (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Tetris Axis (USA) (En,Fr,Es).jpg
+assets.background: Background/Tetris Axis (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Tetris Axis (USA) (En,Fr,Es).jpg
+assets.video: Video/Tetris Axis (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Theatrhythm Final Fantasy (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Theatrhythm Final Fantasy (USA)/Theatrhythm Final Fantasy (USA).json
+developer: indieszero
+publisher: Square Enix
+genre: Music
+description:
+  Tap and slide to the rhythm of over 70 tracks from the FINAL FANTASY series
+  while joining forces with iconic characters and facing off against memorable
+  monsters and villains. Unlock unique items and deeper challenges in three
+  exciting game modes, as you help restore the Music Crystal to its former
+  radiance!
+release: 2012-02-16
+players: 1
+assets.boxfront: BoxFront/Theatrhythm Final Fantasy (USA).jpg
+assets.boxback: BoxBack/Theatrhythm Final Fantasy (USA).jpg
+assets.background: Background/Theatrhythm Final Fantasy (USA).jpg
+assets.screenshot: Screenshot/Theatrhythm Final Fantasy (USA).jpg
+assets.video: Video/Theatrhythm Final Fantasy (USA).mp4
+x-co-op: No
+
+
+game: Theatrhythm Final Fantasy - Curtain Call (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Theatrhythm Final Fantasy - Curtain Call (USA)/Theatrhythm Final Fantasy - Curtain Call (USA).json
+developer: indieszero
+publisher: Square Enix
+genre: Music
+description:
+  A sequel to the first FINAL FANTASY rhythm action game released in 2012,
+  THEATRHYTHM FINAL FANTASY CURTAIN CALL expands on the original in every way with
+  new gameplay modes, over 200 songs, and 60 playable characters. Featuring music
+  that spans the full breadth of the storied FINAL FANTASY franchise, players tap
+  along to the memorable beats and harmonies as the adorable, stylized characters
+  battle and quest through their worlds. The music of over 20 titles is brought
+  together in one package, fusing together the moving scores, cinematic visuals,
+  and role-playing elements the series is known for.
+release: 2014-04-24
+players: 2
+assets.boxfront: BoxFront/Theatrhythm Final Fantasy - Curtain Call (USA).jpg
+assets.boxback: BoxBack/Theatrhythm Final Fantasy - Curtain Call (USA).jpg
+assets.background: Background/Theatrhythm Final Fantasy - Curtain Call (USA).jpg
+assets.screenshot: Screenshot/Theatrhythm Final Fantasy - Curtain Call (USA).jpg
+assets.video: Video/Theatrhythm Final Fantasy - Curtain Call (USA).mp4
+x-co-op: No
+
+
+game: Xenoblade Chronicles 3D (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Xenoblade Chronicles 3D (USA) (En,Fr,Es)/Xenoblade Chronicles 3D (USA) (En,Fr,Es).json
+developer: Monolith Soft
+publisher: Nintendo
+genre: Action;Role-Playing
+description:
+  Xenoblade Chronicles 3D 3DS - A remake of the well-received Xenoblade Chronicles
+  for Wii is launching exclusively for New Nintendo 3DS XL. The new version offers
+  3D visuals and allows players to view the maps and character stats on the bottom
+  screen. An additional bonus mode lets players view 3D models of the characters
+  and listen to music tracks from the game. This game only works in the newer 3DS
+  XL SKU?s, REDSRAAA and REDSVAAA
+release: 2015-04-10
+players: 1
+assets.boxfront: BoxFront/Xenoblade Chronicles 3D (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Xenoblade Chronicles 3D (USA) (En,Fr,Es).jpg
+assets.background: Background/Xenoblade Chronicles 3D (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Xenoblade Chronicles 3D (USA) (En,Fr,Es).jpg
+assets.video: Video/Xenoblade Chronicles 3D (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Yoshi's New Island (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Yoshi's New Island (USA) (En,Fr,Es)/Yoshi's New Island (USA) (En,Fr,Es).json
+developer: Arzest
+publisher: Nintendo
+genre: Platform
+description:
+  Yoshi and Baby Mario are back in Yoshi’s New Island, the third installment in
+  the beloved franchise. The series’ fun game-play mechanics such as Yoshi’s
+  Flutter Jump, Ground Pound and Egg Throw return, but now Yoshi knows a ton of
+  new tricks too. Yoshi gets to bash and thrash his environment by throwing around
+  Mega Eggdozers and Metal Eggdozers. Yoshi also can transform into a variety of
+  objects, such as a jackhammer or a submarine, both of which can be manipulated
+  using the Nintendo 3DS gyro controls. A certain type of star even transforms him
+  into Super Yoshi, giving him the ability to fly through the sky or run along
+  walls and ceilings. Players who are having trouble completing a level might see
+  the appearance of Flutter Wings, which let Yoshi fly through the air.
+release: 2014-03-14
+players: 1
+assets.boxfront: BoxFront/Yoshi's New Island (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Yoshi's New Island (USA) (En,Fr,Es).jpg
+assets.background: Background/Yoshi's New Island (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Yoshi's New Island (USA) (En,Fr,Es).jpg
+assets.video: Video/Yoshi's New Island (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+

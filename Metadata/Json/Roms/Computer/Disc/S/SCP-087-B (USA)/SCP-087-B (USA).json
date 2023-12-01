@@ -1,0 +1,18 @@
+{
+    "main_game_exe": [
+        "SCP_087_B/SCP-087-B.exe"
+    ],
+    "main_game_exe_cwd": {
+        "SCP_087_B/SCP-087-B.exe": "SCP_087_B"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$HDD_MAIN_ROOT/SCP_087_B",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "SCP-087-B (USA).chd"
+}

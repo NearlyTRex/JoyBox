@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Picky Pop (USA).exe"
+    ],
+    "transform_file": "Picky Pop (USA).exe"
+}

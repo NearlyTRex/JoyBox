@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Phoenix Heavy (USA).exe"
+    ],
+    "transform_file": "Phoenix Heavy (USA).exe"
+}

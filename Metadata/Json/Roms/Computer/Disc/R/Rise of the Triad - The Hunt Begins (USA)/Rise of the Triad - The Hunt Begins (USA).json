@@ -1,0 +1,23 @@
+{
+    "installer_dos_exe": "$DISC_MAIN_ROOT/INSTALL.EXE",
+    "is_dos": true,
+    "main_game_dos_exe": [
+        "BSTONE/BSTONE.BAT",
+        "DUKE2/NUKEM2.EXE",
+        "HOCUS/HOCUS.EXE",
+        "RAPTOR/RAP.EXE",
+        "ROTT/ROTT.EXE",
+        "WACKY/WW.EXE",
+        "WOLF3D/WOLF3D.EXE"
+    ],
+    "main_game_dos_exe_cwd": {
+        "BSTONE/BSTONE.BAT": "BSTONE",
+        "DUKE2/NUKEM2.EXE": "DUKE2",
+        "HOCUS/HOCUS.EXE": "HOCUS",
+        "RAPTOR/RAP.EXE": "RAPTOR",
+        "ROTT/ROTT.EXE": "ROTT",
+        "WACKY/WW.EXE": "WACKY",
+        "WOLF3D/WOLF3D.EXE": "WOLF3D"
+    },
+    "transform_file": "Rise of the Triad - The Hunt Begins (USA).chd"
+}

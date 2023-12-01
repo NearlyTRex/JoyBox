@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dual Pong (USA).exe"
+    ],
+    "transform_file": "Dual Pong (USA).exe"
+}

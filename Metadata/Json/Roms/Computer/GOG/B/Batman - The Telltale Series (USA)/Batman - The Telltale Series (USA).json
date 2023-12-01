@@ -1,0 +1,10 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/batman_the_telltale_series_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/batman_the_telltale_series_wallpapers.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_batman_-_the_telltale_series_noir-gog_(64bit)_(37765).exe"
+    ],
+    "transform_file": "setup_batman_-_the_telltale_series_noir-gog_(64bit)_(37765).exe"
+}

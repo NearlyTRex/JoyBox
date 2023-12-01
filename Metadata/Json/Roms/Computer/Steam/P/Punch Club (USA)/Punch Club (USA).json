@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Punch Club (USA).exe"
+    ],
+    "transform_file": "Punch Club (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Operation STEEL (USA).exe"
+    ],
+    "transform_file": "Operation STEEL (USA).exe"
+}

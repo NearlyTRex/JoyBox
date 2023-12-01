@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/ACA Neo Geo - Real Bout Fatal Fury 2 - The Newcomers (USA).exe"
+    ],
+    "transform_file": "ACA Neo Geo - Real Bout Fatal Fury 2 - The Newcomers (USA).exe"
+}

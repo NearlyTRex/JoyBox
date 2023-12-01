@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Guitar Fretter (USA).exe"
+    ],
+    "transform_file": "Guitar Fretter (USA).exe"
+}

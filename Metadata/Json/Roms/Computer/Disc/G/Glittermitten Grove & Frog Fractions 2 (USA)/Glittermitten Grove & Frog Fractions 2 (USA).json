@@ -1,0 +1,12 @@
+{
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT/GlittermittenGrove_windows_v131.zip",
+                "to": "$HDD_MAIN_ROOT/GlittermittenGrove_windows_v131",
+                "type": "extract"
+            }
+        ]
+    },
+    "transform_file": "Glittermitten Grove & Frog Fractions 2 (USA).chd"
+}

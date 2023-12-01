@@ -1,0 +1,882 @@
+collection: Nintendo Gamecube
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Gamecube" {file.path}
+
+
+game: 007 - Agent Under Fire (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/007 - Agent Under Fire (USA)/007 - Agent Under Fire (USA).json
+developer: EA Redwood Shores
+publisher: Electronic Arts
+genre: Shooter
+description:
+  007: Agent Under Fire is the first James Bond game to appear on the PlayStation
+  2, GameCube, and Xbox. The game casts the player as the legendary James Bond who
+  must accomplish missions throughout different areas of the world. Bond is sent
+  on a mission rescue Zoe Nightshade, a CIA agent in the hands of Nigel Bloch.
+  Nigel Bloch is the CEO of Identicon, a section of a highly successful industry
+  company known as Malprave industries. Bond is also tasked to retrieve the set of
+  DNA samples that are in Identicon's hands. So James Bond sets off on another
+  adventure...
+  .
+  The game combines three game modes into one package: first-person-shooter, which
+  is what most of the missions are, a rail-shooter, where the player only controls
+  firing, and a driving game, where the player drives one of the many Bond cars.
+  Numerous weapons have been added to the series, along with some fictional
+  weapons like the Photon cannon and the 5-way grenade launcher. The player can
+  utilize a wide array of gadgets and weapons, like the Q-Claw, Q-Decoder, and
+  Bond's trusty Walther handgun. There is a large variety of missions, and Bond
+  can go through most missions with weapons, or take a stealthy approach. The
+  player is also rated in each level, based on score and difficulty level, and can
+  unlock new features for both single and multiplayer.
+release: 2002-03-13
+players: 4
+assets.boxfront: BoxFront/007 - Agent Under Fire (USA).jpg
+assets.boxback: BoxBack/007 - Agent Under Fire (USA).jpg
+assets.background: Background/007 - Agent Under Fire (USA).jpg
+assets.screenshot: Screenshot/007 - Agent Under Fire (USA).jpg
+assets.video: Video/007 - Agent Under Fire (USA).mp4
+x-co-op: No
+
+
+game: Chibi-Robo! Plug into Adventure! (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Chibi-Robo! Plug into Adventure! (USA)/Chibi-Robo! Plug into Adventure! (USA).json
+developer: Skip Ltd.
+publisher: Nintendo
+genre: Adventure;Platform
+description:
+  Like most families, the Sandersons bicker about money and cleaning. Unlike most
+  families, though, they also have robotic spiders, aliens, and talking toys to
+  worry about. Enter Chibi-Robo, a tiny robot programmed to spread happiness. Join
+  him on his quest to restore order to the Sanderson house and SAVE THE WORLD!
+release: 2006-02-26
+players: 1
+assets.boxfront: BoxFront/Chibi-Robo! Plug into Adventure! (USA).jpg
+assets.boxback: BoxBack/Chibi-Robo! Plug into Adventure! (USA).jpg
+assets.background: Background/Chibi-Robo! Plug into Adventure! (USA).jpg
+assets.screenshot: Screenshot/Chibi-Robo! Plug into Adventure! (USA).jpg
+assets.video: Video/Chibi-Robo! Plug into Adventure! (USA).mp4
+x-co-op: No
+
+
+game: Darkened Skye (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Darkened Skye (USA)/Darkened Skye (USA).json
+developer: Boston Animation
+publisher: Simon & Schuster Interactive
+genre: Action;Adventure;Role-Playing
+description:
+  In the action-oriented 3D role-playing game Darkened Skye, the player takes the
+  role of the title character and embarks on a quest to collect four prisms that
+  may help bring the light of goodness back to the world. Skye of Lynlora was just
+  a restless shepherd when she first came across the strange item that would
+  change her life forever. Now she has opened a portal to another place and chaos
+  has come forth. Only Skye can set things right once again. She will face an
+  assortment of fantasy characters and creatures in her journeys as she makes her
+  way through 30 missions set across five different game worlds. It is notable
+  that, like some other releases from publisher Simon and Schuster (including the
+  Boston Animation-developed M&M's: The Lost Formulas), this game features
+  prominent product placement in the form of Skittles brand fruit-flavored
+  candies. Indeed, it is the mystic power of Skittles that moves Skye through more
+  than one threatening game situation. In spite of any potential incongruities of
+  featuring a familiar consumer item in a fantasy world, Darkened Skye strives to
+  provide the graphical competence, engrossing story, and state-of-the-art play
+  that gamers expect from a major 2002 release. ~ T.J. Deci, All Game Guide
+release: 2002-11-16
+players: 1
+assets.boxfront: BoxFront/Darkened Skye (USA).jpg
+assets.boxback: BoxBack/Darkened Skye (USA).jpg
+assets.background: Background/Darkened Skye (USA).jpg
+assets.screenshot: Screenshot/Darkened Skye (USA).jpg
+assets.video: Video/Darkened Skye (USA).mp4
+x-co-op: No
+
+
+game: Donkey Kong Jungle Beat (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Donkey Kong Jungle Beat (USA)/Donkey Kong Jungle Beat (USA).json
+developer: Nintendo EAD Tokyo
+publisher: Nintendo
+genre: Adventure
+description:
+  Donkey Kong Jungle Beat is a Nintendo GameCube video game featuring the ape
+  Donkey Kong and played with the DK Bongos. It was released in Japan on December
+  16, 2004, in Europe on February 4, 2005, in North America on March 14, 2005, and
+  in Australia on March 17, 2005. In 2008 and 2009, the game was re-released in
+  the New Play Control! series of revamped Nintendo GameCube titles. The Wii
+  version of Donkey Kong Jungle Beat is somewhat changed from the original
+  GameCube version, including new levels, modifications of old levels, and
+  traditional controls that have the player use the analog stick to move and the A
+  button to jump, unlike the GameCube version which required the player to beat
+  the bongos to do both. This is the first game to be rated E10 by the ESRB.
+release: 2005-03-14
+players: 1
+assets.boxfront: BoxFront/Donkey Kong Jungle Beat (USA).jpg
+assets.boxback: BoxBack/Donkey Kong Jungle Beat (USA).jpg
+assets.background: Background/Donkey Kong Jungle Beat (USA).jpg
+assets.screenshot: Screenshot/Donkey Kong Jungle Beat (USA).jpg
+assets.video: Video/Donkey Kong Jungle Beat (USA).mp4
+x-co-op: No
+
+
+game: Eternal Darkness - Sanity's Requiem (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Eternal Darkness - Sanity's Requiem (USA)/Eternal Darkness - Sanity's Requiem (USA).json
+developer: Silicon Knights
+publisher: Nintendo
+genre: Action;Adventure;Horror
+description:
+  Eternal Darkness: Sanity's Requiem is a psychological horror action adventure,
+  released in 2002 by Nintendo for the Gamecube. It tells the stories of twelve
+  characters that span across the world and two millennia who have to deal with
+  ancient forces of evil which have been trying to manifest themselves in our
+  world. Chapters take place in Ancient Rome, Persia, the Middle East, and
+  modern-day Rhode Island. Throughout the game, the protagonists will have access
+  to several weapons appropriate for their era, from bastard sword & gladius to
+  flintlock pistol and shotgun.
+  .
+  The game features an involved Magic system, which allows different spells to be
+  created through the combination of runes. These spells can attack enemies,
+  dispel illusions, and heal both the body and items.
+  .
+  Eternal Darkness: Sanity's Requiem also has a unique feature called Sanity. If
+  an enemy sees a character, their Sanity meter drops. When Sanity gets low,
+  hallucinations begin to plague the character. Walls bleed, voices whisper from
+  nowhere, the camera gets disoriented. Sanity can be restored by dealing a
+  finishing move on a dying enemy, or with spells or some items.
+release: 2002-06-24
+players: 1
+assets.boxfront: BoxFront/Eternal Darkness - Sanity's Requiem (USA).jpg
+assets.boxback: BoxBack/Eternal Darkness - Sanity's Requiem (USA).jpg
+assets.background: Background/Eternal Darkness - Sanity's Requiem (USA).jpg
+assets.screenshot: Screenshot/Eternal Darkness - Sanity's Requiem (USA).jpg
+assets.video: Video/Eternal Darkness - Sanity's Requiem (USA).mp4
+x-co-op: No
+
+
+game: Final Fantasy - Crystal Chronicles (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Final Fantasy - Crystal Chronicles (USA)/Final Fantasy - Crystal Chronicles (USA).json
+developer: Square Enix
+publisher: Nintendo
+genre: Action;Role-Playing
+description:
+  Join a crystal caravan! A deadly miasma has swallowed the land, and it's up to
+  you to hold it at bay! Many dangers lie along your journey, but you need not
+  face them alone. Enlist your friends in a crystal caravan and make your mark
+  together in the Crystal Chronicles!
+release: 2004-02-09
+players: 4
+assets.boxfront: BoxFront/Final Fantasy - Crystal Chronicles (USA).jpg
+assets.boxback: BoxBack/Final Fantasy - Crystal Chronicles (USA).jpg
+assets.background: Background/Final Fantasy - Crystal Chronicles (USA).jpg
+assets.screenshot: Screenshot/Final Fantasy - Crystal Chronicles (USA).jpg
+assets.video: Video/Final Fantasy - Crystal Chronicles (USA).mp4
+x-co-op: Yes
+
+
+game: Geist (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Geist (USA)/Geist (USA).json
+developer: N-Space
+publisher: Nintendo
+genre: Action;Shooter
+description:
+  Take Possession! When a mission goes horribly wrong, you are captured and
+  subjected to a ghastly experiment that rips your spirit from your physical body.
+  Now you are trapped, forced to roam the halls of the shadowy Volks Corporation
+  as a spectral phantom. As you explore, employ you hair-raising power of
+  possession to control humans, animals and objects to infiltrate the compound,
+  solve puzzles, and strike at your enemies. Only by unearthing the dark secrets
+  of the Volks Corporation will you unravel the mystery of your condition and find
+  a way to recover your human form.
+release: 2005-08-15
+players: 1
+assets.boxfront: BoxFront/Geist (USA).jpg
+assets.boxback: BoxBack/Geist (USA).jpg
+assets.background: Background/Geist (USA).jpg
+assets.screenshot: Screenshot/Geist (USA).jpg
+assets.video: Video/Geist (USA).mp4
+x-co-op: No
+
+
+game: Legend of Zelda, The - Collector's Edition (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Legend of Zelda, The - Collector's Edition (USA)/Legend of Zelda, The - Collector's Edition (USA).json
+developer: Nintendo
+publisher: Nintendo
+genre: Adventure;Role-Playing
+description:
+  Receive Four Complete Classic Zelda games all on one disc when you buy the Zelda
+  GameCube Bundle: The Legend of Zelda, Zelda II - The adventure of Link, The
+  Legend of Zelda: Ocarina of Time, The Legend of Zelda: Majora's Mask. The disc
+  also includes: Playable Demo of the Legend of Zelda: The Wind Waker, Zelda
+  Retrospective Movie, The Legend of Zelda: The Wind Waker Movie Preview.
+release: 2003-11-17
+players: 1
+assets.boxfront: BoxFront/Legend of Zelda, The - Collector's Edition (USA).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Collector's Edition (USA).jpg
+assets.background: Background/Legend of Zelda, The - Collector's Edition (USA).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Collector's Edition (USA).jpg
+assets.video: Video/Legend of Zelda, The - Collector's Edition (USA).mp4
+x-co-op: No
+
+
+game: Legend of Zelda, The - Four Swords Adventures (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Legend of Zelda, The - Four Swords Adventures (USA)/Legend of Zelda, The - Four Swords Adventures (USA).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Adventure
+description:
+  The game begins with the land of Hyrule in a state of fear because of strange
+  happenings that have occurred recently. On a stormy night, Princess Zelda and
+  the shrine maidens fear that the reason for these events is that Vaati's seal is
+  weakening. She summons Link and brings him to the castle so he can protect her
+  and the other maidens while they open the portal to the Four Sword Sanctuary.
+  When they do, however, a shadowy figure appears from the portal. This figure was
+  Shadow Link, who then kidnapped the shrine maidens and sealed them in crystals.
+  Link follows him to the sanctuary where he retrieves the Four Sword to destroy
+  this doppelganger. The Four Sword is a magical sword that splits the wielder
+  into three clones of himself. Vaati is once again released and wreaks havoc on
+  the once peaceful kingdom.
+release: 2004-06-07
+players: 4
+assets.boxfront: BoxFront/Legend of Zelda, The - Four Swords Adventures (USA).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Four Swords Adventures (USA).jpg
+assets.background: Background/Legend of Zelda, The - Four Swords Adventures (USA).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Four Swords Adventures (USA).jpg
+assets.video: Video/Legend of Zelda, The - Four Swords Adventures (USA).mp4
+x-co-op: Yes
+
+
+game: Legend of Zelda, The - Ocarina of Time & Master Quest (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Legend of Zelda, The - Ocarina of Time & Master Quest (USA)/Legend of Zelda, The - Ocarina of Time & Master Quest (USA).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Adventure;Role-Playing
+description:
+  Originally released as a bonus disk for those who pre-ordered The Legend of
+  Zelda: Wind Waker, The Legend of Zelda: Ocarina of Time / Master Quest contains
+  GCN versions of Ocarina of Time and the never-released 64DD Ura Zelda (a remixed
+  version of Ocarina of Time with harder dungeons ... Only true heroes will make
+  it through this quest alive!).
+  .
+  Fans of Nintendo's acclaimed series can play both of these games on their
+  GameCubes, and enjoy a few technical improvements over the N64 versions, namely
+  a higher 640x480 resolution, Dolby Pro-Logic surround sound support, and 480p
+  Progressive Scan support. Veterans and newcomers alike will find something to
+  enjoy with this excellent port of the classic N64 game.
+release: 2003-02-17
+players: 1
+assets.boxfront: BoxFront/Legend of Zelda, The - Ocarina of Time & Master Quest (USA).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Ocarina of Time & Master Quest (USA).jpg
+assets.background: Background/Legend of Zelda, The - Ocarina of Time & Master Quest (USA).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Ocarina of Time & Master Quest (USA).jpg
+assets.video: Video/Legend of Zelda, The - Ocarina of Time & Master Quest (USA).mp4
+x-co-op: No
+
+
+game: Legend of Zelda, The - The Wind Waker (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Legend of Zelda, The - The Wind Waker (USA)/Legend of Zelda, The - The Wind Waker (USA).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Action;Adventure
+description:
+  The game is set on a group of islands in a vast sea—a first for the series. The
+  player controls Link, the protagonist of the Zelda series. He struggles against
+  his nemesis, Ganondorf, for control of a sacred relic known as the Triforce.
+  Link spends a large portion of the game sailing, traveling between islands, and
+  traversing through dungeons and temples to gain the power necessary to defeat
+  Ganondorf. He also spends time trying to find his little sister.\n
+  The Wind Waker follows in the footsteps of Ocarina of Time and its sequel
+  Majora's Mask, retaining the basic gameplay and control system from the two
+  Nintendo 64 titles. A heavy emphasis is placed on using and controlling wind
+  with a baton called the Wind Waker, which aids sailing and floating in air.
+  Controversial during development for its use of cel shading graphics and younger
+  Link character, The Wind Waker received acclaim on release and is one of the
+  Nintendo GameCube's most popular games.
+release: 2003-03-24
+players: 2
+assets.boxfront: BoxFront/Legend of Zelda, The - The Wind Waker (USA).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - The Wind Waker (USA).jpg
+assets.background: Background/Legend of Zelda, The - The Wind Waker (USA).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - The Wind Waker (USA).jpg
+assets.video: Video/Legend of Zelda, The - The Wind Waker (USA).mp4
+x-co-op: Yes
+
+
+game: Legend of Zelda, The - Twilight Princess (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Legend of Zelda, The - Twilight Princess (USA)/Legend of Zelda, The - Twilight Princess (USA).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action;Adventure
+description:
+  In the next chapter in the Legend of Zelda series, Link can transform into a
+  wolf to scour the darkened land of Hyrule. With the help of Midna, a mysterious
+  being, you must guide Link through hordes of foul creatures and challenging
+  bosses using new moves and a new horseback combat system. Many puzzles stand
+  between Link and the fulfillment of his quest, so you must sharpen your wits as
+  you hunt for weapons and items.
+release: 2006-12-11
+players: 1
+assets.boxfront: BoxFront/Legend of Zelda, The - Twilight Princess (USA).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Twilight Princess (USA).jpg
+assets.background: Background/Legend of Zelda, The - Twilight Princess (USA).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Twilight Princess (USA).jpg
+assets.video: Video/Legend of Zelda, The - Twilight Princess (USA).mp4
+x-co-op: No
+
+
+game: Mega Man - Network Transmission (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Mega Man - Network Transmission (USA)/Mega Man - Network Transmission (USA).json
+developer: Arika
+publisher: Capcom
+genre: Action;Platform;Role-Playing
+description:
+  Based between the events of the Game Boy Advance titles, Mega Man Battle Network
+  1 and 2, Lan and the virtual friend Mega Man are out to stop an evil virus, code
+  names 'Zero' from destroying Cyberspace.
+  .
+  Guide Mega Man through each side-scrolling level, hacking into Cyberspace and
+  killing off the elements of the virus. Choose from a range of weapons loaded on
+  battle chips, which can be selected and downloaded once found. Each chip
+  provides a new weapons or defense option for Mega Man.
+  .
+  Boss battles at the end of certain levels, and puzzle elements through-out, add
+  to the adventure, while Mega Man's strengths can be improved upon RPG style
+  during play.
+release: 2003-06-17
+players: 1
+assets.boxfront: BoxFront/Mega Man - Network Transmission (USA).jpg
+assets.boxback: BoxBack/Mega Man - Network Transmission (USA).jpg
+assets.background: Background/Mega Man - Network Transmission (USA).jpg
+assets.screenshot: Screenshot/Mega Man - Network Transmission (USA).jpg
+assets.video: Video/Mega Man - Network Transmission (USA).mp4
+x-co-op: No
+
+
+game: P.N. 03 (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/P.N. 03 (USA)/P.N. 03 (USA).json
+developer: Capcom Production Studio 4
+publisher: Capcom
+genre: Action;Shooter
+description:
+  Third-person action shooter from Capcom, featuring robot hunter heroine Vanessa
+  Z. Schneider. This beautiful mercenary for hire with a mysterious past is called
+  in to take care of an off-world colony overrun by a Computer Arms Management
+  System (or CAMS) gone completely haywire. Gameplay exists of run-and-stop
+  shooting action with a rhythm twist, as Vanessa explores 11 linear levels. She
+  can shoot single blasts from her hands or take on multiple enemies at once
+  utilizing a number of combos, which are tied to the nine upgradable suits found
+  in the game. Produced by Shinji Mikami.
+release: 2003-09-09
+players: 1
+assets.boxfront: BoxFront/P.N. 03 (USA).jpg
+assets.boxback: BoxBack/P.N. 03 (USA).jpg
+assets.background: Background/P.N. 03 (USA).jpg
+assets.screenshot: Screenshot/P.N. 03 (USA).jpg
+assets.video: Video/P.N. 03 (USA).mp4
+x-co-op: No
+
+
+game: Pac-Man Vs. (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Pac-Man Vs. (USA)/Pac-Man Vs. (USA).json
+developer: Nintendo EAD
+publisher: Namco
+genre: Action
+description:
+  Pac-Man Vs. is a Pac-Man video game originally designed exclusively for the
+  Nintendo GameCube that was included as an extra bonus disc with the Player's
+  Choice edition of Pac-Man World 2.
+release: 2003-11-27
+players: 4
+assets.boxfront: BoxFront/Pac-Man Vs. (USA).jpg
+assets.boxback: BoxBack/Pac-Man Vs. (USA).jpg
+assets.background: Background/Pac-Man Vs. (USA).jpg
+assets.screenshot: Screenshot/Pac-Man Vs. (USA).jpg
+assets.video: Video/Pac-Man Vs. (USA).mp4
+x-co-op: No
+
+
+game: Paper Mario - The Thousand-Year Door (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Paper Mario - The Thousand-Year Door (USA)/Paper Mario - The Thousand-Year Door (USA).json
+developer: Intelligent Systems
+publisher: Nintendo
+genre: Adventure;Role-Playing
+description:
+  What sleeps behind the door? Time passes, pages turn... and a new chapter
+  unfolds in an unfamiliar land! Get ready for a two-dimensional role-playing
+  adventure for the ages as Mario returns to paper form to discover a mystery that
+  sleeps behind an ancient, legendary portal called The Thousand-Year Door. The
+  quest is long, the dangers many, and this time, Mario will have to make full use
+  of his papery qualities just to survive!
+release: 2004-10-11
+players: 1
+assets.boxfront: BoxFront/Paper Mario - The Thousand-Year Door (USA).jpg
+assets.boxback: BoxBack/Paper Mario - The Thousand-Year Door (USA).jpg
+assets.background: Background/Paper Mario - The Thousand-Year Door (USA).jpg
+assets.screenshot: Screenshot/Paper Mario - The Thousand-Year Door (USA).jpg
+assets.video: Video/Paper Mario - The Thousand-Year Door (USA).mp4
+x-co-op: No
+
+
+game: Phantasy Star Online Episode I & II (USA) (En,Ja,Fr,De,Es) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Phantasy Star Online Episode I & II (USA) (En,Ja,Fr,De,Es) (Rev 1)/Phantasy Star Online Episode I & II (USA) (En,Ja,Fr,De,Es) (Rev 1).json
+developer: Sonic Team
+publisher: Sega
+genre: Role-Playing
+description:
+  The Phantasy Star adventure that began on the PC now comes to your GameCube with
+  new gaming modes and new content. Phantasy Star Online I & II features new
+  character classes, weapons, enemies, items, and quests. A new split-screen
+  feature allows three of your friends to join you on your adventure, as well as
+  in other game modes, on the same console. Episode I includes all of the content
+  from the original PSO and PSO Version 2, while Episode II brings a new,
+  full-length adventure.
+release: 2002-10-24
+players: 4
+assets.boxfront: BoxFront/Phantasy Star Online Episode I & II (USA) (En,Ja,Fr,De,Es) (Rev 1).jpg
+assets.boxback: BoxBack/Phantasy Star Online Episode I & II (USA) (En,Ja,Fr,De,Es) (Rev 1).jpg
+assets.background: Background/Phantasy Star Online Episode I & II (USA) (En,Ja,Fr,De,Es) (Rev 1).jpg
+assets.screenshot: Screenshot/Phantasy Star Online Episode I & II (USA) (En,Ja,Fr,De,Es) (Rev 1).jpg
+assets.video: Video/Phantasy Star Online Episode I & II (USA) (En,Ja,Fr,De,Es) (Rev 1).mp4
+x-co-op: Yes
+
+
+game: Phantasy Star Online Episode III - C.A.R.D. Revolution (USA) (En,Ja)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Phantasy Star Online Episode III - C.A.R.D. Revolution (USA) (En,Ja)/Phantasy Star Online Episode III - C.A.R.D. Revolution (USA) (En,Ja).json
+developer: Sonic Team
+publisher: Sega
+genre: Action;Adventure;Role-Playing
+description:
+  A strangely powerful Photon-like substance found on Planet Ragol has spurred a
+  raging battle between the Hunters and a rebel team called the Arkz. The prized
+  matter known as "The Germ" has unique replicating powers and can be sealed in
+  small playing-card-sized packets. Warriors carrying a deck of the sought-after
+  cards can then bring unprecedented amounts of destructive weapons and creatures
+  into battle. Fight with the Hero Hunters or on the rebels' Dark Side and stack
+  your decks accordingly. You'll compose several powerful decks from nearly 500
+  cards featuring fighting moves, weapons, and PSO creatures.
+release: 2004-03-02
+players: 4
+assets.boxfront: BoxFront/Phantasy Star Online Episode III - C.A.R.D. Revolution (USA) (En,Ja).jpg
+assets.boxback: BoxBack/Phantasy Star Online Episode III - C.A.R.D. Revolution (USA) (En,Ja).jpg
+assets.background: Background/Phantasy Star Online Episode III - C.A.R.D. Revolution (USA) (En,Ja).jpg
+assets.screenshot: Screenshot/Phantasy Star Online Episode III - C.A.R.D. Revolution (USA) (En,Ja).jpg
+assets.video: Video/Phantasy Star Online Episode III - C.A.R.D. Revolution (USA) (En,Ja).mp4
+x-co-op: Yes
+
+
+game: Resident Evil (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Resident Evil (USA)/Resident Evil (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Horror
+description:
+  Turn out the lights. Lock the Doors... Live the nightmare.
+  .
+  Racoon City. Secluded mountain community, plagued by a storm of vicious attacks,
+  is completely overrun. Mutant beasts, blood-thirsty zombies infest the
+  landscape. You are S.T.A.R.S - Special Tactics and Rescue Squad. Your mission:
+  investigate the ominous mansion at the core of the horrific disaster. Uncover
+  secrets behind a radical, genetic research facility. With unspeakable horrors
+  lurking around every corner, the ultimate test may be just to make it out alive!
+release: 2002-04-30
+players: 1
+assets.boxfront: BoxFront/Resident Evil (USA).jpg
+assets.boxback: BoxBack/Resident Evil (USA).jpg
+assets.background: Background/Resident Evil (USA).jpg
+assets.screenshot: Screenshot/Resident Evil (USA).jpg
+assets.video: Video/Resident Evil (USA).mp4
+x-co-op: No
+
+
+game: Resident Evil - Code - Veronica X (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Resident Evil - Code - Veronica X (USA)/Resident Evil - Code - Veronica X (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Adventure;Horror
+description:
+  Experience another terrifying chapter in the Resident Evil series with Resident
+  Evil: Code Veronica X. After narrowly surviving the horrific onslaught in
+  Raccoon City, Claire Redfield now seeks clues in search of her missing brother,
+  Chris. Join Claire as she uncovers the insidious activities of the Umbrella
+  Corporation. Avoid or eliminate flesh-eating zombies and horrific beasts. Use a
+  variety weapons, items, and clues scattered around Raccoon City to help you
+  survive the nightmare and make sure the virus doesn't spread any farther.
+release: 2003-08-07
+players: 1
+assets.boxfront: BoxFront/Resident Evil - Code - Veronica X (USA).jpg
+assets.boxback: BoxBack/Resident Evil - Code - Veronica X (USA).jpg
+assets.background: Background/Resident Evil - Code - Veronica X (USA).jpg
+assets.screenshot: Screenshot/Resident Evil - Code - Veronica X (USA).jpg
+assets.video: Video/Resident Evil - Code - Veronica X (USA).mp4
+x-co-op: No
+
+
+game: Resident Evil 2 (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Resident Evil 2 (USA)/Resident Evil 2 (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Horror
+description:
+  Capcom presents the sequel to the ultimate survival horror series with Resident
+  Evil® 2 for the NINTENDO GAMECUBE™ system. In chapter 1, the case of the
+  disastrous T-virus outbreak (a mutagenic toxin for biological weapon use) was
+  eventually closed but the experiments were far from over. Now a new virus runs
+  rampant! Control the destiny of Leon Kennedy and Claire Redfield as their
+  nightmare begins when a new disaster unleashes itself in Raccoon City.\n
+  • 2 separate adventures: Play as Leon or Claire in an all out struggle for
+  survival\n
+  • Loaded with hidden items and vital information about the Resident Evil saga\n
+  • Discover hidden game modes - the panic struck '4th survivor' mode or as the
+  hidden character, Tofu\n
+  • Adjust the intensity of the game according to player's skill and experience
+release: 2003-01-15
+players: 1
+assets.boxfront: BoxFront/Resident Evil 2 (USA).jpg
+assets.boxback: BoxBack/Resident Evil 2 (USA).jpg
+assets.background: Background/Resident Evil 2 (USA).jpg
+assets.screenshot: Screenshot/Resident Evil 2 (USA).jpg
+assets.video: Video/Resident Evil 2 (USA).mp4
+x-co-op: No
+
+
+game: Resident Evil 3 - Nemesis (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Resident Evil 3 - Nemesis (USA)/Resident Evil 3 - Nemesis (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Adventure
+description:
+  The first half of the game occurs 24 hours prior to Resident Evil 2 and the
+  second half takes place two days after. The storyline expands upon the settings
+  and events of the T-virus outbreak in Raccoon City, and concludes with the fate
+  of the city and its infected population.
+release: 2003-01-23
+players: 1
+assets.boxfront: BoxFront/Resident Evil 3 - Nemesis (USA).jpg
+assets.boxback: BoxBack/Resident Evil 3 - Nemesis (USA).jpg
+assets.background: Background/Resident Evil 3 - Nemesis (USA).jpg
+assets.screenshot: Screenshot/Resident Evil 3 - Nemesis (USA).jpg
+assets.video: Video/Resident Evil 3 - Nemesis (USA).mp4
+x-co-op: No
+
+
+game: Resident Evil 4 (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Resident Evil 4 (USA)/Resident Evil 4 (USA).json
+developer: Capcom Production Studio 4
+publisher: Capcom
+genre: Action;Horror;Shooter
+description:
+  U.S. agent Leon Kennedy has been tasked to look into the abduction of the
+  President's daughter and his investigation has led him to a mysterious location
+  in Europe. As Leon encounters unimaginable horrors, he must find out what is
+  behind the terror.
+release: 2005-01-11
+players: 1
+assets.boxfront: BoxFront/Resident Evil 4 (USA).jpg
+assets.boxback: BoxBack/Resident Evil 4 (USA).jpg
+assets.background: Background/Resident Evil 4 (USA).jpg
+assets.screenshot: Screenshot/Resident Evil 4 (USA).jpg
+assets.video: Video/Resident Evil 4 (USA).mp4
+x-co-op: No
+
+
+game: Resident Evil Zero (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Resident Evil Zero (USA)/Resident Evil Zero (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Adventure;Horror
+description:
+  The game's storyline serves as a prequel to Resident Evil, covering Rebecca
+  Chambers' ordeal a day prior.
+  .
+  On July 23, 1998, special police STARS Bravo team is sent in to investigate a
+  series of grisly murders in the Arklay Mountains region outside of Raccoon City.
+  On the way to the scene, Bravo's helicopter malfunctions and is forced to crash
+  land in the forest. The team soon discover an overturned military police
+  transport truck, along with the mutilated corpses of two officers. The team
+  split up and Bravo team's field medic, Rebecca Chambers, finds a train stopped
+  in the middle of the forest.\n
+  Rebecca soon discovers that the train, the Ecliptic Express, is infested with
+  zombies.
+release: 2002-11-12
+players: 1
+assets.boxfront: BoxFront/Resident Evil Zero (USA).jpg
+assets.boxback: BoxBack/Resident Evil Zero (USA).jpg
+assets.background: Background/Resident Evil Zero (USA).jpg
+assets.screenshot: Screenshot/Resident Evil Zero (USA).jpg
+assets.video: Video/Resident Evil Zero (USA).mp4
+x-co-op: No
+
+
+game: Shadow The Hedgehog (USA) (En,Ja,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Shadow The Hedgehog (USA) (En,Ja,Fr,De,Es,It)/Shadow The Hedgehog (USA) (En,Ja,Fr,De,Es,It).json
+developer: Sonic Team
+publisher: Sega
+genre: Adventure;Platform;Shooter
+description:
+  The world is in peril as forces, both good and evil, make a play for the
+  powerful Chaos Emeralds. In Shadow the Hedgehog, you can control Shadow and
+  choose which side to fight for. This 3D platformer lets you use weapons,
+  vehicles, environmental objects, and time and space manipulation to combat your
+  foes.
+release: 2005-11-15
+players: 1
+assets.boxfront: BoxFront/Shadow The Hedgehog (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Shadow The Hedgehog (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.background: Background/Shadow The Hedgehog (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Shadow The Hedgehog (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.video: Video/Shadow The Hedgehog (USA) (En,Ja,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Skies of Arcadia Legends (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Skies of Arcadia Legends (USA)/Skies of Arcadia Legends (USA).json
+developer: Overworks
+publisher: Sega
+genre: Action;Adventure;Role-Playing
+description:
+  Grasp the wheel of your air-ship and prepare to embark on a legendary adventure.
+  You are Vyse, a young member of the Blue Rogue pirates. Together with your
+  childhood friend Aika and Fina, a mysterious girl, you are locked in an epic
+  struggle with a powerful enemy nation for the fate of the world. You must gather
+  your own crew of air pirates and journey through uncharted skies to vanquish the
+  empire from every corner of the map. Along the way, you'll wage battles against
+  savage monsters and evil pirates as you make a name for yourself on land and in
+  the sky.
+release: 2003-01-27
+players: 1
+assets.boxfront: BoxFront/Skies of Arcadia Legends (USA).jpg
+assets.boxback: BoxBack/Skies of Arcadia Legends (USA).jpg
+assets.background: Background/Skies of Arcadia Legends (USA).jpg
+assets.screenshot: Screenshot/Skies of Arcadia Legends (USA).jpg
+assets.video: Video/Skies of Arcadia Legends (USA).mp4
+x-co-op: No
+
+
+game: Sonic Adventure 2 - Battle (USA) (En,Ja,Fr,De,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Sonic Adventure 2 - Battle (USA) (En,Ja,Fr,De,Es)/Sonic Adventure 2 - Battle (USA) (En,Ja,Fr,De,Es).json
+developer: Sonic Team
+publisher: Sega
+genre: Action;Adventure;Platform
+description:
+  Sonic and company are back and better than ever in Sonic Adventure 2: Battle for
+  Nintendo GameCube. Dr. Eggman is up to his old tricks, and it's up to Sonic,
+  Tails, and Knuckles to stop him yet again. Sonic Adventure 2: Battle features
+  faster action, all-new two-player games, and a branching storyline that lets you
+  choose to save the world as the Hero side, or conquer it as the Dark side.
+  .
+  Two new playable characters enter the Sonic universe -- a mysterious dark
+  hedgehog called Shadow, and a jewel-thieving bat named Rouge. In the
+  single-player mode, you'll go through more than 30 unique stages, which include
+  everything from a forgotten pyramid, an abandoned military base, and a giant
+  space station. Then there's the expanded two-player mode, which features 12
+  playable characters competing in new head-to-head games. All of this adds up to
+  Sonic's biggest adventure yet!
+release: 2001-12-20
+players: 2
+assets.boxfront: BoxFront/Sonic Adventure 2 - Battle (USA) (En,Ja,Fr,De,Es).jpg
+assets.boxback: BoxBack/Sonic Adventure 2 - Battle (USA) (En,Ja,Fr,De,Es).jpg
+assets.background: Background/Sonic Adventure 2 - Battle (USA) (En,Ja,Fr,De,Es).jpg
+assets.screenshot: Screenshot/Sonic Adventure 2 - Battle (USA) (En,Ja,Fr,De,Es).jpg
+assets.video: Video/Sonic Adventure 2 - Battle (USA) (En,Ja,Fr,De,Es).mp4
+x-co-op: No
+
+
+game: Sonic Adventure DX - Director's Cut (USA) (En,Ja,Fr,De,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Sonic Adventure DX - Director's Cut (USA) (En,Ja,Fr,De,Es)/Sonic Adventure DX - Director's Cut (USA) (En,Ja,Fr,De,Es).json
+developer: Sonic Team
+publisher: Sega
+genre: Adventure;Platform
+description:
+  Sonic makes a speedy return in Sonic Adventure DX, which features new missions
+  and gameplay modes. This time, Sonic must enlist the help of his friends to foil
+  the evil Dr. Robotnik's plan to destroy Station Square and replace it with
+  Robotnickland. As one of six playable characters, each with unique skills and
+  abilities, you'll speed through 50 expansive levels, bonus rounds, bosses, and
+  minigames. In your missions, you can collect objects, capture villains, and race
+  a track to collect hidden items.
+release: 2003-06-17
+players: 1
+assets.boxfront: BoxFront/Sonic Adventure DX - Director's Cut (USA) (En,Ja,Fr,De,Es).jpg
+assets.boxback: BoxBack/Sonic Adventure DX - Director's Cut (USA) (En,Ja,Fr,De,Es).jpg
+assets.background: Background/Sonic Adventure DX - Director's Cut (USA) (En,Ja,Fr,De,Es).jpg
+assets.screenshot: Screenshot/Sonic Adventure DX - Director's Cut (USA) (En,Ja,Fr,De,Es).jpg
+assets.video: Video/Sonic Adventure DX - Director's Cut (USA) (En,Ja,Fr,De,Es).mp4
+x-co-op: No
+
+
+game: Sonic Gems Collection (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Sonic Gems Collection (USA)/Sonic Gems Collection (USA).json
+developer: Sonic Team
+publisher: Sega
+genre: Action;Fighting;Platform;Racing
+description:
+  Sonic Gems Collection is a compilation presented in a similar style to the prior
+  collection in the Sonic series, Sonic Mega Collection. However, as its name
+  suggests, Gems Collection contains more rare and obscure games from the Sonic
+  series. The main games included are Sonic CD, Sonic R, and Sonic the Fighters.
+  Several Sonic Game Gear games are also included. The Japanese version contains
+  the Streets of Rage trilogy but the North American release replaces these with
+  the two Vectorman games to prevent the game being given a harsher rating. Also
+  included is an "Extras" feature where players can look at illustrations and
+  promotional material for the Sonic games and play demos of some of the Sonic
+  games featured in Mega Collection.
+release: 2005-08-16
+players: 2
+assets.boxfront: BoxFront/Sonic Gems Collection (USA).jpg
+assets.boxback: BoxBack/Sonic Gems Collection (USA).jpg
+assets.background: Background/Sonic Gems Collection (USA).jpg
+assets.screenshot: Screenshot/Sonic Gems Collection (USA).jpg
+assets.video: Video/Sonic Gems Collection (USA).mp4
+x-co-op: Yes
+
+
+game: Sonic Heroes (USA) (En,Ja,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Sonic Heroes (USA) (En,Ja,Fr,De,Es,It)/Sonic Heroes (USA) (En,Ja,Fr,De,Es,It).json
+developer: Sonic Team
+publisher: Sega
+genre: Platform
+description:
+  Sonic & the gang are back in their latest game, SONIC HEROES. Coming out on the
+  Gamecube and for the first time on Playstation 2, Xbox, and PC! Sonic Heroes has
+  a new twist to the gameplay allowing you to choose a team of 3 characters with
+  different strengths. There are 4 teams to choose from: TEAM SONIC - Sonic,
+  Tails, & Knuckles, TEAM DARK - Shadow, Rouge, & E-123 Omega, TEAM CHAOTIX -
+  Espio, Vector, &, Charmy Bee, and TEAM ROSE - Amy, Big, & Cream with her Chao
+  sidekick Cheese. There are 4 modes, Story mode, Challenge mode, Tutorial modes,
+  & the new & improved battle mode for multiplayer fun. On top of that there are
+  plenty of secrets to unlock.
+release: 2004-01-05
+players: 2
+assets.boxfront: BoxFront/Sonic Heroes (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Sonic Heroes (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.background: Background/Sonic Heroes (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Sonic Heroes (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.video: Video/Sonic Heroes (USA) (En,Ja,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Sonic Riders (USA) (En,Ja,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Sonic Riders (USA) (En,Ja,Fr,De,Es,It)/Sonic Riders (USA) (En,Ja,Fr,De,Es,It).json
+developer: Sonic Team
+publisher: Sega
+genre: Racing
+description:
+  The Sonic series takes to the track in the combat racing game, Sonic Riders. Dr.
+  Eggman has challenged Sonic and friends to race in his World Grand Prix, and you
+  can enter the event and try to unravel his mysterious plot. The races happen on
+  floating boards and include tricks, fighting, and racing. You can customize your
+  character with upgraded equipment as you race down 13 different tracks through a
+  handful of game modes. You can also challenge three of your friends to
+  multiplayer races.
+release: 2006-02-21
+players: 4
+assets.boxfront: BoxFront/Sonic Riders (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Sonic Riders (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.background: Background/Sonic Riders (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Sonic Riders (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.video: Video/Sonic Riders (USA) (En,Ja,Fr,De,Es,It).mp4
+x-co-op: Yes
+
+
+game: Soulcalibur II (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Soulcalibur II (USA)/Soulcalibur II (USA).json
+developer: Project Soul
+publisher: Namco
+genre: Fighting
+description:
+  Transcending history and the world, a tale of souls and swords eternally retold.
+  .
+  Four years have passed since the spirit sword, Soulcalibur defeated the evil
+  Soul Edge. At the end of that fateful battle, the shards of the shattered Soul
+  Edge were scattered across the world and Soulclibur was lost to the void. Now,
+  the evil that still resides in the scattered shards of Soul Edge threatens again
+  to engulf the world in darkness.
+  .
+  Guest starring exclusively for the Nintendo Gamecube: Link from the Legend of
+  Zelda.
+release: 2003-08-27
+players: 2
+assets.boxfront: BoxFront/Soulcalibur II (USA).jpg
+assets.boxback: BoxBack/Soulcalibur II (USA).jpg
+assets.background: Background/Soulcalibur II (USA).jpg
+assets.screenshot: Screenshot/Soulcalibur II (USA).jpg
+assets.video: Video/Soulcalibur II (USA).mp4
+x-co-op: No
+
+
+game: Super Mario Sunshine (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Super Mario Sunshine (USA)/Super Mario Sunshine (USA).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Action;Adventure;Platform
+description:
+  When Mario, Peach, and an entourage of Peach's loyal Toad friends set out for a
+  tropical vacation on lovely Isle Delfino, they're in store for much more than a
+  relaxing holiday. A mustachioed maniac has mucked up the entire island, and
+  Mario is accused of committing the crime. Armed with a hi-tech water cannon
+  called FLUDD (Flash Liquidizer Ultra Dousing Device), Mario sets out to clean
+  the island, clear his name, and solve the mystery of the villainous vandal. With
+  new enemies, moves, and surprises, Super Mario Sunshine offers plenty of
+  challenges.
+release: 2002-08-26
+players: 1
+assets.boxfront: BoxFront/Super Mario Sunshine (USA).jpg
+assets.boxback: BoxBack/Super Mario Sunshine (USA).jpg
+assets.background: Background/Super Mario Sunshine (USA).jpg
+assets.screenshot: Screenshot/Super Mario Sunshine (USA).jpg
+assets.video: Video/Super Mario Sunshine (USA).mp4
+x-co-op: No
+
+
+game: Super Smash Bros. Melee (USA) (En,Ja) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/Super Smash Bros. Melee (USA) (En,Ja) (Rev 1)/Super Smash Bros. Melee (USA) (En,Ja) (Rev 1).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Action;Fighting
+description:
+  Super Smash Bros. Melee differs from traditional fighting games in that
+  inflicting the most damage does not guarantee victory. Instead, opposing players
+  must force their opponents beyond the boundaries of the stage. Most attacks
+  inflict damage and can, if enough damage is dealt, knock back the enemy. Each
+  character's health is measured by a meter that represents the damage received as
+  a percentage. The higher the percentage value, the farther the player gets
+  knocked back, and the easier they are to knock off the stage. Unlike other games
+  of the same genre, in which moves are entered by button-input combinations, most
+  moves in Super Smash Bros. Melee can be accessed via one-button presses and a
+  joystick direction.
+release: 2001-12-03
+players: 4
+assets.boxfront: BoxFront/Super Smash Bros. Melee (USA) (En,Ja) (Rev 1).jpg
+assets.boxback: BoxBack/Super Smash Bros. Melee (USA) (En,Ja) (Rev 1).jpg
+assets.background: Background/Super Smash Bros. Melee (USA) (En,Ja) (Rev 1).jpg
+assets.screenshot: Screenshot/Super Smash Bros. Melee (USA) (En,Ja) (Rev 1).jpg
+assets.video: Video/Super Smash Bros. Melee (USA) (En,Ja) (Rev 1).mp4
+x-co-op: Yes
+
+
+game: WarioWare, Inc. - Mega Party Games! (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Gamecube/WarioWare, Inc. - Mega Party Games! (USA)/WarioWare, Inc. - Mega Party Games! (USA).json
+developer: Nintendo R&D1
+publisher: Nintendo
+genre: Action
+description:
+  Following the almost universally acclaimed short-attention-span action of the
+  Game Boy Advance's WarioWare, Inc.: Mega Microgame$! comes this party-game
+  adaptation for GameCube. Many of the mini-games featured in the handheld
+  original have been converted for four-player competition on the console. Gamers
+  strive to be the quickest teeth-brushers, the most precise nose pickers, the
+  best free-throwers, the most accurate apple shooters, the most skillful
+  paper-airplane pilots, and the victors in countless other quick contests that
+  take no more than a few seconds to complete.
+  .
+  As in the GBA original, a wide variety of activities combine with a simple,
+  unifying theme, for an experience designed to appeal instantly to anyone who
+  played video games in the days before 3D graphics and complicated storylines.
+  Half the fun is in not knowing which five-second challenge will pop up next, or
+  what the player will be required to do in it. Even when players aren't in
+  control of the active character, some of the mini-games allow them to
+  participate in a more passive fashion, adding to the group-oriented strategy.
+release: 2004-04-06
+players: 4
+assets.boxfront: BoxFront/WarioWare, Inc. - Mega Party Games! (USA).jpg
+assets.boxback: BoxBack/WarioWare, Inc. - Mega Party Games! (USA).jpg
+assets.background: Background/WarioWare, Inc. - Mega Party Games! (USA).jpg
+assets.screenshot: Screenshot/WarioWare, Inc. - Mega Party Games! (USA).jpg
+x-co-op: No
+
+

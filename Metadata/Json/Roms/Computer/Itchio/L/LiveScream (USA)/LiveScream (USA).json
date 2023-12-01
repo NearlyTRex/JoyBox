@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/LiveScream (USA).exe"
+    ],
+    "transform_file": "LiveScream (USA).exe"
+}

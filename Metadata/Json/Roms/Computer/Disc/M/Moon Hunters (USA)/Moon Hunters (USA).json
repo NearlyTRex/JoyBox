@@ -1,0 +1,18 @@
+{
+    "main_game_exe": [
+        "MoonHunters/moonhunters.exe"
+    ],
+    "main_game_exe_cwd": {
+        "MoonHunters/moonhunters.exe": "MoonHunters"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT/Windows",
+                "to": "$HDD_MAIN_ROOT/MoonHunters",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Moon Hunters (USA).chd"
+}

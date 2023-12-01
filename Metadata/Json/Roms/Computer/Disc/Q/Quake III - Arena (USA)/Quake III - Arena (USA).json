@@ -1,0 +1,28 @@
+{
+    "main_game_exe": [
+        "Quake3/ioquake3.x86_64.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Quake3/ioquake3.x86_64.exe": "Quake3"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT/Quake3/baseq3",
+                "to": "$HDD_MAIN_ROOT/Quake3/baseq3",
+                "type": "copy"
+            },
+            {
+                "from": "$SETUP_MAIN_ROOT/fix/release-mingw64-x86_64.zip",
+                "to": "$HDD_MAIN_ROOT/Quake3",
+                "type": "extract"
+            },
+            {
+                "from": "$SETUP_MAIN_ROOT/fix/Point-Release-1.32-PAK.zip",
+                "to": "$HDD_MAIN_ROOT/Quake3/baseq3",
+                "type": "extract"
+            }
+        ]
+    },
+    "transform_file": "Quake III - Arena (USA).chd"
+}

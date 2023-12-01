@@ -1,0 +1,12 @@
+{
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT/PC.zip",
+                "to": "$HDD_MAIN_ROOT/PC",
+                "type": "extract"
+            }
+        ]
+    },
+    "transform_file": "Hot Tin Roof - The Cat That Wore a Fedora (USA).chd"
+}

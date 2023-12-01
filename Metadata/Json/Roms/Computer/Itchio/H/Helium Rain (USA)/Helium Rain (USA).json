@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Helium Rain (USA).exe"
+    ],
+    "transform_file": "Helium Rain (USA).exe"
+}

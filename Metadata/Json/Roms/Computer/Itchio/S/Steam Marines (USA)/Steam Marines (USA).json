@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Steam Marines (USA).exe"
+    ],
+    "transform_file": "Steam Marines (USA).exe"
+}

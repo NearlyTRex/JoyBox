@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/DungeonsofDredmor_Complete_windows_1389995827.exe"
+    ],
+    "transform_file": "DungeonsofDredmor_Complete_windows_1389995827.exe"
+}

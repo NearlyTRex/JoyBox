@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/ACA Neo Geo - Kizuna Encounter - Super Tag Battle (USA).exe"
+    ],
+    "transform_file": "ACA Neo Geo - Kizuna Encounter - Super Tag Battle (USA).exe"
+}

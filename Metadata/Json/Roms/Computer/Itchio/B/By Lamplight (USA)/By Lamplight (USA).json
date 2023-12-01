@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/By Lamplight (USA).exe"
+    ],
+    "transform_file": "By Lamplight (USA).exe"
+}

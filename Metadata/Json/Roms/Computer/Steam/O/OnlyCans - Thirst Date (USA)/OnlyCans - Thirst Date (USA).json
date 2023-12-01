@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/OnlyCans - Thirst Date (USA).exe"
+    ],
+    "transform_file": "OnlyCans - Thirst Date (USA).exe"
+}

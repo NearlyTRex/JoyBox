@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Veiled (USA).exe"
+    ],
+    "transform_file": "Veiled (USA).exe"
+}

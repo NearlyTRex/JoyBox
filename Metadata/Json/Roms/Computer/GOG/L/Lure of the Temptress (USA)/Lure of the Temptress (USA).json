@@ -1,0 +1,9 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/lure_of_the_temptress_manual.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_lure_of_the_temptress_1.0_(20270).exe"
+    ],
+    "transform_file": "setup_lure_of_the_temptress_1.0_(20270).exe"
+}

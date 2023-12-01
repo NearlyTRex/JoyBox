@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Electric Zine Maker (USA).exe"
+    ],
+    "transform_file": "Electric Zine Maker (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/MicroHorrorArcade Trilogy I - Andy's Story (USA).exe"
+    ],
+    "transform_file": "MicroHorrorArcade Trilogy I - Andy's Story (USA).exe"
+}

@@ -1,0 +1,16 @@
+{
+    "installer_exe": [
+        "$DISC_MAIN_ROOT/Super Win The Game/Windows/SuperGame_Windows_2014-12-16_16-04.exe",
+        "$DISC_MAIN_ROOT/You Have To Win The Game/Windows/TheGame_Install_2013-10-24_20-01.exe"
+    ],
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT/CluserPuck99/Windows/ClusterPuck99_1_Win.zip",
+                "to": "$HDD_MAIN_ROOT/ClusterPuck99_1_Win",
+                "type": "extract"
+            }
+        ]
+    },
+    "transform_file": "Super Win The Game (USA).chd"
+}

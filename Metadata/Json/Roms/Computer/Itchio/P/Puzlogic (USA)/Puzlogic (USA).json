@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Puzlogic (USA).exe"
+    ],
+    "transform_file": "Puzlogic (USA).exe"
+}

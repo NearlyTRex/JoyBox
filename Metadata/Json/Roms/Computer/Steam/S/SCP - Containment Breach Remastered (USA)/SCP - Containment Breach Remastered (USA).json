@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/SCP - Containment Breach Remastered (USA).exe"
+    ],
+    "main_game_exe": [
+        "SCP - Containment Breach Remastered/SCPCBR.exe"
+    ],
+    "main_game_exe_cwd": {
+        "SCP - Containment Breach Remastered/SCPCBR.exe": "SCP - Containment Breach Remastered"
+    },
+    "transform_file": "SCP - Containment Breach Remastered (USA).exe"
+}

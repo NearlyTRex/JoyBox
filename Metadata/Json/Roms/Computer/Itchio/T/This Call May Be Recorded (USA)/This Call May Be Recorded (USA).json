@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/This Call May Be Recorded (USA).exe"
+    ],
+    "transform_file": "This Call May Be Recorded (USA).exe"
+}

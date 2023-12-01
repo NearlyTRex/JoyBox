@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Fable - Anniversary (World).chd",
+        "Fable - Anniversary (World).dmi.bin",
+        "Fable - Anniversary (World).lyt",
+        "Fable - Anniversary (World).pfi.bin",
+        "Fable - Anniversary (World).ss.bin"
+    ],
+    "launch_file": "Fable - Anniversary (World).iso",
+    "transform_file": "Fable - Anniversary (World).chd"
+}

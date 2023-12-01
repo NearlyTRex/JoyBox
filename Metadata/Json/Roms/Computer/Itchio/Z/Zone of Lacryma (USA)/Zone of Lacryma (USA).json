@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Zone of Lacryma (USA).exe"
+    ],
+    "transform_file": "Zone of Lacryma (USA).exe"
+}

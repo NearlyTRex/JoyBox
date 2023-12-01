@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Waiting for the Loop (USA).exe"
+    ],
+    "transform_file": "Waiting for the Loop (USA).exe"
+}

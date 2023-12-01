@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Nun Massacre (USA).exe"
+    ],
+    "transform_file": "Nun Massacre (USA).exe"
+}

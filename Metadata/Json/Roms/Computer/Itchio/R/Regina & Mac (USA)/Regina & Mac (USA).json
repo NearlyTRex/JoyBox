@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Regina & Mac (USA).exe"
+    ],
+    "transform_file": "Regina & Mac (USA).exe"
+}

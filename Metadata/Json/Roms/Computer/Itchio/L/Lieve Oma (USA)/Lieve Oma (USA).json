@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Lieve Oma (USA).exe"
+    ],
+    "transform_file": "Lieve Oma (USA).exe"
+}

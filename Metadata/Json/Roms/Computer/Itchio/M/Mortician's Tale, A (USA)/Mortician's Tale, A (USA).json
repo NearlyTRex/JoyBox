@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Mortician's Tale, A (USA).exe"
+    ],
+    "transform_file": "Mortician's Tale, A (USA).exe"
+}

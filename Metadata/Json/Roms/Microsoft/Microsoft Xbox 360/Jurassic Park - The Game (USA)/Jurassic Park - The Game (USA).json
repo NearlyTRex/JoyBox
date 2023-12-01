@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Jurassic Park - The Game (USA).chd",
+        "Jurassic Park - The Game (USA).dmi.bin",
+        "Jurassic Park - The Game (USA).lyt",
+        "Jurassic Park - The Game (USA).pfi.bin",
+        "Jurassic Park - The Game (USA).ss.bin"
+    ],
+    "launch_file": "Jurassic Park - The Game (USA).iso",
+    "transform_file": "Jurassic Park - The Game (USA).chd"
+}

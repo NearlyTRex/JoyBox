@@ -1,0 +1,255 @@
+collection: Nintendo 3DS Apps
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo 3DS Apps" {file.path}
+
+
+game: AR Games (USA) (Embedded App)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS Apps/AR Games (USA) (Embedded App)/AR Games (USA) (Embedded App).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  AR Games is an app included with the Nintendo 3DS upon release that is
+  compatible with the AR cards bundled with the device. "AR" stands for
+  "Augmented Reality" which is true to its name. Once placed on a surface and
+  viewed by the 3DS per camera, one can play an assortment of games which seem
+  to be taking place right on said surface.
+release: 2011-03-27
+players: 1
+assets.boxfront: BoxFront/AR Games (USA) (Embedded App).jpg
+assets.boxback: BoxBack/AR Games (USA) (Embedded App).jpg
+assets.background: Background/AR Games (USA) (Embedded App).jpg
+assets.screenshot: Screenshot/AR Games (USA) (Embedded App).jpg
+x-co-op: No
+
+
+game: Activity Log (USA) (Embedded App)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS Apps/Activity Log (USA) (Embedded App)/Activity Log (USA) (Embedded App).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  The Activity Log is an application for the Nintendo 3DS. It tracks the
+  progress a player does with the system, such as game play activity and
+  physical activity, for the player to view later on.
+release: 2011-03-27
+players: 1
+assets.boxfront: BoxFront/Activity Log (USA) (Embedded App).jpg
+assets.boxback: BoxBack/Activity Log (USA) (Embedded App).jpg
+assets.background: Background/Activity Log (USA) (Embedded App).jpg
+assets.screenshot: Screenshot/Activity Log (USA) (Embedded App).jpg
+x-co-op: No
+
+
+game: Download Play (USA) (Embedded App)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS Apps/Download Play (USA) (Embedded App)/Download Play (USA) (Embedded App).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  Download Play is a feature first introduced on the Nintendo DS that allows
+  units to share one Game Card for multiplayer gameplay, or send and receive
+  game demos. Download Play has since then been included in all the forthcoming
+  Nintendo DS models (Nintendo DS Lite, Nintendo DSi, and Nintendo DSi XL) as
+  well as on the Nintendo 3DS, Nintendo 3DS XL, Nintendo 2DS, New Nintendo 3DS,
+  New Nintendo 3DS XL, and New Nintendo 2DS XL.
+release: 2011-03-27
+players: 1
+assets.boxfront: BoxFront/Download Play (USA) (Embedded App).jpg
+assets.boxback: BoxBack/Download Play (USA) (Embedded App).jpg
+assets.background: Background/Download Play (USA) (Embedded App).jpg
+assets.screenshot: Screenshot/Download Play (USA) (Embedded App).jpg
+x-co-op: No
+
+
+game: Face Raiders (USA) (Embedded App)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS Apps/Face Raiders (USA) (Embedded App)/Face Raiders (USA) (Embedded App).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  Face Raiders is an application for the Nintendo 3DS. This game makes use of
+  the 3DS cameras, which is required to create enemies. At the first
+  playthrough, only the 3DS' inner camera can be used to take pictures of the
+  players' faces. After their first play through, they may utilize the outer
+  cameras to take pictures of other people's faces, or they can take another
+  one of their own face by swapping the inner and the outer cameras. If
+  desired, a player can even use a face from a photograph, even if it is
+  online.
+release: 2011-03-27
+players: 1
+assets.boxfront: BoxFront/Face Raiders (USA) (Embedded App).jpg
+assets.boxback: BoxBack/Face Raiders (USA) (Embedded App).jpg
+assets.background: Background/Face Raiders (USA) (Embedded App).jpg
+assets.screenshot: Screenshot/Face Raiders (USA) (Embedded App).jpg
+x-co-op: No
+
+
+game: Mii Maker (USA) (Embedded App)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS Apps/Mii Maker (USA) (Embedded App)/Mii Maker (USA) (Embedded App).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  Mii Maker, previously known as Mii Studio, is an app for the Nintendo 3DS
+  that allows the player to create an avatar, or digital version, of
+  themselves. It is based on the Mii Channel, which is also an avatar creator
+  on the Nintendo Wii. You are able to manually create a Mii and adjust its
+  gender, body size, headgear, eyewear, clothing, etc. You can also take a
+  photo of yourself and automatically create a Mii, then later modify it to
+  your liking. It also includes new choices for hair and more.
+release: 2011-03-27
+players: 1
+assets.boxfront: BoxFront/Mii Maker (USA) (Embedded App).jpg
+assets.boxback: BoxBack/Mii Maker (USA) (Embedded App).jpg
+assets.background: Background/Mii Maker (USA) (Embedded App).jpg
+assets.screenshot: Screenshot/Mii Maker (USA) (Embedded App).jpg
+x-co-op: No
+
+
+game: Nintendo 3DS Camera (USA) (Embedded App)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS Apps/Nintendo 3DS Camera (USA) (Embedded App)/Nintendo 3DS Camera (USA) (Embedded App).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  Nintendo 3DS Camera is app for the Nintendo 3DS that takes pictures and
+  records video using the system's cameras, located on the front and back of
+  the system. Two cameras on the back on the system, which can take 3D photos
+  and video. One camera is located on the front, which takes regular 2D
+  photography and video. The cameras have a resolution of 640×480 pixels.
+release: 2011-03-27
+players: 1
+assets.boxfront: BoxFront/Nintendo 3DS Camera (USA) (Embedded App).jpg
+assets.boxback: BoxBack/Nintendo 3DS Camera (USA) (Embedded App).jpg
+assets.background: Background/Nintendo 3DS Camera (USA) (Embedded App).jpg
+assets.screenshot: Screenshot/Nintendo 3DS Camera (USA) (Embedded App).jpg
+x-co-op: No
+
+
+game: Nintendo 3DS Sound (USA) (Embedded App)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS Apps/Nintendo 3DS Sound (USA) (Embedded App)/Nintendo 3DS Sound (USA) (Embedded App).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  Nintendo 3DS Sound allows you to listen, edit, and record music. Like the
+  Nintendo DSi, you can use a variety of fun filters to edit with your music.
+  You can also edit the pitch of music or recorded sound high, low, fast,
+  and/or slow. It supports MP3 and AAC file types.
+release: 2011-03-27
+players: 1
+assets.boxfront: BoxFront/Nintendo 3DS Sound (USA) (Embedded App).jpg
+assets.boxback: BoxBack/Nintendo 3DS Sound (USA) (Embedded App).jpg
+assets.background: Background/Nintendo 3DS Sound (USA) (Embedded App).jpg
+assets.screenshot: Screenshot/Nintendo 3DS Sound (USA) (Embedded App).jpg
+x-co-op: No
+
+
+game: Nintendo Network ID Settings (USA) (Embedded App)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS Apps/Nintendo Network ID Settings (USA) (Embedded App)/Nintendo Network ID Settings (USA) (Embedded App).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  Each Nintendo Network ID can be associated to one Wii U console and one
+  Nintendo 3DS family system.
+  .
+  The Nintendo 3DS can have only one active Nintendo Network ID registered to
+  it at one time.
+  .
+  If a previous account exists on the system, it will need to be removed before
+  a new Nintendo Network ID can be created or linked.
+release: 2011-03-27
+players: 1
+assets.boxfront: BoxFront/Nintendo Network ID Settings (USA) (Embedded App).jpg
+assets.boxback: BoxBack/Nintendo Network ID Settings (USA) (Embedded App).jpg
+assets.background: Background/Nintendo Network ID Settings (USA) (Embedded App).jpg
+assets.screenshot: Screenshot/Nintendo Network ID Settings (USA) (Embedded App).jpg
+x-co-op: No
+
+
+game: Nintendo Zone Viewer (USA) (Embedded App)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS Apps/Nintendo Zone Viewer (USA) (Embedded App)/Nintendo Zone Viewer (USA) (Embedded App).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  Nintendo Zone is an application for the Nintendo 3DS. Mainly using SpotPass
+  to function, it is used for viewing exclusive 3D videos, upcoming previews,
+  video game trivias, and more exclusive content.
+release: 2011-03-27
+players: 1
+assets.boxfront: BoxFront/Nintendo Zone Viewer (USA) (Embedded App).jpg
+assets.boxback: BoxBack/Nintendo Zone Viewer (USA) (Embedded App).jpg
+assets.background: Background/Nintendo Zone Viewer (USA) (Embedded App).jpg
+assets.screenshot: Screenshot/Nintendo Zone Viewer (USA) (Embedded App).jpg
+x-co-op: No
+
+
+game: Nintendo eShop (USA) (Embedded App)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS Apps/Nintendo eShop (USA) (Embedded App)/Nintendo eShop (USA) (Embedded App).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  The Nintendo eShop is a shopping application for the Nintendo 3DS where a
+  person can buy and download Nintendo 3DS titles, DSiWare, Virtual Console
+  games, and more. It was released in a system update on June 6 in North
+  America, and the following day in Japan. An update released on December 9,
+  2013 allows users to merge their 3DS eShop account with their Wii U's and
+  combine their balances.
+release: 2011-06-06
+players: 1
+assets.boxfront: BoxFront/Nintendo eShop (USA) (Embedded App).jpg
+assets.boxback: BoxBack/Nintendo eShop (USA) (Embedded App).jpg
+assets.background: Background/Nintendo eShop (USA) (Embedded App).jpg
+assets.screenshot: Screenshot/Nintendo eShop (USA) (Embedded App).jpg
+x-co-op: No
+
+
+game: StreetPass Mii Plaza (USA) (Embedded App)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS Apps/StreetPass Mii Plaza (USA) (Embedded App)/StreetPass Mii Plaza (USA) (Embedded App).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  StreetPass Mii Plaza is an application that makes use of the Nintendo 3DS's
+  StreetPass functionality, in which the system can detect and exchange data
+  with other nearby systems whilst in sleep mode. The game revolves around a
+  player's chosen Mii, which can be customised with accessories earned from
+  minigames, along with a short customizable message and some optional
+  information about likes. When new Miis are registered by the system, they
+  will appear at the gate. Up to ten Miis can show up at the gate at any one
+  time, after which the player will need to use them with their minigames
+  before checking for more. Meeting the same Miis multiple times adds extra
+  functionality, such as personalised messages and the ability to rate them.
+  There are also special Miis that appear via SpotPass during special events,
+  such as Nintendo staff members. After meeting another player's Mii, the
+  player can then use that Mii to play a variety of different games, three of
+  them being playable free of charge: Puzzle Swap, StreetPass Quest, and
+  StreetPass Quest II.
+release: 2011-03-27
+players: 1
+assets.boxfront: BoxFront/StreetPass Mii Plaza (USA) (Embedded App).jpg
+assets.boxback: BoxBack/StreetPass Mii Plaza (USA) (Embedded App).jpg
+assets.background: Background/StreetPass Mii Plaza (USA) (Embedded App).jpg
+assets.screenshot: Screenshot/StreetPass Mii Plaza (USA) (Embedded App).jpg
+x-co-op: No
+
+
+game: System Settings (USA) (Embedded App)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS Apps/System Settings (USA) (Embedded App)/System Settings (USA) (Embedded App).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  This application allows the user to configure their Nintendo 3DS system.
+release: 2011-03-27
+players: 1
+assets.boxfront: BoxFront/System Settings (USA) (Embedded App).jpg
+assets.boxback: BoxBack/System Settings (USA) (Embedded App).jpg
+assets.background: Background/System Settings (USA) (Embedded App).jpg
+assets.screenshot: Screenshot/System Settings (USA) (Embedded App).jpg
+x-co-op: No
+
+

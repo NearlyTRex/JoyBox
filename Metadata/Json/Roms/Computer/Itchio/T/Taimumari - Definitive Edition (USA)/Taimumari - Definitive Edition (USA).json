@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Taimumari - Definitive Edition (USA).exe"
+    ],
+    "transform_file": "Taimumari - Definitive Edition (USA).exe"
+}

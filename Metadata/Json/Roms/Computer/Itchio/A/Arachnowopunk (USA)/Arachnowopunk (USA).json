@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Arachnowopunk (USA).exe"
+    ],
+    "transform_file": "Arachnowopunk (USA).exe"
+}

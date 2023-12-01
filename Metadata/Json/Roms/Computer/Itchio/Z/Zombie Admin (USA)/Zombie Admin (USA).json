@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Zombie Admin (USA).exe"
+    ],
+    "transform_file": "Zombie Admin (USA).exe"
+}

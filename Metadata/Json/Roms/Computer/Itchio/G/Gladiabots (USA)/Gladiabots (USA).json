@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Gladiabots (USA).exe"
+    ],
+    "transform_file": "Gladiabots (USA).exe"
+}

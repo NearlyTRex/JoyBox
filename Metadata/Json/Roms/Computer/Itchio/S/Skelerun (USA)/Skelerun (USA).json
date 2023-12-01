@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Skelerun (USA).exe"
+    ],
+    "transform_file": "Skelerun (USA).exe"
+}

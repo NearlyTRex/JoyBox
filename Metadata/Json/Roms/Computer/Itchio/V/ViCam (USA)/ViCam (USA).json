@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/ViCam (USA).exe"
+    ],
+    "transform_file": "ViCam (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Night Book (USA).exe"
+    ],
+    "transform_file": "Night Book (USA).exe"
+}

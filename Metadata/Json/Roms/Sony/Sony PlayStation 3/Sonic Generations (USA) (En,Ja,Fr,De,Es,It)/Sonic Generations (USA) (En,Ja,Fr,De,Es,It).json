@@ -1,0 +1,8 @@
+{
+    "files": [
+        "Sonic Generations (USA) (En,Ja,Fr,De,Es,It).chd",
+        "Sonic Generations (USA) (En,Ja,Fr,De,Es,It).dkey"
+    ],
+    "launch_file": "PS3_GAME/USRDIR/EBOOT.BIN",
+    "transform_file": "Sonic Generations (USA) (En,Ja,Fr,De,Es,It).chd"
+}

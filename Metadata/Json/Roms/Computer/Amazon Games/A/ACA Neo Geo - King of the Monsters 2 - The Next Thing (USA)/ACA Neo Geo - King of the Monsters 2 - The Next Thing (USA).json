@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/ACA Neo Geo - King of the Monsters 2 - The Next Thing (USA).exe"
+    ],
+    "transform_file": "ACA Neo Geo - King of the Monsters 2 - The Next Thing (USA).exe"
+}

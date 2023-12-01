@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Raze's Hell (USA).chd",
+        "Raze's Hell (USA).dmi.bin",
+        "Raze's Hell (USA).lyt",
+        "Raze's Hell (USA).pfi.bin",
+        "Raze's Hell (USA).ss.bin"
+    ],
+    "launch_file": "Raze's Hell (USA).iso",
+    "transform_file": "Raze's Hell (USA).chd"
+}

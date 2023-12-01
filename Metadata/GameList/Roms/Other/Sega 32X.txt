@@ -1,0 +1,6 @@
+Sega 32X || Chaotix ~ Knuckles' Chaotix (Japan, USA) || $ROM_JSON_ROOT/Other/Sega 32X/Chaotix ~ Knuckles' Chaotix (Japan, USA)/Chaotix ~ Knuckles' Chaotix (Japan, USA).json
+Sega 32X || Cyber Brawl ~ Cosmic Carnage (Japan, USA) || $ROM_JSON_ROOT/Other/Sega 32X/Cyber Brawl ~ Cosmic Carnage (Japan, USA)/Cyber Brawl ~ Cosmic Carnage (Japan, USA).json
+Sega 32X || Doom (Europe) (32X Resurrection Patch) || $ROM_JSON_ROOT/Other/Sega 32X/Doom (Europe) (32X Resurrection Patch)/Doom (Europe) (32X Resurrection Patch).json
+Sega 32X || Doom (Japan, USA) || $ROM_JSON_ROOT/Other/Sega 32X/Doom (Japan, USA)/Doom (Japan, USA).json
+Sega 32X || Metal Head (Japan, USA) (En,Ja) || $ROM_JSON_ROOT/Other/Sega 32X/Metal Head (Japan, USA) (En,Ja)/Metal Head (Japan, USA) (En,Ja).json
+Sega 32X || Star Wars Arcade (USA) || $ROM_JSON_ROOT/Other/Sega 32X/Star Wars Arcade (USA)/Star Wars Arcade (USA).json

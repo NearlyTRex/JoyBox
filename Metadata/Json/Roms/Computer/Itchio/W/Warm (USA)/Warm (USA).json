@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Warm (USA).exe"
+    ],
+    "transform_file": "Warm (USA).exe"
+}

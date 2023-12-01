@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dragon's Dogma - Dark Arisen (USA).exe"
+    ],
+    "transform_file": "Dragon's Dogma - Dark Arisen (USA).exe"
+}

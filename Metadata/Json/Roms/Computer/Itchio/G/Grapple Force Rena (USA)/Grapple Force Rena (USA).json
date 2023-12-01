@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Grapple Force Rena (USA).exe"
+    ],
+    "transform_file": "Grapple Force Rena (USA).exe"
+}

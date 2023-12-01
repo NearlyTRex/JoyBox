@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Vulture (USA).exe"
+    ],
+    "transform_file": "Vulture (USA).exe"
+}

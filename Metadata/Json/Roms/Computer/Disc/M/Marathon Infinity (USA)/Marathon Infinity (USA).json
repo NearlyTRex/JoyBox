@@ -1,0 +1,18 @@
+{
+    "main_game_exe": [
+        "MarathonInfinity/Marathon Infinity.exe"
+    ],
+    "main_game_exe_cwd": {
+        "MarathonInfinity/Marathon Infinity.exe": "MarathonInfinity"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$HDD_MAIN_ROOT/MarathonInfinity",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Marathon Infinity (USA).chd"
+}

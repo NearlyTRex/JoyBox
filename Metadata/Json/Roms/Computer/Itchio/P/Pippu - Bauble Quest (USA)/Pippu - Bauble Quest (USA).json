@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Pippu - Bauble Quest (USA).exe"
+    ],
+    "transform_file": "Pippu - Bauble Quest (USA).exe"
+}

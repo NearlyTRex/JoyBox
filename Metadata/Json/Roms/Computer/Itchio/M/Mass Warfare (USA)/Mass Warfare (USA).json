@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Mass Warfare (USA).exe"
+    ],
+    "transform_file": "Mass Warfare (USA).exe"
+}

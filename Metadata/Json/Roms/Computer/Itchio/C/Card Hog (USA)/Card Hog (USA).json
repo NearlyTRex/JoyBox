@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Card Hog (USA).exe"
+    ],
+    "transform_file": "Card Hog (USA).exe"
+}

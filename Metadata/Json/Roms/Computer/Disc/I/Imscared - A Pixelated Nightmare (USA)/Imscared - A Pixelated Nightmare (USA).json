@@ -1,0 +1,18 @@
+{
+    "main_game_exe": [
+        "Imscared/imscared.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Imscared/imscared.exe": "Imscared"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$HDD_MAIN_ROOT/Imscared",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Imscared - A Pixelated Nightmare (USA).chd"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Gnog (USA).exe"
+    ],
+    "transform_file": "Gnog (USA).exe"
+}

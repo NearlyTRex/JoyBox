@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Hack Grid (USA).exe"
+    ],
+    "transform_file": "Hack Grid (USA).exe"
+}

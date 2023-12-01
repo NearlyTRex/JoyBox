@@ -1,0 +1,15 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/alan_wake_files_book.zip",
+        "$SETUP_MAIN_ROOT/extra/alan_wake_making_of.zip",
+        "$SETUP_MAIN_ROOT/extra/alan_wake_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/alan_wake_music_video.zip",
+        "$SETUP_MAIN_ROOT/extra/alan_wake_night_springs.zip",
+        "$SETUP_MAIN_ROOT/extra/alan_wake_wallpaper.zip",
+        "$SETUP_MAIN_ROOT/extra/alan_wake_writer_in_the_cabin.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_alan_wake_1.0_hotfix_(24778).exe"
+    ],
+    "transform_file": "setup_alan_wake_1.0_hotfix_(24778).exe"
+}

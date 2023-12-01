@@ -1,0 +1,27 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Resident Evil Revelations (USA).exe"
+    ],
+    "main_game_exe": [
+        "Resident Evil Revelations/rerev.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Resident Evil Revelations/rerev.exe": "Resident Evil Revelations"
+    },
+    "sandbox": {
+        "wine": {
+            "overrides": {
+                "game": [
+                    "d3d9,d3d10core,d3d11,dxgi=n,b"
+                ]
+            },
+            "tricks": {
+                "game": [
+                    "wmp11"
+                ]
+            },
+            "use_dxvk": true
+        }
+    },
+    "transform_file": "Resident Evil Revelations (USA).exe"
+}

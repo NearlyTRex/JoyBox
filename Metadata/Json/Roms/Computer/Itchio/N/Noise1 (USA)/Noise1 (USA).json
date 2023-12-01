@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Noise1 (USA).exe"
+    ],
+    "transform_file": "Noise1 (USA).exe"
+}

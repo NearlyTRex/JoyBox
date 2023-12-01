@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Blockara (USA).exe"
+    ],
+    "transform_file": "Blockara (USA).exe"
+}

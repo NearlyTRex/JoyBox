@@ -1,0 +1,1132 @@
+collection: Computer - Puppet Combo
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Computer - Puppet Combo" {file.path}
+
+
+game: Babysitter Bloodbath (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/B/Babysitter Bloodbath (USA)/Babysitter Bloodbath (USA).json
+developer: Pig Farmer Productions
+publisher: Pig Farmer Productions
+genre: Action Adventure;Survival
+description:
+  Babysitter Bloodbath is a 2013 survival horror game developed by Puppet
+  Combo. Game can be downloaded from Puppet Combo's patreon and itchio. In
+  2020, the game received a novelization.
+  .
+  For 22 years Neokalus Burr has stared at an empty wall in the bowels of
+  Monroe State Mental Hospital. But tonight he's escaped to continue his
+  blood-soaked murder rampage! It also just happens to be your first-night
+  babysitting.
+release: 2013-10-09
+players: 1
+assets.boxfront: BoxFront/Babysitter Bloodbath (USA).jpg
+assets.boxback: BoxBack/Babysitter Bloodbath (USA).jpg
+assets.background: Background/Babysitter Bloodbath (USA).jpg
+assets.screenshot: Screenshot/Babysitter Bloodbath (USA).jpg
+assets.video: Video/Babysitter Bloodbath (USA).mp4
+x-co-op: No
+
+
+game: Blood Maniac (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/B/Blood Maniac (USA)/Blood Maniac (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Horror
+description:
+  You play as a mental patient named Larry who escapes from the mental hospital
+  and terrorizes the town. Avoid getting caught, and slaughter everyone.
+  .
+  The strategy mostly consists of hiding, sneaking behind NPCs and killing
+  them. If the player has been spotted, NPC will try to run away and timer
+  of 5-10 seconds will appear. If the NPC manages runs away when the timer
+  hits 0, it's game over. Throughout the game, players can drive the van
+  around the snowy town avoiding police and can enter houses where they
+  can find and kill NPCs. By killing, players earn score points, with high
+  scores players can unlock new weapons and costumes.
+release: 2019
+players: 1
+assets.boxfront: BoxFront/Blood Maniac (USA).jpg
+assets.boxback: BoxBack/Blood Maniac (USA).jpg
+assets.background: Background/Blood Maniac (USA).jpg
+assets.screenshot: Screenshot/Blood Maniac (USA).jpg
+assets.video: Video/Blood Maniac (USA).mp4
+x-co-op: No
+
+
+game: Bloodwash (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/B/Bloodwash (USA)/Bloodwash (USA).json
+developer: Black Eyed Priest
+publisher: Torture Star Video
+genre: Action Adventure;Survival
+description:
+  Sara is a pregnant college student living with her alcoholic boyfriend in a run-
+  down apartment complex. To make matters worse, a serial killer targeting
+  pregnant women, the Womb Ripper, is terrorizing the city. One night, the washing
+  machine in the basement breaks down. A helpful neighbor tells Sara about a
+  24-hour laundromat on the outskirts of town. What she finds there might claim
+  her life!
+  .
+  BLOOD WASH is a giallo-inspired survival horror game with low-poly, PS1-style
+  graphics.
+release: 2021-09-16
+players: 1
+assets.boxfront: BoxFront/Bloodwash (USA).jpg
+assets.boxback: BoxBack/Bloodwash (USA).jpg
+assets.background: Background/Bloodwash (USA).jpg
+assets.screenshot: Screenshot/Bloodwash (USA).jpg
+assets.video: Video/Bloodwash (USA).mp4
+x-co-op: No
+
+
+game: Booty Creek Cheek Freak, The (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/B/Booty Creek Cheek Freak, The (USA)/Booty Creek Cheek Freak, The (USA).json
+developer: Jordan King
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Have you heard the legend of the Booty Creek Cheek Freak? Many say he
+  terrorizes the creek to this day. Connor & Gary planned on a relaxing
+  weekend getaway, but now they're in the fight of their lives to protect
+  DEM CHEEKS from the FREAK.
+release: 2022-05-19
+players: 1
+assets.boxfront: BoxFront/Booty Creek Cheek Freak, The (USA).jpg
+assets.boxback: BoxBack/Booty Creek Cheek Freak, The (USA).jpg
+assets.background: Background/Booty Creek Cheek Freak, The (USA).jpg
+assets.screenshot: Screenshot/Booty Creek Cheek Freak, The (USA).jpg
+assets.video: Video/Booty Creek Cheek Freak, The (USA).mp4
+x-co-op: No
+
+
+game: Buzz-Saw Blood House (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/B/Buzz-Saw Blood House (USA)/Buzz-Saw Blood House (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  A deep web community celebrates Halloween with a twisted "Red Room"
+  livestream. Young girls are kidnapped, and forced to navigate a house
+  full of deadly traps for the viewer’s entertainment.
+  .
+  The game plays from 3rd person perspective. Players take control of
+  teenage girls who must navigate through maze of halls while avoiding
+  dangerous traps. To make things even worse, a chainsaw wielding
+  maniac will appear from time to time in attempt to kill them.
+release: 2017
+players: 1
+assets.boxfront: BoxFront/Buzz-Saw Blood House (USA).jpg
+assets.boxback: BoxBack/Buzz-Saw Blood House (USA).jpg
+assets.background: Background/Buzz-Saw Blood House (USA).jpg
+assets.screenshot: Screenshot/Buzz-Saw Blood House (USA).jpg
+assets.video: Video/Buzz-Saw Blood House (USA).mp4
+x-co-op: No
+
+
+game: Christmas Massacre (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/C/Christmas Massacre (USA)/Christmas Massacre (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Larry's Christmas tree has been telling him to kill. But whose side is the tree
+  really on? And can he trust what he's hearing?
+  .
+  CHRISTMAS MASSACRE is an 80's inspired stealth slasher game with low-poly,
+  PS1-style graphics. Sneak, stalk and murder your prey without being caught. You
+  must kill without being seen to complete each level.
+release: 2021-12-17
+players: 1
+assets.boxfront: BoxFront/Christmas Massacre (USA).jpg
+assets.boxback: BoxBack/Christmas Massacre (USA).jpg
+assets.background: Background/Christmas Massacre (USA).jpg
+assets.screenshot: Screenshot/Christmas Massacre (USA).jpg
+assets.video: Video/Christmas Massacre (USA).mp4
+x-co-op: No
+
+
+game: Day 7 (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/D/Day 7 (USA)/Day 7 (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Every 20 seconds, a person goes missing in the US.
+  .
+  Terrence has been slowly losing his mind at a dead-end job. His desolate late-
+  night commute may make him lose a lot more than that!
+  .
+  PSX style, Hellnight inspired survival horror.
+release: 2019
+players: 1
+assets.boxfront: BoxFront/Day 7 (USA).jpg
+assets.boxback: BoxBack/Day 7 (USA).jpg
+assets.background: Background/Day 7 (USA).jpg
+assets.screenshot: Screenshot/Day 7 (USA).jpg
+assets.video: Video/Day 7 (USA).mp4
+x-co-op: No
+
+
+game: Deadly Night (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/D/Deadly Night (USA)/Deadly Night (USA).json
+developer: Cubyte Games
+publisher: Torture Star Video
+genre: Action Adventure;Survival
+description:
+  Deadly Night is a survival horror where you play as Carol, a hitchhiker. You
+  arrive at a small roadside motel overnight. You are tired and the bus won't
+  arrive until morning, so you ask for a room to sleep. The motel owner doesn't
+  seem like a normal person, his questions make you feel uncomfortable. Later you
+  discover something disturbing there, but when you think you know what is going
+  on, something changes everything...
+  .
+  Do you think the Motel was a nightmare? Hell no, it was just the beginning. The
+  murderer's sweet home is waiting for you...
+  .
+  Try to get out of there or die.
+release: 2022-09-01
+players: 1
+assets.boxfront: BoxFront/Deadly Night (USA).jpg
+assets.boxback: BoxBack/Deadly Night (USA).jpg
+assets.background: Background/Deadly Night (USA).jpg
+assets.screenshot: Screenshot/Deadly Night (USA).jpg
+assets.video: Video/Deadly Night (USA).mp4
+x-co-op: No
+
+
+game: Ding Dong Dead (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/D/Ding Dong Dead (USA)/Ding Dong Dead (USA).json
+developer: Blacked Priest Priest
+publisher: Torture Star Video
+genre: Action Adventure;Survival
+description:
+  The ultimate in BABYSITTING TERROR.
+  .
+  All your choices matter as you navigate a night of horror and debauchery while
+  trying to survive the 'Ding Dong Ditcher Ripper', a recently escaped serial
+  killer from the nearby state asylum.
+release: 2023-10-13
+players: 1
+assets.boxfront: BoxFront/Ding Dong Dead (USA).jpg
+assets.boxback: BoxBack/Ding Dong Dead (USA).jpg
+assets.background: Background/Ding Dong Dead (USA).jpg
+assets.screenshot: Screenshot/Ding Dong Dead (USA).jpg
+assets.video: Video/Ding Dong Dead (USA).mp4
+x-co-op: No
+
+
+game: Enigma of Salazar House, The (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/E/Enigma of Salazar House, The (USA)/Enigma of Salazar House, The (USA).json
+developer: Maldo19
+publisher: Torture Star Video
+genre: Adventure;Point-and-Click
+description:
+  Elisa, a young reporter, is sent to investigate the abandoned mansion of
+  renowned author Jaime Salazar, who disappeared, along with his entire family in
+  1986. Setting out to find the truth of what happened in that house, she gets a
+  lot more than she bargained for when she realizes the house of Salazar may not
+  be totally abandoned...
+  .
+  Can you solve The Enigma of Salazar House or will you become another permanent
+  inhabitant?
+  .
+  The Horror of Salazar House is a gothic, Italian horror inspired haunted house
+  game with Virtual Boy style graphics and rotoscoped cut-scenes.
+release: 2020-10-15
+players: 1
+assets.boxfront: BoxFront/Enigma of Salazar House, The (USA).jpg
+assets.boxback: BoxBack/Enigma of Salazar House, The (USA).jpg
+assets.background: Background/Enigma of Salazar House, The (USA).jpg
+assets.screenshot: Screenshot/Enigma of Salazar House, The (USA).jpg
+assets.video: Video/Enigma of Salazar House, The (USA).mp4
+x-co-op: No
+
+
+game: Evil Clowns (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/E/Evil Clowns (USA)/Evil Clowns (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Jean fell asleep during the fair. Now the rides are closed and EVIL CLOWNS
+  rule the night. Can she escape the carnival alive?
+  .
+  Players have to navigate through the maze of halls, collect a specific
+  amount of coins and head to the exit, all while avoiding being caught
+  by murderous clowns that wander the halls. Players can also find
+  weapons to defend themselves against clowns. At the start of the game,
+  players are given 8 lives. If the player dies they will respawn at
+  the start of the level with the same amount of coins collected. If
+  the player dies all 8 times, it's game over.
+release: 2019
+players: 1
+assets.boxfront: BoxFront/Evil Clowns (USA).jpg
+assets.boxback: BoxBack/Evil Clowns (USA).jpg
+assets.background: Background/Evil Clowns (USA).jpg
+assets.screenshot: Screenshot/Evil Clowns (USA).jpg
+assets.video: Video/Evil Clowns (USA).mp4
+x-co-op: No
+
+
+game: Feed Me Billy (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/F/Feed Me Billy (USA)/Feed Me Billy (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  A flesh-eating hole has appeared in your closet. It's YOUR job to
+  feed it. You must! No matter what the cost... Terrorize the town
+  on your sick quest for meat in this deranged serial killer simulator.
+  .
+  You play as the eponymous killer, Billy, as you try to sate a
+  massive flesh-eating hole that has materialized in your closet.
+  .
+  The game consists of 3 different scenarios that all start off
+  with Billy waking up in his bed, getting a phone call from his
+  benefactor, then putting on his clown mask and arming himself
+  with a revolver before getting in his car and driving off to
+  look for victims.
+release: 2018
+players: 1
+assets.boxfront: BoxFront/Feed Me Billy (USA).jpg
+assets.boxback: BoxBack/Feed Me Billy (USA).jpg
+assets.background: Background/Feed Me Billy (USA).jpg
+assets.screenshot: Screenshot/Feed Me Billy (USA).jpg
+assets.video: Video/Feed Me Billy (USA).mp4
+x-co-op: No
+
+
+game: Feed Me Billy Demake (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/F/Feed Me Billy Demake (USA)/Feed Me Billy Demake (USA).json
+developer: Cracked Ghost Games
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  A flesh-eating hole has appeared in your closet. It's YOUR job to feed it.
+  You must! No matter what the cost... Terrorize the town on your sick quest
+  for meat in this deranged serial killer simulator. Faithfully translated to
+  2D by Cracked Ghost Games
+release: 2020-08-30
+players: 1
+assets.boxfront: BoxFront/Feed Me Billy Demake (USA).jpg
+assets.boxback: BoxBack/Feed Me Billy Demake (USA).jpg
+assets.background: Background/Feed Me Billy Demake (USA).jpg
+assets.screenshot: Screenshot/Feed Me Billy Demake (USA).jpg
+assets.video: Video/Feed Me Billy Demake (USA).mp4
+x-co-op: No
+
+
+game: Feed Me More Billy (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/F/Feed Me More Billy (USA)/Feed Me More Billy (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Feed Me More Billy is an upcoming slasher horror game developed by Puppet
+  Combo. It is a sequel to Feed Me Billy. A playable teaser is available for
+  download on Puppet Combo's Patreon page.
+  .
+  The game starts with Billy entering the night club and trying to talk to
+  someone. He eventually gets to talk to someone (it can be a woman or a
+  man depending on who the player chose to talk to) and buys them a drink.
+  After a conversation, Billy takes the person to his house and gives them
+  cocaine, which causes the person to freak out and faint. Billy then
+  takes their clothes off, hangs the person to a chain, and burns him/her
+  alive with a flamethrower. The burned corpse is then fed to the hole.
+release: 2022
+players: 1
+assets.boxfront: BoxFront/Feed Me More Billy (USA).jpg
+assets.boxback: BoxBack/Feed Me More Billy (USA).jpg
+assets.background: Background/Feed Me More Billy (USA).jpg
+assets.screenshot: Screenshot/Feed Me More Billy (USA).jpg
+assets.video: Video/Feed Me More Billy (USA).mp4
+x-co-op: No
+
+
+game: Glass Staircase, The (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/G/Glass Staircase, The (USA)/Glass Staircase, The (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  It's been a long time since you've seen your parents, hasn't it? Not to worry,
+  girls. Just listen to the voice on the intercom. Do what they say. They've
+  provided you a home. They've provided you food. They will make you into good
+  girls.
+  .
+  This old house has never treated you wrong, now has it? Now be good girls, all
+  of you. The Master will need you to be strong during these troubling times.
+  .
+  Remember: Good girls take their medicine. Good girls do their chores. Good girls
+  go home.
+release: 2019-03-30
+players: 1
+assets.boxfront: BoxFront/Glass Staircase, The (USA).jpg
+assets.boxback: BoxBack/Glass Staircase, The (USA).jpg
+assets.background: Background/Glass Staircase, The (USA).jpg
+assets.screenshot: Screenshot/Glass Staircase, The (USA).jpg
+assets.video: Video/Glass Staircase, The (USA).mp4
+x-co-op: No
+
+
+game: Horror of Salazar House, The (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/H/Horror of Salazar House, The (USA)/Horror of Salazar House, The (USA).json
+developer: Maldo19
+publisher: Torture Star Video
+genre: Adventure;Point-and-Click
+description:
+  Elisa, a young reporter, is sent to investigate the abandoned mansion of
+  renowned author Jaime Salazar, who disappeared, along with his entire family in
+  1986. Setting out to find the truth of what happened in that house, she gets a
+  lot more than she bargained for when she realizes the house of Salazar may not
+  be totally abandoned...
+  .
+  Can you solve The Enigma of Salazar House or will you become another permanent
+  inhabitant?
+  .
+  The Horror of Salazar House is a gothic, Italian horror inspired haunted house
+  game with Virtual Boy style graphics and rotoscoped cut-scenes.
+release: 2020-10-15
+players: 1
+assets.boxfront: BoxFront/Horror of Salazar House, The (USA).jpg
+assets.boxback: BoxBack/Horror of Salazar House, The (USA).jpg
+assets.background: Background/Horror of Salazar House, The (USA).jpg
+assets.screenshot: Screenshot/Horror of Salazar House, The (USA).jpg
+assets.video: Video/Horror of Salazar House, The (USA).mp4
+x-co-op: No
+
+
+game: Meat Cleaver Mutilator (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/M/Meat Cleaver Mutilator (USA)/Meat Cleaver Mutilator (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Janet is having a terrible weekend. Looking for a new gig, she drives to the
+  city to audition for a low budget horror movie. But it seems somebody has
+  slipped a sedative in her drink
+  .
+  Waking up cold and alone inside an abandoned apartment building, she wonders, is
+  this real life or just another audition?
+release: 2016
+players: 1
+assets.boxfront: BoxFront/Meat Cleaver Mutilator (USA).jpg
+assets.boxback: BoxBack/Meat Cleaver Mutilator (USA).jpg
+assets.background: Background/Meat Cleaver Mutilator (USA).jpg
+assets.screenshot: Screenshot/Meat Cleaver Mutilator (USA).jpg
+assets.video: Video/Meat Cleaver Mutilator (USA).mp4
+x-co-op: No
+
+
+game: Minotaur (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/M/Minotaur (USA)/Minotaur (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Minotaur was a 2012 horror game by Puppet Combo (formerly Pig Farmer
+  Productions). The game never exited the Alpha development stage but
+  was remade into Power Drill Massacre, in 2015.
+  .
+  After getting in a car crash, a nameless woman flees through the
+  woods looking for help. She eventually stumbles across an abandoned
+  building and takes shelter there, which soon turns out to be a lair
+  of a dangerous killer.
+release: 2012
+players: 1
+assets.boxfront: BoxFront/Minotaur (USA).jpg
+assets.boxback: BoxBack/Minotaur (USA).jpg
+assets.background: Background/Minotaur (USA).jpg
+assets.screenshot: Screenshot/Minotaur (USA).jpg
+assets.video: Video/Minotaur (USA).mp4
+x-co-op: No
+
+
+game: Murder House (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/M/Murder House (USA)/Murder House (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  A local news team breaks into an abandoned house to chase a salacious ghost
+  story... until a MANIAC chases them! ...VHS era 80's slasher. PS1 style survival
+  horror!
+  .
+  A news crew breaks into the old abandoned home of an executed serial killer
+  Anthony Smith, planning to shoot a salacious haunted house story. But is the
+  notorious Easter Ripper really dead or is he waiting inside, ready to wipe them
+  out one by one? Who will survive, and what will be left of them? The spiritual
+  successor to Babysitter Bloodbath.
+  .
+  This game simulates a 5th gen survival horror game. It uses tank controls, third
+  person cinematic camera angles and is meant to be played with a controller. If
+  you have a problem playing tank control games, you will not like this game. It
+  has no auto saves, you must save with pencils which are in limited supply.
+release: 2020-10-22
+players: 1
+assets.boxfront: BoxFront/Murder House (USA).jpg
+assets.boxback: BoxBack/Murder House (USA).jpg
+assets.background: Background/Murder House (USA).jpg
+assets.screenshot: Screenshot/Murder House (USA).jpg
+assets.video: Video/Murder House (USA).mp4
+x-co-op: No
+
+
+game: Night At the Gates of Hell (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/N/Night At the Gates of Hell (USA)/Night At the Gates of Hell (USA).json
+developer: Black Eyed Priest
+publisher: Torture Star Video
+genre: Action Adventure;Survival
+description:
+  From the sick mind behind Bloodwash, Jordan King, comes his latest experiment in
+  terror. Inspired by the Italian zombie flicks from Lucio Fulci and Bruno Mattei,
+  Night of the Gates of Hell promises to be a blood dripping, neon soaked, flesh
+  rotting experience.
+  .
+  You'll play as David, a quiet man whose wife recently passed away, and is living
+  alone in his seaside apartment with nothing to lose when a zombie outbreak
+  ravages upon his city and disrupts his normal every-day life. After gathering
+  his thoughts, collecting a few weapons, and meeting up with other survivors,
+  David realizes that he must fight his way to the truth behind the apocalypse, by
+  gunning and slashing through the hordes of zombies.
+  .
+  Escape the city by solving puzzles to unlock new areas, while collecting
+  resources and fighting zombies, which can only be taken down with a shot
+  directly to the head.
+release: 2022-09-14
+players: 1
+assets.boxfront: BoxFront/Night At the Gates of Hell (USA).jpg
+assets.boxback: BoxBack/Night At the Gates of Hell (USA).jpg
+assets.background: Background/Night At the Gates of Hell (USA).jpg
+assets.screenshot: Screenshot/Night At the Gates of Hell (USA).jpg
+assets.video: Video/Night At the Gates of Hell (USA).mp4
+x-co-op: No
+
+
+game: Night Ripper, The (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/N/Night Ripper, The (USA)/Night Ripper, The (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  As the "Night Ripper" terrorizes the city, Rachel must walk home alone after
+  work. But a short trip goes astray when the streets are cordoned off due to
+  another slaying and she's forced down a back alley. Unfortunately for her, the
+  Ripper isn't done for the night.
+release: 2017
+players: 1
+assets.boxfront: BoxFront/Night Ripper, The (USA).jpg
+assets.boxback: BoxBack/Night Ripper, The (USA).jpg
+assets.background: Background/Night Ripper, The (USA).jpg
+assets.screenshot: Screenshot/Night Ripper, The (USA).jpg
+assets.video: Video/Night Ripper, The (USA).mp4
+x-co-op: No
+
+
+game: Night Shift (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/N/Night Shift (USA)/Night Shift (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Night Shift is a short 2018 horror game developed by Puppet Combo. The game
+  is also available in Scary Tales Vol 1, as well as a pack with its
+  preceding sequel, Stay Out of the House.
+  .
+  The player takes control of a female Esso gas station cashier, taking the
+  night shift. After she is dropped off by her friend Amber and replaces the
+  previous clerk, the game mostly consists her doing menial tasks assigned
+  to her in a note from her manager, Rick, like sweeping the floor,
+  reorganizing the stock, and manning the register. However, a foreboding
+  atmosphere is set when a mysterious white van laps around the gas station
+  and the cashier meets a suspicious customer who appears to spy on while
+  shopping. After he leaves, she hears a door open in the back and
+  investigates where she is attacked and knocked out by the Night Shift
+  Abductor.
+release: 2018
+players: 1
+assets.boxfront: BoxFront/Night Shift (USA).jpg
+assets.boxback: BoxBack/Night Shift (USA).jpg
+assets.background: Background/Night Shift (USA).jpg
+assets.screenshot: Screenshot/Night Shift (USA).jpg
+assets.video: Video/Night Shift (USA).mp4
+x-co-op: No
+
+
+game: Night Watch (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/N/Night Watch (USA)/Night Watch (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Adventure;3D;Third-Person
+description:
+  Night Watch is a 2019 horror game developed by Puppet Combo. The game is
+  available for download on Puppet Combo's Patreon.
+  .
+  The game follows a park ranger named Jim who was assigned on watch duty on
+  top of the tower in the middle of the park, where he specifically has to
+  check for fires and guide any hikers who are in trouble or lost. On top of
+  the tower, he checks for fires using the binoculars and checks the weather
+  using the old portable computer. During his watch, somebody contacts him
+  through the emergency radio transmitter. Jim tries to talk to the person but
+  all he hears is heavy breathing. He assumes some kids are playing pranks on
+  him so he brushes it off. The generator suddenly goes off and Jim goes
+  downstairs to refuel it. After refueling the generator, he finds a computer
+  disk and inserts it into his portable computer and it turns out to be a
+  text-based game. After playing the game, Jim hears a knock on the door and
+  goes to investigate but sees nobody. Later he receives a call from his wife
+  Nicole and they have a chat before Jim's phone dies. Things start to get
+  weird when the portable computer starts displaying encrypted messages and
+  somebody throws a rock at the window. Jim also catches glimpses of someone
+  on the balcony but upon investigating the person is nowhere to be seen.
+release: 2019
+players: 1
+assets.boxfront: BoxFront/Night Watch (USA).jpg
+assets.boxback: BoxBack/Night Watch (USA).jpg
+assets.background: Background/Night Watch (USA).jpg
+assets.screenshot: Screenshot/Night Watch (USA).jpg
+assets.video: Video/Night Watch (USA).mp4
+x-co-op: No
+
+
+game: Night of The Clowns (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/N/Night of The Clowns (USA)/Night of The Clowns (USA).json
+developer: Torture Star Video
+publisher: Torture Star Video
+genre: Action Adventure;Survival
+description:
+  Night of The Clowns is a 2020 survival horror game developed by Torture
+  Star Video. It is a reboot of a 2019 Evil Clowns.
+  .
+  Unlike the 2019 CarnEvil inspired game Evil Clowns which is a fast-paced
+  first-person shooter, Night of the Clowns acts more like a stealth
+  survival horror game where players have to navigate through series of
+  dark corridors and rooms while avoiding hostile clowns that patrol the
+  areas. Players can also use weapons that they can find and use to defend
+  themselves against hostile clowns. Players can also hide in the dark.
+  Clowns in this game move slowly and will attack when they spot the player.
+release: 2020
+players: 1
+assets.boxfront: BoxFront/Night of The Clowns (USA).jpg
+assets.boxback: BoxBack/Night of The Clowns (USA).jpg
+assets.background: Background/Night of The Clowns (USA).jpg
+assets.screenshot: Screenshot/Night of The Clowns (USA).jpg
+assets.video: Video/Night of The Clowns (USA).mp4
+x-co-op: No
+
+
+game: Nun Massacre (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/N/Nun Massacre (USA)/Nun Massacre (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  A letter has arrived at your house under mysterious circumstances... your
+  daughter has fallen ill at her boarding school. As you make a trip to pick her
+  up, a storm blows in and the road is blocked. You continue on foot through the
+  woods and all hell soon breaks loose...
+  .
+  Hide from the PSYCHOPATHIC nun at all costs! She hungers for BLOOD and you are
+  the next course! Nothing could prepare you for a NUN MASSACRE!
+release: 2018-09-30
+players: 1
+assets.boxfront: BoxFront/Nun Massacre (USA).jpg
+assets.boxback: BoxBack/Nun Massacre (USA).jpg
+assets.background: Background/Nun Massacre (USA).jpg
+assets.screenshot: Screenshot/Nun Massacre (USA).jpg
+assets.video: Video/Nun Massacre (USA).mp4
+x-co-op: No
+
+
+game: Pancake House (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/P/Pancake House (USA)/Pancake House (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  A midnight run to Pancake House takes a violent detour.
+  .
+  An upcoming game from Puppet Combo.
+release: 2021
+players: 1
+assets.boxfront: BoxFront/Pancake House (USA).jpg
+assets.boxback: BoxBack/Pancake House (USA).jpg
+assets.background: Background/Pancake House (USA).jpg
+assets.screenshot: Screenshot/Pancake House (USA).jpg
+assets.video: Video/Pancake House (USA).mp4
+x-co-op: No
+
+
+game: Photography Horror Game (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/P/Photography Horror Game (USA)/Photography Horror Game (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Photography Horror Game is an upcoming giallo, RPG horror game developed by
+  Puppet Combo. Demo of the game is available on Puppet Combo's Patreon.
+  .
+  The game starts with a character Alan returning home. Before he leaves the
+  school, he goes to talk to Angela in the library. After a conversation, he
+  exits the school and just remembers about his photo essay that he needs to
+  turn tomorrow. Luckily, he has his thesis written, and just needs to take
+  photos about each subject.
+release: 2023-02-11
+players: 1
+assets.boxfront: BoxFront/Photography Horror Game (USA).jpg
+assets.boxback: BoxBack/Photography Horror Game (USA).jpg
+assets.background: Background/Photography Horror Game (USA).jpg
+assets.screenshot: Screenshot/Photography Horror Game (USA).jpg
+assets.video: Video/Photography Horror Game (USA).mp4
+x-co-op: No
+
+
+game: Planet of Bloodthirsty Santa (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/P/Planet of Bloodthirsty Santa (USA)/Planet of Bloodthirsty Santa (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  A scavenger crew lands on a strange seemingly deserted planet. Something
+  terrible has occurred.
+  .
+  Can you make off alive or succumb to the terror of the Planet of BLOODTHIRSTY
+  SANTA?
+  .
+  Explore the icy planet: Santa's village, the Toy Factory, Santa's Castle.
+  .
+  Avoid the wrath of SANTA. He's for hungry for flesh and thirsty for blood.
+  .
+  Finish the mission at all costs!
+release: 2018
+players: 1
+assets.boxfront: BoxFront/Planet of Bloodthirsty Santa (USA).jpg
+assets.boxback: BoxBack/Planet of Bloodthirsty Santa (USA).jpg
+assets.background: Background/Planet of Bloodthirsty Santa (USA).jpg
+assets.screenshot: Screenshot/Planet of Bloodthirsty Santa (USA).jpg
+assets.video: Video/Planet of Bloodthirsty Santa (USA).mp4
+x-co-op: No
+
+
+game: Power Drill Massacre (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/P/Power Drill Massacre (USA)/Power Drill Massacre (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Power Drill Massacre, a remake of Minotaur, is a 2015 survival horror game
+  developed by Puppet Combo. The game is available for download on Puppet
+  Combo's Patreon and Itch.io pages. Full game will be released on Steam on
+  October 2022.
+  .
+  In 1987, Megan and her boyfriend, Jeff, get in a devastating car crash.
+  Megan soon seeks for help since Jeff is unable to move. Megan stumbles
+  across a factory and decides she can ask for help there. She soon realizes
+  she is trapped in the factory with a crazed killer wielding a power drill.
+  Can Megan survive the Driller Killer?
+release: 2022
+players: 1
+assets.boxfront: BoxFront/Power Drill Massacre (USA).jpg
+assets.boxback: BoxBack/Power Drill Massacre (USA).jpg
+assets.background: Background/Power Drill Massacre (USA).jpg
+assets.screenshot: Screenshot/Power Drill Massacre (USA).jpg
+assets.video: Video/Power Drill Massacre (USA).mp4
+x-co-op: No
+
+
+game: Power Drill Massacre Arcade (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/P/Power Drill Massacre Arcade (USA)/Power Drill Massacre Arcade (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Power Drill Massacre Arcade is a short adventure horror game developed by
+  Puppet Combo. It is an 8-bit arcade version of Power Drill Massacre.
+  .
+  Much like the original Power Drill Massacre but in 8-bit style, the game
+  follows Megan who after getting in a car crash, flees through woods to get
+  help for Jeff and takes shelter in an abandoned factory, which turns out to
+  be a lair of a killer.
+release: 2018-07-26
+players: 1
+assets.boxfront: BoxFront/Power Drill Massacre Arcade (USA).jpg
+assets.boxback: BoxBack/Power Drill Massacre Arcade (USA).jpg
+assets.background: Background/Power Drill Massacre Arcade (USA).jpg
+assets.screenshot: Screenshot/Power Drill Massacre Arcade (USA).jpg
+assets.video: Video/Power Drill Massacre Arcade (USA).mp4
+x-co-op: No
+
+
+game: Rewind or Die (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/R/Rewind or Die (USA)/Rewind or Die (USA).json
+developer: Comp-3 Interactive
+publisher: Torture Star Video
+genre: Action Adventure;Survival
+description:
+  Rewind or Die is a heart-thumping, blood-dripping blast from the past. Your co-
+  worker flaked out on their shift yet again and it's up to you to cover them. And
+  of course, there's a serial killer who's been staking their claim in that area.
+  Just another day at a video rental store... right?
+  .
+  Deal with irate customers, horrible bosses and keep your VHS store clean (or at
+  least as clean as it can be). Don't worry about the occasional creepy phone call
+  or that person watching you through the front window, it's all part of the job.
+  .
+  Will you become Slaw's latest victim? Can you survive a dead end day job AND a
+  stalking serial killer? Whatever the case, always remember to be kind and
+  please... REWIND OR DIE!
+release: 2023-04-14
+players: 1
+assets.boxfront: BoxFront/Rewind or Die (USA).jpg
+assets.boxback: BoxBack/Rewind or Die (USA).jpg
+assets.background: Background/Rewind or Die (USA).jpg
+assets.screenshot: Screenshot/Rewind or Die (USA).jpg
+assets.video: Video/Rewind or Die (USA).mp4
+x-co-op: No
+
+
+game: Riverside Incident, The (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/R/Riverside Incident, The (USA)/Riverside Incident, The (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  The Riverside Incident is a 2019 exploration horror game developed by Puppet
+  Combo. Game can be downloaded from Puppet Combo's Patreon page. It is also
+  available in Scary Tales Vol 1.
+  .
+  "In July 1991, a group of hikers happened upon a garbage bag containing a
+  videotape and some articles of clothing in Spring Forest state park. After
+  viewing the footage, they turned it into the local police, believing it to
+  be a prank. Limited portions of the tape have been released to the public
+  in hopes of identifying the persons involved."
+  .
+  It is a found footage type of game. The player controls an unseen character
+  who carries around a camera and wanders around an abandoned, ruined building
+  (they are either an urban explorer or a killer). Then, the action takes
+  place outside of a house - the character is possibly stalking whoever lives
+  there, as they even walk inside at one point. At the end of the game, the
+  character films a house burning downhill, sirens can be heard in the
+  background. The tape then suddenly cuts off.
+release: 2019
+players: 1
+assets.boxfront: BoxFront/Riverside Incident, The (USA).jpg
+assets.boxback: BoxBack/Riverside Incident, The (USA).jpg
+assets.background: Background/Riverside Incident, The (USA).jpg
+assets.screenshot: Screenshot/Riverside Incident, The (USA).jpg
+assets.video: Video/Riverside Incident, The (USA).mp4
+x-co-op: No
+
+
+game: Samhain (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/S/Samhain (USA)/Samhain (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Samhain is a 2019 horror game developed by Puppet Combo. The game can be
+  downloaded from Puppet Combo's Patreon and Itchio page.
+  .
+  "It's your favorite holiday. Take your brothers out trick-or-treating but
+  stay on the trail. And don't talk to strangers!"
+  .
+  The game takes place on Halloween night and follows Alice, an older sister
+  who was told by her mother to take her younger brothers trick or treating.
+  She also warns her not to talk to strangers and to stick to the trail.
+  Alice and her two brothers go trick or treating and collect some treats.
+  Suddenly, one brother disappears but they assume he returned home since he
+  was scared so they continue with trick or treating. On their way, they
+  stumble across a scarecrow who encourages them to go off the trail and that
+  they will find lots of candy...
+release: 2019
+players: 1
+assets.boxfront: BoxFront/Samhain (USA).jpg
+assets.boxback: BoxBack/Samhain (USA).jpg
+assets.background: Background/Samhain (USA).jpg
+assets.screenshot: Screenshot/Samhain (USA).jpg
+assets.video: Video/Samhain (USA).mp4
+x-co-op: No
+
+
+game: Scary Tales Vol. 1 (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/S/Scary Tales Vol. 1 (USA)/Scary Tales Vol. 1 (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Miscellaneous;Compilation
+description:
+  After a late Friday night of partying, you wake up to a strange package at your
+  door. Four mysteriou tapes you don't remember ordering. Will you dare to watch
+  them?
+  .
+  Four of the scariest Puppet Combo shorts in one shocking anthology! They will
+  rattle your body and haunt your dreams!
+  .
+  - Work the NIGHT SHIFT in a desolate convenience store.
+  .
+  - Defend your family from blood thirsty SPIDERS!
+  .
+  - Clean up the streets and FEED ME BILLY
+  .
+  - Witness the shocking tapes of THE RIVERSIDE INCIDENT
+release: 2019-10-29
+players: 1
+assets.boxfront: BoxFront/Scary Tales Vol. 1 (USA).jpg
+assets.boxback: BoxBack/Scary Tales Vol. 1 (USA).jpg
+assets.background: Background/Scary Tales Vol. 1 (USA).jpg
+assets.screenshot: Screenshot/Scary Tales Vol. 1 (USA).jpg
+assets.video: Video/Scary Tales Vol. 1 (USA).mp4
+x-co-op: No
+
+
+game: Search Party (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/S/Search Party (USA)/Search Party (USA).json
+developer: Torture Star Video
+publisher: Torture Star Video
+genre: Action Adventure;Survival
+description:
+  SEARCH PARTY is a 2019 horror game developed by Lum and published by Torture
+  Star Video. On March 4th 2021, the Director's Cut edition was released on
+  steam.
+  .
+  Claire's 8-year-old brother, Daniel, is missing. While looking for him
+  during a search party, she finds herself completely lost and alone in the
+  woods. She eventually spots a strange house in the distance... could
+  Daniel be inside?
+release: 2019
+players: 1
+assets.boxfront: BoxFront/Search Party (USA).jpg
+assets.boxback: BoxBack/Search Party (USA).jpg
+assets.background: Background/Search Party (USA).jpg
+assets.screenshot: Screenshot/Search Party (USA).jpg
+assets.video: Video/Search Party (USA).mp4
+x-co-op: No
+
+
+game: Ski Freak (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/S/Ski Freak (USA)/Ski Freak (USA).json
+developer: Jordan King
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Ski Freak is a 2020 horror game developed by Jordan King and produced and
+  published by Puppet Combo. The game is available for download on Puppet
+  Combo's Patreon.
+  .
+  This winter, Mt. Doubleton has a new resident and it's decided to dine in.
+  Will these innocent skiers survive? Or will they become mincemeat?
+release: 2020
+players: 1
+assets.boxfront: BoxFront/Ski Freak (USA).jpg
+assets.boxback: BoxBack/Ski Freak (USA).jpg
+assets.background: Background/Ski Freak (USA).jpg
+assets.screenshot: Screenshot/Ski Freak (USA).jpg
+assets.video: Video/Ski Freak (USA).mp4
+x-co-op: No
+
+
+game: Spiders (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/S/Spiders (USA)/Spiders (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Spiders is a 2018 FPS survival horror game developed by Puppet Combo. Game
+  can be downloaded from Puppet Combo's Patreon page, and is available in
+  Scary Tales Vol 1.
+  .
+  Something is coming. Your town is not safe. Your family is not safe from
+  SPIDERS! Nature's perfect predator has had enough and now they're taking
+  revenge... They're at the top of the food chain now.
+release: 2018
+players: 1
+assets.boxfront: BoxFront/Spiders (USA).jpg
+assets.boxback: BoxBack/Spiders (USA).jpg
+assets.background: Background/Spiders (USA).jpg
+assets.screenshot: Screenshot/Spiders (USA).jpg
+assets.video: Video/Spiders (USA).mp4
+x-co-op: No
+
+
+game: Stay Out of the House (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/S/Stay Out of the House (USA)/Stay Out of the House (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  The smack of a hammer... your head lands hard on the dirty linoleum floor... a
+  maniac drags you up the stairs and cages you like an animal! You have three days
+  until the reckoning...
+  .
+  Welcome to the home of THE BUTCHER. Welcome to YOUR new home. Why are you here?
+  Why has this mad man chosen you, and what are his plans for you? How will you
+  escape? Can you even escape? All of these questions have answers, but can you
+  seek them out? Do you want to? If only you'd heeded their warning to STAY OUT OF
+  THE HOUSE.
+release: 2022-10-06
+players: 1
+assets.boxfront: BoxFront/Stay Out of the House (USA).jpg
+assets.boxback: BoxBack/Stay Out of the House (USA).jpg
+assets.background: Background/Stay Out of the House (USA).jpg
+assets.screenshot: Screenshot/Stay Out of the House (USA).jpg
+assets.video: Video/Stay Out of the House (USA).mp4
+x-co-op: No
+
+
+game: Summoning, The (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/S/Summoning, The (USA)/Summoning, The (USA).json
+developer: Jordan King
+publisher: Torture Star Video
+genre: Action Adventure;Survival
+description:
+  The Summoning is a 2020 horror game developed by Jordan King and published
+  under Torture Star Video. The game is available on Puppet Combo's patreon.
+  .
+  "Last night, there was a murder inside an abandoned house in a partically
+  vacant neighborhood. The scene has already been cleaned and detectives
+  got everything they want, but the security company I work for has been
+  hired to watch this place.
+  .
+  Due to the nature of the crime, they suspect the house will be a gold mine
+  for adventure seekers and vandalism.
+  .
+  Stupid kids, don't they see enough death on the news and in movies? Anyway,
+  I'm heading there for my first shift.
+  .
+  I'm not particularly superstitious, but that house is known for being
+  haunted. I just hope I don't get mugged getting there. The buses don't
+  run through that neighborhood anymore...
+  .
+  Well, better get going."
+release: 2020-10-30
+players: 1
+assets.boxfront: BoxFront/Summoning, The (USA).jpg
+assets.boxback: BoxBack/Summoning, The (USA).jpg
+assets.background: Background/Summoning, The (USA).jpg
+assets.screenshot: Screenshot/Summoning, The (USA).jpg
+assets.video: Video/Summoning, The (USA).mp4
+x-co-op: No
+
+
+game: Texas Butcher (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/T/Texas Butcher (USA)/Texas Butcher (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Larry The Butcher (Known as Texas Butcher) is a 2016 horror game developed by
+  Puppet Combo. Some things were changed in the game and it turned into Blood
+  Maniac.
+  .
+  Like Sanitarium Massacre, Texas Butcher is an inverse of the usual Puppet
+  Combo formula in that the player controls the psychotic maniac preying on
+  defenceles people instead of the other way around. Larry is a hulking
+  lunatic that patrols the outskirts of Texas's country, invading the
+  surrounding ranches and houses and stalking and murdering anyone they
+  come across.
+release: 2016
+players: 1
+assets.boxfront: BoxFront/Texas Butcher (USA).jpg
+assets.boxback: BoxBack/Texas Butcher (USA).jpg
+assets.background: Background/Texas Butcher (USA).jpg
+assets.screenshot: Screenshot/Texas Butcher (USA).jpg
+assets.video: Video/Texas Butcher (USA).mp4
+x-co-op: No
+
+
+game: These Trees Are Spectral Fingers (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/T/These Trees Are Spectral Fingers (USA)/These Trees Are Spectral Fingers (USA).json
+developer: kavvkka
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  These Trees Are Spectral Fingers is a 2019 horror game developed by
+  kavvkka and published by Puppet Combo. The game can be downloaded
+  from Puppet Combo's Patreon page.
+  .
+  After endless lonely hours on the highway, your car broke down in the middle
+  of nowhere. Surrounded by age-old trees you're trying to find a way to
+  communicate and get help. But you have no idea what lurks in these old
+  forests.
+release: 2019
+players: 1
+assets.boxfront: BoxFront/These Trees Are Spectral Fingers (USA).jpg
+assets.boxback: BoxBack/These Trees Are Spectral Fingers (USA).jpg
+assets.background: Background/These Trees Are Spectral Fingers (USA).jpg
+assets.screenshot: Screenshot/These Trees Are Spectral Fingers (USA).jpg
+assets.video: Video/These Trees Are Spectral Fingers (USA).mp4
+x-co-op: No
+
+
+game: Tonight It Follows (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/T/Tonight It Follows (USA)/Tonight It Follows (USA).json
+developer: Jordan King
+publisher: Puppet Combo
+genre: Action Adventure;Survival
+description:
+  Tonight It Follows is a 2019 short 2D horror game created by Jordan King and
+  published by Puppet Combo.
+  .
+  Escape an unrelenting horror that never stops as you make your way through a
+  cemetery at night. A 2D pixel art survival horror game inspired by Silent
+  Hill.
+release: 2019
+players: 1
+assets.boxfront: BoxFront/Tonight It Follows (USA).jpg
+assets.boxback: BoxBack/Tonight It Follows (USA).jpg
+assets.background: Background/Tonight It Follows (USA).jpg
+assets.screenshot: Screenshot/Tonight It Follows (USA).jpg
+assets.video: Video/Tonight It Follows (USA).mp4
+x-co-op: No
+
+
+game: Unfinished Worlds Vol 1 (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/U/Unfinished Worlds Vol 1 (USA)/Unfinished Worlds Vol 1 (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Miscellaneous;Compilation
+description:
+  Unfinished Worlds Volume 1 is an anthology compilation of Puppet Combo's
+  cancelled games and the first installment of the Unfinished Worlds series.
+release: 2019
+players: 1
+assets.boxfront: BoxFront/Unfinished Worlds Vol 1 (USA).jpg
+assets.boxback: BoxBack/Unfinished Worlds Vol 1 (USA).jpg
+assets.background: Background/Unfinished Worlds Vol 1 (USA).jpg
+assets.screenshot: Screenshot/Unfinished Worlds Vol 1 (USA).jpg
+assets.video: Video/Unfinished Worlds Vol 1 (USA).mp4
+x-co-op: No
+
+
+game: Unfinished Worlds Vol 2 (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/U/Unfinished Worlds Vol 2 (USA)/Unfinished Worlds Vol 2 (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Miscellaneous;Compilation
+description:
+  Unfinished Worlds Volume 2 is an anthology game made by Puppet Combo. It has
+  cancelled and unreleased games. It is the sequel to Unfinished Worlds Vol. 1.
+release: 2020
+players: 1
+assets.boxfront: BoxFront/Unfinished Worlds Vol 2 (USA).jpg
+assets.boxback: BoxBack/Unfinished Worlds Vol 2 (USA).jpg
+assets.background: Background/Unfinished Worlds Vol 2 (USA).jpg
+assets.screenshot: Screenshot/Unfinished Worlds Vol 2 (USA).jpg
+assets.video: Video/Unfinished Worlds Vol 2 (USA).mp4
+x-co-op: No
+
+
+game: Unfinished Worlds Vol 3 (USA)
+file: $ROM_JSON_ROOT/Computer/Puppet Combo/U/Unfinished Worlds Vol 3 (USA)/Unfinished Worlds Vol 3 (USA).json
+developer: Puppet Combo
+publisher: Puppet Combo
+genre: Miscellaneous;Compilation
+description:
+  Unfinished Worlds Volume 3 is an anthology game made by Puppet Combo. It has
+  cancelled and unreleased games. It is the sequel to Unfinished Worlds Vol. 2.
+release: 2021
+players: 1
+assets.boxfront: BoxFront/Unfinished Worlds Vol 3 (USA).jpg
+assets.boxback: BoxBack/Unfinished Worlds Vol 3 (USA).jpg
+assets.background: Background/Unfinished Worlds Vol 3 (USA).jpg
+assets.screenshot: Screenshot/Unfinished Worlds Vol 3 (USA).jpg
+assets.video: Video/Unfinished Worlds Vol 3 (USA).mp4
+x-co-op: No
+
+

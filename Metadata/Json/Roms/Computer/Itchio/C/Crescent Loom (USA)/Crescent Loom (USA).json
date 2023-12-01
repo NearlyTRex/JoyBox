@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Crescent Loom (USA).exe"
+    ],
+    "transform_file": "Crescent Loom (USA).exe"
+}

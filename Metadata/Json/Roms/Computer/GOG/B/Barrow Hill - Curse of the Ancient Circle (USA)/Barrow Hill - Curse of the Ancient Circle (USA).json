@@ -1,0 +1,17 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/barrow_hill_curse_of_the_ancient_circle_map.zip",
+        "$SETUP_MAIN_ROOT/extra/barrow_hill_curse_of_the_ancient_circle_soundtrack_wav.zip",
+        "$SETUP_MAIN_ROOT/extra/barrow_hill_curse_of_the_ancient_circle_walkthrough.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_barrow_hill_curse_of_the_ancient_circle_bh1-gog2_(37382).exe"
+    ],
+    "sync": {
+        "data": [
+            "*.sav"
+        ],
+        "search": "gog.ico"
+    },
+    "transform_file": "setup_barrow_hill_curse_of_the_ancient_circle_bh1-gog2_(37382).exe"
+}

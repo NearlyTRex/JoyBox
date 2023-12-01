@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Cosmic Express (USA).exe"
+    ],
+    "transform_file": "Cosmic Express (USA).exe"
+}

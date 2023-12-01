@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Strafe - Gold Edition (USA).exe"
+    ],
+    "transform_file": "Strafe - Gold Edition (USA).exe"
+}

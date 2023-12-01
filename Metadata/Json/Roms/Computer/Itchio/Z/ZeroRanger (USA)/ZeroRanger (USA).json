@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/ZeroRanger (USA).exe"
+    ],
+    "transform_file": "ZeroRanger (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Inner Tao (USA).exe"
+    ],
+    "transform_file": "Inner Tao (USA).exe"
+}

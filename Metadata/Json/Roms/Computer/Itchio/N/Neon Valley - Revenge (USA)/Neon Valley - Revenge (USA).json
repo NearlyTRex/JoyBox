@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Neon Valley - Revenge (USA).exe"
+    ],
+    "transform_file": "Neon Valley - Revenge (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Mobility! Accessible Precision Platformer (USA).exe"
+    ],
+    "transform_file": "Mobility! Accessible Precision Platformer (USA).exe"
+}

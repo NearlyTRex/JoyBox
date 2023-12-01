@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/EscapeRoomSim (USA).exe"
+    ],
+    "transform_file": "EscapeRoomSim (USA).exe"
+}

@@ -1,0 +1,31 @@
+{
+    "files": [
+        "rocnrope/a17_prom.bin",
+        "rocnrope/b16_prom.bin",
+        "rocnrope/n82s153.pal1.bin",
+        "rocnrope/n82s153.pal2.bin",
+        "rocnrope/pal10l8.6g",
+        "rocnrope/r1.1j",
+        "rocnrope/r6.11j",
+        "rocnrope/r7.12j",
+        "rocnrope/rnr_7a.snd",
+        "rocnrope/rnr_8a.snd",
+        "rocnrope/rnr_a10.vid",
+        "rocnrope/rnr_a11.vid",
+        "rocnrope/rnr_a12.vid",
+        "rocnrope/rnr_a9.vid",
+        "rocnrope/rnr_h1.vid",
+        "rocnrope/rnr_h11.vid",
+        "rocnrope/rnr_h12.vid",
+        "rocnrope/rnr_h2.vid",
+        "rocnrope/rnr_h3.vid",
+        "rocnrope/rnr_h4.vid",
+        "rocnrope/rnr_h5.vid",
+        "rocnrope/rocnrope.pr3",
+        "rocnrope/rr1.1h",
+        "rocnrope/rr2.2h",
+        "rocnrope/rr3.3h",
+        "rocnrope/rr4.4h"
+    ],
+    "launch_name": "rocnrope"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Goats on a Bridge (USA).exe"
+    ],
+    "transform_file": "Goats on a Bridge (USA).exe"
+}

@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Borderlands 2 (USA).exe"
+    ],
+    "main_game_exe": [
+        "Borderlands 2/Binaries/Win32/Borderlands2.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Borderlands 2/Binaries/Win32/Borderlands2.exe": "Borderlands 2/Binaries/Win32"
+    },
+    "transform_file": "Borderlands 2 (USA).exe"
+}

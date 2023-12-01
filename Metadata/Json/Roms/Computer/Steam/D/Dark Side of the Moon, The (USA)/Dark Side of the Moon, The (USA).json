@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dark Side of the Moon, The (USA).exe"
+    ],
+    "transform_file": "Dark Side of the Moon, The (USA).exe"
+}

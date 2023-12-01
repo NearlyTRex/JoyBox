@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_nosferatu_-_wrath_of_malachi_1.0_(23172).exe"
+    ],
+    "transform_file": "setup_nosferatu_-_wrath_of_malachi_1.0_(23172).exe"
+}

@@ -1,0 +1,8 @@
+{
+    "files": [
+        "PlayStation All-Stars Battle Royale (USA) (En,Fr,Es,Pt).chd",
+        "PlayStation All-Stars Battle Royale (USA) (En,Fr,Es,Pt).dkey"
+    ],
+    "launch_file": "PS3_GAME/USRDIR/EBOOT.BIN",
+    "transform_file": "PlayStation All-Stars Battle Royale (USA) (En,Fr,Es,Pt).chd"
+}

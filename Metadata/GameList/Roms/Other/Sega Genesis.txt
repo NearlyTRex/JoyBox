@@ -1,0 +1,197 @@
+Sega Genesis || 6-Pak (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/6-Pak (USA)/6-Pak (USA).json
+Sega Genesis || After Burner II (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/After Burner II (USA, Europe)/After Burner II (USA, Europe).json
+Sega Genesis || Alex Kidd in the Enchanted Castle (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Alex Kidd in the Enchanted Castle (USA)/Alex Kidd in the Enchanted Castle (USA).json
+Sega Genesis || Alien Soldier (Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Alien Soldier (Europe)/Alien Soldier (Europe).json
+Sega Genesis || Alien Soldier (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Alien Soldier (Japan)/Alien Soldier (Japan).json
+Sega Genesis || Alien Storm (World) || $ROM_JSON_ROOT/Other/Sega Genesis/Alien Storm (World)/Alien Storm (World).json
+Sega Genesis || Alisia Dragoon (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Alisia Dragoon (USA)/Alisia Dragoon (USA).json
+Sega Genesis || Altered Beast (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Altered Beast (USA, Europe)/Altered Beast (USA, Europe).json
+Sega Genesis || Atomic Runner (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Atomic Runner (USA)/Atomic Runner (USA).json
+Sega Genesis || Bare Knuckle - Ikari no Tekken ~ Streets of Rage (World) (Rev A) || $ROM_JSON_ROOT/Other/Sega Genesis/Bare Knuckle - Ikari no Tekken ~ Streets of Rage (World) (Rev A)/Bare Knuckle - Ikari no Tekken ~ Streets of Rage (World) (Rev A).json
+Sega Genesis || Bare Knuckle II - Shitou e no Requiem ~ Streets of Rage II (Japan, Europe) (En,Ja) || $ROM_JSON_ROOT/Other/Sega Genesis/Bare Knuckle II - Shitou e no Requiem ~ Streets of Rage II (Japan, Europe) (En,Ja)/Bare Knuckle II - Shitou e no Requiem ~ Streets of Rage II (Japan, Europe) (En,Ja).json
+Sega Genesis || Bare Knuckle III (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Bare Knuckle III (Japan)/Bare Knuckle III (Japan).json
+Sega Genesis || Barver Battle Saga - Tai Kong Zhan Shi (Taiwan) (Unl) || $ROM_JSON_ROOT/Other/Sega Genesis/Barver Battle Saga - Tai Kong Zhan Shi (Taiwan) (Unl)/Barver Battle Saga - Tai Kong Zhan Shi (Taiwan) (Unl).json
+Sega Genesis || Beavis and Butt-Head (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Beavis and Butt-Head (USA)/Beavis and Butt-Head (USA).json
+Sega Genesis || Beyond Oasis (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Beyond Oasis (USA)/Beyond Oasis (USA).json
+Sega Genesis || Bio Hazard Battle (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Bio Hazard Battle (USA, Europe)/Bio Hazard Battle (USA, Europe).json
+Sega Genesis || Bonanza Bros. (Japan, Europe) (Rev A) || $ROM_JSON_ROOT/Other/Sega Genesis/Bonanza Bros. (Japan, Europe) (Rev A)/Bonanza Bros. (Japan, Europe) (Rev A).json
+Sega Genesis || Bonanza Bros. (USA, Europe, Korea) (Rev B) || $ROM_JSON_ROOT/Other/Sega Genesis/Bonanza Bros. (USA, Europe, Korea) (Rev B)/Bonanza Bros. (USA, Europe, Korea) (Rev B).json
+Sega Genesis || Bram Stoker's Dracula (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Bram Stoker's Dracula (USA)/Bram Stoker's Dracula (USA).json
+Sega Genesis || Brave Battle Saga - Legend of the Magic Warrior (Taiwan) (Unl) || $ROM_JSON_ROOT/Other/Sega Genesis/Brave Battle Saga - Legend of the Magic Warrior (Taiwan) (Unl)/Brave Battle Saga - Legend of the Magic Warrior (Taiwan) (Unl).json
+Sega Genesis || Budokan - The Martial Spirit (USA) (Unl) || $ROM_JSON_ROOT/Other/Sega Genesis/Budokan - The Martial Spirit (USA) (Unl)/Budokan - The Martial Spirit (USA) (Unl).json
+Sega Genesis || Castle of Illusion Starring Mickey Mouse (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Castle of Illusion Starring Mickey Mouse (USA, Europe)/Castle of Illusion Starring Mickey Mouse (USA, Europe).json
+Sega Genesis || Castlevania - Bloodlines (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Castlevania - Bloodlines (USA)/Castlevania - Bloodlines (USA).json
+Sega Genesis || Castlevania - Bloodlines (USA) (Castlevania Anniversary Collection) || $ROM_JSON_ROOT/Other/Sega Genesis/Castlevania - Bloodlines (USA) (Castlevania Anniversary Collection)/Castlevania - Bloodlines (USA) (Castlevania Anniversary Collection).json
+Sega Genesis || Chakan (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Chakan (USA, Europe)/Chakan (USA, Europe).json
+Sega Genesis || ClayFighter (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/ClayFighter (USA)/ClayFighter (USA).json
+Sega Genesis || Columns (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Columns (USA, Europe)/Columns (USA, Europe).json
+Sega Genesis || Columns III (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Columns III (USA)/Columns III (USA).json
+Sega Genesis || Comix Zone (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Comix Zone (USA)/Comix Zone (USA).json
+Sega Genesis || Contra - Hard Corps (USA, Korea) || $ROM_JSON_ROOT/Other/Sega Genesis/Contra - Hard Corps (USA, Korea)/Contra - Hard Corps (USA, Korea).json
+Sega Genesis || Contra - Hard Corps (World) (Contra Anniversary Collection) || $ROM_JSON_ROOT/Other/Sega Genesis/Contra - Hard Corps (World) (Contra Anniversary Collection)/Contra - Hard Corps (World) (Contra Anniversary Collection).json
+Sega Genesis || Contra - The Hard Corps (Japan) (Contra Anniversary Collection) || $ROM_JSON_ROOT/Other/Sega Genesis/Contra - The Hard Corps (Japan) (Contra Anniversary Collection)/Contra - The Hard Corps (Japan) (Contra Anniversary Collection).json
+Sega Genesis || Cosmic Spacehead (USA, Europe) (En,Fr,De,Es) || $ROM_JSON_ROOT/Other/Sega Genesis/Cosmic Spacehead (USA, Europe) (En,Fr,De,Es)/Cosmic Spacehead (USA, Europe) (En,Fr,De,Es).json
+Sega Genesis || Crack Down (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Crack Down (USA)/Crack Down (USA).json
+Sega Genesis || Crusader of Centy (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Crusader of Centy (USA)/Crusader of Centy (USA).json
+Sega Genesis || Cyborg Justice (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Cyborg Justice (USA, Europe)/Cyborg Justice (USA, Europe).json
+Sega Genesis || DEcapAttack (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/DEcapAttack (USA, Europe)/DEcapAttack (USA, Europe).json
+Sega Genesis || DEcapAttack (USA, Europe, Korea) || $ROM_JSON_ROOT/Other/Sega Genesis/DEcapAttack (USA, Europe, Korea)/DEcapAttack (USA, Europe, Korea).json
+Sega Genesis || Daimakaimura ~ Ghouls'n Ghosts (World) (Rev A) || $ROM_JSON_ROOT/Other/Sega Genesis/Daimakaimura ~ Ghouls'n Ghosts (World) (Rev A)/Daimakaimura ~ Ghouls'n Ghosts (World) (Rev A).json
+Sega Genesis || Desert Strike - Return to the Gulf (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Desert Strike - Return to the Gulf (USA, Europe)/Desert Strike - Return to the Gulf (USA, Europe).json
+Sega Genesis || Dr. Robotnik's Mean Bean Machine (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Dr. Robotnik's Mean Bean Machine (USA)/Dr. Robotnik's Mean Bean Machine (USA).json
+Sega Genesis || Dynamite Headdy (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Dynamite Headdy (Japan)/Dynamite Headdy (Japan).json
+Sega Genesis || Dynamite Headdy (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Dynamite Headdy (USA, Europe)/Dynamite Headdy (USA, Europe).json
+Sega Genesis || ESWAT - City under Siege (USA, Europe) (Rev A) || $ROM_JSON_ROOT/Other/Sega Genesis/ESWAT - City under Siege (USA, Europe) (Rev A)/ESWAT - City under Siege (USA, Europe) (Rev A).json
+Sega Genesis || Earthworm Jim (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Earthworm Jim (USA)/Earthworm Jim (USA).json
+Sega Genesis || Earthworm Jim 2 (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Earthworm Jim 2 (USA)/Earthworm Jim 2 (USA).json
+Sega Genesis || Ecco - The Tides of Time (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Ecco - The Tides of Time (USA)/Ecco - The Tides of Time (USA).json
+Sega Genesis || Ecco Jr. (USA, Australia) || $ROM_JSON_ROOT/Other/Sega Genesis/Ecco Jr. (USA, Australia)/Ecco Jr. (USA, Australia).json
+Sega Genesis || Ecco the Dolphin (USA, Europe, Korea) || $ROM_JSON_ROOT/Other/Sega Genesis/Ecco the Dolphin (USA, Europe, Korea)/Ecco the Dolphin (USA, Europe, Korea).json
+Sega Genesis || Elemental Master (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Elemental Master (USA)/Elemental Master (USA).json
+Sega Genesis || Eternal Champions (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Eternal Champions (USA)/Eternal Champions (USA).json
+Sega Genesis || Fatal Fury 2 (USA, Korea) (En) || $ROM_JSON_ROOT/Other/Sega Genesis/Fatal Fury 2 (USA, Korea) (En)/Fatal Fury 2 (USA, Korea) (En).json
+Sega Genesis || Fatal Labyrinth (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Fatal Labyrinth (USA, Europe)/Fatal Labyrinth (USA, Europe).json
+Sega Genesis || Flicky (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Flicky (USA, Europe)/Flicky (USA, Europe).json
+Sega Genesis || Gain Ground (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Gain Ground (USA)/Gain Ground (USA).json
+Sega Genesis || Galaxy Force II (USA, Europe) (PC Rerelease) || $ROM_JSON_ROOT/Other/Sega Genesis/Galaxy Force II (USA, Europe) (PC Rerelease)/Galaxy Force II (USA, Europe) (PC Rerelease).json
+Sega Genesis || Galaxy Force II (World) (Rev B) || $ROM_JSON_ROOT/Other/Sega Genesis/Galaxy Force II (World) (Rev B)/Galaxy Force II (World) (Rev B).json
+Sega Genesis || General Chaos (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/General Chaos (USA, Europe)/General Chaos (USA, Europe).json
+Sega Genesis || Golden Axe (World) (Rev A) || $ROM_JSON_ROOT/Other/Sega Genesis/Golden Axe (World) (Rev A)/Golden Axe (World) (Rev A).json
+Sega Genesis || Golden Axe II (World) || $ROM_JSON_ROOT/Other/Sega Genesis/Golden Axe II (World)/Golden Axe II (World).json
+Sega Genesis || Golden Axe III (Japan) (En) || $ROM_JSON_ROOT/Other/Sega Genesis/Golden Axe III (Japan) (En)/Golden Axe III (Japan) (En).json
+Sega Genesis || Granada (Japan, USA) (En) || $ROM_JSON_ROOT/Other/Sega Genesis/Granada (Japan, USA) (En)/Granada (Japan, USA) (En).json
+Sega Genesis || Gunstar Heroes (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Gunstar Heroes (Japan)/Gunstar Heroes (Japan).json
+Sega Genesis || Gunstar Heroes (Japan) (Sample) (April, 1993) || $ROM_JSON_ROOT/Other/Sega Genesis/Gunstar Heroes (Japan) (Sample) (April, 1993)/Gunstar Heroes (Japan) (Sample) (April, 1993).json
+Sega Genesis || Gunstar Heroes (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Gunstar Heroes (USA)/Gunstar Heroes (USA).json
+Sega Genesis || Haunting Starring Polterguy (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Haunting Starring Polterguy (USA, Europe)/Haunting Starring Polterguy (USA, Europe).json
+Sega Genesis || Hellfire (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Hellfire (USA)/Hellfire (USA).json
+Sega Genesis || Herzog Zwei (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Herzog Zwei (USA, Europe)/Herzog Zwei (USA, Europe).json
+Sega Genesis || Jungle Strike (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Jungle Strike (USA, Europe)/Jungle Strike (USA, Europe).json
+Sega Genesis || Kid Chameleon (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Kid Chameleon (USA, Europe)/Kid Chameleon (USA, Europe).json
+Sega Genesis || Landstalker (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Landstalker (USA)/Landstalker (USA).json
+Sega Genesis || Landstalker - Die Schatze von Konig Nolo (Germany) || $ROM_JSON_ROOT/Other/Sega Genesis/Landstalker - Die Schatze von Konig Nolo (Germany)/Landstalker - Die Schatze von Konig Nolo (Germany).json
+Sega Genesis || Landstalker - Le Tresor du Roi Nole (France) || $ROM_JSON_ROOT/Other/Sega Genesis/Landstalker - Le Tresor du Roi Nole (France)/Landstalker - Le Tresor du Roi Nole (France).json
+Sega Genesis || Legende de Thor, La (France) || $ROM_JSON_ROOT/Other/Sega Genesis/Legende de Thor, La (France)/Legende de Thor, La (France).json
+Sega Genesis || Light Crusader (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Light Crusader (USA)/Light Crusader (USA).json
+Sega Genesis || Lightening Force - Quest for the Darkstar (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Lightening Force - Quest for the Darkstar (USA)/Lightening Force - Quest for the Darkstar (USA).json
+Sega Genesis || Mega Man - The Wily Wars (Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Mega Man - The Wily Wars (Europe)/Mega Man - The Wily Wars (Europe).json
+Sega Genesis || Mega Turrican (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Mega Turrican (USA)/Mega Turrican (USA).json
+Sega Genesis || Mega Turrican - Director's Cut (World) (Aftermarket) (Unl) || $ROM_JSON_ROOT/Other/Sega Genesis/Mega Turrican - Director's Cut (World) (Aftermarket) (Unl)/Mega Turrican - Director's Cut (World) (Aftermarket) (Unl).json
+Sega Genesis || Midnight Resistance (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Midnight Resistance (USA)/Midnight Resistance (USA).json
+Sega Genesis || Might and Magic - Gates to Another World (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Might and Magic - Gates to Another World (USA, Europe)/Might and Magic - Gates to Another World (USA, Europe).json
+Sega Genesis || Mortal Kombat (World) || $ROM_JSON_ROOT/Other/Sega Genesis/Mortal Kombat (World)/Mortal Kombat (World).json
+Sega Genesis || Mortal Kombat II (World) || $ROM_JSON_ROOT/Other/Sega Genesis/Mortal Kombat II (World)/Mortal Kombat II (World).json
+Sega Genesis || Mugen Senshi Valis (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Mugen Senshi Valis (Japan)/Mugen Senshi Valis (Japan).json
+Sega Genesis || Mutant League Football (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Mutant League Football (USA, Europe)/Mutant League Football (USA, Europe).json
+Sega Genesis || Ooze, The (Japan, USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Ooze, The (Japan, USA)/Ooze, The (Japan, USA).json
+Sega Genesis || OutRun (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/OutRun (USA, Europe)/OutRun (USA, Europe).json
+Sega Genesis || OutRunners (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/OutRunners (USA)/OutRunners (USA).json
+Sega Genesis || Phantasy Star - Sennenki no Owari ni (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star - Sennenki no Owari ni (Japan)/Phantasy Star - Sennenki no Owari ni (Japan).json
+Sega Genesis || Phantasy Star - Sennenki no Owari ni (Japan) (Mega Drive Mini) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star - Sennenki no Owari ni (Japan) (Mega Drive Mini)/Phantasy Star - Sennenki no Owari ni (Japan) (Mega Drive Mini).json
+Sega Genesis || Phantasy Star II (USA, Europe) (Rev A) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star II (USA, Europe) (Rev A)/Phantasy Star II (USA, Europe) (Rev A).json
+Sega Genesis || Phantasy Star II (USA, Europe) (Rev A) (PC Rerelease) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star II (USA, Europe) (Rev A) (PC Rerelease)/Phantasy Star II (USA, Europe) (Rev A) (PC Rerelease).json
+Sega Genesis || Phantasy Star II - Amia's Adventure (Japan) (SegaNet) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star II - Amia's Adventure (Japan) (SegaNet)/Phantasy Star II - Amia's Adventure (Japan) (SegaNet).json
+Sega Genesis || Phantasy Star II - Anne's Adventure (Japan) (SegaNet) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star II - Anne's Adventure (Japan) (SegaNet)/Phantasy Star II - Anne's Adventure (Japan) (SegaNet).json
+Sega Genesis || Phantasy Star II - Huey's Adventure (Japan) (SegaNet) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star II - Huey's Adventure (Japan) (SegaNet)/Phantasy Star II - Huey's Adventure (Japan) (SegaNet).json
+Sega Genesis || Phantasy Star II - Kaerazaru Toki no Owari ni (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star II - Kaerazaru Toki no Owari ni (Japan)/Phantasy Star II - Kaerazaru Toki no Owari ni (Japan).json
+Sega Genesis || Phantasy Star II - Kinds's Adventure (Japan) (SegaNet) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star II - Kinds's Adventure (Japan) (SegaNet)/Phantasy Star II - Kinds's Adventure (Japan) (SegaNet).json
+Sega Genesis || Phantasy Star II - Nei's Adventure (Japan) (SegaNet) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star II - Nei's Adventure (Japan) (SegaNet)/Phantasy Star II - Nei's Adventure (Japan) (SegaNet).json
+Sega Genesis || Phantasy Star II - Rudger's Adventure (Japan) (SegaNet) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star II - Rudger's Adventure (Japan) (SegaNet)/Phantasy Star II - Rudger's Adventure (Japan) (SegaNet).json
+Sega Genesis || Phantasy Star II - Shilka's Adventure (Japan) (SegaNet) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star II - Shilka's Adventure (Japan) (SegaNet)/Phantasy Star II - Shilka's Adventure (Japan) (SegaNet).json
+Sega Genesis || Phantasy Star II - Yushis's Adventure (Japan) (SegaNet) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star II - Yushis's Adventure (Japan) (SegaNet)/Phantasy Star II - Yushis's Adventure (Japan) (SegaNet).json
+Sega Genesis || Phantasy Star III - Generations of Doom (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star III - Generations of Doom (USA, Europe)/Phantasy Star III - Generations of Doom (USA, Europe).json
+Sega Genesis || Phantasy Star III - Generations of Doom (USA, Europe, Korea) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star III - Generations of Doom (USA, Europe, Korea)/Phantasy Star III - Generations of Doom (USA, Europe, Korea).json
+Sega Genesis || Phantasy Star IV (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Phantasy Star IV (USA)/Phantasy Star IV (USA).json
+Sega Genesis || Populous (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Populous (Japan)/Populous (Japan).json
+Sega Genesis || Populous (USA) (Unl) || $ROM_JSON_ROOT/Other/Sega Genesis/Populous (USA) (Unl)/Populous (USA) (Unl).json
+Sega Genesis || Probotector (World) (60Hz Hack) (Contra Anniversary Collection) || $ROM_JSON_ROOT/Other/Sega Genesis/Probotector (World) (60Hz Hack) (Contra Anniversary Collection)/Probotector (World) (60Hz Hack) (Contra Anniversary Collection).json
+Sega Genesis || Probotector (World) (Contra Anniversary Collection) || $ROM_JSON_ROOT/Other/Sega Genesis/Probotector (World) (Contra Anniversary Collection)/Probotector (World) (Contra Anniversary Collection).json
+Sega Genesis || Rainbow Islands Extra (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Rainbow Islands Extra (Japan)/Rainbow Islands Extra (Japan).json
+Sega Genesis || Ranger X (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Ranger X (USA)/Ranger X (USA).json
+Sega Genesis || Revenge of Shinobi, The (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Revenge of Shinobi, The (USA, Europe)/Revenge of Shinobi, The (USA, Europe).json
+Sega Genesis || Revenge of Shinobi, The (USA, Europe) (Rev B) || $ROM_JSON_ROOT/Other/Sega Genesis/Revenge of Shinobi, The (USA, Europe) (Rev B)/Revenge of Shinobi, The (USA, Europe) (Rev B).json
+Sega Genesis || Revenge of Shinobi, The (World) (Rev B) (Virtual Console) || $ROM_JSON_ROOT/Other/Sega Genesis/Revenge of Shinobi, The (World) (Rev B) (Virtual Console)/Revenge of Shinobi, The (World) (Rev B) (Virtual Console).json
+Sega Genesis || Ristar (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Ristar (USA, Europe)/Ristar (USA, Europe).json
+Sega Genesis || Ristar - The Shooting Star (Japan, Korea) || $ROM_JSON_ROOT/Other/Sega Genesis/Ristar - The Shooting Star (Japan, Korea)/Ristar - The Shooting Star (Japan, Korea).json
+Sega Genesis || Road Rash (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Road Rash (USA, Europe)/Road Rash (USA, Europe).json
+Sega Genesis || Road Rash 3 (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Road Rash 3 (USA, Europe)/Road Rash 3 (USA, Europe).json
+Sega Genesis || Road Rash II (USA, Europe) (RR206) || $ROM_JSON_ROOT/Other/Sega Genesis/Road Rash II (USA, Europe) (RR206)/Road Rash II (USA, Europe) (RR206).json
+Sega Genesis || RoboCop versus The Terminator (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/RoboCop versus The Terminator (USA)/RoboCop versus The Terminator (USA).json
+Sega Genesis || Rocket Knight Adventures (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Rocket Knight Adventures (USA)/Rocket Knight Adventures (USA).json
+Sega Genesis || Rolling Thunder 2 (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Rolling Thunder 2 (USA)/Rolling Thunder 2 (USA).json
+Sega Genesis || SD Valis (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/SD Valis (Japan)/SD Valis (Japan).json
+Sega Genesis || Shadow Dancer - The Secret of Shinobi (USA, Europe) (PC Rerelease) || $ROM_JSON_ROOT/Other/Sega Genesis/Shadow Dancer - The Secret of Shinobi (USA, Europe) (PC Rerelease)/Shadow Dancer - The Secret of Shinobi (USA, Europe) (PC Rerelease).json
+Sega Genesis || Shadow Dancer - The Secret of Shinobi (World) || $ROM_JSON_ROOT/Other/Sega Genesis/Shadow Dancer - The Secret of Shinobi (World)/Shadow Dancer - The Secret of Shinobi (World).json
+Sega Genesis || Shadowrun (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Shadowrun (USA)/Shadowrun (USA).json
+Sega Genesis || Shining Force (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Shining Force (USA)/Shining Force (USA).json
+Sega Genesis || Shining Force II (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Shining Force II (USA)/Shining Force II (USA).json
+Sega Genesis || Shining in the Darkness (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Shining in the Darkness (USA, Europe)/Shining in the Darkness (USA, Europe).json
+Sega Genesis || Shinobi III - Return of the Ninja Master (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Shinobi III - Return of the Ninja Master (USA)/Shinobi III - Return of the Ninja Master (USA).json
+Sega Genesis || Sonic & Knuckles (World) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic & Knuckles (World)/Sonic & Knuckles (World).json
+Sega Genesis || Sonic & Knuckles + Sonic The Hedgehog (World) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic & Knuckles + Sonic The Hedgehog (World)/Sonic & Knuckles + Sonic The Hedgehog (World).json
+Sega Genesis || Sonic & Knuckles + Sonic The Hedgehog 2 (World) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic & Knuckles + Sonic The Hedgehog 2 (World)/Sonic & Knuckles + Sonic The Hedgehog 2 (World).json
+Sega Genesis || Sonic & Knuckles + Sonic The Hedgehog 3 (Japan) (En) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic & Knuckles + Sonic The Hedgehog 3 (Japan) (En)/Sonic & Knuckles + Sonic The Hedgehog 3 (Japan) (En).json
+Sega Genesis || Sonic & Knuckles + Sonic The Hedgehog 3 (World) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic & Knuckles + Sonic The Hedgehog 3 (World)/Sonic & Knuckles + Sonic The Hedgehog 3 (World).json
+Sega Genesis || Sonic 2 Heroes (World) (Unl) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic 2 Heroes (World) (Unl)/Sonic 2 Heroes (World) (Unl).json
+Sega Genesis || Sonic 3D Blast ~ Sonic 3D Flickies' Island (USA, Europe, Korea) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic 3D Blast ~ Sonic 3D Flickies' Island (USA, Europe, Korea)/Sonic 3D Blast ~ Sonic 3D Flickies' Island (USA, Europe, Korea).json
+Sega Genesis || Sonic Classic Heroes (World) (Unl) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic Classic Heroes (World) (Unl)/Sonic Classic Heroes (World) (Unl).json
+Sega Genesis || Sonic Spinball (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic Spinball (USA)/Sonic Spinball (USA).json
+Sega Genesis || Sonic The Hedgehog (Japan, Europe, Korea) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic The Hedgehog (Japan, Europe, Korea)/Sonic The Hedgehog (Japan, Europe, Korea).json
+Sega Genesis || Sonic The Hedgehog (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic The Hedgehog (USA, Europe)/Sonic The Hedgehog (USA, Europe).json
+Sega Genesis || Sonic The Hedgehog 1+2 (World) (Unl) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic The Hedgehog 1+2 (World) (Unl)/Sonic The Hedgehog 1+2 (World) (Unl).json
+Sega Genesis || Sonic The Hedgehog 2 (World) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic The Hedgehog 2 (World)/Sonic The Hedgehog 2 (World).json
+Sega Genesis || Sonic The Hedgehog 2 (World) (Rev A) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic The Hedgehog 2 (World) (Rev A)/Sonic The Hedgehog 2 (World) (Rev A).json
+Sega Genesis || Sonic The Hedgehog 3 (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Sonic The Hedgehog 3 (USA)/Sonic The Hedgehog 3 (USA).json
+Sega Genesis || Space Harrier II (World) || $ROM_JSON_ROOT/Other/Sega Genesis/Space Harrier II (World)/Space Harrier II (World).json
+Sega Genesis || Spider-Man (World) (Sega) || $ROM_JSON_ROOT/Other/Sega Genesis/Spider-Man (World) (Sega)/Spider-Man (World) (Sega).json
+Sega Genesis || Splatterhouse 2 (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Splatterhouse 2 (USA)/Splatterhouse 2 (USA).json
+Sega Genesis || Splatterhouse 3 (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Splatterhouse 3 (USA)/Splatterhouse 3 (USA).json
+Sega Genesis || Star Control (USA) (Unl) || $ROM_JSON_ROOT/Other/Sega Genesis/Star Control (USA) (Unl)/Star Control (USA) (Unl).json
+Sega Genesis || Story of Thor, The (Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Story of Thor, The (Europe)/Story of Thor, The (Europe).json
+Sega Genesis || Story of Thor, The (Germany) || $ROM_JSON_ROOT/Other/Sega Genesis/Story of Thor, The (Germany)/Story of Thor, The (Germany).json
+Sega Genesis || Story of Thor, The (Spain) || $ROM_JSON_ROOT/Other/Sega Genesis/Story of Thor, The (Spain)/Story of Thor, The (Spain).json
+Sega Genesis || Story of Thor, The - Hikari o Tsugumono (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Story of Thor, The - Hikari o Tsugumono (Japan)/Story of Thor, The - Hikari o Tsugumono (Japan).json
+Sega Genesis || Street Fighter II' - Special Champion Edition (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Street Fighter II' - Special Champion Edition (USA)/Street Fighter II' - Special Champion Edition (USA).json
+Sega Genesis || Streets of Rage 2 (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Streets of Rage 2 (USA)/Streets of Rage 2 (USA).json
+Sega Genesis || Streets of Rage 2 (USA) (TMNT Shredder's Re-Revenge Patch) (New Music) || $ROM_JSON_ROOT/Other/Sega Genesis/Streets of Rage 2 (USA) (TMNT Shredder's Re-Revenge Patch) (New Music)/Streets of Rage 2 (USA) (TMNT Shredder's Re-Revenge Patch) (New Music).json
+Sega Genesis || Streets of Rage 2 (USA) (TMNT Shredder's Re-Revenge Patch) (Original Music) || $ROM_JSON_ROOT/Other/Sega Genesis/Streets of Rage 2 (USA) (TMNT Shredder's Re-Revenge Patch) (Original Music)/Streets of Rage 2 (USA) (TMNT Shredder's Re-Revenge Patch) (Original Music).json
+Sega Genesis || Streets of Rage 3 (Asia) (En) || $ROM_JSON_ROOT/Other/Sega Genesis/Streets of Rage 3 (Asia) (En)/Streets of Rage 3 (Asia) (En).json
+Sega Genesis || Streets of Rage 3 (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Streets of Rage 3 (USA)/Streets of Rage 3 (USA).json
+Sega Genesis || Strider (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Strider (USA, Europe)/Strider (USA, Europe).json
+Sega Genesis || Sub-Terrania (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Sub-Terrania (USA)/Sub-Terrania (USA).json
+Sega Genesis || Super Fantasy Zone (Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Super Fantasy Zone (Europe)/Super Fantasy Zone (Europe).json
+Sega Genesis || Super Fantasy Zone (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Super Fantasy Zone (Japan)/Super Fantasy Zone (Japan).json
+Sega Genesis || Super Hang-On (Japan, USA) (En,Ja) || $ROM_JSON_ROOT/Other/Sega Genesis/Super Hang-On (Japan, USA) (En,Ja)/Super Hang-On (Japan, USA) (En,Ja).json
+Sega Genesis || Super Street Fighter II - The New Challengers (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Super Street Fighter II - The New Challengers (Japan)/Super Street Fighter II - The New Challengers (Japan).json
+Sega Genesis || Super Thunder Blade (World) || $ROM_JSON_ROOT/Other/Sega Genesis/Super Thunder Blade (World)/Super Thunder Blade (World).json
+Sega Genesis || Sword of Vermilion (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Sword of Vermilion (USA, Europe)/Sword of Vermilion (USA, Europe).json
+Sega Genesis || Syd of Valis (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Syd of Valis (USA)/Syd of Valis (USA).json
+Sega Genesis || Tanglewood (World) (Demo) (Unl) || $ROM_JSON_ROOT/Other/Sega Genesis/Tanglewood (World) (Demo) (Unl)/Tanglewood (World) (Demo) (Unl).json
+Sega Genesis || Tanglewood (World) (Unl) || $ROM_JSON_ROOT/Other/Sega Genesis/Tanglewood (World) (Unl)/Tanglewood (World) (Unl).json
+Sega Genesis || Tatsujin ~ Truxton (World) || $ROM_JSON_ROOT/Other/Sega Genesis/Tatsujin ~ Truxton (World)/Tatsujin ~ Truxton (World).json
+Sega Genesis || Teenage Mutant Ninja Turtles - The Hyperstone Heist (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Teenage Mutant Ninja Turtles - The Hyperstone Heist (USA)/Teenage Mutant Ninja Turtles - The Hyperstone Heist (USA).json
+Sega Genesis || Teenage Mutant Ninja Turtles - Tournament Fighters (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Teenage Mutant Ninja Turtles - Tournament Fighters (USA)/Teenage Mutant Ninja Turtles - Tournament Fighters (USA).json
+Sega Genesis || Tetris (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Tetris (Japan)/Tetris (Japan).json
+Sega Genesis || Thunder Force III (Japan, USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Thunder Force III (Japan, USA)/Thunder Force III (Japan, USA).json
+Sega Genesis || ToeJam & Earl (Japan, Europe) (Rev A) || $ROM_JSON_ROOT/Other/Sega Genesis/ToeJam & Earl (Japan, Europe) (Rev A)/ToeJam & Earl (Japan, Europe) (Rev A).json
+Sega Genesis || ToeJam & Earl (USA, Europe, Korea) || $ROM_JSON_ROOT/Other/Sega Genesis/ToeJam & Earl (USA, Europe, Korea)/ToeJam & Earl (USA, Europe, Korea).json
+Sega Genesis || ToeJam & Earl in Panic on Funkotron (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/ToeJam & Earl in Panic on Funkotron (USA)/ToeJam & Earl in Panic on Funkotron (USA).json
+Sega Genesis || Toki no Keishousha - Phantasy Star III (Japan) || $ROM_JSON_ROOT/Other/Sega Genesis/Toki no Keishousha - Phantasy Star III (Japan)/Toki no Keishousha - Phantasy Star III (Japan).json
+Sega Genesis || Valis (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Valis (USA)/Valis (USA).json
+Sega Genesis || Vampire Killer (Japan) (Castlevania Anniversary Collection) || $ROM_JSON_ROOT/Other/Sega Genesis/Vampire Killer (Japan) (Castlevania Anniversary Collection)/Vampire Killer (Japan) (Castlevania Anniversary Collection).json
+Sega Genesis || Vectorman (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Vectorman (USA, Europe)/Vectorman (USA, Europe).json
+Sega Genesis || Vectorman 2 (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Vectorman 2 (USA)/Vectorman 2 (USA).json
+Sega Genesis || Viewpoint (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Viewpoint (USA)/Viewpoint (USA).json
+Sega Genesis || Virtua Fighter 2 (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Virtua Fighter 2 (USA, Europe)/Virtua Fighter 2 (USA, Europe).json
+Sega Genesis || Virtua Racing (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Virtua Racing (USA)/Virtua Racing (USA).json
+Sega Genesis || Virtual Pinball (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Virtual Pinball (USA, Europe)/Virtual Pinball (USA, Europe).json
+Sega Genesis || Warsong (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Warsong (USA)/Warsong (USA).json
+Sega Genesis || Wonder Boy III - Monster Lair (Japan, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Wonder Boy III - Monster Lair (Japan, Europe)/Wonder Boy III - Monster Lair (Japan, Europe).json
+Sega Genesis || Wonder Boy V - Monster World III (Japan, Korea) || $ROM_JSON_ROOT/Other/Sega Genesis/Wonder Boy V - Monster World III (Japan, Korea)/Wonder Boy V - Monster World III (Japan, Korea).json
+Sega Genesis || Wonder Boy in Monster World (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Wonder Boy in Monster World (USA, Europe)/Wonder Boy in Monster World (USA, Europe).json
+Sega Genesis || World of Illusion Starring Mickey Mouse and Donald Duck (USA, Korea) || $ROM_JSON_ROOT/Other/Sega Genesis/World of Illusion Starring Mickey Mouse and Donald Duck (USA, Korea)/World of Illusion Starring Mickey Mouse and Donald Duck (USA, Korea).json
+Sega Genesis || Wrestle War (Japan, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Wrestle War (Japan, Europe)/Wrestle War (Japan, Europe).json
+Sega Genesis || X-Men (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/X-Men (USA)/X-Men (USA).json
+Sega Genesis || X-Men 2 - Clone Wars (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/X-Men 2 - Clone Wars (USA, Europe)/X-Men 2 - Clone Wars (USA, Europe).json
+Sega Genesis || Zero Tolerance (USA, Europe) || $ROM_JSON_ROOT/Other/Sega Genesis/Zero Tolerance (USA, Europe)/Zero Tolerance (USA, Europe).json
+Sega Genesis || Zoop (USA) || $ROM_JSON_ROOT/Other/Sega Genesis/Zoop (USA)/Zoop (USA).json

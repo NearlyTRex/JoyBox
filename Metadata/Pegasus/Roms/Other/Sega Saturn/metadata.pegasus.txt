@@ -1,0 +1,465 @@
+collection: Sega Saturn
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sega Saturn" {file.path}
+
+
+game: Alone in the Dark - One-Eyed Jack's Revenge (USA)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Alone in the Dark - One-Eyed Jack's Revenge (USA)/Alone in the Dark - One-Eyed Jack's Revenge (USA).json
+developer: Infogrames
+publisher: Interplay Entertainment
+genre: Action;Adventure
+description:
+  The original game's horror theme has been significantly de-emphasized in the
+  sequel. While there are some supernatural goings-on (Voodoo black magic), the
+  main villains are gangsters and pirates. While the enemies are revealed to be
+  possessed by evil spirits, and are green and zombie-like in appearance, they are
+  far from the shambling walking corpses of the first game, and walk, talk, and
+  behave much like ordinary people, arming themselves with Tommy Guns and shouting
+  at the player. The game world is larger than that of the original, encompassing
+  not only the mansion, but also the surrounding gardens as well as a pirate ship
+  hidden in caverns beneath the house.
+  .
+  Although much of the game is spent playing as Carnby, the player will
+  occasionally take control of Grace Saunders. Grace, a child, cannot fight and is
+  instantly captured if the gangsters spot her, so instead she must sneak around
+  and defeat the gangsters by turning common household objects into booby traps.
+release: 1996-02-23
+players: 1
+assets.boxfront: BoxFront/Alone in the Dark - One-Eyed Jack's Revenge (USA).jpg
+assets.boxback: BoxBack/Alone in the Dark - One-Eyed Jack's Revenge (USA).jpg
+assets.background: Background/Alone in the Dark - One-Eyed Jack's Revenge (USA).jpg
+assets.screenshot: Screenshot/Alone in the Dark - One-Eyed Jack's Revenge (USA).jpg
+assets.video: Video/Alone in the Dark - One-Eyed Jack's Revenge (USA).mp4
+x-co-op: No
+
+
+game: Bio Hazard (Japan)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Bio Hazard (Japan)/Bio Hazard (Japan).json
+developer: Nextech
+publisher: Capcom
+genre: Action;Horror;Puzzle
+description:
+  Raccoon City has been completely overrun by mutant beasts and bloodthirsty
+  zombies. You are a member of S.T.A.R.S.--a rescue squad sent into the community
+  to investigate the ominous mansion at the core of the disaster. Take the role of
+  operative Jill Valentine or Chris Redfield and uncover the secrets behind a
+  radical, genetic research facility. With an array of weapons to master and
+  horrors around every corner, the ultimate test may be just to make it out alive.
+  .
+  Exclusive to the SEGA Saturn version is a Battle Mode bonus mode, where, with
+  limited ammo and under the threat of limited time, the player must survive a
+  series of rooms filled with monsters.
+release: 1997-07-25
+players: 1
+assets.boxfront: BoxFront/Bio Hazard (Japan).jpg
+assets.boxback: BoxBack/Bio Hazard (Japan).jpg
+assets.background: Background/Bio Hazard (Japan).jpg
+assets.screenshot: Screenshot/Bio Hazard (Japan).jpg
+x-co-op: No
+
+
+game: Bug! (USA)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Bug! (USA)/Bug! (USA).json
+developer: Realtime Associates
+publisher: Sega
+genre: Platform
+description:
+  Bug! was played like a traditional side-scrolling adventure game. In the same
+  fashion as Sonic the Hedgehog (in one level Bug must race against Sonic), Bug
+  must jump and stomp on the heads of his enemies to defeat them while making his
+  way through large levels and collecting power-ups. What sets Bug! apart is the
+  game's 3D levels, which take the side-view and tweak it. Bug can walk sidewise
+  up vertical surfaces and even upside down. Each set of levels (ranging from a
+  bright, green grassy area to a deep red, desert level) has a deeply individual
+  look and feel.
+release: 1995-12-08
+players: 1
+assets.boxfront: BoxFront/Bug! (USA).jpg
+assets.boxback: BoxBack/Bug! (USA).jpg
+assets.background: Background/Bug! (USA).jpg
+assets.screenshot: Screenshot/Bug! (USA).jpg
+assets.video: Video/Bug! (USA).mp4
+x-co-op: No
+
+
+game: Clockwork Knight - Pepperouchau's Adventure (USA)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Clockwork Knight - Pepperouchau's Adventure (USA)/Clockwork Knight - Pepperouchau's Adventure (USA).json
+developer: AM7
+publisher: Sega
+genre: Platform
+description:
+  Sir Tongara de Pepperouchau III ("Pepper" for short) is a toy soldier. He is in
+  love with the Clockwork Fairy Princess, Chelsea, whose voice wakes up the toys
+  of the house every night at midnight. But he is clumsy and something of a
+  laughingstock, especially when compared to his friendly rival Ginger who is also
+  after Chelsea's heart.
+  .
+  One night Chelsea is stolen away by an unknown force, which also hypnotizes some
+  of the lesser toys to become fierce minions and stand in the way of anyone who
+  would try to rescue her. If there's no voice to wake them up anymore then the
+  toys will never live again, so Pepper and Ginger head off to find Chelsea before
+  it's too late.
+release: 1994-12-09
+players: 1
+assets.boxfront: BoxFront/Clockwork Knight - Pepperouchau's Adventure (USA).jpg
+assets.boxback: BoxBack/Clockwork Knight - Pepperouchau's Adventure (USA).jpg
+assets.background: Background/Clockwork Knight - Pepperouchau's Adventure (USA).jpg
+assets.screenshot: Screenshot/Clockwork Knight - Pepperouchau's Adventure (USA).jpg
+assets.video: Video/Clockwork Knight - Pepperouchau's Adventure (USA).mp4
+x-co-op: No
+
+
+game: D (USA)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/D (USA)/D (USA).json
+developer: Warp
+publisher: Acclaim
+genre: Adventure
+description:
+  D is a dark adventure game that explores the twisted designs of a madman and
+  involves the supernatural, D is set at the L.A. National Hospital. Players take
+  on the role of the daughter of a doctor who went mad and embarked on a murderous
+  rampage, and it's up to them to find out why. Inside the hospital all is dark,
+  and fear surrounds the player at every turn, because there's no way to know
+  what's lurking in the shadows. The girl must face this waking nightmare in the
+  hopes of ending the madness, but the forces arrayed against her are powerful,
+  and might not just claim her life, but her soul as well.
+  .
+  Players walk through the hospital, which is fully rendered with 3D graphics, and
+  must search for the clues that explain the cause behind the horrific events that
+  have taken place. Puzzles and conundrums can be found aplenty, and solving them
+  is not only important to completing the game, it's also a matter of life and
+  death for their character. Gruesome scenes can be found in abundance, as can
+  violent and scary encounters, so be forwarned that D is not for the faint of
+  heart.''D'' is a horror/adventure released for Playstation, Sega Saturn, and the
+  computer. It was released back in 1995 and was very misunderstood for it's genre
+  because after a few weeks it hit the shelves, it became a clunker. Obviously
+  this game wasn't FOR everybody, but people who appreciate it's genre which is a
+  horror/adventure video game movie.
+release: 1995-07-28
+players: 1
+assets.boxfront: BoxFront/D (USA).jpg
+assets.boxback: BoxBack/D (USA).jpg
+assets.background: Background/D (USA).jpg
+assets.screenshot: Screenshot/D (USA).jpg
+assets.video: Video/D (USA).mp4
+x-co-op: No
+
+
+game: Daytona USA (USA)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Daytona USA (USA)/Daytona USA (USA).json
+developer: Sega AM2
+publisher: Sega
+genre: Racing
+description:
+  Sega's premier stock car racing game comes to the Dreamcast with DAYTONA USA.
+  All of the cars and tracks from every game in the DAYTONA series are included,
+  resulting in the most complete DAYTONA racer ever seen. There are a number of
+  playing modes as well. Take on the challenges of competing in a Single Race, try
+  to beat your friends in the Two-Player mode, or for the ultimate challenge you
+  can race through the Championship mode and unlock hidden items. In every mode,
+  you can customize your vehicle including its looks, handling, speed, and many
+  other options. Now you can race stock cars with people from around the world
+  from the comfort of your living room with DAYTONA USA.
+release: 1995-04-01
+players: 2
+assets.boxfront: BoxFront/Daytona USA (USA).jpg
+assets.boxback: BoxBack/Daytona USA (USA).jpg
+assets.background: Background/Daytona USA (USA).jpg
+assets.screenshot: Screenshot/Daytona USA (USA).jpg
+assets.video: Video/Daytona USA (USA).mp4
+x-co-op: No
+
+
+game: Deep Fear (Japan)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Deep Fear (Japan)/Deep Fear (Japan).json
+developer: ISCO
+publisher: Sega
+genre: Action;Adventure;Horror
+description:
+  All contact is lost with a submarine on a routine mission which then crashes
+  into an underwater facility. The occupants of the underwater facility are
+  ordered to board the submarine and find out what went wrong. On board the
+  vessel, strange things are happening which are taking control of the crew. The
+  crew are mutating due to an alien parasite and members of the search team have
+  to figure out what is happening and how to stop it!
+  .
+  The game is played via a third person view which is just behind the character
+  and you look over his shoulder. The game is based underwater in a submarine so
+  the developers have added a claustrophobic feeling by giving some areas a
+  limited amount of air so you have to run through to activate the air circulation
+  system. Controls are your typical Resident Evil style which is you pull the
+  Right shoulder button to draw your gun, your d-pad to aim and then a button to
+  shoot. Along your journey of the submarine, you will need to find objects such
+  as keycards to unlock doors and better weapons.
+release: 1998-06-30
+players: 1
+assets.boxfront: BoxFront/Deep Fear (Japan).jpg
+assets.boxback: BoxBack/Deep Fear (Japan).jpg
+assets.background: Background/Deep Fear (Japan).jpg
+assets.screenshot: Screenshot/Deep Fear (Japan).jpg
+assets.video: Video/Deep Fear (Japan).mp4
+x-co-op: No
+
+
+game: Enemy Zero (USA)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Enemy Zero (USA)/Enemy Zero (USA).json
+developer: Warp
+publisher: Sega
+genre: Action;Adventure
+description:
+  Enemy Zero is one of the horror titles by Warp, closely connected to D (and its
+  sequel D2 for Dreamcast). It also features the same heroine as in D series.
+  .
+  The crew members of the spaceship Aki were in a state of suspended animation.
+  All of a sudden, the ship emergency program woke them up. What has happened?
+  Apparently, a hostile alien life form had penetrated the spaceship. Now Laura,
+  the heroine of the game, has to establish contact with her comrades, finding her
+  way through the maze-like corridors of the giant vessel. She will also have to
+  defend herself against the aliens, which seem even more intimidating because
+  they are totally invisible.
+  .
+  The game consists of two genres: puzzle-solving adventure and shooter. When you
+  enter a room, the enemies can't attack you, and you can explore it from 1st
+  person perspective, taking objects, and solving puzzles. When you wander through
+  ship corridors, you enter the 1st person shooter mode. Since the enemies are
+  invisible, you'll have to listen to the sounds they make. A high sound means an
+  enemy is right in front of you; a mid-range sound means it is attacking from the
+  side; a low-pitched noise tells you it is behind you. You can figure out the
+  distance between you and the enemy by the intensity of the sound.
+release: 1997-10-31
+players: 1
+assets.boxfront: BoxFront/Enemy Zero (USA).jpg
+assets.boxback: BoxBack/Enemy Zero (USA).jpg
+assets.background: Background/Enemy Zero (USA).jpg
+assets.screenshot: Screenshot/Enemy Zero (USA).jpg
+assets.video: Video/Enemy Zero (USA).mp4
+x-co-op: No
+
+
+game: Legend of Oasis, The (USA)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Legend of Oasis, The (USA)/Legend of Oasis, The (USA).json
+developer: Ancient
+publisher: Sega
+genre: Action;Role-Playing
+description:
+  Join Leon in his journey to banish Agito, gain control of the Silver Amulet, and
+  become the next Spirit King of Oasis. Unbelievable hand drawn animation! More
+  than nine special moves. Use scrolls and Spirits to power up your arsenal. Use
+  the forces of six angry spirits to destroy the undead forces of Agito! The
+  action-packed prequel to Beyond Oasis!
+release: 1996-11-30
+players: 1
+assets.boxfront: BoxFront/Legend of Oasis, The (USA).jpg
+assets.boxback: BoxBack/Legend of Oasis, The (USA).jpg
+assets.background: Background/Legend of Oasis, The (USA).jpg
+assets.screenshot: Screenshot/Legend of Oasis, The (USA).jpg
+assets.video: Video/Legend of Oasis, The (USA).mp4
+x-co-op: No
+
+
+game: Mansion of Hidden Souls, The (USA)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Mansion of Hidden Souls, The (USA)/Mansion of Hidden Souls, The (USA).json
+developer: Sega
+publisher: Sega
+genre: Adventure
+description:
+  This Saturn-exclusive game is actually a sequel to the Sega CD game Mansion of
+  Hidden Souls, even though the title might lead one to believe it is a remake.
+  .
+  This game takes place after the events of the first game. The souls of the
+  hidden mansion have asked you to return, because they have recognized that you
+  possess special powers that allow you to see the butterfly manifestations of the
+  souls living there. Something terrible is afoot at the mansion, and you must
+  investigate things and set them right. Along the way you must discover the true
+  purpose of the mansion and it's significance in the universe.
+  .
+  Much like the Sega CD game, this is an FMV adventure. You move from location to
+  location via video sequences, and solve puzzles to move on in the story.
+release: 1994-12-02
+players: 1
+assets.boxfront: BoxFront/Mansion of Hidden Souls, The (USA).jpg
+assets.boxback: BoxBack/Mansion of Hidden Souls, The (USA).jpg
+assets.background: Background/Mansion of Hidden Souls, The (USA).jpg
+assets.screenshot: Screenshot/Mansion of Hidden Souls, The (USA).jpg
+assets.video: Video/Mansion of Hidden Souls, The (USA).mp4
+x-co-op: No
+
+
+game: Mass Destruction (USA)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Mass Destruction (USA)/Mass Destruction (USA).json
+developer: NMS Software Ltd.
+publisher: ASC Games
+genre: Action
+description:
+  Mass Destruction puts players behind the controls of a one-man tank. The
+  environments range from arctic to desert to urban. The player can blow up trees,
+  buildings, walls - whatever you don't like the look. Enemies will come at you in
+  tanks, planes, helicopters, and on foot. Each of the different weapons available
+  to the player works best on a specific enemy. The player can use guided missiles
+  for the helicopters and run over infantry men with the tank
+release: 1997-12-31
+players: 1
+assets.boxfront: BoxFront/Mass Destruction (USA).jpg
+assets.boxback: BoxBack/Mass Destruction (USA).jpg
+assets.background: Background/Mass Destruction (USA).jpg
+assets.screenshot: Screenshot/Mass Destruction (USA).jpg
+assets.video: Video/Mass Destruction (USA).mp4
+x-co-op: No
+
+
+game: Mystaria - The Realms of Lore (USA)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Mystaria - The Realms of Lore (USA)/Mystaria - The Realms of Lore (USA).json
+developer: Sega
+publisher: Sega
+genre: Role-Playing;Strategy
+description:
+  Mystaria: The Realms of Lore, originally released as Riglordsaga in Japan, is a
+  strategy game developed by Sega and Microcabin for the Sega Saturn. Two versions
+  of the game were released in the US: one titled Mystaria: The Realms of Lore and
+  the other as Blazing Heroes.
+  .
+  Mystaria, once a land of peace and serenity, is now embroiled in turmoil. The
+  evil Lord Bane and his ruthless band of marauders have overtaken the four
+  kingdoms that rule this land. Now you must rely on the special powers of a
+  Prince, a Ninja, a Lion man and others to reclaim your kingdoms and regain
+  control of this beautiful land you once called your own! Breathtaking 3D
+  graphics plus changing views and perspectives pull you into the action.
+  Characters learn special attacks with each battle - over 250 attacks in all! Use
+  a vast array of spells in your quest to conquer the evil Lord Bane and over 50
+  monsters and enemies.
+  .
+  You are Aragon, the prince of Mystaria. Long time ago, your father was one of
+  the twelve mighty warriors who opposed Sith, the evil being that once tried to
+  open the sacred portals of Mystaria. In the ultimate battle, your father was
+  slain by Sith, but his eleven companion captured the villain and banished him,
+  depriving him of his forces. Sith spend many years in a remote prison, until he
+  grew powerful again. Now he came back to Mystaria and took over the kingdom. It
+  is now up to Aragon to find eleven companions in order to be able to defeat evil
+  again.
+  .
+  This is a strategy RPG along the lines of Shining Force series. Your party
+  contains twelve characters, six of which can be used in battles. The turn-based
+  battles are long and strategic - you move your characters on the battlefield,
+  and the force of your attack depends on the amount of previous movement made by
+  you. You can also use a variety of magic spells to hurt many enemies at the same
+  time.
+release: 1995-07-21
+players: 1
+assets.boxfront: BoxFront/Mystaria - The Realms of Lore (USA).jpg
+assets.boxback: BoxBack/Mystaria - The Realms of Lore (USA).jpg
+assets.background: Background/Mystaria - The Realms of Lore (USA).jpg
+assets.screenshot: Screenshot/Mystaria - The Realms of Lore (USA).jpg
+assets.video: Video/Mystaria - The Realms of Lore (USA).mp4
+x-co-op: No
+
+
+game: NiGHTS into Dreams... (USA) (Demo)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/NiGHTS into Dreams... (USA) (Demo)/NiGHTS into Dreams... (USA) (Demo).json
+developer: Sonic Team
+publisher: Sega
+genre: Action
+description:
+  Immerse yourself in an unparalleled 3D flying experience. NiGHTS truly delivers
+  an amazing virtual world of dreams -- filled with unbelievable real-time
+  effects, fantastic creatures and nightmarish monsters.
+  .
+  * Master a showcase of Sega Saturn's Processing Power.\n
+  * Face your worst nightmares in a stunning world of 3D gameplay.\n
+  * Dozens of camera angles, never-seen-before effects and 3D positional sound.\n
+  * Developed exclusively for Sega Saturn by the creators of "Sonic the Hedgehog."
+release: 1996-08-31
+players: 1
+assets.boxfront: BoxFront/NiGHTS into Dreams... (USA) (Demo).jpg
+assets.boxback: BoxBack/NiGHTS into Dreams... (USA) (Demo).jpg
+assets.background: Background/NiGHTS into Dreams... (USA) (Demo).jpg
+assets.screenshot: Screenshot/NiGHTS into Dreams... (USA) (Demo).jpg
+assets.video: Video/NiGHTS into Dreams... (USA) (Demo).mp4
+x-co-op: No
+
+
+game: Sonic R (USA, Brazil)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Sonic R (USA, Brazil)/Sonic R (USA, Brazil).json
+developer: Sonic Team
+publisher: Sega
+genre: Action;Racing
+description:
+  Everybody's Supersonic Racing! Knuckles, Tails, Amy and Dr. Robotnik join Sonic
+  in his speediest outing yet. Containing 5 graphically stunning tracks with many
+  short-cuts and secrets. Sonic R will have you coming back for more. Features
+  Grand Prix, 4 Time Attack modes and split-screen 2 player game. R U Ready?!?
+release: 1997-11-18
+players: 2
+assets.boxfront: BoxFront/Sonic R (USA, Brazil).jpg
+assets.boxback: BoxBack/Sonic R (USA, Brazil).jpg
+assets.background: Background/Sonic R (USA, Brazil).jpg
+assets.screenshot: Screenshot/Sonic R (USA, Brazil).jpg
+assets.video: Video/Sonic R (USA, Brazil).mp4
+x-co-op: No
+
+
+game: Virtua Cop (USA) (6S)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Virtua Cop (USA) (6S)/Virtua Cop (USA) (6S).json
+developer: Sega AM2
+publisher: Sega
+genre: Shooter
+description:
+  You're a cop. Putting your life on the line is your job. Staying alive is your
+  challenge. Split second decision making, timing and lightning fast reflexes are
+  what it takes in this adrenaline pumping game of cat and mouse. Dirt bags pop
+  out of virtually every hiding place with their guns aimed, cocked and ready to
+  shoot - you!
+release: 1995-11-24
+players: 2
+assets.boxfront: BoxFront/Virtua Cop (USA) (6S).jpg
+assets.boxback: BoxBack/Virtua Cop (USA) (6S).jpg
+assets.background: Background/Virtua Cop (USA) (6S).jpg
+assets.screenshot: Screenshot/Virtua Cop (USA) (6S).jpg
+assets.video: Video/Virtua Cop (USA) (6S).mp4
+x-co-op: Yes
+
+
+game: Virtua Fighter 2 (USA)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Virtua Fighter 2 (USA)/Virtua Fighter 2 (USA).json
+developer: Sega
+publisher: Sega
+genre: Fighting
+description:
+  In Virtua Fighter 2, the intrepid fighters return to the World Fighting
+  Tournament. Take to the stage to see who will claim the championship title. Will
+  it be Lau Chan, Kage-Maru, Wolf Hawkfield, Jeffry McWild, Akira Yuki, Jacky
+  Bryant, Sarah Bryant, or Pai Chan? The answer lies within. Immerse yourself in
+  this technically challenging game and see if you have what it takes to be the
+  champion of the second World Fighting Tournament!
+release: 1995-12-01
+players: 2
+assets.boxfront: BoxFront/Virtua Fighter 2 (USA).jpg
+assets.boxback: BoxBack/Virtua Fighter 2 (USA).jpg
+assets.background: Background/Virtua Fighter 2 (USA).jpg
+assets.screenshot: Screenshot/Virtua Fighter 2 (USA).jpg
+assets.video: Video/Virtua Fighter 2 (USA).mp4
+x-co-op: No
+
+
+game: Virtual Hydlide (USA)
+file: $ROM_JSON_ROOT/Other/Sega Saturn/Virtual Hydlide (USA)/Virtual Hydlide (USA).json
+developer: T&E Soft
+publisher: Atlus
+genre: Action;Role-Playing
+description:
+  Action/RPG's don't get more real than this! Discover the ultimate fantasy world
+  in this compelling epic adventure! An enchanted realm known as the Dream World
+  has been captured an army of supernatural warriors, zombies, vampires and more
+  infest the once peaceful land, awaiting new battles and conquests.
+  .
+  You are a hero, born to the sword. Your mission is to free Dream World from the
+  grip of the undead maravders by using your wits, your sword, and few magic items
+  you uncover in your travels.
+release: 1995-04-27
+players: 1
+assets.boxfront: BoxFront/Virtual Hydlide (USA).jpg
+assets.boxback: BoxBack/Virtual Hydlide (USA).jpg
+assets.background: Background/Virtual Hydlide (USA).jpg
+assets.screenshot: Screenshot/Virtual Hydlide (USA).jpg
+assets.video: Video/Virtual Hydlide (USA).mp4
+x-co-op: No
+
+

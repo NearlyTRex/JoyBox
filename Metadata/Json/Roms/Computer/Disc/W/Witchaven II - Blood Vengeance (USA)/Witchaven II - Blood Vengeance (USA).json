@@ -1,0 +1,11 @@
+{
+    "installer_dos_exe": "$DISC_MAIN_ROOT/INSTALL.EXE",
+    "is_dos": true,
+    "main_game_dos_exe": [
+        "CAPSTONE/WHAVEN2/WH2.EXE"
+    ],
+    "main_game_dos_exe_cwd": {
+        "CAPSTONE/WHAVEN2/WH2.EXE": "CAPSTONE/WHAVEN2"
+    },
+    "transform_file": "Witchaven II - Blood Vengeance (USA).chd"
+}

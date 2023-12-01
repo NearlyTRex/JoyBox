@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Orange Box, The (World) (En,Fr).chd",
+        "Orange Box, The (World) (En,Fr).dmi.bin",
+        "Orange Box, The (World) (En,Fr).lyt",
+        "Orange Box, The (World) (En,Fr).pfi.bin",
+        "Orange Box, The (World) (En,Fr).ss.bin"
+    ],
+    "launch_file": "Orange Box, The (World) (En,Fr).iso",
+    "transform_file": "Orange Box, The (World) (En,Fr).chd"
+}

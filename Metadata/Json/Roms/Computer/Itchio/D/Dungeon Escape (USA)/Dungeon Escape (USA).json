@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dungeon Escape (USA).exe"
+    ],
+    "transform_file": "Dungeon Escape (USA).exe"
+}

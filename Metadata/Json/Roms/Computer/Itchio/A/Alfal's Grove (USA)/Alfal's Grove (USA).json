@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Alfal's Grove (USA).exe"
+    ],
+    "transform_file": "Alfal's Grove (USA).exe"
+}

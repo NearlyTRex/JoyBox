@@ -1,0 +1,1805 @@
+collection: Nintendo Famicom
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Famicom" {file.path}
+
+
+game: ASO - Armored Scrum Object (Japan) (En)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/ASO - Armored Scrum Object (Japan) (En)/ASO - Armored Scrum Object (Japan) (En).json
+developer: SNK
+publisher: SNK
+genre: Action;Shooter;Shoot-'Em-Up;Vertical
+description:
+  Defend your home planet against the Seven Stars Alliance! In the galaxy of
+  Tetranova, a firece war between seven stars has laid waste to their planets.
+  Having destroyed eachother's homes, the seven stars have formed an alliance to
+  seek a new home, where they can rebuild and regain their strength to go to war
+  once again. You must pilot the fighter ship SYD against the deadly fleet of the
+  Seven Stars Alliance. The fate of Earth rests in your hands!
+release: 1987-10-11
+players: 1
+assets.boxfront: BoxFront/ASO - Armored Scrum Object (Japan) (En).jpg
+assets.boxback: BoxBack/ASO - Armored Scrum Object (Japan) (En).jpg
+assets.background: Background/ASO - Armored Scrum Object (Japan) (En).jpg
+assets.screenshot: Screenshot/ASO - Armored Scrum Object (Japan) (En).jpg
+assets.video: Video/ASO - Armored Scrum Object (Japan) (En).mp4
+x-co-op: No
+
+
+game: Abarenbou Tengu (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Abarenbou Tengu (Japan)/Abarenbou Tengu (Japan).json
+developer: KAZe
+publisher: Meldac
+genre: Action;Shooter;Shoot-'Em-Up;Horizontal
+description:
+  1999. What appeared to be a harmless meteorite crashing in the Nevada desert has
+  turned out to be Darc Seed, an evil alien creature with horrible powers. By
+  shooting strange magnetic rays, Darc Seed had turned the helpless nation into
+  zombies and had brought the Statue of Liberty to life to do his dirty work.
+  These rays had also given him control over many deadly weapons, but none were
+  more powerful than the legendary samurai sword, Shura. When the great head of
+  the samurai, Namakubi, heard that the sword had fallen into evil hands, he set
+  off immediately for the United States. For only he possessed the strength and
+  knowledge needed to recapture the magical sword and free the U.S. from the evil
+  clutches of Darc Seed.
+release: 1990-12-14
+players: 1
+assets.boxfront: BoxFront/Abarenbou Tengu (Japan).jpg
+assets.boxback: BoxBack/Abarenbou Tengu (Japan).jpg
+assets.background: Background/Abarenbou Tengu (Japan).jpg
+assets.screenshot: Screenshot/Abarenbou Tengu (Japan).jpg
+assets.video: Video/Abarenbou Tengu (Japan).mp4
+x-co-op: No
+
+
+game: Akumajou Densetsu (World) (Ja) (Castlevania Anniversary Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Akumajou Densetsu (World) (Ja) (Castlevania Anniversary Collection)/Akumajou Densetsu (World) (Ja) (Castlevania Anniversary Collection).json
+developer: Konami
+publisher: Konami
+genre: Action;Platform
+description:
+  Led by the immortal Count Dracula, the greatest army of evil ever assembled is
+  poised to bury mankind in a Tomb of Terror. Destroying this legion of Swamp
+  Dragons, Slasher Skeletons and Forces of the Undead will be the supreme
+  challenge for the mightiest of warriors. Your place in history is 100 years
+  before Simon Belmont's birth. Dracula is young at heart, and it will take more
+  than a stake to penetrate his evil. Luckily, you command the role of Trevor -
+  Simon's forefather and the origin of the Belmont Warlord Chromosones. Trevor has
+  a power never before seen by human eyes - the power to transform into three
+  different spirits: Grant DaNasty, the ferocious Ghost Pirate. Sypha, the Mystic
+  Warlord. And Alucard, Dracula's forgotten son. You must perfectly time Trevor's
+  body transformations to match up his different fighting spirits against Ultimate
+  Evils. Trevor also has the strength and wisdom to command the Battle Axe,
+  Invisibility Potion and Mystic Whip. But the most important weapon Trevor has is
+  your cunning to choose the correct Paths of Fate and your bravery to lead him
+  past 17 possible levels of never-ending doom, including the Haunted Ship of
+  Fools, the Sunken City of Poltergeists, the Clock Tower of Untimely Death and
+  Curse Castle. Never before have so many dangers confronted you at one time. And
+  if by some miracle you triumph, you'll no longer be a mere mortal. You'll be a
+  legend who'll live forever!
+release: 1989-12-22
+players: 1
+assets.boxfront: BoxFront/Akumajou Densetsu (World) (Ja) (Castlevania Anniversary Collection).jpg
+assets.boxback: BoxBack/Akumajou Densetsu (World) (Ja) (Castlevania Anniversary Collection).jpg
+assets.background: Background/Akumajou Densetsu (World) (Ja) (Castlevania Anniversary Collection).jpg
+assets.screenshot: Screenshot/Akumajou Densetsu (World) (Ja) (Castlevania Anniversary Collection).jpg
+assets.video: Video/Akumajou Densetsu (World) (Ja) (Castlevania Anniversary Collection).mp4
+x-co-op: No
+
+
+game: Akumajou Dracula (World) (Ja) (Castlevania Anniversary Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Akumajou Dracula (World) (Ja) (Castlevania Anniversary Collection)/Akumajou Dracula (World) (Ja) (Castlevania Anniversary Collection).json
+developer: Konami
+publisher: Konami
+genre: Action;Platform
+description:
+  If you think it's scary on the outside, wait'll you see the basement! You're in
+  for the longest night of your life. Ghosts, goblins, demons, wolves, bats -
+  creatures lurking around every corner. As you descend deeper and deeper, they
+  get thicker and thicker. Better stick close to the cavern floor - it's your only
+  chance of finding a weapon or two. You're gonna need 'em. Because when you
+  finally meet the Count, you know he'll be going for the jugular. So keep your
+  courage up and your stake sharp. And say your prayers!
+release: 1986-09-26
+players: 1
+assets.boxfront: BoxFront/Akumajou Dracula (World) (Ja) (Castlevania Anniversary Collection).jpg
+assets.boxback: BoxBack/Akumajou Dracula (World) (Ja) (Castlevania Anniversary Collection).jpg
+assets.background: Background/Akumajou Dracula (World) (Ja) (Castlevania Anniversary Collection).jpg
+assets.screenshot: Screenshot/Akumajou Dracula (World) (Ja) (Castlevania Anniversary Collection).jpg
+assets.video: Video/Akumajou Dracula (World) (Ja) (Castlevania Anniversary Collection).mp4
+x-co-op: No
+
+
+game: Athena (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Athena (Japan)/Athena (Japan).json
+developer: Micronics
+publisher: SNK
+genre: Action;Platformer;2D
+description:
+  A fantasy world of boundless adventure awaits you!
+  .
+  I am ATHENA. They call me the Goddess of Wisdom, but I have grown weary of my
+  dull life in the castle. The Fantasy World beyond the castle walls beckons to
+  me! Strange and fearsome creatures will attack me at every turn. But I will find
+  weapons along the way: a ball and chain, a bow and arrow, or a mighty sword will
+  be my defense! In the Fantasy World, I can put on wings and take to the sky, or
+  become a mermaid to explore the ocean depths. There, the Goddess of Wisdom can
+  become the Princess of Victory!
+release: 1987-08-11
+players: 1
+assets.boxfront: BoxFront/Athena (Japan).jpg
+assets.boxback: BoxBack/Athena (Japan).jpg
+assets.background: Background/Athena (Japan).jpg
+assets.screenshot: Screenshot/Athena (Japan).jpg
+assets.video: Video/Athena (Japan).mp4
+x-co-op: No
+
+
+game: Babel no Tou (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Babel no Tou (Japan) (Namcot Collection)/Babel no Tou (Japan) (Namcot Collection).json
+developer: Namco
+publisher: Namco
+genre: Platform;Puzzle
+description:
+  Babel no Tou (Tower of Babel) is a platform puzzle game in which the player
+  controls Indiana Borgnine, an archaeologist in search of the air gardens of
+  Babylon. The only path to the gardens lies through the intimidating sixty-four
+  floors of the famous Tower of Babel.
+  .
+  The hero must escape the various rooms of the biblical structure while
+  collecting treasure. Each room is a separate puzzle, where the main objective is
+  to pick up and stack L-shaped building blocks to construct stairs or bridges and
+  reach the exit door. In each of these rooms, the player has a limited number of
+  times that they can pick up these building blocks. The player must also avoid
+  touching roaming enemies like flying bats, golems and the priest guards. When
+  the explorer gets stuck or the level is made unsolvable by a series of wrong
+  actions, a button can be used to kill the main character and reset the room.
+release: 1986-07-18
+players: 1
+assets.boxfront: BoxFront/Babel no Tou (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Babel no Tou (Japan) (Namcot Collection).jpg
+assets.background: Background/Babel no Tou (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Babel no Tou (Japan) (Namcot Collection).jpg
+assets.video: Video/Babel no Tou (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: BattleCity (World) (Ja) (Namcot Collection, Namco Museum Archives Vol 2)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/BattleCity (World) (Ja) (Namcot Collection, Namco Museum Archives Vol 2)/BattleCity (World) (Ja) (Namcot Collection, Namco Museum Archives Vol 2).json
+developer: Namco Limited
+publisher: Namco Limited
+genre: Shooter
+description:
+  Battle City is a refined and updated version of Namco's arcade game Tank
+  Battalion. Destroy different enemy tanks, while trying to keep them away from
+  your base. When you have destroyed 20 enemy tanks you advance to the next level
+  with different layout. In each level there's some obstacles which you can use to
+  your advantage. Obstacles include red bricks which you can shoot out of your
+  way, silver bricks which are highly armored, water and ice. You start the game
+  with a basic tank, which you can power up to better one little by little.
+  .
+  The game includes a construction mode, so you can make your own levels when you
+  have played through all the 35 original levels.
+release: 1985-09-09
+players: 2
+assets.boxfront: BoxFront/BattleCity (World) (Ja) (Namcot Collection, Namco Museum Archives Vol 2).jpg
+assets.boxback: BoxBack/BattleCity (World) (Ja) (Namcot Collection, Namco Museum Archives Vol 2).jpg
+assets.background: Background/BattleCity (World) (Ja) (Namcot Collection, Namco Museum Archives Vol 2).jpg
+assets.screenshot: Screenshot/BattleCity (World) (Ja) (Namcot Collection, Namco Museum Archives Vol 2).jpg
+assets.video: Video/BattleCity (World) (Ja) (Namcot Collection, Namco Museum Archives Vol 2).mp4
+x-co-op: No
+
+
+game: Bikkuri Nekketsu Shin Kiroku! - Harukanaru Kin Medal (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Bikkuri Nekketsu Shin Kiroku! - Harukanaru Kin Medal (Japan)/Bikkuri Nekketsu Shin Kiroku! - Harukanaru Kin Medal (Japan).json
+developer: Technos
+publisher: Technos
+genre: Sports;Individual;Athletics
+description:
+  Sure they're from the wrong part of town, but Crash Cooney and his buds from
+  Southside High romped all over the Spring Heel City Track Meet. Now all the rich
+  mama's-boys from up on "The Hill" want a rematch - no rules, no-holds-barred. So
+  they're takin' it to the streets! Control your favorite team - Crash 'N' The
+  Boys of Southside High, or any of the three Hiller schools: Washington High,
+  Lincoln High or Jefferson High. Plus you'll face the computer-controlled Team
+  Thomley - a group of super athletes ready to trounce all the schools. Rage
+  through 5 wild street events - 400 M Hurt-les, Hammer Golf, Water Slaughter,
+  Skyline Scramble and Judo.
+release: 1992-06-26
+players: 2
+assets.boxfront: BoxFront/Bikkuri Nekketsu Shin Kiroku! - Harukanaru Kin Medal (Japan).jpg
+assets.boxback: BoxBack/Bikkuri Nekketsu Shin Kiroku! - Harukanaru Kin Medal (Japan).jpg
+assets.background: Background/Bikkuri Nekketsu Shin Kiroku! - Harukanaru Kin Medal (Japan).jpg
+assets.screenshot: Screenshot/Bikkuri Nekketsu Shin Kiroku! - Harukanaru Kin Medal (Japan).jpg
+assets.video: Video/Bikkuri Nekketsu Shin Kiroku! - Harukanaru Kin Medal (Japan).mp4
+x-co-op: No
+
+
+game: Boku Dracula-kun (World) (Ja) (Castlevania Anniversary Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Boku Dracula-kun (World) (Ja) (Castlevania Anniversary Collection)/Boku Dracula-kun (World) (Ja) (Castlevania Anniversary Collection).json
+developer: Konami
+publisher: Konami
+genre: Action;Platform
+description:
+  Kid Dracula is an unusual side-scroller from Konami. It's a parody of the
+  company's popular Castlevania series. Instead of playing as a member of the
+  Belmont family, you play as young Kid Dracula.
+  .
+  You have been woken up from your sleep by the evil demon Garamos, who's been
+  wrecking havoc in Dracula's Castle. It's up to you to stop him by traveling
+  across several different locations, including Dracula's Castle, New York, the
+  Sea, and Egypt!
+  .
+  Gameplay consists of very standard jump and shoot platform action. As you
+  progress through the 8 levels, you gain the ability to perform spells, such as
+  turning into a bat, and different special attacks, such as a spread / homing
+  attack. You can also spend the coins you get when you defeat enemies in one of
+  several mini-games that show up when you're between levels.
+release: 1990-10-19
+players: 1
+assets.boxfront: BoxFront/Boku Dracula-kun (World) (Ja) (Castlevania Anniversary Collection).jpg
+assets.boxback: BoxBack/Boku Dracula-kun (World) (Ja) (Castlevania Anniversary Collection).jpg
+assets.background: Background/Boku Dracula-kun (World) (Ja) (Castlevania Anniversary Collection).jpg
+assets.screenshot: Screenshot/Boku Dracula-kun (World) (Ja) (Castlevania Anniversary Collection).jpg
+assets.video: Video/Boku Dracula-kun (World) (Ja) (Castlevania Anniversary Collection).mp4
+x-co-op: No
+
+
+game: Contra (World) (Ja) (Contra Anniversary Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Contra (World) (Ja) (Contra Anniversary Collection)/Contra (World) (Ja) (Contra Anniversary Collection).json
+developer: Konami
+publisher: Konami
+genre: Platform;Shooter
+description:
+  The universe teeters on the brink of total annihilation at the hands of the vile
+  alien warmonger, Red Falcon. Earth's only hope rests with you, a courageous
+  member of the Special Forces elite commando squad. Your mission: Battle deep
+  into the deadly Amazon jungle, where the Red Falcon and his galactic henchmen
+  have transformed ancient Mayan temples into awesome monuments dedicated to mass
+  destruction. A multitude of weapons, from rapid-fire machine guns to high-tech
+  lasers are at your disposal as you sweat blood, fighting past 3-D mazes,
+  underground security systems, and tropical forests surrounded by giant
+  waterfalls and alien cannons. This is the ultimate test for the ultimate
+  guerilla warrior. And if you survive, Earth survives!
+release: 1988-02-02
+players: 2
+assets.boxfront: BoxFront/Contra (World) (Ja) (Contra Anniversary Collection).jpg
+assets.boxback: BoxBack/Contra (World) (Ja) (Contra Anniversary Collection).jpg
+assets.background: Background/Contra (World) (Ja) (Contra Anniversary Collection).jpg
+assets.screenshot: Screenshot/Contra (World) (Ja) (Contra Anniversary Collection).jpg
+assets.video: Video/Contra (World) (Ja) (Contra Anniversary Collection).mp4
+x-co-op: Yes
+
+
+game: Dig Dug (World) (Namcot Collection, Namco Museum Archives Vol 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Dig Dug (World) (Namcot Collection, Namco Museum Archives Vol 1)/Dig Dug (World) (Namcot Collection, Namco Museum Archives Vol 1).json
+developer: Namco
+publisher: Namco
+genre: Action
+description:
+  Dig a little deeper into this thrilling action game as Dig Dug! Take up the role
+  of Dig Dug, the champion of love and justice, as you drill through the ground
+  and defeat any enemies that stray in your path. Clear the stage by avoiding and
+  defeating the persistent Pooka and the deep-dwelling but whimsical Fygars. Hit
+  enemies with the harpoon and pump air into them, or drop rocks from above. Pass
+  through inflated enemies, or defeat multiple enemies in an adjacent passage for
+  an even higher score. To earn a chance at bonus points, don't forget to collect
+  those vegetables that appear! Keep on digging, and outmatch the enemies that
+  dwell deep underground!
+release: 1985-06-04
+players: 2
+assets.boxfront: BoxFront/Dig Dug (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.boxback: BoxBack/Dig Dug (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.background: Background/Dig Dug (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.screenshot: Screenshot/Dig Dug (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.video: Video/Dig Dug (World) (Namcot Collection, Namco Museum Archives Vol 1).mp4
+x-co-op: No
+
+
+game: Dig Dug II (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Dig Dug II (Japan)/Dig Dug II (Japan).json
+developer: Namco
+publisher: Bandai
+genre: Puzzle
+description:
+  DIG DUG has decided to chill out from the pressures of the real world by taking
+  a long overdue vacation on a beautiful Caribbean island. "At last," he thinks to
+  himself, "sun, sand, surf, and no more hassles from those miserable pests Pooka
+  and Fygar!" Lying in a hammock between the graceful palm trees, he drifts off
+  into a blissful dream of beautiful bikini clad native girls catering to his
+  every wish. But just when he thinks he's got it made in the shade, along come
+  his troublesome enemies to turn his peaceful paradise into a tropical nightmare.
+  Help DIG DUG rid the island of these irritating intruders and bring tranquility
+  back to his vacation by the sea!
+release: 1986-04-18
+players: 1
+assets.boxfront: BoxFront/Dig Dug II (Japan).jpg
+assets.boxback: BoxBack/Dig Dug II (Japan).jpg
+assets.background: Background/Dig Dug II (Japan).jpg
+assets.screenshot: Screenshot/Dig Dug II (Japan).jpg
+assets.video: Video/Dig Dug II (Japan).mp4
+x-co-op: No
+
+
+game: Digital Devil Story - Megami Tensei (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Digital Devil Story - Megami Tensei (Japan) (Namcot Collection)/Digital Devil Story - Megami Tensei (Japan) (Namcot Collection).json
+developer: Atlus
+publisher: Namco
+genre: Role-Playing
+description:
+  A high-school student and skillful computer programmer named Akemi Nakajima
+  created a software called "Devil Summoning Program". At first Nakajima intended
+  to use the software to gain revenge on a classmate who bullied him. However,
+  things went out of control, and the malicious demon Loki was unleashed into the
+  world. Soon, a demonic invasion of the Earth began. Aided by the lovely Yumiko
+  Shirasagi, a transfer student who seems to be interested in him, Nakajima
+  decides to undo his wrongs and defeat the demons. In order to do that, the young
+  couple will need to learn how to use the program for good purposes, and uncover
+  the truth about their own previous incarnations.
+  .
+  Based on a series of horror novels by the Japanese author Aya Nishitani (the
+  first of which is named Digital Devil Story), Megami Tensei (translated as
+  "Goddess Reincarnation") marks the birth of the eponymous role-playing
+  franchise. The game is a first-person RPG with turn-based combat, set entirely
+  in large, maze-like dungeon areas. Unlike in most Japanese-style RPGs, the
+  player can manually increase combat parameters of Nakajima and Yumiko when they
+  gain a level.
+  .
+  The game introduces the demon summoning feature that has since become the
+  distinguishing gameplay element of the series. The player is able to communicate
+  with randomly encountered demons through Nakajima's computer software, summon
+  them, and make them fight as members of the controlled party. Communications
+  with randomly encountered demons usually involve offering them money or
+  magnetite (energy they consume); the outcome of the communication depends on the
+  demon's race, alignment, and the phase of the moon. Demons can also be "fused"
+  with each other in special facilities, creating more powerful species.
+release: 1987-09-11
+players: 1
+assets.boxfront: BoxFront/Digital Devil Story - Megami Tensei (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Digital Devil Story - Megami Tensei (Japan) (Namcot Collection).jpg
+assets.background: Background/Digital Devil Story - Megami Tensei (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Digital Devil Story - Megami Tensei (Japan) (Namcot Collection).jpg
+assets.video: Video/Digital Devil Story - Megami Tensei (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Downtown - Nekketsu Koushinkyoku - Soreyuke Daiundoukai (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Downtown - Nekketsu Koushinkyoku - Soreyuke Daiundoukai (Japan)/Downtown - Nekketsu Koushinkyoku - Soreyuke Daiundoukai (Japan).json
+developer: Million
+publisher: Technos
+genre: Sports;Individual;Athletics
+description:
+  From the 18 works included in "Kunio-kun The World Classics Collection" released
+  in December 2018, "Downtown Nekketsu Koushinkyoku: Soreyuke Daiundoukai" has
+  been released as a single piece!
+  .
+  .
+  Equipped with two modes, the "quality-up version" with improved operation and
+  specifications, and the "original version" with the original titles of the time
+  recorded! You can enjoy that trick and game balance as it is!
+  .
+  .
+  The second work of the "Downtown Series" featuring Kunio-kun. This time Kunio-
+  kun will challenge the athletic meet! The messy competitions such as invading a
+  private house, climbing a building, hitting each other and having weapons are
+  unique to Kunio-kun's work.
+  .
+  .
+  A hot-blooded high school led by "Kuni", a Hanazono high school led by "Riki", a
+  cold peak school with "Ryuichi Ryuji", and a coalition team with "Gouda" and
+  "Godai".
+release: 1990-10-12
+players: 4
+assets.boxfront: BoxFront/Downtown - Nekketsu Koushinkyoku - Soreyuke Daiundoukai (Japan).jpg
+assets.boxback: BoxBack/Downtown - Nekketsu Koushinkyoku - Soreyuke Daiundoukai (Japan).jpg
+assets.background: Background/Downtown - Nekketsu Koushinkyoku - Soreyuke Daiundoukai (Japan).jpg
+assets.screenshot: Screenshot/Downtown - Nekketsu Koushinkyoku - Soreyuke Daiundoukai (Japan).jpg
+assets.video: Video/Downtown - Nekketsu Koushinkyoku - Soreyuke Daiundoukai (Japan).mp4
+x-co-op: No
+
+
+game: Downtown - Nekketsu Monogatari (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Downtown - Nekketsu Monogatari (Japan)/Downtown - Nekketsu Monogatari (Japan).json
+developer: Million
+publisher: Technos
+genre: Action;Beat-'Em-Up;2D
+description:
+  Hear the message from Sick, the meanest ganglord in town: "I hold your high
+  school captive, and some of the students will have a trying moment, if they're
+  ever fool enough to cross my path!" But you aren't afraid of anybody! Face the
+  terrible gangs and neutralize their bosses, in order to deliver the city from
+  terror!
+release: 1989-04-25
+players: 1
+assets.boxfront: BoxFront/Downtown - Nekketsu Monogatari (Japan).jpg
+assets.boxback: BoxBack/Downtown - Nekketsu Monogatari (Japan).jpg
+assets.background: Background/Downtown - Nekketsu Monogatari (Japan).jpg
+assets.screenshot: Screenshot/Downtown - Nekketsu Monogatari (Japan).jpg
+assets.video: Video/Downtown - Nekketsu Monogatari (Japan).mp4
+x-co-op: No
+
+
+game: Downtown Special - Kunio-kun no Jidaigeki Da yo Zenin Shuugou! (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Downtown Special - Kunio-kun no Jidaigeki Da yo Zenin Shuugou! (Japan)/Downtown Special - Kunio-kun no Jidaigeki Da yo Zenin Shuugou! (Japan).json
+developer: Million
+publisher: Technos
+genre: Action;Beat-'Em-Up;2D
+description:
+  From the 18 works included in "Kunio-kun The World Classics Collection" released
+  in December 2018, "Downtown Special Kunio-kun's Historical Drama, All-Member
+  Assembly!" Is released as a single item!
+  .
+  .
+  This work is a historical drama action game in which Kunio-kun is struggling in
+  the Edo period. Many characters from the Downtown series have appeared, and one
+  of the attractions is the dramatic story and the comical dialogue that can be
+  seen everywhere.
+  .
+  .
+  The operation is a simple action game familiar to the Downtown series, but this
+  work has a lot of techniques and items, and you can shop when you go to the
+  town. In addition, there is a "mystery" in an unexpected place, where powerful
+  items and techniques are sold.
+  .
+  .
+  In addition, the content has a high degree of freedom, such as the ability to
+  assign status for training, so you can play carefully, challenge speed play, and
+  play in various ways.
+release: 1991-07-26
+players: 2
+assets.boxfront: BoxFront/Downtown Special - Kunio-kun no Jidaigeki Da yo Zenin Shuugou! (Japan).jpg
+assets.boxback: BoxBack/Downtown Special - Kunio-kun no Jidaigeki Da yo Zenin Shuugou! (Japan).jpg
+assets.background: Background/Downtown Special - Kunio-kun no Jidaigeki Da yo Zenin Shuugou! (Japan).jpg
+assets.screenshot: Screenshot/Downtown Special - Kunio-kun no Jidaigeki Da yo Zenin Shuugou! (Japan).jpg
+assets.video: Video/Downtown Special - Kunio-kun no Jidaigeki Da yo Zenin Shuugou! (Japan).mp4
+x-co-op: Yes
+
+
+game: Dragon Buster (World) (Namcot Collection, Namco Museum Archives Vol 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Dragon Buster (World) (Namcot Collection, Namco Museum Archives Vol 1)/Dragon Buster (World) (Namcot Collection, Namco Museum Archives Vol 1).json
+developer: TOSE
+publisher: Namco
+genre: Action;Platform
+description:
+  Originating in the arcades, Dragon Buster is an action platform game composed
+  out of several large levels, each one containing various stages: a cave, a
+  tower, a castle, etc. The player's goal in every level is to reach the final
+  stage where the protagonist faces the level boss. There are often several ways
+  to reach the final stages, and not all stages are necessary to visit. Equipped
+  with a sword, the player character moves through platform stages, clearing them
+  of diverse monsters, collecting power-ups and trying to stay in good health
+  until the level boss, since it is impossible to heal between the stages. The
+  hero's life meter (called "vitality" in the game) is the first introduction of
+  such a feature to action games.
+release: 1987-01-07
+players: 1
+assets.boxfront: BoxFront/Dragon Buster (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.boxback: BoxBack/Dragon Buster (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.background: Background/Dragon Buster (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.screenshot: Screenshot/Dragon Buster (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.video: Video/Dragon Buster (World) (Namcot Collection, Namco Museum Archives Vol 1).mp4
+x-co-op: No
+
+
+game: Dragon Spirit - Aratanaru Densetsu (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Dragon Spirit - Aratanaru Densetsu (Japan) (Namcot Collection)/Dragon Spirit - Aratanaru Densetsu (Japan) (Namcot Collection).json
+developer: Now Production
+publisher: Namco
+genre: Shooter
+description:
+  After a millennium of captivity, an ugly serpent demon named Zawell escapes
+  imprisonment and kidnaps Alicia, princess to the kingdom of Mitgult. A young,
+  crafty soldier Amul is selected to rescue the princess and destroy Zawell. In
+  praying to the gods for strength and courage, he points his sword high toward
+  the heavens. Suddenly he is transformed into an all-powerful blue dragon,
+  bestowed with special powers. Though gifted with a lethal air and ground attack,
+  this is not enough. He must locate and obtain extra powers along the way. The
+  demon has instructed nine of the mightiest beasts to stop Amul before reaching
+  his goal.
+release: 1989-04-14
+players: 1
+assets.boxfront: BoxFront/Dragon Spirit - Aratanaru Densetsu (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Dragon Spirit - Aratanaru Densetsu (Japan) (Namcot Collection).jpg
+assets.background: Background/Dragon Spirit - Aratanaru Densetsu (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Dragon Spirit - Aratanaru Densetsu (Japan) (Namcot Collection).jpg
+assets.video: Video/Dragon Spirit - Aratanaru Densetsu (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Druaga no Tou (World) (Namcot Collection, Namco Museum Archives Vol 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Druaga no Tou (World) (Namcot Collection, Namco Museum Archives Vol 1)/Druaga no Tou (World) (Namcot Collection, Namco Museum Archives Vol 1).json
+developer: Namco
+publisher: Namco
+genre: Action
+description:
+  The Tower of Druaga is a maze-based action role-playing game from Namco, created
+  on the Mappy engine and originally released in Arcades in 1984 and later ported
+  to consoles such as the NES, Game Boy and MSX as well as appearing in numerous
+  Namco compilations, such as Namco Museum Vol. 3 for the PlayStation in 1997. The
+  game is the first in the Babylonian Castle Saga and second chronologically. In
+  1992, the game was remade for the PC Engine which saw numerous changes detailed
+  below.
+  .
+  Combining hack & slash real-time combat with some basic RPG elements, it laid
+  the foundations for early action role-playing games such as Dragon Slayer and
+  Hydlide. Its hack & slash combat included the ability to both attack with a
+  sword by pressing the attack button and defend with a shield by standing still.
+  It attracted millions of fans in Japan and went on to inspire early action RPGs
+  such as Dragon Slayer, Hydlide, Ys and The Legend of Zelda. The game also
+  debuted the Slime monsters which would later become the mascot of the Dragon
+  Quest series.
+  .
+  The game served the basis of an anime series, The Tower of Druaga: The Aegis of
+  Uruk, from studio Gonzo and was broadcast between April 2008 to March 2009. The
+  anime takes place 60 years after the events of the game. A noteworthy element of
+  the anime is the music, composed by famed video game composer Hitoshi Sakimoto.
+release: 1985-08-06
+players: 1
+assets.boxfront: BoxFront/Druaga no Tou (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.boxback: BoxBack/Druaga no Tou (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.background: Background/Druaga no Tou (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.screenshot: Screenshot/Druaga no Tou (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.video: Video/Druaga no Tou (World) (Namcot Collection, Namco Museum Archives Vol 1).mp4
+x-co-op: No
+
+
+game: Family Circuit (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Family Circuit (Japan) (Namcot Collection)/Family Circuit (Japan) (Namcot Collection).json
+developer: Game Studio
+publisher: Namco
+genre: Racing
+description:
+  Family Circuit is a racing game for Nintendo's Family Computer, hence the name.
+  Unlike other Nintendo racing games at the time, it has many realistic traits,
+  removing itself from the main crop of more arcade oriented titles. The car can
+  be customized to your heart's content, with different tires, wings and
+  suspension and detailed engine settings for both turbo and torque.
+  .
+  Four racing modes are available:
+  .
+  - Free run: Run any way you want around the track, getting to know both the
+  curves and straights as well as the settings of your car.\n
+  - Sprint race: Race a season in four classes – novice, B class, A class and
+  Super A – around well-known (Fuji, Suzuka) and less well-known tracks (Family
+  Park, Namcot-ring), competing for the first place.\n
+  - Endurance race: Run around and around a track to see who gives up last.\n
+  - Spectator mode: Not a real racing mode, but allows you to follow any car in
+  any class around any track.
+  .
+  As you bump into things or push the car too far, you must pit in, where you will
+  be given statistics for each part of the car and may choose to fix it. Some of
+  this realism is however forfeited by the fact that cars can never collide.
+  Racing straight through an opponent with both cars undamaged is perfectly
+  possible.
+release: 1988-01-06
+players: 1
+assets.boxfront: BoxFront/Family Circuit (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Family Circuit (Japan) (Namcot Collection).jpg
+assets.background: Background/Family Circuit (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Family Circuit (Japan) (Namcot Collection).jpg
+assets.video: Video/Family Circuit (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Family Jockey (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Family Jockey (Japan) (Namcot Collection)/Family Jockey (Japan) (Namcot Collection).json
+developer: Namco
+publisher: Namco
+genre: Sports
+description:
+  Family Jockey is a horse racing game for the Famicom. You can choose between one
+  player or two player simultaneous mode. At the start you must choose a horse.
+  Horses have different skill levels like speed, stamina or jump. During the race
+  the horses and the course are displayed from a top-down view. You increase the
+  speed of your horse by using your whip, which in return results in an energy
+  decrease, so it must be used with care. There are two different surface types
+  (lawn and dirt) and some courses have obstacles that you have to jump over. You
+  must place at least in the top 4 of each race to continue with the game. Placing
+  higher increases the prize money. Besides a mode that concentrates purely on the
+  racing part you can choose a so called "Family Game" which includes a betting
+  part in addition to the racing.
+release: 1987-04-24
+players: 2
+assets.boxfront: BoxFront/Family Jockey (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Family Jockey (Japan) (Namcot Collection).jpg
+assets.background: Background/Family Jockey (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Family Jockey (Japan) (Namcot Collection).jpg
+assets.video: Video/Family Jockey (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Family Pinball (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Family Pinball (Japan) (Namcot Collection)/Family Pinball (Japan) (Namcot Collection).json
+developer: KID Corp.
+publisher: Namco Limited
+genre: Sports
+description:
+  Rock 'N' Ball is a pinball game with several gameplay options. The first is
+  regular pinball game for one to four players. The second option is called
+  nineball and the object is to shoot the balls into the playfield and have them
+  land in the holes to form a bingo pattern (i.e. a vertical line, a horizontal
+  line, etc.) This game is also for one to four players. Next is battle flipper.
+  There is a set of flippers at both the top and bottom of the table, and two
+  players try to knock the pinball past their opponents flippers. Lastly is sports
+  pinball. In this game the pinball table is set up to look like a soccer or
+  hockey field. Similar to battle flipper, each player tries to knock the pinball
+  past their opponents goalie. There is only one flipper in this game, however you
+  have a goalie to block shots and the flipper can be moved from side to side.
+release: 1989-03-24
+players: 1
+assets.boxfront: BoxFront/Family Pinball (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Family Pinball (Japan) (Namcot Collection).jpg
+assets.background: Background/Family Pinball (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Family Pinball (Japan) (Namcot Collection).jpg
+assets.video: Video/Family Pinball (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Galaxian (World) (Namcot Collection, Namco Museum Archives Vol 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Galaxian (World) (Namcot Collection, Namco Museum Archives Vol 1)/Galaxian (World) (Namcot Collection, Namco Museum Archives Vol 1).json
+developer: Namco
+publisher: Namco
+genre: Shooter
+description:
+  The Galaxian Fleet has invaded and it's up to you to stop them. There's two-way
+  action in this game; as you fire at them, they're firing back at you! All that
+  is required of you is quick reflexes and an accurate aim. Can you destroy the
+  Galaxian Fleet before they destroy you?
+  .
+  This game was released only for the japanese Famicom and is a port of the
+  original Arcade game released in 1979.
+release: 1984-09-07
+players: 2
+assets.boxfront: BoxFront/Galaxian (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.boxback: BoxBack/Galaxian (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.background: Background/Galaxian (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.screenshot: Screenshot/Galaxian (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.video: Video/Galaxian (World) (Namcot Collection, Namco Museum Archives Vol 1).mp4
+x-co-op: No
+
+
+game: God Slayer - Haruka Tenkuu no Sonata (Japan) (SNK 40th Anniversary Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/God Slayer - Haruka Tenkuu no Sonata (Japan) (SNK 40th Anniversary Collection)/God Slayer - Haruka Tenkuu no Sonata (Japan) (SNK 40th Anniversary Collection).json
+developer: SNK
+publisher: SNK
+genre: Role-Playing;Action RPG
+description:
+  When the Great War engulfed the world, bringing civilization as we know it to an
+  end, it ushered in a new era of sorcery and magic. The magicians used their
+  magic to keep order, and peace reigned for a hundred years... Until an evil
+  magician named Draygon, seeking to control and dominate his fellow men, began to
+  use his powers for destruction and conquest. To combat Draygon's evil, the other
+  magicians constructed four powerful swords of wind, fire, water and thunder.
+  Used together, the swords would transform into the mightiest weapon ever
+  created: the sword Crystalis. But Draygon seized the weapons and scattered them
+  far and wide throughout the land. Only one hope remained: A young lad, himself a
+  great magician, who had been imprisoned in a cave and frozen during the Great
+  War. Though they knew it might destroy them, the wise magicians pooled all of
+  their powers in an attempt to revive him. When the boy awoke - his mind a blank,
+  even his name forgotten - they had vanished, leaving him to find his destiny in
+  this strange new world. In CRYSTALIS, you play the role of the young magician,
+  making your way through Draygon's hostile land in an effort to locate the
+  weapons you will need to defeat him. Draygon's monsters and black magic will
+  threaten you at every turn, but you must not falter - only you can deliver the
+  world from his scourge of evil!
+release: 1990-07-11
+players: 1
+assets.boxfront: BoxFront/God Slayer - Haruka Tenkuu no Sonata (Japan) (SNK 40th Anniversary Collection).jpg
+assets.boxback: BoxBack/God Slayer - Haruka Tenkuu no Sonata (Japan) (SNK 40th Anniversary Collection).jpg
+assets.background: Background/God Slayer - Haruka Tenkuu no Sonata (Japan) (SNK 40th Anniversary Collection).jpg
+assets.screenshot: Screenshot/God Slayer - Haruka Tenkuu no Sonata (Japan) (SNK 40th Anniversary Collection).jpg
+assets.video: Video/God Slayer - Haruka Tenkuu no Sonata (Japan) (SNK 40th Anniversary Collection).mp4
+x-co-op: No
+
+
+game: Great Tank (Japan) (SNK 40th Anniversary Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Great Tank (Japan) (SNK 40th Anniversary Collection)/Great Tank (Japan) (SNK 40th Anniversary Collection).json
+developer: SNK
+publisher: SNK
+genre: Action;Shooter;Shoot-'Em-Up;Top-Down
+description:
+  The date: June 5, 1944. The United Forces are preparing for their final assault
+  on the Normandy Coast. The mission: Establish a beachhead, break through the
+  front lines, and infiltrate and destroy enemy headquarters. To spearhead the
+  invasion, they have chosen Paul, from Command Unit 88 - a secret unit known as
+  "Iron Snake." An experienced combat veteran with special forces training, Paul
+  has been called a Man of Iron. But to succeed in his mission, Paul will need the
+  full firepower of the United Forces' mightiest fighting juggernaut: the Iron
+  Tank!
+release: 1988-07-11
+players: 1
+assets.boxfront: BoxFront/Great Tank (Japan) (SNK 40th Anniversary Collection).jpg
+assets.boxback: BoxBack/Great Tank (Japan) (SNK 40th Anniversary Collection).jpg
+assets.background: Background/Great Tank (Japan) (SNK 40th Anniversary Collection).jpg
+assets.screenshot: Screenshot/Great Tank (Japan) (SNK 40th Anniversary Collection).jpg
+x-co-op: No
+
+
+game: Ikari (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Ikari (Japan)/Ikari (Japan).json
+developer: Micronics
+publisher: SNK
+genre: Action;Shooter;Shoot-'Em-Up;Top-Down
+description:
+  As a member of an elite combat squad, you and your buddy are on a mission behind
+  enemy lines. You've got to wade through rivers, hide behind rubble and shoot to
+  destroy. Will Machine guns, grenades and attack tanks be enough to totally
+  destroy the enemy? Lock and load, make every shot count, your ultimate battle
+  awaits. You are the Ikari Warrior!
+release: 1987-05-11
+players: 1
+assets.boxfront: BoxFront/Ikari (Japan).jpg
+assets.boxback: BoxBack/Ikari (Japan).jpg
+assets.background: Background/Ikari (Japan).jpg
+assets.screenshot: Screenshot/Ikari (Japan).jpg
+x-co-op: No
+
+
+game: Ikari II - Dogosoken (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Ikari II - Dogosoken (Japan)/Ikari II - Dogosoken (Japan).json
+developer: Micronics
+publisher: SNK
+genre: Action;Shooter;Shoot-'Em-Up;Vertical
+description:
+  You begin this game on the "stairway to heaven" through a weird Egyptian land.
+  Having survived the bloodsucking monsters of the first phase, you then progress
+  on to the actual road itself.
+  .
+  This is where the fun really begins! You will meet vampires, two and three
+  headed monsters - the head will fly at you on its own, just when you think you
+  are gaining the upper hand.
+  .
+  The road winds on and on, through tombs containing the bones of former seekers
+  after fame and very much alive Eldrich horrors. Trapdoors and elevators
+  transport you - sometimes to your surprise inside ancient buildings and under
+  lakes and oceans. Collect icons to build up the firepower necessary to fight off
+  your aggressors.
+  .
+  Action and excitement all the way with this macabre and unusual game; which has
+  that elusive extra something to keep you coming back for more.
+release: 1988-04-11
+players: 1
+assets.boxfront: BoxFront/Ikari II - Dogosoken (Japan).jpg
+assets.boxback: BoxBack/Ikari II - Dogosoken (Japan).jpg
+assets.background: Background/Ikari II - Dogosoken (Japan).jpg
+assets.screenshot: Screenshot/Ikari II - Dogosoken (Japan).jpg
+x-co-op: No
+
+
+game: Ikari III (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Ikari III (Japan)/Ikari III (Japan).json
+developer: SNK
+publisher: SNK
+genre: Action;Beat-'Em-Up;2D
+description:
+  It's the end of the 20th century. A worldwide economic recession wreaks havoc
+  with the nation and the planet. The impending threat of anarchy has given rise
+  to a secret vice organization called "Crime Ghost." Dangerously poised to take
+  over the world with its diabolic strategy, "Crime Ghost" has infiltrated every
+  country simultaneously. There is one President who has initiated a plan to wipe
+  out the association, but now his home has been attacked and his daughter Elise
+  abducted. A letter has arrived demanding that he resign his powerful position
+  within a number of days, or else his beautiful Elise will be executed in a most
+  unpleasant manner. The letter is signed "Faust," the notorious mastermind of
+  Crime Ghost. The president knows to whom he must turn. He has summoned two men,
+  Paul and Vince, the incredible Ikari Warriors. Now YOU become Paul and Vince!
+  You must go to the enemy hideout, rescue the lovely Elise, fight Crime Ghost and
+  destroy them all!
+release: 1991-02-11
+players: 1
+assets.boxfront: BoxFront/Ikari III (Japan).jpg
+assets.boxback: BoxBack/Ikari III (Japan).jpg
+assets.background: Background/Ikari III (Japan).jpg
+assets.screenshot: Screenshot/Ikari III (Japan).jpg
+x-co-op: No
+
+
+game: Ike Ike! Nekketsu Hockey-bu - Subette Koronde Dairantou (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Ike Ike! Nekketsu Hockey-bu - Subette Koronde Dairantou (Japan)/Ike Ike! Nekketsu Hockey-bu - Subette Koronde Dairantou (Japan).json
+developer: Technos
+publisher: Technos
+genre: Sports;Team;Ice Hockey;Arcade
+description:
+  From the 18 works included in "Kunio-kun The World Classics Collection" released
+  in December 2018, "Ikeike! Hot-Blooded Hockey Club Sliding and Falling Great
+  Brawl" is released as a single piece! !! !!
+  .
+  .
+  Equipped with two modes, the "quality-up version" with improved operation and
+  specifications, and the "original version" with the original titles of the time
+  recorded! You can enjoy that trick and game balance as it is!
+  .
+  .
+  Kunio-kun's work is familiar; there are hits, and there are other attacks, and
+  as the title name suggests, the game develops like a big brawl. However, if you
+  overdo it, you will be penalized for temporary exit.
+  .
+  .
+  The work is full of elements that go beyond ordinary ice hockey games, such as
+  unique "snapshots" and "costumes" that you can get if you win the game.
+release: 1992-02-07
+players: 4
+assets.boxfront: BoxFront/Ike Ike! Nekketsu Hockey-bu - Subette Koronde Dairantou (Japan).jpg
+assets.boxback: BoxBack/Ike Ike! Nekketsu Hockey-bu - Subette Koronde Dairantou (Japan).jpg
+assets.background: Background/Ike Ike! Nekketsu Hockey-bu - Subette Koronde Dairantou (Japan).jpg
+assets.screenshot: Screenshot/Ike Ike! Nekketsu Hockey-bu - Subette Koronde Dairantou (Japan).jpg
+assets.video: Video/Ike Ike! Nekketsu Hockey-bu - Subette Koronde Dairantou (Japan).mp4
+x-co-op: Yes
+
+
+game: Kaijuu Monogatari (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Kaijuu Monogatari (Japan) (Namcot Collection)/Kaijuu Monogatari (Japan) (Namcot Collection).json
+developer: Birthday
+publisher: Namco
+genre: Role-Playing
+description:
+  Kaijū Monogatari (貝獣物語?) is a role-playing video game developed by Birthday and
+  published by Namco for Famicom, in November 1988 in Japan.
+release: 1988-11-18
+players: 1
+assets.boxfront: BoxFront/Kaijuu Monogatari (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Kaijuu Monogatari (Japan) (Namcot Collection).jpg
+assets.background: Background/Kaijuu Monogatari (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Kaijuu Monogatari (Japan) (Namcot Collection).jpg
+assets.video: Video/Kaijuu Monogatari (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Ki no Bouken - The Quest of Ki (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Ki no Bouken - The Quest of Ki (Japan) (Namcot Collection)/Ki no Bouken - The Quest of Ki (Japan) (Namcot Collection).json
+developer: Game Studio
+publisher: Namco
+genre: Platform
+description:
+  The Quest of Ki (カイの冒険 Kai no Bōken?) is a 1988 video game developed by Game
+  Studio and published by Namco for the Family Computer. It is the third game in
+  Babylonian Castle Saga series which started with the 1984 arcade game, The Tower
+  of Druaga.
+  .
+  The story of The Quest of Ki is actually a prequel to the original Tower of
+  Druaga. It occurs shortly after the demon Druaga has stolen the Blue Crystal Rod
+  and taken it to his tower. The goddess Ishtar sends the priestess Ki to the
+  tower in order to retrieve it. The game then follows her doomed quest to the top
+  of the tower, and leads directly into the story of the original game.
+  .
+  The game is a side-scrolling platformer with one hundred levels. In each level,
+  the player's goal is to pick up a key and open the door leading to the next
+  area. Various enemies, including slimes, ghosts, and wizards, appear on each
+  floor, and any contact with them results in death.
+  .
+  Ki has no weapons, and thus can not damage or defeat any of the enemies. Her
+  only abilities are to dash and jump. As long as the player holds the jump button
+  down, Ki can rise indefinitely into the air. However, contact with the ceiling
+  will cause her to drop to the ground and become stunned for several seconds.
+  .
+  Many of the levels consist of puzzles in which the player must carefully
+  regulate the height and direction of Ki's jumps. Each stage in the game contains
+  one or more treasure chest, which hold various items. Although many of the items
+  bestow helpful abilities, the effects only last for the floor on which they were
+  found.
+  .
+  After completing the game, players can gain access to forty bonus stages. These
+  stages contain cameos from the Pac-Man ghosts and the enemies from Dig Dug.
+release: 1988-07-22
+players: 1
+assets.boxfront: BoxFront/Ki no Bouken - The Quest of Ki (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Ki no Bouken - The Quest of Ki (Japan) (Namcot Collection).jpg
+assets.background: Background/Ki no Bouken - The Quest of Ki (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Ki no Bouken - The Quest of Ki (Japan) (Namcot Collection).jpg
+assets.video: Video/Ki no Bouken - The Quest of Ki (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: King of Kings (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/King of Kings (Japan) (Namcot Collection)/King of Kings (Japan) (Namcot Collection).json
+developer: Atlus
+publisher: Namco
+genre: Strategy
+description:
+  A fantasy-themed strategy. It plays something like Famicom/Advance Wars or
+  Daisenryaku, where the goal is to quickly conquer locations by producing a lot
+  of units each turn and sending them against enemy forces. As with those games,
+  there is also a little close-up graphic of the two units whenever they meet for
+  battle, which shows how the two sides are faring in the conflict.
+release: 1988-12-09
+players: 1
+assets.boxfront: BoxFront/King of Kings (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/King of Kings (Japan) (Namcot Collection).jpg
+assets.background: Background/King of Kings (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/King of Kings (Japan) (Namcot Collection).jpg
+assets.video: Video/King of Kings (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Kunio-kun no Nekketsu Soccer League (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Kunio-kun no Nekketsu Soccer League (Japan)/Kunio-kun no Nekketsu Soccer League (Japan).json
+developer: Technos
+publisher: Technos
+genre: Sports;Team;Soccer;Arcade
+description:
+  Kunio-Kun no Nekketsu Soccer League is a Sports game, developed and published by
+  Technos, which was released in Japan in 1993.
+release: 1993-04-23
+players: 4
+assets.boxfront: BoxFront/Kunio-kun no Nekketsu Soccer League (Japan).jpg
+assets.boxback: BoxBack/Kunio-kun no Nekketsu Soccer League (Japan).jpg
+assets.background: Background/Kunio-kun no Nekketsu Soccer League (Japan).jpg
+assets.screenshot: Screenshot/Kunio-kun no Nekketsu Soccer League (Japan).jpg
+assets.video: Video/Kunio-kun no Nekketsu Soccer League (Japan).mp4
+x-co-op: No
+
+
+game: Mappy (World) (Namcot Collection, Namco Museum Archives Vol 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Mappy (World) (Namcot Collection, Namco Museum Archives Vol 1)/Mappy (World) (Namcot Collection, Namco Museum Archives Vol 1).json
+developer: Namco
+publisher: Namco
+genre: Platform
+description:
+  You control Mappy, a police-mouse whose job is to collect valuables (consumer
+  electronics) from a cat's house. You are being pursued by a gang of five pink
+  cats. Doors are your only defense against the cats. You get from floor to floor
+  by jumping on one of the trampolines.
+  .
+  Points are earned by recovering stolen goods. Other ways of earning points are
+  bouncing on a trampoline, putting cats in the microwave, striking a cat with a
+  door, striking cats with a bell, retrieving a treasure from the Boss cat Goro or
+  dropping cats through a hole in the floor.
+release: 1984-11-14
+players: 1
+assets.boxfront: BoxFront/Mappy (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.boxback: BoxBack/Mappy (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.background: Background/Mappy (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.screenshot: Screenshot/Mappy (World) (Namcot Collection, Namco Museum Archives Vol 1).jpg
+assets.video: Video/Mappy (World) (Namcot Collection, Namco Museum Archives Vol 1).mp4
+x-co-op: No
+
+
+game: Metro-Cross (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Metro-Cross (Japan) (Namcot Collection)/Metro-Cross (Japan) (Namcot Collection).json
+developer: Now Production
+publisher: Namco
+genre: Action;Platform
+description:
+  The player must take control of a man known only as Runner, who is given a time
+  limit to run through each of the game's thirty-two rounds while avoiding
+  obstacles and collecting drink cans. The actual running happens automatically:
+  the job of the player is to avoid the obstacles and collect the cans by moving
+  the Runner with the stick and adjusting his speed accordingly.
+  .
+  If the Runner finishes the round within the time limit, the remaining time will
+  be awarded to him as bonus points and he will proceed to the next round. Every
+  fourth round is special, using the remaining time from the three previous ones
+  as additional time. However, if the Runner has not finished the round by the
+  time the time limit runs out, he will be electrocuted and the game will
+  immediately be over.
+  .
+  Obstacles along the way include Slip Zones which will slow the Runner down if he
+  tries to cross over them, Pitfalls which will break under the Runner's weight
+  and drop him into the holes beneath them, and Crackers which will launch the
+  Runner up into the air and cause him to land on his back. Later rounds also
+  feature Jumbo Tires that bounce towards the Runner, Walls that emerge from the
+  ground before receding back into it, Cubes that move through particular columns
+  of tiles, Mice that attempt to jump onto the Runner and slow him down, and Chess
+  Knights and Kings that bounce from one tile to another.
+  .
+  The rounds also feature Springboards, which can be used to propel the Runner
+  forward at a great speed. Some rounds have a special layout of Springboards,
+  where it is possible to use one Springboard to land directly on the second one.
+  Some other rounds also feature Skateboards which will speed the Runner up and
+  make him immune to Slip Zones. There are also two different types of drink cans;
+  kicking them will either gain the player bonus points (from 100 to 5000) or
+  speed the Runner up, but jumping on them will stop the timer for a few seconds.
+release: 1986-12-16
+players: 2
+assets.boxfront: BoxFront/Metro-Cross (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Metro-Cross (Japan) (Namcot Collection).jpg
+assets.background: Background/Metro-Cross (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Metro-Cross (Japan) (Namcot Collection).jpg
+assets.video: Video/Metro-Cross (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Namco Classic II (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Namco Classic II (Japan) (Namcot Collection)/Namco Classic II (Japan) (Namcot Collection).json
+developer: TOSE
+publisher: Namco
+genre: Sports
+description:
+  Namco Classic II is a golf game developed by TOSE and published by Namco for the
+  Famicom in 1992. The game features three courses to choose from and game modes
+  such as Round Play, which you can use to practice the course in the game or
+  compete with friends up to four players. There's also a Tournament mode, where
+  you play against a computer opponent in an effort to win a large amount of prize
+  money.
+release: 1992-03-13
+players: 4
+assets.boxfront: BoxFront/Namco Classic II (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Namco Classic II (Japan) (Namcot Collection).jpg
+assets.background: Background/Namco Classic II (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Namco Classic II (Japan) (Namcot Collection).jpg
+assets.video: Video/Namco Classic II (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Nazo no Murasamejou (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Nazo no Murasamejou (Japan)/Nazo no Murasamejou (Japan).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action Adventure;General
+description:
+  One stormy night in feudal Japan, a mysterious force begins to take control over
+  Murasame Castle and its lands. Each lord in four neighboring castles has taken
+  possession of a dark sphere of power, allowing them to summon ninja armies and
+  monsters that wreak havoc in the villages.
+  .
+  .
+  Takamaru, a brave and young samurai apprentice, has been sent to investigate. He
+  must infiltrate all four castles and defeat the lords before making his way to
+  Murasame Castle. Use sword and shuriken attacks against the swarms of enemies,
+  and unlock the secret behind the source of evil.
+release: 1986-04-14
+players: 1
+assets.boxfront: BoxFront/Nazo no Murasamejou (Japan).jpg
+assets.boxback: BoxBack/Nazo no Murasamejou (Japan).jpg
+assets.background: Background/Nazo no Murasamejou (Japan).jpg
+assets.screenshot: Screenshot/Nazo no Murasamejou (Japan).jpg
+x-co-op: No
+
+
+game: Nekketsu Kakutou Densetsu (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Nekketsu Kakutou Densetsu (Japan)/Nekketsu Kakutou Densetsu (Japan).json
+developer: Technos
+publisher: Technos
+genre: Action;Beat-'Em-Up;2D
+description:
+  From 18 works included in "Kunio-kun The World Classics Collection" released in
+  December 2018, "Nekketsu Fighting Legend" is released as a single item!
+  .
+  .
+  Equipped with two modes: "Quality-up version" with improved operation and
+  specifications, and the "original version", which contains the original title of
+  the time!
+  .
+  .
+  This work is a 2 to 2 tag battle game that starts with a letter sent to the
+  player. The main character is not Kunio-kun, but the player himself.
+  .
+  .
+  Of course, Riki is also participating in the war, and new characters include
+  Himeyama, Shrimp Hara, Mizusawa, and Okumaga.
+  .
+  .
+  Make full use of your own character with a unique partner. Let's aim for a
+  decisive battle with "Saber Tiger"!
+release: 1992-12-23
+players: 4
+assets.boxfront: BoxFront/Nekketsu Kakutou Densetsu (Japan).jpg
+assets.boxback: BoxBack/Nekketsu Kakutou Densetsu (Japan).jpg
+assets.background: Background/Nekketsu Kakutou Densetsu (Japan).jpg
+assets.screenshot: Screenshot/Nekketsu Kakutou Densetsu (Japan).jpg
+assets.video: Video/Nekketsu Kakutou Densetsu (Japan).mp4
+x-co-op: No
+
+
+game: Nekketsu Kouha Kunio-kun (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Nekketsu Kouha Kunio-kun (Japan)/Nekketsu Kouha Kunio-kun (Japan).json
+developer: Technos
+publisher: Taito Corporation
+genre: Action;Beat-'Em-Up;2D
+description:
+  2 A.M. is no time to be alone in the subway. And you're about to find out why.
+  They've got clubs, chains and blades. And it's three against one... but they've
+  picked the wrong one. The streets are a mess and it's time to do a little street
+  cleaning. They started it... You've gotta finish it!
+release: 1986-05-01
+players: 2
+assets.boxfront: BoxFront/Nekketsu Kouha Kunio-kun (Japan).jpg
+assets.boxback: BoxBack/Nekketsu Kouha Kunio-kun (Japan).jpg
+assets.background: Background/Nekketsu Kouha Kunio-kun (Japan).jpg
+assets.screenshot: Screenshot/Nekketsu Kouha Kunio-kun (Japan).jpg
+assets.video: Video/Nekketsu Kouha Kunio-kun (Japan).mp4
+x-co-op: No
+
+
+game: Nekketsu Koukou Dodgeball-bu (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Nekketsu Koukou Dodgeball-bu (Japan)/Nekketsu Koukou Dodgeball-bu (Japan).json
+developer: Technos
+publisher: Technos
+genre: Sports;Team;Other
+description:
+  Team USA is on its way to a Cinderella success story in the Super Dodgy Ball
+  World Cup Championships. From out of nowhere, this scrappy bunch of rookies is
+  advancing to the final round of competition. Seven powerful teams still stand
+  between Team USA and their ultimate challenge; the long awaited grudge match
+  with the undefeated, defending world champions, Team USSR. Only you can lead the
+  U.S. to victory over the highly-favored competition, and give them the chance to
+  crush the mighty Soviets.
+  .
+  .
+  -1 or 2 players
+  .
+  -Multi-dimensional, high-resolution graphics
+  .
+  -3 increasing levels of challenge
+  .
+  .
+  Thrash, Bash, and Smash the Competition
+release: 1987
+players: 2
+assets.boxfront: BoxFront/Nekketsu Koukou Dodgeball-bu (Japan).jpg
+assets.boxback: BoxBack/Nekketsu Koukou Dodgeball-bu (Japan).jpg
+assets.background: Background/Nekketsu Koukou Dodgeball-bu (Japan).jpg
+assets.screenshot: Screenshot/Nekketsu Koukou Dodgeball-bu (Japan).jpg
+assets.video: Video/Nekketsu Koukou Dodgeball-bu (Japan).mp4
+x-co-op: No
+
+
+game: Nekketsu Koukou Dodgeball-bu - Soccer Hen (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Nekketsu Koukou Dodgeball-bu - Soccer Hen (Japan)/Nekketsu Koukou Dodgeball-bu - Soccer Hen (Japan).json
+developer: Million
+publisher: Nintendo
+genre: Sports;Team;Soccer;Arcade
+description:
+  The eyes of the world are upon you. National pride is at stake. Only seconds
+  left and the crowd rises in anticipation of the greatest upset in soccer
+  history. The horn sounds and you've won it all! The coveted world cup trophy is
+  yours! Pick your team and plan your game strategy. Use advanced super moves like
+  the Bicycle Kick or the Super Header. Choose from 13 teams, representing
+  countries from around the world. Defeat your opponents and you're on your way to
+  the prestigious world cup final. Bring the excitement of international soccer
+  home with Nintendo World Cup!
+release: 1990-05-18
+players: 1
+assets.boxfront: BoxFront/Nekketsu Koukou Dodgeball-bu - Soccer Hen (Japan).jpg
+assets.boxback: BoxBack/Nekketsu Koukou Dodgeball-bu - Soccer Hen (Japan).jpg
+assets.background: Background/Nekketsu Koukou Dodgeball-bu - Soccer Hen (Japan).jpg
+assets.screenshot: Screenshot/Nekketsu Koukou Dodgeball-bu - Soccer Hen (Japan).jpg
+assets.video: Video/Nekketsu Koukou Dodgeball-bu - Soccer Hen (Japan).mp4
+x-co-op: No
+
+
+game: Nekketsu! Street Basket - Ganbare Dunk Heroes (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Nekketsu! Street Basket - Ganbare Dunk Heroes (Japan)/Nekketsu! Street Basket - Ganbare Dunk Heroes (Japan).json
+developer: Technos
+publisher: Technos
+genre: Sports;Team;Basketball;Arcade
+description:
+  From 18 works included in "Kunio-kun The World Classics Collection" released in
+  December 2018 "Nekketsu! Street Basket Ganbare DUNK HEROES" has been released as
+  a single item!
+  .
+  .
+  This work is a sports series of Kunio-kun released in 1993. Kunio-kun aims to
+  win the tournament in the United States with 2on2 basketball.
+  .
+  .
+  The content of the game is a fighting sports action with hitting and kicking.
+  The stage (court) is the home or the city of the expedition destination.
+  .
+  Each of the eight stages has a unique gimmick. You can enjoy various strategies
+  such as climbing the wire net, being kicked by a horse and going to the goal.
+  Including special shots and items that are different for each team and player.
+  .
+  .
+  Since it inherits the system and operation feeling of the Kunio-kun sports
+  series, It is a work that even those who like the series and those who like
+  sports games can easily enjoy it.
+release: 1993-12-22
+players: 2
+assets.boxfront: BoxFront/Nekketsu! Street Basket - Ganbare Dunk Heroes (Japan).jpg
+assets.boxback: BoxBack/Nekketsu! Street Basket - Ganbare Dunk Heroes (Japan).jpg
+assets.background: Background/Nekketsu! Street Basket - Ganbare Dunk Heroes (Japan).jpg
+assets.screenshot: Screenshot/Nekketsu! Street Basket - Ganbare Dunk Heroes (Japan).jpg
+assets.video: Video/Nekketsu! Street Basket - Ganbare Dunk Heroes (Japan).mp4
+x-co-op: Yes
+
+
+game: Pac-Land (World) (Namcot Collection, Namco Museum Archives Vol 2)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Pac-Land (World) (Namcot Collection, Namco Museum Archives Vol 2)/Pac-Land (World) (Namcot Collection, Namco Museum Archives Vol 2).json
+developer: Namco
+publisher: Namco
+genre: Platform
+description:
+  Pac-Land is a side-scrolling platformer with a cartoony feel to it. Now equipped
+  with arms, face, and legs, Pac must guide a fairy back to her home in Fairy
+  Land, but this task will not be easy because Inky, Blinky, Pinky, Clyde, and Sue
+  will pursue Pac-Man as he travels through Pac-Land. When he finally transports
+  the fairy back to her home, Pac is given some magic shoes, which will help him
+  get to his own home, where he will be greeted by his family: Ms. Pac-Man, Baby
+  Pac-Man, Chomp Chomp, and Sourpuss.
+  .
+  There are sixteen rounds to complete, with four trips each. During each round,
+  he can grab a power pellet, which cause ghosts to turn blue, allowing Pac-Man to
+  eat them for points. Points are also awarded by collecting fruit that appear,
+  like cherries and strawberries. In some rounds, Pac must use a springboard to
+  jump over a lake. He must also make it to the end of each round before time runs
+  out, otherwise a ghost will chase him.
+release: 1985-11-21
+players: 1
+assets.boxfront: BoxFront/Pac-Land (World) (Namcot Collection, Namco Museum Archives Vol 2).jpg
+assets.boxback: BoxBack/Pac-Land (World) (Namcot Collection, Namco Museum Archives Vol 2).jpg
+assets.background: Background/Pac-Land (World) (Namcot Collection, Namco Museum Archives Vol 2).jpg
+assets.screenshot: Screenshot/Pac-Land (World) (Namcot Collection, Namco Museum Archives Vol 2).jpg
+assets.video: Video/Pac-Land (World) (Namcot Collection, Namco Museum Archives Vol 2).mp4
+x-co-op: No
+
+
+game: Pac-Man Championship Edition (Japan) (En) (Namcot Collection) (Aftermarket)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Pac-Man Championship Edition (Japan) (En) (Namcot Collection) (Aftermarket)/Pac-Man Championship Edition (Japan) (En) (Namcot Collection) (Aftermarket).json
+developer: M2 Co., Ltd.
+publisher: Bandai Namco Entertainment
+genre: Action
+description:
+  The NES Pac-Man Championship Edition was originally a demake port by Japanese
+  homebrew developer coke774. When Namco got ahold of it for the
+  officially-licensed Namcot Collection (and Namco Museum Archives Vol. 1),
+  development was shifted to M2, who altered a number of aspects from coke774's
+  original. The initial homebrew version was never released to the public, though
+  a handful of emulator-recorded screenshots and videos have surfaced, giving an
+  incomplete look at the alterations M2 made.
+release: 2020-06-18
+players: 1
+assets.boxfront: BoxFront/Pac-Man Championship Edition (Japan) (En) (Namcot Collection) (Aftermarket).jpg
+assets.boxback: BoxBack/Pac-Man Championship Edition (Japan) (En) (Namcot Collection) (Aftermarket).jpg
+assets.background: Background/Pac-Man Championship Edition (Japan) (En) (Namcot Collection) (Aftermarket).jpg
+assets.screenshot: Screenshot/Pac-Man Championship Edition (Japan) (En) (Namcot Collection) (Aftermarket).jpg
+assets.video: Video/Pac-Man Championship Edition (Japan) (En) (Namcot Collection) (Aftermarket).mp4
+x-co-op: No
+
+
+game: Quinty (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Quinty (Japan) (Namcot Collection)/Quinty (Japan) (Namcot Collection).json
+developer: Game Freak
+publisher: Namco
+genre: Action;Puzzle
+description:
+  Candy needs your help! She's fallen fast asleep and may never wake up--because
+  she's trapped in her own dream!\n
+  All her harmless dolls are suddenly out to get her! So who will rescue Candy?
+  Someone must brave her wild nightmare world. With 20 areas and 200 levels!
+release: 1989-06-27
+players: 1
+assets.boxfront: BoxFront/Quinty (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Quinty (Japan) (Namcot Collection).jpg
+assets.background: Background/Quinty (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Quinty (Japan) (Namcot Collection).jpg
+x-co-op: No
+
+
+game: Rockman (Japan) (En)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Rockman (Japan) (En)/Rockman (Japan) (En).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Platform
+description:
+  It's MEGA MAN versus the powerful leaders and fighting forces of Monsteropolis -
+  that strange multi-layered land of robot-like humanoids created by the
+  wrongly-performed experiments with human beings by Dr. Wily. Mega Man - the
+  chosen defender of the human race. For he dares to single-handedly penetrate
+  Monsteropolis' seven separate societies to stop the rapid expansion of strange
+  misrepresentations of humans.
+  .
+  Mega Man's goal is monumental. He must infiltrate seven separate heavily-guarded
+  empires. By himself, he must break down and destroy the following empire
+  leaders: Cutman, Gutsman, Iceman, Bombman, Fireman, Elecman, and Dr. Wily. The
+  action involves Mega Man armed only with laser beam weapons, encountering
+  strangely-configured humanoids. They're atop, in and out of fortified
+  prison-like structures strengthened with thick walls. Hidden amid gun turrets
+  embedded in concrete uprights, even in subterranean passages below icefields.
+  WOW!
+release: 1987-12-17
+players: 1
+assets.boxfront: BoxFront/Rockman (Japan) (En).jpg
+assets.boxback: BoxBack/Rockman (Japan) (En).jpg
+assets.background: Background/Rockman (Japan) (En).jpg
+assets.screenshot: Screenshot/Rockman (Japan) (En).jpg
+x-co-op: No
+
+
+game: Rockman 2 - Dr. Wily no Nazo (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Rockman 2 - Dr. Wily no Nazo (Japan)/Rockman 2 - Dr. Wily no Nazo (Japan).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Platform
+description:
+  He's Back! And this time the evil Dr. Wily (once the supreme power in the
+  universe) has created even more sinister robots to mount his attack. But as
+  MegaMan, you've also grown in power and ability. Can you save mankind from the
+  evil desires of Dr. Wily? Each of the eight empires is ruled by a different
+  super-robot. You must defeat each enemy on his own turf, building up weapons as
+  you go. Only after all are destroyed will you go head-on with the mastermind
+  himself, the evil Dr. Wily.
+release: 1988-12-24
+players: 1
+assets.boxfront: BoxFront/Rockman 2 - Dr. Wily no Nazo (Japan).jpg
+assets.boxback: BoxBack/Rockman 2 - Dr. Wily no Nazo (Japan).jpg
+assets.background: Background/Rockman 2 - Dr. Wily no Nazo (Japan).jpg
+assets.screenshot: Screenshot/Rockman 2 - Dr. Wily no Nazo (Japan).jpg
+x-co-op: No
+
+
+game: Rockman 3 - Dr. Wily no Saigo! (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Rockman 3 - Dr. Wily no Saigo! (Japan)/Rockman 3 - Dr. Wily no Saigo! (Japan).json
+developer: Capcom
+publisher: Nintendo
+genre: Action;Platform
+description:
+  It's robot rebellion, and nobody's safe! Least of all, Mega Man! This time the
+  superpowerful cyborg takes on a horde of metal maniacs who've had it with being
+  obedient! And they use every android-annihilator ever invented to make you
+  believe it! Mega Man goes berserk, blasting through a galaxy of mining stations
+  in search of energy crystals. But it takes more than guts to battle the
+  phenomenal robot masters who control these worlds. It's a wrenching job, the
+  worst - and the best - that Mega Man's faced so far!
+release: 1990-09-28
+players: 1
+assets.boxfront: BoxFront/Rockman 3 - Dr. Wily no Saigo! (Japan).jpg
+assets.boxback: BoxBack/Rockman 3 - Dr. Wily no Saigo! (Japan).jpg
+assets.background: Background/Rockman 3 - Dr. Wily no Saigo! (Japan).jpg
+assets.screenshot: Screenshot/Rockman 3 - Dr. Wily no Saigo! (Japan).jpg
+x-co-op: No
+
+
+game: Rockman 4 - Aratanaru Yabou!! (Japan) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Rockman 4 - Aratanaru Yabou!! (Japan) (Rev 1)/Rockman 4 - Aratanaru Yabou!! (Japan) (Rev 1).json
+developer: Capcom
+publisher: Nintendo
+genre: Action;Platform
+description:
+  For a year the city has been quiet, but a new robotic terror has gripped the
+  city! That scheming scientist, Dr. Cossack has arrived in town with eight new
+  metal maniacs who are bigger and badder than anything Dr. Wily dreamed of. It's
+  going to be a cybernetic showdown as the streets of the city erupt with the
+  sizzling sounds of molten metal! Armed with the new Mega Buster, Mega Man runs,
+  jumps and dodges his way through mazes of metallic munchkins on his way to the
+  Siberian citadel of Dr. Cossack for the final cataclysmic clash!
+release: 1991-12-06
+players: 1
+assets.boxfront: BoxFront/Rockman 4 - Aratanaru Yabou!! (Japan) (Rev 1).jpg
+assets.boxback: BoxBack/Rockman 4 - Aratanaru Yabou!! (Japan) (Rev 1).jpg
+assets.background: Background/Rockman 4 - Aratanaru Yabou!! (Japan) (Rev 1).jpg
+assets.screenshot: Screenshot/Rockman 4 - Aratanaru Yabou!! (Japan) (Rev 1).jpg
+x-co-op: No
+
+
+game: Rockman 5 - Blues no Wana! (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Rockman 5 - Blues no Wana! (Japan)/Rockman 5 - Blues no Wana! (Japan).json
+developer: Capcom
+publisher: Nintendo
+genre: Action;Platform
+description:
+  Protoman has gone berserk! Destroying half the city was not enough. Now, he has
+  snatched Dr. Light and is holding him and the entire city hostage. Speeding to
+  the rescue is Mega Man and his modified Mega Buster, but eight of Protoman's
+  cybernetic soldiers plan to send Mega Man to the scrap heap for good! Feel the
+  weight of the world on your shoulders as you battle Gravity Man! Chip away at
+  the rock-like defenses of Stone Man and bring him crumbling down! Hit the surf
+  and sail up against the tidal power of Wave Man! Help Mega Man defeat all eight
+  of Protoman's robots and then get ready for the fight that pits brother against
+  brother in the battle of the century!
+release: 1992-12-04
+players: 1
+assets.boxfront: BoxFront/Rockman 5 - Blues no Wana! (Japan).jpg
+assets.boxback: BoxBack/Rockman 5 - Blues no Wana! (Japan).jpg
+assets.background: Background/Rockman 5 - Blues no Wana! (Japan).jpg
+assets.screenshot: Screenshot/Rockman 5 - Blues no Wana! (Japan).jpg
+x-co-op: No
+
+
+game: Rockman 6 - Shijou Saidai no Tatakai!! (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Rockman 6 - Shijou Saidai no Tatakai!! (Japan)/Rockman 6 - Shijou Saidai no Tatakai!! (Japan).json
+developer: Capcom
+publisher: Nintendo
+genre: Action;Platform
+description:
+  From the United States, Canada and Japan they came. The world's premier
+  designers and their finest robotic warriors traveled to do battle in the First
+  Annual Robot Tournament. But what began as a game suddenly took a terrifying
+  twist! On the eve of the Grand Championship, the sponsor of the event announced
+  that the entire tournament was just an elaborate scheme to get his hands on the
+  world's most powerful robots! Now faced with an army of metallic mercenaries,
+  Mega Man must fight a ferocious new foe - The Mysterious Mr. X!
+release: 1993-11-05
+players: 1
+assets.boxfront: BoxFront/Rockman 6 - Shijou Saidai no Tatakai!! (Japan).jpg
+assets.boxback: BoxBack/Rockman 6 - Shijou Saidai no Tatakai!! (Japan).jpg
+assets.background: Background/Rockman 6 - Shijou Saidai no Tatakai!! (Japan).jpg
+assets.screenshot: Screenshot/Rockman 6 - Shijou Saidai no Tatakai!! (Japan).jpg
+x-co-op: No
+
+
+game: Splatterhouse - Wanpaku Graffiti (World) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Splatterhouse - Wanpaku Graffiti (World) (Namcot Collection)/Splatterhouse - Wanpaku Graffiti (World) (Namcot Collection).json
+developer: Now Production
+publisher: Namco
+genre: Action;Horror;Platform
+description:
+  Revived by his girlfriend's grief and a flash of lightning, Rick must chase down
+  the Pumpkin king and save his beloved Jennifer once and for all!  A parody of
+  the bloody horror beat-'em-up Splatterhouse, Wanpaku Graffiti assumes a much
+  cuter appearance but retains the same fast-paced action of the original.
+release: 1989-07-31
+players: 1
+assets.boxfront: BoxFront/Splatterhouse - Wanpaku Graffiti (World) (Namcot Collection).jpg
+assets.boxback: BoxBack/Splatterhouse - Wanpaku Graffiti (World) (Namcot Collection).jpg
+assets.background: Background/Splatterhouse - Wanpaku Graffiti (World) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Splatterhouse - Wanpaku Graffiti (World) (Namcot Collection).jpg
+assets.video: Video/Splatterhouse - Wanpaku Graffiti (World) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Star Luster (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Star Luster (Japan) (Namcot Collection)/Star Luster (Japan) (Namcot Collection).json
+developer: Namco
+publisher: Namco
+genre: Shooter
+description:
+  In Star Luster, the player controls Dan Heinick, a pilot of the starfighter
+  Gaia. He is tasked with having to fight the evil being Battura and its minions,
+  who are bent on controlling the entire universe.
+  .
+  The game is played from an inside the cockpit view. Players select a location on
+  their interplanetary map and warp to it. Locations that can be flown to include
+  spots that contain enemy clusters and bases. Players have to be aware of the
+  enemy locations, as the enemies can attack and destroy planets and bases if they
+  come close enough to them.
+  .
+  The game features three modes of play. Training mode and Command mode are easier
+  versions of the Adventure mode. They mainly try to get the player prepared for
+  the Adventure mode. The Adventure mode features the most groups of enemies that
+  have to be dealt with and requires the most planning to defend the planets
+  successfully. The Adventure mode also features an optional objective which
+  involves collecting keys from seven different planets in order to access a
+  hidden final planet.
+release: 1985-12-06
+players: 1
+assets.boxfront: BoxFront/Star Luster (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Star Luster (Japan) (Namcot Collection).jpg
+assets.background: Background/Star Luster (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Star Luster (Japan) (Namcot Collection).jpg
+assets.video: Video/Star Luster (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Summer Carnival '92 - Recca (Japan) (En)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Summer Carnival '92 - Recca (Japan) (En)/Summer Carnival '92 - Recca (Japan) (En).json
+developer: Kid
+publisher: Naxat Soft
+genre: Shooter
+description:
+  Conceived as an entry for a game development competition, this game would later
+  be published by Naxat Soft in 1992.  This frenetic shoot-'em-up taxes the
+  Famicom system and the player's reflexes with huge quantities of enemies while
+  maintaining smooth, fast gameplay!  In addition to a single player campaign,
+  there are also score attack and time attack modes available.
+release: 1992-07-17
+players: 1
+assets.boxfront: BoxFront/Summer Carnival '92 - Recca (Japan) (En).jpg
+assets.boxback: BoxBack/Summer Carnival '92 - Recca (Japan) (En).jpg
+assets.background: Background/Summer Carnival '92 - Recca (Japan) (En).jpg
+assets.screenshot: Screenshot/Summer Carnival '92 - Recca (Japan) (En).jpg
+assets.video: Video/Summer Carnival '92 - Recca (Japan) (En).mp4
+x-co-op: No
+
+
+game: Super Contra (World) (Ja) (Contra Anniversary Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Super Contra (World) (Ja) (Contra Anniversary Collection)/Super Contra (World) (Ja) (Contra Anniversary Collection).json
+developer: Konami
+publisher: Konami
+genre: Platform;Shooter
+description:
+  After losing a confrontation against Super Commandos Mad Dog and Scorpion, the
+  juices of destruction drip from the spiked tongue of the vile alien warmonger -
+  Red Falcon. Now, he's coming back stronger than ever, with a sinister plan that
+  includes having his intergalactic warriors seep into the brains of the U.S.
+  Army. To support his disguised forces of doom, he's recruited Jagger Froid, a
+  demented alien from the Black Hole Galaxy. He's also shuttled in The Babula
+  Destructoid Mechanism with its Beam of Death. With torrential terror about to
+  rain down upon civilization, Earth's only hope rests with you, Scorpion, and
+  your pal, the Dogster. And if your spread guns, lasers, flame throwers and mega
+  shells fail to destroy Red Falcon's eight levels of terror, including
+  radioactive lava fields, it's all over but for the shouting, the screaming and
+  the cries from a disintegrating world!
+release: 1990-02-02
+players: 2
+assets.boxfront: BoxFront/Super Contra (World) (Ja) (Contra Anniversary Collection).jpg
+assets.boxback: BoxBack/Super Contra (World) (Ja) (Contra Anniversary Collection).jpg
+assets.background: Background/Super Contra (World) (Ja) (Contra Anniversary Collection).jpg
+assets.screenshot: Screenshot/Super Contra (World) (Ja) (Contra Anniversary Collection).jpg
+x-co-op: Yes
+
+
+game: Super Mario Bros. 2 (Japan) (Lost Levels) (Unl)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Super Mario Bros. 2 (Japan) (Lost Levels) (Unl)/Super Mario Bros. 2 (Japan) (Lost Levels) (Unl).json
+developer: Nintendo
+publisher: Nintendo
+genre: Platform
+description:
+  Mario’s back!  Bigger and badder than before!  This time it’s a fierce
+  action-packed battle to free the land of Subcon from the curse of the evil Wart.
+  It’s up to you, along with Mario, Luigi, Toad and the Princess, to fight your
+  way through bizarre multi-level worlds and find him!  This time you’ve got a
+  brand new kind of power - plucking power - and now anything you find can be a
+  weapon.  But beware!  You’ve never seen creatures like these!  Shyguys and
+  Tweeters!  Ninji and Beezos!  And you’ve never had an adventure like this!  Only
+  cunning and speed can save you now...
+release: 1988-10-01
+players: 1
+assets.boxfront: BoxFront/Super Mario Bros. 2 (Japan) (Lost Levels) (Unl).jpg
+assets.boxback: BoxBack/Super Mario Bros. 2 (Japan) (Lost Levels) (Unl).jpg
+assets.background: Background/Super Mario Bros. 2 (Japan) (Lost Levels) (Unl).jpg
+assets.screenshot: Screenshot/Super Mario Bros. 2 (Japan) (Lost Levels) (Unl).jpg
+assets.video: Video/Super Mario Bros. 2 (Japan) (Lost Levels) (Unl).mp4
+x-co-op: No
+
+
+game: Super Xevious - Gump no Nazo (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Super Xevious - Gump no Nazo (Japan)/Super Xevious - Gump no Nazo (Japan).json
+developer: TOSE
+publisher: Namco
+genre: Shooter
+description:
+  Once again, inhabitants from the planet Xevious, controlled by the
+  super-computer GAMP, are attacking the Earth, their ancient home planet, willing
+  to re-capture it by force. The SOL towers have emerged from the ground on our
+  planet, remotely controlled by GAMP, aiding the Xevians in their invasion. Only
+  the brave pilots of the Solvalou aircraft are able to avert this new threat!
+  .
+  Super Xevious is a 2D vertically-scrolling shoot 'em up. Power-ups such as
+  bombs, lasers, and shields can be collected; the latter protects the aircraft
+  from immediate destruction if hit by an enemy. Other power-ups for the Solvalou
+  include a rear shot and a bigger lock-on. Some stages are completed by
+  fulfilling certain requirements, rather than simply proceeding, eliminating all
+  enemies; if these are not met, the stage will loop indefinitely, sending
+  progressively harder enemies. These objectives typically include locating and
+  destroying a number of SOL towers; the target sight will flash when it goes over
+  these structures.
+release: 1986-09-19
+players: 1
+assets.boxfront: BoxFront/Super Xevious - Gump no Nazo (Japan).jpg
+assets.boxback: BoxBack/Super Xevious - Gump no Nazo (Japan).jpg
+assets.background: Background/Super Xevious - Gump no Nazo (Japan).jpg
+assets.screenshot: Screenshot/Super Xevious - Gump no Nazo (Japan).jpg
+assets.video: Video/Super Xevious - Gump no Nazo (Japan).mp4
+x-co-op: No
+
+
+game: Tenkaichi Bushi - Keru Naguuru (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Tenkaichi Bushi - Keru Naguuru (Japan) (Namcot Collection)/Tenkaichi Bushi - Keru Naguuru (Japan) (Namcot Collection).json
+developer: Game Studio
+publisher: Namco
+genre: Fighting;Role-Playing
+description:
+  Tenkaichi Bushi: Keru Naguuru is a one-on-one martial arts fighting game set
+  in ancient China.
+  .
+  Using 2D side-scrolling graphics with a distinct cartoony design, the player
+  takes control of a single fighter as he attempts to defeat his opponent in
+  single-round fights. Combat is controlled with a single attack button which
+  can unleash all sorts of moves when pressed in conjunction with the
+  directional arrows. These moves vary among each fighter, as players can
+  choose from 15 different fighters, each with their own stats and moves, and
+  then compete against the others to see who gets the honor of becoming
+  grandmaster.
+  .
+  Additionally the game includes a story mode in which players can take control
+  of a single martial artist and roam the countryside looking for challengers
+  (the later done from a top-down map view). Starting abilities and health are
+  minimal, but successfully defeating opponents will increase the player's
+  health and allow the fighter to learn new moves and turn into the ultimate
+  combatant.
+release: 1989-07-21
+players: 2
+assets.boxfront: BoxFront/Tenkaichi Bushi - Keru Naguuru (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Tenkaichi Bushi - Keru Naguuru (Japan) (Namcot Collection).jpg
+assets.background: Background/Tenkaichi Bushi - Keru Naguuru (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Tenkaichi Bushi - Keru Naguuru (Japan) (Namcot Collection).jpg
+assets.video: Video/Tenkaichi Bushi - Keru Naguuru (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Valkyrie no Bouken - Toki no Kagi Densetsu (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Valkyrie no Bouken - Toki no Kagi Densetsu (Japan) (Namcot Collection)/Valkyrie no Bouken - Toki no Kagi Densetsu (Japan) (Namcot Collection).json
+developer: Namco
+publisher: Namco
+genre: Action;Role-Playing
+description:
+  Once upon a time, the Marvel Land was a peaceful place populated by humans and
+  other races. Zouna, a dark wizard who had once threatened the land was securely
+  sealed in a clock tower. One day, the clock stopped working for unknown reason,
+  and a villager who tried to fix it inadvertently dropped the key of time. A
+  catastrophe ensued: Zouna broke free and took the key with him, preventing
+  anyone from sealing him again. The dark minions of Zouna corrupted the hearts of
+  Marvel Land inhabitants. Hatred and chaos descended upon the world. Finally, a
+  savior has arrived - Valkyrie, a maiden from heaven vows to save Marvel Land
+  from evil and defeat Zouna.
+  .
+  Valkyrie no Bōken: Toki no Kagi Densetsu is an action role-playing game.
+  Controlling Valkyrie, the player roams top-down wilderness areas, fighting
+  enemies and collecting gold and experience points, which will eventually cause
+  the heroine to level up and become stronger. Weapons and armor can be purchased
+  in friendly areas or found during exploration. Valkyrie also gains access to
+  seven different spells of offensive and healing nature. The time needed to learn
+  the spell depends on the protagonist's intelligence parameter. The player's
+  initial choice of star sign and blood group for the heroine may affect the
+  changes in her statistics when she levels up.
+release: 1986-08-01
+players: 1
+assets.boxfront: BoxFront/Valkyrie no Bouken - Toki no Kagi Densetsu (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Valkyrie no Bouken - Toki no Kagi Densetsu (Japan) (Namcot Collection).jpg
+assets.background: Background/Valkyrie no Bouken - Toki no Kagi Densetsu (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Valkyrie no Bouken - Toki no Kagi Densetsu (Japan) (Namcot Collection).jpg
+assets.video: Video/Valkyrie no Bouken - Toki no Kagi Densetsu (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Vs. Excitebike (Japan) (En)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Vs. Excitebike (Japan) (En)/Vs. Excitebike (Japan) (En).json
+developer: Nintendo
+publisher: Nintendo
+genre: Racing;Arcade;Automobile
+description:
+  This thrilling Nintendo programmable game lets you vary the obstacles, change
+  the sequence of events, and increase the racing challenge time and time again!
+  You'll start out in a Nintendo designed preliminary race, and move through a
+  series of increasingly difficult challenge races! You'll face crazy curves,
+  hairpin turns, daredevil jumps, and some very fierce motorcross competition, as
+  you race your bike towards the checkered flag. This thrilling test of driving
+  strategy and skill will keep you riveted to the screen for hours!
+release: 1984-11-30
+players: 2
+assets.boxfront: BoxFront/Vs. Excitebike (Japan) (En).jpg
+assets.boxback: BoxBack/Vs. Excitebike (Japan) (En).jpg
+assets.background: Background/Vs. Excitebike (Japan) (En).jpg
+assets.screenshot: Screenshot/Vs. Excitebike (Japan) (En).jpg
+assets.video: Video/Vs. Excitebike (Japan) (En).mp4
+x-co-op: No
+
+
+game: Wagyan Land (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Wagyan Land (Japan) (Namcot Collection)/Wagyan Land (Japan) (Namcot Collection).json
+developer: Now Production
+publisher: Namco
+genre: Platform
+description:
+  Wagan Land 2 is the sequel to Wagan Land. In this game, the player controls
+  Wagan II, son of Wagan. While gameplay is mostly similar, a few new features
+  have been added. The action scenes now have power-ups and there are now special
+  stages. New minigames, such as number search, noise breakdown, and a panel-based
+  rock-paper-scissors.
+release: 1990-12-14
+players: 1
+assets.boxfront: BoxFront/Wagyan Land (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Wagyan Land (Japan) (Namcot Collection).jpg
+assets.background: Background/Wagyan Land (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Wagyan Land (Japan) (Namcot Collection).jpg
+assets.video: Video/Wagyan Land (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Warpman (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Warpman (Japan) (Namcot Collection)/Warpman (Japan) (Namcot Collection).json
+developer: Namco
+publisher: Namco
+genre: Shooter
+description:
+  This game is an updated version of Warp Warp. Players once again take control of
+  the monster fighter as he does battle with various types of enemy Beroberos.
+  .
+  The game features two types of gameplay. First, players start out in the Space
+  World. Players control the monster fighter from a top down perspective. The
+  player is equipped with a weapon that can be used to fire at the enemy monsters.
+  The monster fighter can only walk in the four cardinal directions and thus only
+  fire straight forward in whatever direction he is currently facing. The
+  objective is to eliminate all the enemy monsters from the playfield to clear a
+  level. Also, eliminating three monsters of the same type and color in a row,
+  will cause a special monster to appear which can be shot for bonus points.
+  Sometimes these special monsters will carry one letter of the word EXTRA.
+  Collecting all five letters of that word will give the player an extra life.
+  .
+  In the center of the Space World is a warp tunnel that will occasionally flash
+  when active. Entering an active warp tunnel will lead the player to the Maze
+  World.
+  .
+  The Maze World portion of the game is similar in nature to Bomberman. Players
+  walk along grid based corridors, planting time bombs attempting to eliminate any
+  enemy monsters who happen to have had the misfortune of stumbling upon them.
+  .
+  Players will have the opportunity to warp out of either world at random
+  intervals. However, they are not required to leave the current world they are
+  in, and they can continue playing in that world type if they so choose to.
+release: 1985-07-12
+players: 2
+assets.boxfront: BoxFront/Warpman (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Warpman (Japan) (Namcot Collection).jpg
+assets.background: Background/Warpman (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Warpman (Japan) (Namcot Collection).jpg
+assets.video: Video/Warpman (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Youkai Douchuuki (Japan) (Namcot Collection)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Youkai Douchuuki (Japan) (Namcot Collection)/Youkai Douchuuki (Japan) (Namcot Collection).json
+developer: Namco
+publisher: Namco
+genre: Platform
+description:
+  The player controls a boy named Tarosuke, who travels through "Jigoku" (the
+  Japanese concept of Hell) fighting off "yokai" (mythical Japanese monsters) on
+  his way to his final fate, as determined by Buddha. He destroys his enemies by
+  firing small Ki bullets, which can be charged to increase their power; however,
+  if overcharged, he is left unable to move or fight for a few seconds. During
+  boss battles, Tarosuke kneels at a shrine to Buddha and prays, summoning
+  "Monmotaro" (not to be confused with "Momotarō"), a spirit which floats in the
+  air and drops energy balls on the boss and any lackeys he has. Once the boss is
+  defeated, Tarosuke goes to the next stage.
+release: 1988-06-24
+players: 2
+assets.boxfront: BoxFront/Youkai Douchuuki (Japan) (Namcot Collection).jpg
+assets.boxback: BoxBack/Youkai Douchuuki (Japan) (Namcot Collection).jpg
+assets.background: Background/Youkai Douchuuki (Japan) (Namcot Collection).jpg
+assets.screenshot: Screenshot/Youkai Douchuuki (Japan) (Namcot Collection).jpg
+assets.video: Video/Youkai Douchuuki (Japan) (Namcot Collection).mp4
+x-co-op: No
+
+
+game: Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII)/Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII).json
+developer: Shenzhen Nanjing Technology
+publisher: Shenzhen Nanjing Technology
+genre: Role-Playing
+description:
+  Final Fantasy VII is an unlicensed "Shanzhai" demake of SquareSoft's
+  role-playing game of the same name, originally released for PlayStation in
+  1997. This two-dimensional "port" was developed and published by Chinese
+  company Shenzhen Nanjing Technology for Subor, a Nintendo's Family Computer
+  clone console series (internationally known as the NES). The cartridge itself
+  is unique, as it is structurally different from licensed Famicom cartridges
+  in terms of hardware and programming.
+  .
+  The title features many gameplay elements of the original counterpart,
+  including a three-member party structure and adaptations of the game's
+  subsystems. Items, spells and equipment available to the player are based
+  upon those in the original game, and although a large number have been
+  omitted along with optional characters and some side quests, the original
+  story was reproduced in very minute detail. Its receptions were mixed, cited
+  as an impressive achievement but at the same time criticized for the
+  difficulty and choice of a target console.
+release: 2005
+players: 1
+assets.boxfront: BoxFront/Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII).jpg
+assets.boxback: BoxBack/Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII).jpg
+assets.background: Background/Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII).jpg
+assets.screenshot: Screenshot/Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII).jpg
+x-co-op: No
+
+
+game: Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII) (English Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Famicom/Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII) (English Patch)/Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII) (English Patch).json
+developer: Shenzhen Nanjing Technology
+publisher: Shenzhen Nanjing Technology
+genre: Role-Playing
+description:
+  Final Fantasy VII is an unlicensed "Shanzhai" demake of SquareSoft's
+  role-playing game of the same name, originally released for PlayStation in
+  1997. This two-dimensional "port" was developed and published by Chinese
+  company Shenzhen Nanjing Technology for Subor, a Nintendo's Family Computer
+  clone console series (internationally known as the NES). The cartridge itself
+  is unique, as it is structurally different from licensed Famicom cartridges
+  in terms of hardware and programming.
+  .
+  The title features many gameplay elements of the original counterpart,
+  including a three-member party structure and adaptations of the game's
+  subsystems. Items, spells and equipment available to the player are based
+  upon those in the original game, and although a large number have been
+  omitted along with optional characters and some side quests, the original
+  story was reproduced in very minute detail. Its receptions were mixed, cited
+  as an impressive achievement but at the same time criticized for the
+  difficulty and choice of a target console.
+release: 2005
+players: 1
+assets.boxfront: BoxFront/Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII) (English Patch).jpg
+assets.boxback: BoxBack/Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII) (English Patch).jpg
+assets.background: Background/Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII) (English Patch).jpg
+assets.screenshot: Screenshot/Zui Zhong Huan Xiang 7 (China) (Final Fantasy VII) (English Patch).jpg
+x-co-op: No
+
+

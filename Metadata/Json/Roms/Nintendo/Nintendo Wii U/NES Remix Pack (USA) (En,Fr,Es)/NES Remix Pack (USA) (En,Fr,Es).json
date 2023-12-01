@@ -1,0 +1,10 @@
+{
+    "files": [
+        "NES Remix Pack (USA) (En,Fr,Es).common.key",
+        "NES Remix Pack (USA) (En,Fr,Es).common.key.txt",
+        "NES Remix Pack (USA) (En,Fr,Es).game.key",
+        "NES Remix Pack (USA) (En,Fr,Es).game.key.txt",
+        "NES Remix Pack (USA) (En,Fr,Es).iso.wux"
+    ],
+    "launch_file": "NES Remix Pack (USA) (En,Fr,Es).iso.wux"
+}

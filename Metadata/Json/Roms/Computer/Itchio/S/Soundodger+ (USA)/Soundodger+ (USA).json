@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Soundodger+ (USA).exe"
+    ],
+    "transform_file": "Soundodger+ (USA).exe"
+}

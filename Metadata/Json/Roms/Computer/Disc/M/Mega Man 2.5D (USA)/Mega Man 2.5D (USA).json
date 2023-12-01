@@ -1,0 +1,28 @@
+{
+    "main_game_exe": [
+        "Mega Man 2.5D/MM25DGame.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Mega Man 2.5D/MM25DGame.exe": "Mega Man 2.5D"
+    },
+    "sandbox": {
+        "wine": {
+            "tricks": {
+                "game": [
+                    "dotnet40",
+                    "xna40"
+                ]
+            }
+        }
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$HDD_MAIN_ROOT/Mega Man 2.5D",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Mega Man 2.5D (USA).chd"
+}

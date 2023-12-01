@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Strata (USA).exe"
+    ],
+    "transform_file": "Strata (USA).exe"
+}

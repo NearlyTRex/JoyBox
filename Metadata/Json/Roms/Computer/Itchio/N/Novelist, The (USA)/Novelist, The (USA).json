@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Novelist, The (USA).exe"
+    ],
+    "transform_file": "Novelist, The (USA).exe"
+}

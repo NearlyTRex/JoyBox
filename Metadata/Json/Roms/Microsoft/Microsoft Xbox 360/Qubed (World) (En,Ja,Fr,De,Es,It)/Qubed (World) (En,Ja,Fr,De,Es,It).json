@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Qubed (World) (En,Ja,Fr,De,Es,It).chd",
+        "Qubed (World) (En,Ja,Fr,De,Es,It).dmi.bin",
+        "Qubed (World) (En,Ja,Fr,De,Es,It).lyt",
+        "Qubed (World) (En,Ja,Fr,De,Es,It).pfi.bin",
+        "Qubed (World) (En,Ja,Fr,De,Es,It).ss.bin"
+    ],
+    "launch_file": "Qubed (World) (En,Ja,Fr,De,Es,It).iso",
+    "transform_file": "Qubed (World) (En,Ja,Fr,De,Es,It).chd"
+}

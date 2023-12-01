@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Mastermind Classic (USA).exe"
+    ],
+    "transform_file": "Mastermind Classic (USA).exe"
+}

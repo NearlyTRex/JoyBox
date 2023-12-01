@@ -1,0 +1,27 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_HQ_artworks.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_bonus_videos.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_ee__gameguide.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_ee_artbook2.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_ee_comix.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_ee_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_ee_map.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_ee_soundtrack.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_ee_triss_playboy.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_ee_wallpapers.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_making_of.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_pamphlet_&_envelope.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_2_papercrafts.zip",
+        "$SETUP_MAIN_ROOT/extra/extras_pack_1_ch_cz_de_en_es_.zip",
+        "$SETUP_MAIN_ROOT/extra/extras_pack_2_fr_it_jp_.zip",
+        "$SETUP_MAIN_ROOT/extra/extras_pack_3_hu_pl_ru_tr_zh_.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_2_ost_flac.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_2_redkit.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_the_witcher_2_-_assassins_of_kings_enhanced_edition_3.5.0.26g_(64109).exe"
+    ],
+    "transform_file": "setup_the_witcher_2_-_assassins_of_kings_enhanced_edition_3.5.0.26g_(64109).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Mending Wall (USA).exe"
+    ],
+    "transform_file": "Mending Wall (USA).exe"
+}

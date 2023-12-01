@@ -1,0 +1,41 @@
+collection: Sony PlayStation Portable Video
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation Portable Video" {file.path}
+
+
+game: Dark Tales of Japan (Japan) (En,Ja)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable Video/Dark Tales of Japan (Japan) (En,Ja)/Dark Tales of Japan (Japan) (En,Ja).json
+developer: Genius Entertainment
+publisher: Genius Entertainment
+genre: Movie
+description:
+  Dark Tales of Japan is a collection of five short horror films that are
+  directed by five notable Japanese film directors.
+release: 2005-11-22
+players: 1
+assets.boxfront: BoxFront/Dark Tales of Japan (Japan) (En,Ja).jpg
+assets.boxback: BoxBack/Dark Tales of Japan (Japan) (En,Ja).jpg
+assets.background: Background/Dark Tales of Japan (Japan) (En,Ja).jpg
+assets.screenshot: Screenshot/Dark Tales of Japan (Japan) (En,Ja).jpg
+x-co-op: No
+
+
+game: Galerians - Rion (USA) (En,Ja)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Portable Video/Galerians - Rion (USA) (En,Ja)/Galerians - Rion (USA) (En,Ja).json
+developer: Image Entertainment
+publisher: Image Entertainment
+genre: Movie
+description:
+  A boy awakes, imprisoned in a hospital without a name or memory. He is
+  immediately attacked and discovers to his surprise that he has incredible
+  telekinetic powers. A girl, her psychic voice calling for help inside his
+  head, sends him on a adventure to save her: And by saving her, he will save
+  all humanity.
+release: 2005-06-28
+players: 1
+assets.boxfront: BoxFront/Galerians - Rion (USA) (En,Ja).jpg
+assets.boxback: BoxBack/Galerians - Rion (USA) (En,Ja).jpg
+assets.background: Background/Galerians - Rion (USA) (En,Ja).jpg
+assets.screenshot: Screenshot/Galerians - Rion (USA) (En,Ja).jpg
+x-co-op: No
+
+

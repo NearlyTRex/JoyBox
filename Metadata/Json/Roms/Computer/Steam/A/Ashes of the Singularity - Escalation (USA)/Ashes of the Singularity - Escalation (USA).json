@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Ashes of the Singularity - Escalation (USA).exe"
+    ],
+    "transform_file": "Ashes of the Singularity - Escalation (USA).exe"
+}

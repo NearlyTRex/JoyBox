@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Tales From Windy Meadow (USA).exe"
+    ],
+    "transform_file": "Tales From Windy Meadow (USA).exe"
+}

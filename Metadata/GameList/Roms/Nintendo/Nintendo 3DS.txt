@@ -1,0 +1,60 @@
+Nintendo 3DS || Animal Crossing - New Leaf (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Animal Crossing - New Leaf (USA) (En,Fr,Es)/Animal Crossing - New Leaf (USA) (En,Fr,Es).json
+Nintendo 3DS || Atooi Collection (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Atooi Collection (USA)/Atooi Collection (USA).json
+Nintendo 3DS || Code Name - S.T.E.A.M. (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Code Name - S.T.E.A.M. (USA)/Code Name - S.T.E.A.M. (USA).json
+Nintendo 3DS || Disney Epic Mickey - Power of Illusion (USA) (En,Fr,Es,Pt) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Disney Epic Mickey - Power of Illusion (USA) (En,Fr,Es,Pt)/Disney Epic Mickey - Power of Illusion (USA) (En,Fr,Es,Pt).json
+Nintendo 3DS || Dragon Quest VII - Fragments of the Forgotten Past (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Dragon Quest VII - Fragments of the Forgotten Past (USA)/Dragon Quest VII - Fragments of the Forgotten Past (USA).json
+Nintendo 3DS || Dragon Quest VIII - Journey of the Cursed King (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Dragon Quest VIII - Journey of the Cursed King (USA)/Dragon Quest VIII - Journey of the Cursed King (USA).json
+Nintendo 3DS || Final Fantasy Explorers (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Final Fantasy Explorers (USA)/Final Fantasy Explorers (USA).json
+Nintendo 3DS || Hyrule Warriors Legends (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Hyrule Warriors Legends (USA)/Hyrule Warriors Legends (USA).json
+Nintendo 3DS || Kirby - Planet Robobot (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Kirby - Planet Robobot (USA)/Kirby - Planet Robobot (USA).json
+Nintendo 3DS || Kirby - Triple Deluxe (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Kirby - Triple Deluxe (USA) (En,Fr,Es)/Kirby - Triple Deluxe (USA) (En,Fr,Es).json
+Nintendo 3DS || Kirby's Extra Epic Yarn (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Kirby's Extra Epic Yarn (USA) (En,Fr,Es)/Kirby's Extra Epic Yarn (USA) (En,Fr,Es).json
+Nintendo 3DS || Legend of Legacy, The (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Legend of Legacy, The (USA)/Legend of Legacy, The (USA).json
+Nintendo 3DS || Legend of Zelda, The - A Link Between Worlds (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Legend of Zelda, The - A Link Between Worlds (USA) (En,Fr,Es)/Legend of Zelda, The - A Link Between Worlds (USA) (En,Fr,Es).json
+Nintendo 3DS || Legend of Zelda, The - Majora's Mask 3D (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Legend of Zelda, The - Majora's Mask 3D (USA) (En,Fr,Es)/Legend of Zelda, The - Majora's Mask 3D (USA) (En,Fr,Es).json
+Nintendo 3DS || Legend of Zelda, The - Ocarina of Time 3D (USA) (En,Fr,Es) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Legend of Zelda, The - Ocarina of Time 3D (USA) (En,Fr,Es) (Rev 1)/Legend of Zelda, The - Ocarina of Time 3D (USA) (En,Fr,Es) (Rev 1).json
+Nintendo 3DS || Legend of Zelda, The - Tri Force Heroes (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Legend of Zelda, The - Tri Force Heroes (USA) (En,Fr,Es)/Legend of Zelda, The - Tri Force Heroes (USA) (En,Fr,Es).json
+Nintendo 3DS || Luigi's Mansion (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Luigi's Mansion (USA)/Luigi's Mansion (USA).json
+Nintendo 3DS || Luigi's Mansion - Dark Moon (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Luigi's Mansion - Dark Moon (USA) (En,Fr,Es)/Luigi's Mansion - Dark Moon (USA) (En,Fr,Es).json
+Nintendo 3DS || Mario & Luigi - Bowser's Inside Story + Bowser Jr.'s Journey (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Mario & Luigi - Bowser's Inside Story + Bowser Jr.'s Journey (USA)/Mario & Luigi - Bowser's Inside Story + Bowser Jr.'s Journey (USA).json
+Nintendo 3DS || Mario & Luigi - Dream Team (USA) (En,Fr,Es) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Mario & Luigi - Dream Team (USA) (En,Fr,Es) (Rev 1)/Mario & Luigi - Dream Team (USA) (En,Fr,Es) (Rev 1).json
+Nintendo 3DS || Mario & Luigi - Paper Jam (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Mario & Luigi - Paper Jam (USA)/Mario & Luigi - Paper Jam (USA).json
+Nintendo 3DS || Mario & Luigi - Superstar Saga + Bowser's Minions (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Mario & Luigi - Superstar Saga + Bowser's Minions (USA) (En,Fr,Es)/Mario & Luigi - Superstar Saga + Bowser's Minions (USA) (En,Fr,Es).json
+Nintendo 3DS || Mario Kart 7 (USA) (En,Fr,Es) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Mario Kart 7 (USA) (En,Fr,Es) (Rev 1)/Mario Kart 7 (USA) (En,Fr,Es) (Rev 1).json
+Nintendo 3DS || Mega Man Legacy Collection (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Mega Man Legacy Collection (USA)/Mega Man Legacy Collection (USA).json
+Nintendo 3DS || Metroid - Samus Returns (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Metroid - Samus Returns (USA) (En,Fr,Es)/Metroid - Samus Returns (USA) (En,Fr,Es).json
+Nintendo 3DS || Metroid Prime - Federation Force (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Metroid Prime - Federation Force (USA) (En,Fr,Es)/Metroid Prime - Federation Force (USA) (En,Fr,Es).json
+Nintendo 3DS || Monster Hunter 3 Ultimate (USA) (En,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Monster Hunter 3 Ultimate (USA) (En,Fr,De,Es,It)/Monster Hunter 3 Ultimate (USA) (En,Fr,De,Es,It).json
+Nintendo 3DS || Monster Hunter 4 Ultimate (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Monster Hunter 4 Ultimate (USA)/Monster Hunter 4 Ultimate (USA).json
+Nintendo 3DS || Monster Hunter Generations (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Monster Hunter Generations (USA)/Monster Hunter Generations (USA).json
+Nintendo 3DS || New Super Mario Bros. 2 (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/New Super Mario Bros. 2 (USA) (En,Fr,Es)/New Super Mario Bros. 2 (USA) (En,Fr,Es).json
+Nintendo 3DS || Paper Mario - Sticker Star (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Paper Mario - Sticker Star (USA) (En,Fr,Es)/Paper Mario - Sticker Star (USA) (En,Fr,Es).json
+Nintendo 3DS || Pokemon Alpha Sapphire (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Pokemon Alpha Sapphire (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2)/Pokemon Alpha Sapphire (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).json
+Nintendo 3DS || Pokemon Omega Ruby (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Pokemon Omega Ruby (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2)/Pokemon Omega Ruby (USA) (En,Ja,Fr,De,Es,It,Ko) (Rev 2).json
+Nintendo 3DS || Pokemon Ultra Moon (USA) (En,Ja,Fr,De,Es,It,Zh,Ko) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Pokemon Ultra Moon (USA) (En,Ja,Fr,De,Es,It,Zh,Ko)/Pokemon Ultra Moon (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).json
+Nintendo 3DS || Pokemon Ultra Sun (USA) (En,Ja,Fr,De,Es,It,Zh,Ko) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Pokemon Ultra Sun (USA) (En,Ja,Fr,De,Es,It,Zh,Ko)/Pokemon Ultra Sun (USA) (En,Ja,Fr,De,Es,It,Zh,Ko).json
+Nintendo 3DS || Pokemon X (USA) (En,Ja,Fr,De,Es,It,Ko) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Pokemon X (USA) (En,Ja,Fr,De,Es,It,Ko)/Pokemon X (USA) (En,Ja,Fr,De,Es,It,Ko).json
+Nintendo 3DS || Pokemon Y (USA) (En,Ja,Fr,De,Es,It,Ko) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Pokemon Y (USA) (En,Ja,Fr,De,Es,It,Ko)/Pokemon Y (USA) (En,Ja,Fr,De,Es,It,Ko).json
+Nintendo 3DS || Poochy & Yoshi's Woolly World (USA) (En,Fr,Es) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Poochy & Yoshi's Woolly World (USA) (En,Fr,Es) (Rev 1)/Poochy & Yoshi's Woolly World (USA) (En,Fr,Es) (Rev 1).json
+Nintendo 3DS || Project X Zone (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Project X Zone (USA)/Project X Zone (USA).json
+Nintendo 3DS || Project X Zone 2 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Project X Zone 2 (USA)/Project X Zone 2 (USA).json
+Nintendo 3DS || Puzzle & Dragons Z + Puzzle & Dragons Super Mario Bros. Edition (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Puzzle & Dragons Z + Puzzle & Dragons Super Mario Bros. Edition (USA)/Puzzle & Dragons Z + Puzzle & Dragons Super Mario Bros. Edition (USA).json
+Nintendo 3DS || RPG Maker Fes (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/RPG Maker Fes (USA) (En,Fr,Es)/RPG Maker Fes (USA) (En,Fr,Es).json
+Nintendo 3DS || Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It)/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It).json
+Nintendo 3DS || Resident Evil - The Mercenaries 3D (USA) (En,Fr) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Resident Evil - The Mercenaries 3D (USA) (En,Fr)/Resident Evil - The Mercenaries 3D (USA) (En,Fr).json
+Nintendo 3DS || SEGA 3D Classics Collection (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/SEGA 3D Classics Collection (USA)/SEGA 3D Classics Collection (USA).json
+Nintendo 3DS || Shovel Knight (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Shovel Knight (USA)/Shovel Knight (USA).json
+Nintendo 3DS || Spirit Camera - The Cursed Memoir (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Spirit Camera - The Cursed Memoir (USA)/Spirit Camera - The Cursed Memoir (USA).json
+Nintendo 3DS || Star Fox 64 3D (USA) (En,Fr,Es) (Rev 3) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Star Fox 64 3D (USA) (En,Fr,Es) (Rev 3)/Star Fox 64 3D (USA) (En,Fr,Es) (Rev 3).json
+Nintendo 3DS || Steel Diver (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Steel Diver (USA) (En,Fr,Es)/Steel Diver (USA) (En,Fr,Es).json
+Nintendo 3DS || Super Mario 3D Land (USA) (En,Fr,Es) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Super Mario 3D Land (USA) (En,Fr,Es) (Rev 1)/Super Mario 3D Land (USA) (En,Fr,Es) (Rev 1).json
+Nintendo 3DS || Super Mario Maker for Nintendo 3DS (USA) (En,Fr,Es) (Rev 3) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Super Mario Maker for Nintendo 3DS (USA) (En,Fr,Es) (Rev 3)/Super Mario Maker for Nintendo 3DS (USA) (En,Fr,Es) (Rev 3).json
+Nintendo 3DS || Super Monkey Ball 3D (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Super Monkey Ball 3D (USA) (En,Fr,Es)/Super Monkey Ball 3D (USA) (En,Fr,Es).json
+Nintendo 3DS || Super Smash Bros. for Nintendo 3DS (USA) (En,Fr,Es) (Rev 2) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Super Smash Bros. for Nintendo 3DS (USA) (En,Fr,Es) (Rev 2)/Super Smash Bros. for Nintendo 3DS (USA) (En,Fr,Es) (Rev 2).json
+Nintendo 3DS || Super Street Fighter IV - 3D Edition (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Super Street Fighter IV - 3D Edition (USA) (En,Fr,Es)/Super Street Fighter IV - 3D Edition (USA) (En,Fr,Es).json
+Nintendo 3DS || Tales of the Abyss (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Tales of the Abyss (USA)/Tales of the Abyss (USA).json
+Nintendo 3DS || Tetris Axis (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Tetris Axis (USA) (En,Fr,Es)/Tetris Axis (USA) (En,Fr,Es).json
+Nintendo 3DS || Theatrhythm Final Fantasy (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Theatrhythm Final Fantasy (USA)/Theatrhythm Final Fantasy (USA).json
+Nintendo 3DS || Theatrhythm Final Fantasy - Curtain Call (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Theatrhythm Final Fantasy - Curtain Call (USA)/Theatrhythm Final Fantasy - Curtain Call (USA).json
+Nintendo 3DS || Xenoblade Chronicles 3D (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Xenoblade Chronicles 3D (USA) (En,Fr,Es)/Xenoblade Chronicles 3D (USA) (En,Fr,Es).json
+Nintendo 3DS || Yoshi's New Island (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo 3DS/Yoshi's New Island (USA) (En,Fr,Es)/Yoshi's New Island (USA) (En,Fr,Es).json

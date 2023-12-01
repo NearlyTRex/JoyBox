@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/I'm on Observation Duty (USA).exe"
+    ],
+    "transform_file": "I'm on Observation Duty (USA).exe"
+}

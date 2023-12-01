@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Kaiju Big Battel - Fighto Fantasy (USA).exe"
+    ],
+    "transform_file": "Kaiju Big Battel - Fighto Fantasy (USA).exe"
+}

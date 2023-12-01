@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Curious Expedition (USA).exe"
+    ],
+    "transform_file": "Curious Expedition (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/We Were Here Forever (USA).exe"
+    ],
+    "transform_file": "We Were Here Forever (USA).exe"
+}

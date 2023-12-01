@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Cardful Planning (USA).exe"
+    ],
+    "transform_file": "Cardful Planning (USA).exe"
+}

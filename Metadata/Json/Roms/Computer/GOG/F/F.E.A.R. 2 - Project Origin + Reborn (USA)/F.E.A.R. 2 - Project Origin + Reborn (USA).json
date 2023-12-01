@@ -1,0 +1,12 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/fear_2_avatar.zip",
+        "$SETUP_MAIN_ROOT/extra/fear_2_manual_en.zip",
+        "$SETUP_MAIN_ROOT/extra/fear_2_manuals_de_esp_fr_ita.zip",
+        "$SETUP_MAIN_ROOT/extra/fear_2_wallpapers.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_fear_2_1.05_(18567).exe"
+    ],
+    "transform_file": "setup_fear_2_1.05_(18567).exe"
+}

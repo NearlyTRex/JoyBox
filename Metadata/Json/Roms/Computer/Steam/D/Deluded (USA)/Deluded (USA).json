@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Deluded (USA).exe"
+    ],
+    "transform_file": "Deluded (USA).exe"
+}

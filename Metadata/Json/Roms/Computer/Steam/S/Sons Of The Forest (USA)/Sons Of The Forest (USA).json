@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Sons Of The Forest (USA).exe"
+    ],
+    "transform_file": "Sons Of The Forest (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Riverside Incident, The (USA).exe"
+    ],
+    "transform_file": "Riverside Incident, The (USA).exe"
+}

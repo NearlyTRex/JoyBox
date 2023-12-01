@@ -1,0 +1,18 @@
+{
+    "main_game_exe": [
+        "Mega Maker/MegaMaker.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Mega Maker/MegaMaker.exe": "Mega Maker"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$HDD_MAIN_ROOT/Mega Maker",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Mega Man Maker (USA).chd"
+}

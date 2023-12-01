@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Please Follow (USA).exe"
+    ],
+    "transform_file": "Please Follow (USA).exe"
+}

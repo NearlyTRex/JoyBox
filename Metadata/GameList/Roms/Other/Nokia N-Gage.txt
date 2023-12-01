@@ -1,0 +1,2 @@
+Nokia N-Gage || Ashen (USA, Europe) (En,Fr,De,Es,It) (v1.06) || $ROM_JSON_ROOT/Other/Nokia N-Gage/Ashen (USA, Europe) (En,Fr,De,Es,It) (v1.06)/Ashen (USA, Europe) (En,Fr,De,Es,It) (v1.06).json
+Nokia N-Gage || Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0) || $ROM_JSON_ROOT/Other/Nokia N-Gage/Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0)/Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0).json

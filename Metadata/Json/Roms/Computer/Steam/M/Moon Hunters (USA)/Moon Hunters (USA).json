@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Moon Hunters (USA).exe"
+    ],
+    "main_game_exe": [
+        "Moon Hunters/moonhunters.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Moon Hunters/moonhunters.exe": "Moon Hunters"
+    },
+    "transform_file": "Moon Hunters (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Indect (USA).exe"
+    ],
+    "transform_file": "Indect (USA).exe"
+}

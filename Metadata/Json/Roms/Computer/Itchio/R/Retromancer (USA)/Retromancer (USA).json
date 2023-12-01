@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Retromancer (USA).exe"
+    ],
+    "transform_file": "Retromancer (USA).exe"
+}

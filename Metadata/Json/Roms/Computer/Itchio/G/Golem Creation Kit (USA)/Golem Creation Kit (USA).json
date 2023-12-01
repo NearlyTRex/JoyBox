@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Golem Creation Kit (USA).exe"
+    ],
+    "transform_file": "Golem Creation Kit (USA).exe"
+}

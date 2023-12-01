@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Prey (USA).exe"
+    ],
+    "main_game_exe": [
+        "Prey/Binaries/Danielle/x64/Release/Prey.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Prey/Binaries/Danielle/x64/Release/Prey.exe": "Prey/Binaries/Danielle/x64/Release"
+    },
+    "transform_file": "Prey (USA).exe"
+}

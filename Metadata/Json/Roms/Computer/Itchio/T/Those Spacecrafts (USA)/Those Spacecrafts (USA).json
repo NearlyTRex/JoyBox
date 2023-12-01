@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Those Spacecrafts (USA).exe"
+    ],
+    "transform_file": "Those Spacecrafts (USA).exe"
+}

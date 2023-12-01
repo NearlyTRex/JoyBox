@@ -1,0 +1,14 @@
+{
+    "files": [
+        "wow/german.x11",
+        "wow/sc01a.bin",
+        "wow/wow.x1",
+        "wow/wow.x2",
+        "wow/wow.x3",
+        "wow/wow.x4",
+        "wow/wow.x5",
+        "wow/wow.x6",
+        "wow/wow.x7"
+    ],
+    "launch_name": "wow"
+}

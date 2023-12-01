@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Death's Life (USA).exe"
+    ],
+    "transform_file": "Death's Life (USA).exe"
+}

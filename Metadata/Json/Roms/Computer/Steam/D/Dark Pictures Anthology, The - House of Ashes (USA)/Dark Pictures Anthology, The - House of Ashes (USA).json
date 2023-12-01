@@ -1,0 +1,27 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dark Pictures Anthology, The - House of Ashes (USA).exe"
+    ],
+    "main_game_exe": [
+        "The Dark Pictures Anthology - House of Ashes/HouseOfAshes.exe"
+    ],
+    "main_game_exe_cwd": {
+        "The Dark Pictures Anthology - House of Ashes/HouseOfAshes.exe": "The Dark Pictures Anthology - House of Ashes"
+    },
+    "sandbox": {
+        "wine": {
+            "overrides": {
+                "game": [
+                    "d3d9,d3d10core,d3d11,dxgi=n,b"
+                ]
+            },
+            "tricks": {
+                "game": [
+                    "vcrun2019"
+                ]
+            },
+            "use_dxvk": true
+        }
+    },
+    "transform_file": "Dark Pictures Anthology, The - House of Ashes (USA).exe"
+}

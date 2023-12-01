@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Space Mining Clicker (USA).exe"
+    ],
+    "transform_file": "Space Mining Clicker (USA).exe"
+}

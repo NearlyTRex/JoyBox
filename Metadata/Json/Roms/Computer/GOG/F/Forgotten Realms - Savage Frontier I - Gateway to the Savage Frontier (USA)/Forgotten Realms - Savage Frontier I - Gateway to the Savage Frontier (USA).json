@@ -1,0 +1,11 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/gateway_to_the_savage_frontier_adventurers_journal.zip",
+        "$SETUP_MAIN_ROOT/extra/gateway_to_the_savage_frontier_clue_book.zip",
+        "$SETUP_MAIN_ROOT/extra/gateway_to_the_savage_frontier_manual.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_gateway_to_the_savage_frontier_1.2_(28044).exe"
+    ],
+    "transform_file": "setup_gateway_to_the_savage_frontier_1.2_(28044).exe"
+}

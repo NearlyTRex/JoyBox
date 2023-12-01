@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Jay and Silent Bob - Mall Brawl (USA).exe"
+    ],
+    "main_game_exe": [
+        "Jay and Silent Bob - Mall Brawl/Jay and Silent Bob Mall Brawl.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Jay and Silent Bob - Mall Brawl/Jay and Silent Bob Mall Brawl.exe": "Jay and Silent Bob - Mall Brawl"
+    },
+    "transform_file": "Jay and Silent Bob - Mall Brawl (USA).exe"
+}

@@ -1,0 +1,37 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/bonus_pack_french_.zip",
+        "$SETUP_MAIN_ROOT/extra/bonus_pack_german_.zip",
+        "$SETUP_MAIN_ROOT/extra/bonus_pack_italian_.zip",
+        "$SETUP_MAIN_ROOT/extra/bonus_pack_polish_.zip",
+        "$SETUP_MAIN_ROOT/extra/bonus_pack_russian_.zip",
+        "$SETUP_MAIN_ROOT/extra/bonus_pack_spanish_.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_artbook.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_artworks.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_baw_concept_art.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_baw_killing_monsters_comic_.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_baw_renders.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_baw_wallpaper.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_blood_and_wine_osts.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_comics.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_compendium_.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_hearts_of_stone_ost_.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_hos_comic.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_hos_komiks_pl.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_hos_renders.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_hos_wallpapers.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_map.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_papertoy_catalog.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_papertoys.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_videos.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_wallpapers.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_wild_hunt_-_official_soundtrack_flac.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_3_wild_hunt_-_official_soundtrack_mp3.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_the_witcher_3_wild_hunt_goty_1.31_(a)_(9709).exe"
+    ],
+    "transform_file": "setup_the_witcher_3_wild_hunt_goty_1.31_(a)_(9709).exe"
+}

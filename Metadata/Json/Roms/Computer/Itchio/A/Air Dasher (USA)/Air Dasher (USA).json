@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Air Dasher (USA).exe"
+    ],
+    "transform_file": "Air Dasher (USA).exe"
+}

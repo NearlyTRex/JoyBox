@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Tri Attack (USA).exe"
+    ],
+    "transform_file": "Tri Attack (USA).exe"
+}

@@ -1,0 +1,4 @@
+{
+    "installer_exe": "$DISC_MAIN_ROOT/Install.exe",
+    "transform_file": "Sonic R (USA).chd"
+}

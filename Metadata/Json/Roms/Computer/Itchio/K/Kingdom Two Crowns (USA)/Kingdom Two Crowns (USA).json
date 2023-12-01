@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Kingdom Two Crowns (USA).exe"
+    ],
+    "transform_file": "Kingdom Two Crowns (USA).exe"
+}

@@ -1,0 +1,24 @@
+{
+    "files": [
+        "rbtapper/5785",
+        "rbtapper/5786",
+        "rbtapper/5787",
+        "rbtapper/5788",
+        "rbtapper/82s123.12d",
+        "rbtapper/rbtbg0.bin",
+        "rbtapper/rbtbg1.bin",
+        "rbtapper/rbtfg0.bin",
+        "rbtapper/rbtfg1.bin",
+        "rbtapper/rbtfg2.bin",
+        "rbtapper/rbtfg3.bin",
+        "rbtapper/rbtfg4.bin",
+        "rbtapper/rbtfg5.bin",
+        "rbtapper/rbtfg6.bin",
+        "rbtapper/rbtfg7.bin",
+        "rbtapper/rbtpg0.bin",
+        "rbtapper/rbtpg1.bin",
+        "rbtapper/rbtpg2.bin",
+        "rbtapper/rbtpg3.bin"
+    ],
+    "launch_name": "rbtapper"
+}

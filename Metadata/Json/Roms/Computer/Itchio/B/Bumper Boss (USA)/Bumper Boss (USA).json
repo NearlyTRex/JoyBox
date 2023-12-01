@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Bumper Boss (USA).exe"
+    ],
+    "transform_file": "Bumper Boss (USA).exe"
+}

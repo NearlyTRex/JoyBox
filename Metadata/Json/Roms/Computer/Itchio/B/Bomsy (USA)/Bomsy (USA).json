@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Bomsy (USA).exe"
+    ],
+    "transform_file": "Bomsy (USA).exe"
+}

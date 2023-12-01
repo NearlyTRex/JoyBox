@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Spookware (USA).exe"
+    ],
+    "transform_file": "Spookware (USA).exe"
+}

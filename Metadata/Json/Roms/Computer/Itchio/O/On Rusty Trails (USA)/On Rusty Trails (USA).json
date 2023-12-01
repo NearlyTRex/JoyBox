@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/On Rusty Trails (USA).exe"
+    ],
+    "transform_file": "On Rusty Trails (USA).exe"
+}

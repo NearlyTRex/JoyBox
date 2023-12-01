@@ -1,0 +1,13 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/baldurs_gate_2_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/baldurs_gate_2_ee_amn_survival_guide.zip",
+        "$SETUP_MAIN_ROOT/extra/baldurs_gate_2_ee_mastering_melee_and_magic.zip",
+        "$SETUP_MAIN_ROOT/extra/baldurs_gate_2_wallpapers.zip",
+        "$SETUP_MAIN_ROOT/extra/baldurs_gate_ii_enhanced_edition_2.5_win32.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_baldurs_gate_ii_enhanced_edition_2.6.6.0_(64bit)_(46870).exe"
+    ],
+    "transform_file": "setup_baldurs_gate_ii_enhanced_edition_2.6.6.0_(64bit)_(46870).exe"
+}

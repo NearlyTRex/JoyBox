@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Adventures of Elena Temple, The (USA).exe"
+    ],
+    "main_game_exe": [
+        "The Adventures of Elena Temple/ElenaTemple.exe"
+    ],
+    "main_game_exe_cwd": {
+        "The Adventures of Elena Temple/ElenaTemple.exe": "The Adventures of Elena Temple"
+    },
+    "transform_file": "Adventures of Elena Temple, The (USA).exe"
+}

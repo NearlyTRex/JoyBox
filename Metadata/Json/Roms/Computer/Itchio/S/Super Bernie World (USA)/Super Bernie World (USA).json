@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Super Bernie World (USA).exe"
+    ],
+    "transform_file": "Super Bernie World (USA).exe"
+}

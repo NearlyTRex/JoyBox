@@ -1,0 +1,24 @@
+{
+    "main_game_exe": [
+        "Spooky/SPOOKY.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Spooky/SPOOKY.exe": "Spooky"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$HDD_MAIN_ROOT/Spooky",
+                "type": "copy"
+            }
+        ]
+    },
+    "sync": {
+        "data": [
+            "save_data_main.ini"
+        ],
+        "search": "Spooky/SPOOKY.exe"
+    },
+    "transform_file": "Spooky's House of Jump Scares (USA).chd"
+}

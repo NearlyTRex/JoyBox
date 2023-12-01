@@ -1,0 +1,2 @@
+Apple MacOS 8 || Harry the Handsome Executive (USA) || $ROM_JSON_ROOT/Other/Apple MacOS 8/Harry the Handsome Executive (USA)/Harry the Handsome Executive (USA).json
+Apple MacOS 8 || Robo-Theif - Crisis at New York City (USA) || $ROM_JSON_ROOT/Other/Apple MacOS 8/Robo-Theif - Crisis at New York City (USA)/Robo-Theif - Crisis at New York City (USA).json

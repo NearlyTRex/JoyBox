@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Paper Sorcerer (USA).exe"
+    ],
+    "transform_file": "Paper Sorcerer (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/That Which Binds Us (USA).exe"
+    ],
+    "transform_file": "That Which Binds Us (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Co-open (USA).exe"
+    ],
+    "transform_file": "Co-open (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Tonight It Follows (USA).exe"
+    ],
+    "transform_file": "Tonight It Follows (USA).exe"
+}

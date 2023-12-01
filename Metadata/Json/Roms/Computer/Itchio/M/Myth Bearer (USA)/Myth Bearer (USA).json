@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Myth Bearer (USA).exe"
+    ],
+    "transform_file": "Myth Bearer (USA).exe"
+}

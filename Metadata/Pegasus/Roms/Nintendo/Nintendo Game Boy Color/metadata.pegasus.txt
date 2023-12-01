@@ -1,0 +1,652 @@
+collection: Nintendo Game Boy Color
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Game Boy Color" {file.path}
+
+
+game: Alone in the Dark - The New Nightmare (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Alone in the Dark - The New Nightmare (USA) (En,Fr,Es)/Alone in the Dark - The New Nightmare (USA) (En,Fr,Es).json
+developer: Pocket Studios
+publisher: Infogrames
+genre: Action;Adventure;Horror
+description:
+  From the moment Edward Carnby and Aline Cedrac set foot on Shadow Island, they
+  are confronted by mysterious, evil creatures intent on thwarting their progress
+  to recover 3 ancient tablets believed to hold the secret key to some incredible
+  menacing phenomenon. Fears threaten from every corner. The slightest shadow
+  could be hiding deep secrets, or concealing worse nightmares...
+release: 2001-06-27
+players: 1
+assets.boxfront: BoxFront/Alone in the Dark - The New Nightmare (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Alone in the Dark - The New Nightmare (USA) (En,Fr,Es).jpg
+assets.background: Background/Alone in the Dark - The New Nightmare (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Alone in the Dark - The New Nightmare (USA) (En,Fr,Es).jpg
+assets.video: Video/Alone in the Dark - The New Nightmare (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Bionic Commando - Elite Forces (USA, Australia)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Bionic Commando - Elite Forces (USA, Australia)/Bionic Commando - Elite Forces (USA, Australia).json
+developer: Nintendo
+publisher: Nintendo
+genre: Platform
+description:
+  You are the ultimate weapon. You are the perfect synthesis of human and machine
+  - a Bionic Commando.Your latest mission - to rescue a fellow commando, Commando
+  Joe - will take you deep into the heart of enemy territory. Use your Bionic Claw
+  to grapple and swing through more than 20 levels of forest, deserts, mountains
+  and futuristic cities Blast through dozens of unique with your Assault Rifle,
+  Rocket Launcher and Flame Thrower as you seek to destroy the overlord Arturus,
+  and save your homeland of Karinia from utter destruction.
+release: 2000-01-24
+players: 1
+assets.boxfront: BoxFront/Bionic Commando - Elite Forces (USA, Australia).jpg
+assets.boxback: BoxBack/Bionic Commando - Elite Forces (USA, Australia).jpg
+assets.background: Background/Bionic Commando - Elite Forces (USA, Australia).jpg
+assets.screenshot: Screenshot/Bionic Commando - Elite Forces (USA, Australia).jpg
+assets.video: Video/Bionic Commando - Elite Forces (USA, Australia).mp4
+x-co-op: No
+
+
+game: Daikatana (USA) (Proto) (2000-04-19)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Daikatana (USA) (Proto) (2000-04-19)/Daikatana (USA) (Proto) (2000-04-19).json
+developer: Will
+publisher: Kemco
+genre: Action;Role-Playing
+description:
+  Daikatana is a Role-Playing game, developed by Ion Storm and published by Kemco.
+  The Game Boy Color version of Daikatana was only released in Europe; Kemco
+  decided against the North American and Japanese release due to the poor
+  reputation of the Daikatana brand. This version's gameplay differs greatly from
+  the N64 and PC versions. At John Romero's request, the title was adapted to the
+  platform as a top-down dungeon crawler, in the style of early Zelda games such
+  as the NES original and The Legend of Zelda: Link's Awakening.
+release: 2000-06-30
+players: 1
+assets.boxfront: BoxFront/Daikatana (USA) (Proto) (2000-04-19).jpg
+assets.boxback: BoxBack/Daikatana (USA) (Proto) (2000-04-19).jpg
+assets.background: Background/Daikatana (USA) (Proto) (2000-04-19).jpg
+assets.screenshot: Screenshot/Daikatana (USA) (Proto) (2000-04-19).jpg
+assets.video: Video/Daikatana (USA) (Proto) (2000-04-19).mp4
+x-co-op: No
+
+
+game: Deja Vu I & II - The Casebooks of Ace Harding (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Deja Vu I & II - The Casebooks of Ace Harding (USA)/Deja Vu I & II - The Casebooks of Ace Harding (USA).json
+developer: Kemco
+publisher: Vatical Entertainment
+genre: Adventure
+description:
+  Take on two thrilling mysteries in one Game Pak!
+  .
+  Life is never boring when you assume the role of Ace Harding, private detective.
+  In Deja Vu I, you will scramble down the dark alleys of Chicago, searching for a
+  cure for you amnesia and a killer who has framed you for a brutal murder. After
+  solving the first case, you'll uncover a few loose strings that gradually
+  unrabel into Deja Vu II. Trapped in the slimy town of Last Vegas, you find
+  yourself dealing with a notorious mob leader who makes you an offer you can't
+  refuse.
+  .
+  -Two detailed graphic adventure games in one Game Boy Color Game Pak!\n
+  -Detailed commands for interacting with anyone or anything!\n
+  -Return to the scene of the crime, or any of the other 140 locations!\n
+  -Sort out the real evidence from the red herrings and over 80 other items!\n
+  -Battery-backed save option for up to three save game files!
+release: 1999-12-01
+players: 1
+assets.boxfront: BoxFront/Deja Vu I & II - The Casebooks of Ace Harding (USA).jpg
+assets.boxback: BoxBack/Deja Vu I & II - The Casebooks of Ace Harding (USA).jpg
+assets.background: Background/Deja Vu I & II - The Casebooks of Ace Harding (USA).jpg
+assets.screenshot: Screenshot/Deja Vu I & II - The Casebooks of Ace Harding (USA).jpg
+assets.video: Video/Deja Vu I & II - The Casebooks of Ace Harding (USA).mp4
+x-co-op: No
+
+
+game: Grandia - Parallel Trippers (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Grandia - Parallel Trippers (Japan)/Grandia - Parallel Trippers (Japan).json
+developer: Game Arts
+publisher: Hudson Soft
+genre: Role-Playing
+description:
+  This is the story of Yuuhi's journey to return home. To do this he must obtain
+  three keys from different areas of the world so that he can unlock a seal in the
+  Tower of White. The  evil Gurgan, who is responsible for Yuuhi's appearance in
+  this new world, must be defeated!
+release: 2000-12-22
+players: 1
+assets.boxfront: BoxFront/Grandia - Parallel Trippers (Japan).jpg
+assets.boxback: BoxBack/Grandia - Parallel Trippers (Japan).jpg
+assets.background: Background/Grandia - Parallel Trippers (Japan).jpg
+assets.screenshot: Screenshot/Grandia - Parallel Trippers (Japan).jpg
+assets.video: Video/Grandia - Parallel Trippers (Japan).mp4
+x-co-op: No
+
+
+game: Harvest Moon 3 GBC (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Harvest Moon 3 GBC (USA)/Harvest Moon 3 GBC (USA).json
+developer: Natsume
+publisher: Natsume
+genre: Construction and Management Simulation;Life Simulation
+description:
+  After much acclaim for your past farming accomplishments, you are asked by a
+  young girl to help her get her farm up and running. The farm, situated on an
+  island, needs plenty of work, so you need all your skills to get things working
+  correctly.
+  .
+  Your many tasks range from tending to the farm animals, keeping an eye on the
+  budget while purchasing goods at the local stores, and so forth. And although
+  the main aim is to build and maintain the farm, there are plenty of
+  opportunities to take care of yourself (go to the movies, buy pets, find a
+  girlfriend/boyfriend).
+release: 2001-11-14
+players: 1
+assets.boxfront: BoxFront/Harvest Moon 3 GBC (USA).jpg
+assets.boxback: BoxBack/Harvest Moon 3 GBC (USA).jpg
+assets.background: Background/Harvest Moon 3 GBC (USA).jpg
+assets.screenshot: Screenshot/Harvest Moon 3 GBC (USA).jpg
+assets.video: Video/Harvest Moon 3 GBC (USA).mp4
+x-co-op: No
+
+
+game: Legend of Zelda, The - Oracle of Ages (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Legend of Zelda, The - Oracle of Ages (USA)/Legend of Zelda, The - Oracle of Ages (USA).json
+developer: Capcom
+publisher: Nintendo
+genre: Action;Adventure;Role-Playing
+description:
+  A pall of darkness has fallen over the land of Labrynna.  The Sorceress of
+  Shadows, Veran, has captured the Oracle of Ages and is using her power for the
+  ways of evil.  But hope is not lost... yet.  Link has been summoned to Labrynna by
+  the Triforce, and he’ll need to bend the very fabric of time to save the Oracle.
+  And he must hurry, for time is running out...
+  .
+  * Play the Harp of Ages!  Travel through time to affect events in both past and
+  present!\n
+  * Use tons of items!  Link will master new items like Mystical Seeds and over 60
+  Magical Rings as well as classic tools like the Boomerang and Roc’s Feather.\n
+  * Link gets reinforcements!  Fly, swim and jump to new heights with all-new
+  characters like Moosh the winged bear, Ricky the marsupial, and Dimitri the
+  Dodongo!
+release: 2001-05-14
+players: 1
+assets.boxfront: BoxFront/Legend of Zelda, The - Oracle of Ages (USA).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Oracle of Ages (USA).jpg
+assets.background: Background/Legend of Zelda, The - Oracle of Ages (USA).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Oracle of Ages (USA).jpg
+assets.video: Video/Legend of Zelda, The - Oracle of Ages (USA).mp4
+x-co-op: No
+
+
+game: Legend of Zelda, The - Oracle of Seasons (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Legend of Zelda, The - Oracle of Seasons (USA)/Legend of Zelda, The - Oracle of Seasons (USA).json
+developer: Capcom
+publisher: Nintendo
+genre: Action;Adventure;Role-Playing
+description:
+  The land of Holodrum is slowly withering. Onox, the General of Darkness, has
+  imprisoned the Oracle of Seasons and is draining the very life out of the land.
+  With the seasons in tumult and the forces of evil running rampant, the world
+  looks for a hero... and finds Link. His quest won't be easy - he'll have to
+  master the seasons themselves if he's to turn back the evil tide.
+release: 2001-05-14
+players: 1
+assets.boxfront: BoxFront/Legend of Zelda, The - Oracle of Seasons (USA).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Oracle of Seasons (USA).jpg
+assets.background: Background/Legend of Zelda, The - Oracle of Seasons (USA).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Oracle of Seasons (USA).jpg
+assets.video: Video/Legend of Zelda, The - Oracle of Seasons (USA).mp4
+x-co-op: No
+
+
+game: Lufia - The Legend Returns (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Lufia - The Legend Returns (USA)/Lufia - The Legend Returns (USA).json
+developer: Natsume
+publisher: Natsume
+genre: Role-Playing
+description:
+  The island of the Sinistrals, Doom Island, sank deep into the sea after the
+  second Doom Island War. It was believed to be in an eternal sleep, but has once
+  again begun silently beating, preparing to make its appearance in the sky for
+  the third time. The evil Sinistrals have again been resurrected and released an
+  unforseen terror on the land. A force has awaken witin you... a spiritual flow
+  that draws you to a conflict that will save the world! The power of Maxim's
+  legendary bloodline lives in you... The thread of destiny guides you through an
+  adventurous journey looking for an unknown destination!
+release: 2001-09-20
+players: 1
+assets.boxfront: BoxFront/Lufia - The Legend Returns (USA).jpg
+assets.boxback: BoxBack/Lufia - The Legend Returns (USA).jpg
+assets.background: Background/Lufia - The Legend Returns (USA).jpg
+assets.screenshot: Screenshot/Lufia - The Legend Returns (USA).jpg
+assets.video: Video/Lufia - The Legend Returns (USA).mp4
+x-co-op: No
+
+
+game: Mario Golf (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Mario Golf (USA)/Mario Golf (USA).json
+developer: Camelot Software Planning
+publisher: Nintendo
+genre: Sports
+description:
+  Forget buying expensive golf gear--Mario brings the game to you. Mario Golf
+  features four complete 18-hole courses, 11 golfers, and precise play control.
+  Create your own golfer and build up his or her experience and skill levels by
+  competing in various tournaments and head-to-head matches. The more you play,
+  the stronger and more accurate your golfer becomes. There are many different
+  modes of play in Mario Golf, including a wide variety of minigames designed to
+  challenge even the most level-headed swingers.
+release: 1999-10-01
+players: 2
+assets.boxfront: BoxFront/Mario Golf (USA).jpg
+assets.boxback: BoxBack/Mario Golf (USA).jpg
+assets.background: Background/Mario Golf (USA).jpg
+assets.screenshot: Screenshot/Mario Golf (USA).jpg
+assets.video: Video/Mario Golf (USA).mp4
+x-co-op: No
+
+
+game: Mario Tennis (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Mario Tennis (USA)/Mario Tennis (USA).json
+developer: Camelot Software Planning
+publisher: Nintendo
+genre: Sports
+description:
+  Take your game to the next level with mario Tennis! Get advice from coaches,
+  test your groundstrokes against "The Wall," then hit the courts to ace the
+  competition and earn a spot on the varsity squad. Play your way to the top on
+  your own in singles, or power up a partner for doubles competition. When you're
+  good enough, you'll enter the Island Open, where you'll face the fiercast
+  players around...and maybe even challenge the greatest player of all-Mario!
+release: 2001-06-16
+players: 2
+assets.boxfront: BoxFront/Mario Tennis (USA).jpg
+assets.boxback: BoxBack/Mario Tennis (USA).jpg
+assets.background: Background/Mario Tennis (USA).jpg
+assets.screenshot: Screenshot/Mario Tennis (USA).jpg
+assets.video: Video/Mario Tennis (USA).mp4
+x-co-op: No
+
+
+game: Mega Man Xtreme (USA, Europe) (GB Compatible)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Mega Man Xtreme (USA, Europe) (GB Compatible)/Mega Man Xtreme (USA, Europe) (GB Compatible).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Platform
+description:
+  The future world is in turmoil. The peace keeping mother computer has been
+  hacked and a virus runs rampant throughout the world. Only Mega Man X has the
+  ability to traverse eight dangerous levels in cyberspace, battle huge bosses
+  along the way and restore the mother computer to its normal state. When the
+  going gets too intence, Mega Man X's pal, Zero can be summoned to help him out
+  of the most dangerous situations. It's an X-treme situation that only Mega Man X
+  can resolve!
+release: 2001-01-11
+players: 1
+assets.boxfront: BoxFront/Mega Man Xtreme (USA, Europe) (GB Compatible).jpg
+assets.boxback: BoxBack/Mega Man Xtreme (USA, Europe) (GB Compatible).jpg
+assets.background: Background/Mega Man Xtreme (USA, Europe) (GB Compatible).jpg
+assets.screenshot: Screenshot/Mega Man Xtreme (USA, Europe) (GB Compatible).jpg
+assets.video: Video/Mega Man Xtreme (USA, Europe) (GB Compatible).mp4
+x-co-op: No
+
+
+game: Mega Man Xtreme 2 (USA, Europe)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Mega Man Xtreme 2 (USA, Europe)/Mega Man Xtreme 2 (USA, Europe).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Platform
+description:
+  Something mysterious is going on at the reploid research island. The reploids
+  have ceased functionality... their data strangely erased. Now the investigation
+  team encounters "irregular" reploids infected with a strange new DNA chip. This
+  strange DNA chip, known as "DNA Soul", replaces useful data with a devastating
+  Sigma virus and places all reploids in imminent danger. Now, it's up to Mega Man
+  X and his comrade, Zero, to get to the damaged island and find out who is behind
+  the DNA Soul virus.
+release: 2001-10-30
+players: 1
+assets.boxfront: BoxFront/Mega Man Xtreme 2 (USA, Europe).jpg
+assets.boxback: BoxBack/Mega Man Xtreme 2 (USA, Europe).jpg
+assets.background: Background/Mega Man Xtreme 2 (USA, Europe).jpg
+assets.screenshot: Screenshot/Mega Man Xtreme 2 (USA, Europe).jpg
+assets.video: Video/Mega Man Xtreme 2 (USA, Europe).mp4
+x-co-op: No
+
+
+game: Perfect Dark (USA, Europe) (En,Fr,De,Es,It) (Rumble Version)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Perfect Dark (USA, Europe) (En,Fr,De,Es,It) (Rumble Version)/Perfect Dark (USA, Europe) (En,Fr,De,Es,It) (Rumble Version).json
+developer: Rare
+publisher: Nintendo
+genre: Action
+description:
+  Joanna Dark has almost finished her training, but she isn't a Carrington
+  Institute agent just yet. She has only one test left - but this time, her
+  mission is for real. In it, she will uncover a far-reaching conspiracy that will
+  introduce her to the shadowy dataDyne Corporation and hint at things to come...
+  From the creators of GoldenEye for the N64 comes Rare's masterpiece... Perfect
+  Dark.
+  .
+  Lots of ways to play! Snipe from long range, commandeer an enemy vehicle - even
+  shoot from a first-person view.
+  .
+  Multiplayer games! Link up and get blown away with eight 2-player games and a
+  total of 35 maps. (Game Link cable sold separately.)
+  .
+  Huge bosses! From helicopters to giant cyborg spiders, go up against some of the
+  most intimidating bosses ever to appear on Game Boy.
+  .
+  Amazing voice and sound! Hear more digitized voices and sound effects in Perfect
+  Dark than in any other handheld game.
+release: 2000-08-28
+players: 1
+assets.boxfront: BoxFront/Perfect Dark (USA, Europe) (En,Fr,De,Es,It) (Rumble Version).jpg
+assets.boxback: BoxBack/Perfect Dark (USA, Europe) (En,Fr,De,Es,It) (Rumble Version).jpg
+assets.background: Background/Perfect Dark (USA, Europe) (En,Fr,De,Es,It) (Rumble Version).jpg
+assets.screenshot: Screenshot/Perfect Dark (USA, Europe) (En,Fr,De,Es,It) (Rumble Version).jpg
+assets.video: Video/Perfect Dark (USA, Europe) (En,Fr,De,Es,It) (Rumble Version).mp4
+x-co-op: No
+
+
+game: Pokemon Puzzle Challenge (USA, Australia)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Pokemon Puzzle Challenge (USA, Australia)/Pokemon Puzzle Challenge (USA, Australia).json
+developer: Intelligent Systems
+publisher: Nintendo
+genre: Puzzle
+description:
+  In a rising pit of colored blocks, it's your task to continuously eliminate
+  these tiles by switching two tiles' positions on the horizontal row. When three
+  or more tiles link up in a up/down or left/right fashion, they disappear.
+  Gravity kicks in and settles the rest of the tiles into the bin ? this can cause
+  a chain reaction to occur since other blocks of the same color can fall into
+  place next to each other. It's up to you to continuously work the bin to wipe
+  out tiles by making combination connections and chain reactions. That's the game
+  in a nutshell, but there are several modes of play that'll keep your fingers
+  busy. In the game's Challenge mode, for example, you're up against a computer
+  opponent and you'll have to make combos and chain reactions to send garbage
+  blocks to his unseen screen -- but keep in mind your opponent's doing the same
+  to you.
+release: 2000-09-21
+players: 1
+assets.boxfront: BoxFront/Pokemon Puzzle Challenge (USA, Australia).jpg
+assets.boxback: BoxBack/Pokemon Puzzle Challenge (USA, Australia).jpg
+assets.background: Background/Pokemon Puzzle Challenge (USA, Australia).jpg
+assets.screenshot: Screenshot/Pokemon Puzzle Challenge (USA, Australia).jpg
+assets.video: Video/Pokemon Puzzle Challenge (USA, Australia).mp4
+x-co-op: No
+
+
+game: Resident Evil (World) (Proto 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Resident Evil (World) (Proto 1)/Resident Evil (World) (Proto 1).json
+developer: HotGen Studios
+publisher: Capcom
+genre: Horror
+description:
+  Following the success of the original PlayStation edition of Resident Evil in
+  1996, Capcom expanded the game in a number of ports - one of those planned was
+  for the GameBoy Color. In 1999, HotGen Studios, Ltd., a company in the United
+  Kingdom, was selected by Capcom to port the game.
+  .
+  HotGen designed the game to be a direct-conversion of the PlayStation version
+  following the same single-player paths as other versions with options to play as
+  either Chris Redfield or Jill Valentine. New additions were also planned
+  including a greater variety in enemies and the ability to disarm traps. A new
+  save feature was also in development, removing the need for Ink Ribbons and
+  finding save points.
+  .
+  However, after sending the finished product to Capcom for evaluation, the
+  company turned it away. Their official statement in 2000 claimed that they were
+  "not confident that the product would have made both consumers and Capcom
+  happy."
+release: 2000
+players: 1
+assets.boxfront: BoxFront/Resident Evil (World) (Proto 1).jpg
+assets.boxback: BoxBack/Resident Evil (World) (Proto 1).jpg
+assets.background: Background/Resident Evil (World) (Proto 1).jpg
+assets.screenshot: Screenshot/Resident Evil (World) (Proto 1).jpg
+assets.video: Video/Resident Evil (World) (Proto 1).mp4
+x-co-op: No
+
+
+game: Resident Evil (World) (Proto 2)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Resident Evil (World) (Proto 2)/Resident Evil (World) (Proto 2).json
+developer: HotGen Studios
+publisher: Capcom
+genre: Horror
+description:
+  Following the success of the original PlayStation edition of Resident Evil in
+  1996, Capcom expanded the game in a number of ports - one of those planned was
+  for the GameBoy Color. In 1999, HotGen Studios, Ltd., a company in the United
+  Kingdom, was selected by Capcom to port the game.
+  .
+  HotGen designed the game to be a direct-conversion of the PlayStation version
+  following the same single-player paths as other versions with options to play as
+  either Chris Redfield or Jill Valentine. New additions were also planned
+  including a greater variety in enemies and the ability to disarm traps. A new
+  save feature was also in development, removing the need for Ink Ribbons and
+  finding save points.
+  .
+  However, after sending the finished product to Capcom for evaluation, the
+  company turned it away. Their official statement in 2000 claimed that they were
+  "not confident that the product would have made both consumers and Capcom
+  happy."
+release: 2000
+players: 1
+assets.boxfront: BoxFront/Resident Evil (World) (Proto 2).jpg
+assets.boxback: BoxBack/Resident Evil (World) (Proto 2).jpg
+assets.background: Background/Resident Evil (World) (Proto 2).jpg
+assets.screenshot: Screenshot/Resident Evil (World) (Proto 2).jpg
+assets.video: Video/Resident Evil (World) (Proto 2).mp4
+x-co-op: No
+
+
+game: Shadowgate Classic (USA, Europe) (En,Fr,De,Es,Sv)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Shadowgate Classic (USA, Europe) (En,Fr,De,Es,Sv)/Shadowgate Classic (USA, Europe) (En,Fr,De,Es,Sv).json
+developer: Infinite Ventures
+publisher: Kemco
+genre: Role-Playing
+description:
+  A council of 12 sorcerers ensured peace in Kal Torin. One member of the council
+  began to practice the black arts and spread destruction throughout the land; he
+  became know as the Warlock Lord. Fortunately, the others were able to defeat the
+  Warlock Lord and imprison him beneath Shadowgate Castle. Now, he has escaped
+  from his prison and rules Shadowgate Castle. Furthermore, he is threatening to
+  summon the Behemoth, a creature so powerful it could destroy the world. As the
+  last member of the forgotten royal family, you are the only one who can stop the
+  Warlock Lord and save Kal Torin. The trek through Shadowgate castle will not be
+  easy, and will require strength of mind and body. Will you be able to stop the
+  Warlock Lord in SHADOWGATE CLASSIC?
+release: 1999-01-01
+players: 1
+assets.boxfront: BoxFront/Shadowgate Classic (USA, Europe) (En,Fr,De,Es,Sv).jpg
+assets.boxback: BoxBack/Shadowgate Classic (USA, Europe) (En,Fr,De,Es,Sv).jpg
+assets.background: Background/Shadowgate Classic (USA, Europe) (En,Fr,De,Es,Sv).jpg
+assets.screenshot: Screenshot/Shadowgate Classic (USA, Europe) (En,Fr,De,Es,Sv).jpg
+assets.video: Video/Shadowgate Classic (USA, Europe) (En,Fr,De,Es,Sv).mp4
+x-co-op: No
+
+
+game: Shantae (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Shantae (USA)/Shantae (USA).json
+developer: WayForward Technologies
+publisher: Capcom
+genre: Action;Platform
+description:
+  Genie-girl Shantae is the self-appointed guardian of a small fishing village,
+  Scuttle Town. Living life in a lighthouse rather than a bottle, she's constantly
+  on the lookout for danger. When the nefarious lady-pirate, Risky Boots catches
+  wind of the treasure that was recently unearthed in the village, she launches an
+  attack. To get Scuttle out of trouble, it's up to Shantae to prove that she's
+  the rightful 'Guardian Genie' to the best of her dancing, buying and
+  hair-whipping abilities. Now crack that whip!
+  .
+  * Play on the Game Boy Advance system for enhanced color and to unlock hidden
+  secrets!\n
+  * Over 50 Locations and Mini-Games!\n
+  * Learn 'Dance Magic' to transform Shantae and learn new attacks!
+release: 2002-06-02
+players: 1
+assets.boxfront: BoxFront/Shantae (USA).jpg
+assets.boxback: BoxBack/Shantae (USA).jpg
+assets.background: Background/Shantae (USA).jpg
+assets.screenshot: Screenshot/Shantae (USA).jpg
+assets.video: Video/Shantae (USA).mp4
+x-co-op: No
+
+
+game: Silver Falls - Galaxy Bound Curse (World)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Silver Falls - Galaxy Bound Curse (World)/Silver Falls - Galaxy Bound Curse (World).json
+developer: Sungrand
+publisher: Sungrand
+genre: Horror;Unofficial
+description:
+  "Silver Falls - Galaxy Bound Curse is now available to play! Download the ROM
+  file for free and play the game on any hardware or software that can play *.GB
+  games!
+  .
+  NEW UPDATE v0.85 September 10, 2021
+  .
+  WHAT'S NEW?
+  .
+  Added Iron Austin as a playable character. Find him at the Gas Station!
+  .
+  More items to find and pick up.
+  .
+  Fixed various glitches in item menu.
+  .
+  Added new lines of dialogue and environment objects.
+  .
+  Fixed glitch in Code Linker menu.
+  .
+  Previous Save Files will cause glitches. Please start a New Game.
+  .
+  What's in this version of the game?
+  .
+  This is beta version v0.85. This means, while the game can be played entirely
+  from start to finish, some features may not be fully implemented in the game.
+  There may be some glitches that may affect the overall gameplay. There will be a
+  few features missing and some funny glitches, and that's where YOU come in! You
+  can help us improve the upcoming versions of the game by sharing your glitch
+  reports and feedback with us via DM's on Twitter or Facebook. We'll update the
+  game regularly so stay tuned for new versions!"
+release: 2021-09-10
+players: 1
+assets.boxfront: BoxFront/Silver Falls - Galaxy Bound Curse (World).jpg
+assets.boxback: BoxBack/Silver Falls - Galaxy Bound Curse (World).jpg
+assets.background: Background/Silver Falls - Galaxy Bound Curse (World).jpg
+assets.screenshot: Screenshot/Silver Falls - Galaxy Bound Curse (World).jpg
+x-co-op: No
+
+
+game: Super Mario Bros. Deluxe (USA, Europe)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Super Mario Bros. Deluxe (USA, Europe)/Super Mario Bros. Deluxe (USA, Europe).json
+developer: Nintendo
+publisher: Nintendo
+genre: Platform
+description:
+  Super Mario Bros. Deluxe, sometimes referred to as Super Mario Bros. DX, was
+  released on the Game Boy Color on May 10, 1999 in North America and Europe and
+  in 2000 in Japan. Based on the original Super Mario Bros., it features an
+  overworld level map, simultaneous multiplayer, a Challenge mode in which the
+  player finds hidden objects and achieves a certain score in addition to normally
+  completing the level, and eight additional worlds based on the main worlds of
+  the Japanese 1986 game Super Mario Bros. 2. It is compatible with the Game Boy
+  Printer. Compared to Super Mario Bros., the game features a few minor visual
+  upgrades such as water and lava now being animated rather than static, and a
+  smaller screen due to the lower resolution of the Game Boy Colour.
+release: 1999-04-30
+players: 2
+assets.boxfront: BoxFront/Super Mario Bros. Deluxe (USA, Europe).jpg
+assets.boxback: BoxBack/Super Mario Bros. Deluxe (USA, Europe).jpg
+assets.background: Background/Super Mario Bros. Deluxe (USA, Europe).jpg
+assets.screenshot: Screenshot/Super Mario Bros. Deluxe (USA, Europe).jpg
+assets.video: Video/Super Mario Bros. Deluxe (USA, Europe).mp4
+x-co-op: Yes
+
+
+game: Towers II - Plight of the Stargazer (USA) (Proto 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Towers II - Plight of the Stargazer (USA) (Proto 1)/Towers II - Plight of the Stargazer (USA) (Proto 1).json
+developer: JV Games
+publisher: Vatical Entertainment
+genre: Role-Playing
+description:
+  Towers II: Plight of the Stargazer was completely finished, playtested,
+  ESRB-rated, and ready for manufacturing before it was cancelled. Publisher
+  Vatical Entertainment was having financial difficulties by that time and was not
+  able to secure distribution for the game. It was shelved soon after.
+  .
+  Around the end of development, an updated version was also produced so it would
+  probably run on the GBA in compatibility mode.
+release: 2000
+players: 1
+assets.boxfront: BoxFront/Towers II - Plight of the Stargazer (USA) (Proto 1).jpg
+assets.boxback: BoxBack/Towers II - Plight of the Stargazer (USA) (Proto 1).jpg
+assets.background: Background/Towers II - Plight of the Stargazer (USA) (Proto 1).jpg
+assets.screenshot: Screenshot/Towers II - Plight of the Stargazer (USA) (Proto 1).jpg
+x-co-op: No
+
+
+game: Towers II - Plight of the Stargazer (USA) (Proto 2) (2001-12-09)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Towers II - Plight of the Stargazer (USA) (Proto 2) (2001-12-09)/Towers II - Plight of the Stargazer (USA) (Proto 2) (2001-12-09).json
+developer: JV Games
+publisher: Vatical Entertainment
+genre: Role-Playing
+description:
+  Towers II: Plight of the Stargazer was completely finished, playtested,
+  ESRB-rated, and ready for manufacturing before it was cancelled. Publisher
+  Vatical Entertainment was having financial difficulties by that time and was not
+  able to secure distribution for the game. It was shelved soon after.
+  .
+  Around the end of development, an updated version was also produced so it would
+  probably run on the GBA in compatibility mode.
+release: 2000
+players: 1
+assets.boxfront: BoxFront/Towers II - Plight of the Stargazer (USA) (Proto 2) (2001-12-09).jpg
+assets.boxback: BoxBack/Towers II - Plight of the Stargazer (USA) (Proto 2) (2001-12-09).jpg
+assets.background: Background/Towers II - Plight of the Stargazer (USA) (Proto 2) (2001-12-09).jpg
+assets.screenshot: Screenshot/Towers II - Plight of the Stargazer (USA) (Proto 2) (2001-12-09).jpg
+x-co-op: No
+
+
+game: Wario Land 3 (World) (En,Ja)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Wario Land 3 (World) (En,Ja)/Wario Land 3 (World) (En,Ja).json
+developer: Nintendo
+publisher: Nintendo
+genre: Platform
+description:
+  Trapped inside a magical music box, the invincible Wario is on a dangerous quest
+  to help a mysterious figure recover its lost powers! Smash, bash and crash your
+  way through more than two dozen gigantic levels in search of hidden keys,
+  valuable treasures and mystical music boxes. Test your wits on puzzle after
+  intricate puzzle and flex your muscles in action-packed boss fights! Be wary of
+  Wanderin' Gooms, Hammer-bots, Mad Scienstein and more as you plunge into one of
+  the largest, most dazzling adventures ever to hit Game Boy Color!
+release: 2000-05-30
+players: 1
+assets.boxfront: BoxFront/Wario Land 3 (World) (En,Ja).jpg
+assets.boxback: BoxBack/Wario Land 3 (World) (En,Ja).jpg
+assets.background: Background/Wario Land 3 (World) (En,Ja).jpg
+assets.screenshot: Screenshot/Wario Land 3 (World) (En,Ja).jpg
+assets.video: Video/Wario Land 3 (World) (En,Ja).mp4
+x-co-op: No
+
+
+game: Yoda Stories (USA, Europe)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Game Boy Color/Yoda Stories (USA, Europe)/Yoda Stories (USA, Europe).json
+developer: Torus Games
+publisher: THQ
+genre: Action
+description:
+  Grab your lightsaber and get ready for terrific Star Wars adventuring in Yoda
+  Stories, the newest in a series of easy-to-play Desktop Adventures from
+  LucasArts. Join Luke Skywalker as he trains to become a Jedi with Yoda, then
+  harness the Force and cross the galaxy to meet exotic aliens, collect stange
+  devices and weapons and deal the Galactic Empire one crippling blow after
+  another - all within an hour!
+release: 1999-12-01
+players: 1
+assets.boxfront: BoxFront/Yoda Stories (USA, Europe).jpg
+assets.boxback: BoxBack/Yoda Stories (USA, Europe).jpg
+assets.background: Background/Yoda Stories (USA, Europe).jpg
+assets.screenshot: Screenshot/Yoda Stories (USA, Europe).jpg
+assets.video: Video/Yoda Stories (USA, Europe).mp4
+x-co-op: No
+
+

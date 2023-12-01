@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Woodland Chasers (USA).exe"
+    ],
+    "transform_file": "Woodland Chasers (USA).exe"
+}

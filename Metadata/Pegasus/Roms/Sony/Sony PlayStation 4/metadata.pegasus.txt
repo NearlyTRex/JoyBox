@@ -1,0 +1,841 @@
+collection: Sony PlayStation 4
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation 4" {file.path}
+
+
+game: Accounting Plus (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Accounting Plus (USA)/Accounting Plus (USA).json
+developer: Crows Crows Crows
+publisher: Crows Crows Crows
+genre: Adventure
+description:
+  Accounting returns to its roots with Accounting+, a nIGHTMARE aDVENTURE cOMEDY
+  made by Crows Crows Crows and designed with Squanch Games! It’s got the guy who
+  voiced Rick and Morty - for real this time! Experience classic virtual reality
+  gameplay: clean up your office, take the battery out of the cooling machine,
+  play the skeleton xylophone, and/or summon thousands of demons. It’s just good,
+  it makes sense, it’s a profitable investment, and you can do this.
+release: 2018-02-06
+players: 1
+assets.boxfront: BoxFront/Accounting Plus (USA).jpg
+assets.boxback: BoxBack/Accounting Plus (USA).jpg
+assets.background: Background/Accounting Plus (USA).jpg
+assets.screenshot: Screenshot/Accounting Plus (USA).jpg
+x-co-op: No
+
+
+game: Bloodborne (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Bloodborne (USA)/Bloodborne (USA).json
+developer: FromSoftware, Inc.
+publisher: Sony
+genre: Action;Role-Playing
+description:
+  Face your fears as you search for answers in the ancient city of Yharnam, now
+  cursed with a strange endemic illness spreading through the streets like
+  wildfire. Danger, death and madness lurk around every corner of this dark and
+  horrific world, and you must discover its darkest secrets in order to survive.
+  .
+  A Terrifying New World: Journey to a horror-filled gothic city where deranged
+  mobs and nightmarish creatures lurk around every corner.
+  .
+  Strategic Action Combat: Armed with a unique arsenal of weaponry, including guns
+  and saw cleavers, you'll need wits, strategy and reflexes to take down the agile
+  and intelligent enemies that guard the city's dark secrets.
+  .
+  A New Generation of Action RPG: Stunningly detailed gothic environments,
+  atmospheric lighting, and advanced new online experiences showcase the power and
+  prowess of the PlayStation(R)4 system.
+release: 2015-03-24
+players: 3
+assets.boxfront: BoxFront/Bloodborne (USA).jpg
+assets.boxback: BoxBack/Bloodborne (USA).jpg
+assets.background: Background/Bloodborne (USA).jpg
+assets.screenshot: Screenshot/Bloodborne (USA).jpg
+x-co-op: No
+
+
+game: Here They Lie (Europe)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Here They Lie (Europe)/Here They Lie (Europe).json
+developer: The Tangentlemen
+publisher: Sony Interactive Entertainment
+genre: Horror
+description:
+  Developed by Tangentlemen under the banner of Santa Monica Studio’s external
+  development group, Here The Lie is an uncanny horror experience where death is
+  not a checkpoint. Delve into an inescapable, surreal world where unsettling
+  encounters and environments come to life.
+release: 2016-10-13
+players: 1
+assets.boxfront: BoxFront/Here They Lie (Europe).jpg
+assets.boxback: BoxBack/Here They Lie (Europe).jpg
+assets.background: Background/Here They Lie (Europe).jpg
+assets.screenshot: Screenshot/Here They Lie (Europe).jpg
+x-co-op: No
+
+
+game: Hidden Agenda (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Hidden Agenda (USA)/Hidden Agenda (USA).json
+developer: Supermassive Games
+publisher: Sony Computer Entertainment
+genre: Action;Adventure
+description:
+  Hidden Agenda is a detective mystery thriller following two protagonists; Becky
+  Marney, a police officer who after capturing the infamous Trapper serial killer
+  gets promoted to a homicide detective, and Felicity Graves, district attorney
+  who convicted the Trapper. Five years have passed since Finn was caught and
+  accused of the series murders, and his admitting to crimes didn't play in his
+  favor. Finn is about to be executed in a couple of days and Felicity goes in for
+  a talk with him only to find herself questioning if he is the real killer.
+  .
+  The story now takes turn based entirely on player's choices, it may lead you to
+  believe that Finn really is the killer, or that he was protecting the real
+  killer, or even the player may end up being a primary suspect in the killings.
+  The game is played entirely via smartphone app and requires both PS4 device and
+  your smartphone to be on the same wi-fi network. Upon starting the PS4 game, the
+  smartphone app will be able to join and the player gets to select his name and
+  color which is mostly used to distinguish multiple players when playing
+  competitive mode where each of the players have his/her own hidden agenda to
+  achieve or prevent other players from achieving.
+  .
+  The story mode is most suitable for single player who can determine the
+  narration of the entire game by making choices for the two protagonists. Game is
+  paused and resumed via smartphone app only, and as the story progresses new
+  characters, ripple effects, and plot progress get marked which can be checked on
+  the smartphone app. Interaction with the game story is done in several different
+  ways, depending on the scene in question. Most common is the choice you
+  determine for your character, whether it is an action to perform or the way you
+  wish Becky or Felicity to answer to a question being asked. Clue searching
+  scenes prompt you to find 3 on-screen clues within the allotted time which
+  affects story that follows, and quick-time events which are seldom, prompt the
+  player to quickly drag the cursor to a point of interest to make the character
+  pass unobstructed (i.e. not to stumble on a crate while chasing a suspect). And
+  last, the player is sometimes able to shoot at the character on the screen.
+  Doing nothing in either of the interactions or prompted choices is also an
+  option and depending on the situation may even be a good choice.
+  .
+  Key choices in the game that affect the story in big way are called ripple
+  effects and are marked on the smartphone app. In general, whenever the plot
+  changes, new character info is uncovered, or ripple effect activated, the
+  smartphone app will add it to the logbook for the players to check at any point
+  during gameplay, whether the game is paused or not. The story is split into 3
+  chapters overall and between each of the chapters all the ripple effects that
+  will affect further story are displayed.
+release: 2017-10-24
+players: 6
+assets.boxfront: BoxFront/Hidden Agenda (USA).jpg
+assets.boxback: BoxBack/Hidden Agenda (USA).jpg
+assets.background: Background/Hidden Agenda (USA).jpg
+assets.screenshot: Screenshot/Hidden Agenda (USA).jpg
+x-co-op: Yes
+
+
+game: Home Sweet Home (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Home Sweet Home (USA)/Home Sweet Home (USA).json
+developer: Mastiff
+publisher: Mastiff
+genre: Action;Adventure;Horror
+description:
+  Inspired by Thai mythology and beliefs, Home Sweet Home throws players into a
+  dark and twisted labyrinth, where a miasma of fear fills the air, dread bleeds
+  through cracks in the ceiling and seeps down through broken floorboards.
+release: 2018-10-16
+players: 1
+assets.boxfront: BoxFront/Home Sweet Home (USA).jpg
+assets.boxback: BoxBack/Home Sweet Home (USA).jpg
+assets.background: Background/Home Sweet Home (USA).jpg
+assets.screenshot: Screenshot/Home Sweet Home (USA).jpg
+x-co-op: No
+
+
+game: Inpatient, The (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Inpatient, The (USA)/Inpatient, The (USA).json
+developer: Supermassive Games
+publisher: Sony Interactive Entertainment
+genre: Horror
+description:
+  Discover who you are before it’s too late in The Inpatient a PS VR Exclusive set
+  in the Blackwood Sanatorium, over 60 years prior to the 2016 BAFTA award-winning
+  Until Dawn.
+  .
+  With deep immersion that places YOU in the game, you take on the role of an
+  amnesiac inpatient who must find out who you are and why you are in the
+  Sanatorium. With a branching narrative and different endings, every choice you
+  make can drastically affect the way the game plays out.
+  .
+  KEY FEATURES:\n
+  • Branching narrative - Choices and consequences are integral to the gameplay.
+  Your life (and the lives of those around you), are dramatically affected by the
+  decisions you make.\n
+  • Rich story/memories - The story isn’t just about scares you’ll discover a rich
+  backstory and uncover a conspiracy. Vivid flashback memories that you discover
+  throughout the game are key to understanding why you are in the Sanatorium.\n
+  • Deep immersion - This game puts YOU in the shoes of the main character. Thanks
+  to the inclusion of voice control, gender choice, and a fully realized body
+  model – when you look down you see your legs, arms and hands – it feels like YOU
+  are in the Sanatorium.
+release: 2018-01-23
+players: 1
+assets.boxfront: BoxFront/Inpatient, The (USA).jpg
+assets.boxback: BoxBack/Inpatient, The (USA).jpg
+assets.background: Background/Inpatient, The (USA).jpg
+assets.screenshot: Screenshot/Inpatient, The (USA).jpg
+x-co-op: No
+
+
+game: Job Simulator (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Job Simulator (USA)/Job Simulator (USA).json
+developer: Owlchemy Labs
+publisher: Owlchemy Labs
+genre: Simulation;Virtual;Career
+description:
+  In a world where robots have replaced all human jobs, step into the "Job
+  Simulator" to learn what it was like 'to job'.
+  .
+  .
+  Players can relive the glory days of work by simulating the ins and outs of
+  being a gourmet chef, an office worker, a convenience store clerk, and more.
+release: 2016-04-05
+players: 1
+assets.boxfront: BoxFront/Job Simulator (USA).jpg
+assets.boxback: BoxBack/Job Simulator (USA).jpg
+assets.background: Background/Job Simulator (USA).jpg
+assets.screenshot: Screenshot/Job Simulator (USA).jpg
+x-co-op: No
+
+
+game: Light Tracer (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Light Tracer (USA)/Light Tracer (USA).json
+developer: Void Dimensions
+publisher: Limited Run Games
+genre: Platform;Puzzle
+description:
+  Light Tracer is a VR platform-puzzler in which the player is a godlike creature
+  who has to guide a princess in despair up the enormous Tower of Bellbatis. A
+  princess with a mission, the mysterious god-like player and a story with a
+  twist!
+  .
+  8 different chapters, 8 different worlds: from Gravity World to Mechanica World,
+  from sliding the princess down icy steps to the final Angelic City. From classic
+  platforming to enigmatic puzzles and boss fights that test both your reaction
+  speed as well as your thinking speed. Use the PlayStation Move controller to
+  "grab" the world and freely move around. Sometimes the solution to a dangerous
+  enemy or an enigmatic puzzle is simply changing your view!
+release: 2017-09-26
+players: 1
+assets.boxfront: BoxFront/Light Tracer (USA).jpg
+assets.boxback: BoxBack/Light Tracer (USA).jpg
+assets.background: Background/Light Tracer (USA).jpg
+assets.screenshot: Screenshot/Light Tracer (USA).jpg
+x-co-op: No
+
+
+game: Loading Human - Chapter 1 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Loading Human - Chapter 1 (USA)/Loading Human - Chapter 1 (USA).json
+developer: Untold Games
+publisher: Maximum Games
+genre: Adventure
+description:
+  Loading Human is a science fiction adventure game designed specifically for
+  virtual reality gameplay. The player takes a role of Prometheus, a young many
+  and a son of a billionaire bent on achieving immortality. Your father, who is
+  100-something years old, and whose life is sustained by a cryo storage container
+  which allows him to occasionally be awaken for a conversation or two, summoned
+  you to a secret research facility in Antarctica. There you undergo a training
+  for a planned interstellar quest to retrieve quintessence, an energy capable of
+  stopping the aging process.
+release: 2016-10-13
+players: 1
+assets.boxfront: BoxFront/Loading Human - Chapter 1 (USA).jpg
+assets.boxback: BoxBack/Loading Human - Chapter 1 (USA).jpg
+assets.background: Background/Loading Human - Chapter 1 (USA).jpg
+assets.screenshot: Screenshot/Loading Human - Chapter 1 (USA).jpg
+x-co-op: No
+
+
+game: Paranormal Activity - The Lost Soul (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Paranormal Activity - The Lost Soul (USA)/Paranormal Activity - The Lost Soul (USA).json
+developer: VRWERX
+publisher: VRWERX
+genre: Adventure;Horror
+description:
+  Engineered from conception for VR, The Lost Soul immerses you in a terrifying
+  realistic environment with haunting atmosphere, and the need to survive. With
+  very limited guidance, your free-movement enables you to discover the secrets
+  that lie in this house of horror.
+release: 2017-08-15
+players: 1
+assets.boxfront: BoxFront/Paranormal Activity - The Lost Soul (USA).jpg
+assets.boxback: BoxBack/Paranormal Activity - The Lost Soul (USA).jpg
+assets.background: Background/Paranormal Activity - The Lost Soul (USA).jpg
+assets.screenshot: Screenshot/Paranormal Activity - The Lost Soul (USA).jpg
+x-co-op: No
+
+
+game: Pixel Gear (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Pixel Gear (USA)/Pixel Gear (USA).json
+developer: Geronimo Interactive
+publisher: Oasis Games
+genre: Action;Shooter;First-Person;Arcade
+description:
+  Pixel Gear is an Action game, developed by Geronimo Interactive and published by
+  Oasis Games, which was released in 2016.
+release: 2016-10-20
+players: 1
+assets.boxfront: BoxFront/Pixel Gear (USA).jpg
+assets.boxback: BoxBack/Pixel Gear (USA).jpg
+assets.background: Background/Pixel Gear (USA).jpg
+assets.screenshot: Screenshot/Pixel Gear (USA).jpg
+x-co-op: No
+
+
+game: PlayStation VR Demo Disc (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/PlayStation VR Demo Disc (USA)/PlayStation VR Demo Disc (USA).json
+developer: Sony Interactive Entertainment
+publisher: Sony Interactive Entertainment
+genre: Miscellaneous;Demo Disc
+description:
+  Play demos of PlayStation VR titles and explore some truly stunning virtual
+  reality game scenes.
+release: 2016-10-10
+players: 1
+assets.boxfront: BoxFront/PlayStation VR Demo Disc (USA).jpg
+assets.boxback: BoxBack/PlayStation VR Demo Disc (USA).jpg
+assets.background: Background/PlayStation VR Demo Disc (USA).jpg
+assets.screenshot: Screenshot/PlayStation VR Demo Disc (USA).jpg
+x-co-op: No
+
+
+game: PlayStation VR Worlds (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/PlayStation VR Worlds (USA)/PlayStation VR Worlds (USA).json
+developer: SIE London Studio
+publisher: Sony Interactive Entertainment
+genre: Action;Racing;Shooter;Sports
+description:
+  Step into PlayStation VR Worlds and journey through five unique and exclusive
+  PlayStation VR experiences.
+  .
+  Go nose to nose with a great white shark, crawl through decaying space hulks,
+  weave between oncoming traffic, survive a futuristic sport or take part in a
+  gritty London gangster thriller.
+release: 2016-10-10
+players: 1
+assets.boxfront: BoxFront/PlayStation VR Worlds (USA).jpg
+assets.boxback: BoxBack/PlayStation VR Worlds (USA).jpg
+assets.background: Background/PlayStation VR Worlds (USA).jpg
+assets.screenshot: Screenshot/PlayStation VR Worlds (USA).jpg
+x-co-op: No
+
+
+game: Polybius (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Polybius (USA)/Polybius (USA).json
+developer: Jeff Minter
+publisher: LLamasoft
+genre: Shooter
+description:
+  Drawing on more than 30 years of game and music visualiser design experience,
+  Polybius' smooth-flowing, bossless gameplay transports the player to a
+  tranced-out pleasure zone that they will never want to leave.
+  .
+  Immerse yourself fully in this hypervelocity neon trancespace with PSVR at a
+  staggering 120 FPS, or play on your telly at up to 4K rez. Strive for hyperspeed
+  as you bask in the aural glory of the game's outstanding soundtrack featuring 25
+  original tracks. Enjoy every second of the ride through 50 trancetastic levels.
+  .
+  Dip in to improve your Normal Mode score using Llamasoft's signature Restart
+  Best feature, or challenge yourself to take the top score in Pure and YOLO
+  modes.
+release: 2017-05-09
+players: 1
+assets.boxfront: BoxFront/Polybius (USA).jpg
+assets.boxback: BoxBack/Polybius (USA).jpg
+assets.background: Background/Polybius (USA).jpg
+assets.screenshot: Screenshot/Polybius (USA).jpg
+x-co-op: No
+
+
+game: Prison Boss VR (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Prison Boss VR (USA)/Prison Boss VR (USA).json
+developer: Trebuchet
+publisher: Trebuchet
+genre: Strategy;Real-Time;General
+description:
+  Prison Boss VR is a Strategy game, developed and published by Trebuchet, which
+  was released in 2018.
+release: 2017-08-29
+players: 1
+assets.boxfront: BoxFront/Prison Boss VR (USA).jpg
+assets.boxback: BoxBack/Prison Boss VR (USA).jpg
+assets.background: Background/Prison Boss VR (USA).jpg
+assets.screenshot: Screenshot/Prison Boss VR (USA).jpg
+x-co-op: No
+
+
+game: Project Lux (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Project Lux (USA)/Project Lux (USA).json
+developer: Spicy Tails
+publisher: Sekai Project
+genre: Adventure;Visual Novel
+description:
+  The crime... is murder.
+  .
+  .
+  Our story takes place in a court trial, set in a futuristic world where most
+  humans have cyberbrains. The defendant on trial is an agent who coordinates with
+  artists to create the data for cyberbrains to interact with peoples emotions.
+  The victim is a girl artist named Lux. The jury has to investigate what really
+  happened by reliving the memory data of the defendant.
+  .
+  .
+  From the creative mind behind the WORLD END ECONOMiCA series, this title is
+  Spicy Tails new adventure adopting HMD in a VR space. Project LUX is a "story-
+  oriented" work for VR, in contrast to recent VR works, which can described as
+  "experience-oriented." Born from an idea upon reading Dr. Naotaka Fujii's book,
+  "Kakuchō Suru Nō" (Expanding Brain) in 2014, Project LUX is a VR animated story
+  that puts you in the perspective of the agent as he interacts with Lux. What
+  will be revealed from reliving the agent's memory data of what transpired...?
+  .
+  .
+  Project Lux features five "episodes" that bring this VR adventure to life,
+  featuring the voice talents of Aimi Tanaka as Lux and Teruaki Ogawa as the
+  agent. Lux is brought to life with the beautiful character designs of
+  illustrator Luna Tsukigami and the motion capture performed by Aimi Tanaka
+  herself.
+release: 2017-03-30
+players: 1
+assets.boxfront: BoxFront/Project Lux (USA).jpg
+assets.boxback: BoxBack/Project Lux (USA).jpg
+assets.background: Background/Project Lux (USA).jpg
+assets.screenshot: Screenshot/Project Lux (USA).jpg
+x-co-op: No
+
+
+game: Resident Evil - Origins Collection (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Resident Evil - Origins Collection (USA)/Resident Evil - Origins Collection (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Miscellaneous;Compilation
+description:
+  Pure Evil: 2-pack is a compilation that contains the following GameCube games:\n
+  Resident Evil\n
+  Resident Evil Zero\n
+  Also included is a trial version of Resident Evil 4. The later released PS4 /
+  Xbox One / Windows compilation called Resident Evil: Origins Collection with
+  enhanced versions of the games does not include the trial version. It comes with
+  support for 3D gameplay controls (opposed to the original tank controls) and a
+  Very Easy mode for novice players.
+release: 2016-01-19
+players: 1
+assets.boxfront: BoxFront/Resident Evil - Origins Collection (USA).jpg
+assets.boxback: BoxBack/Resident Evil - Origins Collection (USA).jpg
+assets.background: Background/Resident Evil - Origins Collection (USA).jpg
+assets.screenshot: Screenshot/Resident Evil - Origins Collection (USA).jpg
+x-co-op: No
+
+
+game: Resident Evil - Revelations (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Resident Evil - Revelations (USA)/Resident Evil - Revelations (USA).json
+developer: Capcom Co., Ltd.
+publisher: Capcom U.S.A., Inc.
+genre: Action;Adventure;Horror
+description:
+  This is a remastered port of the previous console generations game.
+release: 2017-08-17
+players: 1
+assets.boxfront: BoxFront/Resident Evil - Revelations (USA).jpg
+assets.boxback: BoxBack/Resident Evil - Revelations (USA).jpg
+assets.background: Background/Resident Evil - Revelations (USA).jpg
+assets.screenshot: Screenshot/Resident Evil - Revelations (USA).jpg
+x-co-op: No
+
+
+game: Resident Evil - Revelations 2 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Resident Evil - Revelations 2 (USA)/Resident Evil - Revelations 2 (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Horror;Shooter
+description:
+  The beginning of the Resident Evil Revelations 2 tale sees fan favorite Claire
+  Redfield make a dramatic return. Survivor of the Raccoon City incident depicted
+  in previous Resident Evil games, Claire now works for the anti-bioterrorism
+  organization Terra Save. Moira Burton is attending her welcome party for Terra
+  Save when unknown armed forces storm the office. Claire and Moira are knocked
+  unconscious and awaken later to find themselves in a dark and abandoned
+  detention facility. Working together, they must find out who took them and to
+  what sinister end. Will Claire and Moira make it out alive and discover what’s
+  led to them being taken to this remote island? A story of twists and turns will
+  have players guessing the next step at every turn.
+  .
+  Headed for the remote prison island in search of his missing daughter, Barry
+  Burton meets brand new character Natalia Korda, a little girl who has a strange
+  power that allows her to sense enemies and hidden items. Using this skill
+  alongside Barry’s proven combat abilities, players will need to alternate
+  between the two to survive the mysterious island and find Moira. With terrifying
+  enemies waiting around every dark corner, Barry will need to use his ammo and
+  weapon supply wisely, in classic survival horror style.
+  .
+  Evolving the episodic chapter set-up of the original Resident Evil Revelations,
+  Resident Evil Revelations 2 was initially released as a weekly series of
+  episodic downloads beginning on February 24, 2015.
+release: 2015-02-24
+players: 2
+assets.boxfront: BoxFront/Resident Evil - Revelations 2 (USA).jpg
+assets.boxback: BoxBack/Resident Evil - Revelations 2 (USA).jpg
+assets.background: Background/Resident Evil - Revelations 2 (USA).jpg
+assets.screenshot: Screenshot/Resident Evil - Revelations 2 (USA).jpg
+x-co-op: Yes
+
+
+game: Resident Evil 2 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Resident Evil 2 (USA)/Resident Evil 2 (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Horror
+description:
+  A deadly virus engulfs the residents of Raccoon City in September of 1998,
+  plunging the city into chaos as flesh eating zombies roam the streets for
+  survivors.
+  .
+  An unparalleled adrenaline rush, gripping storyline, and unimaginable horrors
+  await you.
+  .
+  Witness the return of Resident Evil 2.
+release: 2019-01-25
+players: 1
+assets.boxfront: BoxFront/Resident Evil 2 (USA).jpg
+assets.boxback: BoxBack/Resident Evil 2 (USA).jpg
+assets.background: Background/Resident Evil 2 (USA).jpg
+assets.screenshot: Screenshot/Resident Evil 2 (USA).jpg
+x-co-op: No
+
+
+game: Resident Evil 3 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Resident Evil 3 (USA)/Resident Evil 3 (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Horror
+description:
+  This is the 2020 remake of the classic game from 1999.
+  .
+  Resident Evil 3 takes place during the events of Resident Evil 2. The midwestern
+  town of Raccoon City is in ruins, having been overrun with the undead creating
+  T-virus thanks to the wacky hijinks of William Birkin and Umbrella Inc. The
+  player must guide Jill "master of unlocking" Valentine (one of the two main
+  protagonists of the original Resident Evil) out of the city alive. Along the
+  way, Jill will interact with and receive help from (or be hindered by) three
+  Umbrella mercenaries who are also stranded in Raccoon City. Standing in the way
+  of your group's last escape are a horde of flesh-eating zombified citizens,
+  homicidal mutants, and a relentless killing machine known only as Nemesis who is
+  determined to hunt down and kill the survivors of the original Resident Evil,
+  including Jill.
+release: 2020-04-03
+players: 1
+assets.boxfront: BoxFront/Resident Evil 3 (USA).jpg
+assets.boxback: BoxBack/Resident Evil 3 (USA).jpg
+assets.background: Background/Resident Evil 3 (USA).jpg
+assets.screenshot: Screenshot/Resident Evil 3 (USA).jpg
+x-co-op: No
+
+
+game: Resident Evil 4 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Resident Evil 4 (USA)/Resident Evil 4 (USA).json
+developer: Capcom Co., Ltd.
+publisher: CAPCOM Co., Ltd.
+genre: Action;Adventure;Horror;Shooter
+description:
+  The original action horror masterpiece. Ushering in a new phase in the Resident
+  Evil franchise, this game focuses on the events following the dissolution of
+  Umbrella Corporation. The pioneering over-the-shoulder camera perspective is a
+  departure from the fixed-camera views found in earlier entries, allowing for
+  unrivaled action gameplay which has been met with widespread critical acclaim.
+  In the wake of the completely unprecedented biological disaster of Raccoon City,
+  the corporation exposed as the initiator of those atrocities, Umbrella, has been
+  dissolved. Leon S. Kennedy, a survivor of the incident, has gone on to become a
+  special agent in the direct employ of the president of the United States. The
+  president's daughter has been kidnapped, and Leon has followed eyewitness
+  reports to a cold village in Europe. In that village, a new intrigue awaits...
+release: 2016-08-30
+players: 1
+assets.boxfront: BoxFront/Resident Evil 4 (USA).jpg
+assets.boxback: BoxBack/Resident Evil 4 (USA).jpg
+assets.background: Background/Resident Evil 4 (USA).jpg
+assets.screenshot: Screenshot/Resident Evil 4 (USA).jpg
+x-co-op: No
+
+
+game: Resident Evil 5 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Resident Evil 5 (USA)/Resident Evil 5 (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action Adventure;Survival
+description:
+  One of the most popular Resident Evil titles comes to PlayStation®4 in full
+  1080p HD with an increased frame rate. Featuring single-player and co-op modes
+  and a dramatic storyline, this fully-loaded release includes all previously
+  released DLC (Lost in Nightmares and Desperate Escape story expansions, Versus
+  mode, extra figures and 4 costumes), and the previously PC-exclusive No Mercy
+  mode, as well as the new mode “The Mercenaries United” which combines the two
+  fan-favorite modes, The Mercenaries and The Mercenaries Reunion for an even more
+  intense experience.
+release: 2016-06-28
+players: 2
+assets.boxfront: BoxFront/Resident Evil 5 (USA).jpg
+assets.boxback: BoxBack/Resident Evil 5 (USA).jpg
+assets.background: Background/Resident Evil 5 (USA).jpg
+assets.screenshot: Screenshot/Resident Evil 5 (USA).jpg
+x-co-op: Yes
+
+
+game: Resident Evil 6 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Resident Evil 6 (USA)/Resident Evil 6 (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action Adventure;Survival
+description:
+  Blending action and survival horror, Resident Evil 6 is a dramatic horror
+  experience that cannot be forgotten. Now in high definition, the game offers
+  multiple characters, including fan favorites and new faces, along with solo and
+  co-op modes and new challenges for players, different from any other in the
+  Resident Evil franchise. This edition includes all DLC, along with two costumes
+  per main character, originally exclusively unlockable through Residentevil.net,
+  that are now unlockable through the game itself.
+release: 2016-03-29
+players: 4
+assets.boxfront: BoxFront/Resident Evil 6 (USA).jpg
+assets.boxback: BoxBack/Resident Evil 6 (USA).jpg
+assets.background: Background/Resident Evil 6 (USA).jpg
+assets.screenshot: Screenshot/Resident Evil 6 (USA).jpg
+x-co-op: Yes
+
+
+game: Resident Evil 7 Biohazard Gold Edition (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Resident Evil 7 Biohazard Gold Edition (USA)/Resident Evil 7 Biohazard Gold Edition (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Horror;Shooter
+description:
+  Experience one of the scariest, most highly acclaimed games of 2017 with
+  Resident Evil 7 Gold Edition - complete with all Season Pass content. As Ethan
+  Winters, explore the seemingly abandoned Baker mansion and uncover the truth
+  behind the disappearance of your wife. The Gold Edition contains the full game
+  plus DLC: the Banned Footage Vol. 1 and 2, and the End of Zoe epilogue episode.
+  Also available as a free download to all RE7 owners is the 'Not a Hero' epilogue
+  chapter starring Chris Redfield.
+release: 2017-12-12
+players: 1
+assets.boxfront: BoxFront/Resident Evil 7 Biohazard Gold Edition (USA).jpg
+assets.boxback: BoxBack/Resident Evil 7 Biohazard Gold Edition (USA).jpg
+assets.background: Background/Resident Evil 7 Biohazard Gold Edition (USA).jpg
+assets.screenshot: Screenshot/Resident Evil 7 Biohazard Gold Edition (USA).jpg
+x-co-op: No
+
+
+game: Rez Infinite (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Rez Infinite (USA)/Rez Infinite (USA).json
+developer: Enhance Games
+publisher: Enhance Games
+genre: Music
+description:
+  Prepare yourself for the ultimate version of Rez, a thrilling journey of sights
+  and sounds and shooting action, remastered and upgraded by members of the
+  original development team exclusively for PS4 and (optional) PlayStation VR.
+  .
+  Experience 360 degrees of mind-blowing synesthesia as you blast through waves of
+  enemies and massive transforming bosses, with colors and sounds that sync and
+  blend to the beat of Rez’s legendary techno soundtrack.
+  .
+  Whether you’re an old fan of the original Sega classic or never heard of Rez
+  before, whether you’re playing on your TV or your PS VR headset, whether you’re
+  looking for a quick diversion or a deeper game you can lose yourself in for
+  hours at a time -- you owe it to your senses to experience Rez Infinite.
+release: 2016-10-13
+players: 1
+assets.boxfront: BoxFront/Rez Infinite (USA).jpg
+assets.boxback: BoxBack/Rez Infinite (USA).jpg
+assets.background: Background/Rez Infinite (USA).jpg
+assets.screenshot: Screenshot/Rez Infinite (USA).jpg
+x-co-op: No
+
+
+game: Robinson - The Journey (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Robinson - The Journey (USA)/Robinson - The Journey (USA).json
+developer: Crytek
+publisher: Crytek
+genre: Adventure;Puzzle;Stealth
+description:
+  When the Esmeralda crashes on Tyson III, a boy named Robin is left stranded. He
+  must rely on his wits – and HIGS, an AI companion from the ship – to survive. As
+  he searches for the lost crew and comes face-to-face with dinosaurs, Robin
+  discovers that Tyson III is not the paradise once promised...
+release: 2016-11-08
+players: 1
+assets.boxfront: BoxFront/Robinson - The Journey (USA).jpg
+assets.boxback: BoxBack/Robinson - The Journey (USA).jpg
+assets.background: Background/Robinson - The Journey (USA).jpg
+assets.screenshot: Screenshot/Robinson - The Journey (USA).jpg
+x-co-op: No
+
+
+game: Star Trek - Bridge Crew (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Star Trek - Bridge Crew (USA)/Star Trek - Bridge Crew (USA).json
+developer: Red Storm Entertainment
+publisher: Ubisoft
+genre: Action;Adventure;Vehicle Simulation
+description:
+  Star Trek: Bridge Crew will immerse you in the Star Trek universe (VR
+  compatible). The game puts you and your friends in the heart of the U.S.S.
+  Aegis.\n
+  Your mission: explore a largely uncharted sector of space known as The Trench,
+  in hopes of locating a suitable new home world for the decimated Vulcan
+  populace. The Klingon Empire is also active in the region, and their purpose is
+  a threat to the Federation’s plans.
+  .
+  Make strategic decisions and coordinate actions with your crew to complete the
+  mission.
+  .
+  In co-op, you can form a crew of four players to serve in the roles of Captain,
+  Helm, Tactical and Engineer. In addition to a dynamic storyline, the game
+  features an “Ongoing Missions” mode, procedurally generating missions for
+  countless hours of Solo and Co-op adventure.
+  .
+  In Star Trek: Bridge Crew, communication, trust, and close crew coordination are
+  the keys to victory.
+release: 2017-05-30
+players: 4
+assets.boxfront: BoxFront/Star Trek - Bridge Crew (USA).jpg
+assets.boxback: BoxBack/Star Trek - Bridge Crew (USA).jpg
+assets.background: Background/Star Trek - Bridge Crew (USA).jpg
+assets.screenshot: Screenshot/Star Trek - Bridge Crew (USA).jpg
+x-co-op: Yes
+
+
+game: Tetris Effect (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Tetris Effect (USA)/Tetris Effect (USA).json
+developer: Monstars
+publisher: Enhance Games
+genre: Puzzle
+description:
+  Tetris Effect is Tetris like you've never seen it, or heard it, or felt it
+  before - an incredibly addictive, unique, and breathtakingly gorgeous
+  reinvention of one of the most popular puzzle games of all time, from the people
+  who brought you the award-winning Rez Infinite and legendary puzzle game
+  Lumines. Fully playable on either a standard display or in mind-blowing 3D on PS
+  VR.
+  .
+  Music, backgrounds, sounds, special effects - everything, down to the Tetris
+  pieces themselves, pulse, dance, shimmer, and explode in perfect sync with how
+  you're playing, making any of the game's 30+ stages and 10+ modes something
+  you'll want to experience over and over again.
+  .
+  A challenge for the mind and a feast for all the senses, Tetris Effect is the
+  perfect excuse to play Tetris again... and again... and again, and again, and
+  again and again and again and again and again and again and...
+release: 2018-11-09
+players: 1
+assets.boxfront: BoxFront/Tetris Effect (USA).jpg
+assets.boxback: BoxBack/Tetris Effect (USA).jpg
+assets.background: Background/Tetris Effect (USA).jpg
+assets.screenshot: Screenshot/Tetris Effect (USA).jpg
+x-co-op: No
+
+
+game: Thumper (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Thumper (USA)/Thumper (USA).json
+developer: Drool
+publisher: Drool
+genre: Action;Music
+description:
+  Thumper is rhythm violence: classic rhythm-action, blistering speed, and brutal
+  physicality. You are a space beetle. Brave the hellish void and confront a
+  maniacal giant head from the future.
+  .
+  Scream down the endless track and crash through punishing obstacles with simple,
+  airtight controls. Hurtle forward, master new moves, reach overwhelming
+  velocities, and survive epic boss battles. Every crushing impact is interwoven
+  with a pounding original soundtrack. To reach synesthetic bliss, you must go
+  through rhythm hell.
+release: 2016-10-10
+players: 1
+assets.boxfront: BoxFront/Thumper (USA).jpg
+assets.boxback: BoxBack/Thumper (USA).jpg
+assets.background: Background/Thumper (USA).jpg
+assets.screenshot: Screenshot/Thumper (USA).jpg
+x-co-op: No
+
+
+game: Until Dawn (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Until Dawn (USA)/Until Dawn (USA).json
+developer: Supermassive Games
+publisher: Sony
+genre: Horror
+description:
+  Until Dawn is a forthcoming adventure horror video game developed by
+  Supermassive Games and published by Sony Computer Entertainment for the
+  PlayStation 4. The game was originally scheduled to be released on the
+  PlayStation 3 and feature PlayStation Move Support, but in August 2014, the game
+  was reintroduced as a PlayStation 4 exclusive.
+  .
+  The game follows a group of 8 teenagers as they spend the night in a log cabin
+  on the anniversary of the death of one of their friends, unaware that they are
+  being hunted by a crazed serial killer.
+release: 2015-08-25
+players: 1
+assets.boxfront: BoxFront/Until Dawn (USA).jpg
+assets.boxback: BoxBack/Until Dawn (USA).jpg
+assets.background: Background/Until Dawn (USA).jpg
+assets.screenshot: Screenshot/Until Dawn (USA).jpg
+x-co-op: No
+
+
+game: Until Dawn - Rush of Blood (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Until Dawn - Rush of Blood (USA)/Until Dawn - Rush of Blood (USA).json
+developer: Supermassive Games
+publisher: Sony Interactive Entertainment
+genre: Horror;Shooter
+description:
+  Descend into madness.
+  .
+  Strap yourself in for the most disturbing rollercoaster ride you’ll ever take.
+  From the warped minds of the team behind PS4 horror classic Until Dawn, comes
+  Until Dawn: Rush of Blood - a virtual reality experience to strike fear into the
+  hearts of every trigger-happy arcade shooter fan.
+  .
+  Arm yourself to the teeth then blast your way through a horde of enemies and
+  monsters coming at you from all angles. Duck and dodge everything that’s thrown
+  at you in this fright-filled rollercoaster ride from hell exclusive to
+  PlayStation VR. Can you survive seven levels of pure terror to top the global
+  leaderboards? With multiple paths to take and nightmarish themes to scare the
+  living daylights out of you, no two rides will ever be the same - and neither
+  will you...
+release: 2016-10-10
+players: 1
+assets.boxfront: BoxFront/Until Dawn - Rush of Blood (USA).jpg
+assets.boxback: BoxBack/Until Dawn - Rush of Blood (USA).jpg
+assets.background: Background/Until Dawn - Rush of Blood (USA).jpg
+assets.screenshot: Screenshot/Until Dawn - Rush of Blood (USA).jpg
+x-co-op: No
+
+
+game: Volume (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation 4/Volume (USA)/Volume (USA).json
+developer: Bithell Games
+publisher: Bithell Games
+genre: Stealth
+description:
+  WELCOME, TO THE VOLUME
+  .
+  An arsenal of gadgets await discovery in a quest to rob from the rich and give
+  to the unheard. Sneaking, distracting, avoiding. Locksley is never seen, and
+  seldom heard. As he grows in popularity and notoriety, so will his inventory.
+  .
+  Every level of the game can be remixed, added to and expanded upon. The
+  community are free to build their own challenges, even releasing their own takes
+  on the core levels. Volume will evolve, warp and grow as players make their mark
+  on Locksley's legend.
+release: 2015-08-18
+players: 1
+assets.boxfront: BoxFront/Volume (USA).jpg
+assets.boxback: BoxBack/Volume (USA).jpg
+assets.background: Background/Volume (USA).jpg
+assets.screenshot: Screenshot/Volume (USA).jpg
+x-co-op: No
+
+

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/TinkerQuarry (USA).exe"
+    ],
+    "transform_file": "TinkerQuarry (USA).exe"
+}

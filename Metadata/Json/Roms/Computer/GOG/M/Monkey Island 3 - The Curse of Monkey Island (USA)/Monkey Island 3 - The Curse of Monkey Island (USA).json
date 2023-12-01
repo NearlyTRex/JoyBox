@@ -1,0 +1,9 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/curse_of_monkey_island_manual.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_the_curse_of_monkey_islandtm_1.0l_(20628).exe"
+    ],
+    "transform_file": "setup_the_curse_of_monkey_islandtm_1.0l_(20628).exe"
+}

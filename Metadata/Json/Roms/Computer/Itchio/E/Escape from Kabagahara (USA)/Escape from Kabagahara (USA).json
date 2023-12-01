@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Escape from Kabagahara (USA).exe"
+    ],
+    "transform_file": "Escape from Kabagahara (USA).exe"
+}

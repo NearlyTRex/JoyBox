@@ -1,0 +1,33 @@
+{
+    "files": [
+        "hsf2/dl-1425.bin",
+        "hsf2/hs2.01",
+        "hsf2/hs2.02",
+        "hsf2/hs2.05",
+        "hsf2/hs2.06",
+        "hsf2/hs2.07",
+        "hsf2/hs2.08",
+        "hsf2/hs2.09",
+        "hsf2/hs2.10",
+        "hsf2/hs2.11m",
+        "hsf2/hs2.13m",
+        "hsf2/hs2.15m",
+        "hsf2/hs2.17m",
+        "hsf2/hs2.19m",
+        "hsf2/hs2u.03",
+        "hsf2/hs2u.04",
+        "hsf2/hsf2.key",
+        "hsf2/hsf2a/hs2a.03",
+        "hsf2/hsf2a/hs2a.04",
+        "hsf2/hsf2a/hsf2a.key",
+        "hsf2/hsf2d/hs2ad.03",
+        "hsf2/hsf2d/hs2ad.04",
+        "hsf2/hsf2d/phoenix.key",
+        "hsf2/hsf2j/hs2j.03c",
+        "hsf2/hsf2j/hs2j.04b",
+        "hsf2/hsf2j/hsf2j.key",
+        "hsf2/hsf2j1/hs2j.03",
+        "hsf2/hsf2j1/hs2j.04"
+    ],
+    "launch_name": "hsf2"
+}

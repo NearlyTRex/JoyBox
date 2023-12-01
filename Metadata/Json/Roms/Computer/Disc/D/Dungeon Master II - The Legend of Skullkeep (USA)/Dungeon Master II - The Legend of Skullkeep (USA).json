@@ -1,0 +1,11 @@
+{
+    "installer_dos_exe": "$DISC_MAIN_ROOT/INSTALL.EXE",
+    "is_dos": true,
+    "main_game_dos_exe": [
+        "INTRPLAY/SKULKEEP/DM2.BAT"
+    ],
+    "main_game_dos_exe_cwd": {
+        "INTRPLAY/SKULKEEP/DM2.BAT": "INTRPLAY/SKULKEEP"
+    },
+    "transform_file": "Dungeon Master II - The Legend of Skullkeep (USA).chd"
+}

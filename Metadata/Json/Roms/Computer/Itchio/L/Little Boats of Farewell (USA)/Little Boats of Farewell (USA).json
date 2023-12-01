@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Little Boats of Farewell (USA).exe"
+    ],
+    "transform_file": "Little Boats of Farewell (USA).exe"
+}

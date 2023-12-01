@@ -1,0 +1,51 @@
+Nintendo Super Famicom || Akumajou Dracula (Japan) (Castlevania Anniversary Collection) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Akumajou Dracula (Japan) (Castlevania Anniversary Collection)/Akumajou Dracula (Japan) (Castlevania Anniversary Collection).json
+Nintendo Super Famicom || Bahamut Lagoon (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Bahamut Lagoon (Japan)/Bahamut Lagoon (Japan).json
+Nintendo Super Famicom || Bahamut Lagoon (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Bahamut Lagoon (Japan) (English Patch)/Bahamut Lagoon (Japan) (English Patch).json
+Nintendo Super Famicom || Chou Mahou Tairiku Wozz (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Chou Mahou Tairiku Wozz (Japan)/Chou Mahou Tairiku Wozz (Japan).json
+Nintendo Super Famicom || Chou Mahou Tairiku Wozz (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Chou Mahou Tairiku Wozz (Japan) (English Patch)/Chou Mahou Tairiku Wozz (Japan) (English Patch).json
+Nintendo Super Famicom || Chrono Trigger (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Chrono Trigger (Japan)/Chrono Trigger (Japan).json
+Nintendo Super Famicom || Contra Spirits (World) (Contra Anniversary Collection) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Contra Spirits (World) (Contra Anniversary Collection)/Contra Spirits (World) (Contra Anniversary Collection).json
+Nintendo Super Famicom || Cyber Knight (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Cyber Knight (Japan)/Cyber Knight (Japan).json
+Nintendo Super Famicom || Cyber Knight (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Cyber Knight (Japan) (English Patch)/Cyber Knight (Japan) (English Patch).json
+Nintendo Super Famicom || Cyber Knight (Japan) (English+Easy Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Cyber Knight (Japan) (English+Easy Patch)/Cyber Knight (Japan) (English+Easy Patch).json
+Nintendo Super Famicom || Cyber Knight II - Chikyuu Teikoku no Yabou (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan)/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan).json
+Nintendo Super Famicom || Cyber Knight II - Chikyuu Teikoku no Yabou (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan) (English Patch)/Cyber Knight II - Chikyuu Teikoku no Yabou (Japan) (English Patch).json
+Nintendo Super Famicom || Dragon Quest I & II (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest I & II (Japan)/Dragon Quest I & II (Japan).json
+Nintendo Super Famicom || Dragon Quest I & II (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest I & II (Japan) (English Patch)/Dragon Quest I & II (Japan) (English Patch).json
+Nintendo Super Famicom || Dragon Quest III - Soshite Densetsu e... (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest III - Soshite Densetsu e... (Japan)/Dragon Quest III - Soshite Densetsu e... (Japan).json
+Nintendo Super Famicom || Dragon Quest III - Soshite Densetsu e... (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest III - Soshite Densetsu e... (Japan) (English Patch)/Dragon Quest III - Soshite Densetsu e... (Japan) (English Patch).json
+Nintendo Super Famicom || Dragon Quest V - Tenkuu no Hanayome (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest V - Tenkuu no Hanayome (Japan)/Dragon Quest V - Tenkuu no Hanayome (Japan).json
+Nintendo Super Famicom || Dragon Quest V - Tenkuu no Hanayome (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest V - Tenkuu no Hanayome (Japan) (English Patch)/Dragon Quest V - Tenkuu no Hanayome (Japan) (English Patch).json
+Nintendo Super Famicom || Dragon Quest VI - Maboroshi no Daichi (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest VI - Maboroshi no Daichi (Japan)/Dragon Quest VI - Maboroshi no Daichi (Japan).json
+Nintendo Super Famicom || Dragon Quest VI - Maboroshi no Daichi (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dragon Quest VI - Maboroshi no Daichi (Japan) (English Patch)/Dragon Quest VI - Maboroshi no Daichi (Japan) (English Patch).json
+Nintendo Super Famicom || Dual Orb - Seirei Tama Densetsu (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dual Orb - Seirei Tama Densetsu (Japan)/Dual Orb - Seirei Tama Densetsu (Japan).json
+Nintendo Super Famicom || Dual Orb II (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dual Orb II (Japan)/Dual Orb II (Japan).json
+Nintendo Super Famicom || Dual Orb II (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Dual Orb II (Japan) (English Patch)/Dual Orb II (Japan) (English Patch).json
+Nintendo Super Famicom || Emerald Dragon (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Emerald Dragon (Japan)/Emerald Dragon (Japan).json
+Nintendo Super Famicom || Emerald Dragon (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Emerald Dragon (Japan) (English Patch)/Emerald Dragon (Japan) (English Patch).json
+Nintendo Super Famicom || Feda - The Emblem of Justice (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Feda - The Emblem of Justice (Japan)/Feda - The Emblem of Justice (Japan).json
+Nintendo Super Famicom || Feda - The Emblem of Justice (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Feda - The Emblem of Justice (Japan) (English Patch)/Feda - The Emblem of Justice (Japan) (English Patch).json
+Nintendo Super Famicom || Live A Live (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Live A Live (Japan)/Live A Live (Japan).json
+Nintendo Super Famicom || Live A Live (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Live A Live (Japan) (English Patch)/Live A Live (Japan) (English Patch).json
+Nintendo Super Famicom || Monstania (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Monstania (Japan)/Monstania (Japan).json
+Nintendo Super Famicom || Monstania (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Monstania (Japan) (English Patch)/Monstania (Japan) (English Patch).json
+Nintendo Super Famicom || Mystic Ark (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Mystic Ark (Japan)/Mystic Ark (Japan).json
+Nintendo Super Famicom || Mystic Ark (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Mystic Ark (Japan) (English Patch)/Mystic Ark (Japan) (English Patch).json
+Nintendo Super Famicom || Nekketsu Tairiku Burning Heroes (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Nekketsu Tairiku Burning Heroes (Japan)/Nekketsu Tairiku Burning Heroes (Japan).json
+Nintendo Super Famicom || Nekketsu Tairiku Burning Heroes (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Nekketsu Tairiku Burning Heroes (Japan) (English Patch)/Nekketsu Tairiku Burning Heroes (Japan) (English Patch).json
+Nintendo Super Famicom || Rockman X (Japan) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Rockman X (Japan) (Rev 1)/Rockman X (Japan) (Rev 1).json
+Nintendo Super Famicom || Rockman X2 (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Rockman X2 (Japan)/Rockman X2 (Japan).json
+Nintendo Super Famicom || Rockman X3 (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Rockman X3 (Japan)/Rockman X3 (Japan).json
+Nintendo Super Famicom || Rudra no Hihou (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Rudra no Hihou (Japan)/Rudra no Hihou (Japan).json
+Nintendo Super Famicom || Rudra no Hihou (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Rudra no Hihou (Japan) (English Patch)/Rudra no Hihou (Japan) (English Patch).json
+Nintendo Super Famicom || Shin Megami Tensei (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Shin Megami Tensei (Japan)/Shin Megami Tensei (Japan).json
+Nintendo Super Famicom || Shin Megami Tensei (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Shin Megami Tensei (Japan) (English Patch)/Shin Megami Tensei (Japan) (English Patch).json
+Nintendo Super Famicom || Shin Megami Tensei II (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Shin Megami Tensei II (Japan)/Shin Megami Tensei II (Japan).json
+Nintendo Super Famicom || Shin Megami Tensei II (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Shin Megami Tensei II (Japan) (English Patch)/Shin Megami Tensei II (Japan) (English Patch).json
+Nintendo Super Famicom || Silva Saga II - The Legend of Light and Darkness (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Silva Saga II - The Legend of Light and Darkness (Japan)/Silva Saga II - The Legend of Light and Darkness (Japan).json
+Nintendo Super Famicom || Silva Saga II - The Legend of Light and Darkness (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Silva Saga II - The Legend of Light and Darkness (Japan) (English Patch)/Silva Saga II - The Legend of Light and Darkness (Japan) (English Patch).json
+Nintendo Super Famicom || Super E.D.F. (Japan) (En) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Super E.D.F. (Japan) (En)/Super E.D.F. (Japan) (En).json
+Nintendo Super Famicom || Torneco no Daibouken - Fushigi no Dungeon (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Torneco no Daibouken - Fushigi no Dungeon (Japan)/Torneco no Daibouken - Fushigi no Dungeon (Japan).json
+Nintendo Super Famicom || Torneco no Daibouken - Fushigi no Dungeon (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Torneco no Daibouken - Fushigi no Dungeon (Japan) (English Patch)/Torneco no Daibouken - Fushigi no Dungeon (Japan) (English Patch).json
+Nintendo Super Famicom || Treasure Hunter G (Japan) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Treasure Hunter G (Japan)/Treasure Hunter G (Japan).json
+Nintendo Super Famicom || Treasure Hunter G (Japan) (English Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo Super Famicom/Treasure Hunter G (Japan) (English Patch)/Treasure Hunter G (Japan) (English Patch).json

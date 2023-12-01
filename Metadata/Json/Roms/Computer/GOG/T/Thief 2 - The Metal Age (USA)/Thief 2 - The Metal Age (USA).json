@@ -1,0 +1,13 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/thief_2_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/thief_2_making_of.zip",
+        "$SETUP_MAIN_ROOT/extra/thief_2_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/thief_2_reference_card.zip",
+        "$SETUP_MAIN_ROOT/extra/thief_2_soundtrack.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_thief_2_-_the_metal_age_1.26_nd_(21946).exe"
+    ],
+    "transform_file": "setup_thief_2_-_the_metal_age_1.26_nd_(21946).exe"
+}

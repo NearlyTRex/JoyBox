@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Not Escape Room (USA).exe"
+    ],
+    "transform_file": "Not Escape Room (USA).exe"
+}

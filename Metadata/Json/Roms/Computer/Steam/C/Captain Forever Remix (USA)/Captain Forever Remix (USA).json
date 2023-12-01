@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Captain Forever Remix (USA).exe"
+    ],
+    "main_game_exe": [
+        "Captain Forever Remix/cap4ever.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Captain Forever Remix/cap4ever.exe": "Captain Forever Remix"
+    },
+    "transform_file": "Captain Forever Remix (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Balloony's Adventure (USA).exe"
+    ],
+    "transform_file": "Balloony's Adventure (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Back to Bed (USA).exe"
+    ],
+    "transform_file": "Back to Bed (USA).exe"
+}

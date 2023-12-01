@@ -1,0 +1,616 @@
+collection: Nintendo Switch eShop
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Switch eShop" {file.path}
+
+
+game: Bad Dream - Coma (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Bad Dream - Coma (World) (eShop)/Bad Dream - Coma (World) (eShop).json
+developer: Desert Fox
+publisher: PlayWay
+genre: Adventure;Point-and-Click
+description:
+  Welcome to Bad Dream: Coma. A point and click game where unique minimalistic
+  art style creates an unforgettable and atmospheric experience! Travel through
+  the surreal and disturbing dreamland where everything depends on your actions.
+  You can't die but you can suffer greatly... Visit the place known from the
+  previous chapters of the Bad Dream Series. Encounter well known creatures in
+  their new form, find the way to erase them from your memory and turn this
+  dream to a peaceful nap.
+release: 2017-03-09
+players: 1
+assets.boxfront: BoxFront/Bad Dream - Coma (World) (eShop).jpg
+assets.boxback: BoxBack/Bad Dream - Coma (World) (eShop).jpg
+assets.background: Background/Bad Dream - Coma (World) (eShop).jpg
+assets.screenshot: Screenshot/Bad Dream - Coma (World) (eShop).jpg
+x-co-op: No
+
+
+game: Bad Dream - Fever (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Bad Dream - Fever (World) (eShop)/Bad Dream - Fever (World) (eShop).json
+developer: Desert Fox
+publisher: PlayWay
+genre: Adventure;Point-and-Click
+description:
+  The world is covered in strange ink, an unknown plague has gathered its cruel
+  harvest. The city seems to be completely empty and dead, but in its every
+  corner there are manifestations of fear, sorrow, frustration, misunderstanding,
+  loneliness, and suffering. The situation looks hopelessly, but not everything
+  is lost yet...
+  .
+  Enter the feverish dream and experience its abstract world. Recognize the
+  degradation of your environment and adapt to it. Act with caution. There is a
+  malicious virus waiting for you at each step. Avoid the ink and everything
+  should be alright.
+release: 2018-11-15
+players: 1
+assets.boxfront: BoxFront/Bad Dream - Fever (World) (eShop).jpg
+assets.boxback: BoxBack/Bad Dream - Fever (World) (eShop).jpg
+assets.background: Background/Bad Dream - Fever (World) (eShop).jpg
+assets.screenshot: Screenshot/Bad Dream - Fever (World) (eShop).jpg
+x-co-op: No
+
+
+game: Baldur's Gate and Baldur's Gate II - Enhanced Editions (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Baldur's Gate and Baldur's Gate II - Enhanced Editions (World) (eShop)/Baldur's Gate and Baldur's Gate II - Enhanced Editions (World) (eShop).json
+developer: Beamdog
+publisher: Beamdog
+genre: Adventure;Role-Playing
+description:
+  Forced to leave your home under mysterious circumstances, you find yourself
+  drawn into a conflict that has the Sword Coast on the brink of war. Soon you
+  discover there are other forces at work, far more sinister than you could ever
+  imagine...
+  .
+  Since its original release in 1998, Baldur’s Gate has set the standard for
+  Dungeons & Dragons computer roleplaying games. Customize your hero, recruit a
+  party of brave allies, and explore the Sword Coast in your search for adventure,
+  profit... and the truth.
+  .
+  Running on an upgraded and improved version of the Infinity Engine, Baldur’s
+  Gate: Enhanced Edition includes the original Baldur’s Gate adventure, the Tales
+  of the Sword Coast expansion, and all-new content including three new party
+  members.
+release: 2019-10-15
+players: 6
+assets.boxfront: BoxFront/Baldur's Gate and Baldur's Gate II - Enhanced Editions (World) (eShop).jpg
+assets.boxback: BoxBack/Baldur's Gate and Baldur's Gate II - Enhanced Editions (World) (eShop).jpg
+assets.background: Background/Baldur's Gate and Baldur's Gate II - Enhanced Editions (World) (eShop).jpg
+assets.screenshot: Screenshot/Baldur's Gate and Baldur's Gate II - Enhanced Editions (World) (eShop).jpg
+x-co-op: Yes
+
+
+game: Capcom Arcade 2nd Stadium (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Capcom Arcade 2nd Stadium (World) (eShop)/Capcom Arcade 2nd Stadium (World) (eShop).json
+developer: Capcom
+publisher: Capcom
+genre: Miscellaneous;Compilation
+description:
+  Capcom is taking you back to the stadium with another collection of your
+  favorite classic hits! Come see what's changed, and what's completely new, in
+  Capcom Arcade 2nd Stadium!
+  .
+  From 3D-rendered arcade cabinets to scanline filters, there's everything you
+  need to recreate that arcade atmosphere. Fully customizable display settings let
+  you craft your own personal experience and truly relive the glory days of arcade
+  gaming.
+  .
+  With gameplay rewind, speed adjustment, and the ability to save and load your
+  game at any time, your old favorites will feel new all over again!
+release: 2022-07-22
+players: 1
+assets.boxfront: BoxFront/Capcom Arcade 2nd Stadium (World) (eShop).jpg
+assets.boxback: BoxBack/Capcom Arcade 2nd Stadium (World) (eShop).jpg
+assets.background: Background/Capcom Arcade 2nd Stadium (World) (eShop).jpg
+assets.screenshot: Screenshot/Capcom Arcade 2nd Stadium (World) (eShop).jpg
+x-co-op: No
+
+
+game: Capcom Arcade Stadium (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Capcom Arcade Stadium (World) (eShop)/Capcom Arcade Stadium (World) (eShop).json
+developer: Capcom
+publisher: Capcom
+genre: Miscellaneous;Compilation
+description:
+  Relive the Capcom classics!
+  .
+  Shooters, fighting, action - all your favorite genres in this exciting
+  collection! Capcom Arcade Stadium brings back all the nostalgia of the arcade,
+  while adding in new and exciting features you'll wish you had back then!
+  .
+  From 3D-rendered arcade cabinets to scanline filters, there's everything you
+  need to recreate that arcade atmosphere. Fully customizable display settings let
+  you craft your own personal experience and truly relive the glory days of arcade
+  gaming.
+  .
+  With gameplay rewind, speed adjustment, and the ability to save and load your
+  game at any time, your old favorites will feel new all over again!
+  .
+  Every game has online leaderboard rankings, so you can see where you stack up
+  against players all over the world!
+release: 2021-02-17
+players: 1
+assets.boxfront: BoxFront/Capcom Arcade Stadium (World) (eShop).jpg
+assets.boxback: BoxBack/Capcom Arcade Stadium (World) (eShop).jpg
+assets.background: Background/Capcom Arcade Stadium (World) (eShop).jpg
+assets.screenshot: Screenshot/Capcom Arcade Stadium (World) (eShop).jpg
+x-co-op: No
+
+
+game: Capcom Beat 'Em Up Bundle (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Capcom Beat 'Em Up Bundle (World) (eShop)/Capcom Beat 'Em Up Bundle (World) (eShop).json
+developer: Capcom
+publisher: Capcom
+genre: Miscellaneous;Compilation
+description:
+  Relive the glory days of cooperative arcade games with the Capcom Beat 'Em Up
+  Bundle!
+  .
+  This comprehensive collection includes seven classic games, each with various
+  multiplayer options, online capabilities and detailed galleries!
+  .
+  Say goodbye to game overs! Adjust your difficulty settings or give yourself more
+  lives to battle through each game in its entirety. You can also play the English
+  or Japanese versions of each title!
+  .
+  Games included: Final Fight, Captain Commando, The King of Dragons, Knights of
+  the Round and Warriors of Fate, as well as two games that were previously
+  unavailable on consoles: Armored Warriors and Battle Circuit!
+  .
+  Grab some friends, stare down the bad guys and BEAT 'EM UP!
+release: 2018-09-18
+players: 1
+assets.boxfront: BoxFront/Capcom Beat 'Em Up Bundle (World) (eShop).jpg
+assets.boxback: BoxBack/Capcom Beat 'Em Up Bundle (World) (eShop).jpg
+assets.background: Background/Capcom Beat 'Em Up Bundle (World) (eShop).jpg
+assets.screenshot: Screenshot/Capcom Beat 'Em Up Bundle (World) (eShop).jpg
+x-co-op: No
+
+
+game: Cat Quest 2 (USA, Europe) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Cat Quest 2 (USA, Europe) (eShop)/Cat Quest 2 (USA, Europe) (eShop).json
+developer: The Gentlebros
+publisher: PQube
+genre: Action;Adventure
+description:
+  Go on the ultimutt catventure today!
+  .
+  Cat Quest II is a 2D open-world action-RPG set in a fantasy realm of cats and
+  dogs. Under threat from a continuing war between the cats of Felingard and the
+  advancing dogs of the Lupus Empire, Cat Quest II tells the tail of two kings,
+  brought together against their will, on a journey of paw-some discovery to
+  reclaim their thrones.
+  .
+  Play as both a cat and dog as you explore their kingdoms solo or with a friend!
+  Quest in a world filled with magic, curious monsters, and go on a catventure
+  like never before!
+  .
+  Following the success of the acclaimed Cat Quest, developers The Gentlebros
+  return to the world of Felingard to expand on the original with more explosive
+  spells, expanded weapon options, an exciting new character switch mechanic, and
+  local co-op!
+  .
+  Features:\n
+  - Brand new story set in the world of Felingard - and beyond!- All new switch
+  and local co-op gameplay. Play as both cat and dog, either alone or with a
+  friend!\n
+  - New weapons types – Master swords, staves and more to become a fur-midable
+  fighter!\n
+  - More spells bring even more furry judgement to your foes.\n
+  - New passive abilities, whose attributes can be mixed and combined for endless
+  paw-sibilities!\n
+  - Exciting, and varied dungeons filled with new traps and obstacles, making
+  every pounce into the unknown a fresh experience!\n
+  - Em-bark on a litany of side quests, each telling its own story and expanding
+  the lore and universe of CAT QUEST!
+release: 2019-10-24
+players: 1
+assets.boxfront: BoxFront/Cat Quest 2 (USA, Europe) (eShop).jpg
+assets.boxback: BoxBack/Cat Quest 2 (USA, Europe) (eShop).jpg
+assets.background: Background/Cat Quest 2 (USA, Europe) (eShop).jpg
+assets.screenshot: Screenshot/Cat Quest 2 (USA, Europe) (eShop).jpg
+x-co-op: No
+
+
+game: Coma 2, The - Vicious Sisters (USA, Europe) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Coma 2, The - Vicious Sisters (USA, Europe) (eShop)/Coma 2, The - Vicious Sisters (USA, Europe) (eShop).json
+developer: Devespresso Games
+publisher: Digerati Distribution
+genre: Action Adventure;Survival
+description:
+  Mina Park, a student of Sehwa High, awakens at night in her school. It isn't
+  long before she realizes that something is amiss. The once-familiar school
+  where she spends her evenings studying looks twisted by something dark and
+  sinister. She finds herself pursued by someone or something that looks eerily
+  like her teacher. To survive, Mina must venture beyond the boundaries of her
+  school and into the surrounding district. There, she will encounter strange
+  creatures, mysterious strangers, and uneasy allies.
+  .
+  The Coma 2: Vicious Sisters is an atmospheric, story-driven game. Immerse
+  yourself in the warped Sehwa district as you encounter an engaging cast of
+  characters, solve puzzles, discover revealing clues, and fight for survival
+  against a relentless psycho.
+  .
+  Heroines, forced to confront their worst fears, rarely emerge unscathed. Over
+  the course of the story, Mina will encounter dangerous scenarios from which
+  she could sustain permanent damage. Craft items to anticipate future dangers
+  to avoid injury.
+  .
+  Dark Song is now more fearsome and powerful than ever before. Falling into her
+  grasp could spell instant death. Running and wielding your flashlight makes
+  you an easy target. You must precariously balance the urgency of exploration
+  with your absolute need to survive!
+release: 2019-11-07
+players: 1
+assets.boxfront: BoxFront/Coma 2, The - Vicious Sisters (USA, Europe) (eShop).jpg
+assets.boxback: BoxBack/Coma 2, The - Vicious Sisters (USA, Europe) (eShop).jpg
+assets.background: Background/Coma 2, The - Vicious Sisters (USA, Europe) (eShop).jpg
+assets.screenshot: Screenshot/Coma 2, The - Vicious Sisters (USA, Europe) (eShop).jpg
+x-co-op: No
+
+
+game: Diablo II - Resurrected (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Diablo II - Resurrected (World) (eShop)/Diablo II - Resurrected (World) (eShop).json
+developer: Blizzard Entertainment
+publisher: Blizzard Entertainment
+genre: Role-Playing;Action RPG
+description:
+  After possessing the body of the hero who defeated him, Diablo resumes his
+  nefarious scheme to enslave humanity by joining forces with the other Prime
+  Evils, Mephisto and Baal. Only you--armed with all-new weapons, spells, and
+  armor--will be able to determine the outcome of this final encounter. As one of
+  five distinct character types, explore the world of Diablo II--journey across
+  distant lands, fight new villains, discover new treasures, and uncover ancient
+  mysteries, all in the quest to stop the Lord of Terror, once and for all.
+release: 2021-09-23
+players: 1
+assets.boxfront: BoxFront/Diablo II - Resurrected (World) (eShop).jpg
+assets.boxback: BoxBack/Diablo II - Resurrected (World) (eShop).jpg
+assets.background: Background/Diablo II - Resurrected (World) (eShop).jpg
+assets.screenshot: Screenshot/Diablo II - Resurrected (World) (eShop).jpg
+x-co-op: No
+
+
+game: Draw a Stickman - EPIC (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Draw a Stickman - EPIC (World) (eShop)/Draw a Stickman - EPIC (World) (eShop).json
+developer: Hitcents
+publisher: Hitcents
+genre: Puzzle;Action
+description:
+  Pencil your way into one of the most creative drawing puzzle games ever
+  designed: Draw a Stickman: EPIC!
+  .
+  In this uniquely crafted cartoon RPG, you become the artist and create your very
+  own stick man hero! Sketch and doodle your way through the cartoon obstacles the
+  evil stick man Zarp throws at you!
+  .
+  As the artist behind the adventure, start the game by drawing an original
+  cartoon hero. Your hero also needs a friend, so sketch his buddy and give him a
+  name! But as you watch your cartoon creations hop right off the page, your stick
+  man hero's friend heads straight into the dangers of the cartoon adventure book!
+  Send your doodle dude into the book to save his cartoon friend!
+  .
+  Need to get past a pile of dynamite sticks? Use the flame pencil to doodle a
+  fire and blow them up! Bees in your way? Use the cloud pencil to sketch some
+  rain to grow a pollinated distraction! Ward off dragon enemies, draw a spider to
+  fight attacking troll hordes, and supercharge a toaster with the lightning
+  cloud! There is plenty to do in the world of Draw a Stickman: EPIC!
+release: 2022-02-03
+players: 1
+assets.boxfront: BoxFront/Draw a Stickman - EPIC (World) (eShop).jpg
+assets.boxback: BoxBack/Draw a Stickman - EPIC (World) (eShop).jpg
+assets.background: Background/Draw a Stickman - EPIC (World) (eShop).jpg
+assets.screenshot: Screenshot/Draw a Stickman - EPIC (World) (eShop).jpg
+x-co-op: No
+
+
+game: Draw a Stickman - EPIC 2 (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Draw a Stickman - EPIC 2 (World) (eShop)/Draw a Stickman - EPIC 2 (World) (eShop).json
+developer: Hitcents
+publisher: Hitcents
+genre: Miscellaneous;Edutainment
+description:
+  Get ready for your most creative adventure yet!
+  .
+  Imagination is the key, as you enter a magical storybook land full of mystery
+  and wonder, unusual creatures and enigmatic puzzles! Create your own original
+  stickman and then watch it come to life in DRAW A STICKMAN: EPIC 2! Challenge
+  yourself to unlock every secret, collect every drawing and share your creativity
+  with the world!
+  .
+  BRING YOUR DRAWINGS TO LIFE!
+  .
+  Unleash your creativity as you draw a Stickman from your own unique perspective,
+  and then watch your animated Hero come to life before your eyes! Make every idea
+  a reality by saving unlimited drawings in your Sketchbook, and sharing them with
+  friends!
+  .
+  A NEW STORY
+  .
+  Embark on a perilous journey through time! Draw your Stickman and create a
+  friend! But be warned disaster falls upon your ally! It's up to you to become
+  the hero! Maneuver your way through the magical world of EPIC 2 in a quest to
+  save your partner!
+  .
+  YOUR DRAWINGS MATTER
+  .
+  Create and save unlimited drawings in your sketchbook! Use them throughout your
+  adventure!
+  .
+  SHARE AND RECEIVE DRAWINGS WITH FRIENDS
+  .
+  With the new share feature, you can now send your creations to your friends!
+  They will then be able to use your drawings in their own epic adventures!
+  .
+  FIGHT EPIC BATTLES
+  .
+  Face off against inked-out goblins, tongue-lashing frogs, fire-breathing
+  dragons, and BIG bosses! You must use your own strategies to solve intriguing
+  challenges and puzzles, while battling all new villains!
+  .
+  Jump in to this action-packed adventure that allows for endless creativity!
+  .
+  As you explore each colorful environment, choose from an assortment of drawing
+  pencils and tools to help you successfully overcome every obstacle along the
+  way.
+  .
+  New features and enhancements allow you to choose from a larger color palette,
+  along with a variety of pencil sizes. With the new share feature, send your
+  drawings to your friends! Unlock hidden Color Buddies, locate puzzle pieces, and
+  enjoy new drawing pencils for Wires, Eggs, and Ice! This is an experience like
+  no other, personalized by you!
+release: 2018-01-11
+players: 1
+assets.boxfront: BoxFront/Draw a Stickman - EPIC 2 (World) (eShop).jpg
+assets.boxback: BoxBack/Draw a Stickman - EPIC 2 (World) (eShop).jpg
+assets.background: Background/Draw a Stickman - EPIC 2 (World) (eShop).jpg
+assets.screenshot: Screenshot/Draw a Stickman - EPIC 2 (World) (eShop).jpg
+x-co-op: No
+
+
+game: Goat Simulator - The GOATY (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Goat Simulator - The GOATY (World) (eShop)/Goat Simulator - The GOATY (World) (eShop).json
+developer: Coffee Stain Studios
+publisher: Coffee Stain Publishing
+genre: Action;Adventure
+description:
+  Goat Simulator is the latest in goat simulation technology, bringing next-gen
+  goat simulation to YOU. You no longer have to fantasize about being a goat your
+  dreams have finally come true!
+  .
+  Goat Simulator is all about causing as much destruction as you possibly can as a
+  goat. It has been compared to an old-school skating game, except instead of
+  being a skater, you're a goat, and instead of doing tricks, you wreck stuff.
+  Destroy things with style and you'll earn even more points!
+  .
+  Game Contains: Goat Simulator, Goat MMO Simulator, Goat Simulator: GoatZ, Goat
+  Simulator: Payday and Goat Simulator: Waste of Space.
+release: 2019-01-23
+players: 2
+assets.boxfront: BoxFront/Goat Simulator - The GOATY (World) (eShop).jpg
+assets.boxback: BoxBack/Goat Simulator - The GOATY (World) (eShop).jpg
+assets.background: Background/Goat Simulator - The GOATY (World) (eShop).jpg
+assets.screenshot: Screenshot/Goat Simulator - The GOATY (World) (eShop).jpg
+x-co-op: Yes
+
+
+game: Jump Rope Challenge (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Jump Rope Challenge (World) (eShop)/Jump Rope Challenge (World) (eShop).json
+developer: Nintendo
+publisher: Nintendo
+genre: Miscellaneous;Exercise / Fitness
+description:
+  Grab those Joy-Con controllers and get jumping!
+  .
+  Jump rope virtually and watch the on-screen counter increase with each
+  successful hop! Another player can join in on the fun with another Joy-Con
+  controller as you strive for a high score.
+  .
+  By using a pair of Joy-Con controllers and imagining them as the handles of a
+  jump rope, players can virtually jump rope every day. With hopping bunnies as
+  the characters, simple menus and no long tutorials to jump through, it's quick
+  and easy to learn the ropes. You can even skip in style with a number of outfits
+  and backgrounds!
+  .
+  For those who aren't able to jump, or are worried about disturbing the
+  downstairs neighbors, players can bend their knees or move their arms to play
+  the game without creating any noise.
+  .
+  Jump Rope Challenge was created by a small group of Nintendo developers while
+  working from home in Japan as a simple game to add some quick and fun movement
+  into their daily lives.
+release: 2020-06-15
+players: 1
+assets.boxfront: BoxFront/Jump Rope Challenge (World) (eShop).jpg
+assets.boxback: BoxBack/Jump Rope Challenge (World) (eShop).jpg
+assets.background: Background/Jump Rope Challenge (World) (eShop).jpg
+assets.screenshot: Screenshot/Jump Rope Challenge (World) (eShop).jpg
+x-co-op: No
+
+
+game: Mega Man Battle & Fighters (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Mega Man Battle & Fighters (World) (eShop)/Mega Man Battle & Fighters (World) (eShop).json
+developer: Capcom
+publisher: SNK Corporation
+genre: Action;General
+description:
+  This game contains two arcade games, "RockMan: The Power Battle" released in
+  1995 and "RockMan 2 The Power Fighters" released in 1996.
+  .
+  Unlike the conventional method of clearing stages in RockMan, this is a new
+  RockMan series that allows you to gather the boss characters that appeared in
+  the previous RockMan series and face the boss characters directly.
+  .
+  Collecting only popular characters, the ultimate fantasy matches of the RockMan
+  series is about to begin!!!
+  .
+  One of the fun things about RockMan is the system specializing in boss battles.
+  Enemies will attack players without giving them any time to breathe! You can
+  enjoy the pure action unique to RockMan.
+release: 2022-08-03
+players: 1
+assets.boxfront: BoxFront/Mega Man Battle & Fighters (World) (eShop).jpg
+assets.boxback: BoxBack/Mega Man Battle & Fighters (World) (eShop).jpg
+assets.background: Background/Mega Man Battle & Fighters (World) (eShop).jpg
+assets.screenshot: Screenshot/Mega Man Battle & Fighters (World) (eShop).jpg
+x-co-op: No
+
+
+game: Neverwinter Nights - Enhanced Edition (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Neverwinter Nights - Enhanced Edition (World) (eShop)/Neverwinter Nights - Enhanced Edition (World) (eShop).json
+developer: Beamdog
+publisher: Beamdog
+genre: Adventure;Role-Playing
+description:
+  Return to the Forgotten Realms in this bestselling Dungeons & Dragons
+  roleplaying game. The Enhanced Edition on the Nintendo Switch combines all of
+  the content of Neverwinter Nights: Diamond Edition with all-new upgraded
+  features, including 100+ hours of award-winning, online RPG play!
+release: 2019-12-03
+players: 4
+assets.boxfront: BoxFront/Neverwinter Nights - Enhanced Edition (World) (eShop).jpg
+assets.boxback: BoxBack/Neverwinter Nights - Enhanced Edition (World) (eShop).jpg
+assets.background: Background/Neverwinter Nights - Enhanced Edition (World) (eShop).jpg
+assets.screenshot: Screenshot/Neverwinter Nights - Enhanced Edition (World) (eShop).jpg
+x-co-op: Yes
+
+
+game: Planescape - Torment and Icewind Dale - Enhanced Editions (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Planescape - Torment and Icewind Dale - Enhanced Editions (World) (eShop)/Planescape - Torment and Icewind Dale - Enhanced Editions (World) (eShop).json
+developer: Beamdog
+publisher: Beamdog
+genre: Adventure;Role-Playing
+description:
+  Journey deep into Icewind Dale, a harsh and unforgiving territory settled only
+  by the hardiest folk. Battle the cunning, ferocious beasts that survive among
+  the snow-shrouded peaks, and confront an evil that schemes to wreak destruction
+  upon the world.
+  .
+  Then, explore the bizarre universe of Planescape, from the dirty streets of
+  Sigil to the mysterious Outer Planes -- and even the depths of Hell itself. This
+  is a place where the word is mightier than the sword, where thought defines
+  reality, and belief has the power to reshape worlds.
+  .
+  Icewind Dale and Planescape: Torment are award-winning classics of the isometric
+  RPG genre. "Planescape: Torment and Icewind Dale: Enhanced Editions" contains
+  the entirety of Icewind Dale (including the Heart of Winter and Trials of the
+  Luremaster expansions) and Planescape: Torment.
+release: 2019-10-15
+players: 1
+assets.boxfront: BoxFront/Planescape - Torment and Icewind Dale - Enhanced Editions (World) (eShop).jpg
+assets.boxback: BoxBack/Planescape - Torment and Icewind Dale - Enhanced Editions (World) (eShop).jpg
+assets.background: Background/Planescape - Torment and Icewind Dale - Enhanced Editions (World) (eShop).jpg
+assets.screenshot: Screenshot/Planescape - Torment and Icewind Dale - Enhanced Editions (World) (eShop).jpg
+x-co-op: No
+
+
+game: SNK 40th Anniversary Collection (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/SNK 40th Anniversary Collection (World) (eShop)/SNK 40th Anniversary Collection (World) (eShop).json
+developer: Digital Eclipse
+publisher: NIS America
+genre: Miscellaneous;Compilation
+description:
+  2018 marks the 40th anniversary of legendary studio SNK! To celebrate this
+  extraordinary milestone, a variety of classic arcade games from SNK's golden age
+  are coming back together in one anthology on Nintendo Switch. SNK 40th
+  Anniversary Collection is packed full of retro games and a treasure trove of
+  features!
+  .
+  FEATURES:
+  .
+  * Collection of classics in your hands! Take a piece of SNK history with you
+  wherever you go on Nintendo Switch. Choose from over a dozen titles and
+  experience an intense blast from the past!
+  .
+  * Modern Meets Retro! Rewind and save at any time while you're playing, enjoy
+  updated graphics at 1080p resolution, and experience redesigned control schemes
+  for a modern feel!
+  .
+  * Enter the SNK Museum: A history of SNK and its games await in the Museum Mode.
+  Explore the legacy of one of Japan's leading developers with high definition
+  artwork and original promotional assets!
+release: 2018-11-13
+players: 1
+assets.boxfront: BoxFront/SNK 40th Anniversary Collection (World) (eShop).jpg
+assets.boxback: BoxBack/SNK 40th Anniversary Collection (World) (eShop).jpg
+assets.background: Background/SNK 40th Anniversary Collection (World) (eShop).jpg
+assets.screenshot: Screenshot/SNK 40th Anniversary Collection (World) (eShop).jpg
+x-co-op: No
+
+
+game: Sea of Stars (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Sea of Stars (World) (eShop)/Sea of Stars (World) (eShop).json
+developer: Sabotage Studio
+publisher: Sabotage Studio
+genre: Role-Playing;Japanese-Style
+description:
+  Embark on a journey of peril and wonder as a Solstice Warrior in this turn-based
+  RPG inspired by the classics
+  .
+  Sea of Stars tells the story of two Children of the Solstice who combine the
+  powers of the sun and moon to perform Eclipse Magic, the only force capable of
+  fighting off the monstrous creations of an evil alchemist known as The
+  Fleshmancer.
+  .
+  * Engaging Turn-Based Combat - Timed hits, combo attacks, boosting, damage types
+  and spellbreaking.
+  .
+  * Unshackled Traversal - Swim, climb, vault, jump off or hoist up as you
+  traverse the world seamlessly.
+  .
+  * A Story Rich Adventure - Dozens of characters and story arcs will take you on
+  a captivating journey.
+  .
+  * A World You Can Touch - Need a change of pace? Go sailing, cooking, fishing or
+  find a tavern to relax.
+release: 2023-08-29
+players: 1
+assets.boxfront: BoxFront/Sea of Stars (World) (eShop).jpg
+assets.boxback: BoxBack/Sea of Stars (World) (eShop).jpg
+assets.background: Background/Sea of Stars (World) (eShop).jpg
+assets.screenshot: Screenshot/Sea of Stars (World) (eShop).jpg
+x-co-op: No
+
+
+game: Sinking City, The (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Sinking City, The (World) (eShop)/Sinking City, The (World) (eShop).json
+developer: Frogwares
+publisher: Frogwares
+genre: Action;Adventure
+description:
+  Languages supported:\n
+  Voice & Text: English, Français, Deutsch, Русский\n
+  Text: Italiano, Español, 简体中文, 繁体中文, 日本語, 한국어, Українська, Polski, Português
+  (Brasil), Český, Türkçe, العربية
+  .
+  The Sinking City is an adventure and investigation game set in an open world
+  inspired by the universe of H.P. Lovecraft, the master of Horror. The
+  half-submerged city of Oakmont is gripped by supernatural forces. You're a
+  private investigator, and you have to uncover the truth of what has possessed
+  the city... and the minds of its inhabitants.\n
+  - An oppressive atmosphere and story inspired by the universe of H.P.
+  Lovecraft.\n
+  - A vast open world that can be explored on foot, by boat, in a diving suit...\n
+  - High replay value thanks to an open investigation system: each case can be
+  solved in a number of ways, with different possible endings depending on your
+  actions.\n
+  - An arsenal of weapons from the 1920's with which to take on nightmarish
+  creatures.\n
+  - Manage your mental health to untangle the truth behind the madness.
+release: 2019-09-12
+players: 1
+assets.boxfront: BoxFront/Sinking City, The (World) (eShop).jpg
+assets.boxback: BoxBack/Sinking City, The (World) (eShop).jpg
+assets.background: Background/Sinking City, The (World) (eShop).jpg
+assets.screenshot: Screenshot/Sinking City, The (World) (eShop).jpg
+x-co-op: No
+
+
+game: Star Ocean - First Departure R (USA, Europe) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Switch eShop/Star Ocean - First Departure R (USA, Europe) (eShop)/Star Ocean - First Departure R (USA, Europe) (eShop).json
+players: 1
+assets.boxfront: BoxFront/Star Ocean - First Departure R (USA, Europe) (eShop).jpg
+assets.boxback: BoxBack/Star Ocean - First Departure R (USA, Europe) (eShop).jpg
+assets.background: Background/Star Ocean - First Departure R (USA, Europe) (eShop).jpg
+assets.screenshot: Screenshot/Star Ocean - First Departure R (USA, Europe) (eShop).jpg
+x-co-op: No
+
+

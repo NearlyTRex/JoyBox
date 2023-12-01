@@ -1,0 +1,991 @@
+collection: Sony PlayStation Network - PlayStation 4
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation Network - PlayStation 4" {file.path}
+
+
+game: Abzu (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Abzu (USA)/Abzu (USA).json
+developer: Giant Squid
+publisher: 505 Games
+genre: Adventure;3D;Third-Person
+description:
+  Discover a lush hidden world as you descend into the heart of the ocean, where
+  ancient secrets lie forgotten and encounters with majestic creatures await.
+  .
+  ABZU is an epic descent into the depths of the sea, where players will explore
+  beautifully rendered ocean environments with fluid swimming controls. The
+  experience draws inspiration from the deep innate narrative that we all carry
+  within our subconscious: the story of ABZU is a universal myth that resonates
+  across cultures. The name references a concept from the oldest mythologies; it
+  is the combination of the two ancient words AB, meaning ocean, and ZU, meaning
+  to know. ABZU is the ocean of wisdom.
+release: 2016-08-02
+players: 1
+assets.boxfront: BoxFront/Abzu (USA).jpg
+assets.boxback: BoxBack/Abzu (USA).jpg
+assets.background: Background/Abzu (USA).jpg
+assets.screenshot: Screenshot/Abzu (USA).jpg
+x-co-op: No
+
+
+game: Allumette (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Allumette (USA)/Allumette (USA).json
+developer: Penrose Studios
+publisher: Penrose Studios
+genre: Adventure;General
+description:
+  Allumette tells the story of a young orphan girl who lives in a fantastical
+  city in the clouds. After enduring tragedy, she grasps at hope for her future.
+  .
+  Loosely inspired by "The Little Match Girl" by Hans Christian Andersen,
+  Allumette is an account of the love a mother and daughter have for one another,
+  and the sacrifices they make for the greater good.
+release: 2016-10-13
+players: 1
+assets.boxfront: BoxFront/Allumette (USA).jpg
+assets.boxback: BoxBack/Allumette (USA).jpg
+assets.background: Background/Allumette (USA).jpg
+assets.screenshot: Screenshot/Allumette (USA).jpg
+x-co-op: No
+
+
+game: Astro Bot - Rescue Mission (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Astro Bot - Rescue Mission (USA)/Astro Bot - Rescue Mission (USA).json
+developer: SIE Japan Studio
+publisher: Sony Interactive Entertainment
+genre: Platform
+description:
+  ASTRO BOT Rescue Mission is a brand new platformer, developed exclusively for
+  use with PS VR. Take control of ASTRO the captain BOT and go on an epic VR
+  rescue mission to save your fellow crew who are dispersed all over space.
+  .
+  The game takes full advantage of PS VR to invigorate the platforming genre with
+  gameplay unfolding around you in 360 degrees. You will be running and jumping
+  through city skylines, lush jungles, dark caves, and golden sandy beaches in 20
+  unique levels that all take advantage of PS VR. Each level features original
+  traps and enemies, and contains 8 lost Bots for you to save.
+  .
+  A new hero is coming to PS VR, so join the ASTRO bot rescue mission and be One
+  of the first to experience the future of platform games!
+release: 2018-10-02
+players: 1
+assets.boxfront: BoxFront/Astro Bot - Rescue Mission (USA).jpg
+assets.boxback: BoxBack/Astro Bot - Rescue Mission (USA).jpg
+assets.background: Background/Astro Bot - Rescue Mission (USA).jpg
+assets.screenshot: Screenshot/Astro Bot - Rescue Mission (USA).jpg
+x-co-op: No
+
+
+game: Dead Rising (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Dead Rising (USA)/Dead Rising (USA).json
+developer: Capcom Co. Ltd
+publisher: Capcom
+genre: Horror;Shooter
+description:
+  Frank West, a freelance photojournalist on the hunt for the scoop of a lifetime,
+  pursues a juicy lead to a small suburban town only to find that it is being
+  overrun by zombies! He escapes to the local shopping mall thinking it will be a
+  bastion of safety, but it turns out to be anything but. It's a true struggle to
+  survive the endless stream of enemies, but with full reign over an entire
+  shopping center, Frank can utilize anything to fight off the flesh-hungry mob
+  and search for the truth behind the horrendous epidemic.
+release: 2016-09-13
+players: 1
+assets.boxfront: BoxFront/Dead Rising (USA).jpg
+assets.boxback: BoxBack/Dead Rising (USA).jpg
+assets.background: Background/Dead Rising (USA).jpg
+assets.screenshot: Screenshot/Dead Rising (USA).jpg
+x-co-op: No
+
+
+game: Dead Rising 2 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Dead Rising 2 (USA)/Dead Rising 2 (USA).json
+developer: Blue Castle Games
+publisher: Capcom
+genre: Horror
+description:
+  Dead Rising 2 is an open world survival horror beat 'em up video game developed
+  by Canadian company Blue Castle Games and published by Capcom in September 2010
+  for the PlayStation 3, Xbox 360, and Microsoft Windows video gaming platforms,
+  and September 2016 for PlayStation 4 and Xbox One. It is a sequel to Dead
+  Rising, and produced by Keiji Inafune. At the time, Dead Rising 2 became the
+  fastest-selling game on Xbox Live. A sequel, Dead Rising 3, was released in
+  2013. The game follows Chuck Greene, a motocross rider, as he tries to survive a
+  zombie outbreak. The game is set in a shopping complex filled with zombies.
+  Players encounter other people, 'survivors', who are often a threat, and can
+  find or craft weapons to help them stay alive.
+release: 2016-09-13
+players: 1
+assets.boxfront: BoxFront/Dead Rising 2 (USA).jpg
+assets.boxback: BoxBack/Dead Rising 2 (USA).jpg
+assets.background: Background/Dead Rising 2 (USA).jpg
+assets.screenshot: Screenshot/Dead Rising 2 (USA).jpg
+x-co-op: No
+
+
+game: Enter the Gungeon (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Enter the Gungeon (USA)/Enter the Gungeon (USA).json
+developer: Dodge Roll
+publisher: Devolver Digital
+genre: Action;Adventure
+description:
+  Enter the Gungeon is a bullet hell dungeon crawler following a band of misfits
+  seeking to shoot, loot, dodge roll and table-flip their way to personal
+  absolution by reaching the legendary Gungeon’s ultimate treasure: the gun that
+  can kill the past. Select a hero [or team up in co-op] and battle your way to
+  the bottom of the Gungeon by surviving a challenging and evolving series of
+  floors filled with the dangerously adorable Gundead and fearsome Gungeon bosses
+  armed to the teeth. Gather precious loot, discover hidden secrets, and chat with
+  opportunistic merchants and shopkeepers to purchase powerful items to gain an
+  edge.
+  .
+  The Gungeon: Enter the Gungeon – a constantly evolving bullet hell fortress that
+  elegantly blends meticulously hand-designed rooms within a
+  procedurally-generated labyrinth bent on destroying all that enter its walls.
+  But beware – the Gungeon responds to even the most modest victory against its
+  sentries and traps by raising the stakes and the challenges found within!
+  .
+  The Cult of the Gundead: The Gungeon isn’t just traps and chasms – calm your
+  nerves and steady your aim as you face down the gun-totting Cult of the Gundead.
+  These disciples of the gun will stop at nothing to put down the heroes in their
+  tracks and employ any tactics necessary to defend their temple.
+  .
+  The Gungeoneers: Choose between one of several unlikely heroes, each burdened by
+  a deep regret and in search of a way to change their past, no matter the cost.
+  Filled with equal parts courage and desperation, these adventurers won’t
+  hesitate to dive across flaming walls, roll through a wall of bullets, or take
+  cover behind whatever is around to make it to their goal alive!
+  .
+  The Guns: Discover and unlock scores of uniquely fantastic guns to annihilate
+  all that oppose you in the Gungeon – each carrying their own unique tactics and
+  ammunition. Unleash everything from the tried and true medley of missiles,
+  lasers, and cannonballs to the bizarrely effective volley of rainbows, fish,
+  foam darts, and bees! Yep, bees.
+release: 2016-04-05
+players: 2
+assets.boxfront: BoxFront/Enter the Gungeon (USA).jpg
+assets.boxback: BoxBack/Enter the Gungeon (USA).jpg
+assets.background: Background/Enter the Gungeon (USA).jpg
+assets.screenshot: Screenshot/Enter the Gungeon (USA).jpg
+x-co-op: Yes
+
+
+game: Fallout Shelter (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Fallout Shelter (USA)/Fallout Shelter (USA).json
+developer: Bethesda Softworks
+publisher: Bethesda Softworks
+genre: Strategy;General
+description:
+  Fallout Shelter puts you in control of a state-of-the-art underground Vault
+  from Vault-Tec. Build the perfect Vault, keep your Dwellers happy, and protect
+  them from the dangers of the Wasteland.
+  .
+  BUILD THE PERFECT VAULT
+  Create a brighter futureunderground! Select from a variety of modern-day rooms
+  to turn an excavation beneath 2,000 feet of bedrock into the very picture of
+  Vault Life.
+  .
+  OVERSEE A THRIVING COMMUNITY
+  Get to know your Dwellers and lead them to happiness. Find their ideal jobs
+  and watch them flourish. Provide them with outfits, weapons, and training to
+  improve their abilities.
+  .
+  PROSPER
+  A well-run Vault requires a variety of Dwellers with a mix of skills. Build a
+  Radio Room to attract new Dwellers. Or, take an active role in their personal
+  lives; play matchmaker and watch the sparks fly!
+  .
+  EXPLORE THE WASTELAND
+  Send Dwellers above ground to explore the blasted surface left behind and seek
+  adventure, handy survival loot, or unspeakable death. Find new armor and
+  weapons, gain experience, and earn Caps. But dont let them die!
+  .
+  PROTECT YOUR VAULT
+  From time to time, idyllic Vault life may be disrupted by the dangers of
+  post-nuclear life. Prepare your Dwellers to protect against threats from the
+  outsideand within.
+  .
+  Vault-Tec has provided the tools, but the rest is up to you. What are you
+  waiting for? Get started building your Vault today for FREE.
+release: 2015-06-14
+players: 1
+assets.boxfront: BoxFront/Fallout Shelter (USA).jpg
+assets.boxback: BoxBack/Fallout Shelter (USA).jpg
+assets.background: Background/Fallout Shelter (USA).jpg
+assets.screenshot: Screenshot/Fallout Shelter (USA).jpg
+x-co-op: No
+
+
+game: Friday the 13th - The Game (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Friday the 13th - The Game (USA)/Friday the 13th - The Game (USA).json
+developer: IllFonic
+publisher: Gun Media
+genre: Action Adventure;Survival
+description:
+  Friday the 13th: The Game is a third-person horror, survival game where players
+  take on the role of a teen counselor, or for the first time ever, Jason
+  Voorhees. You and six other unlucky souls will do everything possible to escape
+  and survive while the most well-known killer in the world tracks you down and
+  brutally slaughters you. Friday the 13th: The Game will strive to give every
+  single player the tools to survive, escape or even try to take down the man
+  who cannot be killed. Each and every gameplay session will give you an entirely
+  new chance to prove if you have what it takes not only to survive, but to best
+  the most prolific killer in cinema history, a slasher with more kills than any
+  of his rivals!
+release: 2017-05-25
+players: 4
+assets.boxfront: BoxFront/Friday the 13th - The Game (USA).jpg
+assets.boxback: BoxBack/Friday the 13th - The Game (USA).jpg
+assets.background: Background/Friday the 13th - The Game (USA).jpg
+assets.screenshot: Screenshot/Friday the 13th - The Game (USA).jpg
+x-co-op: Yes
+
+
+game: Gary the Gull (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Gary the Gull (USA)/Gary the Gull (USA).json
+developer: Motional Entertainment
+publisher: Limitless Ltd
+genre: Adventure;General
+description:
+  Gary the Gull is an Adventure game, developed and published by Limitless Ltd,
+  which was released in 2016.
+release: 2016-11-22
+players: 1
+assets.boxfront: BoxFront/Gary the Gull (USA).jpg
+assets.boxback: BoxBack/Gary the Gull (USA).jpg
+assets.background: Background/Gary the Gull (USA).jpg
+assets.screenshot: Screenshot/Gary the Gull (USA).jpg
+x-co-op: No
+
+
+game: Grim Fandango Remastered (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Grim Fandango Remastered (USA)/Grim Fandango Remastered (USA).json
+developer: Double Fine
+publisher: Double Fine
+genre: Adventure
+description:
+  Based on various legends of Mexican folklore, Grim Fandango is packed to the
+  hilt with dancing skeletons, crime, romance, and much more. You play Manny
+  Calavera, a mid-level worker at the Department of Death (the DOD) who's trying
+  to work off his sins in life so that he can get to his final reward. As a
+  reaper, Manny frees incoming souls from their shrouds, finds out what kind of
+  underworld travel packages their goodness in life has earned them, and then
+  sends them on their way. Unfortunately, business hasn't been very good for Manny
+  of late. As the game begins, Calavera is told that he must sell a premium travel
+  package to a soul or lose his job. In his search, Manny uncovers a hideous plot,
+  a beautiful woman, and a crew of loyal friends (not necessarily in that order).
+  .
+  Based on the acclaimed 1998 classic, this remake of Tim Schafer's original
+  adventure title employs the stunning technology used to bring Broken Age to life
+  for a fresh new way to experience Grim Fandango.
+release: 2015-01-27
+players: 1
+assets.boxfront: BoxFront/Grim Fandango Remastered (USA).jpg
+assets.boxback: BoxBack/Grim Fandango Remastered (USA).jpg
+assets.background: Background/Grim Fandango Remastered (USA).jpg
+assets.screenshot: Screenshot/Grim Fandango Remastered (USA).jpg
+x-co-op: No
+
+
+game: Horizon Zero Dawn - Complete Edition (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Horizon Zero Dawn - Complete Edition (USA)/Horizon Zero Dawn - Complete Edition (USA).json
+developer: Guerrilla Games
+publisher: Sony Interactive Entertainment
+genre: Action;Role-Playing;Sandbox
+description:
+  In a lush, post-apocalyptic world where nature has reclaimed the ruins of a
+  forgotten civilization, pockets of humanity live on in primitive hunter-gatherer
+  tribes. Their dominion over the new wilderness has been usurped by the Machines
+  - fearsome mechanical creatures of unknown origin. Horizon Zero Dawn is an
+  exhilarating new action role playing game exclusively for the PlayStation 4,
+  developed by the award winning Guerrilla Games, creators of PlayStation’s
+  venerated Killzone franchise.
+  .
+  On top of the base game, the Horizon Zero Dawn: Complete Edition includes The
+  Frozen Wilds expansion, a digital art book, a PS4 Dynamic Theme, and bonus
+  Weapons, Outfits, and Resources.
+release: 2017-12-05
+players: 1
+assets.boxfront: BoxFront/Horizon Zero Dawn - Complete Edition (USA).jpg
+assets.boxback: BoxBack/Horizon Zero Dawn - Complete Edition (USA).jpg
+assets.background: Background/Horizon Zero Dawn - Complete Edition (USA).jpg
+assets.screenshot: Screenshot/Horizon Zero Dawn - Complete Edition (USA).jpg
+x-co-op: No
+
+
+game: Invasion! (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Invasion! (USA)/Invasion! (USA).json
+developer: Baobab Studios Inc.
+publisher: Ubisoft
+genre: Adventure;Visual Novel
+description:
+  Rabbids Invasion, the kids hit animated TV show, is now an interactive game on
+  PlayStation 4. With motion gameplay, kids can now play in their living room with
+  a selection of episodes from the TV show. Through fun, silly challenges, players
+  have an outrageous time with family and friends and experience the Rabbids
+  Invasion TV show in a brand new way.
+release: 2014-11-18
+players: 1
+assets.boxfront: BoxFront/Invasion! (USA).jpg
+assets.boxback: BoxBack/Invasion! (USA).jpg
+assets.background: Background/Invasion! (USA).jpg
+assets.screenshot: Screenshot/Invasion! (USA).jpg
+x-co-op: No
+
+
+game: Keep Talking and Nobody Explodes (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Keep Talking and Nobody Explodes (USA)/Keep Talking and Nobody Explodes (USA).json
+developer: Steel Crate Games
+publisher: Steel Crate Games
+genre: Adventure;3D;First-Person
+description:
+  In Keep Talking and Nobody Explodes, one player is trapped in a virtual room
+  with a ticking time bomb they must defuse. The other players are the "Experts"
+  who must give the instructions to defuse the bomb by deciphering the
+  information found in the Bomb Defusal Manual. But there's a catch: the Experts
+  can't see the bomb, so everyone will need to talk it out fast!
+release: 2015-07-16
+players: 4
+assets.boxfront: BoxFront/Keep Talking and Nobody Explodes (USA).jpg
+assets.boxback: BoxBack/Keep Talking and Nobody Explodes (USA).jpg
+assets.background: Background/Keep Talking and Nobody Explodes (USA).jpg
+assets.screenshot: Screenshot/Keep Talking and Nobody Explodes (USA).jpg
+x-co-op: Yes
+
+
+game: King's Tale - Final Fantasy XV, A (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/King's Tale - Final Fantasy XV, A (USA)/King's Tale - Final Fantasy XV, A (USA).json
+developer: Empty Clip Studios
+publisher: Square Enix
+genre: Action
+description:
+  Set in a fictitious 30 years before FINAL FANTASY XV, this game features
+  retro-style inspired graphics centered around a fast-paced combat system with
+  influences from modern gaming. The in-depth combat system blends intense
+  attacks, devastating magic, mighty summons and unique companion attacks into a
+  singular gaming experience through three diverse locations in the world of FINAL
+  FANTASY XV.
+  .
+  Restless before bed, young Noctis asks his father, King Regis, to tell a fairy
+  tale full of fantasy and adventure instead of just another generic bedtime
+  story. Regis begins with a peaceful day being disrupted when monsters raid the
+  royal capital, Insomnia. Young Regis, joined by Weskham, starts his adventure
+  from the royal capital. Eventually they are joined by friends Cid and Clarus,
+  where they travel to the plains of Duscae only to discover a mysterious cave
+  where their enemy resides.
+release: 2017-03-01
+players: 1
+assets.boxfront: BoxFront/King's Tale - Final Fantasy XV, A (USA).jpg
+assets.boxback: BoxBack/King's Tale - Final Fantasy XV, A (USA).jpg
+assets.background: Background/King's Tale - Final Fantasy XV, A (USA).jpg
+assets.screenshot: Screenshot/King's Tale - Final Fantasy XV, A (USA).jpg
+x-co-op: No
+
+
+game: Mega Man Legacy Collection (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Mega Man Legacy Collection (USA)/Mega Man Legacy Collection (USA).json
+developer: Digital Eclipse
+publisher: Capcom
+genre: Action;Platform
+description:
+  Mega Man Legacy Collection is a celebration of the 8-bit history of Capcom’s
+  iconic Blue Bomber. Featuring faithful reproductions of the series’ origins with
+  the original six Mega Man games, the Legacy Collection will remind long-time
+  fans and introduce newcomers to what made Mega Man such a popular and iconic
+  character. Mega Man Legacy Collection will feature all six games and much more.
+  .
+  In addition to the six Mega Man games, Mega Man Legacy Collection features new
+  ways to experience the classic games with the Museum Mode and new Challenge
+  Mode. Challenge Mode remixes gameplay segments from all six games, with plenty
+  of scaling difficulty objectives for experienced players to conquer yet serving
+  as a good starting point for new players, too. Museum Mode contains a
+  comprehensive collection of history, high-res art and original concept pieces -
+  a mega treat for any fan of Mega Man and video game history.
+release: 2015-08-25
+players: 1
+assets.boxfront: BoxFront/Mega Man Legacy Collection (USA).jpg
+assets.boxback: BoxBack/Mega Man Legacy Collection (USA).jpg
+assets.background: Background/Mega Man Legacy Collection (USA).jpg
+assets.screenshot: Screenshot/Mega Man Legacy Collection (USA).jpg
+x-co-op: No
+
+
+game: Moss (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Moss (USA)/Moss (USA).json
+developer: Polyarc
+publisher: Polyarc
+genre: Action;Platform;Puzzle
+description:
+  Moss is a single-player action-adventure puzzle game and new IP from Polyarc
+  tailor-made for the VR platform. It takes classic components of a great game -
+  such as compelling characters, gripping combat, and captivating world
+  exploration - and combines them with the exciting opportunities of virtual
+  reality.
+  .
+  In Moss, players meet Quill, a young mouse with dreams of greatness beyond the
+  confines of her settlement. While exploring the woods, she finds a mysterious
+  Glass Relic and an ancient magic is awakened. With her uncle now in grave
+  danger, Quill must embark on an epic journey - and she needs you there by her
+  side. Together, you'll travel to forgotten realms, solve challenging puzzles,
+  and battle menacing enemies. Alone, no one can conquer what you're up against.
+  But united, you just may defeat even the darkest of villains.
+release: 2018-02-27
+players: 1
+assets.boxfront: BoxFront/Moss (USA).jpg
+assets.boxback: BoxBack/Moss (USA).jpg
+assets.background: Background/Moss (USA).jpg
+assets.screenshot: Screenshot/Moss (USA).jpg
+x-co-op: No
+
+
+game: Nuclear Throne (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Nuclear Throne (USA)/Nuclear Throne (USA).json
+developer: Vlambeer
+publisher: Vlambeer
+genre: Action
+description:
+  Nuclear Throne is an action roguelike game set in a post-apocalyptic wasteland
+  filled with mutants. The game was initially started as Wasteland Kings, a
+  prototype created for the 2013 Mojam game jam. The developers then started work
+  on a full version and took it to Steam's Early Access. Typical for the genre the
+  game is meant to be played in multiple runs, with randomized environments, and
+  weapon and monster placement for each session. It consists of several levels
+  played in succession, each with a different theme, until the character gets a
+  shot to claim the nuclear throne and become the new king. Many levels contain
+  bosses with a brief introduction.
+  .
+  There is permadeath and up to twelve different playable characters can be
+  unlocked, representing different playing styles. Next to the basic attack each
+  character has a unique secondary action such as a roll or forming a shield,
+  along with a general perk. The game is played as a twin-stick shooter where both
+  movement and firing in any direction can be independently combined. Levels are
+  short and always consist of a single, scrolling room. When all enemies are
+  defeated a vortex appears that sucks the character into the next level. Levels
+  contain random chests with weapons such as a revolver, machinegun, smart gun,
+  minigun, shotgun, rifles, an incinerator, sluggers, bows, grenade launchers and
+  bazookas, but also melee weapons such as a wrench or a screwdriver. Ranged
+  weapons usually have a limited amount of ammo and require ammo pick-ups to keep
+  using them. Up to two weapons can be carried and they can be swapped when a new
+  one is encountered.
+  .
+  Enemies leave behind radioactive fragments known as rads. These can also be
+  found as pick-ups. They fill a meter in the top left corner and when a
+  sufficient amount has been collected the character levels up and a mutation is
+  offered after completing a level. Mutations are perks permanent for that run and
+  include a larger bullet capacity, less damage, more health, better range, better
+  movement speed, slower enemy bullets, increased drops etc. The game supports
+  cooperative offline games for up to two players. Next to the main game there are
+  daily and weekly runs.
+release: 2013-10-11
+players: 2
+assets.boxfront: BoxFront/Nuclear Throne (USA).jpg
+assets.boxback: BoxBack/Nuclear Throne (USA).jpg
+assets.background: Background/Nuclear Throne (USA).jpg
+assets.screenshot: Screenshot/Nuclear Throne (USA).jpg
+x-co-op: Yes
+
+
+game: P.T. - Silent Hills (Europe)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/P.T. - Silent Hills (Europe)/P.T. - Silent Hills (Europe).json
+developer: Kojima Productions
+publisher: Konami
+genre: Action Adventure;Survival
+description:
+  Silent Hills is an Action Adventure game, developed by Kojima Productions and
+  published by Konami, which was cancelled before it was released.
+release: 2014-08-12
+players: 1
+assets.boxfront: BoxFront/P.T. - Silent Hills (Europe).jpg
+assets.boxback: BoxBack/P.T. - Silent Hills (Europe).jpg
+assets.background: Background/P.T. - Silent Hills (Europe).jpg
+assets.screenshot: Screenshot/P.T. - Silent Hills (Europe).jpg
+x-co-op: No
+
+
+game: P.T. - Silent Hills (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/P.T. - Silent Hills (USA)/P.T. - Silent Hills (USA).json
+developer: Kojima Productions
+publisher: Konami
+genre: Action Adventure;Survival
+description:
+  'My voice, can you hear it?
+  This sign, can you read it?
+  I'll wait forever if you'll just come to me.'
+  .
+  Her words - To where do they lead?
+  Be the first in the world to find out.
+  .
+  *Avoid playing if you have a heart condition
+release: 2014-08-12
+players: 1
+assets.boxfront: BoxFront/P.T. - Silent Hills (USA).jpg
+assets.boxback: BoxBack/P.T. - Silent Hills (USA).jpg
+assets.background: Background/P.T. - Silent Hills (USA).jpg
+assets.screenshot: Screenshot/P.T. - Silent Hills (USA).jpg
+x-co-op: No
+
+
+game: Paper Beast (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Paper Beast (USA)/Paper Beast (USA).json
+developer: Pixel Reef
+publisher: Pixel Reef
+genre: Action Adventure;Sandbox
+description:
+  An adventure and exploration game about wildlife in a dreamlike universe.
+  Somewhere in the abyssal depths of the internet, life has blossomed. You are
+  the first human to set foot in this mysterious ecosystem. A strange force
+  seems to weigh on its balance. Join forces with intriguing and endearing
+  creatures to solve the puzzles of Paper Beast.
+release: 2020-03-24
+players: 1
+assets.boxfront: BoxFront/Paper Beast (USA).jpg
+assets.boxback: BoxBack/Paper Beast (USA).jpg
+assets.background: Background/Paper Beast (USA).jpg
+assets.screenshot: Screenshot/Paper Beast (USA).jpg
+x-co-op: No
+
+
+game: PlayStation VR Demo Disc 2 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/PlayStation VR Demo Disc 2 (USA)/PlayStation VR Demo Disc 2 (USA).json
+developer: Sony Interactive Entertainment
+publisher: Sony Interactive Entertainment
+genre: Miscellaneous;Demo Disc
+description:
+  PlayStation VR Demo Disc 2 is a Miscellaneous game, developed and published by
+  Sony Interactive Entertainment, which was released in 2017.
+release: 2017-11-08
+players: 1
+assets.boxfront: BoxFront/PlayStation VR Demo Disc 2 (USA).jpg
+assets.boxback: BoxBack/PlayStation VR Demo Disc 2 (USA).jpg
+assets.background: Background/PlayStation VR Demo Disc 2 (USA).jpg
+assets.screenshot: Screenshot/PlayStation VR Demo Disc 2 (USA).jpg
+x-co-op: No
+
+
+game: Playroom VR, The (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Playroom VR, The (USA)/Playroom VR, The (USA).json
+developer: Japan Studio
+publisher: Sony Interactive Entertainment
+genre: Action;Platform
+description:
+  Packed with six exciting games, this is the perfect way to explore and discover
+  all the magic of virtual reality.
+  .
+  The best part is that you can share all the fun of your VR experience with
+  others.\n
+  As one player wears the VR headset, up to four friends can join in the action on
+  the TV screen with DUALSHOCK®4 wireless controllers.
+  .
+  Together you can dive into competitive and cooperative games. Enjoy epic battles
+  in Monster Escape, the hilarious antics of Cat and Mouse, a spooky adventure in
+  Ghost House, frantic two-player platformer action in Robots Rescue, and a trip
+  to the lawless Wild West in Wanted – while keeping an eye out for the cheeky
+  little VR Bots.
+release: 2016-10-10
+players: 5
+assets.boxfront: BoxFront/Playroom VR, The (USA).jpg
+assets.boxback: BoxBack/Playroom VR, The (USA).jpg
+assets.background: Background/Playroom VR, The (USA).jpg
+assets.screenshot: Screenshot/Playroom VR, The (USA).jpg
+x-co-op: Yes
+
+
+game: RPG Maker MV Player (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/RPG Maker MV Player (USA)/RPG Maker MV Player (USA).json
+developer: Kadokawa
+publisher: NIS America
+genre: Miscellaneous;Application
+description:
+  Enjoy role-playing games made by fellow gamers with the RPG Maker MV Player,
+  free for download and play, even without the RPG Maker MV software!
+release: 2019-01-10
+players: 1
+assets.boxfront: BoxFront/RPG Maker MV Player (USA).jpg
+assets.boxback: BoxBack/RPG Maker MV Player (USA).jpg
+assets.background: Background/RPG Maker MV Player (USA).jpg
+assets.screenshot: Screenshot/RPG Maker MV Player (USA).jpg
+x-co-op: No
+
+
+game: Ratchet & Clank (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Ratchet & Clank (USA)/Ratchet & Clank (USA).json
+developer: Insomniac Games
+publisher: Sony Computer Entertainment
+genre: Action;Platform;Shooter
+description:
+  Play the game, based on the movie, based on the game! Ratchet & Clank is a new
+  game based on elements from the original Ratchet & Clank. Developed alongside
+  the major motion CG-animated picture, Ratchet & Clank marks the PlayStation 4
+  debut of PlayStation’s greatest heroes. Join Ratchet, Clank, Captain Qwark and
+  new friends as they battle to save the Solana Galaxy from the evil Chairman
+  Drek. With an hour of new cinematics (including footage from the film), Ratchet
+  & Clank takes a deeper look at the characters’ origin stories and modernizes the
+  original gameplay. Explore the galaxy in a game that features new planets, new
+  and updated gameplay segments, all-new bosses, all-new Clank gameplay, all-new
+  flight sequences, and much more - with completely new visuals built to
+  demonstrate the power of the PS4!
+  .
+  Battle your enemies with an out-of-this-world arsenal, including new weapons and
+  fan-favorite tools of destruction from the Ratchet & Clank Future series. From
+  the brand new Pixelizer (which transforms enemies into explosive 8-bit pixels)
+  to franchise favorites like the dance-party-inducing Groovitron and
+  wise-cracking robotic bodyguard Mr. Zurkon, Ratchet & Clank’s arsenal has never
+  been better. Help Ratchet and Clank save the galaxy for the first time, again,
+  exclusively on PlayStation 4!
+release: 2016-04-12
+players: 1
+assets.boxfront: BoxFront/Ratchet & Clank (USA).jpg
+assets.boxback: BoxBack/Ratchet & Clank (USA).jpg
+assets.background: Background/Ratchet & Clank (USA).jpg
+assets.screenshot: Screenshot/Ratchet & Clank (USA).jpg
+x-co-op: No
+
+
+game: Resident Evil (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Resident Evil (USA)/Resident Evil (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Horror
+description:
+  A deadly virus engulfs the residents of Raccoon City in September of 1998,
+  plunging the city into chaos as flesh eating zombies roam the streets for
+  survivors.
+  .
+  An unparalleled adrenaline rush, gripping storyline, and unimaginable horrors
+  await you.
+  .
+  Witness the return of Resident Evil 2.
+release: 2019-01-25
+players: 1
+assets.boxfront: BoxFront/Resident Evil (USA).jpg
+assets.boxback: BoxBack/Resident Evil (USA).jpg
+assets.background: Background/Resident Evil (USA).jpg
+assets.screenshot: Screenshot/Resident Evil (USA).jpg
+x-co-op: No
+
+
+game: Resident Evil - Code - Veronica X (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Resident Evil - Code - Veronica X (USA)/Resident Evil - Code - Veronica X (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Horror
+description:
+  Experience another terrifying chapter in the Resident Evil series with
+  Resident Evil: Code Veronica X. After narrowly surviving the horrific onslaught
+  in Raccoon City, Claire Redfield now seeks clues in search of her missing
+  brother, Chris. Join Claire as she uncovers the insidious activities of the
+  Umbrella Corporation. Avoid or eliminate flesh-eating zombies and horrific
+  beasts. Use a variety weapons, items, and clues scattered around Raccoon City
+  to help you survive the nightmare and make sure the virus doesn't spread any
+  farther.
+release: 2017-05-10
+players: 1
+assets.boxfront: BoxFront/Resident Evil - Code - Veronica X (USA).jpg
+assets.boxback: BoxBack/Resident Evil - Code - Veronica X (USA).jpg
+assets.background: Background/Resident Evil - Code - Veronica X (USA).jpg
+assets.screenshot: Screenshot/Resident Evil - Code - Veronica X (USA).jpg
+x-co-op: No
+
+
+game: Rez Infinite (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Rez Infinite (USA)/Rez Infinite (USA).json
+developer: Enhance Games
+publisher: Enhance Games
+genre: Music
+description:
+  Prepare yourself for the ultimate version of Rez, a thrilling journey of sights
+  and sounds and shooting action, remastered and upgraded by members of the
+  original development team exclusively for PS4 and (optional) PlayStation VR.
+  .
+  Experience 360 degrees of mind-blowing synesthesia as you blast through waves of
+  enemies and massive transforming bosses, with colors and sounds that sync and
+  blend to the beat of Rez’s legendary techno soundtrack.
+  .
+  Whether you’re an old fan of the original Sega classic or never heard of Rez
+  before, whether you’re playing on your TV or your PS VR headset, whether you’re
+  looking for a quick diversion or a deeper game you can lose yourself in for
+  hours at a time -- you owe it to your senses to experience Rez Infinite.
+release: 2016-10-13
+players: 1
+assets.boxfront: BoxFront/Rez Infinite (USA).jpg
+assets.boxback: BoxBack/Rez Infinite (USA).jpg
+assets.background: Background/Rez Infinite (USA).jpg
+assets.screenshot: Screenshot/Rez Infinite (USA).jpg
+x-co-op: No
+
+
+game: Rollercoaster Dreams (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Rollercoaster Dreams (USA)/Rollercoaster Dreams (USA).json
+developer: COLOPL, Inc.
+publisher: Bimboosoft
+genre: Strategy;Management;Business / Tycoon
+description:
+  Visit the amusement parks which are created by the players from all over the
+  world. The players from all over the world will visit the amusement parks
+  which are created by you. Rollercoaster Dreams will fulfill these dreams.
+  Supports virtual reality: With PlayStation VR, you can experience as if you
+  are in the world of the game. Enjoy many attractions and rollercoasters.
+  Full-scale management mode: Off course, playing in the amusement parks is not
+  the only feature of the game. The main mode of the game is to manage and grow
+  amusement parks. Show your management skill by development, advertisement,
+  staff management, etc. The game has a rollercoaster editor KALMOF. So players
+  can make infinite patterns of rollercoasters.
+release: 2016-12-20
+players: 1
+assets.boxfront: BoxFront/Rollercoaster Dreams (USA).jpg
+assets.boxback: BoxBack/Rollercoaster Dreams (USA).jpg
+assets.background: Background/Rollercoaster Dreams (USA).jpg
+assets.screenshot: Screenshot/Rollercoaster Dreams (USA).jpg
+x-co-op: No
+
+
+game: Spider-Man - Far From Home VR (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Spider-Man - Far From Home VR (USA)/Spider-Man - Far From Home VR (USA).json
+developer: CreateVR
+publisher: Sony Pictures Virtual Reality
+genre: Action;General
+description:
+  Your time to swing through New York like Spider-Man has finally arrived!
+  .
+  In breathtaking virtual reality, you'll finally have the chance to scale and
+  swing from the highest towers in Manhattan. Just pick one of four Spider-Man
+  suits and you'll be launched into the cloudsbut keep your eyes and ears peeled,
+  a colossal and dangerous enemy is waiting. Only you have the power to find and
+  confront New York's latest attacker in this thrilling, swinging adventure.
+  .
+  Based on the film, the Spider-Man: Far From Home VR Experience is a
+  fast-swinging, thrill ride through the eyes of your favorite neighborhood
+  Spider-Man.
+release: 2019-06-25
+players: 1
+assets.boxfront: BoxFront/Spider-Man - Far From Home VR (USA).jpg
+assets.boxback: BoxBack/Spider-Man - Far From Home VR (USA).jpg
+assets.background: Background/Spider-Man - Far From Home VR (USA).jpg
+assets.screenshot: Screenshot/Spider-Man - Far From Home VR (USA).jpg
+x-co-op: No
+
+
+game: Spider-Man - Homecoming VR (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Spider-Man - Homecoming VR (USA)/Spider-Man - Homecoming VR (USA).json
+developer: CreateVR
+publisher: Sony Pictures Virtual Reality
+genre: Action;General
+description:
+  For the first time, you can suit up as Spider-Man and see what it's like to be
+  the world's favorite superhero. Learn the ins and outs of your brand new Stark
+  Industries upgraded web shooters and master different web types as you race to
+  complete fast-paced targeting trials but you'll have to learn quickly The
+  Vulture is on the loose and coming for you. Sling high above the city in a
+  dramatic confrontation before pursuing Spidey's deadliest enemy.
+  .
+  Based on the all-new 2017 film, the Spider-Man Homecoming VR Experience is a
+  fun and thrilling first-person look inside the world of your friendly
+  neighborhood Spider-Man.
+release: 2017-06-30
+players: 1
+assets.boxfront: BoxFront/Spider-Man - Homecoming VR (USA).jpg
+assets.boxback: BoxBack/Spider-Man - Homecoming VR (USA).jpg
+assets.background: Background/Spider-Man - Homecoming VR (USA).jpg
+assets.screenshot: Screenshot/Spider-Man - Homecoming VR (USA).jpg
+x-co-op: No
+
+
+game: Statik (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Statik (USA)/Statik (USA).json
+developer: Tarsier Studios
+publisher: Tarsier Studios
+genre: Puzzle
+description:
+  Statik is a VR game about solving puzzles in a place you don’t know, with a
+  person you don’t recognize, and hands that aren’t completely yours.
+  .
+  Join Dr. Ingen and his delightful assistant Edith on a journey to unravel the
+  complexities of the human mind. Awaking to each new day with a unique,
+  hand-mounted puzzle device to solve, you must use your brain, eyes, and ears to
+  solve each mystery. But, this being VR, it’s hard to know which of these can be
+  trusted...
+release: 2017-04-24
+players: 1
+assets.boxfront: BoxFront/Statik (USA).jpg
+assets.boxback: BoxBack/Statik (USA).jpg
+assets.background: Background/Statik (USA).jpg
+assets.screenshot: Screenshot/Statik (USA).jpg
+x-co-op: No
+
+
+game: Subnautica (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Subnautica (USA)/Subnautica (USA).json
+developer: Unknown Worlds Entertainment
+publisher: Unknown Worlds Entertainment
+genre: Adventure;General
+description:
+  Descend into the depths of an alien underwater world filled with resources,
+  creatures, wonder and threats. Craft equipment and submarines to explore lush
+  coral reefs, volcanoes, cave systems, and more all while trying to survive.
+release: 2014-12-16
+players: 1
+assets.boxfront: BoxFront/Subnautica (USA).jpg
+assets.boxback: BoxBack/Subnautica (USA).jpg
+assets.background: Background/Subnautica (USA).jpg
+assets.screenshot: Screenshot/Subnautica (USA).jpg
+x-co-op: No
+
+
+game: SuperHyperCube (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/SuperHyperCube (USA)/SuperHyperCube (USA).json
+developer: KOKOROMI
+publisher: Polytron Corp.
+genre: Puzzle;General
+description:
+  SuperHyperCube is a Puzzle game, developed by KOKOROMI and published by
+  Polytron Corp., which was released in 2016.
+release: 2016-10-10
+players: 1
+assets.boxfront: BoxFront/SuperHyperCube (USA).jpg
+assets.boxback: BoxBack/SuperHyperCube (USA).jpg
+assets.background: Background/SuperHyperCube (USA).jpg
+assets.screenshot: Screenshot/SuperHyperCube (USA).jpg
+x-co-op: No
+
+
+game: Tearaway Unfolded Soundtrack (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Tearaway Unfolded Soundtrack (USA)/Tearaway Unfolded Soundtrack (USA).json
+developer: Media Molecule
+publisher: SCEA
+genre: Action;Platformer;3D
+description:
+  Unfold her magical papery world, save her pals in peril and battle the
+  monsters trying to stop her delivery! Overflowing with PS4-exclusive features,
+  surprises and secrets, you don't just play Tearaway Unfolded.
+release: 2013-11-20
+players: 1
+assets.boxfront: BoxFront/Tearaway Unfolded Soundtrack (USA).jpg
+assets.boxback: BoxBack/Tearaway Unfolded Soundtrack (USA).jpg
+assets.background: Background/Tearaway Unfolded Soundtrack (USA).jpg
+assets.screenshot: Screenshot/Tearaway Unfolded Soundtrack (USA).jpg
+x-co-op: No
+
+
+game: Thumper (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Thumper (USA)/Thumper (USA).json
+developer: Drool
+publisher: Drool
+genre: Action;Music
+description:
+  Thumper is rhythm violence: classic rhythm-action, blistering speed, and brutal
+  physicality. You are a space beetle. Brave the hellish void and confront a
+  maniacal giant head from the future.
+  .
+  Scream down the endless track and crash through punishing obstacles with simple,
+  airtight controls. Hurtle forward, master new moves, reach overwhelming
+  velocities, and survive epic boss battles. Every crushing impact is interwoven
+  with a pounding original soundtrack. To reach synesthetic bliss, you must go
+  through rhythm hell.
+release: 2016-10-10
+players: 1
+assets.boxfront: BoxFront/Thumper (USA).jpg
+assets.boxback: BoxBack/Thumper (USA).jpg
+assets.background: Background/Thumper (USA).jpg
+assets.screenshot: Screenshot/Thumper (USA).jpg
+x-co-op: No
+
+
+game: Tumble VR (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Tumble VR (USA)/Tumble VR (USA).json
+developer: Supermassive Games
+publisher: Sony Interactive Entertainment
+genre: Puzzle
+description:
+  Tumble VR takes the original, much loved, PlayStation 3 game and rebuilds it
+  from the ground up for PlayStation VR - complete with a brand new visual style,
+  a load of new levels, and some great new modes.
+  .
+  Tumble VR is best described as an accessible, fun, engaging, and immersive
+  puzzle game. When you pull the PlayStation VR headset on we place you in an
+  arena that will test both your physical dexterity and mental skills. Working
+  your way through a gauntlet of tests - from simply building a tower, to creating
+  bridges, working out fiendish puzzles, and blowing up enormous towers of blocks
+  - Tumble VR will push your skills and brainpower to the limit.
+  .
+  Alongside the new levels and visuals for Tumble VR, we have also added a new
+  competitive mode. This uses the PlayStation VR Social Screen feature that allows
+  a second player to play on the same TV together with the VR player to create a
+  social VR experience.
+release: 2016-10-12
+players: 1
+assets.boxfront: BoxFront/Tumble VR (USA).jpg
+assets.boxback: BoxBack/Tumble VR (USA).jpg
+assets.background: Background/Tumble VR (USA).jpg
+assets.screenshot: Screenshot/Tumble VR (USA).jpg
+x-co-op: No
+
+
+game: Valkyria Chronicles Remastered (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Valkyria Chronicles Remastered (USA)/Valkyria Chronicles Remastered (USA).json
+developer: Sega
+publisher: Sega
+genre: Shooter;Strategy
+description:
+  Valkyria Chronicles is back and now beautifully remastered in HD for the
+  PlayStation 4. Now with brand new trophies and all the previously released DLC
+  pre-loaded, take advantage of the visually distinctive classic in 60 FPS!
+  .
+  In the world of Valkyria Chronicles, the year is 1935 E.C., and the continent of
+  Europa has been plunged into the Second Europan War between the Autocratic East
+  Europan Imperial Alliance - also known as The Empire - and the Atlantic
+  Federation over the precious resource Ragnite. The Empire is sweeping through
+  the continent like an unchecked wildfire and has its eyes set on the rich
+  Ragnite deposits of the Principality of Gallia. Although peaceful Gallia remains
+  neutral in the conflict, its citizens will need to defend home and country
+  against the inevitable invasion. Follow Lieutenant Welkin Gunther and the
+  vaunted Squad 7 of the Gallian Militia as they take on the seemingly
+  insurmountable forces of the Empire.
+release: 2016-05-17
+players: 1
+assets.boxfront: BoxFront/Valkyria Chronicles Remastered (USA).jpg
+assets.boxback: BoxBack/Valkyria Chronicles Remastered (USA).jpg
+assets.background: Background/Valkyria Chronicles Remastered (USA).jpg
+assets.screenshot: Screenshot/Valkyria Chronicles Remastered (USA).jpg
+x-co-op: No
+
+
+game: Witness, The (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 4/Witness, The (USA)/Witness, The (USA).json
+developer: Jonathan Blow
+publisher: Thekla, Inc
+genre: Puzzle
+description:
+  The Witness is an upcoming 3D puzzle video game created by Jonathan Blow, and in
+  development by Thekla, Inc. The Witness is set for release on January 26, 2016,
+  for PlayStation 4 and Microsoft Windows, and for iOS on a later date.
+  .
+  Inspired by Myst, The Witness has the player explore an open world island filled
+  with a number of natural and man-made structures. The player progresses by
+  solving puzzles which are based on interactions with mazes presented on panels
+  around the island, though the rules and outcomes of solving the individual mazes
+  are part of the puzzles that the player will have to come to learn themselves
+  through both visual clues around the island and through audio logs that the
+  player can find. Blow aimed to include as little instruction as possible,
+  wanting to have players come to understand the rules of these puzzles for
+  themselves and coming to moments of realization while exploring the island. The
+  final game will have about 650 total puzzles to be solved, though the player is
+  not required to solve them all to finish the game.
+  .
+  Though originally announced in 2009, The Witness has had a lengthy development
+  period. Blow started work on the title in 2008 after a short break from
+  releasing Braid. The financial success of Braid allowed him to hire a larger
+  team to develop the title and maintain his vision of what the final game would
+  be without making any sacrifices. This led to a protracted development period,
+  extending the game's release from 2011 to 2016, spanning a console generation.
+  Original plans for release on the PlayStation 3 and Xbox 360 were abandoned
+  because the game's engine became too demanding, and Blow opted to develop the
+  console version for the PlayStation 4 as Sony was more open towards independent
+  developers.
+release: 2016-01-26
+players: 1
+assets.boxfront: BoxFront/Witness, The (USA).jpg
+assets.boxback: BoxBack/Witness, The (USA).jpg
+assets.background: Background/Witness, The (USA).jpg
+assets.screenshot: Screenshot/Witness, The (USA).jpg
+x-co-op: No
+
+

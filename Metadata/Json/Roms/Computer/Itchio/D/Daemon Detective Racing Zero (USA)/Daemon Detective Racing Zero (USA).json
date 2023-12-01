@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Daemon Detective Racing Zero (USA).exe"
+    ],
+    "transform_file": "Daemon Detective Racing Zero (USA).exe"
+}

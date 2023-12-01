@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Shipwreck (USA).exe"
+    ],
+    "transform_file": "Shipwreck (USA).exe"
+}

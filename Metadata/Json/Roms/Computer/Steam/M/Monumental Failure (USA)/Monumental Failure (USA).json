@@ -1,0 +1,18 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Monumental Failure (USA).exe"
+    ],
+    "main_game_exe": [
+        "Monumental Failure/MonumentalFailureWin32.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Monumental Failure/MonumentalFailureWin32.exe": "Monumental Failure"
+    },
+    "sync": {
+        "data": [
+            "saves"
+        ],
+        "search": "Monumental Failure/MonumentalFailureWin32.exe"
+    },
+    "transform_file": "Monumental Failure (USA).exe"
+}

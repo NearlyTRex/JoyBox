@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Me and My Cat's Castle (USA).exe"
+    ],
+    "transform_file": "Me and My Cat's Castle (USA).exe"
+}

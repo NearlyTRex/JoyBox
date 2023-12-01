@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_personal_nightmare_1.0_(28044).exe"
+    ],
+    "transform_file": "setup_personal_nightmare_1.0_(28044).exe"
+}

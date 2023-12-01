@@ -1,0 +1,18 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Grim Fandango Remastered (USA).exe"
+    ],
+    "main_game_exe": [
+        "Grim Fandango Remastered/GrimFandango.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Grim Fandango Remastered/GrimFandango.exe": "Grim Fandango Remastered"
+    },
+    "sync": {
+        "data": [
+            "Saves"
+        ],
+        "search": "Grim Fandango Remastered/GrimFandango.exe"
+    },
+    "transform_file": "Grim Fandango Remastered (USA).exe"
+}

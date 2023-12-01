@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Gish (USA).exe"
+    ],
+    "transform_file": "Gish (USA).exe"
+}

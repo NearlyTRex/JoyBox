@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Super HelmKnight (USA).exe"
+    ],
+    "transform_file": "Super HelmKnight (USA).exe"
+}

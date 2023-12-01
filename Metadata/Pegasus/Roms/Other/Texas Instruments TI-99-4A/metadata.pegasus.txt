@@ -1,0 +1,133 @@
+collection: Texas Instruments TI-99-4A
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Texas Instruments TI-99-4A" {file.path}
+
+
+game: A-Maze-Ing (USA)
+file: $ROM_JSON_ROOT/Other/Texas Instruments TI-99-4A/A-Maze-Ing (USA)/A-Maze-Ing (USA).json
+developer: Kevin Kenney
+publisher: Texas Instruments Incorporated
+genre: Action;Puzzle
+description:
+  As the name implies, A-Maze-Ing is a maze game, but with a twist: you control a
+  mouse who has to make its way through an actual maze. Options include "Cheese
+  Hunt" (collect 10 pieces of cheese in the right order before you are shown the
+  exit), "Escape Maze" (Get to the exit as fast as you can), "Mouseholes"
+  (shortcuts through the maze walls) or "Obstacles" (which blocks the center of
+  the passages), whether there are cats (and how many) in the maze, how fast they
+  are, and whether the cats are smart or dumb. Try to beat your own best time, or
+  play with another player choosing between co-operative or competitive play.
+release: 1981-01-01
+players: 1
+assets.boxfront: BoxFront/A-Maze-Ing (USA).jpg
+assets.boxback: BoxBack/A-Maze-Ing (USA).jpg
+assets.background: Background/A-Maze-Ing (USA).jpg
+assets.screenshot: Screenshot/A-Maze-Ing (USA).jpg
+assets.video: Video/A-Maze-Ing (USA).mp4
+x-co-op: No
+
+
+game: Hunt The Wumpus (USA)
+file: $ROM_JSON_ROOT/Other/Texas Instruments TI-99-4A/Hunt The Wumpus (USA)/Hunt The Wumpus (USA).json
+developer: Texas Instruments Incorporated
+publisher: Texas Instruments Incorporated
+genre: Action;Puzzle
+description:
+  A mythical creature called a Wumpus is sleeping somewhere in a series of
+  maze-like caves, and your goal is to hunt it down. The cave is dangerous, and in
+  addition to the Wumpus there are bottomless pits and cave bats. Walking into a
+  pit ends the game, encountering a bat will cause you to be relocated to a random
+  location in the cave (which may or may not be safe), and walking into the same
+  room as the Wumpus will cause it to wake up and eat you. To help figure out
+  where these dangers are various cave rooms can provide clues. For example,
+  finding blood splattered in the room means the Wumpus is near, or if you feel a
+  breeze then a pit is near. From these clues you need to deduce the layout of the
+  cave and the location of the Wumpus. If you think you know where the Wumpus is,
+  you have one arrow to fire; a hit wins the game, but a miss means you are eaten
+  by the Wumpus.
+release: 1981-01-01
+players: 1
+assets.boxfront: BoxFront/Hunt The Wumpus (USA).jpg
+assets.boxback: BoxBack/Hunt The Wumpus (USA).jpg
+assets.background: Background/Hunt The Wumpus (USA).jpg
+assets.screenshot: Screenshot/Hunt The Wumpus (USA).jpg
+assets.video: Video/Hunt The Wumpus (USA).mp4
+x-co-op: No
+
+
+game: Moon Mine (USA)
+file: $ROM_JSON_ROOT/Other/Texas Instruments TI-99-4A/Moon Mine (USA)/Moon Mine (USA).json
+developer: John M. Phillips
+publisher: Texas Instruments Incorporated
+genre: Shooter
+description:
+  Moon Mine is a shoot' em up where the player is the captain of the U.S.S.
+  Recovery and has to capture treasure that has been stolen from Earth. The
+  culprit is the evil Zygonaut who has hidden the treasures in a mine shaft in the
+  centre of the moon. As the player descends down the mine shaft ten different
+  creatures will appear that have to be destroyed. This is done with four lasers,
+  one on each side of the screen. The creatures appear far down the shaft and move
+  towards the player's guns. More points are earned by shooting them at a far
+  distance.
+  .
+  Firing the lasers too much will lead to them overheating. They are cooled with
+  water and at times it is necessary to replenish the water supply. Pools of water
+  occasionally appear on the screen and the player then has to send out a crew
+  member to retrieve it. The crew member can destroy monsters with a hand laser
+  but it only has twelve shots. At times treasure (silver, jade and amethyst) will
+  appear and it is collected in the same way.
+release: 1984-01-01
+players: 1
+assets.boxfront: BoxFront/Moon Mine (USA).jpg
+assets.boxback: BoxBack/Moon Mine (USA).jpg
+assets.background: Background/Moon Mine (USA).jpg
+assets.screenshot: Screenshot/Moon Mine (USA).jpg
+assets.video: Video/Moon Mine (USA).mp4
+x-co-op: No
+
+
+game: Munch Man (USA)
+file: $ROM_JSON_ROOT/Other/Texas Instruments TI-99-4A/Munch Man (USA)/Munch Man (USA).json
+developer: Texas Instruments
+publisher: Texas Instruments
+genre: Action;Arcade
+description:
+  Four cunning Hoonos are in hot pursuit of your Munch Man. Can he make it to an
+  energizer in time to change the attack, or will the Hoonos devour him? With the
+  Munch Man game, you must out-maneuver four Hoonos, as you try to connect the
+  passages with one continuous chain, without being eaten.
+release: 1982-01-01
+players: 1
+assets.boxfront: BoxFront/Munch Man (USA).jpg
+assets.boxback: BoxBack/Munch Man (USA).jpg
+assets.background: Background/Munch Man (USA).jpg
+assets.screenshot: Screenshot/Munch Man (USA).jpg
+assets.video: Video/Munch Man (USA).mp4
+x-co-op: No
+
+
+game: Parsec (USA)
+file: $ROM_JSON_ROOT/Other/Texas Instruments TI-99-4A/Parsec (USA)/Parsec (USA).json
+developer: Paul Urbanus
+publisher: Texas Instruments Incorporated
+genre: Shooter
+description:
+  Parsec is a side-scrolling space shooter. Waves of alien craft swoop down from
+  the top and the player must shoot them down without colliding with them or the
+  ground, running out of fuel, or overheating the ship's laser. Some enemies are
+  harder to destroy and shoot back. At the end of each level, the player must
+  navigate through an asteroid field which can yield many points, but can also
+  result in a loss of ships in the process due to collisions.
+  .
+  The game takes advantage of the TI's speech synthesizer: a female voice
+  occasionally makes comments such as "Nice shooting, pilot!", or "Asteroid field
+  ahead" throughout the course of the game.
+release: 1982-01-01
+players: 1
+assets.boxfront: BoxFront/Parsec (USA).jpg
+assets.boxback: BoxBack/Parsec (USA).jpg
+assets.background: Background/Parsec (USA).jpg
+assets.screenshot: Screenshot/Parsec (USA).jpg
+assets.video: Video/Parsec (USA).mp4
+x-co-op: No
+
+

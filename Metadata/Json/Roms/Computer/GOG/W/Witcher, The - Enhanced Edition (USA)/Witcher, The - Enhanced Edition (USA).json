@@ -1,0 +1,31 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_artbook.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_guide.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_maps.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_music_inspired_by_the_game.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_soundtrack.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_story.zip",
+        "$SETUP_MAIN_ROOT/extra/The_Witcher_wallpapers.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_behind_the_scenes.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_creator_interviews_atari.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_creator_interviews_cdpr.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_enahnced_edition_manual_pl.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_enhanced_edition_game_guide_it.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_enhanced_edition_game_guide_pl.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_enhanced_edition_manual_it.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_enhanced_edition_manual_ru.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_handbuch.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_losungsbuch.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_music_inspired_by_the_game_flac.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_music_video.zip",
+        "$SETUP_MAIN_ROOT/extra/the_witcher_sound_track_flac.zip",
+        "$SETUP_MAIN_ROOT/extra/witcher_calendarz.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_the_witcher_enhanced_edition_1.5_(a)_(10712).exe"
+    ],
+    "transform_file": "setup_the_witcher_enhanced_edition_1.5_(a)_(10712).exe"
+}

@@ -1,0 +1,26 @@
+{
+    "disc_type": "macwin",
+    "is_win31": true,
+    "main_game_win31_exe": [
+        "CSWORD/CWD16.EXE"
+    ],
+    "main_game_win31_exe_cwd": {
+        "CSWORD/CWD16.EXE": "CSWORD"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_THREE_ROOT",
+                "to": "$DOS_MAIN_ROOT/C",
+                "type": "copy"
+            }
+        ]
+    },
+    "sync": {
+        "data": [
+            "ROSTERS"
+        ],
+        "search": "CSWORD/CWD16.EXE"
+    },
+    "transform_file": "Carmen Sandiego - Word Detective (USA).m3u"
+}

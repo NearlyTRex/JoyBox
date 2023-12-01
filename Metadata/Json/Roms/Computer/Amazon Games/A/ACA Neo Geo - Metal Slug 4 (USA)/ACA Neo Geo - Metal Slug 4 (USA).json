@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/ACA Neo Geo - Metal Slug 4 (USA).exe"
+    ],
+    "transform_file": "ACA Neo Geo - Metal Slug 4 (USA).exe"
+}

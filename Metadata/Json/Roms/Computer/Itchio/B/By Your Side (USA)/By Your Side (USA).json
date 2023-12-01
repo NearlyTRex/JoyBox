@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/By Your Side (USA).exe"
+    ],
+    "transform_file": "By Your Side (USA).exe"
+}

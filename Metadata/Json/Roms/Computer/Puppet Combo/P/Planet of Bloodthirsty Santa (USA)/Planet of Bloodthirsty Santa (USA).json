@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Planet of Bloodthirsty Santa (USA).exe"
+    ],
+    "transform_file": "Planet of Bloodthirsty Santa (USA).exe"
+}

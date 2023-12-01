@@ -1,0 +1,29 @@
+{
+    "files": [
+        "pooyan/1.4a",
+        "pooyan/2.5a",
+        "pooyan/3.6a",
+        "pooyan/4.7a",
+        "pooyan/5.8a",
+        "pooyan/6.9a",
+        "pooyan/7.9g",
+        "pooyan/8.10g",
+        "pooyan/ic13_g10.cpu",
+        "pooyan/ic14_g9.cpu",
+        "pooyan/ic22_a4.cpu",
+        "pooyan/ic23_a5.cpu",
+        "pooyan/ic24_a6.cpu",
+        "pooyan/ic25_a7.cpu",
+        "pooyan/poo_ic13.bin",
+        "pooyan/poo_ic14.bin",
+        "pooyan/poo_ic22.bin",
+        "pooyan/poo_ic23.bin",
+        "pooyan/poo_ic25.bin",
+        "pooyan/pooyan.pr1",
+        "pooyan/pooyan.pr2",
+        "pooyan/pooyan.pr3",
+        "pooyan/xx.7a",
+        "pooyan/xx.8a"
+    ],
+    "launch_name": "pooyan"
+}

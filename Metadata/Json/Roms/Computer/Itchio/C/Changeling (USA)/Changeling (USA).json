@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Changeling (USA).exe"
+    ],
+    "transform_file": "Changeling (USA).exe"
+}

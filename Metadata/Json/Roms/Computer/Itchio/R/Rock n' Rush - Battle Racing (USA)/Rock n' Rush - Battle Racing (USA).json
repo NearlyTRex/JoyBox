@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Rock n' Rush - Battle Racing (USA).exe"
+    ],
+    "transform_file": "Rock n' Rush - Battle Racing (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Lovely Planet (USA).exe"
+    ],
+    "transform_file": "Lovely Planet (USA).exe"
+}

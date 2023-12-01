@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Serious Sam Collection, The (World).chd",
+        "Serious Sam Collection, The (World).dmi.bin",
+        "Serious Sam Collection, The (World).lyt",
+        "Serious Sam Collection, The (World).pfi.bin",
+        "Serious Sam Collection, The (World).ss.bin"
+    ],
+    "launch_file": "Serious Sam Collection, The (World).iso",
+    "transform_file": "Serious Sam Collection, The (World).chd"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Bicyclism EP (USA).exe"
+    ],
+    "transform_file": "Bicyclism EP (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Majesty of Colors, The (USA).exe"
+    ],
+    "transform_file": "Majesty of Colors, The (USA).exe"
+}

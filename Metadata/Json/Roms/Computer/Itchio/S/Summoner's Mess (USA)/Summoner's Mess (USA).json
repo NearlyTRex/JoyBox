@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Summoner's Mess (USA).exe"
+    ],
+    "transform_file": "Summoner's Mess (USA).exe"
+}

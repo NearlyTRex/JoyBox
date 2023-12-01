@@ -1,0 +1,12 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/avernum_complete_artworks.zip",
+        "$SETUP_MAIN_ROOT/extra/avernum_complete_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/avernum_complete_manuals.zip",
+        "$SETUP_MAIN_ROOT/extra/avernum_complete_wallpapers.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_avernum2_2.1.0.4.exe"
+    ],
+    "transform_file": "setup_avernum2_2.1.0.4.exe"
+}

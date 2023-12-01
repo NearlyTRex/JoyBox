@@ -1,0 +1,11 @@
+{
+    "installer_dos_exe": "$DISC_MAIN_ROOT/INSTALL.EXE",
+    "is_dos": true,
+    "main_game_dos_exe": [
+        "Z/Z.BAT"
+    ],
+    "main_game_dos_exe_cwd": {
+        "Z/Z.BAT": "Z"
+    },
+    "transform_file": "Z - The Game (USA).chd"
+}

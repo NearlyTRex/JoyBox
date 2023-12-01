@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Data Loss (USA).exe"
+    ],
+    "transform_file": "Data Loss (USA).exe"
+}

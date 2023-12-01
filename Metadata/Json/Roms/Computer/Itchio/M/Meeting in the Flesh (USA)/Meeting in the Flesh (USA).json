@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Meeting in the Flesh (USA).exe"
+    ],
+    "transform_file": "Meeting in the Flesh (USA).exe"
+}

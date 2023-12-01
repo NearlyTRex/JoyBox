@@ -1,0 +1,6 @@
+{
+    "files": [
+        "pong/pong.netlist"
+    ],
+    "launch_name": "pong"
+}

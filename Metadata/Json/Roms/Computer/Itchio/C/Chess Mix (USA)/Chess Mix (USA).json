@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Chess Mix (USA).exe"
+    ],
+    "transform_file": "Chess Mix (USA).exe"
+}

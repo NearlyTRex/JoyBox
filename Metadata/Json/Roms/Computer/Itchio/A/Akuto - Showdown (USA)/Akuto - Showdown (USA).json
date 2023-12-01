@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Akuto - Showdown (USA).exe"
+    ],
+    "transform_file": "Akuto - Showdown (USA).exe"
+}

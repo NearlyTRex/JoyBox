@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Whisper of a Rose (USA).exe"
+    ],
+    "transform_file": "Whisper of a Rose (USA).exe"
+}

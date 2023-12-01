@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Petty Puny Planet (USA).exe"
+    ],
+    "transform_file": "Petty Puny Planet (USA).exe"
+}

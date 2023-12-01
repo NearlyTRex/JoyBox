@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Hippo on Elm Street (USA).exe"
+    ],
+    "transform_file": "Hippo on Elm Street (USA).exe"
+}

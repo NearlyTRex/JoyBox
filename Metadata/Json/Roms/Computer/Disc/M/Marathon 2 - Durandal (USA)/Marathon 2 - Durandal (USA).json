@@ -1,0 +1,18 @@
+{
+    "main_game_exe": [
+        "Marathon2/Marathon 2.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Marathon2/Marathon 2.exe": "Marathon2"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$HDD_MAIN_ROOT/Marathon2",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Marathon 2 - Durandal (USA).chd"
+}

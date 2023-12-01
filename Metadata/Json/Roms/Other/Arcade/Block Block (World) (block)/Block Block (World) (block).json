@@ -1,0 +1,33 @@
+{
+    "files": [
+        "block/bl_01.2d",
+        "block/bl_08.8h",
+        "block/bl_09.9h",
+        "block/bl_16.2j",
+        "block/bl_17.3j",
+        "block/bl_18.8j",
+        "block/bl_19.9j",
+        "block/ble_05.14f",
+        "block/ble_05a.14f",
+        "block/ble_05b.14f",
+        "block/ble_06.15f",
+        "block/ble_06b.15f",
+        "block/ble_07.16f",
+        "block/ble_07b.16f",
+        "block/blj_05.14f",
+        "block/blj_07.16f",
+        "block/m10.o5",
+        "block/m11.o7",
+        "block/m12.o10",
+        "block/m13.o14",
+        "block/m3.j20",
+        "block/m4.j17",
+        "block/m5.l3",
+        "block/m6.l5",
+        "block/m7.l6",
+        "block/m8.o2",
+        "block/m9.o3",
+        "block/ym2413_instruments.bin"
+    ],
+    "launch_name": "block"
+}

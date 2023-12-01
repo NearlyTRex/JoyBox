@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Fall of Lazarus, The (USA).exe"
+    ],
+    "transform_file": "Fall of Lazarus, The (USA).exe"
+}

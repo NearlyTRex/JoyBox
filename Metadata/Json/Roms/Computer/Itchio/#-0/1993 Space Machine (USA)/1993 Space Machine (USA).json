@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/1993 Space Machine (USA).exe"
+    ],
+    "transform_file": "1993 Space Machine (USA).exe"
+}

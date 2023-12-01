@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Furniture Of Self, The (USA).exe"
+    ],
+    "transform_file": "Furniture Of Self, The (USA).exe"
+}

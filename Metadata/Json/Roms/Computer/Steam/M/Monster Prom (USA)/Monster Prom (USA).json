@@ -1,0 +1,18 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Monster Prom (USA).exe"
+    ],
+    "main_game_exe": [
+        "Monster Prom/MonsterProm.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Monster Prom/MonsterProm.exe": "Monster Prom"
+    },
+    "sync": {
+        "data": [
+            "UserData"
+        ],
+        "search": "Monster Prom/MonsterProm.exe"
+    },
+    "transform_file": "Monster Prom (USA).exe"
+}

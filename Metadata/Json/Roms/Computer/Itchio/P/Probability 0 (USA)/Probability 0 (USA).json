@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Probability 0 (USA).exe"
+    ],
+    "transform_file": "Probability 0 (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/ACA Neo Geo - The King of Fighters 2003 (USA).exe"
+    ],
+    "transform_file": "ACA Neo Geo - The King of Fighters 2003 (USA).exe"
+}

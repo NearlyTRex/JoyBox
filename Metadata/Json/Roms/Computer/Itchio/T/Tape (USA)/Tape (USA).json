@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Tape (USA).exe"
+    ],
+    "transform_file": "Tape (USA).exe"
+}

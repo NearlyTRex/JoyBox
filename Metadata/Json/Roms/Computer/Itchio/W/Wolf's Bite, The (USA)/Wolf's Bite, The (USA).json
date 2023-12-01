@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Wolf's Bite, The (USA).exe"
+    ],
+    "transform_file": "Wolf's Bite, The (USA).exe"
+}

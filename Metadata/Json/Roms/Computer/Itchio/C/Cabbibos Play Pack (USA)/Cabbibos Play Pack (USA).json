@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Cabbibos Play Pack (USA).exe"
+    ],
+    "transform_file": "Cabbibos Play Pack (USA).exe"
+}

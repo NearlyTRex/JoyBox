@@ -1,0 +1,1464 @@
+Computer - Itchio || 1,000 Heads Among the Trees (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/1,000 Heads Among the Trees (USA)/1,000 Heads Among the Trees (USA).json
+Computer - Itchio || 10 Flights of Ballooning (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/10 Flights of Ballooning (USA)/10 Flights of Ballooning (USA).json
+Computer - Itchio || 10 in 1 Game-a-Week Bundle! (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/10 in 1 Game-a-Week Bundle! (USA)/10 in 1 Game-a-Week Bundle! (USA).json
+Computer - Itchio || 10S (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/10S (USA)/10S (USA).json
+Computer - Itchio || 10mg - SNAAAK (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/10mg - SNAAAK (USA)/10mg - SNAAAK (USA).json
+Computer - Itchio || 10mg - Sealed Estate (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/10mg - Sealed Estate (USA)/10mg - Sealed Estate (USA).json
+Computer - Itchio || 12 Labors (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/12 Labors (USA)/12 Labors (USA).json
+Computer - Itchio || 12 Orbits (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/12 Orbits (USA)/12 Orbits (USA).json
+Computer - Itchio || 1365 (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/1365 (USA)/1365 (USA).json
+Computer - Itchio || 1977 - Radio Aut (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/1977 - Radio Aut (USA)/1977 - Radio Aut (USA).json
+Computer - Itchio || 1993 Space Machine (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/1993 Space Machine (USA)/1993 Space Machine (USA).json
+Computer - Itchio || 2000 to 1 - A Space Felony (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/2000 to 1 - A Space Felony (USA)/2000 to 1 - A Space Felony (USA).json
+Computer - Itchio || 2064 - Read Only Memories (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/2064 - Read Only Memories (USA)/2064 - Read Only Memories (USA).json
+Computer - Itchio || 2901 - Drum Dream Vol. 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/2901 - Drum Dream Vol. 2 (USA)/2901 - Drum Dream Vol. 2 (USA).json
+Computer - Itchio || 2901 - Freelancer (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/2901 - Freelancer (USA)/2901 - Freelancer (USA).json
+Computer - Itchio || 2D Flight Simulator (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/2D Flight Simulator (USA)/2D Flight Simulator (USA).json
+Computer - Itchio || 4-Legged-Heroine (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/4-Legged-Heroine (USA)/4-Legged-Heroine (USA).json
+Computer - Itchio || 6 Pack of Craft Games (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/6 Pack of Craft Games (USA)/6 Pack of Craft Games (USA).json
+Computer - Itchio || 8 Bit Space (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/8 Bit Space (USA)/8 Bit Space (USA).json
+Computer - Itchio || 9 Till Void (USA) || $ROM_JSON_ROOT/Computer/Itchio/#-0/9 Till Void (USA)/9 Till Void (USA).json
+Computer - Itchio || AIdol (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/AIdol (USA)/AIdol (USA).json
+Computer - Itchio || ARGH-P-G (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/ARGH-P-G (USA)/ARGH-P-G (USA).json
+Computer - Itchio || Abomination Tower (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Abomination Tower (USA)/Abomination Tower (USA).json
+Computer - Itchio || About Love, Hate & The Other Ones (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/About Love, Hate & The Other Ones (USA)/About Love, Hate & The Other Ones (USA).json
+Computer - Itchio || Above - The Fallen (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Above - The Fallen (USA)/Above - The Fallen (USA).json
+Computer - Itchio || Absolute Blue (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Absolute Blue (USA)/Absolute Blue (USA).json
+Computer - Itchio || AcidTrip (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/AcidTrip (USA)/AcidTrip (USA).json
+Computer - Itchio || Adjacency (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Adjacency (USA)/Adjacency (USA).json
+Computer - Itchio || Adventure for a Bit (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Adventure for a Bit (USA)/Adventure for a Bit (USA).json
+Computer - Itchio || Adventures of Elena Temple, The - Definitive Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Adventures of Elena Temple, The - Definitive Edition (USA)/Adventures of Elena Temple, The - Definitive Edition (USA).json
+Computer - Itchio || Adventures of a Radish (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Adventures of a Radish (USA)/Adventures of a Radish (USA).json
+Computer - Itchio || Aerannis (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Aerannis (USA)/Aerannis (USA).json
+Computer - Itchio || Aerocraft (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Aerocraft (USA)/Aerocraft (USA).json
+Computer - Itchio || Affinity (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Affinity (USA)/Affinity (USA).json
+Computer - Itchio || After The End - The Harvest (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/After The End - The Harvest (USA)/After The End - The Harvest (USA).json
+Computer - Itchio || Air Dasher (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Air Dasher (USA)/Air Dasher (USA).json
+Computer - Itchio || Airships - Conquer the Skies (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Airships - Conquer the Skies (USA)/Airships - Conquer the Skies (USA).json
+Computer - Itchio || Akurra Chapter 1 (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Akurra Chapter 1 (USA)/Akurra Chapter 1 (USA).json
+Computer - Itchio || Akuto - Showdown (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Akuto - Showdown (USA)/Akuto - Showdown (USA).json
+Computer - Itchio || Alfal's Grove (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Alfal's Grove (USA)/Alfal's Grove (USA).json
+Computer - Itchio || Alien Life Lab (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Alien Life Lab (USA)/Alien Life Lab (USA).json
+Computer - Itchio || All Haze Eve (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/All Haze Eve (USA)/All Haze Eve (USA).json
+Computer - Itchio || All You Can Eat (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/All You Can Eat (USA)/All You Can Eat (USA).json
+Computer - Itchio || All-Stars Dungeons and Diamonds (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/All-Stars Dungeons and Diamonds (USA)/All-Stars Dungeons and Diamonds (USA).json
+Computer - Itchio || Alone With You (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Alone With You (USA)/Alone With You (USA).json
+Computer - Itchio || Alt-Frequencies (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Alt-Frequencies (USA)/Alt-Frequencies (USA).json
+Computer - Itchio || Ambidangerous (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Ambidangerous (USA)/Ambidangerous (USA).json
+Computer - Itchio || Amelie (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Amelie (USA)/Amelie (USA).json
+Computer - Itchio || Amethyst Hearth (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Amethyst Hearth (USA)/Amethyst Hearth (USA).json
+Computer - Itchio || An Airport Game (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/An Airport Game (USA)/An Airport Game (USA).json
+Computer - Itchio || An American Werewolf in LA (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/An American Werewolf in LA (USA)/An American Werewolf in LA (USA).json
+Computer - Itchio || An Outcry, Prelude (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/An Outcry, Prelude (USA)/An Outcry, Prelude (USA).json
+Computer - Itchio || Anarcute (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Anarcute (USA)/Anarcute (USA).json
+Computer - Itchio || And All Would Cry Beware! (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/And All Would Cry Beware! (USA)/And All Would Cry Beware! (USA).json
+Computer - Itchio || And Yet It Moves (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/And Yet It Moves (USA)/And Yet It Moves (USA).json
+Computer - Itchio || Angry Video Game Nerd I & II Deluxe (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Angry Video Game Nerd I & II Deluxe (USA)/Angry Video Game Nerd I & II Deluxe (USA).json
+Computer - Itchio || Animal Lover (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Animal Lover (USA)/Animal Lover (USA).json
+Computer - Itchio || Annwn the Otherworld (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Annwn the Otherworld (USA)/Annwn the Otherworld (USA).json
+Computer - Itchio || Anodyne (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Anodyne (USA)/Anodyne (USA).json
+Computer - Itchio || Anomalies (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Anomalies (USA)/Anomalies (USA).json
+Computer - Itchio || Another Lost Phone - Laura's Story (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Another Lost Phone - Laura's Story (USA)/Another Lost Phone - Laura's Story (USA).json
+Computer - Itchio || Antecrypt (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Antecrypt (USA)/Antecrypt (USA).json
+Computer - Itchio || Antistatic (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Antistatic (USA)/Antistatic (USA).json
+Computer - Itchio || Aquatic Adventure of the Last Human, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Aquatic Adventure of the Last Human, The (USA)/Aquatic Adventure of the Last Human, The (USA).json
+Computer - Itchio || Arachnowopunk (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Arachnowopunk (USA)/Arachnowopunk (USA).json
+Computer - Itchio || Arcade Spirits (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Arcade Spirits (USA)/Arcade Spirits (USA).json
+Computer - Itchio || Arcade Tower, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Arcade Tower, The (USA)/Arcade Tower, The (USA).json
+Computer - Itchio || Archives of Evil Dr BA, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Archives of Evil Dr BA, The (USA)/Archives of Evil Dr BA, The (USA).json
+Computer - Itchio || Arigatou, Ningen-san! (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Arigatou, Ningen-san! (USA)/Arigatou, Ningen-san! (USA).json
+Computer - Itchio || Arlo The Rabbit (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Arlo The Rabbit (USA)/Arlo The Rabbit (USA).json
+Computer - Itchio || Art Sqool (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Art Sqool (USA)/Art Sqool (USA).json
+Computer - Itchio || As Long As We're Together Magical Girls Sweet & Pure (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/As Long As We're Together Magical Girls Sweet & Pure (USA)/As Long As We're Together Magical Girls Sweet & Pure (USA).json
+Computer - Itchio || As We Know It (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/As We Know It (USA)/As We Know It (USA).json
+Computer - Itchio || Astaeria (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Astaeria (USA)/Astaeria (USA).json
+Computer - Itchio || Asterism (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Asterism (USA)/Asterism (USA).json
+Computer - Itchio || Asteroid Farmer (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Asteroid Farmer (USA)/Asteroid Farmer (USA).json
+Computer - Itchio || Asteroid Quest! (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Asteroid Quest! (USA)/Asteroid Quest! (USA).json
+Computer - Itchio || Asteroids... But Roguelite (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Asteroids... But Roguelite (USA)/Asteroids... But Roguelite (USA).json
+Computer - Itchio || Astral Defense (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Astral Defense (USA)/Astral Defense (USA).json
+Computer - Itchio || Astrologaster (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Astrologaster (USA)/Astrologaster (USA).json
+Computer - Itchio || Atchafalaya Arcade (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Atchafalaya Arcade (USA)/Atchafalaya Arcade (USA).json
+Computer - Itchio || Atomic Heist (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Atomic Heist (USA)/Atomic Heist (USA).json
+Computer - Itchio || Atomic Reconstruction (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Atomic Reconstruction (USA)/Atomic Reconstruction (USA).json
+Computer - Itchio || Attentat 1942 (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Attentat 1942 (USA)/Attentat 1942 (USA).json
+Computer - Itchio || Attraction Force (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Attraction Force (USA)/Attraction Force (USA).json
+Computer - Itchio || Attrition (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Attrition (USA)/Attrition (USA).json
+Computer - Itchio || Attrition - Tactical Fronts (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Attrition - Tactical Fronts (USA)/Attrition - Tactical Fronts (USA).json
+Computer - Itchio || Autumn (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Autumn (USA)/Autumn (USA).json
+Computer - Itchio || Away Team, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Away Team, The (USA)/Away Team, The (USA).json
+Computer - Itchio || Awesome Mix Tape (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Awesome Mix Tape (USA)/Awesome Mix Tape (USA).json
+Computer - Itchio || Awkward Dimensions Redux (USA) || $ROM_JSON_ROOT/Computer/Itchio/A/Awkward Dimensions Redux (USA)/Awkward Dimensions Redux (USA).json
+Computer - Itchio || B.O.O.M. - You Win (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/B.O.O.M. - You Win (USA)/B.O.O.M. - You Win (USA).json
+Computer - Itchio || BFF or Die (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/BFF or Die (USA)/BFF or Die (USA).json
+Computer - Itchio || BRKOUT (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/BRKOUT (USA)/BRKOUT (USA).json
+Computer - Itchio || Baba Is You (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Baba Is You (USA)/Baba Is You (USA).json
+Computer - Itchio || Back to Bed (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Back to Bed (USA)/Back to Bed (USA).json
+Computer - Itchio || BackFire (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/BackFire (USA)/BackFire (USA).json
+Computer - Itchio || Backbone (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Backbone (USA)/Backbone (USA).json
+Computer - Itchio || Backspace Bouken (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Backspace Bouken (USA)/Backspace Bouken (USA).json
+Computer - Itchio || Bad Government (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bad Government (USA)/Bad Government (USA).json
+Computer - Itchio || Badblood (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Badblood (USA)/Badblood (USA).json
+Computer - Itchio || Baked Magic (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Baked Magic (USA)/Baked Magic (USA).json
+Computer - Itchio || Baldi's Basics Plus (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Baldi's Basics Plus (USA)/Baldi's Basics Plus (USA).json
+Computer - Itchio || Ball Buster 2.0 (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Ball Buster 2.0 (USA)/Ball Buster 2.0 (USA).json
+Computer - Itchio || Balloony's Adventure (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Balloony's Adventure (USA)/Balloony's Adventure (USA).json
+Computer - Itchio || Bard Harder! (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bard Harder! (USA)/Bard Harder! (USA).json
+Computer - Itchio || Barrel Roll (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Barrel Roll (USA)/Barrel Roll (USA).json
+Computer - Itchio || BasketBelle (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/BasketBelle (USA)/BasketBelle (USA).json
+Computer - Itchio || Batbarian - Testament of the Primordials (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Batbarian - Testament of the Primordials (USA)/Batbarian - Testament of the Primordials (USA).json
+Computer - Itchio || Bazookrash (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bazookrash (USA)/Bazookrash (USA).json
+Computer - Itchio || Be Not Afraid A.K.A. Seraphim Horror Show! (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Be Not Afraid A.K.A. Seraphim Horror Show! (USA)/Be Not Afraid A.K.A. Seraphim Horror Show! (USA).json
+Computer - Itchio || Beacon (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Beacon (USA)/Beacon (USA).json
+Computer - Itchio || Bear-ly There (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bear-ly There (USA)/Bear-ly There (USA).json
+Computer - Itchio || Beglitched (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Beglitched (USA)/Beglitched (USA).json
+Computer - Itchio || Belong (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Belong (USA)/Belong (USA).json
+Computer - Itchio || Benjamin of Blackstone Edge (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Benjamin of Blackstone Edge (USA)/Benjamin of Blackstone Edge (USA).json
+Computer - Itchio || Best Garden (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Best Garden (USA)/Best Garden (USA).json
+Computer - Itchio || Bestiary (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bestiary (USA)/Bestiary (USA).json
+Computer - Itchio || Better to Upload Two Souls (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Better to Upload Two Souls (USA)/Better to Upload Two Souls (USA).json
+Computer - Itchio || Bewildebots (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bewildebots (USA)/Bewildebots (USA).json
+Computer - Itchio || Bezier (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bezier (USA)/Bezier (USA).json
+Computer - Itchio || Bicyclism EP (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bicyclism EP (USA)/Bicyclism EP (USA).json
+Computer - Itchio || Big Wave, The - Colorblind & Deaf Friendly Puzzle Game (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Big Wave, The - Colorblind & Deaf Friendly Puzzle Game (USA)/Big Wave, The - Colorblind & Deaf Friendly Puzzle Game (USA).json
+Computer - Itchio || Binaries (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Binaries (USA)/Binaries (USA).json
+Computer - Itchio || Binary Heresy (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Binary Heresy (USA)/Binary Heresy (USA).json
+Computer - Itchio || Binky's Trash Service (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Binky's Trash Service (USA)/Binky's Trash Service (USA).json
+Computer - Itchio || Bird Bakery (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bird Bakery (USA)/Bird Bakery (USA).json
+Computer - Itchio || Bit Rat - Singularity (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bit Rat - Singularity (USA)/Bit Rat - Singularity (USA).json
+Computer - Itchio || Bitcoin Miner - Remastered (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bitcoin Miner - Remastered (USA)/Bitcoin Miner - Remastered (USA).json
+Computer - Itchio || Black Iris, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Black Iris, The (USA)/Black Iris, The (USA).json
+Computer - Itchio || Blast Rush (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Blast Rush (USA)/Blast Rush (USA).json
+Computer - Itchio || Blaster Bunny Plus (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Blaster Bunny Plus (USA)/Blaster Bunny Plus (USA).json
+Computer - Itchio || Blasting Agent - Ultimate Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Blasting Agent - Ultimate Edition (USA)/Blasting Agent - Ultimate Edition (USA).json
+Computer - Itchio || Bleed (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bleed (USA)/Bleed (USA).json
+Computer - Itchio || Bleed 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bleed 2 (USA)/Bleed 2 (USA).json
+Computer - Itchio || Blind Men (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Blind Men (USA)/Blind Men (USA).json
+Computer - Itchio || Blitz Breaker (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Blitz Breaker (USA)/Blitz Breaker (USA).json
+Computer - Itchio || Block Out (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Block Out (USA)/Block Out (USA).json
+Computer - Itchio || Blockara (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Blockara (USA)/Blockara (USA).json
+Computer - Itchio || Blood Bullets & Ballet (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Blood Bullets & Ballet (USA)/Blood Bullets & Ballet (USA).json
+Computer - Itchio || BloodBlast VR (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/BloodBlast VR (USA)/BloodBlast VR (USA).json
+Computer - Itchio || Blue Rose Reprise (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Blue Rose Reprise (USA)/Blue Rose Reprise (USA).json
+Computer - Itchio || Boa Retina (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Boa Retina (USA)/Boa Retina (USA).json
+Computer - Itchio || Bold Blade (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bold Blade (USA)/Bold Blade (USA).json
+Computer - Itchio || Bomb Dolls (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bomb Dolls (USA)/Bomb Dolls (USA).json
+Computer - Itchio || Bombing!! - A Graffiti Sandbox (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bombing!! - A Graffiti Sandbox (USA)/Bombing!! - A Graffiti Sandbox (USA).json
+Computer - Itchio || Bomsy (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bomsy (USA)/Bomsy (USA).json
+Computer - Itchio || Bonbon (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bonbon (USA)/Bonbon (USA).json
+Computer - Itchio || Bonsai Calendar (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bonsai Calendar (USA)/Bonsai Calendar (USA).json
+Computer - Itchio || Boom Boom Bovine (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Boom Boom Bovine (USA)/Boom Boom Bovine (USA).json
+Computer - Itchio || BoomTown (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/BoomTown (USA)/BoomTown (USA).json
+Computer - Itchio || Borb the Birb (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Borb the Birb (USA)/Borb the Birb (USA).json
+Computer - Itchio || Boreal Tenebrae Act I (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Boreal Tenebrae Act I (USA)/Boreal Tenebrae Act I (USA).json
+Computer - Itchio || Botolo (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Botolo (USA)/Botolo (USA).json
+Computer - Itchio || Bouncy Cars (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bouncy Cars (USA)/Bouncy Cars (USA).json
+Computer - Itchio || Box (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Box (USA)/Box (USA).json
+Computer - Itchio || Brassica - A Marry Tale (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Brassica - A Marry Tale (USA)/Brassica - A Marry Tale (USA).json
+Computer - Itchio || Brathian (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Brathian (USA)/Brathian (USA).json
+Computer - Itchio || Brave Hero Yuusha EX (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Brave Hero Yuusha EX (USA)/Brave Hero Yuusha EX (USA).json
+Computer - Itchio || Breaker (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Breaker (USA)/Breaker (USA).json
+Computer - Itchio || Brendan Keogh's Putting Challenge (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Brendan Keogh's Putting Challenge (USA)/Brendan Keogh's Putting Challenge (USA).json
+Computer - Itchio || Brick Breaker Remix (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Brick Breaker Remix (USA)/Brick Breaker Remix (USA).json
+Computer - Itchio || Bring Back The Sun by Daniel da Silva (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bring Back The Sun by Daniel da Silva (USA)/Bring Back The Sun by Daniel da Silva (USA).json
+Computer - Itchio || Bringris (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bringris (USA)/Bringris (USA).json
+Computer - Itchio || Broken Minds (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Broken Minds (USA)/Broken Minds (USA).json
+Computer - Itchio || Broken Signal (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Broken Signal (USA)/Broken Signal (USA).json
+Computer - Itchio || Brushwood Buddies (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Brushwood Buddies (USA)/Brushwood Buddies (USA).json
+Computer - Itchio || Bubbles the Cat (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bubbles the Cat (USA)/Bubbles the Cat (USA).json
+Computer - Itchio || Bugspeed Collider (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bugspeed Collider (USA)/Bugspeed Collider (USA).json
+Computer - Itchio || Bullet Beat (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bullet Beat (USA)/Bullet Beat (USA).json
+Computer - Itchio || BulletHell Planes (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/BulletHell Planes (USA)/BulletHell Planes (USA).json
+Computer - Itchio || Bumper Boss (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bumper Boss (USA)/Bumper Boss (USA).json
+Computer - Itchio || Bunnies vs. Bunnies - Ukraine Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bunnies vs. Bunnies - Ukraine Edition (USA)/Bunnies vs. Bunnies - Ukraine Edition (USA).json
+Computer - Itchio || Bunny Hill Horror (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bunny Hill Horror (USA)/Bunny Hill Horror (USA).json
+Computer - Itchio || Bunny Hill Horror - Bunny Boiler (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bunny Hill Horror - Bunny Boiler (USA)/Bunny Hill Horror - Bunny Boiler (USA).json
+Computer - Itchio || Bury me, my Love (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Bury me, my Love (USA)/Bury me, my Love (USA).json
+Computer - Itchio || Butsbal (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Butsbal (USA)/Butsbal (USA).json
+Computer - Itchio || Butterflies Episode 1 - Rudies (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Butterflies Episode 1 - Rudies (USA)/Butterflies Episode 1 - Rudies (USA).json
+Computer - Itchio || Butterflies Episode 2 - Getting Up (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Butterflies Episode 2 - Getting Up (USA)/Butterflies Episode 2 - Getting Up (USA).json
+Computer - Itchio || Button City (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/Button City (USA)/Button City (USA).json
+Computer - Itchio || By Lamplight (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/By Lamplight (USA)/By Lamplight (USA).json
+Computer - Itchio || By Your Side (USA) || $ROM_JSON_ROOT/Computer/Itchio/B/By Your Side (USA)/By Your Side (USA).json
+Computer - Itchio || C.H.A.I.N. (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/C.H.A.I.N. (USA)/C.H.A.I.N. (USA).json
+Computer - Itchio || C.M.Y.K. (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/C.M.Y.K. (USA)/C.M.Y.K. (USA).json
+Computer - Itchio || CHESTO - At the Checkout (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/CHESTO - At the Checkout (USA)/CHESTO - At the Checkout (USA).json
+Computer - Itchio || CROSSNIQ+ (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/CROSSNIQ+ (USA)/CROSSNIQ+ (USA).json
+Computer - Itchio || Cabbibos Play Pack (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cabbibos Play Pack (USA)/Cabbibos Play Pack (USA).json
+Computer - Itchio || Campfire Cooking (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Campfire Cooking (USA)/Campfire Cooking (USA).json
+Computer - Itchio || Can Androids Pray - Red (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Can Androids Pray - Red (USA)/Can Androids Pray - Red (USA).json
+Computer - Itchio || Candylight (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Candylight (USA)/Candylight (USA).json
+Computer - Itchio || Cannon Father (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cannon Father (USA)/Cannon Father (USA).json
+Computer - Itchio || Captain Backwater (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Captain Backwater (USA)/Captain Backwater (USA).json
+Computer - Itchio || Captain MaCaw (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Captain MaCaw (USA)/Captain MaCaw (USA).json
+Computer - Itchio || Carbage (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Carbage (USA)/Carbage (USA).json
+Computer - Itchio || Card Hog (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Card Hog (USA)/Card Hog (USA).json
+Computer - Itchio || Cardful Planning (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cardful Planning (USA)/Cardful Planning (USA).json
+Computer - Itchio || Cardiac (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cardiac (USA)/Cardiac (USA).json
+Computer - Itchio || Cardinal Chains (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cardinal Chains (USA)/Cardinal Chains (USA).json
+Computer - Itchio || Cardinal Cross (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cardinal Cross (USA)/Cardinal Cross (USA).json
+Computer - Itchio || Cascadio (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cascadio (USA)/Cascadio (USA).json
+Computer - Itchio || Cat Ace (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cat Ace (USA)/Cat Ace (USA).json
+Computer - Itchio || Catacombs 1 - Demon War (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Catacombs 1 - Demon War (USA)/Catacombs 1 - Demon War (USA).json
+Computer - Itchio || Catlandia - Crisis at Fort Pawprint (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Catlandia - Crisis at Fort Pawprint (USA)/Catlandia - Crisis at Fort Pawprint (USA).json
+Computer - Itchio || Catlateral Damage (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Catlateral Damage (USA)/Catlateral Damage (USA).json
+Computer - Itchio || Catlateral Damage - Remeowstered (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Catlateral Damage - Remeowstered (USA)/Catlateral Damage - Remeowstered (USA).json
+Computer - Itchio || Cats are Liquid - A Better Place (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cats are Liquid - A Better Place (USA)/Cats are Liquid - A Better Place (USA).json
+Computer - Itchio || Cats are Liquid - A Light in the Shadows (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cats are Liquid - A Light in the Shadows (USA)/Cats are Liquid - A Light in the Shadows (USA).json
+Computer - Itchio || Catty & Batty - The Spirit Guide (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Catty & Batty - The Spirit Guide (USA)/Catty & Batty - The Spirit Guide (USA).json
+Computer - Itchio || Cecconoid (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cecconoid (USA)/Cecconoid (USA).json
+Computer - Itchio || Celeste (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Celeste (USA)/Celeste (USA).json
+Computer - Itchio || Celestial Correspondence (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Celestial Correspondence (USA)/Celestial Correspondence (USA).json
+Computer - Itchio || Celestial Hacker Girl Jessica (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Celestial Hacker Girl Jessica (USA)/Celestial Hacker Girl Jessica (USA).json
+Computer - Itchio || Cell Tune (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cell Tune (USA)/Cell Tune (USA).json
+Computer - Itchio || Central Fugitive (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Central Fugitive (USA)/Central Fugitive (USA).json
+Computer - Itchio || Central Limit Theorem (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Central Limit Theorem (USA)/Central Limit Theorem (USA).json
+Computer - Itchio || Changeling (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Changeling (USA)/Changeling (USA).json
+Computer - Itchio || Changes (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Changes (USA)/Changes (USA).json
+Computer - Itchio || Chess Mix (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Chess Mix (USA)/Chess Mix (USA).json
+Computer - Itchio || Chimpology (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Chimpology (USA)/Chimpology (USA).json
+Computer - Itchio || Chipmonk! (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Chipmonk! (USA)/Chipmonk! (USA).json
+Computer - Itchio || Choice Chamber (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Choice Chamber (USA)/Choice Chamber (USA).json
+Computer - Itchio || Chook & Sosig - Walk the Plank (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Chook & Sosig - Walk the Plank (USA)/Chook & Sosig - Walk the Plank (USA).json
+Computer - Itchio || Christmas Cats Revenge (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Christmas Cats Revenge (USA)/Christmas Cats Revenge (USA).json
+Computer - Itchio || Chronicles of Two Heroes (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Chronicles of Two Heroes (USA)/Chronicles of Two Heroes (USA).json
+Computer - Itchio || Chronology - Time Changes Everything (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Chronology - Time Changes Everything (USA)/Chronology - Time Changes Everything (USA).json
+Computer - Itchio || Cinco Paus (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cinco Paus (USA)/Cinco Paus (USA).json
+Computer - Itchio || Circa Infinity (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Circa Infinity (USA)/Circa Infinity (USA).json
+Computer - Itchio || Cityglitch (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cityglitch (USA)/Cityglitch (USA).json
+Computer - Itchio || Clam Man (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Clam Man (USA)/Clam Man (USA).json
+Computer - Itchio || Clash Force (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Clash Force (USA)/Clash Force (USA).json
+Computer - Itchio || Clash of Coins (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Clash of Coins (USA)/Clash of Coins (USA).json
+Computer - Itchio || Clean ATTACK! (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Clean ATTACK! (USA)/Clean ATTACK! (USA).json
+Computer - Itchio || Cloud Gardens (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cloud Gardens (USA)/Cloud Gardens (USA).json
+Computer - Itchio || Cloud Serpent (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cloud Serpent (USA)/Cloud Serpent (USA).json
+Computer - Itchio || Cluster Gun (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cluster Gun (USA)/Cluster Gun (USA).json
+Computer - Itchio || Co-open (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Co-open (USA)/Co-open (USA).json
+Computer - Itchio || Code 7 (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Code 7 (USA)/Code 7 (USA).json
+Computer - Itchio || Code Zone Retro Pack, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Code Zone Retro Pack, The (USA)/Code Zone Retro Pack, The (USA).json
+Computer - Itchio || Codemancer (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Codemancer (USA)/Codemancer (USA).json
+Computer - Itchio || Collared (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Collared (USA)/Collared (USA).json
+Computer - Itchio || Collateral Thinking DX (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Collateral Thinking DX (USA)/Collateral Thinking DX (USA).json
+Computer - Itchio || Color Cannons+ (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Color Cannons+ (USA)/Color Cannons+ (USA).json
+Computer - Itchio || Color Jumper (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Color Jumper (USA)/Color Jumper (USA).json
+Computer - Itchio || Combo Postage (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Combo Postage (USA)/Combo Postage (USA).json
+Computer - Itchio || Come Back - Chapter 1 (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Come Back - Chapter 1 (USA)/Come Back - Chapter 1 (USA).json
+Computer - Itchio || Commune Corvidae (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Commune Corvidae (USA)/Commune Corvidae (USA).json
+Computer - Itchio || Compel (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Compel (USA)/Compel (USA).json
+Computer - Itchio || Completely Normal Dating Simulation, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Completely Normal Dating Simulation, A (USA)/Completely Normal Dating Simulation, A (USA).json
+Computer - Itchio || Concentric (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Concentric (USA)/Concentric (USA).json
+Computer - Itchio || Containment (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Containment (USA)/Containment (USA).json
+Computer - Itchio || Conversations With Emma (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Conversations With Emma (USA)/Conversations With Emma (USA).json
+Computer - Itchio || Conversations With My Anxiety (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Conversations With My Anxiety (USA)/Conversations With My Anxiety (USA).json
+Computer - Itchio || Cook, Serve, Delicious! 2!! (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cook, Serve, Delicious! 2!! (USA)/Cook, Serve, Delicious! 2!! (USA).json
+Computer - Itchio || Cope Island - Adrift (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cope Island - Adrift (USA)/Cope Island - Adrift (USA).json
+Computer - Itchio || Corey Coolbrew (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Corey Coolbrew (USA)/Corey Coolbrew (USA).json
+Computer - Itchio || Corinne Cross's Dead & Breakfast (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Corinne Cross's Dead & Breakfast (USA)/Corinne Cross's Dead & Breakfast (USA).json
+Computer - Itchio || Corpse Reviver (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Corpse Reviver (USA)/Corpse Reviver (USA).json
+Computer - Itchio || Cosmic Express (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cosmic Express (USA)/Cosmic Express (USA).json
+Computer - Itchio || Cosmic Rochambo (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cosmic Rochambo (USA)/Cosmic Rochambo (USA).json
+Computer - Itchio || Cosmonaut (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cosmonaut (USA)/Cosmonaut (USA).json
+Computer - Itchio || Cotrio (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cotrio (USA)/Cotrio (USA).json
+Computer - Itchio || Couch Goblins (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Couch Goblins (USA)/Couch Goblins (USA).json
+Computer - Itchio || Count of Monte Carlo, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Count of Monte Carlo, The (USA)/Count of Monte Carlo, The (USA).json
+Computer - Itchio || Crashed Lander (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Crashed Lander (USA)/Crashed Lander (USA).json
+Computer - Itchio || Crate Punks (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Crate Punks (USA)/Crate Punks (USA).json
+Computer - Itchio || Crawl (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Crawl (USA)/Crawl (USA).json
+Computer - Itchio || Crescent Loom (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Crescent Loom (USA)/Crescent Loom (USA).json
+Computer - Itchio || Crest - An Indirect God Game (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Crest - An Indirect God Game (USA)/Crest - An Indirect God Game (USA).json
+Computer - Itchio || Croissants (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Croissants (USA)/Croissants (USA).json
+Computer - Itchio || Cromwell (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cromwell (USA)/Cromwell (USA).json
+Computer - Itchio || CrossCode (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/CrossCode (USA)/CrossCode (USA).json
+Computer - Itchio || Cruel World (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cruel World (USA)/Cruel World (USA).json
+Computer - Itchio || Crystal Anomaly (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Crystal Anomaly (USA)/Crystal Anomaly (USA).json
+Computer - Itchio || Crystal Control II (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Crystal Control II (USA)/Crystal Control II (USA).json
+Computer - Itchio || Crystal Golem, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Crystal Golem, The (USA)/Crystal Golem, The (USA).json
+Computer - Itchio || Crystal Story - Awakening (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Crystal Story - Awakening (USA)/Crystal Story - Awakening (USA).json
+Computer - Itchio || Crystal Towers 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Crystal Towers 2 (USA)/Crystal Towers 2 (USA).json
+Computer - Itchio || Cube Rampage (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cube Rampage (USA)/Cube Rampage (USA).json
+Computer - Itchio || Cubefall (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cubefall (USA)/Cubefall (USA).json
+Computer - Itchio || Cuckoo Castle (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cuckoo Castle (USA)/Cuckoo Castle (USA).json
+Computer - Itchio || Curious Expedition (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Curious Expedition (USA)/Curious Expedition (USA).json
+Computer - Itchio || Curse of Trasmoz, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Curse of Trasmoz, The (USA)/Curse of Trasmoz, The (USA).json
+Computer - Itchio || Curse of the Crescent Isle DX (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Curse of the Crescent Isle DX (USA)/Curse of the Crescent Isle DX (USA).json
+Computer - Itchio || Cycle 28 (USA) || $ROM_JSON_ROOT/Computer/Itchio/C/Cycle 28 (USA)/Cycle 28 (USA).json
+Computer - Itchio || D.M.T. (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/D.M.T. (USA)/D.M.T. (USA).json
+Computer - Itchio || DYO (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/DYO (USA)/DYO (USA).json
+Computer - Itchio || Daemon Detective Gaiden II (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Daemon Detective Gaiden II (USA)/Daemon Detective Gaiden II (USA).json
+Computer - Itchio || Daemon Detective Racing Zero (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Daemon Detective Racing Zero (USA)/Daemon Detective Racing Zero (USA).json
+Computer - Itchio || Daily Chthonicle (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Daily Chthonicle (USA)/Daily Chthonicle (USA).json
+Computer - Itchio || Dance of Fire and Ice, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dance of Fire and Ice, A (USA)/Dance of Fire and Ice, A (USA).json
+Computer - Itchio || Danger Crew (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Danger Crew (USA)/Danger Crew (USA).json
+Computer - Itchio || Danger Scavenger (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Danger Scavenger (USA)/Danger Scavenger (USA).json
+Computer - Itchio || Danger Zone Friends (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Danger Zone Friends (USA)/Danger Zone Friends (USA).json
+Computer - Itchio || Dangerous Duels (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dangerous Duels (USA)/Dangerous Duels (USA).json
+Computer - Itchio || Dangerous Roads Ahead (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dangerous Roads Ahead (USA)/Dangerous Roads Ahead (USA).json
+Computer - Itchio || Dark Sheep (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dark Sheep (USA)/Dark Sheep (USA).json
+Computer - Itchio || Dark, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dark, The (USA)/Dark, The (USA).json
+Computer - Itchio || Darkest Wave (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Darkest Wave (USA)/Darkest Wave (USA).json
+Computer - Itchio || Darkspace (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Darkspace (USA)/Darkspace (USA).json
+Computer - Itchio || Data Loss (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Data Loss (USA)/Data Loss (USA).json
+Computer - Itchio || Dates & Wires (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dates & Wires (USA)/Dates & Wires (USA).json
+Computer - Itchio || David (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/David (USA)/David (USA).json
+Computer - Itchio || Dawn of a Soul (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dawn of a Soul (USA)/Dawn of a Soul (USA).json
+Computer - Itchio || Dawndusk Dream Sewer (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dawndusk Dream Sewer (USA)/Dawndusk Dream Sewer (USA).json
+Computer - Itchio || Day in the Woods, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Day in the Woods, A (USA)/Day in the Woods, A (USA).json
+Computer - Itchio || Daydreamour (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Daydreamour (USA)/Daydreamour (USA).json
+Computer - Itchio || Dayscream (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dayscream (USA)/Dayscream (USA).json
+Computer - Itchio || Dead 4 Dress (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dead 4 Dress (USA)/Dead 4 Dress (USA).json
+Computer - Itchio || Dead Pixels - The 8-bit Zombie Sim (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dead Pixels - The 8-bit Zombie Sim (USA)/Dead Pixels - The 8-bit Zombie Sim (USA).json
+Computer - Itchio || Dear Mariko (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dear Mariko (USA)/Dear Mariko (USA).json
+Computer - Itchio || Death Drives A Bus (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Death Drives A Bus (USA)/Death Drives A Bus (USA).json
+Computer - Itchio || Death Game (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Death Game (USA)/Death Game (USA).json
+Computer - Itchio || Death and Taxes (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Death and Taxes (USA)/Death and Taxes (USA).json
+Computer - Itchio || Death of the Corpse Wizard, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Death of the Corpse Wizard, The (USA)/Death of the Corpse Wizard, The (USA).json
+Computer - Itchio || Death! Preposterous! - A Non-violent RPG (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Death! Preposterous! - A Non-violent RPG (USA)/Death! Preposterous! - A Non-violent RPG (USA).json
+Computer - Itchio || Death's Life (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Death's Life (USA)/Death's Life (USA).json
+Computer - Itchio || Deck Defenders (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Deck Defenders (USA)/Deck Defenders (USA).json
+Computer - Itchio || Dee Dum (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dee Dum (USA)/Dee Dum (USA).json
+Computer - Itchio || Deeper Into Space (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Deeper Into Space (USA)/Deeper Into Space (USA).json
+Computer - Itchio || Deer God, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Deer God, The (USA)/Deer God, The (USA).json
+Computer - Itchio || Deja Vu (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Deja Vu (USA)/Deja Vu (USA).json
+Computer - Itchio || Deliver Us From Evil - Masquerade (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Deliver Us From Evil - Masquerade (USA)/Deliver Us From Evil - Masquerade (USA).json
+Computer - Itchio || Delver (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Delver (USA)/Delver (USA).json
+Computer - Itchio || Democratic Socialism Simulator (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Democratic Socialism Simulator (USA)/Democratic Socialism Simulator (USA).json
+Computer - Itchio || Demonizer (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Demonizer (USA)/Demonizer (USA).json
+Computer - Itchio || Depanneur Nocturne (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Depanneur Nocturne (USA)/Depanneur Nocturne (USA).json
+Computer - Itchio || Depth of Extinction (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Depth of Extinction (USA)/Depth of Extinction (USA).json
+Computer - Itchio || Dere Evil Exe (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dere Evil Exe (USA)/Dere Evil Exe (USA).json
+Computer - Itchio || Derpy Deep Drive (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Derpy Deep Drive (USA)/Derpy Deep Drive (USA).json
+Computer - Itchio || Desastre Colectivo (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Desastre Colectivo (USA)/Desastre Colectivo (USA).json
+Computer - Itchio || Desert Mothers (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Desert Mothers (USA)/Desert Mothers (USA).json
+Computer - Itchio || Deskspace (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Deskspace (USA)/Deskspace (USA).json
+Computer - Itchio || Desktop Goose (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Desktop Goose (USA)/Desktop Goose (USA).json
+Computer - Itchio || Desktop Meadow (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Desktop Meadow (USA)/Desktop Meadow (USA).json
+Computer - Itchio || Desolate Roads (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Desolate Roads (USA)/Desolate Roads (USA).json
+Computer - Itchio || Destiny Fails Us - A New Life (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Destiny Fails Us - A New Life (USA)/Destiny Fails Us - A New Life (USA).json
+Computer - Itchio || Destructivator 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Destructivator 2 (USA)/Destructivator 2 (USA).json
+Computer - Itchio || Detective Bot (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Detective Bot (USA)/Detective Bot (USA).json
+Computer - Itchio || Detective Case and Clown Bot in Murder in The Hotel Lisbon (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Detective Case and Clown Bot in Murder in The Hotel Lisbon (USA)/Detective Case and Clown Bot in Murder in The Hotel Lisbon (USA).json
+Computer - Itchio || Detective Hank and the Golden Sneeze (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Detective Hank and the Golden Sneeze (USA)/Detective Hank and the Golden Sneeze (USA).json
+Computer - Itchio || Devtheism (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Devtheism (USA)/Devtheism (USA).json
+Computer - Itchio || Dialogue - A Writer's Story (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dialogue - A Writer's Story (USA)/Dialogue - A Writer's Story (USA).json
+Computer - Itchio || Diaries of a Spaceport Janitor (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Diaries of a Spaceport Janitor (USA)/Diaries of a Spaceport Janitor (USA).json
+Computer - Itchio || Dimension Drive (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dimension Drive (USA)/Dimension Drive (USA).json
+Computer - Itchio || Dino Island The Four Crystals (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dino Island The Four Crystals (USA)/Dino Island The Four Crystals (USA).json
+Computer - Itchio || Dis Pontibus (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dis Pontibus (USA)/Dis Pontibus (USA).json
+Computer - Itchio || Discovering Colors - Animals (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Discovering Colors - Animals (USA)/Discovering Colors - Animals (USA).json
+Computer - Itchio || Discsphere (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Discsphere (USA)/Discsphere (USA).json
+Computer - Itchio || Disobedient Sheep (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Disobedient Sheep (USA)/Disobedient Sheep (USA).json
+Computer - Itchio || Distortion Nation (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Distortion Nation (USA)/Distortion Nation (USA).json
+Computer - Itchio || Dogs Throwing Swords II - Three Barks To The Wind (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dogs Throwing Swords II - Three Barks To The Wind (USA)/Dogs Throwing Swords II - Three Barks To The Wind (USA).json
+Computer - Itchio || Dogurai (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dogurai (USA)/Dogurai (USA).json
+Computer - Itchio || Dominique Pamplemousse - Combinatorial Explosion! (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dominique Pamplemousse - Combinatorial Explosion! (USA)/Dominique Pamplemousse - Combinatorial Explosion! (USA).json
+Computer - Itchio || Dominique Pamplemousse - It's All Over Once The Fat Lady Sings! (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dominique Pamplemousse - It's All Over Once The Fat Lady Sings! (USA)/Dominique Pamplemousse - It's All Over Once The Fat Lady Sings! (USA).json
+Computer - Itchio || Don't Escape - 4 Days to Survive (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Don't Escape - 4 Days to Survive (USA)/Don't Escape - 4 Days to Survive (USA).json
+Computer - Itchio || Don't Move (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Don't Move (USA)/Don't Move (USA).json
+Computer - Itchio || Don't Take It Personally, I Just Don't Like You - The Camping Trip (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Don't Take It Personally, I Just Don't Like You - The Camping Trip (USA)/Don't Take It Personally, I Just Don't Like You - The Camping Trip (USA).json
+Computer - Itchio || Don't Wake The Night (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Don't Wake The Night (USA)/Don't Wake The Night (USA).json
+Computer - Itchio || Doodle Date (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Doodle Date (USA)/Doodle Date (USA).json
+Computer - Itchio || Dorfromantik (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dorfromantik (USA)/Dorfromantik (USA).json
+Computer - Itchio || Double Cross (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Double Cross (USA)/Double Cross (USA).json
+Computer - Itchio || Down (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Down (USA)/Down (USA).json
+Computer - Itchio || Down to Earth (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Down to Earth (USA)/Down to Earth (USA).json
+Computer - Itchio || Dr. Langeskov, The Tiger, And The Terribly Cursed Emerald (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dr. Langeskov, The Tiger, And The Terribly Cursed Emerald (USA)/Dr. Langeskov, The Tiger, And The Terribly Cursed Emerald (USA).json
+Computer - Itchio || Dr. Trolley's Problem (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dr. Trolley's Problem (USA)/Dr. Trolley's Problem (USA).json
+Computer - Itchio || Dragon Drop (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dragon Drop (USA)/Dragon Drop (USA).json
+Computer - Itchio || Dragondot 3 (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dragondot 3 (USA)/Dragondot 3 (USA).json
+Computer - Itchio || Dragons in Space (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dragons in Space (USA)/Dragons in Space (USA).json
+Computer - Itchio || Drake (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Drake (USA)/Drake (USA).json
+Computer - Itchio || Dreaming Sarah (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dreaming Sarah (USA)/Dreaming Sarah (USA).json
+Computer - Itchio || Drew and the Floating Labyrinth (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Drew and the Floating Labyrinth (USA)/Drew and the Floating Labyrinth (USA).json
+Computer - Itchio || DriftKing 2D (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/DriftKing 2D (USA)/DriftKing 2D (USA).json
+Computer - Itchio || Drive to Hell (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Drive to Hell (USA)/Drive to Hell (USA).json
+Computer - Itchio || Droid7 (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Droid7 (USA)/Droid7 (USA).json
+Computer - Itchio || Drones, The Human Condition (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Drones, The Human Condition (USA)/Drones, The Human Condition (USA).json
+Computer - Itchio || Dropship (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dropship (USA)/Dropship (USA).json
+Computer - Itchio || Drum Brain (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Drum Brain (USA)/Drum Brain (USA).json
+Computer - Itchio || Dstnce (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dstnce (USA)/Dstnce (USA).json
+Computer - Itchio || Dual Pong (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dual Pong (USA)/Dual Pong (USA).json
+Computer - Itchio || Duck in Town - A Rising Knight (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Duck in Town - A Rising Knight (USA)/Duck in Town - A Rising Knight (USA).json
+Computer - Itchio || Dujanah (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dujanah (USA)/Dujanah (USA).json
+Computer - Itchio || Dumpy & Bumpy (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dumpy & Bumpy (USA)/Dumpy & Bumpy (USA).json
+Computer - Itchio || Dungeon Escape (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dungeon Escape (USA)/Dungeon Escape (USA).json
+Computer - Itchio || Dungeon Nightmares II - The Memory (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dungeon Nightmares II - The Memory (USA)/Dungeon Nightmares II - The Memory (USA).json
+Computer - Itchio || Dungeons & Lesbians (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dungeons & Lesbians (USA)/Dungeons & Lesbians (USA).json
+Computer - Itchio || Dungeons of Loot (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dungeons of Loot (USA)/Dungeons of Loot (USA).json
+Computer - Itchio || Dusk Child (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dusk Child (USA)/Dusk Child (USA).json
+Computer - Itchio || Dwerg Saga (USA) || $ROM_JSON_ROOT/Computer/Itchio/D/Dwerg Saga (USA)/Dwerg Saga (USA).json
+Computer - Itchio || EEK3 2020 Virtual Show Floor (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/EEK3 2020 Virtual Show Floor (USA)/EEK3 2020 Virtual Show Floor (USA).json
+Computer - Itchio || East Van EP (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/East Van EP (USA)/East Van EP (USA).json
+Computer - Itchio || Eat Girl (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Eat Girl (USA)/Eat Girl (USA).json
+Computer - Itchio || Eatvolve (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Eatvolve (USA)/Eatvolve (USA).json
+Computer - Itchio || Ecchi Sketch - Draw Cute Girls Every Day! (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Ecchi Sketch - Draw Cute Girls Every Day! (USA)/Ecchi Sketch - Draw Cute Girls Every Day! (USA).json
+Computer - Itchio || Echoes of the Fey Episode 1 - The Fox's Trail (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Echoes of the Fey Episode 1 - The Fox's Trail (USA)/Echoes of the Fey Episode 1 - The Fox's Trail (USA).json
+Computer - Itchio || Eizoku (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Eizoku (USA)/Eizoku (USA).json
+Computer - Itchio || El Gancho (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/El Gancho (USA)/El Gancho (USA).json
+Computer - Itchio || El Tango de la Muerte (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/El Tango de la Muerte (USA)/El Tango de la Muerte (USA).json
+Computer - Itchio || Elden - Path of the Forgotten (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Elden - Path of the Forgotten (USA)/Elden - Path of the Forgotten (USA).json
+Computer - Itchio || Eldritch (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Eldritch (USA)/Eldritch (USA).json
+Computer - Itchio || EleMetals - Death Metal Death Match (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/EleMetals - Death Metal Death Match (USA)/EleMetals - Death Metal Death Match (USA).json
+Computer - Itchio || Electric Zine Maker (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Electric Zine Maker (USA)/Electric Zine Maker (USA).json
+Computer - Itchio || Elemental Connection (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Elemental Connection (USA)/Elemental Connection (USA).json
+Computer - Itchio || Elephant Hunter Hunter (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Elephant Hunter Hunter (USA)/Elephant Hunter Hunter (USA).json
+Computer - Itchio || Elephantasy (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Elephantasy (USA)/Elephantasy (USA).json
+Computer - Itchio || Emberlight (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Emberlight (USA)/Emberlight (USA).json
+Computer - Itchio || Empyrean Frontier (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Empyrean Frontier (USA)/Empyrean Frontier (USA).json
+Computer - Itchio || Emuurom (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Emuurom (USA)/Emuurom (USA).json
+Computer - Itchio || Enc and the Flying Machine (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Enc and the Flying Machine (USA)/Enc and the Flying Machine (USA).json
+Computer - Itchio || Endless Overdrive (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Endless Overdrive (USA)/Endless Overdrive (USA).json
+Computer - Itchio || Engineer Arena (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Engineer Arena (USA)/Engineer Arena (USA).json
+Computer - Itchio || Enigma Machine, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Enigma Machine, The (USA)/Enigma Machine, The (USA).json
+Computer - Itchio || Ephemeral Tale (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Ephemeral Tale (USA)/Ephemeral Tale (USA).json
+Computer - Itchio || Epic Battle Fantasy 4 (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Epic Battle Fantasy 4 (USA)/Epic Battle Fantasy 4 (USA).json
+Computer - Itchio || Equaboreal 12.21 (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Equaboreal 12.21 (USA)/Equaboreal 12.21 (USA).json
+Computer - Itchio || Erth (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Erth (USA)/Erth (USA).json
+Computer - Itchio || Escape from Kabagahara (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Escape from Kabagahara (USA)/Escape from Kabagahara (USA).json
+Computer - Itchio || Escape from Life Inc (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Escape from Life Inc (USA)/Escape from Life Inc (USA).json
+Computer - Itchio || EscapeRoomSim (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/EscapeRoomSim (USA)/EscapeRoomSim (USA).json
+Computer - Itchio || Escaped Chasm (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Escaped Chasm (USA)/Escaped Chasm (USA).json
+Computer - Itchio || Escort Yourself Out (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Escort Yourself Out (USA)/Escort Yourself Out (USA).json
+Computer - Itchio || Eselmir and the Five Magical Gifts (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Eselmir and the Five Magical Gifts (USA)/Eselmir and the Five Magical Gifts (USA).json
+Computer - Itchio || Eternia - Pet Whisperer (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Eternia - Pet Whisperer (USA)/Eternia - Pet Whisperer (USA).json
+Computer - Itchio || Ethereal (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Ethereal (USA)/Ethereal (USA).json
+Computer - Itchio || Evader (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Evader (USA)/Evader (USA).json
+Computer - Itchio || Evangeline (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Evangeline (USA)/Evangeline (USA).json
+Computer - Itchio || Even in Arcadia (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Even in Arcadia (USA)/Even in Arcadia (USA).json
+Computer - Itchio || Evergate (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Evergate (USA)/Evergate (USA).json
+Computer - Itchio || Eves Drop (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Eves Drop (USA)/Eves Drop (USA).json
+Computer - Itchio || Ex Novo (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Ex Novo (USA)/Ex Novo (USA).json
+Computer - Itchio || Explobers (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Explobers (USA)/Explobers (USA).json
+Computer - Itchio || Explorers - Deluxe Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Explorers - Deluxe Edition (USA)/Explorers - Deluxe Edition (USA).json
+Computer - Itchio || Extreme Meatpunks Forever (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Extreme Meatpunks Forever (USA)/Extreme Meatpunks Forever (USA).json
+Computer - Itchio || Extreme Mining (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Extreme Mining (USA)/Extreme Mining (USA).json
+Computer - Itchio || Eye of Ra (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Eye of Ra (USA)/Eye of Ra (USA).json
+Computer - Itchio || Eyewear Cleaner 2077 (USA) || $ROM_JSON_ROOT/Computer/Itchio/E/Eyewear Cleaner 2077 (USA)/Eyewear Cleaner 2077 (USA).json
+Computer - Itchio || Factory Hiro (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Factory Hiro (USA)/Factory Hiro (USA).json
+Computer - Itchio || Fake Illusions (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fake Illusions (USA)/Fake Illusions (USA).json
+Computer - Itchio || Fall of Lazarus, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fall of Lazarus, The (USA)/Fall of Lazarus, The (USA).json
+Computer - Itchio || Falling Is Not the Same Thing As Dying (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Falling Is Not the Same Thing As Dying (USA)/Falling Is Not the Same Thing As Dying (USA).json
+Computer - Itchio || Falling Skies (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Falling Skies (USA)/Falling Skies (USA).json
+Computer - Itchio || Fantaballous Tilt, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fantaballous Tilt, The (USA)/Fantaballous Tilt, The (USA).json
+Computer - Itchio || Fantastic Fetus - Prebirth (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fantastic Fetus - Prebirth (USA)/Fantastic Fetus - Prebirth (USA).json
+Computer - Itchio || Fantom Feast (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fantom Feast (USA)/Fantom Feast (USA).json
+Computer - Itchio || Far from Noise (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Far from Noise (USA)/Far from Noise (USA).json
+Computer - Itchio || Fat Bear Week (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fat Bear Week (USA)/Fat Bear Week (USA).json
+Computer - Itchio || Fate Tectonics (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fate Tectonics (USA)/Fate Tectonics (USA).json
+Computer - Itchio || Fatum Betula (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fatum Betula (USA)/Fatum Betula (USA).json
+Computer - Itchio || Feud (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Feud (USA)/Feud (USA).json
+Computer - Itchio || Feyna's Quest (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Feyna's Quest (USA)/Feyna's Quest (USA).json
+Computer - Itchio || Fidelity (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fidelity (USA)/Fidelity (USA).json
+Computer - Itchio || Figment (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Figment (USA)/Figment (USA).json
+Computer - Itchio || Final Spike (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Final Spike (USA)/Final Spike (USA).json
+Computer - Itchio || Find Me (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Find Me (USA)/Find Me (USA).json
+Computer - Itchio || Find Yourself (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Find Yourself (USA)/Find Yourself (USA).json
+Computer - Itchio || Firemakaf (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Firemakaf (USA)/Firemakaf (USA).json
+Computer - Itchio || Fish Fly Fever (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fish Fly Fever (USA)/Fish Fly Fever (USA).json
+Computer - Itchio || Fit For A King (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fit For A King (USA)/Fit For A King (USA).json
+Computer - Itchio || Flamberge (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Flamberge (USA)/Flamberge (USA).json
+Computer - Itchio || Flash Point - Fire Rescue (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Flash Point - Fire Rescue (USA)/Flash Point - Fire Rescue (USA).json
+Computer - Itchio || Flashover MegaSector (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Flashover MegaSector (USA)/Flashover MegaSector (USA).json
+Computer - Itchio || Flat Form Fighter (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Flat Form Fighter (USA)/Flat Form Fighter (USA).json
+Computer - Itchio || Flat Kingdom (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Flat Kingdom (USA)/Flat Kingdom (USA).json
+Computer - Itchio || Flewberry (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Flewberry (USA)/Flewberry (USA).json
+Computer - Itchio || Floor is Jelly, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Floor is Jelly, The (USA)/Floor is Jelly, The (USA).json
+Computer - Itchio || Flowerdrops (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Flowerdrops (USA)/Flowerdrops (USA).json
+Computer - Itchio || Flufftopia (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Flufftopia (USA)/Flufftopia (USA).json
+Computer - Itchio || Flux (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Flux (USA)/Flux (USA).json
+Computer - Itchio || Football Drama (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Football Drama (USA)/Football Drama (USA).json
+Computer - Itchio || For-rest (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/For-rest (USA)/For-rest (USA).json
+Computer - Itchio || Forever Lost - Episode 1 (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Forever Lost - Episode 1 (USA)/Forever Lost - Episode 1 (USA).json
+Computer - Itchio || Forever Lost - Episode 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Forever Lost - Episode 2 (USA)/Forever Lost - Episode 2 (USA).json
+Computer - Itchio || Forever Lost - Episode 3 (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Forever Lost - Episode 3 (USA)/Forever Lost - Episode 3 (USA).json
+Computer - Itchio || Forget the Brakes! (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Forget the Brakes! (USA)/Forget the Brakes! (USA).json
+Computer - Itchio || Forgetful Loop, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Forgetful Loop, A (USA)/Forgetful Loop, A (USA).json
+Computer - Itchio || Forgiveness - Escape Room (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Forgiveness - Escape Room (USA)/Forgiveness - Escape Room (USA).json
+Computer - Itchio || Forma.8 (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Forma.8 (USA)/Forma.8 (USA).json
+Computer - Itchio || Fortune-499 (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fortune-499 (USA)/Fortune-499 (USA).json
+Computer - Itchio || Fossil Echo (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fossil Echo (USA)/Fossil Echo (USA).json
+Computer - Itchio || Fossil Hunters (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fossil Hunters (USA)/Fossil Hunters (USA).json
+Computer - Itchio || Fostering Apocalypse (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fostering Apocalypse (USA)/Fostering Apocalypse (USA).json
+Computer - Itchio || Four Horsemen (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Four Horsemen (USA)/Four Horsemen (USA).json
+Computer - Itchio || Four Sided Fantasy (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Four Sided Fantasy (USA)/Four Sided Fantasy (USA).json
+Computer - Itchio || Frick, Inc. (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Frick, Inc. (USA)/Frick, Inc. (USA).json
+Computer - Itchio || Friday Night Bullet Arena (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Friday Night Bullet Arena (USA)/Friday Night Bullet Arena (USA).json
+Computer - Itchio || Frog (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Frog (USA)/Frog (USA).json
+Computer - Itchio || FroggieChat (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/FroggieChat (USA)/FroggieChat (USA).json
+Computer - Itchio || From Orbit (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/From Orbit (USA)/From Orbit (USA).json
+Computer - Itchio || Fugue (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fugue (USA)/Fugue (USA).json
+Computer - Itchio || Fugue in Void (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fugue in Void (USA)/Fugue in Void (USA).json
+Computer - Itchio || Fumiko! (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fumiko! (USA)/Fumiko! (USA).json
+Computer - Itchio || Furniture Of Self, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Furniture Of Self, The (USA)/Furniture Of Self, The (USA).json
+Computer - Itchio || Furries & Scalies & Bears OH MY! - Ultimate Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Furries & Scalies & Bears OH MY! - Ultimate Edition (USA)/Furries & Scalies & Bears OH MY! - Ultimate Edition (USA).json
+Computer - Itchio || Fusion Shift (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fusion Shift (USA)/Fusion Shift (USA).json
+Computer - Itchio || Future Unfolding (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Future Unfolding (USA)/Future Unfolding (USA).json
+Computer - Itchio || Future Vox Imaginarium Dot Exe - Doge Lover Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Future Vox Imaginarium Dot Exe - Doge Lover Edition (USA)/Future Vox Imaginarium Dot Exe - Doge Lover Edition (USA).json
+Computer - Itchio || FutureGrind (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/FutureGrind (USA)/FutureGrind (USA).json
+Computer - Itchio || Fuzz Dungeon (USA) || $ROM_JSON_ROOT/Computer/Itchio/F/Fuzz Dungeon (USA)/Fuzz Dungeon (USA).json
+Computer - Itchio || GUNPIG - Firepower For Hire (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/GUNPIG - Firepower For Hire (USA)/GUNPIG - Firepower For Hire (USA).json
+Computer - Itchio || Galactic Wars (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Galactic Wars (USA)/Galactic Wars (USA).json
+Computer - Itchio || GalaxSeed (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/GalaxSeed (USA)/GalaxSeed (USA).json
+Computer - Itchio || Gambol (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gambol (USA)/Gambol (USA).json
+Computer - Itchio || Game of Changes, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Game of Changes, A (USA)/Game of Changes, A (USA).json
+Computer - Itchio || Ganbare! Super Strikers (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Ganbare! Super Strikers (USA)/Ganbare! Super Strikers (USA).json
+Computer - Itchio || Garden Match (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Garden Match (USA)/Garden Match (USA).json
+Computer - Itchio || Garrison Gauntlet (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Garrison Gauntlet (USA)/Garrison Gauntlet (USA).json
+Computer - Itchio || Gataela (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gataela (USA)/Gataela (USA).json
+Computer - Itchio || Geography, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Geography, The (USA)/Geography, The (USA).json
+Computer - Itchio || Germination (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Germination (USA)/Germination (USA).json
+Computer - Itchio || Ghost Grab 3000 (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Ghost Grab 3000 (USA)/Ghost Grab 3000 (USA).json
+Computer - Itchio || Ghost Story (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Ghost Story (USA)/Ghost Story (USA).json
+Computer - Itchio || Giant's Chalice (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Giant's Chalice (USA)/Giant's Chalice (USA).json
+Computer - Itchio || Gig Life (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gig Life (USA)/Gig Life (USA).json
+Computer - Itchio || Gigabit (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gigabit (USA)/Gigabit (USA).json
+Computer - Itchio || Gimmick in the Chaos Dimension (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gimmick in the Chaos Dimension (USA)/Gimmick in the Chaos Dimension (USA).json
+Computer - Itchio || Gladiabots (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gladiabots (USA)/Gladiabots (USA).json
+Computer - Itchio || Glitch Strike (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Glitch Strike (USA)/Glitch Strike (USA).json
+Computer - Itchio || Glittermitten Grove (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Glittermitten Grove (USA)/Glittermitten Grove (USA).json
+Computer - Itchio || Gloom Reducer (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gloom Reducer (USA)/Gloom Reducer (USA).json
+Computer - Itchio || Gnog (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gnog (USA)/Gnog (USA).json
+Computer - Itchio || Go Morse Go! Arcade Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Go Morse Go! Arcade Edition (USA)/Go Morse Go! Arcade Edition (USA).json
+Computer - Itchio || GoNNER (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/GoNNER (USA)/GoNNER (USA).json
+Computer - Itchio || God, I Hate Wasps (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/God, I Hate Wasps (USA)/God, I Hate Wasps (USA).json
+Computer - Itchio || Golden Treasure - The Great Green (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Golden Treasure - The Great Green (USA)/Golden Treasure - The Great Green (USA).json
+Computer - Itchio || Golem Creation Kit (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Golem Creation Kit (USA)/Golem Creation Kit (USA).json
+Computer - Itchio || Golf Peaks (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Golf Peaks (USA)/Golf Peaks (USA).json
+Computer - Itchio || Good Morning Hon (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Good Morning Hon (USA)/Good Morning Hon (USA).json
+Computer - Itchio || Good Mourning (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Good Mourning (USA)/Good Mourning (USA).json
+Computer - Itchio || Good Snowman Is Hard To Build, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Good Snowman Is Hard To Build, A (USA)/Good Snowman Is Hard To Build, A (USA).json
+Computer - Itchio || Goopty Goo (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Goopty Goo (USA)/Goopty Goo (USA).json
+Computer - Itchio || GourMelee (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/GourMelee (USA)/GourMelee (USA).json
+Computer - Itchio || Grapple Force Rena (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Grapple Force Rena (USA)/Grapple Force Rena (USA).json
+Computer - Itchio || Graveyard Shift (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Graveyard Shift (USA)/Graveyard Shift (USA).json
+Computer - Itchio || Gravity Fighters (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gravity Fighters (USA)/Gravity Fighters (USA).json
+Computer - Itchio || Gravity Pilot! (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gravity Pilot! (USA)/Gravity Pilot! (USA).json
+Computer - Itchio || Gravity Typist (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gravity Typist (USA)/Gravity Typist (USA).json
+Computer - Itchio || Greg the Clumsy Ghost (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Greg the Clumsy Ghost (USA)/Greg the Clumsy Ghost (USA).json
+Computer - Itchio || Grey Man, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Grey Man, The (USA)/Grey Man, The (USA).json
+Computer - Itchio || Grievance (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Grievance (USA)/Grievance (USA).json
+Computer - Itchio || Grime & Gaslight (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Grime & Gaslight (USA)/Grime & Gaslight (USA).json
+Computer - Itchio || Grime House (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Grime House (USA)/Grime House (USA).json
+Computer - Itchio || Grimm & Tonic - Aperitif (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Grimm & Tonic - Aperitif (USA)/Grimm & Tonic - Aperitif (USA).json
+Computer - Itchio || Grindhouse Games Volume I (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Grindhouse Games Volume I (USA)/Grindhouse Games Volume I (USA).json
+Computer - Itchio || Grow Big or Go Home - Ultimate Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Grow Big or Go Home - Ultimate Edition (USA)/Grow Big or Go Home - Ultimate Edition (USA).json
+Computer - Itchio || Guide of the Butterfly (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Guide of the Butterfly (USA)/Guide of the Butterfly (USA).json
+Computer - Itchio || Guilt and the Shadow, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Guilt and the Shadow, The (USA)/Guilt and the Shadow, The (USA).json
+Computer - Itchio || Guitar Fretter (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Guitar Fretter (USA)/Guitar Fretter (USA).json
+Computer - Itchio || Gumgem (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gumgem (USA)/Gumgem (USA).json
+Computer - Itchio || Gun Rounds (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gun Rounds (USA)/Gun Rounds (USA).json
+Computer - Itchio || Gunbuds (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gunbuds (USA)/Gunbuds (USA).json
+Computer - Itchio || Gunducky Industries (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gunducky Industries (USA)/Gunducky Industries (USA).json
+Computer - Itchio || Gunhouse (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gunhouse (USA)/Gunhouse (USA).json
+Computer - Itchio || Gunmetal Arcadia Zero (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gunmetal Arcadia Zero (USA)/Gunmetal Arcadia Zero (USA).json
+Computer - Itchio || Guppy (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Guppy (USA)/Guppy (USA).json
+Computer - Itchio || Gutwhale (USA) || $ROM_JSON_ROOT/Computer/Itchio/G/Gutwhale (USA)/Gutwhale (USA).json
+Computer - Itchio || Hack FPS - Anniversary Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hack FPS - Anniversary Edition (USA)/Hack FPS - Anniversary Edition (USA).json
+Computer - Itchio || Hack Grid (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hack Grid (USA)/Hack Grid (USA).json
+Computer - Itchio || Hair Dash (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hair Dash (USA)/Hair Dash (USA).json
+Computer - Itchio || Halloween Forever (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Halloween Forever (USA)/Halloween Forever (USA).json
+Computer - Itchio || Haque (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Haque (USA)/Haque (USA).json
+Computer - Itchio || Harvest Hero Origins (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Harvest Hero Origins (USA)/Harvest Hero Origins (USA).json
+Computer - Itchio || HasIContent (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/HasIContent (USA)/HasIContent (USA).json
+Computer - Itchio || Hatch (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hatch (USA)/Hatch (USA).json
+Computer - Itchio || Haunted PS1 Demo Disc - Spectral Mall (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Haunted PS1 Demo Disc - Spectral Mall (USA)/Haunted PS1 Demo Disc - Spectral Mall (USA).json
+Computer - Itchio || Haunted PS1 Demo Disc 2020 (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Haunted PS1 Demo Disc 2020 (USA)/Haunted PS1 Demo Disc 2020 (USA).json
+Computer - Itchio || Haunted PS1 Demo Disc 2021 (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Haunted PS1 Demo Disc 2021 (USA)/Haunted PS1 Demo Disc 2021 (USA).json
+Computer - Itchio || Haunted PS1 Madvent Calendar 2020 (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Haunted PS1 Madvent Calendar 2020 (USA)/Haunted PS1 Madvent Calendar 2020 (USA).json
+Computer - Itchio || Haunted PS1 Madvent Calendar 2021 (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Haunted PS1 Madvent Calendar 2021 (USA)/Haunted PS1 Madvent Calendar 2021 (USA).json
+Computer - Itchio || He Plays the Piano (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/He Plays the Piano (USA)/He Plays the Piano (USA).json
+Computer - Itchio || Head AS Code (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Head AS Code (USA)/Head AS Code (USA).json
+Computer - Itchio || Headliner (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Headliner (USA)/Headliner (USA).json
+Computer - Itchio || Headliner - NoviNews (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Headliner - NoviNews (USA)/Headliner - NoviNews (USA).json
+Computer - Itchio || Headspun - Dazed Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Headspun - Dazed Edition (USA)/Headspun - Dazed Edition (USA).json
+Computer - Itchio || Heartbreak High - A Break-Up Simulator (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Heartbreak High - A Break-Up Simulator (USA)/Heartbreak High - A Break-Up Simulator (USA).json
+Computer - Itchio || Heavy Bullets (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Heavy Bullets (USA)/Heavy Bullets (USA).json
+Computer - Itchio || Hedera (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hedera (USA)/Hedera (USA).json
+Computer - Itchio || Helium Rain (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Helium Rain (USA)/Helium Rain (USA).json
+Computer - Itchio || HellStar Squadron (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/HellStar Squadron (USA)/HellStar Squadron (USA).json
+Computer - Itchio || Hellcraze (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hellcraze (USA)/Hellcraze (USA).json
+Computer - Itchio || Hellenica (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hellenica (USA)/Hellenica (USA).json
+Computer - Itchio || Hello Charlotte - Episode 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hello Charlotte - Episode 2 (USA)/Hello Charlotte - Episode 2 (USA).json
+Computer - Itchio || Hermit the Sluggish Caterpillar of the Sea (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hermit the Sluggish Caterpillar of the Sea (USA)/Hermit the Sluggish Caterpillar of the Sea (USA).json
+Computer - Itchio || Hero Generations (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hero Generations (USA)/Hero Generations (USA).json
+Computer - Itchio || Hero Hours Contract (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hero Hours Contract (USA)/Hero Hours Contract (USA).json
+Computer - Itchio || Hero of Budgie Island, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hero of Budgie Island, The (USA)/Hero of Budgie Island, The (USA).json
+Computer - Itchio || Hero-ing Addict (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hero-ing Addict (USA)/Hero-ing Addict (USA).json
+Computer - Itchio || HeroRun (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/HeroRun (USA)/HeroRun (USA).json
+Computer - Itchio || Hex, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hex, The (USA)/Hex, The (USA).json
+Computer - Itchio || HexaCycle (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/HexaCycle (USA)/HexaCycle (USA).json
+Computer - Itchio || Hexed (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hexed (USA)/Hexed (USA).json
+Computer - Itchio || Hi-Score Boi (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hi-Score Boi (USA)/Hi-Score Boi (USA).json
+Computer - Itchio || Hidden Folks (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hidden Folks (USA)/Hidden Folks (USA).json
+Computer - Itchio || Hidden Paws (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hidden Paws (USA)/Hidden Paws (USA).json
+Computer - Itchio || Hiding Spot (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hiding Spot (USA)/Hiding Spot (USA).json
+Computer - Itchio || Highway Blossoms - Remastered (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Highway Blossoms - Remastered (USA)/Highway Blossoms - Remastered (USA).json
+Computer - Itchio || Hippo on Elm Street (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hippo on Elm Street (USA)/Hippo on Elm Street (USA).json
+Computer - Itchio || Hive Time (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hive Time (USA)/Hive Time (USA).json
+Computer - Itchio || Hole New World, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hole New World, A (USA)/Hole New World, A (USA).json
+Computer - Itchio || Hollow Head (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hollow Head (USA)/Hollow Head (USA).json
+Computer - Itchio || Home - A Unique Horror Adventure (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Home - A Unique Horror Adventure (USA)/Home - A Unique Horror Adventure (USA).json
+Computer - Itchio || Homing (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Homing (USA)/Homing (USA).json
+Computer - Itchio || Homunculus Hotel (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Homunculus Hotel (USA)/Homunculus Hotel (USA).json
+Computer - Itchio || Honor Cry - Aftermath (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Honor Cry - Aftermath (USA)/Honor Cry - Aftermath (USA).json
+Computer - Itchio || Hooklings (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hooklings (USA)/Hooklings (USA).json
+Computer - Itchio || Hooks And Shotguns (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hooks And Shotguns (USA)/Hooks And Shotguns (USA).json
+Computer - Itchio || Hope's Peak (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hope's Peak (USA)/Hope's Peak (USA).json
+Computer - Itchio || Hoplegs (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hoplegs (USA)/Hoplegs (USA).json
+Computer - Itchio || Hot Pot Panic (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hot Pot Panic (USA)/Hot Pot Panic (USA).json
+Computer - Itchio || Hotel Paradise (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hotel Paradise (USA)/Hotel Paradise (USA).json
+Computer - Itchio || House In The Woods, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/House In The Woods, The (USA)/House In The Woods, The (USA).json
+Computer - Itchio || House on Holland Hill, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/House on Holland Hill, The (USA)/House on Holland Hill, The (USA).json
+Computer - Itchio || How About Spikes (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/How About Spikes (USA)/How About Spikes (USA).json
+Computer - Itchio || HubWorld (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/HubWorld (USA)/HubWorld (USA).json
+Computer - Itchio || Hunter's Moon Remastered (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hunter's Moon Remastered (USA)/Hunter's Moon Remastered (USA).json
+Computer - Itchio || Hyper Gauntlet - Legacy of Nozzlethruster III (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hyper Gauntlet - Legacy of Nozzlethruster III (USA)/Hyper Gauntlet - Legacy of Nozzlethruster III (USA).json
+Computer - Itchio || Hyper Sentinel (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hyper Sentinel (USA)/Hyper Sentinel (USA).json
+Computer - Itchio || Hyperplex 3D (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hyperplex 3D (USA)/Hyperplex 3D (USA).json
+Computer - Itchio || Hyperspace Dogfights (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hyperspace Dogfights (USA)/Hyperspace Dogfights (USA).json
+Computer - Itchio || Hypnagogia - Boundless Dreams (USA) || $ROM_JSON_ROOT/Computer/Itchio/H/Hypnagogia - Boundless Dreams (USA)/Hypnagogia - Boundless Dreams (USA).json
+Computer - Itchio || I Have Low Stats But My Class Is Leader (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/I Have Low Stats But My Class Is Leader (USA)/I Have Low Stats But My Class Is Leader (USA).json
+Computer - Itchio || I Hurt Myself - PostJam Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/I Hurt Myself - PostJam Edition (USA)/I Hurt Myself - PostJam Edition (USA).json
+Computer - Itchio || I See You (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/I See You (USA)/I See You (USA).json
+Computer - Itchio || I Want to Be a Triangle (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/I Want to Be a Triangle (USA)/I Want to Be a Triangle (USA).json
+Computer - Itchio || I'm a Love Interest in my Childhood Friend's Reverse Harem!!! (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/I'm a Love Interest in my Childhood Friend's Reverse Harem!!! (USA)/I'm a Love Interest in my Childhood Friend's Reverse Harem!!! (USA).json
+Computer - Itchio || IGEO (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/IGEO (USA)/IGEO (USA).json
+Computer - Itchio || Idioctopus (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Idioctopus (USA)/Idioctopus (USA).json
+Computer - Itchio || If Not Us (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/If Not Us (USA)/If Not Us (USA).json
+Computer - Itchio || Il Filo Conduttore (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Il Filo Conduttore (USA)/Il Filo Conduttore (USA).json
+Computer - Itchio || Image of Perfection (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Image of Perfection (USA)/Image of Perfection (USA).json
+Computer - Itchio || Imaginaria (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Imaginaria (USA)/Imaginaria (USA).json
+Computer - Itchio || Immure (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Immure (USA)/Immure (USA).json
+Computer - Itchio || Imperishable Memories (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Imperishable Memories (USA)/Imperishable Memories (USA).json
+Computer - Itchio || Imscared (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Imscared (USA)/Imscared (USA).json
+Computer - Itchio || In My Friend Carrie's Car (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/In My Friend Carrie's Car (USA)/In My Friend Carrie's Car (USA).json
+Computer - Itchio || InSynch (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/InSynch (USA)/InSynch (USA).json
+Computer - Itchio || Inbento (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Inbento (USA)/Inbento (USA).json
+Computer - Itchio || Indect (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Indect (USA)/Indect (USA).json
+Computer - Itchio || Independant Video Video Game (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Independant Video Video Game (USA)/Independant Video Video Game (USA).json
+Computer - Itchio || Indiepocalypse - Issue 4 (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Indiepocalypse - Issue 4 (USA)/Indiepocalypse - Issue 4 (USA).json
+Computer - Itchio || Indifferent Wonder of an Edible Place, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Indifferent Wonder of an Edible Place, The (USA)/Indifferent Wonder of an Edible Place, The (USA).json
+Computer - Itchio || Infini (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Infini (USA)/Infini (USA).json
+Computer - Itchio || Infiniboss (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Infiniboss (USA)/Infiniboss (USA).json
+Computer - Itchio || Inkanians (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Inkanians (USA)/Inkanians (USA).json
+Computer - Itchio || Inmost (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Inmost (USA)/Inmost (USA).json
+Computer - Itchio || Inner Anthology (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Inner Anthology (USA)/Inner Anthology (USA).json
+Computer - Itchio || Inner Tao (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Inner Tao (USA)/Inner Tao (USA).json
+Computer - Itchio || Insufficient Adjectives (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Insufficient Adjectives (USA)/Insufficient Adjectives (USA).json
+Computer - Itchio || Intelligent Design - An Evolutionary Sandbox (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Intelligent Design - An Evolutionary Sandbox (USA)/Intelligent Design - An Evolutionary Sandbox (USA).json
+Computer - Itchio || Interactive Portraits - Trans People in Japan (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Interactive Portraits - Trans People in Japan (USA)/Interactive Portraits - Trans People in Japan (USA).json
+Computer - Itchio || Interactivity - The Interactive Experience (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Interactivity - The Interactive Experience (USA)/Interactivity - The Interactive Experience (USA).json
+Computer - Itchio || Interstellaria (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Interstellaria (USA)/Interstellaria (USA).json
+Computer - Itchio || Into The Mist 2 - The Cult (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Into The Mist 2 - The Cult (USA)/Into The Mist 2 - The Cult (USA).json
+Computer - Itchio || Intra-System - Trust Issues (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Intra-System - Trust Issues (USA)/Intra-System - Trust Issues (USA).json
+Computer - Itchio || Inverness Nights (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Inverness Nights (USA)/Inverness Nights (USA).json
+Computer - Itchio || Islands - Non-Places (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Islands - Non-Places (USA)/Islands - Non-Places (USA).json
+Computer - Itchio || Isolation Story (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Isolation Story (USA)/Isolation Story (USA).json
+Computer - Itchio || It's Six Random Characters and a Single Floor Dungeon (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/It's Six Random Characters and a Single Floor Dungeon (USA)/It's Six Random Characters and a Single Floor Dungeon (USA).json
+Computer - Itchio || Izbot (USA) || $ROM_JSON_ROOT/Computer/Itchio/I/Izbot (USA)/Izbot (USA).json
+Computer - Itchio || J.Edgar Hoover Vs. Kennedy (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/J.Edgar Hoover Vs. Kennedy (USA)/J.Edgar Hoover Vs. Kennedy (USA).json
+Computer - Itchio || J.U.L.I.A. - Among the Stars (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/J.U.L.I.A. - Among the Stars (USA)/J.U.L.I.A. - Among the Stars (USA).json
+Computer - Itchio || JRNL (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/JRNL (USA)/JRNL (USA).json
+Computer - Itchio || Jabberwocky (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Jabberwocky (USA)/Jabberwocky (USA).json
+Computer - Itchio || Jam and the Mystery of the Mysteriously Spooky Mansion (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Jam and the Mystery of the Mysteriously Spooky Mansion (USA)/Jam and the Mystery of the Mysteriously Spooky Mansion (USA).json
+Computer - Itchio || Jet Buster (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Jet Buster (USA)/Jet Buster (USA).json
+Computer - Itchio || Jiayou MemoVirus (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Jiayou MemoVirus (USA)/Jiayou MemoVirus (USA).json
+Computer - Itchio || Jimmy and the Pulsating Mass (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Jimmy and the Pulsating Mass (USA)/Jimmy and the Pulsating Mass (USA).json
+Computer - Itchio || Joggernauts (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Joggernauts (USA)/Joggernauts (USA).json
+Computer - Itchio || Jotun - Valhalla Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Jotun - Valhalla Edition (USA)/Jotun - Valhalla Edition (USA).json
+Computer - Itchio || Jumpgrid (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Jumpgrid (USA)/Jumpgrid (USA).json
+Computer - Itchio || Jupitron Game Collection Vol.1 (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Jupitron Game Collection Vol.1 (USA)/Jupitron Game Collection Vol.1 (USA).json
+Computer - Itchio || Jupitron Game Collection Vol.2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Jupitron Game Collection Vol.2 (USA)/Jupitron Game Collection Vol.2 (USA).json
+Computer - Itchio || Jupitron Game Collection Vol.3 - Oldies! (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Jupitron Game Collection Vol.3 - Oldies! (USA)/Jupitron Game Collection Vol.3 - Oldies! (USA).json
+Computer - Itchio || Jupitron Game Collection Vol.4 - Middleware (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Jupitron Game Collection Vol.4 - Middleware (USA)/Jupitron Game Collection Vol.4 - Middleware (USA).json
+Computer - Itchio || Just Another Day at the Office (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Just Another Day at the Office (USA)/Just Another Day at the Office (USA).json
+Computer - Itchio || Just One, Must Choose (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Just One, Must Choose (USA)/Just One, Must Choose (USA).json
+Computer - Itchio || Just Rain (USA) || $ROM_JSON_ROOT/Computer/Itchio/J/Just Rain (USA)/Just Rain (USA).json
+Computer - Itchio || Kaiju Big Battel - Fighto Fantasy (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Kaiju Big Battel - Fighto Fantasy (USA)/Kaiju Big Battel - Fighto Fantasy (USA).json
+Computer - Itchio || Kakatte Koi Yo! (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Kakatte Koi Yo! (USA)/Kakatte Koi Yo! (USA).json
+Computer - Itchio || Kalling Kingdom (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Kalling Kingdom (USA)/Kalling Kingdom (USA).json
+Computer - Itchio || Karakuri-kun - A Japanese Tale (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Karakuri-kun - A Japanese Tale (USA)/Karakuri-kun - A Japanese Tale (USA).json
+Computer - Itchio || Karambola (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Karambola (USA)/Karambola (USA).json
+Computer - Itchio || Keep It Together (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Keep It Together (USA)/Keep It Together (USA).json
+Computer - Itchio || KeyCars (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/KeyCars (USA)/KeyCars (USA).json
+Computer - Itchio || Kids (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Kids (USA)/Kids (USA).json
+Computer - Itchio || Kill the Superweapon (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Kill the Superweapon (USA)/Kill the Superweapon (USA).json
+Computer - Itchio || King's Bird, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/King's Bird, The (USA)/King's Bird, The (USA).json
+Computer - Itchio || Kingdom Ka (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Kingdom Ka (USA)/Kingdom Ka (USA).json
+Computer - Itchio || Kingdom Two Crowns (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Kingdom Two Crowns (USA)/Kingdom Two Crowns (USA).json
+Computer - Itchio || Kishoutenketsu in the Countryside, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Kishoutenketsu in the Countryside, A (USA)/Kishoutenketsu in the Countryside, A (USA).json
+Computer - Itchio || Klang 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Klang 2 (USA)/Klang 2 (USA).json
+Computer - Itchio || Knight Bewitched (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Knight Bewitched (USA)/Knight Bewitched (USA).json
+Computer - Itchio || Knight Bewitched 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Knight Bewitched 2 (USA)/Knight Bewitched 2 (USA).json
+Computer - Itchio || Knightmare Tower (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Knightmare Tower (USA)/Knightmare Tower (USA).json
+Computer - Itchio || Knights of the Card Table (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Knights of the Card Table (USA)/Knights of the Card Table (USA).json
+Computer - Itchio || Kno (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Kno (USA)/Kno (USA).json
+Computer - Itchio || Korpus - Buried over the Black Soil (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Korpus - Buried over the Black Soil (USA)/Korpus - Buried over the Black Soil (USA).json
+Computer - Itchio || Kubyx (USA) || $ROM_JSON_ROOT/Computer/Itchio/K/Kubyx (USA)/Kubyx (USA).json
+Computer - Itchio || Labyrinth of Wild Abyss (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Labyrinth of Wild Abyss (USA)/Labyrinth of Wild Abyss (USA).json
+Computer - Itchio || Lacrymo Tennis 2016 + 2018 (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lacrymo Tennis 2016 + 2018 (USA)/Lacrymo Tennis 2016 + 2018 (USA).json
+Computer - Itchio || Land of Glass, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Land of Glass, The (USA)/Land of Glass, The (USA).json
+Computer - Itchio || Landlord of the Woods (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Landlord of the Woods (USA)/Landlord of the Woods (USA).json
+Computer - Itchio || Laser Paddles (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Laser Paddles (USA)/Laser Paddles (USA).json
+Computer - Itchio || LaserCat (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/LaserCat (USA)/LaserCat (USA).json
+Computer - Itchio || Last Knight - Rogue Rider Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Last Knight - Rogue Rider Edition (USA)/Last Knight - Rogue Rider Edition (USA).json
+Computer - Itchio || Last Librarian, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Last Librarian, The (USA)/Last Librarian, The (USA).json
+Computer - Itchio || Last Survey, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Last Survey, The (USA)/Last Survey, The (USA).json
+Computer - Itchio || Last Word (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Last Word (USA)/Last Word (USA).json
+Computer - Itchio || Lawn Buster for Hire (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lawn Buster for Hire (USA)/Lawn Buster for Hire (USA).json
+Computer - Itchio || Laza Knitez!! (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Laza Knitez!! (USA)/Laza Knitez!! (USA).json
+Computer - Itchio || Lazy Galaxy - Rebel Story (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lazy Galaxy - Rebel Story (USA)/Lazy Galaxy - Rebel Story (USA).json
+Computer - Itchio || Learn Japanese To Survive - Hiragana Battle (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Learn Japanese To Survive - Hiragana Battle (USA)/Learn Japanese To Survive - Hiragana Battle (USA).json
+Computer - Itchio || Learn Japanese To Survive - Kanji Combat (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Learn Japanese To Survive - Kanji Combat (USA)/Learn Japanese To Survive - Kanji Combat (USA).json
+Computer - Itchio || Legend of Hand (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Legend of Hand (USA)/Legend of Hand (USA).json
+Computer - Itchio || Legend of the Lost Dragons (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Legend of the Lost Dragons (USA)/Legend of the Lost Dragons (USA).json
+Computer - Itchio || Lenna's Inception (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lenna's Inception (USA)/Lenna's Inception (USA).json
+Computer - Itchio || Lew Pulsipher's Doomstar (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lew Pulsipher's Doomstar (USA)/Lew Pulsipher's Doomstar (USA).json
+Computer - Itchio || Lieve Oma (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lieve Oma (USA)/Lieve Oma (USA).json
+Computer - Itchio || Life In Captivity (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Life In Captivity (USA)/Life In Captivity (USA).json
+Computer - Itchio || Light Long Gone, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Light Long Gone, A (USA)/Light Long Gone, A (USA).json
+Computer - Itchio || Light at the End of the Ocean, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Light at the End of the Ocean, The (USA)/Light at the End of the Ocean, The (USA).json
+Computer - Itchio || Lingotopia (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lingotopia (USA)/Lingotopia (USA).json
+Computer - Itchio || Little Boats of Farewell (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Little Boats of Farewell (USA)/Little Boats of Farewell (USA).json
+Computer - Itchio || Little Bug (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Little Bug (USA)/Little Bug (USA).json
+Computer - Itchio || Little Burned Maiden (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Little Burned Maiden (USA)/Little Burned Maiden (USA).json
+Computer - Itchio || Little Cells (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Little Cells (USA)/Little Cells (USA).json
+Computer - Itchio || Little Comet (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Little Comet (USA)/Little Comet (USA).json
+Computer - Itchio || LiveScream (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/LiveScream (USA)/LiveScream (USA).json
+Computer - Itchio || Lizard Lady vs the Cats (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lizard Lady vs the Cats (USA)/Lizard Lady vs the Cats (USA).json
+Computer - Itchio || Lizzi Crossing (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lizzi Crossing (USA)/Lizzi Crossing (USA).json
+Computer - Itchio || Location Withheld Demake (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Location Withheld Demake (USA)/Location Withheld Demake (USA).json
+Computer - Itchio || Locked Up (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Locked Up (USA)/Locked Up (USA).json
+Computer - Itchio || Locomancer (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Locomancer (USA)/Locomancer (USA).json
+Computer - Itchio || Lonely People Potion Shop (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lonely People Potion Shop (USA)/Lonely People Potion Shop (USA).json
+Computer - Itchio || Lonely Wolf Treat (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lonely Wolf Treat (USA)/Lonely Wolf Treat (USA).json
+Computer - Itchio || Long Gone Days (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Long Gone Days (USA)/Long Gone Days (USA).json
+Computer - Itchio || Loot Rascals (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Loot Rascals (USA)/Loot Rascals (USA).json
+Computer - Itchio || Lost Art of Innkeeping, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lost Art of Innkeeping, The (USA)/Lost Art of Innkeeping, The (USA).json
+Computer - Itchio || Lost Cave of the Ozarks, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lost Cave of the Ozarks, The (USA)/Lost Cave of the Ozarks, The (USA).json
+Computer - Itchio || Lost Dreams (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lost Dreams (USA)/Lost Dreams (USA).json
+Computer - Itchio || Lost Night, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lost Night, The (USA)/Lost Night, The (USA).json
+Computer - Itchio || Lost Orbit - Terminal Velocity (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lost Orbit - Terminal Velocity (USA)/Lost Orbit - Terminal Velocity (USA).json
+Computer - Itchio || Lost Potato (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lost Potato (USA)/Lost Potato (USA).json
+Computer - Itchio || LouveSystems' TrackMasters (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/LouveSystems' TrackMasters (USA)/LouveSystems' TrackMasters (USA).json
+Computer - Itchio || Love (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Love (USA)/Love (USA).json
+Computer - Itchio || Love 2 - Kuso (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Love 2 - Kuso (USA)/Love 2 - Kuso (USA).json
+Computer - Itchio || Love Hues! (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Love Hues! (USA)/Love Hues! (USA).json
+Computer - Itchio || Lucid - Parables of the Ubermensch (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lucid - Parables of the Ubermensch (USA)/Lucid - Parables of the Ubermensch (USA).json
+Computer - Itchio || Lucid Awakening 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lucid Awakening 2 (USA)/Lucid Awakening 2 (USA).json
+Computer - Itchio || Lucifer Within Us (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lucifer Within Us (USA)/Lucifer Within Us (USA).json
+Computer - Itchio || Lullaby of Colors, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lullaby of Colors, A (USA)/Lullaby of Colors, A (USA).json
+Computer - Itchio || Luminous (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Luminous (USA)/Luminous (USA).json
+Computer - Itchio || Luminous Corridor 0 (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Luminous Corridor 0 (USA)/Luminous Corridor 0 (USA).json
+Computer - Itchio || Luminous Labyrinth (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Luminous Labyrinth (USA)/Luminous Labyrinth (USA).json
+Computer - Itchio || Luna (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Luna (USA)/Luna (USA).json
+Computer - Itchio || Luna's Wandering Stars (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Luna's Wandering Stars (USA)/Luna's Wandering Stars (USA).json
+Computer - Itchio || Lunarrota (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lunarrota (USA)/Lunarrota (USA).json
+Computer - Itchio || Lydia (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lydia (USA)/Lydia (USA).json
+Computer - Itchio || Lyne (USA) || $ROM_JSON_ROOT/Computer/Itchio/L/Lyne (USA)/Lyne (USA).json
+Computer - Itchio || MMM - Murder Most Misfortunate (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/MMM - Murder Most Misfortunate (USA)/MMM - Murder Most Misfortunate (USA).json
+Computer - Itchio || Mable & The Wood (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mable & The Wood (USA)/Mable & The Wood (USA).json
+Computer - Itchio || Macbat 64 (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Macbat 64 (USA)/Macbat 64 (USA).json
+Computer - Itchio || Machine's Garden, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Machine's Garden, The (USA)/Machine's Garden, The (USA).json
+Computer - Itchio || Madball (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Madball (USA)/Madball (USA).json
+Computer - Itchio || Magic Trick (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Magic Trick (USA)/Magic Trick (USA).json
+Computer - Itchio || Magical Tale, A - Cavern Crawler (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Magical Tale, A - Cavern Crawler (USA)/Magical Tale, A - Cavern Crawler (USA).json
+Computer - Itchio || Magnibox (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Magnibox (USA)/Magnibox (USA).json
+Computer - Itchio || Majesty of Colors, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Majesty of Colors, The (USA)/Majesty of Colors, The (USA).json
+Computer - Itchio || Make It Last (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Make It Last (USA)/Make It Last (USA).json
+Computer - Itchio || Make Your Adventure (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Make Your Adventure (USA)/Make Your Adventure (USA).json
+Computer - Itchio || Maker's Eden, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Maker's Eden, The (USA)/Maker's Eden, The (USA).json
+Computer - Itchio || Manna for Our Malices (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Manna for Our Malices (USA)/Manna for Our Malices (USA).json
+Computer - Itchio || Manse on Soracca, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Manse on Soracca, The (USA)/Manse on Soracca, The (USA).json
+Computer - Itchio || Manual Intervention (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Manual Intervention (USA)/Manual Intervention (USA).json
+Computer - Itchio || Marginalia (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Marginalia (USA)/Marginalia (USA).json
+Computer - Itchio || Marie's Room (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Marie's Room (USA)/Marie's Room (USA).json
+Computer - Itchio || Mass Warfare (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mass Warfare (USA)/Mass Warfare (USA).json
+Computer - Itchio || Master Spy (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Master Spy (USA)/Master Spy (USA).json
+Computer - Itchio || Mastermind Classic (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mastermind Classic (USA)/Mastermind Classic (USA).json
+Computer - Itchio || Maze Of Bears (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Maze Of Bears (USA)/Maze Of Bears (USA).json
+Computer - Itchio || Me and My Cat's Castle (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Me and My Cat's Castle (USA)/Me and My Cat's Castle (USA).json
+Computer - Itchio || Mech_Romancer Charity Bundle 1 (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mech_Romancer Charity Bundle 1 (USA)/Mech_Romancer Charity Bundle 1 (USA).json
+Computer - Itchio || Mech_Romancer Charity Bundle 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mech_Romancer Charity Bundle 2 (USA)/Mech_Romancer Charity Bundle 2 (USA).json
+Computer - Itchio || Meditation 5 (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Meditation 5 (USA)/Meditation 5 (USA).json
+Computer - Itchio || Meeting in the Flesh (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Meeting in the Flesh (USA)/Meeting in the Flesh (USA).json
+Computer - Itchio || Memoir En Code - Reissue (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Memoir En Code - Reissue (USA)/Memoir En Code - Reissue (USA).json
+Computer - Itchio || Mendel (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mendel (USA)/Mendel (USA).json
+Computer - Itchio || Mending Wall (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mending Wall (USA)/Mending Wall (USA).json
+Computer - Itchio || Menos - Psi-Shatter (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Menos - Psi-Shatter (USA)/Menos - Psi-Shatter (USA).json
+Computer - Itchio || Meta Form (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Meta Form (USA)/Meta Form (USA).json
+Computer - Itchio || MetaWare High School (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/MetaWare High School (USA)/MetaWare High School (USA).json
+Computer - Itchio || Metamorphabet (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Metamorphabet (USA)/Metamorphabet (USA).json
+Computer - Itchio || Metori (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Metori (USA)/Metori (USA).json
+Computer - Itchio || MewnBase (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/MewnBase (USA)/MewnBase (USA).json
+Computer - Itchio || MiTOS (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/MiTOS (USA)/MiTOS (USA).json
+Computer - Itchio || Miasma Caves (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Miasma Caves (USA)/Miasma Caves (USA).json
+Computer - Itchio || Micro Dash (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Micro Dash (USA)/Micro Dash (USA).json
+Computer - Itchio || Micro Mages (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Micro Mages (USA)/Micro Mages (USA).json
+Computer - Itchio || MicroHorrorArcade Trilogy I - Andy's Story (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/MicroHorrorArcade Trilogy I - Andy's Story (USA)/MicroHorrorArcade Trilogy I - Andy's Story (USA).json
+Computer - Itchio || Micron (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Micron (USA)/Micron (USA).json
+Computer - Itchio || MidBoss (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/MidBoss (USA)/MidBoss (USA).json
+Computer - Itchio || Midnight Manor (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Midnight Manor (USA)/Midnight Manor (USA).json
+Computer - Itchio || Midnight Scenes Ep.1 - The Highway (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Midnight Scenes Ep.1 - The Highway (USA)/Midnight Scenes Ep.1 - The Highway (USA).json
+Computer - Itchio || Midnight Scenes Ep.2 - The Goodbye Note (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Midnight Scenes Ep.2 - The Goodbye Note (USA)/Midnight Scenes Ep.2 - The Goodbye Note (USA).json
+Computer - Itchio || Midnight Scenes Ep.3 - The Nanny (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Midnight Scenes Ep.3 - The Nanny (USA)/Midnight Scenes Ep.3 - The Nanny (USA).json
+Computer - Itchio || Midnight Ultra (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Midnight Ultra (USA)/Midnight Ultra (USA).json
+Computer - Itchio || Miles Infernum (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Miles Infernum (USA)/Miles Infernum (USA).json
+Computer - Itchio || Milkmaid of the Milky Way (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Milkmaid of the Milky Way (USA)/Milkmaid of the Milky Way (USA).json
+Computer - Itchio || Milky Way, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Milky Way, A (USA)/Milky Way, A (USA).json
+Computer - Itchio || Millikan's Reach (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Millikan's Reach (USA)/Millikan's Reach (USA).json
+Computer - Itchio || Mini Ghost (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mini Ghost (USA)/Mini Ghost (USA).json
+Computer - Itchio || Mini's Magic World (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mini's Magic World (USA)/Mini's Magic World (USA).json
+Computer - Itchio || Minit (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Minit (USA)/Minit (USA).json
+Computer - Itchio || Minit Fun Racer (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Minit Fun Racer (USA)/Minit Fun Racer (USA).json
+Computer - Itchio || Missing Locksmith, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Missing Locksmith, The (USA)/Missing Locksmith, The (USA).json
+Computer - Itchio || Mission - It's Complicated (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mission - It's Complicated (USA)/Mission - It's Complicated (USA).json
+Computer - Itchio || Mnemonic MV (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mnemonic MV (USA)/Mnemonic MV (USA).json
+Computer - Itchio || Mobility! Accessible Precision Platformer (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mobility! Accessible Precision Platformer (USA)/Mobility! Accessible Precision Platformer (USA).json
+Computer - Itchio || Mobius (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mobius (USA)/Mobius (USA).json
+Computer - Itchio || Mole (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mole (USA)/Mole (USA).json
+Computer - Itchio || Mon-cuties for All (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mon-cuties for All (USA)/Mon-cuties for All (USA).json
+Computer - Itchio || MonGirl Tile (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/MonGirl Tile (USA)/MonGirl Tile (USA).json
+Computer - Itchio || Monad (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Monad (USA)/Monad (USA).json
+Computer - Itchio || Monster Jaunt (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Monster Jaunt (USA)/Monster Jaunt (USA).json
+Computer - Itchio || Monster Match (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Monster Match (USA)/Monster Match (USA).json
+Computer - Itchio || Monster Pub Chapter 1 (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Monster Pub Chapter 1 (USA)/Monster Pub Chapter 1 (USA).json
+Computer - Itchio || Monster Pub Chapter 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Monster Pub Chapter 2 (USA)/Monster Pub Chapter 2 (USA).json
+Computer - Itchio || Monster Pub Chapter 3 (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Monster Pub Chapter 3 (USA)/Monster Pub Chapter 3 (USA).json
+Computer - Itchio || Monsters of Kanji (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Monsters of Kanji (USA)/Monsters of Kanji (USA).json
+Computer - Itchio || Monumental Failure (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Monumental Failure (USA)/Monumental Failure (USA).json
+Computer - Itchio || Moon Hunters (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Moon Hunters (USA)/Moon Hunters (USA).json
+Computer - Itchio || Moonstone Deep (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Moonstone Deep (USA)/Moonstone Deep (USA).json
+Computer - Itchio || Morfosi (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Morfosi (USA)/Morfosi (USA).json
+Computer - Itchio || Mortician's Tale, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mortician's Tale, A (USA)/Mortician's Tale, A (USA).json
+Computer - Itchio || Mostly Intense Monster Defense (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mostly Intense Monster Defense (USA)/Mostly Intense Monster Defense (USA).json
+Computer - Itchio || Move 'n' Bloom (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Move 'n' Bloom (USA)/Move 'n' Bloom (USA).json
+Computer - Itchio || Mr Mayor Tells Your Fortune (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mr Mayor Tells Your Fortune (USA)/Mr Mayor Tells Your Fortune (USA).json
+Computer - Itchio || Mu Cartographer (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mu Cartographer (USA)/Mu Cartographer (USA).json
+Computer - Itchio || Muffin Fight VR (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Muffin Fight VR (USA)/Muffin Fight VR (USA).json
+Computer - Itchio || Mull Littoral, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mull Littoral, The (USA)/Mull Littoral, The (USA).json
+Computer - Itchio || Multipuck (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Multipuck (USA)/Multipuck (USA).json
+Computer - Itchio || Murder at the Cat Show (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Murder at the Cat Show (USA)/Murder at the Cat Show (USA).json
+Computer - Itchio || Mutiny Island (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mutiny Island (USA)/Mutiny Island (USA).json
+Computer - Itchio || My Haunted Doll (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/My Haunted Doll (USA)/My Haunted Doll (USA).json
+Computer - Itchio || Mysteries Under Lake Ophelia (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Mysteries Under Lake Ophelia (USA)/Mysteries Under Lake Ophelia (USA).json
+Computer - Itchio || Myth Bearer (USA) || $ROM_JSON_ROOT/Computer/Itchio/M/Myth Bearer (USA)/Myth Bearer (USA).json
+Computer - Itchio || Nano Driller (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nano Driller (USA)/Nano Driller (USA).json
+Computer - Itchio || Naughty Elves - Christmas Puzzle Game (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Naughty Elves - Christmas Puzzle Game (USA)/Naughty Elves - Christmas Puzzle Game (USA).json
+Computer - Itchio || Nauticrawl (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nauticrawl (USA)/Nauticrawl (USA).json
+Computer - Itchio || Nelly Cootalot - Spoonbeaks Ahoy! (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nelly Cootalot - Spoonbeaks Ahoy! (USA)/Nelly Cootalot - Spoonbeaks Ahoy! (USA).json
+Computer - Itchio || NeoLite (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/NeoLite (USA)/NeoLite (USA).json
+Computer - Itchio || Neocolonialism (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Neocolonialism (USA)/Neocolonialism (USA).json
+Computer - Itchio || Neon Blight (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Neon Blight (USA)/Neon Blight (USA).json
+Computer - Itchio || Neon Depth (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Neon Depth (USA)/Neon Depth (USA).json
+Computer - Itchio || Neon Struct (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Neon Struct (USA)/Neon Struct (USA).json
+Computer - Itchio || Neon Valley - Revenge (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Neon Valley - Revenge (USA)/Neon Valley - Revenge (USA).json
+Computer - Itchio || Nepenthe (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nepenthe (USA)/Nepenthe (USA).json
+Computer - Itchio || Nest Lander (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nest Lander (USA)/Nest Lander (USA).json
+Computer - Itchio || New Ice York (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/New Ice York (USA)/New Ice York (USA).json
+Computer - Itchio || New Life, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/New Life, A (USA)/New Life, A (USA).json
+Computer - Itchio || Newfound Courage (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Newfound Courage (USA)/Newfound Courage (USA).json
+Computer - Itchio || Newtraction (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Newtraction (USA)/Newtraction (USA).json
+Computer - Itchio || Next Jump - Shmup Tactics (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Next Jump - Shmup Tactics (USA)/Next Jump - Shmup Tactics (USA).json
+Computer - Itchio || NiNi (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/NiNi (USA)/NiNi (USA).json
+Computer - Itchio || Nigel (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nigel (USA)/Nigel (USA).json
+Computer - Itchio || Night Call (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Night Call (USA)/Night Call (USA).json
+Computer - Itchio || Night Fisherman, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Night Fisherman, The (USA)/Night Fisherman, The (USA).json
+Computer - Itchio || Night Journey, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Night Journey, The (USA)/Night Journey, The (USA).json
+Computer - Itchio || Night in the Storm (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Night in the Storm (USA)/Night in the Storm (USA).json
+Computer - Itchio || Night in the Woods (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Night in the Woods (USA)/Night in the Woods (USA).json
+Computer - Itchio || Night of the Consumers (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Night of the Consumers (USA)/Night of the Consumers (USA).json
+Computer - Itchio || Nightmare's Trip, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nightmare's Trip, A (USA)/Nightmare's Trip, A (USA).json
+Computer - Itchio || Nina Aquila - Legal Eagle, Chapter II - Broken Wings (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nina Aquila - Legal Eagle, Chapter II - Broken Wings (USA)/Nina Aquila - Legal Eagle, Chapter II - Broken Wings (USA).json
+Computer - Itchio || Nina Aquila - Legal Eagle, Season One (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nina Aquila - Legal Eagle, Season One (USA)/Nina Aquila - Legal Eagle, Season One (USA).json
+Computer - Itchio || Nine Lives of Nim, The - Fortune's Fool (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nine Lives of Nim, The - Fortune's Fool (USA)/Nine Lives of Nim, The - Fortune's Fool (USA).json
+Computer - Itchio || Nine Nines (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nine Nines (USA)/Nine Nines (USA).json
+Computer - Itchio || No Brakes Valet (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/No Brakes Valet (USA)/No Brakes Valet (USA).json
+Computer - Itchio || No Delivery (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/No Delivery (USA)/No Delivery (USA).json
+Computer - Itchio || No More Kings (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/No More Kings (USA)/No More Kings (USA).json
+Computer - Itchio || No Pineapple Left Behind (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/No Pineapple Left Behind (USA)/No Pineapple Left Behind (USA).json
+Computer - Itchio || No Players Online (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/No Players Online (USA)/No Players Online (USA).json
+Computer - Itchio || No Thing (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/No Thing (USA)/No Thing (USA).json
+Computer - Itchio || No Wheels Racing (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/No Wheels Racing (USA)/No Wheels Racing (USA).json
+Computer - Itchio || Noise1 (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Noise1 (USA)/Noise1 (USA).json
+Computer - Itchio || Nonsense Soccer (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nonsense Soccer (USA)/Nonsense Soccer (USA).json
+Computer - Itchio || Nonsense at Nightfall (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nonsense at Nightfall (USA)/Nonsense at Nightfall (USA).json
+Computer - Itchio || Normal Lost Phone, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Normal Lost Phone, A (USA)/Normal Lost Phone, A (USA).json
+Computer - Itchio || Not Escape Room (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Not Escape Room (USA)/Not Escape Room (USA).json
+Computer - Itchio || Not the Robots (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Not the Robots (USA)/Not the Robots (USA).json
+Computer - Itchio || Nott & Dagr (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nott & Dagr (USA)/Nott & Dagr (USA).json
+Computer - Itchio || Novelist, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Novelist, The (USA)/Novelist, The (USA).json
+Computer - Itchio || Nuclear Throne (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nuclear Throne (USA)/Nuclear Throne (USA).json
+Computer - Itchio || Nullpointer (USA) || $ROM_JSON_ROOT/Computer/Itchio/N/Nullpointer (USA)/Nullpointer (USA).json
+Computer - Itchio || Octodad (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Octodad (USA)/Octodad (USA).json
+Computer - Itchio || Octodad - Dadliest Catch (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Octodad - Dadliest Catch (USA)/Octodad - Dadliest Catch (USA).json
+Computer - Itchio || Odd Realm (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Odd Realm (USA)/Odd Realm (USA).json
+Computer - Itchio || OddyTree (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/OddyTree (USA)/OddyTree (USA).json
+Computer - Itchio || Oh Jeez, Oh No, My Rabbits Are Gone!!! (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Oh Jeez, Oh No, My Rabbits Are Gone!!! (USA)/Oh Jeez, Oh No, My Rabbits Are Gone!!! (USA).json
+Computer - Itchio || Oh No! Bugs! (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Oh No! Bugs! (USA)/Oh No! Bugs! (USA).json
+Computer - Itchio || Oikospiel Book I (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Oikospiel Book I (USA)/Oikospiel Book I (USA).json
+Computer - Itchio || Old Constellations (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Old Constellations (USA)/Old Constellations (USA).json
+Computer - Itchio || Old Man's Journey (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Old Man's Journey (USA)/Old Man's Journey (USA).json
+Computer - Itchio || Ollie & Bollie - Outdoor Estate (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Ollie & Bollie - Outdoor Estate (USA)/Ollie & Bollie - Outdoor Estate (USA).json
+Computer - Itchio || Omeganaut (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Omeganaut (USA)/Omeganaut (USA).json
+Computer - Itchio || Ominous! (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Ominous! (USA)/Ominous! (USA).json
+Computer - Itchio || On Rusty Trails (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/On Rusty Trails (USA)/On Rusty Trails (USA).json
+Computer - Itchio || Once Upon A Crime in the West (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Once Upon A Crime in the West (USA)/Once Upon A Crime in the West (USA).json
+Computer - Itchio || One Night Stand (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/One Night Stand (USA)/One Night Stand (USA).json
+Computer - Itchio || One-Eyed Lee - Prologue (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/One-Eyed Lee - Prologue (USA)/One-Eyed Lee - Prologue (USA).json
+Computer - Itchio || One-Eyed Lee and the Dinner Party (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/One-Eyed Lee and the Dinner Party (USA)/One-Eyed Lee and the Dinner Party (USA).json
+Computer - Itchio || OneShot (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/OneShot (USA)/OneShot (USA).json
+Computer - Itchio || Online Simulator (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Online Simulator (USA)/Online Simulator (USA).json
+Computer - Itchio || Only One Burn (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Only One Burn (USA)/Only One Burn (USA).json
+Computer - Itchio || Operation STEEL (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Operation STEEL (USA)/Operation STEEL (USA).json
+Computer - Itchio || Order A Pizza - A Visual Novel (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Order A Pizza - A Visual Novel (USA)/Order A Pizza - A Visual Novel (USA).json
+Computer - Itchio || Orion Trail (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Orion Trail (USA)/Orion Trail (USA).json
+Computer - Itchio || Orison of Mercury (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Orison of Mercury (USA)/Orison of Mercury (USA).json
+Computer - Itchio || Ossuary (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Ossuary (USA)/Ossuary (USA).json
+Computer - Itchio || Other Minds (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Other Minds (USA)/Other Minds (USA).json
+Computer - Itchio || Otherside (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Otherside (USA)/Otherside (USA).json
+Computer - Itchio || Ouroboros - The Sacrifice (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Ouroboros - The Sacrifice (USA)/Ouroboros - The Sacrifice (USA).json
+Computer - Itchio || Out the Window - A Car Trip Sim (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Out the Window - A Car Trip Sim (USA)/Out the Window - A Car Trip Sim (USA).json
+Computer - Itchio || Outpost Horizon Station (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Outpost Horizon Station (USA)/Outpost Horizon Station (USA).json
+Computer - Itchio || Over Run (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Over Run (USA)/Over Run (USA).json
+Computer - Itchio || Overland (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Overland (USA)/Overland (USA).json
+Computer - Itchio || Oxenfree (USA) || $ROM_JSON_ROOT/Computer/Itchio/O/Oxenfree (USA)/Oxenfree (USA).json
+Computer - Itchio || PADager (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/PADager (USA)/PADager (USA).json
+Computer - Itchio || PHN-Home (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/PHN-Home (USA)/PHN-Home (USA).json
+Computer - Itchio || POM Simulator 9000 (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/POM Simulator 9000 (USA)/POM Simulator 9000 (USA).json
+Computer - Itchio || PQ93 (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/PQ93 (USA)/PQ93 (USA).json
+Computer - Itchio || Pagan - Autogeny (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pagan - Autogeny (USA)/Pagan - Autogeny (USA).json
+Computer - Itchio || Paint Game (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Paint Game (USA)/Paint Game (USA).json
+Computer - Itchio || Painty Balls (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Painty Balls (USA)/Painty Balls (USA).json
+Computer - Itchio || Palace of Woe (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Palace of Woe (USA)/Palace of Woe (USA).json
+Computer - Itchio || Panic Factory (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Panic Factory (USA)/Panic Factory (USA).json
+Computer - Itchio || Panmorphia (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Panmorphia (USA)/Panmorphia (USA).json
+Computer - Itchio || Parallax (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Parallax (USA)/Parallax (USA).json
+Computer - Itchio || ParamediCats (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/ParamediCats (USA)/ParamediCats (USA).json
+Computer - Itchio || Paranautical Activity (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Paranautical Activity (USA)/Paranautical Activity (USA).json
+Computer - Itchio || Paranoihell (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Paranoihell (USA)/Paranoihell (USA).json
+Computer - Itchio || Parsnip (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Parsnip (USA)/Parsnip (USA).json
+Computer - Itchio || Particle Mace (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Particle Mace (USA)/Particle Mace (USA).json
+Computer - Itchio || Partition Sector (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Partition Sector (USA)/Partition Sector (USA).json
+Computer - Itchio || Patches Of Adventure (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Patches Of Adventure (USA)/Patches Of Adventure (USA).json
+Computer - Itchio || Path Out (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Path Out (USA)/Path Out (USA).json
+Computer - Itchio || Pawndemonium (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pawndemonium (USA)/Pawndemonium (USA).json
+Computer - Itchio || Peace of Mind (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Peace of Mind (USA)/Peace of Mind (USA).json
+Computer - Itchio || Peak Bleak Blues and Other Moods (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Peak Bleak Blues and Other Moods (USA)/Peak Bleak Blues and Other Moods (USA).json
+Computer - Itchio || Pebble Witch (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pebble Witch (USA)/Pebble Witch (USA).json
+Computer - Itchio || Peck N Run (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Peck N Run (USA)/Peck N Run (USA).json
+Computer - Itchio || Peckin' Pixels (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Peckin' Pixels (USA)/Peckin' Pixels (USA).json
+Computer - Itchio || Penance (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Penance (USA)/Penance (USA).json
+Computer - Itchio || Pendula Swing - The Complete Journey (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pendula Swing - The Complete Journey (USA)/Pendula Swing - The Complete Journey (USA).json
+Computer - Itchio || Penguins Arena (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Penguins Arena (USA)/Penguins Arena (USA).json
+Computer - Itchio || Perfect Park (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Perfect Park (USA)/Perfect Park (USA).json
+Computer - Itchio || Perpetuum Mobile (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Perpetuum Mobile (USA)/Perpetuum Mobile (USA).json
+Computer - Itchio || Perspectrum (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Perspectrum (USA)/Perspectrum (USA).json
+Computer - Itchio || Pet the Pup at the Party (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pet the Pup at the Party (USA)/Pet the Pup at the Party (USA).json
+Computer - Itchio || Petty Puny Planet (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Petty Puny Planet (USA)/Petty Puny Planet (USA).json
+Computer - Itchio || PhasR (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/PhasR (USA)/PhasR (USA).json
+Computer - Itchio || Phoenix Heavy (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Phoenix Heavy (USA)/Phoenix Heavy (USA).json
+Computer - Itchio || Pichon! (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pichon! (USA)/Pichon! (USA).json
+Computer - Itchio || Picky Pop (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Picky Pop (USA)/Picky Pop (USA).json
+Computer - Itchio || Pico-8 (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pico-8 (USA)/Pico-8 (USA).json
+Computer - Itchio || Pictassembler (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pictassembler (USA)/Pictassembler (USA).json
+Computer - Itchio || Pig Eat Ball (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pig Eat Ball (USA)/Pig Eat Ball (USA).json
+Computer - Itchio || Pikuniku (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pikuniku (USA)/Pikuniku (USA).json
+Computer - Itchio || Pillars of Dust (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pillars of Dust (USA)/Pillars of Dust (USA).json
+Computer - Itchio || Pin Puck (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pin Puck (USA)/Pin Puck (USA).json
+Computer - Itchio || Pipe Push Paradise (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pipe Push Paradise (USA)/Pipe Push Paradise (USA).json
+Computer - Itchio || Pippu - Bauble Quest (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pippu - Bauble Quest (USA)/Pippu - Bauble Quest (USA).json
+Computer - Itchio || Pixel Fireplace (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pixel Fireplace (USA)/Pixel Fireplace (USA).json
+Computer - Itchio || Pixel Session Vol.1 (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pixel Session Vol.1 (USA)/Pixel Session Vol.1 (USA).json
+Computer - Itchio || Pixelry (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pixelry (USA)/Pixelry (USA).json
+Computer - Itchio || Pixross (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pixross (USA)/Pixross (USA).json
+Computer - Itchio || PizzaBoy (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/PizzaBoy (USA)/PizzaBoy (USA).json
+Computer - Itchio || Plana Gravatatis (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Plana Gravatatis (USA)/Plana Gravatatis (USA).json
+Computer - Itchio || Planet Diver (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Planet Diver (USA)/Planet Diver (USA).json
+Computer - Itchio || Planet of Mine, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Planet of Mine, A (USA)/Planet of Mine, A (USA).json
+Computer - Itchio || Plant Daddy (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Plant Daddy (USA)/Plant Daddy (USA).json
+Computer - Itchio || Play With Gilbert - Remake (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Play With Gilbert - Remake (USA)/Play With Gilbert - Remake (USA).json
+Computer - Itchio || Please (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Please (USA)/Please (USA).json
+Computer - Itchio || Please Follow (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Please Follow (USA)/Please Follow (USA).json
+Computer - Itchio || Pleroma (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pleroma (USA)/Pleroma (USA).json
+Computer - Itchio || Plunge (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Plunge (USA)/Plunge (USA).json
+Computer - Itchio || Pocket Square (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pocket Square (USA)/Pocket Square (USA).json
+Computer - Itchio || Political Compass, The - Devil's Labyrinth (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Political Compass, The - Devil's Labyrinth (USA)/Political Compass, The - Devil's Labyrinth (USA).json
+Computer - Itchio || Polymute (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Polymute (USA)/Polymute (USA).json
+Computer - Itchio || Polyroll (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Polyroll (USA)/Polyroll (USA).json
+Computer - Itchio || Portal Dogs (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Portal Dogs (USA)/Portal Dogs (USA).json
+Computer - Itchio || Possession (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Possession (USA)/Possession (USA).json
+Computer - Itchio || Potato Thriller (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Potato Thriller (USA)/Potato Thriller (USA).json
+Computer - Itchio || Potion Commotion - Heart Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Potion Commotion - Heart Edition (USA)/Potion Commotion - Heart Edition (USA).json
+Computer - Itchio || Predicate (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Predicate (USA)/Predicate (USA).json
+Computer - Itchio || Prison of the Magi - Ch. 0 (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Prison of the Magi - Ch. 0 (USA)/Prison of the Magi - Ch. 0 (USA).json
+Computer - Itchio || Probability 0 (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Probability 0 (USA)/Probability 0 (USA).json
+Computer - Itchio || Project Kat (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Project Kat (USA)/Project Kat (USA).json
+Computer - Itchio || Project MALLOW (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Project MALLOW (USA)/Project MALLOW (USA).json
+Computer - Itchio || Project SNAQE (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Project SNAQE (USA)/Project SNAQE (USA).json
+Computer - Itchio || Promesa (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Promesa (USA)/Promesa (USA).json
+Computer - Itchio || Provider (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Provider (USA)/Provider (USA).json
+Computer - Itchio || Psychoballs (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Psychoballs (USA)/Psychoballs (USA).json
+Computer - Itchio || PuPaiPo Space Deluxe (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/PuPaiPo Space Deluxe (USA)/PuPaiPo Space Deluxe (USA).json
+Computer - Itchio || Pullfrog (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pullfrog (USA)/Pullfrog (USA).json
+Computer - Itchio || Pulstario (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pulstario (USA)/Pulstario (USA).json
+Computer - Itchio || Pumpkin Eater (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pumpkin Eater (USA)/Pumpkin Eater (USA).json
+Computer - Itchio || Pumpking (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pumpking (USA)/Pumpking (USA).json
+Computer - Itchio || Puppet Combo Presents - Babysitter Bloodbath (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Puppet Combo Presents - Babysitter Bloodbath (USA)/Puppet Combo Presents - Babysitter Bloodbath (USA).json
+Computer - Itchio || Puppet Combo Presents - Bloodwash (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Puppet Combo Presents - Bloodwash (USA)/Puppet Combo Presents - Bloodwash (USA).json
+Computer - Itchio || Puppet Combo Presents - Deadly Night (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Puppet Combo Presents - Deadly Night (USA)/Puppet Combo Presents - Deadly Night (USA).json
+Computer - Itchio || Puppet Combo Presents - Murder House (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Puppet Combo Presents - Murder House (USA)/Puppet Combo Presents - Murder House (USA).json
+Computer - Itchio || Puppet Combo Presents - Night of the Nun... aka Nun Massacre (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Puppet Combo Presents - Night of the Nun... aka Nun Massacre (USA)/Puppet Combo Presents - Night of the Nun... aka Nun Massacre (USA).json
+Computer - Itchio || Puppet Combo Presents - Power Drill Massacre (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Puppet Combo Presents - Power Drill Massacre (USA)/Puppet Combo Presents - Power Drill Massacre (USA).json
+Computer - Itchio || Puppet Combo Presents - Rewind or Die (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Puppet Combo Presents - Rewind or Die (USA)/Puppet Combo Presents - Rewind or Die (USA).json
+Computer - Itchio || Puppet Combo Presents - Scary Tales Vol. 1 (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Puppet Combo Presents - Scary Tales Vol. 1 (USA)/Puppet Combo Presents - Scary Tales Vol. 1 (USA).json
+Computer - Itchio || Puppet Combo Presents - Search Party (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Puppet Combo Presents - Search Party (USA)/Puppet Combo Presents - Search Party (USA).json
+Computer - Itchio || Puppet Combo Presents - The Glass Staircase (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Puppet Combo Presents - The Glass Staircase (USA)/Puppet Combo Presents - The Glass Staircase (USA).json
+Computer - Itchio || Puppet Combo Presents - The Horror of Salazar House (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Puppet Combo Presents - The Horror of Salazar House (USA)/Puppet Combo Presents - The Horror of Salazar House (USA).json
+Computer - Itchio || Purple Chicken Spaceman (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Purple Chicken Spaceman (USA)/Purple Chicken Spaceman (USA).json
+Computer - Itchio || Purple Noise Echo (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Purple Noise Echo (USA)/Purple Noise Echo (USA).json
+Computer - Itchio || Pushamo (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pushamo (USA)/Pushamo (USA).json
+Computer - Itchio || Puzlogic (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Puzlogic (USA)/Puzlogic (USA).json
+Computer - Itchio || Puzzle Puppers (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Puzzle Puppers (USA)/Puzzle Puppers (USA).json
+Computer - Itchio || Pyramid (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pyramid (USA)/Pyramid (USA).json
+Computer - Itchio || Pyre (USA) || $ROM_JSON_ROOT/Computer/Itchio/P/Pyre (USA)/Pyre (USA).json
+Computer - Itchio || QLRZ (USA) || $ROM_JSON_ROOT/Computer/Itchio/Q/QLRZ (USA)/QLRZ (USA).json
+Computer - Itchio || Qavo (USA) || $ROM_JSON_ROOT/Computer/Itchio/Q/Qavo (USA)/Qavo (USA).json
+Computer - Itchio || Quack Attack 1985 - Turbo DX Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/Q/Quack Attack 1985 - Turbo DX Edition (USA)/Quack Attack 1985 - Turbo DX Edition (USA).json
+Computer - Itchio || Quadrilateral Cowboy (USA) || $ROM_JSON_ROOT/Computer/Itchio/Q/Quadrilateral Cowboy (USA)/Quadrilateral Cowboy (USA).json
+Computer - Itchio || Quench (USA) || $ROM_JSON_ROOT/Computer/Itchio/Q/Quench (USA)/Quench (USA).json
+Computer - Itchio || Quest of Dungeons (USA) || $ROM_JSON_ROOT/Computer/Itchio/Q/Quest of Dungeons (USA)/Quest of Dungeons (USA).json
+Computer - Itchio || Quest of Graal DX (USA) || $ROM_JSON_ROOT/Computer/Itchio/Q/Quest of Graal DX (USA)/Quest of Graal DX (USA).json
+Computer - Itchio || Quible Sphere (USA) || $ROM_JSON_ROOT/Computer/Itchio/Q/Quible Sphere (USA)/Quible Sphere (USA).json
+Computer - Itchio || Quiet Sleep, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/Q/Quiet Sleep, The (USA)/Quiet Sleep, The (USA).json
+Computer - Itchio || Quiet as a Stone (USA) || $ROM_JSON_ROOT/Computer/Itchio/Q/Quiet as a Stone (USA)/Quiet as a Stone (USA).json
+Computer - Itchio || RB - Axolotl (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/RB - Axolotl (USA)/RB - Axolotl (USA).json
+Computer - Itchio || RD Mars (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/RD Mars (USA)/RD Mars (USA).json
+Computer - Itchio || RYB (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/RYB (USA)/RYB (USA).json
+Computer - Itchio || Radical Solitaire (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Radical Solitaire (USA)/Radical Solitaire (USA).json
+Computer - Itchio || Raik (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Raik (USA)/Raik (USA).json
+Computer - Itchio || Rainsdowne Players, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rainsdowne Players, The (USA)/Rainsdowne Players, The (USA).json
+Computer - Itchio || Rakete (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rakete (USA)/Rakete (USA).json
+Computer - Itchio || Rasternauts (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rasternauts (USA)/Rasternauts (USA).json
+Computer - Itchio || ReIterate (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/ReIterate (USA)/ReIterate (USA).json
+Computer - Itchio || Real Texas, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Real Texas, The (USA)/Real Texas, The (USA).json
+Computer - Itchio || Real Winners - Victoryball (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Real Winners - Victoryball (USA)/Real Winners - Victoryball (USA).json
+Computer - Itchio || Reality (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Reality (USA)/Reality (USA).json
+Computer - Itchio || Realm of the Ghost King (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Realm of the Ghost King (USA)/Realm of the Ghost King (USA).json
+Computer - Itchio || Rebop Blasters (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rebop Blasters (USA)/Rebop Blasters (USA).json
+Computer - Itchio || Receiver (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Receiver (USA)/Receiver (USA).json
+Computer - Itchio || Recipe Of Madness, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Recipe Of Madness, The (USA)/Recipe Of Madness, The (USA).json
+Computer - Itchio || Record Store Nightmare (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Record Store Nightmare (USA)/Record Store Nightmare (USA).json
+Computer - Itchio || Recording the Predestined Time (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Recording the Predestined Time (USA)/Recording the Predestined Time (USA).json
+Computer - Itchio || Red Door, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Red Door, The (USA)/Red Door, The (USA).json
+Computer - Itchio || Redd's Runaway (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Redd's Runaway (USA)/Redd's Runaway (USA).json
+Computer - Itchio || Refactor (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Refactor (USA)/Refactor (USA).json
+Computer - Itchio || Regina & Mac (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Regina & Mac (USA)/Regina & Mac (USA).json
+Computer - Itchio || Reky (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Reky (USA)/Reky (USA).json
+Computer - Itchio || Reminiscence in the Night (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Reminiscence in the Night (USA)/Reminiscence in the Night (USA).json
+Computer - Itchio || Remnants (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Remnants (USA)/Remnants (USA).json
+Computer - Itchio || Reproduction Man (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Reproduction Man (USA)/Reproduction Man (USA).json
+Computer - Itchio || Resistance is Fruitile (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Resistance is Fruitile (USA)/Resistance is Fruitile (USA).json
+Computer - Itchio || Respite 2.0 (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Respite 2.0 (USA)/Respite 2.0 (USA).json
+Computer - Itchio || Resynth (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Resynth (USA)/Resynth (USA).json
+Computer - Itchio || Retrace (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Retrace (USA)/Retrace (USA).json
+Computer - Itchio || Retromancer (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Retromancer (USA)/Retromancer (USA).json
+Computer - Itchio || Revolver and Co (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Revolver and Co (USA)/Revolver and Co (USA).json
+Computer - Itchio || Rex - Another Island (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rex - Another Island (USA)/Rex - Another Island (USA).json
+Computer - Itchio || Rhythm 'n Bullets - VR (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rhythm 'n Bullets - VR (USA)/Rhythm 'n Bullets - VR (USA).json
+Computer - Itchio || Ring Ring (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Ring Ring (USA)/Ring Ring (USA).json
+Computer - Itchio || Ring of Fire Prologue (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Ring of Fire Prologue (USA)/Ring of Fire Prologue (USA).json
+Computer - Itchio || Rip Them Off (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rip Them Off (USA)/Rip Them Off (USA).json
+Computer - Itchio || Ripped Pants at Work (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Ripped Pants at Work (USA)/Ripped Pants at Work (USA).json
+Computer - Itchio || Ripple (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Ripple (USA)/Ripple (USA).json
+Computer - Itchio || Rising Dusk (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rising Dusk (USA)/Rising Dusk (USA).json
+Computer - Itchio || Risk System (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Risk System (USA)/Risk System (USA).json
+Computer - Itchio || Rite (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rite (USA)/Rite (USA).json
+Computer - Itchio || River Tiles (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/River Tiles (USA)/River Tiles (USA).json
+Computer - Itchio || Rock n' Rush - Battle Racing (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rock n' Rush - Battle Racing (USA)/Rock n' Rush - Battle Racing (USA).json
+Computer - Itchio || Rogue Rocks (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rogue Rocks (USA)/Rogue Rocks (USA).json
+Computer - Itchio || RogueCraft Squadron (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/RogueCraft Squadron (USA)/RogueCraft Squadron (USA).json
+Computer - Itchio || RogueSlide (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/RogueSlide (USA)/RogueSlide (USA).json
+Computer - Itchio || Rogues Like Us (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rogues Like Us (USA)/Rogues Like Us (USA).json
+Computer - Itchio || Roguescape (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Roguescape (USA)/Roguescape (USA).json
+Computer - Itchio || Roll for Confidence - A CMC Vignette (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Roll for Confidence - A CMC Vignette (USA)/Roll for Confidence - A CMC Vignette (USA).json
+Computer - Itchio || Roll+Heart (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Roll+Heart (USA)/Roll+Heart (USA).json
+Computer - Itchio || Roly-Polo (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Roly-Polo (USA)/Roly-Polo (USA).json
+Computer - Itchio || Rooftop Cop (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rooftop Cop (USA)/Rooftop Cop (USA).json
+Computer - Itchio || Room Explorer 2010 - Deluxe Lover's Paque (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Room Explorer 2010 - Deluxe Lover's Paque (USA)/Room Explorer 2010 - Deluxe Lover's Paque (USA).json
+Computer - Itchio || Rose & Time (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rose & Time (USA)/Rose & Time (USA).json
+Computer - Itchio || Route Me Mail and Delivery Co (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Route Me Mail and Delivery Co (USA)/Route Me Mail and Delivery Co (USA).json
+Computer - Itchio || Rulent Tower VR (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rulent Tower VR (USA)/Rulent Tower VR (USA).json
+Computer - Itchio || Run Jump Fail (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Run Jump Fail (USA)/Run Jump Fail (USA).json
+Computer - Itchio || Rune of Eternity (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rune of Eternity (USA)/Rune of Eternity (USA).json
+Computer - Itchio || Runner3 (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Runner3 (USA)/Runner3 (USA).json
+Computer - Itchio || Rusty Lake Hotel (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rusty Lake Hotel (USA)/Rusty Lake Hotel (USA).json
+Computer - Itchio || Ruya (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Ruya (USA)/Ruya (USA).json
+Computer - Itchio || Rym 9000 (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Rym 9000 (USA)/Rym 9000 (USA).json
+Computer - Itchio || Ryza Roads (USA) || $ROM_JSON_ROOT/Computer/Itchio/R/Ryza Roads (USA)/Ryza Roads (USA).json
+Computer - Itchio || SOLAS 128 (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/SOLAS 128 (USA)/SOLAS 128 (USA).json
+Computer - Itchio || SOMOS (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/SOMOS (USA)/SOMOS (USA).json
+Computer - Itchio || SOS - Special Operative Stories (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/SOS - Special Operative Stories (USA)/SOS - Special Operative Stories (USA).json
+Computer - Itchio || Safari Zone (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Safari Zone (USA)/Safari Zone (USA).json
+Computer - Itchio || Sagebrush (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sagebrush (USA)/Sagebrush (USA).json
+Computer - Itchio || Sai (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sai (USA)/Sai (USA).json
+Computer - Itchio || Salvage Solitude 8140 (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Salvage Solitude 8140 (USA)/Salvage Solitude 8140 (USA).json
+Computer - Itchio || Sandcastles (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sandcastles (USA)/Sandcastles (USA).json
+Computer - Itchio || Sanguine Sanctum (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sanguine Sanctum (USA)/Sanguine Sanctum (USA).json
+Computer - Itchio || Sarawak (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sarawak (USA)/Sarawak (USA).json
+Computer - Itchio || Satan Loves Cake (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Satan Loves Cake (USA)/Satan Loves Cake (USA).json
+Computer - Itchio || Satellite Repairman (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Satellite Repairman (USA)/Satellite Repairman (USA).json
+Computer - Itchio || Sausage Sports Club (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sausage Sports Club (USA)/Sausage Sports Club (USA).json
+Computer - Itchio || Saving You (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Saving You (USA)/Saving You (USA).json
+Computer - Itchio || Schildmaid MX (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Schildmaid MX (USA)/Schildmaid MX (USA).json
+Computer - Itchio || Scrapper (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Scrapper (USA)/Scrapper (USA).json
+Computer - Itchio || Search, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Search, The (USA)/Search, The (USA).json
+Computer - Itchio || Season's Beatings (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Season's Beatings (USA)/Season's Beatings (USA).json
+Computer - Itchio || Secret Little Haven (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Secret Little Haven (USA)/Secret Little Haven (USA).json
+Computer - Itchio || Secret of Tremendous Corporation, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Secret of Tremendous Corporation, The (USA)/Secret of Tremendous Corporation, The (USA).json
+Computer - Itchio || Secrets of Raetikon (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Secrets of Raetikon (USA)/Secrets of Raetikon (USA).json
+Computer - Itchio || Sector 781 (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sector 781 (USA)/Sector 781 (USA).json
+Computer - Itchio || Seduce Me - The Complete Story (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Seduce Me - The Complete Story (USA)/Seduce Me - The Complete Story (USA).json
+Computer - Itchio || Seethe and Scab (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Seethe and Scab (USA)/Seethe and Scab (USA).json
+Computer - Itchio || Selection Process (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Selection Process (USA)/Selection Process (USA).json
+Computer - Itchio || Self Destroy (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Self Destroy (USA)/Self Destroy (USA).json
+Computer - Itchio || Self-Checkout Unlimited (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Self-Checkout Unlimited (USA)/Self-Checkout Unlimited (USA).json
+Computer - Itchio || Semblance (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Semblance (USA)/Semblance (USA).json
+Computer - Itchio || Serious Scramblers (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Serious Scramblers (USA)/Serious Scramblers (USA).json
+Computer - Itchio || Serre (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Serre (USA)/Serre (USA).json
+Computer - Itchio || Served (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Served (USA)/Served (USA).json
+Computer - Itchio || Sewer Rave (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sewer Rave (USA)/Sewer Rave (USA).json
+Computer - Itchio || Shadowcut (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Shadowcut (USA)/Shadowcut (USA).json
+Computer - Itchio || Shattered Planet (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Shattered Planet (USA)/Shattered Planet (USA).json
+Computer - Itchio || Sheep Dreams Are Made of This (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sheep Dreams Are Made of This (USA)/Sheep Dreams Are Made of This (USA).json
+Computer - Itchio || Shell Out Showdown (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Shell Out Showdown (USA)/Shell Out Showdown (USA).json
+Computer - Itchio || Shiny Gauntlet (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Shiny Gauntlet (USA)/Shiny Gauntlet (USA).json
+Computer - Itchio || Shipwreck (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Shipwreck (USA)/Shipwreck (USA).json
+Computer - Itchio || Shn!p (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Shn!p (USA)/Shn!p (USA).json
+Computer - Itchio || Shnipers (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Shnipers (USA)/Shnipers (USA).json
+Computer - Itchio || Shoot Shoot Mega Pack (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Shoot Shoot Mega Pack (USA)/Shoot Shoot Mega Pack (USA).json
+Computer - Itchio || Short Hike, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Short Hike, A (USA)/Short Hike, A (USA).json
+Computer - Itchio || Shredded Secrets (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Shredded Secrets (USA)/Shredded Secrets (USA).json
+Computer - Itchio || Shrine to Anubis (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Shrine to Anubis (USA)/Shrine to Anubis (USA).json
+Computer - Itchio || Shrug Island - The Meeting (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Shrug Island - The Meeting (USA)/Shrug Island - The Meeting (USA).json
+Computer - Itchio || Shut In (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Shut In (USA)/Shut In (USA).json
+Computer - Itchio || Shutter Stroll (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Shutter Stroll (USA)/Shutter Stroll (USA).json
+Computer - Itchio || Siberia (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Siberia (USA)/Siberia (USA).json
+Computer - Itchio || Sidewords (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sidewords (USA)/Sidewords (USA).json
+Computer - Itchio || Signs of the Sojourner (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Signs of the Sojourner (USA)/Signs of the Sojourner (USA).json
+Computer - Itchio || Silicon Zeroes (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Silicon Zeroes (USA)/Silicon Zeroes (USA).json
+Computer - Itchio || Silk (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Silk (USA)/Silk (USA).json
+Computer - Itchio || Silver Grapple (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Silver Grapple (USA)/Silver Grapple (USA).json
+Computer - Itchio || SilverQuest Gaiden (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/SilverQuest Gaiden (USA)/SilverQuest Gaiden (USA).json
+Computer - Itchio || Sink Gods, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sink Gods, The (USA)/Sink Gods, The (USA).json
+Computer - Itchio || Six Match (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Six Match (USA)/Six Match (USA).json
+Computer - Itchio || SkateBIRD (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/SkateBIRD (USA)/SkateBIRD (USA).json
+Computer - Itchio || Skelerun (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Skelerun (USA)/Skelerun (USA).json
+Computer - Itchio || Skeletris (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Skeletris (USA)/Skeletris (USA).json
+Computer - Itchio || Sketchbook About Her Sun, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sketchbook About Her Sun, A (USA)/Sketchbook About Her Sun, A (USA).json
+Computer - Itchio || Skin & Bones (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Skin & Bones (USA)/Skin & Bones (USA).json
+Computer - Itchio || Sky Rogue (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sky Rogue (USA)/Sky Rogue (USA).json
+Computer - Itchio || Skyling - Garden Defense (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Skyling - Garden Defense (USA)/Skyling - Garden Defense (USA).json
+Computer - Itchio || Slam Fighter II (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Slam Fighter II (USA)/Slam Fighter II (USA).json
+Computer - Itchio || Sly Panda (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sly Panda (USA)/Sly Panda (USA).json
+Computer - Itchio || Snack Scoffer (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Snack Scoffer (USA)/Snack Scoffer (USA).json
+Computer - Itchio || Snake Blocks (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Snake Blocks (USA)/Snake Blocks (USA).json
+Computer - Itchio || Snake's Tale, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Snake's Tale, A (USA)/Snake's Tale, A (USA).json
+Computer - Itchio || Snowdown (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Snowdown (USA)/Snowdown (USA).json
+Computer - Itchio || Social Justice Warriors (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Social Justice Warriors (USA)/Social Justice Warriors (USA).json
+Computer - Itchio || Soft Body (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Soft Body (USA)/Soft Body (USA).json
+Computer - Itchio || Sokoban Land DX (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sokoban Land DX (USA)/Sokoban Land DX (USA).json
+Computer - Itchio || Sokobond (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sokobond (USA)/Sokobond (USA).json
+Computer - Itchio || Solar Collector (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Solar Collector (USA)/Solar Collector (USA).json
+Computer - Itchio || Soldier of Fortune (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Soldier of Fortune (USA)/Soldier of Fortune (USA).json
+Computer - Itchio || Soma Spirits - Rebalance (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Soma Spirits - Rebalance (USA)/Soma Spirits - Rebalance (USA).json
+Computer - Itchio || Some Like It Hot - Chapter 0 (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Some Like It Hot - Chapter 0 (USA)/Some Like It Hot - Chapter 0 (USA).json
+Computer - Itchio || Sonar Smash (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sonar Smash (USA)/Sonar Smash (USA).json
+Computer - Itchio || Songs and Flowers (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Songs and Flowers (USA)/Songs and Flowers (USA).json
+Computer - Itchio || Sonny (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sonny (USA)/Sonny (USA).json
+Computer - Itchio || Sophie's Cubes (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sophie's Cubes (USA)/Sophie's Cubes (USA).json
+Computer - Itchio || Sophie's Safecracking Simulator (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sophie's Safecracking Simulator (USA)/Sophie's Safecracking Simulator (USA).json
+Computer - Itchio || Sorbetta - Gravely in Debt (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sorbetta - Gravely in Debt (USA)/Sorbetta - Gravely in Debt (USA).json
+Computer - Itchio || Sound Typist (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sound Typist (USA)/Sound Typist (USA).json
+Computer - Itchio || SoundStrider (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/SoundStrider (USA)/SoundStrider (USA).json
+Computer - Itchio || Soundodger+ (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Soundodger+ (USA)/Soundodger+ (USA).json
+Computer - Itchio || Space Between, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Space Between, The (USA)/Space Between, The (USA).json
+Computer - Itchio || Space Duet (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Space Duet (USA)/Space Duet (USA).json
+Computer - Itchio || Space Hole 2016 (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Space Hole 2016 (USA)/Space Hole 2016 (USA).json
+Computer - Itchio || Space Hole 2018 (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Space Hole 2018 (USA)/Space Hole 2018 (USA).json
+Computer - Itchio || Space Madness (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Space Madness (USA)/Space Madness (USA).json
+Computer - Itchio || Space Mayhem (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Space Mayhem (USA)/Space Mayhem (USA).json
+Computer - Itchio || Space Mech Pilot - The Universe Drive 1.0 (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Space Mech Pilot - The Universe Drive 1.0 (USA)/Space Mech Pilot - The Universe Drive 1.0 (USA).json
+Computer - Itchio || Space Mining Clicker (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Space Mining Clicker (USA)/Space Mining Clicker (USA).json
+Computer - Itchio || Space Station Architect (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Space Station Architect (USA)/Space Station Architect (USA).json
+Computer - Itchio || SpaceBeef (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/SpaceBeef (USA)/SpaceBeef (USA).json
+Computer - Itchio || Spark of One, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Spark of One, The (USA)/Spark of One, The (USA).json
+Computer - Itchio || Spass Taxi (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Spass Taxi (USA)/Spass Taxi (USA).json
+Computer - Itchio || Spectres of the Cold (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Spectres of the Cold (USA)/Spectres of the Cold (USA).json
+Computer - Itchio || Speed Dating for Ghosts (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Speed Dating for Ghosts (USA)/Speed Dating for Ghosts (USA).json
+Computer - Itchio || Speed Farmers (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Speed Farmers (USA)/Speed Farmers (USA).json
+Computer - Itchio || Speer (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Speer (USA)/Speer (USA).json
+Computer - Itchio || Spell Casting (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Spell Casting (USA)/Spell Casting (USA).json
+Computer - Itchio || Spell Slingers - Trick or Treat (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Spell Slingers - Trick or Treat (USA)/Spell Slingers - Trick or Treat (USA).json
+Computer - Itchio || Spirits of Xanadu (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Spirits of Xanadu (USA)/Spirits of Xanadu (USA).json
+Computer - Itchio || Splash Blast Panic (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Splash Blast Panic (USA)/Splash Blast Panic (USA).json
+Computer - Itchio || Splinter Zone (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Splinter Zone (USA)/Splinter Zone (USA).json
+Computer - Itchio || Splodey Vaders (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Splodey Vaders (USA)/Splodey Vaders (USA).json
+Computer - Itchio || Spookware (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Spookware (USA)/Spookware (USA).json
+Computer - Itchio || Spooky Ghosts Dot Com (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Spooky Ghosts Dot Com (USA)/Spooky Ghosts Dot Com (USA).json
+Computer - Itchio || Spooky Station (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Spooky Station (USA)/Spooky Station (USA).json
+Computer - Itchio || Spooky Waltz (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Spooky Waltz (USA)/Spooky Waltz (USA).json
+Computer - Itchio || Spring Falls (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Spring Falls (USA)/Spring Falls (USA).json
+Computer - Itchio || SpringBack (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/SpringBack (USA)/SpringBack (USA).json
+Computer - Itchio || Stage Fright (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Stage Fright (USA)/Stage Fright (USA).json
+Computer - Itchio || Star Escape (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Star Escape (USA)/Star Escape (USA).json
+Computer - Itchio || Star and Light 1.0 (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Star and Light 1.0 (USA)/Star and Light 1.0 (USA).json
+Computer - Itchio || StarFighter R&D HD Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/StarFighter R&D HD Edition (USA)/StarFighter R&D HD Edition (USA).json
+Computer - Itchio || Starcats (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Starcats (USA)/Starcats (USA).json
+Computer - Itchio || Stardrop (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Stardrop (USA)/Stardrop (USA).json
+Computer - Itchio || Starlight Shores (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Starlight Shores (USA)/Starlight Shores (USA).json
+Computer - Itchio || Stars Die (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Stars Die (USA)/Stars Die (USA).json
+Computer - Itchio || Starseed Pilgrim (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Starseed Pilgrim (USA)/Starseed Pilgrim (USA).json
+Computer - Itchio || Stealth Fishing (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Stealth Fishing (USA)/Stealth Fishing (USA).json
+Computer - Itchio || Steam Marines (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Steam Marines (USA)/Steam Marines (USA).json
+Computer - Itchio || Steam Marines 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Steam Marines 2 (USA)/Steam Marines 2 (USA).json
+Computer - Itchio || Stellar Interface (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Stellar Interface (USA)/Stellar Interface (USA).json
+Computer - Itchio || Stellaxy (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Stellaxy (USA)/Stellaxy (USA).json
+Computer - Itchio || Stick Nightmare (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Stick Nightmare (USA)/Stick Nightmare (USA).json
+Computer - Itchio || Stillness of the Wind, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Stillness of the Wind, The (USA)/Stillness of the Wind, The (USA).json
+Computer - Itchio || Stoneblade (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Stoneblade (USA)/Stoneblade (USA).json
+Computer - Itchio || Stophat (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Stophat (USA)/Stophat (USA).json
+Computer - Itchio || Stowaway (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Stowaway (USA)/Stowaway (USA).json
+Computer - Itchio || Strawberry Cubes (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Strawberry Cubes (USA)/Strawberry Cubes (USA).json
+Computer - Itchio || Strife of Cosmos (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Strife of Cosmos (USA)/Strife of Cosmos (USA).json
+Computer - Itchio || String Tyrant (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/String Tyrant (USA)/String Tyrant (USA).json
+Computer - Itchio || Sub-Uber-Marine (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sub-Uber-Marine (USA)/Sub-Uber-Marine (USA).json
+Computer - Itchio || SubDivide (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/SubDivide (USA)/SubDivide (USA).json
+Computer - Itchio || Subject, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Subject, The (USA)/Subject, The (USA).json
+Computer - Itchio || Subterrarium (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Subterrarium (USA)/Subterrarium (USA).json
+Computer - Itchio || Sudd City Adventures (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sudd City Adventures (USA)/Sudd City Adventures (USA).json
+Computer - Itchio || Sudoku Zenkai (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sudoku Zenkai (USA)/Sudoku Zenkai (USA).json
+Computer - Itchio || Sulphur Nimbus - Hel's Elixir (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sulphur Nimbus - Hel's Elixir (USA)/Sulphur Nimbus - Hel's Elixir (USA).json
+Computer - Itchio || Summer Gems (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Summer Gems (USA)/Summer Gems (USA).json
+Computer - Itchio || Summer in Mara (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Summer in Mara (USA)/Summer in Mara (USA).json
+Computer - Itchio || Summer of '58 (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Summer of '58 (USA)/Summer of '58 (USA).json
+Computer - Itchio || Summoner's Mess (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Summoner's Mess (USA)/Summoner's Mess (USA).json
+Computer - Itchio || Sun Dogs (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sun Dogs (USA)/Sun Dogs (USA).json
+Computer - Itchio || Sundered - Eldritch Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sundered - Eldritch Edition (USA)/Sundered - Eldritch Edition (USA).json
+Computer - Itchio || Sunlight (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sunlight (USA)/Sunlight (USA).json
+Computer - Itchio || Sunset (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sunset (USA)/Sunset (USA).json
+Computer - Itchio || Super Bernie World (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Bernie World (USA)/Super Bernie World (USA).json
+Computer - Itchio || Super Crome - Bullet Purgatory (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Crome - Bullet Purgatory (USA)/Super Crome - Bullet Purgatory (USA).json
+Computer - Itchio || Super Cube Attack (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Cube Attack (USA)/Super Cube Attack (USA).json
+Computer - Itchio || Super Dunkman (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Dunkman (USA)/Super Dunkman (USA).json
+Computer - Itchio || Super Head Ball (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Head Ball (USA)/Super Head Ball (USA).json
+Computer - Itchio || Super HelmKnight (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super HelmKnight (USA)/Super HelmKnight (USA).json
+Computer - Itchio || Super Hexagon (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Hexagon (USA)/Super Hexagon (USA).json
+Computer - Itchio || Super Ledgehop - Double Laser (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Ledgehop - Double Laser (USA)/Super Ledgehop - Double Laser (USA).json
+Computer - Itchio || Super Mumtaz Bros. (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Mumtaz Bros. (USA)/Super Mumtaz Bros. (USA).json
+Computer - Itchio || Super Platformer Gun (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Platformer Gun (USA)/Super Platformer Gun (USA).json
+Computer - Itchio || Super Rad Raygun (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Rad Raygun (USA)/Super Rad Raygun (USA).json
+Computer - Itchio || Super Sellout (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Sellout (USA)/Super Sellout (USA).json
+Computer - Itchio || Super Skull Smash GO! 2 Turbo (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Skull Smash GO! 2 Turbo (USA)/Super Skull Smash GO! 2 Turbo (USA).json
+Computer - Itchio || Super Slime Arena (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Slime Arena (USA)/Super Slime Arena (USA).json
+Computer - Itchio || Super Snake 3D (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Snake 3D (USA)/Super Snake 3D (USA).json
+Computer - Itchio || Super Win the Game (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Super Win the Game (USA)/Super Win the Game (USA).json
+Computer - Itchio || SuperLuminauts (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/SuperLuminauts (USA)/SuperLuminauts (USA).json
+Computer - Itchio || Superhot (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Superhot (USA)/Superhot (USA).json
+Computer - Itchio || Supper, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Supper, The (USA)/Supper, The (USA).json
+Computer - Itchio || Surprise Mechanic - The Gaming Trivia (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Surprise Mechanic - The Gaming Trivia (USA)/Surprise Mechanic - The Gaming Trivia (USA).json
+Computer - Itchio || Sushi Master VR (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sushi Master VR (USA)/Sushi Master VR (USA).json
+Computer - Itchio || Sverdheim (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sverdheim (USA)/Sverdheim (USA).json
+Computer - Itchio || Sweet Volley High (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sweet Volley High (USA)/Sweet Volley High (USA).json
+Computer - Itchio || Swim Out (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Swim Out (USA)/Swim Out (USA).json
+Computer - Itchio || Switch 'N' Shoot (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Switch 'N' Shoot (USA)/Switch 'N' Shoot (USA).json
+Computer - Itchio || Sword and the Slime, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Sword and the Slime, The (USA)/Sword and the Slime, The (USA).json
+Computer - Itchio || Swung (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Swung (USA)/Swung (USA).json
+Computer - Itchio || Synestia (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Synestia (USA)/Synestia (USA).json
+Computer - Itchio || Syscrusher (USA) || $ROM_JSON_ROOT/Computer/Itchio/S/Syscrusher (USA)/Syscrusher (USA).json
+Computer - Itchio || T.A.R.S (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/T.A.R.S (USA)/T.A.R.S (USA).json
+Computer - Itchio || TEOCALLI (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/TEOCALLI (USA)/TEOCALLI (USA).json
+Computer - Itchio || Taco Tom 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Taco Tom 2 (USA)/Taco Tom 2 (USA).json
+Computer - Itchio || Tacoma (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tacoma (USA)/Tacoma (USA).json
+Computer - Itchio || Tail Makes the Fox, The - Episode 1 (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tail Makes the Fox, The - Episode 1 (USA)/Tail Makes the Fox, The - Episode 1 (USA).json
+Computer - Itchio || Taimumari - Definitive Edition (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Taimumari - Definitive Edition (USA)/Taimumari - Definitive Edition (USA).json
+Computer - Itchio || Tales From Windy Meadow (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tales From Windy Meadow (USA)/Tales From Windy Meadow (USA).json
+Computer - Itchio || Tales from the Road (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tales from the Road (USA)/Tales from the Road (USA).json
+Computer - Itchio || Talk To Me (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Talk To Me (USA)/Talk To Me (USA).json
+Computer - Itchio || Tallowmere (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tallowmere (USA)/Tallowmere (USA).json
+Computer - Itchio || Tamashii (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tamashii (USA)/Tamashii (USA).json
+Computer - Itchio || Tanglewood (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tanglewood (USA)/Tanglewood (USA).json
+Computer - Itchio || Tangrams Deluxe (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tangrams Deluxe (USA)/Tangrams Deluxe (USA).json
+Computer - Itchio || Tap Strike BOOM! (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tap Strike BOOM! (USA)/Tap Strike BOOM! (USA).json
+Computer - Itchio || Tape (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tape (USA)/Tape (USA).json
+Computer - Itchio || Task Force Kampas (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Task Force Kampas (USA)/Task Force Kampas (USA).json
+Computer - Itchio || Temple Of Tangram (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Temple Of Tangram (USA)/Temple Of Tangram (USA).json
+Computer - Itchio || Temple Scramble (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Temple Scramble (USA)/Temple Scramble (USA).json
+Computer - Itchio || Tenderfoot Tactics (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tenderfoot Tactics (USA)/Tenderfoot Tactics (USA).json
+Computer - Itchio || Tennnes (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tennnes (USA)/Tennnes (USA).json
+Computer - Itchio || Terri-Fried (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Terri-Fried (USA)/Terri-Fried (USA).json
+Computer - Itchio || Tessa's Ark - Chapter 1 (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tessa's Ark - Chapter 1 (USA)/Tessa's Ark - Chapter 1 (USA).json
+Computer - Itchio || Test Tube Titans (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Test Tube Titans (USA)/Test Tube Titans (USA).json
+Computer - Itchio || Testimony of Trixie Glimmer Smith, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Testimony of Trixie Glimmer Smith, The (USA)/Testimony of Trixie Glimmer Smith, The (USA).json
+Computer - Itchio || Textreme 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Textreme 2 (USA)/Textreme 2 (USA).json
+Computer - Itchio || That Puzzle Game Everyone Knows (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/That Puzzle Game Everyone Knows (USA)/That Puzzle Game Everyone Knows (USA).json
+Computer - Itchio || That Which Binds Us (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/That Which Binds Us (USA)/That Which Binds Us (USA).json
+Computer - Itchio || Theorem (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Theorem (USA)/Theorem (USA).json
+Computer - Itchio || There Will Be Ink (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/There Will Be Ink (USA)/There Will Be Ink (USA).json
+Computer - Itchio || Thermo Puzzle (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Thermo Puzzle (USA)/Thermo Puzzle (USA).json
+Computer - Itchio || These Lands (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/These Lands (USA)/These Lands (USA).json
+Computer - Itchio || They Bleed Pixels (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/They Bleed Pixels (USA)/They Bleed Pixels (USA).json
+Computer - Itchio || They Came From Uranus! (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/They Came From Uranus! (USA)/They Came From Uranus! (USA).json
+Computer - Itchio || Thing-in-Itself (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Thing-in-Itself (USA)/Thing-in-Itself (USA).json
+Computer - Itchio || This Call May Be Recorded (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/This Call May Be Recorded (USA)/This Call May Be Recorded (USA).json
+Computer - Itchio || This Strange Realm Of Mine (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/This Strange Realm Of Mine (USA)/This Strange Realm Of Mine (USA).json
+Computer - Itchio || This World Unknown (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/This World Unknown (USA)/This World Unknown (USA).json
+Computer - Itchio || Those Spacecrafts (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Those Spacecrafts (USA)/Those Spacecrafts (USA).json
+Computer - Itchio || Thou Shalt Be Brave (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Thou Shalt Be Brave (USA)/Thou Shalt Be Brave (USA).json
+Computer - Itchio || Three Lesbians in a Barrow (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Three Lesbians in a Barrow (USA)/Three Lesbians in a Barrow (USA).json
+Computer - Itchio || Three-Body Problem (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Three-Body Problem (USA)/Three-Body Problem (USA).json
+Computer - Itchio || Throw Cubes into Brick Towers To Collapse Them (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Throw Cubes into Brick Towers To Collapse Them (USA)/Throw Cubes into Brick Towers To Collapse Them (USA).json
+Computer - Itchio || Thrunt (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Thrunt (USA)/Thrunt (USA).json
+Computer - Itchio || ThrustMe (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/ThrustMe (USA)/ThrustMe (USA).json
+Computer - Itchio || Tic Tac Together (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tic Tac Together (USA)/Tic Tac Together (USA).json
+Computer - Itchio || Ticket (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Ticket (USA)/Ticket (USA).json
+Computer - Itchio || Time Stone (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Time Stone (USA)/Time Stone (USA).json
+Computer - Itchio || TimeOut (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/TimeOut (USA)/TimeOut (USA).json
+Computer - Itchio || TinkerQuarry (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/TinkerQuarry (USA)/TinkerQuarry (USA).json
+Computer - Itchio || Tiny Dangerous Dungeons (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tiny Dangerous Dungeons (USA)/Tiny Dangerous Dungeons (USA).json
+Computer - Itchio || To Be a HerpWitch (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/To Be a HerpWitch (USA)/To Be a HerpWitch (USA).json
+Computer - Itchio || Toaster Jam (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Toaster Jam (USA)/Toaster Jam (USA).json
+Computer - Itchio || Tonight We Riot (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tonight We Riot (USA)/Tonight We Riot (USA).json
+Computer - Itchio || Toree 2 (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Toree 2 (USA)/Toree 2 (USA).json
+Computer - Itchio || Toree 3D (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Toree 3D (USA)/Toree 3D (USA).json
+Computer - Itchio || TorqueL (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/TorqueL (USA)/TorqueL (USA).json
+Computer - Itchio || Toto Temple Deluxe (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Toto Temple Deluxe (USA)/Toto Temple Deluxe (USA).json
+Computer - Itchio || Touhou Fan Game Jam Black Lives Matter Collection (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Touhou Fan Game Jam Black Lives Matter Collection (USA)/Touhou Fan Game Jam Black Lives Matter Collection (USA).json
+Computer - Itchio || Towayami (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Towayami (USA)/Towayami (USA).json
+Computer - Itchio || Tower, The - The Order of XII (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tower, The - The Order of XII (USA)/Tower, The - The Order of XII (USA).json
+Computer - Itchio || TowerFall Ascension (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/TowerFall Ascension (USA)/TowerFall Ascension (USA).json
+Computer - Itchio || Towertale (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Towertale (USA)/Towertale (USA).json
+Computer - Itchio || Toybox Aviation (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Toybox Aviation (USA)/Toybox Aviation (USA).json
+Computer - Itchio || Trainbow (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Trainbow (USA)/Trainbow (USA).json
+Computer - Itchio || Trash Wars (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Trash Wars (USA)/Trash Wars (USA).json
+Computer - Itchio || Trawl (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Trawl (USA)/Trawl (USA).json
+Computer - Itchio || Tri Attack (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tri Attack (USA)/Tri Attack (USA).json
+Computer - Itchio || Trolley, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Trolley, The (USA)/Trolley, The (USA).json
+Computer - Itchio || Tumbleblox (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Tumbleblox (USA)/Tumbleblox (USA).json
+Computer - Itchio || Turn Chase (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Turn Chase (USA)/Turn Chase (USA).json
+Computer - Itchio || Turn-Based Champion (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Turn-Based Champion (USA)/Turn-Based Champion (USA).json
+Computer - Itchio || Type The Entire Of Ulysses (USA) || $ROM_JSON_ROOT/Computer/Itchio/T/Type The Entire Of Ulysses (USA)/Type The Entire Of Ulysses (USA).json
+Computer - Itchio || U.F.O - Unfortunately Fortunate Organisms (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/U.F.O - Unfortunately Fortunate Organisms (USA)/U.F.O - Unfortunately Fortunate Organisms (USA).json
+Computer - Itchio || Ug! Caveman Game (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/Ug! Caveman Game (USA)/Ug! Caveman Game (USA).json
+Computer - Itchio || Ultimate Zombie Death Ball (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/Ultimate Zombie Death Ball (USA)/Ultimate Zombie Death Ball (USA).json
+Computer - Itchio || Ultra Hat Dimension (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/Ultra Hat Dimension (USA)/Ultra Hat Dimension (USA).json
+Computer - Itchio || Un Pas Fragile (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/Un Pas Fragile (USA)/Un Pas Fragile (USA).json
+Computer - Itchio || Unbuild (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/Unbuild (USA)/Unbuild (USA).json
+Computer - Itchio || Underhero (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/Underhero (USA)/Underhero (USA).json
+Computer - Itchio || Unfair Jousting Fair (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/Unfair Jousting Fair (USA)/Unfair Jousting Fair (USA).json
+Computer - Itchio || Unfinished - An Artist's Lament (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/Unfinished - An Artist's Lament (USA)/Unfinished - An Artist's Lament (USA).json
+Computer - Itchio || Ungrounded (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/Ungrounded (USA)/Ungrounded (USA).json
+Computer - Itchio || Unobelisk (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/Unobelisk (USA)/Unobelisk (USA).json
+Computer - Itchio || Upsquid (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/Upsquid (USA)/Upsquid (USA).json
+Computer - Itchio || Us Lovely Corpses (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/Us Lovely Corpses (USA)/Us Lovely Corpses (USA).json
+Computer - Itchio || Utopias - Navigating Without Coordinates (USA) || $ROM_JSON_ROOT/Computer/Itchio/U/Utopias - Navigating Without Coordinates (USA)/Utopias - Navigating Without Coordinates (USA).json
+Computer - Itchio || VR Drum Studio (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/VR Drum Studio (USA)/VR Drum Studio (USA).json
+Computer - Itchio || Valley of Super Flowers, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Valley of Super Flowers, The (USA)/Valley of Super Flowers, The (USA).json
+Computer - Itchio || Veiled (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Veiled (USA)/Veiled (USA).json
+Computer - Itchio || VekWars (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/VekWars (USA)/VekWars (USA).json
+Computer - Itchio || Vektor 2089 (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Vektor 2089 (USA)/Vektor 2089 (USA).json
+Computer - Itchio || Verdant Skies (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Verdant Skies (USA)/Verdant Skies (USA).json
+Computer - Itchio || Veritas (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Veritas (USA)/Veritas (USA).json
+Computer - Itchio || ViCam (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/ViCam (USA)/ViCam (USA).json
+Computer - Itchio || Videgoame (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Videgoame (USA)/Videgoame (USA).json
+Computer - Itchio || Vienna Automobile Society (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Vienna Automobile Society (USA)/Vienna Automobile Society (USA).json
+Computer - Itchio || Vignettes (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Vignettes (USA)/Vignettes (USA).json
+Computer - Itchio || Village Monsters (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Village Monsters (USA)/Village Monsters (USA).json
+Computer - Itchio || Vilmonic (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Vilmonic (USA)/Vilmonic (USA).json
+Computer - Itchio || Vincent - The Secret of Myers (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Vincent - The Secret of Myers (USA)/Vincent - The Secret of Myers (USA).json
+Computer - Itchio || Viral Reload (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Viral Reload (USA)/Viral Reload (USA).json
+Computer - Itchio || Virtua Blinds (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Virtua Blinds (USA)/Virtua Blinds (USA).json
+Computer - Itchio || Vision Soft Reset (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Vision Soft Reset (USA)/Vision Soft Reset (USA).json
+Computer - Itchio || Visual Out (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Visual Out (USA)/Visual Out (USA).json
+Computer - Itchio || Void (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Void (USA)/Void (USA).json
+Computer - Itchio || Void Runner (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Void Runner (USA)/Void Runner (USA).json
+Computer - Itchio || Void Wisp (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Void Wisp (USA)/Void Wisp (USA).json
+Computer - Itchio || Volatile (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Volatile (USA)/Volatile (USA).json
+Computer - Itchio || Volo Airsport (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Volo Airsport (USA)/Volo Airsport (USA).json
+Computer - Itchio || VoltAge - Genesis (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/VoltAge - Genesis (USA)/VoltAge - Genesis (USA).json
+Computer - Itchio || Voyageur (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Voyageur (USA)/Voyageur (USA).json
+Computer - Itchio || Vulture (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Vulture (USA)/Vulture (USA).json
+Computer - Itchio || Vylan (USA) || $ROM_JSON_ROOT/Computer/Itchio/V/Vylan (USA)/Vylan (USA).json
+Computer - Itchio || Waiting for the Loop (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Waiting for the Loop (USA)/Waiting for the Loop (USA).json
+Computer - Itchio || Wakamarina Valley, New Zealand (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wakamarina Valley, New Zealand (USA)/Wakamarina Valley, New Zealand (USA).json
+Computer - Itchio || Walden, A Game (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Walden, A Game (USA)/Walden, A Game (USA).json
+Computer - Itchio || Walking Tourist (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Walking Tourist (USA)/Walking Tourist (USA).json
+Computer - Itchio || Wand Wars (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wand Wars (USA)/Wand Wars (USA).json
+Computer - Itchio || Wandersong (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wandersong (USA)/Wandersong (USA).json
+Computer - Itchio || Warden - Melody of the Undergrowth (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Warden - Melody of the Undergrowth (USA)/Warden - Melody of the Undergrowth (USA).json
+Computer - Itchio || Warm (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Warm (USA)/Warm (USA).json
+Computer - Itchio || WarpThrough (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/WarpThrough (USA)/WarpThrough (USA).json
+Computer - Itchio || Watch Me Jump (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Watch Me Jump (USA)/Watch Me Jump (USA).json
+Computer - Itchio || Water's Fine (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Water's Fine (USA)/Water's Fine (USA).json
+Computer - Itchio || Wave to the People (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wave to the People (USA)/Wave to the People (USA).json
+Computer - Itchio || WaveCrash!! (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/WaveCrash!! (USA)/WaveCrash!! (USA).json
+Computer - Itchio || We Are Doomed (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/We Are Doomed (USA)/We Are Doomed (USA).json
+Computer - Itchio || We Should Talk (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/We Should Talk (USA)/We Should Talk (USA).json
+Computer - Itchio || Welcome to Elk (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Welcome to Elk (USA)/Welcome to Elk (USA).json
+Computer - Itchio || What Happened to Survey Team 4 (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/What Happened to Survey Team 4 (USA)/What Happened to Survey Team 4 (USA).json
+Computer - Itchio || What Isn't Saved Will Be Lost (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/What Isn't Saved Will Be Lost (USA)/What Isn't Saved Will Be Lost (USA).json
+Computer - Itchio || Wheels of Aurelia (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wheels of Aurelia (USA)/Wheels of Aurelia (USA).json
+Computer - Itchio || When The River Runs Dry (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/When The River Runs Dry (USA)/When The River Runs Dry (USA).json
+Computer - Itchio || Where is Cat (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Where is Cat (USA)/Where is Cat (USA).json
+Computer - Itchio || Where the Snow Settles (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Where the Snow Settles (USA)/Where the Snow Settles (USA).json
+Computer - Itchio || Whipped And Steamy - Cosplay Cafe (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Whipped And Steamy - Cosplay Cafe (USA)/Whipped And Steamy - Cosplay Cafe (USA).json
+Computer - Itchio || Whirlibird (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Whirlibird (USA)/Whirlibird (USA).json
+Computer - Itchio || Whisperer in Darkness, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Whisperer in Darkness, The (USA)/Whisperer in Darkness, The (USA).json
+Computer - Itchio || White Door, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/White Door, The (USA)/White Door, The (USA).json
+Computer - Itchio || Who Killed My Father Academy! (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Who Killed My Father Academy! (USA)/Who Killed My Father Academy! (USA).json
+Computer - Itchio || Wide Ocean Big Jacket (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wide Ocean Big Jacket (USA)/Wide Ocean Big Jacket (USA).json
+Computer - Itchio || Widget Satchel (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Widget Satchel (USA)/Widget Satchel (USA).json
+Computer - Itchio || Wild Woods (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wild Woods (USA)/Wild Woods (USA).json
+Computer - Itchio || Wiloo (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wiloo (USA)/Wiloo (USA).json
+Computer - Itchio || Windosill (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Windosill (USA)/Windosill (USA).json
+Computer - Itchio || Winterlore Chapter I (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Winterlore Chapter I (USA)/Winterlore Chapter I (USA).json
+Computer - Itchio || Wish Upon A Star, A (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wish Upon A Star, A (USA)/Wish Upon A Star, A (USA).json
+Computer - Itchio || Wishing Sarah (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wishing Sarah (USA)/Wishing Sarah (USA).json
+Computer - Itchio || Wishing Stone, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wishing Stone, The (USA)/Wishing Stone, The (USA).json
+Computer - Itchio || Witch Thief (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Witch Thief (USA)/Witch Thief (USA).json
+Computer - Itchio || WitchWay (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/WitchWay (USA)/WitchWay (USA).json
+Computer - Itchio || Witchball (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Witchball (USA)/Witchball (USA).json
+Computer - Itchio || Witches Tea Party, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Witches Tea Party, The (USA)/Witches Tea Party, The (USA).json
+Computer - Itchio || Without Escape (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Without Escape (USA)/Without Escape (USA).json
+Computer - Itchio || Wizard Battle (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wizard Battle (USA)/Wizard Battle (USA).json
+Computer - Itchio || Wolf's Bite, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wolf's Bite, The (USA)/Wolf's Bite, The (USA).json
+Computer - Itchio || Wondee (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wondee (USA)/Wondee (USA).json
+Computer - Itchio || Wonderland Nights - White Rabbit's Diary (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wonderland Nights - White Rabbit's Diary (USA)/Wonderland Nights - White Rabbit's Diary (USA).json
+Computer - Itchio || Wooden Hearts (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wooden Hearts (USA)/Wooden Hearts (USA).json
+Computer - Itchio || Woodland Chasers (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Woodland Chasers (USA)/Woodland Chasers (USA).json
+Computer - Itchio || Word After Word (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Word After Word (USA)/Word After Word (USA).json
+Computer - Itchio || Word Forward (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Word Forward (USA)/Word Forward (USA).json
+Computer - Itchio || Wordsum Blitz (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wordsum Blitz (USA)/Wordsum Blitz (USA).json
+Computer - Itchio || World Begins With You, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/World Begins With You, The (USA)/World Begins With You, The (USA).json
+Computer - Itchio || Woter - A Tale of Two Water Cans (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Woter - A Tale of Two Water Cans (USA)/Woter - A Tale of Two Water Cans (USA).json
+Computer - Itchio || Wrapped With A Kiss (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wrapped With A Kiss (USA)/Wrapped With A Kiss (USA).json
+Computer - Itchio || Wratch's Den, The (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/Wratch's Den, The (USA)/Wratch's Den, The (USA).json
+Computer - Itchio || WretchWorks Arcade Pack (USA) || $ROM_JSON_ROOT/Computer/Itchio/W/WretchWorks Arcade Pack (USA)/WretchWorks Arcade Pack (USA).json
+Computer - Itchio || Xander the Monster Morpher - Universe Breaker (USA) || $ROM_JSON_ROOT/Computer/Itchio/X/Xander the Monster Morpher - Universe Breaker (USA)/Xander the Monster Morpher - Universe Breaker (USA).json
+Computer - Itchio || Xenogunner (USA) || $ROM_JSON_ROOT/Computer/Itchio/X/Xenogunner (USA)/Xenogunner (USA).json
+Computer - Itchio || Yi and the Thousand Moons (USA) || $ROM_JSON_ROOT/Computer/Itchio/Y/Yi and the Thousand Moons (USA)/Yi and the Thousand Moons (USA).json
+Computer - Itchio || Ynglet (USA) || $ROM_JSON_ROOT/Computer/Itchio/Y/Ynglet (USA)/Ynglet (USA).json
+Computer - Itchio || You Can Pet The Dog VR (USA) || $ROM_JSON_ROOT/Computer/Itchio/Y/You Can Pet The Dog VR (USA)/You Can Pet The Dog VR (USA).json
+Computer - Itchio || You Died But a Necromancer Revived You (USA) || $ROM_JSON_ROOT/Computer/Itchio/Y/You Died But a Necromancer Revived You (USA)/You Died But a Necromancer Revived You (USA).json
+Computer - Itchio || You Used to be Someone (USA) || $ROM_JSON_ROOT/Computer/Itchio/Y/You Used to be Someone (USA)/You Used to be Someone (USA).json
+Computer - Itchio || Your Future Self (USA) || $ROM_JSON_ROOT/Computer/Itchio/Y/Your Future Self (USA)/Your Future Self (USA).json
+Computer - Itchio || Zak (USA) || $ROM_JSON_ROOT/Computer/Itchio/Z/Zak (USA)/Zak (USA).json
+Computer - Itchio || Zenodyne R (USA) || $ROM_JSON_ROOT/Computer/Itchio/Z/Zenodyne R (USA)/Zenodyne R (USA).json
+Computer - Itchio || Zenohell (USA) || $ROM_JSON_ROOT/Computer/Itchio/Z/Zenohell (USA)/Zenohell (USA).json
+Computer - Itchio || Zepball Deluxe (USA) || $ROM_JSON_ROOT/Computer/Itchio/Z/Zepball Deluxe (USA)/Zepball Deluxe (USA).json
+Computer - Itchio || Zeph (USA) || $ROM_JSON_ROOT/Computer/Itchio/Z/Zeph (USA)/Zeph (USA).json
+Computer - Itchio || Zepton (USA) || $ROM_JSON_ROOT/Computer/Itchio/Z/Zepton (USA)/Zepton (USA).json
+Computer - Itchio || ZeroRanger (USA) || $ROM_JSON_ROOT/Computer/Itchio/Z/ZeroRanger (USA)/ZeroRanger (USA).json
+Computer - Itchio || Zombie Admin (USA) || $ROM_JSON_ROOT/Computer/Itchio/Z/Zombie Admin (USA)/Zombie Admin (USA).json
+Computer - Itchio || Zombusters (USA) || $ROM_JSON_ROOT/Computer/Itchio/Z/Zombusters (USA)/Zombusters (USA).json
+Computer - Itchio || Zone of Lacryma (USA) || $ROM_JSON_ROOT/Computer/Itchio/Z/Zone of Lacryma (USA)/Zone of Lacryma (USA).json
+Computer - Itchio || Zzap! (USA) || $ROM_JSON_ROOT/Computer/Itchio/Z/Zzap! (USA)/Zzap! (USA).json

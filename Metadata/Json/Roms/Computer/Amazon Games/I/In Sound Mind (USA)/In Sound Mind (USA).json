@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/In Sound Mind (USA).exe"
+    ],
+    "transform_file": "In Sound Mind (USA).exe"
+}

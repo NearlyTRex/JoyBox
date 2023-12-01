@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Toaster Jam (USA).exe"
+    ],
+    "transform_file": "Toaster Jam (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/And Yet It Moves (USA).exe"
+    ],
+    "transform_file": "And Yet It Moves (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Epic Battle Fantasy 4 (USA).exe"
+    ],
+    "transform_file": "Epic Battle Fantasy 4 (USA).exe"
+}

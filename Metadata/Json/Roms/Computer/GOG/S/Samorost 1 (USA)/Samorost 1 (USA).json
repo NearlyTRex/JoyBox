@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_samorost_1_1.12_(47177).exe"
+    ],
+    "transform_file": "setup_samorost_1_1.12_(47177).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Rose & Time (USA).exe"
+    ],
+    "transform_file": "Rose & Time (USA).exe"
+}

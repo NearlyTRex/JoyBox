@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/CrossCode (USA).exe"
+    ],
+    "transform_file": "CrossCode (USA).exe"
+}

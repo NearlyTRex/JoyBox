@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Sausage Sports Club (USA).exe"
+    ],
+    "transform_file": "Sausage Sports Club (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Muffin Fight VR (USA).exe"
+    ],
+    "transform_file": "Muffin Fight VR (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Samsara Room (USA).exe"
+    ],
+    "transform_file": "Samsara Room (USA).exe"
+}

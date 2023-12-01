@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/El Gancho (USA).exe"
+    ],
+    "transform_file": "El Gancho (USA).exe"
+}

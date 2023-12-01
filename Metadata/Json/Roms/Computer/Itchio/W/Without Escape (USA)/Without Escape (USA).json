@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Without Escape (USA).exe"
+    ],
+    "transform_file": "Without Escape (USA).exe"
+}

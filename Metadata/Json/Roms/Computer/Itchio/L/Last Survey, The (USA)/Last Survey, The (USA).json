@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Last Survey, The (USA).exe"
+    ],
+    "transform_file": "Last Survey, The (USA).exe"
+}

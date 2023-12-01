@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Speer (USA).exe"
+    ],
+    "transform_file": "Speer (USA).exe"
+}

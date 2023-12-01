@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/RD Mars (USA).exe"
+    ],
+    "transform_file": "RD Mars (USA).exe"
+}

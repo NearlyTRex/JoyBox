@@ -1,0 +1,17 @@
+Sega Saturn || Alone in the Dark - One-Eyed Jack's Revenge (USA) || $ROM_JSON_ROOT/Other/Sega Saturn/Alone in the Dark - One-Eyed Jack's Revenge (USA)/Alone in the Dark - One-Eyed Jack's Revenge (USA).json
+Sega Saturn || Bio Hazard (Japan) || $ROM_JSON_ROOT/Other/Sega Saturn/Bio Hazard (Japan)/Bio Hazard (Japan).json
+Sega Saturn || Bug! (USA) || $ROM_JSON_ROOT/Other/Sega Saturn/Bug! (USA)/Bug! (USA).json
+Sega Saturn || Clockwork Knight - Pepperouchau's Adventure (USA) || $ROM_JSON_ROOT/Other/Sega Saturn/Clockwork Knight - Pepperouchau's Adventure (USA)/Clockwork Knight - Pepperouchau's Adventure (USA).json
+Sega Saturn || D (USA) || $ROM_JSON_ROOT/Other/Sega Saturn/D (USA)/D (USA).json
+Sega Saturn || Daytona USA (USA) || $ROM_JSON_ROOT/Other/Sega Saturn/Daytona USA (USA)/Daytona USA (USA).json
+Sega Saturn || Deep Fear (Japan) || $ROM_JSON_ROOT/Other/Sega Saturn/Deep Fear (Japan)/Deep Fear (Japan).json
+Sega Saturn || Enemy Zero (USA) || $ROM_JSON_ROOT/Other/Sega Saturn/Enemy Zero (USA)/Enemy Zero (USA).json
+Sega Saturn || Legend of Oasis, The (USA) || $ROM_JSON_ROOT/Other/Sega Saturn/Legend of Oasis, The (USA)/Legend of Oasis, The (USA).json
+Sega Saturn || Mansion of Hidden Souls, The (USA) || $ROM_JSON_ROOT/Other/Sega Saturn/Mansion of Hidden Souls, The (USA)/Mansion of Hidden Souls, The (USA).json
+Sega Saturn || Mass Destruction (USA) || $ROM_JSON_ROOT/Other/Sega Saturn/Mass Destruction (USA)/Mass Destruction (USA).json
+Sega Saturn || Mystaria - The Realms of Lore (USA) || $ROM_JSON_ROOT/Other/Sega Saturn/Mystaria - The Realms of Lore (USA)/Mystaria - The Realms of Lore (USA).json
+Sega Saturn || NiGHTS into Dreams... (USA) (Demo) || $ROM_JSON_ROOT/Other/Sega Saturn/NiGHTS into Dreams... (USA) (Demo)/NiGHTS into Dreams... (USA) (Demo).json
+Sega Saturn || Sonic R (USA, Brazil) || $ROM_JSON_ROOT/Other/Sega Saturn/Sonic R (USA, Brazil)/Sonic R (USA, Brazil).json
+Sega Saturn || Virtua Cop (USA) (6S) || $ROM_JSON_ROOT/Other/Sega Saturn/Virtua Cop (USA) (6S)/Virtua Cop (USA) (6S).json
+Sega Saturn || Virtua Fighter 2 (USA) || $ROM_JSON_ROOT/Other/Sega Saturn/Virtua Fighter 2 (USA)/Virtua Fighter 2 (USA).json
+Sega Saturn || Virtual Hydlide (USA) || $ROM_JSON_ROOT/Other/Sega Saturn/Virtual Hydlide (USA)/Virtual Hydlide (USA).json

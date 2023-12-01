@@ -1,0 +1,28 @@
+{
+    "files": [
+        "sonson/ss.01e",
+        "sonson/ss.02e",
+        "sonson/ss.03e",
+        "sonson/ss_0.l9",
+        "sonson/ss_1.j9",
+        "sonson/ss_10.m6",
+        "sonson/ss_11.m3",
+        "sonson/ss_12.m4",
+        "sonson/ss_13.m1",
+        "sonson/ss_14.m2",
+        "sonson/ss_2.l8",
+        "sonson/ss_3.j8",
+        "sonson/ss_4.l7",
+        "sonson/ss_5.j7",
+        "sonson/ss_6.c11",
+        "sonson/ss_7.b6",
+        "sonson/ss_8.b5",
+        "sonson/ss_9.m5",
+        "sonson/ssb1.k11",
+        "sonson/ssb2.c4",
+        "sonson/ssb3.h7",
+        "sonson/ssb4.b2",
+        "sonson/ssb5.b1"
+    ],
+    "launch_name": "sonson"
+}

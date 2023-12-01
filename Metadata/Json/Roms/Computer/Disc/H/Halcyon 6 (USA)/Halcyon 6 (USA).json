@@ -1,0 +1,5 @@
+{
+    "installer_exe": "$DISC_MAIN_ROOT/Halcyon 6 (Windows).exe",
+    "installer_type": "7zip",
+    "transform_file": "Halcyon 6 (USA).chd"
+}

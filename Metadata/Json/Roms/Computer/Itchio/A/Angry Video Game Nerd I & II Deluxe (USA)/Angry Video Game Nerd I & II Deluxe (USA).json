@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Angry Video Game Nerd I & II Deluxe (USA).exe"
+    ],
+    "transform_file": "Angry Video Game Nerd I & II Deluxe (USA).exe"
+}

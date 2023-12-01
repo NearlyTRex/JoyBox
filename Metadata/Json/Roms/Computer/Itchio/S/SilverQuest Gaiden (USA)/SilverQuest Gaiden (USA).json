@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/SilverQuest Gaiden (USA).exe"
+    ],
+    "transform_file": "SilverQuest Gaiden (USA).exe"
+}

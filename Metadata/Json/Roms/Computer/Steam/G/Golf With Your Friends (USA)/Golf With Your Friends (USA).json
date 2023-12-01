@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Golf With Your Friends (USA).exe"
+    ],
+    "transform_file": "Golf With Your Friends (USA).exe"
+}

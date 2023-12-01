@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Super Crate Box (USA).exe"
+    ],
+    "transform_file": "Super Crate Box (USA).exe"
+}

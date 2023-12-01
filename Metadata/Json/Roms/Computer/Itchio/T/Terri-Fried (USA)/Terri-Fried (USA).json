@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Terri-Fried (USA).exe"
+    ],
+    "transform_file": "Terri-Fried (USA).exe"
+}

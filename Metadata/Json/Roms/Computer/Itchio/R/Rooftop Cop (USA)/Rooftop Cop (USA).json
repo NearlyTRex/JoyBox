@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Rooftop Cop (USA).exe"
+    ],
+    "transform_file": "Rooftop Cop (USA).exe"
+}

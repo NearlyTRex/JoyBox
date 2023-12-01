@@ -1,0 +1,30 @@
+{
+    "files": [
+        "joust/decoder_rom_4.3g",
+        "joust/decoder_rom_6.3c",
+        "joust/joust_rom_10a_3006-10.a7",
+        "joust/joust_rom_10a_3006-37.a7",
+        "joust/joust_rom_10b_3006-22.a7",
+        "joust/joust_rom_11a_3006-38.c7",
+        "joust/joust_rom_11b_3006-23.c7",
+        "joust/joust_rom_12a_3006-39.e7",
+        "joust/joust_rom_12b_3006-24.e7",
+        "joust/joust_rom_1b_3006-13.e4",
+        "joust/joust_rom_2b_3006-14.c4",
+        "joust/joust_rom_3b_3006-15.a4",
+        "joust/joust_rom_4a_3006-31.e5",
+        "joust/joust_rom_4b_3006-16.e5",
+        "joust/joust_rom_5b_3006-17.c5",
+        "joust/joust_rom_6a_3006-33.a5",
+        "joust/joust_rom_6b_3006-18.a5",
+        "joust/joust_rom_7a_3006-34.e6",
+        "joust/joust_rom_7a_3006-7.e6",
+        "joust/joust_rom_7b_3006-19.e6",
+        "joust/joust_rom_8a_3006-35.c6",
+        "joust/joust_rom_8b_3006-20.c6",
+        "joust/joust_rom_9a_3006-36.a6",
+        "joust/joust_rom_9b_3006-21.a6",
+        "joust/video_sound_rom_4_std_780.ic12"
+    ],
+    "launch_name": "joust"
+}

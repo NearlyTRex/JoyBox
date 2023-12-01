@@ -1,0 +1,11 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/eschalon_book_1_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/eschalon_book_1_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/eschalon_book_1_wallpaper.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_eschalon_-_book_i_1.06_(18470).exe"
+    ],
+    "transform_file": "setup_eschalon_-_book_i_1.06_(18470).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Delver (USA).exe"
+    ],
+    "transform_file": "Delver (USA).exe"
+}

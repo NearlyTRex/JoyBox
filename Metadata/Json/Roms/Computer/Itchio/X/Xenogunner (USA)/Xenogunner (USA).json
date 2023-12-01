@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Xenogunner (USA).exe"
+    ],
+    "transform_file": "Xenogunner (USA).exe"
+}

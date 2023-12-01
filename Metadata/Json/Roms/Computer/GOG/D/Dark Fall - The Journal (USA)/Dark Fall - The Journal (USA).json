@@ -1,0 +1,10 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/dark_fall_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/dark_fall_soundtrack.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_dark_fall_-_the_journal_6.00_(19403).exe"
+    ],
+    "transform_file": "setup_dark_fall_-_the_journal_6.00_(19403).exe"
+}

@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Buffy the Vampire Slayer (USA).chd",
+        "Buffy the Vampire Slayer (USA).dmi.bin",
+        "Buffy the Vampire Slayer (USA).lyt",
+        "Buffy the Vampire Slayer (USA).pfi.bin",
+        "Buffy the Vampire Slayer (USA).ss.bin"
+    ],
+    "launch_file": "Buffy the Vampire Slayer (USA).iso",
+    "transform_file": "Buffy the Vampire Slayer (USA).chd"
+}

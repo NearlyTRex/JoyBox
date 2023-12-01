@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_kathy_rain_(demo)_1.0.4_(19094).exe"
+    ],
+    "transform_file": "setup_kathy_rain_(demo)_1.0.4_(19094).exe"
+}

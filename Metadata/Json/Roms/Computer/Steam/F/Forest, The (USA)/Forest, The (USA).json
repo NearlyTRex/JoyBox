@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Forest, The (USA).exe"
+    ],
+    "transform_file": "Forest, The (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/D.M.T. (USA).exe"
+    ],
+    "transform_file": "D.M.T. (USA).exe"
+}

@@ -1,0 +1,28 @@
+{
+    "main_game_exe": [
+        "Barkely/BarkleyV120.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Barkely/BarkleyV120.exe": "Barkely"
+    },
+    "sandbox": {
+        "wine": {
+            "overrides": {
+                "game": [
+                    "d3d9,d3d10core,d3d11,dxgi=n,b"
+                ]
+            },
+            "use_dxvk": true
+        }
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$HDD_MAIN_ROOT/Barkely",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Barkley, Shut Up and Jam - Gaiden (USA).chd"
+}

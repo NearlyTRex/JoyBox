@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Search, The (USA).exe"
+    ],
+    "transform_file": "Search, The (USA).exe"
+}

@@ -1,0 +1,8 @@
+{
+    "files": [
+        "Demon's Souls (USA).chd",
+        "Demon's Souls (USA).dkey"
+    ],
+    "launch_file": "PS3_GAME/USRDIR/EBOOT.BIN",
+    "transform_file": "Demon's Souls (USA).chd"
+}

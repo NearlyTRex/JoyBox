@@ -1,0 +1,64 @@
+Nintendo DSi || 7 Wonders II (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/7 Wonders II (USA)/7 Wonders II (USA).json
+Nintendo DSi || Abyss (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Abyss (USA)/Abyss (USA).json
+Nintendo DSi || AiRace (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/AiRace (USA)/AiRace (USA).json
+Nintendo DSi || AiRace Tunnel (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/AiRace Tunnel (USA)/AiRace Tunnel (USA).json
+Nintendo DSi || Amoebattle (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Amoebattle (USA)/Amoebattle (USA).json
+Nintendo DSi || Anonymous Notes 1 - From The Abyss (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Anonymous Notes 1 - From The Abyss (USA)/Anonymous Notes 1 - From The Abyss (USA).json
+Nintendo DSi || Anonymous Notes 2 - From The Abyss (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Anonymous Notes 2 - From The Abyss (USA)/Anonymous Notes 2 - From The Abyss (USA).json
+Nintendo DSi || Anonymous Notes 3 - From The Abyss (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Anonymous Notes 3 - From The Abyss (USA)/Anonymous Notes 3 - From The Abyss (USA).json
+Nintendo DSi || Anonymous Notes 4 - From The Abyss (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Anonymous Notes 4 - From The Abyss (USA)/Anonymous Notes 4 - From The Abyss (USA).json
+Nintendo DSi || Art Style - AQUIA (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Art Style - AQUIA (USA)/Art Style - AQUIA (USA).json
+Nintendo DSi || Aura-Aura Climber (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Aura-Aura Climber (USA)/Aura-Aura Climber (USA).json
+Nintendo DSi || Bomberman Blitz (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Bomberman Blitz (USA)/Bomberman Blitz (USA).json
+Nintendo DSi || Bookworm (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Bookworm (USA)/Bookworm (USA).json
+Nintendo DSi || Box Pusher (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Box Pusher (USA)/Box Pusher (USA).json
+Nintendo DSi || Candle Route (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Candle Route (USA)/Candle Route (USA).json
+Nintendo DSi || Cat Frenzy (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Cat Frenzy (USA)/Cat Frenzy (USA).json
+Nintendo DSi || Clash of Elementalists (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Clash of Elementalists (USA)/Clash of Elementalists (USA).json
+Nintendo DSi || Color Commando (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Color Commando (USA)/Color Commando (USA).json
+Nintendo DSi || Commando - Steel Disaster (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Commando - Steel Disaster (USA)/Commando - Steel Disaster (USA).json
+Nintendo DSi || Crystal Adventure (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Crystal Adventure (USA)/Crystal Adventure (USA).json
+Nintendo DSi || Dark Void Zero (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Dark Void Zero (USA)/Dark Void Zero (USA).json
+Nintendo DSi || Don't Cross The Line (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Don't Cross The Line (USA)/Don't Cross The Line (USA).json
+Nintendo DSi || Doodle Fit (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Doodle Fit (USA)/Doodle Fit (USA).json
+Nintendo DSi || Dr. Mario Express (USA) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Dr. Mario Express (USA) (Rev 1)/Dr. Mario Express (USA) (Rev 1).json
+Nintendo DSi || Dracula - Undead Awakening (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Dracula - Undead Awakening (USA)/Dracula - Undead Awakening (USA).json
+Nintendo DSi || Dragon Quest Wars (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Dragon Quest Wars (USA)/Dragon Quest Wars (USA).json
+Nintendo DSi || Fishdom (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Fishdom (USA)/Fishdom (USA).json
+Nintendo DSi || Flip the Core (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Flip the Core (USA)/Flip the Core (USA).json
+Nintendo DSi || Gaia's Moon (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Gaia's Moon (USA)/Gaia's Moon (USA).json
+Nintendo DSi || Goony (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Goony (USA)/Goony (USA).json
+Nintendo DSi || Kappa's Trail, A (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Kappa's Trail, A (USA)/Kappa's Trail, A (USA).json
+Nintendo DSi || Legend of Zelda, The - Four Swords Anniversary Edition (USA) (En,Fr,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Legend of Zelda, The - Four Swords Anniversary Edition (USA) (En,Fr,Es)/Legend of Zelda, The - Four Swords Anniversary Edition (USA) (En,Fr,Es).json
+Nintendo DSi || Little Red Riding Hood's Zombie BBQ (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Little Red Riding Hood's Zombie BBQ (USA)/Little Red Riding Hood's Zombie BBQ (USA).json
+Nintendo DSi || Looksley's Line Up (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Looksley's Line Up (USA)/Looksley's Line Up (USA).json
+Nintendo DSi || Mario Calculator (USA) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Mario Calculator (USA) (Rev 1)/Mario Calculator (USA) (Rev 1).json
+Nintendo DSi || Mario Clock (USA) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Mario Clock (USA) (Rev 1)/Mario Clock (USA) (Rev 1).json
+Nintendo DSi || Mario vs. Donkey Kong - Minis March Again! (USA) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Mario vs. Donkey Kong - Minis March Again! (USA) (Rev 1)/Mario vs. Donkey Kong - Minis March Again! (USA) (Rev 1).json
+Nintendo DSi || Mighty Flip Champs! (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Mighty Flip Champs! (USA)/Mighty Flip Champs! (USA).json
+Nintendo DSi || Mighty Milky Way (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Mighty Milky Way (USA)/Mighty Milky Way (USA).json
+Nintendo DSi || Nintendo 3DS Transfer Tool (USA) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo 3DS Transfer Tool (USA) (Rev 1)/Nintendo 3DS Transfer Tool (USA) (Rev 1).json
+Nintendo DSi || Nintendo DSi + Internet (USA) (Pre-install Only) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi + Internet (USA) (Pre-install Only)/Nintendo DSi + Internet (USA) (Pre-install Only).json
+Nintendo DSi || Nintendo DSi - Instrument Tuner (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi - Instrument Tuner (USA)/Nintendo DSi - Instrument Tuner (USA).json
+Nintendo DSi || Nintendo DSi Browser (USA) (Rev 3) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi Browser (USA) (Rev 3)/Nintendo DSi Browser (USA) (Rev 3).json
+Nintendo DSi || Nintendo DSi Camera (USA) (Rev 4) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi Camera (USA) (Rev 4)/Nintendo DSi Camera (USA) (Rev 4).json
+Nintendo DSi || Nintendo DSi Metronome (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi Metronome (USA)/Nintendo DSi Metronome (USA).json
+Nintendo DSi || Nintendo DSi Shop (USA) (Rev 12) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi Shop (USA) (Rev 12)/Nintendo DSi Shop (USA) (Rev 12).json
+Nintendo DSi || Nintendo DSi Sound (USA) (Rev 2) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi Sound (USA) (Rev 2)/Nintendo DSi Sound (USA) (Rev 2).json
+Nintendo DSi || Penguin Patrol (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Penguin Patrol (USA)/Penguin Patrol (USA).json
+Nintendo DSi || Photo Dojo (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Photo Dojo (USA)/Photo Dojo (USA).json
+Nintendo DSi || Plants vs. Zombies (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Plants vs. Zombies (USA)/Plants vs. Zombies (USA).json
+Nintendo DSi || Retro Pocket (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Retro Pocket (USA)/Retro Pocket (USA).json
+Nintendo DSi || Rhythm Core Alpha (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Rhythm Core Alpha (USA)/Rhythm Core Alpha (USA).json
+Nintendo DSi || Rhythm Core Alpha 2 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Rhythm Core Alpha 2 (USA)/Rhythm Core Alpha 2 (USA).json
+Nintendo DSi || Rytmik Retrobits (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Rytmik Retrobits (USA)/Rytmik Retrobits (USA).json
+Nintendo DSi || Soul of Darkness (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Soul of Darkness (USA)/Soul of Darkness (USA).json
+Nintendo DSi || Starship Defense (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Starship Defense (USA)/Starship Defense (USA).json
+Nintendo DSi || SteamWorld Tower Defense (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/SteamWorld Tower Defense (USA)/SteamWorld Tower Defense (USA).json
+Nintendo DSi || Topsy Turvy Life, A - The Turvys Strike Back (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Topsy Turvy Life, A - The Turvys Strike Back (USA)/Topsy Turvy Life, A - The Turvys Strike Back (USA).json
+Nintendo DSi || Topsy Turvy Life, A - Turvy Drops (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Topsy Turvy Life, A - Turvy Drops (USA)/Topsy Turvy Life, A - Turvy Drops (USA).json
+Nintendo DSi || Touch Solitaire (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Touch Solitaire (USA)/Touch Solitaire (USA).json
+Nintendo DSi || WarioWare - Snapped! (USA) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/WarioWare - Snapped! (USA) (Rev 1)/WarioWare - Snapped! (USA) (Rev 1).json
+Nintendo DSi || X-Scape (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/X-Scape (USA)/X-Scape (USA).json
+Nintendo DSi || ZENONIA (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/ZENONIA (USA)/ZENONIA (USA).json
+Nintendo DSi || Zuma's Revenge! (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Zuma's Revenge! (USA)/Zuma's Revenge! (USA).json

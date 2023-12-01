@@ -1,0 +1,3948 @@
+collection: Nintendo 3DS eShop
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo 3DS eShop" {file.path}
+
+
+game: 3D After Burner II (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D After Burner II (USA) (eShop)/3D After Burner II (USA) (eShop).json
+developer: M2 Co.,LTD
+publisher: Sega
+genre: Flight Simulator
+description:
+  3D After Burner II is a completely re-mastered version of the arcade classic.
+  Pilot your F-14D fighter through enemy territory blasting away squadrons of
+  enemy fighters. This arcade masterpiece now features a choice of real arcade
+  cabinets, new difficulty settings as well as visual adjustments options. Blast
+  your way through 23 stages to unlock a special mode with even more gameplay
+  enhancements.
+release: 2015-01-15
+players: 1
+assets.boxfront: BoxFront/3D After Burner II (USA) (eShop).jpg
+assets.boxback: BoxBack/3D After Burner II (USA) (eShop).jpg
+assets.background: Background/3D After Burner II (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D After Burner II (USA) (eShop).jpg
+x-co-op: No
+
+
+game: 3D Classics Excitebike (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Classics Excitebike (USA) (eShop)/3D Classics Excitebike (USA) (eShop).json
+developer: Nintendo R&D1
+publisher: Nintendo
+genre: Racing
+description:
+  The original Excitebike game returns, re-mastered with Nintendo's 3D technology
+  and available exclusively via Nintendo eShop! Tackle perilous obstacle courses
+  alone or face off against rival bikers as you compete in white-knuckle motocross
+  races that pit you against the clock. Make good time, and you might get a chance
+  to race in a legendary Excitebike rally. Or if you feel the need for customized
+  speed, create your own tracks to race on using the intuitive Course Editor
+  feature that now lets you save up to 32 dream courses of your own design! Get
+  ready for the ride of your life - with 3D Classics: Excitebike, and rediscover
+  an old favorite enhanced to a new dimension!
+release: 2011-06-06
+players: 1
+assets.boxfront: BoxFront/3D Classics Excitebike (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Classics Excitebike (USA) (eShop).jpg
+assets.background: Background/3D Classics Excitebike (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Classics Excitebike (USA) (eShop).jpg
+x-co-op: No
+
+
+game: 3D Classics Kid Icarus (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Classics Kid Icarus (USA) (eShop)/3D Classics Kid Icarus (USA) (eShop).json
+developer: TOSE
+publisher: Nintendo
+genre: Action;Platform
+description:
+  Relive Pit’s first adventure in the 3D Classics: Kid Icarus game as you venture
+  from the depths of the underworld up to the heights of the sky palace. The evil
+  goddess Medusa has stolen the Three Sacred Treasures and imprisoned the goddess
+  of light, Palutena, in an evil plot to control all. Play in 2D or 3D as Pit, a
+  young angel who has been entrusted with a magical bow and arrow. Fight against
+  hordes of enemies that swoop from above and below. Secure the Three Sacred
+  Treasures from their evil guardians, equip them and face Medusa in the final
+  battle. Are you the stuff of legend? Restore peace to Angel Land and prove your
+  worth.
+release: 2011-12-19
+players: 1
+assets.boxfront: BoxFront/3D Classics Kid Icarus (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Classics Kid Icarus (USA) (eShop).jpg
+assets.background: Background/3D Classics Kid Icarus (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Classics Kid Icarus (USA) (eShop).jpg
+assets.video: Video/3D Classics Kid Icarus (USA) (eShop).mp4
+x-co-op: No
+
+
+game: 3D Classics Kirby's Adventure (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Classics Kirby's Adventure (USA) (eShop)/3D Classics Kirby's Adventure (USA) (eShop).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Platform
+description:
+  One day Kirby is surprised to discover that he cannot have any dreams during his
+  customary after-lunch nap. Soon he discovers that King Dedede has stolen the
+  Star Rod, which supplies the energy to the Fountain of Dreams, and broken it
+  into several pieces, entrusting each of his allies with one. Kirby has no other
+  choice but find these pieces and bring dreams back to the Dream Land.
+  .
+  Kirby's Adventure is an action side-scrolling platform game. As the pink
+  puffball Kirby the player explores numerous colorful lands with a variety of
+  enemies to defeat. To help out on his journey, Kirby has the ability to eat
+  enemies and spit them out as projectiles. With certain enemies Kirby can capture
+  their abilities and e.g. gain a sword, shoot lasers, or even fly around the
+  level. There are seven different stages, each broken up into multiple levels,
+  and sometimes also containing a couple of bonus mini-games. The game cartridge
+  features a battery backup allowing games to be saved without the need for
+  passwords.
+release: 2011-11-17
+players: 1
+assets.boxfront: BoxFront/3D Classics Kirby's Adventure (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Classics Kirby's Adventure (USA) (eShop).jpg
+assets.background: Background/3D Classics Kirby's Adventure (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Classics Kirby's Adventure (USA) (eShop).jpg
+assets.video: Video/3D Classics Kirby's Adventure (USA) (eShop).mp4
+x-co-op: No
+
+
+game: 3D Ecco the Dolphin (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Ecco the Dolphin (USA) (eShop)/3D Ecco the Dolphin (USA) (eShop).json
+developer: Sega
+publisher: Sega
+genre: Action
+description:
+  Ecco the Dolphin is an action-adventure game originally developed by Ed
+  Annunziata and Novotrade International for the Sega Genesis and published by
+  Sega in 1992.
+  .
+  It is the first installment in the Ecco the Dolphin video game franchise. The
+  player character is a bottlenose dolphin who travels through time to combat
+  hostile extraterrestrials in Earth's oceans and on an alien spacecraft.
+  .
+  3D Ecco the Dolphin is a port of the game for the Nintendo 3DS as part of Sega's
+  3D Classics line. Along with stereoscopic 3D graphics and the option to choose
+  between Japanese and international versions of the game, the port also adds
+  'Super Dolphin Mode', which decreases the difficulty by giving players
+  invincibility and unlimited oxygen. The game was released on the Nintendo eShop
+  in Japan on June 26, 2013, and in North America and Europe on December 12, 2013.
+release: 2013-06-26
+players: 1
+assets.boxfront: BoxFront/3D Ecco the Dolphin (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Ecco the Dolphin (USA) (eShop).jpg
+assets.background: Background/3D Ecco the Dolphin (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Ecco the Dolphin (USA) (eShop).jpg
+x-co-op: No
+
+
+game: 3D Fantasy Zone (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Fantasy Zone (USA) (eShop)/3D Fantasy Zone (USA) (eShop).json
+developer: Sega
+publisher: Sega
+genre: Shooter
+description:
+  Fantasy Zone II: The Tears of Opa-Opa is the sequel to Fantasy Zone, in which
+  you control Opa-Opa, a pretty colored ship with wings on its side. You must
+  destroy the large creatures in each world before moving on to the next. Your
+  task becomes difficult by other small creatures that happen to pass by. If you
+  destroy a large creature, they will drop a dollar bill, which you can pick up
+  and use at the shop to buy items and powerful weapons such as laser beams, x-way
+  shots, and big wings. Another way to get money is to shoot certain kinds of
+  enemies all in a row.
+  .
+  More often than not, some large creatures will reveal a warp gate rather than a
+  dollar bill. You can go through the warp gate to get to another part of the
+  land, and destroy more large creatures. Only one of them will have a warp gate
+  in the form of a 'stop' sign - that is your ticket to the round boss, but you
+  must defeat all large creatures in order to pass through it. Also like in the
+  original can you walk on the ground to avoid approaching enemies, and spend
+  money in the shop to get new weapons (but they only last for a limited time).
+release: 1986-03-01
+players: 1
+assets.boxfront: BoxFront/3D Fantasy Zone (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Fantasy Zone (USA) (eShop).jpg
+assets.background: Background/3D Fantasy Zone (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Fantasy Zone (USA) (eShop).jpg
+x-co-op: No
+
+
+game: 3D Galaxy Force II (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Galaxy Force II (USA) (eShop)/3D Galaxy Force II (USA) (eShop).json
+developer: Sega
+publisher: Sega
+genre: Shooter
+description:
+  Halcyon, ruler of the invading Fourth Empire, has marked Junos as his final
+  target in a galaxy wide campaign for dominance.
+  .
+  Sending the bulk of his forces, he attacks with a single purpose – to eliminate
+  all life forms in the system in order to build the seat of his power on the
+  ashes of each of its five planets. As the star pilot of the governing Space
+  Federation, it’s up to you to strap yourself into your TRY-X and turn the tables
+  on Halcyon.
+  .
+  Re-mastered in 3D, Galaxy Force II 3D features drastically improved visuals and
+  supports 16:9 wide screen and GamePad Pro. Arcade fans can now also enjoy Galaxy
+  Force II in Arcade Cabinet mode!
+release: 2013-12-12
+players: 1
+assets.boxfront: BoxFront/3D Galaxy Force II (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Galaxy Force II (USA) (eShop).jpg
+assets.background: Background/3D Galaxy Force II (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Galaxy Force II (USA) (eShop).jpg
+x-co-op: No
+
+
+game: 3D Gunstar Heroes (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Gunstar Heroes (USA) (eShop)/3D Gunstar Heroes (USA) (eShop).json
+developer: Sega
+publisher: Sega
+genre: Shooter
+description:
+  Treasure's visually stunning side scrolling shooter, Gunstar Heroes is now
+  re-mastered in 3D! Take advantage of Gunslinger Mode by choosing between FREE
+  and FIXED shot modes on the fly and cycling through all your weapons. However,
+  firepower can only take you so far! Go the distance and make it to the
+  long-awaited boss battles with double life with the new Mega Life Mode. Take on
+  the enemies alone or with a friend using two-player co-op via Local Play and
+  prevent the world from destruction.
+release: 2015-08-20
+players: 2
+assets.boxfront: BoxFront/3D Gunstar Heroes (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Gunstar Heroes (USA) (eShop).jpg
+assets.background: Background/3D Gunstar Heroes (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Gunstar Heroes (USA) (eShop).jpg
+x-co-op: Yes
+
+
+game: 3D Out Run (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Out Run (USA) (eShop)/3D Out Run (USA) (eShop).json
+developer: Sega AM2
+publisher: Sega
+genre: Racing
+description:
+  3D third-person racing game. The player controls a car, a Ferrari Testarossa
+  Spider, from a rear third-person perspective. In contrast to other third-person
+  racing games at the time where the camera is some distance above the horizon to
+  see into the distance, Out Run places the camera near the ground, directly
+  behind the car, simulating a Ferrari driver's perspective view and limiting the
+  player's view into the distance.The road also curves and dips,which, combined
+  with the low perspective, increases the challenge by making it difficult to see
+  what is on the other side of a hill.
+  .
+  The player must race to the end of each stage as fast as possible against a time
+  limit while avoiding traffic. At the end of each stage, the player is presented
+  with a fork in the road where the player must choose one of two stages. The left
+  route presents an easier stage, while the right offers a greater challenge.
+  Passing through checkpoints awards the player with extra time. Once the timer
+  reaches zero or the player completes the race, the game ends. In addition to the
+  nonlinear gameplay, Out Run also offered the choice of music to listen to while
+  driving, represented as radio stations.
+release: 2015-03-12
+players: 1
+assets.boxfront: BoxFront/3D Out Run (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Out Run (USA) (eShop).jpg
+assets.background: Background/3D Out Run (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Out Run (USA) (eShop).jpg
+x-co-op: No
+
+
+game: 3D Shinobi III (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Shinobi III (USA) (eShop)/3D Shinobi III (USA) (eShop).json
+developer: Sega
+publisher: Sega
+genre: Action;Adventure;Platform
+description:
+  Joe Musashi's sworn enemies, the Neo Zeed, have returned! Controlled by Shadow
+  Master, a formidable ninja cloned from Joe's own bloodline, the syndicate holds
+  the city captive with its vicious crime ring. Utilize deadly weapons and lethal
+  ninja arts in order to stand against the hordes of bio-ninja and save your city!
+  .
+  In addition to its all-new 3D presentation, 3D Shinobi III features a Round
+  Select Mode and customizable input setting which allows you to assign each
+  action to specific buttons.
+release: 2013-12-19
+players: 1
+assets.boxfront: BoxFront/3D Shinobi III (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Shinobi III (USA) (eShop).jpg
+assets.background: Background/3D Shinobi III (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Shinobi III (USA) (eShop).jpg
+x-co-op: No
+
+
+game: 3D Sonic The Hedgehog 2 (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Sonic The Hedgehog 2 (USA) (eShop)/3D Sonic The Hedgehog 2 (USA) (eShop).json
+developer: Sonic Team
+publisher: Sega
+genre: Action;Platformer;2D
+description:
+  Sonic the Hedgehog 2 is a side-scrolling platformer based around speed, and the
+  sequel to Sonic the Hedgehog. Like the original, players run through different
+  worlds called "zones", which each have their own specific theme. There are two
+  Acts in nearly all of the 10 Zones, and at the end of each Zone's last Act is a
+  machine that Robotnik controls, which you must defeat to progress. The evil Dr.
+  Robotnik wants to conquer the world. In order to do that, he imprisons and
+  transforms all animals into robots called "Badniks". This way they can build his
+  powerful weapon, the Death Egg. Only Sonic the Hedgehog, and his new tagalong
+  partner, Miles 'Tails' Prower, can stop Robotnik and his army of Badniks from
+  taking over the world.
+  .
+  Sonic and Tails can collect rings which are scattered throughout all of the
+  levels. As with most platformers, when the player collects 100 rings, they earn
+  an extra life. However, the rings also act as protection; if Sonic is hurt when
+  he is carrying rings, they scatter everywhere and he is briefly invincible. If
+  he is hit again when he has no rings, he'll lose a life. If the player reaches a
+  continue point lamppost with 50 or more rings, they'll be able to access the
+  Special Stage. In this stage, you must gather a set amount of rings in a
+  halfpipe-like stage before you reach a checkpoint. Complete all the checkpoints
+  and you'll earn one of the seven Chaos Emeralds.
+  .
+  New to Sonic the Hedgehog 2 is the ability to play the game co-op with a friend
+  - at any time, a player can plug in a second controller and take over the AI
+  controlled Tails. Tails has infinite lives and the camera remains focused on
+  Sonic, meaning that Tails will not hinder play. Sonic (and Tails) can now also
+  get speed from a standing start by holding down and repeatedly pressing the jump
+  button for a "spin dash". This is useful when stuck near steep slopes or other
+  areas where you need some momentum. The game also features a 2-player versus
+  mode. This mode is a horizontally split-screen race through levels based on
+  three of the zones in the single player game.
+  .
+  The mobile version (iOS/Android) contains ten new levels in a new environment
+  called Hidden Palace Zone, a boss attack mode, upgraded graphics, faster frame
+  rate, a re-mastered soundtrack, and Knuckles as a third playable character.
+release: 1992-10-16
+players: 2
+assets.boxfront: BoxFront/3D Sonic The Hedgehog 2 (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Sonic The Hedgehog 2 (USA) (eShop).jpg
+assets.background: Background/3D Sonic The Hedgehog 2 (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Sonic The Hedgehog 2 (USA) (eShop).jpg
+x-co-op: Yes
+
+
+game: 3D Space Harrier (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Space Harrier (USA) (eShop)/3D Space Harrier (USA) (eShop).json
+developer: Sega
+publisher: Sega
+genre: Shooter
+description:
+  Space is your battlefield!
+  .
+  As a resourceful, extra-terrestrial warrior, your mission is to save the
+  peaceful Land of the Dragons from vicious creatures.
+  .
+  Aided by the dragons, you must use every trick in the book and every skill at
+  your command in order to stave off these alien invaders and save the day!
+  .
+  In addition to its all-new 3D presentation, 3D Space Harrier also features touch
+  control functionality and an Arcade Cabinet mode!
+release: 2013-11-28
+players: 1
+assets.boxfront: BoxFront/3D Space Harrier (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Space Harrier (USA) (eShop).jpg
+assets.background: Background/3D Space Harrier (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Space Harrier (USA) (eShop).jpg
+x-co-op: No
+
+
+game: 3D Streets of Rage (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Streets of Rage (USA) (eShop)/3D Streets of Rage (USA) (eShop).json
+developer: Sega
+publisher: Sega
+genre: Beat 'em Up
+description:
+  Take the fight to the streets!
+  .
+  In the grips of a vicious crime syndicate, this once peaceful city has become a
+  center of violence and mayhem.
+  .
+  Amidst this chaos, three young police officers are determined to tackle the
+  problem head-on. Taking control of one of three ex-officers, use their special
+  hand-to-hand combat abilities to take down the syndicate and save the city.
+  .
+  In addition to its all-new 3D presentation, 3D Streets of Rage also features
+  Local Multiplayer and a Single Hit KO mode to help you power through the city’s
+  crime.
+release: 2013-12-19
+players: 2
+assets.boxfront: BoxFront/3D Streets of Rage (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Streets of Rage (USA) (eShop).jpg
+assets.background: Background/3D Streets of Rage (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Streets of Rage (USA) (eShop).jpg
+x-co-op: Yes
+
+
+game: 3D Streets of Rage 2 (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Streets of Rage 2 (USA) (eShop)/3D Streets of Rage 2 (USA) (eShop).json
+developer: M2 Co., Ltd.
+publisher: Sega
+genre: Beat 'em Up
+description:
+  Bust knuckles with this Sega classic, rebuilt from the ground up in stunning 3D!
+  .
+  The sequel to the original rumbler is back and re-mastered in 3D. Slam the
+  asphalt with bigger, better and totally devastating attacks. Skull crushing
+  ex-wrestler Max Thunder joins up with Axel and Blaze to throw earth shattering
+  body slams and fist attacks. New thrasher Skate slices punks with high speed
+  inline attacks and spinning jump kicks. Use secret weapons to bash your way
+  through gangs of bikers to rescue your friend and defeat Mr. X.
+release: 2015-07-23
+players: 2
+assets.boxfront: BoxFront/3D Streets of Rage 2 (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Streets of Rage 2 (USA) (eShop).jpg
+assets.background: Background/3D Streets of Rage 2 (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Streets of Rage 2 (USA) (eShop).jpg
+x-co-op: Yes
+
+
+game: 3D Super Hang-On (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Super Hang-On (USA) (eShop)/3D Super Hang-On (USA) (eShop).json
+developer: Sega
+publisher: Sega
+genre: Racing;Sports
+description:
+  Gear up for ultimate speed in Super Hang-On!
+  .
+  Tour through 48 challenging tracks on four continents and discover the rush of
+  true arcade game play as you blaze through checkpoints in a race to beat the
+  clock and your competitors. Experience the thrill of street bike racing and earn
+  your place at the top of the scoreboards in this must-have classic.
+  .
+  In addition to its all-new 3D presentation, 3D Super Hang-On also features Tilt
+  Controls and a Moving Cabinet mode!
+release: 2013-11-28
+players: 1
+assets.boxfront: BoxFront/3D Super Hang-On (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Super Hang-On (USA) (eShop).jpg
+assets.background: Background/3D Super Hang-On (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Super Hang-On (USA) (eShop).jpg
+x-co-op: No
+
+
+game: 3D Thunder Blade (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/3D Thunder Blade (USA) (eShop)/3D Thunder Blade (USA) (eShop).json
+developer: M2 Co.,LTD
+publisher: Sega
+genre: Shooter
+description:
+  3D Thunder Blade is a recreation of a one-of-a-kind combat originally released
+  in 1987, re-mastered for the Nintendo 3DS hand-held system. In 3D Thunder Blade,
+  players control a helicopter and use guns and missiles to destroy enemy vehicles
+  while flying between buildings, through caves, and into enemy bases. The
+  re-mastered version boasts stereoscopic 3D visuals and adds a host of new
+  features. Some of the additional features include: gyro controls, adjustable
+  difficulty settings, Circle Pad Pro support, and a load of options that recreate
+  the look and feel of the original arcade machine. Replay saving and stage select
+  are also available. 3D Thunder Blade also introduces brand new remixes of the
+  original in-game music that can be toggled ‘on’ and ‘off’ and an unlockable
+  Special Mode with updated gameplay, new enemies, and a more powerful fighter.
+release: 2015-05-14
+players: 1
+assets.boxfront: BoxFront/3D Thunder Blade (USA) (eShop).jpg
+assets.boxback: BoxBack/3D Thunder Blade (USA) (eShop).jpg
+assets.background: Background/3D Thunder Blade (USA) (eShop).jpg
+assets.screenshot: Screenshot/3D Thunder Blade (USA) (eShop).jpg
+x-co-op: No
+
+
+game: 80's Overdrive (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/80's Overdrive (USA) (eShop)/80's Overdrive (USA) (eShop).json
+developer: Insane Code
+publisher: Insane Code
+genre: Racing
+description:
+  80'S OVERDRIVE is a 2D pixel art racing game, designed to take you back in time
+  to when 8 and 16 bit consoles and arcade games ruled the world. Compete against
+  opponents in career mode to unlock new races, buy new cars, and upgrade them
+  with state-of-the-art technologies! Try your skill in time attack mode and see
+  how far you can get in this race against the clock! Create your own tracks with
+  built-in track generator and easily share them with your friends!
+  .
+  Features:
+  .
+  * 2 game modes and racing track editor;
+  .
+  * 6 retro supercars;
+  .
+  * 8 unique visual themes;
+  .
+  * 13 synth/retrowave music scores;
+  .
+  * Tons of retro, handcrafted, pixel-perfect joy!
+release: 2017-12-07
+players: 1
+assets.boxfront: BoxFront/80's Overdrive (USA) (eShop).jpg
+assets.boxback: BoxBack/80's Overdrive (USA) (eShop).jpg
+assets.background: Background/80's Overdrive (USA) (eShop).jpg
+assets.screenshot: Screenshot/80's Overdrive (USA) (eShop).jpg
+x-co-op: No
+
+
+game: AiRace Speed (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/AiRace Speed (USA) (eShop)/AiRace Speed (USA) (eShop).json
+developer: Atari
+publisher: Atari
+genre: Racing
+description:
+  Race on 18 adrenaline-fueld tracks. Fly extreme speeds with 5 advanced jets.
+  Take the ultimate 3D challenge.
+  .
+  .
+  Let your Nintendo 3DS discover the true meaning of speed and adrenaline with
+  AiRace Speed.
+  .
+  Take the challenge and pilot the most advanced and powerful jets as you compete
+  to beat your best time. Race on stunning high-speed tracks featuring extremlely
+  difficult tunnels, spectacular halls and hidden shortcuts.
+  .
+  Take speed to a whole new level and enjoy a frantic new gaming experience:
+  .
+  Take the challenge - fly extreme speeds across 18 adrenaline-fueled tracks\n
+  Stunning environments packed with challenging obstacles, tunnels, shortcuts and
+  more\n
+  Take control of one of 5 high-speed, futuristic jets powered with advanced
+  technology\n
+  High-performance graphics and immersive 3D effects that put you in the middle of
+  the action\n
+  Compete against fellow competitors around the world in online leaderboards\n
+  Fantastic replay value with special achievements to be unlocked\n
+  Third game of the successful and highly rated AiRace series
+release: 2013-09-13
+players: 1
+assets.boxfront: BoxFront/AiRace Speed (USA) (eShop).jpg
+assets.boxback: BoxBack/AiRace Speed (USA) (eShop).jpg
+assets.background: Background/AiRace Speed (USA) (eShop).jpg
+assets.screenshot: Screenshot/AiRace Speed (USA) (eShop).jpg
+x-co-op: No
+
+
+game: AiRace Xeno (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/AiRace Xeno (USA) (eShop)/AiRace Xeno (USA) (eShop).json
+developer: QubicGames
+publisher: QubicGames
+genre: Racing
+description:
+  After the success of its predecessors, AiRace Xeno brings back the speed and
+  adrenaline to your Nintendo 3DS!
+  .
+  Take the challenge and pilot the most advanced and powerful jets as you compete
+  to beat your best time. Race on stunning high-speed tracks featuring extremely
+  difficult tunnels, spectacular halls and hidden shortcuts.
+  .
+  Take speed to a whole new level and enjoy a frantic new gaming experience:
+  .
+  Take the challenge - fly extreme speeds across 9 adrenaline-fueled tracks.
+  .
+  Stunning environments packed with challenging obstacles, tunnels, shortcuts and
+  more.
+  .
+  Take control of one of 3 high-speed, futuristic jets powered with advanced
+  technology.
+  .
+  High-performance graphics and immersive 3D effects that put you in the middle of
+  the action.
+  .
+  Compete against fellow competitors around the world in online leaderboards.
+  .
+  Fantastic replay value with special achievements to be unlocked.
+release: 2014-06-12
+players: 1
+assets.boxfront: BoxFront/AiRace Xeno (USA) (eShop).jpg
+assets.boxback: BoxBack/AiRace Xeno (USA) (eShop).jpg
+assets.background: Background/AiRace Xeno (USA) (eShop).jpg
+assets.screenshot: Screenshot/AiRace Xeno (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Alien on the Run (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Alien on the Run (USA) (eShop)/Alien on the Run (USA) (eShop).json
+developer: G-STYLE
+publisher: G-STYLE
+genre: Action;General
+description:
+  Delude was an alien on a faraway planet doing his usual alien-like business when
+  all of a sudden a UFO whisks him off into outer space. Desperate to get back to
+  his own planet he begins his escape from the UFO where he is being held captive.
+  .
+  Take control of Delude in his comical great escape, avoiding the tractor beams
+  that patrol the ship and making use of strange alien devices!
+  .
+  Take down the tractor beams with Delude's hilarious "Fever Action" by diving
+  into them and quickly pulling off a take-down move. Make use of the weird and
+  wonderful alien devices such as giant rolling wheels, punch bags and mechanical
+  launch arms!
+  .
+  Find a way through each area of the UFO littered with traps including
+  roundabouts, speedwalkways and punch boxes as you race against the clock to
+  reach the exit before the time runs out!
+release: 2014-04-30
+players: 1
+assets.boxfront: BoxFront/Alien on the Run (USA) (eShop).jpg
+assets.boxback: BoxBack/Alien on the Run (USA) (eShop).jpg
+assets.background: Background/Alien on the Run (USA) (eShop).jpg
+assets.screenshot: Screenshot/Alien on the Run (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Apollo Justice - Ace Attorney (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Apollo Justice - Ace Attorney (USA) (eShop)/Apollo Justice - Ace Attorney (USA) (eShop).json
+developer: Capcom
+publisher: Capcom
+genre: Adventure;Puzzle
+description:
+  Hold it! Here comes Justice!
+  .
+  Experience the popular Ace Attorney series as a rookie lawyer in Apollo Justice:
+  Ace Attorney now on the Nintendo eShop on Nintendo 3DS! Step into the shoes of a
+  young and passionate Apollo Justice in his early law career as he takes on his
+  first case. With the help of Trucy Wright, a talented magician who is also his
+  assistant, and his level-headed mentor, Kristoph Gavin, the team will seek to
+  reveal the truth in criminal trials. Apollo's undeniable skills in uncovering
+  lies by analyzing witness' body language and years of invaluable advice from his
+  mentor will be put to test when he faces a dashing rival prosecutor named
+  Klavier Gavin. With special appearances from well-known characters such as
+  Phoenix Wright and Ema Skye, players will have an adventure filled with dramatic
+  cases, jaw-dropping events, and a chance to defend their clients at all costs!
+  .
+  Players will utilize the Touch Screen to maneuver their way through crime
+  scenes, interview witnesses with amusing dialogue, and collect vital evidence
+  using forensic science by dusting for prints or testing for traces of blood and
+  present them in the courtroom. Experience challenging puzzles and thrilling
+  stories that will have you at the edge of your seat! The courtroom awaits you,
+  download today!
+release: 2017-11-21
+players: 1
+assets.boxfront: BoxFront/Apollo Justice - Ace Attorney (USA) (eShop).jpg
+assets.boxback: BoxBack/Apollo Justice - Ace Attorney (USA) (eShop).jpg
+assets.background: Background/Apollo Justice - Ace Attorney (USA) (eShop).jpg
+assets.screenshot: Screenshot/Apollo Justice - Ace Attorney (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Attack of the Friday Monsters! A Tokyo Tale (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Attack of the Friday Monsters! A Tokyo Tale (USA) (eShop)/Attack of the Friday Monsters! A Tokyo Tale (USA) (eShop).json
+developer: Level-5
+publisher: Level-5
+genre: Adventure
+description:
+  Step into the life of Sohta, the young son of a family that has just set up a
+  dry cleaners shop in the idyllic town of Fuji no Hana. In his interactions with
+  the town's unique residents, episodic mysteries are revealed that portend to the
+  strange events surrounding the appearance of a giant monster every Friday. And
+  finally, when Friday evening falls, the giant monster will appear right before
+  your eyes!
+  .
+  Collect the "Monster Glims" scattered around town to form Monster Cards, and
+  once you've collected five cards, Sohta can battle his friends for dominance.
+  Winning at Monster Cards gives you the chance to collect useful information,
+  more Monster Glims, and even to cast a secret spell on your friends that will
+  make them fall down at your whim. Why? Because that's the rules!
+  .
+  A touching drama about family, friendship, and the innocence of being a child
+  unfolds against hand-drawn backgrounds, charming music, and memorable
+  characters.
+release: 2013-07-18
+players: 1
+assets.boxfront: BoxFront/Attack of the Friday Monsters! A Tokyo Tale (USA) (eShop).jpg
+assets.boxback: BoxBack/Attack of the Friday Monsters! A Tokyo Tale (USA) (eShop).jpg
+assets.background: Background/Attack of the Friday Monsters! A Tokyo Tale (USA) (eShop).jpg
+assets.screenshot: Screenshot/Attack of the Friday Monsters! A Tokyo Tale (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Automaton Lung (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Automaton Lung (USA) (eShop)/Automaton Lung (USA) (eShop).json
+developer: Luke Vincent
+publisher: Luke Vincent
+genre: Action;Platformer;3D
+description:
+  Automaton Lung is an experimental third-person exploration game. Make use of
+  your special abilities to skate, shoot, and fly through over 40 unique
+  locations.
+  .
+  In a strange land with almost no information you must be resourceful and clever.
+  Question everything you see and trust nothing you hear.
+  .
+  Each footstep taken, every mile flown, and all doorways entered reveal more to
+  discover in Automaton Lung.
+release: 2022-12-16
+players: 1
+assets.boxfront: BoxFront/Automaton Lung (USA) (eShop).jpg
+assets.boxback: BoxBack/Automaton Lung (USA) (eShop).jpg
+assets.background: Background/Automaton Lung (USA) (eShop).jpg
+assets.screenshot: Screenshot/Automaton Lung (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Block-a-Pix Color (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Block-a-Pix Color (USA) (eShop)/Block-a-Pix Color (USA) (eShop).json
+developer: Lightwood Games
+publisher: Lightwood Games
+genre: Puzzle;Logic
+description:
+  Block-a-Pix is a block-filling puzzle where every grid has a picture hidden
+  inside.
+  .
+  .
+  Reveal the picture by dividing the grid into smaller rectangular blocks. Each
+  block must contain one clue number, which tells you the number of grid squares
+  covered by that block and the color the block will be painted.
+  .
+  .
+  Block-a-Pix can always be solved using logic and deduction. You don't ever have
+  to guess!
+  .
+  .
+  - This game contains 120 exclusive puzzles, designed by Conceptis Ltd.
+  .
+  - Puzzles range in difficulty and size from small introductory pictures
+  .
+  - to huge scrollable grids with highly detailed pictures.
+release: 2018-05-17
+players: 1
+assets.boxfront: BoxFront/Block-a-Pix Color (USA) (eShop).jpg
+assets.boxback: BoxBack/Block-a-Pix Color (USA) (eShop).jpg
+assets.background: Background/Block-a-Pix Color (USA) (eShop).jpg
+assets.screenshot: Screenshot/Block-a-Pix Color (USA) (eShop).jpg
+x-co-op: No
+
+
+game: BoxBoxBoy! (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/BoxBoxBoy! (USA) (eShop)/BoxBoxBoy! (USA) (eShop).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Platform;Puzzle
+description:
+  It's time to think outside the box once again. Our boxy hero, Qbby, has a
+  brand-new power that lets him duplicate his blocky bod into TWO sets of boxes.
+  He'll put every box to use to survive perilous traps across 11+ worlds of
+  puzzling levels. Learn new tricks and box formations to get past obstacles, like
+  switches, spikes, and even lazers!
+  .
+  Once you learn the ropes—erm, boxes—take on the bonus challenge world to beat
+  levels using the Bunny or Ninja outfit with a lower box count. Medals
+  overflowing your pockets? Take them to the shop to purchase new costumes, like
+  the Robo-Suit, read humourous comics, or listen to the tunes of BOXBOXBOY! If
+  you've played the first title, BOXBOY!, you can unlock many of those costumes
+  too because almost every one can be used in BOXBOXBOY!
+release: 2016-06-30
+players: 1
+assets.boxfront: BoxFront/BoxBoxBoy! (USA) (eShop).jpg
+assets.boxback: BoxBack/BoxBoxBoy! (USA) (eShop).jpg
+assets.background: Background/BoxBoxBoy! (USA) (eShop).jpg
+assets.screenshot: Screenshot/BoxBoxBoy! (USA) (eShop).jpg
+x-co-op: No
+
+
+game: BoxBoy! (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/BoxBoy! (USA) (eShop)/BoxBoy! (USA) (eShop).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Platform;Puzzle
+description:
+  BoxBoy! is a platform game in which players control a box-shaped character named
+  Qbby as he makes his way through each level. The source of the game's mechanics
+  come from Qbby's ability to spawn boxes out of his body, the number of which
+  varies between each level. These boxes can spread out in whatever direction is
+  possible to make various shapes and can either be carried or thrown and pushed
+  around. The boxes have various uses, such as allowing players to reach high
+  ledges or cross large gaps, holding down switches, or blocking deadly lasers.
+  Additionally, by hooking these boxes onto a ledge while Qbby is still attached,
+  he can pull himself up.
+release: 2015-01-14
+players: 1
+assets.boxfront: BoxFront/BoxBoy! (USA) (eShop).jpg
+assets.boxback: BoxBack/BoxBoy! (USA) (eShop).jpg
+assets.background: Background/BoxBoy! (USA) (eShop).jpg
+assets.screenshot: Screenshot/BoxBoy! (USA) (eShop).jpg
+assets.video: Video/BoxBoy! (USA) (eShop).mp4
+x-co-op: No
+
+
+game: Brave Dungeon (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Brave Dungeon (USA) (eShop)/Brave Dungeon (USA) (eShop).json
+developer: Inside System
+publisher: Inside System
+genre: Role-Playing;Japanese-Style
+description:
+  Syega are powerful crystals that grant humans the ability to use magic. Some
+  crystals are so powerful they have to be contained in specially prepared vessels
+  these are known as Magic Items. Join intrepid adventurer Al as she explores the
+  dangerous labyrinths of Belfer Island in search of powerful Magic Items. Along
+  the way Al will join forces with strong allies and face even stronger enemies.
+  Can Al conquer the imposing dungeon known as Godshill and find the ultimate
+  Magic Item?
+  .
+  .
+  Brave Dungeon is a dungeon crawling RPG adventure by indie games company INSIDE
+  SYSTEM, creators of the Legend of Dark Witch series. Brave Dungeon features an
+  easy to pick up combat system for new players. However, it also has many
+  customisation options, unique playable characters, and deep challenges for the
+  completionist. A crafting system featuring materials dropped from enemies and
+  treasure chests in dungeons allows you to customise your characters further.
+  Class Changes allow the player to build their party the way they want, playing
+  to one's own personal preferences and their characters' unique strengths.
+release: 2016-11-30
+players: 1
+assets.boxfront: BoxFront/Brave Dungeon (USA) (eShop).jpg
+assets.boxback: BoxBack/Brave Dungeon (USA) (eShop).jpg
+assets.background: Background/Brave Dungeon (USA) (eShop).jpg
+assets.screenshot: Screenshot/Brave Dungeon (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Bye-Bye BoxBoy! (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Bye-Bye BoxBoy! (USA) (eShop)/Bye-Bye BoxBoy! (USA) (eShop).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Platform;Puzzle
+description:
+  Well, fear not—Qbby is no ordinary box. Using his four startling new powers, you
+  must solve hundreds of puzzles across 18 deadly worlds. Create boxes to climb,
+  hover, warp, and bomb your way to salvation! Whether you're a newcomer or an old
+  vet, thinking outside the box has never been more fun.
+  .
+  Scattered across many challenging worlds, Black Smoke and other new hazards
+  threaten to destroy Qbby. Survive vicious winds, viscous water, and more on your
+  mission to rescue the mysteriously cute little wonders known as Qbabies. Each
+  Qbaby you rescue will offer a new power: hit high buttons with a Boxrocket,
+  destroy parts of the environment with a Bombox, teleport with a Warpbox, and
+  even levitate a Remotebox. To the victor goes the goodies: earn new in-game
+  costumes, comics, music, and challenge worlds by beating levels or tapping
+  amiibo. Tap a Kirby™ series amiibo™ figure to receive a costume based on the
+  tapped character! King Dedede box, anyone?
+release: 2017-02-02
+players: 1
+assets.boxfront: BoxFront/Bye-Bye BoxBoy! (USA) (eShop).jpg
+assets.boxback: BoxBack/Bye-Bye BoxBoy! (USA) (eShop).jpg
+assets.background: Background/Bye-Bye BoxBoy! (USA) (eShop).jpg
+assets.screenshot: Screenshot/Bye-Bye BoxBoy! (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Cave Story (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Cave Story (USA) (eShop)/Cave Story (USA) (eShop).json
+developer: Studio Pixel
+publisher: Nicalis, Inc.
+genre: Platform
+description:
+  Cave Story is a re-release of the original Cave Story and meant to replace the
+  2010 DSi version. As technical limitations prevented it from being provided as a
+  free update, it was released as a new game. This version does not incorporate
+  the re-drawn look of the 2010 Wii version or the 2011 PC version Cave Story+,
+  nor does it carry over the very different 3D makeover from the 2011 3DS game
+  Cave Story 3D. The game was reworked to fit the higher 5:3 widescreen screen
+  size and has the stereoscopic 3D effect. This makes it easier to distinguish
+  elements in busy environments, but optionally it can be scaled back to the
+  original 4:3 resolution.
+  .
+  Contentwise there are a few small tweaks. The in-game map is no longer visible
+  at the bottom of the screen all the time, encouraging the player not to rely on
+  it too much. It is also possible to customize the controls, flipping jump and
+  shoot buttons for instance. The game incorporates the additional content of the
+  WiiWare and + version with the modes Boss Rush, Curly Story, and Sanctuary Time
+  Attack (WiiWare and Cave Story+ versions) and the new unlockable Wind Fortress
+  area with the new enemies and bosses, and the Nemesis Challenge (Cave Story+).
+  It includes the reindeer and vampire sprite swaps from the WiiWare version, but
+  not the holiday themed content from Cave Story+. It also contains the jukebox
+  option from the DSi version.
+release: 2012-10-04
+players: 1
+assets.boxfront: BoxFront/Cave Story (USA) (eShop).jpg
+assets.boxback: BoxBack/Cave Story (USA) (eShop).jpg
+assets.background: Background/Cave Story (USA) (eShop).jpg
+assets.screenshot: Screenshot/Cave Story (USA) (eShop).jpg
+assets.video: Video/Cave Story (USA) (eShop).mp4
+x-co-op: No
+
+
+game: Chain Blaster (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Chain Blaster (USA) (eShop)/Chain Blaster (USA) (eShop).json
+developer: G-STYLE
+publisher: G-STYLE
+genre: Action;Shooter;Shoot-'Em-Up;Top-Down
+description:
+  Set in the future, a deadly virus infiltrates the world's super computer and
+  puts on standby the world's nuclear weapons ready for launch. With the world on
+  the brink of destruction, take control of an anti-virus ship and go head to head
+  with the virus, taking on wave after wave of enemy ships in a fierce battle to
+  save the world.
+  .
+  .
+  Use special shots known as Chain Blasts to counter the virus ships as they swarm
+  together in attack formations. Trigger a Chain Blast at just the right point to
+  set in motion a combo explosion that will take out the entire chain of enemies.
+  The more enemies you take out in one blast the higher your score. Upload your
+  Top Score online and see how you stack up against players from around the world.
+release: 2013-06-12
+players: 1
+assets.boxfront: BoxFront/Chain Blaster (USA) (eShop).jpg
+assets.boxback: BoxBack/Chain Blaster (USA) (eShop).jpg
+assets.background: Background/Chain Blaster (USA) (eShop).jpg
+assets.screenshot: Screenshot/Chain Blaster (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Chibi-Robo! Photo Finder (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Chibi-Robo! Photo Finder (USA) (eShop)/Chibi-Robo! Photo Finder (USA) (eShop).json
+developer: Skip Ltd.
+publisher: Nintendo
+genre: Action;Adventure
+description:
+  Become one of the world’s best tiny robot helpers by doing your part to open a
+  new museum. Collect Happy Points by vaccuming, picking up trash, and helping a
+  cast of colorful characters, and then use those Happy Points to purchase special
+  film that lets you photograph real-world objects and transport them into the
+  game for the museum’s displays!
+  .
+  Mr. Curator wants to immortalize objects from your day-to-day life, and it’s
+  Chibi-Robo’s job to collect them! Lead Chibi-Robo on a scavenger hunt, taking
+  photos of real-world objects with the Nintendo 3DS Camera so that he can
+  transport them into his world for the museum’s collection. Along the way, you’ll
+  meet eclectic characters who need Chibi Robo’s help, like a sushi-slinging
+  squid, a high-flying super hero, and an eccentric pair of chefs. The more
+  happiness you spread, the faster your quest for exhibits can progress. Just make
+  sure Chibi-Robo doesn’t run out of watts. He’s a tiny robot, after all.
+  .
+  Be the best mini robo-helper you can be\n
+  Clean up and play games with a cast of characters\n
+  Use the Nintendo 3DS Camera to go on a scavenger hunt\n
+  Transport real-world objects into the game world by taking photos of them
+release: 2014-01-09
+players: 1
+assets.boxfront: BoxFront/Chibi-Robo! Photo Finder (USA) (eShop).jpg
+assets.boxback: BoxBack/Chibi-Robo! Photo Finder (USA) (eShop).jpg
+assets.background: Background/Chibi-Robo! Photo Finder (USA) (eShop).jpg
+assets.screenshot: Screenshot/Chibi-Robo! Photo Finder (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Corpse Party (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Corpse Party (USA) (eShop)/Corpse Party (USA) (eShop).json
+developer: Team GrisGris
+publisher: Xseed Games
+genre: Adventure;Horror
+description:
+  Kisaragi Academy student Mayu Suzumoto is transferring to a new high school,
+  leaving behind a sizable group of friends and countless lovely memories. To help
+  her cope with this move, her friend Ayumi has devised a seemingly innocent plan:
+  the whole group will come together to perform a charm she found on the internet
+  called "Sachiko Ever After", which is supposed to bind all of its participants
+  together as friends to the end.
+  .
+  This does not go as expected.
+  .
+  Following an intense earthquake, the group awakens to find themselves separated
+  and trapped in an alternate reality version of Heavenly Host Elementary School,
+  a tragedy-stricken institution that once stood on the site of their own school
+  but was torn down long ago. Here, the vengeful spirits of elementary-aged
+  children threaten their lives and their sanity, and the only hope of survival -
+  much less escape - is to uncover the chilling details surrounding the murders of
+  those trapped before them.
+release: 2016-10-25
+players: 1
+assets.boxfront: BoxFront/Corpse Party (USA) (eShop).jpg
+assets.boxback: BoxBack/Corpse Party (USA) (eShop).jpg
+assets.background: Background/Corpse Party (USA) (eShop).jpg
+assets.screenshot: Screenshot/Corpse Party (USA) (eShop).jpg
+assets.video: Video/Corpse Party (USA) (eShop).mp4
+x-co-op: No
+
+
+game: Crashmo (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Crashmo (USA) (eShop)/Crashmo (USA) (eShop).json
+developer: Intelligent Systems
+publisher: Nintendo
+genre: Puzzle
+description:
+  Welcome to Crashmo! Embrace the laws of gravity, and challenge yourself with a
+  whole new kind of action-puzzle play in this exciting sequel to the critically
+  acclaimed Pushmo game. New gravity mechanics and gadgets like floating blocks,
+  doors, and move switches await. Push, pull, and slide each puzzle's colorful
+  blocks in order to climb to the top—just be careful where those blocks go.
+  Unsupported blocks will come crashing down! The Crashmo game contains plenty of
+  puzzles to test your skills, and enhanced puzzle-creation and puzzle-sharing
+  features mean that even when all the puzzles are cleared, the fun never has to
+  stop!
+release: 2012-10-31
+players: 1
+assets.boxfront: BoxFront/Crashmo (USA) (eShop).jpg
+assets.boxback: BoxBack/Crashmo (USA) (eShop).jpg
+assets.background: Background/Crashmo (USA) (eShop).jpg
+assets.screenshot: Screenshot/Crashmo (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Crimson Shroud (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Crimson Shroud (USA) (eShop)/Crimson Shroud (USA) (eShop).json
+developer: Level-5
+publisher: Level-5
+genre: Role-Playing
+description:
+  LEVEL-5 and Yasumi Matsuno have brought together the industry's most venerated
+  creators in the world of RPGs to take up the challenge and lend their support to
+  the production of CRIMSON SHROUD.
+  .
+  A tribute to the table-top RPG, crucial decisions hinge on the roll of a die.
+  Players roll dice in real time and chain skills together to earn bonus dice of
+  greater and greater face value. Use your dice strategically though, or your foes
+  may yet get the best of you!
+  .
+  Follow the tale of a young "Chaser" named Giauque, as he and his team find
+  themselves drawn into the mystery of the Original Gift, the Crimson Shroud. A
+  bold new adventure awaits!
+release: 2012-12-13
+players: 1
+assets.boxfront: BoxFront/Crimson Shroud (USA) (eShop).jpg
+assets.boxback: BoxBack/Crimson Shroud (USA) (eShop).jpg
+assets.background: Background/Crimson Shroud (USA) (eShop).jpg
+assets.screenshot: Screenshot/Crimson Shroud (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Dedede's Drum Dash Deluxe (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Dedede's Drum Dash Deluxe (USA) (eShop)/Dedede's Drum Dash Deluxe (USA) (eShop).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Music
+description:
+  Bounce to the beat as Kirby’s longtime rival in King Dedede’s rhythm action
+  game! Jump on drums collecting coins and avoiding enemies while tapping buttons
+  in sync with catchy Kirby tunes! This standalone deluxe game includes content
+  not found in Kirby™: Triple Deluxe, including all-new stages, new obstacles and
+  more!
+release: 2014-07-23
+players: 1
+assets.boxfront: BoxFront/Dedede's Drum Dash Deluxe (USA) (eShop).jpg
+assets.boxback: BoxBack/Dedede's Drum Dash Deluxe (USA) (eShop).jpg
+assets.background: Background/Dedede's Drum Dash Deluxe (USA) (eShop).jpg
+assets.screenshot: Screenshot/Dedede's Drum Dash Deluxe (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Dementium Remastered (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Dementium Remastered (USA) (eShop)/Dementium Remastered (USA) (eShop).json
+developer: Renegade Kid
+publisher: Gamecock Media Group
+genre: Action Adventure;Survival
+description:
+  Rebuilt from the ground up to take advantage of the Nintendo 3DS, Dementium
+  Remastered takes the guts of Renegade Kid's award-winning title and delivers a
+  new and improved atmospheric first-person survival horror experience with
+  enhanced graphics, refined gameplay, high-quality audio, and immersive control
+  options.
+  .
+  Features new difficulty settings, including Demented mode - designed for
+  hardcore fans of the series!
+  .
+  Dementium Remastered tells the tale of a man who awakens to find himself alone
+  in a mysterious, derelict hospital that is frozen in time. Confronted by the
+  deadly, grotesque surgical experiments that wander the halls, a series of
+  challenging puzzles, and a cast of peculiar characters, he must face his deepest
+  fears, unlock the mysteries of the hospital, and escape with his life.
+release: 2016-02-11
+players: 1
+assets.boxfront: BoxFront/Dementium Remastered (USA) (eShop).jpg
+assets.boxback: BoxBack/Dementium Remastered (USA) (eShop).jpg
+assets.background: Background/Dementium Remastered (USA) (eShop).jpg
+assets.screenshot: Screenshot/Dementium Remastered (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Denpa Men 2, The - Beyond the Waves (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Denpa Men 2, The - Beyond the Waves (USA) (eShop)/Denpa Men 2, The - Beyond the Waves (USA) (eShop).json
+developer: Genius Sonority
+publisher: Genius Sonority
+genre: Role-Playing
+description:
+  The Denpa Men are mysterious little creatures that float around radio waves.
+  They all have their own territory. You can't see them with the naked eye, but
+  you can use your 3DS to find them and catch them.
+  .
+  In this RPG, you can form a team of the Denpa Men you caught and take them on an
+  exciting adventure across the world, in order to save the hero's family. Many
+  wonders and strong enemies await you on your journey!
+  .
+  This game supports StreetPass as well. By passing other players, you can
+  exchange your party information and increase the amount of time you have to
+  explore special dungeons.
+  .
+  You can even battle online now! All you have to do is register for battle, and
+  you'll be able to fight other players at any time you want. Keep winning to earn
+  phenomenal prizes!
+  .
+  If you played the previous game, "The Denpa Men: They Came By Wave," you'll be
+  able to transfer your hero and you'll even be able to bring all of your friends
+  from the previous game into this one!
+release: 2013-05-30
+players: 1
+assets.boxfront: BoxFront/Denpa Men 2, The - Beyond the Waves (USA) (eShop).jpg
+assets.boxback: BoxBack/Denpa Men 2, The - Beyond the Waves (USA) (eShop).jpg
+assets.background: Background/Denpa Men 2, The - Beyond the Waves (USA) (eShop).jpg
+assets.screenshot: Screenshot/Denpa Men 2, The - Beyond the Waves (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Denpa Men 3, The - The Rise of Digitoll (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Denpa Men 3, The - The Rise of Digitoll (USA) (eShop)/Denpa Men 3, The - The Rise of Digitoll (USA) (eShop).json
+developer: Genius Sonority
+publisher: Genius Sonority
+genre: Role-Playing
+description:
+  The Denpa Men are mysterious creatures that live among radio waves. Invisible to
+  the naked eye, they can only be seen and caught by looking through your Nintendo
+  3DS. In this game, catch Denpa Men, form your team, and head out on an exciting
+  adventure across the world. All to save a special someone!
+  .
+  This time, some Denpa Men can capture monsters, turning them into allies who can
+  be summoned to your side. Capture powerful monsters to turn the tide of battle.
+  Also, your Denpa Men friends now have their own little homes, which can be
+  customized and decorated to suit your style.
+  .
+  Network play is now better than ever. Trade items with players worldwide, and
+  lend or borrow Denpa Men. You can import your hero and bring all your friends
+  from the previous two "The Denpa Men" titles, too.
+release: 2014-05-08
+players: 1
+assets.boxfront: BoxFront/Denpa Men 3, The - The Rise of Digitoll (USA) (eShop).jpg
+assets.boxback: BoxBack/Denpa Men 3, The - The Rise of Digitoll (USA) (eShop).jpg
+assets.background: Background/Denpa Men 3, The - The Rise of Digitoll (USA) (eShop).jpg
+assets.screenshot: Screenshot/Denpa Men 3, The - The Rise of Digitoll (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Denpa Men, The - They Came By Wave (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Denpa Men, The - They Came By Wave (USA) (eShop)/Denpa Men, The - They Came By Wave (USA) (eShop).json
+developer: Genius Sonority
+publisher: Genius Sonority
+genre: Role-Playing
+description:
+  Radio waves are all around you. However, what you might not know is that, at any
+  and all times, mysterious little creatures float around near these waves.
+  They're called "Denpa" Men. You can't see them normally, but you can find them
+  and catch them with your Nintendo 3DS.
+  .
+  .
+  .
+  This is a role-playing game in which you collect Denpa Men to form a party, and
+  use this party to explore dungeons. Each radio wave territory has its own
+  completely unique Denpa Men, and no two of them are ever the same! Their faces,
+  bodies, and personalities are all different, and some of them even have special
+  skills and strong points. There's a practically infinite number of variations!
+  Sometimes, you'll even find Denpa Men who are exceptionally strong. Try
+  searching in lots of different places to form your own team of these wonderful
+  tiny critters, and take them on an adventure to rescue a certain special someone
+  from the clutches of the King of Evil!
+  .
+  .
+  .
+  Features:
+  .
+  • Different types of "DENPA" MEN are location-specific
+  .
+  • There are many types of "DENPA" MEN, some are quite rare
+  .
+  • You can find and catch new characters anytime, anywhere
+  .
+  • Captured characters become characters in the game
+release: 2012-09-27
+players: 1
+assets.boxfront: BoxFront/Denpa Men, The - They Came By Wave (USA) (eShop).jpg
+assets.boxback: BoxBack/Denpa Men, The - They Came By Wave (USA) (eShop).jpg
+assets.background: Background/Denpa Men, The - They Came By Wave (USA) (eShop).jpg
+assets.screenshot: Screenshot/Denpa Men, The - They Came By Wave (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Dillon's Rolling Western (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Dillon's Rolling Western (USA) (eShop)/Dillon's Rolling Western (USA) (eShop).json
+developer: Vanpool
+publisher: Nintendo
+genre: Action
+description:
+  On the dusty plains of the new frontier, fearsome rock monsters are attacking
+  the villages and stealing their livestock. It's up to Dillon, an armadillo out
+  for justice, to set the world to rights. If he can defend a village from the
+  rocky threat for three days, then his work is done and he can hit the road for
+  the next town.
+  .
+  Dillon's Rolling Western is a tower defence game divided into two segments.
+  During the day, the player-controlled Dillon can explore the local area to look
+  for resources to sell and use the money to build up the village's defences, as
+  well as run errands for the villagers. During the night, the rock monsters
+  arrive to attack the village, so to support the defences he's built up, Dillon
+  will fight them by rolling into a ball and charging at them. The player can roll
+  Dillon into a ball using the touch screen and control his direction while
+  rolling using the circle pad. Upon impact, they can either hold for a grinding
+  attack or tap to start a combo.
+  .
+  Once Dillon has successfully held the rock monsters back for three days, he is
+  free to move on to another village.
+release: 2012-02-22
+players: 1
+assets.boxfront: BoxFront/Dillon's Rolling Western (USA) (eShop).jpg
+assets.boxback: BoxBack/Dillon's Rolling Western (USA) (eShop).jpg
+assets.background: Background/Dillon's Rolling Western (USA) (eShop).jpg
+assets.screenshot: Screenshot/Dillon's Rolling Western (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Dillon's Rolling Western - The Last Ranger (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Dillon's Rolling Western - The Last Ranger (USA) (eShop)/Dillon's Rolling Western - The Last Ranger (USA) (eShop).json
+developer: Vanpool
+publisher: Nintendo
+genre: Action
+description:
+  Dillon, an armadillo, is a ranger charged with protecting villages from nightly
+  invasions of walking rock monsters called Grocks. The Grocks attack the villages
+  to feed on Scrogs, the residents' livestock. While Dillon is able to attack
+  Grocks by rolling into them, the Grocks can sometimes outnumber Dillon. Thus,
+  the villages have established defense towers that can be outfitted with weapons
+  that will attack Grocks whenever they are in range. To get guns, Dillon must buy
+  them, and sometimes he may have to build the gun tower first. In order to
+  improve the villages' defenses, Dillon must collect materials by exploring mines
+  and defeating Grocks; the materials can then be used to build stronger doors for
+  the village. The stronger a door is, the harder it is for a Grock to get in.
+release: 2013-04-11
+players: 1
+assets.boxfront: BoxFront/Dillon's Rolling Western - The Last Ranger (USA) (eShop).jpg
+assets.boxback: BoxBack/Dillon's Rolling Western - The Last Ranger (USA) (eShop).jpg
+assets.background: Background/Dillon's Rolling Western - The Last Ranger (USA) (eShop).jpg
+assets.screenshot: Screenshot/Dillon's Rolling Western - The Last Ranger (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Dr. Mario Miracle Cure (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Dr. Mario Miracle Cure (World) (eShop)/Dr. Mario Miracle Cure (World) (eShop).json
+developer: Arika Co., Ltd.
+publisher: Nintendo of America Inc.
+genre: Puzzle
+description:
+  Puzzle fans, here's your fix: the ultimate Dr. Mario game—on the go! Play
+  classic-style, Dr. Luigi-style, or in Virus Buster mode, using new power-ups
+  called Miracle Cures that will have you and your friends wiping out those pesky
+  viruses like the doc himself.
+  .
+  Dr. Mario is back with a new arsenal of treatments. In the Miracle Cure
+  Laboratory, you'll take on preset challenges with normal, two-sided pills and
+  L-shaped pills. To aid your recovery, you'll fill a special gauge to earn
+  Miracle Cures that will help alleviate your ailments. Pop in powerful Blasters
+  to disinfect a section of the bottle, or apply cleverly placed Zappers to wipe
+  out entire rows or columns. Then, self-prescribe some Miracle Cure power-ups in
+  endless Dr. Mario or Dr. Luigi game modes to balance out your intake. A caution
+  from the doctor: challenging your friends locally or online may be habit
+  forming.
+release: 2015-06-11
+players: 2
+assets.boxfront: BoxFront/Dr. Mario Miracle Cure (World) (eShop).jpg
+assets.boxback: BoxBack/Dr. Mario Miracle Cure (World) (eShop).jpg
+assets.background: Background/Dr. Mario Miracle Cure (World) (eShop).jpg
+assets.screenshot: Screenshot/Dr. Mario Miracle Cure (World) (eShop).jpg
+x-co-op: No
+
+
+game: Excave (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Excave (USA) (eShop)/Excave (USA) (eShop).json
+developer: Mechanic Arms
+publisher: Teyon
+genre: Role-Playing;Action RPG
+description:
+  Dare the demon's nest of the Labyrinth and rediscover the thrill & challenge of
+  epic dungeon-crawling RPG adventure!
+  .
+  .
+  Imperial City is at war! The King needs you to explore the perilous and ancient
+  Labyrinth beneath the city find out why this mysterious magical laboratory now
+  spews out an army of powerful monsters bent on destruction, and descend to its
+  lowest depths to rescue the missing Magician.
+  .
+  .
+  Triumph in a test of your weapons & magic, or perish trapped deep within the
+  twisting halls of the Labyrinth. Explore, fight and win fame & fortune, then
+  return to the city above to heal, identify fabulous treasures and repair &
+  upgrade your equipment. Are you brave enough to explore the treacherous depths?
+  .
+  .
+  -Classic dungeon exploration RPG from Japan
+  .
+  -Choose and customize your character with hundreds of treasures and equipment
+  items to collect, modify, upgrade, repair and sell
+  .
+  -Test your courage & skills against hundreds of unique enemies
+  .
+  -50 terrifying dungeon levels to explore, with 5 massive boss fights
+  .
+  -Progress through an epic storyline to develop your character's abilities in
+  true RPG fashion
+release: 2013-11-27
+players: 1
+assets.boxfront: BoxFront/Excave (USA) (eShop).jpg
+assets.boxback: BoxBack/Excave (USA) (eShop).jpg
+assets.background: Background/Excave (USA) (eShop).jpg
+assets.screenshot: Screenshot/Excave (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Excave II - Wizard of the Underworld (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Excave II - Wizard of the Underworld (USA) (eShop)/Excave II - Wizard of the Underworld (USA) (eShop).json
+developer: Mechanic Arms
+publisher: Bergsala-Lightweight
+genre: Role-Playing;Action RPG
+description:
+  Excave II : The Wizard of the Underworld - Dungeon hack and slash RPG
+  .
+  .
+  Excave is back with even more challenging dungeons and a more varied ensemble of
+  terrible foes!
+  .
+  .
+  Excave II is a classic JRPG style dungeon hack and slash game wherein you take
+  the role of one of two adventurers, tasked with returning order to a
+  progressively more chaotic city.
+  .
+  .
+  Each adventurer has their own attacking style and hundreds of items and weaponry
+  to discover!
+  .
+  .
+  Unlike other RPG's, there is no leveling up system, instead the player's
+  equipment determines how strong they are - find legendary weapons to smash your
+  way through!
+  .
+  .
+  Progress requires careful planning and thought - come ill prepared with weapons
+  and equipment that are not targeting a specific enemies weakpoints then only
+  doom awaits.
+release: 2014-07-16
+players: 1
+assets.boxfront: BoxFront/Excave II - Wizard of the Underworld (USA) (eShop).jpg
+assets.boxback: BoxBack/Excave II - Wizard of the Underworld (USA) (eShop).jpg
+assets.background: Background/Excave II - Wizard of the Underworld (USA) (eShop).jpg
+assets.screenshot: Screenshot/Excave II - Wizard of the Underworld (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Excave III - Tower of Destiny (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Excave III - Tower of Destiny (USA) (eShop)/Excave III - Tower of Destiny (USA) (eShop).json
+developer: Mechanic Arms
+publisher: Bergsala-Lightweight
+genre: Role-Playing;Action RPG
+description:
+  Excave III : Tower of Destiny is a classic Japanese-style dungeon crawler. As
+  the heroine Scarlett, take on huge hordes of enemies as you climb up through the
+  Fantasy Tower.
+  .
+  The Fantasy Tower is connected to online leaderboards so you can compete with
+  players across the country. Auto-generated maps await so you can enjoy a
+  different experience each time.
+  .
+  If Excave II : Wizard of the Underworld save data is found on your Nintendo 3DS
+  family system, then special unlocks will occur!
+release: 2015-01-28
+players: 1
+assets.boxfront: BoxFront/Excave III - Tower of Destiny (USA) (eShop).jpg
+assets.boxback: BoxBack/Excave III - Tower of Destiny (USA) (eShop).jpg
+assets.background: Background/Excave III - Tower of Destiny (USA) (eShop).jpg
+assets.screenshot: Screenshot/Excave III - Tower of Destiny (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Flipnote Studio 3D (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Flipnote Studio 3D (USA) (eShop)/Flipnote Studio 3D (USA) (eShop).json
+developer: Nintendo EAD
+publisher: Nintendo of America Inc.
+genre: Education
+description:
+  Flipnote Studio 3D is a free drawing application that allows you to create your
+  very own animated masterpieces. Whether you want to scribble quick notes or draw
+  sketches, you'll never run out of pages with Flipnote Studio 3D. There are a
+  whole host of tools that will let you bring your creations to life and create
+  high-quality animations. You can then share these creations with friends and
+  users from around the world so everyone can be wowed by your talents.
+release: 2015-02-10
+players: 1
+assets.boxfront: BoxFront/Flipnote Studio 3D (USA) (eShop).jpg
+assets.boxback: BoxBack/Flipnote Studio 3D (USA) (eShop).jpg
+assets.background: Background/Flipnote Studio 3D (USA) (eShop).jpg
+assets.screenshot: Screenshot/Flipnote Studio 3D (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Fluidity - Spin Cycle (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Fluidity - Spin Cycle (USA) (eShop)/Fluidity - Spin Cycle (USA) (eShop).json
+developer: Curve Studios
+publisher: Nintendo
+genre: Puzzle
+description:
+  Tilt, turn and even completely rotate your Nintendo 3DS to maneuver a puddle of
+  water—named Eddy—through a maze-like magical world. Change from liquid to a
+  block of ice or a steam cloud to solve fun, gravity-defying puzzles and defeat
+  Goop monsters. Some puzzles require the player to rotate their Nintendo 3DS a
+  full 360 degrees, turning the world upside-down, to navigate through tricky
+  tunnels and crazy contraptions. Each state of water provides the player with
+  different play abilities, all themed to match the properties of that state. This
+  is helpful as the ‘chapters’ of the game contain hidden secrets that encourage
+  exploration. Discovering all the well-hidden puzzle pieces unlocks bonus
+  “playrooms” that provide additional gameplay, and a scoring system (weighing
+  speed vs. accomplishment) provides great re-playability. Due to the rotation of
+  the hardware during gameplay, this game is not in 3D.
+release: 2012-12-27
+players: 1
+assets.boxfront: BoxFront/Fluidity - Spin Cycle (USA) (eShop).jpg
+assets.boxback: BoxBack/Fluidity - Spin Cycle (USA) (eShop).jpg
+assets.background: Background/Fluidity - Spin Cycle (USA) (eShop).jpg
+assets.screenshot: Screenshot/Fluidity - Spin Cycle (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Fractured Soul (USA) (eshop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Fractured Soul (USA) (eshop)/Fractured Soul (USA) (eshop).json
+developer: Endgame Studios
+publisher: Endgame Studios
+genre: Action;Shooter;Shoot-'Em-Up;Vertical
+description:
+  In Fractured Soul 3D, players take on the role of interplanetary rogue, Jake
+  DeSaul a man with a checkered and mysterious past who must confront his demons
+  in his desperate plight to escape an eerie and malevolent space station. As they
+  progress through each level, the boundaries between dream and reality continue
+  to blur as Jake faces a lifetime of regrets, hopes, dreams, and what might have
+  been in his efforts to reconcile himself with his past.
+  .
+  In order to help Jake, players must blast their way through 20 exciting and
+  brain bending platform levels spread across five distinct worlds - each offering
+  a unique challenge including inverted gravity, damage, wind, ice, and
+  underwater. Additionally, there are four shoot 'em up levels that also make use
+  of the screen switching. Each level is timed and ranked to encourage
+  replayability.
+release: 2012-09-13
+players: 1
+assets.boxfront: BoxFront/Fractured Soul (USA) (eshop).jpg
+assets.boxback: BoxBack/Fractured Soul (USA) (eshop).jpg
+assets.background: Background/Fractured Soul (USA) (eshop).jpg
+assets.screenshot: Screenshot/Fractured Soul (USA) (eshop).jpg
+x-co-op: No
+
+
+game: Fragrant Story (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Fragrant Story (USA) (eShop)/Fragrant Story (USA) (eShop).json
+developer: William Kage
+publisher: Seven Silhouettes Enterprises
+genre: Strategy;Turn-Based;Tactics
+description:
+  The kingdom of Flowergard is under attack! Build a team of Fierce Fleuristas,
+  and lend your skills to the Ancient Aroma. You'll be guided by Colonel Rhubarb
+  as you defend the region from invaders.
+  .
+  Your team is made up of kids from the world of Otosan, who join the world using
+  VR headsets. Each kid has a unique ability that can help subdue the opposing
+  army. Knock one enemy into another, recover health or armor, draw enemies in and
+  bind them, or obstruct tiles to prevent passage. Combine these moves to build
+  your own strategic solution.
+release: 2022-04-21
+players: 1
+assets.boxfront: BoxFront/Fragrant Story (USA) (eShop).jpg
+assets.boxback: BoxBack/Fragrant Story (USA) (eShop).jpg
+assets.background: Background/Fragrant Story (USA) (eShop).jpg
+assets.screenshot: Screenshot/Fragrant Story (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Go! Go! Kokopolo (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Go! Go! Kokopolo (USA) (eShop)/Go! Go! Kokopolo (USA) (eShop).json
+developer: Tanukii Studios
+publisher: Limited Run Games
+genre: Action;Platformer;2D
+description:
+  Go! Go! Kokopolo: Harmonious Forest Revenge is an arcade-style, puzzle-action
+  game, in which the player takes on the role of Kokopolo, a hyperactive
+  wildcat, in an attempt to get revenge on the cute-looking enemies who
+  accidentally wronged him. The game unfolds through 80 stages of fast-paced
+  arcade-style gameplay, in which the player needs to clear each stage by
+  luring all enemies to their doom into the belly of the carnivorous Snap Snap
+  plant located somewhere on the stage. The stages themselves are a unique mix
+  of side-scrolling platform elements, and top down puzzle elements. Each world
+  is littered with various dangerous hazards, which increase as the game's
+  difficulty increases.
+  .
+  By scratching the enemies with Kokopolo's set of sharp claws, they become
+  infuriated and chase him anywhere he goes. With careful timing and fast
+  reflexes it is possible to create huge conga lines and chains of enemies for
+  multiple scores, but if the enemies catch up with Kokopolo all the hard work
+  will be for nothing. Once the enemies have been devoured, the focus shifts to
+  the lower screen, where the player can use the stylus or their thumbs in
+  order to stop a set of spinning roulette wheels, which symbolize the enemies
+  being digested inside the plant's stomach. This allows the player to gain
+  bonus points, in the form of fruits, or hazards in the form of bombs.
+  .
+  The game includes ten boss stages, which are set over both screens, in which
+  the player has to figure out the boss' weaknesses, which usually involves
+  getting the boss to hurt itself in some way or another.
+release: 2022-09-16
+players: 1
+assets.boxfront: BoxFront/Go! Go! Kokopolo (USA) (eShop).jpg
+assets.boxback: BoxBack/Go! Go! Kokopolo (USA) (eShop).jpg
+assets.background: Background/Go! Go! Kokopolo (USA) (eShop).jpg
+assets.screenshot: Screenshot/Go! Go! Kokopolo (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Gotta Protectors (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Gotta Protectors (USA) (eShop)/Gotta Protectors (USA) (eShop).json
+developer: Ancient
+publisher: Ancient
+genre: Action
+description:
+  The bad guys are after Princess Lola. You gotta protect her! Choose from a
+  diverse and memorable cast of six classes, each with unique weapons and
+  customizable, upgradeable skills. Strategically place barricades and turrets,
+  hire hirelings, move Lola (the source of your power) around the map, and get
+  ready to hack, slash, and magically mash wave after wave of enemies. LEVEL UP
+  and DESTROY THEM ALL! Fight through 100 story maps, or create your own using the
+  Map Editor and share them with friends via QR Code patterns.
+release: 2016-07-28
+players: 4
+assets.boxfront: BoxFront/Gotta Protectors (USA) (eShop).jpg
+assets.boxback: BoxBack/Gotta Protectors (USA) (eShop).jpg
+assets.background: Background/Gotta Protectors (USA) (eShop).jpg
+assets.screenshot: Screenshot/Gotta Protectors (USA) (eShop).jpg
+x-co-op: Yes
+
+
+game: Gunman Clive (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Gunman Clive (USA) (eShop)/Gunman Clive (USA) (eShop).json
+developer: Hörberg Productions
+publisher: Hörberg Productions
+genre: Action;Adventure
+description:
+  Gunman Clive is a side-scrolling action video game developed and published by
+  Swedish indie video game development studio Hörberg Productions. It was first
+  released for Android on 2 April 2012. The game follows a lone gunslinger in a
+  futuristic Wild West as he tries to save the mayor's daughter from a group of
+  technologically well-armed bandits.
+release: 2012-12-20
+players: 1
+assets.boxfront: BoxFront/Gunman Clive (USA) (eShop).jpg
+assets.boxback: BoxBack/Gunman Clive (USA) (eShop).jpg
+assets.background: Background/Gunman Clive (USA) (eShop).jpg
+assets.screenshot: Screenshot/Gunman Clive (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Gunman Clive 2 (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Gunman Clive 2 (USA) (eShop)/Gunman Clive 2 (USA) (eShop).json
+developer: Horberg Productions
+publisher: Horberg Productions
+genre: Platform
+description:
+  After successfully rescuing Mayor Johnsons daughter, Gunman Clive returns to
+  again find his home town under attack by bandits. To stop them once and for all
+  he must chase after their leader; an adventure that takes him all the way around
+  the world.This follow up to the 2012 indie hit retains the same classic gameplay
+  formula, but dials the action up a notch further and adds many new features and
+  improvements.
+release: 2015-01-29
+players: 1
+assets.boxfront: BoxFront/Gunman Clive 2 (USA) (eShop).jpg
+assets.boxback: BoxBack/Gunman Clive 2 (USA) (eShop).jpg
+assets.background: Background/Gunman Clive 2 (USA) (eShop).jpg
+assets.screenshot: Screenshot/Gunman Clive 2 (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Gurumin 3D - A Monstrous Adventure (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Gurumin 3D - A Monstrous Adventure (USA) (eShop)/Gurumin 3D - A Monstrous Adventure (USA) (eShop).json
+developer: Falcom
+publisher: Mastiff
+genre: Role-Playing;Action RPG
+description:
+  Gurumin stars a strong-willed girl named Parin, who is sent to live with her
+  grandfather in a small mining town while her parents are off excavating an
+  ancient ruin. With no other children living in this town, Parin is surprised one
+  day to encounter a young girl being tormented by a stray dog. After Parin drives
+  off the mongrel, she is shocked to discover the young girl is actually a
+  monster, and like all monsters, invisible to adults. Parin is soon invited to
+  pass through a crack in the wall behind her home and enter Monster Village.
+  Parin has just started making monster friends when evil spirits, known as the
+  Phantoms, invade the village and monsternap most of the inhabitants. Parin soon
+  learns of the Legendary Drill, a weapon hidden underneath the village and, in
+  the right hands, powerful enough to destroy the Phantoms. Thus begins Parin's
+  quest to reclaim the Legendary Drill and set the world right. Features Non-
+  linear game play set in vast world with a variety of stages in different
+  environments. 23 non-player characters, 48 unique enemies, and over 90 items to
+  collect. Destroy everything in your path with your legendary drill: almost all
+  objects are destructible, and many hide money and valuable items.
+release: 2016-10-13
+players: 1
+assets.boxfront: BoxFront/Gurumin 3D - A Monstrous Adventure (USA) (eShop).jpg
+assets.boxback: BoxBack/Gurumin 3D - A Monstrous Adventure (USA) (eShop).jpg
+assets.background: Background/Gurumin 3D - A Monstrous Adventure (USA) (eShop).jpg
+assets.screenshot: Screenshot/Gurumin 3D - A Monstrous Adventure (USA) (eShop).jpg
+x-co-op: No
+
+
+game: HarmoKnight (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/HarmoKnight (USA) (eShop)/HarmoKnight (USA) (eShop).json
+developer: Game Freak
+publisher: Nintendo
+genre: Music
+description:
+  GAME FREAK inc. brings all of the polish players have come to expect from their
+  Pokémon franchise to a brand-new action-packed rhythm game! Use Tempo’s Music
+  Note Staff to beat drums, crash cymbals, and smack enemies through more than 50
+  levels with unique boss fights. On your journey, you’ll team up with multiple
+  characters like Lyra, who can slide under obstacles and shoot musical arrows,
+  and Tyko, who can pound out powerful beats with his drums! More challenging
+  speeds and unlockable stages await those locked onto the beat. Feel the music
+  and find your rhythm to save Melodia!
+release: 2012-03-28
+players: 1
+assets.boxfront: BoxFront/HarmoKnight (USA) (eShop).jpg
+assets.boxback: BoxBack/HarmoKnight (USA) (eShop).jpg
+assets.background: Background/HarmoKnight (USA) (eShop).jpg
+assets.screenshot: Screenshot/HarmoKnight (USA) (eShop).jpg
+assets.video: Video/HarmoKnight (USA) (eShop).mp4
+x-co-op: No
+
+
+game: Harold Reborn (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Harold Reborn (USA) (eShop)/Harold Reborn (USA) (eShop).json
+developer: Luke Vincent
+publisher: Luke Vincent
+genre: Action;Platformer;3D
+description:
+  Can you take the pace from a walk to a run?
+  .
+  Harold Reborn is a challenging open-world adventure and sequel to Harold's Walk.
+  .
+  Uncover the secrets in an unusual and mysterious realm by searching the
+  overworld and 9 sub-worlds for over 90+ hidden objects and mysterious messages.
+  .
+  Harold's new abilities will have him rocketing over hills and across wide gaps
+  at ultra fast speeds.
+  .
+  Walk right into a new adventure.
+release: 2021-05-13
+players: 1
+assets.boxfront: BoxFront/Harold Reborn (USA) (eShop).jpg
+assets.boxback: BoxBack/Harold Reborn (USA) (eShop).jpg
+assets.background: Background/Harold Reborn (USA) (eShop).jpg
+assets.screenshot: Screenshot/Harold Reborn (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Harold's Walk (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Harold's Walk (USA) (eShop)/Harold's Walk (USA) (eShop).json
+developer: Luke Vincent
+publisher: Luke Vincent
+genre: Action;Platformer;3D
+description:
+  Explore 3D worlds and discover all the secret objects in Harold's Walk. Master
+  the use of your special abilities to reach new areas.
+release: 2020-12-28
+players: 1
+assets.boxfront: BoxFront/Harold's Walk (USA) (eShop).jpg
+assets.boxback: BoxBack/Harold's Walk (USA) (eShop).jpg
+assets.background: Background/Harold's Walk (USA) (eShop).jpg
+assets.screenshot: Screenshot/Harold's Walk (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Ice Station Z (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Ice Station Z (USA) (eShop)/Ice Station Z (USA) (eShop).json
+developer: Wobbly Tooth Ltd
+publisher: Wobbly Tooth Ltd
+genre: Action Adventure;Open-World
+description:
+  MULTIPLAYER OPEN WORLD ZOMBIE SURVIVAL
+  .
+  After a strange virus spreads across an Arctic island you are left alone to
+  survive.
+  .
+  Scavenge for food, drink, medical supplies, weapons, ammunition, clothes, fuel
+  and other useful equipment.
+  .
+  Find shelters, vehicles and other interesting locations to help you survive
+  during day and night.
+  .
+  Features Single Player, Local Play and Internet Multiplayer (Worldwide with
+  anyone plus Game Chat).
+  .
+  Go scavenging, fishing and hunting with friends or alone, it's up to you how you
+  survive.
+release: 2016-11-03
+players: 1
+assets.boxfront: BoxFront/Ice Station Z (USA) (eShop).jpg
+assets.boxback: BoxBack/Ice Station Z (USA) (eShop).jpg
+assets.background: Background/Ice Station Z (USA) (eShop).jpg
+assets.screenshot: Screenshot/Ice Station Z (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Ironfall Invasion (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Ironfall Invasion (USA) (eShop)/Ironfall Invasion (USA) (eShop).json
+developer: VD-Dev
+publisher: VD-Dev
+genre: Shooter
+description:
+  IronFall: Invasion is a thrilling third-person shooter. Equipped with an arsenal
+  of destructive weapons, take cover and repel an invasion of Alien Robots.
+  .
+  IronFall: Invasion is divided into two separate modes, which can be tried for
+  free and purchased separately!
+  .
+  The "Campaign" mode is a single-player adventure, which will have you travel
+  from various locations over 11 levels.
+  .
+  The "Multiplayer" mode allows up to 6 players to join locally or online for
+  competitive battles in 6 different arenas.
+release: 2015-02-13
+players: 4
+assets.boxfront: BoxFront/Ironfall Invasion (USA) (eShop).jpg
+assets.boxback: BoxBack/Ironfall Invasion (USA) (eShop).jpg
+assets.background: Background/Ironfall Invasion (USA) (eShop).jpg
+assets.screenshot: Screenshot/Ironfall Invasion (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Jett Rocket II - The Wrath of Taikai (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Jett Rocket II - The Wrath of Taikai (USA) (eShop)/Jett Rocket II - The Wrath of Taikai (USA) (eShop).json
+developer: Shin'en
+publisher: Shin'en
+genre: Action;Platformer;3D
+description:
+  From the makers of Nano Assault Neo, FAST - Racing League, Art of Balance
+  .
+  .
+  Jett Rocket returns! Your favorite planetary inspector is back and in trouble.
+  His archrival Kaiser Taikai has to settle an old score with him...
+  .
+  .
+  Explore the home planet of the Power Plant Posse and ignite your trusty old jet
+  pack in this epic full-3D action-adventure!
+  .
+  .
+  Features:
+  .
+  -Jump'n'Run with lots of action and variety
+  .
+  -Hidden Bonus stages
+  .
+  -Destroyable Environments
+  .
+  -Ignite your JettPack
+  .
+  -Jump on your JettBoat
+  .
+  -Full stereoscopic 3D
+  .
+  -Super-smooth 60 frames/sec.
+release: 2013-11-13
+players: 1
+assets.boxfront: BoxFront/Jett Rocket II - The Wrath of Taikai (USA) (eShop).jpg
+assets.boxback: BoxBack/Jett Rocket II - The Wrath of Taikai (USA) (eShop).jpg
+assets.background: Background/Jett Rocket II - The Wrath of Taikai (USA) (eShop).jpg
+assets.screenshot: Screenshot/Jett Rocket II - The Wrath of Taikai (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Kersploosh! (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Kersploosh! (USA) (eShop)/Kersploosh! (USA) (eShop).json
+developer: Poisoft
+publisher: Nintendo
+genre: Miscellaneous;General
+description:
+  Be one with the stone from the toss to the splash. With a sharp mind and a deft
+  touch on the Circle Pad, master the journey to the bottom of wells filled with
+  obstacles. As you learn to maneuver each stone in free fall and complete each
+  level, you’ll unlock more stones and wells. Embrace the challenges that lie
+  ahead...for the flight is at hand.
+  .
+  Each well is designed differently, with various hazards to impede your journey.
+  Some wells have pizzas that break apart; others contain floating cookies that
+  will sacrifice their delicious lives to stop you from getting to the bottom.
+  Armed with a selection of stones, such as the beefy iron ball and the fragile
+  gem, race as fast as possible to the bottom of each well. Then turn on the
+  StreetPass feature and share your speedy conquests with others!
+  .
+  Be one with the stone and race to the bottom of the well\n
+  Each stone handles differently. Master them all!\n
+  Learn to control stones, rubber balls, and even iron balls\n
+  Use the StreetPass feature to share your high scores with others
+release: 2011-06-07
+players: 1
+assets.boxfront: BoxFront/Kersploosh! (USA) (eShop).jpg
+assets.boxback: BoxBack/Kersploosh! (USA) (eShop).jpg
+assets.background: Background/Kersploosh! (USA) (eShop).jpg
+assets.screenshot: Screenshot/Kersploosh! (USA) (eShop).jpg
+assets.video: Video/Kersploosh! (USA) (eShop).mp4
+x-co-op: No
+
+
+game: Ketzal's Corridors (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Ketzal's Corridors (USA) (eShop)/Ketzal's Corridors (USA) (eShop).json
+developer: Keys Factory
+publisher: Nintendo
+genre: Puzzle
+description:
+  Use speed, skill and lightning-fast reflexes to save the spirit world from
+  destruction in this engaging, action-packed puzzle game. A variety of compelling
+  spatial challenges await you. Rotate and maneuver block-shaped Guardians to
+  explore sacred shrines and climb towers that reach high above the clouds. Face
+  adrenaline-fueled races against the clock, cerebral shape-matching missions and
+  mazes that you’ll need a sharp memory to escape. The evil god Koruptal has
+  brought chaos and destruction to the spirit world, and it’s up to you to put
+  things right.
+  .
+  Three multiplayer modes and 96 replayable, fast-paced single-player stages offer
+  a wealth of puzzle-packed excitement, only available on the Nintendo 3DS system.
+release: 2011-10-21
+players: 2
+assets.boxfront: BoxFront/Ketzal's Corridors (USA) (eShop).jpg
+assets.boxback: BoxBack/Ketzal's Corridors (USA) (eShop).jpg
+assets.background: Background/Ketzal's Corridors (USA) (eShop).jpg
+assets.screenshot: Screenshot/Ketzal's Corridors (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Kirby Fighters Deluxe (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Kirby Fighters Deluxe (USA) (eShop)/Kirby Fighters Deluxe (USA) (eShop).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Action;Fighting
+description:
+  Duke it out with your favorite pink puffball in a fierce 4-player battle action
+  game! Team up or go solo as you battle in new and classic Kirby™ arenas. Choose
+  from powerful copy abilities like Sword, Ninja, Hammer and more as you take your
+  fighting skills to the limit!
+  .
+  Based on the wild battle mode introduced in Kirby: Triple Deluxe, this
+  standalone game contains expanded gameplay features, the ability to play as a
+  team, new arenas and more. Join up with a buddy and fire the powerful new Team
+  Cannon to blast opponents with mega-damage! Earn rare copy ability hats for
+  defeating Kracko and the King Dedede army in the single-player gauntlet. Owners
+  of Kirby: Triple Deluxe can also access two bonus copy abilities plus an
+  exclusive arena – Waddle Dee Train Tracks!
+release: 2014-07-23
+players: 4
+assets.boxfront: BoxFront/Kirby Fighters Deluxe (USA) (eShop).jpg
+assets.boxback: BoxBack/Kirby Fighters Deluxe (USA) (eShop).jpg
+assets.background: Background/Kirby Fighters Deluxe (USA) (eShop).jpg
+assets.screenshot: Screenshot/Kirby Fighters Deluxe (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Kirby's Blowout Blast (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Kirby's Blowout Blast (World) (eShop)/Kirby's Blowout Blast (World) (eShop).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Action;Platform
+description:
+  Kirby is ready for action in a whole different dimensionthe third dimension!
+  .
+  Have a blast inhaling foes and blowing them away in 3D environments across 25+
+  stages. Inhale enough enemies and you can launch one huge Blaster Bullet capable
+  of wiping out a troop of Waddle Dees. Now's your chance to battle iconic bosses
+  like Kracko Jr and King Dedede in 3D!
+  .
+  Inhaling multiple enemies to launch Blaster Bullets is a great way to pump up
+  your score and go for a bronze, silver, or gold star. Another way to score big
+  is to rack up a combo by continuously firing at enemies without missing. Or you
+  could always just collect coins as you jump across platforms. As you progress,
+  you'll unlock EX stages, which provide a tougher challenge to master. Celebrate
+  your victories by tapping a Kirby series amiibo figure to build a statue in the
+  plaza that plays new music!
+  .
+  *Inhale enemies to launch Blaster Bullets and take out groups of enemies in a 3D
+  space\n
+  *Obtain a bronze, silver, or gold trophy while shooting for a high score\n
+  *Face down beloved Kirby series bosses like Kracko Jr and King Dedede\n
+  *Unlock EX stages and master them for an even tougher challenge
+  .
+  Alt description:
+  .
+  Kirby’s Blowout Blast is based on Kirby 3D Rumble, which is a mini-game in
+  Kirby: Planet Robobot. The game follows the same mechanics as the original Kirby
+  game, Kirby's Dream Land, meaning there is no copy ability, like in future
+  iterations of the series. The main difference in Kirby’s Blowout Blast is the
+  introduction of the 3D environment, which changes the gameplay around. For
+  instance, Kirby can now spit enemies he has swallowed in several different
+  directions, with the introduction of a small arrow to indicate the direction
+  Kirby will spit the enemy out.
+  .
+  Even though the game is fully playable in 2D, the use of the 3D gimmick gives
+  the world a much greater sense of depth, and can sometimes help with the
+  gameplay, just like it happened in Planet Robobot.
+  .
+  Each completed stage awards the player with bonus points, depending on how fast
+  the stage was finished, how many enemies were killed, if all coins were
+  collected and if damage was avoided. A gold ranking (or higher) will unlock the
+  EX versions of the corresponding world, and since there are initially five
+  worlds to beat, obtaining that rank in each single world will double the game’s
+  length, making 10 worlds available.
+  .
+  Kirby themed Amiibo work with the game, unlocking several cosmetic extras. Other
+  extras are also unlocked by having Kirby Planet Robobot.
+release: 2017-07-04
+players: 1
+assets.boxfront: BoxFront/Kirby's Blowout Blast (World) (eShop).jpg
+assets.boxback: BoxBack/Kirby's Blowout Blast (World) (eShop).jpg
+assets.background: Background/Kirby's Blowout Blast (World) (eShop).jpg
+assets.screenshot: Screenshot/Kirby's Blowout Blast (World) (eShop).jpg
+x-co-op: No
+
+
+game: Kokuga (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Kokuga (USA) (eShop)/Kokuga (USA) (eShop).json
+developer: G.rev Ltd.
+publisher: G.rev Ltd.
+genre: Action;Adventure;Shooter
+description:
+  Kokuga is a slow-moving, free-scrolling top-down shooter where players are
+  placed in control of a futuristic "compact mobile tank" known as Kokuga. The
+  Kokuga is suspended on four "legs" and features a single turret capable of
+  rotating 360 degrees using the shoulder buttons.
+  .
+  Each stage has the player move through destroying other mechanical, tank-like,
+  turret-like, and robotic enemies. Most stages end with massive and varied boss
+  battles. Stages are separated into segments with large gates at the
+  dividers--destroying all enemies before destroying the divider resorts in bonus
+  shield repairs. Destroying the gate without defeating all the enemies in that
+  section merely results in all enemies therein being annihilated.
+  .
+  Kokuga differentiates itself from most other shooters in a variety of ways.
+  Rather than collecting power-ups, players already have 20 "cards" to utilize. Of
+  these 20 attack and support cards, four are randomly displayed on the
+  touch-screen at a time and offer a variety of abilities, from an offensive laser
+  ring around the player, to homing shots, to shield restoration and damage
+  repairs. Players cannot cycle through the cards, and in order to get new ones,
+  at least one current card must be used. In this way, the game offers an unusual
+  strategy element to the shooter gameplay--careful and planned use of power-up
+  cards over simply powering up as much as possible as soon as possible.
+release: 2013-06-27
+players: 4
+assets.boxfront: BoxFront/Kokuga (USA) (eShop).jpg
+assets.boxback: BoxBack/Kokuga (USA) (eShop).jpg
+assets.background: Background/Kokuga (USA) (eShop).jpg
+assets.screenshot: Screenshot/Kokuga (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Legend of Dark Witch 2, The - The Price of Desire (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Legend of Dark Witch 2, The - The Price of Desire (USA) (eShop)/Legend of Dark Witch 2, The - The Price of Desire (USA) (eShop).json
+developer: Inside System
+publisher: CIRCLE Entertainment
+genre: Action;Platformer;2D
+description:
+  The Legend of Dark Witch 2 retains its simple controls and enough challenges to
+  satisfy the completist.
+  .
+  .
+  Created by indie games company INSIDE SYSTEM in 2014, The Legend of Dark Witch 2
+  is a 2D action story sequel to "The Legend of Dark Witch". True to its
+  predecessor, Legend of the Dark Witch 2 retains its simple controls and enough
+  challenges to satisfy the completist.
+  .
+  .
+  Players have 8 stages to choose from and must use SHOTs to make their way
+  through a variety of obstacles to reach the boss enemy. Within each stage there
+  are hidden "Pura Syega" which are helpful to power up player characters.
+  .
+  .
+  New Features
+  .
+  -Increased number of stages to choose from
+  .
+  -Allows finer customization for player stats using "Tres"
+  .
+  -"Technical skills" can be customized not only to increase power, but add
+  abilities as well
+  .
+  -New "Forbidden" items added for a wider variety of game play
+release: 2015-11-04
+players: 1
+assets.boxfront: BoxFront/Legend of Dark Witch 2, The - The Price of Desire (USA) (eShop).jpg
+assets.boxback: BoxBack/Legend of Dark Witch 2, The - The Price of Desire (USA) (eShop).jpg
+assets.background: Background/Legend of Dark Witch 2, The - The Price of Desire (USA) (eShop).jpg
+assets.screenshot: Screenshot/Legend of Dark Witch 2, The - The Price of Desire (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Legend of Dark Witch 3, The - Wisdom and Lunacy (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Legend of Dark Witch 3, The - Wisdom and Lunacy (USA) (eShop)/Legend of Dark Witch 3, The - Wisdom and Lunacy (USA) (eShop).json
+developer: Flyhigh Works
+publisher: CIRCLE Entertainment
+genre: Action;General
+description:
+  The Legend of Dark Witch 3 - Wisdom and Lunacy is a 2D side-scrolling action
+  shooting game.
+  .
+  .
+  The player (Zizou) advances through a variety of stages while using their Shot
+  and Lord Attack to defeat enemies. Defeating the bosses at the end of stages
+  clears the stage. Beating all stages clears the game.
+  .
+  .
+  When you start the game you'll play through the Opening Stage. Upon clearing
+  that, you'll move on to the Stage Select Screen where you have 8 stages to
+  choose from. The Syega Fragments and Tres collected during stages can be used to
+  Power Up the player character. After defeating a certain number of enemies in a
+  stage, or reaching certain places you'll receive Syega Fragments which can be
+  used to activate slots temporarily.
+release: 2017-12-21
+players: 1
+assets.boxfront: BoxFront/Legend of Dark Witch 3, The - Wisdom and Lunacy (USA) (eShop).jpg
+assets.boxback: BoxBack/Legend of Dark Witch 3, The - Wisdom and Lunacy (USA) (eShop).jpg
+assets.background: Background/Legend of Dark Witch 3, The - Wisdom and Lunacy (USA) (eShop).jpg
+assets.screenshot: Screenshot/Legend of Dark Witch 3, The - Wisdom and Lunacy (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Legend of Dark Witch, The (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Legend of Dark Witch, The (USA) (eShop)/Legend of Dark Witch, The (USA) (eShop).json
+developer: Inside System
+publisher: CIRCLE Entertainment
+genre: Action;Platformer;2D
+description:
+  The Legend of Dark Witch is a 2D platform action game.
+  .
+  .
+  Syega Crystals gave their powers to the people of the world, but somebody has
+  stolen all of them...
+  .
+  .
+  After all the Syega crystals are missing, the world plunges into darkness. As
+  the dark witch Zizou, you must retrieve the missing Syega Crystals.
+  .
+  .
+  The Legend of Dark Witch is a 2D platform action game. Zizou can learn new
+  attacks by defeating bosses. She will need every one of those attacks if she is
+  going to save the world.
+  .
+  .
+  Other Features:
+  .
+  -A magical world beautifully depicted through in-game graphics.
+  .
+  -Diverse levels that provide a fair challenge.
+  .
+  -Additional bonuses that reward those who replay the game.
+  .
+  -3 difficulty modes.
+release: 2014-08-06
+players: 1
+assets.boxfront: BoxFront/Legend of Dark Witch, The (USA) (eShop).jpg
+assets.boxback: BoxBack/Legend of Dark Witch, The (USA) (eShop).jpg
+assets.background: Background/Legend of Dark Witch, The (USA) (eShop).jpg
+assets.screenshot: Screenshot/Legend of Dark Witch, The (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Legend of Kusakari, The (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Legend of Kusakari, The (USA) (eShop)/Legend of Kusakari, The (USA) (eShop).json
+developer: Librage
+publisher: Nnooo
+genre: Action;General
+description:
+  Help the heroes and CUT that GRASS!
+  .
+  You know what's the worst thing ever? Fighting slimes and dragons knee-deep in
+  grass and weeds.
+  .
+  Well if Kusakari has anything to do with it, it wont be that way for long. Get
+  your scythe sharpened and jump into this quirky Japanese adventure puzzle game.
+  Slice through over 50 levels of grass-filled action and help those heroes save
+  the kingdom, in battle grounds fit to have a picnic on!
+  .
+  Up to the challenge? Compete for the most grass cut in the endless grass cutting
+  competion and record your best cut in the online leaderboards!
+release: 2016-08-25
+players: 1
+assets.boxfront: BoxFront/Legend of Kusakari, The (USA) (eShop).jpg
+assets.boxback: BoxBack/Legend of Kusakari, The (USA) (eShop).jpg
+assets.background: Background/Legend of Kusakari, The (USA) (eShop).jpg
+assets.screenshot: Screenshot/Legend of Kusakari, The (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Liberation Maiden (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Liberation Maiden (USA) (eShop)/Liberation Maiden (USA) (eShop).json
+developer: Grasshopper Manufacture
+publisher: Level-5
+genre: Action;Shooter
+description:
+  LEVEL-5 and Grasshopper Manufacture’s SUDA51 team up to bring you LIBERATION
+  MAIDEN, a full-scale 3D shooter game in the Nintendo eShop.
+  .
+  Players step into the role of Shoko Ozora, who rides out on her Liberator,
+  Kamui, to protect the country of New Japan against invading forces. Shoko will
+  face powerful opposition from an arsenal of ground forces, culminating in
+  thrilling showdowns with the enemy’s massive mechanical Conduit Spikes.
+  .
+  The game brings AAA production values to the downloadable space with
+  breathtaking animation by bones, fully voiced dialog and contributions from an
+  all-star cast of artists, designers and musicians.
+release: 2012-10-04
+players: 1
+assets.boxfront: BoxFront/Liberation Maiden (USA) (eShop).jpg
+assets.boxback: BoxBack/Liberation Maiden (USA) (eShop).jpg
+assets.background: Background/Liberation Maiden (USA) (eShop).jpg
+assets.screenshot: Screenshot/Liberation Maiden (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Link-a-Pix Color (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Link-a-Pix Color (USA) (eShop)/Link-a-Pix Color (USA) (eShop).json
+developer: Lightwood Games
+publisher: Lightwood Games
+genre: Puzzle;Logic
+description:
+  Link-a-Pix is a clue-linking puzzle where every grid has a picture hidden
+  inside. The aim is to reveal the picture by painting paths to link the clues.
+  .
+  .
+  Connect pairs of clues which have the same color and number. The number shows
+  the length of the line which will connect them.
+  .
+  .
+  Link-a-Pix can always be solved using logic and deduction. You don't ever have
+  to guess!
+  .
+  .
+  This game contains 120 exclusive puzzles, designed by Conceptis Ltd. Puzzles
+  range in difficulty and size from small introductory pictures to huge scrollable
+  grids with highly detailed pictures.
+release: 2018-01-18
+players: 1
+assets.boxfront: BoxFront/Link-a-Pix Color (USA) (eShop).jpg
+assets.boxback: BoxBack/Link-a-Pix Color (USA) (eShop).jpg
+assets.background: Background/Link-a-Pix Color (USA) (eShop).jpg
+assets.screenshot: Screenshot/Link-a-Pix Color (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Mario Party - Star Rush - Party Guest (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Mario Party - Star Rush - Party Guest (USA) (eShop)/Mario Party - Star Rush - Party Guest (USA) (eShop).json
+developer: Nd Cube
+publisher: Nintendo
+genre: Miscellaneous;Party / Minigame
+description:
+  Mario™ and friends invite you to be their party guest! Think fast and have a
+  blast in this free version of the Mario Party Star Rush game. Connect with a
+  player that has the full version to enjoy all multiplayer modes with up to 4
+  players*. No matter how you party, it's instant fun for everyone!
+  .
+  Break free of turn order and choose your path across bite-sized, open maps in
+  Toad Scramble. You and up to 3* friends roll the dice, roam the board, and
+  recruit fan-favorite allies, like Yoshi™, Daisy™, and Waluigi™! The bigger
+  your party, the faster you can earn stars and coins in frantic minigames. Pit
+  your skills against friends by racing through minigames in Coinathlon or
+  navigating a board in Balloon Bash. As you play multiplayer, single-player
+  bonuses unlock, including Goomba Gold Rush, which has you blasting enemies
+  with cannons, and a museum you can add characters to by tapping compatible
+  amiibo™ figures. Partying is tough business!
+release: 2016-10-07
+players: 1
+assets.boxfront: BoxFront/Mario Party - Star Rush - Party Guest (USA) (eShop).jpg
+assets.boxback: BoxBack/Mario Party - Star Rush - Party Guest (USA) (eShop).jpg
+assets.background: Background/Mario Party - Star Rush - Party Guest (USA) (eShop).jpg
+assets.screenshot: Screenshot/Mario Party - Star Rush - Party Guest (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Mario and Donkey Kong - Minis on the Move (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Mario and Donkey Kong - Minis on the Move (USA) (eShop)/Mario and Donkey Kong - Minis on the Move (USA) (eShop).json
+developer: Nintendo SPD Group No.1
+publisher: Nintendo of America
+genre: Platform;Puzzle
+description:
+  Mario and Donkey Kong: Minis on the Move is a puzzle game, part of the Mario vs.
+  Donkey Kong series. The Mario Toy Company hosts an annual Mini Toy Carnival, and
+  Donkey Kong and Pauline are running it. As usual, the player must guide Mini
+  Marios to a goal within a time limit, but this time the path is occasionally cut
+  off. The player must drag and rearrange tiles in order to make to complete the
+  path and guide the toys through it safely. Most levels have three M-Tokens, and
+  collecting all three gives the player a star. Once so many stars are collected,
+  a new mode is unlocked, with four total modes in the game. Additional playable
+  characters can also be unlocked by meeting other requirements.
+release: 2013-05-09
+players: 1
+assets.boxfront: BoxFront/Mario and Donkey Kong - Minis on the Move (USA) (eShop).jpg
+assets.boxback: BoxBack/Mario and Donkey Kong - Minis on the Move (USA) (eShop).jpg
+assets.background: Background/Mario and Donkey Kong - Minis on the Move (USA) (eShop).jpg
+assets.screenshot: Screenshot/Mario and Donkey Kong - Minis on the Move (USA) (eShop).jpg
+assets.video: Video/Mario and Donkey Kong - Minis on the Move (USA) (eShop).mp4
+x-co-op: No
+
+
+game: Mario vs. Donkey Kong - Tipping Stars (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Mario vs. Donkey Kong - Tipping Stars (USA) (eShop)/Mario vs. Donkey Kong - Tipping Stars (USA) (eShop).json
+developer: Nintendo Software Technology
+publisher: Nintendo
+genre: Platform;Puzzle
+description:
+  Mario vs. Donkey Kong: Tipping Stars is a 2D puzzle game starring Mario and
+  Donkey Kong. The monkey still likes to kidnap and the player has to complete
+  levels helping Minis, wind-up toy versions of Mario and other characters, while
+  solving puzzles. They walk by themselves and need to be guided to an exit. The
+  player interferes by using touch on the GamePad to manipulate the environment.
+  This is done by leading enemies away, covering traps, building or removing
+  girders and adding or removing springs. Some levels have a character that needs
+  to be freed and guided to safety. Other elements are escalators, conveyors with
+  different directions, free-form building blocks, spikes to avoid, hammers to
+  defeat Donkey Kongs blocking paths, toy Donkey Kongs with cannons heads, cursed
+  Minis that need to be reclaimed etc. Levels are grouped per eight and each group
+  introduces a new mechanic before mixing them up.
+release: 2015-03-05
+players: 1
+assets.boxfront: BoxFront/Mario vs. Donkey Kong - Tipping Stars (USA) (eShop).jpg
+assets.boxback: BoxBack/Mario vs. Donkey Kong - Tipping Stars (USA) (eShop).jpg
+assets.background: Background/Mario vs. Donkey Kong - Tipping Stars (USA) (eShop).jpg
+assets.screenshot: Screenshot/Mario vs. Donkey Kong - Tipping Stars (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Mini Mario & Friends (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Mini Mario & Friends (USA) (eShop)/Mini Mario & Friends (USA) (eShop).json
+developer: Nintendo
+publisher: Nintendo
+genre: Puzzle;Action
+description:
+  Tap an amiibo™ figure to guide 1 of 11 minis across more than 50 levels. Use
+  minis and their unique abilities, like Yoshi™ who can eat enemies or Luigi™ who
+  jumps to high places to reach the exit. But watch out! Mine carts, ghostly Boos
+  and other new obstacles lurk around every corner.
+  .
+  Whether you're playing on a Nintendo 3DS™ or Wii U™ system, simply tap any
+  compatible amiibo figure to get started. Or, by tapping specific amiibo figures,
+  you can guide minis that have their own unique abilities and exclusive sets of
+  levels. These specially designed, character-themed levels include their own
+  look, remixed music and obstacles for you to master, which comes in handy the
+  more you play. Earn in-game amiibo tokens with different minis to unlock even
+  more difficult challenges.
+release: 2016-01-01
+players: 1
+assets.boxfront: BoxFront/Mini Mario & Friends (USA) (eShop).jpg
+assets.boxback: BoxBack/Mini Mario & Friends (USA) (eShop).jpg
+assets.background: Background/Mini Mario & Friends (USA) (eShop).jpg
+assets.screenshot: Screenshot/Mini Mario & Friends (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Monster Hunter 3 Ultimate Data Transfer Program (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Monster Hunter 3 Ultimate Data Transfer Program (USA) (eShop)/Monster Hunter 3 Ultimate Data Transfer Program (USA) (eShop).json
+developer: Capcom
+publisher: Capcom
+genre: Action
+description:
+  Monster Hunter 3 Ultimate utilises the functionality of the Nintendo 3DS to
+  provide players with a truly intuitive hunting experience. The touchscreen
+  allows players to quickly access in-game books, weapons, field maps and mini
+  games while the 3D visuals of Nintendo 3DS, powered by the latest iteration of
+  Capcoms MT Framework, deliver a unique and stunning world for players to
+  explore. Taking advantage of the portability of Nintendo 3DS, players can
+  exchange their guild card that contains all their hunters information with other
+  players via StreetPass.
+  .
+  Players can experience the world of Monster Hunter alone or in four player local
+  play using Nintendo 3DS. Finding nearby hunters to adventure on quests with is
+  now even easier via the local Nintendo 3DS search feature. Wii U players will be
+  able to enjoy the hunt with Nintendo 3DS players via a local wireless
+  connection. Gamers that own both a Wii U and Nintendo 3DS can take advantage of
+  the inter compatibility of save data between the two consoles, taking the hunt
+  from the living room wherever they go.
+  .
+  -Expansive Monster Hunter world equipment and weapon upgrades, challenging
+  monsters and over 200 quests to tackle make this latest offering the most
+  expansive in the series so far.\n
+  -Utilise 3DS functionalities The touch screen provides easy access to in-game
+  books, weapons, field maps and mini games.\n
+  -3D visuals The beautiful world of Monster Hunter, powered by Capcoms latest
+  iteration of the MT Framework, appears visually stunning and unique for players
+  to enjoy on 3DS format\n
+  -Dont hunt on your own Connect with up to three friends in four player local
+  play via the Nintendo 3DS or online via the Wii U. Wii U players can also link
+  up with Nintendo 3DS players over a local connection.\n
+  -Search for fellow hunters! Use the local 3DS search feature to find other
+  hunters in your location.\n
+  -Take the experience with you wherever you go Share your save data between your
+  Wii U home console and the Nintendo 3DS, allowing the Monster Hunter experience
+  to be truly portable.\n
+  -Meet your companions Never feel alone in the vast world of Monster Hunter with
+  the aid of your two companions, Cha-Cha and Kayamba, who will assist you on your
+  quests.\n
+  -Exchange your information Share your guild card with fellow hunters via the
+  Nintendo StreetPass function.
+release: 2013-03-19
+players: 1
+assets.boxfront: BoxFront/Monster Hunter 3 Ultimate Data Transfer Program (USA) (eShop).jpg
+assets.boxback: BoxBack/Monster Hunter 3 Ultimate Data Transfer Program (USA) (eShop).jpg
+assets.background: Background/Monster Hunter 3 Ultimate Data Transfer Program (USA) (eShop).jpg
+assets.screenshot: Screenshot/Monster Hunter 3 Ultimate Data Transfer Program (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Monster Hunter Generations Ultimate Data Transfer App (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Monster Hunter Generations Ultimate Data Transfer App (USA) (eShop)/Monster Hunter Generations Ultimate Data Transfer App (USA) (eShop).json
+developer: Capcom
+publisher: Capcom
+genre: Tool
+description:
+  This application allows you to transfer your save data from the Nintendo 3DS
+  title Monster Hunter Generations to the Nintendo Switch title Monster Hunter
+  Generations Ultimate.
+  .
+  Note: a copy of each of the aforementioned titles is required to perform save
+  data transfer. For details on what data is transferred, please visit the
+  official website.
+release: 2018-08-12
+players: 1
+assets.boxfront: BoxFront/Monster Hunter Generations Ultimate Data Transfer App (USA) (eShop).jpg
+assets.boxback: BoxBack/Monster Hunter Generations Ultimate Data Transfer App (USA) (eShop).jpg
+assets.background: Background/Monster Hunter Generations Ultimate Data Transfer App (USA) (eShop).jpg
+assets.screenshot: Screenshot/Monster Hunter Generations Ultimate Data Transfer App (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Moon Chronicles (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Moon Chronicles (USA) (eShop)/Moon Chronicles (USA) (eShop).json
+developer: Renegade Kid
+publisher: Renegade Kid
+genre: Shooter
+description:
+  In Moon, the year is 2058 and the United States has established a series of
+  stations on the moon to perform scientific experiments and construct a Mars
+  launch facility. An extraordinary discovery has been uncovered at one of the dig
+  sites, a sealed hatch leading beneath the moon's surface. The player assumes the
+  role of Major Kane, the leader of a special task force sent to investigate the
+  mysterious hatch and reveal its secrets.
+  .
+  Moon Chronicles  features first-person shooter gameplay and full 3D environments
+  that the player can explore. Over the course of the game, the player can collect
+  a variety of weapons to fight enemies.
+  .
+  The 3DS version is a remake of the original DS game, and has been released in an
+  episodic format on the eShop.
+release: 2014-05-15
+players: 1
+assets.boxfront: BoxFront/Moon Chronicles (USA) (eShop).jpg
+assets.boxback: BoxBack/Moon Chronicles (USA) (eShop).jpg
+assets.background: Background/Moon Chronicles (USA) (eShop).jpg
+assets.screenshot: Screenshot/Moon Chronicles (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Nano Assault EX (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Nano Assault EX (USA) (eShop)/Nano Assault EX (USA) (eShop).json
+developer: Shin'en Multimedia GmbH
+publisher: Shin'en Multimedia GmbH
+genre: Action;Shooter
+description:
+  Stop the deadly Nanostray virus from spreading and contaminating civilization in
+  Nano Assault EX, a fast-paced action shooter set within a visually stunning
+  cellular system that leaps off the screen in full 3D. Control your microscopic
+  Nanite ship inside the dangerous virus to fight off infections, navigate through
+  alien cell clusters, battle bosses, and ultimately analyze and destroy the
+  virus' core to save humanity.
+  .
+  Nano Assault EX is based on the original Nano Assault retail game plus the
+  all-new survivor mode, new online rankings, support for Circle Pad Pro, improved
+  gameplay, updated graphics, etc.
+release: 2013-03-07
+players: 1
+assets.boxfront: BoxFront/Nano Assault EX (USA) (eShop).jpg
+assets.boxback: BoxBack/Nano Assault EX (USA) (eShop).jpg
+assets.background: Background/Nano Assault EX (USA) (eShop).jpg
+assets.screenshot: Screenshot/Nano Assault EX (USA) (eShop).jpg
+assets.video: Video/Nano Assault EX (USA) (eShop).mp4
+x-co-op: No
+
+
+game: Ninja Battle Heroes (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Ninja Battle Heroes (USA) (eShop)/Ninja Battle Heroes (USA) (eShop).json
+developer: Tom Create
+publisher: Tom Create
+genre: Action;Platform
+description:
+  Fight through enemies with katanas and throwing stars, absorb Spirit and summon
+  powerful legendary heroes!
+  .
+  Grab your katana and a ninja throwing stars and embark on a journey that will
+  take you across Japan in your mission to find the missing Yukimura and his Beast
+  Brigade!
+  .
+  Use your katana to slash through enemies coming at you front and back as you
+  make your way through cities, forests and across water falls. Take out enemies
+  in the distance with ninja throwing stars before they shoot or charge towards
+  you.
+  .
+  Absorb Spirit from each enemy you defeat and use it to summon powerful heroes
+  that you've rescued on your journey. Make use of their powers including
+  firewalls, ice pillars, cyclones, quakes and even flight as you come face to
+  face with greater and greater foes on your journey to find the missing Beast
+  Brigade!
+release: 2014-10-09
+players: 1
+assets.boxfront: BoxFront/Ninja Battle Heroes (USA) (eShop).jpg
+assets.boxback: BoxBack/Ninja Battle Heroes (USA) (eShop).jpg
+assets.background: Background/Ninja Battle Heroes (USA) (eShop).jpg
+assets.screenshot: Screenshot/Ninja Battle Heroes (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Nintendo Badge Arcade (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Nintendo Badge Arcade (USA) (eShop)/Nintendo Badge Arcade (USA) (eShop).json
+developer: Nintendo SDD Software Development Group
+publisher: Nintendo
+genre: Puzzle
+description:
+  Nintendo Badge Arcade is a collection of virtual crane machines that award
+  decorative icons that the player can use to decorate their Nintendo 3DS' home
+  menu. Crane machines rotate in and out frequently, so there is only a short
+  window of time in which to collect every badge a machine offers. Plays on the
+  crane machines cost real money and can be purchased five at a time. However, it
+  is also possible to earn free plays by performing well on the daily practice
+  machine, which is modeled on one of the active machines at the time and does not
+  award badges. The player also has a random chance of being given free plays the
+  first time they load the game on any given day. Since the game is free to start,
+  it can potentially be played without making a single payment.
+release: 2014-12-17
+players: 1
+assets.boxfront: BoxFront/Nintendo Badge Arcade (USA) (eShop).jpg
+assets.boxback: BoxBack/Nintendo Badge Arcade (USA) (eShop).jpg
+assets.background: Background/Nintendo Badge Arcade (USA) (eShop).jpg
+assets.screenshot: Screenshot/Nintendo Badge Arcade (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Noitu Love Devolution (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Noitu Love Devolution (USA) (eShop)/Noitu Love Devolution (USA) (eShop).json
+developer: Konjak
+publisher: Konjak
+genre: Action;Beat-'Em-Up;2D
+description:
+  The year is 2288. The city is protected by an organization called "The
+  Peacekeepers League" and everything is swell except for that it's under attack!
+  By a robot army lead by professor Darnacus Damnation!! Or is it... ?
+  .
+  .
+  100 years after the events of Noitu Love 1 the new star of the Peacekeepers is
+  Xoda Rap, and what she has to endure is a sudden resurrection of the Darn
+  armies, but adding to that the city is locally turning to places of the past!
+  What could be causing this?
+  .
+  .
+  Using a mouse reticule as a quick-dash-to-enemies and mouse gestures for special
+  moves, Xoda will take on anything that stands in her way in the name of peace!
+  The game shares little in pacing and action to Noitu Love 1. It is more of a
+  continuation on that universe, so expect much more mindless action!
+  .
+  .
+  Features:
+  .
+  .
+  - 7 wholly different levels
+  .
+  - 3 modes of playing the game
+  .
+  - 3 difficulty levels befitting most players
+  .
+  - Several bosses per level
+  .
+  - Ratings for every level, difficulty and mode
+  .
+  - A bunch of secrets and more!!
+release: 2008-04-18
+players: 1
+assets.boxfront: BoxFront/Noitu Love Devolution (USA) (eShop).jpg
+assets.boxback: BoxBack/Noitu Love Devolution (USA) (eShop).jpg
+assets.background: Background/Noitu Love Devolution (USA) (eShop).jpg
+assets.screenshot: Screenshot/Noitu Love Devolution (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Otosan - Nintendo 3DS Edition (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Otosan - Nintendo 3DS Edition (USA) (eShop)/Otosan - Nintendo 3DS Edition (USA) (eShop).json
+developer: William Kage
+publisher: Seven Silhouettes Enterprises
+genre: Role-Playing;Action RPG
+description:
+  Fight fear and make your dad proud in this bite-sized adventure.
+release: 2023-03-08
+players: 1
+assets.boxfront: BoxFront/Otosan - Nintendo 3DS Edition (USA) (eShop).jpg
+assets.boxback: BoxBack/Otosan - Nintendo 3DS Edition (USA) (eShop).jpg
+assets.background: Background/Otosan - Nintendo 3DS Edition (USA) (eShop).jpg
+assets.screenshot: Screenshot/Otosan - Nintendo 3DS Edition (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Phoenix Wright - Ace Attorney - Dual Destinies (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Phoenix Wright - Ace Attorney - Dual Destinies (USA) (eShop)/Phoenix Wright - Ace Attorney - Dual Destinies (USA) (eShop).json
+developer: Capcom
+publisher: Capcom
+genre: Adventure;Visual Novel
+description:
+  There are no "Objections!" to the latest entry in the Ace Attorney series!
+  Become a lawyer and solve the case! Your client's life is in your hands!
+release: 2013-10-24
+players: 1
+assets.boxfront: BoxFront/Phoenix Wright - Ace Attorney - Dual Destinies (USA) (eShop).jpg
+assets.boxback: BoxBack/Phoenix Wright - Ace Attorney - Dual Destinies (USA) (eShop).jpg
+assets.background: Background/Phoenix Wright - Ace Attorney - Dual Destinies (USA) (eShop).jpg
+assets.screenshot: Screenshot/Phoenix Wright - Ace Attorney - Dual Destinies (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Phoenix Wright - Ace Attorney - Spirit of Justice (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Phoenix Wright - Ace Attorney - Spirit of Justice (USA) (eShop)/Phoenix Wright - Ace Attorney - Spirit of Justice (USA) (eShop).json
+developer: Capcom
+publisher: Capcom
+genre: Adventure;Visual Novel
+description:
+  Court is back in session!
+  .
+  Phoenix Wright: Ace Attorney Spirit of Justice sees Phoenix in a brand new
+  location: a courtroom situated in the Kingdom of Khura'in, origin of the Kurain
+  Channeling Technique, where mysterious seance trials decide the fate of all
+  defendants. Meanwhile, defense attorney Apollo Justice faces his own challenges
+  holding down the fort at the Wright Anything Agency, as he takes on a case that
+  will have explosive implications. Both our heroes are joined by a host of
+  returning friends and adversaries in their fight to bring about justice. Filled
+  with puzzling mysteries to solve, a cast of memorable characters, and all new
+  investigation techniques, this is one case you'll definitely want to take.
+release: 2016-09-08
+players: 1
+assets.boxfront: BoxFront/Phoenix Wright - Ace Attorney - Spirit of Justice (USA) (eShop).jpg
+assets.boxback: BoxBack/Phoenix Wright - Ace Attorney - Spirit of Justice (USA) (eShop).jpg
+assets.background: Background/Phoenix Wright - Ace Attorney - Spirit of Justice (USA) (eShop).jpg
+assets.screenshot: Screenshot/Phoenix Wright - Ace Attorney - Spirit of Justice (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Phoenix Wright - Ace Attorney Trilogy (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Phoenix Wright - Ace Attorney Trilogy (USA) (eShop)/Phoenix Wright - Ace Attorney Trilogy (USA) (eShop).json
+developer: Capcom
+publisher: Capcom
+genre: Adventure;Visual Novel
+description:
+  Defend the innocent and save the day! Courtroom hero Phoenix Wright lays down
+  the law this Winter in the digital release of Phoenix Wright: Ace Attorney
+  Trilogy. Experience the original trilogy like never before in clear, high-
+  resolution re-drawn graphics and immersive 3D visuals optimized for the Nintendo
+  3DS system. Join rookie lawyer Phoenix Wright through the early years of his
+  career in his quest to find the truth behind all of the classic cases! Prepare
+  for intense courtroom showdowns by investigating crime scenes, collecting
+  evidence, and questioning witnesses. Use evidence and the testimonies of
+  witnesses to your advantage as you battle for the innocence of your client.
+  Nothing less of a full acquittal will do in this court of law. Find the
+  contradictions in witnesses' testimonies to expose the truth!
+  .
+  As a new feature, the Japanese version of the game, "Gyakuten Saiban 123
+  Naruhodo Selection," will be included, giving players the option to switch
+  between the Japanese and English versions in-game. Phoenix Wright: Ace Attorney
+  Trilogy includes Phoenix Wright: Ace Attorney, Phoenix Wright: Ace Attorney -
+  Justice For All, and Phoenix Wright: Ace Attorney - Trials and Tribulations and
+  will be available to purchase as a digital download title exclusively on the
+  Nintendo eShop for Nintendo 3DS.
+  .
+  -Three beloved games in one: For the first time ever on Nintendo 3DS, experience
+  all of the classic courtroom drama from the original Phoenix Wright trilogy in
+  one epic collection.
+  .
+  -Familiar faces return: Join Phoenix Wright in his early years, as he gets
+  introduced to his colorful cast of friends and foes, including Pearl Fey and
+  rival prosecutor Miles Edgeworth.
+  .
+  -Two classic gameplay segments:
+  .
+  --Investigation phase - survey crime scenes, interview witnesses and gather
+  evidence that will be used in court.
+  .
+  --Court phase - present findings from the investigation to support your case,
+  listen to testimonies and examine witnesses.
+  .
+  -Play two versions: the Japanese version of the game, "Gyakuten Saiban 123
+  Naruhodo Selection," will be included, giving players the option to switch
+  between the Japanese and English versions in-game.
+release: 2014-12-09
+players: 1
+assets.boxfront: BoxFront/Phoenix Wright - Ace Attorney Trilogy (USA) (eShop).jpg
+assets.boxback: BoxBack/Phoenix Wright - Ace Attorney Trilogy (USA) (eShop).jpg
+assets.background: Background/Phoenix Wright - Ace Attorney Trilogy (USA) (eShop).jpg
+assets.screenshot: Screenshot/Phoenix Wright - Ace Attorney Trilogy (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Photos with Mario (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Photos with Mario (USA) (eShop)/Photos with Mario (USA) (eShop).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Miscellaneous;General
+description:
+  This special-edition eShop Card series comes with a new way to have fun with
+  your favorite Mushroom Kingdom characters!
+  .
+  .
+  Use your Nintendo 3DS system to play and pose with Mario, Peach, or Goomba using
+  special character cards and the Photos with Mario application, included at no
+  additional cost with the Photos with Mario series of $10 Nintendo eShop Cards.
+  .
+  .
+  How it works
+  .
+  .
+  Download the free "Photos with Mario" app to your Nintendo 3DS or 2DS system
+  using the QR Code included with your eShop Card.
+  .
+  .
+  Open the app and view the included character card using your systems camera.
+  .
+  .
+  How to buy
+  .
+  .
+  Find the Photos with Mario series of $10 Nintendo eShop Cards exclusively at
+  Target. Choose from Mario, Peach, or Goomba versions-or collect all three.
+release: 2014-04-23
+players: 1
+assets.boxfront: BoxFront/Photos with Mario (USA) (eShop).jpg
+assets.boxback: BoxBack/Photos with Mario (USA) (eShop).jpg
+assets.background: Background/Photos with Mario (USA) (eShop).jpg
+assets.screenshot: Screenshot/Photos with Mario (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Pic-a-Pix Color (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pic-a-Pix Color (USA) (eShop)/Pic-a-Pix Color (USA) (eShop).json
+developer: Lightwood Games
+publisher: Lightwood Games
+genre: Puzzle;Logic
+description:
+  Pic-a-Pix are exciting logic puzzles that form whimsical pixel-art pictures when
+  solved. Challenging, deductive and artistic, this original Japanese invention
+  offers the ultimate mix of logic, art and fun while providing solvers with many
+  hours of mentally stimulating entertainment.
+  .
+  .
+  Pic-a-Pix are sometimes known by other names, such as Picross, Nonogram, Paint
+  by Numbers, Griddlers, Hanjie and many more.
+  .
+  .
+  Pic-a-Pix Color adds a new dimension to this popular puzzle by using colored
+  clues to indicate which color each block should be painted. The new rules add a
+  unique twist to the game's logic and the puzzles produce beautiful, colorful
+  pixel art.
+  .
+  .
+  This game contains 150 exclusive puzzles, designed by Conceptis Ltd - the
+  world's leading supplier of logic puzzles. Puzzles range in difficulty and size
+  from introductory 5x5 pictures up to huge 20x20 grids!
+  .
+  .
+  Extra puzzles are available as Add On Content in a selection of sizes and more
+  downloadable packs are added regularly!
+  .
+  .
+  Exclusively on Wii U, hardcore puzzlers can purchase extra "Giant" puzzles at
+  massive 30x20 and 35x25 sizes!
+release: 2017-03-30
+players: 1
+assets.boxfront: BoxFront/Pic-a-Pix Color (USA) (eShop).jpg
+assets.boxback: BoxBack/Pic-a-Pix Color (USA) (eShop).jpg
+assets.background: Background/Pic-a-Pix Color (USA) (eShop).jpg
+assets.screenshot: Screenshot/Pic-a-Pix Color (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Picross e (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e (USA) (eShop)/Picross e (USA) (eShop).json
+developer: Jupiter Corporation
+publisher: Jupiter Corporation
+genre: Puzzle
+description:
+  This is the series of "picture crossword puzzles" in which you use numbers as
+  hints to complete illustrations that Nintendo has been developing as its own
+  brand of game software since 1995.
+  .
+  Anyone can enjoy it with its simple and easy to understand rules.\n
+  With this version's newly implemented Navigation feature, the puzzles can be
+  solved more smoothly than ever.\n
+  There are 3 types of puzzle sizes: 5x5, 10x10, and 15x15.\n
+  Don't take puzzles lightly because they're small.\n
+  There are plenty of challenging puzzles as well.\n
+  Complete a puzzle within the time limit and the illustration will be displayed
+  in color.
+release: 2011-07-27
+players: 1
+assets.boxfront: BoxFront/Picross e (USA) (eShop).jpg
+assets.boxback: BoxBack/Picross e (USA) (eShop).jpg
+assets.background: Background/Picross e (USA) (eShop).jpg
+assets.screenshot: Screenshot/Picross e (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Picross e2 (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e2 (USA) (eShop)/Picross e2 (USA) (eShop).json
+developer: Jupiter Corporation
+publisher: Jupiter Corporation
+genre: Puzzle
+description:
+  The sequel to Picross e offers a new navigation feature to make gameplay even
+  smoother. As with the previous game, this sequel has 150 new puzzles, plus an
+  all new gameplay element known as Micross.
+  .
+  Picross is a Picture Crossword Puzzle Game in which you use numbers as hints to
+  complete illustrations. The rules are simple and easy to understand. Anyone can
+  do it!
+release: 2013-07-25
+players: 1
+assets.boxfront: BoxFront/Picross e2 (USA) (eShop).jpg
+assets.boxback: BoxBack/Picross e2 (USA) (eShop).jpg
+assets.background: Background/Picross e2 (USA) (eShop).jpg
+assets.screenshot: Screenshot/Picross e2 (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Picross e3 (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e3 (USA) (eShop)/Picross e3 (USA) (eShop).json
+developer: Jupiter Corporation
+publisher: Jupiter Corporation
+genre: Puzzle
+description:
+  The third Picross installment, Picross e3, has arrived!
+  .
+  The new Picross e3 is equipped with a navigation function.
+  .
+  It includes an all-new mode called "Mega Picross" that's a must-see for fans!
+  .
+  "Picross" is a "Picture Crossword Puzzle Game" in which you use numbers as hints
+  to complete illustrations. The rules are simple and easy to understand. Anyone
+  can do it!
+  .
+  Beginners and intermediate players alike will be able to enjoy these 150 all-new
+  puzzles!
+  .
+  The new Picross includes an all-new mode, "Mega Picross," which has "Mega
+  Numbers," numbers which span two rows.
+  .
+  It can be difficult to determine where to fill Mega Numbers, so a different kind
+  of logic from the normal Picross may be necessary.
+  .
+  You can change the rules for each puzzle to your own liking as you play.
+release: 2013-10-03
+players: 1
+assets.boxfront: BoxFront/Picross e3 (USA) (eShop).jpg
+assets.boxback: BoxBack/Picross e3 (USA) (eShop).jpg
+assets.background: Background/Picross e3 (USA) (eShop).jpg
+assets.screenshot: Screenshot/Picross e3 (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Picross e4 (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e4 (USA) (eShop)/Picross e4 (USA) (eShop).json
+developer: Jupiter Corporation
+publisher: Jupiter Corporation
+genre: Puzzle
+description:
+  The 4th game in the Picross e series! Now with big 20x15 puzzles! With Micross
+  and Mega Picross modes!
+  .
+  The 4th game in the Picross e series, with a Navigation Feature! As fans
+  requested, new 20x15 puzzles have been added. Micross and Mega Picross modes are
+  also included, with 150+ new puzzles! Tutorials and rule options let newcomers
+  to the series start playing with ease. With save data from previous games, you
+  can also play additional Special Puzzles. Picross is a "Picture Crossword Puzzle
+  Game" where numbers act as hints to complete images. The rules are simple and
+  easy to grasp. Anyone can do it!
+release: 2014-05-01
+players: 1
+assets.boxfront: BoxFront/Picross e4 (USA) (eShop).jpg
+assets.boxback: BoxBack/Picross e4 (USA) (eShop).jpg
+assets.background: Background/Picross e4 (USA) (eShop).jpg
+assets.screenshot: Screenshot/Picross e4 (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Picross e5 (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e5 (USA) (eShop)/Picross e5 (USA) (eShop).json
+developer: Jupiter Corporation
+publisher: Jupiter Corporation
+genre: Puzzle
+description:
+  The 5th game in the Picross e series, with a Navigation Feature!
+  .
+  Featuring Micross, Mega Picross and 2015 Picross, all three modes from the
+  previous game.
+  .
+  Also includes more than 150 satisfying, all-new puzzles to solve.
+  .
+  Tutorials and rule options let newcomers to the series start playing with ease.
+  .
+  Picross is a "Picture Crossword Puzzle Game" where numbers act as hints to
+  complete images.
+  .
+  The rules are simple and easy to grasp. Anyone can do it!
+release: 2014-11-13
+players: 1
+assets.boxfront: BoxFront/Picross e5 (USA) (eShop).jpg
+assets.boxback: BoxBack/Picross e5 (USA) (eShop).jpg
+assets.background: Background/Picross e5 (USA) (eShop).jpg
+assets.screenshot: Screenshot/Picross e5 (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Picross e6 (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e6 (USA) (eShop)/Picross e6 (USA) (eShop).json
+developer: Jupiter Corporation
+publisher: Jupiter Corporation
+genre: Puzzle
+description:
+  The 6th game in the Picross e series! Packed with over 300 puzzles!
+  .
+  The 6th game in the Picross e series, with a Navigation Feature!
+  .
+  -New to this title, each puzzle can be played in either Picross or Mega Picross
+  mode!
+  .
+  -Enjoy over 300 puzzles, including special puzzles.
+  .
+  -You can also choose the fill animation for the puzzle screen.
+  .
+  Picross is a "Picture Crossword Puzzle Game" where numbers act as hints to
+  complete images.
+  .
+  The rules are simple and easy to grasp. Anyone can do it!
+release: 2015-08-06
+players: 1
+assets.boxfront: BoxFront/Picross e6 (USA) (eShop).jpg
+assets.boxback: BoxBack/Picross e6 (USA) (eShop).jpg
+assets.background: Background/Picross e6 (USA) (eShop).jpg
+assets.screenshot: Screenshot/Picross e6 (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Picross e7 (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Picross e7 (USA) (eShop)/Picross e7 (USA) (eShop).json
+developer: Jupiter Corporation
+publisher: Jupiter Corporation
+genre: Puzzle
+description:
+  The 7th game in the Picross e series, with a Navigation Feature!
+  .
+  The first game with 20x15-size Mega Picross puzzles.
+  .
+  The new Mark function lets you leave indicators on squares you aren't sure
+  about, without risking a penalty.
+  .
+  Also, new Switch stylus controls allow you to switch input modes just by
+  pressing the Circle Pad or +Control Pad once!
+  .
+  Picross is a "Picture Crossword Puzzle Game" where numbers act as hints to
+  complete images.
+  .
+  The rules are simple and easy to grasp. Anyone can do it!
+release: 2016-12-15
+players: 1
+assets.boxfront: BoxFront/Picross e7 (USA) (eShop).jpg
+assets.boxback: BoxBack/Picross e7 (USA) (eShop).jpg
+assets.background: Background/Picross e7 (USA) (eShop).jpg
+assets.screenshot: Screenshot/Picross e7 (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Pixel Paint (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pixel Paint (USA) (eShop)/Pixel Paint (USA) (eShop).json
+developer: Aury Glenz
+publisher: Two Kernel Connection
+genre: Miscellaneous;Application
+description:
+  Create retro pixel art using the Wii U Gamepad and share with the world!
+  .
+  .
+  Create your very own pixel art with Pixel Paint! Pixel art is a picture created
+  pixel by pixel - think retro games, and a good portion of current indie games.
+  Base your creation off an old game, or create something entirely new! Pixel
+  Paint includes tools to make it easy:
+  .
+  .
+  -Color palettes of some of the biggest retro systems
+  .
+  -Change brush size and shape
+  .
+  -Cut/copy/paste
+  .
+  -Color picker, fill color, and replace color
+  .
+  .
+  All of that is wrapped up in an intuitive control scheme that makes creation
+  easy. When your pixel art is complete, share it with the world by posting to
+  Miiverse!
+release: 2014-10-30
+players: 1
+assets.boxfront: BoxFront/Pixel Paint (USA) (eShop).jpg
+assets.boxback: BoxBack/Pixel Paint (USA) (eShop).jpg
+assets.background: Background/Pixel Paint (USA) (eShop).jpg
+assets.screenshot: Screenshot/Pixel Paint (USA) (eShop).jpg
+x-co-op: No
+
+
+game: PixelMaker Studio (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/PixelMaker Studio (USA) (eShop)/PixelMaker Studio (USA) (eShop).json
+developer: Nostatic Software
+publisher: Nostatic Software
+genre: Miscellaneous;Application
+description:
+  PixelMaker Studio - imagine, draw, and animate your own pixel art creations!
+  .
+  .
+  PixelMaker Studio is a drawing program designed specifically for making pixel
+  art images, animations and tile-based scenes!
+  .
+  .
+  Using easy to use tools on your Wii U GamePad, you can design images as simple
+  or as complex as you like. Experiment, and create characters and scenes based on
+  your favorite classic video games, or draw straight out of your own imagination!
+release: 2018-11-29
+players: 1
+assets.boxfront: BoxFront/PixelMaker Studio (USA) (eShop).jpg
+assets.boxback: BoxBack/PixelMaker Studio (USA) (eShop).jpg
+assets.background: Background/PixelMaker Studio (USA) (eShop).jpg
+assets.screenshot: Screenshot/PixelMaker Studio (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Pocket Card Jockey (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pocket Card Jockey (USA) (eShop)/Pocket Card Jockey (USA) (eShop).json
+developer: Game Freak
+publisher: Nintendo
+genre: Action;Puzzle
+description:
+  Pocket Card Jockey is a unique crossbreed of a game that combines the thrill of
+  horse racing with the classic card game solitaire. Play solitaire to speed
+  through the races and go for 1st place! The more you race, the more horses
+  you're bound to come across, some of which can be rather striking! If you want
+  to live up to your sponsors' expectations, you'll need to ride your horses to
+  the top and take first place in all 20 of the highest-ranked G1 races!
+release: 2013-07-31
+players: 1
+assets.boxfront: BoxFront/Pocket Card Jockey (USA) (eShop).jpg
+assets.boxback: BoxBack/Pocket Card Jockey (USA) (eShop).jpg
+assets.background: Background/Pocket Card Jockey (USA) (eShop).jpg
+assets.screenshot: Screenshot/Pocket Card Jockey (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Pokemon Bank (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pokemon Bank (World) (eShop)/Pokemon Bank (World) (eShop).json
+developer: Game Freak
+publisher: Nintendo
+genre: Life Simulation
+description:
+  Pokémon Bank is an application and paid service with an annual fee of US $4.99
+  (CA $7.09) that will allow you to deposit, store, and manage up to 3,000 of your
+  Pokémon in private Boxes on the Internet! It will be a powerful resource for
+  players who like to obtain many different kinds of Pokémon, or for those who
+  like to raise many Pokémon in preparation for battles and competitions! Pokémon
+  Bank also makes it easy to transfer Pokémon from copies of Pokémon Sun, Pokémon
+  Moon, Pokémon X, Pokémon Y, Pokémon Omega Ruby and Pokémon Alpha Sapphire -
+  including the downloadable versions - to a single game! When you download
+  Pokémon Bank, you can also download the free linked application Poké
+  Transporter!
+release: 2014-02-04
+players: 1
+assets.boxfront: BoxFront/Pokemon Bank (World) (eShop).jpg
+assets.boxback: BoxBack/Pokemon Bank (World) (eShop).jpg
+assets.background: Background/Pokemon Bank (World) (eShop).jpg
+assets.screenshot: Screenshot/Pokemon Bank (World) (eShop).jpg
+x-co-op: No
+
+
+game: Pokemon Battle Trozei (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pokemon Battle Trozei (World) (eShop)/Pokemon Battle Trozei (World) (eShop).json
+developer: Genius Sonority
+publisher: Nintendo
+genre: Puzzle
+description:
+  Pokémon Battle Trozei is a Nintendo 3DS game where players battle Pokémon to
+  capture them through fast-paced puzzles. When you catch a wild Pokémon, it is
+  called a Trozei. Your goal in this game is to Trozei every last Pokémon.
+  .
+  In Pokémon Battle Trozei, you must make matches of the same Pokémon from among
+  all the many Pokémon that fill your Trozei Box - the large field of Pokémon on
+  the lower screen. The Pokémon that appears on the top screen is the wild Pokémon
+  that you are facing in battle. Line up three Pokémon in a row to clear your
+  Pokémon from the box, and to attack and reduce the HP of the wild Pokémon that
+  you face. When its HP reaches zero, you will be able to Trozei that Pokémon!
+  .
+  As time passes, the wild Pokémon will also lash out to attack you in return.
+  When you’re attacked by a wild Pokémon, the Trozei Box will lose some of its
+  energy. The wild Pokémon you face may even try to get in your way! If the Trozei
+  Box’s energy reaches zero, it’s game over.
+release: 2014-03-12
+players: 4
+assets.boxfront: BoxFront/Pokemon Battle Trozei (World) (eShop).jpg
+assets.boxback: BoxBack/Pokemon Battle Trozei (World) (eShop).jpg
+assets.background: Background/Pokemon Battle Trozei (World) (eShop).jpg
+assets.screenshot: Screenshot/Pokemon Battle Trozei (World) (eShop).jpg
+x-co-op: Yes
+
+
+game: Pokemon Dream Radar (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pokemon Dream Radar (World) (eShop)/Pokemon Dream Radar (World) (eShop).json
+developer: Creatures, Inc.
+publisher: Nintendo
+genre: Shooter
+description:
+  Pokemon Dream Radar is a downloadable Nintendo 3DS game that was released on the
+  same date as Pokemon Black 2 and White 2 in all regions. Making use of the
+  augmented reality technology of the 3DS, Pokemon Dream Radar is a shooting game
+  that provides an alternate method for obtaining a particular group of Pokemon
+  with their hidden abilities. This guide provides an overview of how to play the
+  game and what you can gain from playing it.
+release: 2012-10-07
+players: 1
+assets.boxfront: BoxFront/Pokemon Dream Radar (World) (eShop).jpg
+assets.boxback: BoxBack/Pokemon Dream Radar (World) (eShop).jpg
+assets.background: Background/Pokemon Dream Radar (World) (eShop).jpg
+assets.screenshot: Screenshot/Pokemon Dream Radar (World) (eShop).jpg
+x-co-op: No
+
+
+game: Pokemon Picross (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pokemon Picross (World) (eShop)/Pokemon Picross (World) (eShop).json
+developer: Jupiter Corporation
+publisher: Nintendo
+genre: Puzzle
+description:
+  This entry in Nintendo's Picross series has players solve the eponymous puzzles,
+  also called nonograms, to form an image of an object or creature from the
+  Pokémon universe. The usual rules of picross apply, but are also supplemented by
+  the special abilities of the Pokémon available within this game. Every time a
+  puzzle is completed, its corresponding Pokémon is captured and can be used in
+  subsequent puzzles to provide special powers, including automatically fixing the
+  first few mistakes the player makes, revealing several squares when the puzzle
+  starts, and hinting at which row to work on next.
+  .
+  Picrites are a form of currency introduced in the game. With them, players can
+  unlock new areas, increase the number of support Pokémon they can use per
+  puzzle, and bypass the cooldown times assigned to Pokémon abilities. An energy
+  meter limits the number of squares a player can fill in before they need to take
+  a break, and Picrites can be used to fill the meter, increase the max energy,
+  and eventually remove the meter entirely. Although Picrites can be earned for
+  free by finishing the daily training mode, earning achivements, and solving the
+  main puzzles, additional Picrites can be purchased through the Nintendo eShop.
+  There is a purchase limit of 5000 Picrites, at which point no more money can be
+  spent on the game, and additional Picrites can then be obtained for free in
+  batches of 1000 at a time.
+  .
+  There are over 600 puzzles in the game. The basic, main set of puzzles is
+  grouped into several different areas that can be traveled to.Sometimes, the
+  player can earn a mural piece by completing a main puzzle under specific
+  circumstances, which will unlock a new mural puzzle. These puzzles don't cost
+  any stamina to play, but support Pokémon cannot be used on them, and they do not
+  award any Picrites. However, full completion of a mural board will unlock Primal
+  Groudon or Primal Kyogre. Lastly, every main puzzle has a Mega Picross variant
+  with more difficult clues to work out.
+release: 2015-12-03
+players: 1
+assets.boxfront: BoxFront/Pokemon Picross (World) (eShop).jpg
+assets.boxback: BoxBack/Pokemon Picross (World) (eShop).jpg
+assets.background: Background/Pokemon Picross (World) (eShop).jpg
+assets.screenshot: Screenshot/Pokemon Picross (World) (eShop).jpg
+x-co-op: No
+
+
+game: Pokemon Rumble World (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pokemon Rumble World (World) (eShop)/Pokemon Rumble World (World) (eShop).json
+developer: Ambrella
+publisher: Nintendo
+genre: Adventure;Role-Playing
+description:
+  Control cute Toy Pokémon and have exhilarating battles in Pokémon Rumble World!
+  This downloadable game for systems in the Nintendo 3DS family is packed with
+  Pokémon that you can battle and befriend. You can collect 719 species of
+  Pokémon: all the ones that have appeared in the video games up through Pokémon
+  Omega Ruby and Pokémon Alpha Sapphire. When you defeat one of the wild Pokémon
+  you meet in a stage, it sometimes becomes your friend. Even Mega-Evolving
+  Pokémon will join the battles, a first for a game in the Pokémon Rumble series!
+  .
+  .
+  .
+  Befriend as many Pokémon as you can: as you collect more species of Pokémon,
+  your Adventurer Rank goes up. As your Adventurer Rank goes up, the shop will
+  offer more products, and stages will feature stronger Pokémon.
+  .
+  .
+  .
+  It's not just Pokémon that will appear in Pokémon Rumble World. Your Mii
+  character will also appear in your game, as well as the Mii characters of
+  players you pass! It's the first time in the Pokémon Rumble series that Mii
+  characters have joined in to interact with Pokémon and have adventures together.
+  .
+  .
+  .
+  Your story is set in the kingdom of toys, and the adventure starts when the king
+  summons you. He explains his frustration at having only one Pikachu. In
+  contrast, a mysterious magician has captured several Pokémon! So the king asks
+  you to show that magician a thing or two by collecting lots more Pokémon, and he
+  lends you his Pikachu to get you started on your adventures. Depart from the
+  castle town via a hot-air balloon to get to different areas where wild Toy
+  Pokémon await!
+  .
+  .
+  .
+  It's fun to connect with other friends playing Pokémon Rumble World. Players can
+  visit your castle town via StreetPass. Connect your Nintendo 3DS system to the
+  Internet, and Mii characters of faraway players will visit you. They can even
+  provide support for you in future battles in a variety of ways.
+  .
+  .
+  .
+  Poke Diamonds are meant to make your adventures even more exciting and easy.
+  With Poke Diamonds, you can get hot-air balloons, clothes for your Mii
+  character, extras that provide more fun in your game play, and more. In
+  addition, Poke Diamonds can be used to continue playing in a stage after your
+  Pokémon's HP runs out, as well as to re-inflate hot-air balloons that have
+  become deflated after use. You can acquire them in various ways, including at
+  the beginning of the adventure and when you speak to Mii characters who come to
+  the castle town via StreetPass. You can also purchase Poke Diamonds at the shop
+  in the castle town via Nintendo eShop.
+release: 2015-04-08
+players: 1
+assets.boxfront: BoxFront/Pokemon Rumble World (World) (eShop).jpg
+assets.boxback: BoxBack/Pokemon Rumble World (World) (eShop).jpg
+assets.background: Background/Pokemon Rumble World (World) (eShop).jpg
+assets.screenshot: Screenshot/Pokemon Rumble World (World) (eShop).jpg
+x-co-op: No
+
+
+game: Pokemon Shuffle (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pokemon Shuffle (World) (eShop)/Pokemon Shuffle (World) (eShop).json
+developer: Genius Sonority
+publisher: Nintendo
+genre: Puzzle
+description:
+  Pokemon Shuffle is a Pokemon game available now for the Nintendo 3DS family of
+  systems. In Pokemon Shuffle, your goal is to clear various stages by lining up
+  the same Pokemon and clearing these matches from the puzzle area. Within each
+  puzzle stage, you can deal damage to the wild Pokemon you face by lining up
+  three of the same Pokemon to clear them. Battle and try to catch the Pokemon
+  before you run out of moves!
+release: 2015-02-18
+players: 1
+assets.boxfront: BoxFront/Pokemon Shuffle (World) (eShop).jpg
+assets.boxback: BoxBack/Pokemon Shuffle (World) (eShop).jpg
+assets.background: Background/Pokemon Shuffle (World) (eShop).jpg
+assets.screenshot: Screenshot/Pokemon Shuffle (World) (eShop).jpg
+x-co-op: No
+
+
+game: Pushmo (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Pushmo (USA) (eShop)/Pushmo (USA) (eShop).json
+developer: Intelligent Systems
+publisher: Nintendo
+genre: Puzzle
+description:
+  A kindly old inventor created a park and filled it with incredible puzzle-like
+  climbing toys called Pushmo. But a little trickster has trapped kids inside the
+  Pushmo, and now it’s up to our hero, Mallo, to push, pull and climb his way
+  through the puzzling playground to save his friends! The Pushmo game features
+  more than 250 fun and challenging puzzles. As you solve them, you’ll discover
+  new gadgets that will add to the challenge. Complete certain sets of Pushmo to
+  open additional game features, such as Pushmo Studio, which lets you create,
+  play and even share your very own Pushmo puzzle creations. With adorable
+  characters, charming 3D graphics and endless replay value, Pushmo offers fun for
+  puzzle fans of all ages.
+release: 2011-10-05
+players: 1
+assets.boxfront: BoxFront/Pushmo (USA) (eShop).jpg
+assets.boxback: BoxBack/Pushmo (USA) (eShop).jpg
+assets.background: Background/Pushmo (USA) (eShop).jpg
+assets.screenshot: Screenshot/Pushmo (USA) (eShop).jpg
+x-co-op: No
+
+
+game: RPGMaker Fes Player (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/RPGMaker Fes Player (USA) (eShop)/RPGMaker Fes Player (USA) (eShop).json
+developer: Jupiter Corporation
+publisher: NIS America
+genre: Role-Playing;General
+description:
+  Download and play RPG games created by the amazing and imaginative users of RPG
+  Maker Fes.
+release: 2016-11-24
+players: 1
+assets.boxfront: BoxFront/RPGMaker Fes Player (USA) (eShop).jpg
+assets.boxback: BoxBack/RPGMaker Fes Player (USA) (eShop).jpg
+assets.background: Background/RPGMaker Fes Player (USA) (eShop).jpg
+assets.screenshot: Screenshot/RPGMaker Fes Player (USA) (eShop).jpg
+x-co-op: No
+
+
+game: River City - Knights of Justice (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/River City - Knights of Justice (USA) (eShop)/River City - Knights of Justice (USA) (eShop).json
+developer: Avit-Niigata
+publisher: Natsume
+genre: Role-Playing;Japanese-Style
+description:
+  The magical land of Riverandia is in a state of turmoil!
+  .
+  .
+  Several years have passed since the rainbow-colored Crystal Tower was suddenly
+  enveloped in darkness. With the world plunged into horror and chaos, a legend
+  began to spread amongst the people about a savior who would come to save the
+  world. Then, one day, a lone knight appeared. His name: Alexander Valford.
+  .
+  .
+  Kunio and his friends go medieval in River City: Knights of Justice! This unique
+  entry to the River City series sees Kunio and his friends and foes transformed
+  into heroes and villains that would be at home in any RPG! Use swords, staves,
+  and even magic to bring peace back to Riverandia!
+  .
+  .
+  Featuring:
+  .
+  .
+  - Multiple Allies!
+  .
+  - Over 100 Quests!
+  .
+  - Multiple Story Paths!
+release: 2014-04-30
+players: 1
+assets.boxfront: BoxFront/River City - Knights of Justice (USA) (eShop).jpg
+assets.boxback: BoxBack/River City - Knights of Justice (USA) (eShop).jpg
+assets.background: Background/River City - Knights of Justice (USA) (eShop).jpg
+assets.screenshot: Screenshot/River City - Knights of Justice (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Runny Egg (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Runny Egg (USA) (eShop)/Runny Egg (USA) (eShop).json
+developer: Tom Create
+publisher: Tom Create
+genre: Action;Platformer;2D
+description:
+  Run through a course as an egg while avoiding obstacles to keep your shell
+  intact and reach the egg stand!
+  .
+  .
+  Take control of an egg with legs and run as fast as you can through a course
+  littered with dangers to reach the egg stand at the end! Duck and dodge your way
+  through each stage, avoiding collisions that will damage and eventually break
+  your shell and spoil the egg! Reach the goal as quickly as possible and without
+  breaking the egg's shell!
+  .
+  .
+  Earn Egg Points for making it through each stage and extra points for
+  accomplishing a task. Use your Egg Points to enhance your egg's HP, Speed and
+  Shell.
+  .
+  .
+  Collect the chicks scattered throughout each stage to increase your rate of
+  hatching. Getting 100 chicks will hatch your egg, making you invincible for a
+  short period of time!
+release: 2015-04-09
+players: 1
+assets.boxfront: BoxFront/Runny Egg (USA) (eShop).jpg
+assets.boxback: BoxBack/Runny Egg (USA) (eShop).jpg
+assets.background: Background/Runny Egg (USA) (eShop).jpg
+assets.screenshot: Screenshot/Runny Egg (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Rusty's Real Deal Baseball (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Rusty's Real Deal Baseball (USA) (eShop)/Rusty's Real Deal Baseball (USA) (eShop).json
+developer: Nintendo SDD Software Development Group
+publisher: Nintendo
+genre: Sports
+description:
+  Feel the crack of the bat in a collection of baseball-themed minigames!
+  .
+  Then, take a breather and haggle with hilarious ol’ Rusty to lower the real-life
+  Nintendo eShop* price of additional batting, pitching, and fielding minigames,
+  plus a whole lot more!
+  .
+  Knock it out of the park in a series of baseball-themed minigames that will have
+  you swinging at disappearing fastballs, bringing down UFOs with the help of some
+  rubber tires, or even becoming an umpire and ringing up batters. But before you
+  play ball, you’ll have to haggle with that miserable mutt, ex-pro baseball
+  player Rusty Slugger, to lower the actual Nintendo eShop* purchase price of each
+  minigame! Don’t worry, you can use weird in-game items like donuts and nose hair
+  trimmers (that’s not a typo) to help you get the lowest price possible.
+  .
+  Hit, catch, toss, and more in individually priced baseball-themed challenges\n
+  Haggle with Rusty Slugger to lower the real-life price of each minigame\n
+  Use discount tickets and in-game items to lower prices\n
+  Share your high score achievements via the StreetPass™ feature\n
+  In-game content available for purchase using stored account funds.
+  .
+  *Broadband Internet access. For more info, go to support.nintendo.com.
+release: 2014-04-03
+players: 1
+assets.boxfront: BoxFront/Rusty's Real Deal Baseball (USA) (eShop).jpg
+assets.boxback: BoxBack/Rusty's Real Deal Baseball (USA) (eShop).jpg
+assets.background: Background/Rusty's Real Deal Baseball (USA) (eShop).jpg
+assets.screenshot: Screenshot/Rusty's Real Deal Baseball (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Sadame (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Sadame (USA) (eShop)/Sadame (USA) (eShop).json
+developer: Mebius
+publisher: Rising Star Games
+genre: Role-Playing;Action RPG
+description:
+  Hack and slash your way through an invading army of Japanese Yokai monsters
+  taking over the nation.
+  .
+  .
+  Choose the role of a Samurai, Ninja, Monk or Rogue and confront an invasion of
+  Japanese traditional Yokai taking over the nation. Hack and slash your way
+  through an army of monsters using Swordsmanship, Ninjitsu, pole sword, bow, and
+  supernatural powers. Enhance your skills by defeating waves of enemies and
+  slaying evil bosses lying in wait.
+  .
+  .
+  Level up and customize your hero to take on tougher foes and learn new combo
+  skills for devasting attacks. Unselected heroes will support you as an Assist -
+  or you can send them to Assist other players via StreetPass! Hack your way
+  through 23 stages based on Japanese historic battles across four chapters, all
+  beautifully hand-drawn using classic 2D Japanese art style.
+release: 2014-12-17
+players: 1
+assets.boxfront: BoxFront/Sadame (USA) (eShop).jpg
+assets.boxback: BoxBack/Sadame (USA) (eShop).jpg
+assets.background: Background/Sadame (USA) (eShop).jpg
+assets.screenshot: Screenshot/Sadame (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Sakura Samurai - Art of the Sword (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Sakura Samurai - Art of the Sword (USA) (eShop)/Sakura Samurai - Art of the Sword (USA) (eShop).json
+developer: Grounding Inc.
+publisher: Nintendo
+genre: Action
+description:
+  Leave button mashing behind. Sakura Samurai: Art of the Sword is about precision
+  swordplay, battlefield finesse, and martial-arts style.
+  .
+  As the heroic title character, you’ll travel a world rife with cherry-blossom
+  beauty—and deadly danger—to rescue the legendary Princess Cherry Blossom. Her
+  kidnapper has set dozens of blade-wielding henchmen in your path, and you’ll
+  have to exercise your best battle senses to defeat them and save her. Learn to
+  predict your foes’ moves, deftly dodge their attacks, and create opportunities
+  for devastating counterattacks.
+  .
+  Start with the Sakura Sword, a little health, and some basic training from your
+  water-spirit guide. Make your way from battleground to battleground fighting
+  wave after wave of increasingly cunning enemies. Fight through huge castles to
+  duel epic bosses. And don’t forget to stop at small villages along the way to
+  get help, gear, encouragement (and distraction) from the quirky townsfolk.
+  .
+  Prove that you truly are the Sakura Samurai!
+release: 2012-02-02
+players: 1
+assets.boxfront: BoxFront/Sakura Samurai - Art of the Sword (USA) (eShop).jpg
+assets.boxback: BoxBack/Sakura Samurai - Art of the Sword (USA) (eShop).jpg
+assets.background: Background/Sakura Samurai - Art of the Sword (USA) (eShop).jpg
+assets.screenshot: Screenshot/Sakura Samurai - Art of the Sword (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Save Data Transfer Tool (World) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Save Data Transfer Tool (World) (eShop)/Save Data Transfer Tool (World) (eShop).json
+developer: Nintendo
+publisher: Nintendo
+genre: Tool
+description:
+  The Save Data Transfer Tool (©2013 Nintendo) is free Nintendo 3DS software
+  released on the Nintendo eShop on March 26, 2013 in North America and March
+  28, 2013 in Europe.
+  .
+  It allows the player to transfer Nintendo 3DS Game Card save data to digital
+  version save data stored on an SD Card. Once the save data is transferred it
+  cannot be sent back.
+release: 2013-03-26
+players: 1
+assets.boxfront: BoxFront/Save Data Transfer Tool (World) (eShop).jpg
+assets.boxback: BoxBack/Save Data Transfer Tool (World) (eShop).jpg
+assets.background: Background/Save Data Transfer Tool (World) (eShop).jpg
+assets.screenshot: Screenshot/Save Data Transfer Tool (World) (eShop).jpg
+x-co-op: No
+
+
+game: Senran Kagura Burst (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Senran Kagura Burst (USA) (eShop)/Senran Kagura Burst (USA) (eShop).json
+developer: Tamsoft
+publisher: XSEED Games
+genre: Action;Beat-'Em-Up;2D
+description:
+  A little violent, a little sexy, and a ton of fun!
+  .
+  Enter a world filled with beautiful ninja destined to break down the barriers
+  between good and evil.
+  .
+  Play two different storylines, each with its own perspective. The girls of Hanzo
+  believe they fight on the side of righteousness, but are their methods always
+  right? The girls of Hebijo are mercenaries to the highest bidders, but what if
+  their motives aren't as clear as they seem?
+  .
+  * Crush your enemies with your favorite buxom ninja girl using fast punches,
+  mid-air flight sequences, combos, super attacks, revealing cut-scenes and sexy
+  Ninja Arts.
+  .
+  * Dozens of costumes expose endless combinations!
+  .
+  * Choose from 72 different costume sets such as school uniforms, swimsuits and
+  ninja gear, along with hairstyles that can be changed, mixed and matched to
+  provide an endless array of looks.
+release: 2013-11-14
+players: 1
+assets.boxfront: BoxFront/Senran Kagura Burst (USA) (eShop).jpg
+assets.boxback: BoxBack/Senran Kagura Burst (USA) (eShop).jpg
+assets.background: Background/Senran Kagura Burst (USA) (eShop).jpg
+assets.screenshot: Screenshot/Senran Kagura Burst (USA) (eShop).jpg
+assets.video: Video/Senran Kagura Burst (USA) (eShop).mp4
+x-co-op: No
+
+
+game: Severed (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Severed (USA) (eShop)/Severed (USA) (eShop).json
+developer: DrinkBox Studios
+publisher: DrinkBox Studios
+genre: Action Adventure;General
+description:
+  Severed follows the saga of a distraught warrior, who is lost in a fantastical
+  world, as she knits together pieces of her story from both the past and the
+  future. As the heroine, players will embark on a journey through a surreal,
+  nonlinear world by using a gesture-based combat mechanic to defeat enemies in
+  this first-person adventure. During their journey, players will unlock new
+  abilities, discover secrets of the land, and grow in power as they master both
+  offensive and defensive techniques.
+release: 2016-10-13
+players: 1
+assets.boxfront: BoxFront/Severed (USA) (eShop).jpg
+assets.boxback: BoxBack/Severed (USA) (eShop).jpg
+assets.background: Background/Severed (USA) (eShop).jpg
+assets.screenshot: Screenshot/Severed (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Silver Falls - 3 Down Stars (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Silver Falls - 3 Down Stars (USA) (eShop)/Silver Falls - 3 Down Stars (USA) (eShop).json
+developer: Sungrand
+publisher: Sungrand
+genre: Action Adventure;Survival
+description:
+  Survival Horror has a new home.
+  .
+  Strange lights have been appearing in the night sky above Silver Falls. When
+  three mysterious objects fall from the sky, this secluded, sleepy town becomes
+  frozen in a moment in time. Strange radiation has turned local wildlife
+  bloodthirsty. Only 3 people in Silver Falls seem to be unaffected. Holt, a
+  composer mourning the death of his grandfather with a fishing trip, Analise, an
+  organizer for the annual Moose Steak Festival, and Moss, the local sheriff
+  investigating reports of strange lights in the sky, must work together to figure
+  out exactly what is going wrong in their town. Why are they being attacked by
+  wildlife? Why has time seem to have stopped? Using their wits and resources
+  scavenged around Silver Falls, these three survivors must discover the mystery
+  behind the three objects and return their town to normal.
+  .
+  Silver Falls offers a suspenseful, tensely paced Storyline Campaign for players
+  looking for a classic, survival horror challenge. When players want to flex some
+  muscle, the Frontier Fighters game mode features RPG style loot collecting,
+  leveling up, skill customization, and weapon upgrading. This game mode allows
+  the player to play short missions of varying difficulty. These action focused
+  missions let players enjoy short bursts of action for gaming on the go. With a
+  variety of playable characters to unlock, each with unique strengths and skills,
+  players will find hours of thrilling action, fighting back waves of enemies,
+  unlocking more missions, earning unique, legendary weapons, and powering up
+  characters in Frontier Fighters.
+release: 2020-01-02
+players: 1
+assets.boxfront: BoxFront/Silver Falls - 3 Down Stars (USA) (eShop).jpg
+assets.boxback: BoxBack/Silver Falls - 3 Down Stars (USA) (eShop).jpg
+assets.background: Background/Silver Falls - 3 Down Stars (USA) (eShop).jpg
+assets.screenshot: Screenshot/Silver Falls - 3 Down Stars (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Silver Falls - Gaiden - Deathly Delusion Destroyers (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Silver Falls - Gaiden - Deathly Delusion Destroyers (USA) (eShop)/Silver Falls - Gaiden - Deathly Delusion Destroyers (USA) (eShop).json
+developer: Sungrand
+publisher: Sungrand
+genre: Role-Playing;General
+description:
+  People have been going missing recently in the forests surrounding a quiet
+  mountain town. Hikers, hunters, and fishers from out of town seem unaware
+  of something sinister lurking in the shadows of Silver Falls. Gus Ironcock
+  is a contented delivery driver whose world is turned upside down when the
+  most important person in his life becomes one of the numbers of people
+  who have disappeared into the forest.
+  .
+  Gaiden Deathly Delusion Destroyers is a Battle RPG in which players can
+  enjoy a deeply complex character customization and battle system without
+  getting lost in a massive environment to traverse and explore. Story events
+  take place after completing missions, ensuring players don’t get lost even
+  if they’ve taken a break in between play sessions.
+  .
+  TWO games in one, Gaiden Deathly Delusion Destroyers comes packaged with
+  Ruby River.
+release: 2023-03-09
+players: 1
+assets.boxfront: BoxFront/Silver Falls - Gaiden - Deathly Delusion Destroyers (USA) (eShop).jpg
+assets.boxback: BoxBack/Silver Falls - Gaiden - Deathly Delusion Destroyers (USA) (eShop).jpg
+assets.background: Background/Silver Falls - Gaiden - Deathly Delusion Destroyers (USA) (eShop).jpg
+assets.screenshot: Screenshot/Silver Falls - Gaiden - Deathly Delusion Destroyers (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Silver Falls - Guardians and Metal Exterminators (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Silver Falls - Guardians and Metal Exterminators (USA) (eShop)/Silver Falls - Guardians and Metal Exterminators (USA) (eShop).json
+developer: Sungrand
+publisher: Sungrand
+genre: Action;General
+description:
+  In the 1980s, the sky was colored by neon lights and the air smelled like
+  hairspray. A hardworking ranch hand, Oxa Boscova, and a daydreaming
+  carpenter, Gold Prospector, meet up for a blind date. Things seem fine
+  until Oxa sees a distant explosion on the ranch where she works. When
+  Oxa runs toward a bright light in the sky, Gold follows close behind.
+  This ordinary date is about to become a terrifying fight for survival!
+  .
+  The next heart-stopping chapter in the story of Silver Falls introduces
+  new gameplay elements never before seen in the series! Play as a
+  variety of unique, quirky characters from across the Silver Falls series.
+  Take on a variety of missions with a range of challenges to earn
+  powerful weapons and skills. Customize your weapons, power up your
+  characters, and chill to the vibe of totally sick 80s beats.
+  .
+  knuckle-busting action of Liquid Crystal Display intensity! In these
+  exclusive LCD modes, play as Oxa and use her unbreakable Cryo Shield
+  to deflect attacks and defeat enemies. OR, play as Gold and use his
+  unstoppable Electro Blaster to pierce the hearts of your foes while
+  taking evasive actions.
+  .
+  Unlock horrendous creatures as playable characters! Power up,
+  customize, and slash your way through missions with a unique set of
+  monstrous abilities and skills!
+release: 2022-09-15
+players: 1
+assets.boxfront: BoxFront/Silver Falls - Guardians and Metal Exterminators (USA) (eShop).jpg
+assets.boxback: BoxBack/Silver Falls - Guardians and Metal Exterminators (USA) (eShop).jpg
+assets.background: Background/Silver Falls - Guardians and Metal Exterminators (USA) (eShop).jpg
+assets.screenshot: Screenshot/Silver Falls - Guardians and Metal Exterminators (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Silver Falls - Undertakers (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Silver Falls - Undertakers (USA) (eShop)/Silver Falls - Undertakers (USA) (eShop).json
+developer: Sungrand
+publisher: Sungrand
+genre: Action Adventure;Survival
+description:
+  Back in the 70's, something suspicious happened in a small mountain town. Along
+  with reports of people going missing, corpses of mutilated animals were found
+  scattered all within a single property in Silver Falls. Join Bull Brandish, a 14
+  year old boy, as he goes camping on his grandfather's property. When an
+  explosion lights up the night sky, Bull sets out into the darkness of night to
+  investigate. It doesn't take long before Bull discovers the terror of the
+  Undertakers, enormous, bloodthirsty monsters which are abducting children and
+  burying them deep under the ground. How can Bull possibly convince the adults in
+  town that monsters are real? Will he have to stop the Undertakers all on his
+  own?
+  .
+  .
+  Enjoy a trip back to a simpler time with this retro game experience. Explore
+  Silver Falls in the open world Game A story mode. Dive into the lore and history
+  of this mysterious town and meet colourful characters.
+  .
+  Dive into Game B to fight back hordes of Undertakers with a wide range of
+  weapons. Use traps, campfires, and more, while searching for Comic Book pages to
+  power up your group of characters. This action packed mode will let players take
+  on battles while playing as a variety of characters.
+  .
+  .
+  Add new playable characters to Game B by connecting to other Silver Falls
+  titles! Discover surprises with new playable characters and features by
+  completing Game A.
+  .
+  .
+  Add new content to other Silver Falls titles by connecting to Silver Falls -
+  Undertakers. Continue Bull Brandish's story and join him on new adventures in
+  other Silver Falls titles!
+release: 2021-01-14
+players: 1
+assets.boxfront: BoxFront/Silver Falls - Undertakers (USA) (eShop).jpg
+assets.boxback: BoxBack/Silver Falls - Undertakers (USA) (eShop).jpg
+assets.background: Background/Silver Falls - Undertakers (USA) (eShop).jpg
+assets.screenshot: Screenshot/Silver Falls - Undertakers (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Smash Controller (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Smash Controller (USA) (eShop)/Smash Controller (USA) (eShop).json
+developer: Nintendo
+publisher: Nintendo
+genre: Miscellaneous;Application
+description:
+  This application is intended for use by consumers who own the Super Smash Bros.
+  for Wii U game and want to expand their controller options by using a Nintendo
+  3DS family system as a controller even without owning the handheld version of
+  the game. This application includes the same capability that is included in the
+  Super Smash Bros. for Nintendo 3DS game. Simply purchase and download the Smash
+  Controller application from the Nintendo eShop to your Nintendo 3DS system and
+  get ready for battle!
+release: 2015-06-14
+players: 1
+assets.boxfront: BoxFront/Smash Controller (USA) (eShop).jpg
+assets.boxback: BoxBack/Smash Controller (USA) (eShop).jpg
+assets.background: Background/Smash Controller (USA) (eShop).jpg
+assets.screenshot: Screenshot/Smash Controller (USA) (eShop).jpg
+x-co-op: No
+
+
+game: SmileBASIC (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/SmileBASIC (USA) (eShop)/SmileBASIC (USA) (eShop).json
+developer: SmileBoom
+publisher: SmileBoom
+genre: Miscellaneous;Edutainment
+description:
+  Let's play in programming! Create, Pop-up and Carry around!
+  .
+  .
+  SmileBASIC is a portable version of a programming language known as BASIC.
+  .
+  .
+  BASIC is a programming language designed to help beginners learn to program.
+  .
+  .
+  As soon as you start SmileBASIC, you can begin programming! When you're
+  finished, you can play the game you made! Enjoy intuitive, trouble-free
+  programming.
+  .
+  .
+  A Range of Versatile Instructions:
+  .
+  -Pictures and words that "pop out" from the screen!
+  .
+  -Information obtained from various different sensors
+  .
+  -Voice input and playback via the microphone
+  .
+  -Versus play using local wireless communication
+  .
+  -Draw instructions for lines and circles, filling, and more
+  .
+  -Music composition using MML
+  .
+  .
+  Useful Tools:
+  .
+  -SMILE Tool (for checking SE and character numbers)
+  .
+  -Paint Tool (for drawing characters and background images)
+  .
+  -Animation Tool (for creating flipbook animations)
+  .
+  -Mapping Tool (for arranging tiles to create maps)
+  .
+  -Waveform Tool (for sampling and creating waveforms)
+  .
+  .
+  Rich Sample Library:
+  .
+  -Characters and background images that can be used in a variety of contexts
+  .
+  -Over 100 sound effects and 40 BGM tunes
+  .
+  -Simple programs for helping to learn BASIC
+  .
+  -Technical samples that allow the user to check the execution results for each
+  instruction
+  .
+  -Game samples created using advanced techniques
+release: 2014-11-19
+players: 4
+assets.boxfront: BoxFront/SmileBASIC (USA) (eShop).jpg
+assets.boxback: BoxBack/SmileBASIC (USA) (eShop).jpg
+assets.background: Background/SmileBASIC (USA) (eShop).jpg
+assets.screenshot: Screenshot/SmileBASIC (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Starship Damrey, The (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Starship Damrey, The (USA) (eShop)/Starship Damrey, The (USA) (eShop).json
+developer: Level 5
+publisher: Level 5
+genre: Adventure;General
+description:
+  THE STARSHIP DAMREY is an adventure/horror/suspense game designed by Kazuya
+  Asano (Kamaitachi no Yoru (The Night of the Sickle Weasel), TORNEKO: The Last
+  Hope) and written by Takemaru Abiko (Kamaitachi no Yoru (The Night of the Sickle
+  Weasel), TRICK X LOGIC), known as pioneers of text-based adventure games in
+  Japan. In the game, players awaken to discover that they are trapped in a Cold
+  Sleep capsule aboard the titular Starship Damrey, with no memory of who they are
+  or how they got there. With no tutorials, explanations, or hints provided, the
+  game was created with the intent that self-discovery and experimentation be an
+  integral part of the experience. An inconceivable truth awaits those willing to
+  discover it.
+release: 2013-05-16
+players: 1
+assets.boxfront: BoxFront/Starship Damrey, The (USA) (eShop).jpg
+assets.boxback: BoxBack/Starship Damrey, The (USA) (eShop).jpg
+assets.background: Background/Starship Damrey, The (USA) (eShop).jpg
+assets.screenshot: Screenshot/Starship Damrey, The (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Steel Diver Sub Wars (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Steel Diver Sub Wars (USA) (eShop)/Steel Diver Sub Wars (USA) (eShop).json
+developer: Nintendo EAD
+publisher: Nintendo of America Inc.
+genre: Vehicle Simulation
+description:
+  Battle your friends* and the world in high-tension submarine combat! Command
+  your submarine and crew either locally or over the internet** in four on four
+  team battles. Unlock new submarines by increasing your online rank or by earning
+  medals in offline single player missions. Hone your skills to perfect the art of
+  warfare and rule the seas!
+  .
+  An ocean of challenges await the nautically gifted in single player skirmishes.
+  Call in an air strike with Morse code or take on a massive fleet... all on your
+  own! As you rise in rank and status, assemble your submarine’s crew
+  strategically, as each shipmate carries unique strengths and weaknesses that
+  will alter your gameplay style. Then, give your enemies something to remember
+  you by with customizable patterns and colors for your ship. With a host of
+  unlockable submarines, crew members, ship patterns, and single player missions,
+  there’s a boatload to unlock and even more to master.
+release: 2014-02-13
+players: 1
+assets.boxfront: BoxFront/Steel Diver Sub Wars (USA) (eShop).jpg
+assets.boxback: BoxBack/Steel Diver Sub Wars (USA) (eShop).jpg
+assets.background: Background/Steel Diver Sub Wars (USA) (eShop).jpg
+assets.screenshot: Screenshot/Steel Diver Sub Wars (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Stretchmo (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Stretchmo (USA) (eShop)/Stretchmo (USA) (eShop).json
+developer: Intelligent Systems
+publisher: Nintendo
+genre: Puzzle
+description:
+  Stretch and pull blocks to guide Mallo to the goal in seven free starter
+  puzzles. Then expand this entry in the acclaimed Pushmo series by purchasing up
+  to four puzzle-filled download packs on Nintendo eShop. You can even create and
+  share your own puzzles!
+  .
+  Purchase and download any of the four main attractions to unlock the Stretchmo
+  Studio level creator, which also lets you share puzzles via QR Code patterns.
+  Mallo’s Playtime Plaza has 100 great puzzles for players of all skill levels!
+  Looking for a challenge? Then come on over to Polly’s Sculpture Square, where 50
+  animal and object puzzles await. Keep the fun going in Corin’s Fortress of Fun,
+  which packs in 50 action-packed puzzles filled with special objects, like
+  manholes and even enemies - a series first! Or head on down to Papa Blox’s NES
+  Expo to play 50 puzzles based on characters from Nintendo classics.
+release: 2015-05-12
+players: 1
+assets.boxfront: BoxFront/Stretchmo (USA) (eShop).jpg
+assets.boxback: BoxBack/Stretchmo (USA) (eShop).jpg
+assets.background: Background/Stretchmo (USA) (eShop).jpg
+assets.screenshot: Screenshot/Stretchmo (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Swapdoodle (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Swapdoodle (USA) (eShop)/Swapdoodle (USA) (eShop).json
+developer: Nintendo
+publisher: Nintendo
+genre: Miscellaneous;Application
+description:
+  The Swapdoodle game is an easy way to write messages, draw 3D pictures, and
+  share them with your Nintendo 3DS friends.
+  .
+  .
+  Swapping doodles is a snap thanks to stamps based on the icons of played titles
+  and your Mii character. You can also purchase in-game add-ons packs that have
+  doodle lessons of Nintendo characters!
+  .
+  .
+  Doodle lessons allow you to trace beloved Nintendo characters from the Super
+  Mario series, The Legend of Zelda, Splatoon, and more! With the right add-on,
+  you can also draw more doodles per note, boost your note storage to over 6000,
+  get more than 45 pen colors, and download stationaries featuring Nintendo
+  characters. Put a piece of yourself in your art by sticking on a Mii face with
+  various emotions to choose from. It's also possible to share in-game screenshots
+  with friends who also have the game and even create secret pages that are hidden
+  until your friend replies. It's always fun to see what doodles your friends are
+  swapping!
+  .
+  .
+  -Swap messages and doodles with your Nintendo 3DS friends
+  .
+  -Purchase add-ons packs to enhance your doodles and learn to doodle Nintendo
+  characters
+  .
+  -Take doodle lessons featuring characters from Splatoon, The Legend of Zelda,
+  Super Mario , and more!
+  .
+  -Draw 3D doodles on 2 layers
+  .
+  -Place a sticker of your Mii character's face with different emotions
+  .
+  -Send in-game screenshots from select titles
+release: 2016-11-17
+players: 1
+assets.boxfront: BoxFront/Swapdoodle (USA) (eShop).jpg
+assets.boxback: BoxBack/Swapdoodle (USA) (eShop).jpg
+assets.background: Background/Swapdoodle (USA) (eShop).jpg
+assets.screenshot: Screenshot/Swapdoodle (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Swapnote (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Swapnote (USA) (eShop)/Swapnote (USA) (eShop).json
+developer: Nintendo
+publisher: Nintendo
+genre: Miscellaneous;Application
+description:
+  Create handwritten 3D notes and send them to your friends! Add stationery,
+  photos, sound recordings, and more! Swapnote lets you create handwritten notes
+  and then share those notes with other Swapnote users on your friend list via the
+  SpotPass and StreetPass features. Nintendo might even send notes to you too! As
+  your note collection grows and you spend Play Coins, youll unlock new features
+  and be able to personalize messages even further by changing stationery
+  patterns, attaching photos and sound recordings, writing and drawing in 3D, and
+  more. Youll even be able to surprise your friends with secret notes that they
+  can only open on a certain date! Passing handwritten notes to your friends is a
+  breeze, regardless of whether theyre sitting across the room...or across the
+  world!
+release: 2011-12-21
+players: 1
+assets.boxfront: BoxFront/Swapnote (USA) (eShop).jpg
+assets.boxback: BoxBack/Swapnote (USA) (eShop).jpg
+assets.background: Background/Swapnote (USA) (eShop).jpg
+assets.screenshot: Screenshot/Swapnote (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Team Kirby Clash Deluxe (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Team Kirby Clash Deluxe (USA) (eShop)/Team Kirby Clash Deluxe (USA) (eShop).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Action;Role-Playing
+description:
+  Power through bosses as a team of four!\n
+  In pretty much the best team up ever, Kirby, Kirby, Kirby, and Kirby must unite
+  to do battle in this free-to-start multiplayer action game! Choose from four
+  roles to make your own Kirby crew, take on bosses, level up, and try out new
+  challenges in this clash of power and puffiness. Are you a Sword Hero? Hammer
+  Lord? Beam Mage? Or Doctor Healmore?!
+  .
+  No matter what, each mighty role offers up a unique way to play. Puff up your
+  power by crafting new weapons and spending materials at the shop to receive even
+  MORE weapons, not to mention armor and items. Beyond the main game, there's also
+  a ton of quests and a brand-new challenge system. Plus, tapping compatible
+  amiibo™ figures/accessories will earn you extra fragments to help craft new
+  gear! Are you ready? For Kirby, the answer is always fight and flight.
+  .
+  Beat down powerful bosses on a team of four players in this free-to-start action
+  game!\n
+  Four roles to choose from: Sword Hero, Hammer Lord, Beam Mage, and Doctor
+  Healmore\n
+  Earn EXP to level up heroes and strengthen their stats\n
+  Craft new equipment with materials you collect from quests\n
+  Use Vigor to enter battle (recharges over time)\n
+  Purchase additional Gem Apples in Nintendo eShop, which can be used to craft and
+  obtain new items or to restore vigor
+release: 2017-04-13
+players: 1
+assets.boxfront: BoxFront/Team Kirby Clash Deluxe (USA) (eShop).jpg
+assets.boxback: BoxBack/Team Kirby Clash Deluxe (USA) (eShop).jpg
+assets.background: Background/Team Kirby Clash Deluxe (USA) (eShop).jpg
+assets.screenshot: Screenshot/Team Kirby Clash Deluxe (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Tokyo Crash Mobs (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Tokyo Crash Mobs (USA) (eShop)/Tokyo Crash Mobs (USA) (eShop).json
+developer: Nintendo
+publisher: Nintendo
+genre: Puzzle
+description:
+  All Grace and Savannah want is to make it in Tokyo, but what’s with all the
+  scenesters, bomb balls, flower displays, and ninjas getting in their way?! And
+  don’t even get me started on the UFO abductions, or how easy it is for a visit
+  to Tokyo to end with getting sucked into outer space...
+  .
+  You’ll need lightning-fast reflexes and an eye for strategy to succeed in this
+  fast-paced puzzle game, where live-action video blends seamlessly with wacky
+  digital graphics. Throw and roll hapless bystanders into lines of people, trying
+  to group three or more who wear the same color together so that they’ll form a
+  clique and disappear. Form cliques and eliminate the lines you’re facing as fast
+  as you can to progress through the game’s many stages. With two different play
+  modes - Story Mode and Challenge Mode - this game’s got you covered whether
+  you’re looking for quick gaming sessions or longer endurance challenges.
+release: 2012-08-08
+players: 1
+assets.boxfront: BoxFront/Tokyo Crash Mobs (USA) (eShop).jpg
+assets.boxback: BoxBack/Tokyo Crash Mobs (USA) (eShop).jpg
+assets.background: Background/Tokyo Crash Mobs (USA) (eShop).jpg
+assets.screenshot: Screenshot/Tokyo Crash Mobs (USA) (eShop).jpg
+assets.video: Video/Tokyo Crash Mobs (USA) (eShop).mp4
+x-co-op: No
+
+
+game: Wakedas (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Wakedas (USA) (eShop)/Wakedas (USA) (eShop).json
+developer: CIRCLE Entertainment
+publisher: CIRCLE Entertainment
+genre: Puzzle;Logic
+description:
+  WAKEDAS is a contemplative and thoughtful shape shifting puzzle game with the
+  perfect combination of eye-candy visuals and serene sounds. Radiant multicolored
+  tiles rests on an infinite loop; aim of the game is to group same colored blocks
+  together by simply dragging your finger across the screen.
+release: 2013-11-14
+players: 1
+assets.boxfront: BoxFront/Wakedas (USA) (eShop).jpg
+assets.boxback: BoxBack/Wakedas (USA) (eShop).jpg
+assets.background: Background/Wakedas (USA) (eShop).jpg
+assets.screenshot: Screenshot/Wakedas (USA) (eShop).jpg
+x-co-op: No
+
+
+game: Weapon Shop de Omasse (USA) (eShop)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo 3DS eShop/Weapon Shop de Omasse (USA) (eShop)/Weapon Shop de Omasse (USA) (eShop).json
+developer: Nex Entertainment
+publisher: Level 5
+genre: Role-Playing;General
+description:
+  Forge your destiny! Adventure vicariously! Topple the Evil Lord from your shop!
+  .
+  From the mind of comedian Yoshiyuki Hirai comes WEAPON SHOP de OMASSE, a
+  humorous twist on the classic fantasy adventure.
+  .
+  You are Yuhan, an apprentice in a weapon rental shop inside an RPG. It's your
+  job to forge and rent weapons to the seven misfit heroes and various NPCs that
+  come your way.
+  .
+  Why rental? Sure, there's a risk that a hero will fail their quest and lose your
+  weapon, but if they succeed, you'll get your weapon back, get paid, and earn a
+  returning customer. With the dreaded Evil Lord's return looking nigh, it wouldnt
+  hurt to have more well-equipped heroes running around, either...
+  .
+  Match your customer to a weapon and forge it to the rhythm! Tap your Nintendo
+  3DS in time with the music, balance the heat of your materials, and make sure
+  that your hammer strikes true to create a weapon that really shines.
+  .
+  Follow your customers' adventures on the "Grindcast," a special feed built into
+  each weapon that sends every encounter, discovery, and conversation it hears
+  back to you!
+release: 2014-02-20
+players: 1
+assets.boxfront: BoxFront/Weapon Shop de Omasse (USA) (eShop).jpg
+assets.boxback: BoxBack/Weapon Shop de Omasse (USA) (eShop).jpg
+assets.background: Background/Weapon Shop de Omasse (USA) (eShop).jpg
+assets.screenshot: Screenshot/Weapon Shop de Omasse (USA) (eShop).jpg
+x-co-op: No
+
+

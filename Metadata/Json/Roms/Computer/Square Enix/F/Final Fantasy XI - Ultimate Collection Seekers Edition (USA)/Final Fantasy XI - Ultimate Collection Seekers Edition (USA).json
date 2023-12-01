@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/FFXIFullSetup_US.part1.exe"
+    ],
+    "transform_file": "FFXIFullSetup_US.part1.exe"
+}

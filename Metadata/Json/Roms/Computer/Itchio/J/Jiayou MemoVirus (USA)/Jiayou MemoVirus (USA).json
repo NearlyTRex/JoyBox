@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Jiayou MemoVirus (USA).exe"
+    ],
+    "transform_file": "Jiayou MemoVirus (USA).exe"
+}

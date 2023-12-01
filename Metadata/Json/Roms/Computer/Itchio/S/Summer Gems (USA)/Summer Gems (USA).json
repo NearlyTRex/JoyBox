@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Summer Gems (USA).exe"
+    ],
+    "transform_file": "Summer Gems (USA).exe"
+}

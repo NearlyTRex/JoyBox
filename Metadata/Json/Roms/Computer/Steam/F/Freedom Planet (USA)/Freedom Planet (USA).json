@@ -1,0 +1,30 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Freedom Planet (USA).exe"
+    ],
+    "main_game_exe": [
+        "Freedom Planet/FP.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Freedom Planet/FP.exe": "Freedom Planet"
+    },
+    "sandbox": {
+        "wine": {
+            "overrides": {
+                "game": [
+                    "d3d9,d3d10core,d3d11,dxgi=n,b"
+                ]
+            },
+            "use_dxvk": true
+        }
+    },
+    "sync": {
+        "data": [
+            "file*.sav",
+            "records.dat",
+            "*.cfg"
+        ],
+        "search": "Freedom Planet/FP.exe"
+    },
+    "transform_file": "Freedom Planet (USA).exe"
+}

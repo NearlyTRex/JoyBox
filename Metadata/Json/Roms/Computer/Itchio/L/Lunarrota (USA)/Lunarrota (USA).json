@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Lunarrota (USA).exe"
+    ],
+    "transform_file": "Lunarrota (USA).exe"
+}

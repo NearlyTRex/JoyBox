@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Ring of Fire Prologue (USA).exe"
+    ],
+    "transform_file": "Ring of Fire Prologue (USA).exe"
+}

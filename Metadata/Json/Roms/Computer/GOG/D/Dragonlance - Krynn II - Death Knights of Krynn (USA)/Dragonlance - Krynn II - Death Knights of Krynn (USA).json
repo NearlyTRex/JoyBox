@@ -1,0 +1,11 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/ks_deathknights_adv_jour_pdf.zip",
+        "$SETUP_MAIN_ROOT/extra/ks_deathknights_cluebook_pdf.zip",
+        "$SETUP_MAIN_ROOT/extra/ks_deathknights_manual_pdf.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_death_knights_of_krynn_1.10_(28043).exe"
+    ],
+    "transform_file": "setup_death_knights_of_krynn_1.10_(28043).exe"
+}

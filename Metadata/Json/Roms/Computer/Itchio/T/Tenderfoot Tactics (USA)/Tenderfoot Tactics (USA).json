@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Tenderfoot Tactics (USA).exe"
+    ],
+    "transform_file": "Tenderfoot Tactics (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Switch 'N' Shoot (USA).exe"
+    ],
+    "transform_file": "Switch 'N' Shoot (USA).exe"
+}

@@ -1,0 +1,135 @@
+Nintendo SNES || 7th Saga, The (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/7th Saga, The (USA)/7th Saga, The (USA).json
+Nintendo SNES || ActRaiser (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/ActRaiser (USA)/ActRaiser (USA).json
+Nintendo SNES || Advanced Dungeons & Dragons - Eye of the Beholder (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Advanced Dungeons & Dragons - Eye of the Beholder (USA)/Advanced Dungeons & Dragons - Eye of the Beholder (USA).json
+Nintendo SNES || Arcana (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Arcana (USA)/Arcana (USA).json
+Nintendo SNES || Axelay (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Axelay (USA)/Axelay (USA).json
+Nintendo SNES || B.O.B. (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/B.O.B. (USA)/B.O.B. (USA).json
+Nintendo SNES || Battle Clash (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Battle Clash (USA)/Battle Clash (USA).json
+Nintendo SNES || Big Sky Trooper (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Big Sky Trooper (USA)/Big Sky Trooper (USA).json
+Nintendo SNES || Bill Laimbeer's Combat Basketball (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Bill Laimbeer's Combat Basketball (USA)/Bill Laimbeer's Combat Basketball (USA).json
+Nintendo SNES || Brain Lord (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Brain Lord (USA)/Brain Lord (USA).json
+Nintendo SNES || Brandish (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Brandish (USA)/Brandish (USA).json
+Nintendo SNES || Brawl Brothers (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Brawl Brothers (USA)/Brawl Brothers (USA).json
+Nintendo SNES || Breath of Fire (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Breath of Fire (USA)/Breath of Fire (USA).json
+Nintendo SNES || Breath of Fire II (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Breath of Fire II (USA)/Breath of Fire II (USA).json
+Nintendo SNES || Castlevania - Dracula X (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Castlevania - Dracula X (USA)/Castlevania - Dracula X (USA).json
+Nintendo SNES || Clay Fighter (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Clay Fighter (USA)/Clay Fighter (USA).json
+Nintendo SNES || Clue (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Clue (USA)/Clue (USA).json
+Nintendo SNES || Contra III - The Alien Wars (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Contra III - The Alien Wars (USA)/Contra III - The Alien Wars (USA).json
+Nintendo SNES || Contra III - The Alien Wars (World) (Contra Anniversary Collection) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Contra III - The Alien Wars (World) (Contra Anniversary Collection)/Contra III - The Alien Wars (World) (Contra Anniversary Collection).json
+Nintendo SNES || Cybernator (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Cybernator (USA)/Cybernator (USA).json
+Nintendo SNES || Darius Twin (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Darius Twin (USA)/Darius Twin (USA).json
+Nintendo SNES || Demon's Crest (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Demon's Crest (USA)/Demon's Crest (USA).json
+Nintendo SNES || Donkey Kong Country (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Donkey Kong Country (USA)/Donkey Kong Country (USA).json
+Nintendo SNES || Donkey Kong Country 2 - Diddy's Kong Quest (USA) (En,Fr) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Donkey Kong Country 2 - Diddy's Kong Quest (USA) (En,Fr)/Donkey Kong Country 2 - Diddy's Kong Quest (USA) (En,Fr).json
+Nintendo SNES || Donkey Kong Country 3 - Dixie Kong's Double Trouble! (USA) (En,Fr) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Donkey Kong Country 3 - Dixie Kong's Double Trouble! (USA) (En,Fr)/Donkey Kong Country 3 - Dixie Kong's Double Trouble! (USA) (En,Fr).json
+Nintendo SNES || Doom (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Doom (USA)/Doom (USA).json
+Nintendo SNES || Doom Troopers - Mutant Chronicles (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Doom Troopers - Mutant Chronicles (USA)/Doom Troopers - Mutant Chronicles (USA).json
+Nintendo SNES || Drakkhen (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Drakkhen (USA)/Drakkhen (USA).json
+Nintendo SNES || Dungeon Master (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Dungeon Master (USA)/Dungeon Master (USA).json
+Nintendo SNES || EarthBound (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/EarthBound (USA)/EarthBound (USA).json
+Nintendo SNES || F-Zero (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/F-Zero (USA)/F-Zero (USA).json
+Nintendo SNES || Final Fantasy - Mystic Quest (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Final Fantasy - Mystic Quest (USA)/Final Fantasy - Mystic Quest (USA).json
+Nintendo SNES || Final Fantasy II (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Final Fantasy II (USA)/Final Fantasy II (USA).json
+Nintendo SNES || Final Fantasy III (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Final Fantasy III (USA)/Final Fantasy III (USA).json
+Nintendo SNES || Final Fight (USA) (Virtual Console) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Final Fight (USA) (Virtual Console)/Final Fight (USA) (Virtual Console).json
+Nintendo SNES || Final Fight 2 (USA) (Virtual Console) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Final Fight 2 (USA) (Virtual Console)/Final Fight 2 (USA) (Virtual Console).json
+Nintendo SNES || Final Fight 3 (USA) (Virtual Console) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Final Fight 3 (USA) (Virtual Console)/Final Fight 3 (USA) (Virtual Console).json
+Nintendo SNES || Ghoul Patrol (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Ghoul Patrol (USA)/Ghoul Patrol (USA).json
+Nintendo SNES || Harvest Moon (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Harvest Moon (USA)/Harvest Moon (USA).json
+Nintendo SNES || Ignition Factor, The (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Ignition Factor, The (USA)/Ignition Factor, The (USA).json
+Nintendo SNES || Illusion of Gaia (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Illusion of Gaia (USA)/Illusion of Gaia (USA).json
+Nintendo SNES || Indiana Jones' Greatest Adventures (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Indiana Jones' Greatest Adventures (USA)/Indiana Jones' Greatest Adventures (USA).json
+Nintendo SNES || Inindo - Way of the Ninja (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Inindo - Way of the Ninja (USA)/Inindo - Way of the Ninja (USA).json
+Nintendo SNES || Jurassic Park (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Jurassic Park (USA)/Jurassic Park (USA).json
+Nintendo SNES || Killer Instinct (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Killer Instinct (USA)/Killer Instinct (USA).json
+Nintendo SNES || King Arthur's World (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/King Arthur's World (USA)/King Arthur's World (USA).json
+Nintendo SNES || Kirby Super Star (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Kirby Super Star (USA)/Kirby Super Star (USA).json
+Nintendo SNES || Kirby's Avalanche (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Kirby's Avalanche (USA)/Kirby's Avalanche (USA).json
+Nintendo SNES || Kirby's Dream Course (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Kirby's Dream Course (USA)/Kirby's Dream Course (USA).json
+Nintendo SNES || Kirby's Dream Land 3 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Kirby's Dream Land 3 (USA)/Kirby's Dream Land 3 (USA).json
+Nintendo SNES || Krusty's Super Fun House (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Krusty's Super Fun House (USA)/Krusty's Super Fun House (USA).json
+Nintendo SNES || Lagoon (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Lagoon (USA)/Lagoon (USA).json
+Nintendo SNES || Legend of Zelda, The - A Link to the Past (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Legend of Zelda, The - A Link to the Past (USA)/Legend of Zelda, The - A Link to the Past (USA).json
+Nintendo SNES || Legend of the Mystical Ninja, The (USA) (Virtual Console) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Legend of the Mystical Ninja, The (USA) (Virtual Console)/Legend of the Mystical Ninja, The (USA) (Virtual Console).json
+Nintendo SNES || Lemmings (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Lemmings (USA)/Lemmings (USA).json
+Nintendo SNES || Lufia & the Fortress of Doom (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Lufia & the Fortress of Doom (USA)/Lufia & the Fortress of Doom (USA).json
+Nintendo SNES || Lufia II - Rise of the Sinistrals (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Lufia II - Rise of the Sinistrals (USA)/Lufia II - Rise of the Sinistrals (USA).json
+Nintendo SNES || Mario Paint (Japan, USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Mario Paint (Japan, USA)/Mario Paint (Japan, USA).json
+Nintendo SNES || Mega Man 7 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Mega Man 7 (USA)/Mega Man 7 (USA).json
+Nintendo SNES || Mega Man X (USA) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Mega Man X (USA) (Rev 1)/Mega Man X (USA) (Rev 1).json
+Nintendo SNES || Mega Man X2 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Mega Man X2 (USA)/Mega Man X2 (USA).json
+Nintendo SNES || Mega Man X3 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Mega Man X3 (USA)/Mega Man X3 (USA).json
+Nintendo SNES || Metal Combat - Falcon's Revenge (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Metal Combat - Falcon's Revenge (USA)/Metal Combat - Falcon's Revenge (USA).json
+Nintendo SNES || Metal Marines (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Metal Marines (USA)/Metal Marines (USA).json
+Nintendo SNES || Might and Magic III - Isles of Terra (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Might and Magic III - Isles of Terra (USA)/Might and Magic III - Isles of Terra (USA).json
+Nintendo SNES || NBA Jam (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/NBA Jam (USA)/NBA Jam (USA).json
+Nintendo SNES || New Horizons (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/New Horizons (USA)/New Horizons (USA).json
+Nintendo SNES || Out of This World (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Out of This World (USA)/Out of This World (USA).json
+Nintendo SNES || Pac-Attack (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Pac-Attack (USA)/Pac-Attack (USA).json
+Nintendo SNES || Paladin's Quest (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Paladin's Quest (USA)/Paladin's Quest (USA).json
+Nintendo SNES || Pilotwings (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Pilotwings (USA)/Pilotwings (USA).json
+Nintendo SNES || Populous (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Populous (USA)/Populous (USA).json
+Nintendo SNES || Rival Turf! (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Rival Turf! (USA)/Rival Turf! (USA).json
+Nintendo SNES || Robotrek (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Robotrek (USA)/Robotrek (USA).json
+Nintendo SNES || Rock N' Roll Racing (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Rock N' Roll Racing (USA)/Rock N' Roll Racing (USA).json
+Nintendo SNES || Secret of Evermore (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Secret of Evermore (USA)/Secret of Evermore (USA).json
+Nintendo SNES || Secret of Evermore (USA) (2 Player Edition) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Secret of Evermore (USA) (2 Player Edition)/Secret of Evermore (USA) (2 Player Edition).json
+Nintendo SNES || Secret of Evermore (USA) (Balance Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Secret of Evermore (USA) (Balance Patch)/Secret of Evermore (USA) (Balance Patch).json
+Nintendo SNES || Secret of Mana (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Secret of Mana (USA)/Secret of Mana (USA).json
+Nintendo SNES || Shadowrun (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Shadowrun (USA)/Shadowrun (USA).json
+Nintendo SNES || Skyblazer (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Skyblazer (USA)/Skyblazer (USA).json
+Nintendo SNES || Soul Blazer (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Soul Blazer (USA)/Soul Blazer (USA).json
+Nintendo SNES || Spanky's Quest (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Spanky's Quest (USA)/Spanky's Quest (USA).json
+Nintendo SNES || Sparkster (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Sparkster (USA)/Sparkster (USA).json
+Nintendo SNES || Spider-Man (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Spider-Man (USA)/Spider-Man (USA).json
+Nintendo SNES || Spider-Man - Venom - Maximum Carnage (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Spider-Man - Venom - Maximum Carnage (USA)/Spider-Man - Venom - Maximum Carnage (USA).json
+Nintendo SNES || Star Fox (USA) (Rev 2) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Star Fox (USA) (Rev 2)/Star Fox (USA) (Rev 2).json
+Nintendo SNES || Star Fox (USA) (Rev 2) (Exploration Showcase Legacy) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Star Fox (USA) (Rev 2) (Exploration Showcase Legacy)/Star Fox (USA) (Rev 2) (Exploration Showcase Legacy).json
+Nintendo SNES || Star Fox (USA) (Rev 2) (Exploration Showcase) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Star Fox (USA) (Rev 2) (Exploration Showcase)/Star Fox (USA) (Rev 2) (Exploration Showcase).json
+Nintendo SNES || Star Fox 2 (USA, Europe) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Star Fox 2 (USA, Europe)/Star Fox 2 (USA, Europe).json
+Nintendo SNES || Street Fighter II Turbo (USA) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Street Fighter II Turbo (USA) (Rev 1)/Street Fighter II Turbo (USA) (Rev 1).json
+Nintendo SNES || Stunt Race FX (USA) (Rev 1) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Stunt Race FX (USA) (Rev 1)/Stunt Race FX (USA) (Rev 1).json
+Nintendo SNES || Super Bomberman (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Bomberman (USA)/Super Bomberman (USA).json
+Nintendo SNES || Super Castlevania IV (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Castlevania IV (USA)/Super Castlevania IV (USA).json
+Nintendo SNES || Super Castlevania IV (USA) (Castlevania Anniversary Collection) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Castlevania IV (USA) (Castlevania Anniversary Collection)/Super Castlevania IV (USA) (Castlevania Anniversary Collection).json
+Nintendo SNES || Super Ghouls'n Ghosts (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Ghouls'n Ghosts (USA)/Super Ghouls'n Ghosts (USA).json
+Nintendo SNES || Super Mario All-Stars (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Mario All-Stars (USA)/Super Mario All-Stars (USA).json
+Nintendo SNES || Super Mario Kart (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Mario Kart (USA)/Super Mario Kart (USA).json
+Nintendo SNES || Super Mario RPG - Legend of the Seven Stars (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Mario RPG - Legend of the Seven Stars (USA)/Super Mario RPG - Legend of the Seven Stars (USA).json
+Nintendo SNES || Super Mario World (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Mario World (USA)/Super Mario World (USA).json
+Nintendo SNES || Super Mario World (USA) (Co-op Patch) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Mario World (USA) (Co-op Patch)/Super Mario World (USA) (Co-op Patch).json
+Nintendo SNES || Super Mario World 2 - Yoshi's Island (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Mario World 2 - Yoshi's Island (USA)/Super Mario World 2 - Yoshi's Island (USA).json
+Nintendo SNES || Super Metroid (Japan, USA) (En,Ja) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Metroid (Japan, USA) (En,Ja)/Super Metroid (Japan, USA) (En,Ja).json
+Nintendo SNES || Super Nova (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Nova (USA)/Super Nova (USA).json
+Nintendo SNES || Super Probotector - Alien Rebels (World) (Contra Anniversary Collection) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Probotector - Alien Rebels (World) (Contra Anniversary Collection)/Super Probotector - Alien Rebels (World) (Contra Anniversary Collection).json
+Nintendo SNES || Super Punch-Out!! (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Punch-Out!! (USA)/Super Punch-Out!! (USA).json
+Nintendo SNES || Super R-Type (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super R-Type (USA)/Super R-Type (USA).json
+Nintendo SNES || Super Scope 6 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Scope 6 (USA)/Super Scope 6 (USA).json
+Nintendo SNES || Super Smash T.V. (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Smash T.V. (USA)/Super Smash T.V. (USA).json
+Nintendo SNES || Super Star Wars (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Star Wars (USA)/Super Star Wars (USA).json
+Nintendo SNES || Super Star Wars - Return of the Jedi (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Star Wars - Return of the Jedi (USA)/Super Star Wars - Return of the Jedi (USA).json
+Nintendo SNES || Super Star Wars - The Empire Strikes Back (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Star Wars - The Empire Strikes Back (USA)/Super Star Wars - The Empire Strikes Back (USA).json
+Nintendo SNES || Super Turrican (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Turrican (USA)/Super Turrican (USA).json
+Nintendo SNES || Super Turrican - Director's Cut (USA) (Unl) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Turrican - Director's Cut (USA) (Unl)/Super Turrican - Director's Cut (USA) (Unl).json
+Nintendo SNES || Super Turrican 2 (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Super Turrican 2 (USA)/Super Turrican 2 (USA).json
+Nintendo SNES || Syndicate (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Syndicate (USA)/Syndicate (USA).json
+Nintendo SNES || Tecmo Secret of the Stars (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Tecmo Secret of the Stars (USA)/Tecmo Secret of the Stars (USA).json
+Nintendo SNES || Teenage Mutant Ninja Turtles - Tournament Fighters (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Teenage Mutant Ninja Turtles - Tournament Fighters (USA)/Teenage Mutant Ninja Turtles - Tournament Fighters (USA).json
+Nintendo SNES || Teenage Mutant Ninja Turtles IV - Turtles in Time (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Teenage Mutant Ninja Turtles IV - Turtles in Time (USA)/Teenage Mutant Ninja Turtles IV - Turtles in Time (USA).json
+Nintendo SNES || Trials of Mana (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Trials of Mana (USA)/Trials of Mana (USA).json
+Nintendo SNES || Trials of Mana (USA) (3-Player Edition) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Trials of Mana (USA) (3-Player Edition)/Trials of Mana (USA) (3-Player Edition).json
+Nintendo SNES || Twisted Tales of Spike McFang, The (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Twisted Tales of Spike McFang, The (USA)/Twisted Tales of Spike McFang, The (USA).json
+Nintendo SNES || Ultima - The Black Gate (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Ultima - The Black Gate (USA)/Ultima - The Black Gate (USA).json
+Nintendo SNES || Ultima - The False Prophet (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Ultima - The False Prophet (USA)/Ultima - The False Prophet (USA).json
+Nintendo SNES || Venom - Spider-Man - Separation Anxiety (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Venom - Spider-Man - Separation Anxiety (USA)/Venom - Spider-Man - Separation Anxiety (USA).json
+Nintendo SNES || Vortex (USA) (En,Es) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Vortex (USA) (En,Es)/Vortex (USA) (En,Es).json
+Nintendo SNES || Wild Guns (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Wild Guns (USA)/Wild Guns (USA).json
+Nintendo SNES || Wing Commander (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Wing Commander (USA)/Wing Commander (USA).json
+Nintendo SNES || Wing Commander - The Secret Missions (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Wing Commander - The Secret Missions (USA)/Wing Commander - The Secret Missions (USA).json
+Nintendo SNES || Wizardry V - Heart of the Maelstrom (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Wizardry V - Heart of the Maelstrom (USA)/Wizardry V - Heart of the Maelstrom (USA).json
+Nintendo SNES || X-Men - Mutant Apocalypse (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/X-Men - Mutant Apocalypse (USA)/X-Men - Mutant Apocalypse (USA).json
+Nintendo SNES || Yoshi's Safari (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Yoshi's Safari (USA)/Yoshi's Safari (USA).json
+Nintendo SNES || Ys III - Wanderers from Ys (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Ys III - Wanderers from Ys (USA)/Ys III - Wanderers from Ys (USA).json
+Nintendo SNES || Zombies Ate My Neighbors (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Zombies Ate My Neighbors (USA)/Zombies Ate My Neighbors (USA).json
+Nintendo SNES || Zool - Ninja of the 'Nth' Dimension (USA) || $ROM_JSON_ROOT/Nintendo/Nintendo SNES/Zool - Ninja of the 'Nth' Dimension (USA)/Zool - Ninja of the 'Nth' Dimension (USA).json

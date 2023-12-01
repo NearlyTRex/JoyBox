@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Magical Tale, A - Cavern Crawler (USA).exe"
+    ],
+    "transform_file": "Magical Tale, A - Cavern Crawler (USA).exe"
+}

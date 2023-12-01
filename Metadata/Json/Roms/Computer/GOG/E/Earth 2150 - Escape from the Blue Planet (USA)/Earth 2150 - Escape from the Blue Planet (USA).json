@@ -1,0 +1,12 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/earth2150_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/earth2150_manuals.zip",
+        "$SETUP_MAIN_ROOT/extra/earth2150_trilogy_soundtrack.zip",
+        "$SETUP_MAIN_ROOT/extra/earth2150_wallpaper.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_earth_2150_2.8.7.1_(16406).exe"
+    ],
+    "transform_file": "setup_earth_2150_2.8.7.1_(16406).exe"
+}

@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Rise of Nightmares (World).chd",
+        "Rise of Nightmares (World).dmi.bin",
+        "Rise of Nightmares (World).lyt",
+        "Rise of Nightmares (World).pfi.bin",
+        "Rise of Nightmares (World).ss.bin"
+    ],
+    "launch_file": "Rise of Nightmares (World).iso",
+    "transform_file": "Rise of Nightmares (World).chd"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Bezier (USA).exe"
+    ],
+    "transform_file": "Bezier (USA).exe"
+}

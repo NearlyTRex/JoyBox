@@ -1,0 +1,15 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/UU_1_memoirs_of_cabirus.zip",
+        "$SETUP_MAIN_ROOT/extra/UU_2_a_safe_passage_through_britannia.zip",
+        "$SETUP_MAIN_ROOT/extra/Ultima_Underworld_1_2_QRC.zip",
+        "$SETUP_MAIN_ROOT/extra/Ultima_Underworld_1_2_cluebook.zip",
+        "$SETUP_MAIN_ROOT/extra/Ultima_Underworld_1_2_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/Ultima_Underworld_1_2_maps.zip",
+        "$SETUP_MAIN_ROOT/extra/uu_avatars.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_ultima_underworld_2_1.0_cs_(28190).exe"
+    ],
+    "transform_file": "setup_ultima_underworld_2_1.0_cs_(28190).exe"
+}

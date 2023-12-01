@@ -1,0 +1,10 @@
+{
+    "files": [
+        "Xbox Exhibition (USA).chd",
+        "Xbox Exhibition (USA).dmi.bin",
+        "Xbox Exhibition (USA).pfi.bin",
+        "Xbox Exhibition (USA).ss.bin"
+    ],
+    "launch_file": "Xbox Exhibition (USA).iso",
+    "transform_file": "Xbox Exhibition (USA).chd"
+}

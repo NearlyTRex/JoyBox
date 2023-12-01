@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_observer_02.07.2018_(21921).exe"
+    ],
+    "transform_file": "setup_observer_02.07.2018_(21921).exe"
+}

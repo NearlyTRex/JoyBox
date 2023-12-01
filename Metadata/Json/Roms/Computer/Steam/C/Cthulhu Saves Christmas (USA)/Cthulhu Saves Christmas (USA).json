@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Cthulhu Saves Christmas (USA).exe"
+    ],
+    "transform_file": "Cthulhu Saves Christmas (USA).exe"
+}

@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Resident Evil 2 Remake (USA).exe"
+    ],
+    "main_game_exe": [
+        "Resident Evil 2 Remake/re2.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Resident Evil 2 Remake/re2.exe": "Resident Evil 2 Remake"
+    },
+    "transform_file": "Resident Evil 2 Remake (USA).exe"
+}

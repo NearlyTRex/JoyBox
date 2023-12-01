@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Button City (USA).exe"
+    ],
+    "transform_file": "Button City (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/To Be a HerpWitch (USA).exe"
+    ],
+    "transform_file": "To Be a HerpWitch (USA).exe"
+}

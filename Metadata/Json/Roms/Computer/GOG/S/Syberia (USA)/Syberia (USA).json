@@ -1,0 +1,12 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/Syberia_Artworks.zip",
+        "$SETUP_MAIN_ROOT/extra/Syberia_Avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/Syberia_Manual.zip",
+        "$SETUP_MAIN_ROOT/extra/Syberia_tracks.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_syberia_1.0.0_hotfix4_(53936).exe"
+    ],
+    "transform_file": "setup_syberia_1.0.0_hotfix4_(53936).exe"
+}

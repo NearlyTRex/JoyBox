@@ -1,0 +1,838 @@
+collection: Sony PlayStation Network - PlayStation Portable
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation Network - PlayStation Portable" {file.path}
+
+
+game: Ape Quest (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Ape Quest (USA)/Ape Quest (USA).json
+developer: Shift
+publisher: Sony Computer Entertainment
+genre: Role-Playing
+description:
+  The ape kingdom is cursed and it's up to you, the prince, to redeem yourself and
+  restore peace to the land! Battle your way through the evil minions that have
+  overrun Toqsica Kingdom by leveling up your character, collecting new weapons
+  and items, and completing an endless variety of mini-games in this RPG-style ape
+  adventure. It's more fun than a barrel of monkeys, or apes for that matter!
+release: 2008-01-10
+players: 1
+assets.boxfront: BoxFront/Ape Quest (USA).jpg
+assets.boxback: BoxBack/Ape Quest (USA).jpg
+assets.background: Background/Ape Quest (USA).jpg
+assets.screenshot: Screenshot/Ape Quest (USA).jpg
+assets.video: Video/Ape Quest (USA).mp4
+x-co-op: No
+
+
+game: Armored Core - Last Raven Portable (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Armored Core - Last Raven Portable (USA)/Armored Core - Last Raven Portable (USA).json
+developer: FromSoftware, Inc.
+publisher: FromSoftware, Inc.
+genre: Action
+description:
+  In the wake of the now defunct Navis's failed attempt to control recovered
+  ancient weapons technology, the world has been left in tatters. Looking to
+  consolidate power, the Corporations (Crest, Mirage, and Kisaragi) have merged
+  into one super-corporation known as "The Alliance". Fed up with corporate rule
+  and oppression, and seeing a newfound threat in The Alliance, a Raven known as
+  Jack-O (an important but minor character from Armored Core: Nexus) forms an
+  organization of Ravens known as "Vertex" from the ashes of the fallen Raven's
+  Ark. After rallying a sizable force of fellow Ravens to his cause, Jack-O
+  declares that he will launch an all-out war on the Alliance in 24 hours. Leading
+  the opposing force, a Raven named Evangel has rallied just as many Ravens to the
+  Alliance and is preparing to fight Jack-O head on. Making matters all the more
+  complicated, many Ravens have turned into independent warlords, setting out on
+  their own after the collapse of Raven's Ark.
+  .
+  To finish this volatile situation: you. You are approached by both sides seeking
+  your cooperation. Will you side with the Corporations, or assist Vertex in
+  causing their downfall? You have a choice to make, Raven.
+release: 2010-05-04
+players: 1
+assets.boxfront: BoxFront/Armored Core - Last Raven Portable (USA).jpg
+assets.boxback: BoxBack/Armored Core - Last Raven Portable (USA).jpg
+assets.background: Background/Armored Core - Last Raven Portable (USA).jpg
+assets.screenshot: Screenshot/Armored Core - Last Raven Portable (USA).jpg
+assets.video: Video/Armored Core - Last Raven Portable (USA).mp4
+x-co-op: No
+
+
+game: Armored Core - Silent Line Portable (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Armored Core - Silent Line Portable (USA)/Armored Core - Silent Line Portable (USA).json
+developer: FromSoftware, Inc.
+publisher: FromSoftware, Inc.
+genre: Action;Shooter;Strategy
+description:
+  Silent Line: Armored Core is a 3d action game in which you take control of a
+  mech from the Raven mercenary hired by the government to investigate a recently
+  discovered megacity. This city is well defended to the point that everything
+  that comes to close get destroyed. This defensive line is called the Silent
+  Line. The game is a sequel to Armored Core 3
+  .
+  The game offers over 34 missions and lets you customize your mech with over 400
+  parts. Your mech can walk on the ground as well as fly in the air. Enemies can
+  be destroyed by using your machine gun or missiles.
+release: 2010-02-04
+players: 4
+assets.boxfront: BoxFront/Armored Core - Silent Line Portable (USA).jpg
+assets.boxback: BoxBack/Armored Core - Silent Line Portable (USA).jpg
+assets.background: Background/Armored Core - Silent Line Portable (USA).jpg
+assets.screenshot: Screenshot/Armored Core - Silent Line Portable (USA).jpg
+assets.video: Video/Armored Core - Silent Line Portable (USA).mp4
+x-co-op: No
+
+
+game: Armored Core 3 Portable (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Armored Core 3 Portable (USA)/Armored Core 3 Portable (USA).json
+developer: FromSoftware, Inc.
+publisher: FromSoftware, Inc.
+genre: Shooter
+description:
+  Armored Core 3 once again puts you in the shoes of a Raven mercenary, with the
+  task of piloting your own battle machine to use in a range of tasks (from
+  destroying other mechs to seek and destroy missions).
+  .
+  After each mission, you are paid in full. The money raised can then go on
+  towards the purchase of items for your mech. Weapon upgrades, better shields,
+  even the opportunity to purchase what's called an Exceed Orbit, smaller robot
+  gun emplacements that hover around your mech, giving you an added boost of fire
+  power in the crunch. Four-player deathmatch modes are also included, where
+  players pit souped-up mechs against each other to see who is the last robot
+  standing.
+  .
+  The PSP release includes additional new parts and support for ad-hoc wireless
+  play.
+release: 2009-10-22
+players: 4
+assets.boxfront: BoxFront/Armored Core 3 Portable (USA).jpg
+assets.boxback: BoxBack/Armored Core 3 Portable (USA).jpg
+assets.background: Background/Armored Core 3 Portable (USA).jpg
+assets.screenshot: Screenshot/Armored Core 3 Portable (USA).jpg
+assets.video: Video/Armored Core 3 Portable (USA).mp4
+x-co-op: No
+
+
+game: Black Rock Shooter - The Game (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Black Rock Shooter - The Game (USA)/Black Rock Shooter - The Game (USA).json
+developer: imageepoch Inc.
+publisher: NIS America, Inc.
+genre: Role-Playing;Shooter
+description:
+  In the year 2032, aliens have invaded Earth. Humanity bands together and fights
+  back valiantly, but they are simply no match for the invading force, and their
+  numbers steadily dwindle as fighting continues. At the brink of extinction after
+  years of war, one last hope for humanity appears: Black Rock Shooter, a young
+  girl who is also the most powerful biological weapon ever created. Working
+  together with the last remnants of the human race, will she be able to repel the
+  alien invasion and save the Earth?
+  .
+  Black Rock Shooter is an action-RPG based on the anime of the same name. It is
+  in many ways a standard Japanese-style RPG. The player controls the eponymous
+  Black Rock Shooter as she explores the battle-ravaged landscape, and enemies
+  will approach her when they notice her. If they get close enough, the game will
+  switch to battle mode, which is closer to a rail shooter rather than a standard
+  turn-based battle system.
+  .
+  During battle, enemies will attack in real time. The player controls a cursor to
+  aim Black Rock's rock cannon, and can shoot freely, as well as block, dodge, and
+  use various items and special skills, but she cannot move freely around the
+  battlefield. Certain actions will increase a heat gauge, which will only lower
+  if she is allowed to rest. If the gauge gets too high, she will become
+  temporarily unable to attack.
+  .
+  The game is divided into stages, each of which contains a number of missions and
+  optional objectives. The stage ends when these missions are cleared. Optional
+  objectives in each stage will reward the player with additional abilities and
+  unlockable bonuses such as weapons, costumes, and concept art. Completed stages
+  can be returned to in order to complete additional objectives.
+release: 2013-04-23
+players: 1
+assets.boxfront: BoxFront/Black Rock Shooter - The Game (USA).jpg
+assets.boxback: BoxBack/Black Rock Shooter - The Game (USA).jpg
+assets.background: Background/Black Rock Shooter - The Game (USA).jpg
+assets.screenshot: Screenshot/Black Rock Shooter - The Game (USA).jpg
+assets.video: Video/Black Rock Shooter - The Game (USA).mp4
+x-co-op: No
+
+
+game: Brandish - The Dark Revenant (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Brandish - The Dark Revenant (USA)/Brandish - The Dark Revenant (USA).json
+developer: Falcom
+publisher: Xseed Games
+genre: Role-Playing
+description:
+  Over 40 Massive Dungeon Floors Designed to Kill You
+  .
+  Explore ancient ruins, cursed caverns, otherworldly planes and more, each
+  riddled with false floors, false walls, spikes, poison traps, boulders,
+  teleporters and other deadly surprises. Solve brain-busting puzzles, battle
+  unique enemies and forge ever onward!\n
+  Innovative World-Turning Mechanice\n
+  Immersive Atmosphere through Innovative “World-Turning” Mechanic
+  .
+  Like a first-person dungeon crawler with a third-person viewpoint, the camera is
+  always positioned behind Ares with the world smoothly rotating into place
+  whenever he turns, creating a feeling of total immersion and really pulling
+  players into the action.\n
+  Bonus Content Dela Mode\n
+  Bonus Content including Expert-Level “Dela Mode”
+  .
+  Beat the game as Ares to challenge an additional 10 floors as the sorceress
+  Dela, complete with harder enemies, crueler traps and a whole new perspective on
+  the story!\n
+  Engaging Mini-Games\n
+  Engaging Mini-Games with Exclusive Prizes
+  .
+  Play the slots or challenge lost souls to an original card game called “Blade,”
+  then use your winnings to buy unique items that can aid you in escaping these
+  deadly ruins.
+release: 2015-01-13
+players: 1
+assets.boxfront: BoxFront/Brandish - The Dark Revenant (USA).jpg
+assets.boxback: BoxBack/Brandish - The Dark Revenant (USA).jpg
+assets.background: Background/Brandish - The Dark Revenant (USA).jpg
+assets.screenshot: Screenshot/Brandish - The Dark Revenant (USA).jpg
+assets.video: Video/Brandish - The Dark Revenant (USA).mp4
+x-co-op: No
+
+
+game: Carnage Heart EXA (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Carnage Heart EXA (USA)/Carnage Heart EXA (USA).json
+developer: Artdink Corporation
+publisher: Natsume, Inc.
+genre: Action;Fighting;Shooter;Strategy
+description:
+  A follow-up to the cult PS one classic, Carnage Heart EXA puts players in
+  control of giant robots — Overkill Engines (OKEs) — and pits these menacing
+  mechs against each other in larger-than-life battles! You can control your OKE
+  yourself or set up complex programs that automatically command your
+  robo-battlers to follow your orders to the letter! Choose from either a
+  compelling Story Mode, or get right into the action with Battle Mode!
+release: 2013-03-19
+players: 1
+assets.boxfront: BoxFront/Carnage Heart EXA (USA).jpg
+assets.boxback: BoxBack/Carnage Heart EXA (USA).jpg
+assets.background: Background/Carnage Heart EXA (USA).jpg
+assets.screenshot: Screenshot/Carnage Heart EXA (USA).jpg
+assets.video: Video/Carnage Heart EXA (USA).mp4
+x-co-op: No
+
+
+game: Cho Aniki Zero (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Cho Aniki Zero (USA)/Cho Aniki Zero (USA).json
+developer: extreme
+publisher: Aksys Games
+genre: Shooter
+description:
+  After the defeat of the evil Emperor Body, it seemed like peace may finally
+  return to the Builder star system. However, a new force has begun to drain the
+  Protien from the planets here: Emperor Body the Second. Idaten and Benten,
+  having defeated Body before, immediately set off to destroy the plant that's
+  draining the Protein, and defeat evil once and for all.
+  .
+  Zero Chō Aniki is a side-scrolling shooter from the infamously bizarre Chō Aniki
+  series. Controlling either Idaten or Benten and their options, the player must
+  survive five stages filled with curiously suggestive enemies and environments.
+  Destroying enemies will earn power-ups to increase the player's output, and
+  there are also bombs and the special "Men's Beam" which can help clear the
+  screen if things get overwhelmingly hectic. There are two difficulty settings on
+  offer, and in addition to the main mode, there is also a boss rush mode unlocked
+  after clearing the game.
+release: 2010-03-25
+players: 2
+assets.boxfront: BoxFront/Cho Aniki Zero (USA).jpg
+assets.boxback: BoxBack/Cho Aniki Zero (USA).jpg
+assets.background: Background/Cho Aniki Zero (USA).jpg
+assets.screenshot: Screenshot/Cho Aniki Zero (USA).jpg
+assets.video: Video/Cho Aniki Zero (USA).mp4
+x-co-op: No
+
+
+game: Cladun - This Is an RPG! (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Cladun - This Is an RPG! (USA)/Cladun - This Is an RPG! (USA).json
+developer: System Prisma
+publisher: Nippon Ichi Software
+genre: Action;Role-Playing
+description:
+  The story starts with a girl named Pudding and a boy named Soma going to a gate
+  that Pudding believes is a way to go to the magical world "Arcanus Cella". Upon
+  entering, they find themselves in Arcanus Cella. The story progresses as you
+  finish levels to unlock characters and places. Each time you finish one floor of
+  a dungeon, you unlock more floors and sometimes a scene that may unlock a new
+  characters,or show something about the characters in the game.
+release: 2010-09-18
+players: 1
+assets.boxfront: BoxFront/Cladun - This Is an RPG! (USA).jpg
+assets.boxback: BoxBack/Cladun - This Is an RPG! (USA).jpg
+assets.background: Background/Cladun - This Is an RPG! (USA).jpg
+assets.screenshot: Screenshot/Cladun - This Is an RPG! (USA).jpg
+assets.video: Video/Cladun - This Is an RPG! (USA).mp4
+x-co-op: No
+
+
+game: Cladun x2 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Cladun x2 (USA)/Cladun x2 (USA).json
+developer: System Prisma
+publisher: NIS America
+genre: Action;Role-Playing
+description:
+  Dive back into the world of Arcanus Cella with a new cast and a new adventure!
+  Take on the role of a wandering warrior trapped in a dangerous pocket-sized
+  world filled with more monsters, more weapons, more dungeons and more danger
+  than ever before and there's only one way out. ClaDun x2 has twice the thrills,
+  twice the spills, twice the lovable classic-ness of the first!
+release: 2011-08-30
+players: 1
+assets.boxfront: BoxFront/Cladun x2 (USA).jpg
+assets.boxback: BoxBack/Cladun x2 (USA).jpg
+assets.background: Background/Cladun x2 (USA).jpg
+assets.screenshot: Screenshot/Cladun x2 (USA).jpg
+assets.video: Video/Cladun x2 (USA).mp4
+x-co-op: No
+
+
+game: Corpse Party - Book of Shadows (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Corpse Party - Book of Shadows (USA)/Corpse Party - Book of Shadows (USA).json
+developer: 5pb.
+publisher: Xseed Games
+genre: Adventure;Horror
+description:
+  A gory, disturbing and uncomfortably exhilarating tale of mystery, fear and
+  survival, in the tradition of the greatest Japanese horror classics!\n
+  Join eight students and one teacher as they inadvertently invoke a powerful
+  curse and find themselves wandering the haunted halls of Heavenly Host -- a
+  constantly shifting echo of a tragedy-stricken elementary school that should
+  have been torn down decades ago. With vengeful spirits lurking around every
+  corner and an omnipresent pressure in the air threatening to break what's left
+  of their sanity, they must race against their own impending dooms to solve the
+  mystery of where and when they are, cataloguing the rotting corpses of their own
+  unsuccessful predecessors all the while.\n
+  Featuring retro-styled 2D visuals, agonizingly detailed art stills, binaural 3D
+  audio with original Japanese voices, over two dozen endings and some truly
+  twisted depictions of death, this story-driven horror adventure is the perfect
+  nightmare fuel.
+release: 2013-01-15
+players: 1
+assets.boxfront: BoxFront/Corpse Party - Book of Shadows (USA).jpg
+assets.boxback: BoxBack/Corpse Party - Book of Shadows (USA).jpg
+assets.background: Background/Corpse Party - Book of Shadows (USA).jpg
+assets.screenshot: Screenshot/Corpse Party - Book of Shadows (USA).jpg
+assets.video: Video/Corpse Party - Book of Shadows (USA).mp4
+x-co-op: No
+
+
+game: Creature Defense (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Creature Defense (USA)/Creature Defense (USA).json
+developer: Hudson Soft
+publisher: Hudson Soft
+genre: Strategy
+description:
+  Save the hills, assemble the Monsters!
+  .
+  "Creature Defense" combines addictive Tower Defense game-play with card-battle
+  tactics to allow for an new gaming experience with unlimited strategic
+  possibilities.
+  .
+  Game Features:\n
+  - Unique stages and modes!\n
+  Includes a plethora of stages and modes promising over 50 hours of game-play!
+  Strategize accordingly as you protect the hills from the oncoming monsters!
+  Beware of addictive gaming!
+  .
+  - More than 60 monsters, each with their unique characteristics!\n
+  Purchase new Monster Cards to keep your roster growing!
+  .
+  - SP Skills!\n
+  Activated once the Monster’s level has been upgraded, use their skills to take
+  the advantage in every battle!
+release: 2009-11-05
+players: 1
+assets.boxfront: BoxFront/Creature Defense (USA).jpg
+assets.boxback: BoxBack/Creature Defense (USA).jpg
+assets.background: Background/Creature Defense (USA).jpg
+assets.screenshot: Screenshot/Creature Defense (USA).jpg
+assets.video: Video/Creature Defense (USA).mp4
+x-co-op: No
+
+
+game: Crimson Room Reverse (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Crimson Room Reverse (USA)/Crimson Room Reverse (USA).json
+developer: Takagism Inc.
+publisher: Success
+genre: Adventure
+description:
+  Crimson Room Reverse is an Adventure game, developed by Takagism Inc. and
+  published by Success, which was released in Japan in 2009.
+release: 2009-11-05
+players: 1
+assets.boxfront: BoxFront/Crimson Room Reverse (USA).jpg
+assets.boxback: BoxBack/Crimson Room Reverse (USA).jpg
+assets.background: Background/Crimson Room Reverse (USA).jpg
+assets.screenshot: Screenshot/Crimson Room Reverse (USA).jpg
+assets.video: Video/Crimson Room Reverse (USA).mp4
+x-co-op: No
+
+
+game: Dissidia 012 - Prologus - Duodecim Final Fantasy (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Dissidia 012 - Prologus - Duodecim Final Fantasy (USA)/Dissidia 012 - Prologus - Duodecim Final Fantasy (USA).json
+developer: Square Enix
+publisher: Square Enix
+genre: Action;Fighting;3D
+description:
+  Cosmos versus Chaos
+  .
+  .
+  Harmony and discord clash once more in DISSIDIA 012[duodecim] FINAL FANTASY for
+  PSP, as the gods Cosmos and Chaos struggle against each other in an eternal
+  cycle of life, death and rebirth.
+  .
+  .
+  The warring gods call upon the heroes and villains of the FINAL FANTASY series
+  to try to tip the scales in their favour, in a superbly rewarding hybrid of the
+  fighting and role-playing genres. It's a classic battle of light against dark,
+  an endless fight which these FINAL FANTASY stars have decided to finish once and
+  for all.
+  .
+  .
+  Drama is handled with effortless style smooth cutscenes dazzle, dialogue
+  bristles with age-old rivalries and the combat itself reflects the highly
+  individual techniques favoured by each member of this glittering cast.
+  .
+  .
+  Master the challenge of the gods to unearth a game of incredible depth. Not only
+  are there countless special attacks and costumes to unlock for each of the
+  30-plus characters, but the entire Campaign Mode of DISSIDIA FINAL FANTASY, the
+  forerunner to this game, is included as a truly staggering bonus.
+  .
+  .
+  Fusing an unforgettable cast with a torrent of special features, DISSIDIA
+  012[duodecim] FINAL FANTASY is a must-have for your PSP.
+  .
+  .
+  * Choose your favourite Final Fantasy heroes and villains to take into combat in
+  this amazing follow-up to DISSIDIA FINAL FANTASY.
+  .
+  .
+  * Includes new characters from FINAL FANTASY lore to fight with, such as
+  Lightning from Final Fantasy XIII.
+  .
+  .
+  * Discover the story behind the 12th battle, a new war between Cosmos and Chaos.
+release: 2011-03-03
+players: 1
+assets.boxfront: BoxFront/Dissidia 012 - Prologus - Duodecim Final Fantasy (USA).jpg
+assets.boxback: BoxBack/Dissidia 012 - Prologus - Duodecim Final Fantasy (USA).jpg
+assets.background: Background/Dissidia 012 - Prologus - Duodecim Final Fantasy (USA).jpg
+assets.screenshot: Screenshot/Dissidia 012 - Prologus - Duodecim Final Fantasy (USA).jpg
+x-co-op: No
+
+
+game: Elminage Original (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Elminage Original (USA)/Elminage Original (USA).json
+developer: Starfish SD
+publisher: UFO Interactive
+genre: Role-Playing
+description:
+  Create and raise your characters to defeat the monsters that lurk deep in the
+  labyrinth-like dungeons. Its simple gameplay and sense of freedom makes you feel
+  like you are truly inside a fantasy world.
+  .
+  Choose from 16 occupation including the likes of Fighter, Mage and Samurai.\n
+  With 9 races to choose from, diverse parties can be created set according to
+  gender, age and their personality. In addition, customize the game to your
+  liking with the graphic/sound functions.
+  .
+  With many events along the way, fulfill the main quest to search for the 5
+  rings.\n
+  Let's open the gates and head out to a new adventure.
+release: 2012-11-20
+players: 1
+assets.boxfront: BoxFront/Elminage Original (USA).jpg
+assets.boxback: BoxBack/Elminage Original (USA).jpg
+assets.background: Background/Elminage Original (USA).jpg
+assets.screenshot: Screenshot/Elminage Original (USA).jpg
+assets.video: Video/Elminage Original (USA).mp4
+x-co-op: No
+
+
+game: End of Serenity (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/End of Serenity (USA)/End of Serenity (USA).json
+developer: Kemco
+publisher: Natsume, Inc.
+genre: Role-Playing
+description:
+  Throughout history, mysterious objects known as 'Atomigems' have existed all
+  over the world. The people of the world have used them for many things, from
+  simple family heirlooms to even objects of worship. However, recently, a gang
+  known as the Underworld has been going around collecting any and all Atomigems
+  they can find. What exactly is their aim?
+  .
+  That's what Eril, known as the Azure Sorceress, intends to find out. Along the
+  way, she'll meet some friends who will help her on this mission, such as Yute,
+  the son of a famous trader, and Earon, a highly-skilled martial arts fighter.
+  Can they find out exactly what the Underworld is up to? And can they do anything
+  to stop it, or are they already too late...?
+release: 2014-06-24
+players: 1
+assets.boxfront: BoxFront/End of Serenity (USA).jpg
+assets.boxback: BoxBack/End of Serenity (USA).jpg
+assets.background: Background/End of Serenity (USA).jpg
+assets.screenshot: Screenshot/End of Serenity (USA).jpg
+assets.video: Video/End of Serenity (USA).mp4
+x-co-op: No
+
+
+game: Eye of Judgment, The - Legends (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Eye of Judgment, The - Legends (USA) (En,Fr,Es)/Eye of Judgment, The - Legends (USA) (En,Fr,Es).json
+developer: Japan Studio
+publisher: SCE
+genre: Board Game
+description:
+  The Eye of Judgment: Legends is a spin-off of The Eye of Judgment. The biggest
+  difference is that Legends is a digital card game and does not make use of a
+  camera during the game to bring the animations to life. It contains all the
+  cards of the original game (over 300) and using the PSP online functions you can
+  challenge people worldwide. It is also possible to trade cards with other
+  players through ad hoc mode and infrastructure mode.
+  .
+  For Legends a completely new, single-player story mode was created. The card
+  game itself has the exact same rules as the original The Eye of Judgment.
+release: 2010-03-10
+players: 1
+assets.boxfront: BoxFront/Eye of Judgment, The - Legends (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Eye of Judgment, The - Legends (USA) (En,Fr,Es).jpg
+assets.background: Background/Eye of Judgment, The - Legends (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Eye of Judgment, The - Legends (USA) (En,Fr,Es).jpg
+assets.video: Video/Eye of Judgment, The - Legends (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Generation of Chaos - Pandora's Reflection (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Generation of Chaos - Pandora's Reflection (USA)/Generation of Chaos - Pandora's Reflection (USA).json
+developer: Super Sting
+publisher: NIS
+genre: Role-Playing;Strategy
+description:
+  The sixth game in Idea Factory's strategy RPG saga, Generation of Chaos:
+  Pandora's Reflection features an active-time battle system, in which players can
+  move and position their units in real-time across sweeping battlefields --
+  you'll need a quick mind and a steady hand to succeed!\n
+  Dark clouds blanket the withered skies and block out the sun; cracked earth and
+  choking fog rule the land. This colorless world, showing no signs of life, is
+  known as Hades. The barren land is blasted by chilling winds that cut to the
+  bone ... This is where we meet our heroes -- Yuri, a young girl cursed with a
+  disease draining her life away; and Claude, her protective older brother who
+  will stop at nothing to save her. As they travel in search of a cure, they find
+  themselves embroiled in a conflict that will determine the fate of the world
+  and, just maybe, the fate of the siblings. They'll lose old friends, meet new
+  friends, and travel on a path that will lead them to the very doorstep of
+  destiny...
+release: 2013-02-19
+players: 1
+assets.boxfront: BoxFront/Generation of Chaos - Pandora's Reflection (USA).jpg
+assets.boxback: BoxBack/Generation of Chaos - Pandora's Reflection (USA).jpg
+assets.background: Background/Generation of Chaos - Pandora's Reflection (USA).jpg
+assets.screenshot: Screenshot/Generation of Chaos - Pandora's Reflection (USA).jpg
+assets.video: Video/Generation of Chaos - Pandora's Reflection (USA).mp4
+x-co-op: No
+
+
+game: Gravity Crash Portable (USA) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Gravity Crash Portable (USA) (En,Fr,De,Es,It)/Gravity Crash Portable (USA) (En,Fr,De,Es,It).json
+developer: Just Add Water
+publisher: SCEA
+genre: Shooter
+description:
+  Gravity Crash combines old school arcade gameplay with next-gen visuals,
+  delivering a simple yet addictive experience. Pilot a spacecraft and tackle a
+  variety of missions, from taking out enemy installations to rescuing stranded
+  astronauts. Each planet is fraught with danger, from narrow, twisting tunnels to
+  deadly creatures. Players can even create their own custom levels to share.
+  You'll need quick wits and a precise, steady hand to survive the action in
+  Gravity Crash.
+release: 2010-07-20
+players: 1
+assets.boxfront: BoxFront/Gravity Crash Portable (USA) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Gravity Crash Portable (USA) (En,Fr,De,Es,It).jpg
+assets.background: Background/Gravity Crash Portable (USA) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Gravity Crash Portable (USA) (En,Fr,De,Es,It).jpg
+assets.video: Video/Gravity Crash Portable (USA) (En,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Kurulin Fusion (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Kurulin Fusion (USA)/Kurulin Fusion (USA).json
+developer: Tozai, Lancarse
+publisher: MTO
+genre: Puzzle
+description:
+  Kurulin Fusion is an hypnotic blend of color, geometry, puzzle action and a
+  futuristic soundtrack featuring renowned Final Fantasy composer Nobuo Uematsu's
+  reimagining of J.S. Bach. The game combines a fusion block and energy orb to
+  score points. Fuse blocks together to obtain an even higher score, or build a
+  3X3 combo for the ultimate payoff. You can even challenge a friend in
+  multiplayer.
+release: 2009-12-10
+players: 2
+assets.boxfront: BoxFront/Kurulin Fusion (USA).jpg
+assets.boxback: BoxBack/Kurulin Fusion (USA).jpg
+assets.background: Background/Kurulin Fusion (USA).jpg
+assets.screenshot: Screenshot/Kurulin Fusion (USA).jpg
+assets.video: Video/Kurulin Fusion (USA).mp4
+x-co-op: No
+
+
+game: LocoRoco - Midnight Carnival (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/LocoRoco - Midnight Carnival (USA)/LocoRoco - Midnight Carnival (USA).json
+developer: SCE Japan Studio
+publisher: Sony
+genre: Puzzle
+description:
+  Midnight Carnival is a spin off of the LocoRoco games, and forms a sequel to
+  LocoRoco 2 and was released as a halloween special.
+  .
+  LocoRoco BuiBui, a red, sinister version of MuiMui, pulls on a nearby star which
+  opens a trapdoor over a chute and into a cannon which sends LocoRoco into the
+  titular Midnight Carnival that was designed by BuiBui as a secret base, and also
+  gives LocoRoco the new "boing" power. It is now up to you to get out.
+  .
+  Gameplay is unchanged from previous LocoRoco games, you still have to roll along
+  by tilting and bouncing your way over walls and climbing up walls. Each stage of
+  the game tracks both your score and time progress. You can now dress up your
+  LocoRoco.
+  .
+  Multiplayer comes in the form of four player ad-hoc games, which can be played
+  over any of the single player levels.
+release: 2009-10-29
+players: 4
+assets.boxfront: BoxFront/LocoRoco - Midnight Carnival (USA).jpg
+assets.boxback: BoxBack/LocoRoco - Midnight Carnival (USA).jpg
+assets.background: Background/LocoRoco - Midnight Carnival (USA).jpg
+assets.screenshot: Screenshot/LocoRoco - Midnight Carnival (USA).jpg
+assets.video: Video/LocoRoco - Midnight Carnival (USA).mp4
+x-co-op: Yes
+
+
+game: Mystic Chronicles (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Mystic Chronicles (USA)/Mystic Chronicles (USA).json
+developer: Kemco
+publisher: Natsume
+genre: Role-Playing
+description:
+  Orphaned as a child, Lux was raised in the small village of Selka by his
+  grandmother. He lived a quiet and uneventful life there until on his 18th
+  birthday, when he decided to join the legendary Holos Guild, an organization
+  whose primary mission is to rid the world of evil. And that’s when Lux’s life
+  began to change. A chance meeting with a young girl will lead Lux on an
+  adventure of a lifetime, answering questions of his past and secrets that dwell
+  deep within his soul... Is there more to Lux than meets the eye? You’ll never know
+  quite what to expect in Mystic Chronicles!
+release: 2012-09-04
+players: 1
+assets.boxfront: BoxFront/Mystic Chronicles (USA).jpg
+assets.boxback: BoxBack/Mystic Chronicles (USA).jpg
+assets.background: Background/Mystic Chronicles (USA).jpg
+assets.screenshot: Screenshot/Mystic Chronicles (USA).jpg
+assets.video: Video/Mystic Chronicles (USA).mp4
+x-co-op: No
+
+
+game: No Heroes Allowed! (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/No Heroes Allowed! (USA)/No Heroes Allowed! (USA).json
+developer: Acquire
+publisher: SCEA
+genre: Strategy
+description:
+  Experience No Heroes Allowed!™ originally released on the PSP™
+  (PlayStation®Portable) system, enhanced with up-rendering, rewind, quick
+  save, and custom video filters.
+  .
+  Badman is hatching evil plans for world domination from his underground lair.
+  But the rumblings from above are that there are heroes on the hunt, looking
+  to bring him to justice. Only you can save Badman by luring them into your
+  own monster-filled dungeons of doom!
+  .
+  Become the God of Destruction, summoned to save Badman from an army of heroic
+  forces. Dig a vast network of dungeons and create an ecosystem of hungry
+  monsters to defeat the invading warriors.
+  .
+  The enemy is on the way and, as Badman famously said back in 2010, there is
+  no sweeter sound than the scream of a slain hero, muwahahahaha…
+  .
+  This title has been converted from the PSP™ (PlayStation®Portable) version to
+  the PlayStation®4 and PlayStation®5 consoles and provides newly added
+  features. Consequently, there may be times where the title plays differently
+  from the PSP™ (PlayStation®Portable) version, or where some features may
+  cause the title to not function properly. This version does not support the
+  PSP™ (PlayStation®Portable) system’s peripherals, therefore some
+  functionality may not be available.
+release: 2010-11-01
+players: 1
+assets.boxfront: BoxFront/No Heroes Allowed! (USA).jpg
+assets.boxback: BoxBack/No Heroes Allowed! (USA).jpg
+assets.background: Background/No Heroes Allowed! (USA).jpg
+assets.screenshot: Screenshot/No Heroes Allowed! (USA).jpg
+assets.video: Video/No Heroes Allowed! (USA).mp4
+x-co-op: No
+
+
+game: Patchwork Heroes (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Patchwork Heroes (USA) (En,Fr,Es)/Patchwork Heroes (USA) (En,Fr,Es).json
+developer: Acquire
+publisher: SCEA
+genre: Action
+description:
+  Save a colorful world in need of a brave hero! Millions of innocent lives are
+  being threatened by giant warships that are targeting defenseless cities and
+  towns. Answer the people's cry for help and control a machine that can cut apart
+  warships into harmless patches.
+  .
+  A unique artistic style is combined with friendly game play to create instant
+  excitement! No two levels are alike as you learn new strategies and get help
+  from comrades to overcome different enemies throughout a fun story.
+  .
+  Features:\n
+  • Beat 30 action-packed levels, each with a different war ship, enemies, and
+  obstacles to overcome\n
+  • Easy controls let you cut ships apart, set bombs, and use special Mojo attacks
+  to defeat the enemy\n
+  • Uncover the story and get to know your comrades and the innocent cities being
+  threatened by enemies\n
+  • React quickly and plan ahead to stop enemy repairs and attacks before time
+  runs out\n
+  • Become the ultimate patchwork hero by mastering unique challenges in Mission
+  Mode
+release: 2010-03-17
+players: 1
+assets.boxfront: BoxFront/Patchwork Heroes (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Patchwork Heroes (USA) (En,Fr,Es).jpg
+assets.background: Background/Patchwork Heroes (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Patchwork Heroes (USA) (En,Fr,Es).jpg
+assets.video: Video/Patchwork Heroes (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Piyotama (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Piyotama (USA)/Piyotama (USA).json
+developer: SCE Japan Studio
+publisher: Sony Computer Entertainment
+genre: Puzzle
+description:
+  Piyotama is a puzzle game where the goal is to manipulate colored eggs and line
+  up four or more in a row to "hatch" them. The eggs can only be manipulated when
+  outside of the "nest" (the play area), which is accomplished by sliding the
+  selected row of eggs to the left or right using the dpad. The order of the three
+  eggs pushed out of the nest can be cycled left or right using the X and O
+  buttons, respectively. The current row can be changed with the up and down
+  directions on the dpad allowing them to be re-inserted on a different row to
+  form lines of matching eggs.
+  .
+  Once a line of four eggs is formed a "hatch" is begun, giving the player a short
+  time to create more lines of eggs to form a combo to score more points before
+  the eggs hatch. When the "hatch" timer is up any eggs that formed part of a line
+  will hatch and the little Piyos will fly off to collect on either side of the
+  screen. An egg will hatch even if it is no longer part of a line of matching
+  eggs, so long as it is not being held outside of the nest. The remaining eggs
+  will fall to fill in the gaps. When enough points are scored the player's level
+  increases.
+  .
+  An additional dimension is added to the controls by the use of the Sixaxis
+  controller's motion-sensing abilities. By shaking the Sixaxis from side-to-side
+  the eggs can be shaken to fall into gaps. Shaking the controller up-and-down
+  will cause the eggs to jump about offering limited control in re-ordering the
+  eggs beyond manipulating them three-at-a-time beyond the nest. If a hatch has
+  started, shaking the controller will cause the eggs to hatch immediately. The
+  maneuver can be particularly useful in the battle mode when the eggs are getting
+  close to filling the nest, which would result in the end of the game.
+release: 2010-07-27
+players: 2
+assets.boxfront: BoxFront/Piyotama (USA).jpg
+assets.boxback: BoxBack/Piyotama (USA).jpg
+assets.background: Background/Piyotama (USA).jpg
+assets.screenshot: Screenshot/Piyotama (USA).jpg
+assets.video: Video/Piyotama (USA).mp4
+x-co-op: No
+
+
+game: Red Star, The (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Red Star, The (USA)/Red Star, The (USA).json
+developer: Acclaim Studios Austin
+publisher: XS Games
+genre: Action
+description:
+  The Red Star is a third-person action game based on the graphic novel of the
+  same name. The setting is an alternate reality version of the Soviet Union, the
+  United Republics of the Red Star (URRS) where magic and technology co-exist. You
+  can play as one of three character each with different abilities and play
+  styles. The gameplay includes elements of shoot'em up and beat'em up genres,
+  boss fights, weapon upgrades, and more.
+release: 2010-03-17
+players: 1
+assets.boxfront: BoxFront/Red Star, The (USA).jpg
+assets.boxback: BoxBack/Red Star, The (USA).jpg
+assets.background: Background/Red Star, The (USA).jpg
+assets.screenshot: Screenshot/Red Star, The (USA).jpg
+assets.video: Video/Red Star, The (USA).mp4
+x-co-op: No
+
+
+game: Savage Moon - The Hera Campaign (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Savage Moon - The Hera Campaign (USA)/Savage Moon - The Hera Campaign (USA).json
+developer: FluffyLogic
+publisher: Sony Computer Entertainment
+genre: Strategy
+description:
+  Savage Moon: The Hera Campaign, named with reference to the Aegophagus: the goat
+  eating aspect of the Greek goddess. This huge gathering of Imoons, the Hera
+  Cluster, drifted into human space a few months ago. Preliminary intelligence
+  suggests that it consists of 20 Imoons populated by a rich variety of
+  Insectocyte forms, some of which we have encountered before and some of which
+  are new. The human military forces have advanced too with new technologies being
+  available for the Hera Campaign. Pride of place goes to the Sniper Tower - a
+  deadly new combat tower that seeks prey that poses the biggest threat within
+  range. We have also separated the blocking towers from the rest of the
+  tower-tech to give the player both drop-pods (that land a new combat or support
+  tower) and block-pods (that land a blocking tower). And finally, in addition,
+  you now play as the Supreme Commander of the entire armada. The player controls
+  events for the whole campaign as well as each individual Imoon mission; choosing
+  which Imoon to concentrate your resources on via the new Tactical Layer
+  interface.
+release: 2009-12-22
+players: 1
+assets.boxfront: BoxFront/Savage Moon - The Hera Campaign (USA).jpg
+assets.boxback: BoxBack/Savage Moon - The Hera Campaign (USA).jpg
+assets.background: Background/Savage Moon - The Hera Campaign (USA).jpg
+assets.screenshot: Screenshot/Savage Moon - The Hera Campaign (USA).jpg
+assets.video: Video/Savage Moon - The Hera Campaign (USA).mp4
+x-co-op: No
+
+
+game: Unchained Blades (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable/Unchained Blades (USA)/Unchained Blades (USA).json
+developer: FuRyu
+publisher: Xseed Games
+genre: Role-Playing
+description:
+  Unchained Blades follows the story of the dragon emperor, Fang, who after being
+  stripped of his powers by the goddess Clunea, embarks on a journey for revenge
+  and to regain his true form. Arrogant and vengeful, Fang is joined in his quest
+  by a cowardly golem prince, a shy medusa priestess, a young phoenix clan maiden,
+  and many other mythical beings seeking to meet with the goddess.\n
+  In Unchained Blades, players journey through the game with a party of up to four
+  characters, moving through dungeons in a first-person perspective and engaging
+  in turn-based combat along the way. Using the game's unique "Unchain" system
+  while in battle, players are able to try and convince monsters to follow them.
+  If they are successful in using the Unchain system, the enemy monster will then
+  join their party and help them in the future by blocking attacks or supplying
+  players with special offensive abilities. Each character in the player's four
+  person party can hold up to four unchained creatures, ensuring plenty of combat
+  variety.
+release: 2012-06-26
+players: 1
+assets.boxfront: BoxFront/Unchained Blades (USA).jpg
+assets.boxback: BoxBack/Unchained Blades (USA).jpg
+assets.background: Background/Unchained Blades (USA).jpg
+assets.screenshot: Screenshot/Unchained Blades (USA).jpg
+assets.video: Video/Unchained Blades (USA).mp4
+x-co-op: No
+
+

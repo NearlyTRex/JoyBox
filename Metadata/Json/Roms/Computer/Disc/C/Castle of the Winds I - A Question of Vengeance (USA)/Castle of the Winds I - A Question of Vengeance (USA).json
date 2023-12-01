@@ -1,0 +1,30 @@
+{
+    "is_win31": true,
+    "main_game_win31_exe": [
+        "CASTLE1/CASTLE1.EXE"
+    ],
+    "main_game_win31_exe_cwd": {
+        "CASTLE1/CASTLE1.EXE": "CASTLE1"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_ONE_ROOT",
+                "to": "$DOS_MAIN_ROOT/C/CASTLE1",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT",
+                "to": "$DOS_MAIN_ROOT/C",
+                "type": "copy"
+            }
+        ]
+    },
+    "sync": {
+        "data": [
+            "*.CWG"
+        ],
+        "search": "CASTLE1/CASTLE1.EXE"
+    },
+    "transform_file": "Castle of the Winds I - A Question of Vengeance (USA).m3u"
+}

@@ -1,0 +1,20 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/ss_artworks.zip",
+        "$SETUP_MAIN_ROOT/extra/ss_enhanced_controls.zip",
+        "$SETUP_MAIN_ROOT/extra/ss_hintbook.zip",
+        "$SETUP_MAIN_ROOT/extra/ss_manual_de.zip",
+        "$SETUP_MAIN_ROOT/extra/ss_manual_en.zip",
+        "$SETUP_MAIN_ROOT/extra/ss_manual_fr.zip",
+        "$SETUP_MAIN_ROOT/extra/ss_maps.zip",
+        "$SETUP_MAIN_ROOT/extra/ss_ost_flac.zip",
+        "$SETUP_MAIN_ROOT/extra/ss_ost_midi.zip",
+        "$SETUP_MAIN_ROOT/extra/ss_ost_mp3.zip",
+        "$SETUP_MAIN_ROOT/extra/ss_strategy_guide.zip",
+        "$SETUP_MAIN_ROOT/extra/ss_tv_spot.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_system_shock_enhanced_edition_1.2.16_(64bit)_(44378).exe"
+    ],
+    "transform_file": "setup_system_shock_enhanced_edition_1.2.16_(64bit)_(44378).exe"
+}

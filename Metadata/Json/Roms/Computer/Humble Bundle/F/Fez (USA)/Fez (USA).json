@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/FEZ-Windows-11282016.exe"
+    ],
+    "transform_file": "FEZ-Windows-11282016.exe"
+}

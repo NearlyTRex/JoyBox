@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Forced - Showdown (USA).exe"
+    ],
+    "transform_file": "Forced - Showdown (USA).exe"
+}

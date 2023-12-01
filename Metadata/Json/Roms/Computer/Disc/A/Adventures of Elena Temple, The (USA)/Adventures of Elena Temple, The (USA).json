@@ -1,0 +1,18 @@
+{
+    "main_game_exe": [
+        "Elena Temple v1.2.0 Windows/v1.2.0_DRMfree/ElenaTemple.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Elena Temple v1.2.0 Windows/v1.2.0_DRMfree/ElenaTemple.exe": "Elena Temple v1.2.0 Windows/v1.2.0_DRMfree"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT/Elena Temple v1.2.0 Windows.zip",
+                "to": "$HDD_MAIN_ROOT/Elena Temple v1.2.0 Windows",
+                "type": "extract"
+            }
+        ]
+    },
+    "transform_file": "Adventures of Elena Temple, The (USA).chd"
+}

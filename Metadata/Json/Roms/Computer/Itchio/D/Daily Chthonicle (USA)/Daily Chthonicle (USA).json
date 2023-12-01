@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Daily Chthonicle (USA).exe"
+    ],
+    "transform_file": "Daily Chthonicle (USA).exe"
+}

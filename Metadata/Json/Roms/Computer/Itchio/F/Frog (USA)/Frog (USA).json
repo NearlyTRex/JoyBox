@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Frog (USA).exe"
+    ],
+    "transform_file": "Frog (USA).exe"
+}

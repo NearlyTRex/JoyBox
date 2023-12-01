@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_neurodeck_psychological_deckbuilder_1.5.3_(64bit)_(49983).exe"
+    ],
+    "transform_file": "setup_neurodeck_psychological_deckbuilder_1.5.3_(64bit)_(49983).exe"
+}

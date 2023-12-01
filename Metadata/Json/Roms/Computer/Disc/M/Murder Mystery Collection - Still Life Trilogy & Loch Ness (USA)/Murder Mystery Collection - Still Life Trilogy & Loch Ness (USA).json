@@ -1,0 +1,16 @@
+{
+    "installer_exe": "$DISC_MAIN_ROOT/Autoplay.exe",
+    "main_game_exe": [
+        "Program Files (x86)/Anuman interactive/StillLife2/SL2.exe",
+        "Program Files (x86)/Loch Ness/Lochness.exe",
+        "Program Files (x86)/Post Mortem/Post Mortem.exe",
+        "Program Files (x86)/Still Life/StillLife.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Program Files (x86)/Anuman interactive/StillLife2/SL2.exe": "Program Files (x86)/Anuman interactive/StillLife2",
+        "Program Files (x86)/Loch Ness/Lochness.exe": "Program Files (x86)/Loch Ness",
+        "Program Files (x86)/Post Mortem/Post Mortem.exe": "Program Files (x86)/Post Mortem",
+        "Program Files (x86)/Still Life/StillLife.exe": "Program Files (x86)/Still Life"
+    },
+    "transform_file": "Murder Mystery Collection - Still Life Trilogy & Loch Ness (USA).chd"
+}

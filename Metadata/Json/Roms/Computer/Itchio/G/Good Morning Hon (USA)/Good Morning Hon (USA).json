@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Good Morning Hon (USA).exe"
+    ],
+    "transform_file": "Good Morning Hon (USA).exe"
+}

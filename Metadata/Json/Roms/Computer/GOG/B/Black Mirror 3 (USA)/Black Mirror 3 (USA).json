@@ -1,0 +1,11 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/bm_3_handbuch.zip",
+        "$SETUP_MAIN_ROOT/extra/bm_3_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/bm_3_manual_es.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_black_mirror3_2.0.0.5.exe"
+    ],
+    "transform_file": "setup_black_mirror3_2.0.0.5.exe"
+}

@@ -1,0 +1,1683 @@
+collection: Nintendo DSi
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo DSi" {file.path}
+
+
+game: 7 Wonders II (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/7 Wonders II (USA)/7 Wonders II (USA).json
+developer: MumboJumbo
+publisher: Avanquest Software
+genre: Puzzle
+description:
+  7 Wonders II transports you to far away lands to complete an unbelievable
+  mission: Build the 7 Wonders of the World!
+  .
+  Match three to help your workers build the unbelievable sights from Stonehenge
+  to the Taj Mahal. Incredible new power-ups and bonuses help you piece together
+  the hidden map and uncover the secret route leading to the most wondrous sight.
+release: 2012-06-14
+players: 1
+assets.boxfront: BoxFront/7 Wonders II (USA).jpg
+assets.boxback: BoxBack/7 Wonders II (USA).jpg
+assets.background: Background/7 Wonders II (USA).jpg
+assets.screenshot: Screenshot/7 Wonders II (USA).jpg
+x-co-op: No
+
+
+game: Abyss (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Abyss (USA)/Abyss (USA).json
+developer: EnjoyUp Games
+publisher: EnjoyUp Games
+genre: Action
+description:
+  Earth, 3024.
+  .
+  Natural resources are scarce and the survival of the human race is in danger.
+  Desperate to find new energy resources, the ASAN creates Nep2no: a biomechanical
+  robot capable of withstanding extreme depths in the hope of finding new energy
+  sources.
+  .
+  After many years of exploration, a new energy source is found: codenamed 'Gaia'.
+  .
+  Your mission will be to find the 'Gaia' energy stones by exploring the depths.
+  To do so, you must control Nep2no by counteracting gravity and the surrounding
+  darkness with the aid of a light – however, that light goes out little by
+  little...
+release: 2012-08-23
+players: 2
+assets.boxfront: BoxFront/Abyss (USA).jpg
+assets.boxback: BoxBack/Abyss (USA).jpg
+assets.background: Background/Abyss (USA).jpg
+assets.screenshot: Screenshot/Abyss (USA).jpg
+x-co-op: Yes
+
+
+game: AiRace (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/AiRace (USA)/AiRace (USA).json
+developer: NoWay Studio
+publisher: QubicGames
+genre: Racing
+description:
+  AiRace is not your typical handheld racing game – it’s high-sky racing at its
+  best. There are no limits to your flight with 360° movement and unique steering
+  with the Nintendo DSi stylus. AiRace offers you a chance to control one of nine
+  planes and compete against AI or human opponents in six exotic locations. With
+  great physics, plane upgrades, on-the-track power-ups and unique maps, AiRace
+  offers a little bit more than your average racing experience.
+  .
+  It’s time to leave your cars behind and take to the air!
+release: 2010-04-12
+players: 1
+assets.boxfront: BoxFront/AiRace (USA).jpg
+assets.boxback: BoxBack/AiRace (USA).jpg
+assets.background: Background/AiRace (USA).jpg
+assets.screenshot: Screenshot/AiRace (USA).jpg
+x-co-op: No
+
+
+game: AiRace Tunnel (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/AiRace Tunnel (USA)/AiRace Tunnel (USA).json
+developer: NoWay Studio
+publisher: QubicGames
+genre: Racing
+description:
+  AiRace: Tunnel invites you to take on the challenges of Project Tunnel - a
+  recently developed project designed to test the skills and precision of aviation
+  rookies. Think you've got the skills? Then put your reflexes to the test and see
+  how swift you are, how exact you are and how well you anticipate the unexpected.
+  Manoeuvre your aircraft safely through specially created winding tunnels full of
+  traps. And be careful – your plane will speed up with every second making each
+  turn and barrier harder to negotiate. It’s not just a game – it’s a challenge.
+release: 2010-04-01
+players: 1
+assets.boxfront: BoxFront/AiRace Tunnel (USA).jpg
+assets.boxback: BoxBack/AiRace Tunnel (USA).jpg
+assets.background: Background/AiRace Tunnel (USA).jpg
+assets.screenshot: Screenshot/AiRace Tunnel (USA).jpg
+x-co-op: No
+
+
+game: Amoebattle (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Amoebattle (USA)/Amoebattle (USA).json
+developer: Grab, LLC
+publisher: Grab, LLC
+genre: Puzzle;Strategy
+description:
+  Battle for 'Primordial Soup'-remacy! A mysterious infection threatens the
+  microscopic world and its inhabitants, and it’s up to you – and your group of
+  loveable single-celled creatures – to stop it from spreading.
+  .
+  Built from the ground up, Amoebattle delivers a portable twist to the real time
+  strategy genre and brings the experience to the palm of your hand. Intuitively
+  command your troops using the Touch Screen as you discover interesting types of
+  amoebas, journey through fantastic environments, and lead your amoebas to
+  victory in battle...Amoebattle!
+release: 2012-05-03
+players: 1
+assets.boxfront: BoxFront/Amoebattle (USA).jpg
+assets.boxback: BoxBack/Amoebattle (USA).jpg
+assets.background: Background/Amoebattle (USA).jpg
+assets.screenshot: Screenshot/Amoebattle (USA).jpg
+x-co-op: No
+
+
+game: Anonymous Notes 1 - From The Abyss (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Anonymous Notes 1 - From The Abyss (USA)/Anonymous Notes 1 - From The Abyss (USA).json
+developer: Sonic Powered
+publisher: Sonic Powered
+genre: Role-Playing;Action RPG
+description:
+  Discover an exhilarating RPG set inside an infinitely extending dungeon. Sweep
+  away the monsters wriggling in many places and defeat the strong boss monster
+  lurking in the deepest part of the dungeon. Even after the boss monster is
+  defeated, the dungeon automatically re-creates itself, so players can try new
+  games over and over. Using the skill called Soul Capture, the male character
+  can take magic and other skills away from the monsters, as well as weapons and
+  shields to power up.
+release: 2010-02-10
+players: 1
+assets.boxfront: BoxFront/Anonymous Notes 1 - From The Abyss (USA).jpg
+assets.boxback: BoxBack/Anonymous Notes 1 - From The Abyss (USA).jpg
+assets.background: Background/Anonymous Notes 1 - From The Abyss (USA).jpg
+assets.screenshot: Screenshot/Anonymous Notes 1 - From The Abyss (USA).jpg
+x-co-op: No
+
+
+game: Anonymous Notes 2 - From The Abyss (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Anonymous Notes 2 - From The Abyss (USA)/Anonymous Notes 2 - From The Abyss (USA).json
+developer: Sonic Powered
+publisher: Sonic Powered
+genre: Role-Playing;Action RPG
+description:
+  Discover an action-packed RPG set inside an infinitely extending dungeon. Sweep
+  away the monsters wriggling in many places and defeat a strong boss monster
+  lurking in the deepest part of the dungeon. Even after the boss monster is
+  defeated, the dungeon automatically re-creates itself, so players can try new
+  games over and over. Using a skill called Soul Capture, the male character can
+  take magic and other skills away from the monsters, as well as weapons and
+  shields to power up. It's exhilarating to strengthen your character by
+  combining equipment and skills, and then crush the monsters in a sweep.
+release: 2010-03-31
+players: 1
+assets.boxfront: BoxFront/Anonymous Notes 2 - From The Abyss (USA).jpg
+assets.boxback: BoxBack/Anonymous Notes 2 - From The Abyss (USA).jpg
+assets.background: Background/Anonymous Notes 2 - From The Abyss (USA).jpg
+assets.screenshot: Screenshot/Anonymous Notes 2 - From The Abyss (USA).jpg
+x-co-op: No
+
+
+game: Anonymous Notes 3 - From The Abyss (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Anonymous Notes 3 - From The Abyss (USA)/Anonymous Notes 3 - From The Abyss (USA).json
+developer: Sonic Powered
+publisher: Sonic Powered
+genre: Role-Playing;Action RPG
+description:
+  It's a real action RPG with preeminent exhilaration set inside an
+  infinitely-extending dungeon.
+  .
+  Sweep away the monsters wriggling in many places and get at defeating a strong
+  boss monster lurking at the deepest portion of the dungeon.
+  .
+  Even after the boss monster is defeated, the dungeon re-creates itself with
+  automatic system so the player can try new games over and over.
+  .
+  Using the skill called "Soul Capture," the mail character can take away the
+  magic and other skills from the monsters, as well as weapons and shields to
+  power up.
+  .
+  It is very exhilarating to strengthen the character combining the equipments
+  and skills, then crushing the monsters in a sweep.
+  .
+  The player can enjoy a simple and yet profound world of From The Abyss,
+  "Anonymous Notes."
+  .
+  The items, skills, and the magic collected in Chapter 2 can be shared between
+  other titles of this series.
+release: 2012-06-20
+players: 1
+assets.boxfront: BoxFront/Anonymous Notes 3 - From The Abyss (USA).jpg
+assets.boxback: BoxBack/Anonymous Notes 3 - From The Abyss (USA).jpg
+assets.background: Background/Anonymous Notes 3 - From The Abyss (USA).jpg
+assets.screenshot: Screenshot/Anonymous Notes 3 - From The Abyss (USA).jpg
+x-co-op: No
+
+
+game: Anonymous Notes 4 - From The Abyss (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Anonymous Notes 4 - From The Abyss (USA)/Anonymous Notes 4 - From The Abyss (USA).json
+developer: Sonic Powered
+publisher: Sonic Powered
+genre: Role-Playing;Action RPG
+description:
+  Play serious! A true action RPG! Defeat all the flock of monster looming!
+  .
+  It's a real action RPG with preeminent exhilaration set inside an
+  infinitely-extending dungeon. Sweep away the monsters wriggling in many places
+  and get at defeating a strong boss monster lurking at the deepest portion of
+  the dungeon. Even after the boss monster is defeated, the dungeon re-creates
+  itself with automatic system so the player can try new games over and over.
+  Using the skill called "Soul Capture," the mail character can take away the
+  magic and other skills from the monsters, as well as weapons and shields to
+  power up. It is very exhilarating to strengthen the character combining the
+  equipments and skills, then crushing the monsters in a sweep. The player can
+  enjoy a simple and yet profound world of From The Abyss, " Anonymous Notes."
+  The items, skills, and the magic collected in Chapter 2 can be shared between
+  other titles of this series.
+release: 2013-12-11
+players: 1
+assets.boxfront: BoxFront/Anonymous Notes 4 - From The Abyss (USA).jpg
+assets.boxback: BoxBack/Anonymous Notes 4 - From The Abyss (USA).jpg
+assets.background: Background/Anonymous Notes 4 - From The Abyss (USA).jpg
+assets.screenshot: Screenshot/Anonymous Notes 4 - From The Abyss (USA).jpg
+x-co-op: No
+
+
+game: Art Style - AQUIA (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Art Style - AQUIA (USA)/Art Style - AQUIA (USA).json
+developer: Skip Ltd.
+publisher: Nintendo
+genre: Puzzle;General
+description:
+  Dive into Art Style: AQUIA, a fast-paced underwater puzzle game that asks you
+  to think fast and move even faster. Help a scuba diver reach the ocean's floor
+  by matching three or more colored blocks horizontally or vertically. The more
+  blocks you match, the faster the diver will descend. Fail to clear blocks and
+  the diver's air supply will start to run out, causing darkness to creep in
+  from above and cloud your vision. Race against time in TIMED DIVE, dive deep
+  in FREE DIVE mode or visit the AQUARIUM to view various sea creatures. Like
+  every game in the Art Style series, AQUIA features elegant design, polished
+  graphics and pick-up-and-play controls, creating an experience that focuses
+  purely on fun and engaging game play.
+release: 2008-12-24
+players: 1
+assets.boxfront: BoxFront/Art Style - AQUIA (USA).jpg
+assets.boxback: BoxBack/Art Style - AQUIA (USA).jpg
+assets.background: Background/Art Style - AQUIA (USA).jpg
+assets.screenshot: Screenshot/Art Style - AQUIA (USA).jpg
+x-co-op: No
+
+
+game: Aura-Aura Climber (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Aura-Aura Climber (USA)/Aura-Aura Climber (USA).json
+developer: Nintendo Software Technology
+publisher: Nintendo
+genre: Action
+description:
+  Aura-Aura Climber is an arcade-style game where you control a star which has
+  fallen from the sky. Your goal is to grab onto grapple points floating in the
+  air, which lift you higher and higher. By pressing the A Button to grab at the
+  peak of the jump, you'll gain a bit of extra height. You can also use the
+  Control Pad to change direction as you climb upwards, allowing you to reach
+  out-of-reach grapple points. Finally, you can drop from great heights to your
+  advantage, as grappling as you fall past a grapple point will slingshot you back
+  in the opposite direction. By mastering all of these techniques, you can quickly
+  and skillfully navigate to the goal at the top of the level.
+release: 2010-02-22
+players: 1
+assets.boxfront: BoxFront/Aura-Aura Climber (USA).jpg
+assets.boxback: BoxBack/Aura-Aura Climber (USA).jpg
+assets.background: Background/Aura-Aura Climber (USA).jpg
+assets.screenshot: Screenshot/Aura-Aura Climber (USA).jpg
+x-co-op: No
+
+
+game: Bomberman Blitz (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Bomberman Blitz (USA)/Bomberman Blitz (USA).json
+developer: Hudson Soft
+publisher: Hudson Soft
+genre: Action;Strategy
+description:
+  Bomberman makes his debut downloadable appearance on DSiWare with Bomberman
+  Blitz! Experience the classic Bomberman multiplayer experience with 8 player
+  local and online multiplayer through Nintendo Wi-Fi Connection. Hone your skills
+  and learn the maps and when ready, take the battle online! Change multiple map
+  and item preferences for tons of customization options to battle it out.
+  Delivering unparalleled multiplayer gaming excitement, Bomberman Blitz gives
+  everyone who picks up the Nintendo DSi system the addictive fun of Bomberman,
+  anytime, anywhere! Bring friends!
+release: 2009-11-06
+players: 8
+assets.boxfront: BoxFront/Bomberman Blitz (USA).jpg
+assets.boxback: BoxBack/Bomberman Blitz (USA).jpg
+assets.background: Background/Bomberman Blitz (USA).jpg
+assets.screenshot: Screenshot/Bomberman Blitz (USA).jpg
+x-co-op: No
+
+
+game: Bookworm (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Bookworm (USA)/Bookworm (USA).json
+developer: Black Lantern Studios
+publisher: PopCap Games, Inc.
+genre: Puzzle
+description:
+  Spell F-U-N on the run in an all-new Bookworm for the DS!
+  .
+  Have an appetite for words? Then join Lex the Bookworm in the hit word-puzzle
+  game created by PopCap® for your Nintendo DS! Link letter tiles left, right, up
+  and down to spell words and keep your bookworm smiling. Spell words to fill your
+  bookshelves, unlock 20 themed folios and build out 18 unique library rooms.
+  Boost your score using bonus words and Word of the Day. Then track your progress
+  with the all-new Lex-Ray to see how big your Bookworm brain can be!
+  .
+  Work wordy wonders in three game modes: Start with Classic for the most popular
+  Bookworm experience. When you’re ready to test your skills, speed through the
+  fast-paced Action mode.
+  .
+  And if you want to compete with friends, match wits in Multiplayer mode. No
+  matter which mode you like best, you’ll relax and tune up your brain every time
+  you play!
+  .
+  Features
+  .
+  • Flex your lexicon in three game modes – Classic, Action and Multiplayer\n
+  • Form words from 20 themed book collections\n
+  • Unlock 18 rooms to build your library\n
+  • Customize your game backgrounds with your libraries\n
+  • Pick up and play — it’s easy to start working wordy wonders in seconds\n
+  • Compete with friends and family with wireless Multiplayer\n
+  • Unlimited levels to keep you rising up the ranks in the Hall of Fame\n
+  • Boost scores and advance faster with Bonus Words and Reward Tiles\n
+  • Learn the meanings of words you may not know along the way\n
+  • Save your high scores and track your progress with the Lex-Ray\n
+  • Take the brain-boosting fun anywhere you go!
+release: 2009-12-08
+players: 2
+assets.boxfront: BoxFront/Bookworm (USA).jpg
+assets.boxback: BoxBack/Bookworm (USA).jpg
+assets.background: Background/Bookworm (USA).jpg
+assets.screenshot: Screenshot/Bookworm (USA).jpg
+x-co-op: Yes
+
+
+game: Box Pusher (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Box Pusher (USA)/Box Pusher (USA).json
+developer: Cosmigo
+publisher: GameOn
+genre: Puzzle
+description:
+  Push! In this classic puzzle game you play a warehouse worker who has to move
+  boxes to the correct locations. Sounds easy?
+  .
+  Prove you have the brain power to solve over 250 missions and master all
+  situations with the correct strategy.
+  .
+  Funny animations, zoomable playing area and unlimited undo will help you with
+  these brain-teasers.
+  .
+  Play with friends in multiplayer or make and exchange your own levels.This
+  puzzler will captivate you.
+release: 2012-02-22
+players: 2
+assets.boxfront: BoxFront/Box Pusher (USA).jpg
+assets.boxback: BoxBack/Box Pusher (USA).jpg
+assets.background: Background/Box Pusher (USA).jpg
+assets.screenshot: Screenshot/Box Pusher (USA).jpg
+x-co-op: Yes
+
+
+game: Candle Route (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Candle Route (USA)/Candle Route (USA).json
+developer: Fun Unit
+publisher: Teyon
+genre: Puzzle
+description:
+  Sparky has been entrusted to bring the light to the Crayon Castle before
+  nightfall. Lead Sparky through over 100 colourful levels to collect matches and
+  light candles. Don’t be surprised to find various obstacles like bombs, puddles,
+  dynamite or dead ends! This unique and beautiful game will light a fire in the
+  heart of every puzzle fan!
+release: 2011-12-14
+players: 1
+assets.boxfront: BoxFront/Candle Route (USA).jpg
+assets.boxback: BoxBack/Candle Route (USA).jpg
+assets.background: Background/Candle Route (USA).jpg
+assets.screenshot: Screenshot/Candle Route (USA).jpg
+x-co-op: No
+
+
+game: Cat Frenzy (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Cat Frenzy (USA)/Cat Frenzy (USA).json
+developer: Teyon
+publisher: Teyon
+genre: Puzzle
+description:
+  Little kittens are trapped in a well, and it’s up to you to figure out how to
+  get them out of trouble! Slide rows or columns of cute, cuddly cats to create
+  chains of three or more of the same kind, in order to pull them out of the well.
+  The game features both Mission and Quick Play modes, with a total of 140 levels
+  that will engage you in hours of fun!
+release: 2012-05-02
+players: 1
+assets.boxfront: BoxFront/Cat Frenzy (USA).jpg
+assets.boxback: BoxBack/Cat Frenzy (USA).jpg
+assets.background: Background/Cat Frenzy (USA).jpg
+assets.screenshot: Screenshot/Cat Frenzy (USA).jpg
+x-co-op: No
+
+
+game: Clash of Elementalists (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Clash of Elementalists (USA)/Clash of Elementalists (USA).json
+developer: Amzy
+publisher: Teyon
+genre: Fighting
+description:
+  Step into the shoes of one of the four Elementalists each possessing their own
+  superior power – fire, earth, air and water – and take to the battlefields in a
+  fight for superiority!
+  .
+  Draw on the unique abilities of your chosen character and use their elements to
+  counterattack from afar or in hand-to-hand combat. Destroy the other
+  Elementalists in engaging and explosive rounds of single-play onslaughts, or
+  compete with your friends via local wireless connection! Take the battle above
+  the clouds or in the depths of ancient ruins as you fight for your Elementalist
+  to be the only and final victor!
+release: 2011-04-27
+players: 1
+assets.boxfront: BoxFront/Clash of Elementalists (USA).jpg
+assets.boxback: BoxBack/Clash of Elementalists (USA).jpg
+assets.background: Background/Clash of Elementalists (USA).jpg
+assets.screenshot: Screenshot/Clash of Elementalists (USA).jpg
+x-co-op: No
+
+
+game: Color Commando (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Color Commando (USA)/Color Commando (USA).json
+developer: Circle Entertainment
+publisher: CIRCLE Entertainment
+genre: Action;Platform;Puzzle
+description:
+  Color Commando is a new and very cool puzzle platform game.
+  .
+  In this game you get to hunt for treasure! However, many evil colour monsters
+  are blocking your path! Pick up colour blobs and try to outsmart the monsters!
+  .
+  In each level, colour monsters will block your path and try to grab you! So what
+  can you do against this?
+  .
+  Collect paint blobs that are spread out over the level. You can use a paint blob
+  to paint a big paint-spot on the world. If a monster of the same colour comes
+  into contact with the paint-spot, the monster will dissolve into the spot. When
+  this happens the monster cannot harm the player!
+  .
+  The game starts out easy enough, but before you know it you'll be surrounded by
+  many different types of monsters in all different colours!
+  .
+  There are five worlds, each with four normal levels and one star level. You can
+  unlock the star level by getting all the treasure in the other four levels!
+release: 2013-04-25
+players: 1
+assets.boxfront: BoxFront/Color Commando (USA).jpg
+assets.boxback: BoxBack/Color Commando (USA).jpg
+assets.background: Background/Color Commando (USA).jpg
+assets.screenshot: Screenshot/Color Commando (USA).jpg
+x-co-op: No
+
+
+game: Commando - Steel Disaster (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Commando - Steel Disaster (USA)/Commando - Steel Disaster (USA).json
+developer: Mana Computer Software
+publisher: XS Games
+genre: Action;Shooter
+description:
+  Commando: Steel Disaster is a shooting game based on a futuristic military
+  theme.
+  .
+  Various sectors of a military group report being attacked by some of their own
+  war machines and that a terrorist organization led by a man named Rattlesnake is
+  at the center of each attack. A commando and vehicle specialist code-named Storm
+  is assigned to enter each affected area and progressively stop Rattlesnake’s
+  ambitions.
+  .
+  • Excellent visuals and game graphics for an effective appearance!\n
+  • Very fluent and smooth gameplay!\n
+  • Very intense battle scenes!
+release: 2008-05-30
+players: 1
+assets.boxfront: BoxFront/Commando - Steel Disaster (USA).jpg
+assets.boxback: BoxBack/Commando - Steel Disaster (USA).jpg
+assets.background: Background/Commando - Steel Disaster (USA).jpg
+assets.screenshot: Screenshot/Commando - Steel Disaster (USA).jpg
+x-co-op: No
+
+
+game: Crystal Adventure (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Crystal Adventure (USA)/Crystal Adventure (USA).json
+developer: Circle Entertainment
+publisher: CIRCLE Entertainment
+genre: Role-Playing
+description:
+  In the outskirts of the kingdom, there are rare crystals containing a secret
+  magical energy inside them. Rumour has it that a sorcerer is collecting the
+  crystals in a tower for some reason, but no one knows where or if the tower
+  actually exists...
+  .
+  As the most famous bounty hunter in the kingdom, you've been hired to seek out
+  and investigate the tower’s location. At last you find the tower, but it has
+  already been overrun by a large group of monsters intent on performing a dark
+  ritual to summon a highly dangerous demon!
+  .
+  Although the demon has been summoned, you must stop the continuing ritual and
+  kill the demon before it gains full power... or everything will be destroyed!
+release: 2012-12-06
+players: 1
+assets.boxfront: BoxFront/Crystal Adventure (USA).jpg
+assets.boxback: BoxBack/Crystal Adventure (USA).jpg
+assets.background: Background/Crystal Adventure (USA).jpg
+assets.screenshot: Screenshot/Crystal Adventure (USA).jpg
+x-co-op: No
+
+
+game: Dark Void Zero (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Dark Void Zero (USA)/Dark Void Zero (USA).json
+developer: Other Ocean Interactive
+publisher: Capcom
+genre: Action;Platform
+description:
+  With your trusty rocket pack, help Rusty defeat the Watchers in three intense
+  levels of 8-bit retro-styled action.
+  .
+  As the ‘80s were drawing to a close, the developers at Capcom began work on a
+  top secret project that aimed to set new standards for the platformer genre.
+  That game was called “Dark Void”. Alas, Capcom suspended development on Dark
+  Void as it began to evaluate the SNES. Before long, the game was shelved and
+  drifted, unnoticed, into the annals of gaming history. Dark Void became a
+  legendary “lost project” at Capcom. Now, nearly twenty years later, Dark Void is
+  back! To commemorate the game’s humble origins, Capcom has commissioned this
+  recreation of the original 8-bit classic, now re-titled “Dark Void Zero”, on the
+  Nintendo DSi system. You play Rusty, the first human born in the Void, who must
+  take on the Watchers in a quest to stop their domination of Earth. With the aid
+  of Nikola Tesla, and his state-of-the-art rocket pack, Rusty must take down the
+  Watchers and their minions across three intense levels of action and intrigue.
+release: 2010-01-18
+players: 1
+assets.boxfront: BoxFront/Dark Void Zero (USA).jpg
+assets.boxback: BoxBack/Dark Void Zero (USA).jpg
+assets.background: Background/Dark Void Zero (USA).jpg
+assets.screenshot: Screenshot/Dark Void Zero (USA).jpg
+x-co-op: No
+
+
+game: Don't Cross The Line (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Don't Cross The Line (USA)/Don't Cross The Line (USA).json
+developer: Jupiter Corporation
+publisher: Aksys Games
+genre: Puzzle;General
+description:
+  Don't Cross The Line is a puzzle game in which the player must connect lines
+  to various boxes, from one identical box to another, without crossing the
+  lines they draw in the process. There are roughly 50 stages in all. Depending
+  on how quickly you complete each stage, you'll be awarded with a bronze, silver
+  or gold award. To unlock additional stages, players must achieve a certain
+  ranking in previous stages. Can you outwit the puzzles at hand and receive
+  gold awards all around?
+release: 2009-11-04
+players: 1
+assets.boxfront: BoxFront/Don't Cross The Line (USA).jpg
+assets.boxback: BoxBack/Don't Cross The Line (USA).jpg
+assets.background: Background/Don't Cross The Line (USA).jpg
+assets.screenshot: Screenshot/Don't Cross The Line (USA).jpg
+x-co-op: No
+
+
+game: Doodle Fit (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Doodle Fit (USA)/Doodle Fit (USA).json
+developer: Gamelion Studios
+publisher: Gamelion Studios
+genre: Puzzle;Logic
+description:
+  Doodle Fit, the best-selling puzzle game, is finally here! Your task is simple:
+  fit the given sets of blocks into given shapes. Drag the blocks inside and
+  outside in search for the layout that covers the whole shape. A level is
+  complete when all blocks have been used and there's no more space free in the
+  shape. The game features over one hundred different levels with a variety of
+  unique shapes to play with. There are almost 550 solutions in total, which
+  means you can enjoy near unlimited replayability.
+release: 2010-09-27
+players: 1
+assets.boxfront: BoxFront/Doodle Fit (USA).jpg
+assets.boxback: BoxBack/Doodle Fit (USA).jpg
+assets.background: Background/Doodle Fit (USA).jpg
+assets.screenshot: Screenshot/Doodle Fit (USA).jpg
+x-co-op: No
+
+
+game: Dr. Mario Express (USA) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Dr. Mario Express (USA) (Rev 1)/Dr. Mario Express (USA) (Rev 1).json
+developer: Arika
+publisher: Nintendo
+genre: Puzzle
+description:
+  Battle the forces of illness with Mario on the go!
+  .
+  • The classic puzzle game starring Mario returns\n
+  • Puzzle game & Mario fans won't be able to put it down\n
+  • Downloadable directly to your Nintendo DSi system
+  .
+  Mario once again dons his stethoscope to battle the forces of illness in this
+  downloadable version of the classic puzzle game. Use vitamins to eliminate
+  viruses in Classic mode, or play against a computer opponent in Vs. CPU mode.
+  Make an appointment with Dr. Mario today!
+release: 2009-04-20
+players: 1
+assets.boxfront: BoxFront/Dr. Mario Express (USA) (Rev 1).jpg
+assets.boxback: BoxBack/Dr. Mario Express (USA) (Rev 1).jpg
+assets.background: Background/Dr. Mario Express (USA) (Rev 1).jpg
+assets.screenshot: Screenshot/Dr. Mario Express (USA) (Rev 1).jpg
+x-co-op: No
+
+
+game: Dracula - Undead Awakening (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Dracula - Undead Awakening (USA)/Dracula - Undead Awakening (USA).json
+developer: Moregames Entertainment
+publisher: Chillingo
+genre: Action;Shooter;Shoot-'Em-Up;Top-Down
+description:
+  Are you a vampire hunter? Are you ready to battle legions of undead foes
+  including zombies, ghouls and werewolves? You'll need to wield an arsenal of
+  powerful weaponry while using your skill and intelligence. Uncover devastating
+  firepower - machine guns, buzz-saws, flamethrowers and more - and choose
+  upgrades for them as well as unique new perks for your character as your
+  enemies increase in number and ferocity. You're a tough customer, but beware -
+  Lord Dracula is always on the hunt, and you are his prey. Enemies in Dracula
+  have one thing in common: Undead, lycanthrope or mutant, they're all after
+  your flesh.
+release: 2009-02-20
+players: 1
+assets.boxfront: BoxFront/Dracula - Undead Awakening (USA).jpg
+assets.boxback: BoxBack/Dracula - Undead Awakening (USA).jpg
+assets.background: Background/Dracula - Undead Awakening (USA).jpg
+assets.screenshot: Screenshot/Dracula - Undead Awakening (USA).jpg
+x-co-op: No
+
+
+game: Dragon Quest Wars (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Dragon Quest Wars (USA)/Dragon Quest Wars (USA).json
+developer: Intelligent Systems
+publisher: Square Enix
+genre: Role-Playing;Strategy
+description:
+  Dragon Quest Wars is a turn-based strategy game played out across a number of
+  quick and challenging rounds. The player will pick four monster playing pieces
+  to battle on their team, with Dragon Quest superstars Slime, Dracky, Hammerhood,
+  Healslime, Chimaera and Golem all available to choose from. Played across a
+  table-top style arena the ultimate aim of the game is to battle and defend
+  against the opposing team to advance to the other side of the arena.
+release: 2009-09-28
+players: 1
+assets.boxfront: BoxFront/Dragon Quest Wars (USA).jpg
+assets.boxback: BoxBack/Dragon Quest Wars (USA).jpg
+assets.background: Background/Dragon Quest Wars (USA).jpg
+assets.screenshot: Screenshot/Dragon Quest Wars (USA).jpg
+x-co-op: No
+
+
+game: Fishdom (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Fishdom (USA)/Fishdom (USA).json
+developer: Playrix Entertainment
+publisher: Playrix Entertainment
+genre: Puzzle;Matching
+description:
+  In Fishdom, you use your mouse to swap two items so as to make a row of at least
+  three. When you create this, those three or more disappear. The object to to
+  match items where at least one is on a gold tile. When all the gold tiles are
+  cleared from the puzzle, the level is complete. You will then win money based on
+  how many gold tiles there were and any time you had remaining. Then, you can use
+  this money to buy various fish, decorative items like plants and shells or items
+  for your fish's comfort like heaters, lights and filters so as to create your
+  dream aquarium.
+  .
+  If you match five of the same item, you will create a depth charge.
+  Double-clicking or swapping this will make it explode. It will then clear the
+  area up to two tiles away. If you match six of the same item, you will create a
+  firecracker. Double-clicking or swapping this will make it explode. It will then
+  clear the area up to one tile away. If you have gold tiles with a gray plate,
+  you must match them twice to clear them. If you have any tiles that are locked,
+  with a chain on it, you must match it to unlock it but you cannot move the item
+  within until it is unlocked. If a tile is double locked, with chains crossed,
+  you must match it twice to unlock it.
+release: 2015-02-19
+players: 1
+assets.boxfront: BoxFront/Fishdom (USA).jpg
+assets.boxback: BoxBack/Fishdom (USA).jpg
+assets.background: Background/Fishdom (USA).jpg
+assets.screenshot: Screenshot/Fishdom (USA).jpg
+x-co-op: No
+
+
+game: Flip the Core (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Flip the Core (USA)/Flip the Core (USA).json
+developer: Engine Software
+publisher: Engine Software
+genre: Shooter
+description:
+  Before the Big Bang shaped the universe as we know it, a place existed with
+  fewer dimensions than we have today. It is there that our hero's journey began,
+  and he carried with him a special device that allowed him to flip between these
+  flat dimensions...
+  .
+  Flip the Core is an artistic and unique take on the classic shoot 'em up genre
+  and combines fast shooting action with strategic thinking. In this
+  side-scrolling action game, you can literally flip your screen at will, changing
+  walls into tunnels, a death trap into a passageway and moving an enemy from one
+  spot to the next. Unless you truly believe in dead ends...there are none.
+release: 2012-06-28
+players: 1
+assets.boxfront: BoxFront/Flip the Core (USA).jpg
+assets.boxback: BoxBack/Flip the Core (USA).jpg
+assets.background: Background/Flip the Core (USA).jpg
+assets.screenshot: Screenshot/Flip the Core (USA).jpg
+x-co-op: No
+
+
+game: Gaia's Moon (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Gaia's Moon (USA)/Gaia's Moon (USA).json
+developer: EnjoyUp Games
+publisher: EnjoyUp Games
+genre: Action;Adventure
+description:
+  Something strange is causing changes to the balance of energy in the
+  life-prolonging Gaia.
+  .
+  To discover the cause, you must play the role of Atreyu and grab his magical
+  cane, Milo - tapping into its power to fly into action.
+  .
+  But be careful! The whole planet has gone mad and chaos threatens to take
+  control...
+release: 2012-01-19
+players: 1
+assets.boxfront: BoxFront/Gaia's Moon (USA).jpg
+assets.boxback: BoxBack/Gaia's Moon (USA).jpg
+assets.background: Background/Gaia's Moon (USA).jpg
+assets.screenshot: Screenshot/Gaia's Moon (USA).jpg
+x-co-op: No
+
+
+game: Goony (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Goony (USA)/Goony (USA).json
+developer: Moragami Company
+publisher: CIRCLE Entertainment
+genre: Action
+description:
+  Goony is a one-button arcade game for casual and core gamers. You control Goony,
+  a jelly-like creature, who is running down a road covered in hazardous
+  obstacles. The goal of the game is to stay alive for as long as possible. If you
+  fall off the road or fall from a high place, you lose the game.
+  .
+  Goony is constantly on the go, and moves either left or right. You can switch
+  the direction by simply pressing the +Control Pad.
+  .
+  Special blocks, which can help you, are scattered across the playfield. The
+  playfield is infinitely long and lasts until you make a mistake. The number of
+  steps you took is your final score.
+release: 2013-03-14
+players: 1
+assets.boxfront: BoxFront/Goony (USA).jpg
+assets.boxback: BoxBack/Goony (USA).jpg
+assets.background: Background/Goony (USA).jpg
+assets.screenshot: Screenshot/Goony (USA).jpg
+x-co-op: No
+
+
+game: Kappa's Trail, A (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Kappa's Trail, A (USA)/Kappa's Trail, A (USA).json
+developer: Brownie Brown
+publisher: Nintendo
+genre: Action
+description:
+  Use the stylus to successfully guide a kappa down the Kappa Trail, collecting
+  items and avoiding obstacles as you go.Step into the world of a kappa, a
+  mythical river spirit famous in Japanese folklore, as he tries to make his way
+  to the human world. In addition to the challenging main game, you’ll find three
+  different minigames to further improve your kappa-related skills.
+release: 2010-06-14
+players: 1
+assets.boxfront: BoxFront/Kappa's Trail, A (USA).jpg
+assets.boxback: BoxBack/Kappa's Trail, A (USA).jpg
+assets.background: Background/Kappa's Trail, A (USA).jpg
+assets.screenshot: Screenshot/Kappa's Trail, A (USA).jpg
+x-co-op: No
+
+
+game: Legend of Zelda, The - Four Swords Anniversary Edition (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Legend of Zelda, The - Four Swords Anniversary Edition (USA) (En,Fr,Es)/Legend of Zelda, The - Four Swords Anniversary Edition (USA) (En,Fr,Es).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action;Adventure
+description:
+  The Legend of Zelda: Four Swords Anniversary Edition is a special commemorative
+  version of the Four Swords section of the 2003 GBA release "A Link to the Past &
+  Four Swords". In it, you'll embark on an exciting multiplayer adventure filled
+  with action and puzzles as you work to save Princess Zelda from the evil Vaati.
+  You can play with up to four friends at once, as long as each player has a copy
+  of the game installed on their Nintendo DSi or 3DS system.
+  .
+  This game was originally made available for free download for DSi and 3DS owners
+  between September 28th, 2011 and February 20th, 2012, and later for 3DS owners
+  between January 30, 2014, and February 2, 2014.
+  .
+  It is currently unavailable for purchase via DSiWare or the 3DS eShop.
+release: 2011-09-28
+players: 4
+assets.boxfront: BoxFront/Legend of Zelda, The - Four Swords Anniversary Edition (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Four Swords Anniversary Edition (USA) (En,Fr,Es).jpg
+assets.background: Background/Legend of Zelda, The - Four Swords Anniversary Edition (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Four Swords Anniversary Edition (USA) (En,Fr,Es).jpg
+x-co-op: Yes
+
+
+game: Little Red Riding Hood's Zombie BBQ (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Little Red Riding Hood's Zombie BBQ (USA)/Little Red Riding Hood's Zombie BBQ (USA).json
+developer: EnjoyUp
+publisher: Destineer
+genre: Action
+description:
+  Something has gone terribly wrong in fairy tale land. It's up to Little Red
+  Riding Hood to defeat twisted versions of fairy tale characters in Little Red
+  Riding Hood's Zombie BBQ.
+  .
+  Choose from Little Red Riding Hood or legendary Japanese Hero Momataro, each
+  with unique special moves. Defeat waves of zombies, ghosts, and more with simple
+  touch screen controls! Take on undead versions of the Three Little Pigs,
+  Pinocchio, Santa Clause and More.
+  .
+  Red Riding Hood is no damsel in distress! Take down twisted creatures with
+  machine guns, shotguns, bombs, and more. Tackle your enemies in Story, Survival,
+  and Boss Attack Modes.
+release: 2008-10-31
+players: 1
+assets.boxfront: BoxFront/Little Red Riding Hood's Zombie BBQ (USA).jpg
+assets.boxback: BoxBack/Little Red Riding Hood's Zombie BBQ (USA).jpg
+assets.background: Background/Little Red Riding Hood's Zombie BBQ (USA).jpg
+assets.screenshot: Screenshot/Little Red Riding Hood's Zombie BBQ (USA).jpg
+x-co-op: No
+
+
+game: Looksley's Line Up (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Looksley's Line Up (USA)/Looksley's Line Up (USA).json
+developer: Good-Feel
+publisher: Nintendo
+genre: Puzzle
+description:
+  In Tales in a Box, discover a new slant on hidden-object games! Via clever use
+  of the Nintendo DSi system’s inner camera, you can peer ‘into’ the screen,
+  tilting your head to view a scene from different angles, creating an impression
+  of real depth. Journey through a fairy-tale world populated by characters from
+  famous folk stories, and search each themed diorama by looking around from all
+  angles to find hidden letters and objects. As you collect letters and objects,
+  you will meet new characters and form words that will open new stages with even
+  more hidden items to find. Some stages contain secret pictures, testing your
+  observation skills even further. Players of all ages will be amazed by this
+  unique visual spectacle, where a simple-looking picture can reveal a whole world
+  of stories, if you just know where to look!
+release: 2010-05-17
+players: 1
+assets.boxfront: BoxFront/Looksley's Line Up (USA).jpg
+assets.boxback: BoxBack/Looksley's Line Up (USA).jpg
+assets.background: Background/Looksley's Line Up (USA).jpg
+assets.screenshot: Screenshot/Looksley's Line Up (USA).jpg
+x-co-op: No
+
+
+game: Mario Calculator (USA) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Mario Calculator (USA) (Rev 1)/Mario Calculator (USA) (Rev 1).json
+developer: Nintendo Software Technology Corporation
+publisher: Nintendo
+genre: Miscellaneous;Application
+description:
+  Mario and Luigi™ take a break from their normal adventures to dedicate their
+  heroic talents to working with numbers. Mario Calculator features the full
+  functionality of a traditional calculator, including a Memory key and the
+  ability to display up to 13 digits, and adds a layer of atmosphere reminiscent
+  of the original Super Mario Bros.™ Use the Unit Converter to turn one unit of
+  measure into another (such as length, weight, volume, age and others), or track
+  the history of calculations you've performed with ease. Listen to the
+  Mario-related sounds and watch the coins fly as calculations are performed. Now,
+  back to adding up those high scores...
+release: 2009-02-25
+players: 1
+assets.boxfront: BoxFront/Mario Calculator (USA) (Rev 1).jpg
+assets.boxback: BoxBack/Mario Calculator (USA) (Rev 1).jpg
+assets.background: Background/Mario Calculator (USA) (Rev 1).jpg
+assets.screenshot: Screenshot/Mario Calculator (USA) (Rev 1).jpg
+x-co-op: No
+
+
+game: Mario Clock (USA) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Mario Clock (USA) (Rev 1)/Mario Clock (USA) (Rev 1).json
+developer: Nintendo Software Technology Corporation
+publisher: Nintendo
+genre: Miscellaneous;Application
+description:
+  Turn back time and enjoy a bit of classic game play based on the original Super
+  Mario Bros. with Mario Clock. Help Mario and Luigi collect more coins than ever
+  (POW block anyone?) while they run through a variety of stages. Gather enough
+  coins and you'll be treated to another scene bound to bring back fond memories
+  for many. Mario Clock includes both analog and digital clocks that use the
+  system's internal clock or allow you to offset the time however you like.
+  Program up to three alarms (with snooze functionality for those that need it)
+  and assign them a Mario-related sound or use one created in the Nintendo DSi™
+  Sound application. You'll find yourself thinking "Just a few more coins..." in
+  no time!
+release: 2009-04-01
+players: 1
+assets.boxfront: BoxFront/Mario Clock (USA) (Rev 1).jpg
+assets.boxback: BoxBack/Mario Clock (USA) (Rev 1).jpg
+assets.background: Background/Mario Clock (USA) (Rev 1).jpg
+assets.screenshot: Screenshot/Mario Clock (USA) (Rev 1).jpg
+x-co-op: No
+
+
+game: Mario vs. Donkey Kong - Minis March Again! (USA) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Mario vs. Donkey Kong - Minis March Again! (USA) (Rev 1)/Mario vs. Donkey Kong - Minis March Again! (USA) (Rev 1).json
+developer: Nintendo Software Technology
+publisher: Nintendo
+genre: Puzzle
+description:
+  Help Mario and his army of Mini Marios rescue Pauline again! Or create your own
+  levels and share them with others.
+  .
+  Thanks to the runaway success of Super Mini Mario World, Mario and Pauline have
+  expanded their toy-filled theme park and invited everyone to the opening
+  celebration. Everyone, that is, except Donkey Kong, who was too late to get in!
+  Donkey Kong decides to crash the party and kidnaps Pauline along the way! Can
+  Mario and his Mini Marios rescue Pauline from Donkey Kong’s clutches yet again?
+  .
+  In addition, make sure to explore the Construction Zone, where you’ll find all
+  the tools needed to make your own original levels. You can then share your
+  masterpieces or download levels created by others via Nintendo Wi-Fi Connection
+  and broadband Internet access, or via local wireless.
+release: 2009-06-08
+players: 1
+assets.boxfront: BoxFront/Mario vs. Donkey Kong - Minis March Again! (USA) (Rev 1).jpg
+assets.boxback: BoxBack/Mario vs. Donkey Kong - Minis March Again! (USA) (Rev 1).jpg
+assets.background: Background/Mario vs. Donkey Kong - Minis March Again! (USA) (Rev 1).jpg
+assets.screenshot: Screenshot/Mario vs. Donkey Kong - Minis March Again! (USA) (Rev 1).jpg
+x-co-op: No
+
+
+game: Mighty Flip Champs! (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Mighty Flip Champs! (USA)/Mighty Flip Champs! (USA).json
+developer: WayForward Technologies
+publisher: WayForward Technologies
+genre: Puzzle
+description:
+  Take control of multiple dimensions as Alta in Mighty Flip Champs! Navigate your
+  way through different worlds and dimensions as you attempt to make your way to
+  the exit. Use your Magical Warp Wand to switch to new dimensions, but watch the
+  touch screen when you flip to a new dimension - or you might just get crushed!
+  .
+  Mighty Flip Champs! is a puzzle game for the Nintendo DSi that uses both the top
+  screen and the touch screen for play. The player controls Alta on the top
+  screen, and the next dimension in the sequence is displayed on the touch screen.
+  As Alta, the player is unable to jump - pressing A, B, X or Y instead uses the
+  Warp Wand, which flips the dimension from the touch screen up onto the top
+  screen. This allows you to progress forward by creating paths where there would
+  otherwise be dead ends. However, it can also be dangerous if used recklessly, as
+  you can crush Alta in a wall or make her fall straight onto spikes. At certain
+  points in the game, the Warp Wand also malfunctions, and automatically flips to
+  new dimensions after set periods of time. In these situations, you need to stay
+  on your toes and react quickly to the level changes.
+  .
+  Mighty Flip Champs! DX is slightly altered to accommodate the platforms it is
+  played on. As there is only one screen, the current dimension is displayed on
+  the left of the screen, while the next dimension is displayed on the right of
+  the screen, mirrored horizontally rather than vertically.
+release: 2009-06-01
+players: 1
+assets.boxfront: BoxFront/Mighty Flip Champs! (USA).jpg
+assets.boxback: BoxBack/Mighty Flip Champs! (USA).jpg
+assets.background: Background/Mighty Flip Champs! (USA).jpg
+assets.screenshot: Screenshot/Mighty Flip Champs! (USA).jpg
+x-co-op: No
+
+
+game: Mighty Milky Way (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Mighty Milky Way (USA)/Mighty Milky Way (USA).json
+developer: WayForward Technologies
+publisher: WayForward Technologies
+genre: Action;Puzzle
+description:
+  Are you ready to pulse some planets and soar through space? With a pocket full
+  of planet candy and a heart full of ennui, green-skinned cutie-pie Luna needs
+  your help to accomplish her secret mission! Prepare for fever-pitched puzzles in
+  another mighty game from WayForward!
+  .
+  Luna uses her magical staff to create and destroy planets on a whim. Explode
+  vicious space monsters, avoid sizzling electric barriers, and grab all the
+  delicious planet candy you can. But watch out for the T-Rex, Luna’s
+  arch-nemesis! His laser eyes are matched only by the awkwardness of his and
+  Luna’s sketchy past. But enough incessant blathering! Let’s stare into the sun
+  with stoic tears and embrace the rolling chaos that is life!
+release: 2011-05-09
+players: 1
+assets.boxfront: BoxFront/Mighty Milky Way (USA).jpg
+assets.boxback: BoxBack/Mighty Milky Way (USA).jpg
+assets.background: Background/Mighty Milky Way (USA).jpg
+assets.screenshot: Screenshot/Mighty Milky Way (USA).jpg
+x-co-op: No
+
+
+game: Nintendo 3DS Transfer Tool (USA) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo 3DS Transfer Tool (USA) (Rev 1)/Nintendo 3DS Transfer Tool (USA) (Rev 1).json
+developer: Nintendo
+publisher: Nintendo
+genre: Tool
+description:
+  The Nintendo 3DS Transfer Tool allows you to transfer Nintendo DSiWare and
+  data from your Nintendo DSi/Nintendo DSi XL system to your Nintendo 3DS
+  system.
+  .
+  Transferable Data includes:\n
+  *  Wi-Fi Configuration Data - You can transfer Internet Settings and your
+  Nintendo Wi-Fi Connection ID\n
+  *  Photos and Recordings - You can transfer photos and recordings from the
+  Nintendo DSi Camera and Nintendo DSi Sound software preinstalled on the
+  Nintendo DSi system.\n
+  *  Nintendo DSiWare - You can transfer Nintendo DSiWare.
+  .
+  Please note:\n
+  *  You cannot transfer from a Nintendo 3DS system to a Nintendo DSi/Nintendo
+  DSi XL system.\n
+  *  Once a transfer has been made, it cannot be undone.\n
+  *  Some Nintendo DSiWare software cannot be transferred.\n
+  *  Nintendo DSiWare save data is not transferred to the Nintendo 3DS system
+  along with the Nintendo DSiWare.\n
+  *  You cannot transfer Nintendo DSi Points or software that was preinstalled on
+  the Nintendo DSi/Nintendo DSi XL system.\n
+  *  You will need to be connected to the internet to transfer data.
+release: 2011-07-06
+players: 1
+assets.boxfront: BoxFront/Nintendo 3DS Transfer Tool (USA) (Rev 1).jpg
+assets.boxback: BoxBack/Nintendo 3DS Transfer Tool (USA) (Rev 1).jpg
+assets.background: Background/Nintendo 3DS Transfer Tool (USA) (Rev 1).jpg
+assets.screenshot: Screenshot/Nintendo 3DS Transfer Tool (USA) (Rev 1).jpg
+x-co-op: No
+
+
+game: Nintendo DSi + Internet (USA) (Pre-install Only)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi + Internet (USA) (Pre-install Only)/Nintendo DSi + Internet (USA) (Pre-install Only).json
+developer: Nintendo
+publisher: Nintendo
+genre: Firmware
+description:
+  The Nintendo DSi is the third version of the Nintendo DS handheld gaming
+  system. It was announced during the Nintendo Conference 2008 on October 2,
+  2008, in Tokyo, Japan. While it is a part of the DS series of handhelds, it
+  has been stated that the DSi should be considered as a separate console next
+  to the Nintendo DS Lite and the Wii within the United States. The DSi is
+  somewhat larger in size but is thinner in depth. It is likely that it is this
+  decrease in size is likely what forced the removal of the expansion slot, as
+  the bottom portion of the DSi is roughly 12mm, meaning that it is no longer
+  backward compatible with Game Boy Advance games, nor is it compatible with
+  accessories that use the slot. It introduces several other new features over
+  the Nintendo DS Lite.
+release: 2008-11-01
+players: 1
+assets.boxfront: BoxFront/Nintendo DSi + Internet (USA) (Pre-install Only).jpg
+assets.boxback: BoxBack/Nintendo DSi + Internet (USA) (Pre-install Only).jpg
+assets.background: Background/Nintendo DSi + Internet (USA) (Pre-install Only).jpg
+assets.screenshot: Screenshot/Nintendo DSi + Internet (USA) (Pre-install Only).jpg
+x-co-op: No
+
+
+game: Nintendo DSi - Instrument Tuner (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi - Instrument Tuner (USA)/Nintendo DSi - Instrument Tuner (USA).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  The Nintendo DSi Instrument Tuner software can be used to tune an instrument
+  by aligning tonal pitches. The software offers two methods of handling this:
+  feeding sounds into the microphone to measure the difference with a target
+  pitch, or listening to a sample tone. In addition, the standard musical pitch
+  and notation can be changed, as well as the design of the tuner (choose one of
+  three designs). If you're feeling especially in tune, test your ear by taking
+  on the Tuner Fight minigame's challenge: Pop balloons as they rise from pipes
+  by making tones that match the displayed pitches.
+release: 2009-09-02
+players: 1
+assets.boxfront: BoxFront/Nintendo DSi - Instrument Tuner (USA).jpg
+assets.boxback: BoxBack/Nintendo DSi - Instrument Tuner (USA).jpg
+assets.background: Background/Nintendo DSi - Instrument Tuner (USA).jpg
+assets.screenshot: Screenshot/Nintendo DSi - Instrument Tuner (USA).jpg
+x-co-op: No
+
+
+game: Nintendo DSi Browser (USA) (Rev 3)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi Browser (USA) (Rev 3)/Nintendo DSi Browser (USA) (Rev 3).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  The Nintendo DSi Browser was a port of the Opera 9.5 web browser released as
+  a day one update for the Nintendo DSi, and preinstalled on the Nintendo DSi
+  XL. It offers better performance than the previous browser, which is
+  incompatible with the DSi family. As of March 31, 2017, the browser remains
+  available for download on all Nintendo DSi XL systems, and on any Nintendo
+  DSi system that had the browser preinstalled or downloaded prior to that date.
+release: 2008-11-01
+players: 1
+assets.boxfront: BoxFront/Nintendo DSi Browser (USA) (Rev 3).jpg
+assets.boxback: BoxBack/Nintendo DSi Browser (USA) (Rev 3).jpg
+assets.background: Background/Nintendo DSi Browser (USA) (Rev 3).jpg
+assets.screenshot: Screenshot/Nintendo DSi Browser (USA) (Rev 3).jpg
+x-co-op: No
+
+
+game: Nintendo DSi Camera (USA) (Rev 4)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi Camera (USA) (Rev 4)/Nintendo DSi Camera (USA) (Rev 4).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  The Nintendo DSi Camera is a feature in the Nintendo DSi in which the user
+  can take pictures with the two DSi cameras, and store them in their album or
+  SD Card. With the Nintendo Dsi Camera, you can take photos with eleven
+  different lenses, watch slideshows of your photos, and exchange photos with
+  other Nintendo DSi.
+release: 2008-11-01
+players: 1
+assets.boxfront: BoxFront/Nintendo DSi Camera (USA) (Rev 4).jpg
+assets.boxback: BoxBack/Nintendo DSi Camera (USA) (Rev 4).jpg
+assets.background: Background/Nintendo DSi Camera (USA) (Rev 4).jpg
+assets.screenshot: Screenshot/Nintendo DSi Camera (USA) (Rev 4).jpg
+x-co-op: No
+
+
+game: Nintendo DSi Metronome (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi Metronome (USA)/Nintendo DSi Metronome (USA).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  The Nintendo DSi Metronome software can be used to help keep tempo - when
+  playing an instrument, for example. It creates a rhythm by playing sounds
+  based on beat and tempo settings, both of which allow a wide range of
+  adjustments. Choose from three metronome designs (including one based on
+  Nintendo's Game & Watch: Ball title) and record your own sounds for the
+  metronome to use. Or, if you want to take a break, enjoy a unique minigame:
+  Donkey Kong Metronome, in which you make sounds into the microphone to match
+  the beat and have Mario jump over Donkey Kong's barrels.
+release: 2009-09-02
+players: 1
+assets.boxfront: BoxFront/Nintendo DSi Metronome (USA).jpg
+assets.boxback: BoxBack/Nintendo DSi Metronome (USA).jpg
+assets.background: Background/Nintendo DSi Metronome (USA).jpg
+assets.screenshot: Screenshot/Nintendo DSi Metronome (USA).jpg
+x-co-op: No
+
+
+game: Nintendo DSi Shop (USA) (Rev 12)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi Shop (USA) (Rev 12)/Nintendo DSi Shop (USA) (Rev 12).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  Nintendo DSi Shop was an application that allowed the user to download games
+  for the Nintendo DSi. In order to access DSi shop, you will need a DSi system
+  and a Wi-Fi Connection. Nintendo DSi shop was used to buy games for use on
+  your Nintendo DSi system without the need for a game cartridge. There were
+  always new games being added and it can be downloaded to your Nintendo DSi.
+  They've range in prices from some being free to others being 800 points. You
+  must have a Nintendo Points Card to buy games that cost points. You can also
+  buy points via credit card. It was discontinued on 31st March, 2017, along
+  with gainable points at 30th September, 2016.
+release: 2008-11-01
+players: 1
+assets.boxfront: BoxFront/Nintendo DSi Shop (USA) (Rev 12).jpg
+assets.boxback: BoxBack/Nintendo DSi Shop (USA) (Rev 12).jpg
+assets.background: Background/Nintendo DSi Shop (USA) (Rev 12).jpg
+assets.screenshot: Screenshot/Nintendo DSi Shop (USA) (Rev 12).jpg
+x-co-op: No
+
+
+game: Nintendo DSi Sound (USA) (Rev 2)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Nintendo DSi Sound (USA) (Rev 2)/Nintendo DSi Sound (USA) (Rev 2).json
+developer: Nintendo
+publisher: Nintendo
+genre: Application
+description:
+  Nintendo DSi Sound is an application built into the Nintendo DSi that cannot
+  be removed. It can be accessed on the Nintendo DSi Menu by pressing the icon
+  with a parakeet.
+release: 2008-11-01
+players: 1
+assets.boxfront: BoxFront/Nintendo DSi Sound (USA) (Rev 2).jpg
+assets.boxback: BoxBack/Nintendo DSi Sound (USA) (Rev 2).jpg
+assets.background: Background/Nintendo DSi Sound (USA) (Rev 2).jpg
+assets.screenshot: Screenshot/Nintendo DSi Sound (USA) (Rev 2).jpg
+x-co-op: No
+
+
+game: Penguin Patrol (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Penguin Patrol (USA)/Penguin Patrol (USA).json
+developer: Grab Games
+publisher: Grab Games
+genre: Puzzle;General
+description:
+  Waddle We Do?! Baby penguins have been stranded on thin ice by the evil (but
+  oddly stylish) Walrus, and it's up to the Penguin Patrol to rescue them!
+  .
+  Encounter several types of penguins, such as the stubborn Bratty Penguin or
+  the sleepy Fatty Penguin, as you trek across over 75 puzzling levels. But
+  watch out! With each step you take, the thin ice behind you breaks. Without
+  careful planning, you could cut off your own escape route!
+  .
+  Featuring a charming pixel art style, delightful music, and thoughtfully
+  designed levels, Penguin Patrol will entice players of all ages.
+release: 2011-09-28
+players: 1
+assets.boxfront: BoxFront/Penguin Patrol (USA).jpg
+assets.boxback: BoxBack/Penguin Patrol (USA).jpg
+assets.background: Background/Penguin Patrol (USA).jpg
+assets.screenshot: Screenshot/Penguin Patrol (USA).jpg
+x-co-op: No
+
+
+game: Photo Dojo (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Photo Dojo (USA)/Photo Dojo (USA).json
+developer: Nintendo
+publisher: Nintendo
+genre: Fighting
+description:
+  Photo Dojo is a fighting video game developed and published by Nintendo for the
+  Nintendo DSi and Nintendo 3DS's DSiWare and eShop download services. 200 DSi
+  Points are required to download Photo Dojo in the DSi Shop. In North America,
+  the game was free to download until June 11, 2010.
+release: 2010-05-10
+players: 2
+assets.boxfront: BoxFront/Photo Dojo (USA).jpg
+assets.boxback: BoxBack/Photo Dojo (USA).jpg
+assets.background: Background/Photo Dojo (USA).jpg
+assets.screenshot: Screenshot/Photo Dojo (USA).jpg
+x-co-op: No
+
+
+game: Plants vs. Zombies (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Plants vs. Zombies (USA)/Plants vs. Zombies (USA).json
+developer: PopCap Games
+publisher: PopCap Games
+genre: Puzzle
+description:
+  Now you can zap zombies on the go in PopCap's award-winning game! Enjoy
+  thrilling new minigames, take on a friend in Versus mode, and make your own
+  zombie with the Zombatar! Plus, you'll get all the fun of the original hit game:
+  Fight the fun-dead with your arsenal of plants through day, night, fog, in the
+  swimming pool and on the roof. It's a powerful, portable new way to play Plants
+  vs. Zombies. The fun never dies!
+release: 2011-01-18
+players: 2
+assets.boxfront: BoxFront/Plants vs. Zombies (USA).jpg
+assets.boxback: BoxBack/Plants vs. Zombies (USA).jpg
+assets.background: Background/Plants vs. Zombies (USA).jpg
+assets.screenshot: Screenshot/Plants vs. Zombies (USA).jpg
+x-co-op: No
+
+
+game: Retro Pocket (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Retro Pocket (USA)/Retro Pocket (USA).json
+developer: UFO Interactive
+publisher: UFO Interactive
+genre: Miscellaneous;General
+description:
+  Retro Pocket is a fun and exciting video game that brings you back to the glory
+  days of LED handhelds! Discover eight all-original LED-style games such as
+  Kung Fu Hero, Whale Escape, Mind Your Head, Candy Factory and more! Retro
+  Pocket features Game A and Game B modes in all eight games for extra gameplay
+  variations and more high scores to obtain. Aside from the retro visuals, an
+  all-original retro-game-inspired soundtrack await your ears as well! UFO
+  Interactive Games would like to welcome you (back) into the wonderful world of
+  Retro Pocket!
+release: 2012-09-20
+players: 1
+assets.boxfront: BoxFront/Retro Pocket (USA).jpg
+assets.boxback: BoxBack/Retro Pocket (USA).jpg
+assets.background: Background/Retro Pocket (USA).jpg
+assets.screenshot: Screenshot/Retro Pocket (USA).jpg
+x-co-op: No
+
+
+game: Rhythm Core Alpha (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Rhythm Core Alpha (USA)/Rhythm Core Alpha (USA).json
+developer: SoftEgg
+publisher: SoftEgg
+genre: Action;Rhythm;Music
+description:
+  Make music with your Nintendo DSi system! Rhythm Core Alpha is an advanced
+  music creation system, designed for creating and performing live music in
+  front of an audience. Rhythm Core Alpha makes it easy to build drum and
+  instrument loops, and then allows you to play solos over them using the stylus.
+  It automatically detects the key and scale of the music you have created and
+  allows you to change chords at the press of a button. All notes in the solo
+  match the selected key and scale, so you can never hit a wrong note. Rhythm
+  Core Alpha also includes a powerful pattern mode that allows you to set up
+  chord changes and arrange your sequenced parts, enabling you to build a whole
+  song or make sections that you can play back as you desire. Hundreds of
+  adjustable drum and instrument sounds are included. You can edit while the
+  song is playing, so you really can build the song in front of an audience.
+release: 2010-08-09
+players: 1
+assets.boxfront: BoxFront/Rhythm Core Alpha (USA).jpg
+assets.boxback: BoxBack/Rhythm Core Alpha (USA).jpg
+assets.background: Background/Rhythm Core Alpha (USA).jpg
+assets.screenshot: Screenshot/Rhythm Core Alpha (USA).jpg
+x-co-op: No
+
+
+game: Rhythm Core Alpha 2 (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Rhythm Core Alpha 2 (USA)/Rhythm Core Alpha 2 (USA).json
+developer: SoftEgg
+publisher: SoftEgg
+genre: Miscellaneous;Application
+description:
+  Rhythm Core Alpha 2 is an advanced music creation and performance tool. It
+  allows you to build loops of music with drums and a variety of instruments, as
+  well as to play live music with the stylus using the Solo Mode. With this
+  software, you can build music quickly, and perform it live in front of an
+  audience!
+  .
+  This new version greatly expands the capabilities of the original Rhythm Core
+  Alpha by adding:
+  .
+  -Drum Screen\n
+  -Mixer Screen\n
+  -8 Way Solo Mode\n
+  -1,2, and 3 Layer Piano Solo Mode\n
+  -Large finger playable Solo Modes\n
+  -Vibrato\n
+  -Portamento\n
+  -Pitch Envelopes Envelope Curve Options\n
+  -Echo\n
+  -Individual Sound Tuning\n
+  -Recording of Solos\n
+  -Recording of Patterns\n
+  -Recording of Control Inputs to SD\n
+  -MIDI File Export to SD\n
+  -Import and Export of Individual Blocks\n
+  -Renaming of Tracks and Blocks
+  .
+  and many other new features, fixes, and tweaks designed to make this the best
+  live music program on any mobile device!
+release: 2013-06-20
+players: 1
+assets.boxfront: BoxFront/Rhythm Core Alpha 2 (USA).jpg
+assets.boxback: BoxBack/Rhythm Core Alpha 2 (USA).jpg
+assets.background: Background/Rhythm Core Alpha 2 (USA).jpg
+assets.screenshot: Screenshot/Rhythm Core Alpha 2 (USA).jpg
+x-co-op: No
+
+
+game: Rytmik Retrobits (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Rytmik Retrobits (USA)/Rytmik Retrobits (USA).json
+developer: Cinemax
+publisher: Cinemax
+genre: Miscellaneous;Application
+description:
+  Rytmik Retrobits is an application for creating rhythmical and melodic themes
+  and for composing whole songs. Its user interface blends the fast and
+  well-arranged interface of classic drum machines with the flexible pattern
+  interface of popular trackers, and with a modern sound library. It contains
+  more than 180 carefully selected authentic retro sound samples of electronic
+  drums, percussion, bass, melodic instruments and effects from 8-bit and 16-bit
+  computers and classic consoles.
+  .
+  With Rytmik Retrobits you can quickly and easily create the basic building
+  block – an audio clip. Each clip consists of musical notation for up to four
+  instruments that you can transpose, select their location in the stereo field
+  and modify. You can even take advantage of polyphony (with extended polyphony
+  handling), chorus/widening stereo effect and echo. You may arbitrarily combine
+  up to 128 such clips in four tracks and create complex pieces of music.
+  Moreover, you have a collection of 10  re-made compositions at your disposal
+  from which you may quickly compose your own pieces.
+  .
+  Rytmik Retrobits is not only for playing with sounds; in the hands of a
+  skillful musician it can become a serious musical instrument – a surprisingly
+  powerful pocket music station. For the best musical experience we recommend
+  connecting headphones or a quality speaker system. You’ll become the king of
+  the retro party in no time...
+release: 2011-11-03
+players: 1
+assets.boxfront: BoxFront/Rytmik Retrobits (USA).jpg
+assets.boxback: BoxBack/Rytmik Retrobits (USA).jpg
+assets.background: Background/Rytmik Retrobits (USA).jpg
+assets.screenshot: Screenshot/Rytmik Retrobits (USA).jpg
+x-co-op: No
+
+
+game: Soul of Darkness (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Soul of Darkness (USA)/Soul of Darkness (USA).json
+developer: Gameloft
+publisher: Gameloft
+genre: Action;Adventure
+description:
+  Enter a fascinating gothic world as Kale, a mysterious, powerful man. Try to
+  save your beloved's life and soul and get her out of an evil vampire's clutches.
+  Explore dark woods and caves, huge castles and cathedrals under the full moon's
+  light. Master and upgrade your sword and spear, and learn how to control your
+  powers: use the Fire and the Ice, or transform into your enemies. Face and
+  defeat werewolves, gargoyles, zombies, and more, with a customized hero thanks
+  to the exclusive camera features. Good or evil - be the sole master of your
+  destiny!
+release: 2010-07-05
+players: 1
+assets.boxfront: BoxFront/Soul of Darkness (USA).jpg
+assets.boxback: BoxBack/Soul of Darkness (USA).jpg
+assets.background: Background/Soul of Darkness (USA).jpg
+assets.screenshot: Screenshot/Soul of Darkness (USA).jpg
+x-co-op: No
+
+
+game: Starship Defense (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Starship Defense (USA)/Starship Defense (USA).json
+developer: BLUE WIND
+publisher: BLUE WIND
+genre: Strategy;Real-Time;Defense
+description:
+  Starship Defense takes the tower defense genre into outer space. Defend your
+  space fleet from wave after wave of enemy attacks by equipping a variety of
+  weapons and using a combination of strategic skills and resource management.
+  Attach weapons to your ships using the touch screen, making sure to place them
+  for maximum effect when planning your defense. If you don't, the relentless
+  nature of your enemies could overwhelm you. Increase your chances of success
+  by using energy collected from defeated enemies to install new and more powerful
+  weapons, destroying particular enemies to obtain weapon upgrades, and watching
+  for rare power crystals that unlock advanced attacks, including a devastating
+  black hole. And if you still find yourself in trouble, select an SOS card to
+  call on a special kind of assistance. You'll have to defend your fleet across
+  30 intense sectors, some with specific challenges, while advancing your rank
+  from lowly recruit all the way to fleet admiral. Are you up to the challenge?
+release: 2009-09-23
+players: 1
+assets.boxfront: BoxFront/Starship Defense (USA).jpg
+assets.boxback: BoxBack/Starship Defense (USA).jpg
+assets.background: Background/Starship Defense (USA).jpg
+assets.screenshot: Screenshot/Starship Defense (USA).jpg
+x-co-op: No
+
+
+game: SteamWorld Tower Defense (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/SteamWorld Tower Defense (USA)/SteamWorld Tower Defense (USA).json
+developer: Image & Form
+publisher: Image & Form
+genre: Action;Strategy
+description:
+  Welcome to Cowbot County, home of the robotic master race of SteamWorld! As the
+  Sheriff, you must stop the human invaders in their mad hunt for gold. Build
+  attack robots next to the roads they roam, and watch the invaders go down! Use
+  the special skills of your robots to your advantage in this original Tower
+  Defence variation, where strategy and execution are equally important. For
+  rookies, there is an “Easy” mode – but all will find a unique challenge in the
+  great Western reaches. See ya soon!
+release: 2010-07-05
+players: 1
+assets.boxfront: BoxFront/SteamWorld Tower Defense (USA).jpg
+assets.boxback: BoxBack/SteamWorld Tower Defense (USA).jpg
+assets.background: Background/SteamWorld Tower Defense (USA).jpg
+assets.screenshot: Screenshot/SteamWorld Tower Defense (USA).jpg
+x-co-op: No
+
+
+game: Topsy Turvy Life, A - The Turvys Strike Back (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Topsy Turvy Life, A - The Turvys Strike Back (USA)/Topsy Turvy Life, A - The Turvys Strike Back (USA).json
+developer: Tecmo
+publisher: Tecmo Koei Games
+genre: Shooter
+description:
+  Turn the Nintendo DSi upside down! Play as the Imperial Armada out to destroy
+  the Earth Defence Force in this topsy turvy take on arcade shooters! You control
+  the unsung forces of arcade shooters past with three kinds of ships including
+  giant bosses! Draw a line to send the fighters down. Touch the guards to make
+  them shoot. Make your boss ship fire multiple weapons including an enormous
+  blast that destroys everything in its way! Then take on a friend! Two players
+  can battle each other on one Nintendo DSi system! Will the Earth Defence Force
+  win again? Or will the Imperial Armada find victory at long last?! Turn the
+  tables topsy with A Topsy Turvy Life: The Turvys Strike Back!
+release: 2010-05-31
+players: 1
+assets.boxfront: BoxFront/Topsy Turvy Life, A - The Turvys Strike Back (USA).jpg
+assets.boxback: BoxBack/Topsy Turvy Life, A - The Turvys Strike Back (USA).jpg
+assets.background: Background/Topsy Turvy Life, A - The Turvys Strike Back (USA).jpg
+assets.screenshot: Screenshot/Topsy Turvy Life, A - The Turvys Strike Back (USA).jpg
+x-co-op: No
+
+
+game: Topsy Turvy Life, A - Turvy Drops (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Topsy Turvy Life, A - Turvy Drops (USA)/Topsy Turvy Life, A - Turvy Drops (USA).json
+developer: Tecmo
+publisher: Tecmo Koei Games
+genre: Action;Puzzle
+description:
+  Turn the Nintendo DSi upside down!
+  .
+  Draw blocks on the Touch Screen to fill the spaces below in this topsy turvy
+  take on puzzle games.
+release: 2010-05-17
+players: 1
+assets.boxfront: BoxFront/Topsy Turvy Life, A - Turvy Drops (USA).jpg
+assets.boxback: BoxBack/Topsy Turvy Life, A - Turvy Drops (USA).jpg
+assets.background: Background/Topsy Turvy Life, A - Turvy Drops (USA).jpg
+assets.screenshot: Screenshot/Topsy Turvy Life, A - Turvy Drops (USA).jpg
+x-co-op: No
+
+
+game: Touch Solitaire (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Touch Solitaire (USA)/Touch Solitaire (USA).json
+developer: Nintendo
+publisher: Nintendo
+genre: Strategy
+description:
+  Enjoy two of the most popular versions of solitaire, featuring simple controls
+  and various difficulty levels.Touch Solitaire features two of the most popular
+  versions of the world-famous card game—Spider and Klondike—with simple Touch
+  Screen controls and an easy to understand interface. In Spider, the aim is to
+  arrange cards in piles of a single suit from King down to Ace, thereby removing
+  the pile from play. When all cards are removed, you win the game. The goal of
+  Klondike is to arrange cards from Ace to King in piles, one for each suit, on
+  the four foundations. You win when all cards have been moved to the foundations.
+  Various difficulty levels are available for Spider and Klondike, allowing
+  beginners or experts to enjoy the game at their own pace.
+release: 2010-01-11
+players: 1
+assets.boxfront: BoxFront/Touch Solitaire (USA).jpg
+assets.boxback: BoxBack/Touch Solitaire (USA).jpg
+assets.background: Background/Touch Solitaire (USA).jpg
+assets.screenshot: Screenshot/Touch Solitaire (USA).jpg
+x-co-op: No
+
+
+game: WarioWare - Snapped! (USA) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/WarioWare - Snapped! (USA) (Rev 1)/WarioWare - Snapped! (USA) (Rev 1).json
+developer: Intelligent Systems
+publisher: Nintendo
+genre: Action;Puzzle
+description:
+  Wario's just opened his very own theme park, with four amazing rollercoasters!
+  Each one of them are manned by different characters from the WarioWare
+  franchise, with the intent of making Wario loads of cash. So roll up, and get
+  ready for a ride like you've never had before!
+  .
+  WarioWare: Snapped! is the first WarioWare game created specifically for use
+  with a camera. The game uses the Nintendo DSi's camera to control all of the
+  microgames within each rollercoaster. At the start of the rollercoaster, you are
+  prompted to pose for the camera, so that it can use it to track your movement
+  and control the microgames. At the end of the rollercoaster, your results are
+  shown, along with goofy photos of you performing the moves needed for the
+  microgames. All of the rollercoasters require a single player, excluding Kat and
+  Ana's, which needs to be played with two people simultaneously.
+release: 2009-04-03
+players: 1
+assets.boxfront: BoxFront/WarioWare - Snapped! (USA) (Rev 1).jpg
+assets.boxback: BoxBack/WarioWare - Snapped! (USA) (Rev 1).jpg
+assets.background: Background/WarioWare - Snapped! (USA) (Rev 1).jpg
+assets.screenshot: Screenshot/WarioWare - Snapped! (USA) (Rev 1).jpg
+x-co-op: No
+
+
+game: X-Scape (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/X-Scape (USA)/X-Scape (USA).json
+developer: Q-Games
+publisher: Nintendo
+genre: Action;Shooter
+description:
+  Pilot your tank, VIXIV, and battle on numerous planets, all presented in 3-D.
+  Can you free the Kiisa system?Your journey through the universe of X-Scape
+  begins as you wake from 10 years of cryosleep, only to find yourself
+  unexpectedly thrown into a fearsome battle against an evil empire bent on your
+  destruction. You’ll travel to numerous planets in the Kiisa system and engage in
+  a wide variety of challenges (including optional side quests) in your fight for
+  answers...and survival. At your command is VIXIV, an advanced battle tank able to
+  deftly maneuver both on land and in the air and loaded with an array of
+  formidable weapons. Also onboard, and ready to help with advice or upgrades to
+  VIXIV’s abilities, is your highly capable support bot, VIX-529. To progress in
+  your adventure, you’ll use the Touch Screen to pilot VIXIV in one of two modes:
+  tunnel mode and free-movement mode. In tunnel mode, you navigate through narrow,
+  dangerous tunnels that connect planets. Successful completion of tunnel mode
+  opens free-movement mode, which allows you to freely roam the surface of planets
+  and take up missions. Presented in 3-D with a stylishly retro graphic style,
+  X-Scape combines continuous action with an epic story to create an experience
+  sure to keep players on the edge of their seats!
+release: 2010-05-31
+players: 1
+assets.boxfront: BoxFront/X-Scape (USA).jpg
+assets.boxback: BoxBack/X-Scape (USA).jpg
+assets.background: Background/X-Scape (USA).jpg
+assets.screenshot: Screenshot/X-Scape (USA).jpg
+x-co-op: No
+
+
+game: ZENONIA (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/ZENONIA (USA)/ZENONIA (USA).json
+developer: GAMEVIL
+publisher: GAMEVIL
+genre: Action
+description:
+  Zenonia features Anime-style characters and graphics with numerous quests
+  following an epic storyline which offers playing time of over 40 hours to
+  conquer the quests. The player can choose from three different classes: warrior,
+  paladin and assassin, and customise attributes. The game provides hundreds of
+  different weapons and skill trees. The game also provides items that can be
+  collected from five different classes (normal, magic, rare, unique and epic) to
+  enchant or combine them for upgrades.
+release: 2010-09-27
+players: 1
+assets.boxfront: BoxFront/ZENONIA (USA).jpg
+assets.boxback: BoxBack/ZENONIA (USA).jpg
+assets.background: Background/ZENONIA (USA).jpg
+assets.screenshot: Screenshot/ZENONIA (USA).jpg
+x-co-op: No
+
+
+game: Zuma's Revenge! (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DSi/Zuma's Revenge! (USA)/Zuma's Revenge! (USA).json
+developer: PopCap Games
+publisher: PopCap Games
+genre: Puzzle
+description:
+  Zuma's Revenge is the sequel to Zuma Deluxe. As in the previous game, the main
+  goal is to clear a series of marble strings by matching three or more balls of
+  the same color. The spheres roll on twisting tracks that occupy most of the
+  screen, appearing from one side and moving towards the gaping mouth of a golden
+  skull. The player controls a frog that is either stationed near the tracks or
+  moving sideways at the bottom. The amphibian holds one of the colored balls in
+  its open mouth, and a reserve one inside its body.
+  .
+  The main Adventure Mode is divided in sequential zones, each with several
+  levels. The main objective of each level is to aim and shoot at the moving lines
+  to make three-of-a-kind color matches and fill a meter at the top to finish. If
+  three or more balls enter the exit hole, the player loses one life and the level
+  has to be replayed. When all lives are spent, the whole zone has to be restarted
+  from the latest automatic checkpoint, usually at mid-point.
+  .
+  Some of the spheres are marked with icons and have power-ups that can be
+  activated with matches. The bomb explodes all the surrounding spheres, the
+  reticule improves shot accuracy by giving temporary laser targeting sights to
+  the frog, the rewind arrow pushes all the marbles backwards, the hand slowdowns
+  movement for some seconds, the lightning bolt vaporizes all the balls of one
+  color, the tri-shot fires three cannon balls that destroy anything in their path
+  and the laser surgically removes single spheres. Some levels have pairs of lily
+  pads, and the frog can jump between them to eliminate all the marbles.
+  .
+  A boss battle happens at the end of each zone, where the opponent is an idol
+  mask that keeps moving sideways at the top. The frog moves at the bottom and has
+  to hit the enemy with several spheres to defeat it, while at the same time
+  matching the moving line of spheres to clear the field. Each boss has a
+  different attack and defense strategy, throwing enchantment shots at the frog
+  and putting obstacles and minions to block the area.
+  .
+  Besides Adventure Mode, there are three additional modes that are gradually
+  unlocked as the levels are completed in the main game. In Challenge Mode, the
+  objective is to achieve a high score under three minutes. The top meter is
+  replaced by a bonus gauge that slowly fills with every match. When it is full,
+  it transforms one of the spheres into a multiplier that gives bonus points after
+  being matched. The Heroic Frog Mode is a harder version of Adventure Mode, with
+  the spheres moving faster and with more color variations from the start. Iron
+  Frog Mode is unlocked after finishing Adventure Mode, and is the hardest mode
+  where the player has only one life available to complete ten difficult levels in
+  sequence.
+release: 2009-09-15
+players: 1
+assets.boxfront: BoxFront/Zuma's Revenge! (USA).jpg
+assets.boxback: BoxBack/Zuma's Revenge! (USA).jpg
+assets.background: Background/Zuma's Revenge! (USA).jpg
+assets.screenshot: Screenshot/Zuma's Revenge! (USA).jpg
+x-co-op: No
+
+

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Lost Night, The (USA).exe"
+    ],
+    "transform_file": "Lost Night, The (USA).exe"
+}

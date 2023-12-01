@@ -1,0 +1,2584 @@
+collection: Nintendo DS
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo DS" {file.path}
+
+
+game: America's Test Kitchen - Let's Get Cooking (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/America's Test Kitchen - Let's Get Cooking (USA)/America's Test Kitchen - Let's Get Cooking (USA).json
+developer: Indies Zero
+publisher: Nintendo
+genre: Life Simulation
+description:
+  What's for dinner? Just tap the touch screen to reveal dozens of possibilities,
+  then gather a team of friends or family members to help prepare it. 300 recipes
+  have been tested and perfected by the three dozen test cooks at America's Test
+  Kitchen, a 2,500-square foot kitchen that is home to Cook's Illustrated and
+  Cook's Country magazines as well as the popular America's Test Kitchen public
+  television show. Now their culinary expertise promises to give everyone the
+  tools and knowhow to prepare spectacular meals - together.
+release: 2010-03-28
+players: 4
+assets.boxfront: BoxFront/America's Test Kitchen - Let's Get Cooking (USA).jpg
+assets.boxback: BoxBack/America's Test Kitchen - Let's Get Cooking (USA).jpg
+assets.background: Background/America's Test Kitchen - Let's Get Cooking (USA).jpg
+assets.screenshot: Screenshot/America's Test Kitchen - Let's Get Cooking (USA).jpg
+assets.video: Video/America's Test Kitchen - Let's Get Cooking (USA).mp4
+x-co-op: No
+
+
+game: Animal Crossing - Wild World (USA) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Animal Crossing - Wild World (USA) (Rev 1)/Animal Crossing - Wild World (USA) (Rev 1).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Life Simulation
+description:
+  Cross over to a brand new world!
+  .
+  Much of the cast of the original Animal Crossing returns, including animals of
+  all shapes and personality types: K.K. Slider, Tom Nook, Blathers, Mr. Resetti
+  and more. There are also a number of new characters.
+  .
+  Players move into village, buy a small house and then do whatever they want.
+  Time and seasons pass as they do in the real world, so there will always be
+  something unpredictable happening. Collect or buy items, talk to neighbors, go
+  fishing, catch bugs, dig up treasure or hang out with human friends.
+release: 2005-11-23
+players: 4
+assets.boxfront: BoxFront/Animal Crossing - Wild World (USA) (Rev 1).jpg
+assets.boxback: BoxBack/Animal Crossing - Wild World (USA) (Rev 1).jpg
+assets.background: Background/Animal Crossing - Wild World (USA) (Rev 1).jpg
+assets.screenshot: Screenshot/Animal Crossing - Wild World (USA) (Rev 1).jpg
+assets.video: Video/Animal Crossing - Wild World (USA) (Rev 1).mp4
+x-co-op: Yes
+
+
+game: Art Academy (USA) (NDSi Enhanced)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Art Academy (USA) (NDSi Enhanced)/Art Academy (USA) (NDSi Enhanced).json
+developer: Headstrong Games
+publisher: Nintendo
+genre: Life Simulation;Education
+description:
+  Enjoy a fun, portable art tutor on your Nintendo DS™.
+  .
+  Have you ever had an interest in art or wanted to learn how to draw and paint?
+  Well now you can with the Art Academy™ software for the Nintendo DS™ system. Art
+  Academy is a fun, interactive, and portable training software that will teach
+  you how to draw and paint, much as you would learn in an art class.
+  .
+  Art Academy offers simple, easy to understand art lessons that you can take at
+  your own pace. You even have the ability to fast forward or rewind a step if you
+  would like to view it again. Vince is your in-game art tutor and he will guide
+  you through each new lesson, gradually introducing new concepts to you. Each new
+  lesson builds upon concepts that you learned in previous lessons, complete with
+  step by step examples.
+  .
+  So what are you waiting for? There is no time like the present to start learning
+  how to draw and paint with Art Academy.
+release: 2010-10-26
+players: 1
+assets.boxfront: BoxFront/Art Academy (USA) (NDSi Enhanced).jpg
+assets.boxback: BoxBack/Art Academy (USA) (NDSi Enhanced).jpg
+assets.background: Background/Art Academy (USA) (NDSi Enhanced).jpg
+assets.screenshot: Screenshot/Art Academy (USA) (NDSi Enhanced).jpg
+assets.video: Video/Art Academy (USA) (NDSi Enhanced).mp4
+x-co-op: No
+
+
+game: Blue Dragon Plus (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Blue Dragon Plus (USA)/Blue Dragon Plus (USA).json
+developer: Ignition Entertainment
+publisher: Feel Plus
+genre: Role-Playing;Strategy
+description:
+  Unleash The Power Within!
+  .
+  One year has passed since Shu and his companions defeated the tyrannical remnant
+  of the Ancients, Nene. In the midst of the battle, the world split in two and
+  now consists of a myriad of “cubes” that exploded from its depths. In one of
+  these cubes, King Jibral stands on the balcony of Neo Jibral Castle and surveys
+  the scene before him.\n
+  He notices a mysterious cube in the distance suddenly start to move violently,
+  and from it he sees the Shadow of a Balaur, a three-headed dragon, emerge. The
+  enormous and sinister Shadow is just the beginning of the new turmoil and
+  devastation to come.
+  .
+  Features:\n
+  • Single Player Campaign With Over 30 Hours of Game Play\n
+  • Control up to 16 humans and Mecha Robos to fight against a horde of enemies\n
+  • Equip your units with items and alter their composition to bolster their
+  strength\n
+  • Take Advantage of Your DS Features Through Exciting Real-Time Battles and
+  Shadow\n
+  • High Quality Dual Screen FMV’s Showcasing More Than an Hour of Story Events!\n
+  • Exciting RPG Elements Such As Item Collection, Character Progression and Robot
+release: 2009-02-24
+players: 1
+assets.boxfront: BoxFront/Blue Dragon Plus (USA).jpg
+assets.boxback: BoxBack/Blue Dragon Plus (USA).jpg
+assets.background: Background/Blue Dragon Plus (USA).jpg
+assets.screenshot: Screenshot/Blue Dragon Plus (USA).jpg
+assets.video: Video/Blue Dragon Plus (USA).mp4
+x-co-op: No
+
+
+game: Brain Age - Train Your Brain in Minutes a Day! (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Brain Age - Train Your Brain in Minutes a Day! (USA)/Brain Age - Train Your Brain in Minutes a Day! (USA).json
+developer: Nintendo SPD
+publisher: Nintendo
+genre: Puzzle
+description:
+  The gaming sensation designed to stimulate your brain.
+  .
+  • Stylus controls and quick activities—so easy to learn\n
+  • Fun math and logic puzzles keep your mind in shape\n
+  • Keep track of your "Brain Age" and improve over time
+  .
+  Brain Age: Train Your Brain in Minutes a Day for Nintendo DS is a fun, rewarding
+  form of entertainment everyone can enjoy, as it helps players flex their mental
+  muscles. Brain Age is inspired by the research of Dr. Ryuta Kawashima, a
+  prominent Japanese neuroscientist. His studies evaluated the impact of
+  performing certain reading and mathematic exercises to help stimulate the brain.
+  .
+  Brain Age presents quick mental activities that help keep your DS brain in
+  shape. Activities include quickly solving simple math problems, counting people
+  going in and out of a house simultaneously, drawing pictures on the Touch
+  Screen, reading classic literature out loud, and more. You can also play sudoku,
+  the number puzzle game which has become an extremely popular feature in U.S.
+  newspapers.
+  .
+  We all know as we grow older our bodies change and it becomes important to
+  regularly exercise to maintain health and fitness. Our brain is no different.
+  "Use it or lose it," as the adage goes. New research indicates mental acuity may
+  be strengthened, like muscles, with brain exercises.
+  .
+  That's where Brain Age comes in.
+  .
+  Dr. Elizabeth Zelinski, dean and executive director of University of Southern
+  California’s Leonard Davis School of Gerontology, says games like Brain Age can
+  help keep older generations of Americans’ minds active. “Americans can do a
+  great deal to maintain and even improve their mental abilities,” Zelinski
+  explains. “Aging is about taking on new challenges for our minds. Nintendo’s
+  Brain Age is a great way to do that.”
+  .
+  How does Brain Age work?
+  .
+  The Brain Age exercises are designed to stimulate your brain. Solving simple
+  math and logic problems quickly, and reading aloud, have been proven to be
+  effective methods of achieving this goal.
+  .
+  The distinctive Nintendo DS Touch Screen lets users write their answers with a
+  Stylus pen, just as though they were writing on paper or using a Personal
+  Digital Assistant or "PDA". Furthermore, the Nintendo DS's voice input
+  identifies particular words you'll speak during the Stroop Test.
+  .
+  Brain Age tracks your progression through each exercise with easy-to-read line
+  charts. Consistently using Brain Age each day will open new exercises to test
+  your ability.
+  .
+  Brain Age includes a fun calculation competition for friends and family. Only
+  one Brain Age Game Card is needed. With the DS's user-friendly interface, it's a
+  snap to download this minigame to as many as 15 DS systems!
+  .
+  Baby Boomers and test-prepping school kids alike want to challenge themselves
+  and find ways to stay sharp. Brain Age acts like a treadmill for the mind. With
+  the simplicity of the Nintendo DS, and Brain Age's challenging and rewarding
+  exercises, everyone can stimulate their DS brain, improving speed and accuracy
+  of their game play.
+release: 2005-05-19
+players: 4
+assets.boxfront: BoxFront/Brain Age - Train Your Brain in Minutes a Day! (USA).jpg
+assets.boxback: BoxBack/Brain Age - Train Your Brain in Minutes a Day! (USA).jpg
+assets.background: Background/Brain Age - Train Your Brain in Minutes a Day! (USA).jpg
+assets.screenshot: Screenshot/Brain Age - Train Your Brain in Minutes a Day! (USA).jpg
+assets.video: Video/Brain Age - Train Your Brain in Minutes a Day! (USA).mp4
+x-co-op: No
+
+
+game: Castlevania - Dawn of Sorrow (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Castlevania - Dawn of Sorrow (USA)/Castlevania - Dawn of Sorrow (USA).json
+developer: Konami
+publisher: Konami
+genre: Action;Adventure;Platform;Role-Playing
+description:
+  The year is 2036, one year after the events of Castlevania®: Aria of Sorrow™.
+  Soma Cruz finds himself at the center of a mysterious cult's plan to resurrect
+  their evil lord and master Dracula. In order to save himself and protect the
+  lives of those he loves, Soma must infiltrate the enemy's home base, a towering
+  replica of Dracula's castle that is teaming with monstrous creatures.
+  .
+  • Use Devil Forgery skills to develop & enhance Innocent Devils allies\n
+  • RPG elements featuring character growth based on experience points\n
+  • Deep storyline that unfolds against a backdrop of beautiful environments\n
+  • Increased number of unlockable features to enhance replayability
+release: 2005-10-04
+players: 1
+assets.boxfront: BoxFront/Castlevania - Dawn of Sorrow (USA).jpg
+assets.boxback: BoxBack/Castlevania - Dawn of Sorrow (USA).jpg
+assets.background: Background/Castlevania - Dawn of Sorrow (USA).jpg
+assets.screenshot: Screenshot/Castlevania - Dawn of Sorrow (USA).jpg
+assets.video: Video/Castlevania - Dawn of Sorrow (USA).mp4
+x-co-op: No
+
+
+game: Castlevania - Dawn of Sorrow (USA) (Touch Screen & Luck Patch)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Castlevania - Dawn of Sorrow (USA) (Touch Screen & Luck Patch)/Castlevania - Dawn of Sorrow (USA) (Touch Screen & Luck Patch).json
+developer: Konami
+publisher: Konami
+genre: Adventure;Platform
+description:
+  The team that developed Castlevania: Aria of Sorrow returns to bring the sequel,
+  CastleVania: Dawn of Sorrow, to the Nintendo DS. This time, you must infiltrate
+  a castle belonging to a cult that is planning to resurrect Lord Dracula.
+  Castlevania: Dawn of Sorrow lets you defeat evil spirits using the "Magic Seal"
+  system which utilizes the Nintendo DS touch screen. You can trade captured souls
+  with other players using the wireless system as well.
+release: 2005-10-04
+players: 1
+assets.boxfront: BoxFront/Castlevania - Dawn of Sorrow (USA) (Touch Screen & Luck Patch).jpg
+assets.boxback: BoxBack/Castlevania - Dawn of Sorrow (USA) (Touch Screen & Luck Patch).jpg
+assets.background: Background/Castlevania - Dawn of Sorrow (USA) (Touch Screen & Luck Patch).jpg
+assets.screenshot: Screenshot/Castlevania - Dawn of Sorrow (USA) (Touch Screen & Luck Patch).jpg
+assets.video: Video/Castlevania - Dawn of Sorrow (USA) (Touch Screen & Luck Patch).mp4
+x-co-op: No
+
+
+game: Castlevania - Order of Ecclesia (USA) (En,Fr)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Castlevania - Order of Ecclesia (USA) (En,Fr)/Castlevania - Order of Ecclesia (USA) (En,Fr).json
+developer: Konami
+publisher: Konami
+genre: Action;Adventure;Platform
+description:
+  Following the success of Dawn of Sorrow and Portrait of Ruin, the legendary
+  Castlevania series is back on the DS.
+  .
+  Play as a member of Ecclesia, an organization that has sworn to defeat the evil
+  forces of Dracula. Featuring intense, side-scrolling action as you collect
+  elements to help in your quest against Dracula. Use the brand new Glyph attack
+  system with more than 100 combos to battle Dracula and his minions throughout 20
+  explorable areas.
+release: 2008-10-21
+players: 2
+assets.boxfront: BoxFront/Castlevania - Order of Ecclesia (USA) (En,Fr).jpg
+assets.boxback: BoxBack/Castlevania - Order of Ecclesia (USA) (En,Fr).jpg
+assets.background: Background/Castlevania - Order of Ecclesia (USA) (En,Fr).jpg
+assets.screenshot: Screenshot/Castlevania - Order of Ecclesia (USA) (En,Fr).jpg
+assets.video: Video/Castlevania - Order of Ecclesia (USA) (En,Fr).mp4
+x-co-op: No
+
+
+game: Castlevania - Portrait of Ruin (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Castlevania - Portrait of Ruin (USA)/Castlevania - Portrait of Ruin (USA).json
+developer: Konami
+publisher: Konami
+genre: Adventure;Platform
+description:
+  Celebrating 20 years of vampire hunting action, the legendary Castlevania series
+  is back with an all-new action packed adventure. Take control of two heroes,
+  Jonathan Morris, a vampire hunter and his close friend Charlotte Orlean, a girl
+  with tremendous magical ability. Amidst the chaos of World War II, two
+  mysterious sisters emerge, working to resurrect Dracula and David and Charlotte
+  are all that stand in their way.
+  .
+  • Two new playable characters, each with their own unique style of play and
+  abilities\n
+  • Strategically switch between characters in the heat of the action\n
+  • Call on your partner and execute Summon Attacks to decimate your enemies\n
+  • Encounter over 100 diverse enemies in your adventure to stop Dracula’s
+  resurrection\n
+  • Original storyline set during World War II\n
+  • Collect items, weapons and magic as you explore the castle\n
+  • Explore several environments new to the series, such as the Desert, abandoned
+  cities and more\n
+  • Play with your friends in unlockable multi-player modes
+release: 2006-12-05
+players: 2
+assets.boxfront: BoxFront/Castlevania - Portrait of Ruin (USA).jpg
+assets.boxback: BoxBack/Castlevania - Portrait of Ruin (USA).jpg
+assets.background: Background/Castlevania - Portrait of Ruin (USA).jpg
+assets.screenshot: Screenshot/Castlevania - Portrait of Ruin (USA).jpg
+assets.video: Video/Castlevania - Portrait of Ruin (USA).mp4
+x-co-op: No
+
+
+game: Challenge Me - Brain Puzzles (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Challenge Me - Brain Puzzles (USA)/Challenge Me - Brain Puzzles (USA).json
+developer: Oxygen Games
+publisher: TDK Core
+genre: Puzzle;Education
+description:
+  Relax, play & improve your mind
+  .
+  With thousands of Sudoku and Picture Logic puzzles, you can have fun and improve
+  your mind! You can track how you are improving in the Challenge Me mode, or just
+  pick up & play a quick sudoku puzzle. With hours of gameplay Challenge Me: Brain
+  Puzzles will stimulate you for hours!
+release: 2009-05-18
+players: 1
+assets.boxfront: BoxFront/Challenge Me - Brain Puzzles (USA).jpg
+assets.boxback: BoxBack/Challenge Me - Brain Puzzles (USA).jpg
+assets.background: Background/Challenge Me - Brain Puzzles (USA).jpg
+assets.screenshot: Screenshot/Challenge Me - Brain Puzzles (USA).jpg
+assets.video: Video/Challenge Me - Brain Puzzles (USA).mp4
+x-co-op: No
+
+
+game: Children of Mana (USA, Australia)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Children of Mana (USA, Australia)/Children of Mana (USA, Australia).json
+developer: Square Enix
+publisher: Nintendo
+genre: Action;Role-Playing
+description:
+  In the center of the world, the legendary Mana Trees, sheltering all beneath its
+  mighty, speading limbs. But now, something sinister has happened. Having grown
+  too strong, the Mana Tree's tremendous power surges across the world, corrupting
+  all that it touches. It is up to four bold heroes to undertake a daring journey
+  through scorching deserts and icy wastes to drive the forces of malice from the
+  world!
+  .
+  Square Enix’s classic series looks absolutely beautiful on the DS. Dual screens
+  means maps and key info are always available at a glance at the bottom screen.
+  And thanks to wireless local play, as many as four friends can team up for an
+  exciting adventure!
+  .
+  Never a company to rest on its laurels, Square Enix takes one of gaming’s most
+  beloved franchises to a new level. A sinuous storyline, radiant art, brilliant
+  use of dual screens, the engrossing gem system and the multiplayer free-for-alls
+  propel the Mana series’ eagerly awaited DS debut into instant-classic territory.
+release: 2006-03-02
+players: 4
+assets.boxfront: BoxFront/Children of Mana (USA, Australia).jpg
+assets.boxback: BoxBack/Children of Mana (USA, Australia).jpg
+assets.background: Background/Children of Mana (USA, Australia).jpg
+assets.screenshot: Screenshot/Children of Mana (USA, Australia).jpg
+assets.video: Video/Children of Mana (USA, Australia).mp4
+x-co-op: Yes
+
+
+game: Chrono Trigger (USA) (En,Fr)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Chrono Trigger (USA) (En,Fr)/Chrono Trigger (USA) (En,Fr).json
+developer: Square Enix
+publisher: Square Enix
+genre: Role-Playing
+description:
+  The RPG of the ages returns.
+  .
+  When a newly developed teleportation device malfunctions, young Crono must
+  journey through time to rescue a mysterious girl from an intricate web of past
+  and present perils. Enhanced with dual-screen presentation, stylus controls, and
+  a host of great new features, the classic tale transcends time once again!
+release: 2008-11-20
+players: 1
+assets.boxfront: BoxFront/Chrono Trigger (USA) (En,Fr).jpg
+assets.boxback: BoxBack/Chrono Trigger (USA) (En,Fr).jpg
+assets.background: Background/Chrono Trigger (USA) (En,Fr).jpg
+assets.screenshot: Screenshot/Chrono Trigger (USA) (En,Fr).jpg
+assets.video: Video/Chrono Trigger (USA) (En,Fr).mp4
+x-co-op: No
+
+
+game: Club Penguin - Elite Penguin Force (USA) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Club Penguin - Elite Penguin Force (USA) (Rev 1)/Club Penguin - Elite Penguin Force (USA) (Rev 1).json
+developer: 1st Playable Productions
+publisher: Disney Interactive Studios
+genre: Adventure
+description:
+  The Disney Club Penguins from the wildly popular snow-covered Disney Club
+  Penguin online world waddle onto the Nintendo DS for the first time. Disney Club
+  Penguin: Elite Penguin Force introduces kids to all new adventures in the Disney
+  Club Penguin world, giving players a chance to complete secret agent missions,
+  solve mysteries and connect with friends and the Disney Club Penguin Web site in
+  new ways. Kids can earn coins while playing on the Disney Club Penguin Nintendo
+  DS, which will seamlessly transfer into their online accounts via a wireless
+  connection. Players will embark on missions utilizing familiar and all-new
+  gadgets, accessories, disguises, vehicles and locations to investigate
+  mysterious events in the Disney Club Penguin world.
+  .
+  • Take on the role of a Disney Club Penguin Elite Penguin Forces agent,
+  completing top secret missions only available on the Disney Club Penguin
+  Nintendo DS\n
+  • Play brand new exclusive DS-only mini-games including Snowboarding and Dance
+  Challenge.\n
+  • Play favorite Disney Club Penguin mini-games such as Cart Surfer, Jet Pack
+  Adventure and Ice Fishing in a whole new way, using the DS stylus and the unique
+  dual-screen view.\n
+  • Earn coins while playing on the Nintendo DS to use or transfer wirelessly to
+  online accounts.\n
+  • Download new missions and weekly newsletters.
+release: 2008-11-25
+players: 2
+assets.boxfront: BoxFront/Club Penguin - Elite Penguin Force (USA) (Rev 1).jpg
+assets.boxback: BoxBack/Club Penguin - Elite Penguin Force (USA) (Rev 1).jpg
+assets.background: Background/Club Penguin - Elite Penguin Force (USA) (Rev 1).jpg
+assets.screenshot: Screenshot/Club Penguin - Elite Penguin Force (USA) (Rev 1).jpg
+assets.video: Video/Club Penguin - Elite Penguin Force (USA) (Rev 1).mp4
+x-co-op: Yes
+
+
+game: CrossworDS (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/CrossworDS (USA)/CrossworDS (USA).json
+developer: Nuevo Retro Games
+publisher: Nintendo
+genre: Puzzle
+description:
+  Crosswords for Everyone!
+  .
+  Choose from more than a thousand crossword puzzles or hone your word skills with
+  Wordsearch or Anagrams. No matter which type of puzzle you choose, you can
+  easily save your progress at any time and return later to finish. Crosswords DS
+  is designed for all players—just select your difficulty level and start off with
+  a basic four-by-four puzzle. As you progress, the game will increase in
+  difficulty and puzzle size. Use the DS stylus like a pencil to write or circle
+  your answers on the touch-control screen. Erasing mistakes is as simple as
+  writing the new answer over the old one. A hint system is also included in case
+  you need some friendly assistance.
+  .
+  In Crosswords DS, you'll find puzzles perfect for everyone regardless of age or
+  experience. Exercise your word skills in more than a thousand touch-control word
+  puzzles to challenge every skill level.
+  .
+  • Crosswords DS offers crossword puzzles at multiple skill levels to engage any
+  player, all controlled with the Nintendo DS stylus. Simply use the stylus to
+  write your answers on the touch screen. Erase your mistakes with a quick tap on
+  the screen, or write new answers directly over old ones.\n
+  • An interactive hint system helps you move along at your own pace. For
+  particularly puzzling problems, tap the "Hint" button to receive an additional
+  clue, reveal a letter or have the word solved for you—the choice is yours.\n
+  • The wordplay doesn't stop with crosswords. "Wordsearch" challenges you to find
+  words hidden among random letters, while "Anagrams" will stretch your
+  imagination to see how many words you can assemble from a group of letters.
+  .
+  Crosswords:
+  .
+  • Puzzles are designed for stress-free completion and are broken into three
+  difficulty levels: Easy, Medium and Hard—plus an unlockable fourth level.\n
+  • Unlike paper puzzles, Crosswords DS can offer help if you get stuck. By simply
+  touching the hint button above the puzzle, players can choose to receive another
+  clue, fill in an unknown letter or even reveal the entire word.\n
+  • To input a letter, simply touch a square on the screen and write the answer
+  just as you would in a paper puzzle. If you make a mistake, simply write the new
+  letter over the old one—no more messy eraser bits.
+  .
+  Wordsearch and Anagrams:
+  .
+  • Wordsearch is just like the classic word searches you played as a kid. Use the
+  DS stylus like a pencil to circle words hidden in a letter-filled screen. The
+  more difficult the puzzle, the larger the block of letters you'll need to
+  scan.\n
+  • In Anagrams, players are given six random letters that must be arranged to
+  spell out three-, four-, five- or six-letter words. Even if you don't identify
+  every suitable combination, you only need to find a majority of possible words
+  to move on to the next level.
+release: 2008-05-05
+players: 1
+assets.boxfront: BoxFront/CrossworDS (USA).jpg
+assets.boxback: BoxBack/CrossworDS (USA).jpg
+assets.background: Background/CrossworDS (USA).jpg
+assets.screenshot: Screenshot/CrossworDS (USA).jpg
+assets.video: Video/CrossworDS (USA).mp4
+x-co-op: No
+
+
+game: Dementium - The Ward (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Dementium - The Ward (USA)/Dementium - The Ward (USA).json
+developer: Renegade Kid
+publisher: Gamecock
+genre: Horror;Shooter
+description:
+  Once you've checked into this ward, how do you leave?
+  .
+  Dementium tells the tale of a man who awakens to find himself alone, with no
+  memories of his past, in a derelict hospital that is frozen in time. Confronted
+  by the deadly, grotesque surgical experiments that wander the halls, a series of
+  challenging puzzles and a cast of peculiar characters, he must face his deepest
+  fears, unlock the mysteries of the hospital, and escape with his life.
+  .
+  Dementium: The Ward combines action-adventure, first-person shooter, and
+  survival horror into one nightmarish experience. Pushing the limits of the
+  Nintendo DS with full 3D visuals, Dementium aims to raise the bar for mature
+  handheld games.
+  .
+  A completely new experience on the Nintendo DS from new publisher Gamecock Media
+  Group, Dementium will creep you out with gory visuals and bone-chilling audio
+  that brings this eerie ward to screaming life.
+release: 2007-10-25
+players: 1
+assets.boxfront: BoxFront/Dementium - The Ward (USA).jpg
+assets.boxback: BoxBack/Dementium - The Ward (USA).jpg
+assets.background: Background/Dementium - The Ward (USA).jpg
+assets.screenshot: Screenshot/Dementium - The Ward (USA).jpg
+assets.video: Video/Dementium - The Ward (USA).mp4
+x-co-op: No
+
+
+game: Dementium II (USA) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Dementium II (USA) (En,Fr,De,Es,It)/Dementium II (USA) (En,Fr,De,Es,It).json
+developer: Renegade Kid
+publisher: SouthPeak Games
+genre: Horror;Shooter
+description:
+  Just how demented are you?
+  .
+  You are William Redmoor, recent recipient of a radical brain operation intended
+  to cure psychosis and current inmate at a clandestine treatment center for the
+  criminally insane. Your memories are fuzzy, but it appears that your wife was
+  murdered, and the evidence pointed toward you as the killer. Here at the Bright
+  Dawn Treatment Center you are under the care of an enigmatic figure known only
+  as The Doctor.
+  .
+  Whatever the Doctor’s methods, they appear to work—your psychosis is gone... or is
+  it? Demons you once battled have appeared once again. Worse, it seems that the
+  Doctor has some diabolical scheme to perform experimental operations on scores
+  of other inmates. You must not only survive an onslaught of horrific beasts but
+  also stop the Doctor from achieving his goal. With all the insanity that
+  surrounds you, you can’t tell if it’s you or the world around you that has truly
+  lost it. Just how demented are you?
+release: 2010-05-04
+players: 1
+assets.boxfront: BoxFront/Dementium II (USA) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Dementium II (USA) (En,Fr,De,Es,It).jpg
+assets.background: Background/Dementium II (USA) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Dementium II (USA) (En,Fr,De,Es,It).jpg
+assets.video: Video/Dementium II (USA) (En,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Diner Dash - Sizzle & Serve (USA) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Diner Dash - Sizzle & Serve (USA) (En,Fr,De,Es,It)/Diner Dash - Sizzle & Serve (USA) (En,Fr,De,Es,It).json
+developer: Climax Studios
+publisher: Eidos  Interactive
+genre: Puzzle
+description:
+  The customer is always right!
+  .
+  Diner Dash is the action-puzzle game that brings out the entrepreneur in all of
+  us! Poor Flo! Sick and tired of pushing paper in the dreary, bleary-eyed world
+  of finance, she ditched her desk job and now she's rolling up her sleeves and
+  setting out to build her very own empire of high-class, five-star restaurants.
+  It won't be easy, though! Flo's on her own now, and heading for the top! To get
+  there she'll have to start on the ground floor - and she needs your help to
+  build the best restaurant business possible.
+  .
+  Serve your way from a two-table diner to the top of the restaurant ladder -
+  starting with a run-of-the-mill greasy spoon and ending in a dream restaurant
+  that will take your breath away!
+  .
+  • Table Reservations: Flo must seat reserved customers at the tables reserved
+  for their party. Reserved customers will be unhappy if their table is occupied
+  but will leave Flo a very big tip if they are satisfied with their meal.\n
+  • Brand-new outfits: Unlock 5 different outfits for Flo to wear in her
+  restaurants!\n
+  • Critic Reviews: Beware the "Critic" character who reviews your restaurant
+  depending on how well you serve her.\n
+  • All-New Levels: Introducing 50 different levels with over 20 unlockable
+  levels, and 6 new restaurants.\n
+  • Exciting Upgrades: Score enough points to unlock upgrades that will help you
+  improve your customers' happiness such as energy bars, stereos and more!\n
+  • Wireless Multiplayer: For the first time ever, play Diner Dash against a
+  friend! - Introducing 3 new multi-player modes for friends to play against each
+  other: Highest Score, First to Serve and Survival Mode. - Play as 5 different
+  characters including the Chef and Maitre d! Gain customer testimonials by
+  winning different goals throughout the game. - Once a Critic leaves your
+  restaurant satisfied, power ups are left at her table that will either benefit
+  your player or restrict your opponent for a short period of time.
+release: 2007-05-22
+players: 1
+assets.boxfront: BoxFront/Diner Dash - Sizzle & Serve (USA) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Diner Dash - Sizzle & Serve (USA) (En,Fr,De,Es,It).jpg
+assets.background: Background/Diner Dash - Sizzle & Serve (USA) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Diner Dash - Sizzle & Serve (USA) (En,Fr,De,Es,It).jpg
+assets.video: Video/Diner Dash - Sizzle & Serve (USA) (En,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Dragon Quest Heroes - Rocket Slime (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Dragon Quest Heroes - Rocket Slime (USA)/Dragon Quest Heroes - Rocket Slime (USA).json
+developer: TOSE
+publisher: Square Enix
+genre: Action;Adventure
+description:
+  The latest game from the creative minds behind the 2005 RPG hit, Dragon Quest
+  VIII: Journey of the Cursed KingTM, has arrived on the Nintendo DSTM. The hero
+  of this brand-new action-adventure is a slime—one of the most popular monsters
+  from the Dragon Quest series. Experience an action-packed adventure with slime
+  rescue missions, addictive monster and item collection, and fierce multiplayer
+  tank battles.
+  .
+  The game is set in the kingdom of Slimenia, a peaceful land that is suddenly
+  invaded by a mysterious cartel called “the Plob,” who then proceed to kidnap all
+  the slimes in the capital city of Boingburg. Our protagonist, Rocket, is the
+  only slime left behind, and must embark on a journey throughout Slimenia to save
+  his friends and uncover the Plob’s nefarious plot!
+  .
+  • Perform unique slime actions such as stretching, bouncing, carrying things on
+  your head, and your awesome “Elasto Blast” attack!\n
+  • Rescue your captured slime friends and collect items, money, and monsters as
+  you solve the adventure stages.\n
+  • Each adventure stage culminates in an exciting battle in your Schleiman Tank
+  against other enemy Monster Tanks.\n
+  • A cornucopia of colorful characters from the Dragon Quest world takes part in
+  this wildly entertaining new adventure.\n
+  • Customize your tanks by collecting a vast array of weapons and items. You can
+  even shoot your fellow slimes or yourself from your tank’s cannons to infiltrate
+  and sabotage the enemy’s Monster Tanks.\n
+  • Simple, streamlined controls allow players of all ages and skill levels to
+  take part in the action with ease.\n
+  • With the Nintendo DS wireless play feature you can pit your tank against a
+  friend’s in exciting player vs. player action.
+release: 2006-09-19
+players: 1
+assets.boxfront: BoxFront/Dragon Quest Heroes - Rocket Slime (USA).jpg
+assets.boxback: BoxBack/Dragon Quest Heroes - Rocket Slime (USA).jpg
+assets.background: Background/Dragon Quest Heroes - Rocket Slime (USA).jpg
+assets.screenshot: Screenshot/Dragon Quest Heroes - Rocket Slime (USA).jpg
+assets.video: Video/Dragon Quest Heroes - Rocket Slime (USA).mp4
+x-co-op: No
+
+
+game: Dragon Quest IV - Chapters of the Chosen (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Dragon Quest IV - Chapters of the Chosen (USA) (En,Fr,Es)/Dragon Quest IV - Chapters of the Chosen (USA) (En,Fr,Es).json
+developer: ArtePiazza
+publisher: Square Enix
+genre: Role-Playing
+description:
+  A prestigious army captain, an adventurous princess seeking to test her skills
+  beyond palace walls, a humble merchant aspiring to open his own shop, and two
+  sisters who wish to avenge their father’s death... These seemingly unrelated
+  individuals will soon cross paths when fate brings them together to journey
+  alongside you, the hero. Dive into this unique adventure, and discover an epic
+  tale told through the experiences and emotions of characters from all walks of
+  life. For the first time, a full-fledged DRAGON QUEST adventure arrives on
+  Nintendo DS with DRAGON QUEST IV: Chapters of the Chosen. The brainchild of
+  series creator Yuji Horii, the DRAGON QUEST series has continued to excite and
+  enchant players with its engaging storylines, charming characters designed by
+  world-famous manga artist Akira Toriyama and imaginative worlds complemented by
+  the memorable scores of renowned composer Koichi Sugiyama. Experience an
+  adventure of epic proportions, presented through a unique portrayal of multiple
+  character perspectives. While retaining the classic look and feel of the
+  original release, this remake breathes new life into a much-loved entry in the
+  DRAGON QUEST series with 3D graphics, dual screen presentation and newly
+  animated monsters.
+release: 2008-09-16
+players: 1
+assets.boxfront: BoxFront/Dragon Quest IV - Chapters of the Chosen (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Dragon Quest IV - Chapters of the Chosen (USA) (En,Fr,Es).jpg
+assets.background: Background/Dragon Quest IV - Chapters of the Chosen (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Dragon Quest IV - Chapters of the Chosen (USA) (En,Fr,Es).jpg
+assets.video: Video/Dragon Quest IV - Chapters of the Chosen (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Dragon Quest IX - Sentinels of the Starry Skies (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Dragon Quest IX - Sentinels of the Starry Skies (USA) (En,Fr,Es)/Dragon Quest IX - Sentinels of the Starry Skies (USA) (En,Fr,Es).json
+developer: Level-5
+publisher: Square Enix
+genre: Role-Playing
+description:
+  In "Dragon Quest IX: Sentinels of the Starry Skies," players begin their
+  adventure as a city guardian who is sent to retrieve a sacred tree's fruits,
+  which have the power to grant wishes. Players travel the world, conquer fearsome
+  monsters and unravel an epic storyline. During their journey, players will
+  encounter mighty opponents in fast-paced battles, and also interact with a
+  colorful cast of characters. "Dragon Quest IX: Sentinels of the Starry Skies"
+  contains special modes that let players share their adventure with others,
+  allowing up to four players to team up via a local wireless connection and
+  experience the fun of tackling challenging monsters and dungeons cooperatively
+  with their own characters. Players can even leave the game active in their
+  backpacks, pockets or purses and still interact with other players via an
+  interactive "Tag Mode." Information about players' characters can be wirelessly
+  transmitted to others, and treasure maps and customized greetings can be
+  exchanged automatically by players who come within range of one another when
+  their games are set to Tag Mode. Players looking to enjoy a variety of different
+  game activities can take on special side quests. Some of these quests will be
+  earned by progressing through the game, while additional quests will be made
+  available for free download for players with broadband Internet access after the
+  game launches, providing hours of additional content for virtual adventurers to
+  enjoy either on their own or with friends. Some downloadable quests will
+  continue the main storyline of the game, while others offer standalone missions.
+release: 2010-07-11
+players: 4
+assets.boxfront: BoxFront/Dragon Quest IX - Sentinels of the Starry Skies (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Dragon Quest IX - Sentinels of the Starry Skies (USA) (En,Fr,Es).jpg
+assets.background: Background/Dragon Quest IX - Sentinels of the Starry Skies (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Dragon Quest IX - Sentinels of the Starry Skies (USA) (En,Fr,Es).jpg
+assets.video: Video/Dragon Quest IX - Sentinels of the Starry Skies (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: Dragon Quest Monsters - Joker (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Dragon Quest Monsters - Joker (USA)/Dragon Quest Monsters - Joker (USA).json
+developer: Square Enix
+publisher: Square Enix
+genre: Role-Playing
+description:
+  Send your minions to capture more minions!
+  .
+  Enter the world of DRAGON QUEST MONSTERS: Joker as the young hero, locked in a
+  prison by your own father, the leader of a mysterious organization known as
+  CELL. Released under orders to enter the Monster Scout Challenge, you will
+  embark on a journey starting with a single monster and a scout ring, unaware of
+  the dark and mysterious intentions that surround the competition.
+  .
+  • The “big three” comprised of series creator Yuji Horii, legendary manga artist
+  Akira Toriyama, and renowned composer Koichi Sugiyama, teams up once again to
+  create an unforgettable gaming experience\n
+  • Witness the same breathtaking visuals that brought Akira Toriyama’s art to
+  life in DRAGON QUEST VIII: Journey of the Cursed King\n
+  • Create new species as you synthesize customized monsters from a selection of
+  more than 200 different DRAGON QUEST creatures\n
+  • Experience an innovative and exciting mix of the monster arena battles from
+  DRAGON QUEST VIII and traditional DRAGON QUEST gameplay\n
+  • Challenge your friends via local wireless play to see whose team is the
+  strongest
+release: 2007-11-06
+players: 1
+assets.boxfront: BoxFront/Dragon Quest Monsters - Joker (USA).jpg
+assets.boxback: BoxBack/Dragon Quest Monsters - Joker (USA).jpg
+assets.background: Background/Dragon Quest Monsters - Joker (USA).jpg
+assets.screenshot: Screenshot/Dragon Quest Monsters - Joker (USA).jpg
+assets.video: Video/Dragon Quest Monsters - Joker (USA).mp4
+x-co-op: No
+
+
+game: Dragon Quest V - Hand of the Heavenly Bride (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Dragon Quest V - Hand of the Heavenly Bride (USA) (En,Fr,Es)/Dragon Quest V - Hand of the Heavenly Bride (USA) (En,Fr,Es).json
+developer: ArtePiazza
+publisher: Square Enix
+genre: Role-Playing
+description:
+  DRAGON QUEST V: Hand of the Heavenly Bride–the second installment in the
+  Zenithia Trilogy–makes its way to North America for the first time. Follow a
+  journey that crosses three generations of a family’s legacy in a classic RPG
+  brimming with new ideas, numerous lands to explore, multiple branches to enhance
+  replayability, and dozens of your favorite DRAGON QUEST monsters. What begins as
+  an innocent childhood voyage of a boy following alongside his father’s journey
+  soon develops into an eye-opening adventure of a brave young man traveling the
+  world as he faces life-altering decisions that transcend generations. You – a
+  hero in the making – determine your own path, choose your wife, and befriend a
+  wagonload of quirky monsters along the way. Indulge in the colorful DRAGON QUEST
+  world created by Yuji Horii, combined with the charming characters and monsters
+  designed by Akira Toriyama and memorable soundtrack from famed composer Koichi
+  Sugiyama to create an unforgettable gaming experience.
+release: 2009-02-17
+players: 1
+assets.boxfront: BoxFront/Dragon Quest V - Hand of the Heavenly Bride (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Dragon Quest V - Hand of the Heavenly Bride (USA) (En,Fr,Es).jpg
+assets.background: Background/Dragon Quest V - Hand of the Heavenly Bride (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Dragon Quest V - Hand of the Heavenly Bride (USA) (En,Fr,Es).jpg
+assets.video: Video/Dragon Quest V - Hand of the Heavenly Bride (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Dragon Quest VI - Realms of Revelation (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Dragon Quest VI - Realms of Revelation (USA) (En,Fr,Es)/Dragon Quest VI - Realms of Revelation (USA) (En,Fr,Es).json
+developer: ArtePiazza
+publisher: Square Enix
+genre: Role-Playing
+description:
+  DRAGON QUEST VI: Realms of Revelation - previously unavailable outside of Japan
+  - makes its North American debut exclusively on the hand-held Nintendo DS family
+  of systems. Combining classic role-playing adventure with new character options
+  and enhancements, the game offers hours of imaginative DRAGON QUEST fun spanning
+  several unique game worlds that can be enjoyed on the go.
+  .
+  DRAGON QUEST VI: Realms of Revelation features a rich storyline that leads
+  players through a multitude of captivating worlds as they gather allies and
+  battle fierce monsters on a quest to defeat evil forces. With updated graphics
+  and more than 15 character classes to choose from, new and experienced players
+  alike can dive headlong into the timeless role-playing excitement of the DRAGON
+  QUEST franchise anytime, anywhere. They can even enjoy special features such as
+  switching between character classes and letting monsters, such as Slimes, join
+  their party.
+release: 2011-02-14
+players: 1
+assets.boxfront: BoxFront/Dragon Quest VI - Realms of Revelation (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Dragon Quest VI - Realms of Revelation (USA) (En,Fr,Es).jpg
+assets.background: Background/Dragon Quest VI - Realms of Revelation (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Dragon Quest VI - Realms of Revelation (USA) (En,Fr,Es).jpg
+assets.video: Video/Dragon Quest VI - Realms of Revelation (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Drawn to Life (USA) (En,Fr)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Drawn to Life (USA) (En,Fr)/Drawn to Life (USA) (En,Fr).json
+developer: 5th Cell
+publisher: THQ
+genre: Action;Adventure;Platform
+description:
+  Drawn to Life is an action-adventure platform video game for the Nintendo DS
+  developed by 5th Cell and published by THQ in 2007. It was later published by
+  Agatsuma Entertainment in Japan in 2008 under the name Drawn to Life: God's
+  Marionette (????????? ????????? Doron to Raifu: Kami-sama no Marionetto?). In
+  the game, the player creates their own playable characters, level objects, and
+  accessories by drawing them using the DS's stylus and Touch Screen. The game was
+  ported to iOS by WayForward Technologies and released by 505 Games on May 22,
+  2014.
+  .
+  Drawn to Life requires the player to create a hero in order to free a cursed
+  village from an encroaching darkness. It features numerous platforming levels, a
+  top down central village, and other elements such as vehicles, weapons, and
+  platforms, which are drawn or colored by the player using the stylus.
+  .
+  Two sequels have come out, both under the title Drawn to Life: The Next Chapter,
+  for release on the Wii and DS. A spin-off title, Drawn to Life: SpongeBob
+  SquarePants Edition (based on the SpongeBob SquarePants episode
+  "Frankendoodle"), was developed by Altron for the DS.
+release: 2007-09-11
+players: 1
+assets.boxfront: BoxFront/Drawn to Life (USA) (En,Fr).jpg
+assets.boxback: BoxBack/Drawn to Life (USA) (En,Fr).jpg
+assets.background: Background/Drawn to Life (USA) (En,Fr).jpg
+assets.screenshot: Screenshot/Drawn to Life (USA) (En,Fr).jpg
+assets.video: Video/Drawn to Life (USA) (En,Fr).mp4
+x-co-op: No
+
+
+game: Drawn to Life - The Next Chapter (USA) (En,Fr) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Drawn to Life - The Next Chapter (USA) (En,Fr) (Rev 1)/Drawn to Life - The Next Chapter (USA) (En,Fr) (Rev 1).json
+developer: 5th Cell
+publisher: THQ
+genre: Action;Adventure;Platform
+description:
+  Drawn to Life: The Next Chapter is the sequel of the video game Drawn to Life.
+  .
+  The game begins with a surreal sequence, wherein an unknown party asks the
+  player “What do you remember about that day?” The player is given several
+  dialogue choices that build a cohesive description of "that day", though at this
+  time, the player is not aware of the event's importance (or even occurrence).
+  Before the game properly begins, the player is asked to draw an image depicting
+  this mysterious scene, introducing them to the game's core "draw" functionality.
+  .
+  Following this is an animation sequence wherein one of the characters from the
+  previous game, Heather, recovers from a nightmare. She is shown to possess a
+  red-colored jewel pendant. In the same sequence, Heather is abducted by a
+  darkness which emanated from a scepter she discovered in a beached treasure
+  chest in the middle of the night. The next morning, when the other characters
+  realize she's missing, a search for her is dramatically cut short by Wilfre, who
+  causes the majority of the Raposa villagers to vanish, reveals himself as
+  Heather's captor, and ultimately drains the Village of color. The remaining
+  characters flee to the back of a massive turtle delivered, upon request, by the
+  Creator.
+  .
+  Their numbers sorely reduced and their home ruined, the game follows the
+  Raposa's struggle to reunite with their fellows and, with the aid of the
+  Creator's Hero of Creation, defeat Wilfre before he can realize his as-yet
+  unknown goals. The remaining members of the Village travel to Watersong,
+  Lavasteam, the Galactic Jungle, and Wilfre's Wasteland, a combination of all
+  three villages.
+release: 2009-10-27
+players: 1
+assets.boxfront: BoxFront/Drawn to Life - The Next Chapter (USA) (En,Fr) (Rev 1).jpg
+assets.boxback: BoxBack/Drawn to Life - The Next Chapter (USA) (En,Fr) (Rev 1).jpg
+assets.background: Background/Drawn to Life - The Next Chapter (USA) (En,Fr) (Rev 1).jpg
+assets.screenshot: Screenshot/Drawn to Life - The Next Chapter (USA) (En,Fr) (Rev 1).jpg
+assets.video: Video/Drawn to Life - The Next Chapter (USA) (En,Fr) (Rev 1).mp4
+x-co-op: No
+
+
+game: Final Fantasy Crystal Chronicles - Echoes of Time (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Final Fantasy Crystal Chronicles - Echoes of Time (USA) (En,Fr,Es)/Final Fantasy Crystal Chronicles - Echoes of Time (USA) (En,Fr,Es).json
+developer: Square Enix
+publisher: Square Enix
+genre: Action;Role-Playing
+description:
+  An innovative new concept in multiplayer gaming, Final Fantasy Crystal
+  Chronicles: Echoes of Time enables Wii and DS users to play side by side for the
+  first time. This breakthrough in gaming connectivity allows players on both
+  Nintendo platforms to journey together in the fantastical world of the beloved
+  Final Fantasy Crystal Chronicles series. Echoes of Time offers a gameplay system
+  that allows for a seamless, hassle-free in-game switch from single to
+  multiplayer mode. Play anytime, anywhere, with anyone and experience a new level
+  of connectivity with this latest adventure in the FFCC series. A triumphant
+  return from a monster-infested forest marks the completion of the 16-year-old
+  hero's coming-of-age ceremony. However, the hero's joy is short-lived as a young
+  village girl is found to be afflicted by a mysterious illness known as "crystal
+  sickness." Determined to obtain the cure, the hero steps out of the secluded
+  village for the first time, only to discover a world in which crystals are
+  merely artifacts of the past and no longer exist. Players can switch between
+  single and multiplayer modes at any time while playing, enjoying two great
+  gaming options in one integrated experience. A personalized hero can be
+  generated from a choice of the four familiar races of the series; Clavats,
+  Lilties, Selkies or Yukes. Players can continue to enjoy the game even after
+  completing the main adventure, as the New Game+ feature provides increased
+  difficulty and better items with every new round.
+release: 2009-03-24
+players: 4
+assets.boxfront: BoxFront/Final Fantasy Crystal Chronicles - Echoes of Time (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Final Fantasy Crystal Chronicles - Echoes of Time (USA) (En,Fr,Es).jpg
+assets.background: Background/Final Fantasy Crystal Chronicles - Echoes of Time (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Final Fantasy Crystal Chronicles - Echoes of Time (USA) (En,Fr,Es).jpg
+assets.video: Video/Final Fantasy Crystal Chronicles - Echoes of Time (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: Final Fantasy Crystal Chronicles - Ring of Fates (USA) (En,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Final Fantasy Crystal Chronicles - Ring of Fates (USA) (En,Es)/Final Fantasy Crystal Chronicles - Ring of Fates (USA) (En,Es).json
+developer: Square Enix
+publisher: Square Enix
+genre: Action;Role-Playing
+description:
+  Yuri and Chelinka are fraternal twins who live happily with their father in a
+  small village, but their happiness comes to an abrupt end when an ancient evil
+  force arrives. Now, with his family shattered, Yuri begins to train so that he
+  can be strong enough to fight when the evil returns. Yuri and Chelinka set out
+  on their quest to find their friends, avenge their family, and heal their world.
+release: 2008-03-11
+players: 4
+assets.boxfront: BoxFront/Final Fantasy Crystal Chronicles - Ring of Fates (USA) (En,Es).jpg
+assets.boxback: BoxBack/Final Fantasy Crystal Chronicles - Ring of Fates (USA) (En,Es).jpg
+assets.background: Background/Final Fantasy Crystal Chronicles - Ring of Fates (USA) (En,Es).jpg
+assets.screenshot: Screenshot/Final Fantasy Crystal Chronicles - Ring of Fates (USA) (En,Es).jpg
+assets.video: Video/Final Fantasy Crystal Chronicles - Ring of Fates (USA) (En,Es).mp4
+x-co-op: Yes
+
+
+game: Final Fantasy III (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Final Fantasy III (USA)/Final Fantasy III (USA).json
+developer: Square Enix
+publisher: Square Enix
+genre: Role-Playing
+description:
+  This is the fans' chance to complete the circle. The legend of Final Fantasy III
+  is reborn.
+  .
+  The Gulgan thus prophesied: This earthquake is only the beginning. The great
+  tremors that swallowed the crystals, the light of our world, only to spawn
+  monsters from the depths of the scarred land, are nothing but harbingers of what
+  is yet to come. Something is coming...fathomless, ominous, and full of sorrow...
+  But hope is not yet lost. Four souls will be blessed with the light, and so it
+  shall begin... A chance encounter with a sentient crystal changes Luneth’s life
+  forever. Luneth must leave the peaceful village of Ur behind, and seek three
+  others who share his destiny. Together, the four young adventurers set out on a
+  dangerous journey to banish the darkness that threatens their world.
+release: 2006-08-24
+players: 1
+assets.boxfront: BoxFront/Final Fantasy III (USA).jpg
+assets.boxback: BoxBack/Final Fantasy III (USA).jpg
+assets.background: Background/Final Fantasy III (USA).jpg
+assets.screenshot: Screenshot/Final Fantasy III (USA).jpg
+assets.video: Video/Final Fantasy III (USA).mp4
+x-co-op: No
+
+
+game: Final Fantasy IV (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Final Fantasy IV (USA) (En,Fr,Es)/Final Fantasy IV (USA) (En,Fr,Es).json
+developer: Square Enix
+publisher: Square Enix
+genre: Role-Playing
+description:
+  Follow the dark knight Cecil - Lord Captain of Baron's elite force, the Red
+  Wings - as he embarks on a fateful journey riddled with trials, betrayals,
+  friendship, loss and self-discovery. Plagued with uncertainty over his monarch's
+  motives, can Cecil turn away from the path of darkness and destruction?\n
+  • Fully remade in 3D with new graphics and voiceovers\n
+  • Witness gorgeous, all-new CG cutscenes\n
+  • Updated battle system retains its original feel while elevating visual effects
+  to an entirely new level
+release: 2008-09-05
+players: 1
+assets.boxfront: BoxFront/Final Fantasy IV (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Final Fantasy IV (USA) (En,Fr,Es).jpg
+assets.background: Background/Final Fantasy IV (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Final Fantasy IV (USA) (En,Fr,Es).jpg
+assets.video: Video/Final Fantasy IV (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Final Fantasy XII - Revenant Wings (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Final Fantasy XII - Revenant Wings (USA)/Final Fantasy XII - Revenant Wings (USA).json
+developer: Square Enix
+publisher: Square Enix
+genre: Role-Playing;Strategy
+description:
+  One year after the events of FINAL FANTASY XII, the young protagonist Vaan
+  travels the skies of Ivalice with his trusted navigator Penelo at his side.
+  Their treasure hunting adventures take them to the sky continent of Lemurés
+  where they meet Llyud, a member of the aegyl race. These mysterious winged
+  people have been living on the floating continent for centuries, but a
+  disturbance has allowed treasure-seeking sky pirates to breach their once-hidden
+  territory. It falls to Vaan and his band of young sky pirates to stand up
+  against the trespassers, and defend this extraordinary world and its people.
+release: 2007-11-20
+players: 1
+assets.boxfront: BoxFront/Final Fantasy XII - Revenant Wings (USA).jpg
+assets.boxback: BoxBack/Final Fantasy XII - Revenant Wings (USA).jpg
+assets.background: Background/Final Fantasy XII - Revenant Wings (USA).jpg
+assets.screenshot: Screenshot/Final Fantasy XII - Revenant Wings (USA).jpg
+assets.video: Video/Final Fantasy XII - Revenant Wings (USA).mp4
+x-co-op: No
+
+
+game: Fire Emblem - Shadow Dragon (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Fire Emblem - Shadow Dragon (USA)/Fire Emblem - Shadow Dragon (USA).json
+developer: Intelligent Systems
+publisher: Nintendo
+genre: Role-Playing;Strategy
+description:
+  A reinvention of the original NES titles with revamped graphics and intuitive
+  touch control, Fire Emblem: Shadow Dragon will finally introduce longtime fans
+  to the stories that gave birth to the series nearly 20 years ago in Japan, while
+  introducing the Fire Emblem franchise to a broader audience of strategy and
+  chess fans. Fire Emblem: Shadow Dragon also reveals the back story of Marth, the
+  original lead character in the Fire Emblem series introduced and made popular in
+  North America by the Super Smash Bros. series of fighting games.
+release: 2008-08-07
+players: 2
+assets.boxfront: BoxFront/Fire Emblem - Shadow Dragon (USA).jpg
+assets.boxback: BoxBack/Fire Emblem - Shadow Dragon (USA).jpg
+assets.background: Background/Fire Emblem - Shadow Dragon (USA).jpg
+assets.screenshot: Screenshot/Fire Emblem - Shadow Dragon (USA).jpg
+assets.video: Video/Fire Emblem - Shadow Dragon (USA).mp4
+x-co-op: No
+
+
+game: From the Abyss (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/From the Abyss (USA)/From the Abyss (USA).json
+developer: Sonic Powered Co., Ltd.
+publisher: Aksys Games Localization, Inc.
+genre: Role-Playing
+description:
+  From the Abyss is a dungeon crawling RPG where the player takes command of a
+  custom created character. The story takes place in a small country called
+  Rubenhaut where for many years the world has been free of monster when the
+  Dimensional Abyss was created by the Saint of Light to seal them off in a
+  parallel dimension, afterwards Rubenhaut was built to guard the gate. However,
+  one day the seal was broken and the monster that was once sealed off have been
+  released again and is wreaking havoc on the world and it is up to the player to
+  explore the dungeons of the world and collect parts of a magical crystal called
+  the Abyss Gate in order to re-seal the rift.
+  .
+  The gameplay consists of exploring the world and dungeons, collecting items,
+  defeating enemies afterwards absorbing their souls and steal their skills and
+  combine them with their existing skills and weapons for a multitude of different
+  attacks. What makes From the Abyss different from other RPGs is that every time
+  the player starts a new game, everything is randomized ensuring an unique
+  experience each time.
+  .
+  There is also multiplayer mode where two friends can play co-op and advance
+  through the game and fight the main boss, The Abyss Lord.
+release: 2008-08-28
+players: 2
+assets.boxfront: BoxFront/From the Abyss (USA).jpg
+assets.boxback: BoxBack/From the Abyss (USA).jpg
+assets.background: Background/From the Abyss (USA).jpg
+assets.screenshot: Screenshot/From the Abyss (USA).jpg
+assets.video: Video/From the Abyss (USA).mp4
+x-co-op: Yes
+
+
+game: Geometry Wars - Galaxies (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Geometry Wars - Galaxies (USA)/Geometry Wars - Galaxies (USA).json
+developer: Bizarre Creations
+publisher: Sierra Entertainment
+genre: Shooter
+description:
+  Like its parent, the Xbox Live Arcade game Geometry Wars: Retro Evolved,
+  Galaxies has the player control a ship that can shoot and travel in 8 directions
+  and is controlled primarily with analog sticks and a single button to activate
+  bombs. The playing space is a flat 2D plane, but unlike Evolved there are
+  multiple planes (or levels) that vary in size and shape. The planes are
+  typically a near-black background lit up with a grid, but enemies are brightly
+  colored shapes that fill the screen with particles and colors when attacking the
+  player.
+  .
+  Galaxies differs from Retro Evolved in that the single-player component has many
+  different levels rather than the single provided in Evolved, each with its own
+  set of score goals. Galaxies also adds a new mechanic of the drone, which acts
+  as a helper ship that can perform one user-selected duty at a time such as
+  rotating shield, secondary shooter, backwards shooter, etc.
+  .
+  The Wii version includes Geometry Wars: Retro Evolved and can interface with the
+  Nintendo DS to download the demo to the system, as well as to unlock new
+  features, including a hidden version of Geometry Wars: Waves.
+release: 2007-11-27
+players: 1
+assets.boxfront: BoxFront/Geometry Wars - Galaxies (USA).jpg
+assets.boxback: BoxBack/Geometry Wars - Galaxies (USA).jpg
+assets.background: Background/Geometry Wars - Galaxies (USA).jpg
+assets.screenshot: Screenshot/Geometry Wars - Galaxies (USA).jpg
+assets.video: Video/Geometry Wars - Galaxies (USA).mp4
+x-co-op: No
+
+
+game: Glory of Heracles (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Glory of Heracles (USA)/Glory of Heracles (USA).json
+developer: Paon Corporation
+publisher: Nintendo
+genre: Role-Playing
+description:
+  Glory of Heracles features the eponymous Greek hero in a pick-up-and-play
+  role-playing game that has a rich storyline in a Greek motif and a deep battle
+  system. The story begins when Heracles washes up on a beach with amnesia.
+  Players must journey far and wide to figure out Heracles' story and unravel the
+  mysterious pasts of the other main characters in this new adventure. The game
+  uses ancient Greece as its backdrop, and players can visit cities like Sparta
+  and Athens on their travels.
+release: 2010-01-19
+players: 1
+assets.boxfront: BoxFront/Glory of Heracles (USA).jpg
+assets.boxback: BoxBack/Glory of Heracles (USA).jpg
+assets.background: Background/Glory of Heracles (USA).jpg
+assets.screenshot: Screenshot/Glory of Heracles (USA).jpg
+assets.video: Video/Glory of Heracles (USA).mp4
+x-co-op: No
+
+
+game: Harvest Moon DS (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Harvest Moon DS (USA)/Harvest Moon DS (USA).json
+developer: Marvelous Interactive
+publisher: Natsume / Marvelous Entertainment
+genre: Life Simulation
+description:
+  Harvest Moon DS (牧場物語 コロボックルステーション Bokujō Monogatari: Korobokkuru Sutēshon) is
+  the first game for the Nintendo DS in the Harvest Moon ) of farm simulation
+  video games/role-playing. It was published and developed by Marvelous
+  Interactive Inc., and first released in Japan on March 17, 2005. It is the first
+  entry in the series without series creator Yasuhiro Wada heavily involved,
+  though it borrows many assets from Harvest Moon: Friends of Mineral Town and
+  Harvest Moon: A Wonderful Life, such as the graphical style from the former and
+  setting of the latter.
+release: 2005-03-25
+players: 1
+assets.boxfront: BoxFront/Harvest Moon DS (USA).jpg
+assets.boxback: BoxBack/Harvest Moon DS (USA).jpg
+assets.background: Background/Harvest Moon DS (USA).jpg
+assets.screenshot: Screenshot/Harvest Moon DS (USA).jpg
+assets.video: Video/Harvest Moon DS (USA).mp4
+x-co-op: No
+
+
+game: Hidden Mysteries - Vampire Secrets (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Hidden Mysteries - Vampire Secrets (USA)/Hidden Mysteries - Vampire Secrets (USA).json
+developer: Gunnar Games
+publisher: GameMill Publishing
+genre: Puzzle
+description:
+  What is intended as a relaxing vacation to Savannah , Georgia for Claire
+  Donnelly wuickly turns into one of adventure and mystery. Upon her arrival,
+  Claire starts experiencing unusual visions, which grow to vivid depiction of
+  visions of evil forces living among the citizens of Savannah. Dark Shadows: A
+  Vampire's Tale mixes hidden object gameplay with adventure elements. The dark
+  and mysterious storyline will capture the attention of casual gamers and vampire
+  fanatics alike
+release: 2010-08-20
+players: 1
+assets.boxfront: BoxFront/Hidden Mysteries - Vampire Secrets (USA).jpg
+assets.boxback: BoxBack/Hidden Mysteries - Vampire Secrets (USA).jpg
+assets.background: Background/Hidden Mysteries - Vampire Secrets (USA).jpg
+assets.screenshot: Screenshot/Hidden Mysteries - Vampire Secrets (USA).jpg
+assets.video: Video/Hidden Mysteries - Vampire Secrets (USA).mp4
+x-co-op: No
+
+
+game: Kirby - Canvas Curse (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Kirby - Canvas Curse (USA)/Kirby - Canvas Curse (USA).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Action;Platform
+description:
+  Your DS stylus has been infused with the power to paint! When Kirby gets turned
+  into a ball by an evil witch, your hand-drawn rainbow paths become the only way
+  he can find power-ups and reach the gates of each world. Draw loops to make him
+  speed up, make ramps to jump danger, and draw walls to block laser beams and
+  cannon blasts as you explore seven worlds packed with adventure! Get in touch:
+  Stun enemies, break blocks, and much more - all with a touch of the stylus! Be a
+  copycat: Tap Kirby to dash into enemies and copy their abilities. Eleven
+  abilities in all! So many modes: Try timed challenges, take on bosses, or play
+  simple but fun mini-games!  Released in Europe on November 25, 2005 as Kirby:
+  Power Paintbrush.
+release: 2005-03-24
+players: 1
+assets.boxfront: BoxFront/Kirby - Canvas Curse (USA).jpg
+assets.boxback: BoxBack/Kirby - Canvas Curse (USA).jpg
+assets.background: Background/Kirby - Canvas Curse (USA).jpg
+assets.screenshot: Screenshot/Kirby - Canvas Curse (USA).jpg
+assets.video: Video/Kirby - Canvas Curse (USA).mp4
+x-co-op: No
+
+
+game: Kirby - Squeak Squad (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Kirby - Squeak Squad (USA)/Kirby - Squeak Squad (USA).json
+developer: Capcom
+publisher: Nintendo
+genre: Action;Adventure;Platform
+description:
+  Kirby: Squeak Squad, known in Europe as Kirby: Mouse Attack and in Japan as
+  Kirby of the Stars: Calling on the Dorotche Gang (Japanese: 星のカービィ 参上! ドロッチェ団
+  Hepburn: Hoshi no Kābī Sanjō! Dorocche Dan?), is a 2006-07 platforming video
+  game developed by HAL Laboratory, Flagship and Natsume (the latter as seen in
+  the end credits) and published by Nintendo for the Nintendo DS handheld video
+  game console. Unlike the previous Nintendo DS title, Kirby: Canvas Curse, Squeak
+  Squad is a traditional platformer which uses the face buttons instead of the
+  touch screen to control Kirby.
+release: 2006-11-02
+players: 1
+assets.boxfront: BoxFront/Kirby - Squeak Squad (USA).jpg
+assets.boxback: BoxBack/Kirby - Squeak Squad (USA).jpg
+assets.background: Background/Kirby - Squeak Squad (USA).jpg
+assets.screenshot: Screenshot/Kirby - Squeak Squad (USA).jpg
+assets.video: Video/Kirby - Squeak Squad (USA).mp4
+x-co-op: No
+
+
+game: Kirby Mass Attack (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Kirby Mass Attack (USA) (En,Fr,Es)/Kirby Mass Attack (USA) (En,Fr,Es).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Action;Platform
+description:
+  One day, an evildoer with a magic cane appears and splits Kirby into 10 pieces.
+  Kirby sets off on a journey to return to his original form. Players use the
+  touch screen to control a mass of Kirby characters in a new and novel way. Swipe
+  the touch screen to launch them in a mass attack against enemies, then tap the
+  enemies into submission.
+release: 2011-08-04
+players: 1
+assets.boxfront: BoxFront/Kirby Mass Attack (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Kirby Mass Attack (USA) (En,Fr,Es).jpg
+assets.background: Background/Kirby Mass Attack (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Kirby Mass Attack (USA) (En,Fr,Es).jpg
+assets.video: Video/Kirby Mass Attack (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Kirby Super Star Ultra (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Kirby Super Star Ultra (USA)/Kirby Super Star Ultra (USA).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Action;Platform
+description:
+  Kirby's back with a bunch of fun adventures! Explore Dream Land and defeat King
+  Dedede, tame the ferocious Dynablade, explore a huge cave, take part in a
+  gluttonous race, vandalize Meta Knight's ship, the Halberd, explore the entire
+  galaxy, and more!
+  .
+  Kirby Super Star Ultra is an updated remake of Kirby Super Star, a popular SNES
+  game which is broken up into seven main games. In addition to those previous
+  games, Ultra includes five new games and three new sub-games. Listed are just
+  some of the new ones:
+  .
+  Revenge of the King: King Dedede wants a rematch! This game is a toughened up
+  version of Spring Breeze, the opening game.
+  .
+  The Arena: Every boss that Kirby has met throughout the game, one after the
+  other! Try to beat them all!
+  .
+  Meta Knightmare Ultra: Play through the first five games as Meta Knight, with
+  his own special abilities and powers! Speed is the key!
+  .
+  Kirby Card Swipe: Watch the top screen, and quickly pick the correct card. Be
+  the first to do it thrice!
+  .
+  Kirby on the Draw: Enemy targets pop up, tap them as they appear. Don't tap the
+  bombs!
+  .
+  Snack Tracks: Eat all the food on your tracks. Don't eat the bugs, bombs or
+  rocks!
+  .
+  As with the original, Ultra features a heavily featured multiplayer mode. All
+  games can be played either co-operatively or competitively. Spring Breeze can
+  even be played co-operatively if your friend doesn't have a copy of the game!
+release: 2008-09-22
+players: 4
+assets.boxfront: BoxFront/Kirby Super Star Ultra (USA).jpg
+assets.boxback: BoxBack/Kirby Super Star Ultra (USA).jpg
+assets.background: Background/Kirby Super Star Ultra (USA).jpg
+assets.screenshot: Screenshot/Kirby Super Star Ultra (USA).jpg
+assets.video: Video/Kirby Super Star Ultra (USA).mp4
+x-co-op: Yes
+
+
+game: LEGO Battles (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/LEGO Battles (USA) (En,Fr,Es)/LEGO Battles (USA) (En,Fr,Es).json
+developer: Hellbent Games
+publisher: Warner Bros. Interactive Entertainment
+genre: Strategy
+description:
+  Lego Battles is a video game developed by Hellbent Games and co-published by TT
+  Games. It was released on June 9, 2009 for the Nintendo DS. There are a total of
+  three different stories in the game, each with the option of playing as the
+  protagonists or the antagonists. There are 6 different quests (one for the
+  protagonists and one for the antagonists of each story), with 15 different
+  levels in each quest. Quests are divided into three acts, each act ranging in
+  length of 4-6 levels. It is similar to Starcraft in that it has buildings,
+  builders, fighters, machines (Specials) and Resources.
+release: 2009-06-09
+players: 1
+assets.boxfront: BoxFront/LEGO Battles (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/LEGO Battles (USA) (En,Fr,Es).jpg
+assets.background: Background/LEGO Battles (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/LEGO Battles (USA) (En,Fr,Es).jpg
+assets.video: Video/LEGO Battles (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es)/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es).json
+developer: Traveller's Tales
+publisher: Lucas Art's
+genre: Platform
+description:
+  Lego Indiana Jones 2: The Adventure Continues is a 2009 video game developed by
+  Traveller's Tales and published by LucasArts. It is the sequel to the 2008 game,
+  Lego Indiana Jones: The Original Adventures. The game allows gamers to play all
+  four cinematic adventures,[5] including the latest film in the franchise,
+  Indiana Jones and the Kingdom of the Crystal Skull, which was not included in
+  the previous game. Despite being tagged as a sequel, the game contains newly
+  designed levels for all four movies. The game is available on the Wii, Xbox 360,
+  PlayStation 3, Nintendo DS, PlayStation Portable, Mac OS X, and Microsoft
+  Windows.[6][7] The Mac OS X version of the game was released on April 28, 2011
+  by Feral Interactive.[1] A PlayStation 2 version of the game was planned, but
+  later cancelled for unknown reasons and was scrapped along with Lego Harry
+  Potter: Years 1-4.
+release: 2009-11-17
+players: 2
+assets.boxfront: BoxFront/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es).jpg
+assets.background: Background/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es).jpg
+assets.video: Video/LEGO Indiana Jones 2 - The Adventure Continues (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: Legend of Zelda, The - Phantom Hourglass (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Legend of Zelda, The - Phantom Hourglass (USA) (En,Fr,Es)/Legend of Zelda, The - Phantom Hourglass (USA) (En,Fr,Es).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Adventure;Role-Playing
+description:
+  Many months have passed since the events of The Legend of Zelda: The Wind Waker,
+  and Link, Tetra and Tetra's band of pirates have set sail in search of new
+  lands. Tetra falls into danger when she explores an abandoned ship alone, and
+  Link falls into the ocean when he attempts to rescue her. When he washes up
+  unconscious on the shores of a mysterious island, he is awakened by a fairy who
+  agrees to help him as he sets off to find Tetra - and his way back to the seas
+  he once knew.
+release: 2007-06-23
+players: 2
+assets.boxfront: BoxFront/Legend of Zelda, The - Phantom Hourglass (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Phantom Hourglass (USA) (En,Fr,Es).jpg
+assets.background: Background/Legend of Zelda, The - Phantom Hourglass (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Phantom Hourglass (USA) (En,Fr,Es).jpg
+assets.video: Video/Legend of Zelda, The - Phantom Hourglass (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: Legend of Zelda, The - Spirit Tracks (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Legend of Zelda, The - Spirit Tracks (USA) (En,Fr,Es)/Legend of Zelda, The - Spirit Tracks (USA) (En,Fr,Es).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action;Adventure
+description:
+  For the first time in the 23-year history of The Legend of Zelda series,
+  Princess Zelda is leaving the villainous clutches of the underworld behind and
+  joining the adventure with Link. In The Legend of Zelda: Spirit Tracks, the
+  spirit of Zelda accompanies Link on his quest to save Hyrule. Directly impacting
+  game play like never before, Zelda's spirit can take control of hulking suits of
+  armor known as Phantoms, allowing the player to direct both Link and these new
+  allies as they battle enemies, solve puzzles and uncover secrets. Zelda also
+  rides alongside Link on his customizable train, offering wisdom that will help
+  players find new areas, storylines and items. The team of Link and Zelda
+  presents countless new storyline details for fans to enjoy, including a closer
+  look at Princess Zelda herself, one of the most iconic video game characters of
+  all-time.
+release: 2009-12-07
+players: 4
+assets.boxfront: BoxFront/Legend of Zelda, The - Spirit Tracks (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Spirit Tracks (USA) (En,Fr,Es).jpg
+assets.background: Background/Legend of Zelda, The - Spirit Tracks (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Spirit Tracks (USA) (En,Fr,Es).jpg
+assets.video: Video/Legend of Zelda, The - Spirit Tracks (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: Lunar - Dragon Song (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Lunar - Dragon Song (USA)/Lunar - Dragon Song (USA).json
+developer: Game Arts
+publisher: Ubisoft
+genre: Role-Playing
+description:
+  Through the Darkness find the Light!\n
+  When The Legends of Dragons were first born, an age of darkness descended on the
+  world of Lunar. Join the untried hero Jian and his friends on their journey to
+  save Lunar from the powerful forces of evil.
+release: 2005-09-27
+players: 1
+assets.boxfront: BoxFront/Lunar - Dragon Song (USA).jpg
+assets.boxback: BoxBack/Lunar - Dragon Song (USA).jpg
+assets.background: Background/Lunar - Dragon Song (USA).jpg
+assets.screenshot: Screenshot/Lunar - Dragon Song (USA).jpg
+assets.video: Video/Lunar - Dragon Song (USA).mp4
+x-co-op: No
+
+
+game: Magical Starsign (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Magical Starsign (USA)/Magical Starsign (USA).json
+developer: Brownie Brown
+publisher: Nintendo
+genre: Role-Playing
+description:
+  The students of Will O'Wisp magical academy have a little problem: Their teacher
+  has mysteriously disappeared. After commandeering a handful of rockets to rescue
+  her, they've wound up on a strange (and sometimes scary) adventure through outer
+  space. Now players must rescue both their classmates AND their teacher - and
+  just maybe the whole solar system while they're at it. Explore strange planets.
+  Players see the sights of this strange, sci-fi fantasy setting as they uncover
+  the secret behind their teacher's disappearance in this epic role-playing game.
+  The stylus controls everything, from combat to conversations to outfitting
+  allies. Simple controls make it easy to play but a challenge to master. Players
+  can link up wirelessly with five friends and explore the amigo dungeon together
+  - they'll find unending challenges and incredible rewards as they delve into the
+  depths of this unique multiplayer experience.
+release: 2006-10-23
+players: 4
+assets.boxfront: BoxFront/Magical Starsign (USA).jpg
+assets.boxback: BoxBack/Magical Starsign (USA).jpg
+assets.background: Background/Magical Starsign (USA).jpg
+assets.screenshot: Screenshot/Magical Starsign (USA).jpg
+assets.video: Video/Magical Starsign (USA).mp4
+x-co-op: Yes
+
+
+game: Mario & Luigi - Partners in Time (USA) (Rev 1)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Mario & Luigi - Partners in Time (USA) (Rev 1)/Mario & Luigi - Partners in Time (USA) (Rev 1).json
+developer: AlphaDream
+publisher: Nintendo
+genre: Role-Playing
+description:
+  The famous Mario Brothers return in this sequel to the humorous Superstar Saga.
+  In this adventure, Princess Peach takes a trip in a time machine, but when it
+  returns, there's only a monster inside! The heroic brothers travel back in time
+  only to discover that evil alien life forms known as the Shroobs have taken over
+  the Mushroom Kingdom, and no-one is safe! They soon meet up with their younger
+  selves, and set out to stop the alien menace, not to mention rescue the
+  Princess!
+release: 2005-11-28
+players: 1
+assets.boxfront: BoxFront/Mario & Luigi - Partners in Time (USA) (Rev 1).jpg
+assets.boxback: BoxBack/Mario & Luigi - Partners in Time (USA) (Rev 1).jpg
+assets.background: Background/Mario & Luigi - Partners in Time (USA) (Rev 1).jpg
+assets.screenshot: Screenshot/Mario & Luigi - Partners in Time (USA) (Rev 1).jpg
+assets.video: Video/Mario & Luigi - Partners in Time (USA) (Rev 1).mp4
+x-co-op: No
+
+
+game: Mario Kart DS (USA) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Mario Kart DS (USA) (En,Fr,De,Es,It)/Mario Kart DS (USA) (En,Fr,De,Es,It).json
+developer: Nintendo
+publisher: Nintendo
+genre: Racing
+description:
+  Rev up your engines and buckle up for Mario Kart DS! An all-star cast of karting
+  veterans and newcomers compete for glory across 32 fiendishly-designed courses,
+  including Grand Prix, Time Trial, VS., Battle and Mission modes. The first game
+  in the series to feature classic courses from previous Mario Kart titles, it
+  also introduced the new items Blooper and Bullet Bill and an emblem editor for
+  customising your karts. Mario Kart DS is packed with more content than you can
+  shake a Spiny Shell at!
+release: 2005-11-14
+players: 4
+assets.boxfront: BoxFront/Mario Kart DS (USA) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Mario Kart DS (USA) (En,Fr,De,Es,It).jpg
+assets.background: Background/Mario Kart DS (USA) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Mario Kart DS (USA) (En,Fr,De,Es,It).jpg
+assets.video: Video/Mario Kart DS (USA) (En,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Mario Party DS (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Mario Party DS (USA)/Mario Party DS (USA).json
+developer: Hudson Soft
+publisher: Nintendo
+genre: Party
+description:
+  He's captured Mario and his friends in his pursuit of a crystal that the group
+  collected when it fell from the sky, and he doesn't hesitate to shrink them to
+  miniature size to get rid of them and get his hands on the other four crystals.
+  The mini-heroes have to find the crystals before he does, making their way
+  through giant environments filled with enormous creatures. The single-player
+  campaign takes place in five different settings, each of them ending with a
+  boss. As usual, players have to collect coins and stars, at the same time
+  escaping dangers such as Piranha Plants and other classic creatures from the
+  Mario universe.
+release: 2007-11-19
+players: 4
+assets.boxfront: BoxFront/Mario Party DS (USA).jpg
+assets.boxback: BoxBack/Mario Party DS (USA).jpg
+assets.background: Background/Mario Party DS (USA).jpg
+assets.screenshot: Screenshot/Mario Party DS (USA).jpg
+assets.video: Video/Mario Party DS (USA).mp4
+x-co-op: Yes
+
+
+game: McDonald's eCrew Development Program (Japan)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/McDonald's eCrew Development Program (Japan)/McDonald's eCrew Development Program (Japan).json
+developer: McDonald's Japan
+publisher: McDonald's Japan
+genre: Miscellaneous;Edutainment
+description:
+  eCDP is a Miscellaneous game, developed and published by McDonald's Japan, which
+  was released in Japan in 2010.
+release: 2010
+players: 1
+assets.boxfront: BoxFront/McDonald's eCrew Development Program (Japan).jpg
+assets.boxback: BoxBack/McDonald's eCrew Development Program (Japan).jpg
+assets.background: Background/McDonald's eCrew Development Program (Japan).jpg
+assets.screenshot: Screenshot/McDonald's eCrew Development Program (Japan).jpg
+x-co-op: No
+
+
+game: Metroid Prime - Hunters (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Metroid Prime - Hunters (USA)/Metroid Prime - Hunters (USA).json
+developer: Nintendo Software Technology
+publisher: Nintendo
+genre: Action;Shooter
+description:
+  The famous Metroid series lands on the Nintendo DS with Metroid Prime: Hunters.
+  A once-strong race has gone extinct, leaving powerful artifacts to be found by
+  bounty hunters from across the galaxy. The game features a variety of bounty
+  hunters, both old and new, to the series. It also features multiple competitive
+  game modes--such as deathmatch and king of the hill--for battling wirelessly
+  with up to three other players.
+release: 2006-03-20
+players: 4
+assets.boxfront: BoxFront/Metroid Prime - Hunters (USA).jpg
+assets.boxback: BoxBack/Metroid Prime - Hunters (USA).jpg
+assets.background: Background/Metroid Prime - Hunters (USA).jpg
+assets.screenshot: Screenshot/Metroid Prime - Hunters (USA).jpg
+assets.video: Video/Metroid Prime - Hunters (USA).mp4
+x-co-op: No
+
+
+game: Metroid Prime - Hunters - First Hunt (USA, Australia) (Demo)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Metroid Prime - Hunters - First Hunt (USA, Australia) (Demo)/Metroid Prime - Hunters - First Hunt (USA, Australia) (Demo).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action;Adventure;Shooter
+description:
+  Metroid Prime Hunters: First Hunt is an official demo of Metroid Prime Hunters,
+  the first Metroid game for the Nintendo DS. It was included in Nintendo DS
+  packages at the time of release, but has long since been discontinued. The game
+  includes three short single-player games, a trailer for the full game, and a
+  small multiplayer section.
+  .
+  The game is a collection of trials to test Samus's abilities. These include
+  Regulator, Survival, and Morph Ball Training. Points are gained based on
+  performance in these trials, and by combo-ing enemies without missing a shot.
+release: 2004-11-21
+players: 1
+assets.boxfront: BoxFront/Metroid Prime - Hunters - First Hunt (USA, Australia) (Demo).jpg
+assets.boxback: BoxBack/Metroid Prime - Hunters - First Hunt (USA, Australia) (Demo).jpg
+assets.background: Background/Metroid Prime - Hunters - First Hunt (USA, Australia) (Demo).jpg
+assets.screenshot: Screenshot/Metroid Prime - Hunters - First Hunt (USA, Australia) (Demo).jpg
+x-co-op: No
+
+
+game: Metroid Prime Pinball (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Metroid Prime Pinball (USA)/Metroid Prime Pinball (USA).json
+developer: Fuse Games Limited
+publisher: Nintendo
+genre: Action
+description:
+  In this pinball game based on Metroid Prime, Samus gets knocked and rolled
+  around the table in Morph Ball form; the table contains Metroids, which can
+  latch onto her and suck away health. Tables include the surface of Tallon IV,
+  the Space Station, the Phazon Mines, and more can be unlocked by searching for
+  artifacts and collecting bounties, which are found by destroying Space Pirates
+  and other dangerous creatures.
+  .
+  Metroid Prime Pinball is a pinball game with a Metroid theme. Players can
+  collect power-ups such as missiles and super bombs, which can be helpful when
+  defeating bosses. There are also missions to be completed within a time limit;
+  these missions can involve defeating unique enemies that appear on the table or
+  completing tasks such as wall jumping. Completing missions earns either
+  artifacts or special tokens.
+  .
+  The game also features a single-card multiplayer mode. In this mode, up to eight
+  players can play. The game is a race to see who can reach a certain score first.
+  Players lose points if they lose their ball. It is also possible to dump enemies
+  onto opponents' tables to cause trouble for them.
+release: 2005-10-24
+players: 8
+assets.boxfront: BoxFront/Metroid Prime Pinball (USA).jpg
+assets.boxback: BoxBack/Metroid Prime Pinball (USA).jpg
+assets.background: Background/Metroid Prime Pinball (USA).jpg
+assets.screenshot: Screenshot/Metroid Prime Pinball (USA).jpg
+assets.video: Video/Metroid Prime Pinball (USA).mp4
+x-co-op: No
+
+
+game: Midnight Mysteries - The Edgar Allan Poe Conspiracy (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Midnight Mysteries - The Edgar Allan Poe Conspiracy (USA)/Midnight Mysteries - The Edgar Allan Poe Conspiracy (USA).json
+developer: MumboJumbo
+publisher: MumboJumbo
+genre: Puzzle;Hidden Object
+description:
+  The master of macabre, Edgar Allan Poe, leads you on a shadowy journey to
+  finally solve the mystery of his death. As a famed mystery writer, you're
+  looking for your next cold case to crack when an unexpected visitor hands you
+  the perfect case to get your career moving again. When Edgar leads you through
+  some of his most famous works, The Raven, The Gold Bug, The Mystery of Marie
+  Roget and The Purloined Letter, you'll collect clues, interview witnesses and
+  piece together the conspiracy behind the death of one of America's greatest
+  writers. Who killed Edgar? And, why were such measures taken so that no one
+  would ever know the truth? You have 24 hours and ghosts of the past to guide you
+  through Midnight Mysteries: The Edgar Allan Poe Conspiracy!
+release: 2009-07-17
+players: 1
+assets.boxfront: BoxFront/Midnight Mysteries - The Edgar Allan Poe Conspiracy (USA).jpg
+assets.boxback: BoxBack/Midnight Mysteries - The Edgar Allan Poe Conspiracy (USA).jpg
+assets.background: Background/Midnight Mysteries - The Edgar Allan Poe Conspiracy (USA).jpg
+assets.screenshot: Screenshot/Midnight Mysteries - The Edgar Allan Poe Conspiracy (USA).jpg
+assets.video: Video/Midnight Mysteries - The Edgar Allan Poe Conspiracy (USA).mp4
+x-co-op: No
+
+
+game: New Super Mario Bros. (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/New Super Mario Bros. (USA)/New Super Mario Bros. (USA).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Platform
+description:
+  Old-School Platforming Fun - Jump, bounce, and power-up through visually
+  stunning side-scrolling worlds filled with Mushroom Kingdom madness. New Action
+  - Grab a Mega Mushroom and grow to incredible proportions, or smash through your
+  foes in a blue Koopa shell. 2 Distinct Multiplayer Modes - New Super Mario Bros.
+  features competitive 2-player multiplayer and mini-game functionality supporting
+  up to 4 players. A Classic Storyline - Bowser and Bowser Jr. have kidnapped
+  Princess Peach, again, and only Mario and you can save her. Powerups Galore -
+  You'll find classic power-ups, like the Super Mushroom and the Fire Flower in
+  the game, as well as some all-new ones that let Mario explore the Mushroom
+  Kingdom like never before. New Moves - New Super Mario Bros. expands Mario's
+  arsenal of moves to include some very powerful advanced techniques. If you want
+  to uncover every secret in the game, you'll have to master them all.
+release: 2006-05-15
+players: 4
+assets.boxfront: BoxFront/New Super Mario Bros. (USA).jpg
+assets.boxback: BoxBack/New Super Mario Bros. (USA).jpg
+assets.background: Background/New Super Mario Bros. (USA).jpg
+assets.screenshot: Screenshot/New Super Mario Bros. (USA).jpg
+assets.video: Video/New Super Mario Bros. (USA).mp4
+x-co-op: Yes
+
+
+game: Nintendo DS Browser (USA, Europe) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Nintendo DS Browser (USA, Europe) (En,Fr,De,Es,It)/Nintendo DS Browser (USA, Europe) (En,Fr,De,Es,It).json
+developer: Nintendo
+publisher: Nintendo
+genre: Miscellaneous;Application
+description:
+  Nintendo DS Browser makes use of the Nintendo DS's touchscreen for input, with
+  an on-screen keyboard as well as handwriting recognition and a stock of pre-set
+  text (for example, the .com and .org top-level domains).
+  .
+  The browser can render pages in two modes, Small Screen Rendering (SSR) or
+  Overview. In Small Screen Rendering mode, the contents of the page are displayed
+  in a single column fitting the width of the screen - for example, a page
+  featuring two columns of text side-by-side would be displayed as a single
+  column, one after the other. In Overview mode, a scaled-down version of the page
+  is displayed on the touchscreen with a small selection box which can be moved
+  around using the stylus. The contents of the selection box are displayed on the
+  top screen at their full size. This selection can be brought into the
+  touchscreen to perform such actions as click on links or entering text in boxes.
+  .
+  The browser connects to the network through IEEE 802.11 Wi-Fi access points or
+  hotspots using the built-in wireless capability of the Nintendo DS. While WEP
+  encryption is supported, WPA encryption is not.
+  .
+  Nintendo has partnered with Internet security company Astaro to integrate web
+  filtering technology into the Nintendo DS Browser. Called Astaro Parental
+  Control, the technology acts as a proxy filter, providing the option of blocking
+  inappropriate content.[6] This is provided free of charge and can be activated
+  through a simple menu option.
+  .
+  The Nintendo DS browser supports JavaScript and SSL in web pages,[7] but does
+  not support plugins like Adobe Flash, or bold text.[8] Due to limited system
+  resources, most other dynamic media, such as videos or sound, will not work in
+  the browser.
+release: 2006-07-24
+players: 1
+assets.boxfront: BoxFront/Nintendo DS Browser (USA, Europe) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Nintendo DS Browser (USA, Europe) (En,Fr,De,Es,It).jpg
+assets.background: Background/Nintendo DS Browser (USA, Europe) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Nintendo DS Browser (USA, Europe) (En,Fr,De,Es,It).jpg
+assets.video: Video/Nintendo DS Browser (USA, Europe) (En,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Nintendogs - Dachshund & Friends (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Nintendogs - Dachshund & Friends (USA)/Nintendogs - Dachshund & Friends (USA).json
+developer: Nintendo
+publisher: Nintendo
+genre: Life Simulation
+description:
+  Nintendogs (Japanese: ニンテンドッグス Hepburn: Nintendoggusu?) is a realtime pet
+  simulation video game developed and published by Nintendo for the Nintendo DS
+  handheld video game console. It was first released in Japan, and was later
+  released in North America, Australia, Europe, and other regions. It was
+  originally released in three different versions: Dachshund & Friends, Lab &
+  Friends (Shiba & Friends in Japan), and Chihuahua & Friends. It has been
+  re-released twice since then, first as a bundled release with a special edition
+  Nintendo DS with a new version called Nintendogs: Best Friends, and then later
+  as Nintendogs: Dalmatian & Friends.
+  .
+  Nintendogs uses the DS's touchscreen and built-in microphone. The touch screen
+  allows the player to pet a dog, as well as to use various items that can be
+  found or purchased. These range from balls and frisbees, to toys, to grooming
+  supplies to keep the dogs happy. The microphone is used to call to the player's
+  dog by speaking the name given to the dog in the beginning of the game as well
+  as to teach the dog tricks such as "sit" or "roll over". Players can bring their
+  dogs on walks and to the park if they so choose. They may interact with other
+  players in multi-player by using the DS's wireless linkup. It also uses the DS's
+  internal clock and calendar to allow the dog to grow hungrier or dirtier based
+  on the elapsed time.
+  .
+  Nintendogs received critical acclaim. It has an aggregate score of 85% at Game
+  Rankings,[3] and has won many awards, including the 2006 Innovation Award from
+  PC World and Best Handheld Game from the Associated Press. As of March 31, 2015,
+  all versions of Nintendogs combined have sold 23.96 million copies worldwide,
+  making it second on the Nintendo DS best-sellers list, behind only New Super
+  Mario Bros.[4] Because of Nintendogs' success, Nintendo has made several related
+  products, including Nintendogs toys[5] and a series of Nintendogs trading
+  cards.[6] At E3 2010, it was announced a sequel, titled Nintendogs + Cats, would
+  be released for the Nintendo 3DS.
+release: 2005-08-23
+players: 1
+assets.boxfront: BoxFront/Nintendogs - Dachshund & Friends (USA).jpg
+assets.boxback: BoxBack/Nintendogs - Dachshund & Friends (USA).jpg
+assets.background: Background/Nintendogs - Dachshund & Friends (USA).jpg
+assets.screenshot: Screenshot/Nintendogs - Dachshund & Friends (USA).jpg
+assets.video: Video/Nintendogs - Dachshund & Friends (USA).mp4
+x-co-op: No
+
+
+game: Nintendogs - Dalmatian & Friends (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Nintendogs - Dalmatian & Friends (USA)/Nintendogs - Dalmatian & Friends (USA).json
+developer: Nintendo
+publisher: Nintendo
+genre: Life Simulation
+description:
+  With Nintendogs, you can put a puppy inside your Nintendo DS. Pick from multiple
+  breeds, ranging from Labradors to Dalmatians, and then take care of and train
+  the puppy using the touch screen and microphone. If you train your puppy well
+  enough, you can compete in dog shows and agility contests to unlock other items
+  and puppy breeds.
+release: 2006-10-16
+players: 1
+assets.boxfront: BoxFront/Nintendogs - Dalmatian & Friends (USA).jpg
+assets.boxback: BoxBack/Nintendogs - Dalmatian & Friends (USA).jpg
+assets.background: Background/Nintendogs - Dalmatian & Friends (USA).jpg
+assets.screenshot: Screenshot/Nintendogs - Dalmatian & Friends (USA).jpg
+assets.video: Video/Nintendogs - Dalmatian & Friends (USA).mp4
+x-co-op: No
+
+
+game: Personal Trainer - Cooking (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Personal Trainer - Cooking (USA)/Personal Trainer - Cooking (USA).json
+developer: Indies Zero
+publisher: Nintendo
+genre: Life Simulation
+description:
+  Personal Trainer: Cooking includes more than 200 recipes from around the world
+  and transforms the Nintendo DS into an electronic, interactive cookbook,
+  complete with a glossary of terms and even instructional videos.
+release: 2008-11-24
+players: 1
+assets.boxfront: BoxFront/Personal Trainer - Cooking (USA).jpg
+assets.boxback: BoxBack/Personal Trainer - Cooking (USA).jpg
+assets.background: Background/Personal Trainer - Cooking (USA).jpg
+assets.screenshot: Screenshot/Personal Trainer - Cooking (USA).jpg
+assets.video: Video/Personal Trainer - Cooking (USA).mp4
+x-co-op: No
+
+
+game: Plants vs. Zombies (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Plants vs. Zombies (USA)/Plants vs. Zombies (USA).json
+developer: PopCap Games
+publisher: PopCap Games
+genre: Puzzle
+description:
+  Now you can zap zombies on the go in PopCap's award-winning game! Enjoy
+  thrilling new minigames, take on a friend in Versus mode, and make your own
+  zombie with the Zombatar! Plus, you'll get all the fun of the original hit game:
+  Fight the fun-dead with your arsenal of plants through day, night, fog, in the
+  swimming pool and on the roof. It's a powerful, portable new way to play Plants
+  vs. Zombies. The fun never dies!
+release: 2011-01-18
+players: 2
+assets.boxfront: BoxFront/Plants vs. Zombies (USA).jpg
+assets.boxback: BoxBack/Plants vs. Zombies (USA).jpg
+assets.background: Background/Plants vs. Zombies (USA).jpg
+assets.screenshot: Screenshot/Plants vs. Zombies (USA).jpg
+assets.video: Video/Plants vs. Zombies (USA).mp4
+x-co-op: No
+
+
+game: Pokemon - Platinum Version (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Pokemon - Platinum Version (USA)/Pokemon - Platinum Version (USA).json
+developer: Game Freak
+publisher: Nintendo
+genre: Adventure;Role-Playing
+description:
+  Another world has emerged in the Sinnoh Region...
+  .
+  ...A world where space & time are altered!
+  .
+  New Discoveries, New Challenges!\n
+  Catch, train, and battle your favorite Pokemon, and discover ancient, mythical
+  Pokemon in this exciting new adventure!
+  .
+  Expanded Online Options!\n
+  New experiences in the Wi-Fi Plaza and Battle Frontier!
+release: 2008-09-13
+players: 4
+assets.boxfront: BoxFront/Pokemon - Platinum Version (USA).jpg
+assets.boxback: BoxBack/Pokemon - Platinum Version (USA).jpg
+assets.background: Background/Pokemon - Platinum Version (USA).jpg
+assets.screenshot: Screenshot/Pokemon - Platinum Version (USA).jpg
+assets.video: Video/Pokemon - Platinum Version (USA).mp4
+x-co-op: No
+
+
+game: Pokemon Mystery Dungeon - Explorers of Sky (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Pokemon Mystery Dungeon - Explorers of Sky (USA)/Pokemon Mystery Dungeon - Explorers of Sky (USA).json
+developer: Chunsoft
+publisher: Nintendo
+genre: Role-Playing
+description:
+  Pokemon Mystery Dungeon: Explorers of Sky expands on the fun found in Pokemon
+  Mystery Dungeon: Explorers of Time and Pokemon Mystery Dungeon: Explorers of
+  Darkness. Players become a Pokemon and team up with a partner Pokemon. Together
+  the two set out on an adventure of exploration and discovery, ultimately saving
+  the world from destruction.
+  .
+  With additional Pokemon to become, new Special Episodes and enhanced
+  communication features, this is a grand adventure with a moving story and
+  stunning finale. This game is a great starting point for players to enter the
+  world of Pokemon Mystery Dungeon and for returning players to discover even more
+  secrets.
+release: 2009-10-12
+players: 2
+assets.boxfront: BoxFront/Pokemon Mystery Dungeon - Explorers of Sky (USA).jpg
+assets.boxback: BoxBack/Pokemon Mystery Dungeon - Explorers of Sky (USA).jpg
+assets.background: Background/Pokemon Mystery Dungeon - Explorers of Sky (USA).jpg
+assets.screenshot: Screenshot/Pokemon Mystery Dungeon - Explorers of Sky (USA).jpg
+assets.video: Video/Pokemon Mystery Dungeon - Explorers of Sky (USA).mp4
+x-co-op: Yes
+
+
+game: Pokemon Ranger (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Pokemon Ranger (USA)/Pokemon Ranger (USA).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Action;Role-Playing
+description:
+  An action RPG set in the world of the Pokémon Ranger movie. You play as a
+  Pokémon Ranger. Different from a Pokémon Trainer, a Ranger travels the lands,
+  using Pokémon in a fight to defend nature from baddies. Its release precedes
+  that of Diamond and Pearl, and all three games link up together for some top
+  secret bonuses.
+release: 2006-10-30
+players: 1
+assets.boxfront: BoxFront/Pokemon Ranger (USA).jpg
+assets.boxback: BoxBack/Pokemon Ranger (USA).jpg
+assets.background: Background/Pokemon Ranger (USA).jpg
+assets.screenshot: Screenshot/Pokemon Ranger (USA).jpg
+assets.video: Video/Pokemon Ranger (USA).mp4
+x-co-op: No
+
+
+game: Pokemon Ranger - Guardian Signs (USA, Australia)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Pokemon Ranger - Guardian Signs (USA, Australia)/Pokemon Ranger - Guardian Signs (USA, Australia).json
+developer: Creatures, Inc.
+publisher: Nintendo
+genre: Adventure
+description:
+  The third installment in the action-packed Pokemon Ranger series lets players
+  take on the role of a Pokemon Ranger tasked with protecting Pokemon, people and
+  nature.
+  .
+  With Ranger Signs to call powerful Pokemon, including Legendary Pokemon, and the
+  addition of multiplayer missions, players investigate the nefarious actions of
+  the Pokemon Pinchers, who have been disrupting the peace by chasing and catching
+  Pokemon.
+release: 2010-10-04
+players: 4
+assets.boxfront: BoxFront/Pokemon Ranger - Guardian Signs (USA, Australia).jpg
+assets.boxback: BoxBack/Pokemon Ranger - Guardian Signs (USA, Australia).jpg
+assets.background: Background/Pokemon Ranger - Guardian Signs (USA, Australia).jpg
+assets.screenshot: Screenshot/Pokemon Ranger - Guardian Signs (USA, Australia).jpg
+assets.video: Video/Pokemon Ranger - Guardian Signs (USA, Australia).mp4
+x-co-op: Yes
+
+
+game: Pokemon Ranger - Shadows of Almia (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Pokemon Ranger - Shadows of Almia (USA)/Pokemon Ranger - Shadows of Almia (USA).json
+developer: Creatures, Inc.
+publisher: Nintendo
+genre: Action;Adventure;Role-Playing
+description:
+  In the second in the Pokemon Ranger series, you once again play as a Pokemon
+  Ranger, working to help people, Pokemon and nature in a new area called the
+  Almia Region. Starting out as a Student Ranger, you quickly earn the title of a
+  full-fledged Pokemon Ranger. As you succeed in more and more missions, you will
+  aspire to become the highest Ranger rank: Top Ranger. Along the way you meet and
+  capture all kinds of different Pokemon.
+  .
+  Capture wild Pokemon and create a team to clear obstacles and puzzles
+  encountered along the way. After using a Pokemon’s ability, it will leave your
+  team; however, you will have a Partner Pokemon that will always stay by your
+  side. As you progress through Missions and Quests, your Capture Styler becomes
+  more powerful, giving your Styler more Energy and eventually advancing you to
+  the level of Top Ranger.
+release: 2008-11-10
+players: 1
+assets.boxfront: BoxFront/Pokemon Ranger - Shadows of Almia (USA).jpg
+assets.boxback: BoxBack/Pokemon Ranger - Shadows of Almia (USA).jpg
+assets.background: Background/Pokemon Ranger - Shadows of Almia (USA).jpg
+assets.screenshot: Screenshot/Pokemon Ranger - Shadows of Almia (USA).jpg
+assets.video: Video/Pokemon Ranger - Shadows of Almia (USA).mp4
+x-co-op: No
+
+
+game: Populous DS (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Populous DS (USA)/Populous DS (USA).json
+developer: EA Japan
+publisher: Xseed Games
+genre: Strategy
+description:
+  Peter Molyneaux's pioneering "God game" gets resurrected and re-imagined for a
+  new generation of handheld strategists in Populous DS. This time players take
+  control of five different deities, and make use of each God's unique elemental
+  miracles to manipulate terrain and encourage the growth of a civilization. Solo
+  gamers can take part in the 50-mission campaign or tackle the "Warrior Hunt"
+  mini-game in the "Free Play Mode," and multiplayer action lets up to four people
+  battle one another using earthquakes, tidal waves, and volcanic eruptions.
+release: 2008-11-11
+players: 1
+assets.boxfront: BoxFront/Populous DS (USA).jpg
+assets.boxback: BoxBack/Populous DS (USA).jpg
+assets.background: Background/Populous DS (USA).jpg
+assets.screenshot: Screenshot/Populous DS (USA).jpg
+assets.video: Video/Populous DS (USA).mp4
+x-co-op: No
+
+
+game: Prism - Light the Way (USA) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Prism - Light the Way (USA) (En,Fr,De,Es,It)/Prism - Light the Way (USA) (En,Fr,De,Es,It).json
+developer: Game Sauce
+publisher: Eidos Interactive
+genre: Puzzle
+description:
+  The Truly Brilliant Puzzle Game. Color the light, split the light, bounce and
+  bend the light to create the one illuminating pattern that solves all. Solve 120
+  unique puzzles increasing in complexity and difficulty.
+release: 2007-10-17
+players: 1
+assets.boxfront: BoxFront/Prism - Light the Way (USA) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Prism - Light the Way (USA) (En,Fr,De,Es,It).jpg
+assets.background: Background/Prism - Light the Way (USA) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Prism - Light the Way (USA) (En,Fr,De,Es,It).jpg
+assets.video: Video/Prism - Light the Way (USA) (En,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Professor Layton and the Diabolical Box (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Professor Layton and the Diabolical Box (USA)/Professor Layton and the Diabolical Box (USA).json
+developer: Level-5
+publisher: Nintendo
+genre: Adventure;Puzzle
+description:
+  In the world of Professor Layton, puzzles hide in every corner. When the
+  professor's mentor is mysteriously murdered, a cursed artifact called the
+  Elysian Box appears to be behind it. With a ticket to the Molentary Express as
+  their only lead, Professor Layton and Luke embark on an adventure that will test
+  their wits and work their brains. Calling all brainteaser fans! With tons of
+  in-game puzzles of different types and difficulties, there's something for
+  everyone from kids to adults. As Professor Layton, you'll open doors with
+  sliding puzzles, uncover clues with logic puzzles, and find answers by solving
+  riddles. A cinematic experience! This large-scale sequel to Professor Layton and
+  the Curious Village features three times the voiced dialogue and movies of its
+  predecessor. The fully voiced movies, hand-drawn art style, and cast of
+  eccentric characters bring the story to life and are sure to charm puzzle fans
+  young and old.
+release: 2009-08-24
+players: 1
+assets.boxfront: BoxFront/Professor Layton and the Diabolical Box (USA).jpg
+assets.boxback: BoxBack/Professor Layton and the Diabolical Box (USA).jpg
+assets.background: Background/Professor Layton and the Diabolical Box (USA).jpg
+assets.screenshot: Screenshot/Professor Layton and the Diabolical Box (USA).jpg
+assets.video: Video/Professor Layton and the Diabolical Box (USA).mp4
+x-co-op: No
+
+
+game: Professor Layton and the Last Specter (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Professor Layton and the Last Specter (USA)/Professor Layton and the Last Specter (USA).json
+developer: Brownie Brown
+publisher: Nintendo
+genre: Adventure;Puzzle
+description:
+  Last Specter is the fourth game in the Professor Layton series, and is a prequel
+  that takes place three years before the first trilogy, detailing how Professor
+  Layton met his apprentice, Luke Triton. The game includes over 170 puzzles.\n
+  Professor Layton and the Last Specter also includes an additional role-playing
+  game entitled Professor Layton's London Life, available from the start of the
+  game. London Life, in which players interact with various characters from the
+  series in a town called "Little London", was advertised to contain over 100
+  hours of content. London Life was removed from the European versions of the game
+  in order to prevent a significant delay of the game's release for translation.
+release: 2011-10-17
+players: 1
+assets.boxfront: BoxFront/Professor Layton and the Last Specter (USA).jpg
+assets.boxback: BoxBack/Professor Layton and the Last Specter (USA).jpg
+assets.background: Background/Professor Layton and the Last Specter (USA).jpg
+assets.screenshot: Screenshot/Professor Layton and the Last Specter (USA).jpg
+assets.video: Video/Professor Layton and the Last Specter (USA).mp4
+x-co-op: No
+
+
+game: Professor Layton and the Unwound Future (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Professor Layton and the Unwound Future (USA)/Professor Layton and the Unwound Future (USA).json
+developer: Level-5
+publisher: Nintendo
+genre: Adventure;Puzzle
+description:
+  Professor Layton and the Unwound Future is the third game in the beloved
+  Professor Layton series of brainteaser puzzles for Nintendo. It places the
+  Professor and his trusted apprentice at the center of a spellbinding adventure
+  after they receive a strange letter sent from 10 years in the future. Wind your
+  way through more than 165 mind-bending puzzles as you decipher clues and strive
+  to unlock a time-twisting mystery that threatens to plunge London into chaos.
+  The story is delivered both through game play and through beautifully rendered
+  hand-drawn cinematics. Layton fans and puzzle fans alike will find the game
+  remarkably addictive.
+release: 2010-09-12
+players: 1
+assets.boxfront: BoxFront/Professor Layton and the Unwound Future (USA).jpg
+assets.boxback: BoxBack/Professor Layton and the Unwound Future (USA).jpg
+assets.background: Background/Professor Layton and the Unwound Future (USA).jpg
+assets.screenshot: Screenshot/Professor Layton and the Unwound Future (USA).jpg
+assets.video: Video/Professor Layton and the Unwound Future (USA).mp4
+x-co-op: No
+
+
+game: Puzzle Chronicles (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Puzzle Chronicles (USA) (En,Fr,Es)/Puzzle Chronicles (USA) (En,Fr,Es).json
+developer: Konami
+publisher: Konami
+genre: Role-Playing;Puzzle
+description:
+  In the savage lands of the Asharin Empire, the tribesmen have been captured by
+  the King. After acquiring his freedom it is up to the player to gain vengeance
+  for the tribesmen, no matter what the cost. To exact revenge, the player will
+  need to become a great warrior capable of toppling an empire by mastering the
+  puzzle based combat system in this Puzzle RPG of legendary proportions.
+release: 2010-01-28
+players: 2
+assets.boxfront: BoxFront/Puzzle Chronicles (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Puzzle Chronicles (USA) (En,Fr,Es).jpg
+assets.background: Background/Puzzle Chronicles (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Puzzle Chronicles (USA) (En,Fr,Es).jpg
+assets.video: Video/Puzzle Chronicles (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Puzzle Quest - Challenge of the Warlords (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Puzzle Quest - Challenge of the Warlords (USA)/Puzzle Quest - Challenge of the Warlords (USA).json
+developer: 1st Playable Productions
+publisher: D3Publisher
+genre: Puzzle;Role-Playing
+description:
+  Set in the Warlords universe, Puzzle Quest challenges gamers to create, develop
+  and customize the ultimate hero to save the land of Etheria from the evil Lord
+  Bane. In order to advance, players battle in turn-based, head-to-head
+  "match-three" style puzzle games in one of three distinct gameplay modes:
+  Single-player allows gamers to battle against the computer AI as they embark on
+  over 150 challenging quests, Instant Action allows gamers to jump in and
+  immediately play continuous battles to level-up characters without participating
+  in quests, and Multiplayer allows gamers to battle live opponents via wireless
+  connectivity. Victory will advance the player's hero, magical arsenal, creature
+  companions and more - ultimately rewarding gamers at nearly every turn and
+  providing endless hours of replayablity.
+release: 2007-03-20
+players: 1
+assets.boxfront: BoxFront/Puzzle Quest - Challenge of the Warlords (USA).jpg
+assets.boxback: BoxBack/Puzzle Quest - Challenge of the Warlords (USA).jpg
+assets.background: Background/Puzzle Quest - Challenge of the Warlords (USA).jpg
+assets.screenshot: Screenshot/Puzzle Quest - Challenge of the Warlords (USA).jpg
+assets.video: Video/Puzzle Quest - Challenge of the Warlords (USA).mp4
+x-co-op: No
+
+
+game: Puzzle Quest - Galactrix (USA) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Puzzle Quest - Galactrix (USA) (En,Fr,De,Es,It)/Puzzle Quest - Galactrix (USA) (En,Fr,De,Es,It).json
+developer: Infinite Interactive
+publisher: D3Publisher
+genre: Puzzle;Matching
+description:
+  In Puzzle Quest: Galactrix a horrifying scientific accident has provoked another
+  race to attempt extermination of humankind; players will create a persistent
+  pilot who gains skills, crafts items, maneuvers among the universe's political
+  factions, and upgrades the ultimate space fleet as they attempt to end the
+  genocide.
+  .
+  An innovative hexagonal puzzle board allows for a wide range of strategic depth
+  as it heeds to gravity according to a player's location in the game universe.
+release: 2009-02-24
+players: 1
+assets.boxfront: BoxFront/Puzzle Quest - Galactrix (USA) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Puzzle Quest - Galactrix (USA) (En,Fr,De,Es,It).jpg
+assets.background: Background/Puzzle Quest - Galactrix (USA) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Puzzle Quest - Galactrix (USA) (En,Fr,De,Es,It).jpg
+assets.video: Video/Puzzle Quest - Galactrix (USA) (En,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Resident Evil - Deadly Silence (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Resident Evil - Deadly Silence (USA)/Resident Evil - Deadly Silence (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Horror
+description:
+  Resident Evil: Deadly Silence is an enhanced version of the original Resident
+  Evil, a survival horror video game developed and released by Capcom originally
+  for the PlayStation in 1996.
+  .
+  The game introduces Resident Evil series mainstays Chris Redfield and Jill
+  Valentine as members of an elite task force known as S.T.A.R.S. (Special Tactics
+  and Rescue Service). At the start of the game, players select one of the two as
+  they investigate the disappearance of their fellow team members on the outskirts
+  of Raccoon City, and become trapped in an old mansion infested with zombies and
+  other monsters. As players explore this mysterious place, they uncover clues and
+  solve puzzles. Depending on the player's actions, the game ends with different
+  outcomes.
+  .
+  There are many new features added into Deadly Silence, including "Knife Battle"
+  sequences in which the player must stab enemies in the face by swinging the
+  knife via the stylus. The player can also shake off enemies by using touch
+  screen and stab a zombie.
+release: 2006-02-07
+players: 4
+assets.boxfront: BoxFront/Resident Evil - Deadly Silence (USA).jpg
+assets.boxback: BoxBack/Resident Evil - Deadly Silence (USA).jpg
+assets.background: Background/Resident Evil - Deadly Silence (USA).jpg
+assets.screenshot: Screenshot/Resident Evil - Deadly Silence (USA).jpg
+assets.video: Video/Resident Evil - Deadly Silence (USA).mp4
+x-co-op: Yes
+
+
+game: Retro Game Challenge (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Retro Game Challenge (USA)/Retro Game Challenge (USA).json
+developer: indieszero
+publisher: Namco
+genre: Action;Adventure;Racing;Role-Playing;Shooter
+description:
+  Thrown back in time to the 1980's, you are turned into a young boy and forced to
+  play video games by an evil self-proclaimed "Game Master", Game Master Arino.
+  Game Master Arino will test your gaming skills by throwing various challenges at
+  you in a wide-variety of retro games including shooters, racing, action and even
+  an epic role-playing game - your only way to return is to defeat him in every
+  retro game challenge he throws at you.
+  .
+  But you are not alone in your quest-armed with access to gaming magazines, cheat
+  codes can be found to warp to later levels, receive unlimited continues or even
+  become invincible! A young Arino is at your side to keep you company during your
+  challenges, quite amused at the fact that he grows up to be so evil in the
+  future to be the cause of your current predicament. Test your skills with the
+  awesomeness of the 8-bit era and prevent the retro games from exacting their
+  revenge! An original game based on the popular Japanese GAME CENTER CX TV
+  series, Retro Game Challenge reinvents how classic games are played by having
+  the player complete short challenges in a wide-variety of games to keep the game
+  play fresh and rewarding.
+  .
+  Specific challenges in shooters, racing, action and a role-playing game are
+  integrated into the story, while the in-game magazines offer cheat codes as well
+  as fake 80's news stories paying tribute to the rich history of the gaming
+  industry. Whether it's 80's nostalgia for the seasoned gamer or experiencing
+  classic 8-bit game play for the first time, Retro Game Challenge has something
+  for everyone.
+release: 2007-11-15
+players: 1
+assets.boxfront: BoxFront/Retro Game Challenge (USA).jpg
+assets.boxback: BoxBack/Retro Game Challenge (USA).jpg
+assets.background: Background/Retro Game Challenge (USA).jpg
+assets.screenshot: Screenshot/Retro Game Challenge (USA).jpg
+assets.video: Video/Retro Game Challenge (USA).mp4
+x-co-op: No
+
+
+game: Rhapsody - A Musical Adventure (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Rhapsody - A Musical Adventure (USA)/Rhapsody - A Musical Adventure (USA).json
+developer: NIS
+publisher: Atlus
+genre: Role-Playing
+description:
+  Originally released in 2000, Rhapsody: A Musical Adventure is a musical RPG that
+  has musical numbers, complete with vocals. The game has a wide appeal thanks to
+  its simple game style and clean anime art. Players will take on the role of
+  Cornet, who can talk to puppets and has a magical horn that grants wishes. She
+  must save Prince Ferdinand, who has been turned into stone by an evil witch.
+release: 2008-09-23
+players: 1
+assets.boxfront: BoxFront/Rhapsody - A Musical Adventure (USA).jpg
+assets.boxback: BoxBack/Rhapsody - A Musical Adventure (USA).jpg
+assets.background: Background/Rhapsody - A Musical Adventure (USA).jpg
+assets.screenshot: Screenshot/Rhapsody - A Musical Adventure (USA).jpg
+assets.video: Video/Rhapsody - A Musical Adventure (USA).mp4
+x-co-op: No
+
+
+game: Rune Factory - A Fantasy Harvest Moon (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Rune Factory - A Fantasy Harvest Moon (USA)/Rune Factory - A Fantasy Harvest Moon (USA).json
+developer: Neverland
+publisher: Natsume
+genre: Life Simulation;Role-Playing
+description:
+  Rune Factory: A Fantasy Harvest Moon you'll help a young man with amnesia build
+  a new life. Laguna doesn't know who he is or where he comes from, so he goes
+  looking for answers. He meets & befriends a young woman named Mist, who puts you
+  to work on her farm. As you help her tend to the crops, you'll try and build a
+  life for yourself in the Harvest Moon world.
+release: 2007-08-14
+players: 1
+assets.boxfront: BoxFront/Rune Factory - A Fantasy Harvest Moon (USA).jpg
+assets.boxback: BoxBack/Rune Factory - A Fantasy Harvest Moon (USA).jpg
+assets.background: Background/Rune Factory - A Fantasy Harvest Moon (USA).jpg
+assets.screenshot: Screenshot/Rune Factory - A Fantasy Harvest Moon (USA).jpg
+assets.video: Video/Rune Factory - A Fantasy Harvest Moon (USA).mp4
+x-co-op: No
+
+
+game: Scribblenauts (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Scribblenauts (USA) (En,Fr,Es,Pt)/Scribblenauts (USA) (En,Fr,Es,Pt).json
+developer: 5th Cell
+publisher: Warner Bros. Interactive
+genre: Puzzle
+description:
+  What Will You Write?
+  .
+  Help Maxwell reach the Starlite by solving each challenge. Write any object you
+  can think of and watch it come to life. Try another word and watch an entirely
+  different solution unfold. With your stylus and imagination, the possibilities
+  are endless!
+release: 2009-09-15
+players: 1
+assets.boxfront: BoxFront/Scribblenauts (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/Scribblenauts (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/Scribblenauts (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/Scribblenauts (USA) (En,Fr,Es,Pt).jpg
+assets.video: Video/Scribblenauts (USA) (En,Fr,Es,Pt).mp4
+x-co-op: No
+
+
+game: Sid Meier's Civilization Revolution (USA) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Sid Meier's Civilization Revolution (USA) (En,Fr,De,Es,It)/Sid Meier's Civilization Revolution (USA) (En,Fr,De,Es,It).json
+developer: Firaxis Games
+publisher: 2K Games
+genre: Strategy
+description:
+  Built from the ground up solely for console and handheld gamers at 2K's
+  world-renowned and award-winning Firaxis development studio, Civilization
+  Revolution features fast-paced, pick-up-and-play action involving strategic
+  global domination and history's most intrepid leaders, as well as a highly
+  competitive multi-player experience. Civilization Revolution brings the renowned
+  Civilization franchise to consoles for the first time, delivering the vast
+  re-playability and unmatched addictive gameplay that has become synonymous with
+  the works of Sid Meier. New graphical touches and a streamlined interface will
+  transport the Civilization franchise to a level that fans have never seen
+  before.
+release: 2008-07-08
+players: 1
+assets.boxfront: BoxFront/Sid Meier's Civilization Revolution (USA) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Sid Meier's Civilization Revolution (USA) (En,Fr,De,Es,It).jpg
+assets.background: Background/Sid Meier's Civilization Revolution (USA) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Sid Meier's Civilization Revolution (USA) (En,Fr,De,Es,It).jpg
+assets.video: Video/Sid Meier's Civilization Revolution (USA) (En,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Sonic Rush (USA) (En,Ja,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Sonic Rush (USA) (En,Ja,Fr,De,Es,It)/Sonic Rush (USA) (En,Ja,Fr,De,Es,It).json
+developer: Dimps
+publisher: Sega
+genre: Action;Platform
+description:
+  Sonic the Hedgehog has a new partner, Blaze the Cat, in this fast-paced
+  platformer, Sonic Rush. You can play as either Sonic or Blaze as you try to
+  track down powerful Sol emeralds. Sonic Rush displays the level over both
+  screens, allowing for screen-spanning jumps and dives. Some gameplay modes
+  include stylus support as well.
+release: 2005-11-15
+players: 2
+assets.boxfront: BoxFront/Sonic Rush (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Sonic Rush (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.background: Background/Sonic Rush (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Sonic Rush (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.video: Video/Sonic Rush (USA) (En,Ja,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Space Invaders Revolution (USA) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Space Invaders Revolution (USA) (En,Fr,De,Es,It)/Space Invaders Revolution (USA) (En,Fr,De,Es,It).json
+developer: Marvelous Entertainment
+publisher: Mastiff
+genre: Shooter
+description:
+  Space Invaders Revolution is a new take on the series, which marks a true
+  progression over any version before it: New types of invaders, new rules and new
+  ways to destroy them. Contains a faithful reproduction of the original arcade
+  machine in Classic Mode. New Era mode: the simple rules of Space Invaders are
+  expanded and twisted into a revolutionary step for the classic franchise. New
+  Era mode takes the form of a world tour, with the player confronting the Space
+  Invaders at 20 recognisable geographical locations. In total there are 60 levels
+  to defend and 13 different types of invader to battle. Power-ups include
+  protective shields, additional support craft, rapid-fire shots and
+  column-clearing laser beams - essential aides as the action becomes
+  progressively more intense. Power-ups can be used in combination: using support
+  craft with laser results in three laser beams, decimating multiple waves of
+  invaders with every press of the fire button.
+release: 2005-09-20
+players: 1
+assets.boxfront: BoxFront/Space Invaders Revolution (USA) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Space Invaders Revolution (USA) (En,Fr,De,Es,It).jpg
+assets.background: Background/Space Invaders Revolution (USA) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Space Invaders Revolution (USA) (En,Fr,De,Es,It).jpg
+assets.video: Video/Space Invaders Revolution (USA) (En,Fr,De,Es,It).mp4
+x-co-op: No
+
+
+game: Spore Creatures (USA) (En,Fr,De,Es,It,Nl)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Spore Creatures (USA) (En,Fr,De,Es,It,Nl)/Spore Creatures (USA) (En,Fr,De,Es,It,Nl).json
+developer: Griptonite Games
+publisher: Electronic Arts
+genre: Construction and Management Simulation;Strategy
+description:
+  SPORE takes players on an epic journey from the origin and evolution of life
+  through the development of civilization and eventually into the outer reaches of
+  space. Create a creature, then control every dimension of its evolution from
+  pond scum to galactic god. Experience multiple styles of gameplay as your
+  creature advances through different stages of development. Fight for survival in
+  the wild, develop a sprawling metropolis, trade and war against rival
+  civilizations and explore the outer reaches of the galaxy. Every aspect of the
+  universe from creatures to vehicles, buildings to plants, are created by the
+  player and automatically shared with other players, providing a limitless number
+  of worlds to explore and play. Create, control and explore your universe with
+  SPORE.
+release: 2008-09-07
+players: 1
+assets.boxfront: BoxFront/Spore Creatures (USA) (En,Fr,De,Es,It,Nl).jpg
+assets.boxback: BoxBack/Spore Creatures (USA) (En,Fr,De,Es,It,Nl).jpg
+assets.background: Background/Spore Creatures (USA) (En,Fr,De,Es,It,Nl).jpg
+assets.screenshot: Screenshot/Spore Creatures (USA) (En,Fr,De,Es,It,Nl).jpg
+assets.video: Video/Spore Creatures (USA) (En,Fr,De,Es,It,Nl).mp4
+x-co-op: No
+
+
+game: Star Fox Command (USA, Australia)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Star Fox Command (USA, Australia)/Star Fox Command (USA, Australia).json
+developer: Q-Games Ltd.
+publisher: Nintendo Co., Ltd.
+genre: Shooter
+description:
+  Star Fox Command lets you hop into your fight through a unique branching
+  storyline of missions, all rendered in gorgeous 3-D. This game brings a whole
+  new strategic element to the series, with a commander's view of the mission.
+  Using the touch screen, players can draw the routes they and their teammates
+  will take. Battle the enemies they encounter as they take over bases and
+  strategically advance across the map. Players can also blow their friends out of
+  the sky, as they dogfight 8 players over a local wireless connection -- or take
+  on 4 players from around the world on Nintendo Wi-Fi Connection.
+release: 2006-08-29
+players: 4
+assets.boxfront: BoxFront/Star Fox Command (USA, Australia).jpg
+assets.boxback: BoxBack/Star Fox Command (USA, Australia).jpg
+assets.background: Background/Star Fox Command (USA, Australia).jpg
+assets.screenshot: Screenshot/Star Fox Command (USA, Australia).jpg
+assets.video: Video/Star Fox Command (USA, Australia).mp4
+x-co-op: No
+
+
+game: Super Mario 64 DS (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Super Mario 64 DS (USA)/Super Mario 64 DS (USA).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Platform
+description:
+  Super Mario 64, the classic 3D platformer for the Nintendo 64, arrives on the
+  Nintendo DS with all-new features that take advantage of the portable system's
+  dual screens, touch screen, and wireless multiplayer capability. Like the
+  original game, Super Mario 64 DS challenges you to find all the power stars
+  hidden throughout the royal castle in the effort to free Peach imprisoned inside
+  the castle. This time, you can play as Mario, Luigi, Wario, and Yoshi, each of
+  whom has unique abilities. Overcome the challenges on your own or battle up to
+  three of your friends in the multiplayer modes.
+release: 2004-11-21
+players: 4
+assets.boxfront: BoxFront/Super Mario 64 DS (USA).jpg
+assets.boxback: BoxBack/Super Mario 64 DS (USA).jpg
+assets.background: Background/Super Mario 64 DS (USA).jpg
+assets.screenshot: Screenshot/Super Mario 64 DS (USA).jpg
+assets.video: Video/Super Mario 64 DS (USA).mp4
+x-co-op: No
+
+
+game: Super Princess Peach (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Super Princess Peach (USA)/Super Princess Peach (USA).json
+developer: Tose Software
+publisher: Nintendo
+genre: Platform
+description:
+  Princess Power! Bowser's up to no good again...but this time, it's Princess
+  Peach to the rescue! When Mario, Luigi, and the Mushroom Castle Toads get
+  kidnapped it's up to Peach and her magical umbrella to save them. Feel the
+  vibes! Use the Touch Screen on the DS to channel Peach's emotional vibes into
+  special abilities. Float when she's happy, burn through walls when she's mad, or
+  make vegetation grow with her tears! Save Mario! Join the princess as she runs,
+  jumps, floats, and fights her way through eight worlds, from Fury Volcano to
+  Spooky Shriek Mansion. Keep your eyes peeled! Every area hides secrets,
+  including Touch-Screen Minigames, cool puzzles, and and plenty of power ups for
+  both Peach and her umbrella!
+release: 2005-10-20
+players: 1
+assets.boxfront: BoxFront/Super Princess Peach (USA).jpg
+assets.boxback: BoxBack/Super Princess Peach (USA).jpg
+assets.background: Background/Super Princess Peach (USA).jpg
+assets.screenshot: Screenshot/Super Princess Peach (USA).jpg
+assets.video: Video/Super Princess Peach (USA).mp4
+x-co-op: No
+
+
+game: Super Scribblenauts (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Super Scribblenauts (USA) (En,Fr,Es,Pt)/Super Scribblenauts (USA) (En,Fr,Es,Pt).json
+developer: 5th Cell
+publisher: Warner Bros. Interactive
+genre: Puzzle
+description:
+  In this new game created and developed by 5TH Cell, players use the stylus and
+  touch screen to help Maxwell, the game's hero, acquire the "Starite," the prize
+  earned from solving the puzzle in even more robust challenges and redesigned
+  levels. Players now have the ability to write any object that comes to mind and
+  modify it in any way they desire using adjectives to reach the goal in each
+  level. Adjectives can change the color, size, elements, behaviors and many other
+  aspects of the object they are describing. Multiple adjectives can be combined
+  together to produce incredibly creative objects, allowing the player's
+  imagination to run wild for a truly unique and individualistic experience.
+release: 2010-10-12
+players: 1
+assets.boxfront: BoxFront/Super Scribblenauts (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/Super Scribblenauts (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/Super Scribblenauts (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/Super Scribblenauts (USA) (En,Fr,Es,Pt).jpg
+assets.video: Video/Super Scribblenauts (USA) (En,Fr,Es,Pt).mp4
+x-co-op: No
+
+
+game: Tetris DS (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Tetris DS (USA)/Tetris DS (USA).json
+developer: Nintendo SPD Group No.2
+publisher: Nintendo
+genre: Puzzle
+description:
+  You can rediscover the timeless puzzle game Tetris on your Nintendo DS with
+  Tetris DS. Now you can choose from six different game modes, all of which take
+  advantage of the DS's touch screen. Each game mode features a theme from another
+  Nintendo franchise, such as The Legend of Zelda or Metroid. You can challenge up
+  to nine other players using one cartridge for local multiplayer play or three
+  other players around the world with the DS's Wi-Fi connection.
+release: 2006-03-20
+players: 4
+assets.boxfront: BoxFront/Tetris DS (USA).jpg
+assets.boxback: BoxBack/Tetris DS (USA).jpg
+assets.background: Background/Tetris DS (USA).jpg
+assets.screenshot: Screenshot/Tetris DS (USA).jpg
+assets.video: Video/Tetris DS (USA).mp4
+x-co-op: No
+
+
+game: Valkyrie Profile - Covenant of the Plume (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Valkyrie Profile - Covenant of the Plume (USA)/Valkyrie Profile - Covenant of the Plume (USA).json
+developer: tri-Ace
+publisher: Square Enix
+genre: Role-Playing;Strategy
+description:
+  The origins of a cult classic are revealed in VALKYRIE PROFILE: Covenant of the
+  Plume, the third entry in the critically acclaimed VALKYRIE PROFILE series.
+  Development studio tri-Ace returns to craft a gameplay experience that boasts a
+  captivating storyline with ties to Norse mythology and a familiar yet refreshing
+  battle system enhanced with deeper strategic elements.
+release: 2009-03-16
+players: 1
+assets.boxfront: BoxFront/Valkyrie Profile - Covenant of the Plume (USA).jpg
+assets.boxback: BoxBack/Valkyrie Profile - Covenant of the Plume (USA).jpg
+assets.background: Background/Valkyrie Profile - Covenant of the Plume (USA).jpg
+assets.screenshot: Screenshot/Valkyrie Profile - Covenant of the Plume (USA).jpg
+assets.video: Video/Valkyrie Profile - Covenant of the Plume (USA).mp4
+x-co-op: No
+
+
+game: WarioWare - Touched! (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/WarioWare - Touched! (USA)/WarioWare - Touched! (USA).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action;Puzzle
+description:
+  Wario makes his debut on the Nintendo DS with hundreds of all-new minigames. Now
+  you must complete your goals by using the touch screen and a stylus. Tap,
+  scratch, and rub your stylus on the touch screen to play minigames that have you
+  do everything from milking a cow and drawing a mustache to hurling stars at evil
+  ninjas. You can even play some minigames by blowing into the DS's built-in
+  microphone. The more minigames you clear, the more characters and items you
+  unlock.
+release: 2005-02-14
+players: 1
+assets.boxfront: BoxFront/WarioWare - Touched! (USA).jpg
+assets.boxback: BoxBack/WarioWare - Touched! (USA).jpg
+assets.background: Background/WarioWare - Touched! (USA).jpg
+assets.screenshot: Screenshot/WarioWare - Touched! (USA).jpg
+assets.video: Video/WarioWare - Touched! (USA).mp4
+x-co-op: No
+
+
+game: WireWay (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/WireWay (USA) (En,Fr,Es)/WireWay (USA) (En,Fr,Es).json
+developer: Konami
+publisher: Konami
+genre: Action;Platformer;2D
+description:
+  Introducing the lovable, yet trouble making alien who has been left by his ship.
+  He needs to flip, rub and draw his way through dynamic levels, avoiding enemies
+  trying to foil his way home. Bringing a whole new fun type of game play to the
+  Nintendo DS, players launch the character with the wire to help him reach his
+  goal while overcoming the crazy obstacles and enemies that get in his way!
+  Benefit from no time limits or dangerous enemies. Mistakes don't affect your
+  lifeline!
+release: 2009-11-03
+players: 1
+assets.boxfront: BoxFront/WireWay (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/WireWay (USA) (En,Fr,Es).jpg
+assets.background: Background/WireWay (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/WireWay (USA) (En,Fr,Es).jpg
+assets.video: Video/WireWay (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Yoshi's Island DS (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo DS/Yoshi's Island DS (USA)/Yoshi's Island DS (USA).json
+developer: Nintendo
+publisher: Nintendo
+genre: Platform
+description:
+  Return to the colorful wilds of Yoshi's Island in a new platforming adventure. A
+  mysterious floating island has suddenly appeared over peaceful Yoshi’s Island.
+  Soon after its arrival, a gaggle of kids vanishes from the island school.
+  Thankfully, Baby Mario, Baby Peach and Baby Donkey Kong manage to avoid being
+  kidnapped. Now, Yoshi and the three young superstars must set out on a wild and
+  colorful quest to rescue the kids and investigate the ominous island hovering
+  overhead.
+release: 2006-11-13
+players: 1
+assets.boxfront: BoxFront/Yoshi's Island DS (USA).jpg
+assets.boxback: BoxBack/Yoshi's Island DS (USA).jpg
+assets.background: Background/Yoshi's Island DS (USA).jpg
+assets.screenshot: Screenshot/Yoshi's Island DS (USA).jpg
+assets.video: Video/Yoshi's Island DS (USA).mp4
+x-co-op: No
+
+

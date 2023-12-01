@@ -1,0 +1,27 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Star Wars - Dark Forces (USA).exe"
+    ],
+    "main_game_exe": [
+        "Star Wars - Dark Forces/DosBox/dosbox.exe"
+    ],
+    "main_game_exe_args": {
+        "Star Wars - Dark Forces/DosBox/dosbox.exe": [
+            "-conf",
+            "./Dosbox.conf",
+            "-noconsole",
+            "-c",
+            "exit"
+        ]
+    },
+    "main_game_exe_cwd": {
+        "Star Wars - Dark Forces/DosBox/dosbox.exe": "Star Wars - Dark Forces"
+    },
+    "sync": {
+        "data": [
+            "*.CFG"
+        ],
+        "search": "Star Wars - Dark Forces/Game/DARK.EXE"
+    },
+    "transform_file": "Star Wars - Dark Forces (USA).exe"
+}

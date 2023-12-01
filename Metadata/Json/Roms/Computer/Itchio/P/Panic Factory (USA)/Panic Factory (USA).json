@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Panic Factory (USA).exe"
+    ],
+    "transform_file": "Panic Factory (USA).exe"
+}

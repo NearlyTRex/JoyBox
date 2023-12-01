@@ -1,0 +1,7 @@
+{
+    "installer_exe": "$DISC_MAIN_ROOT/Rogue Legacy/Windows/Installation Files/RogueLegacyInstaller_v120a.exe",
+    "transform_file": "Rogue Legacy (USA).chd",
+    "update": [
+        "$DISC_MAIN_ROOT/Rogue Legacy/Windows/Patch/Rogue Legacy Patch_v1.2.0b (Requires v120a) PC.exe"
+    ]
+}

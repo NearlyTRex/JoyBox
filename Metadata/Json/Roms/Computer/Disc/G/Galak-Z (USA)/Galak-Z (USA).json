@@ -1,0 +1,12 @@
+{
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT/Galak-Z/Windows",
+                "to": "$HDD_MAIN_ROOT/Galak-Z",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Galak-Z (USA).chd"
+}

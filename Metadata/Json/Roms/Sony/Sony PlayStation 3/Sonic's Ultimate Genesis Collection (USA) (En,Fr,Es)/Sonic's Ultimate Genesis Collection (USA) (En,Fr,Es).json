@@ -1,0 +1,8 @@
+{
+    "files": [
+        "Sonic's Ultimate Genesis Collection (USA) (En,Fr,Es).chd",
+        "Sonic's Ultimate Genesis Collection (USA) (En,Fr,Es).dkey"
+    ],
+    "launch_file": "PS3_GAME/USRDIR/EBOOT.BIN",
+    "transform_file": "Sonic's Ultimate Genesis Collection (USA) (En,Fr,Es).chd"
+}

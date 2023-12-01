@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Search Party (USA).exe"
+    ],
+    "transform_file": "Search Party (USA).exe"
+}

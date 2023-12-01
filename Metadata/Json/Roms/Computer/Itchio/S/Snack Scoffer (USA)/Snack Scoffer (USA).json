@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Snack Scoffer (USA).exe"
+    ],
+    "transform_file": "Snack Scoffer (USA).exe"
+}

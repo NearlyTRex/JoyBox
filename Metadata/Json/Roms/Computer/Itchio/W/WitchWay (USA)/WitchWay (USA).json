@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/WitchWay (USA).exe"
+    ],
+    "transform_file": "WitchWay (USA).exe"
+}

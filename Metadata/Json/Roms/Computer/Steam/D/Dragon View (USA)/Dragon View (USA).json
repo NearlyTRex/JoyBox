@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dragon View (USA).exe"
+    ],
+    "transform_file": "Dragon View (USA).exe"
+}

@@ -1,0 +1,18 @@
+{
+    "main_game_exe": [
+        "TheNextPenelope_Windows/nw.exe"
+    ],
+    "main_game_exe_cwd": {
+        "TheNextPenelope_Windows/nw.exe": "TheNextPenelope_Windows"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT/TheNextPenelope_Windows",
+                "to": "$HDD_MAIN_ROOT/TheNextPenelope_Windows",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Next Penelope, The (USA).chd"
+}

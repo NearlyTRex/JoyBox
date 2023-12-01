@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Tiny Dangerous Dungeons (USA).exe"
+    ],
+    "transform_file": "Tiny Dangerous Dungeons (USA).exe"
+}

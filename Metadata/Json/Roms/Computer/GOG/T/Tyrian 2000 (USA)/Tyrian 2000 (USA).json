@@ -1,0 +1,9 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/tyrian2000_ost.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_tyrian_2000_3.0_(28045).exe"
+    ],
+    "transform_file": "setup_tyrian_2000_3.0_(28045).exe"
+}

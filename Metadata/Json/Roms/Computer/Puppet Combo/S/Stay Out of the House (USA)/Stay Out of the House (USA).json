@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Stay Out of the House (USA).exe"
+    ],
+    "transform_file": "Stay Out of the House (USA).exe"
+}

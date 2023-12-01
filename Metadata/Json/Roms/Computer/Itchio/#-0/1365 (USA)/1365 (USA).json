@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/1365 (USA).exe"
+    ],
+    "transform_file": "1365 (USA).exe"
+}

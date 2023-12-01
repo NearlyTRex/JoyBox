@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Forma.8 (USA).exe"
+    ],
+    "transform_file": "Forma.8 (USA).exe"
+}

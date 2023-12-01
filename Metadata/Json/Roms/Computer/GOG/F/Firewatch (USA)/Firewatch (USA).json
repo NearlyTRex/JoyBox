@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_firewatch_1.12_(64bit)_(54889).exe"
+    ],
+    "transform_file": "setup_firewatch_1.12_(64bit)_(54889).exe"
+}

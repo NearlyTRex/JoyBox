@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Cosmonaut (USA).exe"
+    ],
+    "transform_file": "Cosmonaut (USA).exe"
+}

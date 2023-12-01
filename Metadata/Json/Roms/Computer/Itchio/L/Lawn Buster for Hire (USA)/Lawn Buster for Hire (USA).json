@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Lawn Buster for Hire (USA).exe"
+    ],
+    "transform_file": "Lawn Buster for Hire (USA).exe"
+}

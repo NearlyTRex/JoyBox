@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Frog Fractions - Game of the Decade Edition (USA).exe"
+    ],
+    "transform_file": "Frog Fractions - Game of the Decade Edition (USA).exe"
+}

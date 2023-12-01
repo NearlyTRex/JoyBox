@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_lorelai_1.1.0a_(40070).exe"
+    ],
+    "transform_file": "setup_lorelai_1.1.0a_(40070).exe"
+}

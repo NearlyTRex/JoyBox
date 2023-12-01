@@ -1,0 +1,147 @@
+collection: Atari 800
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Atari 800" {file.path}
+
+
+game: Bounty Bob Strikes Back! (USA)
+file: $ROM_JSON_ROOT/Other/Atari 800/Bounty Bob Strikes Back! (USA)/Bounty Bob Strikes Back! (USA).json
+developer: Big Five Software
+publisher: Big Five Software
+genre: Action;Platformer;2D
+description:
+  Bounty Bob returns in this new and exciting follow-up adventure to Miner 2049er.
+  This time around it's even tougher than before and Bob needs your help more than
+  ever to guide him through the mine. The mutant organisms have multiplied and
+  over run the mine entirely, making it extremely difficult to survive the hazards
+  of the underground passage ways. Using the high powered special equipment in the
+  twenty-five new caverns is Bob's only hope of achieving his objective of
+  securing the mine and defeating the plans of the evil Yukon Yohan.
+release: 1985-05-12
+players: 1
+assets.boxfront: BoxFront/Bounty Bob Strikes Back! (USA).jpg
+assets.boxback: BoxBack/Bounty Bob Strikes Back! (USA).jpg
+assets.background: Background/Bounty Bob Strikes Back! (USA).jpg
+assets.screenshot: Screenshot/Bounty Bob Strikes Back! (USA).jpg
+assets.video: Video/Bounty Bob Strikes Back! (USA).mp4
+x-co-op: No
+
+
+game: Caverns of Mars (USA)
+file: $ROM_JSON_ROOT/Other/Atari 800/Caverns of Mars (USA)/Caverns of Mars (USA).json
+developer: Atari, Inc.
+publisher: Atari, Inc.
+genre: Action;Shooter;Shoot-'Em-Up;Vertical
+description:
+  Caverns of Mars is a vertically scrolling shoot 'em up similar in concept and
+  visual style to the 1981 arcade game Scramble. Christensen changed the
+  orientation of the caverns from Scramble, having the player fly down into
+  them as opposed to sideways through them. For technical reasons, vertical
+  scrolling is somewhat easier than horizontal to implement on the Atari
+  platform. Unlike Scramble, the targets generally did not move relative to the
+  map.
+  .
+  Using a joystick, the player controls a ship descending into the tunnels of
+  Mars, firing at targets along the way. The player's spacecraft features two
+  cannons, positioned on either side of the craft, firing downwards. The player
+  needs to avoid hitting the cavern walls, while shooting targets of
+  opportunity along the way. Fuel tanks can be shot to add 5 points of fuel,
+  and the craft is destroyed if it runs out.
+  .
+  There are several different sections of the map, with easier skill levels
+  removing the more difficult sections from the areas through which the player
+  has to fly. The easiest skill level has only three sections, the hardest has
+  six. On any skill level the last section of the map is a reactor, which the
+  player lands on and thereby sets to explode. The player then has to reverse
+  course and fly up and out of the caverns to escape before the reactor
+  explodes.
+release: 1981-05-12
+players: 1
+assets.boxfront: BoxFront/Caverns of Mars (USA).jpg
+assets.boxback: BoxBack/Caverns of Mars (USA).jpg
+assets.background: Background/Caverns of Mars (USA).jpg
+assets.screenshot: Screenshot/Caverns of Mars (USA).jpg
+assets.video: Video/Caverns of Mars (USA).mp4
+x-co-op: No
+
+
+game: Food Fight (USA)
+file: $ROM_JSON_ROOT/Other/Atari 800/Food Fight (USA)/Food Fight (USA).json
+developer: The Softworks Factory
+publisher: Atari Corporation
+genre: Action;Arcade
+description:
+  In Food Fight, the player controls a young boy named Charley Chuck. The
+  object of the game is to eat an ice cream cone located on the opposite side
+  of an open playfield. The ice cream is slowly melting, and must be consumed
+  before it melts completely. Standing between Charley and the ice cream are
+  four chefs named Angelo, Jacques, Oscar, and Zorba.
+  .
+  The chefs appear from holes in the floor of the level and will chase after
+  Charley. The chefs are identified by the shape of their toques: Angelo's is
+  short and rectangular; Jacques' is curved; Oscar's is big and round; and
+  Zorba's is tall and slender.
+  .
+  Scattered throughout the level are piles of food, such as pies, peas,
+  tomatoes, and bananas. Both the player and the chefs can grab food from the
+  piles to throw at each other. The supplies of most foods are limited, but
+  watermelon, which appears either on special levels exclusively or with
+  other foods in later levels, is unlimited in supply. If the chefs are hit
+  by food thrown either by the player or by other chefs, they are taken down
+  for a few seconds. If the player is hit, a life is lost. The player also
+  loses a life if a chef touches Charley, if Charley falls through an open
+  hole, or if the ice cream melts before it is eaten.
+  .
+  Points are scored for each chef hit by food thrown by the player (up to
+  1,000 points each), luring a chef over an open hole and for each remaining
+  pile of food on the level. The ice cream is worth 500 points multiplied by
+  the level number, up to a maximum of 25,000 points from level 50 onwards to
+  the last regular level, level 125. If the player has at least one close call
+  with flying food and a chef, the game will present the player with an instant
+  replay of that level.
+release: 1983-02-02
+players: 2
+assets.boxfront: BoxFront/Food Fight (USA).jpg
+assets.boxback: BoxBack/Food Fight (USA).jpg
+assets.background: Background/Food Fight (USA).jpg
+assets.screenshot: Screenshot/Food Fight (USA).jpg
+assets.video: Video/Food Fight (USA).mp4
+x-co-op: No
+
+
+game: Yoomp! (World)
+file: $ROM_JSON_ROOT/Other/Atari 800/Yoomp! (World)/Yoomp! (World).json
+developer: Marcin Zukowski
+publisher: Marcin Zukowski
+genre: Action;Arcade
+description:
+  Yoomp! is an 8-bit Atari action game with some great features, including:
+  .
+  - Three-dimensional textured tube
+  ·
+  - System-optimized PAL and NTSC versions
+  ·
+  - Lots of ingame items - additional lives, extra jumps, earthquakes,
+  lightings and teleporters
+  ·
+  - Outstanding stereo music with interactive stereo panning effect
+  ·
+  - On-the-fly adjustments of music or sound effects volume
+  ·
+  - 5 unique eye-catching background graphics
+  ·
+  - Highly detailed antialiased ball with interactive shadow
+  ·
+  - 21 levels with increasing difficulty, accessible with level codes
+  ·
+  - Great title and end-of-the-game screens (get there to see it!)
+  ·
+  - Hours of fun - a perfect run through the game takes over 20 minutes
+release: 2007
+players: 1
+assets.boxfront: BoxFront/Yoomp! (World).jpg
+assets.boxback: BoxBack/Yoomp! (World).jpg
+assets.background: Background/Yoomp! (World).jpg
+assets.screenshot: Screenshot/Yoomp! (World).jpg
+assets.video: Video/Yoomp! (World).mp4
+x-co-op: No
+
+

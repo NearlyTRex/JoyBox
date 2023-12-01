@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Panmorphia (USA).exe"
+    ],
+    "transform_file": "Panmorphia (USA).exe"
+}

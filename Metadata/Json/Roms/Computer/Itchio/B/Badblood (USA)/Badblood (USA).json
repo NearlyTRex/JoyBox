@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Badblood (USA).exe"
+    ],
+    "transform_file": "Badblood (USA).exe"
+}

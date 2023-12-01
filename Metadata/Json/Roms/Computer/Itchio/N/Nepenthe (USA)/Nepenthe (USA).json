@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Nepenthe (USA).exe"
+    ],
+    "transform_file": "Nepenthe (USA).exe"
+}

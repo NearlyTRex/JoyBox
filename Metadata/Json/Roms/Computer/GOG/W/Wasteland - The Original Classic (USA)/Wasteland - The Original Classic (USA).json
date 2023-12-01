@@ -1,0 +1,15 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/Wasteland_OST_by_Edwin_Montgomery.zip",
+        "$SETUP_MAIN_ROOT/extra/wasteland_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/wasteland_music.zip",
+        "$SETUP_MAIN_ROOT/extra/wasteland_paragraphs.zip",
+        "$SETUP_MAIN_ROOT/extra/wasteland_reference_card.zip",
+        "$SETUP_MAIN_ROOT/extra/wasteland_survival_guide.zip",
+        "$SETUP_MAIN_ROOT/extra/wasteland_wasteland2_artworks.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_wasteland_2.1.0.8.exe"
+    ],
+    "transform_file": "setup_wasteland_2.1.0.8.exe"
+}

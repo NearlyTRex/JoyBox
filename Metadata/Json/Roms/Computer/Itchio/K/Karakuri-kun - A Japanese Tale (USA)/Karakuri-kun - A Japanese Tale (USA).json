@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Karakuri-kun - A Japanese Tale (USA).exe"
+    ],
+    "transform_file": "Karakuri-kun - A Japanese Tale (USA).exe"
+}

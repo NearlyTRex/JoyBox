@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_saints_row_4_20170523_(12199).exe"
+    ],
+    "transform_file": "setup_saints_row_4_20170523_(12199).exe"
+}

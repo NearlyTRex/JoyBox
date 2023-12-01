@@ -1,0 +1,9 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/horizon_zero_dawn_digital_artbook_pdf.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_horizon_zero_dawntm_complete_edition_7517962_(64bit)_(53037).exe"
+    ],
+    "transform_file": "setup_horizon_zero_dawntm_complete_edition_7517962_(64bit)_(53037).exe"
+}

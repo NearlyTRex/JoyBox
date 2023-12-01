@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_crypt_of_the_necrodancer_3.7.4-b4860_(64bit)_(68328).exe"
+    ],
+    "transform_file": "setup_crypt_of_the_necrodancer_3.7.4-b4860_(64bit)_(68328).exe"
+}

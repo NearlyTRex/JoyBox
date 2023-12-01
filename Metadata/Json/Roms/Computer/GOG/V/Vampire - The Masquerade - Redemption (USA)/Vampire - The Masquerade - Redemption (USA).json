@@ -1,0 +1,12 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/vampire_artworks.zip",
+        "$SETUP_MAIN_ROOT/extra/vampire_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/vampire_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/vampire_wallpapers.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_vampire_the_masquerade_redemption_2.0.0.3.exe"
+    ],
+    "transform_file": "setup_vampire_the_masquerade_redemption_2.0.0.3.exe"
+}

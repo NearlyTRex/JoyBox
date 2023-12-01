@@ -1,0 +1,19 @@
+{
+    "files": [
+        "wacko/82s123.12d",
+        "wacko/wackocpu.2d",
+        "wacko/wackocpu.3d",
+        "wacko/wackocpu.3g",
+        "wacko/wackocpu.4d",
+        "wacko/wackocpu.4g",
+        "wacko/wackocpu.5d",
+        "wacko/wackosnd.7a",
+        "wacko/wackosnd.8a",
+        "wacko/wackosnd.9a",
+        "wacko/wackovid.1a",
+        "wacko/wackovid.1b",
+        "wacko/wackovid.1d",
+        "wacko/wackovid.1e"
+    ],
+    "launch_name": "wacko"
+}

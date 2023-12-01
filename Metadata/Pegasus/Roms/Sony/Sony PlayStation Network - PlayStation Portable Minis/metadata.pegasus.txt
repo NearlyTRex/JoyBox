@@ -1,0 +1,65 @@
+collection: Sony PlayStation Network - PlayStation Portable Minis
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation Network - PlayStation Portable Minis" {file.path}
+
+
+game: Age of Zombies (USA) (Minis)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable Minis/Age of Zombies (USA) (Minis)/Age of Zombies (USA) (Minis).json
+developer: Halfbrick
+publisher: Halfbrick
+genre: Horror;Shooter
+description:
+  The evil Professor Brains has sent hordes of zombies back to various periods in
+  history to destroy mankind. It's up to time traveling protagonist Barry
+  Steakfries to foil this evil scheme.
+  .
+  Age of Zombies is a top-down shooter that will take the player to the
+  prehistory, thirties Chicago, ancient Egypt, medieval Japan and the future. To
+  defend himself against large waves of zombies, Barry can use his standard gun,
+  for which he receives no points, or various other weapons like SMGs,
+  flamethrowers, shotguns, miniguns and explosives which can be found around the
+  map.
+release: 2010-02-25
+players: 1
+assets.boxfront: BoxFront/Age of Zombies (USA) (Minis).jpg
+assets.boxback: BoxBack/Age of Zombies (USA) (Minis).jpg
+assets.background: Background/Age of Zombies (USA) (Minis).jpg
+assets.screenshot: Screenshot/Age of Zombies (USA) (Minis).jpg
+assets.video: Video/Age of Zombies (USA) (Minis).mp4
+x-co-op: No
+
+
+game: Freekscape - Escape From Hell (USA) (Minis)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation Portable Minis/Freekscape - Escape From Hell (USA) (Minis)/Freekscape - Escape From Hell (USA) (Minis).json
+developer: Kidguru Studios
+publisher: Creat Studios Inc
+genre: Action
+description:
+  Freekscape: Escape from Hell is a 2.5D puzzle platformer. The protagonist is the
+  horned demon Freek who is left behind in hell because he does not enjoy
+  torturing souls. That is why he is tasked with housekeeping chores instead by
+  his master Beel. Working alone, he discovers the key to the treasure room,
+  steals a trident and attempts to escape hell to reach heaven. To complete levels
+  the exit needs to be reached. Levels are accessed one by one on a large world
+  map and they branch out at a certain point with multiple paths.
+  .
+  Puzzles are based on platforming and using the abilities of different creatures.
+  Freek can use his trident to skewer other minions, carry them around or use them
+  as a pogo stick to jump higher. One type of creature rushes and can knock Freek
+  over large gaps. Another type acts as a trampoline. Creatures can sometimes be
+  dropped into the lava to create safe passages. A hug block rushes to hug you. By
+  taking it out up to three can be skewered to use them as a bridge. Creatures are
+  summoned through portals at specific locations. Freek can also draw their
+  attention by whistling. Freek has his own portals that act as checkpoints when
+  he passes them. Some levels require you to locate a number of peppers to unlock
+  a pepper portal before a level can be finished. The D-pad can be used to look
+  around while the analog stick control movement.
+release: 2010-04-08
+players: 1
+assets.boxfront: BoxFront/Freekscape - Escape From Hell (USA) (Minis).jpg
+assets.boxback: BoxBack/Freekscape - Escape From Hell (USA) (Minis).jpg
+assets.background: Background/Freekscape - Escape From Hell (USA) (Minis).jpg
+assets.screenshot: Screenshot/Freekscape - Escape From Hell (USA) (Minis).jpg
+assets.video: Video/Freekscape - Escape From Hell (USA) (Minis).mp4
+x-co-op: No
+
+

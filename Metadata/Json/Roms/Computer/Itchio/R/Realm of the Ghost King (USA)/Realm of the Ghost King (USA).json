@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Realm of the Ghost King (USA).exe"
+    ],
+    "transform_file": "Realm of the Ghost King (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/RogueCraft Squadron (USA).exe"
+    ],
+    "transform_file": "RogueCraft Squadron (USA).exe"
+}

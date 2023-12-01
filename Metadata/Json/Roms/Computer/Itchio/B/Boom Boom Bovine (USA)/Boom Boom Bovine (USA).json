@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Boom Boom Bovine (USA).exe"
+    ],
+    "transform_file": "Boom Boom Bovine (USA).exe"
+}

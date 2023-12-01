@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Inside the Backrooms (USA).exe"
+    ],
+    "transform_file": "Inside the Backrooms (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Old Constellations (USA).exe"
+    ],
+    "transform_file": "Old Constellations (USA).exe"
+}

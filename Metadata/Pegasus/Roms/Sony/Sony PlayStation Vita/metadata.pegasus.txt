@@ -1,0 +1,3045 @@
+collection: Sony PlayStation Vita
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation Vita" {file.path}
+
+
+game: Alone With You (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Alone With You (USA)/Alone With You (USA).json
+developer: Benjamin Rivers
+publisher: Benjamin Rivers
+genre: Adventure
+description:
+  From the creator of indie horror hit Home comes Alone With You — a bittersweet
+  sci-fi adventure game that goes right for the heart.
+  .
+  You’re trying to escape a doomed space colony with the help of your troubled AI
+  companion and four very emotional holograms. By day, you'll embark on missions
+  to scan for clues, solve puzzles, and discover the fates of over two-dozen of
+  your former colleagues and their interwoven lives. By night, you'll help the
+  holograms realize their own special fates, as you get to know each other in a
+  series of increasingly touching conversations.
+release: 2016-08-23
+players: 1
+assets.boxfront: BoxFront/Alone With You (USA).jpg
+assets.boxback: BoxBack/Alone With You (USA).jpg
+assets.background: Background/Alone With You (USA).jpg
+assets.screenshot: Screenshot/Alone With You (USA).jpg
+x-co-op: No
+
+
+game: Another World - 20th Anniversary Edition (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Another World - 20th Anniversary Edition (USA)/Another World - 20th Anniversary Edition (USA).json
+developer: Delphine Software International
+publisher: Digital Lounge
+genre: Action
+description:
+  This is an updated version of Another World for the 20th anniversary of the
+  original game, five years after the updated 15th anniversary edition. It is
+  adapted for mobile devices offering both touch controls and a virtual D-pad. The
+  backgrounds are reworked for higher resolutions with subtler shades of light,
+  and crisper detail and edges to the polygons and animations. It is still
+  possible to switch to the original graphics. This version also contains
+  remastered sound effects and three difficulty modes.
+  .
+  Two to three years later it was also ported to PC and a variety of console
+  platforms with platform-specific tweaks. On the GOG distribution portal 15th
+  Anniversary Edition was replaced with this version, but both versions are still
+  accessible as a single package.
+release: 2014-07-08
+players: 1
+assets.boxfront: BoxFront/Another World - 20th Anniversary Edition (USA).jpg
+assets.boxback: BoxBack/Another World - 20th Anniversary Edition (USA).jpg
+assets.background: Background/Another World - 20th Anniversary Edition (USA).jpg
+assets.screenshot: Screenshot/Another World - 20th Anniversary Edition (USA).jpg
+x-co-op: No
+
+
+game: Antiquia Lost (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Antiquia Lost (USA)/Antiquia Lost (USA).json
+developer: Exe Create Inc.
+publisher: Kemco
+genre: Role-Playing
+description:
+  Bine is a young man who lives in a small rural village. One day, he is asked by
+  Lunaria, a girl who lives near the village, to go with her to the royal capital.
+  .
+  With more and more disappearances occurring, the rulers' reactions are mixed.\n
+  And there is a forgotten existence, too...
+  .
+  'Trusting hearts' become 'strength'. This is just the start of the story...
+release: 2017-09-05
+players: 1
+assets.boxfront: BoxFront/Antiquia Lost (USA).jpg
+assets.boxback: BoxBack/Antiquia Lost (USA).jpg
+assets.background: Background/Antiquia Lost (USA).jpg
+assets.screenshot: Screenshot/Antiquia Lost (USA).jpg
+x-co-op: No
+
+
+game: Aqua Kitty - Milk Mine Defender DX (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Aqua Kitty - Milk Mine Defender DX (USA)/Aqua Kitty - Milk Mine Defender DX (USA).json
+developer: Tikipod
+publisher: Tikipod
+genre: Action
+description:
+  Due to a sudden shortage of milk, cats around the world are forced to seek out
+  new sources to get their fix.\n
+  You and your team of milk mining kittens have overcome a fear of water to drill
+  down under the ocean seabed and begin extracting vast reserves of what seems to
+  be naturally forming full-fat milk.\n
+  Get ready for fast paced submarine action, defending the kittens from disruptive
+  mechanical sea creatures.
+release: 2014-11-25
+players: 1
+assets.boxfront: BoxFront/Aqua Kitty - Milk Mine Defender DX (USA).jpg
+assets.boxback: BoxBack/Aqua Kitty - Milk Mine Defender DX (USA).jpg
+assets.background: Background/Aqua Kitty - Milk Mine Defender DX (USA).jpg
+assets.screenshot: Screenshot/Aqua Kitty - Milk Mine Defender DX (USA).jpg
+x-co-op: No
+
+
+game: Army Corps of Hell (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Army Corps of Hell (USA)/Army Corps of Hell (USA).json
+developer: Entersphere
+publisher: Square Enix
+genre: Action
+description:
+  The story behind Army Corps of Hell wouldn't be out of place on a DIO album
+  cover. As the King of Hell, you are fighting to claim your rightful place as the
+  leader of the underworld, fighting off legions of demonic enemies and huge
+  bosses while pushing your way forward and asserting your place in hell.
+  .
+  The gameplay is a cross between Overlord and Pikmin, giving you command of a
+  group of Goblins who fight for you. They are divided into three different types
+  – Soldiers, Spearmen, and Magi. Soldiers are your basic workhorse fighters,
+  you'll chuck them at your enemies and stack them up in order to pull off
+  high-damage yielding Salvo attacks, while Spearmen are long-range, narrow
+  attackers. The final class, Magi, require you to charge up their attacks, but
+  are capable of hitting protected targets, like enemies that are covered in fire
+  for example. You can also set your different unit types into formations,
+  resulting in improved attack power, defense, and mobility depending in which
+  unit type you're using.
+release: 2012-02-22
+players: 1
+assets.boxfront: BoxFront/Army Corps of Hell (USA).jpg
+assets.boxback: BoxBack/Army Corps of Hell (USA).jpg
+assets.background: Background/Army Corps of Hell (USA).jpg
+assets.screenshot: Screenshot/Army Corps of Hell (USA).jpg
+x-co-op: No
+
+
+game: Asdivine Hearts (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Asdivine Hearts (USA)/Asdivine Hearts (USA).json
+developer: Exe Create Inc.
+publisher: Kemco
+genre: Role-Playing
+description:
+  One year ago, the world of Asdivine was enveloped by a brilliant flash of light.
+  Since that time, the influence of shadow has only continued to grow ever more
+  powerful across the face of the land. Although the event itself was undoubtedly
+  connected with the heavens, few people seem to have realized the far-reaching
+  implications of what transpired. Now turning to the present, a surprising
+  revelation awaits a young man, Zack, and his childhood friend, Stella, in the
+  capital from a chubby cat claiming to be none other than the Light Deity and
+  declaring the world to be on the verge of destruction...
+  .
+  Asdivine Hearts boasts of plenty of subquests, a battle arena, treasure to dig
+  for, and an enemy guide to complete. By setting puzzle piece-like jewels in a
+  box known as a rubix, players are able to customize characters! How far can you
+  level and how many millions of damage can you dish out?
+release: 2017-01-10
+players: 1
+assets.boxfront: BoxFront/Asdivine Hearts (USA).jpg
+assets.boxback: BoxBack/Asdivine Hearts (USA).jpg
+assets.background: Background/Asdivine Hearts (USA).jpg
+assets.screenshot: Screenshot/Asdivine Hearts (USA).jpg
+x-co-op: No
+
+
+game: Bard's Gold (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Bard's Gold (USA)/Bard's Gold (USA).json
+developer: Pixel Lantern
+publisher: Pixel Lantern
+genre: Action
+description:
+  Bard's Gold is a challenging platformer that let's you explore eerie worlds in a
+  quest for a Goblin that stole your gold. Help the Bard to overcome the dungeon’s
+  many dangerous perils and use your new-found treasures to improve your character
+  and to buy new weapons and gear!
+  .
+  .
+  This game takes inspiration from early 90's platforming classics such as Rainbow
+  Island, Rick Dangerous, Alex Kidd and Erik, which at the time were popular on
+  the Amiga and consoles. Bard's Gold is slower paced than most current day
+  platformers, but is extemely challenging. Players need to avoid enemies, traps
+  and projectiles in order to progress. Being hit by any of them means instant
+  death. Difficult puzzles and towering bosses will have to be overcome to reach
+  the filthy goblin that stole the family treasure.
+release: 2016-07-17
+players: 1
+assets.boxfront: BoxFront/Bard's Gold (USA).jpg
+assets.boxback: BoxBack/Bard's Gold (USA).jpg
+assets.background: Background/Bard's Gold (USA).jpg
+assets.screenshot: Screenshot/Bard's Gold (USA).jpg
+x-co-op: No
+
+
+game: Bastion (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Bastion (USA)/Bastion (USA).json
+developer: Supergiant Games
+publisher: Limited Run Games
+genre: Role-Playing
+description:
+  Bastion is an isometric action/role playing game. It's the story of a city known
+  as Caelondia after it has been destroyed by a disaster called "Calamity". The
+  game follows a silent protagonist known as "The Kid" who tries to create a safe
+  haven (Bastion) with the help of Rucks, who is also the narrator of the game.
+  The kid has to defeat the game's many foes with a variety of melee and ranged
+  weapons and also special skills. The Bastion, which acts as some sort of
+  headquarters in the game, can be upgraded with useful buildings as the player
+  progresses.
+  .
+  As the Kid travels through the world, he will discover new weapons, upgrade
+  materials, mementos and fragments. Mementos can be discussed with other
+  characters residing in the Bastion and may reveal more about the world. The Kid
+  can only hold two weapons and one special skill at a time, which may require
+  switching them with others, considering the player's preferences and the
+  enemies' weaknesses. The fragments are the game's main currency and they can be
+  collected after destroying objects, defeating enemies and, sometimes, by simply
+  finding them. The player can later use them in the Bastion in order to purchase
+  upgrades and useful trinkets.
+  .
+  The Bastion encloses a total of six buildings which the Kid can restore and
+  utilize. In the Distillery, the player can assign spirits (drinks) to a maximum
+  of ten slots, providing various passive bonuses during the gameplay. At the
+  beginning, only one slot is available for use, the rest being unlocked one by
+  one every time the Kid levels up. The Arsenal stores all the weapons that the
+  protagonist gathers during his adventures; the player can switch weapons and
+  special skills here. The weapons are enhanced and upgraded in the Forge, and
+  this is possible only after collecting the required upgrade materials in the
+  world. The Memorial offers various challenges, which if completed reward the
+  player with additional fragments. In Lost-and-Found, the player can spend
+  fragments in order to restore upgrade materials and unlock idols and spirits.
+  Finally, the game difficulty can be increased by invoking the gods in the
+  Shrine.
+  .
+  One of the notable features in the game is dynamic narration. Narrating in the
+  game is based on the player's actions. For example, when the kid has fallen from
+  a height the narrator gives a comment about the incident.
+release: 2015-12-05
+players: 1
+assets.boxfront: BoxFront/Bastion (USA).jpg
+assets.boxback: BoxBack/Bastion (USA).jpg
+assets.background: Background/Bastion (USA).jpg
+assets.screenshot: Screenshot/Bastion (USA).jpg
+x-co-op: No
+
+
+game: Bit.Trip Presents... Runner2 - Future Legend of Rhythm Alien (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Bit.Trip Presents... Runner2 - Future Legend of Rhythm Alien (USA)/Bit.Trip Presents... Runner2 - Future Legend of Rhythm Alien (USA).json
+developer: Gaijin Games
+publisher: Gaijin Games
+genre: Action
+description:
+  Runner 2: Future Legend of Rhythm Alien is the sequel to Bit.Trip Runner. The
+  game's look and feel is very different from the original. Runner 2 forgoes the
+  original's retro look in favor of a cartoon art style. The game's story takes on
+  a more humorous tone, and is narrated by Charles Martinet.
+  .
+  The game expands on the original in several ways. There are several new actions,
+  such as rotating the analog stick to trace Commander Video's path around a loop.
+  In addition, level selection takes place on a map screen laid out similar to
+  other classic platform games. Levels offer alternate paths which can be either
+  easier or harder to complete depending on the path. There are also mid-level
+  checkpoints, though these are optional, and the player earns more points if
+  he/she chooses to skip them. Collecting all gold in each stage allows the player
+  to shoot Commander Video out of a cannon into a target to score extra points.
+  .
+  There are several characters that can be unlocked, as well as several costumes
+  for each one.
+  .
+  The game offers 120 levels, online leaderboards for each individual stage, and
+  multiple difficulties for replay value.
+release: 2013-12-17
+players: 1
+assets.boxfront: BoxFront/Bit.Trip Presents... Runner2 - Future Legend of Rhythm Alien (USA).jpg
+assets.boxback: BoxBack/Bit.Trip Presents... Runner2 - Future Legend of Rhythm Alien (USA).jpg
+assets.background: Background/Bit.Trip Presents... Runner2 - Future Legend of Rhythm Alien (USA).jpg
+assets.screenshot: Screenshot/Bit.Trip Presents... Runner2 - Future Legend of Rhythm Alien (USA).jpg
+x-co-op: No
+
+
+game: Bit.Trip, The (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Bit.Trip, The (USA)/Bit.Trip, The (USA).json
+developer: Choice Provisions
+publisher: Choice Provisions
+genre: Action
+description:
+  THE BIT.TRIP is the ultimate way to play all six games in the award-winning
+  BIT.TRIP series, including BIT.TRIP RUNNER, the first auto-running rhythm
+  platformer on Earth!
+  .
+  This tough-as-nails collection of retro-inspired music/rhythm games will make
+  you laugh, cry, scream, curse, and perhaps even bleed.    And for those trying
+  to keep an eye on their blood pressure, we’ve also added in the ability to
+  toggle the difficulty in each game. Because we care.    Not for the faint of
+  heart, THE BIT.TRIP is deceptively hardcore. It will take you through the origin
+  story of CommanderVideo as you follow him through his life-journey as he learns
+  what it means to be a human, fall in love, face adversity, and ultimately return
+  to the ether.
+release: 2015-12-05
+players: 1
+assets.boxfront: BoxFront/Bit.Trip, The (USA).jpg
+assets.boxback: BoxBack/Bit.Trip, The (USA).jpg
+assets.background: Background/Bit.Trip, The (USA).jpg
+assets.screenshot: Screenshot/Bit.Trip, The (USA).jpg
+x-co-op: No
+
+
+game: Chronus Arc (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Chronus Arc (USA)/Chronus Arc (USA).json
+developer: Hit-Point
+publisher: Kemco
+genre: Role-Playing
+description:
+  The Chronus Fragments are needed to prepare for the Time Rewinding, which only
+  takes place once every 10 years. On their way to the Chronus Shrine to get the
+  Fragments, Loka and his teacher Teth are surrounded by a mysterious man named
+  Geppel and his gang. They demand the Fragments. While Teth plays for time, Loka,
+  the main character, rushes out of the cave on his own to fetch reinforcements.
+  He is successful, but Teth and Geppel are nowhere to be found.
+  .
+  Aiming to gather information about his missing teacher, Teth, and Geppel, who is
+  trying to get his hands on the Fragments, Loka decides to set out on a journey
+  with his friend Sarna.
+  .
+  The game features familiar quests, but also dungeons filled with puzzles to
+  solve, and characters who grow and can be developed as the story progresses with
+  the class change system.
+  .
+  Also, additional dungeons and special items are available for extra fun by
+  collecting Mana!
+  .
+  Don't miss out on Loka and his friends' grand adventure!
+release: 2018-10-30
+players: 1
+assets.boxfront: BoxFront/Chronus Arc (USA).jpg
+assets.boxback: BoxBack/Chronus Arc (USA).jpg
+assets.background: Background/Chronus Arc (USA).jpg
+assets.screenshot: Screenshot/Chronus Arc (USA).jpg
+x-co-op: No
+
+
+game: Claire - Extended Cut (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Claire - Extended Cut (USA)/Claire - Extended Cut (USA).json
+developer: Hailstorm Games Inc
+publisher: Hailstorm Games Inc
+genre: Adventure;General
+description:
+  While visiting her sick mother, Claire takes a wrong turn and stumbles into a
+  dark passage of echoing doors and abandoned rooms. Lost, and attempting to find
+  her way back, Claire encounters an over-protective dog and few denizens who are
+  seemingly uninterested in Claires plight. Did they block the doors and windows
+  to keep something out, or is a malevolent force stopping Claire from leaving? As
+  panic sets in, time slips and begins to fall away.
+release: 2014-01-22
+players: 1
+assets.boxfront: BoxFront/Claire - Extended Cut (USA).jpg
+assets.boxback: BoxBack/Claire - Extended Cut (USA).jpg
+assets.background: Background/Claire - Extended Cut (USA).jpg
+assets.screenshot: Screenshot/Claire - Extended Cut (USA).jpg
+x-co-op: No
+
+
+game: Croixleur Sigma (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Croixleur Sigma (USA)/Croixleur Sigma (USA).json
+developer: Souvenir Circ.
+publisher: Souvenir Circ.
+genre: Action
+description:
+  Croixleur Sigma is a 3D arena based fighting game, with girls wielding swords as
+  the playable characters. The story is about a rivalry between two groups known
+  as the Knights and the Aristocrats. Two friends, Lucrezia Visconti and Francesca
+  Storaro, compete against each other in a series of tests. There can be only one
+  victor.
+  .
+  The gameplay is somewhat similar to Mitsurugi Kamui Hikae. The chosen girl
+  enters a small arena and must murder all relatively weak enemies as quickly as
+  possible. After this, she goes on to the next arena. Sometimes a boss needs to
+  be defeated. Each girl has various moves to make combos and combo chains are the
+  key to high scores and fast times. They can also find various items like new
+  swords.
+release: 2013-12-30
+players: 1
+assets.boxfront: BoxFront/Croixleur Sigma (USA).jpg
+assets.boxback: BoxBack/Croixleur Sigma (USA).jpg
+assets.background: Background/Croixleur Sigma (USA).jpg
+assets.screenshot: Screenshot/Croixleur Sigma (USA).jpg
+x-co-op: No
+
+
+game: Curses 'N Chaos (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Curses 'N Chaos (USA)/Curses 'N Chaos (USA).json
+developer: Tribute Games
+publisher: Tribute Games
+genre: Action
+description:
+  In this 2D Arena-Brawler world, there is only one law: fight or die! The Wizard
+  King has cursed Lea and Leo, the fiercest fighters in the land! Now living under
+  the shadow of death, they're hounded by ghouls and hunted by the grim reaper
+  itself! To lift the curse, you must concoct the legendary Elixir of Life! But
+  there's only one way to get the ingredients...FIGHT MONSTERS!\n
+  But punching and kicking is not all you can do! Assisted by Allison the
+  Alchemist, you can craft potions and summons to heal, create weapons and even
+  marshall elemental powers at your command!
+  .
+  Put up your dukes! Bring a friend along! The Wizard King's undead knights and
+  monsters are not ready for the mayhem you'll unleash on them!
+release: 2015-08-18
+players: 2
+assets.boxfront: BoxFront/Curses 'N Chaos (USA).jpg
+assets.boxback: BoxBack/Curses 'N Chaos (USA).jpg
+assets.background: Background/Curses 'N Chaos (USA).jpg
+assets.screenshot: Screenshot/Curses 'N Chaos (USA).jpg
+x-co-op: No
+
+
+game: Damascus Gear - Operation Osaka (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Damascus Gear - Operation Osaka (USA)/Damascus Gear - Operation Osaka (USA).json
+developer: Aplus
+publisher: Arc System Works
+genre: Action
+description:
+  'GEAR System' - The system revealed by Atsuga Corporation in the mid-21st
+  century revolutionized all technologies, allowing for the perfection of piloted
+  humanoid robots called 'GEARs'.
+  .
+  During World War IV in 2050, GEARs from all over the world went berserk and
+  began massacring humanity. The berserk GEARs, known as 'RAGE', conquered the
+  surface world and pushed humanity to the brink of extinction. The remaining
+  survivors escaped underground and began their counterattack. After over 50 years
+  of war, humanity managed to defeat the RAGEs and reclaim Japan. 30 years later
+  in the 'Cosmopolis' built upon Osaka, GEAR pilots fight day and night in the
+  'Arena' for large sums of 'Eyn'.
+  .
+  The goal of 'Damascus Gear Operation Osaka' is to repay the hero's inherited
+  debt before the due date. The hero together with his Operator will participate
+  in the Arena as a Ranker, aiming for the prize money to repay his debt. It will
+  not be a story for the history books, but a battle for freedom...
+release: 2018-03-07
+players: 1
+assets.boxfront: BoxFront/Damascus Gear - Operation Osaka (USA).jpg
+assets.boxback: BoxBack/Damascus Gear - Operation Osaka (USA).jpg
+assets.background: Background/Damascus Gear - Operation Osaka (USA).jpg
+assets.screenshot: Screenshot/Damascus Gear - Operation Osaka (USA).jpg
+x-co-op: No
+
+
+game: Damascus Gear - Operation Tokyo (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Damascus Gear - Operation Tokyo (USA)/Damascus Gear - Operation Tokyo (USA).json
+developer: Aplus
+publisher: Arc System Works
+genre: Action
+description:
+  The GEAR System was developed sometime in the middle of the 21st century, by the
+  Atsuga Corporation, and allowed pilots unprecedented motor-control and
+  maneuverability with their machines. Mankind developed the system further, to
+  create man-operated mechs and robots, known as GEARs.
+  .
+  In the year 2050, the world goes to war, in what would be known as World War IV.
+  Nonetheless, the outcome, no one could have predicted...
+  .
+  The GEARs, which were the primary forces in battle became uncontrollable by
+  their operators, and turned against mankind. GEARs that have gone berserk were
+  named RAGEs, and left a mark on human history that can never be forgotten.
+  .
+  In 2097, the human population that remained was forced to live underground. And,
+  in order to reclaim what they have lost to the RAGEs, they call upon the GEAR
+  System once more.
+release: 2015-03-24
+players: 1
+assets.boxfront: BoxFront/Damascus Gear - Operation Tokyo (USA).jpg
+assets.boxback: BoxBack/Damascus Gear - Operation Tokyo (USA).jpg
+assets.background: Background/Damascus Gear - Operation Tokyo (USA).jpg
+assets.screenshot: Screenshot/Damascus Gear - Operation Tokyo (USA).jpg
+x-co-op: No
+
+
+game: Dariusburst - Chronicle Saviours (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Dariusburst - Chronicle Saviours (USA)/Dariusburst - Chronicle Saviours (USA).json
+developer: Pyramid
+publisher: Chara-Ani
+genre: Action
+description:
+  DARIUSBURST Chronicle Saviours is the latest installment in Taito's DARIUS
+  series of arcade-style shooting games. Blast hordes of alien sea-monsters, and
+  blaze your own trail through branching environments.
+release: 2015-11-30
+players: 1
+assets.boxfront: BoxFront/Dariusburst - Chronicle Saviours (USA).jpg
+assets.boxback: BoxBack/Dariusburst - Chronicle Saviours (USA).jpg
+assets.background: Background/Dariusburst - Chronicle Saviours (USA).jpg
+assets.screenshot: Screenshot/Dariusburst - Chronicle Saviours (USA).jpg
+x-co-op: No
+
+
+game: Deadbolt (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Deadbolt (USA)/Deadbolt (USA).json
+developer: Hopoo Games
+publisher: Hopoo Games
+genre: Action
+description:
+  Deadbolt is a side-scrolling stealth-action which puts the player in the role of
+  the Grim Reaper, taking out supernatural entities such as zombies, vampires and
+  skeletons. The game is divided into levels in which the player is usually
+  required to take out all the enemies, and can do so with a selection of melee
+  and ranged weapons, picked up in the level or bought from a guns salesman.
+  .
+  Similar to Hotline Miami, enemies have quick response times and the player can
+  die with a single shot. That requires the player to either respond quickly to
+  threats, or use the level's environment to his advantage: The player can turn
+  off or shoot lights to avoid being seen, and use vents to move around the level.
+  .
+  Each level introduces a new gameplay element, enemy, or offers a unique twist.
+  For example, one level is rigged with traps, which the player must watch out
+  for, but the traps can also be used against enemies. Another level has a sniper
+  trying to get the player, so he must remain in the dark or watch out for the
+  sniper's laser sight.
+release: 2018-02-20
+players: 1
+assets.boxfront: BoxFront/Deadbolt (USA).jpg
+assets.boxback: BoxBack/Deadbolt (USA).jpg
+assets.background: Background/Deadbolt (USA).jpg
+assets.screenshot: Screenshot/Deadbolt (USA).jpg
+x-co-op: No
+
+
+game: Deception IV - The Nightmare Princess (Asia) (En)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Deception IV - The Nightmare Princess (Asia) (En)/Deception IV - The Nightmare Princess (Asia) (En).json
+developer: Koei Tecmo Games
+publisher: Koei Tecmo Games
+genre: Role-Playing;Strategy
+description:
+  Unleash your inner evil! The Nightmare Princess, Velguirie, uses her kicks and
+  spins in her own quest to revive the Devil by trapping humans. Set over 180
+  traps in a variety of locales, including all new modern stages!
+  .
+  - New stages: gym, hospital, and park!\n
+  - New Quest Mode: Discover the story of Velguirie, the Nightmare Princess\n
+  - Enemy Edit to create your own sacrifices\n
+  - All of the content of Deception IV: Blood Ties\n
+  ...and more!
+release: 2015-03-26
+players: 1
+assets.boxfront: BoxFront/Deception IV - The Nightmare Princess (Asia) (En).jpg
+assets.boxback: BoxBack/Deception IV - The Nightmare Princess (Asia) (En).jpg
+assets.background: Background/Deception IV - The Nightmare Princess (Asia) (En).jpg
+assets.screenshot: Screenshot/Deception IV - The Nightmare Princess (Asia) (En).jpg
+x-co-op: No
+
+
+game: Deemo - The Last Recital (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Deemo - The Last Recital (USA)/Deemo - The Last Recital (USA).json
+developer: Rayark Games
+publisher: PM Studios
+genre: Music
+description:
+  Experience Deemo: The Last Recital, a music rhythm game and story of urban
+  fantasy.
+  .
+  Deemo is a mystic being that lives in solitude in a castle all by itself. His
+  life changes when a little girl who lost her memories, unknowingly falls from
+  the sky, not knowing who she is and where she came from. Deemo comes to realize
+  that whenever he plays the piano, a tree in front of him grows taller and
+  taller. Confident that the tree can grow tall enough to help the little girl
+  reach the sky from where she came from, the two come together to play the piano
+  together. Can Deemo help the little girl regain her memories and help her get
+  back home?
+  .
+  Enjoy all remade high quality animations as well as new modes: “After Story”,
+  “Duet”, and “Duel” exclusively for PS Vita!
+release: 2017-05-16
+players: 1
+assets.boxfront: BoxFront/Deemo - The Last Recital (USA).jpg
+assets.boxback: BoxBack/Deemo - The Last Recital (USA).jpg
+assets.background: Background/Deemo - The Last Recital (USA).jpg
+assets.screenshot: Screenshot/Deemo - The Last Recital (USA).jpg
+x-co-op: No
+
+
+game: Defender's Quest (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Defender's Quest (USA)/Defender's Quest (USA).json
+developer: Level Up Labs
+publisher: Level Up Labs
+genre: Role-Playing;Strategy
+description:
+  Enjoy tactical tower defense battles with a party of persistent and customizable
+  RPG characters! Play how you want: breeze through for the story, or conquer
+  endless hours of extreme challenges!
+release: 2018-02-20
+players: 1
+assets.boxfront: BoxFront/Defender's Quest (USA).jpg
+assets.boxback: BoxBack/Defender's Quest (USA).jpg
+assets.background: Background/Defender's Quest (USA).jpg
+assets.screenshot: Screenshot/Defender's Quest (USA).jpg
+x-co-op: No
+
+
+game: Dragon Fantasy (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Dragon Fantasy (USA)/Dragon Fantasy (USA).json
+developer: Muteki Corporation
+publisher: Muteki Corporation
+genre: Role-Playing
+description:
+  Join Ogden and the heroes of Westeria in this classic JRPG epic, Dragon Fantasy:
+  The Black Tome of Ice. Travel through the frozen wastelands of Tundaria,
+  experiencing action-packed battles without random encounters, using spatially
+  aware Area-of-Effect attacks and power moves. Travel by pirate ship, defending
+  against enemies in thrilling ship-to-ship rock monster combat! Defeat oncoming
+  hordes of demons and huge bosses that threaten the entire world of Dragon
+  Fantasy!
+release: 2016-03-22
+players: 1
+assets.boxfront: BoxFront/Dragon Fantasy (USA).jpg
+assets.boxback: BoxBack/Dragon Fantasy (USA).jpg
+assets.background: Background/Dragon Fantasy (USA).jpg
+assets.screenshot: Screenshot/Dragon Fantasy (USA).jpg
+x-co-op: No
+
+
+game: Dragon Fantasy - Book II - The Black Tome of Ice (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Dragon Fantasy - Book II - The Black Tome of Ice (USA)/Dragon Fantasy - Book II - The Black Tome of Ice (USA).json
+developer: The Muteki Corporation
+publisher: The Muteki Corporation
+genre: Role-Playing;Japanese-Style
+description:
+  Join Ogden and the heroes of Westeria in this classic JRPG epic, Dragon Fantasy:
+  The Black Tome of Ice.
+  .
+  .
+  Travel through the frozen wastelands of Tundaria, experiencing action-packed
+  battles without random encounters, using spatially aware Area-of-Effect attacks
+  and power moves. Travel by pirate ship, defending against enemies in thrilling
+  ship-to-ship rock monster combat! Defeat oncoming hordes of demons and huge
+  bosses that threaten the entire world of Dragon Fantasy.
+release: 2013-09-10
+players: 1
+assets.boxfront: BoxFront/Dragon Fantasy - Book II - The Black Tome of Ice (USA).jpg
+assets.boxback: BoxBack/Dragon Fantasy - Book II - The Black Tome of Ice (USA).jpg
+assets.background: Background/Dragon Fantasy - Book II - The Black Tome of Ice (USA).jpg
+assets.screenshot: Screenshot/Dragon Fantasy - Book II - The Black Tome of Ice (USA).jpg
+x-co-op: No
+
+
+game: Dragon Sinker (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Dragon Sinker (USA)/Dragon Sinker (USA).json
+developer: EXE-CREATE
+publisher: Kemco
+genre: Role-Playing
+description:
+  Join forces with elves and dwarves, and slay the evil dragon, Wyrmvarg in a
+  retro-style fantasy RPG!
+  .
+  Set out in search of the legendary weapons to free the world from the rule of
+  Wyrmvarg!
+  .
+  Employing 8-bit graphics and sound that hark back to the golden era of RPGs,
+  Dragon Sinker brings a visual and audio feast to the table of hungry gamers
+  starving for the nostalgia of the great classics of yesteryear!
+  .
+  Scour the world in search of new companions and collect more than 16 jobs! Then
+  lead up to 12 party members into turn-based battles and swap freely between 3
+  teams to take on a host of powerful foes! And if that were not exciting enough,
+  character costumes also change according to their job, giving pixel lovers
+  something even more to look forward to!
+  .
+  Plus, with plenty of subquests for the hero to tackle and secret dungeons to
+  explore, this is one adventure not soon to be forgotten!
+release: 2018-02-06
+players: 1
+assets.boxfront: BoxFront/Dragon Sinker (USA).jpg
+assets.boxback: BoxBack/Dragon Sinker (USA).jpg
+assets.background: Background/Dragon Sinker (USA).jpg
+assets.screenshot: Screenshot/Dragon Sinker (USA).jpg
+x-co-op: No
+
+
+game: Earth Defense Force 2 - Invaders From Planet Space (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Earth Defense Force 2 - Invaders From Planet Space (USA)/Earth Defense Force 2 - Invaders From Planet Space (USA).json
+developer: Sandlot
+publisher: Xseed Games
+genre: Action;Shooter
+description:
+  Terror in Tokyo! Evil in England! Aliens from another world have spread their
+  tentacles worldwide, and only you, brave soldiers of the Earth Defense Force,
+  can save the day.
+  .
+  Charge into battle as a proud member of the EDF's Infantry, expertly trained in
+  weapons of all kinds. Take control of the battlefield as an Air Raider, with
+  cunning traps, massive bombardments and superior driving skills. Or soar above
+  the battlefield as a Pale Wing, wielding reverse-engineered alien weapons
+  against their villainous makers!
+  .
+  Survive over 70 missions, wield over 500 weapons, join forces with up to three
+  squadmates online, and beat the aliens so hard they'll never even think of
+  coming back!
+  .
+  Now and forever, we are the Earth Defense Force!
+release: 2015-12-08
+players: 2
+assets.boxfront: BoxFront/Earth Defense Force 2 - Invaders From Planet Space (USA).jpg
+assets.boxback: BoxBack/Earth Defense Force 2 - Invaders From Planet Space (USA).jpg
+assets.background: Background/Earth Defense Force 2 - Invaders From Planet Space (USA).jpg
+assets.screenshot: Screenshot/Earth Defense Force 2 - Invaders From Planet Space (USA).jpg
+x-co-op: Yes
+
+
+game: Exile's End (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Exile's End (USA)/Exile's End (USA).json
+developer: Magnetic Realms
+publisher: Xseed
+genre: Action
+description:
+  Exile's End is an homage to early 90's action-adventure PC games like Flashback
+  and Another World, but with a Japanese flair. The core of the game is from
+  Australian game maker Magnetic Realms with art, cutscenes, and music provided by
+  legends of the 8 and 16-bit eras from Japan. It draws its thematic influence
+  from the science-fiction films and anime of the 80's and its gameplay from
+  classic Amiga and Commodore 64 action-adventures.
+release: 2015-10-25
+players: 1
+assets.boxfront: BoxFront/Exile's End (USA).jpg
+assets.boxback: BoxBack/Exile's End (USA).jpg
+assets.background: Background/Exile's End (USA).jpg
+assets.screenshot: Screenshot/Exile's End (USA).jpg
+x-co-op: Yes
+
+
+game: Exist Archive - The Other Side of the Sky (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Exist Archive - The Other Side of the Sky (USA)/Exist Archive - The Other Side of the Sky (USA).json
+developer: Spike Chunsoft Co., Ltd.
+publisher: Aksys Games Localization, Inc.
+genre: Role-Playing
+description:
+  An RPG in which the lead character Kanata and others have passed away, and are
+  sent to Protolexa after their death, for reasons unbeknownst to them.
+  .
+  In this traditional side-scrolling JRPG, you must battle enemies and the armies
+  of Chasseur as you search for your other teammates and complete quests and side
+  events.
+release: 2015-12-17
+players: 1
+assets.boxfront: BoxFront/Exist Archive - The Other Side of the Sky (USA).jpg
+assets.boxback: BoxBack/Exist Archive - The Other Side of the Sky (USA).jpg
+assets.background: Background/Exist Archive - The Other Side of the Sky (USA).jpg
+assets.screenshot: Screenshot/Exist Archive - The Other Side of the Sky (USA).jpg
+x-co-op: No
+
+
+game: Factotum 90 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Factotum 90 (USA)/Factotum 90 (USA).json
+developer: TACS Games
+publisher: Poppy Works
+genre: Action
+description:
+  You’re in deep space and something’s collided with the ship. Main power is
+  offline and you’re trapped. It’s lucky you have access to this walker control
+  terminal. It’s a little old but with these two robots and some clever thinking
+  you might be able to get power back online and save the day.
+  .
+  Control two walker robots and puzzle your way through 30 levels to restore
+  power, reactivate the life support and solve the mystery of the collision. An
+  unknown voice on the other end of the terminal is your only guide.
+  .
+  –message begins–
+  .
+  Thank you for choosing the F90 Walker Control Terminal. We hope you will find
+  that the installation and operation of this system easy and satisfying. A
+  correctly installed F90 Walker Control Terminal should remain operational for
+  more than 600 standard years even in conditions of critical system or power
+  failure. Please enjoy the enhanced productivity and peace of mind provided by
+  your new F90 Walker Control Terminal.
+  .
+  The F90 Walker Control Terminal includes the following features:
+  .
+  Dual Mode Interactive Control\n
+  D-Class Magnetic Tether for object manipulation\n
+  Energy Beam Relay ports in the underside and the head assembly\n
+  CES Auto Reset functionality\n
+  Terminal Buffer for quick recall\n
+  Scan Code Relay Node and 48TB code storage
+  .
+  Should you have any questions regarding your installation please use your deep
+  space broadcast frequencies and contact our customer services department today.
+  .
+  –message ends–
+release: 2017-09-19
+players: 1
+assets.boxfront: BoxFront/Factotum 90 (USA).jpg
+assets.boxback: BoxBack/Factotum 90 (USA).jpg
+assets.background: Background/Factotum 90 (USA).jpg
+assets.screenshot: Screenshot/Factotum 90 (USA).jpg
+x-co-op: No
+
+
+game: Fernz Gate (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Fernz Gate (USA)/Fernz Gate (USA).json
+developer: EXE-CREATE
+publisher: Kemco
+genre: Role-Playing
+description:
+  ―Finding oneself in an unknown world―\n
+  After awaking in some unfamiliar woods, Alex, an ordinary high schooler living
+  an ordinary life, learns he has somehow ended up in Fernland, a world where
+  peace and order have been replaced by conflict and destruction.\n
+  Fighting to defend himself from monsters, the ever-ominous threat of the
+  Overlord, and one chaotic event after another as he tries to find his own place
+  in this new world, Alex comes across a young woman by the name of Lita from a
+  peaceful world like his own.\n
+  Hitting it off, they soon become friends and set out together, but what hidden
+  truth awaits them as their adventure begins to unfold...?
+  .
+  .
+  Features\n
+  - Join forces with buddies and fight! You may even encounter some familiar
+  faces!\n
+  - Take advantage of the Secret House and dispatch buddies to collect items or
+  place them on stands to gain special-effects!\n
+  - Plant seeds to grow parameter-increasing fruit.\n
+  - Easy-to-use controls on classic turn-based battles!\n
+  - Upgrade and customize weapons!\n
+  - A variety of sub quests, monster guide to complete and much, much more!
+release: 2018-08-28
+players: 1
+assets.boxfront: BoxFront/Fernz Gate (USA).jpg
+assets.boxback: BoxBack/Fernz Gate (USA).jpg
+assets.background: Background/Fernz Gate (USA).jpg
+assets.screenshot: Screenshot/Fernz Gate (USA).jpg
+x-co-op: No
+
+
+game: Forma.8 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Forma.8 (USA)/Forma.8 (USA).json
+developer: MixedBag
+publisher: MixedBag
+genre: Adventure
+description:
+  forma.8 is a unique take on the proven Metroidvania action-adventure formula,
+  with a striking visual style and a huge world to explore.
+  .
+  As the small exploration probe forma.8 you're stranded alone on the surface of
+  an alien planet. Separated from your companions by accident you have a life or
+  death mission to accomplish: find and recover a lost, powerful energy source
+  before it's too late. Ancient civilisations, great perils and dystopian visions
+  await you. And not everything is what it seems...
+release: 2017-02-28
+players: 1
+assets.boxfront: BoxFront/Forma.8 (USA).jpg
+assets.boxback: BoxBack/Forma.8 (USA).jpg
+assets.background: Background/Forma.8 (USA).jpg
+assets.screenshot: Screenshot/Forma.8 (USA).jpg
+x-co-op: Yes
+
+
+game: Freedom Wars (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Freedom Wars (USA)/Freedom Wars (USA).json
+developer: Dimps
+publisher: Sony Computer Entertainment
+genre: Action;Role-Playing
+description:
+  Fight Your Way To Freedom! In the not-too-distant future, atmospheric pollution
+  has devastated the earth and resources have become scarce. Harsh new penal
+  communities have formed in order to survive... The communities, known as
+  Panopticons, battle to secure what precious few resources remain.
+  .
+  Born into incarceration, you are forced to fight for your freedom in dangerous
+  missions. Work together with up to 4-player co-op in a frenetic blend of action
+  and strategy as you fight to rescue civilians in possession of valuable rival
+  Panopticon knowledge. Complete your missions, reduce your sentence, earn your
+  freedom.
+release: 2014-06-26
+players: 4
+assets.boxfront: BoxFront/Freedom Wars (USA).jpg
+assets.boxback: BoxBack/Freedom Wars (USA).jpg
+assets.background: Background/Freedom Wars (USA).jpg
+assets.screenshot: Screenshot/Freedom Wars (USA).jpg
+x-co-op: Yes
+
+
+game: Guacamelee! (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Guacamelee! (USA)/Guacamelee! (USA).json
+developer: Drinkbox Studios
+publisher: Drinkbox Studios
+genre: Action;Platform
+description:
+  Drinkbox Studios (developers of Mutant Blobs Attack) bring this non-linear
+  platformer and action game to Sony's Playstation Vita and Playstation Network
+  download service exclusively.
+  .
+  Guacamelee! is a Metroid-vania style action-platformer set in a magical Mexican
+  inspired world.
+  .
+  The game draws its inspiration from traditional Mexican culture and folklore,
+  and features many interesting and unique characters. Guacamelee builds upon the
+  classic open-world Metroid-vania style of games, by adding a strong melee combat
+  component, a new dimension switching mechanic, and cooperative same-screen
+  multiplayer for the entire story. The game also blurs the boundaries between
+  combat and platforming by making many of the moves useful and necessary for both
+  of these.
+  .
+  The game features a down on his luck Mexican named Juan Aguacate, who sets out
+  to save the world when El Presidente’s Daughter is kidnapped by an Evil Charro
+  Skeleton. The story takes place in and around a small village in Mexico, and has
+  the player travelling through alternate dimensions: “The World of the Living”
+  and “The World of the Dead” on his quest to rescue the girl he loves.
+release: 2013-04-09
+players: 2
+assets.boxfront: BoxFront/Guacamelee! (USA).jpg
+assets.boxback: BoxBack/Guacamelee! (USA).jpg
+assets.background: Background/Guacamelee! (USA).jpg
+assets.screenshot: Screenshot/Guacamelee! (USA).jpg
+x-co-op: Yes
+
+
+game: Gunhouse (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Gunhouse (USA)/Gunhouse (USA).json
+developer: Necrosoft Games
+publisher: Necrosoft Games
+genre: Puzzle;Strategy
+description:
+  Load your guns! Rain death from above! Protect your valuable orphans! Defeat
+  giant, improbable bosses! Gunhouse is part puzzle, part active tower defense, as
+  you make big combos to launch a hail of bullets and special attacks at the
+  enemies who would like nothing better than to consume your delicious orphan
+  friends. With a unique art style, music by Fez composer Disasterpeace, code by
+  that Frog Fractions guy, and design by some jerk named Brandon Sheffield,
+  Gunhouse is a cute, endless game that will chill you out and rile you up!
+release: 2017-12-19
+players: 1
+assets.boxfront: BoxFront/Gunhouse (USA).jpg
+assets.boxback: BoxBack/Gunhouse (USA).jpg
+assets.background: Background/Gunhouse (USA).jpg
+assets.screenshot: Screenshot/Gunhouse (USA).jpg
+x-co-op: No
+
+
+game: Home - A Unique Horror Adventure (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Home - A Unique Horror Adventure (USA)/Home - A Unique Horror Adventure (USA).json
+developer: Benjamin Rivers
+publisher: Benjamin Rivers
+genre: Adventure
+description:
+  A man wakes up with a headache in a strange house with just a flashlight at his
+  feet. He is missing most of his belongings and he remembers little of what
+  happened. But he has a feeling he should be going home, quickly.
+  .
+  Home is a short psychological horror story played with a 2D side-scrolling view.
+  While there are a few puzzles, the game is mostly about getting information and
+  piecing together the story yourself. The character carries a flashlight and can
+  be moved left or right. It is also possible to shine the flashlight upward. All
+  interaction is done using one more key/button. This is usually provides a text
+  description and sometimes a choice is offered through 'Yes/No' to interact with
+  an item or the environment.
+release: 2014-11-04
+players: 1
+assets.boxfront: BoxFront/Home - A Unique Horror Adventure (USA).jpg
+assets.boxback: BoxBack/Home - A Unique Horror Adventure (USA).jpg
+assets.background: Background/Home - A Unique Horror Adventure (USA).jpg
+assets.screenshot: Screenshot/Home - A Unique Horror Adventure (USA).jpg
+x-co-op: No
+
+
+game: House in Fata Morgana, The (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/House in Fata Morgana, The (USA)/House in Fata Morgana, The (USA).json
+developer: Novectacle
+publisher: Limited Run Games
+genre: Visual Novel
+description:
+  ou awaken in a decrepit old mansion.
+  .
+  A woman with eyes of jade stands before You, informing You that You are the
+  Master of the house, and she Your Maid. However, You have no memories, no
+  concept of self—or, indeed, any certainty that You are even alive.
+  .
+  The Maid invites You to join her on a journey through the mansion's lifeless
+  halls, to behold the numerous tragedies that have befallen its residents. She
+  suggests that among them, perhaps You will find some trace of Yourself.
+  .
+  Beyond the first door lies the year 1603.\n
+  It is an era of unparalleled beauty, where art and theatre flourish. Roses bloom
+  abundantly in the garden where the inseparable Rhodes siblings play, and though
+  they appear to be free of worry and strife... not everyone is content to see
+  them happy.
+  .
+  Beyond the second door lies the year 1707.\n
+  In this era, the mansion lies in ruins, and a beast dwells within. He claims to
+  yearn for a life of serenity, but it is not long before he yields to his innate
+  savagery and a massacre ensues.
+  .
+  Beyond the third door lies the year 1869.\n
+  In this technologically advanced era, people are always on the move. The
+  mansion's master is an ambitious businessman who has invested in the rail
+  industry. However, his obsession with wealth and power leads him to neglect and
+  mistreat his wife.
+  .
+  Beyond the fourth door lies the year 1099.\n
+  The Maid tells You that this is the final tale. In this era, You see a young man
+  who claims to be cursed and a girl with white hair, called Giselle, who has been
+  branded a witch and marked for death.
+  .
+  Having borne witness to these four tragedies, each set in a different time and
+  place, You are now free to choose whether You wish to end Your story here... or
+  press on.
+  .
+  But there are those who would say,
+  .
+  "You were able to bear them because they weren't your tragedies."
+release: 2019-05-28
+players: 1
+assets.boxfront: BoxFront/House in Fata Morgana, The (USA).jpg
+assets.boxback: BoxBack/House in Fata Morgana, The (USA).jpg
+assets.background: Background/House in Fata Morgana, The (USA).jpg
+assets.screenshot: Screenshot/House in Fata Morgana, The (USA).jpg
+x-co-op: No
+
+
+game: Hue (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Hue (USA)/Hue (USA).json
+developer: Fiddlesticks
+publisher: Curve Digital
+genre: Action;Puzzle
+description:
+  Hue is a puzzle game played as a side-scrolling platformer. The player controls
+  the male character Hue who needs to find back his missing mother. She developed
+  a ring called Annular Spectrum which allows perception and alteration of
+  impossible colours, beyond the human spectrum. She was deceived by the
+  traitorous professor Dr. Grey she fell in love with and has now become
+  invisible, as a shade of such as impossible colour. It is up to Hue to restore
+  the ring and bring her back by collecting the many scattered coloured shards.
+  .
+  The game consists of a large, 2D side-scrolling world where different
+  environments are linked together through doors. The game uses a silhouetted art
+  style which is initially monochromatic. Soon Hue discovers his first colour,
+  which is added to a ring-like circle that can be summoned at any moment, as one
+  of many bright colours. Eventually eight colours can be collected: aqua, blue,
+  lime, orange, pink, purple, red and yellow. These are used for the main gameplay
+  mechanic as the player can switch between them on the fly, even in the middle of
+  actions as time is slowed down extensively during the selection. Changing a
+  colour brings it into the environment, colouring almost anything. This mechanic
+  is for instance used to discover hidden doors. Obstacles, barriers and other
+  elements often have a specific colour and when Hue switches colours to match it,
+  it disappears into the environment as if it was never there. The simple mechanic
+  quickly becomes more complex due to moving elements, the ability to push and
+  pull objects, platform-based puzzles, fast sequences and so on. While Hue can
+  jump and there are some general elements such as ladders or deadly spikes,
+  almost every area needs to be approached as a puzzle that can be solved without
+  time pressure.
+release: 2016-11-29
+players: 1
+assets.boxfront: BoxFront/Hue (USA).jpg
+assets.boxback: BoxBack/Hue (USA).jpg
+assets.background: Background/Hue (USA).jpg
+assets.screenshot: Screenshot/Hue (USA).jpg
+x-co-op: No
+
+
+game: LEGO Batman 2 - DC Super Heroes (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Batman 2 - DC Super Heroes (USA)/LEGO Batman 2 - DC Super Heroes (USA).json
+developer: Traveller's Tales Ltd.
+publisher: WB Games
+genre: Action;Adventure
+description:
+  LEGO Batman 2: DC Super Heroes is an Action-Adventure game set within the Batman
+  universe, and filled with LEGO versions of heroes and villains from the Batman
+  comic series, working together/against those from the Justice League comic
+  series.
+release: 2012-06-19
+players: 2
+assets.boxfront: BoxFront/LEGO Batman 2 - DC Super Heroes (USA).jpg
+assets.boxback: BoxBack/LEGO Batman 2 - DC Super Heroes (USA).jpg
+assets.background: Background/LEGO Batman 2 - DC Super Heroes (USA).jpg
+assets.screenshot: Screenshot/LEGO Batman 2 - DC Super Heroes (USA).jpg
+x-co-op: Yes
+
+
+game: LEGO Batman 3 - Beyond Gotham (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Batman 3 - Beyond Gotham (USA)/LEGO Batman 3 - Beyond Gotham (USA).json
+developer: Irem
+publisher: Irem
+genre: Action
+description:
+  The best-selling LEGO Batman videogame franchise returns in an
+  out-of-this-world, action-packed adventure! In LEGO Batman 3: Beyond Gotham, the
+  Caped Crusader joins forces with the super heroes of the DC Comics universe and
+  blasts off to outer space to stop the evil Brainiac from destroying Earth. Using
+  the power of the Lantern Rings, Brainiac shrinks worlds to add to his twisted
+  collection of miniature cities from across the universe. Now the greatest super
+  heroes and the most cunning villains must unite and journey to different Lantern
+  Worlds to collect the Lantern Rings and stop Brainiac before it's too late.
+release: 2014-11-11
+players: 1
+assets.boxfront: BoxFront/LEGO Batman 3 - Beyond Gotham (USA).jpg
+assets.boxback: BoxBack/LEGO Batman 3 - Beyond Gotham (USA).jpg
+assets.background: Background/LEGO Batman 3 - Beyond Gotham (USA).jpg
+assets.screenshot: Screenshot/LEGO Batman 3 - Beyond Gotham (USA).jpg
+x-co-op: No
+
+
+game: LEGO Jurassic World (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Jurassic World (USA)/LEGO Jurassic World (USA).json
+developer: Warner Home Video Games
+publisher: Warner Home Video Games
+genre: Action;Adventure
+description:
+  Following the epic storylines of Jurassic Park, The Lost World: Jurassic Park
+  and Jurassic Park III, as well as the highly anticipated Jurassic World, LEGO
+  Jurassic World is the first videogame where players will be able to relive and
+  experience all four Jurassic films. Reimagined in LEGO form and told in TT
+  Games' signature classic LEGO humor, the thrilling adventure recreates
+  unforgettable scenes and action sequences from the films, allowing fans to play
+  through key moments and giving them the opportunity to fully explore the
+  expansive grounds of Isla Nublar and Isla Sorna.
+release: 2015-06-30
+players: 2
+assets.boxfront: BoxFront/LEGO Jurassic World (USA).jpg
+assets.boxback: BoxBack/LEGO Jurassic World (USA).jpg
+assets.background: Background/LEGO Jurassic World (USA).jpg
+assets.screenshot: Screenshot/LEGO Jurassic World (USA).jpg
+x-co-op: Yes
+
+
+game: LEGO Marvel Super Heroes - Universe in Peril (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Marvel Super Heroes - Universe in Peril (USA)/LEGO Marvel Super Heroes - Universe in Peril (USA).json
+developer: Psikyo
+publisher: Psikyo
+genre: Action;Adventure
+description:
+  When the villainous Doctor Doom and Loki attacked the space-faring Silver
+  Surfer, his board's shattered remains rained down upon an unsuspecting Earth.
+  Now the race is on to recover the powerful Cosmic Bricks that once comprised the
+  board as Nick Fury gathers the Earth's mightiest heroes to recover them - all
+  before Loki, Doctor Doom and their cabal of villains can assemble their Super
+  Weapon and take over the world. Meanwhile, Silver Surfer's master, the
+  planet-eating Galactus, comes in search of his Herald and his next meal...
+  Earth.
+release: 2013-10-22
+players: 1
+assets.boxfront: BoxFront/LEGO Marvel Super Heroes - Universe in Peril (USA).jpg
+assets.boxback: BoxBack/LEGO Marvel Super Heroes - Universe in Peril (USA).jpg
+assets.background: Background/LEGO Marvel Super Heroes - Universe in Peril (USA).jpg
+assets.screenshot: Screenshot/LEGO Marvel Super Heroes - Universe in Peril (USA).jpg
+x-co-op: No
+
+
+game: LEGO Marvel's Avengers (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Marvel's Avengers (USA)/LEGO Marvel's Avengers (USA).json
+developer: TT Games
+publisher: Warner Bros. Interactive Entertainment
+genre: Action;Adventure
+description:
+  Avengers Assemble! Experience the first console videogame featuring characters
+  and storylines from the blockbuster film Marvel’s The Avengers and the much
+  anticipated sequel Marvel’s Avengers: Age of Ultron, and more. Play as the most
+  powerful Super Heroes in their quest to save humanity.
+release: 2016-01-26
+players: 2
+assets.boxfront: BoxFront/LEGO Marvel's Avengers (USA).jpg
+assets.boxback: BoxBack/LEGO Marvel's Avengers (USA).jpg
+assets.background: Background/LEGO Marvel's Avengers (USA).jpg
+assets.screenshot: Screenshot/LEGO Marvel's Avengers (USA).jpg
+x-co-op: Yes
+
+
+game: LEGO Movie Videogame, The (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Movie Videogame, The (USA)/LEGO Movie Videogame, The (USA).json
+developer: TT Fusion
+publisher: Warner Bros Interactive
+genre: Action;Adventure
+description:
+  In a scenario drawn from the film, The LEGO Movie Videogame puts LEGO kids into
+  the role of Emmet, an ordinary, rules-following, perfectly average LEGO
+  minifigure who is mistakenly identified as the most extraordinary person and the
+  key to saving the world. Players guide him as he is drafted into a fellowship of
+  strangers on an epic quest to stop an evil tyrant, a journey for which Emmet is
+  hopelessly and hilariously underprepared.
+release: 2014-02-07
+players: 2
+assets.boxfront: BoxFront/LEGO Movie Videogame, The (USA).jpg
+assets.boxback: BoxBack/LEGO Movie Videogame, The (USA).jpg
+assets.background: Background/LEGO Movie Videogame, The (USA).jpg
+assets.screenshot: Screenshot/LEGO Movie Videogame, The (USA).jpg
+x-co-op: Yes
+
+
+game: LEGO Ninjago - Shadow of Ronin (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Ninjago - Shadow of Ronin (USA)/LEGO Ninjago - Shadow of Ronin (USA).json
+developer: Travellers Tales (UK) Ltd.
+publisher: Warner Bros. Interactive Entertainment Inc.
+genre: Action;Adventure
+description:
+  LEGO Ninjago: Shadow of Ronin is the most advanced video game based on LEGO
+  Ninjago franchise, using engine known from LEGO Jurassic World. The story
+  involves the adventures, characters and locations introduced in the first five
+  seasons of the series. Sensei Wu Crew meets a new threat: Ronin, who erased the
+  ninjas memories with obsidian glave and is seeking for the primal folcrum to
+  bring back Chen from the cursed realm. In order to restore their memories,
+  ninjas have to find elemental obsidian weapons and then stop Ronin from
+  fulfilling his quest.
+  .
+  The game is expanding with each progress, allowing to open new locations,
+  characters and bonus content. Each level is played with a certain adjusted group
+  of characters. Some of the environment based puzzles require switching between
+  characters to use specific abilities or elementals. Unlocked locations appear on
+  the Ninjago tactical map. Reaching the specific location requires traveling on a
+  dragon. The action includes fighting, climbing up walls and chains, jumping,
+  interacting with technology panels, destroying and assembling new objects out of
+  the bricks objects, using bikes, sliders, jets, robots, dragons and much more.
+  .
+  There are 113 playable characters to unlock, each with specific abilities.
+  Unlocking the character requires reaching a specific place or fulfilling a quest
+  and buying him in the store with a gathered sum of bricks. The game features 10
+  extras, 34 achievements and 10 unique locations, well known from the cartoon
+  series.
+release: 2015-03-24
+players: 1
+assets.boxfront: BoxFront/LEGO Ninjago - Shadow of Ronin (USA).jpg
+assets.boxback: BoxBack/LEGO Ninjago - Shadow of Ronin (USA).jpg
+assets.background: Background/LEGO Ninjago - Shadow of Ronin (USA).jpg
+assets.screenshot: Screenshot/LEGO Ninjago - Shadow of Ronin (USA).jpg
+x-co-op: No
+
+
+game: LEGO Star Wars - The Force Awakens (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LEGO Star Wars - The Force Awakens (USA)/LEGO Star Wars - The Force Awakens (USA).json
+developer: TT Fusion
+publisher: Warner Bros Interactive Entertainment
+genre: Action;Adventure
+description:
+  LEGO Star Wars: The Force Awakens marks the triumphant return of the No. 1 LEGO
+  videogame franchise and immerses fans in the new Star Wars adventure like never
+  before. Players can relive the epic action from the blockbuster film in a way
+  that only LEGO can offer, featuring all of the storylines from Star Wars: The
+  Force Awakens, retold through the clever and witty LEGO lens. The game will also
+  feature exclusive playable content that takes players on adventures between Star
+  Wars: Episode VI: Return of the Jedi and Star Wars: The Force Awakens, providing
+  additional insight about the new movie and its characters.
+release: 2016-06-28
+players: 1
+assets.boxfront: BoxFront/LEGO Star Wars - The Force Awakens (USA).jpg
+assets.boxback: BoxBack/LEGO Star Wars - The Force Awakens (USA).jpg
+assets.background: Background/LEGO Star Wars - The Force Awakens (USA).jpg
+assets.screenshot: Screenshot/LEGO Star Wars - The Force Awakens (USA).jpg
+x-co-op: No
+
+
+game: La-Mulana EX (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/La-Mulana EX (USA)/La-Mulana EX (USA).json
+developer: NIGORO
+publisher: Rising Star Games Inc.
+genre: Action;Platform
+description:
+  La-Mulana is a remake of the original La-Mulana released in 2005. It is an
+  explorable platformer / metroidvania, or, as described by the authors
+  "Archaeological Ruin Exploration Action Game" with hardcore difficulty of
+  platforming action and puzzles. The vast world of the original game was rebuilt
+  from the ground up with various tweaks made to the gameplay and presentation:\n
+  Visually the game now resembles 32-bit 2D games of PlayStation and Sega Saturn
+  era;\n
+  The soundtrack was rearranged with different instruments in tone with the new
+  presentation;\n
+  Many puzzles were altered to be more accessible and some were removed all
+  together, while the difficulty of the actual gameplay was generally increased;\n
+  The location of many items was modified; new rooms, enemies and items were
+  added;\n
+  New sub-bosses were added; many of earlier sub-bosses and all the Guardian
+  bosses were significantly modified (both in terms of presentation and behaviour
+  patterns);\n
+  In-game software system was tweaked, all references to classic MSX games were
+  removed);\n
+  Many control issues and minor gameplay elements were corrected based on players'
+  feedback.\n
+  This remake was first released on Nintendo's WiiWare service. Due to the
+  file-size limitations it didn't include the optional content - Hell Temple area
+  and Time Attack mode, which were later available as additional download in
+  Japan. The later PC port includes this content within the base game. The PS Vita
+  version, called La-Mulana EX, features further improvements to the gameplay as
+  well as new bestiary and rearrangement of several item placements.
+release: 2015-03-03
+players: 1
+assets.boxfront: BoxFront/La-Mulana EX (USA).jpg
+assets.boxback: BoxBack/La-Mulana EX (USA).jpg
+assets.background: Background/La-Mulana EX (USA).jpg
+assets.screenshot: Screenshot/La-Mulana EX (USA).jpg
+x-co-op: No
+
+
+game: LittleBigPlanet PS Vita (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/LittleBigPlanet PS Vita (USA)/LittleBigPlanet PS Vita (USA).json
+developer: Double Eleven
+publisher: Sony Computer Entertainment
+genre: Platform
+description:
+  The core mechanics of the series revolve around its tagline "Play, Create,
+  Share".\n
+  The Play component involves players taking control of Sackboy and navigating him
+  through various levels. In the first two instalments of the series, gameplay
+  consisted primarily of traditional platforming like jumping and avoiding
+  obstacles to successfully navigate to the end of a level to win. Since
+  LittleBigPlanet 2, gameplay has expanded to being a "platform for games" with
+  the introduction of numerous mini-games and other genres into the game
+  diversifying the game from being strictly a traditional platforming game. Most
+  LittleBigPlanet games involve a player playing solo or co-operatively with
+  friends to navigate through a level whilst collecting various "prize bubbles"
+  along the way. These prize bubbles come in two types, small ones which
+  constitute points and larger ones that contain new costumes, stickers or other
+  type of collectibles that can be used to customise Sackboy or in level creation.
+  There are also numerous co-operative parts of levels whereby certain prize
+  bubbles can only be collected with the help of at least one player or more
+  depending on the number of players stated in the level.
+release: 2012-09-19
+players: 4
+assets.boxfront: BoxFront/LittleBigPlanet PS Vita (USA).jpg
+assets.boxback: BoxBack/LittleBigPlanet PS Vita (USA).jpg
+assets.background: Background/LittleBigPlanet PS Vita (USA).jpg
+assets.screenshot: Screenshot/LittleBigPlanet PS Vita (USA).jpg
+x-co-op: Yes
+
+
+game: London Detective Mysteria (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/London Detective Mysteria (USA)/London Detective Mysteria (USA).json
+developer: Karin Entertainment
+publisher: Marvelous USA
+genre: Adventure
+description:
+  Her Majesty's birthday was to be the heiress of House Whiteley’s debut into high
+  society, but an inquiring mind begs for more than parties as she stumbles into
+  the many curiosities that lay hidden in London’s darkest corners. Help sharpen
+  her instincts as a detective, take control of her present to uncover her past,
+  and form an unbreakable bond with one of many dashing personalities from
+  well-known works of fiction.
+  .
+  - Find love with personalities inspired by famous figures and works of fiction,
+  including Detective Holmes, Gentleman Thief Lupin, Jack the Ripper, and more.
+  .
+  - Decisions made throughout will net not only special rewards, but will shape
+  whether love is in Lady Whiteley’s future or if fate has more unfortunate
+  consequences in mind.
+release: 2018-09-25
+players: 1
+assets.boxfront: BoxFront/London Detective Mysteria (USA).jpg
+assets.boxback: BoxBack/London Detective Mysteria (USA).jpg
+assets.background: Background/London Detective Mysteria (USA).jpg
+assets.screenshot: Screenshot/London Detective Mysteria (USA).jpg
+x-co-op: No
+
+
+game: Lone Survivor - The Director's Cut (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Lone Survivor - The Director's Cut (USA)/Lone Survivor - The Director's Cut (USA).json
+developer: superflat games
+publisher: Curve Studios
+genre: Action;Adventure
+description:
+  Lone Survivor: The Director's Cut is a new kind of adventure where the choice of
+  how to survive is up to you. Sneak through without firing a single shot, or kill
+  everything in your path. Eat and sleep well, or resort to drugs to keep going.
+  Search for survivors, or try to escape the city alone. Look after your mental
+  health, or descend into madness. Lone Survivor is a game where your choices
+  genuinely matter.
+  .
+  This extended edition of Jasper Byrne's horror masterpiece expands Lone
+  Survivor's deep story with hundreds of tiny new details, more locations, more
+  dialogue, more side quests, more craft-able items, and even two completely new
+  endings. Lone Survivor: The Director's Cut really is the ultimate version of
+  this acclaimed game.\n
+  Purchasing this content entitles you to both the PS3 system and PS Vita system
+  versions!
+release: 2013-09-24
+players: 1
+assets.boxfront: BoxFront/Lone Survivor - The Director's Cut (USA).jpg
+assets.boxback: BoxBack/Lone Survivor - The Director's Cut (USA).jpg
+assets.background: Background/Lone Survivor - The Director's Cut (USA).jpg
+assets.screenshot: Screenshot/Lone Survivor - The Director's Cut (USA).jpg
+x-co-op: No
+
+
+game: Mecho Tales (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Mecho Tales (USA)/Mecho Tales (USA).json
+developer: Arcade Distillery
+publisher: Arcade Distillery
+genre: Action
+description:
+  Mecho Tales is a 2D platformer set in the world of the critically-acclaimed
+  Mecho Wars. Run, jump and shoot through more than twenty challenging stages.
+  With the help of the Robo Buddy combat drone, fight an army of deadly robots
+  (including massive boss enemies) using eight powerful weapons.
+release: 2017-09-19
+players: 1
+assets.boxfront: BoxFront/Mecho Tales (USA).jpg
+assets.boxback: BoxBack/Mecho Tales (USA).jpg
+assets.background: Background/Mecho Tales (USA).jpg
+assets.screenshot: Screenshot/Mecho Tales (USA).jpg
+x-co-op: No
+
+
+game: Murasma Rebirth (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Murasma Rebirth (USA)/Murasma Rebirth (USA).json
+developer: Vanillaware
+publisher: Ignition Entertainment
+genre: Role-Playing;Action RPG
+description:
+  In a land of myth and legend, a tale of two souls and 108 deadly blades begins.
+  Muramasa Rebirth, the follow-up to Murasama: The Demon Blade, comes vividly to
+  life on the PlayStation Vita handheld entertainment system with redesigned high-
+  res graphics, enhanced controls, and available downloadable scenarios.
+  .
+  .
+  Journey east as the amnesiac ninja Kisuke in search of the legendary demon
+  blades. Or travel west as Momohime, a princess possessed by a vengeful spirit,
+  as you hunt for the same weapons. With 108 powerful blades, each with a special
+  deadly attack, fend off enemies big and small in this exciting action-RPG
+  specially redesigned for the PS Vita.
+release: 2009-04-09
+players: 1
+assets.boxfront: BoxFront/Murasma Rebirth (USA).jpg
+assets.boxback: BoxBack/Murasma Rebirth (USA).jpg
+assets.background: Background/Murasma Rebirth (USA).jpg
+assets.screenshot: Screenshot/Murasma Rebirth (USA).jpg
+x-co-op: No
+
+
+game: Musynx (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Musynx (USA)/Musynx (USA).json
+developer: I-Inferno
+publisher: PM Studios
+genre: Music
+description:
+  Brand new independent rhythm game - MUSYNX now on iPhone!
+  .
+  -Now include 130 songs in game
+  .
+  -High quality graphics using each pixel of the retina screen to create beautiful
+  game images !
+  .
+  -No matter your screen size or finger thickness, we guarantee you an enjoyable
+  gaming experience!
+  .
+  -With professional sound processing and high quality audio, MUSYNX will bring
+  you the ultimate audio experience.
+  .
+  -Let melodious sounds flow from your fingertips with every single touch.
+  Experience the fun of playing real sounds and tunes!
+  .
+  -Our classic game design allows you to identify each dropping note at the
+  highest speed. Play to the tunes of popular songs and stars such as M2U!
+release: 2018-06-21
+players: 1
+assets.boxfront: BoxFront/Musynx (USA).jpg
+assets.boxback: BoxBack/Musynx (USA).jpg
+assets.background: Background/Musynx (USA).jpg
+assets.screenshot: Screenshot/Musynx (USA).jpg
+x-co-op: No
+
+
+game: Mystery Chronicle - One Way Heroics (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Mystery Chronicle - One Way Heroics (USA)/Mystery Chronicle - One Way Heroics (USA).json
+developer: Spike ChunSoft
+publisher: Spike Chunsoft
+genre: Role-Playing
+description:
+  Forget about saving the king, forget about saving the townsfolk, a true hero is
+  one who saves the day!\n
+  Once you begin Mystery Chronicle: One Way Heroics, there is no turning back.
+  .
+  Mystery Chronicle overhauls the gameplay and graphics of the highly acclaimed
+  indie title One Way Heroics. As well as adding in some well-loved characters
+  from other IPs such as Danganronpa and Shiren the Wanderer.
+  .
+  Play your way through the different maps generated with every playthrough,
+  constantly on the move away from the calamity of light, the Shine Raid, to your
+  left and on to your final battle with the Fallen Angel, Alma. There's no turning
+  back, once this thrilling one-way adventure begins!
+release: 2016-09-13
+players: 1
+assets.boxfront: BoxFront/Mystery Chronicle - One Way Heroics (USA).jpg
+assets.boxback: BoxBack/Mystery Chronicle - One Way Heroics (USA).jpg
+assets.background: Background/Mystery Chronicle - One Way Heroics (USA).jpg
+assets.screenshot: Screenshot/Mystery Chronicle - One Way Heroics (USA).jpg
+x-co-op: No
+
+
+game: NOVA-111 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/NOVA-111 (USA)/NOVA-111 (USA).json
+developer: Funktronic Labs
+publisher: Curve Digital
+genre: Action;Strategy
+description:
+  Nowa-111 is a sci-fi themed turn-based game set in alien worlds. The main
+  mission is to restore the flow of time by searching out the scientists lost in
+  the aftermath of the Universe's Greatest Science Experiment. The game is divided
+  into sectors, each with a few individual missions. Each mission requires finding
+  all the scientists and reaching the extraction point by navigating "Nova"
+  spaceship. The labyrinth is inhabited by various enemy forms of life, including
+  mutated astrobiological creatures and robots.
+  .
+  Additionally, numerous obstacles may be encountered, for example, falling
+  stalactites or one way wind tunnels. The duel uses a turn-based system, where
+  the player may move, perform or avoid attacks. The board view uses a fog of war
+  system, showing only the closest area. The game expands with each level,
+  allowing to use new weapons, extras and abilities.
+  .
+  As for the story, once upon a spacetime, there existed a team of 111 brilliant
+  scientists, who lived together in a simple turn-based world. They were
+  interested in expediting their scientific research, and thus began developing
+  the Universe's "Greatest Science Experiment" which was theorized to unlock
+  "real-time". All was fine until the science experiment resulted in a cosmic
+  real-time/turn-based vortex that mashed the two unlikely worlds together.
+release: 2015-09-01
+players: 1
+assets.boxfront: BoxFront/NOVA-111 (USA).jpg
+assets.boxback: BoxBack/NOVA-111 (USA).jpg
+assets.background: Background/NOVA-111 (USA).jpg
+assets.screenshot: Screenshot/NOVA-111 (USA).jpg
+x-co-op: No
+
+
+game: NeuroVoider (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/NeuroVoider (USA)/NeuroVoider (USA).json
+developer: Flying Oak Games
+publisher: Plug In Digital
+genre: Action
+description:
+  NeuroVoider* is a twin-stick shooter RPG set in a cyber futuristic world about
+  brains shooting around evil robots with nuclear rocket launchers. Battle through
+  the horde of vigilant robots, boost your character with the smoking remains of
+  your victims, and defeat the master NeuroVoider to end this eternal war. Play it
+  coop with up to 4 friends, or go alone in an adventure of hack'n'slash rampage,
+  with a pinch of rogue-lite, and some permadeath.
+  .
+  * may contain explosions.
+release: 2018-03-20
+players: 4
+assets.boxfront: BoxFront/NeuroVoider (USA).jpg
+assets.boxback: BoxBack/NeuroVoider (USA).jpg
+assets.background: Background/NeuroVoider (USA).jpg
+assets.screenshot: Screenshot/NeuroVoider (USA).jpg
+x-co-op: Yes
+
+
+game: Oceanhorn - Monster of Uncharted Seas (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Oceanhorn - Monster of Uncharted Seas (USA)/Oceanhorn - Monster of Uncharted Seas (USA).json
+developer: Cornfox & Brothers
+publisher: FDG Entertainment
+genre: Action;Adventure
+description:
+  In this Zelda inspired action adventure game, the protagonist (a boy) looks for
+  his father, who went hunting for the legendary monster Oceanhorn. The boy must
+  discover and travel through the many islands of the Uncharted Seas, looking for
+  many tools and magic seals who will allow him to access new places and defeat
+  new bosses.
+  .
+  Much of the game is about fighting monsters (with sword and shield or a few
+  spells) and solving puzzles (pushing switches and moving blocks and statues to
+  open gates and paths, or even blowing up secret walls) in 3D isometric view.
+  There is also a 3rd person view mini-game when sailing between islands, where
+  you fire a weapon to hit sea mines and sea monsters (to get XP) or to break
+  crates and barrels (to get coins and items).
+release: 2017-05-17
+players: 1
+assets.boxfront: BoxFront/Oceanhorn - Monster of Uncharted Seas (USA).jpg
+assets.boxback: BoxBack/Oceanhorn - Monster of Uncharted Seas (USA).jpg
+assets.background: Background/Oceanhorn - Monster of Uncharted Seas (USA).jpg
+assets.screenshot: Screenshot/Oceanhorn - Monster of Uncharted Seas (USA).jpg
+x-co-op: No
+
+
+game: Octodad - Dadliest Catch (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Octodad - Dadliest Catch (USA)/Octodad - Dadliest Catch (USA).json
+developer: Young Horses
+publisher: Young Horses
+genre: Action
+description:
+  In Octodad: Dadliest Catch, the player takes the role of a loving fiancé and
+  father of two kids. He is also a octopus in a suit who lives unrecognized in the
+  human world. The majority of the time is spent with mundane tasks, e.g.
+  preparing the protagonist's wedding ceremony, but unfortunately one person knows
+  the secret: a crazy chef who is in the mood for sushi...
+  .
+  This is commercial and further developed successor to the freeware game Octodad.
+  While the objectives themselves are not too complicated, e.g. doing the dishes,
+  the challenge comes from the fact that each limb is controlled separately. Of
+  course this makes coordinated movement hard and, along with the deliberately
+  oversensitive physics simulation, results in chaos and slapstick moments.
+  However, making chaos when other people are watching fills up a suspicion meter
+  which eventually causes Octodad to be recognized and leads to a game over.
+  Sometimes there are small stealth sequences in which the protagonist can't be
+  seen at all.
+  .
+  After finishing the campaign, the six levels can be replayed in order to find
+  hidden ties or beating the developers' best time. In co-op mode, each player
+  controls one limb (or two with less than four participants). The level editor is
+  exclusive to the Windows version, but the user levels can also be played on
+  Macintosh and Linux.
+release: 2014-04-22
+players: 1
+assets.boxfront: BoxFront/Octodad - Dadliest Catch (USA).jpg
+assets.boxback: BoxBack/Octodad - Dadliest Catch (USA).jpg
+assets.background: Background/Octodad - Dadliest Catch (USA).jpg
+assets.screenshot: Screenshot/Octodad - Dadliest Catch (USA).jpg
+x-co-op: No
+
+
+game: Operation Abyss - New Tokyo Legacy (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Operation Abyss - New Tokyo Legacy (USA)/Operation Abyss - New Tokyo Legacy (USA).json
+developer: Experience
+publisher: NIS America, Inc.
+genre: Role-Playing
+description:
+  Operation Abyss: New Tokyo Legacy is a sci-fi dungeon crawling RPG that takes
+  place in near-future Tokyo. With the city under the constant threat of Variants
+  - genetically engineered monsters - and the emergence of portals leading to a
+  mysterious dimension called the Abyss, the government has established a secret
+  organization called the Code Physics Agency to investigate these mysterious
+  phenomena. Operating under the guise of a private school called Hinowa Academy,
+  the CPA recruits teenage youths to be part of the "Xion Transhuman (Xth) Squad."
+  The CPA uses their Code technology to provide the Xth Squad with "Blood Codes",
+  special Codes that contain the genomes of history's greatest heroes and bestow
+  the Xth Squad with powerful abilities to combat the Variant menace. Using a team
+  of six people, the player will map dungeons, evade traps, and face powerful
+  monsters as they investigate the mystery behind the Variants and the Abyss.
+release: 2015-06-29
+players: 1
+assets.boxfront: BoxFront/Operation Abyss - New Tokyo Legacy (USA).jpg
+assets.boxback: BoxBack/Operation Abyss - New Tokyo Legacy (USA).jpg
+assets.background: Background/Operation Abyss - New Tokyo Legacy (USA).jpg
+assets.screenshot: Screenshot/Operation Abyss - New Tokyo Legacy (USA).jpg
+x-co-op: No
+
+
+game: Operation Babel - New Tokyo Legacy (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Operation Babel - New Tokyo Legacy (USA)/Operation Babel - New Tokyo Legacy (USA).json
+developer: Experience Inc.
+publisher: NIS America, Inc.
+genre: Role-Playing
+description:
+  Continue the story of Operation Abyss and defend near-future Tokyo from a new
+  threat in this dungeon crawling RPG. When a mysterious object - dubbed the
+  'Embryo' - appears in the sky, the CPA and the Xth Squad are mobilized to face
+  the new threat. Venture into challenging new labyrinths and create the perfect
+  team to challenge each threat.
+release: 2015-04-30
+players: 1
+assets.boxfront: BoxFront/Operation Babel - New Tokyo Legacy (USA).jpg
+assets.boxback: BoxBack/Operation Babel - New Tokyo Legacy (USA).jpg
+assets.background: Background/Operation Babel - New Tokyo Legacy (USA).jpg
+assets.screenshot: Screenshot/Operation Babel - New Tokyo Legacy (USA).jpg
+x-co-op: No
+
+
+game: Organ Trail - Complete Edition (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Organ Trail - Complete Edition (USA)/Organ Trail - Complete Edition (USA).json
+developer: The Men Who Wear Many Hats
+publisher: The Men Who Wear Many Hats
+genre: Action;Role-Playing
+description:
+  Organ Trail: Complete Edition is the first release of the Organ Trail game for
+  the PS4 and the PS Vita. It is a take on the classic game The Oregon Trail,
+  replacing the travels of the American pioneers with a zombie survival theme
+  where a group of people needs to take an armored vehicle across 2,000 miles,
+  fleeing from the ruins of Washington D.C. that has been overrun and will soon be
+  wiped with a nuke. The game maintains the Apple II-style visual design and uses
+  text prompts for choices.
+  .
+  It contains the content of the PC release Organ Trail: Director's Cut, which
+  includes the Endless Expansion released as an in-app purchase for the mobile
+  version and a default part of the PC release. This console release also contains
+  the Final Cut Expansion, which was released simultaneously as a commercial DLC
+  for the PC version.
+release: 2015-10-20
+players: 2
+assets.boxfront: BoxFront/Organ Trail - Complete Edition (USA).jpg
+assets.boxback: BoxBack/Organ Trail - Complete Edition (USA).jpg
+assets.background: Background/Organ Trail - Complete Edition (USA).jpg
+assets.screenshot: Screenshot/Organ Trail - Complete Edition (USA).jpg
+x-co-op: No
+
+
+game: PSYCHO-PASS - Mandatory Happiness (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/PSYCHO-PASS - Mandatory Happiness (USA)/PSYCHO-PASS - Mandatory Happiness (USA).json
+developer: Nitroplus
+publisher: 5pb.
+genre: Visual Novel
+description:
+  In the new future, everyone's mental state and disposition can now be
+  quantified.\n
+  Everything from emotional tendencies to criminal behavior are recorded and
+  utilized as a guideline to lead everyone to the good life: not only pursuing
+  happiness, but attaining it. Needless to say, the public was excited to begin
+  quantifying their everyday lives. The general term for this value, which
+  determines the morality of an individual's heart and soul, is commonly known as
+  the Psycho-Pass.
+  .
+  One component of this value is the Crime Coefficient, which is ultimately a
+  number that represents an individual's potential to commit crime. In order to
+  combat those who attempt to disrupt the status quo, detectives work in tandem to
+  maintain peace and order, composed of Enforcers and Inspectors. The former is
+  tasked with apprehending suspects, while the latter oversees and commands their
+  subordinate colleagues. After all, Enforcers possess high Crime Coefficients.
+  However, because of their criminal nature, they can better understand what makes
+  other criminals tick, allowing them to sniff out suspects and arrest the true
+  perpetrators. But because of their criminal background, Inspectors are needed to
+  provide a calm and sound judgement to each case. Ultimately, all members of the
+  MWPSB have to walk a fine line, maintaining their own mental health while facing
+  the worst that society has to offer.
+  .
+  With justice in their hearts, the detectives of Division 1 tackle each case,
+  confronting humanity's ugly truths.
+  .
+  But, what lies ahead?
+release: 2016-03-24
+players: 1
+assets.boxfront: BoxFront/PSYCHO-PASS - Mandatory Happiness (USA).jpg
+assets.boxback: BoxBack/PSYCHO-PASS - Mandatory Happiness (USA).jpg
+assets.background: Background/PSYCHO-PASS - Mandatory Happiness (USA).jpg
+assets.screenshot: Screenshot/PSYCHO-PASS - Mandatory Happiness (USA).jpg
+x-co-op: No
+
+
+game: Papers, Please (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Papers, Please (USA)/Papers, Please (USA).json
+developer: 3909
+publisher: 3909
+genre: Puzzle
+description:
+  Papers Please is a simulation game based on the life of a immigration inspector
+  charged with checking passports at the border of a fictional communist state,
+  Arztoska. The game is set after the conclusion of a six year war with
+  neighboring Kolechia, the war has moved the combatants boarded and left the city
+  of Greznin split. Kolechia controls the west and Arztoska the east. The game
+  begins with the player being selected for border duty in Arztoska's monthly
+  labor lottery. He (the player character is unnamed) and his family are relocated
+  to the city of Greznin.
+  .
+  Gameplay takes the form of checking the documents of people wishing to cross the
+  border. Initially this is a task of making sure that no documents are expired or
+  that cities and countries where the documents come from are real. However, as
+  events such as the deterioration of relations with neighboring powers and
+  terrorist attacks on the border, take place the D.O.I. (Department of
+  Immigration) require documents to become more complicated. The player will have
+  to juggle checking, crosschecking and rechecking supplemental IDs, work permits,
+  vaccination records, and more. Complications can include anything from simple
+  misspellings to changing heights, or circumstances that require strip searches.
+  .
+  In addition to simply deciding based on the information in the documents the
+  player will be offered bribes, be pleaded with, and be threatened. Moral choice
+  may come to play a role in who the player allows of denies. The player is
+  rewarded for each applicant processed with a bonus on his paycheck at the end of
+  the day. Applicants who are allowed to enter while their documents were not in
+  order, or one sent away when they were clear for entry will result in a warning.
+  The paycheck of the immigration inspector is penalized for every mistake past
+  two in a day.
+  .
+  At the end of the day the immigration inspector returns home and must use his
+  meager salary to cover the expenses, of heat, food, and medicine for his family.
+  Keeping the family alive becomes an important aspect of the game as it will end
+  should all members die. Arztoska requires public servants to have large
+  families, a sign of patriotism.
+  .
+  Many of the characters that the player interacts with are randomly generated,
+  but a number of characters will have specific story arcs. One such arc is that
+  of The Order of the EZIC Star, a group bent on regime change. The Order will
+  send a hooded messenger to give the immigration inspector commands about how to
+  admit their agents into Arztoska or may even ask him to kill.
+  .
+  There are a little over thirty ingame days and twenty endings. The immigration
+  inspector may end up imprisoned, a loyal member of the bureaucracy, murdered,
+  executed and more.
+release: 2017-12-12
+players: 1
+assets.boxfront: BoxFront/Papers, Please (USA).jpg
+assets.boxback: BoxBack/Papers, Please (USA).jpg
+assets.background: Background/Papers, Please (USA).jpg
+assets.screenshot: Screenshot/Papers, Please (USA).jpg
+x-co-op: No
+
+
+game: Persona 4 Golden (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Persona 4 Golden (USA)/Persona 4 Golden (USA).json
+developer: Atlus
+publisher: Atlus
+genre: Adventure;Role-Playing
+description:
+  Loaded with enhancements and overflowing with new content, Persona 4 Golden is
+  far more than just a handheld version of an all-time classic RPG: it’s the best
+  way to experience it yet!
+  .
+  In a quiet town in rural Japan, a normal teenager begins a year-long stay with
+  the unsettling news that there’s been a murder...and soon after, another.
+  Meanwhile, a rumor is going around school that by looking at a TV screen at
+  midnight on a rainy night, the face of your soul mate will be revealed. But is
+  that all? As connections between the murders and the rumors begin to take shape,
+  you and your team of Persona users must enter the mysterious TV world and solve
+  the mystery before more people die.
+release: 2012-11-20
+players: 1
+assets.boxfront: BoxFront/Persona 4 Golden (USA).jpg
+assets.boxback: BoxBack/Persona 4 Golden (USA).jpg
+assets.background: Background/Persona 4 Golden (USA).jpg
+assets.screenshot: Screenshot/Persona 4 Golden (USA).jpg
+x-co-op: No
+
+
+game: Pix the Cat (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Pix the Cat (USA)/Pix the Cat (USA).json
+developer: Liquid Entertainment
+publisher: Ubisoft
+genre: Action;Strategy
+description:
+  Pix the Cat is an intense, fast-paced action game. Perfect your skills to rescue
+  ducklings by the millions from the Grid of Infinity. Increase your Combo Level
+  until you reach Fever Time to score Massive Points! Challenge your friends
+  locally and online ghosts to become the Baddest Cat in town and in the world!
+  Discover various solo and multiplayer game modes throughout your adventure to
+  master the art of Pix the Cat!
+release: 2014-10-08
+players: 1
+assets.boxfront: BoxFront/Pix the Cat (USA).jpg
+assets.boxback: BoxBack/Pix the Cat (USA).jpg
+assets.background: Background/Pix the Cat (USA).jpg
+assets.screenshot: Screenshot/Pix the Cat (USA).jpg
+x-co-op: No
+
+
+game: Plague Road (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Plague Road (USA)/Plague Road (USA).json
+developer: Arcade Distillery
+publisher: Arcade Distillery
+genre: Strategy
+description:
+  Set around a city being consumed from within by a disease, Plague Road tells a
+  story of a lone doctor who once abandoned their home and now returns to learn
+  the fate of those they left behind. Travel from the safe refuge of your farm
+  through a series of regions progressively more affected by the infernal plague.
+  .
+  On the road, rescue survivors and choose whether to use them as traveling
+  companions or to improve the Doctor's farm and gain access to new abilities. How
+  your farm progresses depends upon where you assign survivors to work.
+  .
+  Some survivor types are more valuable in certain jobs, but may be more useful
+  still if kept available for expeditions. Surviving the road will rely on your
+  ability to fight horrors created by the plague, in combat encounters featuring
+  grid-based positioning and turn-based strategy mechanics.
+  .
+  Traverse four regions with procedurally generated stages, featuring richly
+  illustrated 2D art, music from award-winning composer Sean Beeson and narration
+  performed by Jim Sterling.
+release: 2017-06-06
+players: 1
+assets.boxfront: BoxFront/Plague Road (USA).jpg
+assets.boxback: BoxBack/Plague Road (USA).jpg
+assets.background: Background/Plague Road (USA).jpg
+assets.screenshot: Screenshot/Plague Road (USA).jpg
+x-co-op: No
+
+
+game: Proteus (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Proteus (USA)/Proteus (USA).json
+developer: New World Computing
+publisher: Ubisoft
+genre: Adventure;Strategy
+description:
+  Proteus is a minimalist game of pure exploration and sublime discovery in a
+  musical wilderness environment. There are no challenges and no goals other than
+  those set by the player. A reactive audio mixing system allows the player to
+  explore the environment as music.
+release: 2013-10-29
+players: 1
+assets.boxfront: BoxFront/Proteus (USA).jpg
+assets.boxback: BoxBack/Proteus (USA).jpg
+assets.background: Background/Proteus (USA).jpg
+assets.screenshot: Screenshot/Proteus (USA).jpg
+x-co-op: No
+
+
+game: Race the Sun (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Race the Sun (USA)/Race the Sun (USA).json
+developer: Flippfly LLC
+publisher: Flippfly LLC
+genre: Racing
+description:
+  Race the Sun is an endless racer set in an abstract environment. The player
+  controls a solar craft hovering above the surface and it needs to survive as
+  long as possible, racing after the sun that provides the power to move on. The
+  game world is procedurally generated and changes each day. It is divided into
+  regions with a completely different lay-out each day, but with fixed mutators
+  for each region to build a similar difficulty curve for every session.
+  .
+  To survive the craft needs to dodge moving and falling blocks, pillars, shapes
+  and projectiles that appear in quick succession. Acceleration is done
+  automatically and it cannot be slowed down. The craft can be steered left and
+  right endlessly, as there is no border to the game world. The quickest way to
+  gain speed is by picking up yellow boost items, slightly reversing the sun path
+  for a while. Green items provide a jump that can be triggered at any moment,
+  allowing the craft to fly. Purple ones provide a second chance after a crash.
+  Obstacles are not the only concern, as tunnels, clouds or objects blacking out
+  the sun also need to be avoided as they deplete the available energy. The game
+  is over when there is no more sunlight or after a crash. Along the way blue tris
+  can be collected, triangles that add up to a score multiplier. When bumping into
+  an obstacle, not causing a complete collision, some speed is lost and the
+  multiplier is reset. The gameplay is fast-paced and requires good reflexes in
+  the later regions. By steering in a certain direction and quickly switching, a
+  barrel roll can be performed.
+  .
+  The game offers different objectives that can be completed over multiple
+  sessions, such as achieving a certain amount of air time, clearing a region
+  without a single collision, collecting a number of tris, achieving a certain
+  score etc. This allows the craft to level up with a cap at 25. With almost every
+  level some new options become available, such as decals for the ship or
+  attachments. The latter include a magnet that collects nearby pick-ups
+  automatically, a battery to survive longer without energy, storage for multiple
+  jump pick-ups or shields etc. These have an upgraded version as well. It is
+  possible to fit multiple attachments at a certain level and another type of
+  bonus provides a higher multiplier level at the start.
+  .
+  After a while a secondary Apocalypse mode is unlocked, set in a different world
+  with a higher difficulty level and meteorites that cause temporary blindness.
+  The game's editor support the creation and sharing of user made levels through
+  the Steam workshop. These can be downloaded and played separately and some are
+  also accessed in the game's main mode through world portals in the game world,
+  temporarily moving the game into a very different environment before continuing.
+  There are global leaderboards to compare scores.
+  .
+  In February 2015 the unlockable Labyrinthia mode was added. It is an advanced,
+  randomized maze filled with obstacles, switches and moving parts. It largely
+  takes the sun and reflex based movement out of the equation in favour of
+  planning ahead. It uses a more zoomed out view.
+release: 2013-12-10
+players: 1
+assets.boxfront: BoxFront/Race the Sun (USA).jpg
+assets.boxback: BoxBack/Race the Sun (USA).jpg
+assets.background: Background/Race the Sun (USA).jpg
+assets.screenshot: Screenshot/Race the Sun (USA).jpg
+x-co-op: No
+
+
+game: Ragnarok Odyssey (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Ragnarok Odyssey (USA)/Ragnarok Odyssey (USA).json
+developer: Game Arts
+publisher: Xseed Games
+genre: Action;Role-Playing
+description:
+  Ragnarok Odyssey is set in an original world based on Norse mythology where a
+  battle is being waged between humans and giants after the fall of the gods had
+  previously separated the races. Players create their characters from over 20,000
+  possible combinations based on customizable physical features, then select one
+  of six specialized job classes. The game's real-time battles are fast and
+  furious as players can fling enemies skyward, follow them into the air for
+  gravity-defying strikes, then finish off the combo by smacking them clear across
+  the stage. Gameplay is driven forward by story-advancing and optional quests,
+  and up to four players can fight together in online co-op mode.
+release: 2012-10-30
+players: 4
+assets.boxfront: BoxFront/Ragnarok Odyssey (USA).jpg
+assets.boxback: BoxBack/Ragnarok Odyssey (USA).jpg
+assets.background: Background/Ragnarok Odyssey (USA).jpg
+assets.screenshot: Screenshot/Ragnarok Odyssey (USA).jpg
+x-co-op: Yes
+
+
+game: Rainbow Moon (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Rainbow Moon (USA)/Rainbow Moon (USA).json
+developer: SideQuest Studios
+publisher: eastasiasoft
+genre: Role-Playing;Strategy
+description:
+  Rainbow Moon is a Strategy-RPG from the makers of the hit Soldner-X franchise.
+  Cursed by his long-time enemy, Baldren founds himself warped to Rainbow Moon.
+  And to make things worse, Baldren isn't only stranded in an unknown place – he
+  has also opened a dimensional gate, out of which troops of monsters are
+  crawling, turning this once peaceful planet into a real hell.
+  .
+  The residents of Rainbow Moon who have found themselves in this sudden and
+  unpleasant situation react suspiciously and even nastily, which certainly
+  doesn't make things any easier for our brave hero. There's only one thing for
+  Baldren to do: he has to seal the gate and warp himself back to his home planet.
+  This is easier said than done, since the gate can only be sealed by a
+  dimensional gate staff and no such object is available anywhere on Rainbow Moon.
+  However Baldren knows that he can create one if he finds the right materials. He
+  needs seven magical artifacts, said to be hidden deep inside Rainbow Moon's
+  dungeons.
+  .
+  And this is where our quest begins ...
+release: 2013-12-03
+players: 1
+assets.boxfront: BoxFront/Rainbow Moon (USA).jpg
+assets.boxback: BoxBack/Rainbow Moon (USA).jpg
+assets.background: Background/Rainbow Moon (USA).jpg
+assets.screenshot: Screenshot/Rainbow Moon (USA).jpg
+x-co-op: No
+
+
+game: Ray Gigant (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Ray Gigant (USA)/Ray Gigant (USA).json
+developer: Acttil
+publisher: Bandai Namco Entertainment
+genre: Role-Playing
+description:
+  The game takes place in a fictional, future version of Tokyo that has been left
+  in ruins due to the invasion of space aliens called "Gigants".[4] While the
+  entire Earth has been largely laid to waste, before complete destruction, the
+  game's primary character, Ichiya Amakaze, is finally able to defeat a Gigant
+  with a mysterious power called "Yorigami".[5] However, at the same time, the
+  uncontrollable nature of the power also accidentally destroys an entire city,
+  leaving the characters of the game to figure out how to handle this ability".[5]
+  The game is split into three separate chapters, each focusing on a separate
+  protagonist,[6] Ichiya Amakaze, Kyle Griffin, and Nil Phineas.[4] Each
+  protagonist will also team up with two other side characters during their side
+  of the story, Ichiya teaming up with two characters named Mana Isano and Kazuomi
+  Miwa.[4]
+release: 2015-07-30
+players: 1
+assets.boxfront: BoxFront/Ray Gigant (USA).jpg
+assets.boxback: BoxBack/Ray Gigant (USA).jpg
+assets.background: Background/Ray Gigant (USA).jpg
+assets.screenshot: Screenshot/Ray Gigant (USA).jpg
+x-co-op: No
+
+
+game: Resistance - Burning Skies (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Resistance - Burning Skies (USA)/Resistance - Burning Skies (USA).json
+developer: Nihilistic Software
+publisher: Sony Computer Entertainment
+genre: Shooter
+description:
+  Resistance: Burning Skies is a unique Resistance experience developed
+  specifically for PS Vita that takes full advantage of the system's dual analog
+  sticks and features an all-new hero and story written by William C. Dietz,
+  author of Resistance: The Gathering Storm and Resistance: A Hole in the Sky.
+release: 2012-05-29
+players: 8
+assets.boxfront: BoxFront/Resistance - Burning Skies (USA).jpg
+assets.boxback: BoxBack/Resistance - Burning Skies (USA).jpg
+assets.background: Background/Resistance - Burning Skies (USA).jpg
+assets.screenshot: Screenshot/Resistance - Burning Skies (USA).jpg
+x-co-op: Yes
+
+
+game: Revenant Saga (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Revenant Saga (USA)/Revenant Saga (USA).json
+developer: EXE-CREATE
+publisher: Kemco
+genre: Role-Playing
+description:
+  Become a Revenant and find the truth beyond revenge in this gothic fantasy RPG
+  with stunning 3D battles!
+  .
+  After being turned into an immortal being known as a 'Revenant' and learning of
+  the existence of a demon within him, Albert sets out on a journey to make the
+  person who did this to him pay with their very life. However, as he runs into
+  others along the way dealing with their own figurative demons, what is the
+  answer he finds...?
+  .
+  Boasting a story that blurs the lines between good and evil, and plenty of
+  content to go around, this is one title not to be missed! This includes a
+  variety of unique subquests, in-battle transformation systems, as well as a
+  weapon forging system allowing players to make entirely unique weapons as they
+  battle in turn-based battles with 3D animation!
+release: 2017-05-09
+players: 1
+assets.boxfront: BoxFront/Revenant Saga (USA).jpg
+assets.boxback: BoxBack/Revenant Saga (USA).jpg
+assets.background: Background/Revenant Saga (USA).jpg
+assets.screenshot: Screenshot/Revenant Saga (USA).jpg
+x-co-op: No
+
+
+game: Risk of Rain (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Risk of Rain (USA)/Risk of Rain (USA).json
+developer: Hopoo Games
+publisher: Hopoo Games
+genre: Action;Platform
+description:
+  Risk of Rain is a roguelike platformer with a sci-fi setting. The player is the
+  lone survivor of a space train that got shot out of orbit and crash landed on a
+  mysterious planet.
+  .
+  Each stage starts with the player spawning in a random spot. The first aim is to
+  find a teleporter, also randomly spawned somewhere in that stage. When the
+  teleporter is found and activated, it will take 90 seconds to be fully active.
+  During this time, several enemies will spawn, including a boss. After the
+  teleporter loading time is complete, the player must then kill all enemies that
+  are left in order to be teleported to the next stage.
+  .
+  One distinctive feature of the game is that difficulty increases over time: a
+  difficulty bar is shown in the top right corner of the screen. Every five
+  minutes the difficulty increases one level, so the quicker the player finds his
+  way out of stages, the easier the later stages are. In order to keep up with the
+  challenge, the players must equip their characters with items that were being
+  carried by the space train. There are more than 100 different items (most of
+  which must be unlocked), each with a different effect, such as inflicting damage
+  to enemies as they approach the player, increasing healing rate, slowing down
+  hit enemies, double jump, etc. The effects are stackable, so if two or more
+  items of the same kind are collected a multiplier will be added to it. Items are
+  dropped by boss enemies, but are more commonly found in locked chests. To unlock
+  chests, players must collect money dropped by enemies when killed. Money is also
+  used to activate drones that will help the player.
+  .
+  Players can choose different characters, each one with different skills. Every
+  character has 4 different actions, like different weapons or defensive
+  maneuvers, plus one usable item slot. There are 12 different characters
+  available, but they must be unlocked by finding items or performing some
+  achievements.
+release: 2016-04-12
+players: 1
+assets.boxfront: BoxFront/Risk of Rain (USA).jpg
+assets.boxback: BoxBack/Risk of Rain (USA).jpg
+assets.background: Background/Risk of Rain (USA).jpg
+assets.screenshot: Screenshot/Risk of Rain (USA).jpg
+x-co-op: No
+
+
+game: Rock Boshers DX - Directors Cut (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Rock Boshers DX - Directors Cut (USA)/Rock Boshers DX - Directors Cut (USA).json
+developer: Tikipod
+publisher: Tikipod
+genre: Action;Shooter
+description:
+  Get ready to take a trip back to the 80s, the 1880s!\n
+  Help young Queen Victoria fight her way across Mars and attempt to escape home
+  in this exceedingly retro arcade adventure!\n
+  Created to look, feel and sound like an 8-bit styled videogame from the 1980s -
+  Rock Boshers DX: Director’s Cut mixes top down and side on 8-way directional
+  shooting action.
+  .
+  See amazing sights as you journey across Mars. Prepare to bosh rocks! - with
+  only the occasional break for tea and scones.
+  .
+  RBDX is a 2D pixel drawn arcade action game, created as if made on an 8bit
+  hardware (choose from either NES or ZX Spectrum visuals), but modernised with
+  widescreen formatting, HD rendering and of course - no colour clash!
+release: 2014-12-09
+players: 1
+assets.boxfront: BoxFront/Rock Boshers DX - Directors Cut (USA).jpg
+assets.boxback: BoxBack/Rock Boshers DX - Directors Cut (USA).jpg
+assets.background: Background/Rock Boshers DX - Directors Cut (USA).jpg
+assets.screenshot: Screenshot/Rock Boshers DX - Directors Cut (USA).jpg
+x-co-op: No
+
+
+game: Rocketbirds - Hardboiled Chicken (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Rocketbirds - Hardboiled Chicken (USA)/Rocketbirds - Hardboiled Chicken (USA).json
+developer: Ratloop
+publisher: Ratloop
+genre: Action
+description:
+  Annihilate an evil penguin regime in Rocketbirds: Hardboiled Chicken, a
+  cinematic platform adventure game offering full solo and co-op campaigns updated
+  and expanded to use the PS Vita system features. Set out on a mission to
+  assassinate the totalitarian penguin leader as Hardboiled Chicken. Solve Puzzles
+  and destroy enemies with a slew of weapons and illuminate the secrets to his
+  past while uncovering the real enemies of Albatropolis. Master fowl play in the
+  co-op campaign as a pair of Budgie commandos on a mission to save the general’s
+  daughter. Many lives will be destroyed, countless penguins will die!
+release: 2013-01-12
+players: 1
+assets.boxfront: BoxFront/Rocketbirds - Hardboiled Chicken (USA).jpg
+assets.boxback: BoxBack/Rocketbirds - Hardboiled Chicken (USA).jpg
+assets.background: Background/Rocketbirds - Hardboiled Chicken (USA).jpg
+assets.screenshot: Screenshot/Rocketbirds - Hardboiled Chicken (USA).jpg
+x-co-op: No
+
+
+game: Sayonara Umihara Kawase++ (Europe)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Sayonara Umihara Kawase++ (Europe)/Sayonara Umihara Kawase++ (Europe).json
+developer: Studio Saizensen
+publisher: Studio Saizensen
+genre: Platform
+description:
+  Completely re-worked for the PlayStation Vita, play as Umihara Kawase - a 20
+  year old backpacking Japanese sushi chef armed with a fishing rod, a rubber
+  fishing line, and a fishing hook. Avoid fish-like enemies, conveyor belts,
+  spikes, watery pits, time travel, and more. Make your way to the end of each
+  level, collecting items and exploring along the way. The deeper into this
+  dream-like game players venture, the more challenging the solutions and the
+  greater the time pressure becomes. Along the way, look out for shortcuts and
+  secret exits and unlock bonus levels.
+  .
+  It is the elasticity of Umihara’s rubber fishing line that has always set this
+  franchise apart from all other rope games, giving unprecedented levels of
+  mobility and discovery. Tightening the line or giving lots of slack can be the
+  difference between success and failure. The bungee like nature of the fishing
+  line allows the player to stretch down to otherwise unreachable areas or be
+  catapulted upwards.
+release: 2015-04-21
+players: 1
+assets.boxfront: BoxFront/Sayonara Umihara Kawase++ (Europe).jpg
+assets.boxback: BoxBack/Sayonara Umihara Kawase++ (Europe).jpg
+assets.background: Background/Sayonara Umihara Kawase++ (Europe).jpg
+assets.screenshot: Screenshot/Sayonara Umihara Kawase++ (Europe).jpg
+x-co-op: No
+
+
+game: Senran Kagura - Bon Appetit! Full Course (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Senran Kagura - Bon Appetit! Full Course (USA)/Senran Kagura - Bon Appetit! Full Course (USA).json
+developer: Meteorise
+publisher: XSEED Games
+genre: Action;Rhythm;Music
+description:
+  Many speak of it, but rarely have human mouths ever tasted it: the pinnacle of
+  culinary perfectionthe Super Dish. Few shinobi have ever been able to prepare a
+  dish so exquisite, but legendary shinobi and sushi chef Hanzo thinks that
+  perhaps his students and their rivals are up to the task. He holds a contest to
+  see which of the girls can hone her Ninja Arts best for cooking as opposed to
+  combat. The competition is fierce; the one who presents the old shinobi master
+  with the Super Dish will obtain a Secret Ninja Art Scroll that will make real
+  her most fervent desire. Whosoever can prove her knife to be as suitable for
+  cooking as for combat will emerge the victor, while all her friends and rivals
+  wind up as mere dessert...
+  .
+  .
+  A rhythm spin-off of the ninja busty brawler series, SENRAN KAGURA, Bon Appetit!
+  features cooking battles rather than shinobi showdowns, with emphasis on
+  outrageous humor, delicious food, and gratuitous images of the series lovely
+  ladies. This culinary warfare is carried out through an array of rhythm battles,
+  where tapping the correct buttons in time with the beat will rack up combos and
+  determine the size and quality of the resulting dish. The soundtrack consists of
+  a variety of catchy tunes encompassing all genres from jazz to classical, with
+  special Japanese vocal tracks sung by the leader of each faction. This Full
+  Course edition includes all DLC and 22 buxom ninja between the two original
+  PlayStation Vita releases, rewarding players who can overcome the challenge of
+  creating the ultimate Super Dish with a special feast for the eyes as well.
+  .
+  .
+  KEY FEATURES:
+  .
+  .
+  * Rhythm spin-off of the popular SENRAN KAGURA series
+  .
+  The infamous, voluptuous ninja series ventures into a new genre as all of the
+  bouncy babes from SENRAN KAGURA Burst and SENRAN KAGURA SHINOVI VERSUS return,
+  taking a break from physical combat to make culinary war instead in this tasty
+  yet truly tasteless adventure.
+  .
+  .
+  * The Dressing Room returns with even more stylish options
+  .
+  Like other SENRAN KAGURA titles, the Dressing Room makes another appearance with
+  multiple ways to customize characters outfitsbut be careful! Peep too much and
+  you risk the wrath of a full-fledged shinobi
+  .
+  .
+  * Three different modes of play plus online leaderboards
+  .
+  Story Mode progresses through the main game, Free Mode allows for customized
+  cooking showdowns, and Arcade Mode includes comprehensive online leaderboards to
+  see how you stack up against your already pretty stacked competition.
+  .
+  .
+  * Includes original Hanzo x Crimson Squad, additional Gessen x Hebijo pack, and
+  all additional DLC
+  .
+  Includes both games which were released separately on PlayStation(r)Vita, as
+  well as all DLC in between, now in 1080p resolution and running at 60fps.
+release: 2014-03-20
+players: 1
+assets.boxfront: BoxFront/Senran Kagura - Bon Appetit! Full Course (USA).jpg
+assets.boxback: BoxBack/Senran Kagura - Bon Appetit! Full Course (USA).jpg
+assets.background: Background/Senran Kagura - Bon Appetit! Full Course (USA).jpg
+assets.screenshot: Screenshot/Senran Kagura - Bon Appetit! Full Course (USA).jpg
+x-co-op: No
+
+
+game: Silent Hill - Book of Memories (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Silent Hill - Book of Memories (USA)/Silent Hill - Book of Memories (USA).json
+developer: WayForward Technologies
+publisher: Konami Digital Entertainment
+genre: Action;Adventure
+description:
+  Book of Memories is an all-new game in the Silent Hill series, with a unique
+  premise and storyline. The story begins with a strange book that is received,
+  inside that book is your entire life story to this point, everything that’s ever
+  happened to you; all of your memories. You discover that by altering what’s
+  written... you can actually change the past. You can write your own ideal history.
+  .
+  A departure for the series, with a focus on co-operative multiplayer action
+  rather than traditional Psychological Horror. Players can work together as they
+  explore several different Otherworlds, solving puzzles and defeating creatures
+  to advance through the Nightmares and uncover the truth behind the Book of
+  Memories. Scare rooms, limited resources, and dark atmosphere all return—but in
+  a gameplay package specifically designed to take advantage of the
+  PlayStation®Vita handheld entertainment system.
+  .
+  Book of Memories is a macabre celebration of the best that Silent Hill has to
+  offer. Players will encounter items and Creatures culled from over a decade of
+  Silent Hill lore, including a special someone who walks softly and carries a
+  gigantic knife.
+release: 2012-10-16
+players: 4
+assets.boxfront: BoxFront/Silent Hill - Book of Memories (USA).jpg
+assets.boxback: BoxBack/Silent Hill - Book of Memories (USA).jpg
+assets.background: Background/Silent Hill - Book of Memories (USA).jpg
+assets.screenshot: Screenshot/Silent Hill - Book of Memories (USA).jpg
+x-co-op: Yes
+
+
+game: Siralim (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Siralim (USA)/Siralim (USA).json
+developer: Thylacine Studios
+publisher: Thylacine Studios LLC
+genre: Role-Playing
+description:
+  Siralim is a deep RPG with light roguelike elements that allows you to summon
+  and customize hundreds of creatures to fight in strategic battle. Fight your way
+  through randomly generated dungeons and complete randomized quests. Find rare
+  treasure and use it to upgrade your castle, empower your creatures, craft
+  powerful artifacts, learn new spells, and much more.
+release: 2016-02-09
+players: 1
+assets.boxfront: BoxFront/Siralim (USA).jpg
+assets.boxback: BoxBack/Siralim (USA).jpg
+assets.background: Background/Siralim (USA).jpg
+assets.screenshot: Screenshot/Siralim (USA).jpg
+x-co-op: No
+
+
+game: Siralim 2 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Siralim 2 (USA)/Siralim 2 (USA).json
+developer: Thylacine Studios
+publisher: Thylacine Studios LLC
+genre: Role-Playing
+description:
+  Siralim 2 is an old-school monster catching RPG. Summon and customize hundreds
+  of creatures to fight for you as you battle your way through endless dungeons.
+  Find rare treasure and use it to upgrade your castle, empower your creatures,
+  craft powerful artifacts, learn new spells, and much more.
+release: 2017-03-14
+players: 1
+assets.boxfront: BoxFront/Siralim 2 (USA).jpg
+assets.boxback: BoxBack/Siralim 2 (USA).jpg
+assets.background: Background/Siralim 2 (USA).jpg
+assets.screenshot: Screenshot/Siralim 2 (USA).jpg
+x-co-op: No
+
+
+game: Skullgirls - 2nd Encore (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Skullgirls - 2nd Encore (USA)/Skullgirls - 2nd Encore (USA).json
+developer: Lab Zero Games
+publisher: Autumn Games
+genre: Action;Fighting
+description:
+  Skullgirls 2nd Encore is an updated re-release of Skullgirls. It provides the
+  following enhancements:\n
+  All DLC from the original game is included as part of 2nd Encore's base game.\n
+  Story mode is fully voiced.\n
+  Challenges in which players must win battles under unique conditions. Bloody
+  Marie is a playable character in this mode only.\n
+  Trials mode teaches players how to perform specific combos.\n
+  Survival mode challenges players to endure an endless gauntlet of enemies.
+release: 2015-07-07
+players: 1
+assets.boxfront: BoxFront/Skullgirls - 2nd Encore (USA).jpg
+assets.boxback: BoxBack/Skullgirls - 2nd Encore (USA).jpg
+assets.background: Background/Skullgirls - 2nd Encore (USA).jpg
+assets.screenshot: Screenshot/Skullgirls - 2nd Encore (USA).jpg
+x-co-op: No
+
+
+game: Sky Force Anniversary (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Sky Force Anniversary (USA)/Sky Force Anniversary (USA).json
+developer: Infinite Dreams
+publisher: Infinite Dreams
+genre: Action;Shooter
+description:
+  The legendary shoot-’em-up is here to celebrate its 10-year anniversary in
+  super-destructive style.
+  .
+  Harnessing the intensity of classic arcade games combined with modern visuals,
+  Sky Force Anniversary offers a stunning scrolling shooter experience with an
+  incredible new social gameplay element.
+  .
+  Over a decade ago, IGN said, "Put simply, Sky Force is amazing." Scoring an
+  incredible 9.5 out of 10. And now i'ts back. Bigger, bolder and more intense
+  than ever.
+  .
+  This 10th anniversary edition adds incredible depth to the series through
+  stunning 3D graphics, intuitive controls and a powerful upgrade system that'll
+  keep you blasting for hours on end.
+release: 2016-09-06
+players: 1
+assets.boxfront: BoxFront/Sky Force Anniversary (USA).jpg
+assets.boxback: BoxBack/Sky Force Anniversary (USA).jpg
+assets.background: Background/Sky Force Anniversary (USA).jpg
+assets.screenshot: Screenshot/Sky Force Anniversary (USA).jpg
+x-co-op: No
+
+
+game: Soul Sacrifice (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Soul Sacrifice (USA)/Soul Sacrifice (USA).json
+developer: SCE Japan Studio
+publisher: Sony Computer Entertainment
+genre: Action;Role-Playing
+description:
+  What would you sacrifice for ultimate power?
+  .
+  Prepare yourself for a brutal combat experience where every decision made will
+  have consequential results. Take on the role of a slave who is about to be
+  sacrificed, stumbles upon a forbidden book that allows its readers to relive
+  battles between sorcerers and monsters of the past. In order to use the magic
+  during fierce battles, the player must be willing to make a sacrifice – ranging
+  from personal belongings, a limb, or even a life.
+release: 2013-03-30
+players: 4
+assets.boxfront: BoxFront/Soul Sacrifice (USA).jpg
+assets.boxback: BoxBack/Soul Sacrifice (USA).jpg
+assets.background: Background/Soul Sacrifice (USA).jpg
+assets.screenshot: Screenshot/Soul Sacrifice (USA).jpg
+x-co-op: Yes
+
+
+game: Spelunky (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Spelunky (USA)/Spelunky (USA).json
+developer: Mossmouth
+publisher: Twisted Tree
+genre: Adventure;Platform
+description:
+  Spelunky is a cave exploration / treasure-hunting game inspired by classic
+  platform games and roguelikes, where the goal is to grab as much treasure from
+  the cave as possible. Every time you play the cave's layout will be different.
+  Use your wits, your reflexes, and the items available to you to survive and go
+  ever deeper! Perhaps at the end you may find what you're looking for...
+release: 2013-08-27
+players: 4
+assets.boxfront: BoxFront/Spelunky (USA).jpg
+assets.boxback: BoxBack/Spelunky (USA).jpg
+assets.background: Background/Spelunky (USA).jpg
+assets.screenshot: Screenshot/Spelunky (USA).jpg
+x-co-op: Yes
+
+
+game: Stealth Inc - A Clone in the Dark Ultimate Edition (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Stealth Inc - A Clone in the Dark Ultimate Edition (USA)/Stealth Inc - A Clone in the Dark Ultimate Edition (USA).json
+developer: Curve Digital
+publisher: Limited Run Games
+genre: Action;Stealth
+description:
+  Stealth Inc.: A Clone in the Dark (Ultimate Edition) is the first version of the
+  game for the PS4 platform. It contains the base game and the two pieces of DLC
+  that were previously released for the PS3 and the PS Vita:\n
+  Stealth Inc.: A Clone in the Dark (base game)\n
+  Stealth Inc.: A Clone in the Dark - The Teleporter Chambers (DLC)\n
+  Stealth Inc.: A Clone in the Dark - The Lost Clones (DLC)
+release: 2016-11-25
+players: 1
+assets.boxfront: BoxFront/Stealth Inc - A Clone in the Dark Ultimate Edition (USA).jpg
+assets.boxback: BoxBack/Stealth Inc - A Clone in the Dark Ultimate Edition (USA).jpg
+assets.background: Background/Stealth Inc - A Clone in the Dark Ultimate Edition (USA).jpg
+assets.screenshot: Screenshot/Stealth Inc - A Clone in the Dark Ultimate Edition (USA).jpg
+x-co-op: No
+
+
+game: Steins;Gate (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Steins;Gate (USA)/Steins;Gate (USA).json
+developer: Nitroplus
+publisher: PQube
+genre: Adventure;Visual Novel
+description:
+  Steins Gate is the award-winning time travel science-fiction interactive visual
+  novel developed by 5pb. and Nitro plus. A group of teenage scientists discover
+  the ability to alter the past by sending text messages through a modified
+  microwave. Their experiments inevitably spiral out of control as they become
+  entangled in a conspiracy surrounding SERN, the organization behind supposed
+  failed time travel events, and John Titor, a mysterious internet forum poster
+  claiming to come from a dystopian future. With memorable characters, outstanding
+  art design and a gripping narrative, Steins Gate is a critically-acclaimed
+  visual that can be experienced time and time again.
+release: 2015-08-31
+players: 1
+assets.boxfront: BoxFront/Steins;Gate (USA).jpg
+assets.boxback: BoxBack/Steins;Gate (USA).jpg
+assets.background: Background/Steins;Gate (USA).jpg
+assets.screenshot: Screenshot/Steins;Gate (USA).jpg
+x-co-op: No
+
+
+game: Stranger of Sword City (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Stranger of Sword City (USA)/Stranger of Sword City (USA).json
+developer: Experience Inc.
+publisher: Experience Inc.
+genre: Role-Playing
+description:
+  After your plane flies through a strange rift and crashes, you awake under an
+  unfamiliar sky. This is Sword City, a dark fantasy world that combines magic and
+  technology. Explore, level up, make a perfect team, and slay monsters. But
+  choose your allies carefully if you want to find a way home.
+  .
+  In Stranger of Sword City, you must perfect your DRPG skills and navigate your
+  way through Escario, a place of fantasy races, fierce monsters, and treacherous
+  labyrinths. Explore labyrinths to slay the powerful Lineage Type monsters within
+  and take their Blood Crystals to increase your power. Who you decide to trust,
+  be it the Kingdom, Medell Co., or the Strangers Guild, is entirely up to you.
+  But choose wisely. Your fate depends on it.
+release: 2016-04-26
+players: 1
+assets.boxfront: BoxFront/Stranger of Sword City (USA).jpg
+assets.boxback: BoxBack/Stranger of Sword City (USA).jpg
+assets.background: Background/Stranger of Sword City (USA).jpg
+assets.screenshot: Screenshot/Stranger of Sword City (USA).jpg
+x-co-op: No
+
+
+game: Super Hydorah (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Super Hydorah (USA)/Super Hydorah (USA).json
+developer: Abylight
+publisher: Abylight
+genre: Action;Shooter
+description:
+  An evil force has launched an invasion over the Omios star. Only you, the most
+  skilled and deadly pilot in the galaxy, can face the dreadful menace of the
+  Meroptians, bio-mechanical creatures set in a ruthless war of conquest. Equip
+  your ship, select a route and fight planet by planet against the hordes of
+  Meroptians!
+  .
+  Super Hydorah is a nonlinear horizontal shoot’ em up designed to offer a
+  challenging and memorable experience, sublimating the wisdom and richness of
+  traditional shmup classics. The game has direct action, nostalgic art and a wide
+  variety of unique spatial content and situations. It is hours of intense fun,
+  alone or with your friends, to face the menace of the Meroptians aboard the
+  Delta Lance.
+release: 2017-09-20
+players: 1
+assets.boxfront: BoxFront/Super Hydorah (USA).jpg
+assets.boxback: BoxBack/Super Hydorah (USA).jpg
+assets.background: Background/Super Hydorah (USA).jpg
+assets.screenshot: Screenshot/Super Hydorah (USA).jpg
+x-co-op: No
+
+
+game: Super Mutant Alien Assault (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Super Mutant Alien Assault (USA)/Super Mutant Alien Assault (USA).json
+developer: Cybernate
+publisher: Suprise Attack
+genre: Shooter
+description:
+  Three fleets of spaceships flee a doomed Earth carrying the last humans in
+  cryostasis. Pursued by aliens, it’s up to the lowly security droids to save
+  humanity. Taking up arms solo or with a friend, you must dance with death in a
+  brutal and addictive arcade platformer shooter inspired by Super Crate Box and
+  stuffed to the brim with unlockables.
+  .
+  Fight through rapid fire single screen levels each with a random combination of
+  platform layout, objective, vending machines and enemies. Dodge and weave
+  amongst the aliens to stay alive but don’t leave them standing too long or the
+  ship’s radiation will mutate them into bigger, nastier versions.
+  .
+  Only by unlocking and mastering the wild variety of weapons, explosives, special
+  abilities, defense moves and perks can you hope to survive across all three
+  galaxies, rid your ship of the mutant menace and save the oblivious humans.
+release: 2018-09-18
+players: 1
+assets.boxfront: BoxFront/Super Mutant Alien Assault (USA).jpg
+assets.boxback: BoxBack/Super Mutant Alien Assault (USA).jpg
+assets.background: Background/Super Mutant Alien Assault (USA).jpg
+assets.screenshot: Screenshot/Super Mutant Alien Assault (USA).jpg
+x-co-op: No
+
+
+game: Swapper, The (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Swapper, The (USA)/Swapper, The (USA).json
+developer: Facepalm Games
+publisher: Facepalm Games
+genre: Action;Adventure;Puzzle
+description:
+  Holder of numerous awards and accolades, the Swapper is an atmospheric puzzle
+  platformer set in the furthest reaches of space. Players wield an experimental
+  device able to clone the user and swap control between them. Dropped into a
+  character and world as mysterious as the workings of the device itself, The
+  Swapper is a game of exploration of a very personal nature.
+  .
+  All of the art in The Swapper is constructed using clay models and other
+  everyday materials.
+  .
+  The Swapper is supported by Indie Fund.
+release: 2014-06-25
+players: 1
+assets.boxfront: BoxFront/Swapper, The (USA).jpg
+assets.boxback: BoxBack/Swapper, The (USA).jpg
+assets.background: Background/Swapper, The (USA).jpg
+assets.screenshot: Screenshot/Swapper, The (USA).jpg
+x-co-op: No
+
+
+game: Swindle, The (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Swindle, The (USA)/Swindle, The (USA).json
+developer: Size Five Games
+publisher: Curve Digital
+genre: Action;Platform;Stealth
+description:
+  The Swindle is a steampunk, 2D side-scrolling game about heists. It is set in
+  London in 1849 and the player takes control of a master burglar. In 100 days
+  Scotland Yard will activate The Devil's Basilisk, advanced artificial
+  intelligence technology that will massively improve surveillance and make theft
+  almost impossible. Therefore the thief has 100 days to steal the Basilisk and
+  prevent it from being activated.
+  .
+  The master burglar is never seen in the game and does not take part in the
+  action. Instead he sends out lower thieves to perform heists. A thief is sent
+  down from an airship, the main hub, using a pod. When the heist is successful
+  the thief can return to the airship with the haul where the money can be spent
+  in five skill trees: agility, abilities, tools, goggles and miscellaneous. The
+  game consists of six main locations that are randomly generated for level
+  design, enemies and items with each new heist. By earning money the main goal is
+  to buy additional security clearance, opening up new locations, until the
+  Basilisk can be stolen in the final location to win the game. The six main
+  locations are The Slums, Warehouse District, New Belgravia, Casino Town, The
+  Banks, and The Swindle. Each started heist, whether successful or not, takes up
+  a single day. The game is lost if the Basilisk is not stolen in 100 days because
+  the game ends after that limit. Each new location provides opportunities to
+  steal a lot more money, but also introduces more difficulty security and more
+  dangerous guards. That way the game challenges the player to take calculated
+  risks. By saving up it is possible to move on to harder locations quickly, but
+  the money can also be spent on various perks that make the heists easier
+  instead. The thief characters can die or be terminated and a random one is then
+  generated for each new heist after an unsuccessful one. The player is however
+  encouraged to carry on with a single character as an experience bonus is
+  provided for completing consecutive heists with the same thief. Bonus are also
+  provided for completing levels without being spotted (ghost) and rewarding
+  aptitude.
+  .
+  Each heist takes place in a side-scrolling, fairly small area with connected
+  rooms. There are various approaches through doors, climbing pipes, creating
+  entrances with bombs or smashing windows. The character can move around and
+  jump. By upgrading elements in the agility skill tree additional options can be
+  unlocked and often be upgraded multiple times, such as wall jumping and clinging
+  to walls, double jumping and stealth. Most early enemies have a line of sight
+  that is visible to the player, but from New Belgravia onwards enemies with a
+  microphone icon are sensitive to sound and then the slower sneaking method has
+  to be used for movement. Enemies can be taken out by whacking them. Some enemies
+  require multiple hits and others cannot be destroyed permanently with the
+  regular weapon. Unlockable abilities include a hacking skill to disarm bombs,
+  open doors and open cash machines. This is done through a short mini-game where
+  the player has to follow the directions on the screen to press one of four
+  directions, sometimes multiple times. When a mistake is made while disarming a
+  bomb, it explodes right away, killing the thief. Other abilities are bionic
+  eyes, improved hacking, barging through doors and so on. Many different tools
+  can also be unlocked that can be selected during heists. They are bombs to blow
+  through walls, steam purge to use a cloud that obscures vision, bugs that syphon
+  funds, EMPs and so on. Many of these have a limit or use a separate meter that
+  takes some time to recharge. It is possible to switch between tools at any time
+  during a level and they are all available when unlocked. There are also four
+  types of goggles to unlock and other technology such as jamming radio
+  transmissions or improvements for tools and abilities.
+  .
+  When a thief is killed, no money is gathered from that heist and a new one needs
+  to be sent out. All levels offer multiple approaches through the tools and
+  abilities. Doors can be opened or closed, many elements can be hacked and custom
+  passages can be created with bombs. Each location introduces new elements to
+  levels and new types of enemies that need to be analyzed. When the thief is
+  spotted, the alarms are sounded right away. All enemies then become much faster
+  and more aggressive. The funds in the levels are then also drained gradually to
+  move them elsewhere. The thief can however still finish the level by returning
+  to the pod, but has to watch out for a powerful police character that soon
+  arrives. It has some roguelike elements (character permadeath, random levels),
+  but perks are permanent and carried over to a new thief as long as there are
+  days left. Perks are also bought specifically and are not offered from a random
+  selection.
+release: 2015-07-28
+players: 1
+assets.boxfront: BoxFront/Swindle, The (USA).jpg
+assets.boxback: BoxBack/Swindle, The (USA).jpg
+assets.background: Background/Swindle, The (USA).jpg
+assets.screenshot: Screenshot/Swindle, The (USA).jpg
+x-co-op: No
+
+
+game: Sword Art Online - Hollow Fragment (Asia) (En,Zh-Hans)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Sword Art Online - Hollow Fragment (Asia) (En,Zh-Hans)/Sword Art Online - Hollow Fragment (Asia) (En,Zh-Hans).json
+developer: Aquria
+publisher: Bandai Namco Games
+genre: Action
+description:
+  In Sword Art Online: Hollow Fragment, take on the role of Kirito, who has been
+  locked into the VR world of Aincrad by the creator of a bizarre game along with
+  thousands of other players. To escape the fantastical and dangerous world,
+  players must explore and defeat the enemies contained within. Actively engage
+  monsters and characters and experience aggressive battles with breathtaking
+  attack actions, exhilarating combos and powerful burst attacks. Continuing to
+  ﬁght is essential when locked in the VR world -- if players die in the fantasy
+  world, their character will die in real life.
+  .
+  Based off the light novel, manga, and anime, Sword Art Online: Hollow Fragment
+  emulates the Virtual Reality MMO Role Playing Game (VRMMORPG) gameplay from the
+  Sword Art Online storyline. The MMO-style role playing gameplay in this
+  single-player adventure allows players feel immersed in a massive virtual
+  reality (VR) world. And as an added bonus, Hollow Fragment contains an HD
+  version of the previous PSP game in the franchise titled Sword Art Online:
+  Infinity Moment. This exciting game combo celebrates the two titles featured
+  together on PlayStation Vita.
+release: 2014-08-19
+players: 4
+assets.boxfront: BoxFront/Sword Art Online - Hollow Fragment (Asia) (En,Zh-Hans).jpg
+assets.boxback: BoxBack/Sword Art Online - Hollow Fragment (Asia) (En,Zh-Hans).jpg
+assets.background: Background/Sword Art Online - Hollow Fragment (Asia) (En,Zh-Hans).jpg
+assets.screenshot: Screenshot/Sword Art Online - Hollow Fragment (Asia) (En,Zh-Hans).jpg
+x-co-op: Yes
+
+
+game: Sword Art Online - Lost Song (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Sword Art Online - Lost Song (USA)/Sword Art Online - Lost Song (USA).json
+developer: ArtDink
+publisher: Bandai Namco Games America Inc.
+genre: Role-Playing
+description:
+  Journey into the world of ALfheim Online for the very first time! Join Kirito as
+  he ventures online to explore Start Alfheim, a brand-new area of ALfheim Online,
+  the floating is comprised of continents led by The Floating City of Ryne. This
+  original storyline includes new and returning characters and exclusive
+  environments in the ultimate Virtual Reality universe! Sword Art Online: Lost
+  Song features all-new Aerial Battles and plenty of customization features. Link
+  Start into the Sword Art Online world and join your favorite dual-wielding
+  player, Kirito, on the greatest adventure yet!
+release: 2015-11-17
+players: 1
+assets.boxfront: BoxFront/Sword Art Online - Lost Song (USA).jpg
+assets.boxback: BoxBack/Sword Art Online - Lost Song (USA).jpg
+assets.background: Background/Sword Art Online - Lost Song (USA).jpg
+assets.screenshot: Screenshot/Sword Art Online - Lost Song (USA).jpg
+x-co-op: No
+
+
+game: Tales From Space - Mutant Blobs Attack!!! (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Tales From Space - Mutant Blobs Attack!!! (USA)/Tales From Space - Mutant Blobs Attack!!! (USA).json
+developer: Drinkbox Studios
+publisher: Drinkbox Studios
+genre: Platform;Puzzle
+description:
+  Tales from Space: Mutant Blobs Attack is a 2D puzzle platformer about an alien,
+  mutant blob who manages to escape from a store where they are sold to humans.
+  Through six large worlds (College, Town, Moon, Badlands, Army Base and
+  Metropolis), with multiple levels each, the blob needs to complete levels and
+  optionally free captured blobs along the way. The game has a bright visual style
+  inspired by 50's art and corresponding music, and uses a lot of B-movie-inspired
+  humor with many references to other indie games in the background environment.
+  .
+  The blob can move left and right and jump. While in the air a dash can be
+  performed to quickly move down, also to destroy objects below. Levels are
+  usually split up in smaller sections with multiple checkpoints, locked through a
+  cork. In order to pass, the blob needs to absorbs various objects along the way
+  to grow to the required size. Similar to the Katamari games certain items can
+  only be absorbed when a certain size has been reached. As a blob it is also able
+  to squeeze through narrow passages.
+  .
+  Various gameplay elements are introduced gradually. Through telekinesis certain
+  objects such as platforms can be moved. In sections with magnetism it is
+  possible to stick to magnetic surfaces or repel from them by changing polarity,
+  gaining boost. There are also sections where the blob can be moved freely around
+  the environment, boosting around in any direction with a more powerful boost to
+  gain speed. Next to the main levels various mini-game levels can be unlocked
+  where courses need to be completed. Depending on the objects sometimes multiple
+  hits can be taken and health is recharged at the next checkpoint. Various small
+  blue orbs can be eaten to reach a high score, tracked on global leaderboards.
+  Blob friends are hidden in each level where they can be freed.
+release: 2012-02-21
+players: 1
+assets.boxfront: BoxFront/Tales From Space - Mutant Blobs Attack!!! (USA).jpg
+assets.boxback: BoxBack/Tales From Space - Mutant Blobs Attack!!! (USA).jpg
+assets.background: Background/Tales From Space - Mutant Blobs Attack!!! (USA).jpg
+assets.screenshot: Screenshot/Tales From Space - Mutant Blobs Attack!!! (USA).jpg
+x-co-op: No
+
+
+game: Tales of Hearts R (USA) (En,Ja,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Tales of Hearts R (USA) (En,Ja,Fr,De,Es,It)/Tales of Hearts R (USA) (En,Ja,Fr,De,Es,It).json
+developer: 7thChord
+publisher: Bandai Namco Games
+genre: Action;Role-Playing
+description:
+  Kor Meteor is a young man living in a small village by the sea who trains with
+  his grandfather in the ways of the sword. Impressed by Kor's growing skill, his
+  grandfather bequeaths to him an unusual weapon known as a Soma. Kor meets a
+  young woman, Kohaku Hearts who is looking for a Soma weapon along with her
+  brother Hisui. During their search, a mysterious witch appears and casts a spell
+  on Kohaku's Spiria, the embodiment of her heart and soul. Kor attempts to lift
+  the spell by connecting to her Spiria but accidentally shatters her Spiria Core,
+  the source of all her emotions. Kor, armed only with the Soma given to him by
+  his grandfather, must now set out on a journey to find a way to make Kohaku's
+  Spiria whole once more.
+release: 2014-11-11
+players: 1
+assets.boxfront: BoxFront/Tales of Hearts R (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Tales of Hearts R (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.background: Background/Tales of Hearts R (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Tales of Hearts R (USA) (En,Ja,Fr,De,Es,It).jpg
+x-co-op: No
+
+
+game: Tearaway (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Tearaway (USA)/Tearaway (USA).json
+developer: Media Molecule
+publisher: Sony Computer Entertainment America
+genre: Platform
+description:
+  Explore a spectacular world held entirely in your hands.
+  .
+  Embark on a unique adventure from the creative minds behind LittleBigPlanet™
+  with your new friend, the adventurous IOTA or the intrepid ATOI — a papercraft
+  messenger from another dimension with a unique message to deliver — to you!
+release: 2013-11-22
+players: 1
+assets.boxfront: BoxFront/Tearaway (USA).jpg
+assets.boxback: BoxBack/Tearaway (USA).jpg
+assets.background: Background/Tearaway (USA).jpg
+assets.screenshot: Screenshot/Tearaway (USA).jpg
+x-co-op: No
+
+
+game: Teslagrad (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Teslagrad (USA)/Teslagrad (USA).json
+developer: Rain Games
+publisher: SOEDESCO
+genre: Action;Platform
+description:
+  Teslagrad is a side-scrolling platformer with strong puzzle elements. The
+  protagonist is a boy who finds himself inside the mysterious Tesla Tower which
+  houses fictional technology inspired by the works of inventor Nikola Tesla. The
+  game communicates without words.
+  .
+  The player moves inside the tower which can be freely explored (but, as it is a
+  tower, the general direction is up and there are not many branches in width). To
+  progress, the player needs to use special abilities to solve puzzles which are
+  all based on magnetic fields: many objects have a magnetic field (red or blue);
+  objects with different colours are attracted to each other while objects of the
+  same colour are repelled. The player has gloves which allow him to change the
+  polarity of objects. During the course of the games, more abilities and gadgets
+  are earned, e.g. a cannon to change polarity over distances or a short-distance
+  teleport to pass deadly currency unharmed. Those are used to reach new parts of
+  the tower. The puzzles are mostly embedded in platforming challenges which
+  require pixel-perfect jumping and fast reactions. There are also a few boss
+  battles.
+release: 2015-11-24
+players: 1
+assets.boxfront: BoxFront/Teslagrad (USA).jpg
+assets.boxback: BoxBack/Teslagrad (USA).jpg
+assets.background: Background/Teslagrad (USA).jpg
+assets.screenshot: Screenshot/Teslagrad (USA).jpg
+x-co-op: No
+
+
+game: Thomas Was Alone (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Thomas Was Alone (USA)/Thomas Was Alone (USA).json
+developer: Mike Bithell
+publisher: Curve Studios
+genre: Platform
+description:
+  Thomas Was Alone is an indie puzzle platformer video game created by Mike
+  Bithell, originally released as a Flash-based browser game in October 2010. The
+  game was expanded and released to Microsoft Windows and OS X systems in July
+  2012. PlayStation 3 and PlayStation Vita versions with new content were released
+  in April 2013, while a Linux version was released as part of the game's
+  inclusion in a Humble Bundle in May 2013. The game was released for iPad devices
+  in May 2014, and for other iOS devices and Android devices in July 2014. The
+  game was also released on Xbox One, PlayStation 4 and Wii U in November 2014.[1]
+  .
+  In the game, the player controls one or more simple polygon shapes representing
+  several out-of-control artificial intelligence entities, working with the shapes
+  to get each to their individual end points on each level. Each shape is
+  characterized with a unique name and personality, including the eponymous
+  Thomas, which are conveyed to the player through the use of a narrator, voiced
+  by Danny Wallace and whose performance earned the game a BAFTA Games Award.
+release: 2013-04-23
+players: 1
+assets.boxfront: BoxFront/Thomas Was Alone (USA).jpg
+assets.boxback: BoxBack/Thomas Was Alone (USA).jpg
+assets.background: Background/Thomas Was Alone (USA).jpg
+assets.screenshot: Screenshot/Thomas Was Alone (USA).jpg
+x-co-op: No
+
+
+game: Uncharted - Golden Abyss (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Uncharted - Golden Abyss (USA)/Uncharted - Golden Abyss (USA).json
+developer: SCE Bend Studio
+publisher: Sony Computer Entertainment America
+genre: Action;Platform;Shooter
+description:
+  The story is set some time before the events of Uncharted: Drake's Fortune, and
+  begins in medias res with Nathan Drake following rival explorer Jason Dante
+  through a temple complex in Panama. Dante has ordered his army of mercenaries to
+  kill Drake on sight, and after a series of gunfights, Drake is apparently killed
+  in an RPG explosion.\n
+  The game then flashes back two weeks, when Drake and Dante, revealed to be old
+  friends, arrive at a dig site in Panama headed by Dante's "partner" Marisa
+  Chase, who doesn't trust him. At the site, they find corpses of Spanish
+  conquistadors that were apparently poisoned and a grave marker with a Visigoth
+  symbol. Chase also shows Drake an amulet that she hid from Dante. The dig is
+  then interrupted by Dante's real partner, warlord Roberto Guerro. Guerro
+  captures Drake and Chase, however they escape Guerro's base after Chase starts a
+  diversionary fire.
+release: 2012-02-13
+players: 1
+assets.boxfront: BoxFront/Uncharted - Golden Abyss (USA).jpg
+assets.boxback: BoxBack/Uncharted - Golden Abyss (USA).jpg
+assets.background: Background/Uncharted - Golden Abyss (USA).jpg
+assets.screenshot: Screenshot/Uncharted - Golden Abyss (USA).jpg
+x-co-op: No
+
+
+game: Volume (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Volume (USA)/Volume (USA).json
+developer: Mike Bithell
+publisher: Mike Bithell
+genre: Action
+description:
+  Volume is a stealth game presented as a modern take on the legend of Robin Hood
+  as the protagonist is also called Robert Locksley and it is also about someone
+  who steals from the rich, but in a digital age. He is a thief who finds a device
+  called Volume that is a military training simulator, but allows users to
+  simulate heists in virtual worlds as well. The game opens showing how Locksley
+  is discovered and captured. It then rewinds three hours and 100 missions explain
+  what happened before. Locksley broadcasts his simulated heists over the internet
+  for anyone to match and finds an antagonist in Guy Gisborne, CEO of Gisborne
+  Industries, who has also taken over the country of England. More of the story
+  and the background is revealed through notes found during missions. Volume also
+  has artificial intelligence called Alan who guides Locksley through the
+  mechanics and has conversations about events while the missions are in progress.
+  .
+  The game is played from an elevated, almost top-down perspective and consists of
+  short, maze-like levels. To complete a level Locksley needs to collect all gems
+  and then the exit opens up. Levels are guarded by characters called Pawns. They
+  are stationary or patrol and it is possible to see their line of sight through a
+  cone. When they discover Locksley they go after him and shoot. The level then
+  has to be restarted unless a checkpoint has been activated first. There are no
+  means to kill opponents, so strategy is always about distractions and staying
+  unnoticed. Locksley can cling to walls, with slower movement, but at the same
+  time ducking slightly to stay out of sight when near lower objects. The game
+  moves to a completely top-down perspective at that time and it is possible to
+  hop between walls around corners. He can also move in any direction while
+  walking regularly.
+  .
+  The initial approach to distract guards is by whistling, but eventually many
+  types of gadgets are introduced. Gadgets can only be used when they are present
+  in levels. The first one introduced is the Bugle that can be fired in any
+  direction. When it is set off, also in flight, it makes a sound that draws
+  attention. The Oddity has similar mechanics, but can only be shot at a high
+  wall, where it will attract the attention of a guard for some time when it is
+  spotted. Mute gives a temporary speed boost and mutes the sound of pressure
+  plates. Gadgets generally take some time to recharge, but can be used without
+  limits. During levels only one gadget can be carried at a time. Locksley can
+  also flush toilets or run water taps to create sounds, and he can hide in
+  closets behind doors.
+  .
+  Advanced levels include new types of opponents such as turrets, and hounds with
+  a 180 degrees line of sight. Guards will often activate alarms alerting the
+  others when Locksley is spotted. They will then run much faster and it can only
+  be averted by hiding for a while or hacking the security system to disable the
+  alarm. Some levels have pressure plates that make a sound and sometimes there
+  are forcefields blocking the path that require some time to deactivate. Levels
+  do not always have a single solution and can often be solved in different ways.
+  .
+  The game includes an editor that allows users to create and share custom levels
+  online. It is also possible to edit and remix the existing levels.
+release: 2015-08-18
+players: 1
+assets.boxfront: BoxFront/Volume (USA).jpg
+assets.boxback: BoxBack/Volume (USA).jpg
+assets.background: Background/Volume (USA).jpg
+assets.screenshot: Screenshot/Volume (USA).jpg
+x-co-op: No
+
+
+game: Xenon Valkyrie+ (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Xenon Valkyrie+ (USA)/Xenon Valkyrie+ (USA).json
+developer: Diabolical Mind
+publisher: COWCAT
+genre: Action;Role-Playing
+description:
+  Xenon Valkyrie is a roguelite platformer game with RPG elements in which you
+  must fight to the deepest part of a moon and halt the plans of a wicked witch.
+  .
+  Obtain many weapons as you fight through a unique, randomly-generated world
+  every time you play. Encounter many characters, stores and enemies that tell a
+  legendary story.
+  .
+  With traditional graphics and high quality chiptune music, level up and get the
+  amazing power of the Xenon Valkyrie!
+  .
+  - Rogue-like platformer with a great story\n
+  - Many worlds with different routes\n
+  - 3 heroes with unique skills\n
+  - 100+ items\n
+  - Multiple bosses and enemies\n
+  - RPG elements\n
+  - Several endings and secrets\n
+  - Quality Chiptune music\n
+  - Hard gameplay and Permadeath
+release: 2017-12-19
+players: 1
+assets.boxfront: BoxFront/Xenon Valkyrie+ (USA).jpg
+assets.boxback: BoxBack/Xenon Valkyrie+ (USA).jpg
+assets.background: Background/Xenon Valkyrie+ (USA).jpg
+assets.screenshot: Screenshot/Xenon Valkyrie+ (USA).jpg
+x-co-op: No
+
+
+game: Ys - Memories of Celceta (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Ys - Memories of Celceta (USA)/Ys - Memories of Celceta (USA).json
+developer: Falcom
+publisher: Xseed Games
+genre: Action;Role-Playing
+description:
+  A bustling town deep in the frontier at the foot of an endless sea of trees...
+  It is into this wild and untamed setting that a young man collapses, memories
+  gone and only his name to guide him.
+  .
+  Bereft of his past, Adol Cristin wanders the town of Casnan searching for clues
+  to his identity. Joined by an information dealer who claims to have known him,
+  the young adventurer helps rescue doomed miners from a collapse; an act which
+  attracts the attention of the Romun Army general in town. Impressed with their
+  skills, the pair is enlisted to explore the Great Forest and map the vast
+  expanses of Celceta – a task which many have attempted in the past, but from
+  which none have ever returned alive.
+  .
+  Alone in this strange and uncharted frontier, Adol must brave the perilous sea
+  of trees as he struggles to regain his memories and decide whom he can trust,
+  and who is simply attempting to take advantage of his memory loss in order to
+  deceive him...
+release: 2013-11-26
+players: 1
+assets.boxfront: BoxFront/Ys - Memories of Celceta (USA).jpg
+assets.boxback: BoxBack/Ys - Memories of Celceta (USA).jpg
+assets.background: Background/Ys - Memories of Celceta (USA).jpg
+assets.screenshot: Screenshot/Ys - Memories of Celceta (USA).jpg
+x-co-op: No
+
+
+game: Ys Origin (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Vita/Ys Origin (USA)/Ys Origin (USA).json
+developer: Nihon Falcom Corp.
+publisher: DotEmu SAS
+genre: Action;Role-Playing
+description:
+  The events of Ys Origin take place 700 years before those depicted in Ys: The
+  Vanished Omens; it is the first game in the timeline of Ys, and a prequel to the
+  entire series. It is also the first Ys game in which the main protagonist is not
+  Adol Christin, the red-haired swordsman and recurrent hero of the series.
+  .
+  There are three main playable characters in the game: Yunica Tovah, a young
+  apprentice knight; Hugo Fact, a skillful magician; and a mysterious person known
+  as The Claw, who can be unlocked only after having completed the game with the
+  other two. These characters venture to the sinister Darm Tower, each having her
+  or his own motives. The three also vary in gameplay style: Yunica plays
+  similarly to Adol from the previous games, specializing in melee combat with
+  swords and axes; Hugo fires magical bullets with his staff and has access to
+  other types of magic; The Claw is distinguished by his speed in close combat.
+  .
+  The game is set entirely in the Darm Tower, discarding the overworld and
+  populated areas of the previous games. The fast-paced action RPG gameplay is
+  similar to the one adopted in Ys VI: The Ark of Napishtim and Ys: The Oath in
+  Felghana. As the story progresses, characters acquire skills that can be
+  combined in order to extend battle strategy. Some of the bosses from the first
+  and the second Ys re-appear in this game.
+release: 2017-05-30
+players: 1
+assets.boxfront: BoxFront/Ys Origin (USA).jpg
+assets.boxback: BoxBack/Ys Origin (USA).jpg
+assets.background: Background/Ys Origin (USA).jpg
+assets.screenshot: Screenshot/Ys Origin (USA).jpg
+x-co-op: No
+
+

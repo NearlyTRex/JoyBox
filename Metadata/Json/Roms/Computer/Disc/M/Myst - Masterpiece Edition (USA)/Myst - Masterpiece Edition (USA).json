@@ -1,0 +1,69 @@
+{
+    "disc_type": "macwin",
+    "is_scumm": true,
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT/QTW",
+                "skip_existing": true,
+                "to": "$SCUMM_MAIN_ROOT/QTW",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_MAIN_ROOT/CHANNEL.DAT",
+                "skip_existing": true,
+                "to": "$SCUMM_MAIN_ROOT/CHANNEL.DAT",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_MAIN_ROOT/CREDITS.DAT",
+                "skip_existing": true,
+                "to": "$SCUMM_MAIN_ROOT/CREDITS.DAT",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_MAIN_ROOT/DUNNY.DAT",
+                "skip_existing": true,
+                "to": "$SCUMM_MAIN_ROOT/DUNNY.DAT",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_MAIN_ROOT/Help.dat",
+                "skip_existing": true,
+                "to": "$SCUMM_MAIN_ROOT//Help.dat",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_MAIN_ROOT/INTRO.DAT",
+                "skip_existing": true,
+                "to": "$SCUMM_MAIN_ROOT/INTRO.DAT",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_MAIN_ROOT/MECHAN.DAT",
+                "skip_existing": true,
+                "to": "$SCUMM_MAIN_ROOT/MECHAN.DAT",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_MAIN_ROOT/MYST.DAT",
+                "skip_existing": true,
+                "to": "$SCUMM_MAIN_ROOT/MYST.DAT",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_MAIN_ROOT/SELEN.DAT",
+                "skip_existing": true,
+                "to": "$SCUMM_MAIN_ROOT/SELEN.DAT",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_MAIN_ROOT/STONE.DAT",
+                "skip_existing": true,
+                "to": "$SCUMM_MAIN_ROOT/STONE.DAT",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Myst - Masterpiece Edition (USA).chd"
+}

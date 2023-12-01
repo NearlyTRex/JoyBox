@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Starlight Shores (USA).exe"
+    ],
+    "transform_file": "Starlight Shores (USA).exe"
+}

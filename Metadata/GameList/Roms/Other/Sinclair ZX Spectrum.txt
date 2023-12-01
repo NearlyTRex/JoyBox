@@ -1,0 +1,11 @@
+Sinclair ZX Spectrum || Alien 8 (Europe) (Ultimate Play The Game) || $ROM_JSON_ROOT/Other/Sinclair ZX Spectrum/Alien 8 (Europe) (Ultimate Play The Game)/Alien 8 (Europe) (Ultimate Play The Game).json
+Sinclair ZX Spectrum || Atic Atac (Europe) (Ultimate Play The Game) || $ROM_JSON_ROOT/Other/Sinclair ZX Spectrum/Atic Atac (Europe) (Ultimate Play The Game)/Atic Atac (Europe) (Ultimate Play The Game).json
+Sinclair ZX Spectrum || Cookie (Europe) (Ultimate Play The Game) (16K) || $ROM_JSON_ROOT/Other/Sinclair ZX Spectrum/Cookie (Europe) (Ultimate Play The Game) (16K)/Cookie (Europe) (Ultimate Play The Game) (16K).json
+Sinclair ZX Spectrum || Gunfright (Europe) (Ultimate Play The Game) || $ROM_JSON_ROOT/Other/Sinclair ZX Spectrum/Gunfright (Europe) (Ultimate Play The Game)/Gunfright (Europe) (Ultimate Play The Game).json
+Sinclair ZX Spectrum || Jet Pac (Europe) (Ultimate Play The Game) (16K) || $ROM_JSON_ROOT/Other/Sinclair ZX Spectrum/Jet Pac (Europe) (Ultimate Play The Game) (16K)/Jet Pac (Europe) (Ultimate Play The Game) (16K).json
+Sinclair ZX Spectrum || Jumpin' Jupiter - Prelude (USA) || $ROM_JSON_ROOT/Other/Sinclair ZX Spectrum/Jumpin' Jupiter - Prelude (USA)/Jumpin' Jupiter - Prelude (USA).json
+Sinclair ZX Spectrum || Knight Lore (Europe) (Ultimate Play The Game) || $ROM_JSON_ROOT/Other/Sinclair ZX Spectrum/Knight Lore (Europe) (Ultimate Play The Game)/Knight Lore (Europe) (Ultimate Play The Game).json
+Sinclair ZX Spectrum || Lunar Jetman (Europe) (Ultimate Play The Game) || $ROM_JSON_ROOT/Other/Sinclair ZX Spectrum/Lunar Jetman (Europe) (Ultimate Play The Game)/Lunar Jetman (Europe) (Ultimate Play The Game).json
+Sinclair ZX Spectrum || Pssst (Europe) (Ultimate Play The Game) (16K) || $ROM_JSON_ROOT/Other/Sinclair ZX Spectrum/Pssst (Europe) (Ultimate Play The Game) (16K)/Pssst (Europe) (Ultimate Play The Game) (16K).json
+Sinclair ZX Spectrum || Sabre Wulf (Europe) (Ultimate Play The Game) || $ROM_JSON_ROOT/Other/Sinclair ZX Spectrum/Sabre Wulf (Europe) (Ultimate Play The Game)/Sabre Wulf (Europe) (Ultimate Play The Game).json
+Sinclair ZX Spectrum || Underwurlde (Europe) (Ultimate Play The Game) || $ROM_JSON_ROOT/Other/Sinclair ZX Spectrum/Underwurlde (Europe) (Ultimate Play The Game)/Underwurlde (Europe) (Ultimate Play The Game).json

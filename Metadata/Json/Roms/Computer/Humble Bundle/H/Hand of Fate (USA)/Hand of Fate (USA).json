@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/handoffate_humble_win32_53277.1.exe"
+    ],
+    "transform_file": "handoffate_humble_win32_53277.1.exe"
+}

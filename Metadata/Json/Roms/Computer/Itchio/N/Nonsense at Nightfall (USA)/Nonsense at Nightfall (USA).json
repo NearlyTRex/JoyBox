@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Nonsense at Nightfall (USA).exe"
+    ],
+    "transform_file": "Nonsense at Nightfall (USA).exe"
+}

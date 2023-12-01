@@ -1,0 +1,35 @@
+collection: Bandai WonderSwan
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Bandai WonderSwan" {file.path}
+
+
+game: Clock Tower for WonderSwan (Japan)
+file: $ROM_JSON_ROOT/Other/Bandai WonderSwan/Clock Tower for WonderSwan (Japan)/Clock Tower for WonderSwan (Japan).json
+developer: Human Entertainment
+publisher: Naxat Soft
+genre: Adventure
+description:
+  Jennifer Simpson is a child from the fictional Granite Orphanage in Romsdalen,
+  Norway. She and her friends, who are also orphans (Laura, Ann and Lotte) are
+  adopted in September 1995 (the same month the game was released) by a wealthy
+  recluse named Mr. Barrows, who lives in a mansion known as the "Clock Tower",
+  named after its predominant feature.
+  .
+  The game immediately begins with these characters walking towards the Barrows
+  mansion and settling in the main foyer. Mary, the woman who brought the children
+  to the mansion, leaves to find Mr. Barrows, but she takes an unusually long
+  time. Jennifer offers to investigate, but upon leaving the room, a scream is
+  heard from the main foyer. Jennifer returns to find the lights are off and the
+  girls are missing. After finding either Laura or Ann killed, she finds herself
+  being stalked by a murderous little boy with deformed features, wielding a huge
+  pair of scissors. The boy is Bobby Barrows, A.K.A The Scissorman, who will be
+  Jennifer's main stalker and tormentor for the rest of the game.
+release: 1999-12-09
+players: 1
+assets.boxfront: BoxFront/Clock Tower for WonderSwan (Japan).jpg
+assets.boxback: BoxBack/Clock Tower for WonderSwan (Japan).jpg
+assets.background: Background/Clock Tower for WonderSwan (Japan).jpg
+assets.screenshot: Screenshot/Clock Tower for WonderSwan (Japan).jpg
+assets.video: Video/Clock Tower for WonderSwan (Japan).mp4
+x-co-op: No
+
+

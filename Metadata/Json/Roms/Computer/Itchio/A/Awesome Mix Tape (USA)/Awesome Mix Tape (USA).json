@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Awesome Mix Tape (USA).exe"
+    ],
+    "transform_file": "Awesome Mix Tape (USA).exe"
+}

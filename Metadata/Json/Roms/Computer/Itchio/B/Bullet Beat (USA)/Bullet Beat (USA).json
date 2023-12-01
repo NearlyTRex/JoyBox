@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Bullet Beat (USA).exe"
+    ],
+    "transform_file": "Bullet Beat (USA).exe"
+}

@@ -1,0 +1,8 @@
+{
+    "files": [
+        "Journey Collector's Edition (USA).chd",
+        "Journey Collector's Edition (USA).dkey"
+    ],
+    "launch_file": "PS3_GAME/USRDIR/EBOOT.BIN",
+    "transform_file": "Journey Collector's Edition (USA).chd"
+}

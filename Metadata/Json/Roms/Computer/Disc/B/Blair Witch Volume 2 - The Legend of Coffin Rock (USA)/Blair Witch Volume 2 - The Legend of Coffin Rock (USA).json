@@ -1,0 +1,11 @@
+{
+    "installer_exe": "$DISC_MAIN_ROOT/setup.exe",
+    "sync": {
+        "data": [
+            "save",
+            "SYSTEM"
+        ],
+        "search": "blairwitch2.exe"
+    },
+    "transform_file": "Blair Witch Volume 2 - The Legend of Coffin Rock (USA).chd"
+}

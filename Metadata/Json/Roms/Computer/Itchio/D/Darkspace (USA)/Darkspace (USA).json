@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Darkspace (USA).exe"
+    ],
+    "transform_file": "Darkspace (USA).exe"
+}

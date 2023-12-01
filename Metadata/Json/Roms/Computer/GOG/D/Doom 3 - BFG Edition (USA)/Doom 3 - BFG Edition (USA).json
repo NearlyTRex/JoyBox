@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_doom_3_bfg_1.14_(13452).exe"
+    ],
+    "transform_file": "setup_doom_3_bfg_1.14_(13452).exe"
+}

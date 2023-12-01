@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Capcom Digital Collection (World).chd",
+        "Capcom Digital Collection (World).dmi.bin",
+        "Capcom Digital Collection (World).lyt",
+        "Capcom Digital Collection (World).pfi.bin",
+        "Capcom Digital Collection (World).ss.bin"
+    ],
+    "launch_file": "Capcom Digital Collection (World).iso",
+    "transform_file": "Capcom Digital Collection (World).chd"
+}

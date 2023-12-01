@@ -1,0 +1,19 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/black_mirror_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/black_mirror_handbuch.zip",
+        "$SETUP_MAIN_ROOT/extra/black_mirror_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/black_mirror_wallpapers.zip",
+        "$SETUP_MAIN_ROOT/extra/bm_original_soundtrack_mp3.zip",
+        "$SETUP_MAIN_ROOT/extra/bm_special_edition_geschichte.zip",
+        "$SETUP_MAIN_ROOT/extra/bm_special_edition_illustrations.zip",
+        "$SETUP_MAIN_ROOT/extra/bm_special_edition_interviews.zip",
+        "$SETUP_MAIN_ROOT/extra/bm_special_edition_losung.zip",
+        "$SETUP_MAIN_ROOT/extra/bm_special_edition_ost_flac.zip",
+        "$SETUP_MAIN_ROOT/extra/bm_special_edition_ost_mp3.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_black_mirror_2.1.1.4.exe"
+    ],
+    "transform_file": "setup_black_mirror_2.1.1.4.exe"
+}

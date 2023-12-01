@@ -1,0 +1,3 @@
+Philips CDi || Apprentice, The (Europe) || $ROM_JSON_ROOT/Other/Philips CDi/Apprentice, The (Europe)/Apprentice, The (Europe).json
+Philips CDi || Mutant Rampage - Bodyslam (Europe) || $ROM_JSON_ROOT/Other/Philips CDi/Mutant Rampage - Bodyslam (Europe)/Mutant Rampage - Bodyslam (Europe).json
+Philips CDi || Pac-Panic (Europe) || $ROM_JSON_ROOT/Other/Philips CDi/Pac-Panic (Europe)/Pac-Panic (Europe).json

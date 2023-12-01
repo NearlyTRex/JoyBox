@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Viva Pinata (USA, Europe).chd",
+        "Viva Pinata (USA, Europe).dmi.bin",
+        "Viva Pinata (USA, Europe).lyt",
+        "Viva Pinata (USA, Europe).pfi.bin",
+        "Viva Pinata (USA, Europe).ss.bin"
+    ],
+    "launch_file": "Viva Pinata (USA, Europe).iso",
+    "transform_file": "Viva Pinata (USA, Europe).chd"
+}

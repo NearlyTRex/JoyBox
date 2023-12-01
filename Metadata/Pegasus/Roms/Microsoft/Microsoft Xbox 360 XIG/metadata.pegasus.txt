@@ -1,0 +1,138 @@
+collection: Microsoft Xbox 360 XIG
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Microsoft Xbox 360 XIG" {file.path}
+
+
+game: Breath of Death VII (USA) (XIG)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft Xbox 360 XIG/Breath of Death VII (USA) (XIG)/Breath of Death VII (USA) (XIG).json
+developer: Zeboyd Games
+publisher: Zeboyd Games
+genre: Role-Playing
+description:
+  Resurrect the classic era of RPGs with the retro parody RPG, Breath of Death
+  VII: The Beginning. Join Dem the Skeleton Knight, Sara the ghost historian, Lita
+  the vampire techie, and Erik the zombie prince as they explore an undead world
+  in search of the secrets of the past. Laugh! Cry! Laugh some more!
+  .
+  Old school RPG style mixed with modern design sensibilities! Fast-paced turn
+  based combat! 4-6 hour quest with multiple game modes & difficulty levels for
+  added replay value. Easy to understand branching character customization system
+  with frequent LV-Ups. Multi-character unite techniques and combo break system
+  for added depth!
+release: 2010-04-22
+players: 1
+assets.boxfront: BoxFront/Breath of Death VII (USA) (XIG).jpg
+assets.boxback: BoxBack/Breath of Death VII (USA) (XIG).jpg
+assets.background: Background/Breath of Death VII (USA) (XIG).jpg
+assets.screenshot: Screenshot/Breath of Death VII (USA) (XIG).jpg
+x-co-op: No
+
+
+game: Cthulhu Saves the World (USA) (XIG)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft Xbox 360 XIG/Cthulhu Saves the World (USA) (XIG)/Cthulhu Saves the World (USA) (XIG).json
+developer: Zeboyd Games
+publisher: Zeboyd Games
+genre: Role-Playing
+description:
+  The lord of insanity, Cthulhu was all set to plunge the world into insanity and
+  destruction when his powers were sealed by a mysterious sorcerer. The only way
+  for him to break the curse is to become a true hero. Save the world to destroy
+  it in an epic parody RPG journey of redemption, romance, and insanity!
+  .
+  Old school RPG style mixed with modern design sensibilities! Inflict insanity
+  upon your opponents for fun and profit! 6-10 hour quest with unlockable game
+  modes & difficulty levels for increased replay value. All of the great features
+  players know and love from Breath of Death VII: The Beginning have returned –
+  fast-paced gameplay, combo system, random encounter limits, branching LV-Ups,
+  and more!
+release: 2010-12-30
+players: 1
+assets.boxfront: BoxFront/Cthulhu Saves the World (USA) (XIG).jpg
+assets.boxback: BoxBack/Cthulhu Saves the World (USA) (XIG).jpg
+assets.background: Background/Cthulhu Saves the World (USA) (XIG).jpg
+assets.screenshot: Screenshot/Cthulhu Saves the World (USA) (XIG).jpg
+x-co-op: No
+
+
+game: Dead Pixels (USA) (XIG)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft Xbox 360 XIG/Dead Pixels (USA) (XIG)/Dead Pixels (USA) (XIG).json
+developer: CSR-Studios
+publisher: CSR-Studios
+genre: Shooter
+description:
+  When the Dead Start Walking, It's Time to Run.
+  .
+  A toxic waste spill finds its way into the water supply, causing the recently
+  deceased to rise from their graves. Now it's up to you to blast your way through
+  the hordes of undead if you're going to escape the city. On the way to your
+  rescue, you'll search stores and houses for supplies, and trade with other
+  survivors.
+  .
+  With three game modes, hundreds of items, weapons and grenades, and a city that
+  is never the same twice, there is always something new hiding round the corner
+  in Dead Pixels.
+release: 2011-09-15
+players: 1
+assets.boxfront: BoxFront/Dead Pixels (USA) (XIG).jpg
+assets.boxback: BoxBack/Dead Pixels (USA) (XIG).jpg
+assets.background: Background/Dead Pixels (USA) (XIG).jpg
+assets.screenshot: Screenshot/Dead Pixels (USA) (XIG).jpg
+x-co-op: No
+
+
+game: EvilQuest (USA) (XIG)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft Xbox 360 XIG/EvilQuest (USA) (XIG)/EvilQuest (USA) (XIG).json
+developer: Chaosoft Games
+publisher: Chaosoft Games
+genre: Role-Playing;Action RPG
+description:
+  Why save the world when you can conquer it? In EvilQuest, take on the role of
+  Galvis -- a dark knight obsessed with ultimate power. Set out on a quest of
+  revenge, destruction and conquest in this exciting retro Action RPG title.
+  Along the way you'll unlock ancient mysteries, discover legendary weapons,
+  relics and magic...and of course kill thousands of those foolish enough to
+  stand in your way!
+release: 2012-01-04
+players: 1
+assets.boxfront: BoxFront/EvilQuest (USA) (XIG).jpg
+assets.boxback: BoxBack/EvilQuest (USA) (XIG).jpg
+assets.background: Background/EvilQuest (USA) (XIG).jpg
+assets.screenshot: Screenshot/EvilQuest (USA) (XIG).jpg
+x-co-op: No
+
+
+game: White Noise - A Tale of Horror (USA) (XIG)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft Xbox 360 XIG/White Noise - A Tale of Horror (USA) (XIG)/White Noise - A Tale of Horror (USA) (XIG).json
+developer: Milkstone Studios
+publisher: Milkstone Studios
+genre: Miscellaneous;General
+description:
+  A pure horror experience in your Xbox! Find the 8 hidden clues in an unsettling
+  forest, and avoid being hunted by a supernatural being lurking in the shadows.
+  Will you manage to uncover the truth about the mysterious events?
+release: 2012-12-14
+players: 1
+assets.boxfront: BoxFront/White Noise - A Tale of Horror (USA) (XIG).jpg
+assets.boxback: BoxBack/White Noise - A Tale of Horror (USA) (XIG).jpg
+assets.background: Background/White Noise - A Tale of Horror (USA) (XIG).jpg
+assets.screenshot: Screenshot/White Noise - A Tale of Horror (USA) (XIG).jpg
+x-co-op: No
+
+
+game: Zombie Snowmen (USA) (XIG)
+file: $ROM_JSON_ROOT/Microsoft/Microsoft Xbox 360 XIG/Zombie Snowmen (USA) (XIG)/Zombie Snowmen (USA) (XIG).json
+developer: sanGames
+publisher: sanGames
+genre: Action;Arcade
+description:
+  Test your reaction and kill evil snowmen before they kill you. Press the buttons
+  that appear at the screen and survive as long as you can. But be careful, they
+  are getting faster and faster.
+release: 2011-12-28
+players: 1
+assets.boxfront: BoxFront/Zombie Snowmen (USA) (XIG).jpg
+assets.boxback: BoxBack/Zombie Snowmen (USA) (XIG).jpg
+assets.background: Background/Zombie Snowmen (USA) (XIG).jpg
+assets.screenshot: Screenshot/Zombie Snowmen (USA) (XIG).jpg
+x-co-op: No
+
+

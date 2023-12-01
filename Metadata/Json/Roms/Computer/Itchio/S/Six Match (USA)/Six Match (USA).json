@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Six Match (USA).exe"
+    ],
+    "transform_file": "Six Match (USA).exe"
+}

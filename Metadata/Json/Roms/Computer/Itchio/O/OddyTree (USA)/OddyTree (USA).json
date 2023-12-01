@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/OddyTree (USA).exe"
+    ],
+    "transform_file": "OddyTree (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Pixelry (USA).exe"
+    ],
+    "transform_file": "Pixelry (USA).exe"
+}

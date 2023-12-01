@@ -1,0 +1,123 @@
+collection: Tiger Game.com
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Tiger Game.com" {file.path}
+
+
+game: Castlevania - Symphony of the Night (Unknown) (Proto)
+file: $ROM_JSON_ROOT/Other/Tiger Game.com/Castlevania - Symphony of the Night (Unknown) (Proto)/Castlevania - Symphony of the Night (Unknown) (Proto).json
+developer: Tiger Electronics, Ltd
+publisher: Tiger Electronics, Ltd
+genre: Action
+description:
+  A prototype of the unreleased Castlevania: Symphony of the Night port for
+  the Tiger Electronics Game.com.
+  .
+  Based on Castlevania: Symphony of the Night which was originally released
+  around the same time on both the Sony PlayStation and Sega Saturn in 1997.
+  .
+  - Most of the text has been implemented.
+  .
+  - Game retains the castle and reverse castle, and can be played start to finish.
+  .
+  - Alucard can collect his Bat and Mist forms, but not his Wolf form.
+  .
+  - Alucard can use one of two familiars: Bat or Ghost. Each level up.
+  .
+  - Cancelled for unknown reasons.
+release: 1999
+players: 1
+assets.boxfront: BoxFront/Castlevania - Symphony of the Night (Unknown) (Proto).jpg
+assets.boxback: BoxBack/Castlevania - Symphony of the Night (Unknown) (Proto).jpg
+assets.background: Background/Castlevania - Symphony of the Night (Unknown) (Proto).jpg
+assets.screenshot: Screenshot/Castlevania - Symphony of the Night (Unknown) (Proto).jpg
+x-co-op: No
+
+
+game: Fighters Megamix (USA)
+file: $ROM_JSON_ROOT/Other/Tiger Game.com/Fighters Megamix (USA)/Fighters Megamix (USA).json
+developer: Tiger Electronics, Ltd
+publisher: Tiger Electronics, Ltd
+genre: Fighting
+description:
+  It's Virtua Fighter 2 versus Fighting Vipers! Two arcade smash hits, smashing
+  into each other in the ultimate battle for supremacy. It's cutting edge combat.
+  It's also filled with surprises - try to unlock your favourite characters from
+  Daytona USA and Virtua Cop! This is fighting like you've never experienced
+  before!
+release: 1998-01-01
+players: 2
+assets.boxfront: BoxFront/Fighters Megamix (USA).jpg
+assets.boxback: BoxBack/Fighters Megamix (USA).jpg
+assets.background: Background/Fighters Megamix (USA).jpg
+assets.screenshot: Screenshot/Fighters Megamix (USA).jpg
+assets.video: Video/Fighters Megamix (USA).mp4
+x-co-op: No
+
+
+game: Jurassic Park - The Lost World (USA)
+file: $ROM_JSON_ROOT/Other/Tiger Game.com/Jurassic Park - The Lost World (USA)/Jurassic Park - The Lost World (USA).json
+developer: Tiger Electronics, Ltd
+publisher: Tiger Electronics, Ltd
+genre: Action;Platform
+description:
+  The Lost World: Jurassic Park is an action-platformer game made by Tiger
+  Electronics for the Game.com in 1997. It is based on the film of the same name.
+release: 1997-01-01
+players: 1
+assets.boxfront: BoxFront/Jurassic Park - The Lost World (USA).jpg
+assets.boxback: BoxBack/Jurassic Park - The Lost World (USA).jpg
+assets.background: Background/Jurassic Park - The Lost World (USA).jpg
+assets.screenshot: Screenshot/Jurassic Park - The Lost World (USA).jpg
+assets.video: Video/Jurassic Park - The Lost World (USA).mp4
+x-co-op: No
+
+
+game: Resident Evil 2 (USA)
+file: $ROM_JSON_ROOT/Other/Tiger Game.com/Resident Evil 2 (USA)/Resident Evil 2 (USA).json
+developer: Tiger Electronics, Ltd
+publisher: Tiger Electronics, Ltd
+genre: Horror
+description:
+  Following the release of the original PlayStation edition Resident Evil 2 in
+  January 1998, Tiger Electronics released a sprite-based 2.5D version for their
+  Game.com handheld in late 1998. It included only Leon Kennedy's story path, and
+  removed several of the original game's core features.\n
+  Having been developed for a woefully under-powered console, it lacks much of
+  what defined the original game. It can be seen as attempting to boil Resident
+  Evil 2 down to its bare essentials: Killing zombies and collecting items.
+  However, with the poor framerate and lack of visual fidelity afforded by the
+  Game.com, it fails even in this regard. Despite this, it is known as one of the
+  best games for the Tiger Game.com.
+  .
+  In the history of the franchise, it is the first game to be rated "T" for Teen
+  by the ESRB, as opposed to the more typical "M" for Mature. This rating can be
+  attributed to the Game.com's inability to render the same level of graphic
+  violence as the original game.
+release: 1998-11-11
+players: 1
+assets.boxfront: BoxFront/Resident Evil 2 (USA).jpg
+assets.boxback: BoxBack/Resident Evil 2 (USA).jpg
+assets.background: Background/Resident Evil 2 (USA).jpg
+assets.screenshot: Screenshot/Resident Evil 2 (USA).jpg
+assets.video: Video/Resident Evil 2 (USA).mp4
+x-co-op: No
+
+
+game: Sonic Jam (USA)
+file: $ROM_JSON_ROOT/Other/Tiger Game.com/Sonic Jam (USA)/Sonic Jam (USA).json
+developer: Tiger Electronics, Ltd
+publisher: Sega
+genre: Platform
+description:
+  Everyone's favourite hedgehog is at it again - and he's jammin' Join Sonic on
+  his action packed adventure. It's high speed, non stop fun as the best of Sonic
+  merges. Play classic levels of Sonic 2, 3 and Sonic and Knuckles.
+release: 1998-07-10
+players: 1
+assets.boxfront: BoxFront/Sonic Jam (USA).jpg
+assets.boxback: BoxBack/Sonic Jam (USA).jpg
+assets.background: Background/Sonic Jam (USA).jpg
+assets.screenshot: Screenshot/Sonic Jam (USA).jpg
+assets.video: Video/Sonic Jam (USA).mp4
+x-co-op: No
+
+

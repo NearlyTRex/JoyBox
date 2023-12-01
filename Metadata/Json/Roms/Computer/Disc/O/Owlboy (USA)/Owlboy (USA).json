@@ -1,0 +1,18 @@
+{
+    "main_game_exe": [
+        "Owlboy/Owlboy/Owlboy.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Owlboy/Owlboy/Owlboy.exe": "Owlboy/Owlboy"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT/Owlboy.zip",
+                "to": "$HDD_MAIN_ROOT/Owlboy",
+                "type": "extract"
+            }
+        ]
+    },
+    "transform_file": "Owlboy (USA).chd"
+}

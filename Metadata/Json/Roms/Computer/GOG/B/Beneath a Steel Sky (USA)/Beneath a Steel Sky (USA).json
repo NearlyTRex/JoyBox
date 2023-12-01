@@ -1,0 +1,13 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/bass_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/bass_comic_book.zip",
+        "$SETUP_MAIN_ROOT/extra/bass_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/bass_security_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/bass_wallpapers.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_beneath_a_steel_sky_1.0_(20270).exe"
+    ],
+    "transform_file": "setup_beneath_a_steel_sky_1.0_(20270).exe"
+}

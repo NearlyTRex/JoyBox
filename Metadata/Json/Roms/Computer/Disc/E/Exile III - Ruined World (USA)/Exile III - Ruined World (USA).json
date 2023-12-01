@@ -1,0 +1,30 @@
+{
+    "is_win31": true,
+    "main_game_win31_exe": [
+        "EXILE3/EXILE3.EXE"
+    ],
+    "main_game_win31_exe_cwd": {
+        "EXILE3/EXILE3.EXE": "EXILE3"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_ONE_ROOT",
+                "to": "$DOS_MAIN_ROOT/C/EXILE3",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT",
+                "to": "$DOS_MAIN_ROOT/C",
+                "type": "copy"
+            }
+        ]
+    },
+    "sync": {
+        "data": [
+            "*.SAV"
+        ],
+        "search": "EXILE3/EXILE3.EXE"
+    },
+    "transform_file": "Exile III - Ruined World (USA).m3u"
+}

@@ -1,0 +1,13 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/syndicate_avatars.zip",
+        "$SETUP_MAIN_ROOT/extra/syndicate_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/syndicate_plus_manual_fr.zip",
+        "$SETUP_MAIN_ROOT/extra/syndicate_plus_reference_card_en.zip",
+        "$SETUP_MAIN_ROOT/extra/syndicate_plus_reference_card_fr.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_syndicate_plus_2.1.0.15.exe"
+    ],
+    "transform_file": "setup_syndicate_plus_2.1.0.15.exe"
+}

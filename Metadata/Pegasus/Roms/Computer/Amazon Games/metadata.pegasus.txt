@@ -1,0 +1,1273 @@
+collection: Computer - Amazon Games
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Computer - Amazon Games" {file.path}
+
+
+game: ACA Neo Geo - 3 Count Bout (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - 3 Count Bout (USA)/ACA Neo Geo - 3 Count Bout (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action;Sports
+description:
+  Take your enemies down on a 3 count! Tough wrestlers fight it out for the title
+  of the "World's Strongest"!!
+  .
+  "3 COUNT BOUT" is a pro-wrestling game released by SNK in 1993. Aim to become
+  the world's strongest wrestler, and take the champion's throne for yourself!
+  Chock full of the elements of pro-wrestling, including strike exchanges and
+  aerial assaults, dash moves, even illegal moves! Enjoy interesting matches
+  including electricity matches, street matches, and more.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2018-11-11
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - 3 Count Bout (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - 3 Count Bout (USA).jpg
+assets.background: Background/ACA Neo Geo - 3 Count Bout (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - 3 Count Bout (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Alpha Mission II (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Alpha Mission II (USA)/ACA Neo Geo - Alpha Mission II (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action
+description:
+  Utilize 11 types of "Power Armor" and recapture the universe from the Seven Star
+  Alliance!
+  .
+  "ALPHA MISSION II" is a shooting game released by SNK in 1991.
+  .
+  The game is a fan-favorite in the genre, and features unique gameplay allowing
+  players to collect and upgrade armor power-ups and switch them out on the fly.
+  .
+  This second entry in the series adds a wealth of new flashy armor power-ups,
+  expanding on the tactical and exciting gameplay the series is known for.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces. Players can change various game settings such as game difficulty,
+  and also reproduce the atmosphere of arcade display settings at that time.
+  Players can also compete against each other from all over the world with their
+  high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2017-04-06
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Alpha Mission II (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Alpha Mission II (USA).jpg
+assets.background: Background/ACA Neo Geo - Alpha Mission II (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Alpha Mission II (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Art of Fighting 3 - The Path of The Warrior (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Art of Fighting 3 - The Path of The Warrior (USA)/ACA Neo Geo - Art of Fighting 3 - The Path of The Warrior (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Fighting
+description:
+  Completely unknown fighters appear. The ultimate rules make for intense battles!
+  .
+  "ART OF FIGHTING 3" is a fighting game released by SNK in 1996. As a side-story
+  in the ART OF FIGHTING series, it portrays the drama and battles of the various
+  fighters. With the Ultimate KO system and other mechanics, it makes a stake in a
+  new frontier of 2D fighting games.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time.
+  .
+  Players can also compete against each other from all over the world with their
+  high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+  .
+  Kasumi Todoh, Karman Cole, Lenny Creston, Rody Birts, Jin Fu-Ha, Wang Koh-San,
+  Sinclair, Wyler, Ryo Sakazaki e Robert Garcia are the characters
+release: 2017-11-02
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Art of Fighting 3 - The Path of The Warrior (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Art of Fighting 3 - The Path of The Warrior (USA).jpg
+assets.background: Background/ACA Neo Geo - Art of Fighting 3 - The Path of The Warrior (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Art of Fighting 3 - The Path of The Warrior (USA).jpg
+x-co-op: No
+
+
+game: ACA Neo Geo - Crossed Swords (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Crossed Swords (USA)/ACA Neo Geo - Crossed Swords (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action
+description:
+  Experience the legend of the world's strongest knights. Sparks fly in this
+  realistic battle RPG!
+  .
+  "CROSSED SWORDS" is an action game released by SNK in 1991. In order to defeat
+  the demon Nausizz, use Weapon Attacks, Magic Attacks, and your Defend ability as
+  you make your way through seven intense stages. Up to two players can play
+  simultaneously with the unique 3D perspective. Buy weapons with accumulated
+  GOLD. Characters also grow in strength through an RPG-like system.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2018-08-23
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Crossed Swords (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Crossed Swords (USA).jpg
+assets.background: Background/ACA Neo Geo - Crossed Swords (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Crossed Swords (USA).jpg
+x-co-op: No
+
+
+game: ACA Neo Geo - Ghost Pilots (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Ghost Pilots (USA)/ACA Neo Geo - Ghost Pilots (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action;Shooter
+description:
+  This is the long-awaited authentic shooting experience! Hurry to the frontline
+  on the seaplane!
+  .
+  "GHOST PILOTS" is a shooting game released by SNK in 1991. The hero flies an
+  old-fashioned seaplane in order to fight the two powerful nations invading their
+  own country. Alongside giant military weapons, a mysterious combat unit arrives
+  and makes for an intense battle.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2018-04-25
+players: 4
+assets.boxfront: BoxFront/ACA Neo Geo - Ghost Pilots (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Ghost Pilots (USA).jpg
+assets.background: Background/ACA Neo Geo - Ghost Pilots (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Ghost Pilots (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - King of the Monsters 2 - The Next Thing (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - King of the Monsters 2 - The Next Thing (USA)/ACA Neo Geo - King of the Monsters 2 - The Next Thing (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action
+description:
+  The monsters are back with a vengeance! An earthshaking monster battle!! Who
+  will rule the world!?
+  .
+  "KING OF THE MONSTERS 2" is an action game released by SNK in 1992.
+  .
+  Choose 1 of 3 monsters to thrash aliens around the world and become the
+  undisputed King of the Monsters!
+  .
+  Work together in a 2 player co-op mode, or duke it out in versus mode!
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2018-11-22
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - King of the Monsters 2 - The Next Thing (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - King of the Monsters 2 - The Next Thing (USA).jpg
+assets.background: Background/ACA Neo Geo - King of the Monsters 2 - The Next Thing (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - King of the Monsters 2 - The Next Thing (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Kizuna Encounter - Super Tag Battle (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Kizuna Encounter - Super Tag Battle (USA)/ACA Neo Geo - Kizuna Encounter - Super Tag Battle (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Fighting
+description:
+  See some serious battle action in this hybrid fighting game!
+  .
+  "KIZUNA ENCOUNTER" is a fighting game released by SNK in 1996.
+  .
+  Create a team of two fighters and use weapons and your fists to win in single-
+  round sudden death tag-team matches!
+  .
+  Experience the feel of an advanced battle system that pairs mid-battle character
+  change-ups and easy commands leading to rush combos!
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2019-01-10
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Kizuna Encounter - Super Tag Battle (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Kizuna Encounter - Super Tag Battle (USA).jpg
+assets.background: Background/ACA Neo Geo - Kizuna Encounter - Super Tag Battle (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Kizuna Encounter - Super Tag Battle (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Last Resort (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Last Resort (USA)/ACA Neo Geo - Last Resort (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action
+description:
+  "LAST RESORT" is a shoot 'em up game released by SNK in 1992.
+  .
+  Players can use weapons such as laser, homing, or grenades, which can be powered
+  up as many as three times, along with a "unit" that can nullify enemy bullets
+  and attack foes. Using these abilities and many other attacks players will fight
+  in order to win the war between robots and humanity.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2017-06-01
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Last Resort (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Last Resort (USA).jpg
+assets.background: Background/ACA Neo Geo - Last Resort (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Last Resort (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Magician Lord (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Magician Lord (USA)/ACA Neo Geo - Magician Lord (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action
+description:
+  Magician Lord puts you in charge of Elta, a wizard who has the task of
+  collecting eight books of wisdom from the clutches of Az Atorse, the god of
+  destruction. By collecting the right power-ups along the way, you can transform
+  into different characters, including the Rajin, Samurai, Waterman, Shinobi,
+  Poseidon, and Dragon Warrior. Each character has different abilities. There are
+  eight areas in the game, and each stage ends with you trying to defeat both a
+  guardian and the end-of-area boss (which are basically Atorse's incarnations).
+  One of the first games that demonstrated the graphical abilities of the Neo-Geo.
+release: 2017-11-23
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Magician Lord (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Magician Lord (USA).jpg
+assets.background: Background/ACA Neo Geo - Magician Lord (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Magician Lord (USA).jpg
+x-co-op: No
+
+
+game: ACA Neo Geo - Metal Slug (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Metal Slug (USA)/ACA Neo Geo - Metal Slug (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action
+description:
+  "METAL SLUG ", the very first title in SNK's legendary 2D run & gun action
+  shooting game series where all began, returns to the missions on the Steam
+  gaming platform!
+release: 2015-06-25
+players: 4
+assets.boxfront: BoxFront/ACA Neo Geo - Metal Slug (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Metal Slug (USA).jpg
+assets.background: Background/ACA Neo Geo - Metal Slug (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Metal Slug (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Metal Slug 3 (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Metal Slug 3 (USA)/ACA Neo Geo - Metal Slug 3 (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action
+description:
+  "METAL SLUG 3", the masterpiece in SNK's emblematic 2D run & gun action shooting
+  game series, still continues to fascinate millions of fans worldwide to this day
+  for its intricate dot-pixel graphics, and simple and intuitive game controls!
+  The most highly praised title in the series among Metal Slug fans for its
+  refined balance and game volume.
+release: 2014-02-15
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Metal Slug 3 (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Metal Slug 3 (USA).jpg
+assets.background: Background/ACA Neo Geo - Metal Slug 3 (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Metal Slug 3 (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Metal Slug 4 (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Metal Slug 4 (USA)/ACA Neo Geo - Metal Slug 4 (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action;Shooter
+description:
+  In the year 20xx, a cyber-terrorist group has struck out at the world by
+  unleashing a computer virus through the internet with the sole purpose of
+  hijacking the militaries of the world's nations.
+  .
+  Join Marco, Fio, and new Metal Slug team members Trevor and Nadia to stop the
+  distribution of the virus before it's too late.
+release: 2019-05-31
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Metal Slug 4 (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Metal Slug 4 (USA).jpg
+assets.background: Background/ACA Neo Geo - Metal Slug 4 (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Metal Slug 4 (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Metal Slug X (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Metal Slug X (USA)/ACA Neo Geo - Metal Slug X (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action;Shooter
+description:
+  "METAL SLUG X", a masterpiece in SNK's emblematic 2D run & gun action shooting
+  game series, still continues to fascinate millions of fans worldwide to this day
+  for its intricate dot-pixel graphics, and simple and intuitive game controls.
+  One of the most highly praised titles in the series among Metal Slug fans for
+  its refined balance and game volume, heads out to the Steam gaming platform!
+release: 2014-10-02
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Metal Slug X (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Metal Slug X (USA).jpg
+assets.background: Background/ACA Neo Geo - Metal Slug X (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Metal Slug X (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Mutation Nation (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Mutation Nation (USA)/ACA Neo Geo - Mutation Nation (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action
+description:
+  A genius biologist gone mad has created the greatest thread to humankind! This
+  isn't a nightmare you can wake up from!
+  .
+  "MUTATION NATION" is an action game released by SNK in 1992.
+  .
+  Humans turned into mutants by the hands of a genius biologist have gone on a
+  rampage. To save their hometown, two youths rise up to resist. Battle with
+  courage using full action combos along with 6 special moves.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2017-10-26
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Mutation Nation (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Mutation Nation (USA).jpg
+assets.background: Background/ACA Neo Geo - Mutation Nation (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Mutation Nation (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Ninja Commando (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Ninja Commando (USA)/ACA Neo Geo - Ninja Commando (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action
+description:
+  Take your place among the strongest ninja group the world has ever known!
+  .
+  "NINJA COMMANDO" is an action game released by SNK in 1992. Fight to protect
+  history from death merchants planning to bring chaos to the world. Shoot, use
+  Ninja Tricks and Death Blows, and accumulate scrolls to perform Transformations
+  for a variety of attacks. Two-player simultaneous play is also available.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2018-09-06
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Ninja Commando (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Ninja Commando (USA).jpg
+assets.background: Background/ACA Neo Geo - Ninja Commando (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Ninja Commando (USA).jpg
+x-co-op: No
+
+
+game: ACA Neo Geo - Ninja Masters (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Ninja Masters (USA)/ACA Neo Geo - Ninja Masters (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Fighting
+description:
+  Another one-on-one fighting game straight from the arcades for the Neo Geo.
+  Ninja Master's (sic.) is set on feudal Japan, and tells the story of 10 unique
+  ninjas who fight each other for their own personal reasons and the chance to
+  defeat the evil Nobunaga and bring peace back to Japan.
+  .
+  As expected for the genre, the game pits your selected character against a
+  series of opponents in best-of-3 round matches, with your objective being to
+  deplete your opponents health bar with your basic attacks, special moves
+  (triggered by specific control motions) and super moves (which rely on a power
+  gauge). All the characters in Ninja Master's fight with their weapon of choice,
+  but you can freely choose to put your weapon away and go mano a mano. This does
+  not have a major impact on speed or attack power, but changes the movesets
+  significantly changing the way even basic attacks work.
+  .
+  Uses 2D sprite-based graphics and features 1P or 2P Vs gameplay.
+release: 2019-01-17
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Ninja Masters (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Ninja Masters (USA).jpg
+assets.background: Background/ACA Neo Geo - Ninja Masters (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Ninja Masters (USA).jpg
+x-co-op: No
+
+
+game: ACA Neo Geo - Over Top (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Over Top (USA)/ACA Neo Geo - Over Top (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Racing
+description:
+  The ultimate NEOGEO Racing Game! The game features branching paths and a variety
+  of car models for maximum replayability!
+  .
+  "OVER TOP" is a racing game released by SNK in 1996.
+  .
+  Players will participate in breathtaking races through urban areas, mountainous
+  regions, and snowy roads. The courses also feature weather variations to add
+  more variety to the game.
+  .
+  In addition to the various vehicles with different performance factors which
+  players can use, they can also enjoy the thrill of drifting their way through
+  corners to clear courses.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2017-04-27
+players: 1
+assets.boxfront: BoxFront/ACA Neo Geo - Over Top (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Over Top (USA).jpg
+assets.background: Background/ACA Neo Geo - Over Top (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Over Top (USA).jpg
+x-co-op: No
+
+
+game: ACA Neo Geo - Real Bout Fatal Fury 2 - The Newcomers (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Real Bout Fatal Fury 2 - The Newcomers (USA)/ACA Neo Geo - Real Bout Fatal Fury 2 - The Newcomers (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action;Fighting;2D
+description:
+  "REAL BOUT FATAL FURY 2" is a fighting game released by SNK in 1998. It is the
+  7th title in the Fatal Fury series. New elements have been added on top of
+  refining the previous systems. This entry adds Rick Strowd and Li Xiangfei as
+  playable characters, and Geese Howard makes his return as well!
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 1998-03-19
+players: 1
+assets.boxfront: BoxFront/ACA Neo Geo - Real Bout Fatal Fury 2 - The Newcomers (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Real Bout Fatal Fury 2 - The Newcomers (USA).jpg
+assets.background: Background/ACA Neo Geo - Real Bout Fatal Fury 2 - The Newcomers (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Real Bout Fatal Fury 2 - The Newcomers (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Robo Army (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Robo Army (USA)/ACA Neo Geo - Robo Army (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action
+description:
+  Experience high-powered collisions! Send out the ROBO ARMY!
+  .
+  "ROBO ARMY" is a beat 'em up action game released by SNK in 1991.
+  .
+  Head out to crush and destroy your enemies in order to restore peace from under
+  the grasp of the robot corps known as Hell Jeed.
+  .
+  Collect items to power up and perform a variety of attacks in this exhilarating
+  battle.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2017-10-19
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Robo Army (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Robo Army (USA).jpg
+assets.background: Background/ACA Neo Geo - Robo Army (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Robo Army (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Samurai Shodown IV - Amakusa's Revenge (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Samurai Shodown IV - Amakusa's Revenge (USA)/ACA Neo Geo - Samurai Shodown IV - Amakusa's Revenge (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Fighting
+description:
+  17 samurai will fight to defeat Amakusa who came back from hell!
+  .
+  "SAMURAI SHODOWN IV" is a fighting game released by SNK in 1996.
+  .
+  Warriors with their own respective goals will challenge Amakusa who has returned
+  to life again, and plans to conquer the modern world.
+  .
+  Attacks using the "Anger Gauge" can lead to unexpected outcomes and make battles
+  even more intense!
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2017-04-13
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Samurai Shodown IV - Amakusa's Revenge (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Samurai Shodown IV - Amakusa's Revenge (USA).jpg
+assets.background: Background/ACA Neo Geo - Samurai Shodown IV - Amakusa's Revenge (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Samurai Shodown IV - Amakusa's Revenge (USA).jpg
+x-co-op: No
+
+
+game: ACA Neo Geo - Sengoku (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Sengoku (USA)/ACA Neo Geo - Sengoku (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action;Beat-'Em-Up;2D
+description:
+  It's the final battle. A warlord in the past planned to conquer the world by
+  brutal attack. Now, 400 years later, this "Demon Castle" suddenly appeared in
+  the sky above Washington D.C. The prophecy came true! Only two samurai warriors
+  with the special weapon can stop the revival of this ghost!
+release: 2017-06-15
+players: 1
+assets.boxfront: BoxFront/ACA Neo Geo - Sengoku (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Sengoku (USA).jpg
+assets.background: Background/ACA Neo Geo - Sengoku (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Sengoku (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Sengoku 2 (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Sengoku 2 (USA)/ACA Neo Geo - Sengoku 2 (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action
+description:
+  Join the Heroes of Light as they battle across time itself to save history from
+  evil!
+  .
+  "SENGOKU 2 "is a side scrolling action game released by SNK in 1993.
+  .
+  Take on the role of a warrior summoned by a shrine princess, and fight over
+  various historical periods in order to defeat the dark monarch.
+  .
+  Players can enjoy new tactical features such as charge attacks and defensive
+  abilities.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players
+  .
+  can also compete against each other from all over the world with their high
+  scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2018-03-01
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Sengoku 2 (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Sengoku 2 (USA).jpg
+assets.background: Background/ACA Neo Geo - Sengoku 2 (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Sengoku 2 (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Soccer Brawl (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Soccer Brawl (USA)/ACA Neo Geo - Soccer Brawl (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Sports
+description:
+  Punch! Kick! Anything goes. The battling soccer of the 21st century begins now!
+  .
+  "SOCCER BRAWL" is a soccer game released by SNK in 1992.
+  .
+  Sparks fly as teams representing 8 different countries battle for the
+  championship. Staged in the near future, teams feature 7 robot player instead of
+  the normal 11 players, allowing the defense to also go on the attack and for a
+  variety of arrangements.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2017-11-22
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Soccer Brawl (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Soccer Brawl (USA).jpg
+assets.background: Background/ACA Neo Geo - Soccer Brawl (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Soccer Brawl (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Super Sidekicks (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Super Sidekicks (USA)/ACA Neo Geo - Super Sidekicks (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Sports
+description:
+  The very first realistic soccer game released on NEOGEO! Win exciting matches,
+  and aim to seize to the Champion Cup!
+  .
+  SUPER SIDEKICKS is a soccer game released by SNK in 1992.
+  .
+  This is the very first realistic-looking soccer game released for the NEOGEO
+  system.
+  .
+  Use a variety of techniques such as dribbling and passing to compete against the
+  best teams from around the world! Take part in exhilarating matches on your way
+  to seizing the Champion Cup!
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2017-07-07
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Super Sidekicks (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Super Sidekicks (USA).jpg
+assets.background: Background/ACA Neo Geo - Super Sidekicks (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Super Sidekicks (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - The King of Fighters 2003 (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - The King of Fighters 2003 (USA)/ACA Neo Geo - The King of Fighters 2003 (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action;Fighting;2D
+description:
+  The Curtain Rises On The Long Awaited New Chapter of KOF!
+  .
+  34 characters making up 10 of the most dangerous 2D fighting teams ever
+  assembled
+  .
+  10 beautifully rendered 3D battle stages
+  .
+  Introducing the all new "Multi-Shift" system, allowing free substitution of
+  teammates during battle
+  .
+  Select your team leader with the new "Tactical Leader System"
+  .
+  Learn the combo moves for your favourite fighters and unleash massive attacks
+release: 2019-02-21
+players: 1
+assets.boxfront: BoxFront/ACA Neo Geo - The King of Fighters 2003 (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - The King of Fighters 2003 (USA).jpg
+assets.background: Background/ACA Neo Geo - The King of Fighters 2003 (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - The King of Fighters 2003 (USA).jpg
+x-co-op: No
+
+
+game: ACA Neo Geo - The Last Blade (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - The Last Blade (USA)/ACA Neo Geo - The Last Blade (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Fighting
+description:
+  The game takes place during the Bakumatsu era in Japan, and incorporates various
+  elements of Japanese mythology (with a heavy emphasis on the symbology of the
+  Four Symbols). As such, the background music generally incorporates synthesized
+  instruments simulating a sound appropriate to the 19th century setting, in a
+  Western classical, pseudo-Romantic style (unusual for a fighting game).
+release: 2016-08-31
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - The Last Blade (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - The Last Blade (USA).jpg
+assets.background: Background/ACA Neo Geo - The Last Blade (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - The Last Blade (USA).jpg
+x-co-op: No
+
+
+game: ACA Neo Geo - The Last Blade 2 (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - The Last Blade 2 (USA)/ACA Neo Geo - The Last Blade 2 (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action;Fighting
+description:
+  THE LAST BLADE 2 is SNK's legendary weapons-based fighting game which was
+  originally released in 1998 on SNK's NEOGEO game system as a sequel to its
+  predecessor THE LAST BLADE.
+  .
+  Discover (or rediscover) THE LAST BLADE 2, which is still considered as the
+  pinnacle of weapons-based fighting games around the world!
+  .
+  GAME FEATURES:
+  .
+  An epic storyline during the twilight period of the SAMURAI!
+  .
+  "Hell's Gate", the boundary between life and death. Four "Mythological Symbols"
+  are about to fight to the death against an ultimate spirit awakened from the
+  netherworld, in order to send him straight to "Hell's Gate"! Taking place during
+  the end of the Edo-period, a truly mystical and spectacular story is about to
+  unfold...
+  .
+  18 characters who are directed by their destiny cross swords!
+  .
+  In addition to 12 combatants (including boss character "Kagami" from the series'
+  predecessor), 4 new characters and 2 hidden ones join the gorgeous roster of 18
+  playable characters. Choose the character and fighting style which suits you the
+  most, and prepare for an epic battle to seal "Hell's Gate"!
+  .
+  Enjoyable strategies and a unique game system / game mechanics!
+  .
+  Select your favorite sword attack type among the "POWER", "SPEED", and "EXTREME"
+  modes. Master the "REPEL" mechanic to counter your opponent's attacks, and when
+  the right time comes, activate the "SUPER SECRET SLASH", "HIDDEN SECRET SLASH"
+  and "ENIGMA FRENZY-ATTACK" ultimate techniques in order to change the outcome of
+  the battle!
+release: 2017-11-17
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - The Last Blade 2 (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - The Last Blade 2 (USA).jpg
+assets.background: Background/ACA Neo Geo - The Last Blade 2 (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - The Last Blade 2 (USA).jpg
+x-co-op: No
+
+
+game: ACA Neo Geo - The Super Spy (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - The Super Spy (USA)/ACA Neo Geo - The Super Spy (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action
+description:
+  Punch, kick, and shoot to destroy the worst terrorist group in history.
+  .
+  "THE SUPER SPY" is an action game released by SNK in 1990.
+  .
+  Punch, kick, and use guns to fight off terrorists as you make your way through
+  the building to rescue their captives. Defeating enemies earns experience, which
+  can be used in a Role Playing Game-like feature to level up.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2018-07-12
+players: 1
+assets.boxfront: BoxFront/ACA Neo Geo - The Super Spy (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - The Super Spy (USA).jpg
+assets.background: Background/ACA Neo Geo - The Super Spy (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - The Super Spy (USA).jpg
+x-co-op: No
+
+
+game: ACA Neo Geo - Top Hunter - Roddy & Cathy (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Top Hunter - Roddy & Cathy (USA)/ACA Neo Geo - Top Hunter - Roddy & Cathy (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Action
+description:
+  This intense action game offers thrills and adventure! It's time to get rid of
+  the space pirates!
+  .
+  "TOP HUNTER RODDY & CATHY" is a side-scrolling action game released by SNK in
+  1994. Using a 2-line system with front and back lines that can freely be
+  switched between, jump, shoot, throw, and perform special attacks to defeat the
+  space pirates who aim for total domination. This game offers simultaneous 2
+  player mode.
+  .
+  The "ACA NEOGEO" series has faithfully reproduced many classic NEOGEO
+  masterpieces.
+  .
+  Players can change various game settings such as game difficulty, and also
+  reproduce the atmosphere of arcade display settings at that time. Players can
+  also compete against each other from all over the world with their high scores.
+  .
+  Please enjoy the masterpiece that built a generation for video games.
+release: 2017-12-07
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Top Hunter - Roddy & Cathy (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Top Hunter - Roddy & Cathy (USA).jpg
+assets.background: Background/ACA Neo Geo - Top Hunter - Roddy & Cathy (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Top Hunter - Roddy & Cathy (USA).jpg
+x-co-op: Yes
+
+
+game: ACA Neo Geo - Twinkle Star Sprites (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/A/ACA Neo Geo - Twinkle Star Sprites (USA)/ACA Neo Geo - Twinkle Star Sprites (USA).json
+developer: SNK
+publisher: HAMSTER Corporation
+genre: Shooter
+description:
+  "TWINKLE STAR SPRITES ", a competitive 2D top-down view scrolling shooter
+  released on NEOGEO MVS in 1996, departs for new adventures on the Steam gaming
+  platform!
+  .
+  Master your shots, and aim for the magical Twinkle Star"!
+release: 2016-05-26
+players: 2
+assets.boxfront: BoxFront/ACA Neo Geo - Twinkle Star Sprites (USA).jpg
+assets.boxback: BoxBack/ACA Neo Geo - Twinkle Star Sprites (USA).jpg
+assets.background: Background/ACA Neo Geo - Twinkle Star Sprites (USA).jpg
+assets.screenshot: Screenshot/ACA Neo Geo - Twinkle Star Sprites (USA).jpg
+x-co-op: No
+
+
+game: Baldur's Gate II - Enhanced Edition (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/B/Baldur's Gate II - Enhanced Edition (USA)/Baldur's Gate II - Enhanced Edition (USA).json
+developer: Beamdog
+publisher: Beamdog
+genre: Role-Playing;Strategy
+description:
+  Kidnapped. Imprisoned. Tortured. The wizard Irenicus holds you captive in his
+  stronghold, attempting to strip you of the powers that are your birthright. Can
+  you resist the evil in your blood and forsake the dark destiny that awaits you?
+  Or will you embrace your monstrous nature and ascend to godhood as the new Lord
+  of Murder?
+  .
+  Continue a journey started in Baldur's Gate: Enhanced Edition or create an
+  entirely new character in this isometric Dungeons & Dragons roleplaying game.
+  Running on an upgraded and improved version of the Infinity Engine, Baldur's
+  Gate II: Enhanced Edition includes the original Shadows of Amn adventure, the
+  Throne of Bhaal expansion, and all-new content including four new party members.
+  .
+  Key Features
+  .
+  The original Shadows of Amn adventure
+  .
+  Throne of Bhaal expansion
+  .
+  New Adventure: The Black Pits II: Gladiators of Thay
+  .
+  New Characters: The Blackguard Dorn Il-Khan, Neera the Wild Mage, Rasaad yn
+  Bashir the Monk, and Hexxat the Thief
+  .
+  Native support for high-resolution widescreen displays
+  .
+  Improved multiplayer support with connectivity between all platforms
+  .
+  Hundreds of bug fixes and improvements to the original game
+  .
+  Note: All translations are text only. Voice-overs are played in English.
+release: 2013-11-16
+players: 1
+assets.boxfront: BoxFront/Baldur's Gate II - Enhanced Edition (USA).jpg
+assets.boxback: BoxBack/Baldur's Gate II - Enhanced Edition (USA).jpg
+assets.background: Background/Baldur's Gate II - Enhanced Edition (USA).jpg
+assets.screenshot: Screenshot/Baldur's Gate II - Enhanced Edition (USA).jpg
+x-co-op: No
+
+
+game: Blade Assault (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/B/Blade Assault (USA)/Blade Assault (USA).json
+developer: TeamSuneat
+publisher: Neowiz Games
+genre: Action;Adventure;Platform
+description:
+  Blade Assault is a 2D action rogue-lite platformer with beautiful pixel art set
+  in a desolate sci-fi world. Fight against the corrupt military of Esperanza as
+  part of the resistance force of the Undercity. Bring the corrupt to justice by
+  becoming stronger and fighting alongside your trusty comrades.
+release: 2020-12-30
+players: 1
+assets.boxfront: BoxFront/Blade Assault (USA).jpg
+assets.boxback: BoxBack/Blade Assault (USA).jpg
+assets.background: Background/Blade Assault (USA).jpg
+assets.screenshot: Screenshot/Blade Assault (USA).jpg
+x-co-op: No
+
+
+game: Cook, Serve, Delicious! 3! (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/C/Cook, Serve, Delicious! 3! (USA)/Cook, Serve, Delicious! 3! (USA).json
+developer: Vertigo Games
+publisher: Vertigo Games
+genre: Strategy;Management;Business / Tycoon
+description:
+  Hit the road in this massive sequel to the million-selling Cook, Serve,
+  Delicious! series as you travel across the United States to participate in the
+  Iron Cook Foodtruck Championships with your trusty robot crew Whisk and Cleaver.
+  .
+  Set in the radically-changed war-torn America of 2042, play through an all new
+  story-driven campaign where you cook hundreds of foods - including many brand
+  new to the series - across hundreds of levels in a new gameplay structure that
+  has been completely redesigned to deliver fast-paced action, or take it easy
+  with the all new Chill Mode that can be toggled on or off at any time!
+release: 2020-10-14
+players: 1
+assets.boxfront: BoxFront/Cook, Serve, Delicious! 3! (USA).jpg
+assets.boxback: BoxBack/Cook, Serve, Delicious! 3! (USA).jpg
+assets.background: Background/Cook, Serve, Delicious! 3! (USA).jpg
+assets.screenshot: Screenshot/Cook, Serve, Delicious! 3! (USA).jpg
+x-co-op: No
+
+
+game: Driftland - The Magic Revival (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/D/Driftland - The Magic Revival (USA)/Driftland - The Magic Revival (USA).json
+developer: Star Drifters
+publisher: Star Drifters
+genre: Strategy;General
+description:
+  After a devastating war between ancient mages, a powerful spell is all that
+  holds together the shattered planet of Driftland. Faced with the destruction of
+  their entire civilization and life on the planet, the warring factions called a
+  truce and tried to repair the damage -- but it was already too late. By using
+  all their remaining magic to cast a powerful spell, they managed to keep their
+  world in relative balance.
+  .
+  Many dark ages passed, but when all seemed lost, a ray of hope emerged once
+  more: new sources of magic appeared, and new mages were given birth to across
+  the planet. Now, as the dormant conflicts once again surface, this rediscovered
+  power will determine whether Driftland is restored to its former glory or wiped
+  from the cosmos entirely.
+  .
+  You take on the role of a Mage Overlord with your own castle, tower, and a small
+  realm on one of the landmasses. With your unique powers, you can explore a
+  procedurally generated world and connect floating lands to expand your kingdom.
+  .
+  Gameplay focuses on setting general goals for all your units without the need to
+  micromanage each of them. The warriors, archers, and mages under your command
+  are able to tame and ride different kinds of flying beasts and create various
+  aerial units.
+release: 2019-04-18
+players: 1
+assets.boxfront: BoxFront/Driftland - The Magic Revival (USA).jpg
+assets.boxback: BoxBack/Driftland - The Magic Revival (USA).jpg
+assets.background: Background/Driftland - The Magic Revival (USA).jpg
+assets.screenshot: Screenshot/Driftland - The Magic Revival (USA).jpg
+x-co-op: No
+
+
+game: Foretales (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/F/Foretales (USA)/Foretales (USA).json
+developer: Alkemi Games
+publisher: Dear Villagers
+genre: Strategy;Turn-Based;Card Battle
+description:
+  A terrible curse is ravaging the realm and the only one who can stop it is a
+  small-time thief named Volepain.
+  .
+  The Weaver put in the hands of her children the fate of the world's creation and
+  stability. The instruments of creation have the power to create and destroy the
+  many worlds of Foretales.
+  .
+  Discover the true goals of the Nymphants and the Cult or embrace the Maelstorm
+  for eternity!
+  .
+  Decide the fate of the world in this ingenious story-driven card game. Foretales
+  offers a unique take on the adventure genre, with a multitude of playstyles and
+  story paths through which you can save the world... or bring about its end.
+release: 2022-09-15
+players: 1
+assets.boxfront: BoxFront/Foretales (USA).jpg
+assets.boxback: BoxBack/Foretales (USA).jpg
+assets.background: Background/Foretales (USA).jpg
+assets.screenshot: Screenshot/Foretales (USA).jpg
+x-co-op: No
+
+
+game: In Sound Mind (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/I/In Sound Mind (USA)/In Sound Mind (USA).json
+developer: We Create Stuff
+publisher: Modus Games
+genre: Action Adventure;Survival
+description:
+  As you awake in the corridors of an inexplicable building, you find the
+  environment takes on a life of its own and leads you to discover a series of
+  victims, all exposed to the same experimental chemical. In your search for
+  answers, bizarre visions emerge and introduce a host of imposing horrors...and a
+  cat named Tonia.
+  .
+  From the creators of the cult classic Nightmare House 2 comes In Sound Mind, a
+  witty first-person psychological horror with frenetic puzzles and unique boss
+  fights. Traverse a series of unsettling memories as you journey within the inner
+  workings of the one place you can't seem to escape - your own mind.
+release: 2021-09-28
+players: 1
+assets.boxfront: BoxFront/In Sound Mind (USA).jpg
+assets.boxback: BoxBack/In Sound Mind (USA).jpg
+assets.background: Background/In Sound Mind (USA).jpg
+assets.screenshot: Screenshot/In Sound Mind (USA).jpg
+x-co-op: No
+
+
+game: NAIRI - Tower of Shirin (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/N/NAIRI - Tower of Shirin (USA)/NAIRI - Tower of Shirin (USA).json
+developer: HomeBearStudio
+publisher: HoundPicked Games
+genre: Puzzle;Action
+description:
+  Welcome to the first chapter of the NAIRI story! As Nairi becomes separated from
+  her upper class family in the exotic city of Shirin, she embarks on a perilous
+  journey to seek her way back home. Follow her unique story together with her ex-
+  criminal companion Rex to solve puzzles, make friends and enemies, and uncover a
+  dark mystery tied to the Tower of Shirin...
+  .
+  NAIRI: Tower of Shirin is a charming graphic adventure with adorable characters
+  in a troubled world that is sure to delight people of all ages looking for a
+  strong narrative and puzzle experience!
+release: 2018-11-29
+players: 1
+assets.boxfront: BoxFront/NAIRI - Tower of Shirin (USA).jpg
+assets.boxback: BoxBack/NAIRI - Tower of Shirin (USA).jpg
+assets.background: Background/NAIRI - Tower of Shirin (USA).jpg
+assets.screenshot: Screenshot/NAIRI - Tower of Shirin (USA).jpg
+x-co-op: No
+
+
+game: Once Upon a Jester (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/O/Once Upon a Jester (USA)/Once Upon a Jester (USA).json
+developer: Bonte Avond
+publisher: Crunching Koalas
+genre: Adventure;General
+description:
+  Best friends Sok & Jester devise a mischievous scheme to steal the Royal
+  Diamond!
+  .
+  To complete their master plan, they must start an improv theatre show and
+  outperform every other act - including their rivals, Hofnar & Bok. Only becoming
+  the best show in the kingdom will get them invited to the Royal Theatrical
+  Spectacle in the Royal Palace, where the king keeps his precious gem.
+  .
+  They embark on a grand adventure across a fantasy kingdom, meeting tons of wacky
+  characters, performing improvised shows and singing their hearts out. Along the
+  way, they unintentionally discover the freedom and joy of musical theatre.
+  .
+  Will the pair change their wicked ways or do whatever it takes to get rich?
+release: 2022-11-09
+players: 1
+assets.boxfront: BoxFront/Once Upon a Jester (USA).jpg
+assets.boxback: BoxBack/Once Upon a Jester (USA).jpg
+assets.background: Background/Once Upon a Jester (USA).jpg
+assets.screenshot: Screenshot/Once Upon a Jester (USA).jpg
+x-co-op: No
+
+
+game: Roguebook (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/R/Roguebook (USA)/Roguebook (USA).json
+developer: Abrakam SA
+publisher: Nacon
+genre: Strategy;Turn-Based;Card Battle
+description:
+  The ancients speak of a Book written since time immemorial containing all the
+  world's legends. After many fabulous adventures, recounted in Faeria Chronicles
+  of Gagana, this relic was lost in a well of Faeria. Through contact with this
+  source of magic, the Book developed a wicked free will of its own and became the
+  Roguebook!
+  .
+  You are trapped in the Book of Lore of Faeria, and each page represents a new
+  challenge. Lead your two heroes to victory in this roguelike deckbuilder
+  developed in partnership with Richard Garfield, creator of Magic: The Gathering.
+  Put together the best synergies between cards, relics and abilities, and take on
+  the Roguebook.
+release: 2021-06-17
+players: 1
+assets.boxfront: BoxFront/Roguebook (USA).jpg
+assets.boxback: BoxBack/Roguebook (USA).jpg
+assets.background: Background/Roguebook (USA).jpg
+assets.screenshot: Screenshot/Roguebook (USA).jpg
+x-co-op: No
+
+
+game: SNK 40th Anniversary Collection (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/S/SNK 40th Anniversary Collection (USA)/SNK 40th Anniversary Collection (USA).json
+developer: Digital Eclipse
+publisher: SNK Corporation
+genre: Miscellaneous;Compilation
+description:
+  2018 marks the 40th anniversary of legendary studio SNK! To celebrate this
+  extraordinary milestone, a variety of classic arcade games from SNK's golden age
+  are coming back together in one anthology on Nintendo Switch. SNK 40th
+  Anniversary Collection is packed full of retro games and a treasure trove of
+  features!
+  .
+  FEATURES:
+  .
+  * Collection of classics in your hands! Take a piece of SNK history with you
+  wherever you go on Nintendo Switch. Choose from over a dozen titles and
+  experience an intense blast from the past!
+  .
+  * Modern Meets Retro! Rewind and save at any time while you're playing, enjoy
+  updated graphics at 1080p resolution, and experience redesigned control schemes
+  for a modern feel!
+  .
+  * Enter the SNK Museum: A history of SNK and its games await in the Museum Mode.
+  Explore the legacy of one of Japan's leading developers with high definition
+  artwork and original promotional assets!
+release: 2019-06-07
+players: 1
+assets.boxfront: BoxFront/SNK 40th Anniversary Collection (USA).jpg
+assets.boxback: BoxBack/SNK 40th Anniversary Collection (USA).jpg
+assets.background: Background/SNK 40th Anniversary Collection (USA).jpg
+assets.screenshot: Screenshot/SNK 40th Anniversary Collection (USA).jpg
+x-co-op: No
+
+
+game: Shovel Knight Showdown (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/S/Shovel Knight Showdown (USA)/Shovel Knight Showdown (USA).json
+developer: Yacht Club Games
+publisher: Yacht Club Games
+genre: Action;Platformer;2D
+description:
+  Shovel Knight is a sweeping classic action adventure game with awesome gameplay,
+  memorable characters, and an 8-bit retro aesthetic. It's a hot mashup of new and
+  old! You play as the eponymous Shovel Knight, a small knight with a huge quest.
+  Shovel Knight has come to this land with two goals: to defeat the evil
+  Enchantress and quest for his lost beloved. He wields a Shovel Blade: a
+  multipurpose weapon whose techniques have now been lost to the ages. Always
+  honest and helpful, Shovel Knight is a shining example of the code of Shovelry:
+  Slash Mercilessly and Dig Tirelessly!
+  .
+  But, between Shovel Knight and his beloved stands a cadre of villainous knights.
+  These terrible foes, known as The Order of No Quarter, have been dispatched to
+  prevent Shovel Knight from reaching the Enchantress, and will pursue their
+  mission at any cost. If you love games with perfect platforming, beautiful art,
+  infectious music, crazy bosses, humor and levity, and real heart... Shovel
+  Knight is for you!
+release: 2019-12-10
+players: 1
+assets.boxfront: BoxFront/Shovel Knight Showdown (USA).jpg
+assets.boxback: BoxBack/Shovel Knight Showdown (USA).jpg
+assets.background: Background/Shovel Knight Showdown (USA).jpg
+assets.screenshot: Screenshot/Shovel Knight Showdown (USA).jpg
+x-co-op: No
+
+
+game: Star Wars - The Force Unleashed (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/S/Star Wars - The Force Unleashed (USA)/Star Wars - The Force Unleashed (USA).json
+developer: LucasArts
+publisher: Aspyr
+genre: Miscellaneous;Compilation
+description:
+  Star Wars The Force Unleashed: Ultimate Sith Edition combines the original Star
+  Wars: The Force Unleashed videogame and three new levels to create the
+  definitive ultimate-evil storyline of the events that occurred between the two
+  classic Star Wars movie trilogies. The additional content includes two levels
+  set on Coruscant and Tatooine previously only available via direct download, and
+  an all-new exclusive level available only in the Ultimate Sith Edition package.
+  The exclusive level concludes the "Infinities" storyline set up in the Tatooine
+  mission, as the Secret Apprentice is sent to the planet Hoth on a crusade to
+  crush the Rebellion once and for all. While on Hoth, players face Luke Skywalker
+  himself while visiting iconic locations seen in Star Wars: Episode V The Empire
+  Strikes Back.
+release: 2009-11-03
+players: 1
+assets.boxfront: BoxFront/Star Wars - The Force Unleashed (USA).jpg
+assets.boxback: BoxBack/Star Wars - The Force Unleashed (USA).jpg
+assets.background: Background/Star Wars - The Force Unleashed (USA).jpg
+assets.screenshot: Screenshot/Star Wars - The Force Unleashed (USA).jpg
+x-co-op: No
+
+
+game: Star Wars - The Force Unleashed II (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/S/Star Wars - The Force Unleashed II (USA)/Star Wars - The Force Unleashed II (USA).json
+developer: LucasArts
+publisher: LucasArts
+genre: Action;General
+description:
+  With Star Wars: The Force Unleashed II, the epic story continues as players once
+  again assume the role of the devastatingly powerful Starkiller - Darth Vader's
+  secret apprentice set during the largely unexplored era between Star Wars:
+  Episode III Revenge of the Sith and Star Wars: Episode IV A New Hope.
+release: 2010-10-26
+players: 1
+assets.boxfront: BoxFront/Star Wars - The Force Unleashed II (USA).jpg
+assets.boxback: BoxBack/Star Wars - The Force Unleashed II (USA).jpg
+assets.background: Background/Star Wars - The Force Unleashed II (USA).jpg
+assets.screenshot: Screenshot/Star Wars - The Force Unleashed II (USA).jpg
+x-co-op: No
+
+
+game: Wytchwood (USA)
+file: $ROM_JSON_ROOT/Computer/Amazon Games/W/Wytchwood (USA)/Wytchwood (USA).json
+developer: Alientrap
+publisher: Whitethorn Digital
+genre: Adventure;General
+description:
+  Wytchwood is a crafting adventure game set in an expressive land of gothic
+  fables and fairytales. As the mysterious old witch of the woods, you will
+  explore a strange countryside, collect magical ingredients, brew sorcerous
+  enchantments, and pass your twisted judgement upon a capricious cast of
+  characters and creatures.
+  .
+  After all, how will they ever learn if you don't teach them the moral of the
+  story?
+release: 2021-12-09
+players: 1
+assets.boxfront: BoxFront/Wytchwood (USA).jpg
+assets.boxback: BoxBack/Wytchwood (USA).jpg
+assets.background: Background/Wytchwood (USA).jpg
+assets.screenshot: Screenshot/Wytchwood (USA).jpg
+x-co-op: No
+
+

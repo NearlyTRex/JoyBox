@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_teenagent_1.0_(15595).exe"
+    ],
+    "transform_file": "setup_teenagent_1.0_(15595).exe"
+}

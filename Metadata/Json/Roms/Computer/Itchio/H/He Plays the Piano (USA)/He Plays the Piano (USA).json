@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/He Plays the Piano (USA).exe"
+    ],
+    "transform_file": "He Plays the Piano (USA).exe"
+}

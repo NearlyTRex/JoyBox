@@ -1,0 +1,32 @@
+{
+    "files": [
+        "timeplt/1",
+        "timeplt/2",
+        "timeplt/3",
+        "timeplt/5",
+        "timeplt/6",
+        "timeplt/cd1y",
+        "timeplt/cd2y",
+        "timeplt/cd3y",
+        "timeplt/cd_e1.bin",
+        "timeplt/cd_e2.bin",
+        "timeplt/cd_e3.bin",
+        "timeplt/sp1",
+        "timeplt/sp2",
+        "timeplt/sp3",
+        "timeplt/sp4",
+        "timeplt/sp6",
+        "timeplt/timeplt.b4",
+        "timeplt/timeplt.b5",
+        "timeplt/timeplt.e12",
+        "timeplt/timeplt.e9",
+        "timeplt/tm1",
+        "timeplt/tm2",
+        "timeplt/tm3",
+        "timeplt/tm4",
+        "timeplt/tm5",
+        "timeplt/tm6",
+        "timeplt/tm7"
+    ],
+    "launch_name": "timeplt"
+}

@@ -1,0 +1,16 @@
+{
+    "installer_exe": "$DISC_MAIN_ROOT/setup.exe",
+    "sandbox": {
+        "wine": {
+            "tricks": {
+                "game": [
+                    "corefonts",
+                    "mfc42",
+                    "msxml3",
+                    "msxml4"
+                ]
+            }
+        }
+    },
+    "transform_file": "Rise of Nations - Rise of Legends (USA).chd"
+}

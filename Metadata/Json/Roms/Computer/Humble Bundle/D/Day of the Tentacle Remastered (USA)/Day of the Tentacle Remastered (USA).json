@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/DayOfTheTentacle_Win32_NoSteam_v1.8_20210106.exe"
+    ],
+    "transform_file": "DayOfTheTentacle_Win32_NoSteam_v1.8_20210106.exe"
+}

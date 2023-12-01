@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Escaped Chasm (USA).exe"
+    ],
+    "transform_file": "Escaped Chasm (USA).exe"
+}

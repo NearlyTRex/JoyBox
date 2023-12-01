@@ -1,0 +1,3849 @@
+collection: Google Android
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Google Android" {file.path}
+
+
+game: 12 Orbits (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/12 Orbits (USA)/12 Orbits (USA).json
+developer: Roman Uhlig
+publisher: Roman Uhlig
+genre: Action
+description:
+  12 orbits is the only game for up to 12 players at once,
+  .
+  no matter what you play on.
+  .
+  All you need is a single keyboard, touchscreen, gamepad, dance mat, makey
+  makey...
+  .
+  Features
+  .
+  Local competitive multiplayer for everyone at once. Anywhere. On anything.
+  .
+  4 vastly different game modes to choose from
+  .
+  Setup takes seconds, even for 12 players at once
+  .
+  The basic mechanics are simple and can be taught to a group quickly
+  .
+  ...yet the physical nature of the game provides you with a lot of room for
+  mastery
+  .
+  One Switch accessible
+  .
+  You can choose from 4 vastly different game modes:
+  .
+  Multiball (Teams)
+  .
+  Kind of like football, but with exploding goals and multiple balls at once,
+  which change color all the time.
+  .
+  Arena
+  .
+  Fill the arena with spheres of your own color and avoid those of your opponents.
+  A bullet hell that constantly grows more intense.
+  .
+  Trails
+  .
+  Collect spheres to grow longer than your opponents. Block their path and pay
+  attention to your own, similar to Snake or Achtung die Kurve / Zatacka. On top
+  of that, you also have the ability to shoot with your own spheres.
+  .
+  Blizzard (Teams)
+  .
+  Think Pong. But you play in teams, can roam freely on your side of the court,
+  and have to defend against a whole shower of spheres at once.
+release: 2016-07-30
+players: 12
+assets.boxfront: BoxFront/12 Orbits (USA).jpg
+assets.boxback: BoxBack/12 Orbits (USA).jpg
+assets.background: Background/12 Orbits (USA).jpg
+assets.screenshot: Screenshot/12 Orbits (USA).jpg
+x-co-op: No
+
+
+game: 2D Flight Simulator (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/2D Flight Simulator (USA)/2D Flight Simulator (USA).json
+developer: phrssoftware
+publisher: phrssoftware
+genre: Simulation
+description:
+  A 2d flight simulator with realistic planes and airports.
+  .
+  Welcome to the 2d flight Simulator. Fly with realistic planes across all over
+  the world.
+  .
+  - Airbus a320
+  .
+  - Airbus a330
+  .
+  - Airbus a380
+  .
+  - Boeing 737
+  .
+  - Boeing 777
+  .
+  - Boeing  747
+  .
+  And more
+  .
+  All planes and airports have been accurately designed and are based in reality.
+  .
+  - Flaps
+  .
+  - Landing gear
+  .
+  - Speed Brake
+  .
+  - Reverser
+release: 2020-04-07
+players: 1
+assets.boxfront: BoxFront/2D Flight Simulator (USA).jpg
+assets.boxback: BoxBack/2D Flight Simulator (USA).jpg
+assets.background: Background/2D Flight Simulator (USA).jpg
+assets.screenshot: Screenshot/2D Flight Simulator (USA).jpg
+x-co-op: No
+
+
+game: 8 Bit Space (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/8 Bit Space (USA)/8 Bit Space (USA).json
+developer: GlassFrogGames
+publisher: GlassFrogGames
+genre: Platformer
+description:
+  8 Bit Space is a 2D platformer inspired by games from the 8-bit era of gaming
+  and with particular emphasis on the ZX Spectrum.
+  .
+  A new star system has just been discovered. Within one of the systems is an
+  ancient portal, its origins or where it leads are unknown. It looks to be
+  powered by 5 relics. With the help of your ship's computer, Z.X. You have been
+  tasked with uncovering these 5 relics and powering the portal to find out where
+  it leads.
+  .
+  Explore 25 alien planets in the search of your goal, valuable gems are also
+  scattered within each planet, can you find them all?
+  .
+  FEATURES
+  .
+  * Unique 8 bit graphics using the ZX Spectrums colour palette.
+  .
+  * All planets are unlocked, explore in any order you like.
+  .
+  * Three difficulty levels, casual, normal and old skool.
+  .
+  * Classic 80s platforming action.
+  .
+  * Controller Supported  (Android)
+release: 2020-03-16
+players: 1
+assets.boxfront: BoxFront/8 Bit Space (USA).jpg
+assets.boxback: BoxBack/8 Bit Space (USA).jpg
+assets.background: Background/8 Bit Space (USA).jpg
+assets.screenshot: Screenshot/8 Bit Space (USA).jpg
+x-co-op: No
+
+
+game: Air Dasher (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Air Dasher (USA)/Air Dasher (USA).json
+developer: Anton
+publisher: Anton
+genre: Platformer
+description:
+  Air Dasher is Fast!
+  .
+  Air Dasher is Fluid!
+  .
+  Air Dasher is Platformer!
+  .
+  Air Dasher has 60 levels!
+  .
+  Air Dasher is on Android!
+  .
+  By AntonMakesGames
+release: 2016-12-19
+players: 1
+assets.boxfront: BoxFront/Air Dasher (USA).jpg
+assets.boxback: BoxBack/Air Dasher (USA).jpg
+assets.background: Background/Air Dasher (USA).jpg
+assets.screenshot: Screenshot/Air Dasher (USA).jpg
+x-co-op: No
+
+
+game: Alt-Frequencies (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Alt-Frequencies (USA)/Alt-Frequencies (USA).json
+developer: Plug In Digital
+publisher: Plug In Digital
+genre: Interactive Fiction;Puzzle
+description:
+  An audio mystery set in a time loop. Record, rewind time and broadcast snippets
+  of radio shows to expose radio hosts, conspiracy theorists and politicians.
+  .
+  Alt-Frequencies is an audio-based game, revolving around radio stations that
+  reset every 3 minutes. Populated with all sorts of different characters and
+  personalities, players get an intimate look into the lives of radio hosts,
+  conspiracy theorists, students, politicians, underground activists, train
+  station managers - and a dog.
+  .
+  By redistributing information, you change what happens in the next 3 minute time
+  loop and impact both news cycles and the lives of the people behind them.
+  .
+  Listen as their personal stories evolve, in a world that seems to stand still.
+  .
+  A new kind of narrative game that blurs the lines between the fantastical and
+  the everyday while examining our relationship with mainstream media through the
+  prism of radio stations.
+  .
+  Built-in accessibility features that make the game available to a wide range of
+  people - including blind and visually impaired players.
+  .
+  Brought to life by a diverse cast of 20+ amazing voice performers, including TV,
+  podcasts and YouTube personalities such as Jasika Nicole (Fringe, Welcome to
+  Night Vale).
+  .
+  By Accidental Queens, the studio behind the critically acclaimed A Normal Lost
+  Phone and Another Lost Phone: Laura's Story, and co-produced with ARTE, the
+  European cultural network.
+release: 2019-05-16
+players: 1
+assets.boxfront: BoxFront/Alt-Frequencies (USA).jpg
+assets.boxback: BoxBack/Alt-Frequencies (USA).jpg
+assets.background: Background/Alt-Frequencies (USA).jpg
+assets.screenshot: Screenshot/Alt-Frequencies (USA).jpg
+x-co-op: No
+
+
+game: Amelie (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Amelie (USA)/Amelie (USA).json
+developer: Two and a Half Studios
+publisher: Two and a Half Studios
+genre: Visual Novel
+description:
+  In the middle of a field, far out in the countryside, sits a lone manor.
+  .
+  That's the way it's always been. Always will be.
+  .
+  Then why is she here?
+  .
+  Why have you let her come?
+  .
+  In the middle of a field, far out in the countryside, sits a lone manor.
+  .
+  Inside that manor, in the middle of the field, far out in the countryside, lives
+  Amelie and her dear friend Lilika.
+  .
+  Forbidden from leaving the house, Amelie awaits the arrival of her long time
+  penpal, Sofia, to Lilika's dismay.
+  .
+  What secrets will Sofia unravel that were best kept buried?
+  .
+  And will she manage to survive the night?
+  .
+  Play as three different protagonists to uncover the full story and discover the
+  truth about the lone manor.
+  .
+  A short, spooky story: At around 20,000 words/1 - 1.5 hours of playtime, Amelie
+  is a short (and not so sweet) story about two girls in love, and another who
+  lost her love.
+  .
+  Captivating visuals: You'll be pulled right into the story with original
+  illustrations by Alyssa Calderon and .
+  .
+  Three playable characters: You'll play as three different characters... Amelie,
+  Sofia, and finally Lilika, to uncover the full story about what happened in the
+  lone manor.
+  .
+  Gorgeous Music: Listen as the music accentuates Amelie's scenes, making both the
+  heartwarming and slightly terrifying scenes come to life.
+release: 2021-11-11
+players: 1
+assets.boxfront: BoxFront/Amelie (USA).jpg
+assets.boxback: BoxBack/Amelie (USA).jpg
+assets.background: Background/Amelie (USA).jpg
+assets.screenshot: Screenshot/Amelie (USA).jpg
+x-co-op: No
+
+
+game: Another Lost Phone - Laura's Story (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Another Lost Phone - Laura's Story (USA)/Another Lost Phone - Laura's Story (USA).json
+developer: Dear Villagers
+publisher: Dear Villagers
+genre: Adventure
+description:
+  Another Lost Phone is a game about exploring the social life of a young woman
+  whose phone you have just found.
+  .
+  This game is designed as a narrative investigation where you must piece together
+  elements from the different applications, messages and pictures to progress.
+  Scrolling through the phone's content, you will find out everything about Laura:
+  her friendships, her professional life and the events that led to her mysterious
+  disappearance and the loss of this phone.
+  .
+  Features :
+  .
+  Combine your findings from the phone's apps, messages and photo galleries to
+  uncover the mystery surrounding Laura's disappearance.
+  .
+  Delve into the professional life, relationships & social habits of a young adult
+  in the digital age. Experience a relatable story which helps build empathy with
+  the characters, allowing to explore difficult topics and social issues.
+  .
+  Act as yourself in a game that bridges the gap between reality and fiction. If
+  you close the app but still think about the game, have you truly stopped
+  playing?
+release: 2017-09-21
+players: 1
+assets.boxfront: BoxFront/Another Lost Phone - Laura's Story (USA).jpg
+assets.boxback: BoxBack/Another Lost Phone - Laura's Story (USA).jpg
+assets.background: Background/Another Lost Phone - Laura's Story (USA).jpg
+assets.screenshot: Screenshot/Another Lost Phone - Laura's Story (USA).jpg
+x-co-op: No
+
+
+game: Beat Hazard Ultra (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Beat Hazard Ultra (USA)/Beat Hazard Ultra (USA).json
+developer: ShadowRage
+publisher: Cold Beam Games Ltd
+genre: Action;Shooter;Shoot-'Em-Up;Top-Down
+description:
+  With Beat Hazard Ultra, you can experience your very own music collection as
+  never before with this intense music driven arcade shooter. (Note: Music must be
+  on SD card - Google cloud music is not possible at the moment) Blast away to
+  your favorite tracks. Your firepower pulse links to the energy of the music.
+  .
+  Levels in this game are created from your very own music collection (On SD
+  card). You can also play to internet radio stations. Two ways to play: Simple 1
+  stick mode for beginners, and Twin stick mode for the pros. Includes Boss Rush,
+  Survival & Chill Out game modes. Rank up and unlock 23 perks to enhance your
+  gameplay experience!
+release: 2009-10-28
+players: 1
+assets.boxfront: BoxFront/Beat Hazard Ultra (USA).jpg
+assets.boxback: BoxBack/Beat Hazard Ultra (USA).jpg
+assets.background: Background/Beat Hazard Ultra (USA).jpg
+assets.screenshot: Screenshot/Beat Hazard Ultra (USA).jpg
+x-co-op: No
+
+
+game: Beatbuddy - Tale of the Guardians (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Beatbuddy - Tale of the Guardians (USA)/Beatbuddy - Tale of the Guardians (USA).json
+developer: Threaks
+publisher: Reverb
+genre: Action;Rhythm;Music
+description:
+  The best-selling PC game is now available on Android mobile devices!
+  Beatbuddy is an action-adventure where players solve puzzles and vanquish
+  enemies in six beautiful hand-drawn worlds, each with their own amazing
+  soundtrack composed by industry legends such as Austin Wintory, Parov Stelar,
+  chiptune-genius Sabrepulse, the La Rochelle Band -- and more. Can you save
+  the music on Symphonia?
+release: 2015-06-12
+players: 1
+assets.boxfront: BoxFront/Beatbuddy - Tale of the Guardians (USA).jpg
+assets.boxback: BoxBack/Beatbuddy - Tale of the Guardians (USA).jpg
+assets.background: Background/Beatbuddy - Tale of the Guardians (USA).jpg
+assets.screenshot: Screenshot/Beatbuddy - Tale of the Guardians (USA).jpg
+x-co-op: No
+
+
+game: Blast Rush (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Blast Rush (USA)/Blast Rush (USA).json
+developer: Bipedal Dog
+publisher: Bipedal Dog
+genre: Shooter
+description:
+  Blasting is Everything!
+  .
+  Ever played a shmup and wished for one more bomb? How about as many as you want?
+  .
+  The core of the enemy mothership is destroyed and reinforcements are approaching
+  fast, but your guns are weakened. You can't shoot your way out, but you can
+  blast your way out! Blast Rush empowers you with infinite screen-clearing bombs,
+  but keeps up the challenge with increasingly complex waves of enemy drones. Rush
+  to victory!
+  .
+  * Fly through 40 intense levels or survive a randomized onslaught
+  .
+  * Three distinct fighter ships and bomb types
+  .
+  * One-thumb control keeps you blasting*
+  .
+  * Share scores on social media*
+  .
+  * Screamin' 16-bit-style graphics and sound
+  .
+  *Android version only
+  .
+  This version of Blast Rush is fully unlocked, ad-free and DRM-free.
+  Consequently, scores and achievements are offline & local only and will be
+  erased if the app is uninstalled.
+release: 2017-11-14
+players: 1
+assets.boxfront: BoxFront/Blast Rush (USA).jpg
+assets.boxback: BoxBack/Blast Rush (USA).jpg
+assets.background: Background/Blast Rush (USA).jpg
+assets.screenshot: Screenshot/Blast Rush (USA).jpg
+x-co-op: No
+
+
+game: Bloons TD 5 (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Bloons TD 5 (USA)/Bloons TD 5 (USA).json
+developer: Ninja kiwi
+publisher: Ninja Kiwi
+genre: Strategy
+description:
+  Bloons TD5 has heaps of new features including all of your favourite towers from
+  BTD4 with 8 awesome upgrades each instead of 4, and two brand new never before
+  seen tower types. So much new awesomeness: tower upgrades with cool Super
+  Activated Abilities, new Bloon types, fun new tracks with moving parts and
+  tunnels, powerful Special Agent towers, Daily Rewards, Special Missions, and
+  Daily Challenges - a fun new challenge to play each and every day! Updates are
+  coming all the time, and your progress is tracked for ranks, upgrades, and
+  achievements when you log in using our new NK login system. Have fun
+release: 2011-12-03
+players: 1
+assets.boxfront: BoxFront/Bloons TD 5 (USA).jpg
+assets.boxback: BoxBack/Bloons TD 5 (USA).jpg
+assets.background: Background/Bloons TD 5 (USA).jpg
+assets.screenshot: Screenshot/Bloons TD 5 (USA).jpg
+x-co-op: No
+
+
+game: Breaker (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Breaker (USA)/Breaker (USA).json
+developer: Daniel Linssen
+publisher: Daniel Linssen
+genre: Action
+description:
+  A blend of BREAKOUT, SPACE INVADERS and IKARUGA
+  .
+  And part of the 2018 FANTASTIC ARCADE BUNDLE
+  .
+  A/LeftArrow (StickLeft/LeftTrigger on gamepad) to turn BLUE and move COUNTER-
+  CLOCKWISE
+  .
+  D/RightArrow (StickRight/RightTrigger on gamepad) to turn RED and move CLOCKWISE
+  .
+  Enter (A on gamepad) to START playing or to input high score initials
+  .
+  Escape (Start on gamepad) to PAUSE and open the menu
+  .
+  Deflect BLUE bullets while BLUE
+  .
+  Deflect RED bullets while RED
+  .
+  9 bosses and 3 minibosses
+  .
+  30+ unlockable palettes
+  .
+  Sound effects by MARTIN KVALE
+  .
+  A responsive OST by DUBMOOD
+release: 2019-04-06
+players: 1
+assets.boxfront: BoxFront/Breaker (USA).jpg
+assets.boxback: BoxBack/Breaker (USA).jpg
+assets.background: Background/Breaker (USA).jpg
+assets.screenshot: Screenshot/Breaker (USA).jpg
+x-co-op: No
+
+
+game: By Your Side (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/By Your Side (USA)/By Your Side (USA).json
+developer: Takafumi
+publisher: Takafumi
+genre: Visual Novel;Simulation
+description:
+  A short simulation game made by one person in one month.
+  .
+  Take control of the unnamed protagonist as she moves into an apartment with her
+  girlfriend. Unlock new clothing, discover new scenes, learn more about this
+  mysterious couple, and most importantly... Enjoy life!
+release: 2019-03-30
+players: 1
+assets.boxfront: BoxFront/By Your Side (USA).jpg
+assets.boxback: BoxBack/By Your Side (USA).jpg
+assets.background: Background/By Your Side (USA).jpg
+assets.screenshot: Screenshot/By Your Side (USA).jpg
+x-co-op: No
+
+
+game: Carmageddon (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Carmageddon (USA)/Carmageddon (USA).json
+developer: Stainless Games
+publisher: Stainless Games Ltd
+genre: Action;Racing
+description:
+  The year is 2026 and fatal toxins have polluted the earth's atmosphere. Those
+  humans lucky enough to get to the "Climate Emulation Centers" in time live in
+  fear of the souls left on the surface - mutated, blood-thirsty zombies - the
+  "undead." The World Government has recruited drivers to deal with this problem.
+  The solution is "The Carmageddon" - a death race in which drivers race against
+  each other for the ultimate prize: a new life on the sun-drenched beaches of the
+  off-world colonies. As well as a way of dealing with the zombies, it provides
+  entertainment for the dwindling human population. You take on this challenge as
+  Max Damage, a psychotic, cold-blooded racing machine. There is no second place.
+  Drive to survive and let nothing and no one get in your way!
+release: 2013-05-10
+players: 1
+assets.boxfront: BoxFront/Carmageddon (USA).jpg
+assets.boxback: BoxBack/Carmageddon (USA).jpg
+assets.background: Background/Carmageddon (USA).jpg
+assets.screenshot: Screenshot/Carmageddon (USA).jpg
+x-co-op: No
+
+
+game: Catlandia - Crisis at Fort Pawprint (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Catlandia - Crisis at Fort Pawprint (USA)/Catlandia - Crisis at Fort Pawprint (USA).json
+developer: Polar Tabby
+publisher: Polar Tabby
+genre: Role Playing
+description:
+  Catlandia: Crisis at Fort Pawprint, is a 2D RPG featuring cats! The first game
+  in the Catlandia world, players embark upon a short adventure to reveal and
+  squash a canine threat to the peaceful Cat Kingdom.
+  .
+  Trout Lake is a vital component in the Cat Kingdom's fish supply lines. But
+  rumours of dogs in the nearby Whisker Woods has forced the Cat Kingdom to
+  establish the outpost of Fort Pawprint to investigate. You are Nugget, a brave
+  Catmando stationed at the fort. Along with your sidekick Sausage, you are
+  charged to sort this whole mess out.
+  .
+  Create a fully customizable cat by choosing colours, shapes, and patterns
+  .
+  Collect costume items to make your cat cuter - and unlock powerful techniques
+  .
+  Take your cat into battle against dogs, pigeons, and other fearsome creatures
+  .
+  Become friends with other cats of varying degrees of helpfulness!
+  .
+  Take on exciting quests!
+  .
+  Explore the Whisker Woods and defeat the dogs - for the glory of the Cat
+  Kingdom!
+release: 2020-06-10
+players: 1
+assets.boxfront: BoxFront/Catlandia - Crisis at Fort Pawprint (USA).jpg
+assets.boxback: BoxBack/Catlandia - Crisis at Fort Pawprint (USA).jpg
+assets.background: Background/Catlandia - Crisis at Fort Pawprint (USA).jpg
+assets.screenshot: Screenshot/Catlandia - Crisis at Fort Pawprint (USA).jpg
+x-co-op: No
+
+
+game: Chess Mix (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Chess Mix (USA)/Chess Mix (USA).json
+developer: Keith Burgun Games
+publisher: Keith Burgun Games
+genre: Strategy
+description:
+  Chess Mix is a turn-based tactical game set in the REAL world of Chess, where
+  they party all day long and hang out and chill and generally have a great time.
+  .
+  Meet lots of strange, cool friends who have their own weird strengths and
+  weaknesses. Unlock new songs that give you cool passive powers and build them
+  into powerful playlists! Dance, kiss, eat pizza, and do other stuff too!!
+  .
+  How to play
+  .
+  You're moving pieces around the board, using abilities (on the little cards on
+  the bottom) and gaining as many Cool Points as you can before the day is over.
+  There are currently about a dozen or so different pieces in the game, and each
+  party locale has its own special rules and features.
+  .
+  Tap on a unit to find out where it can move to. Then you can click one of the
+  destinations to move it there.
+  .
+  When a unit is selected, you can also see its abilities on the bottom of the
+  screen. If you use an ability, you have to wait a few turns before you can use
+  it again - this is called a "cooldown". Wait a few more turns and then try
+  again.
+  .
+  Songs and Playlists
+  .
+  You start with 2 songs unlocked, but as you gain more stars, more will be
+  unlocked. Each song does a different thing passively as you play (you can click
+  the Karaoke machine to remind you just what the song's a-doin').
+  .
+  Probably some songs go good with some kinds of units or something, but you
+  probably will also just have your favorite songs. Try stuff out!
+  .
+  Good luck! <3
+release: 2019-01-25
+players: 1
+assets.boxfront: BoxFront/Chess Mix (USA).jpg
+assets.boxback: BoxBack/Chess Mix (USA).jpg
+assets.background: Background/Chess Mix (USA).jpg
+assets.screenshot: Screenshot/Chess Mix (USA).jpg
+x-co-op: No
+
+
+game: Codemancer (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Codemancer (USA)/Codemancer (USA).json
+developer: Important Little Games
+publisher: Important Little Games
+genre: Educational;Puzzle
+description:
+  Codemancer brings the mystery of magic and the exhilaration of learning to code
+  together in a fantasy universe that uses spell casting as a way to teach and
+  learn programming skills. Codemancer's fantasy universe is filled with rival
+  sorcerers and their minions for players to encounter along their journey.
+  Codemancer is a non-violent, entertaining, and educational game designed to be
+  inclusive and accessible to learners at any stage. Features include a gender-
+  neutral fantasy setting with a female protagonist, a narrative backbone, and a
+  programming interface that's designed to be easy to understand by kids with
+  varying degrees of skill and experience. Codemancer breaks down barriers that
+  may have discouraged some kids from embracing technology and elevates their
+  screentime to be more productive and entertaining.  It isn't a typical coding or
+  technology game.
+  .
+  WHAT IS CODEMANCER ALL ABOUT?
+  .
+  Codemancer tells a moving story about Aurora, a young, creatively talented girl
+  who's trying to grow up, become independent, and do good in the world in the
+  face of incredible obstacles when her father is suddenly kidnapped. Aurora has
+  to embark on an adventure to save him as she grows into a gracious and
+  independent young woman. She must learn magic spells to save her father, but the
+  magic used in Aurora's world works the same as programming does in ours. Inspire
+  children to explore their potential as they discover the magic of coding.
+  .
+  CODEMANCER IS AN EDUCATIONAL GAMING ADVENTURE:
+  .
+  Codemancer is designed for 6 to 12 year olds as an educational game that teaches
+  the magic behind coding-and can be fun for grownups, too!
+  .
+  CODEMANCER SPECIFICALLY TEACHES:
+  .
+  Sequential Algorithms
+  .
+  Debugging
+  .
+  Function Arguments
+  .
+  Scope
+  .
+  Looping Constructs
+  .
+  Concurrent Programming
+  .
+  ...AND TEACHES IN GENERAL:
+  .
+  Computational Thinking
+  .
+  Planning
+  .
+  Problem Solving
+  .
+  Resilience
+  .
+  CODEMANCER FEATURES:
+  .
+  A narrative inspired by popular works of young adult fantasy worlds such as
+  Harry Potter, Percy Jackson, The Neverending Story, The Last Airbender, and many
+  more!
+  .
+  Gameplay that takes place in a hexagonal world, making it easy to estimate
+  distances and angles by eye.
+  .
+  'Freeze time' ability, so players can debug the programs they've written and
+  potentially code their way out of a jam to learn from their mistakes.
+  .
+  Availability for PC, Mac, iPad, and Android tablets.
+  .
+  CODEMANCER IS STRUCTURED FOR ACCESSIBILITY AND INCLUSIVITY:
+  .
+  The goal of Codemancer is to be as broadly inclusive as possible by creating a
+  gender-neutral fantasy setting with a female protagonist, a narrative backbone,
+  and language interface that's designed to make the game appeal to kids at
+  different skill levels.
+  .
+  Codemancer breaks down barriers that can hinder some kids from feeling
+  comfortable with engaging with programming, for example Codemancer uses pips
+  (like on a die) instead of numerals, and sets the gameplay in a hexagonal world
+  that makes it easy to estimate distances and angles by eye.
+  .
+  No syntax errors -- if you can enter a spell, it will run. Syntax errors can be
+  frustrating and cause learners to quit before they really begin.
+  .
+  Codemancer uses an open dyslexic font, where letters are designed to look
+  distinctly different from each other to make reading easier for kids with
+  dyslexia.
+  .
+  The game is fully voiced, so reading is completely optional.
+  .
+  Codemancer's programming language is designed to be accessible, but also
+  translates easily to a variety of popular real-world programming languages (such
+  as Python).
+  .
+  Codemancer appeals to many educational groups, from children with special needs
+  for reading, to younger children new to coding, to older children with more
+  advanced coding and programming skill sets.
+  .
+  Codemancer has the potential to reach under-represented groups in coding and
+  teach them an often-exclusionary, but nonetheless important, 20th-century skill.
+release: 2019-07-03
+players: 1
+assets.boxfront: BoxFront/Codemancer (USA).jpg
+assets.boxback: BoxBack/Codemancer (USA).jpg
+assets.background: Background/Codemancer (USA).jpg
+assets.screenshot: Screenshot/Codemancer (USA).jpg
+x-co-op: No
+
+
+game: Crayon Physics Deluxe (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Crayon Physics Deluxe (USA)/Crayon Physics Deluxe (USA).json
+developer: Kloonigames
+publisher: Hudson Soft
+genre: Puzzle;General
+description:
+  Crayon Physics Deluxe is the full game that was developed out of the Crayon
+  Physics prototype. It is a puzzle game of crayons and physics. The goal for
+  each of the 80 levels is to move a red ball so it hits one or more yellow
+  stars. The mouse (or a tablet PC) is used to draw physical objects of
+  different colours which can move the ball, block it or provide a bridge. The
+  objects interact with each other as well as with the environment. The left
+  mouse button is used to draw, and the right one to erase objects. When the
+  ball falls off the screen, it reappears at its original relocation. It is
+  also possible to reset an entire level. The game is played against a scrap
+  paper background and all objects have a crayon art style.
+  .
+  The most important change is that the puzzles are now shown as areas on
+  different islands. From the overview map, the player can travel to different
+  locations and try levels. For each won level, the number of stars is added
+  up. When an entire island has been completed, it is possible to travel
+  between eight different islands to try a new set, provided that a sufficient
+  amount of stars has been collected. Islands that require many stars also
+  provide more difficult levels and player can choose to skip a level to solve
+  it later.
+  .
+  Even though the basic concept has not been changed, the physics model has
+  been vastly improved. More types of shapes can be drawn and there are pins to
+  connect them, which opens up the possibility to draw objects that act like
+  hammers that swing down to kick the ball. The mouse wheel is used to change
+  the colour of the lines and there are much more levels with different themes
+  and variations. A new function allows the player to nudge the ball a little
+  to the left or the right, but it has a reloading instance so that it cannot
+  be used constantly.
+  .
+  A level editor is included to design custom levels and these can be
+  uploaded to a playground. When registered, it is possible to download and
+  play custom levels designed by other users.
+release: 2009-01-01
+players: 1
+assets.boxfront: BoxFront/Crayon Physics Deluxe (USA).jpg
+assets.boxback: BoxBack/Crayon Physics Deluxe (USA).jpg
+assets.background: Background/Crayon Physics Deluxe (USA).jpg
+assets.screenshot: Screenshot/Crayon Physics Deluxe (USA).jpg
+x-co-op: No
+
+
+game: Crimsonland (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Crimsonland (USA)/Crimsonland (USA).json
+developer: 10tons
+publisher: 10tons
+genre: Action;Shooter;Shoot-'Em-Up;Top-Down
+description:
+  Crimsonland is an intense, addictive and immensely gratifying top-down dual
+  stick shooter where your screen is filled with literally hundreds of aliens,
+  giant spiders, mutant lizards, and more.
+  .
+  Complete sixty quests to unlock an array of weapons and abilities, then unleash
+  your arsenal in five survival modes with leaderboards.
+  .
+  All Crimsonland game modes feature local co-op for up to four players. There are
+  also dedicated leaderboards for co-op games, so gather your friends and show
+  everyone who wields the gauss shotgun like a pro!
+release: 2003-09-09
+players: 4
+assets.boxfront: BoxFront/Crimsonland (USA).jpg
+assets.boxback: BoxBack/Crimsonland (USA).jpg
+assets.background: Background/Crimsonland (USA).jpg
+assets.screenshot: Screenshot/Crimsonland (USA).jpg
+x-co-op: Yes
+
+
+game: Crowntakers (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Crowntakers (USA)/Crowntakers (USA).json
+developer: Bulwark Studios
+publisher: Kasedo Games
+genre: Role-Playing;Roguelike
+description:
+  Dark times are imminent: the king's abduction throws a once peaceful land into
+  turmoil. Being the chosen one elected by the king himself through one of your
+  dreams, you embark on an adventurous journey to free him from the hands of the
+  evil duke and go down in history as the kingdom's greatest hero. But time is of
+  the essence...
+  .
+  Crowntakers combines turn-based strategy with RPG elements and takes you at the
+  behest of the crown into a medieval fantasy world full of challenging encounters
+  and epic adventures. With its randomly generated world, Crowntakers offers a
+  varied gaming experience every time you set out to fight evil. As a hero on a
+  mission, you'll have to assemble a group of brave mercenaries to take on cruel
+  enemies like barbarians, ferocious animals or deceitful thieves. Embark on
+  challenging quests, gather vital resources and finally banish evil from the
+  world.
+release: 2014-11-07
+players: 1
+assets.boxfront: BoxFront/Crowntakers (USA).jpg
+assets.boxback: BoxBack/Crowntakers (USA).jpg
+assets.background: Background/Crowntakers (USA).jpg
+assets.screenshot: Screenshot/Crowntakers (USA).jpg
+x-co-op: No
+
+
+game: Darkest Wave (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Darkest Wave (USA)/Darkest Wave (USA).json
+developer: duckmanSD
+publisher: duckmanSD
+genre: Shooter
+description:
+  Darkest Wave is a retro shoot-em up done in bright colors and a unique style
+  created solely by Derek "Duckman" Adams. A throwback to the age of a different
+  kind of difficult and rewarding videogames. Relentless yet you almost made it.
+  Entire game was built on timing of the music and action, Keyboard and Gamepad
+  support with rumble. Explosive and addictive.
+  .
+  Moving toward the government base known as Delta-9, Max Titan pilots his custom
+  Ferrari fighter the X-20 to destroy a secret rebel base thought to be creating
+  enormous robotic creatures. Fly with him and the X-20 through 5 levels of
+  explosive color and sound.
+  .
+  Were you able to beat it? I've skipped a hard mode and just went to insane.
+  .
+  Features
+  .
+  Xbox controller support
+  .
+  Gamepad support
+  .
+  Adjustable volume
+  .
+  Adjustable sound FX
+  .
+  Easy and Hard Levels
+  .
+  Xbox controller rumble
+  .
+  60FPS
+release: 2017-04-03
+players: 1
+assets.boxfront: BoxFront/Darkest Wave (USA).jpg
+assets.boxback: BoxBack/Darkest Wave (USA).jpg
+assets.background: Background/Darkest Wave (USA).jpg
+assets.screenshot: Screenshot/Darkest Wave (USA).jpg
+x-co-op: No
+
+
+game: Dastardly Dairy Debacle, The (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Dastardly Dairy Debacle, The (USA)/Dastardly Dairy Debacle, The (USA).json
+developer: Whim Independent Studios
+publisher: Whim Independent Studios
+genre: Role-playing
+description:
+  The Dastardly Dairy Debacle is a small mobile role-playing game developed and
+  published by Whim Independent Studios. Tap your way and defeat monsters and
+  bosses through five different dungeons to rescue the prized cow "Betty
+  Udderton"!
+  .
+  All was nice and well at the annual dairy festival in the land
+  .
+  Until Lord Umbragog swiped Betty, the prized cow, with his evil hand
+  .
+  Now four heroes must find out why someone would do something so awful
+  .
+  As they try and solve the Dastardly Dairy Debacle!
+release: 2018-09-08
+players: 1
+assets.boxfront: BoxFront/Dastardly Dairy Debacle, The (USA).jpg
+assets.boxback: BoxBack/Dastardly Dairy Debacle, The (USA).jpg
+assets.background: Background/Dastardly Dairy Debacle, The (USA).jpg
+assets.screenshot: Screenshot/Dastardly Dairy Debacle, The (USA).jpg
+x-co-op: No
+
+
+game: Death of the Corpse Wizard, The (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Death of the Corpse Wizard, The (USA)/Death of the Corpse Wizard, The (USA).json
+developer: FeatureCreeps
+publisher: FeatureCreeps
+genre: Action
+description:
+  The Death of the Corpse Wizard is a coffee-break, arena Rogue-like.
+  .
+  How long can spite and the simplest magical abilities keep The Corpse Wizard
+  alive?
+release: 2017-05-20
+players: 1
+assets.boxfront: BoxFront/Death of the Corpse Wizard, The (USA).jpg
+assets.boxback: BoxBack/Death of the Corpse Wizard, The (USA).jpg
+assets.background: Background/Death of the Corpse Wizard, The (USA).jpg
+assets.screenshot: Screenshot/Death of the Corpse Wizard, The (USA).jpg
+x-co-op: No
+
+
+game: Demonizer (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Demonizer (USA)/Demonizer (USA).json
+developer: IoriBranford
+publisher: IoriBranford
+genre: Shooter;Action
+description:
+  The fantasy bullet battle to end monstergirl genocide! Turn hateful humans into
+  lovable demons in this 90s arcade style shooter, inspired by Raiden Fighters,
+  Strikers 1945, and Battle Garegga.
+  .
+  The exiled princess Amelia has turned into a succubus and joined the peaceful
+  monstergirl tribe. Then invaders arrive led by her sister Angelina. Fighting
+  back with her newfound powers of hypnosis and demonization she departs to take
+  on the kingdom in a desperate bid to save her new people.
+  .
+  Seven challenging hand-crafted levels packed with beautiful pixel art - defend
+  your forest, fight through towns, break monstergirls out of dungeons, race
+  against cavalry and more
+  .
+  Battle fearsome enemy forces - masses of infantry and artillery, nimble
+  swordsmen and assassins, tricky spellcasters and mighty magical constructs
+  .
+  Capture their souls - transform them into fellow demons and watch their powers
+  grow with yours
+  .
+  Simple game systems reward natural and intuitive play - stay alive, shoot and
+  bomb, and the rest will follow
+  .
+  Three difficulty levels - beginners, enthusiasts, and experts can all enjoy
+  .
+  Rock out to a gritty, stompy YM2612 FM synth soundtrack
+  .
+  Rich retro visual customization - portrait or landscape, low or high res, smooth
+  or sharp pixels, stretch or no stretch
+  .
+  A twist on the old monster-slaying story - includes free digital comic book
+  revealing events before the game
+release: 2020-10-30
+players: 1
+assets.boxfront: BoxFront/Demonizer (USA).jpg
+assets.boxback: BoxBack/Demonizer (USA).jpg
+assets.background: Background/Demonizer (USA).jpg
+assets.screenshot: Screenshot/Demonizer (USA).jpg
+x-co-op: No
+
+
+game: Desert Mothers (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Desert Mothers (USA)/Desert Mothers (USA).json
+developer: Aaron Oldenburg
+publisher: Aaron Oldenburg
+genre: Meditation
+description:
+  Desert Mothers is a multiplayer virtual reality meditation circle. Players begin
+  in the same procedurally-generated environment.  This diverges for each as their
+  personal environment, composed of individualized weather and hallucinations,
+  responds emotionally to the player's actions.
+  .
+  The constraints within which the players interact are discovered during play,
+  and revolve around the body, simulated breath, drawing in the air, and out-of-
+  body exploration of flora, fauna, and abandoned human habitations.
+release: 2019-09-15
+players: 2
+assets.boxfront: BoxFront/Desert Mothers (USA).jpg
+assets.boxback: BoxBack/Desert Mothers (USA).jpg
+assets.background: Background/Desert Mothers (USA).jpg
+assets.screenshot: Screenshot/Desert Mothers (USA).jpg
+x-co-op: Yes
+
+
+game: Detective Case and Clown Bot in Murder in The Hotel Lisbon (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Detective Case and Clown Bot in Murder in The Hotel Lisbon (USA)/Detective Case and Clown Bot in Murder in The Hotel Lisbon (USA).json
+developer: Nerd Monkeys
+publisher: Nerd Monkeys
+genre: Adventure
+description:
+  A strange murder has occurred in the Hotel Lisbon, a man committed suicide with
+  14 stabs to the back while at the same time he peacefully drank his coffee.
+  .
+  This case with contradictory facts was too complex for Policeman Garcia to
+  solve, so he decided to hire the only detective duo in town capable of solving
+  it: the mythical Detective Case and the unmistakable Clown Bot.
+  .
+  Together, they will solve a network of love relations so complex and so
+  intricate, that it would take at least 14 clairvoyants, 5 apocalyptic sect
+  prophets who can predict the end of the world and 3 of those gypsies that can
+  read the palm of your hand just to guess the final outcome.
+release: 2022-03-04
+players: 1
+assets.boxfront: BoxFront/Detective Case and Clown Bot in Murder in The Hotel Lisbon (USA).jpg
+assets.boxback: BoxBack/Detective Case and Clown Bot in Murder in The Hotel Lisbon (USA).jpg
+assets.background: Background/Detective Case and Clown Bot in Murder in The Hotel Lisbon (USA).jpg
+assets.screenshot: Screenshot/Detective Case and Clown Bot in Murder in The Hotel Lisbon (USA).jpg
+x-co-op: No
+
+
+game: Distortion Nation (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Distortion Nation (USA)/Distortion Nation (USA).json
+developer: TangledVirus, BáiYù
+publisher: TangledVirus, BáiYù
+genre: Visual Novel
+description:
+  Distortion Nation is about Reverie, a 24 year old woman that's starting her day
+  in a really bad shape, with a eye that's severely hurt and a arm that might be
+  broken.
+  .
+  Also she's a vampire.
+  .
+  So what will she do? Ask her two girlfriends for help? Try so solve her problems
+  by herself? Learn to open up to others?
+release: 2020-04-12
+players: 1
+assets.boxfront: BoxFront/Distortion Nation (USA).jpg
+assets.boxback: BoxBack/Distortion Nation (USA).jpg
+assets.background: Background/Distortion Nation (USA).jpg
+assets.screenshot: Screenshot/Distortion Nation (USA).jpg
+x-co-op: No
+
+
+game: Don't Move (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Don't Move (USA)/Don't Move (USA).json
+developer: stvr
+publisher: stvr
+genre: Platformer
+description:
+  Don't Move is a game about ninjas, failure, ludonarrative dissonance, and player
+  investment manipulation. The game starts simply: move left or right. But as you
+  try -- and as you fail -- to move, you unlock more of the game's mechanisms.
+  With each new element comes new challenges and more rewards!
+release: 2013-09-13
+players: 1
+assets.boxfront: BoxFront/Don't Move (USA).jpg
+assets.boxback: BoxBack/Don't Move (USA).jpg
+assets.background: Background/Don't Move (USA).jpg
+assets.screenshot: Screenshot/Don't Move (USA).jpg
+x-co-op: No
+
+
+game: Doodle God (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Doodle God (USA)/Doodle God (USA).json
+developer: JoyBits
+publisher: JoyBits
+genre: Miscellaneous;Board / Card Game
+description:
+  Doodle God puts the power of creation in your hands!
+  .
+  The power of creation is in your hands! In this addictive, ALL ages, puzzle game
+  mix and match different combinations of fire, earth, wind and air to create an
+  entire universe! Of course the universe was not created in a day. Youll have to
+  work your up from a simple microorganism to create animals, tools, storms and
+  even build armies before you have what it takes to build the universe! But
+  beware, the power of creation may have unintended consequences, inventing the
+  wheel might just trigger a zombie plague
+release: 2010-06-11
+players: 1
+assets.boxfront: BoxFront/Doodle God (USA).jpg
+assets.boxback: BoxBack/Doodle God (USA).jpg
+assets.background: Background/Doodle God (USA).jpg
+assets.screenshot: Screenshot/Doodle God (USA).jpg
+x-co-op: No
+
+
+game: Dungeon Defenders (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Dungeon Defenders (USA)/Dungeon Defenders (USA).json
+developer: Trendy Entertainment
+publisher: Trendy Entertainment
+genre: Strategy;Real-Time;Defense
+description:
+  Epic Online Action-RPG meets Tower Defense: Battle by yourself or with up to 3
+  friends! Adventure through a massive campaign, collect loot, level up, compete
+  in a new online PvP mode and shop for tons of goods & services as you build the
+  strongest hero in Etheria!
+release: 2010-12-16
+players: 4
+assets.boxfront: BoxFront/Dungeon Defenders (USA).jpg
+assets.boxback: BoxBack/Dungeon Defenders (USA).jpg
+assets.background: Background/Dungeon Defenders (USA).jpg
+assets.screenshot: Screenshot/Dungeon Defenders (USA).jpg
+x-co-op: Yes
+
+
+game: Dynamite Jack (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Dynamite Jack (USA)/Dynamite Jack (USA).json
+developer: Hassey Enterprises, Inc.
+publisher: Hassey Enterprises, Inc.
+genre: Action
+description:
+  Dynamite Jack is an almost top-down shooter about the space marine Jack. He
+  was captured and forced to work in the Anathema Mines, but now he has a
+  chance to escape, armed only with a flashlight and bombs. To reach the
+  surface he has to move up 26 levels, sneaking past enemies or blowing them
+  up, to open up the entrances that bring him to a new environment.
+  .
+  Each level is set in a maze-like environment where the exit needs to be
+  located. Jack starts unarmed but the first item he usually gets to pick up is
+  a flashlight. It is used to navigate dark passages but makes him more visible
+  to opponents. The only means of offence is the bomb. Once a detonator has
+  been picked up Jack can put down an unlimited amount of bombs, but only one
+  at a time. They are dropped Bomberman-style and are detonated with a second
+  key press. Enemies are oblivious to bombs that have not been detonated yet so
+  generally their movement patterns need to be studied to drop a bomb in their
+  path. Bombs are also used to blow up rocks in the environment to create a
+  custom route. Certain parts of the levels are metal structures and those
+  cannot be blown up.
+  .
+  The default enemies have a visible line of sight that needs to be used by the
+  player in the vein of the Commandos series. Not all enemies need to be
+  defeated, it is also often possible to sneak past them. The sound of bombs
+  attracts the attention of enemies and this can also be used to Jack's
+  advantage to lure them away. Most enemies carry guns and a single bullet
+  kills Jack. Blue cubes scattered around the levels are used as quick save
+  spots. More advanced levels have energy sources that need to be blown up and
+  different key cards. To progress hidden data sets needs to be collect to open
+  up additional maps.
+  .
+  The in-game map can be consulted at any time and it shows all locations Jack
+  has visited with visual cues for enemies and other important elements. The
+  game includes an editor to build custom levels and share them with other
+  players. There is a map browser to play maps made available by other players
+  directly from the game.
+release: 2013-03-20
+players: 1
+assets.boxfront: BoxFront/Dynamite Jack (USA).jpg
+assets.boxback: BoxBack/Dynamite Jack (USA).jpg
+assets.background: Background/Dynamite Jack (USA).jpg
+assets.screenshot: Screenshot/Dynamite Jack (USA).jpg
+x-co-op: No
+
+
+game: Eves Drop (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Eves Drop (USA)/Eves Drop (USA).json
+developer: 8points
+publisher: 8points
+genre: Action
+description:
+  Eves Drop is a fast-paced, physics-based action game about free-falling through
+  cyberspace inspired by the extreme hackers of the 1990s.
+  .
+  Ricochet enemies for in-your-face destruction
+  .
+  Fluid, acrobatic gameplay about falling...with style!
+  .
+  Gritty, sci-fi, pixel art by Kyle Templeton (@supajackle)
+  .
+  Original, old-school, techno soundtrack by Rupert Cole (@RupertCole)
+  .
+  Bite-sized 5 minute runs
+  .
+  Real moody and Cool
+  .
+  New Year's Eve, 1999.
+  .
+  You are the head of an elite underground hacking ring, Project EVE.
+  .
+  Your goal: Stopping the world's largest surveillance corporation, Big Brother,
+  from turning into a deep-state puppet master.
+  .
+  You've spent months setting up this operation.
+  .
+  Tonight, at midnight, you'll have your chance.
+  .
+  Crash their code
+  .
+  Breach their protocols
+  .
+  Upgrade your system
+  .
+  Corrupt their mainframe
+  .
+  Destroy their data core, once and for all
+release: 2019-02-07
+players: 1
+assets.boxfront: BoxFront/Eves Drop (USA).jpg
+assets.boxback: BoxBack/Eves Drop (USA).jpg
+assets.background: Background/Eves Drop (USA).jpg
+assets.screenshot: Screenshot/Eves Drop (USA).jpg
+x-co-op: No
+
+
+game: Explobers Go (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Explobers Go (USA)/Explobers Go (USA).json
+developer: John D. Moore
+publisher: John D. Moore
+genre: Platformer
+description:
+  Deep in the recesses of the digital world, the Explobers find themselves in
+  perilous predicaments. Guide the Explobers to safety by blowing them up,
+  building pathways, and navigating through dozens of fun, tricky puzzles and
+  challenging platforming stages. Help them work together to achieve the seemingly
+  impossible!
+  .
+  80 challenging stages!
+  .
+  Unique multi-character single-player experience!
+  .
+  Expert goals for advanced players!
+  .
+  Unlock secret graphic modes and 20 bonus stages!
+  .
+  EXPLOBERS GO is designed for Android-based handheld game consoles and Android
+  phones with controller input only. It has been tested on and optimized for the
+  Retroid Pocket 2 and requires Android 6.0 and up.
+release: 2017-09-21
+players: 1
+assets.boxfront: BoxFront/Explobers Go (USA).jpg
+assets.boxback: BoxBack/Explobers Go (USA).jpg
+assets.background: Background/Explobers Go (USA).jpg
+assets.screenshot: Screenshot/Explobers Go (USA).jpg
+x-co-op: No
+
+
+game: Explobers Pocket (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Explobers Pocket (USA)/Explobers Pocket (USA).json
+developer: John D. Moore
+publisher: John D. Moore
+genre: Platformer
+description:
+  Deep in the recesses of the digital world, the Explobers find themselves in
+  perilous predicaments. Guide the Explobers to safety by blowing them up,
+  building pathways, and navigating through dozens of fun, tricky puzzles and
+  challenging platforming stages. Help them work together to achieve the seemingly
+  impossible!
+  .
+  80 challenging stages!
+  .
+  Unique multi-character single-player experience!
+  .
+  Expert goals for advanced players!
+  .
+  Unlock secret graphic modes and 20 bonus stages!
+  .
+  EXPLOBERS Pocket (for Android 6.0 and up) is playable in portrait mode with
+  touchscreen controls.
+release: 2017-09-21
+players: 1
+assets.boxfront: BoxFront/Explobers Pocket (USA).jpg
+assets.boxback: BoxBack/Explobers Pocket (USA).jpg
+assets.background: Background/Explobers Pocket (USA).jpg
+assets.screenshot: Screenshot/Explobers Pocket (USA).jpg
+x-co-op: No
+
+
+game: FOTONICA (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/FOTONICA (USA)/FOTONICA (USA).json
+developer: Santa Ragione S.r.l.
+publisher: Santa Ragione S.r.l.
+genre: Action
+description:
+  Fotonica is a first-person running game, similar to Canabalt. With only one
+  button, the player has to run and jump across platforms, gaining speed,
+  raising the score and collecting white dots. Graphics are done with low-count
+  polygon wireframe and colored with excessive effects depending on the speed.
+  There are five levels with different environment available, one of which is
+  endless.
+release: 2015-03-23
+players: 1
+assets.boxfront: BoxFront/FOTONICA (USA).jpg
+assets.boxback: BoxBack/FOTONICA (USA).jpg
+assets.background: Background/FOTONICA (USA).jpg
+assets.screenshot: Screenshot/FOTONICA (USA).jpg
+x-co-op: No
+
+
+game: Fateful Lore (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Fateful Lore (USA)/Fateful Lore (USA).json
+developer: Stonehollow Workshop, Lartu, Tejo
+publisher: Stonehollow Workshop, Lartu, Tejo
+genre: Role Playing;Adventure
+description:
+  "Many years ago, the Kingdom of Damerel was attacked by the demoness Daglaxaak.
+  War raged, but Daglaxaak was too powerful. When all hope was lost, a warrior by
+  the name of Egmulf managed to banish the demon warlord to another dimension,
+  where she was trapped for good. But peace may not last much longer, for the
+  magic that has been keeping Daglaxaak from coming back is weakening! And it's up
+  to you - the greatest of the King's warriors - to venture forth and prevent
+  chaos from ensuing once again!"
+  .
+  Fateful Lore is an all-new retro-style role-playing game by Fantaseel
+  Interactive! Inspired by old-school, 8-bit JRPGs, Fateful Lore is a nostalgic
+  adventure that will delight fans of the genre!
+  .
+  Adventure, monster slaying, treasure hunting and lots of pixels in wonderful,
+  retro NES style await!
+  .
+  Fateful Lore is inspired by classic RPGs like Dragon Quest and Final Fantasy. We
+  found that there were no RPGs on these platforms that looked and played like the
+  games we loved when we were young, so we decided to make one ourselves.
+  .
+  Features:
+  .
+  2D Retro RPG for Android (and iOS) Devices
+  .
+  First-person, turn-based battles
+  .
+  An enormous open world to explore
+  .
+  Beautiful pixel art graphics
+  .
+  Wonderful chiptune soundtrack
+  .
+  Numerous optional dungeons to explore
+  .
+  Plenty of loot to find
+  .
+  Save anywhere
+  .
+  Autosave feature in case you forget to save!
+  .
+  Quest log to remember what you did the last time you played
+  .
+  Excellent puns about everything almost anywhere
+  .
+  Awful puns about wells in every town!
+  .
+  No microtransactions of any kind!
+  .
+  Around 8 hours of gameplay
+  .
+  Seizure Warning:
+  .
+  This game contains flashing effects that may make it unsuitable for people with
+  photosensitive epilepsy or other photosensitive conditions. Player discretion is
+  advised. Flashing effects can be disabled in the in-game options menu.
+  .
+  Prequel
+  .
+  Fateful Lore is, in many ways, a spiritual successor to Lartu's Aidinia: An Epic
+  Adventure. If you want to learn more about the roots of Fateful Lore, you could
+  give it a go.
+release: 2020-04-30
+players: 1
+assets.boxfront: BoxFront/Fateful Lore (USA).jpg
+assets.boxback: BoxBack/Fateful Lore (USA).jpg
+assets.background: Background/Fateful Lore (USA).jpg
+assets.screenshot: Screenshot/Fateful Lore (USA).jpg
+x-co-op: No
+
+
+game: Feud (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Feud (USA)/Feud (USA).json
+developer: Bearwaves
+publisher: Bearwaves
+genre: Strategy
+description:
+  Feud is a turn-based strategy game made by some guys you haven't heard of yet.
+  Originally a board game designed by Dave Cordell, it's been polished and tweaked
+  and generally mucked about with to bring it to the glowing screen you're reading
+  this description on. Unless you printed it out? Think of the trees. Please.
+  .
+  Condensed abstract strategy!
+  .
+  Imagine chess, but on a four-by-four grid, where pieces are swapped rather than
+  moved, each piece has its own special ability and--
+  .
+  OK, not so much like chess. What you can expect is a highly condensed little
+  abstract strategy game which is easy enough to learn but quite tricky to get
+  good at. The AI still beats us sometimes. The computers are winning. Please get
+  good at Feud so we can beat them.
+  .
+  Cross-platform!
+  .
+  Feud has full cross-platform play between PC, Mac, Linux, iOS and Android. This
+  means you can play Feud at your boring job, then on the bus on the way home from
+  your boring job, then on your computer at home while you recover from your
+  boring job.
+  .
+  Please note that we do not recommend playing Feud during your commute if you
+  walk to work, especially if you live in a city with lots of open manhole covers
+  which is pretty much what I imagine New York to be like. I dunno, I've never
+  been.
+  .
+  You haven't told me much about this game yet, to be honest!
+  .
+  I'm not very good at this. Sorry. Anyway, look, the game's pay-whatever and only
+  a couple of hundred megabytes. You might as well, really.
+release: 2019-05-21
+players: 1
+assets.boxfront: BoxFront/Feud (USA).jpg
+assets.boxback: BoxBack/Feud (USA).jpg
+assets.background: Background/Feud (USA).jpg
+assets.screenshot: Screenshot/Feud (USA).jpg
+x-co-op: No
+
+
+game: Food Flinger VR (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Food Flinger VR (USA)/Food Flinger VR (USA).json
+developer: Eric Guadara
+publisher: Eric Guadara
+genre: Action
+description:
+  The patrons are hungry, so feed them!
+  .
+  Huck food at their faces to shut them up graciously serve them... in VR!  Grab
+  their tips, prep for the next wave, and do it all over again!  Can you survive
+  to Wave 99?
+  .
+  Food Flingin' Fun!
+  .
+  An Oculus Quest VR arcade game.
+  .
+  Randomized patron preferences means lots of replayability.
+  .
+  Arcade mechanics - Wait till they're on the Sweet Spot to increase your coinage
+  (and points!).
+  .
+  Puts the 'fun' back in 'Virtual Reality is fun'!
+  .
+  This is an apk file to sideload onto your Oculus Quest
+release: 2020-06-16
+players: 1
+assets.boxfront: BoxFront/Food Flinger VR (USA).jpg
+assets.boxback: BoxBack/Food Flinger VR (USA).jpg
+assets.background: Background/Food Flinger VR (USA).jpg
+assets.screenshot: Screenshot/Food Flinger VR (USA).jpg
+x-co-op: No
+
+
+game: Galactic Bar Fight VR (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Galactic Bar Fight VR (USA)/Galactic Bar Fight VR (USA).json
+developer: WeirdKidStudios
+publisher: WeirdKidStudios
+genre: Action;Shooter
+description:
+  Get ready for a Galactic Bar Fight!
+  .
+  Galactic Bar Fight is a fun, fast, frantic, frenzied VR arena space shooter!
+  .
+  Brawl your way through seedy intergalactic dive bars and fight your way across
+  the galaxy. Grab the nearest laser pistol and start blasting away at the first
+  person who looks at you funny.
+  .
+  CREATIVE WEAPONS AND POWER-UPS: Players are equipped with an arsenal of fun and
+  unique weapons like a frost rifle, a crossbow that shoots swords, blasters,
+  blades, all sorts of things that go pew pew pew.
+  .
+  HIGH-OCTANE COMBAT: Inspired by arcade shooter classics like Smash TV and
+  Serious Sam, Galactic Bar Fight simulates the unpredictable chaos of a good ol'
+  fashioned pub brawl. Shoot, blast, and disintegrate your way across 150+
+  challenges that will get your synapses firing and your blood pumping.
+  .
+  Players will be able to complete a variety of our 150+ challenges in both our
+  pegasus hub where they can destroy training droids, practice shooting holograms,
+  observe Hologram stage performers, and more. As well as the in-combat challenges
+  players will be randomly served.
+  .
+  Within the bar arenas players will creatively dispatch enemies using blasters of
+  all types. Featuring 11 unique weapons to Slash , smash , deflect, dissolve, and
+  split your enemies and using Powerups to tip the edge in combat in their own
+  favor. All feedback is welcome - come help shape the future of Galactic Bar
+  Fight as we continue to expand the feature set with suggestions from the
+  community!
+  .
+  The first release of Galactic Bar Fight comes with our first of 4 planned combat
+  arenas ( Club Axilla) a neon -splashed club where some of the rowdiest denizens
+  within the galaxy hang out.
+  .
+  **This is a VR project designed to be played on the Oculus/ Meta Quest and has
+  to be sideloaded onto the headset in order to be played ! **
+release: 2022-03-01
+players: 1
+assets.boxfront: BoxFront/Galactic Bar Fight VR (USA).jpg
+assets.boxback: BoxBack/Galactic Bar Fight VR (USA).jpg
+assets.background: Background/Galactic Bar Fight VR (USA).jpg
+assets.screenshot: Screenshot/Galactic Bar Fight VR (USA).jpg
+x-co-op: No
+
+
+game: Geography, The (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Geography, The (USA)/Geography, The (USA).json
+developer: Paws Menu
+publisher: Paws Menu
+genre: Exploration;Meditation
+description:
+  The Geography  is an endless, nonlinear orchestration.
+  .
+  The Geography is a companion for meditation, relaxation, jubilation,
+  contemplation, self care, sleeping and dreaming.
+  .
+  The Geography is an endless album.
+  .
+  The Geography is both still and in motion.
+  .
+  The Geography is a passive game, but also lets you play, if you want to play.
+  .
+  The Geography uses terrain data from Svalbard, Norway rendered into low-poly
+  landscapes brought to life with soft shaders.
+  .
+  The Geography is inspired by The Global Seed Vault.
+  .
+  The Geography is inspired by Music.
+  .
+  The Geography is an electronic orchestration that plays forever, always re-
+  organising itself, always changing and creating ambient sound baths.
+  .
+  The Geography is unique to the listener, with every instance generating a unique
+  organisation of harmonious sounds, creating a unique composition.
+  .
+  The Geography is a form of The New Music.
+  .
+  The Geography is a collaboration between Michael Berto and Titouan Millet.
+release: 2021-09-12
+players: 1
+assets.boxfront: BoxFront/Geography, The (USA).jpg
+assets.boxback: BoxBack/Geography, The (USA).jpg
+assets.background: Background/Geography, The (USA).jpg
+assets.screenshot: Screenshot/Geography, The (USA).jpg
+x-co-op: No
+
+
+game: God of Blades (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/God of Blades (USA)/God of Blades (USA).json
+developer: White Whale Games, LLC
+publisher: White Whale Games, LLC
+genre: Action
+description:
+  The dead king rises! Become a spectral warrior who has returned to defend his
+  planet against a rampaging doom-cult and the devouring touch of the cosmic
+  horrors they serve. Wrenching this world from the grasp of oblivion, the
+  Nameless King wields phantom blades forged from the legends and heritage of a
+  dying world.
+  .
+  Raise your blade, and rush into the darkness!
+release: 2013-04-03
+players: 1
+assets.boxfront: BoxFront/God of Blades (USA).jpg
+assets.boxback: BoxBack/God of Blades (USA).jpg
+assets.background: Background/God of Blades (USA).jpg
+assets.screenshot: Screenshot/God of Blades (USA).jpg
+x-co-op: No
+
+
+game: Golf Peaks (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Golf Peaks (USA)/Golf Peaks (USA).json
+developer: afterburn, Mirzka, wrnk
+publisher: afterburn, Mirzka, wrnk
+genre: Puzzle;Sports
+description:
+  Relaxing puzzle game where you climb mountains by playing golf. Conquer 100+
+  handcrafted puzzles using a card-based movement system.
+  .
+  FEATURES:
+  .
+  120+ levels and 10 worlds to complete,
+  .
+  Various block types to experiment with,
+  .
+  Unique card-based movement system,
+  .
+  Minimalist visuals and a relaxing atmosphere,
+  .
+  Relaxing music,
+  .
+  15 languages supported: English, Polish, Japanese, French, Italian, Spanish,
+  Portuguese, Dutch, Norwegian, Czech, Russian, Latin, Simplified Chinese,
+  Traditional Chinese, Korean.
+  .
+  Zero understanding of golf required!
+release: 2018-11-13
+players: 1
+assets.boxfront: BoxFront/Golf Peaks (USA).jpg
+assets.boxback: BoxBack/Golf Peaks (USA).jpg
+assets.background: Background/Golf Peaks (USA).jpg
+assets.screenshot: Screenshot/Golf Peaks (USA).jpg
+x-co-op: No
+
+
+game: Gunhouse (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Gunhouse (USA)/Gunhouse (USA).json
+developer: Necrosoft Games
+publisher: Necrosoft Games
+genre: Puzzle
+description:
+  Puzzle meets Tower Defense!
+  .
+  Load your guns! Rain death from above! Protect your valuable orphans! Defeat
+  giant, improbable bosses! Gunhouse is part puzzle, part active tower defense, as
+  you make big combos to launch a hail of bullets and special attacks at the alien
+  invaders who would like nothing better than to consume your delicious orphan
+  friends.
+  .
+  With infinite levels (you can play this for ever), upgradeable weapons, hardcore
+  mode, a unique visual style from artist Juan Ramirez, a "weird fiction" story by
+  Brandon Sheffield (Street Fighter 30th), code by Jim Stormdancer (Frog
+  Fractions), and music by Disasterpeace (Hyper Light Drifter), Gunhouse from
+  Necrosoft Games will entertain the heck right out of you, maybe!
+  .
+  Tower Defense!
+  .
+  Weapon upgrades!
+  .
+  Infinite levels!
+  .
+  Strange narrative!
+  .
+  Weird bosses!
+release: 2020-01-20
+players: 1
+assets.boxfront: BoxFront/Gunhouse (USA).jpg
+assets.boxback: BoxBack/Gunhouse (USA).jpg
+assets.background: Background/Gunhouse (USA).jpg
+assets.screenshot: Screenshot/Gunhouse (USA).jpg
+x-co-op: No
+
+
+game: Guppy (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Guppy (USA)/Guppy (USA).json
+developer: Christiaan Moleman
+publisher: Christiaan Moleman
+genre: Simulation
+description:
+  Guppy is a 2D watercolour fish simulation.
+  .
+  Swim like a fish! Move your tail left and right to propel yourself through the
+  water, hide in the shade of lilies and venture carefully into the open in search
+  of food. Try not to get eaten.
+  .
+  CONTROLS:
+  .
+  Alternate LEFT and RIGHT ARROW (player 1) or A and D (player 2)
+  .
+  NOTE: Also supports GAMEPAD and TOUCH  (mobile)
+  .
+  Co-op only supported on desktop (Win/Mac/Linux), not mobile.
+  .
+  TIP: If you prefer swimming around in peace you can also remove predators in the
+  options (ESC > Main Menu > Options), though this disables scoring.
+release: 2014-01-06
+players: 1
+assets.boxfront: BoxFront/Guppy (USA).jpg
+assets.boxback: BoxBack/Guppy (USA).jpg
+assets.background: Background/Guppy (USA).jpg
+assets.screenshot: Screenshot/Guppy (USA).jpg
+x-co-op: No
+
+
+game: Hammer Bomb (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Hammer Bomb (USA)/Hammer Bomb (USA).json
+developer: Crescent Moon Games
+publisher: Crescent Moon Games
+genre: Action
+description:
+  Are you ready to enter dark mazes and dungeons - full of monster hordes and
+  traps?
+  .
+  Then brave the dungeon, Sir Hammer Bomb. Rescue your soldiers and find the
+  treasure!
+  .
+  Hammer Bomb is a new twist on dungeon style arcade games.
+  .
+  Easy controls for anyone to play, but only a few will master!
+  .
+  Drop bombs to open secret areas to find the best treasures!
+  .
+  Go on quests looking for various types of treats. Cake, Pizza, Hot Dogs,
+  Soda, and more!
+  .
+  Level up and collect all 50 perks to enhance your gameplaying abilities.
+  .
+  Use various weapons, bows, swords, magic, and the almighty hammer!
+  .
+  Battle Ginormous bosses in each of the biomes.
+  .
+  Features:
+  .
+  -An endless amount of mind bending mazes to escape
+  .
+  -Great voxel style graphics
+  .
+  -Easy to play, simple controls for anyone to play.
+  .
+  -Various weapons to use and master
+  .
+  -50 perks to upgrade your playing skills
+  .
+  -Quests to find in each maze - yummy treats!
+release: 2016-05-01
+players: 1
+assets.boxfront: BoxFront/Hammer Bomb (USA).jpg
+assets.boxback: BoxBack/Hammer Bomb (USA).jpg
+assets.background: Background/Hammer Bomb (USA).jpg
+assets.screenshot: Screenshot/Hammer Bomb (USA).jpg
+x-co-op: No
+
+
+game: He Plays the Piano (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/He Plays the Piano (USA)/He Plays the Piano (USA).json
+developer: Sebastian Scaini
+publisher: Sebastian Scaini
+genre: Music
+description:
+  Play the piano in a dimly lit jazz club, isolated from the rest of the world.
+release: 2018-11-20
+players: 1
+assets.boxfront: BoxFront/He Plays the Piano (USA).jpg
+assets.boxback: BoxBack/He Plays the Piano (USA).jpg
+assets.background: Background/He Plays the Piano (USA).jpg
+assets.screenshot: Screenshot/He Plays the Piano (USA).jpg
+x-co-op: No
+
+
+game: Idioctopus (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Idioctopus (USA)/Idioctopus (USA).json
+developer: BadgerHammer
+publisher: BadgerHammer
+genre: Puzzle
+description:
+  Love Don't Come Easy!
+  .
+  Guide brainless lovestruck octopus couples safely to their romantic rendezvous
+  in increasingly deadly date spots. Magical teleports, juicy switches, sticky
+  gates, dastardly timers and more keep the gameplay fresh and exciting through 80
+  brain straining puzzles.
+  .
+  Features
+  .
+  2 brain dead octopi
+  .
+  8 devious features
+  .
+  80 monster mazes of slimy puzzles
+  .
+  Romance and danger
+  .
+  Multi format
+release: 2017-02-10
+players: 1
+assets.boxfront: BoxFront/Idioctopus (USA).jpg
+assets.boxback: BoxBack/Idioctopus (USA).jpg
+assets.background: Background/Idioctopus (USA).jpg
+assets.screenshot: Screenshot/Idioctopus (USA).jpg
+x-co-op: No
+
+
+game: Inbento (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Inbento (USA)/Inbento (USA).json
+developer: afterburn
+publisher: afterburn
+genre: Puzzle
+description:
+  Play with snacks, solve hand-crafted recipes and enjoy a cute story
+  in this culinary brain-teaser from the creators of Golf Peaks!
+  .
+  FEATURES:
+  .
+  > 120+ puzzles and unique pattern-matching gameplay <
+  .
+  > Textless, heartwarming story about cats and parenthood <
+  .
+  > Inspired by Japanese aesthetics and bento cuisine <
+release: 2019-09-02
+players: 1
+assets.boxfront: BoxFront/Inbento (USA).jpg
+assets.boxback: BoxBack/Inbento (USA).jpg
+assets.background: Background/Inbento (USA).jpg
+assets.screenshot: Screenshot/Inbento (USA).jpg
+x-co-op: No
+
+
+game: Inkanians - Ouya Edition (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Inkanians - Ouya Edition (USA)/Inkanians - Ouya Edition (USA).json
+developer: Kronbits
+publisher: Kronbits
+genre: Puzzle
+description:
+  Inkanians is a puzzle game on you control a squared-inca moving boxes, slide
+  blocks, teleport... to collect all the diamonds of the level
+  .
+  History: Two incas stole a treasure and a mysterious magic turning them in to
+  rocks inside the cave. Now they have to find the way to escape.
+  .
+  The game starts with easy levels to explain all the mechanics and increases the
+  difficulty in various ways until the last levels. There is no constant
+  difficulty increase, you can find a normal level and after that some a bit more
+  easier to no get frustrated after something hard
+release: 2015-02-27
+players: 1
+assets.boxfront: BoxFront/Inkanians - Ouya Edition (USA).jpg
+assets.boxback: BoxBack/Inkanians - Ouya Edition (USA).jpg
+assets.background: Background/Inkanians - Ouya Edition (USA).jpg
+assets.screenshot: Screenshot/Inkanians - Ouya Edition (USA).jpg
+x-co-op: No
+
+
+game: Jabberwocky (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Jabberwocky (USA)/Jabberwocky (USA).json
+developer: python-b5, Sam Gorman
+publisher: python-b5, Sam Gorman
+genre: Adventure;Action;Role Playing
+description:
+  Jabberwocky is a game inspired by the 2D Zelda titles, based on the poem
+  "Jabberwocky" by Lewis Carroll.
+  .
+  You are a young knight charged with saving the kingdom from a terrifying
+  monster. You must adventure through the sprawling overworld, solve puzzles, and
+  fight bosses on your journey. While you're playing, keep an eye out for secret
+  tokens!
+  .
+  So good luck, brave knight, on your quest to slay the Jabberwock!
+release: 2020-02-03
+players: 1
+assets.boxfront: BoxFront/Jabberwocky (USA).jpg
+assets.boxback: BoxBack/Jabberwocky (USA).jpg
+assets.background: Background/Jabberwocky (USA).jpg
+assets.screenshot: Screenshot/Jabberwocky (USA).jpg
+x-co-op: No
+
+
+game: Kaiju Big Battel - Fighto Fantasy (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Kaiju Big Battel - Fighto Fantasy (USA)/Kaiju Big Battel - Fighto Fantasy (USA).json
+developer: Super Walrus Games
+publisher: Super Walrus Games
+genre: Role Playing
+description:
+  Kaiju Big Battel: Fighto Fantasy is 16-bit styled RPG featuring turn-based
+  combat, plenty of exploration, and a funky soundtrack to pump you up. This is an
+  officially licensed game based on the live-action monster wrestling group Kaiju
+  Big Battel, who have been performing their Godzilla-meets-WWE act for over 20
+  years.
+  .
+  Designed for Kaiju fans and newcomers alike, Fighto Fantasy takes players on a
+  quest across time and space as they work to undo damage caused by the evil Dr.
+  Cube as he rampages through history in search of fame and glory. With seven main
+  playable heroes (and a secret one to unlock), players explore six time periods
+  and punch out dozens of deadly monsters.
+  .
+  All the world is watching as the Kaiju Big Battel Title Fight is about to begin:
+  The diabolical Dr. Cube vs. the patriotic pugilist, American Beetle! Things take
+  a sudden turn when Cube pulls out a secret weapon that rips open portals into
+  history. Now it's up to the Kaiju Heroes to pursue Cube across the centuries,
+  from Egypt to Rome to Russia and beyond! Is the mad doctor pursuing dangerous
+  artifacts lost to time, or does he just want to deface famous landmarks with his
+  own ugly mug?
+  .
+  Combat: No random encounters here; touch enemy NPCs on the map to trigger turn-
+  based battles. Each of the seven main heroes has their own strengths and
+  weaknesses.
+  .
+  Side stories: When you're not chasing Dr. Cube through time, take a minute to
+  help out some locals. Slay a musclebound mummy, rescue lost Kaiju heroes, adopt
+  cats!
+  .
+  Map abilities: Each hero has a unique ability to interact with environmental
+  objects, unlocking hidden paths and secret treasures.
+  .
+  Difficulty selection: Easy Mode for a relaxed experience, Normal Mode for
+  players who want some tense fights, and Hard Mode for players looking for more
+  deadly dangers.
+  .
+  12+ hours of RPG adventure.
+release: 2018-11-18
+players: 1
+assets.boxfront: BoxFront/Kaiju Big Battel - Fighto Fantasy (USA).jpg
+assets.boxback: BoxBack/Kaiju Big Battel - Fighto Fantasy (USA).jpg
+assets.background: Background/Kaiju Big Battel - Fighto Fantasy (USA).jpg
+assets.screenshot: Screenshot/Kaiju Big Battel - Fighto Fantasy (USA).jpg
+x-co-op: No
+
+
+game: Karambola (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Karambola (USA)/Karambola (USA).json
+developer: Holy Pangolin
+publisher: Holy Pangolin
+genre: Puzzle
+description:
+  In the middle of the summer, a pack of evil bird-thoughts
+  attacked a peaceful village of emotional fruit people.
+  .
+  They have been separated, each sent into a different season,
+  focused on their own loneliness and internal landscape of troubles.
+  .
+  If you wish, help Karambola on his quest to rescue
+  his friends from the power of evil thoughts.
+  .
+  It's my first game, so be open-minded, enjoy!
+release: 2016-09-07
+players: 1
+assets.boxfront: BoxFront/Karambola (USA).jpg
+assets.boxback: BoxBack/Karambola (USA).jpg
+assets.background: Background/Karambola (USA).jpg
+assets.screenshot: Screenshot/Karambola (USA).jpg
+x-co-op: No
+
+
+game: Karateka Classic (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Karateka Classic (USA)/Karateka Classic (USA).json
+developer: Karateka, LLC
+publisher: Karateka, LLC
+genre: Action
+description:
+  The evil Akuma has destroyed the protagonist's homeland, killed many of his
+  friends and kidnapped the princess Mariko. Fortunately, the hero is skilled
+  in martial arts, so his inevitable quest to reach Akuma's palace and rescue
+  Mariko has a chance of success.
+  .
+  Karateka is viewed from the side and features a succession of increasingly
+  difficult opponents. Three types of punches and kicks are available to both
+  the player character and his foes, differentiated by their height (low,
+  medium, and high). The protagonist has a health bar, which refills itself
+  gradually when he stands still.
+release: 2013-05-16
+players: 1
+assets.boxfront: BoxFront/Karateka Classic (USA).jpg
+assets.boxback: BoxBack/Karateka Classic (USA).jpg
+assets.background: Background/Karateka Classic (USA).jpg
+assets.screenshot: Screenshot/Karateka Classic (USA).jpg
+x-co-op: No
+
+
+game: Knock-Knock (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Knock-Knock (USA)/Knock-Knock (USA).json
+developer: Ice-Pick Lodge Ltd.
+publisher: Ice-Pick Lodge Ltd.
+genre: Action
+description:
+  There is a cabin in the woods that serves as a laboratory and a dwelling for
+  a Lodger. Lately the Lodger experiences strange changes in the surroundings -
+  each night some things get missing, noises are heard and mysterious guests
+  are coming from the woods. The Lodger is insomniac and he needs to stay awake
+  and sane till dawn. He also has lost something important, something that may
+  be the reason of all the strange events.
+  .
+  At its heart Knock-knock! is a hide-and-seek game. Each level (or night) is
+  timed and all you need to do is wait till the morning comes. The way you do
+  it is up to you, the player. You may roam around the house and investigate
+  what's going on - turning on the lights and unlocking doors. You may choose
+  to "fill in the gaps" - make certain things appear in the lit rooms. When
+  bizarre "guests" start appearing in your house you may try to close the
+  "portals" from which they come or you may choose to hide behind the bed and
+  hope they don't spot you. From time to time you will leave your dwelling and
+  find yourself in the woods or in a seemingly endless corridor. The story of
+  the Lodger is told in strange messages that you find and by the Lodger
+  himself at certain moments. At some points the rules of the game may slightly
+  change and it is up to the player to understand what has changed and why.
+  Some of your actions will determine the outcome of the story and alter your
+  understanding of what's going on.
+release: 2014-05-01
+players: 1
+assets.boxfront: BoxFront/Knock-Knock (USA).jpg
+assets.boxback: BoxBack/Knock-Knock (USA).jpg
+assets.background: Background/Knock-Knock (USA).jpg
+assets.screenshot: Screenshot/Knock-Knock (USA).jpg
+x-co-op: No
+
+
+game: Love (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Love (USA)/Love (USA).json
+developer: Fred Wood
+publisher: Fred Wood
+genre: Platformer
+description:
+  LOVE is a minimalistic platforming game with a retro aesthetic and a focus on a
+  challenging but not unfair difficulty. It has an innovative respawn system, 16
+  levels, a 12 track soundtrack, online leaderboards, and a unique custom level
+  creation feature*.
+  .
+  Users are able to create images (both static and animated) that can be imported
+  as level geometry, hazards, or interactive elements. Creators can craft full
+  10-level campaigns with customizeable screens and intros, and share them with
+  one another*.
+  .
+  The challenging levels are balanced with the inclusion of a simple yet unique
+  respawn system wherein the player can leave a checkpoint at any location at any
+  point, as long as they are on solid ground.
+  .
+  Beyond the visual aesthetic, the challenging level design, and the abundance of
+  features, there is the fantastic soundtrack composed by James Bennett, which
+  bring the seemingly simple 3-color atmospheres to life.
+release: 2014-02-07
+players: 1
+assets.boxfront: BoxFront/Love (USA).jpg
+assets.boxback: BoxBack/Love (USA).jpg
+assets.background: Background/Love (USA).jpg
+assets.screenshot: Screenshot/Love (USA).jpg
+x-co-op: No
+
+
+game: Love - Ouya Edition (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Love - Ouya Edition (USA)/Love - Ouya Edition (USA).json
+developer: Fred Wood
+publisher: Fred Wood
+genre: Platformer
+description:
+  LOVE is a minimalistic platforming game with a retro aesthetic and a focus on a
+  challenging but not unfair difficulty. It has an innovative respawn system, 16
+  levels, a 12 track soundtrack, online leaderboards, and a unique custom level
+  creation feature*.
+  .
+  Users are able to create images (both static and animated) that can be imported
+  as level geometry, hazards, or interactive elements. Creators can craft full
+  10-level campaigns with customizeable screens and intros, and share them with
+  one another*.
+  .
+  The challenging levels are balanced with the inclusion of a simple yet unique
+  respawn system wherein the player can leave a checkpoint at any location at any
+  point, as long as they are on solid ground.
+  .
+  Beyond the visual aesthetic, the challenging level design, and the abundance of
+  features, there is the fantastic soundtrack composed by James Bennett, which
+  bring the seemingly simple 3-color atmospheres to life.
+release: 2014-02-07
+players: 1
+assets.boxfront: BoxFront/Love - Ouya Edition (USA).jpg
+assets.boxback: BoxBack/Love - Ouya Edition (USA).jpg
+assets.background: Background/Love - Ouya Edition (USA).jpg
+assets.screenshot: Screenshot/Love - Ouya Edition (USA).jpg
+x-co-op: No
+
+
+game: Love 2 - Kuso (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Love 2 - Kuso (USA)/Love 2 - Kuso (USA).json
+developer: Fred Wood
+publisher: Fred Wood
+genre: Platformer
+description:
+  Kuso is the sequel to LOVE, and maintains the same focus on creating a fair
+  challenge for players to complete and master. You have the ability to run, jump,
+  and leave your own checkpoint. Make your way through acid, long jumps,
+  disappearing platforms, bouncers, giant saws, and much more in this dreadful
+  mechanical world. If you're looking for a game that'll challenge your
+  platforming skills, give you something excellent to listen to, and a game to
+  master, kuso is the game for you.
+  .
+  Features:
+  .
+  * 41 Levels with unique music for each stage
+  .
+  * 26 Unlockable Achievements
+  .
+  * Local 2 Player Race Mode across 32 Levels
+  .
+  * Speedrun Mode allows players to compete for the fastest time
+  .
+  * Time Attack Mode allows players to master individual levels for the fastest
+  time
+  .
+  * A completely original soundtrack by James Bennett
+  .
+  * Collectibles and Secrets for players to find
+  .
+  * Full Controller Support for XInput Gamepads
+release: 2017-11-07
+players: 2
+assets.boxfront: BoxFront/Love 2 - Kuso (USA).jpg
+assets.boxback: BoxBack/Love 2 - Kuso (USA).jpg
+assets.background: Background/Love 2 - Kuso (USA).jpg
+assets.screenshot: Screenshot/Love 2 - Kuso (USA).jpg
+x-co-op: No
+
+
+game: Love 2 - Kuso - Ouya Edition (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Love 2 - Kuso - Ouya Edition (USA)/Love 2 - Kuso - Ouya Edition (USA).json
+developer: Fred Wood
+publisher: Fred Wood
+genre: Platformer
+description:
+  Kuso is the sequel to LOVE, and maintains the same focus on creating a fair
+  challenge for players to complete and master. You have the ability to run, jump,
+  and leave your own checkpoint. Make your way through acid, long jumps,
+  disappearing platforms, bouncers, giant saws, and much more in this dreadful
+  mechanical world. If you're looking for a game that'll challenge your
+  platforming skills, give you something excellent to listen to, and a game to
+  master, kuso is the game for you.
+  .
+  Features:
+  .
+  * 41 Levels with unique music for each stage
+  .
+  * 26 Unlockable Achievements
+  .
+  * Local 2 Player Race Mode across 32 Levels
+  .
+  * Speedrun Mode allows players to compete for the fastest time
+  .
+  * Time Attack Mode allows players to master individual levels for the fastest
+  time
+  .
+  * A completely original soundtrack by James Bennett
+  .
+  * Collectibles and Secrets for players to find
+  .
+  * Full Controller Support for XInput Gamepads
+  .
+  Note: Ouya version works, but is not supported.
+release: 2017-11-07
+players: 2
+assets.boxfront: BoxFront/Love 2 - Kuso - Ouya Edition (USA).jpg
+assets.boxback: BoxBack/Love 2 - Kuso - Ouya Edition (USA).jpg
+assets.background: Background/Love 2 - Kuso - Ouya Edition (USA).jpg
+assets.screenshot: Screenshot/Love 2 - Kuso - Ouya Edition (USA).jpg
+x-co-op: No
+
+
+game: Lullaby of Colors, A (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Lullaby of Colors, A (USA)/Lullaby of Colors, A (USA).json
+developer: andyman404
+publisher: andyman404
+genre: Action
+description:
+  This is a blissful psychedelic relaxation experience made for both VR and non-
+  VR.
+  .
+  Treat yourself to this virtual refuge from the real world with procedurally
+  generated realms of gentle sounds, sweet-tasting colors, and breathtaking
+  beauty.
+  .
+  Find and catch the bouncing spheres to visit different worlds. Find the perfect
+  place to relax and watch the virtual world go by. There are no enemies, quests,
+  guns, or puzzles. There is no objective other than to relax and enjoy.
+  .
+  Inspired by "Wave For Me" Famicase 2018 Cover by Michael Shillingburger
+  (@shillingburger).
+  .
+  Oculus Quest (Sideload .json): You can install the .json version onto the Oculus
+  Quest via sideloading. For most people, the easiest way to do this is to install
+  via SideQuest. After configuring your Oculus Quest for developer mode, and
+  installing/setting up Sidequest on your desktop, you can then just drag and drop
+  the APK into SideQuest in the area in the top left corner.
+  .
+  Previously titled "Chromesthesia".
+release: 2018-09-14
+players: 1
+assets.boxfront: BoxFront/Lullaby of Colors, A (USA).jpg
+assets.boxback: BoxBack/Lullaby of Colors, A (USA).jpg
+assets.background: Background/Lullaby of Colors, A (USA).jpg
+assets.screenshot: Screenshot/Lullaby of Colors, A (USA).jpg
+x-co-op: No
+
+
+game: Luminous Labyrinth (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Luminous Labyrinth (USA)/Luminous Labyrinth (USA).json
+developer: Bobby Wolfe
+publisher: Bobby Wolfe
+genre: Puzzle
+description:
+  A maze solving puzzle game of high contrast colors and moving obstacles.
+  .
+  In a world made of labyrinths and colorful obstacles, move a glowing cube
+  through beautiful worlds of color to find the ending star. Discover each
+  colorful world, unlocking auras and hidden areas, all ending with an epic test
+  of skill in Rainbow World.
+  .
+  * Simple move controls. (keyboard, mouse or game controller)
+  .
+  * Integrated menu system with minimal UI
+  .
+  * Original music by Matt Reeves
+  .
+  * Relax and move your way through 7 worlds of color.
+  .
+  * Discover all hidden areas and glowing stars to complete 100%.
+  .
+  * Use quick reaction time and patience to slide through each section.
+  .
+  * Collect a protective color aura to help against obstacles.
+  .
+  * Discover 100% on all levels of a world and unlock the 'Permanent Aura'.
+  .
+  * Solve mazes in a high contrast, colorful world, while listening to an all
+  original 8 song soundtrack.
+release: 2020-02-16
+players: 1
+assets.boxfront: BoxFront/Luminous Labyrinth (USA).jpg
+assets.boxback: BoxBack/Luminous Labyrinth (USA).jpg
+assets.background: Background/Luminous Labyrinth (USA).jpg
+assets.screenshot: Screenshot/Luminous Labyrinth (USA).jpg
+x-co-op: No
+
+
+game: Lyne (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Lyne (USA)/Lyne (USA).json
+developer: Thomas Bowker
+publisher: Thomas Bowker
+genre: Puzzle
+description:
+  Deceptively simple. Infinitely complex. LYNE is a minimalist puzzle game that
+  will knot your brain as it calms your soul.
+  .
+  Connect the shapes. Fill the board. Lose yourself in the interflowing paths of
+  LYNE.
+  .
+  Hundreds of pre-built puzzles
+  .
+  An infinite number of procedurally-generated puzzles, released daily
+  .
+  Slick, intuitive interface
+  .
+  Soothing dynamic audio
+  .
+  Unlockable colour palettes
+release: 2013-12-24
+players: 1
+assets.boxfront: BoxFront/Lyne (USA).jpg
+assets.boxback: BoxBack/Lyne (USA).jpg
+assets.background: Background/Lyne (USA).jpg
+assets.screenshot: Screenshot/Lyne (USA).jpg
+x-co-op: No
+
+
+game: MANOS - The Hands of Fate (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/MANOS - The Hands of Fate (USA)/MANOS - The Hands of Fate (USA).json
+developer: FreakZone Games
+publisher: FreakZone Games
+genre: Action
+description:
+  MANOS: The Hands of Fate is a retro platformer done in the style of 8-bit
+  games, such as Super Mario Bros. It is based on the 1966 cult horror film of
+  the same name. Mike and his family get lost on their trip only to end up in
+  Valley Lodge, where caretaker Torgo greets them and warns them to stay. But
+  they stay and a night of terror ensues.
+  .
+  The graphics, music and sound effects are all done in the style of old NES
+  games. You play as Mike, the father of the family, and the goal is to jump,
+  run and shoot your way through the level to the level boss and beat it in
+  order to get to the next level. There are different types of guns available.
+  There are also levels where Mike flies a plane.
+release: 2013-02-22
+players: 1
+assets.boxfront: BoxFront/MANOS - The Hands of Fate (USA).jpg
+assets.boxback: BoxBack/MANOS - The Hands of Fate (USA).jpg
+assets.background: Background/MANOS - The Hands of Fate (USA).jpg
+assets.screenshot: Screenshot/MANOS - The Hands of Fate (USA).jpg
+x-co-op: No
+
+
+game: Madball (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Madball (USA)/Madball (USA).json
+developer: Madness Studio
+publisher: Madness Studio
+genre: Platformer
+description:
+  Do you want a hard platformer game? Madball is here to challenge you! I mean
+  seriously!
+  .
+  What is Madball?
+  .
+  Madball is a casual game that you should control a ball with a constant velocity
+  through an unpredictable and exciting platform by tapping the screen in
+  smartphones and pressing the "Space" button or using a mouse in PCs. But wait,
+  do you think the gameplay is simple? Hmm, let us know after trying the game!
+  .
+  Madball has two primary modes: level mode and endless mode. In the level mode,
+  you should scrimmage with around 60 different levels that every one of them has
+  its exclusivity!
+  .
+  In the endless mode, there are 9 different modes such as Pillars, The Wall,
+  Invisible, Dark with various properties that you should try not reading about
+  them!
+  .
+  Features:
+  .
+  Rich and amusing gameplay with 60 levels and 9 endless runs.
+  .
+  Colorful and minimalist environment.
+  .
+  9 original soundtracks.
+  .
+  A large shop with numerous updates for the ball such as various colors and tails
+  that let you design the character as you wish.
+  .
+  Challenging levels and addictive modes can keep you entertained for a long time.
+  .
+  You should know that Madball has been created by two students, so each support
+  from you can boost us a lot in our journey. So, Download it now and Have fun!
+release: 2020-06-20
+players: 1
+assets.boxfront: BoxFront/Madball (USA).jpg
+assets.boxback: BoxBack/Madball (USA).jpg
+assets.background: Background/Madball (USA).jpg
+assets.screenshot: Screenshot/Madball (USA).jpg
+x-co-op: No
+
+
+game: Magical Tale, A - Cavern Crawler (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Magical Tale, A - Cavern Crawler (USA)/Magical Tale, A - Cavern Crawler (USA).json
+developer: DarkLightGames
+publisher: DarkLightGames
+genre: Adventure
+description:
+  You have been given the task to complete each of the caverns located in each
+  area. Each cavern contain 15 levels, filled with both combat and puzzles! From
+  the likes of lava, sand, ice or water themes, they all collaborate into a full
+  quest with over 90+ levels overall to cater to your cavern crawling need!
+  .
+  For each level you complete with you will gain a  key, with said key you can
+  unlock the door nearby in order to progress to the next level!
+  .
+  In the latest version of the game as of v2.0.0+, it introduced brand new content
+  "Snow Cavern" totalling the amount of caverns to 7! In this cavern, you will
+  confront snowmen and new set of unique puzzles!
+  .
+  Both saving and loading can be done at any point during your game, This menu can
+  be accessed by pressing the pause button located at the top left of the screen.
+release: 2017-08-31
+players: 1
+assets.boxfront: BoxFront/Magical Tale, A - Cavern Crawler (USA).jpg
+assets.boxback: BoxBack/Magical Tale, A - Cavern Crawler (USA).jpg
+assets.background: Background/Magical Tale, A - Cavern Crawler (USA).jpg
+assets.screenshot: Screenshot/Magical Tale, A - Cavern Crawler (USA).jpg
+x-co-op: No
+
+
+game: Manna for Our Malices (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Manna for Our Malices (USA)/Manna for Our Malices (USA).json
+developer: enkiv2
+publisher: enkiv2
+genre: Visual Novel
+description:
+  Akagi Ai is unexpectedly stabbed on her way home from school. She finds her
+  spirit possessing her body from earlier that day, and must collaborate with the
+  past self that inhabits her body to discover why she keeps dying -- and why she
+  keeps coming back.
+  .
+  Along the way, she becomes entangled with mysterious goings-on that have
+  entrapped her friends.
+release: 2018-01-11
+players: 1
+assets.boxfront: BoxFront/Manna for Our Malices (USA).jpg
+assets.boxback: BoxBack/Manna for Our Malices (USA).jpg
+assets.background: Background/Manna for Our Malices (USA).jpg
+assets.screenshot: Screenshot/Manna for Our Malices (USA).jpg
+x-co-op: No
+
+
+game: Micron (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Micron (USA)/Micron (USA).json
+developer: Apparition Games
+publisher: Apparition Games
+genre: Puzzle;Rhythm
+description:
+  Micron is a unique fusion of puzzle and rhythm gameplay. Place pieces on the
+  board to deflect bullets of energy that fire to the beat. Guide the bullets to
+  the exit through 51 challenging levels - and 12 bonus levels - featuring a
+  variety of distinctive soundscapes. Your solutions create the music.
+  .
+  Micron began as a game created for Kongregate's 'Project Eden: Experience the
+  Music' game contest, in which it won 2nd place. The judges included Tetsuya
+  Mizuguchi, creator of REZ and LUMINES, and representatives from Ubisoft,
+  Gamespot, and Kongregate.
+release: 2015-10-19
+players: 1
+assets.boxfront: BoxFront/Micron (USA).jpg
+assets.boxback: BoxBack/Micron (USA).jpg
+assets.background: Background/Micron (USA).jpg
+assets.screenshot: Screenshot/Micron (USA).jpg
+x-co-op: No
+
+
+game: Millikan's Reach (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Millikan's Reach (USA)/Millikan's Reach (USA).json
+developer: Inferior Planet
+publisher: Inferior Planet
+genre: Simulation;Shooter
+description:
+  Set in a war-torn star system on the fringes of civilized space, Millikan's
+  Reach is a single-player open-world space shooter with trading and mining
+  elements. A clean art style, fluid dogfighting and an easy-to-learn economy
+  ensure an experience you can quickly pick up and play, without compromising the
+  freedom that the best in the genre has to offer.
+  .
+  Start with a small scout craft and claw your way up into grander and more
+  powerful vessels through whatever means you choose. Become a bounty hunter,
+  wiping out the system's criminal scum. Go mercenary and take a side in the war
+  between the proud Terran Empire and the alien Millikan Hive-Mind. Mine ore or
+  trade cargo, playing the market for the best deals in the system. You can even
+  become a space pirate, and raid cargo ships for loot and profit.
+  .
+  Features
+  .
+  Eighteen playable spacecraft, each filling a unique role in their respective
+  fleet
+  .
+  A variety of weapons systems, ranging from basic plasma blasters to space
+  shotguns and homing seeker-cannons
+  .
+  Several commodities that can be bought, sold, extracted from asteroids, or even
+  stolen from less-fortunate pilots
+  .
+  A dynamic reputation system, allowing you to side with whomever you desire
+  .
+  Five unique freelance mission types, from basic cargo runs to clearing
+  minefields
+release: 2022-01-31
+players: 1
+assets.boxfront: BoxFront/Millikan's Reach (USA).jpg
+assets.boxback: BoxBack/Millikan's Reach (USA).jpg
+assets.background: Background/Millikan's Reach (USA).jpg
+assets.screenshot: Screenshot/Millikan's Reach (USA).jpg
+x-co-op: No
+
+
+game: Mnemonic MV (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Mnemonic MV (USA)/Mnemonic MV (USA).json
+developer: Pablo Lavín
+publisher: Pablo Lavín
+genre: Application
+description:
+  Shrink long texts to create shorter documents that are easier to memorize!
+  .
+  How it works
+  .
+  1. Type or paste a text in the left text box.
+  .
+  2. Press a button
+  .
+  3. Your text has been summarized!
+  .
+  With Mnemonic you can create automatic summaries by replacing words from a
+  source text!  This app will crop out any word it believes it's not needed for
+  your text to be understood.  You can take a picture of a text and summarize it
+  in seconds!
+  .
+  What you can do
+  .
+  Create Summaries for English or Spanish texts
+  .
+  Highlight words instead of shrinking texts
+  .
+  Get the text to summarize from a picture! (Experimental)
+  .
+  Try to extend your texts instead of shrinking (Experimental)
+  .
+  Save your summaries
+  .
+  Copy the end result to the clipboard
+  .
+  Export your summary to PDF
+release: 2019-09-03
+players: 1
+assets.boxfront: BoxFront/Mnemonic MV (USA).jpg
+assets.boxback: BoxBack/Mnemonic MV (USA).jpg
+assets.background: Background/Mnemonic MV (USA).jpg
+assets.screenshot: Screenshot/Mnemonic MV (USA).jpg
+x-co-op: No
+
+
+game: Mole (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Mole (USA)/Mole (USA).json
+developer: Badjano Entertainment
+publisher: Badjano Entertainment
+genre: Puzzle
+description:
+  Mole is a fun game for anyone to enjoy. It is based on the classic whack-a-mole
+  game style so it is very intuitive and easy to understand, but it will keep you
+  playing for hours while trying to beat your own record! Or maybe your friends'
+  records!
+  .
+  There are three gameplay styles:
+  .
+  The first one is the King style, where you have a limited amount of moles to
+  hit, but you may want to be quick, because as time goes by the moles start
+  popping more and more often!
+  .
+  The second style would be the Lover style. The Lover mole is a mole who loves
+  hearts and he'll do anything to get one, and every time you forget to hit a
+  mole, a heart will pop up, so if you don't stop him, he will get it for him and
+  you will lose one of yours! Try not to lose all three!
+  .
+  The third style would be the Devil! You are on a deadline and every time you
+  don't hit a mole you'll have even less time to play! So be fast and don't let
+  any mole get away so that you can play as long you can!
+release: 2018-09-04
+players: 1
+assets.boxfront: BoxFront/Mole (USA).jpg
+assets.boxback: BoxBack/Mole (USA).jpg
+assets.background: Background/Mole (USA).jpg
+assets.screenshot: Screenshot/Mole (USA).jpg
+x-co-op: No
+
+
+game: Monster Loves You! (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Monster Loves You! (USA)/Monster Loves You! (USA).json
+developer: Dejobaan Games, LLC, Radial Games Corp.
+publisher: Radial Games Corp.
+genre: Simulation
+description:
+  Monster Loves You is an interactive fiction with graphics life simulator,
+  where the player lives the life of a monster in the village of Omen —
+  starting from the monster brooding pool, adolescence, adulthood, and, if it
+  survives, elderhood — and may affect the world of monsters and humans.
+  .
+  Gameplay consists of decision making choices the player must make to
+  determine the life course of the monster. These choices will affect
+  attributes the monster has: bravery, ferocity, cleverness, honesty, and
+  kindness. Including an invisible attribute: neurosurgery. Decisions made will
+  either increase or decrease these attributes (e.g. +9 Ferocity), which in
+  return will also affect the success rate of future choices since adulthood.
+  .
+  When monster reaches adulthood, reputation comes into play, which may affect
+  the monster's chances of becoming an elder. Failing to become an elder may
+  mean certain death. Chances of success will greatly depend on the overall
+  attributes and reputation the monster has accumulated throughout the game. If
+  the monster successfully becomes an elder, it now has the choice to affect
+  the lives and relations between monsters and humans. To coexist peacefully,
+  destroy the humans or other alternatives are entirely up to the player.
+  .
+  Finishing the game will unlock medals (achievements) commemorating the
+  accomplishments the player has made.
+release: 2014-01-02
+players: 1
+assets.boxfront: BoxFront/Monster Loves You! (USA).jpg
+assets.boxback: BoxBack/Monster Loves You! (USA).jpg
+assets.background: Background/Monster Loves You! (USA).jpg
+assets.screenshot: Screenshot/Monster Loves You! (USA).jpg
+x-co-op: No
+
+
+game: Neverending Nightmares (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Neverending Nightmares (USA)/Neverending Nightmares (USA).json
+developer: Infinitap Games, LLC
+publisher: Infinitap Games, LLC
+genre: Adventure
+description:
+  Neverending Nightmares is a psychological horror game inspired by the
+  developer's real-life battle with OCD and depression. You take the role of a
+  character named Thomas who keeps waking up from a nightmare to find out that
+  he's still in a nightmare. In a similar style to classic adventure game, the
+  player can explorer the worlds, interact with enemies, mainly through
+  fleeing and hiding mechanics, and interact with the environment. The player
+  can progress through a branching tree of nightmares to one of several
+  possible endings. The artwork is inspired by the classic artist Edward Gorey,
+  done mostly in black and white, with color for emphasis of objects that can
+  be interacted with.
+release: 2017-11-27
+players: 1
+assets.boxfront: BoxFront/Neverending Nightmares (USA).jpg
+assets.boxback: BoxBack/Neverending Nightmares (USA).jpg
+assets.background: Background/Neverending Nightmares (USA).jpg
+assets.screenshot: Screenshot/Neverending Nightmares (USA).jpg
+x-co-op: No
+
+
+game: NightSky (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/NightSky (USA)/NightSky (USA).json
+developer: Nicalis, Inc.
+publisher: Nicalis, Inc.
+genre: Action;Puzzle
+description:
+  In NightSky a boy finds a glowing sphere on the beach. He brings it home, but
+  ever since finding it he has the strangest dreams at night. The player acts
+  out these dreams in surreal environments, controlling the ball. The game
+  combines the ambient aesthetics of the Knytt series with the ball mechanic
+  from Within a Deep Forest. Players guide the ball through different worlds,
+  but with more linear gameplay than the aforementioned titles, solving
+  puzzles to progress.
+  .
+  The ball can be moved left or right and using the appropriate speed it is
+  possible to travel over gaps or climb ramps. Levels gradually introduce more
+  difficult challenges often based on physics. The ball for instance needs to
+  ride a cart, pass a windmill or use flippers like in a pinball machine to
+  reach a higher area. There are also two main powers that can be applied to
+  the ball, but these are not available at all times. The first gives the ball
+  a red glow and offers more precise control. The player can brake more
+  quickly and slightly stick to surfaces. The second gives off a blue glow and
+  offers additional speed. Players use it to climb slopes more quickly or
+  traverse wider gaps. In certain section the blue glow reverses gravity (and
+  the controls along with it). The game has an ambient atmosphere and there
+  are no enemies, bosses or any form of violence.
+  .
+  There are eleven worlds in total, each with a different theme and new
+  challenges. To progress the player simply needs to reach the next screen each
+  time. The game is saved automatically, but not after every single screen.
+  Certain challenges are divided over multiple screens (often three) and then
+  the game is only saved after the section is entirely completed. It is
+  possible to misinterpret a puzzle, get stuck, and reset the environment.
+  .
+  There are two difficulty levels. "Normal" is aimed at casual players with
+  minor puzzle elements, similar in difficulty to most of Nicklas Nygren's
+  previous games, while "Alternative" has complicated puzzles, minimal
+  instructions, and demands more thought and precise control of the ball.
+  In both game modes levels are largely the same.
+release: 2013-03-15
+players: 1
+assets.boxfront: BoxFront/NightSky (USA).jpg
+assets.boxback: BoxBack/NightSky (USA).jpg
+assets.background: Background/NightSky (USA).jpg
+assets.screenshot: Screenshot/NightSky (USA).jpg
+x-co-op: No
+
+
+game: Normal Lost Phone, A (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Normal Lost Phone, A (USA)/Normal Lost Phone, A (USA).json
+developer: Dear Villagers
+publisher: Dear Villagers
+genre: Adventure;Interactive Fiction;Puzzle
+description:
+  A Normal Lost Phone is a game about exploring the intimacy of an unknown person
+  whose phone was found by the player.
+  .
+  Through the interface of a mobile phone, the player must discover what happened
+  to its owner, Sam. Digging through secrets scattered among apps, text messages
+  and photo galleries, the player-voyeur starts witnessing the emotions of Sam,
+  and behind the apparent light-heartedness of a teenage story, their questioning
+  on coming of age, homophobia, depression or the search of oneself.
+  .
+  Features
+  .
+  An immersive and intuitive way of introducing the narrative through a fake
+  smartphone interface.
+  .
+  A game that bridges the gap between reality and fiction by letting players act
+  as themselves. The game asks a simple question: if you close the app but still
+  think about the game, have you truly stopped playing?
+  .
+  A relatable story that helps build empathy with the characters, allowing to
+  explore difficult topics such as identity, gender binarism, individuation and
+  privacy.
+release: 2017-01-26
+players: 1
+assets.boxfront: BoxFront/Normal Lost Phone, A (USA).jpg
+assets.boxback: BoxBack/Normal Lost Phone, A (USA).jpg
+assets.background: Background/Normal Lost Phone, A (USA).jpg
+assets.screenshot: Screenshot/Normal Lost Phone, A (USA).jpg
+x-co-op: No
+
+
+game: Nuvoloso (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Nuvoloso (USA)/Nuvoloso (USA).json
+developer: Claudio Vertemara
+publisher: Claudio Vertemara
+genre: Action;Educational
+description:
+  Nuvoloso is a casual arcade game where your task is to look at a sky full of
+  clouds and find clouds in a certain shape.
+  .
+  Singleplayer
+  .
+  Play through a number of singleplayer game modes and try to improve your
+  highscore while also unlocking new backgrounds & powers that will give you an
+  advantage.
+  .
+  Classic - the original game where you have all the time in the world to find as
+  many clouds as you can. Don't make too many mistakes though, because 3 strikes
+  and it's game over.
+  .
+  Tick Tock - the timed game mode where you don't need to worry about strikes or
+  clouds floating away, just the timer that will limit your highscore.
+  .
+  Color Match - the colorful game mode where all clouds have a random color and
+  you need to worry about their color as well as their shape.
+  .
+  Local Multiplayer
+  .
+  VS - play against a friend in this local multiplayer game mode to see who can
+  find the most clouds the quickest.
+  .
+  Educational
+  .
+  Nuvoloso is a fun way to memorize or practice some English words for English
+  Language Learners.
+release: 2019-06-03
+players: 2
+assets.boxfront: BoxFront/Nuvoloso (USA).jpg
+assets.boxback: BoxBack/Nuvoloso (USA).jpg
+assets.background: Background/Nuvoloso (USA).jpg
+assets.screenshot: Screenshot/Nuvoloso (USA).jpg
+x-co-op: No
+
+
+game: Omeganaut (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Omeganaut (USA)/Omeganaut (USA).json
+developer: Txori
+publisher: Txori
+genre: Shooter
+description:
+  You are the last pilot of the Earth Alliance, our only resort: the Omeganaut!
+  .
+  Features
+  .
+  Fast-paced gameplay with randomly generated levels
+  .
+  No loading time, no cuts between levels
+  .
+  Small footprint: the entire game can fit inside a good old floppy disk
+  .
+  How to play?
+  .
+  It is recommended to use an Xbox controller. But you can play with a keyboard or
+  a touchscreen too, just activate the virtual gamepad in the Setup screen.
+  .
+  Move around to avoid obstacles
+  .
+  Fire to destroy enemies that come in your way
+  .
+  Hold Fire to charge your laser
+  .
+  Press the Roll buttons to turn faster
+  .
+  Double tap a Roll button to avoid danger and to slap nearby enemies
+  .
+  Virtual Reality
+  .
+  You can turn on VR in the Setup screen. I only have a Google Cardboard, but
+  maybe it will work with fancy headsets? Please give me feedback if you have the
+  chance to play with such a device
+release: 2019-05-02
+players: 1
+assets.boxfront: BoxFront/Omeganaut (USA).jpg
+assets.boxback: BoxBack/Omeganaut (USA).jpg
+assets.background: Background/Omeganaut (USA).jpg
+assets.screenshot: Screenshot/Omeganaut (USA).jpg
+x-co-op: No
+
+
+game: Orbis - Throw Them All! (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Orbis - Throw Them All! (USA)/Orbis - Throw Them All! (USA).json
+developer: Madness Studio
+publisher: Madness Studio
+genre: Platformer
+description:
+  Orbis is an amusing casual-arcade game with astonishing art and design that
+  challenges your reaction time, memory and eyes! You need an alarm to help you to
+  stop playing!
+  .
+  You must throw disks of the tower to the blue or red wall based on colors of the
+  disks and do not let the tower reach the top! but it might not be simple after
+  all. Basically, you should just touch the left or right side of the screen to
+  direct disks to the same color side. However, there are not just blue and red
+  disks! There are a lot of special disks such as Golden Disk which gives you
+  double score, Black Disk which makes the tower completely black and you can
+  throw the disk anywhere, and Frozen Disk which slows down the speed of the crazy
+  tower!
+  .
+  Features:
+  .
+  Rich and entertaining gameplay with 4 main game modes: Normal, Classic, Mad and
+  Invisible (more still coming!).
+  .
+  Exciting original music which dynamically changes with the rhythm of the game.
+  .
+  Beautiful and stunning art.
+  .
+  Many upgrades and features in the game.
+release: 2020-03-14
+players: 1
+assets.boxfront: BoxFront/Orbis - Throw Them All! (USA).jpg
+assets.boxback: BoxBack/Orbis - Throw Them All! (USA).jpg
+assets.background: Background/Orbis - Throw Them All! (USA).jpg
+assets.screenshot: Screenshot/Orbis - Throw Them All! (USA).jpg
+x-co-op: No
+
+
+game: Organ Trail (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Organ Trail (USA)/Organ Trail (USA).json
+developer: The Men Who Wear Many Hats LLC
+publisher: The Men Who Wear Many Hats LLC
+genre: Action;Role-playing;Simulation
+description:
+  Organ Trail: Director's Cut is an enhanced version of the browser game Organ
+  Trail. It maintains most of the content of the original game but also
+  includes various enhancements:
+  .
+  * 4 difficulty levels\n
+  * 400 tombstones written by the community\n
+  * Additional road events\n
+  * Additional boss encounters\n
+  * Characters can be customized instead of choosing a pre-set one\n
+  * Choose-your-own-adventure style encounters on the road\n
+  * Conversation mechanic\n
+  * Reworked soundtrack\n
+  * Rewritten for the Unity game engine\n
+  * Rewritten story\n
+  * Updated and new art\n
+  * Weather system and day-night cycle
+release: 2012-08-09
+players: 1
+assets.boxfront: BoxFront/Organ Trail (USA).jpg
+assets.boxback: BoxBack/Organ Trail (USA).jpg
+assets.background: Background/Organ Trail (USA).jpg
+assets.screenshot: Screenshot/Organ Trail (USA).jpg
+x-co-op: Yes
+
+
+game: Petty Puny Planet (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Petty Puny Planet (USA)/Petty Puny Planet (USA).json
+developer: Whales And Games, MoskiDraws, Zachary Blystone, JorgeGameDev
+publisher: Whales And Games, MoskiDraws, Zachary Blystone, JorgeGameDev
+genre: Simulation
+description:
+  Why have a pet rock when you can have a pet planet? Micromanage this cosmic
+  massive rock from its humble beginnings and take its people to places they never
+  thought possible! Sure, you can teach them about food and science, but what if
+  you take some liberties with evolution?
+  .
+  You've got a planet, and you have to decide what happens to it. But being the
+  boss is such a tiring job, so you have to take a century long rest after every
+  decision. Let's hope they can manage without you for that long. Every action you
+  take can change the tiny people's destiny!
+  .
+  Features
+  .
+  Randomized choice based gameplay. Your choices unlock more things to choose
+  from, as well as new consequences and events, some which are also dependent on
+  your previous decisions!
+  .
+  Keep the people happy and wealthy! Or not! I mean, what's the worst that could
+  happen?
+  .
+  Did the worst that could happen actually happen? Well, ditch the planet and
+  start a new one!
+  .
+  You can take a screenshot of your planet at any given time. It'll be saved on
+  the game's folder. Don't tell the tiny people though. Nobody likes paparazzi.
+  Screenshots only work on the desktop versions though!
+  .
+  There's 10 different endings. Let's discover them all!
+release: 2017-04-25
+players: 1
+assets.boxfront: BoxFront/Petty Puny Planet (USA).jpg
+assets.boxback: BoxBack/Petty Puny Planet (USA).jpg
+assets.background: Background/Petty Puny Planet (USA).jpg
+assets.screenshot: Screenshot/Petty Puny Planet (USA).jpg
+x-co-op: No
+
+
+game: Plant Down (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Plant Down (USA)/Plant Down (USA).json
+developer: Rouli
+publisher: Rouli
+genre: Action
+description:
+  Play as a plant in its instinctive quest to take down the monarchy
+  .
+  In Plant Down, you're faced with 3 bosses of increasing difficulty. Will you
+  manage to take them all down?
+  .
+  The game takes between 20 minutes and one hour to complete.
+  .
+  It is available exclusively for android
+  .
+  Plant Down uses an elegant two-button input system designed for mobile
+  .
+  The game contains little to no text
+  .
+  A game by Rouli, with music from PeKaNo and melima
+release: 2022-01-07
+players: 1
+assets.boxfront: BoxFront/Plant Down (USA).jpg
+assets.boxback: BoxBack/Plant Down (USA).jpg
+assets.background: Background/Plant Down (USA).jpg
+assets.screenshot: Screenshot/Plant Down (USA).jpg
+x-co-op: No
+
+
+game: Provider (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Provider (USA)/Provider (USA).json
+developer: CakeNeq Games
+publisher: CakeNeq Games
+genre: Action
+description:
+  If a ghost asks you to return something.  You should return it.
+  .
+  Awaken.
+  .
+  Speak to the Dead.
+  .
+  Brave the Zones.
+  .
+  Provide for their requests.
+  .
+  Awaken.
+  .
+  Provider is an esoteric exploration and action zone-punk game. Play as a
+  Provider, a ferryman of sorts for those caught between spaces. Explore Excluded
+  Zones, each unstuck at a different time and populated with creatures and hazards
+  that are not meant to be survived. Use your cunning and curiosity to find what
+  is requested, smite the creatures that stand in your way, and make it back
+  before you're left stranded with no heat to keep you lucid. Stone Castles razed
+  to the ground, souls cursed by greed, creatures feasting on blood and bone
+  alike, and beings older than creation itself await you in PROVIDER.
+  .
+  Explore stories from across time and space, as you set lost souls right on their
+  path to whatever comes next, all while battling back haunting echoes from the
+  past and strange monsters that slip through the cracks in the universal fabric.
+release: 2021-12-17
+players: 1
+assets.boxfront: BoxFront/Provider (USA).jpg
+assets.boxback: BoxBack/Provider (USA).jpg
+assets.background: Background/Provider (USA).jpg
+assets.screenshot: Screenshot/Provider (USA).jpg
+x-co-op: No
+
+
+game: Pulstario (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Pulstario (USA)/Pulstario (USA).json
+developer: Fred Wood
+publisher: Fred Wood
+genre: Action;Platformer
+description:
+  Pulstario is a small game in which you pilot a ship through the void and collect
+  missing souls. It has challenging moments and hopefully the gameplay is a
+  rewarding experience. From the creator of LOVE and kuso.
+  .
+  Pulstario is a short game that will likely take a player 30 minutes to complete
+  the main game. There are also achievements, secret levels, and unlockable ship
+  skins for the player to earn and collect.
+  .
+  Features:
+  .
+  11 Levels
+  .
+  5 Secret Levels
+  .
+  14 Achievements
+  .
+  14 Unlockable Ship Skins
+  .
+  Native Xinput Controller Support
+  .
+  The game features the following modes:
+  .
+  Unlimited Mode: Play through the game's ten levels with unlimited lives, the
+  ability to slow down time, and enjoy the game with no punishments.
+  .
+  Arcade Mode: Play through the game with a limited number of lives and the
+  ability to slow down time.
+  .
+  Challenge Mode: Play through the game with a very limited number of lives.
+  .
+  Speedrun Mode: Play through the game or individual levels to try and achieve the
+  fastest time.
+  .
+  One Life Mode: Challenge each level without dying
+  .
+  The soundtrack for the game is the Green EP from Retfoniq
+release: 2019-10-29
+players: 1
+assets.boxfront: BoxFront/Pulstario (USA).jpg
+assets.boxback: BoxBack/Pulstario (USA).jpg
+assets.background: Background/Pulstario (USA).jpg
+assets.screenshot: Screenshot/Pulstario (USA).jpg
+x-co-op: No
+
+
+game: Pulstario - Ouya Edition (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Pulstario - Ouya Edition (USA)/Pulstario - Ouya Edition (USA).json
+developer: Fred Wood
+publisher: Fred Wood
+genre: Action;Platformer
+description:
+  Pulstario is a small game in which you pilot a ship through the void and collect
+  missing souls. It has challenging moments and hopefully the gameplay is a
+  rewarding experience. From the creator of LOVE and kuso.
+  .
+  Pulstario is a short game that will likely take a player 30 minutes to complete
+  the main game. There are also achievements, secret levels, and unlockable ship
+  skins for the player to earn and collect.
+  .
+  Features:
+  .
+  11 Levels
+  .
+  5 Secret Levels
+  .
+  14 Achievements
+  .
+  14 Unlockable Ship Skins
+  .
+  Native Xinput Controller Support
+  .
+  The game features the following modes:
+  .
+  Unlimited Mode: Play through the game's ten levels with unlimited lives, the
+  ability to slow down time, and enjoy the game with no punishments.
+  .
+  Arcade Mode: Play through the game with a limited number of lives and the
+  ability to slow down time.
+  .
+  Challenge Mode: Play through the game with a very limited number of lives.
+  .
+  Speedrun Mode: Play through the game or individual levels to try and achieve the
+  fastest time.
+  .
+  One Life Mode: Challenge each level without dying
+  .
+  The soundtrack for the game is the Green EP from Retfoniq
+release: 2019-10-29
+players: 1
+assets.boxfront: BoxFront/Pulstario - Ouya Edition (USA).jpg
+assets.boxback: BoxBack/Pulstario - Ouya Edition (USA).jpg
+assets.background: Background/Pulstario - Ouya Edition (USA).jpg
+assets.screenshot: Screenshot/Pulstario - Ouya Edition (USA).jpg
+x-co-op: No
+
+
+game: Punch Quest (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Punch Quest (USA)/Punch Quest (USA).json
+developer: Madgarden, Rocketcat LLC
+publisher: Noodlecake Studios Inc.
+genre: Action
+description:
+  Punch Quest is an arcade-style fighting game, entirely controlled by taps
+  with your left and right thumbs.
+  .
+  Jab, uppercut, slam, and otherwise pummel your way through dungeons full of
+  monsters, branching path choices, rare events, and fragile pottery.
+  .
+  Features:\n
+  - Unlock and equip many special abilities and Supermoves.\n
+  - Ride a dinosaur that shoots lasers out of its mouth.\n
+  - Character customization that gets shown off on our friend scoreboards.\n
+  - Punch an egg that turns you into a magical gnome.\n
+  - Do quests to earn really fancy hats.\n
+  - Combo system where you launch enemies into each other from across the map.
+  .
+  Punch Quest is a collaboration between Rocketcat Games (Hook Champ, Mage
+  Gauntlet) and Madgarden (Saucelifter, Sword of Fargoal).
+release: 2014-11-03
+players: 1
+assets.boxfront: BoxFront/Punch Quest (USA).jpg
+assets.boxback: BoxBack/Punch Quest (USA).jpg
+assets.background: Background/Punch Quest (USA).jpg
+assets.screenshot: Screenshot/Punch Quest (USA).jpg
+x-co-op: No
+
+
+game: QWOP (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/QWOP (USA)/QWOP (USA).json
+developer: Noodlecake Studios Inc.
+publisher: Noodlecake Studios Inc.
+genre: Sports
+description:
+  You are Qwop, your small nations only entry in the Olympics. Sadly, where
+  you're from is so cold there is no outdoor track so you've never practiced
+  running or even walking.
+  .
+  QWOP is a rag doll game where you try to guide your avatar through Olympic
+  track events. You make your man tilt by tilting the device you are using and,
+  to move his legs, you move your thumbs around two diamond-shaped controllers
+  on the screen. Your event choices are:
+  .
+  * 100m sprint\n
+  * 110m hurdles\n
+  * Long jump\n
+  * Speeplechase\n
+  * 50km walk
+  .
+  If any part of your body touches the ground, the race ends. The ultimate goal
+  is to finish the race but the game will keep track of where you last made it
+  to.
+release: 2013-07-04
+players: 1
+assets.boxfront: BoxFront/QWOP (USA).jpg
+assets.boxback: BoxBack/QWOP (USA).jpg
+assets.background: Background/QWOP (USA).jpg
+assets.screenshot: Screenshot/QWOP (USA).jpg
+x-co-op: No
+
+
+game: Quest of Dungeons (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Quest of Dungeons (USA)/Quest of Dungeons (USA).json
+developer: David Amador
+publisher: David Amador
+genre: Role Playing
+description:
+  Quest of Dungeons is a turn based dungeon crawler game, a roguelike.
+  .
+  An evil Dark Lord has stolen all the light, so your mission is to enter his lair
+  and defeat him. The dungeons layout is procedural so you won't find
+  items/enemies in the same place each time you play.
+  .
+  By playing as either a Warrior, a Wizard, a Assassin or a Shaman you have to
+  traverse dungeons, defeat enemies and loot everything you can in order to
+  survive. You can learn new skills in Tomes you find along the way and buy/sell
+  items at shops.
+  .
+  The entire game is procedural so you won't find items/enemies in the same place
+  each time you play.
+  .
+  Features
+  .
+  Procedural dungeons
+  .
+  Procedural weapons
+  .
+  Boss encounters
+  .
+  Quests
+  .
+  4 Difficulty levels
+  .
+  Permadeath - Once you die, game over man, game over!
+  .
+  Shop - buy and sell items/weapons
+release: 2014-03-25
+players: 1
+assets.boxfront: BoxFront/Quest of Dungeons (USA).jpg
+assets.boxback: BoxBack/Quest of Dungeons (USA).jpg
+assets.background: Background/Quest of Dungeons (USA).jpg
+assets.screenshot: Screenshot/Quest of Dungeons (USA).jpg
+x-co-op: No
+
+
+game: Ravensword - Shadowlands (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Ravensword - Shadowlands (USA)/Ravensword - Shadowlands (USA).json
+developer: Crescent Moon Games LLC
+publisher: Crescent Moon Games LLC
+genre: Role-playing
+description:
+  Ravensword: Shadowlands is an open world fantasy RPG. You play the only
+  survivor of a huge battle between humans and elves, and must collect three
+  magic stones to recover the legendary Ravensword and slay a powerful demon.
+  .
+  The game can be played in first- or third-person modes, and you can switch
+  between modes with one press. You can battle monsters using a melee weapon, a
+  ranged weapon (bow, crossbows or powdered weapons) and/or magic powered by
+  energy (there are about half a dozen magic spells). There is one button for
+  attacking, one for blocking and another one for casting the selected spell.
+  Melee, ranged and magic skills can be raised by practicing or by spending
+  gold at trainers; other skills can be increased only when you level up your
+  character. You must also have food with you (which can be bought or extracted
+  from some animals), otherwise your character goes hungry and your health
+  regeneration slows down. The game includes some mounted combat, with a couple
+  different mount types.
+release: 2013-03-21
+players: 1
+assets.boxfront: BoxFront/Ravensword - Shadowlands (USA).jpg
+assets.boxback: BoxBack/Ravensword - Shadowlands (USA).jpg
+assets.background: Background/Ravensword - Shadowlands (USA).jpg
+assets.screenshot: Screenshot/Ravensword - Shadowlands (USA).jpg
+x-co-op: No
+
+
+game: Roly-Polo (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Roly-Polo (USA)/Roly-Polo (USA).json
+developer: LaPieza
+publisher: LaPieza
+genre: Sports;Platformer
+description:
+  Roly-Polo it's a fast and fun sport videogame for up to four players.
+  .
+  In the game you control a PillBugBear (or a pair of them if you chose Twins-
+  Mode), to win you have to score 15 points by throwing the purple ball thought
+  the ring goals.
+  .
+  The controllers have an auto throw to goal aid that you can turn On and Off on
+  the options menu, also options for twin-mode, and the number of A.I. players
+  that you want to play with.
+  .
+  It's local-multiplayer against friends or CPU controlled players,  and doesn't
+  have any online mode but it can be played online using streaming software like
+  PARSEC (https://parsecgaming.com/) or Remote Play Detached
+  (https://github.com/smaTc/RemotePlayDetached).
+  .
+  By the time of release it comes with 8 hand-made stages that are selected one
+  after the other in semi-random order for non-stop fun, and more will be added in
+  the near future.
+release: 2020-10-16
+players: 4
+assets.boxfront: BoxFront/Roly-Polo (USA).jpg
+assets.boxback: BoxBack/Roly-Polo (USA).jpg
+assets.background: Background/Roly-Polo (USA).jpg
+assets.screenshot: Screenshot/Roly-Polo (USA).jpg
+x-co-op: No
+
+
+game: Secret of the Magic Crystals (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Secret of the Magic Crystals (USA)/Secret of the Magic Crystals (USA).json
+developer: Artery Studios Kft.
+publisher: Artery Studios Kft.
+genre: Simulation;Sports
+description:
+  In this game you manage a horse-breeding farm set in a fantasy surrounding.
+  The game enables you to breed legendary horses such as Pegasus, Unicorn,
+  Fire-steed, Ice-steed and Demon-steed. You can buy over 700 objects during
+  the game. Make all kinds of horseshoes as well as lots of magical potions for
+  your horses. If they are exhausted or ill, you are able to cure and look
+  after them. Your horses and colts need lots of care and that’s the way they
+  recover their strengths. You can train your horses on four different fields
+  in five levels of difficulty. You can even breed them in order to have more
+  talented horses. Different horse races help you to gather 25 kinds of cups
+  and you can send your horses to complete 30 exciting missions.
+  .
+  * Real time weather and season changing.\n
+  * 5 different buildings and over 5 levels to upgrade your buildings on your
+  farm.\n
+  * 5 different type of fantasy horses.\n
+  * Interactive horse caring.\n
+  * Over 700 items to decorate your stable.\n
+  * Over 30 kind of magical potions.\n
+  * Over 30 kind of magical horseshoes.\n
+  * 4 training fields to train your horses, 5 difficulty for each.\n
+  * 25 cups to win on horse races.\n
+  * 30 quests to find the lost magical crystals.
+release: 2013-12-14
+players: 1
+assets.boxfront: BoxFront/Secret of the Magic Crystals (USA).jpg
+assets.boxback: BoxBack/Secret of the Magic Crystals (USA).jpg
+assets.background: Background/Secret of the Magic Crystals (USA).jpg
+assets.screenshot: Screenshot/Secret of the Magic Crystals (USA).jpg
+x-co-op: No
+
+
+game: Seduce Me - The Complete Story (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Seduce Me - The Complete Story (USA)/Seduce Me - The Complete Story (USA).json
+developer: Michaela Laws
+publisher: Michaela Laws
+genre: Visual Novel;Action
+description:
+  Introducing the COMPLETE STORY of "Seduce Me", the popular English Dating Sim
+  where you get to tell your story with a family of five demon brothers from the
+  moment you meet the incubi to the day you say I do to your favorite incubus.
+  This Complete Story includes "Seduce Me The Otome", "Seduce Me 2: The Demon
+  War", 13 mini-episodes, and both Audio Otome CDs as well as a basic compendium
+  for lore comprehension!
+  .
+  "It seemed like the start of something new. Something that would change."
+  .
+  You are a senior in high school along with your two best friends, Naomi
+  Patterson and Suzu Cappini. You are also the granddaughter of Harold Anderson,
+  the CEO and founder of Anderson Toys, a toy company sworn to give children
+  amazing products and give a large part of their profit to charity.
+  .
+  One day, you get called home to attend your grandfather's funeral. After the
+  funeral, you learn that you have inherited his large estate. Your father
+  suggests you move in immediately, so the next day, you move out of your parents
+  home and into your estate.
+  .
+  When you enter your new home, however, you see five injured, yet very handsome
+  men on the lobby floor. They eventually awaken and make it known that they were
+  attacked by a group of dangerous 'misfits' and ran to find shelter, passing out
+  as soon as they entered your home.
+  .
+  You find out that they are incubi, 'demons who consume and use sexual energy of
+  humans to survive'. With nowhere to go and a target on their backs, they ponder
+  what what to do. Out of sympathy, you offer your home as refuge for a while in
+  exchange for minor servitude (it is a big house, after all). They happily agree.
+  .
+  What will happen as the incubi get comfy? Why exactly did they come the human
+  world? Who are the 'misfits', and will they stop pursuing them so the incubi can
+  leave?
+  .
+  ...Will you WANT them to leave?
+release: 2020-03-14
+players: 1
+assets.boxfront: BoxFront/Seduce Me - The Complete Story (USA).jpg
+assets.boxback: BoxBack/Seduce Me - The Complete Story (USA).jpg
+assets.background: Background/Seduce Me - The Complete Story (USA).jpg
+assets.screenshot: Screenshot/Seduce Me - The Complete Story (USA).jpg
+x-co-op: No
+
+
+game: Six Match (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Six Match (USA)/Six Match (USA).json
+developer: st33d
+publisher: st33d
+genre: Puzzle
+description:
+  This is a new kind of Match 3 game. Move Mr Swap With Coins to swap places with
+  coins. You must make a match within 6 moves.
+  .
+  Match coins of the same type to create a poker hand for extra points. Gems do
+  not match, they are collected when they hit the bottom row. Skulls will reduce
+  your moves left to 1 if you are next to them when they match. Skulls can be
+  disposed of in the same way as gems.
+  .
+  You get 3 hints for free to show you the ropes. Then you have 6 more that will
+  only appear if you press the Help button. If no hint is available, the help
+  button creates a bomb. After your last Help is gone, you must figure it out or
+  wait for the cash in button.
+  .
+  Six Match auto-saves your game. A game can last for weeks, take your time.
+  .
+  Android: It took a long time to fix but it should work on the latest version of
+  Android now.
+release: 2017-09-10
+players: 1
+assets.boxfront: BoxFront/Six Match (USA).jpg
+assets.boxback: BoxBack/Six Match (USA).jpg
+assets.background: Background/Six Match (USA).jpg
+assets.screenshot: Screenshot/Six Match (USA).jpg
+x-co-op: No
+
+
+game: Snake's Tale, A (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Snake's Tale, A (USA)/Snake's Tale, A (USA).json
+developer: m12y
+publisher: m12y
+genre: Puzzle
+description:
+  Hissssssss
+  .
+  A Snake's Tale is a puzzle game about snakes in cramped places. Clear a path to
+  get to the hole, eat some eggs along the way, and make sure to press all the
+  buttons.
+  .
+  75+ brain-crushing puzzles (okay, not all of them are "brain-crushing" hard)
+  .
+  5 different environments, each with a unique mechanic
+  .
+  A whole ton of snakes
+  .
+  Play with mouse, keyboard, or gamepad
+  .
+  Procedurally generated art with a unique style
+release: 2017-05-02
+players: 1
+assets.boxfront: BoxFront/Snake's Tale, A (USA).jpg
+assets.boxback: BoxBack/Snake's Tale, A (USA).jpg
+assets.background: Background/Snake's Tale, A (USA).jpg
+assets.screenshot: Screenshot/Snake's Tale, A (USA).jpg
+x-co-op: No
+
+
+game: Solar 2 (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Solar 2 (USA)/Solar 2 (USA).json
+developer: Murudai
+publisher: Murudai
+genre: Action
+description:
+  In most games you see stars in the background, you shoot asteroids or you
+  live on planets. But in Solar 2 you ARE these objects! Enter a universe where
+  you must prove yourself to the resident god-like figure by doing its many
+  bizarre and varied tasks. Or just ignore it and see how big you can grow!
+  .
+  Solar 2 is an open-world, sandbox game set in an infinite abstract universe.
+  Play constructively: grow your system, nurture life on your planets and
+  attack enemy life in huge space battles. Play destructively: crash into other
+  objects and cause chaos, use your orbiting objects like wrecking balls, steal
+  planets from other systems.
+release: 2013-03-18
+players: 1
+assets.boxfront: BoxFront/Solar 2 (USA).jpg
+assets.boxback: BoxBack/Solar 2 (USA).jpg
+assets.background: Background/Solar 2 (USA).jpg
+assets.screenshot: Screenshot/Solar 2 (USA).jpg
+x-co-op: No
+
+
+game: Splice (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Splice (USA)/Splice (USA).json
+developer: Cipher Prime Studios, Inc.
+publisher: Cipher Prime Studios, Inc.
+genre: Puzzle
+description:
+  Splice is a puzzle game that imitates the look of a microbial world. Each of
+  the 75 levels consist of a number of cells that you will need to rearrange
+  into a target structure within a limited number of moves. Exploration and
+  experimentation are key in determining how the cells interact with one
+  another. The player has to predict the sequence of splices to make in order
+  to successfully arrange the target structure thus solving the puzzle.
+release: 2012-12-05
+players: 1
+assets.boxfront: BoxFront/Splice (USA).jpg
+assets.boxback: BoxBack/Splice (USA).jpg
+assets.background: Background/Splice (USA).jpg
+assets.screenshot: Screenshot/Splice (USA).jpg
+x-co-op: No
+
+
+game: Spookening, The (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Spookening, The (USA)/Spookening, The (USA).json
+developer: Modesty Creative Agency
+publisher: Modesty Creative Agency
+genre: Action
+description:
+  In The Spookening you play as Herman who every night will have his life ended
+  in the most strange ways. Your objective is to get back to life through
+  collecting 'Soular Powers' from the villagers. This is achieved by scaring
+  the inhabitants of the town as much as possible. You do this through sneaking
+  up on them and scaring them or using tools to make poltergeist effects. This
+  game has a lot of humor and you can use cars, water wells, trees and flowers
+  to reach your objectives.
+release: 2013-05-01
+players: 1
+assets.boxfront: BoxFront/Spookening, The (USA).jpg
+assets.boxback: BoxBack/Spookening, The (USA).jpg
+assets.background: Background/Spookening, The (USA).jpg
+assets.screenshot: Screenshot/Spookening, The (USA).jpg
+x-co-op: No
+
+
+game: Star Command (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Star Command (USA)/Star Command (USA).json
+developer: Star Command LLC
+publisher: Star Command LLC
+genre: Action;Construction and Management Simulation;Strategy
+description:
+  Build and command your own starship!
+  .
+  Star Command let's you build your own ship, hire your crew, explore the universe
+  and battle alien civilizations across the galaxy.\n
+  * Premium game - no in app purchase roadblocks\n
+  * HD support for retina pixel goodness\n
+  * Level your crew members up and earn new skills\n
+  * Build a ship in your own image\n
+  * Four distinct ship hulls to choose from\n
+  * Focus on tactical, science or engineering\n
+  * Amazing soundtrack intensifies the action and exploration\n
+  * Over 10 alien species to discover\n
+  Brought to you in beautiful HD pixelated glory, Star Command brings to life the
+  challenges and joys of managing a starship. Upgrade your ship, get out into the
+  unknown and watch your crew die grizzly deaths all at your command. Strange and
+  annoying alien civilizations await you at every turn. Manage each of your ships
+  roles, focusing on science skills, tactical combat and ship engineering. Prevent
+  alien invaders from taking over your ship and causing massive amounts of damage
+  with sentry guns. Revive dying crew members with new rooms! And don’t forget
+  that your decisions matter - an enemy made early could come back to haunt you
+  later.
+release: 2013-10-08
+players: 1
+assets.boxfront: BoxFront/Star Command (USA).jpg
+assets.boxback: BoxBack/Star Command (USA).jpg
+assets.background: Background/Star Command (USA).jpg
+assets.screenshot: Screenshot/Star Command (USA).jpg
+x-co-op: No
+
+
+game: Stophat (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Stophat (USA)/Stophat (USA).json
+developer: Problematicar
+publisher: Problematicar
+genre: Action;Arcade
+description:
+  Stophat is a charming arcade game about a rich man, his disobedient top hat and
+  a falling golden lift.
+  .
+  Originally made in under 48 hours for the 14th gm(48) competition, Stophat is an
+  imaginative take on the theme "top-down". There's some groovy bossa nova beats
+  and Atari-style sound effects, dramatic lift-plummeting action, and a play time
+  of a whole 10 minutes.
+  .
+  "Why is he in a solid gold lift? Gold is heavy as hell, of course the lift is
+  broken!" - Sir Julian Adams
+release: 2015-04-24
+players: 1
+assets.boxfront: BoxFront/Stophat (USA).jpg
+assets.boxback: BoxBack/Stophat (USA).jpg
+assets.background: Background/Stophat (USA).jpg
+assets.screenshot: Screenshot/Stophat (USA).jpg
+x-co-op: No
+
+
+game: Super Hexagon (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Super Hexagon (USA)/Super Hexagon (USA).json
+developer: Terry Cavanagh
+publisher: Terry Cavanagh
+genre: Action
+description:
+  Super Hexagon is a minimal action game. The player controls a small triangle
+  shape in a fixed position in the middle of the screen. The only possible
+  interaction is quickly rotating the shape in a clockwise or counterclockwise
+  circle with a fixed radius to avoid oncoming shapes (mostly hexagons, all
+  lacking one side or more) and walls whose progression matches the music's
+  rhythm. Shapes often only have a little open space the player has to steer
+  towards to pass through. Shapes can rotate as well and there are some tricks
+  and difficulties where speed and movement is suddenly reversed.
+  .
+  There is only one try: when dead, the level has to be restarted. There are
+  six difficulty levels and the last three, each the "Hyper" version of the
+  former three, are unlocked one by one as the corresponding standard level is
+  completed. Completing a level means making the triangle avoid collisions for
+  60 seconds; however, play continues indefinitely until a collision occurs.
+  Optionally, the game can be played in an arcade mode: the only difference is
+  a high score screen. Graphics and background music are psychedelic: sets of
+  colours and tracks are specific to levels, while their order is determined
+  anew at each play; a similar mechanic applies to the geometrical shapes
+  running towards the centre.
+release: 2013-01-21
+players: 1
+assets.boxfront: BoxFront/Super Hexagon (USA).jpg
+assets.boxback: BoxBack/Super Hexagon (USA).jpg
+assets.background: Background/Super Hexagon (USA).jpg
+assets.screenshot: Screenshot/Super Hexagon (USA).jpg
+x-co-op: No
+
+
+game: Superbrothers - Sword & Sworcery EP (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Superbrothers - Sword & Sworcery EP (USA)/Superbrothers - Sword & Sworcery EP (USA).json
+developer: Capybara Games Inc.
+publisher: Capybara Games Inc.
+genre: Adventure
+description:
+  Superbrothers: Sword & Sworcery EP is presented as a vinyl disc with
+  different tracks that act as episodes. It is set in the Caucasus Mountains
+  and stars The Scythian, a female character that embarks on a quest. A
+  side-scrolling platformer in appearance, it is much closer to an adventure
+  game with nods to the likes of Zelda. It is largely focused on exploration,
+  has environment puzzles that are mandatory to progress, and includes classic
+  combat sequences. There is also a focus on sound and music, and it has a
+  distinct retro 8-bit art style.
+  .
+  During her quest The Scythian meets many characters, such as Girl and
+  Logfella. There is also The Archetype, an omniscient character that appears
+  to narrate the story (first-person, "we") and calls her quest a session of
+  trials. He appears in between episodes as an interlude and often urges the
+  player to take a rest.
+  .
+  On mobile devices the entire game is navigated through touch-based controls.
+  Moving around is done by tapping or by holding down a finger and moving along
+  a path. Actions are performed by tapping twice and pinching is used to zoom.
+  During fights tapping an attack or a shield icon is required. Rotating the
+  device 90 degrees is needed to take out the sword, initiate fights and also
+  to open the Megatome when the book has been discovered. The latter often acts
+  as a hint system. During her quest The Scythian gradually learns new
+  abilities that allow her to manipulate objects in the environment. It is
+  possible to die during fights and progress is saved automatically. On the PC
+  the touch-based input has been reworked with point-and-click mouse control.
+  Tilting the device has been replaced by rotating the image on the screen with
+  a key.
+release: 2012-12-21
+players: 1
+assets.boxfront: BoxFront/Superbrothers - Sword & Sworcery EP (USA).jpg
+assets.boxback: BoxBack/Superbrothers - Sword & Sworcery EP (USA).jpg
+assets.background: Background/Superbrothers - Sword & Sworcery EP (USA).jpg
+assets.screenshot: Screenshot/Superbrothers - Sword & Sworcery EP (USA).jpg
+x-co-op: No
+
+
+game: Surprise Mechanic - The Gaming Trivia (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Surprise Mechanic - The Gaming Trivia (USA)/Surprise Mechanic - The Gaming Trivia (USA).json
+developer: Sword Garden Studios
+publisher: Sword Garden Studios
+genre: Card Game;Educational
+description:
+  Welcome to Surprise Mechanic, the trivia game focused in the gaming industry.
+  Test yourself and your friends with questions about the gaming industry with a
+  huge variety of themes on the matter.
+  .
+  Features:
+  .
+  - Trivia Mode: Complete a series of questions of multiple choice answer in a row
+  chosen from a pool of currently 500 questions.
+  .
+  - Generator Mode: Generate a question, answer and bonus action to test your
+  friends knowledge. Bonus actions are a fun way to give your friends a bit of an
+  extra challenge and have some healthy laugh in the process.
+release: 2020-04-11
+players: 1
+assets.boxfront: BoxFront/Surprise Mechanic - The Gaming Trivia (USA).jpg
+assets.boxback: BoxBack/Surprise Mechanic - The Gaming Trivia (USA).jpg
+assets.background: Background/Surprise Mechanic - The Gaming Trivia (USA).jpg
+assets.screenshot: Screenshot/Surprise Mechanic - The Gaming Trivia (USA).jpg
+x-co-op: No
+
+
+game: Switch 'N' Shoot (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Switch 'N' Shoot (USA)/Switch 'N' Shoot (USA).json
+developer: Matt Glanville
+publisher: Matt Glanville
+genre: Action
+description:
+  Calling all pilots: Earth is under alien attack!
+  .
+  Your assistance is required! No experience necessary.
+  .
+  ONE BUTTON:
+  .
+  Piloting an advanced star fighter with just one button is simple: you switch,
+  you shoot. Every shot fired changes your direction, and mastering this is the
+  key to becoming a legend among the stars. Timing is everything!
+  .
+  QUICK. SIMPLE. CHALLENGING:
+  .
+  Don't underestimate its simplicity; this game tests your reflexes like no other!
+  And while your ship might become stardust in a matter of seconds, you can
+  instantly jump back in for "just one more go".
+  .
+  RETRO ARCADE FEEL:
+  .
+  A love letter to arcade classics with crunchy pixel art, chiptune soundtrack,
+  authentic cabinet artwork and compulsive gameplay. Only now you don't need a
+  stack of coins to stand a chance at getting a High Score.
+  .
+  COLOUR PALETTES:
+  .
+  Unlock 64 palettes that completely change the look of everything in the game.
+  Choose from 8-bit favourites or create your own!
+  .
+  PORTRAIT MODE:
+  .
+  At the touch of a button your screen rotates into portrait mode (a.k.a. TATE
+  Mode) for a truly authentic arcade experience. The game supports a wide range of
+  controller setups so how you play is up to you.
+release: 2014-12-20
+players: 1
+assets.boxfront: BoxFront/Switch 'N' Shoot (USA).jpg
+assets.boxback: BoxBack/Switch 'N' Shoot (USA).jpg
+assets.background: Background/Switch 'N' Shoot (USA).jpg
+assets.screenshot: Screenshot/Switch 'N' Shoot (USA).jpg
+x-co-op: No
+
+
+game: Talk To Me (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Talk To Me (USA)/Talk To Me (USA).json
+developer: Boop Studios
+publisher: Boop Studios
+genre: Visual Novel
+description:
+  What is Talk To Me?
+  .
+  Talk To Me is a Western-style Visual Novel. It's a Dating Sim--kind of--but
+  also, maybe you shouldn't play it like that.*
+  .
+  You play as Ordell Harrison, a guy in his twenties who is just trying to get
+  through the day. After his mother dies, Ordell moves to a different town to
+  start over, but things don't seem to be getting any better for him.
+  .
+  * Talk to Me is a Visual Novel about grief, mental health and friendship
+  intended for audiences over the age of 18. Please note there are no explicit
+  images in the game. This can be a hard game to play if you're depressed or have
+  just lost someone close to you, so please be aware of that, along with the
+  trigger warnings that have been posted at the end of the post. These can be
+  spoilery, so please skip them if you would rather not know what they are.
+  .
+  Features:
+  .
+  There are no 100% good or bad endings in this game. You won't get a game over.
+  There's no true ending either
+  .
+  Over 75k words of story, with difficult choices and consequences
+  .
+  A vibrant cast of characters
+  .
+  Explore up to 20 different outcomes of the game. See how your choices have
+  affected Ordell's life
+  .
+  25+BGs and 10+ CGs
+  .
+  This game is both BxG and BxB
+  .
+  Trigger warnings for the game. Contains spoilers.
+release: 2017-11-24
+players: 1
+assets.boxfront: BoxFront/Talk To Me (USA).jpg
+assets.boxback: BoxBack/Talk To Me (USA).jpg
+assets.background: Background/Talk To Me (USA).jpg
+assets.screenshot: Screenshot/Talk To Me (USA).jpg
+x-co-op: No
+
+
+game: Tallowmere (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Tallowmere (USA)/Tallowmere (USA).json
+developer: Chris McFarland
+publisher: Chris McFarland
+genre: Platformer;Action
+description:
+  Raise your shield. Embrace Lady Tallowmere's dungeons.
+  .
+  Indulge Lady Tallowmere. See how far through her lovingly violent dungeons you
+  can delve in this 2D indie action roguelike-inspired platformer.
+  .
+  New rooms are procedurally generated every time you play, meaning you'll have to
+  be on your guard for every randomly-placed enemy, elite, boss, and treasure
+  chest you'll come across.
+  .
+  Each room gets progressively bigger, harder, and more rewarding the further you
+  go.
+  .
+  The concept is simple yet hard to master:
+  .
+  Raise your shield to block enemy attacks.
+  .
+  Lower your shield and strike your foes when the timing is right.
+  .
+  Jump or move to avoid traps, or raise your shield to reduce damage taken.
+  .
+  Find the key to advance to the next room.
+  .
+  Collect weapons, outfits, headgear, and shields of various rarities to aid your
+  journey.
+  .
+  Turn in souls from slain enemies to increase your base stats and passive
+  abilities.
+  .
+  Stay alive as long as you can.
+  .
+  Brace yourself with your shield as you learn the quirks of each foe and trap so
+  you can strive for that "one more run" high-score victory! Each dungeon is
+  infinite in length so it's up to you to push your limits; a local scoreboard
+  lets you track your greatest efforts.
+  .
+  Available for Windows, macOS, Linux, and Android. Play with keyboard (and
+  optionally mouse), or use your favourite gamepad/controller.
+  .
+  Tallowmere offers single-player and local co-op madness (up to 4 players,
+  desktop-only) for fun frantic couch gaming.
+  .
+  To those who will be lured into Lady Tallowmere's dungeons: good luck.
+  .
+  The Android port requires Android 4.4 or higher and OpenGL ES 2.0 or higher.
+  Further details here. For a list of supported Android controllers, click here.
+release: 2015-03-03
+players: 4
+assets.boxfront: BoxFront/Tallowmere (USA).jpg
+assets.boxback: BoxBack/Tallowmere (USA).jpg
+assets.background: Background/Tallowmere (USA).jpg
+assets.screenshot: Screenshot/Tallowmere (USA).jpg
+x-co-op: Yes
+
+
+game: That Which Binds Us (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/That Which Binds Us (USA)/That Which Binds Us (USA).json
+developer: Crystal Game Works
+publisher: Crystal Game Works
+genre: Visual Novel;Interactive Fiction
+description:
+  Idris is a bonds man- a special bonds man. While most of his clients need to
+  bail loved ones out of jail, a few are looking for a reprieve from someone they
+  once knew. For Evalise, all she wanted was to get a bail bond for her boyfriend,
+  when Idris surprised her with a simple but confusing question.
+  .
+  What if you could make him forget all about you?
+  .
+  Evalise's boyfriend has a bit of a wild side... and a bit of a knack for being
+  caught. She arrives at a bail bonds place run by a man named Idris- however,
+  while working out a bail bond, he springs a question about a different kind of
+  bond- a memory bond. With his knife, he's able to sever any ties a person has
+  with someone else, permanently, making the other person completely forget about
+  his client. With one small cut, she'd be able to leave her not-so-great
+  boyfriend behind and move on...
+  .
+  That Which Binds Us (TWBU) is a josei otome visual novel centered around a young
+  woman named Evalise. The full game is over 5 hours long and contains a new game+
+  featuring an alternate story line as well as choices later on that affect
+  dialogue. This game was originally made on RPG Maker MV for the Indie Game Maker
+  Contest game jam in September 2017, but has since been ported to Ren'Py and has
+  been heavily extended.
+release: 2018-01-28
+players: 1
+assets.boxfront: BoxFront/That Which Binds Us (USA).jpg
+assets.boxback: BoxBack/That Which Binds Us (USA).jpg
+assets.background: Background/That Which Binds Us (USA).jpg
+assets.screenshot: Screenshot/That Which Binds Us (USA).jpg
+x-co-op: No
+
+
+game: Time Surfer (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Time Surfer (USA)/Time Surfer (USA).json
+developer: Kumobius Pty. Ltd.
+publisher: Kumobius Pty. Ltd.
+genre: Action
+description:
+  Time Surfer is an endless, 2D side-scrolling game similar to Tiny Wings or
+  Wavespark, but set in space. A character on a surfboard needs to survive as
+  long as possible, using hills to gain speed and be launched into the air to
+  travel great distances. The character moves forward automatically, following
+  the curves of hills. By tapping and holding the bottom right side of the
+  screen, it is possible to speed up while going downhill and then use an
+  upwards slope for a launch. For maximum effect, the player needs to release
+  as soon as the terrain goes up again, or all speed is lost. When performed
+  successfully, the character soars near the top of the screen and is also able
+  to grind planets. When the screen is tapped while in flight, the character
+  dives down almost immediately, so multiple jumps can be performed quickly in
+  succession.
+  .
+  There is only one life and there are many ways to die. Certain obstacles and
+  enemies need to be avoided and there are sometimes gaps in the terrain. When
+  the character goes too slow, a glowing threat appears on the left side of the
+  screen and that way the character can be consumed by the end of the universe.
+  Gems can be collected along the way to fill up a meter. This is used to
+  manipulate time. When a mistake is made or the character dies, it is possible
+  to rewind time for the amount available in the meter, providing an
+  opportunity to correct the mistake. Different types of power-ups can be found
+  along the way.
+  .
+  The game has many missions and objectives and progress is rewarded with
+  pieces of cake. Cake can be traded in for flair, and costumes (also with
+  vehicles, aliens, toons and holiday heroes) with different abilities. By
+  leveling up, pets are unlocked that can be used to receive certain skills.
+  While playing the scenery changes often. There are four main environments:
+  Time Surfer, Holiday Hills, Hell Zone, and The Kepler Run.
+release: 2013-09-25
+players: 1
+assets.boxfront: BoxFront/Time Surfer (USA).jpg
+assets.boxback: BoxBack/Time Surfer (USA).jpg
+assets.background: Background/Time Surfer (USA).jpg
+assets.screenshot: Screenshot/Time Surfer (USA).jpg
+x-co-op: No
+
+
+game: Timebomb (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Timebomb (USA)/Timebomb (USA).json
+developer: Isoteric Games
+publisher: Isoteric Games
+genre: Action
+description:
+  It's simple.
+  .
+  You are a bomb. A minimalist bomb.
+  .
+  Graze pillars to extend your time.
+  .
+  Don't explode.
+  .
+  Get better  Beat your best time.
+release: 2017-05-19
+players: 1
+assets.boxfront: BoxFront/Timebomb (USA).jpg
+assets.boxback: BoxBack/Timebomb (USA).jpg
+assets.background: Background/Timebomb (USA).jpg
+assets.screenshot: Screenshot/Timebomb (USA).jpg
+x-co-op: No
+
+
+game: TinyKeep (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/TinyKeep (USA)/TinyKeep (USA).json
+developer: Phigames
+publisher: Digital Tribe Entertainment, Inc.
+genre: Action
+description:
+  In TinyKeep players will embrace the role of a hopeless prisoner held deep in
+  a forgotten dungeon who one day wakes up to find themselves mysteriously
+  released. Their savior is nowhere to be seen, but the cell door is broken and
+  ajar, tempting them with the sweet scent of freedom. With nothing but a
+  flickering lantern and a strange letter left behind by their in-mate, they
+  must venture into the darkness and escape TinyKeep!
+  .
+  Lure monsters into traps, knock over fire torches to set the dungeon alight
+  and set prisoners free to help you on your way. Enemies will work together in
+  groups to hunt you down, and some will flee from threats. You can also take
+  advantage of monster rivalries and lead them against each other, while you
+  wait behind a corner as the resulting chaos ensues. There are many ways to
+  survive in TinyKeep.
+release: 2015-05-28
+players: 1
+assets.boxfront: BoxFront/TinyKeep (USA).jpg
+assets.boxback: BoxBack/TinyKeep (USA).jpg
+assets.background: Background/TinyKeep (USA).jpg
+assets.screenshot: Screenshot/TinyKeep (USA).jpg
+x-co-op: No
+
+
+game: Walking Tourist (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Walking Tourist (USA)/Walking Tourist (USA).json
+developer: August Junkala
+publisher: August Junkala
+genre: Puzzle
+description:
+  Your friend is coming to visit so you are touring the city you live in and
+  making a list of things for your friend to see. Walking Tour A puzzle game that
+  tries to capture some of the experience and strategy of passing through crowds
+  while trying to navigate places
+release: 2017-05-31
+players: 1
+assets.boxfront: BoxFront/Walking Tourist (USA).jpg
+assets.boxback: BoxBack/Walking Tourist (USA).jpg
+assets.background: Background/Walking Tourist (USA).jpg
+assets.screenshot: Screenshot/Walking Tourist (USA).jpg
+x-co-op: No
+
+
+game: Zombies, Run! 5k Training (USA)
+file: $ROM_JSON_ROOT/Other/Google Android/Zombies, Run! 5k Training (USA)/Zombies, Run! 5k Training (USA).json
+developer: Six to Start
+publisher: Six to Start
+genre: Sports
+description:
+  Zombies, Run! 5k Training is an 8-week training program and audio adventure
+  for beginners that’ll improve your fitness so you can run a 5km distance.
+  .
+  We give you clear and detailed instructions about when to walk, jog, run and
+  stretch, building up your confidence and stamina over 25 workouts - combined
+  with a gripping story delivered straight to your headphones.
+  .
+  (If you already have running experience, check out our “Zombies, Run!” app
+  with extra features including 200 more missions, Zombie Chase interval
+  training, a base-building game, time and distance audio notifications, and
+  more!)
+  .
+  Zombies, Run! 5k Training comes from the creators of Zombies, Run! (Six to
+  Start & Naomi Alderman), the world’s most successful smartphone exercise game
+  with 4 million players worldwide.
+release: 2012-12-20
+players: 1
+assets.boxfront: BoxFront/Zombies, Run! 5k Training (USA).jpg
+assets.boxback: BoxBack/Zombies, Run! 5k Training (USA).jpg
+assets.background: Background/Zombies, Run! 5k Training (USA).jpg
+assets.screenshot: Screenshot/Zombies, Run! 5k Training (USA).jpg
+x-co-op: No
+
+

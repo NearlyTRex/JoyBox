@@ -1,0 +1,23 @@
+{
+    "main_game_exe": [
+        "DungeonKeeper/launcher.exe"
+    ],
+    "main_game_exe_cwd": {
+        "DungeonKeeper/launcher.exe": "DungeonKeeper"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT/Keeper",
+                "to": "$HDD_MAIN_ROOT/DungeonKeeper",
+                "type": "copy"
+            },
+            {
+                "from": "$SETUP_MAIN_ROOT/fix/keeperfx_0_5_0b_complete.7z",
+                "to": "$HDD_MAIN_ROOT/DungeonKeeper",
+                "type": "extract"
+            }
+        ]
+    },
+    "transform_file": "Dungeon Keeper Gold (USA).chd"
+}

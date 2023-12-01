@@ -1,0 +1,13 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/akalabeth_1998_linux.zip",
+        "$SETUP_MAIN_ROOT/extra/akalabeth_1998_mac.zip",
+        "$SETUP_MAIN_ROOT/extra/akalabeth_1998_windows.zip",
+        "$SETUP_MAIN_ROOT/extra/akalabeth_manual.zip",
+        "$SETUP_MAIN_ROOT/extra/akalabeth_wallpaper.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_akalabeth_2.0.0.1.exe"
+    ],
+    "transform_file": "setup_akalabeth_2.0.0.1.exe"
+}

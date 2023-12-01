@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Four Sided Fantasy (USA).exe"
+    ],
+    "transform_file": "Four Sided Fantasy (USA).exe"
+}

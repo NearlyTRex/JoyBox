@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Hero-ing Addict (USA).exe"
+    ],
+    "transform_file": "Hero-ing Addict (USA).exe"
+}

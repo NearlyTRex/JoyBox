@@ -1,0 +1,23 @@
+{
+    "is_dos": true,
+    "main_game_dos_exe": [
+        "FORC1/EYE/START.BAT",
+        "FORC1/DARKMOON/START.EXE",
+        "FORC1/EOB3/EYE.BAT"
+    ],
+    "main_game_dos_exe_cwd": {
+        "FORC1/DARKMOON/START.EXE": "FORC1/DARKMOON",
+        "FORC1/EOB3/EYE.BAT": "FORC1/EOB3",
+        "FORC1/EYE/START.BAT": "FORC1/EYE"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$DOS_MAIN_ROOT/C/FORC1",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Forgotten Realms - The Archives - Collection One (USA).chd"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Dagon by H. P. Lovecraft (USA).exe"
+    ],
+    "transform_file": "Dagon by H. P. Lovecraft (USA).exe"
+}

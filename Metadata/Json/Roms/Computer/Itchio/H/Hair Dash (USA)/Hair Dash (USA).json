@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Hair Dash (USA).exe"
+    ],
+    "transform_file": "Hair Dash (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_tormented_souls_1.10_(57757).exe"
+    ],
+    "transform_file": "setup_tormented_souls_1.10_(57757).exe"
+}

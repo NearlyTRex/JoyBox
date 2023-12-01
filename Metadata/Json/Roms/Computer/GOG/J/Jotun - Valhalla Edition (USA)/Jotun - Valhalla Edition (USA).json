@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_jotun_valhalla_edition_11-09-2019_(64bit)_(32396).exe"
+    ],
+    "transform_file": "setup_jotun_valhalla_edition_11-09-2019_(64bit)_(32396).exe"
+}

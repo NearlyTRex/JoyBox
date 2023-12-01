@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Whisperer in Darkness, The (USA).exe"
+    ],
+    "transform_file": "Whisperer in Darkness, The (USA).exe"
+}

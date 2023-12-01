@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Regular Human Basketball (USA).exe"
+    ],
+    "main_game_exe": [
+        "Regular Human Basketball/RegularHumanBasketball.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Regular Human Basketball/RegularHumanBasketball.exe": "Regular Human Basketball"
+    },
+    "transform_file": "Regular Human Basketball (USA).exe"
+}

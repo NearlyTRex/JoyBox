@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Magnibox (USA).exe"
+    ],
+    "transform_file": "Magnibox (USA).exe"
+}

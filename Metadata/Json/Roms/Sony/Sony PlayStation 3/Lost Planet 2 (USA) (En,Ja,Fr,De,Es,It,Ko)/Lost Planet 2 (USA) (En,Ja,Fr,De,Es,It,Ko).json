@@ -1,0 +1,8 @@
+{
+    "files": [
+        "Lost Planet 2 (USA) (En,Ja,Fr,De,Es,It,Ko).chd",
+        "Lost Planet 2 (USA) (En,Ja,Fr,De,Es,It,Ko).dkey"
+    ],
+    "launch_file": "PS3_GAME/USRDIR/EBOOT.BIN",
+    "transform_file": "Lost Planet 2 (USA) (En,Ja,Fr,De,Es,It,Ko).chd"
+}

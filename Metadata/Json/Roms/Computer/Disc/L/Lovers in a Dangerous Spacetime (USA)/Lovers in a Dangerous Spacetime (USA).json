@@ -1,0 +1,18 @@
+{
+    "main_game_exe": [
+        "Lovers/LoversInADangerousSpacetime.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Lovers/LoversInADangerousSpacetime.exe": "Lovers"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT/Windows.zip",
+                "to": "$HDD_MAIN_ROOT/Lovers",
+                "type": "extract"
+            }
+        ]
+    },
+    "transform_file": "Lovers in a Dangerous Spacetime (USA).chd"
+}

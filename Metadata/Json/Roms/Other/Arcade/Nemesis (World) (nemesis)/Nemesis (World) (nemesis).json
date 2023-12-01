@@ -1,0 +1,27 @@
+{
+    "files": [
+        "nemesis/400-a01.fse",
+        "nemesis/400-a02.fse",
+        "nemesis/456-d01.12a",
+        "nemesis/456-d02.13a",
+        "nemesis/456-d03.14a",
+        "nemesis/456-d04.15a",
+        "nemesis/456-d05.12c",
+        "nemesis/456-d06.13c",
+        "nemesis/456-d07.14c",
+        "nemesis/456-d08.15c",
+        "nemesis/456-d09.9c",
+        "nemesis/gradius/400-a04.10l",
+        "nemesis/gradius/400-a06.15l",
+        "nemesis/gradius/400-e03.5l",
+        "nemesis/gradius/456-a05.12l",
+        "nemesis/gradius/456-a07.17l",
+        "nemesis/nemesisuk/456-e01.12a",
+        "nemesis/nemesisuk/456-e02.13a",
+        "nemesis/nemesisuk/456-e04.15a",
+        "nemesis/nemesisuk/456-e05.12c",
+        "nemesis/nemesisuk/456-e06.13c",
+        "nemesis/nemesisuk/456-e08.15c"
+    ],
+    "launch_name": "nemesis"
+}

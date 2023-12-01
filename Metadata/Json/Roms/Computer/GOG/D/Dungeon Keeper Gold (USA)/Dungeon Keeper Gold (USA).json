@@ -1,0 +1,13 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/dk1_artworks.zip",
+        "$SETUP_MAIN_ROOT/extra/dk1_avatar.zip",
+        "$SETUP_MAIN_ROOT/extra/dk1_dev_team_photos.zip",
+        "$SETUP_MAIN_ROOT/extra/dk1_wallpaper.zip",
+        "$SETUP_MAIN_ROOT/extra/dungeon_keeper_manual.zip"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_dungeon_keeper_gold_10.1_(28184).exe"
+    ],
+    "transform_file": "setup_dungeon_keeper_gold_10.1_(28184).exe"
+}

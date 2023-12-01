@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/How About Spikes (USA).exe"
+    ],
+    "transform_file": "How About Spikes (USA).exe"
+}

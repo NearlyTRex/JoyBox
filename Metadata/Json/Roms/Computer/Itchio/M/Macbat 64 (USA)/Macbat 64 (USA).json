@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Macbat 64 (USA).exe"
+    ],
+    "transform_file": "Macbat 64 (USA).exe"
+}

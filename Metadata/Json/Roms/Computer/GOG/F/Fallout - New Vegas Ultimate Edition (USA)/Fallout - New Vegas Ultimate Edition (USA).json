@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_fallout_new_vegas_1.4.0.525_(12010).exe"
+    ],
+    "transform_file": "setup_fallout_new_vegas_1.4.0.525_(12010).exe"
+}

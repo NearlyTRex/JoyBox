@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Unbuild (USA).exe"
+    ],
+    "transform_file": "Unbuild (USA).exe"
+}

@@ -1,0 +1,15 @@
+{
+    "installer_exe": [
+        "$DISC_MAIN_ROOT/JacktheRipper/setup.exe",
+        "$DISC_MAIN_ROOT/UnicornKiller/setup.exe"
+    ],
+    "main_game_exe": [
+        "Program Files (x86)/Real Crimes - The Unicorn Killer/RealCrimesTheUnicornKiller.exe",
+        "Program Files (x86)/Real Crimes Jack the Ripper/jackTheRipper.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Program Files (x86)/Real Crimes - The Unicorn Killer/RealCrimesTheUnicornKiller.exe": "Program Files (x86)/Real Crimes - The Unicorn Killer",
+        "Program Files (x86)/Real Crimes Jack the Ripper/jackTheRipper.exe": "Program Files (x86)/Real Crimes Jack the Ripper"
+    },
+    "transform_file": "Real Crimes 2-Pack (Jack the Ripper, The Unicorn Killer) (USA).chd"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Outpost Horizon Station (USA).exe"
+    ],
+    "transform_file": "Outpost Horizon Station (USA).exe"
+}

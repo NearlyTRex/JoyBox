@@ -1,0 +1,1956 @@
+collection: Commodore 64
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Commodore 64" {file.path}
+
+
+game: Alleykat (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Alleykat (Europe)/Alleykat (Europe).json
+developer: Graftgold
+publisher: Thunder Mountain
+genre: Racing;Shooter
+description:
+  Alleykat (Demolition Mission: The Alleykat Space Racer in North America) is a
+  vertically-scrolling racer with elements of a shoot-em up game.
+  .
+  The player, a speeder pilot, strives to become the Alleykat Champion by
+  competing in eight space stadiums scattered around the galaxy. Different races
+  like demolition derbies, time-trials, endurance epics and others feature all
+  kinds of obstacles like rocks, pillars, bridges and hard walls, and several
+  types of enemies race along.
+  .
+  The game also features a cooperative two-player-mode.
+release: 1986-01-01
+players: 1
+assets.boxfront: BoxFront/Alleykat (Europe).jpg
+assets.boxback: BoxBack/Alleykat (Europe).jpg
+assets.background: Background/Alleykat (Europe).jpg
+assets.screenshot: Screenshot/Alleykat (Europe).jpg
+assets.video: Video/Alleykat (Europe).mp4
+x-co-op: No
+
+
+game: Anarchy (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Anarchy (Europe)/Anarchy (Europe).json
+developer: Michael Sentinella
+publisher: Rack-It [Hewson]
+genre: Puzzle;Shooter
+description:
+  Inside an Ace Mk2 Interceptor tank, you have been assigned a hazardous 16-stage
+  mission. You must travel to the overrun planet of Sentinel 4, and destroy the
+  weapons caches the rebels have build up. They can't be blasted when you are
+  right next to them, ensuring that a degree of planning and strategy is required.
+  Viewed from above in levels with simple sideways scrolling, the objective on
+  each level is to shoot each of the weapons crates, before going through the
+  newly-opened exit. Guard droids must be avoided, but shooting them can leave
+  them inactive for a short period of time, and they can now be shot or hit to
+  push them in that direction, which can be used strategically to make more paths
+  available. There is a 2-minute time limit on each level. Every 5th level has a
+  nuclear weapon guarded by a seeking enemy droid, which continually follows you.
+release: 1987-01-01
+players: 1
+assets.boxfront: BoxFront/Anarchy (Europe).jpg
+assets.boxback: BoxBack/Anarchy (Europe).jpg
+assets.background: Background/Anarchy (Europe).jpg
+assets.screenshot: Screenshot/Anarchy (Europe).jpg
+assets.video: Video/Anarchy (Europe).mp4
+x-co-op: No
+
+
+game: Arc of Yesod, The (USA)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Arc of Yesod, The (USA)/Arc of Yesod, The (USA).json
+developer: Odin Computer Graphics Ltd
+publisher: Thor Computer Software
+genre: Platform
+description:
+  In Nodes of Yesod, a monolith was discovered on the moon that transferred data
+  vital to earth's security to an alien planet. After an attempt to destroy the
+  monolith failed, it was transported to its creators the Ariatans. Now it is up
+  to Charlie to travel to the planet Ariat and prevent the Ariatans from accessing
+  the data. Gameplay in Arc of Yesod is very similar to its predecessor. Seen from
+  a side-scrolling perspective, Charlie has to explore many large caverns, filled
+  with enemies and transporters, and find eight crystals that he hopes will help
+  him destroy the monolith for good. To get rid of his enemies, he can once again
+  control a device similar to the mole in Nodes of Yesod. Pressing up on the
+  joystick releases a small sphere that can be moved across the screen (while
+  Charlie stands still) and shoot at enemies. Once again, there are enemies that
+  are immune to the sphere, including a spaceman who, when touched, takes away one
+  of Charlie's crystals.
+release: 1985-01-01
+players: 1
+assets.boxfront: BoxFront/Arc of Yesod, The (USA).jpg
+assets.boxback: BoxBack/Arc of Yesod, The (USA).jpg
+assets.background: Background/Arc of Yesod, The (USA).jpg
+assets.screenshot: Screenshot/Arc of Yesod, The (USA).jpg
+assets.video: Video/Arc of Yesod, The (USA).mp4
+x-co-op: No
+
+
+game: Avenger (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Avenger (USA, Europe)/Avenger (USA, Europe).json
+developer: Commodore Electronics Ltd.
+publisher: Commodore Electronics Ltd.
+genre: Shooter
+description:
+  Avenger is a Space Invaders variant. The player has to defend Earth from endless
+  rows of attacking aliens. Flying saucers can be shot for extra points.
+release: 1983-01-01
+players: 1
+assets.boxfront: BoxFront/Avenger (USA, Europe).jpg
+assets.boxback: BoxBack/Avenger (USA, Europe).jpg
+assets.background: Background/Avenger (USA, Europe).jpg
+assets.screenshot: Screenshot/Avenger (USA, Europe).jpg
+assets.video: Video/Avenger (USA, Europe).mp4
+x-co-op: No
+
+
+game: Barnsley Badger (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Barnsley Badger (Europe)/Barnsley Badger (Europe).json
+developer: Trevor Storey
+publisher: Psytronik Software
+genre: Platform
+description:
+  In this game inspired by the Monty Mole series you play Barnsley, a lazy, good
+  for nothing badger whose addiction to gambling has got him into all sorts of
+  trouble. One night in his local boozer he overhears a conversation. A gold coin
+  was discovered in the nearby graveyard, a coin carved with the head of the
+  fabled ruler Tutanbodger on one side. If Barnsley can find the lost treasure of
+  Tutanbodger it would solve all his money problems.  A great journey awaits - as
+  long as he doesn't fall asleep on the way!
+release: 2016-01-01
+players: 1
+assets.boxfront: BoxFront/Barnsley Badger (Europe).jpg
+assets.boxback: BoxBack/Barnsley Badger (Europe).jpg
+assets.background: Background/Barnsley Badger (Europe).jpg
+assets.screenshot: Screenshot/Barnsley Badger (Europe).jpg
+x-co-op: No
+
+
+game: Battle Valley (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Battle Valley (Europe)/Battle Valley (Europe).json
+developer: Simon Wellard
+publisher: Hewson Consultants Ltd.
+genre: Shooter
+description:
+  This side-view shoot 'em up involves trying to retrieve two nuclear weapons
+  which have been stolen by terrorists. These are located at opposite ends of the
+  playing area, so you can pursue them in either order. Needless to say, the
+  terrorists have plenty of forces out to prevent you getting too far.
+  .
+  Unusually, the game features both a helicopter and a tank - you choose either
+  from the base, and can fly/drive back there to change. The best strategy is to
+  use the helicopter to shoot out air-based enemies and repair the various
+  bridges, then return for the tank. You get 4000 seconds in which to complete all
+  this, and losing a life costs you 500 of these.
+release: 1988-01-01
+players: 1
+assets.boxfront: BoxFront/Battle Valley (Europe).jpg
+assets.boxback: BoxBack/Battle Valley (Europe).jpg
+assets.background: Background/Battle Valley (Europe).jpg
+assets.screenshot: Screenshot/Battle Valley (Europe).jpg
+x-co-op: No
+
+
+game: Boulder Dash (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Boulder Dash (USA, Europe)/Boulder Dash (USA, Europe).json
+developer: Peter Liepa
+publisher: Statesoft
+genre: Action;Puzzle
+description:
+  The game's protagonist is called "Rockford". He must dig through caves
+  collecting gems and diamonds and reach the exit within a time limit, while
+  avoiding various types of dangerous creatures as well as obstacles like falling
+  rocks and the constant danger of being crushed or trapped by an avalanche, or
+  killed by an underground explosion.
+release: 1984-07-15
+players: 2
+assets.boxfront: BoxFront/Boulder Dash (USA, Europe).jpg
+assets.boxback: BoxBack/Boulder Dash (USA, Europe).jpg
+assets.background: Background/Boulder Dash (USA, Europe).jpg
+assets.screenshot: Screenshot/Boulder Dash (USA, Europe).jpg
+assets.video: Video/Boulder Dash (USA, Europe).mp4
+x-co-op: No
+
+
+game: Break Dance (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Break Dance (Europe)/Break Dance (Europe).json
+developer: Beck-Tech
+publisher: Epyx, Inc.
+genre: Music;Strategy
+description:
+  Breakdance is game based on the dance craze from the early 80s and consists of
+  three different games, a chance to compete in the three games together or just
+  choreograph your own dance routine. One or two players can play with each player
+  taking it turns to dance. The games you can play are:\n
+  Hot Feet Dance Contest: This is a Simon-like simple break dancing memory game. A
+  computer character performs a pattern of five break dancing moves which the
+  player then has to reproduce by moving his joystick in one of four directions.
+  Every round, one more move is added, increasing the difficulty the player
+  continues.\n
+  Battle the Rocket Crew: You are near a river and rows of dancers slowly dance
+  down the screen and to make a dancer disappear you have to copy their moves. You
+  need to keep making the dancers disappear or they will keep pushing you towards
+  the river and it is game over when you fall into the water.\n
+  Perfections Dance Puzzle: You watch a dancer perform four moves before the four
+  moves appear above you in the wrong order. You have to put the moves shown, in
+  the right order to win ghettoblasters.\n
+  You have the option called Grand Loop and this allows you to play all three
+  games to try to enter the Breakdance Hall of Fame. The choreograph option allows
+  you to perform in front of a crowd and choose from 14 moves to keep them
+  entertained.
+release: 1984-01-01
+players: 1
+assets.boxfront: BoxFront/Break Dance (Europe).jpg
+assets.boxback: BoxBack/Break Dance (Europe).jpg
+assets.background: Background/Break Dance (Europe).jpg
+assets.screenshot: Screenshot/Break Dance (Europe).jpg
+assets.video: Video/Break Dance (Europe).mp4
+x-co-op: No
+
+
+game: Chip's Challenge (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Chip's Challenge (USA, Europe)/Chip's Challenge (USA, Europe).json
+developer: Epyx, Inc.
+publisher: U.S. Gold Ltd.
+genre: Puzzle
+description:
+  Nerdy Chip desperately wants to join the "Bit Busters" computer club, led by
+  Melinda the Mental Marvel. However, before she'll let him in, he must prove his
+  intelligence by passing the initiation test. 149 increasingly difficult levels,
+  including a few hidden ones, await Chip in this tile-based puzzle game. Use
+  tools such as keys, and special shoes to bypass obstacles. Manipulate switches
+  to and use dirt blocks to build bridges across waterways. Avoid enemy creatures,
+  grab all the computer chips in the level, and hurry to the exit: On top of
+  everything else, there's a time limit!
+release: 1990-01-01
+players: 1
+assets.boxfront: BoxFront/Chip's Challenge (USA, Europe).jpg
+assets.boxback: BoxBack/Chip's Challenge (USA, Europe).jpg
+assets.background: Background/Chip's Challenge (USA, Europe).jpg
+assets.screenshot: Screenshot/Chip's Challenge (USA, Europe).jpg
+assets.video: Video/Chip's Challenge (USA, Europe).mp4
+x-co-op: No
+
+
+game: Coil Cop (USA)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Coil Cop (USA)/Coil Cop (USA).json
+developer: Marco Duroe
+publisher: Epyx
+genre: Platform
+description:
+  The star of Thing on a Spring returns in this sequel. The evil Toy Goblin is up
+  to his old tricks, with his giant toy factory producing thousands of evil toys.
+  In order to shut down the factory, Thing must travel through the factory's 11
+  different levels and collect the tape, floppy disk, listing paper and ROM chip
+  scattered throughout.
+  .
+  The levels are filled with slopes, conveyor belts, interconnected pipework
+  (years before Sonic the Hedgehog), and lots of foes to avoid. Question mark
+  times have variable effects: stepping onto them reveals bonus points, objects,
+  or a large weight that squashes Thing flat.
+  .
+  As Thing takes damage from enemies or weights, his oil level is reduced. When
+  Thing runs out of oil, he becomes rusted and the game ends. To move between
+  levels, Thing must enter the pipework through a vent and bounce around the pipes
+  to find an exit.
+release: 1987-01-01
+players: 1
+assets.boxfront: BoxFront/Coil Cop (USA).jpg
+assets.boxback: BoxBack/Coil Cop (USA).jpg
+assets.background: Background/Coil Cop (USA).jpg
+assets.screenshot: Screenshot/Coil Cop (USA).jpg
+x-co-op: No
+
+
+game: Confuzion (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Confuzion (Europe)/Confuzion (Europe).json
+developer: Paul Shirley
+publisher: Incentive Software Ltd
+genre: Action
+description:
+  This is a puzzle game in which players must explode all of the bombs on each
+  level using a spark. The spark flows along a fuse, which is made up of a series
+  of tiles. These tiles can be moved in the manner of a sliding puzzle. In other
+  words, there is only one unoccupied space and adjacent tiles can be moved into
+  that space, freeing a new space in the process. The aim is then to move the
+  tiles so that the fuse forms a path from the spark to each bomb. There is a time
+  limit, however, and extra time is knocked off if the spark reaches a dead end.
+  Some levels also contain water droplets that extinguish the spark if they touch
+  it.
+release: 1985-01-01
+players: 2
+assets.boxfront: BoxFront/Confuzion (Europe).jpg
+assets.boxback: BoxBack/Confuzion (Europe).jpg
+assets.background: Background/Confuzion (Europe).jpg
+assets.screenshot: Screenshot/Confuzion (Europe).jpg
+x-co-op: No
+
+
+game: Cosmic Causeway - Trailblazer II (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Cosmic Causeway - Trailblazer II (Europe)/Cosmic Causeway - Trailblazer II (Europe).json
+developer: Shaun Southern
+publisher: Gremlin Graphics Software
+genre: Action;Racing
+description:
+  On many levels there are enemies to be shot, by holding the joystick forward. At
+  the end of certain levels are large enemy dragons, inspired by the game Space
+  Harrier, which must be destroyed before the time runs out. Other hazards include
+  large yellow walls with doors that open and close.
+  .
+  A timer ticks down constantly, and only stops when the player reaches the grey
+  tiles that mark the end of a level. Remaining time is carried over to the next
+  level, and a bonus score awarded based on the number of seconds left. (The timer
+  is reset after each dragon level).
+  .
+  There are 24 levels in total. At the end of the game a rating is awarded, from
+  Hilarious to Superblazer for completing the game.
+  .
+  Published in Commodore Zone Issue #15, Commodore Format 1992/11 (Issue #26) /
+  part of the "Mega Pack".
+release: 1987-07-01
+players: 1
+assets.boxfront: BoxFront/Cosmic Causeway - Trailblazer II (Europe).jpg
+assets.boxback: BoxBack/Cosmic Causeway - Trailblazer II (Europe).jpg
+assets.background: Background/Cosmic Causeway - Trailblazer II (Europe).jpg
+assets.screenshot: Screenshot/Cosmic Causeway - Trailblazer II (Europe).jpg
+assets.video: Video/Cosmic Causeway - Trailblazer II (Europe).mp4
+x-co-op: No
+
+
+game: Cyberdyne Warrior (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Cyberdyne Warrior (Europe)/Cyberdyne Warrior (Europe).json
+developer: Apex Computer Productions
+publisher: Hewson Consultants Ltd.
+genre: Shooter
+description:
+  Players control a space marine who must search for droids on three planets -
+  Geminus, Sirius, and Arius - while avoiding the planet's inhabitants and
+  hazards. Energy is lost when players come into contact with an inhabitant. Up to
+  three weapons can be used to destroy the inhabitants. Once all the droids have
+  been collected, players make their way to the next planet where new inhabitants
+  are introduced and the number of droids to be collected increases. Players have
+  a limited amount of time to do this, but as well as energy and ammo, it can be
+  replenished by purchasing more at the shop (only one shop per planet).
+  .
+  Published in Commodore Format 1992/02 (Issue #17).
+release: 1989-01-01
+players: 1
+assets.boxfront: BoxFront/Cyberdyne Warrior (Europe).jpg
+assets.boxback: BoxBack/Cyberdyne Warrior (Europe).jpg
+assets.background: Background/Cyberdyne Warrior (Europe).jpg
+assets.screenshot: Screenshot/Cyberdyne Warrior (Europe).jpg
+assets.video: Video/Cyberdyne Warrior (Europe).mp4
+x-co-op: No
+
+
+game: Cybernoid - The Fighting Machine (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Cybernoid - The Fighting Machine (USA, Europe)/Cybernoid - The Fighting Machine (USA, Europe).json
+developer: Nick Jones
+publisher: U.S. Gold
+genre: Shooter
+description:
+  There are three asteroids, hidden among thousands, where various minerals and
+  precious gems were stored. It was believed the riches would be safe there, until
+  the Zoggians discovered them! Now you have to fly an experimental spacefighter,
+  the Cybernoid, into battle to recover the asteroids. The Cybernoid is equipped
+  with standard laser blasters, missiles, and the ability to pick up other weapons
+  along the way. Cybernoid is an arcade style action game for one player. You can
+  choose from three different skill levels; easy, hard and lethal. On some
+  versions two different sound modes are also available, a basic music and sound
+  effects mode, and a super sound effects mode with no music. Each room you
+  explore is equipped with a time bomb. The bomb will explode taking you with it
+  should you take too long to get past all the obstacles on the screen. You start
+  the game with nine ships, and more can be earned by collecting enough points
+  during the game.
+release: 1988-07-01
+players: 1
+assets.boxfront: BoxFront/Cybernoid - The Fighting Machine (USA, Europe).jpg
+assets.boxback: BoxBack/Cybernoid - The Fighting Machine (USA, Europe).jpg
+assets.background: Background/Cybernoid - The Fighting Machine (USA, Europe).jpg
+assets.screenshot: Screenshot/Cybernoid - The Fighting Machine (USA, Europe).jpg
+assets.video: Video/Cybernoid - The Fighting Machine (USA, Europe).mp4
+x-co-op: No
+
+
+game: Cybernoid II (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Cybernoid II (Europe)/Cybernoid II (Europe).json
+developer: Nick Jones
+publisher: Hewson Consultants Ltd.
+genre: Shooter
+description:
+  The follow-up to Cybernoid: The Fighting Machine is again a flip-screen shoot
+  'em up. In control of the deadly Cybernoid craft, your job is to rescue the
+  cargo which has been stolen by a wave of pirate ships. Using the range of weapon
+  systems correctly is again a key factor. These include sideways aiming guns,
+  bouncing bombs, 'seeker' smart bombs, bombs which move around th edge of the
+  screen before finding a target, and time-sensitive bombs which explode a few
+  seconds after you drop them. Shot pirate ships release cargo, and you must
+  collect at least 1500 points of this, but on many screens it is more prudent to
+  make an escape ASAP, as some screens have more hazards than others, and not all
+  aliens on each screen act in the same way.
+release: 1988-07-01
+players: 1
+assets.boxfront: BoxFront/Cybernoid II (Europe).jpg
+assets.boxback: BoxBack/Cybernoid II (Europe).jpg
+assets.background: Background/Cybernoid II (Europe).jpg
+assets.screenshot: Screenshot/Cybernoid II (Europe).jpg
+assets.video: Video/Cybernoid II (Europe).mp4
+x-co-op: No
+
+
+game: Deflektor (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Deflektor (Europe)/Deflektor (Europe).json
+developer: Vortex Software
+publisher: Erbe Software
+genre: Puzzle
+description:
+  There's plenty of reflection in this game, in both senses of the word. That's
+  because this strategic puzzler involves using mirrors to direct a beam of light
+  across a succession of 60 screens. Each mirror has 16 different angles it can be
+  set at, each of which will send the beam around the screen in different ways.
+  .
+  Before the exit is activated, all the mines on a screen must be cleared by
+  running the beam over them. There are other devices built into the levels,
+  including teleports and random angle-changers, as well as hazards to avoid (they
+  cause the beam to overheat) and droids which go around moving the mirrors'
+  directions.
+release: 1988-01-01
+players: 1
+assets.boxfront: BoxFront/Deflektor (Europe).jpg
+assets.boxback: BoxBack/Deflektor (Europe).jpg
+assets.background: Background/Deflektor (Europe).jpg
+assets.screenshot: Screenshot/Deflektor (Europe).jpg
+assets.video: Video/Deflektor (Europe).mp4
+x-co-op: No
+
+
+game: Destroyer (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Destroyer (USA, Europe)/Destroyer (USA, Europe).json
+developer: Chuck Sommerville
+publisher: U.S. Gold Ltd.
+genre: Action;Strategy;Vehicle Simulation
+description:
+  Destroyer is a naval combat simulation computer game released by Epyx in 1986.
+  It was published for the Amiga, Apple II, Commodore 64, and IBM PC.
+  .
+  Players take the role of a captain controlling a United States Navy Destroyer
+  class vessel. During World War II, the player has to command several Destroyer
+  operations:
+  .
+  Subhunter missions\n
+  Rescue missions\n
+  Blockade runnings\n
+  Bombardment missions\n
+  Scout operations\n
+  Convoy escort
+release: 1986-01-01
+players: 1
+assets.boxfront: BoxFront/Destroyer (USA, Europe).jpg
+assets.boxback: BoxBack/Destroyer (USA, Europe).jpg
+assets.background: Background/Destroyer (USA, Europe).jpg
+assets.screenshot: Screenshot/Destroyer (USA, Europe).jpg
+x-co-op: No
+
+
+game: Epyx Games Collection (USA, Europe) (Multicart)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Epyx Games Collection (USA, Europe) (Multicart)/Epyx Games Collection (USA, Europe) (Multicart).json
+developer: Epyx, Inc.
+publisher: U.S. Gold
+genre: Sports
+description:
+  All your favorite Epyx sports games with much faster loading from these
+  titles:\n
+  - Summer Games\n
+  - Summer Games II\n
+  - Winter Games\n
+  - World Games\n
+  - California Games
+release: 2012-04-06
+players: 1
+assets.boxfront: BoxFront/Epyx Games Collection (USA, Europe) (Multicart).jpg
+assets.boxback: BoxBack/Epyx Games Collection (USA, Europe) (Multicart).jpg
+assets.background: Background/Epyx Games Collection (USA, Europe) (Multicart).jpg
+assets.screenshot: Screenshot/Epyx Games Collection (USA, Europe) (Multicart).jpg
+x-co-op: No
+
+
+game: Epyx Games Collection (USA, Europe) (Multicart) (EasyFlash)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Epyx Games Collection (USA, Europe) (Multicart) (EasyFlash)/Epyx Games Collection (USA, Europe) (Multicart) (EasyFlash).json
+developer: Epyx, Inc.
+publisher: U.S. Gold
+genre: Sports
+description:
+  All your favorite Epyx sports games with much faster loading from these
+  titles:\n
+  - Summer Games\n
+  - Summer Games II\n
+  - Winter Games\n
+  - World Games\n
+  - California Games
+release: 2012-04-06
+players: 1
+assets.boxfront: BoxFront/Epyx Games Collection (USA, Europe) (Multicart) (EasyFlash).jpg
+assets.boxback: BoxBack/Epyx Games Collection (USA, Europe) (Multicart) (EasyFlash).jpg
+assets.background: Background/Epyx Games Collection (USA, Europe) (Multicart) (EasyFlash).jpg
+assets.screenshot: Screenshot/Epyx Games Collection (USA, Europe) (Multicart) (EasyFlash).jpg
+x-co-op: No
+
+
+game: Everyone's a Wally (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Everyone's a Wally (USA, Europe)/Everyone's a Wally (USA, Europe).json
+developer: Mike Berry
+publisher: Mikro-Gen
+genre: Adventure;Platform
+description:
+  Everyone's a Wally was the first arcade adventure game to feature multiple
+  playable characters - a revolutionary feature at the time. Players began in
+  control of Wally (a builder and handyman), but could switch to Wilma (his wife),
+  and their friends Tom (a punk mechanic), Dick (a plumber) and Harry (a hippie
+  electrician) - these last three names drawn from the placeholder phrase Tom,
+  Dick and Harry. Herbert (their baby son) also appeared in the game as a mobile
+  hazard NPC. The player cannot freely change character; the player begins in
+  control of Wally and in order to switch must be on the same screen as the
+  desired character. Those not being controlled by the player wander randomly
+  around the map controlled by extremely simple AI - another feature that at the
+  time had never been seen before. Lives and health (called "endurance") were
+  tracked independently for each character, but the game ended if any character
+  died.
+  .
+  The aim of the game is to complete a day's worth of work for each character;
+  each character has a job to do stereotypical of their skill - for instance,
+  Wally has to build a wall, Wilma has to take back three books to the library,
+  etc. Completing the job awards the character with a letter, which spells out a
+  password to open a safe holding everyone's wages. The eventual password is
+  "BREAK" - knowing this does not spoil the game since most of the letters can be
+  seen before jobs are complete; the game requires them to be actually collected
+  before allowing the safe to open.
+release: 1985-01-01
+players: 1
+assets.boxfront: BoxFront/Everyone's a Wally (USA, Europe).jpg
+assets.boxback: BoxBack/Everyone's a Wally (USA, Europe).jpg
+assets.background: Background/Everyone's a Wally (USA, Europe).jpg
+assets.screenshot: Screenshot/Everyone's a Wally (USA, Europe).jpg
+assets.video: Video/Everyone's a Wally (USA, Europe).mp4
+x-co-op: No
+
+
+game: Farming Simulator (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Farming Simulator (USA, Europe)/Farming Simulator (USA, Europe).json
+developer: GIANTS Software GmbH
+publisher: GIANTS Software GmbH
+genre: Simulation
+description:
+  Farming Simulator 19: C64 Edition is a version of Farming Simulator made for
+  the C64. Originally part of Farming Simulator 19 (Collector's Edition) it is
+  also available separately as a download which this entry covers as well as a
+  separate boxed physical cartridge release. For Windows the game is played
+  on the VICE emulator. It contains the CRT and D64 files needed to run it and
+  these can also be used separately to play the game on the original C64 hardware.
+  .
+  The game has the typical Farming Simulator gameplay here shown from an
+  isometric perspective. There are three tractors and one harvester the player
+  can control, based on the brands Case IH, Fendt, John Deere and New Holland.
+  The game takes place on a single map. The different vehicles can be
+  controlled and there are keys to quickly switch between them. Basic actions
+  are acceleration, turning, breaking or reversing, and using the equipment.
+  The vehicles also have a separate key to use the horn.
+release: 2018-11-30
+players: 1
+assets.boxfront: BoxFront/Farming Simulator (USA, Europe).jpg
+assets.boxback: BoxBack/Farming Simulator (USA, Europe).jpg
+assets.background: Background/Farming Simulator (USA, Europe).jpg
+assets.screenshot: Screenshot/Farming Simulator (USA, Europe).jpg
+x-co-op: No
+
+
+game: Firelord (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Firelord (Europe)/Firelord (Europe).json
+developer: John Cumming
+publisher: Hewson Consultants Ltd.
+genre: Adventure
+description:
+  The land of Torot has been oppressed by the Evil Queen; fortunately you (as Sir
+  Galaheart) are on hand to put things right. Initially you have no weaponry as
+  you progress through the 500 screens of Atic Atac-influenced streets and towns,
+  but fireballs can be collected and used against the Queen's forces. Trading is a
+  large part of the game, a unique aspect for a game of this type at the time.
+  While many objects are lying around, many more must be obtained by entering the
+  homes of people, and negotiating with them to arrange a swap. You can also
+  attempt to steal from them, but you risk being caught and sentenced to death
+  (losing a life in the process).
+release: 1986-01-01
+players: 1
+assets.boxfront: BoxFront/Firelord (Europe).jpg
+assets.boxback: BoxBack/Firelord (Europe).jpg
+assets.background: Background/Firelord (Europe).jpg
+assets.screenshot: Screenshot/Firelord (Europe).jpg
+assets.video: Video/Firelord (Europe).mp4
+x-co-op: No
+
+
+game: Galencia Mini (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Galencia Mini (Europe)/Galencia Mini (Europe).json
+developer: Jason Aldred
+publisher: Retro Games Ltd.
+genre: Shooter
+description:
+  The original version was reworked slightly before being released by Retro Games
+  Ltd. on the THEC64 Mini, but was also available for standard C64 users with
+  these changes at just after Christmas.
+release: 2018-12-28
+players: 1
+assets.boxfront: BoxFront/Galencia Mini (Europe).jpg
+assets.boxback: BoxBack/Galencia Mini (Europe).jpg
+assets.background: Background/Galencia Mini (Europe).jpg
+assets.screenshot: Screenshot/Galencia Mini (Europe).jpg
+x-co-op: No
+
+
+game: Gateway to Apshai (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Gateway to Apshai (USA, Europe)/Gateway to Apshai (USA, Europe).json
+developer: The Connelley Group
+publisher: Epyx, Inc.
+genre: Action;Adventure;Role-Playing
+description:
+  Turmoil rocks the land and the only salvation lies in the magic of the Temple of
+  Apshai. Unfortunately the location of this temple has gotten lost in time.
+  Furthermore, many heros dispatched to seek it have been slain. A legend speaks
+  that only the blood of the greatest hero of Apshai's greatest hero will be able
+  to reclaim the lost Temple of Apshai. Unfortunately this "greatest hero" has
+  also perished. But all hope is not lost, for the wise man, Merlis has found the
+  hero's son, whose blood is still able to fulfill the prophesy. With great haste,
+  Merlis brings the youngster to the dungeon pits and leaves him to fend for
+  himself. It is this youngster's destiny to find safe passage through the 8
+  levels, each of which contains passage to 99 different areas. Gateway to Apshai
+  is a top-down action-RPG. As the descendant of a hero, the player starts with
+  basic stats in 4 areas, Strength, Agility, Luck and Health. and basic equipment,
+  a dagger and leather armor. Then it's time to choose a number between 1 and 99
+  to generate the dungeon. Once begun, the player must explore the dungeon, hidden
+  until explored and revealed. The player can move in four directions and has
+  standard abilities, each mapped to a different control. There are several
+  different actions available to the player. These include: fighting with the
+  equipped weapon, a LOCATE spell to discover traps in the room, a SEARCH spell to
+  discover hidden doors inside of room which would otherwise look like ordinary
+  walls. Players may also use many of the items and scrolls that can be picked up
+  in the dungeon. The treasure can be picked up which include weaponry (swords,
+  bows and arrows), healing slaves, precious items and magical scrolls. Most items
+  are only good for a single use. The Gateway to Apshai is guarded by an
+  assortment of creatures including snakes, swamp rats, bats and many more. These
+  enemies are only visible when they are in the same room as the player and are
+  otherwise hidden. After 6 minutes and 30 seconds has passed, the player is
+  teleported to the next dungeon, many versions of the game also offer the option
+  to manually leave the dungeon at any time. Dungeons get progressively more
+  difficult with faster and more vicious enemies.
+release: 1983-08-28
+players: 1
+assets.boxfront: BoxFront/Gateway to Apshai (USA, Europe).jpg
+assets.boxback: BoxBack/Gateway to Apshai (USA, Europe).jpg
+assets.background: Background/Gateway to Apshai (USA, Europe).jpg
+assets.screenshot: Screenshot/Gateway to Apshai (USA, Europe).jpg
+assets.video: Video/Gateway to Apshai (USA, Europe).mp4
+x-co-op: No
+
+
+game: Gribbly's Day Out (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Gribbly's Day Out (USA, Europe)/Gribbly's Day Out (USA, Europe).json
+developer: Graftgold Ltd.
+publisher: Rack-It
+genre: Action;Platform
+description:
+  Blabgorians possess the gift of psychic ability which allow them to levitate and
+  move items with their minds, as a result they evolved without hands (who needs
+  them?), a single foot (good for bouncing) and an oversized head (handy for
+  containing large quantities of psychic energy). Gribbly Grobbly is your typical
+  Blabgorian, and is tasked with the safety of the 'gribblets'. 'Gribblets' are
+  infant Blabgorians; they have an armoured shell to protect them, but when
+  flipped on their backs they expose their vulnerable belly and are unable to
+  right themselves. They also have an annoying tendency to leave the safety of
+  home in search of adventure. Unfortunately Blabgor is not a safe place; there
+  are hordes of beasts roaming the landscape, eagerly searching for vulnerable
+  Gribblets.
+  .
+  The basic premise for the game required the player to control Gribbly and
+  navigate him through each of the 16 surreal 8-way scrolling landscapes in an
+  attempt to locate and rescue eight baby Gribblets and returning them to the
+  safety of the home cave. Gribbly can hop and levitate around each of the levels
+  and can blow bubbles to defend himself. Once a Gribblet is located, Gribbly can
+  pick up the hapless offspring and carry it to safety. Once only a single
+  Gribblet remains on a level, the energy web fails, freeing Seon. This usually
+  results in a mad rush to get the remaining Gribblet to safety before succumbing
+  to his attacks. Once all the Gribblets are either saved or killed, the level
+  ends and Gribbly is transported to the next level.
+release: 1985-06-01
+players: 1
+assets.boxfront: BoxFront/Gribbly's Day Out (USA, Europe).jpg
+assets.boxback: BoxBack/Gribbly's Day Out (USA, Europe).jpg
+assets.background: Background/Gribbly's Day Out (USA, Europe).jpg
+assets.screenshot: Screenshot/Gribbly's Day Out (USA, Europe).jpg
+assets.video: Video/Gribbly's Day Out (USA, Europe).mp4
+x-co-op: No
+
+
+game: Heartland (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Heartland (Europe)/Heartland (Europe).json
+developer: Keith Robinson
+publisher: Odin Computer Graphics Ltd.
+genre: Adventure
+description:
+  Heartland's meta-referential plot involves a struggle between good and evil, as
+  depicted in a book, the last six pages of which have become lost. As a result,
+  you must dive into the game's world to complete the story, and ensure that evil
+  doesn't win, by saving the white pages and destroying the black ones. There are
+  six levels, all with distinctly cutesy themes and colourful graphics. The level
+  layouts are extremely complicated, and you have to make your way back to base
+  after each one, before being transported onto the next one, all within a time
+  limit. The levels are full of wizards who must be shot, as well as a small
+  amount of character interaction.
+release: 1986-01-01
+players: 1
+assets.boxfront: BoxFront/Heartland (Europe).jpg
+assets.boxback: BoxBack/Heartland (Europe).jpg
+assets.background: Background/Heartland (Europe).jpg
+assets.screenshot: Screenshot/Heartland (Europe).jpg
+assets.video: Video/Heartland (Europe).mp4
+x-co-op: No
+
+
+game: Herobotix (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Herobotix (Europe)/Herobotix (Europe).json
+developer: Steven Collins
+publisher: Hewson Consultants Ltd.
+genre: Shooter
+description:
+  The Alliance of Space Pilots has stolen a dangerous weapon called Z-Ray. A rebel
+  sector of the Alliance sends a "Herobot" into their base to retrieve the weapon
+  along with important data. Players take control of the Herobot and must find all
+  six parts of the Z-Ray and download the data from the main computer. There are
+  12 different enemy droids that attack in different ways, some follow a set path,
+  some charge the Herobot and a few can shoot. The Herobot can shoot at his
+  enemies or use an energy bomb that destroys everything onscreen, but also
+  depletes half of its energy. The base is laid out like a maze with energy
+  barriers and conveyor belts blocking the robot's progress. Energy barriers can
+  be turned off via switches, while conveyor belts can only be stopped temporarily
+  by accessing terminals. Terminals can also be used to display a small map of the
+  surroundings.
+release: 1987-01-01
+players: 1
+assets.boxfront: BoxFront/Herobotix (Europe).jpg
+assets.boxback: BoxBack/Herobotix (Europe).jpg
+assets.background: Background/Herobotix (Europe).jpg
+assets.screenshot: Screenshot/Herobotix (Europe).jpg
+x-co-op: No
+
+
+game: Hessian (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Hessian (USA, Europe)/Hessian (USA, Europe).json
+developer: Covert Bitops
+publisher: Psytronik Software
+genre: Action;Adventure
+description:
+  From Lasse Öörni, creator of the acclaimed Metal Warrior series comes HESSIAN,
+  his most ambitious C64 release yet! Featuring fluid gameplay, immersive
+  movie-style story, detailed character animation, ultra-smooth multi-directional
+  scrolling, a huge science complex to explore, multiple enemies to defeat and
+  guns ... lots of guns!
+  .
+  Take the role of Kim, a low-level security guard at a Throne Group science
+  complex, during the worst night shift of her life!
+  .
+  This involves the Group's inventions spiraling out of control thanks to the
+  megalomaniacal visions of the head scientist Norman Throne, ad-hoc life-saving
+  nanomechanical surgical procedures that grant Kim superior strength and recovery
+  capability, but also the constant dependence on battery power, relentless combat
+  against enemies both robotic and human, and an impending apocalypse!
+  .
+  ** HESSIAN FEATURES **\n
+  • Huge map (around 700 screens) to explore\n
+  • Super-smooth scrolling\n
+  • Atmospheric soundtracks\n
+  • Multiple weapons available\n
+  • Immersive storyline\n
+  • Assorted enemies (human and robotic)\n
+  • PAL & NTSC compatible\n
+  • SD2IEC  compatible
+release: 2016-02-01
+players: 1
+assets.boxfront: BoxFront/Hessian (USA, Europe).jpg
+assets.boxback: BoxBack/Hessian (USA, Europe).jpg
+assets.background: Background/Hessian (USA, Europe).jpg
+assets.screenshot: Screenshot/Hessian (USA, Europe).jpg
+assets.video: Video/Hessian (USA, Europe).mp4
+x-co-op: No
+
+
+game: Highway Encounter (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Highway Encounter (Europe)/Highway Encounter (Europe).json
+developer: Vortex Software
+publisher: Gremlin Graphics Software
+genre: Action
+description:
+  In this isometric 3D action-strategy game, the player uses a Vorton droid to
+  push a bomb to the end of the highway into an alien base. There are 30 screens,
+  most of them filled with hazards trying to block (like barrels) or destroy
+  (mines and aliens) your bomb. The perspective and guidance concept are not the
+  game's only original features; there are 4 more bombs with you, representing
+  your extra lives - pushing you forward on your mission. If these other Vortons
+  are destroyed, one of your extra lives is lost without the player being able to
+  use it.
+release: 1985-01-01
+players: 1
+assets.boxfront: BoxFront/Highway Encounter (Europe).jpg
+assets.boxback: BoxBack/Highway Encounter (Europe).jpg
+assets.background: Background/Highway Encounter (Europe).jpg
+assets.screenshot: Screenshot/Highway Encounter (Europe).jpg
+x-co-op: No
+
+
+game: Hunter's Moon (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Hunter's Moon (Europe)/Hunter's Moon (Europe).json
+developer: Martin Walker
+publisher: U.S. Gold Ltd.
+genre: Shooter
+description:
+  Each level takes place in a void with two dimensional cities appearing as they
+  are being built by "worker cells". The worker cells are indestructible but the
+  bricks dropped by them can be temporarily destroyed using the ship's weapon. The
+  goal of the game is to collect enough star cells contained inside the cities to
+  get to the next level.
+  .
+  By collecting enough star cells within a strict time limit (displayed in the
+  lower score table) it is possible to skip the remaining levels in current star
+  system and pass on to the next, allowing skilled players to advance the game
+  quicker.
+  .
+  The game was well received, gaining a score of 92% in the well-known computer
+  games magazine Zzap!64.
+release: 1987-07-15
+players: 1
+assets.boxfront: BoxFront/Hunter's Moon (Europe).jpg
+assets.boxback: BoxBack/Hunter's Moon (Europe).jpg
+assets.background: Background/Hunter's Moon (Europe).jpg
+assets.screenshot: Screenshot/Hunter's Moon (Europe).jpg
+assets.video: Video/Hunter's Moon (Europe).mp4
+x-co-op: No
+
+
+game: Hysteria (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Hysteria (Europe)/Hysteria (Europe).json
+developer: Special FX
+publisher: Software Projects
+genre: Action
+description:
+  A fanatical sect has changed mankind's future by summoning a previously extinct
+  primeval entity in our past. You, a sole survivor of the once elite 'time corps'
+  have been chosen by the federation of law and order to combat the entity in
+  three time zones: Ancient Greece, Dark Ages and Space.
+  .
+  The game, controlled by joystick, has you moving the time warrior in
+  horizontal-scrolling parallax levels. You have to collect nine pieces that
+  assemble to a face of the primeval entity who must be battled.
+  .
+  Meanwhile, the locals in each time zone do not like time warriors and throw and
+  fire everything at you. Luckily, you are carrying an energy conversion kit that
+  changes some shot objects and enemies into valuable weapons and armoury. Good
+  luck, you will need it!
+release: 1987-07-01
+players: 1
+assets.boxfront: BoxFront/Hysteria (Europe).jpg
+assets.boxback: BoxBack/Hysteria (Europe).jpg
+assets.background: Background/Hysteria (Europe).jpg
+assets.screenshot: Screenshot/Hysteria (Europe).jpg
+assets.video: Video/Hysteria (Europe).mp4
+x-co-op: No
+
+
+game: IO - Into Oblivion (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/IO - Into Oblivion (Europe)/IO - Into Oblivion (Europe).json
+developer: Kinetic Designs
+publisher: Zeppelin Games
+genre: Shooter
+description:
+  An enemy has entered your region of space in a mothership, and unleashed foes
+  aimed at destroying you. As the planet's top pilot, the player is sent out to
+  ultimately destroy the mothership, in this horizontally-scrolling shoot 'em up.
+  As well as aliens, the player will encounter gun turrets and missiles, plus
+  bosses at the end of each level. Levels 3 and also add narrow R-Type-style gaps.
+  .
+  Smart bombs appear on the screen at random intervals, which can be used in two
+  ways. Flying over them destroys everything on the screen, but shooting them
+  turns them into power-up tokens or protective orbs, to be picked up. Players
+  lose all these weapons every time they are defeated by enemies.
+release: 1988-07-01
+players: 1
+assets.boxfront: BoxFront/IO - Into Oblivion (Europe).jpg
+assets.boxback: BoxBack/IO - Into Oblivion (Europe).jpg
+assets.background: Background/IO - Into Oblivion (Europe).jpg
+assets.screenshot: Screenshot/IO - Into Oblivion (Europe).jpg
+assets.video: Video/IO - Into Oblivion (Europe).mp4
+x-co-op: No
+
+
+game: Impossible Mission (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Impossible Mission (USA, Europe)/Impossible Mission (USA, Europe).json
+developer: Dennis Caswell
+publisher: U.S. Gold Ltd.
+genre: Action;Platform;Puzzle
+description:
+  You play a secret agent on a quest to stop the evil Professor Elvin Atombender,
+  who is believed to be tampering with national security computers. You must
+  penetrate Atombender's stronghold, avoid his deadly robot creations, and acquire
+  various pieces of a password to use in the main control room.
+  .
+  The robots, rooms, and puzzle pieces will be switched around when starting over
+  which provides replay value.
+release: 1984-07-01
+players: 1
+assets.boxfront: BoxFront/Impossible Mission (USA, Europe).jpg
+assets.boxback: BoxBack/Impossible Mission (USA, Europe).jpg
+assets.background: Background/Impossible Mission (USA, Europe).jpg
+assets.screenshot: Screenshot/Impossible Mission (USA, Europe).jpg
+assets.video: Video/Impossible Mission (USA, Europe).mp4
+x-co-op: No
+
+
+game: Impossible Mission II (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Impossible Mission II (USA, Europe)/Impossible Mission II (USA, Europe).json
+developer: József Szentesi
+publisher: U.S. Gold Ltd.
+genre: Platform;Puzzle
+description:
+  Impossible Mission II is a direct sequel to Epyx's 1984 game Impossible Mission.
+  The game follows directly from the same plot, with Elvin Atombender seeking
+  revenge, and the player having to stop him. The overall game structure and basic
+  gameplay is mostly similar, but there are a few differences and new features.
+  .
+  The game takes place in Elvin's fortress, which consists of nine towers. Each of
+  the eight outer towers has a specific theme, such as computers, automobiles,
+  furniture and so on. Each tower consists of several rooms connected by two
+  vertical corridors with elevators and two horizontal corridors leading to other
+  towers. This time, the corridors leading between different towers are locked,
+  and can only be unlocked by figuring out a numerical puzzle.
+  .
+  Each tower contains the numbers zero through nine in three different colors. The
+  computer interface will allow you to try various number combinations to see if
+  they are correct.
+release: 1988-07-15
+players: 1
+assets.boxfront: BoxFront/Impossible Mission II (USA, Europe).jpg
+assets.boxback: BoxBack/Impossible Mission II (USA, Europe).jpg
+assets.background: Background/Impossible Mission II (USA, Europe).jpg
+assets.screenshot: Screenshot/Impossible Mission II (USA, Europe).jpg
+assets.video: Video/Impossible Mission II (USA, Europe).mp4
+x-co-op: No
+
+
+game: Jumpman (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Jumpman (USA, Europe)/Jumpman (USA, Europe).json
+developer: Randy Glover
+publisher: Epyx, Inc.
+genre: Platform
+description:
+  The object of the game is to defuse all bombs in a platform-filled screen.
+  Jumpman defuses a bomb by touching it. According to the story, these are placed
+  on Jupiter by terrorists. Jumpman can climb up and down ladders, and of course
+  jump, and there are two kinds of rope each allowing a single direction of
+  climbing only. Hazards include falling, "smart darts" (small bullets that fly
+  slowly across the screen, but when orthogonally lined up with Jumpman, greatly
+  speed up and shoot straight in his direction) and other hazards that are unique
+  to a certain level.
+  .
+  Points are awarded for each bomb defused, with bonus points available for
+  completing a level quickly. Jumpman's game run-speed can be chosen by the
+  player, with faster speeds being riskier but providing greater opportunity to
+  earn bonus points.
+release: 1983-07-15
+players: 1
+assets.boxfront: BoxFront/Jumpman (USA, Europe).jpg
+assets.boxback: BoxBack/Jumpman (USA, Europe).jpg
+assets.background: Background/Jumpman (USA, Europe).jpg
+assets.screenshot: Screenshot/Jumpman (USA, Europe).jpg
+assets.video: Video/Jumpman (USA, Europe).mp4
+x-co-op: No
+
+
+game: Jumpman Junior (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Jumpman Junior (USA, Europe)/Jumpman Junior (USA, Europe).json
+developer: Epyx, Inc.
+publisher: Epyx, Inc.
+genre: Action;Platform
+description:
+  The object of the game is to defuse all bombs in a platform-filled screen.
+  Jumpman defuses a bomb by touching it. According to the story, these are placed
+  on Jupiter by terrorists. Jumpman can climb up and down ladders, and of course
+  jump, and there are two kinds of rope each allowing a single direction of
+  climbing only. Hazards include falling, "smart darts" (small bullets that fly
+  slowly across the screen, but when orthogonally lined up with Jumpman, greatly
+  speed up and shoot straight in his direction) and other hazards that are unique
+  to a certain level.
+  .
+  Points are awarded for each bomb defused, with bonus points available for
+  completing a level quickly. Jumpman's game run-speed can be chosen by the
+  player, with faster speeds being riskier but providing greater opportunity to
+  earn bonus points.
+  .
+  This is the cartridge version with less levels that the full disk version.
+release: 1983-10-01
+players: 1
+assets.boxfront: BoxFront/Jumpman Junior (USA, Europe).jpg
+assets.boxback: BoxBack/Jumpman Junior (USA, Europe).jpg
+assets.background: Background/Jumpman Junior (USA, Europe).jpg
+assets.screenshot: Screenshot/Jumpman Junior (USA, Europe).jpg
+assets.video: Video/Jumpman Junior (USA, Europe).mp4
+x-co-op: No
+
+
+game: Mega-Apocalypse (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Mega-Apocalypse (Europe)/Mega-Apocalypse (Europe).json
+developer: Martech Games
+publisher: Martech Games
+genre: Shooter
+description:
+  It is the sequel to Crazy Comets. The game involves repetitively shooting
+  planets and moons as they grow in size and threaten to collide with the player's
+  space ship. The game is noted for its Rob Hubbard music, fast paced action and 2
+  player co-op game play.\n
+  It is a very strange universe really - isn´t it? All those millions of planets
+  and moons and stars and comets swirling about in the vastness of space. Imagine
+  what fun it would be to explore - to boldly go where no boldly goer had boldly
+  gone before - unless they happened to live there. Latest research from the
+  Institute of Advanced Research (I.A.R.) indicated that there are quite a lot of
+  planets with things living on them. Some of these things are pretty intelligent
+  like us really. Other of these things are really stupid, like whelks, for
+  example. Anyway, to cut a long story short, you have been selected to explore
+  the universe, boldly seeking out strange and exciting new worlds. If you find
+  any, your instructions are quite clear.\n
+  BLAST THE LIVING DAYLIGHTS OUT OF THEM!!
+release: 1987-09-01
+players: 2
+assets.boxfront: BoxFront/Mega-Apocalypse (Europe).jpg
+assets.boxback: BoxBack/Mega-Apocalypse (Europe).jpg
+assets.background: Background/Mega-Apocalypse (Europe).jpg
+assets.screenshot: Screenshot/Mega-Apocalypse (Europe).jpg
+assets.video: Video/Mega-Apocalypse (Europe).mp4
+x-co-op: Yes
+
+
+game: Mission A.D. (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Mission A.D. (Europe)/Mission A.D. (Europe).json
+developer: Marc Dawson
+publisher: Odin Computer Graphics Ltd.
+genre: Platform;Shooter
+description:
+  Earth is in trouble once again after minor attacks against our planet and
+  scientists have predicted that there will be one final big attack that will
+  totally destroy us. The scientists have devised a plan called Mission A.D. which
+  will see all countries join their defense systems and give financial aid to the
+  plan. All countries agreed apart from one, Silesia, which sees it's Head of
+  State General Offisrokka condemn the plan as he feels it's a capitalist plan to
+  take over his country. Assassins hired by the General have now been dispatched
+  to the bunker where the plans are being devised and drawn up to kill the
+  scientists.
+release: 1986-01-01
+players: 1
+assets.boxfront: BoxFront/Mission A.D. (Europe).jpg
+assets.boxback: BoxBack/Mission A.D. (Europe).jpg
+assets.background: Background/Mission A.D. (Europe).jpg
+assets.screenshot: Screenshot/Mission A.D. (Europe).jpg
+assets.video: Video/Mission A.D. (Europe).mp4
+x-co-op: No
+
+
+game: Monty on the Run (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Monty on the Run (Europe)/Monty on the Run (Europe).json
+developer: Micro Projects
+publisher: Gremlin Graphics Software
+genre: Platform
+description:
+  "Monty Mole was imprisoned due to his coal theft in Wanted: Monty Mole, and
+  rescued by Sam Stoat in Monty is Innocent. Now he has to get out of Britain
+  while he still can.
+  .
+  Like the original, the game is a flick-screen platformer with puzzly leanings.
+  Learning the movement paths of enemies, and the timing sequence of the crushers,
+  and working out a path across the screen by using the offered ropes and
+  platforms. Not all parts of all screens can be accessed at once.
+  .
+  You will need to collect money and other items along the way. Before starting
+  the game, you must choose five items from a selection of 21 to form your
+  'Freedom Kit' – correct selections are essential to complete the game, and a
+  degree of trial and error is required to know which ones are correct."
+  --mobygames.com
+release: 1985-01-01
+players: 1
+assets.boxfront: BoxFront/Monty on the Run (Europe).jpg
+assets.boxback: BoxBack/Monty on the Run (Europe).jpg
+assets.background: Background/Monty on the Run (Europe).jpg
+assets.screenshot: Screenshot/Monty on the Run (Europe).jpg
+assets.video: Video/Monty on the Run (Europe).mp4
+x-co-op: No
+
+
+game: Netherworld (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Netherworld (USA, Europe)/Netherworld (USA, Europe).json
+developer: jukka Tapanimäki
+publisher: Hewson Consultants
+genre: Shooter
+description:
+  The object is to fly a small spacecraft and collect as many diamonds as possible
+  from the level. Once enough diamonds are collected, the craft must reach a
+  teleporter to go to the next level before the time runs out. Aside of the time
+  limit, there are various obstacles, ranging from monsters to items which can
+  damage the craft or block the path. The ship can destroy some obstacles by
+  shooting, sometimes turning them to diamonds as well.
+  .
+  The game cover art features Tapanimäki's face.[citation needed] The cover art
+  was done without his knowledge and approval. There was friction between the
+  original cover artist and Tapanimäki; Unbeknownst to him, this led to the art
+  getting shelved and new version was made. Tapanimäki did not see the final
+  version until the press conference in London where the game was released, giving
+  him a big shock.
+release: 1988-01-01
+players: 1
+assets.boxfront: BoxFront/Netherworld (USA, Europe).jpg
+assets.boxback: BoxBack/Netherworld (USA, Europe).jpg
+assets.background: Background/Netherworld (USA, Europe).jpg
+assets.screenshot: Screenshot/Netherworld (USA, Europe).jpg
+assets.video: Video/Netherworld (USA, Europe).mp4
+x-co-op: No
+
+
+game: Nobby the Ardvark (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Nobby the Ardvark (USA, Europe)/Nobby the Ardvark (USA, Europe).json
+developer: Genesis Software Developments
+publisher: Thalamus
+genre: Action;Platformer;2D
+description:
+  Antopia is a land of ants and a culinary delight to the likes of Nobby the
+  Aardvark. With directions gained from a previous meal Nobby sets forth to eat
+  his fill and battle his way through eight levels of superb arcade action.
+  .
+  Leap through the Wild West. Explore the ocean depths in a midget submarine and
+  greet the inhabitants of the fabled city of Atlantis with a well aimed ant. Not
+  to mention a hectic ride in a Hot Air Balloon, arm wrestling with an octopus or
+  even a daring escape from a monster filled maze, plus a hair raising ride
+  through a long abandoned gold mine then a laser battle with the mutants of Mars.
+  .
+  Have you got what it takes to guide Nobby on this adventure of a lifetime?
+release: 1993
+players: 1
+assets.boxfront: BoxFront/Nobby the Ardvark (USA, Europe).jpg
+assets.boxback: BoxBack/Nobby the Ardvark (USA, Europe).jpg
+assets.background: Background/Nobby the Ardvark (USA, Europe).jpg
+assets.screenshot: Screenshot/Nobby the Ardvark (USA, Europe).jpg
+assets.video: Video/Nobby the Ardvark (USA, Europe).mp4
+x-co-op: No
+
+
+game: Nodes of Yesod (USA)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Nodes of Yesod (USA)/Nodes of Yesod (USA).json
+developer: Keith Robinson
+publisher: Odin Computer Graphics Ltd.
+genre: Platform
+description:
+  Strange signals are coming from the moon and Charlemagne Fotheringham-Grunes (or
+  Charlie for short), member of the International Commission for Universal Problem
+  Solving (I.C.U.P.S.) is sent to investigate. It turns out that the source of the
+  signals is a strange monolith. The aim of the game is to destroy this monolith.
+  .
+  Nodes of Yesod is an Arcade Adventure seen from a side-scrolling perspective.
+  Charlie can jump and, after finding it first, use a device called mole. After
+  pressing up on on the joystick, Charlie stands still and the player gains
+  control over the mole that can be used to attack enemies. However, not all
+  enemies can be harmed by the mole. Another useful device is the burrowing chum
+  that can be used to dig through certain walls. Before Charlie can reach the
+  monolith, he has to explore the many caverns of the moon and find eight keys or
+  alchiems. Every now and then a red spaceman will show up, and touching him will
+  cause Charlie to loose one of his keys.
+release: 1985-01-01
+players: 1
+assets.boxfront: BoxFront/Nodes of Yesod (USA).jpg
+assets.boxback: BoxBack/Nodes of Yesod (USA).jpg
+assets.background: Background/Nodes of Yesod (USA).jpg
+assets.screenshot: Screenshot/Nodes of Yesod (USA).jpg
+assets.video: Video/Nodes of Yesod (USA).mp4
+x-co-op: No
+
+
+game: PET Snake Redux (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/PET Snake Redux (USA, Europe)/PET Snake Redux (USA, Europe).json
+developer: Donkeysoft UK
+publisher: Chronosoft UK
+genre: Action
+description:
+  PET Snake 64 is a conversion of PET Snake which released in 2017 by Monument
+  Microgames for the Commodore CBM/PET 40 columns machines. Both versions are
+  developed by Donkeysoft UK (Shaun Bebbington).
+  .
+  PET Snake 64 is ready to install on TheC64 Mini, but will work on all
+  Commodore 64 compatible computers and emulators.
+  .
+  Supports keyboard and joystick in this simple and fun 'gobble and grow'
+  game. Each food pellet counts down from nine to zero, and your 'Snake'
+  will grow the equivalent units and thus increase your score. The
+  longer you grow, the harder the game.
+release: 2020-08-09
+players: 1
+assets.boxfront: BoxFront/PET Snake Redux (USA, Europe).jpg
+assets.boxback: BoxBack/PET Snake Redux (USA, Europe).jpg
+assets.background: Background/PET Snake Redux (USA, Europe).jpg
+assets.screenshot: Screenshot/PET Snake Redux (USA, Europe).jpg
+x-co-op: No
+
+
+game: Paradroid (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Paradroid (USA, Europe)/Paradroid (USA, Europe).json
+developer: Graftgold
+publisher: Thunder Mountain
+genre: Puzzle;Shooter
+description:
+  The game is set on a spaceship viewed from a top-down perspective. The ship
+  consists of numerous rooms and levels, each one populated by hostile robots or
+  "droids". The player, in control of a special droid called the "Influence
+  Device", must destroy all the other droids on the ship. Each droid (including
+  the player) is represented as a circle around a three-digit number. The numbers
+  roughly correspond to the droid's "power" or "level", in that higher-numbered
+  droids are tougher to destroy.
+  .
+  The Influence Device is numbered "001". The primary way in which the Influence
+  Device destroys other droids is by "linking" with them, effectively taking them
+  over. When the player takes over another droid, the previously-controlled droid
+  is destroyed.
+release: 1985-03-01
+players: 1
+assets.boxfront: BoxFront/Paradroid (USA, Europe).jpg
+assets.boxback: BoxBack/Paradroid (USA, Europe).jpg
+assets.background: Background/Paradroid (USA, Europe).jpg
+assets.screenshot: Screenshot/Paradroid (USA, Europe).jpg
+assets.video: Video/Paradroid (USA, Europe).mp4
+x-co-op: No
+
+
+game: Pitstop II (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Pitstop II (Europe)/Pitstop II (Europe).json
+developer: Epyx
+publisher: Epyx
+genre: Racing
+description:
+  Race Formula-1 in several tracks while trying to beat a computer, or human
+  opponent. Pay attention to your fuel and tires: It will be necessary to drive
+  into a pitstop to swap them out and refuel. Tire damage is indicated by their
+  colour; they start off black and become lighter as they take damage. Once they
+  have turned white a collision will send the car off the track.
+  .
+  Six different tracks are available to race on including Brands Hatch and
+  Vallelunga. Tracks can be played singly, or all together in a Grand Prix
+  contest. When playing the Grand Prix this is scored in the same way as the real
+  contest. Players can select how many laps they want to race and 3 different
+  skill levels.
+  .
+  This is the first 3D racing game to implement a split-screen simultaneous
+  two-player game mode. Players could be in completely different places on the
+  racing track, and each split screen would show the view of the track according
+  to the player's position.
+release: 1984-01-01
+players: 2
+assets.boxfront: BoxFront/Pitstop II (Europe).jpg
+assets.boxback: BoxBack/Pitstop II (Europe).jpg
+assets.background: Background/Pitstop II (Europe).jpg
+assets.screenshot: Screenshot/Pitstop II (Europe).jpg
+assets.video: Video/Pitstop II (Europe).mp4
+x-co-op: No
+
+
+game: Ranarama (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Ranarama (Europe)/Ranarama (Europe).json
+developer: Graftgold
+publisher: Players Software
+genre: Shooter
+description:
+  The purpose of apprentice courses is for young people to learn a trade
+  gradually, without putting yourself or your employers at risk. Unfortunately,
+  nobody explained this to Wizard’s apprentice Mervyn, before he tried to cast a
+  spell to make him irresistible to females, as the spell misfired, and made him
+  attractive only to female frogs. However, his dungeon was soon invaded, and
+  Mervyn was not killed, as he appeared to be a humble frog.
+  .
+  Viewed from above, the aim is to kill all 96 of the wizards who have invaded the
+  dungeon, which is split into 8 levels, each made up of 16 screens and at least
+  50 rooms. To see what’s in a room he has to enter it, in a manner similar to the
+  Switchblade games.
+  .
+  The game’s rather esoteric title comes from the way you obtain spells to upgrade
+  the four different types of power you have (power, offence, defence and effect).
+  When you meet a warlock you enter a mini game in which the letters RANARAMA are
+  in random order, and by swapping pairs of letters in sequence you must form the
+  full word in as little time as possible. This system of having a sub-game for
+  collecting upgrades is similar to the ‘grappling’ concept in Paradroid.
+  .
+  This earns up to four of the Runes (Mysticism, Witchcraft, Magecraft and
+  Runecraft), each of which can be used on one of the four types of power. The
+  Magecraft offensive use is a fireball, defence for Runecraft makes you invisible
+  to enemies, and the special effect for Witchcraft allows you to jump through
+  space. Lose a life and you lose all these powers, and losing another life means
+  it’s Game Over.
+release: 1987-01-01
+players: 1
+assets.boxfront: BoxFront/Ranarama (Europe).jpg
+assets.boxback: BoxBack/Ranarama (Europe).jpg
+assets.background: Background/Ranarama (Europe).jpg
+assets.screenshot: Screenshot/Ranarama (Europe).jpg
+assets.video: Video/Ranarama (Europe).mp4
+x-co-op: No
+
+
+game: Robin of the Wood (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Robin of the Wood (Europe)/Robin of the Wood (Europe).json
+developer: Steve Wetherill
+publisher: Odin Computer Graphics Ltd.
+genre: Action;Adventure
+description:
+  As the outlaw Robin of Sherwood, you aim to win recover the prize of the Silver
+  Arrow from the Sheriff of Nottingham. Before you can enter the contest to
+  recover the arrow, you must purchase your equipment from a tree spirit (Ent)
+  hiding in the forest. And to purchase your equipment, you wander the forest in
+  search of moneybags or rich nobles who you can ask for a "donation."
+  .
+  There are allies, such as the Hermit, who will heal your wounds providing you
+  don't attack him. There are also foes such as Norman soldiers, the Sheriff of
+  Nottingham, witches and wild boars who will impede your progress to enter the
+  contest.
+  .
+  In a nutshell, wander the forest gathering money to buy your sword, bow and
+  arrows while avoiding/defeating your enemies. You can also collect flowers to
+  placate the witch who will send you to some other part of the forest instead of
+  taking your money and locking you in the dungeon.
+  .
+  .
+  Robin of the Wood is a maze game published in 1985 for several 8-bit computer
+  formats by Odin Computer Graphics in the UK and Serma Software in Spain. It was
+  based on the English legend Robin Hood.
+release: 1985-01-01
+players: 1
+assets.boxfront: BoxFront/Robin of the Wood (Europe).jpg
+assets.boxback: BoxBack/Robin of the Wood (Europe).jpg
+assets.background: Background/Robin of the Wood (Europe).jpg
+assets.screenshot: Screenshot/Robin of the Wood (Europe).jpg
+assets.video: Video/Robin of the Wood (Europe).mp4
+x-co-op: No
+
+
+game: Silicon Warrior (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Silicon Warrior (USA, Europe)/Silicon Warrior (USA, Europe).json
+developer: Epyx, Inc.
+publisher: Epyx, Inc.
+genre: Action;Platform
+description:
+  You are one of the Silicon Warriors, and your mission is to program five of the
+  chips in a row - vertically, horizontally, or diagonally before any of your
+  opponents can do the same. They will try to beat you to the task and steal the
+  program or destroy you with laser fire, or you might even be swallowed up by a
+  black hole "glitch" in the program that appears when you least expect it. This
+  game was ported from the Atari 8-Bit computers.
+release: 1984-01-01
+players: 1
+assets.boxfront: BoxFront/Silicon Warrior (USA, Europe).jpg
+assets.boxback: BoxBack/Silicon Warrior (USA, Europe).jpg
+assets.background: Background/Silicon Warrior (USA, Europe).jpg
+assets.screenshot: Screenshot/Silicon Warrior (USA, Europe).jpg
+x-co-op: No
+
+
+game: Skate Crazy (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Skate Crazy (USA, Europe)/Skate Crazy (USA, Europe).json
+developer: Christian P. Shrigley
+publisher: Mastertronic
+genre: Sports
+description:
+  The player grooves his way around one level of the car park which has been
+  turned into a multidirectionally scrolling arena for the gladiators of roller
+  racing. Kick cans over, litter to collect and obstacles to avoid in the shape of
+  cones, ramps, sand, bouncing balls, flying frisbees, mazes of tyres and rocks,
+  and even other skaters. Finishing each level is a battle against time to
+  negotiate a series of gates in a set order, the next gate being signified by a
+  row of dots which flash between its flags. There are four judges to satisfy to
+  complete each round. If you can't make the grade pick up discarded clothes and
+  litter to make up for it. Then make your way to\n
+  'The Skate Crazy Championship Course' where it is a race against time!
+release: 1988-01-01
+players: 1
+assets.boxfront: BoxFront/Skate Crazy (USA, Europe).jpg
+assets.boxback: BoxBack/Skate Crazy (USA, Europe).jpg
+assets.background: Background/Skate Crazy (USA, Europe).jpg
+assets.screenshot: Screenshot/Skate Crazy (USA, Europe).jpg
+assets.video: Video/Skate Crazy (USA, Europe).mp4
+x-co-op: No
+
+
+game: Skool Daze (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Skool Daze (Europe)/Skool Daze (Europe).json
+developer: Microsphere Computer Services Ltd.
+publisher: Elite Systems Ltd.
+genre: Action;Adventure
+description:
+  The game features the player as a schoolboy named Eric, with the objective of
+  stealing his report card out of the staff room safe by accomplishing various
+  tasks around the school. The computer controls all the other characters in the
+  game, including the headmaster, other teachers and other pupils.
+  .
+  The four teachers are Mr Wacker (the headmaster), Mr Rockitt (the science
+  teacher), Mr Withit (the geography teacher) and Mr Creak (the history master).
+  Other than Eric, three of the pupils are named: Boy Wander (the tearaway),
+  Angelface (the bully) and Einstein (the swot). The player has the option of
+  renaming the characters before the game begins. There are also many unnamed,
+  undistinguished pupils at the school.
+  .
+  If Eric is caught out of class or otherwise misbehaving, teacher characters
+  pursue him and issue lines. When 10,000 lines or more are accumulated, the game
+  ends with Eric's expulsion. However, Eric can also receive lines for things that
+  are not his fault, such as lying or sitting on the floor when in fact he has
+  been knocked down, or being nearest a teacher who has just been hit by a
+  projectile fired by one of the other pupils. So part of the challenge of the
+  game is to prevent other pupils from getting Eric into trouble.
+release: 1984-01-01
+players: 1
+assets.boxfront: BoxFront/Skool Daze (Europe).jpg
+assets.boxback: BoxBack/Skool Daze (Europe).jpg
+assets.background: Background/Skool Daze (Europe).jpg
+assets.screenshot: Screenshot/Skool Daze (Europe).jpg
+assets.video: Video/Skool Daze (Europe).mp4
+x-co-op: No
+
+
+game: Snare (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Snare (USA, Europe)/Snare (USA, Europe).json
+developer: Enigma Software Developments
+publisher: Beyond Belief
+genre: Action
+description:
+  You play the role of Humphrey who just spends his days eating and not doing a
+  lot else. All this is about to change when the King summons Humphrey to his
+  castle and give him the task of retrieving the Princesses gems stolen by aliens.
+  Humphrey has no choice but to attempt this task or be beheaded by the King.
+  Snare is a single screen game where you must move Humphrey around the screen
+  collecting all the gems on each screen over 30 levels. Each gem must be
+  collected before a timer runs out and an Earthquake destroys everything.
+  .
+  On each screen as well as the gems, there are aliens and obstacles that need
+  avoiding, and items that can help you. Aliens appear from a generator, blobs
+  stick you to one spot, and there are skull and crossbones that when pushed turn
+  into bombs and you have a few seconds to get out of its blast range. The
+  explosion will kill any nearby aliens and remove solid walls. Teleport's can be
+  used to make you appear elsewhere on the screen, rocks can hide gems, switches
+  need to be used, and clocks can be collected to give yourself more time.
+  .
+  If you touch an alien, stand too close to a bomb or run out of time then you
+  lose one of five lives.
+release: 1993-01-01
+players: 1
+assets.boxfront: BoxFront/Snare (USA, Europe).jpg
+assets.boxback: BoxBack/Snare (USA, Europe).jpg
+assets.background: Background/Snare (USA, Europe).jpg
+assets.screenshot: Screenshot/Snare (USA, Europe).jpg
+x-co-op: No
+
+
+game: Soulless (USA)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Soulless (USA)/Soulless (USA).json
+developer: Georg Rottensteiner
+publisher: Psytronik Software
+genre: Action;Platform
+description:
+  A powerful warrior King, tired of constant battle and the smell of blood
+  declares peace on the land he rules ... But his generals crave war and plan to
+  overthrow the King.  Enlisting the help of an evil wizard the King is cursed
+  using unholy magic.  His human body is twisted and deformed into a beastly form,
+  his human soul is stolen!  Locked away in a tomb the cursed King is all but
+  forgotten while an unending war rages on for a thousand years ...  Until one day
+  a great quake shakes the land and smashes the wall of the Tomb holding the
+  beast. Now he is FREE and is determined to reclaim his human soul and once again
+  bring peace to the land.
+  .
+  From Georg 'Endurion' Rottensteiner, the maker of the smash hit C64 release Joe
+  Gunn comes SOULLESS - a new arcade-adventure game for the Commodore 64 featuring
+  stunningly detailed graphics by Trevor 'Smila' Storey!  Soulless takes you on an
+  epic quest around a huge exquisitely detailed map packed with objects to search
+  and monsters to avoid as you desperately try to find your human soul.
+  .
+  ** SOULLESS CREDITS **
+  .
+  Programmed by Georg 'Endurion' Rottensteiner
+  .
+  Graphics by Trevor 'Smila' Storey
+  .
+  Music by Mikkel 'Encore' Hastrup
+release: 2012-06-01
+players: 1
+assets.boxfront: BoxFront/Soulless (USA).jpg
+assets.boxback: BoxBack/Soulless (USA).jpg
+assets.background: Background/Soulless (USA).jpg
+assets.screenshot: Screenshot/Soulless (USA).jpg
+assets.video: Video/Soulless (USA).mp4
+x-co-op: No
+
+
+game: Speedball (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Speedball (USA, Europe)/Speedball (USA, Europe).json
+developer: The Bitmap Brothers
+publisher: Image Works
+genre: Sports
+description:
+  The game is played by two teams on an enclosed court with a goal at each end,
+  similar to that of ice hockey or five-a-side football. The court contains
+  elements that affect gameplay, such as score multipliers and power ups. Points
+  are scored by successfully getting the ball into the goal, and also by injuring
+  opposition players. The team that has amassed the most points at the end of the
+  game is the winner.
+  .
+  A player has control of only one outfield player on a team at any one time. The
+  game may be played by one or two players; two player games are played
+  competitively.
+release: 1989-01-01
+players: 2
+assets.boxfront: BoxFront/Speedball (USA, Europe).jpg
+assets.boxback: BoxBack/Speedball (USA, Europe).jpg
+assets.background: Background/Speedball (USA, Europe).jpg
+assets.screenshot: Screenshot/Speedball (USA, Europe).jpg
+assets.video: Video/Speedball (USA, Europe).mp4
+x-co-op: No
+
+
+game: Speedball 2 (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Speedball 2 (USA, Europe)/Speedball 2 (USA, Europe).json
+developer: The Bitmap Brothers
+publisher: Image Works
+genre: Sports
+description:
+  Brutal Deluxe doesn't live up to their name - in fact they're the worst team
+  Speedball has ever seen. As their manager, it is your job to transform their
+  fortunes. As well as the league system, which consists of 2 8-team divisions and
+  challenges you to advance to the top, there are also 2 cup tournaments, one of
+  which is played out over 2 'legs' with the aggregate score deciding who
+  progresses.
+  .
+  You can play the matches as well, which is the real meat of the game. They
+  consist of 2 90-second periods, and the gameplay is futuristic, fast and
+  frantic, with heavy tackling encouraged to retrieve the ball. Power-ups and
+  tokens appear on the pitch, including ones to make your players extra-tough or
+  freeze the opponents.
+release: 1991-01-01
+players: 2
+assets.boxfront: BoxFront/Speedball 2 (USA, Europe).jpg
+assets.boxback: BoxBack/Speedball 2 (USA, Europe).jpg
+assets.background: Background/Speedball 2 (USA, Europe).jpg
+assets.screenshot: Screenshot/Speedball 2 (USA, Europe).jpg
+assets.video: Video/Speedball 2 (USA, Europe).mp4
+x-co-op: No
+
+
+game: Spindizzy (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Spindizzy (USA, Europe)/Spindizzy (USA, Europe).json
+developer: Paul Shirley
+publisher: Activision
+genre: Action;Puzzle
+description:
+  As GERALD (Gyroscopic ExploRAtion Landing Device) you must explore 385 screens
+  of Hangworld, using limited fuel. The game is viewed isometrically, which means
+  that the controls are rotated through 90 degrees - this, coupled with the fact
+  that many screens have huge gaps and diagonal paths, means that it's hard to get
+  far at first. Falling off ledges loses you time, which is very limited to start
+  with.
+  .
+  Gerald must collect energy crystals throughout his journey - which can also be
+  shortened by using a complex system of lifts. Sections you have travelled
+  through are automatically mapped.
+release: 1986-07-15
+players: 1
+assets.boxfront: BoxFront/Spindizzy (USA, Europe).jpg
+assets.boxback: BoxBack/Spindizzy (USA, Europe).jpg
+assets.background: Background/Spindizzy (USA, Europe).jpg
+assets.screenshot: Screenshot/Spindizzy (USA, Europe).jpg
+assets.video: Video/Spindizzy (USA, Europe).mp4
+x-co-op: No
+
+
+game: Street Sports Baseball (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Street Sports Baseball (USA, Europe)/Street Sports Baseball (USA, Europe).json
+developer: Epyx, Inc.
+publisher: Epyx, Inc.
+genre: Sports
+description:
+  A baseball game for 1 or 2 players in which the action takes place in parks,
+  vacant lots and backyards with makeshift bases, rather than on an actual
+  diamond. In addition to the normal rules of baseball, players must cope with mud
+  puddles, tree stumps, and other hazards. Features a split-screen view which
+  provides an overview of the entire field alongside close-ups of where the action
+  is happening.
+release: 1987-01-01
+players: 2
+assets.boxfront: BoxFront/Street Sports Baseball (USA, Europe).jpg
+assets.boxback: BoxBack/Street Sports Baseball (USA, Europe).jpg
+assets.background: Background/Street Sports Baseball (USA, Europe).jpg
+assets.screenshot: Screenshot/Street Sports Baseball (USA, Europe).jpg
+x-co-op: No
+
+
+game: Street Sports Basketball (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Street Sports Basketball (USA, Europe)/Street Sports Basketball (USA, Europe).json
+developer: Andrew B. Spencer
+publisher: Epyx, Inc.
+genre: Sports
+description:
+  Taking basketball out of poshly-decorated arenas with hotdog sellers,
+  cheerleaders and pre-game entertainments, Epyx presented basketball played as it
+  is by kids all over America. Four different courts are provided - the
+  schoolyard, the alleyway, the parking lot and the backyard. Each of these has
+  its own hazards to play around, such as oil slicks and potholes. The standard
+  basketball dunks, passes and steals are on offer. An opposition player drilling
+  the ball into you sees you gain possession.
+  .
+  One or two players can join in, choosing their team of 3 from the 10 kids you
+  are offered, each with different abilities. There are 3 computer difficulty
+  levels.
+release: 1987-01-01
+players: 2
+assets.boxfront: BoxFront/Street Sports Basketball (USA, Europe).jpg
+assets.boxback: BoxBack/Street Sports Basketball (USA, Europe).jpg
+assets.background: Background/Street Sports Basketball (USA, Europe).jpg
+assets.screenshot: Screenshot/Street Sports Basketball (USA, Europe).jpg
+x-co-op: No
+
+
+game: Street Sports Soccer (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Street Sports Soccer (USA, Europe)/Street Sports Soccer (USA, Europe).json
+developer: K-Byte
+publisher: Epyx, Inc.
+genre: Action;Sports
+description:
+  A soccer action game for one or two players. Instead of professional players in
+  a soccer field, the game is played in one of several city street locations.
+  Several default teams are included, or you can create new teams from a variety
+  of characters.
+release: 1988-01-01
+players: 2
+assets.boxfront: BoxFront/Street Sports Soccer (USA, Europe).jpg
+assets.boxback: BoxBack/Street Sports Soccer (USA, Europe).jpg
+assets.background: Background/Street Sports Soccer (USA, Europe).jpg
+assets.screenshot: Screenshot/Street Sports Soccer (USA, Europe).jpg
+x-co-op: No
+
+
+game: Super Cycle (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Super Cycle (USA, Europe)/Super Cycle (USA, Europe).json
+developer: Stephen Landrum
+publisher: Epyx, Inc.
+genre: Racing
+description:
+  A motorbike racing game strongly resembling Sega's Hang-On titles. The game is
+  viewed from behind the bike, which tilts as you turn. You are racing against the
+  clock, although there are lots of other bikes on track to avoid and ride around.
+  There are 3 skill levels, which affect the amount of time you have to complete
+  the level, and the bonus offered if you manage to (the amount of time left,
+  divided by a set number, bigger on lower levels). Your bike has 3 gears and
+  appears to have a top speed of around 120 MPH. After every 2 races there's a
+  bonus round in which you must pick up as many tokens as possible in the time
+  limit.
+release: 1986-07-15
+players: 1
+assets.boxfront: BoxFront/Super Cycle (USA, Europe).jpg
+assets.boxback: BoxBack/Super Cycle (USA, Europe).jpg
+assets.background: Background/Super Cycle (USA, Europe).jpg
+assets.screenshot: Screenshot/Super Cycle (USA, Europe).jpg
+assets.video: Video/Super Cycle (USA, Europe).mp4
+x-co-op: No
+
+
+game: Sword of Fargoal, The (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Sword of Fargoal, The (USA, Europe)/Sword of Fargoal, The (USA, Europe).json
+developer: Jeff McCord
+publisher: Epyx, Inc.
+genre: Adventure
+description:
+  The Protectorate Sword which was forged to vanquish evil has been stolen by a
+  powerful wizard named Ulma and placed deep in an underground dungeon. Only when
+  this sword is retrieved and given to Gedwyn the blinded hero, will Ulma be
+  destroyed forever.
+  .
+  A Rogue-style game released in the same year, with the difference being that the
+  game is presented graphically, not with ASCII characters. The player will travel
+  through a multi-level dungeon complete with treasures and traps that are
+  randomly generated each time the game is played. Once your character is
+  generated you will hack and slash your way through ogres, hobgoblins, and many
+  other monsters in the hopes of eventually reaching the level where the sword is
+  hidden.
+  .
+  The game does not end when the sword is in hand, the player must also escape the
+  dungeon before it is destroyed by Ulma - you have 2000 seconds to do this.
+release: 1983-01-01
+players: 1
+assets.boxfront: BoxFront/Sword of Fargoal, The (USA, Europe).jpg
+assets.boxback: BoxBack/Sword of Fargoal, The (USA, Europe).jpg
+assets.background: Background/Sword of Fargoal, The (USA, Europe).jpg
+assets.screenshot: Screenshot/Sword of Fargoal, The (USA, Europe).jpg
+assets.video: Video/Sword of Fargoal, The (USA, Europe).mp4
+x-co-op: No
+
+
+game: Temple of Apshai Trilogy (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Temple of Apshai Trilogy (USA, Europe)/Temple of Apshai Trilogy (USA, Europe).json
+developer: Epyx, Inc.
+publisher: Epyx, Inc.
+genre: Role-Playing
+description:
+  The Temple of Apshai Trilogy includes updated graphical versions of three
+  classic Apshai games:
+  .
+  • Dunjonquest: Temple of Apshai\n
+  • Dunjonquest: Upper Reaches of Apshai\n
+  • Dunjonquest: Curse of Ra
+  .
+  The game could be described as a graphical "rogue like", but actually it
+  resembles the mainframe classic DND more, as you cannot see the whole level, but
+  only your surroundings. Furthermore, the level maps are not randomized like in
+  Rogue. Still, the game play has a lot in common with Rogue and other early
+  dungeon crawls: A solo character explores a monster-infested, multi-level
+  dungeon to grab some treasure, everything in top-down view.
+release: 1985-01-01
+players: 1
+assets.boxfront: BoxFront/Temple of Apshai Trilogy (USA, Europe).jpg
+assets.boxback: BoxBack/Temple of Apshai Trilogy (USA, Europe).jpg
+assets.background: Background/Temple of Apshai Trilogy (USA, Europe).jpg
+assets.screenshot: Screenshot/Temple of Apshai Trilogy (USA, Europe).jpg
+assets.video: Video/Temple of Apshai Trilogy (USA, Europe).mp4
+x-co-op: No
+
+
+game: Thing on a Spring (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Thing on a Spring (USA, Europe)/Thing on a Spring (USA, Europe).json
+developer: Jason H. Perkins
+publisher: Epyx
+genre: Platform
+description:
+  The evil Goblin has used his magical abilities to ensnare all the toys in the
+  neighborhood to go into his underground lair. Thing bounces to the rescue, and
+  resolves to retrieve them from his 4 storey underground lair. To do this he must
+  collect 9 pieces of a jigsaw puzzle on each floor.
+  .
+  Needless to say, Goblin has not made things easy - a myriad of traps await our
+  intrepid hero. There are traps all over, some crucial areas are guarded by
+  switches, and the last of these switches locks the level-ending lift.
+release: 1985-07-01
+players: 1
+assets.boxfront: BoxFront/Thing on a Spring (USA, Europe).jpg
+assets.boxback: BoxBack/Thing on a Spring (USA, Europe).jpg
+assets.background: Background/Thing on a Spring (USA, Europe).jpg
+assets.screenshot: Screenshot/Thing on a Spring (USA, Europe).jpg
+assets.video: Video/Thing on a Spring (USA, Europe).mp4
+x-co-op: No
+
+
+game: Tower Toppler (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Tower Toppler (USA, Europe)/Tower Toppler (USA, Europe).json
+developer: Triffix
+publisher: U.S. Gold
+genre: Action;Platform
+description:
+  You play a small green guy who needs to blow up eight towers, because their
+  presence is somehow poisoning the water of planets which could potentially be
+  ideal colonies. Unfortunately you need to get to the top of these towers to blow
+  them up.
+  .
+  You make your way up to the top of the tower via walkways around the outside of
+  the towers. You need to jump over, kick, and run from various enemies in your
+  journey to the top. Most vertical movement is achieved by jumping onto moving
+  ledges at the right moment.
+  .
+  The game was considered revolutionary in its time for its graphic technique. As
+  the main character walked around the outside of the tower, the character was
+  fixed in the middle of the screen while the tower itself rotated. This gave it a
+  pseudo-3D effect.
+  .
+  Towers are linked together via a voyage through the sea in your trusty MK.7
+  submarine. This plays out as a side-scrolling collect-'em-up in which bonus
+  points can be obtained.
+release: 1987-12-15
+players: 2
+assets.boxfront: BoxFront/Tower Toppler (USA, Europe).jpg
+assets.boxback: BoxBack/Tower Toppler (USA, Europe).jpg
+assets.background: Background/Tower Toppler (USA, Europe).jpg
+assets.screenshot: Screenshot/Tower Toppler (USA, Europe).jpg
+assets.video: Video/Tower Toppler (USA, Europe).mp4
+x-co-op: No
+
+
+game: Trailblazer (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Trailblazer (USA, Europe)/Trailblazer (USA, Europe).json
+developer: Mr Chip Software
+publisher: Mindscape
+genre: Action
+description:
+  An imaginative action game in which you must guide a ball-shaped craft through a
+  succession of levels. These have a patchwork-quilt type display, with holes to
+  avoid, and squares of various colors, which affect the craft's speed, both
+  within its power potential and into warp, as well as a control-reverser and lots
+  of holes. You can jump and thus avoid these holes, although you have a limited
+  number of them for each level, and it's possible to adjust the speed through
+  joystick or keyboard control. You also face a time limit on each of the levels,
+  although your time is boosted every time you complete one.\n
+  Released as part of Commodore Zone Issue #15 / released in the US by Mindscape /
+  part of the "Mega Pack"
+release: 1986-01-01
+players: 2
+assets.boxfront: BoxFront/Trailblazer (USA, Europe).jpg
+assets.boxback: BoxBack/Trailblazer (USA, Europe).jpg
+assets.background: Background/Trailblazer (USA, Europe).jpg
+assets.screenshot: Screenshot/Trailblazer (USA, Europe).jpg
+assets.video: Video/Trailblazer (USA, Europe).mp4
+x-co-op: No
+
+
+game: Uridium (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Uridium (USA, Europe)/Uridium (USA, Europe).json
+developer: Andrew Braybrook
+publisher: Mindscape
+genre: Shooter
+description:
+  The solar system is under attack! Enemy Super-Dreadnoughts have been placed in
+  orbit around each of the fifteen planets in this galactic sector. They are
+  draining mineral resources from the planetary cores for use in their
+  interstellar power units. Each Super-Dreadnought seeks out a different metal for
+  its metal converter.\n
+  Your Manta class Space Fighter will be transported to each planet in turn and it
+  is your task to destroy each Dreadnought. First you must attack the defensive
+  screen of enemy fighters, then you must neutralise the majority of surface
+  defences before you land on the Super-Dreadnought's master runway. Once on board
+  you must pull as many fuel rods as possible from the metal converters before you
+  take off for a final strafing run as the Dreadnought vaporises into the ether.
+release: 1986-01-01
+players: 1
+assets.boxfront: BoxFront/Uridium (USA, Europe).jpg
+assets.boxback: BoxBack/Uridium (USA, Europe).jpg
+assets.background: Background/Uridium (USA, Europe).jpg
+assets.screenshot: Screenshot/Uridium (USA, Europe).jpg
+assets.video: Video/Uridium (USA, Europe).mp4
+x-co-op: No
+
+
+game: Vegetables Deluxe C64 (USA)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Vegetables Deluxe C64 (USA)/Vegetables Deluxe C64 (USA).json
+developer: Mike Richmond
+publisher: Mike Richmond
+genre: Puzzle
+description:
+  This game must be played on a real Commodore 64 or an emulator (I recommend
+  VICE)
+  .
+  Coding, music and ingame graphics by Mike Richmond
+  .
+  Title screen and background graphics by Andy Cashmore
+  .
+  Controls:
+  .
+  Use a joystick in Port 2. While playing, press P to pause and un-pause the
+  game. Press Q from pause mode to quit to the menu screen.
+  .
+  Playing Instructions
+  .
+  On the menu screen, use joystick left and right to select a game mode.
+  Joystick up and down changes between in-game music and sound effects.
+  Press fire to start the game.
+  .
+  The object of the game is to make lines of three or more matching
+  vegetables. To do so, you can swap the position of any two vegetables on the
+  play screen by holding down fire and pushing in a direction. When there are
+  no valid moves left then the board is shuffled – until you run out of
+  shuffles, then it’s game over!
+  .
+  Match three vegetables and they are removed from the board, with new shapes
+  dropping down to replace them. Occasionally an immovable block will be
+  dropped. These can only be removed by strategically dropping them until a
+  line of three or more immovable blocks is made. Match four shapes in a row
+  to destroy a full row or line and match five to destroy all matching shapes
+  and get an extra shuffle.
+release: 2020-03-19
+players: 1
+assets.boxfront: BoxFront/Vegetables Deluxe C64 (USA).jpg
+assets.boxback: BoxBack/Vegetables Deluxe C64 (USA).jpg
+assets.background: Background/Vegetables Deluxe C64 (USA).jpg
+assets.screenshot: Screenshot/Vegetables Deluxe C64 (USA).jpg
+x-co-op: No
+
+
+game: West Bank (USA, Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/West Bank (USA, Europe)/West Bank (USA, Europe).json
+developer: Dinamic Software
+publisher: Gremlin Graphics Software
+genre: Action;Shooter
+description:
+  The game takes place at the time of the gold rush in the Wild West. You guard
+  the money storage of the West Bank, into which a great number of customers put
+  their money. The West Bank has 12 doors, and each of them needs to get one
+  incoming payment per day. To aggravate this bandits try to rob the money from
+  the bank. In the first days they are easy to defeat. Just draw the gun early
+  enough. In the following days also gunslingers appear next to further bandits.
+  Here, you are only allowed to shoot when the enemy draws his pistol. Some of the
+  opponents simpy just put in money. The small man with the many hats brings money
+  or a bomb to the bank. So pay attention well, because you will also lose one of
+  your three lives if you shoot innocent people. Between each new day there is a
+  duel against three bandits. Here you are only allowed to shoot when the
+  corresponding opponent draws. The faster the better. Beware, you can also get
+  shot or lose a life here, if you shoot too early.
+release: 1987-01-01
+players: 1
+assets.boxfront: BoxFront/West Bank (USA, Europe).jpg
+assets.boxback: BoxBack/West Bank (USA, Europe).jpg
+assets.background: Background/West Bank (USA, Europe).jpg
+assets.screenshot: Screenshot/West Bank (USA, Europe).jpg
+assets.video: Video/West Bank (USA, Europe).mp4
+x-co-op: No
+
+
+game: Who Dares Wins II (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Who Dares Wins II (Europe)/Who Dares Wins II (Europe).json
+developer: Steve Evans
+publisher: Alligata Software Ltd.
+genre: Action
+description:
+  Eight invaded townships must be brought back under your control in this
+  Commando-style shoot 'em up, which progresses vertically using a flick-screen
+  system. You are armed with a rifle (activated by a short tap of the fire button)
+  and five grenades (used via a longer press), and must not only kill off the
+  enemy forces, but also rescue your comrades who have been tied to trees along
+  the way. If you take too long then the prisoners will be executed by a firing
+  squad. You begin at the bottom of the first screen and slowly make your way
+  upwards; enemies pop up from all sides, walking around and shooting, and you
+  have to dodge their shots while trying to shoot them yourself. The foes make
+  good use of the decoy opportunities of the terrain, and you must do the same to
+  have a chance. The levels include rivers with narrow bridges, potholes, and
+  train-lines. Extra supplies are dropped in as you progress through the game, as
+  are extra lives in addition to your starting 5.
+release: 1985-10-16
+players: 1
+assets.boxfront: BoxFront/Who Dares Wins II (Europe).jpg
+assets.boxback: BoxBack/Who Dares Wins II (Europe).jpg
+assets.background: Background/Who Dares Wins II (Europe).jpg
+assets.screenshot: Screenshot/Who Dares Wins II (Europe).jpg
+assets.video: Video/Who Dares Wins II (Europe).mp4
+x-co-op: No
+
+
+game: Zynaps (Europe)
+file: $ROM_JSON_ROOT/Other/Commodore 64/Zynaps (Europe)/Zynaps (Europe).json
+developer: Hewson Consultants
+publisher: Hewson Consultants
+genre: Shooter
+description:
+  In Zynaps you play a spacecraft scrolling across a landscape jammed with alien
+  crafts who swoop and dart at you at every opportunity. You're in control of the
+  spacecraft, which resembles something you'd find in a cornflakes box, but packs
+  a pretty mean punch as you make your way through the waves of oncoming aliens.
+release: 1987-07-01
+players: 1
+assets.boxfront: BoxFront/Zynaps (Europe).jpg
+assets.boxback: BoxBack/Zynaps (Europe).jpg
+assets.background: Background/Zynaps (Europe).jpg
+assets.screenshot: Screenshot/Zynaps (Europe).jpg
+assets.video: Video/Zynaps (Europe).mp4
+x-co-op: No
+
+

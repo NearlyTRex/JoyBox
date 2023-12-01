@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Hand of Fate (USA).exe"
+    ],
+    "transform_file": "Hand of Fate (USA).exe"
+}

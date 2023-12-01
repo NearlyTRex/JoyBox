@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/From Orbit (USA).exe"
+    ],
+    "transform_file": "From Orbit (USA).exe"
+}

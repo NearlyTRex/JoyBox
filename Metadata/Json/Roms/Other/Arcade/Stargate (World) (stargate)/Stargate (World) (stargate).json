@@ -1,0 +1,20 @@
+{
+    "files": [
+        "stargate/decoder_rom_4.3g",
+        "stargate/decoder_rom_5.3c",
+        "stargate/stargate_rom_1-a_3002-1.e4",
+        "stargate/stargate_rom_10-a_3002-10.a7",
+        "stargate/stargate_rom_11-a_3002-11.c7",
+        "stargate/stargate_rom_12-a_3002-12.e7",
+        "stargate/stargate_rom_2-a_3002-2.c4",
+        "stargate/stargate_rom_3-a_3002-3.a4",
+        "stargate/stargate_rom_4-a_3002-4.e5",
+        "stargate/stargate_rom_5-a_3002-5.c5",
+        "stargate/stargate_rom_6-a_3002-6.a5",
+        "stargate/stargate_rom_7-a_3002-7.e6",
+        "stargate/stargate_rom_8-a_3002-8.c6",
+        "stargate/stargate_rom_9-a_3002-9.a6",
+        "stargate/video_sound_rom_2_std_744.ic12"
+    ],
+    "launch_name": "stargate"
+}

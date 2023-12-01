@@ -1,0 +1,9 @@
+{
+    "dlc": [
+        "$SETUP_MAIN_ROOT/dlc/setup_our_life_beginnings__always_-_voiced_name_expansion__1.7.1.2_(65490).exe"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_our_life_beginnings__always_1.7.1.2_(64bit)_(65490).exe"
+    ],
+    "transform_file": "setup_our_life_beginnings__always_1.7.1.2_(64bit)_(65490).exe"
+}

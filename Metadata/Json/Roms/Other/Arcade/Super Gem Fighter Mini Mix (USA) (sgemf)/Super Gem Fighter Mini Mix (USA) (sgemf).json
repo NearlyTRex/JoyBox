@@ -1,0 +1,33 @@
+{
+    "files": [
+        "sgemf/dl-1425.bin",
+        "sgemf/pcf.01",
+        "sgemf/pcf.02",
+        "sgemf/pcf.04",
+        "sgemf/pcf.05",
+        "sgemf/pcf.06",
+        "sgemf/pcf.07",
+        "sgemf/pcf.11m",
+        "sgemf/pcf.12m",
+        "sgemf/pcf.13m",
+        "sgemf/pcf.14m",
+        "sgemf/pcf.15m",
+        "sgemf/pcf.16m",
+        "sgemf/pcf.17m",
+        "sgemf/pcf.18m",
+        "sgemf/pcf.19m",
+        "sgemf/pcf.20m",
+        "sgemf/pcfu.03",
+        "sgemf/pfghtj/pcfj.03",
+        "sgemf/pfghtj/pfghtj.key",
+        "sgemf/sgemf.key",
+        "sgemf/sgemfa/pcfa.03",
+        "sgemf/sgemfa/sgemfa.key",
+        "sgemf/sgemfd/pcfd.04",
+        "sgemf/sgemfd/pcfud.03",
+        "sgemf/sgemfd/phoenix.key",
+        "sgemf/sgemfh/pcfh.03",
+        "sgemf/sgemfh/sgemfh.key"
+    ],
+    "launch_name": "sgemf"
+}

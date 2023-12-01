@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Nest Lander (USA).exe"
+    ],
+    "transform_file": "Nest Lander (USA).exe"
+}

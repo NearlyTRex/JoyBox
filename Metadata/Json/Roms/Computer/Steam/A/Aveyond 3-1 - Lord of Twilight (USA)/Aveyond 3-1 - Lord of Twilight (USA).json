@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Aveyond 3-1 - Lord of Twilight (USA).exe"
+    ],
+    "transform_file": "Aveyond 3-1 - Lord of Twilight (USA).exe"
+}

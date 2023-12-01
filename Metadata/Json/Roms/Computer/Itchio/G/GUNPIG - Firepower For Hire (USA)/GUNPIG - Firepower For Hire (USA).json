@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/GUNPIG - Firepower For Hire (USA).exe"
+    ],
+    "transform_file": "GUNPIG - Firepower For Hire (USA).exe"
+}

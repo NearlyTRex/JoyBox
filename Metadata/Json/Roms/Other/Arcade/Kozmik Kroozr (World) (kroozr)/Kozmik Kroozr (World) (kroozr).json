@@ -1,0 +1,20 @@
+{
+    "files": [
+        "kroozr/82s123.12d",
+        "kroozr/kozmkcpu.2d",
+        "kroozr/kozmkcpu.3d",
+        "kroozr/kozmkcpu.3g",
+        "kroozr/kozmkcpu.4d",
+        "kroozr/kozmkcpu.4g",
+        "kroozr/kozmkcpu.5d",
+        "kroozr/kozmkcpu.6d",
+        "kroozr/kozmksnd.7a",
+        "kroozr/kozmksnd.8a",
+        "kroozr/kozmksnd.9a",
+        "kroozr/kozmkvid.1a",
+        "kroozr/kozmkvid.1b",
+        "kroozr/kozmkvid.1d",
+        "kroozr/kozmkvid.1e"
+    ],
+    "launch_name": "kroozr"
+}

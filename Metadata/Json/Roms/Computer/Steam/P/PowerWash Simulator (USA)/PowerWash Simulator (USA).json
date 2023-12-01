@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/PowerWash Simulator (USA).exe"
+    ],
+    "main_game_exe": [
+        "PowerWash Simulator/PowerWashSimulator.exe"
+    ],
+    "main_game_exe_cwd": {
+        "PowerWash Simulator/PowerWashSimulator.exe": "PowerWash Simulator"
+    },
+    "transform_file": "PowerWash Simulator (USA).exe"
+}

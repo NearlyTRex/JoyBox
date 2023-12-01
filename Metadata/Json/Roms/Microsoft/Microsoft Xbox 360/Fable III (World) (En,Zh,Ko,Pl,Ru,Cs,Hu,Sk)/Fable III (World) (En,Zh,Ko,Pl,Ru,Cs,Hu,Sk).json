@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Fable III (World) (En,Zh,Ko,Pl,Ru,Cs,Hu,Sk).chd",
+        "Fable III (World) (En,Zh,Ko,Pl,Ru,Cs,Hu,Sk).dmi.bin",
+        "Fable III (World) (En,Zh,Ko,Pl,Ru,Cs,Hu,Sk).lyt",
+        "Fable III (World) (En,Zh,Ko,Pl,Ru,Cs,Hu,Sk).pfi.bin",
+        "Fable III (World) (En,Zh,Ko,Pl,Ru,Cs,Hu,Sk).ss.bin"
+    ],
+    "launch_file": "Fable III (World) (En,Zh,Ko,Pl,Ru,Cs,Hu,Sk).iso",
+    "transform_file": "Fable III (World) (En,Zh,Ko,Pl,Ru,Cs,Hu,Sk).chd"
+}

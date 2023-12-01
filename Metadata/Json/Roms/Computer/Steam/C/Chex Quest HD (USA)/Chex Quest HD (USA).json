@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Chex Quest HD (USA).exe"
+    ],
+    "transform_file": "Chex Quest HD (USA).exe"
+}

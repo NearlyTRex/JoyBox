@@ -1,0 +1,37 @@
+{
+    "installer_exe": "$DISC_ONE_ROOT/Install.EXE",
+    "main_game_exe": [
+        "Program Files/Necronomicon/Necrono.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Program Files/Necronomicon/Necrono.exe": "Program Files/Necronomicon"
+    },
+    "steps": {
+        "postinstall": [
+            {
+                "from": "$DISC_ONE_ROOT/Data/*",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/Program Files/Necronomicon/Data",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT/Data/*",
+                "skip_existing": true,
+                "to": "$HDD_MAIN_ROOT/Program Files/Necronomicon/Data",
+                "type": "copy"
+            },
+            {
+                "from": "$SETUP_MAIN_ROOT/fix/*",
+                "to": "$HDD_MAIN_ROOT/Program Files/Necronomicon",
+                "type": "copy"
+            }
+        ]
+    },
+    "sync": {
+        "data": [
+            "Saved_*.bin"
+        ],
+        "search": "Necrono.exe"
+    },
+    "transform_file": "Necronomicon (USA).m3u"
+}

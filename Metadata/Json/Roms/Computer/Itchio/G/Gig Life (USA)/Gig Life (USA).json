@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Gig Life (USA).exe"
+    ],
+    "transform_file": "Gig Life (USA).exe"
+}

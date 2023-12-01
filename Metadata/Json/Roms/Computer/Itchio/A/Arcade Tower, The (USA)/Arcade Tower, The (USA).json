@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Arcade Tower, The (USA).exe"
+    ],
+    "transform_file": "Arcade Tower, The (USA).exe"
+}

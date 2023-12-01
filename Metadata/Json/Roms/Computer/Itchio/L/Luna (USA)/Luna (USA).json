@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Luna (USA).exe"
+    ],
+    "transform_file": "Luna (USA).exe"
+}

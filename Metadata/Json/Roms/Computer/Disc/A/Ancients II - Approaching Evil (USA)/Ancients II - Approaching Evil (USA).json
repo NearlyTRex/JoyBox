@@ -1,0 +1,11 @@
+{
+    "installer_dos_exe": "$DISC_MAIN_ROOT/INSTALL.BAT",
+    "is_dos": true,
+    "main_game_dos_exe": [
+        "ANC2/BEGIN.EXE"
+    ],
+    "main_game_dos_exe_cwd": {
+        "ANC2/BEGIN.EXE": "ANC2"
+    },
+    "transform_file": "Ancients II - Approaching Evil (USA).chd"
+}

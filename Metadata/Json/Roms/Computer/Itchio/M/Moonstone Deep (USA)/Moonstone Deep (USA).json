@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Moonstone Deep (USA).exe"
+    ],
+    "transform_file": "Moonstone Deep (USA).exe"
+}

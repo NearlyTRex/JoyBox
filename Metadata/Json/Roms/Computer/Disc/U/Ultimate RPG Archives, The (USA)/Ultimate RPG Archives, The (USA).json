@@ -1,0 +1,70 @@
+{
+    "installer_dos_exe": [
+        "$DISC_ONE_ROOT/INSTALL.EXE",
+        "$DISC_THREE_ROOT/INSTALL.EXE"
+    ],
+    "is_dos": true,
+    "main_game_dos_exe": [
+        "BARDTALE/BT1/BARD.EXE",
+        "BARDTALE/BT2/DK.EXE",
+        "BARDTALE/BT3/THIEF.EXE",
+        "DRAGON/DRAGON.BAT",
+        "INTRPLAY/STONKEEP/SK.BAT",
+        "UNDERWRD/UW1/UW.EXE",
+        "UNDERWRD/UW2/UW2.EXE",
+        "WASTELND/WL/WL.EXE",
+        "WORLD/XEEN.EXE"
+    ],
+    "main_game_dos_exe_cwd": {
+        "BARDTALE/BT1/BARD.EXE": "BARDTALE/BT1",
+        "BARDTALE/BT2/DK.EXE": "BARDTALE/BT2",
+        "BARDTALE/BT3/THIEF.EXE": "BARDTALE/BT3",
+        "DRAGON/DRAGON.BAT": "DRAGON",
+        "INTRPLAY/STONKEEP/SK.BAT": "INTRPLAY/STONKEEP",
+        "UNDERWRD/UW1/UW.EXE": "UNDERWRD/UW1",
+        "UNDERWRD/UW2/UW2.EXE": "UNDERWRD/UW2",
+        "WASTELND/WL/WL.EXE": "WASTELND/WL",
+        "WORLD/XEEN.EXE": "WORLD"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_TWO_ROOT/BARDTALE",
+                "to": "$DOS_MAIN_ROOT/C/BARDTALE",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT/DRAGON",
+                "to": "$DOS_MAIN_ROOT/C/DRAGON",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT/UNDERWRD",
+                "to": "$DOS_MAIN_ROOT/C/UNDERWRD",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT/WASTELND",
+                "to": "$DOS_MAIN_ROOT/C/WASTELND",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT/MANUALS",
+                "to": "$DOS_MAIN_ROOT/C/MANUALS",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_TWO_ROOT/MAPS",
+                "to": "$DOS_MAIN_ROOT/C/MAPS",
+                "type": "copy"
+            }
+        ]
+    },
+    "sync": {
+        "data": [
+            "MS-DOS/C/INTRPLAY/STONKEEP/SAVEGAME"
+        ],
+        "search": "raw_files.index"
+    },
+    "transform_file": "Ultimate RPG Archives, The (USA).m3u"
+}

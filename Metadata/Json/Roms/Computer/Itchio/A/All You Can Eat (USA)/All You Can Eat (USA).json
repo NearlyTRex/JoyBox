@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/All You Can Eat (USA).exe"
+    ],
+    "transform_file": "All You Can Eat (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Theorem (USA).exe"
+    ],
+    "transform_file": "Theorem (USA).exe"
+}

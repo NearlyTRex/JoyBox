@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Good Snowman Is Hard To Build, A (USA).exe"
+    ],
+    "transform_file": "Good Snowman Is Hard To Build, A (USA).exe"
+}

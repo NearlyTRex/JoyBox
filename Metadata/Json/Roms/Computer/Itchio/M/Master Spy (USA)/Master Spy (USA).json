@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Master Spy (USA).exe"
+    ],
+    "transform_file": "Master Spy (USA).exe"
+}

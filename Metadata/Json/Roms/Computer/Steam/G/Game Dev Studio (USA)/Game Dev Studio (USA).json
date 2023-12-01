@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Game Dev Studio (USA).exe"
+    ],
+    "main_game_exe": [
+        "Game Dev Studio/game_dev_studio.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Game Dev Studio/game_dev_studio.exe": "Game Dev Studio"
+    },
+    "transform_file": "Game Dev Studio (USA).exe"
+}

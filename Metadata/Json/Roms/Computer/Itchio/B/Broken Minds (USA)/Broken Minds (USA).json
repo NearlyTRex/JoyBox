@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Broken Minds (USA).exe"
+    ],
+    "transform_file": "Broken Minds (USA).exe"
+}

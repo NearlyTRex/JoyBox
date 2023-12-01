@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Breaker (USA).exe"
+    ],
+    "transform_file": "Breaker (USA).exe"
+}

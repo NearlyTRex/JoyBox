@@ -1,0 +1,15 @@
+Atari Lynx || Basketbrawl (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Basketbrawl (USA, Europe)/Basketbrawl (USA, Europe).json
+Atari Lynx || Block Out (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Block Out (USA, Europe)/Block Out (USA, Europe).json
+Atari Lynx || Chip's Challenge (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Chip's Challenge (USA, Europe)/Chip's Challenge (USA, Europe).json
+Atari Lynx || Crystal Mines II (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Crystal Mines II (USA, Europe)/Crystal Mines II (USA, Europe).json
+Atari Lynx || Gates of Zendocon, The (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Gates of Zendocon, The (USA, Europe)/Gates of Zendocon, The (USA, Europe).json
+Atari Lynx || Gauntlet - The Third Encounter (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Gauntlet - The Third Encounter (USA, Europe)/Gauntlet - The Third Encounter (USA, Europe).json
+Atari Lynx || Ishido - The Way of Stones (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Ishido - The Way of Stones (USA, Europe)/Ishido - The Way of Stones (USA, Europe).json
+Atari Lynx || Klax (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Klax (USA, Europe)/Klax (USA, Europe).json
+Atari Lynx || Malibu Bikini Volleyball (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Malibu Bikini Volleyball (USA, Europe)/Malibu Bikini Volleyball (USA, Europe).json
+Atari Lynx || Scrapyard Dog (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Scrapyard Dog (USA, Europe)/Scrapyard Dog (USA, Europe).json
+Atari Lynx || Shanghai (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Shanghai (USA, Europe)/Shanghai (USA, Europe).json
+Atari Lynx || Super Asteroids, Missile Command (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Super Asteroids, Missile Command (USA, Europe)/Super Asteroids, Missile Command (USA, Europe).json
+Atari Lynx || Todd's Adventures in Slime World (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Todd's Adventures in Slime World (USA, Europe)/Todd's Adventures in Slime World (USA, Europe).json
+Atari Lynx || Turbo Sub (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Turbo Sub (USA, Europe)/Turbo Sub (USA, Europe).json
+Atari Lynx || Warbirds (USA, Europe) || $ROM_JSON_ROOT/Other/Atari Lynx/Warbirds (USA, Europe)/Warbirds (USA, Europe).json

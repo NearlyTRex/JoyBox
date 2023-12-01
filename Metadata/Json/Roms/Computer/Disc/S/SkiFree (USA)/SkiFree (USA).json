@@ -1,0 +1,18 @@
+{
+    "main_game_exe": [
+        "SkiFree/ski32.exe"
+    ],
+    "main_game_exe_cwd": {
+        "SkiFree/ski32.exe": "SkiFree"
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$HDD_MAIN_ROOT/SkiFree",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "SkiFree (USA).chd"
+}

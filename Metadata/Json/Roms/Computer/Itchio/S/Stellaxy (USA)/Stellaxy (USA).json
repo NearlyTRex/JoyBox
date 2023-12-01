@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Stellaxy (USA).exe"
+    ],
+    "transform_file": "Stellaxy (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Ryza Roads (USA).exe"
+    ],
+    "transform_file": "Ryza Roads (USA).exe"
+}

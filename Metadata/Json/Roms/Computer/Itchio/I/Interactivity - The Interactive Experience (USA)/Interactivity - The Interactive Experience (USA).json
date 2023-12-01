@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Interactivity - The Interactive Experience (USA).exe"
+    ],
+    "transform_file": "Interactivity - The Interactive Experience (USA).exe"
+}

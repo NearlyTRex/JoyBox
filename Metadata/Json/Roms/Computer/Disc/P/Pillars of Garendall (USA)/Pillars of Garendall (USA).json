@@ -1,0 +1,12 @@
+{
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_MAIN_ROOT",
+                "to": "$HDD_MAIN_ROOT/Pillars",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Pillars of Garendall (USA).chd"
+}

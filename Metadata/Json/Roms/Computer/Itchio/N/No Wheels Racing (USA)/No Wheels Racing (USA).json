@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/No Wheels Racing (USA).exe"
+    ],
+    "transform_file": "No Wheels Racing (USA).exe"
+}

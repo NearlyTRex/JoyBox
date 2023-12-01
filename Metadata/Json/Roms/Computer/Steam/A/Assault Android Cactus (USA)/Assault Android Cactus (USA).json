@@ -1,0 +1,12 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Assault Android Cactus (USA).exe"
+    ],
+    "main_game_exe": [
+        "Assault Android Cactus/cactus.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Assault Android Cactus/cactus.exe": "Assault Android Cactus"
+    },
+    "transform_file": "Assault Android Cactus (USA).exe"
+}

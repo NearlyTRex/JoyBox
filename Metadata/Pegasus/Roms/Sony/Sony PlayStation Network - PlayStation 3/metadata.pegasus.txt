@@ -1,0 +1,2572 @@
+collection: Sony PlayStation Network - PlayStation 3
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation Network - PlayStation 3" {file.path}
+
+
+game: Alien Breed - Impact (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Alien Breed - Impact (USA)/Alien Breed - Impact (USA).json
+developer: Team17 Software
+publisher: Team17 Software
+genre: Shooter
+description:
+  Alien Breed Impact is an explosive science fiction arcade-shooter that
+  resurrects a much revered franchise with an epic story, swarms of highly
+  intelligent alien enemies, high-impact weapons, highly detailed and rich
+  environments; all implemented with superb technology in a state-of-the-art
+  gaming experience. In addition to the thrilling single-player campaign mode, the
+  game also offers a relentless, action-packed, online two-player co-operative
+  battle mode.
+release: 2010-10-05
+players: 1
+assets.boxfront: BoxFront/Alien Breed - Impact (USA).jpg
+assets.boxback: BoxBack/Alien Breed - Impact (USA).jpg
+assets.background: Background/Alien Breed - Impact (USA).jpg
+assets.screenshot: Screenshot/Alien Breed - Impact (USA).jpg
+x-co-op: No
+
+
+game: Alien Breed 2 - Assault (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Alien Breed 2 - Assault (USA)/Alien Breed 2 - Assault (USA).json
+developer: Team17 Software
+publisher: Team17 Software
+genre: Shooter
+description:
+  Alien Breed 2: Assault is the second chapter in the Alien Breed series, and is
+  an explosive science fiction arcade-shooter with an epic story, swarms of highly
+  intelligent alien enemies and highly detailed environments, developed using Epic
+  Games' Unreal Engine 3. Assault finds the player taking control of Conrad, Chief
+  Engineer aboard the dying ship Leopold and continuing his fight for survival
+  across the fatally damaged space vessel. His only hope relies on reigniting the
+  alien space craft's monstrous engines to rescue him from impending annihilation,
+  but to do this he will have to survive wave after wave of relentless alien
+  assaults. In addition to the thrilling single-player campaign and all new
+  "Survivor" modes, the game also offers action-packed, two-player online
+  co-operative battle modes.
+release: 2010-09-22
+players: 1
+assets.boxfront: BoxFront/Alien Breed 2 - Assault (USA).jpg
+assets.boxback: BoxBack/Alien Breed 2 - Assault (USA).jpg
+assets.background: Background/Alien Breed 2 - Assault (USA).jpg
+assets.screenshot: Screenshot/Alien Breed 2 - Assault (USA).jpg
+x-co-op: No
+
+
+game: Alien Breed 3 - Descent (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Alien Breed 3 - Descent (USA)/Alien Breed 3 - Descent (USA).json
+developer: Team17 Software
+publisher: Team17 Software
+genre: Shooter
+description:
+  Alien Breed 3: Descent is a 3rd person shooter in which players assume the role
+  of a soldier battling aliens aboard a stranded space station. Players collect
+  weapons as they navigate dark halls in an effort to regain control of the space
+  station.
+release: 2011-02-22
+players: 1
+assets.boxfront: BoxFront/Alien Breed 3 - Descent (USA).jpg
+assets.boxback: BoxBack/Alien Breed 3 - Descent (USA).jpg
+assets.background: Background/Alien Breed 3 - Descent (USA).jpg
+assets.screenshot: Screenshot/Alien Breed 3 - Descent (USA).jpg
+x-co-op: No
+
+
+game: Alien Shooter (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Alien Shooter (USA)/Alien Shooter (USA).json
+developer: Sigma Team
+publisher: Sigma Team
+genre: Action;Shooter;Shoot-'Em-Up;Vertical
+description:
+  Sinister hordes of bloodthirsty aliens have infiltrated our world! Take on the
+  role of a soldier and head to a secret military laboratory to end this invasion!
+  You'll have a ragtag arsenal at your disposal, everything from pistols to with
+  machine-guns and high-caliber blasters. Keep your eyes open: you never know
+  what's waiting around the corner...
+release: 2014-03-19
+players: 1
+assets.boxfront: BoxFront/Alien Shooter (USA).jpg
+assets.boxback: BoxBack/Alien Shooter (USA).jpg
+assets.background: Background/Alien Shooter (USA).jpg
+assets.screenshot: Screenshot/Alien Shooter (USA).jpg
+x-co-op: No
+
+
+game: Amy (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Amy (USA)/Amy (USA).json
+developer: Lexis Numerique
+publisher: Lexis Numerique
+genre: Action;Horror
+description:
+  Amy is a survival horror game where the player controls the woman Lana as she
+  attempts to escort the 8-year old autistic girl Amy out of a city overrun with
+  creatures and military. At the start of the game they are together in a train as
+  Lana escorts her to a hospital after she is busted out of a shady research
+  facility. The train suddenly derails and they end up in a dark and hostile
+  environment. The game is played from a third-person perspective and the main
+  goal is to make sure Lana keeps Amy out of harm's way. The creatures send out an
+  infection, but Amy has an immunizing aura that prevents Lana from being infected
+  as long as she keeps close. Therefore she walks around holding the girl's hand
+  most of the game and they often need to sneak past hazards together. Lana is
+  however also able to take out enemies with melee combat mechanics using sticks
+  and crowbars, but in many situations that is not an option due to the number of
+  opponents. Weapons also degrade over time. When Lana lets go of Amy, the
+  infection gradually sets in and it causes the contamination sensor on her back
+  to turn from green to yellow and red. It turns her skin pale and renders her
+  vision hazy, but at certain points in the game it is necessary to sneak past
+  creatures who then think she is one of their own.
+  .
+  As Amy's survival is vital for Lana, in many locations she is able to make her
+  hide in closets or other spots when danger is lurking. The options to hide
+  appear automatically when a viable location is nearby. Lana can also hide
+  together with the girl or just by herself. All other control over Amy is also
+  indirect. Lana can ask her to stay in a fixed place, call her to come over, make
+  her turn on a lamp, or ask her to interact with an object in the environment.
+  Amy has to hack into computers, crawl through small grates to access rooms,
+  stand on elevators, and push buttons. There are also locks that can only be
+  opened by collecting a specific DNA sample. These interactions are used
+  extensively for environment-based puzzles. Later in the game Amy gets access to
+  two psychic powers she can call upon; sending out a bubble that knocks down an
+  opponent and a field that silences everything inside. These are activated by
+  having Amy draw a glyph at specific locations around levels. The game consists
+  of six chapters and saving is done automatically through checkpoints.
+release: 2012-01-11
+players: 1
+assets.boxfront: BoxFront/Amy (USA).jpg
+assets.boxback: BoxBack/Amy (USA).jpg
+assets.background: Background/Amy (USA).jpg
+assets.screenshot: Screenshot/Amy (USA).jpg
+x-co-op: No
+
+
+game: Attack on Titan (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Attack on Titan (USA)/Attack on Titan (USA).json
+developer: Tecmo Koei Games
+publisher: Koei Tecmo Games
+genre: Action;Adventure
+description:
+  An international hit anime “Attack on Titan” has come to Steam®! Battle is
+  joined between the man-eating Titans and Eren and his companions. Experience the
+  illusion of being in the anime, and controlling the flow of the story. The story
+  from the anime, with a few original twists, is yours to experience!
+release: 2016-01-01
+players: 1
+assets.boxfront: BoxFront/Attack on Titan (USA).jpg
+assets.boxback: BoxBack/Attack on Titan (USA).jpg
+assets.background: Background/Attack on Titan (USA).jpg
+assets.screenshot: Screenshot/Attack on Titan (USA).jpg
+x-co-op: No
+
+
+game: Awesomenauts (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Awesomenauts (USA)/Awesomenauts (USA).json
+developer: Ronimo Games
+publisher: Ronimo Games, DTP Entertainment
+genre: Role-Playing
+description:
+  Awesomenauts is a MOBA fitted into the form of an accessible 3-on-3 action
+  platformer. Head out to the online battlefields together with your friends as an
+  online party or in local splitscreen! Devise strategies as you upgrade and
+  customize each character's skills to suit your playing style. Expect new items,
+  features, DLC and Awesomenauts to be added regularly! The year is 3587. Conflict
+  spans the stars as huge robot armies are locked in an enduring stalemate. In
+  their bid for galactic supremacy, they call upon the most powerful group of
+  mercenaries in the universe: the Awesomenauts!
+release: 2012-05-01
+players: 3
+assets.boxfront: BoxFront/Awesomenauts (USA).jpg
+assets.boxback: BoxBack/Awesomenauts (USA).jpg
+assets.background: Background/Awesomenauts (USA).jpg
+assets.screenshot: Screenshot/Awesomenauts (USA).jpg
+x-co-op: Yes
+
+
+game: Battle Fantasia (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Battle Fantasia (USA)/Battle Fantasia (USA).json
+developer: Arc System Works
+publisher: Taito
+genre: Fighting
+description:
+  There was once a time when the world was engulfed in darkness. Mankind fought
+  six battles to save their world, but lost every single one. All hope was lost
+  for humanity, but one day the darkness was finally driven back by the swords of
+  four heroes. Light returned to the world, and with it came peace and serenity.
+  The world was then divided into two major countries: The Magic Kingdom and the
+  Steam Empire. The people prospered like never before. But in recent months,
+  rumors spread among the people that the darkness was returning. However, fate
+  has once again brought together warriors from all over the world. Some fight in
+  the relentless pursuit of justice. Some fight due to their conviction and faith.
+  .
+  Developed by ARC System Works, creators of the highly popular Guilty Gear
+  series, Battle Fantasia utilizes RPG-stylish elements and blends them with high
+  level gameplay. Players will also be able to pick between 12 beautifully
+  illustrated characters by Emiko Iwasaki, and battle it out in front of gorgeous
+  high-definition 3D environments.
+release: 2009-12-22
+players: 1
+assets.boxfront: BoxFront/Battle Fantasia (USA).jpg
+assets.boxback: BoxBack/Battle Fantasia (USA).jpg
+assets.background: Background/Battle Fantasia (USA).jpg
+assets.screenshot: Screenshot/Battle Fantasia (USA).jpg
+x-co-op: No
+
+
+game: Black Knight Sword (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Black Knight Sword (USA)/Black Knight Sword (USA).json
+developer: Grasshopper Manufacture
+publisher: Reverb Communications
+genre: Action
+description:
+  Black Knight Sword (ブラック・ナイト・ソード) is a side-scrolling action platformer game
+  co-developed by Grasshopper Manufacture and Digital Reality. It was released on
+  the PlayStation 3 via the PlayStation Network on December 11, 2012 and on Xbox
+  360 via Xbox Live Arcade on December 12, 2012.
+release: 2012-12-11
+players: 1
+assets.boxfront: BoxFront/Black Knight Sword (USA).jpg
+assets.boxback: BoxBack/Black Knight Sword (USA).jpg
+assets.background: Background/Black Knight Sword (USA).jpg
+assets.screenshot: Screenshot/Black Knight Sword (USA).jpg
+x-co-op: No
+
+
+game: Bloodrayne - Betrayal (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Bloodrayne - Betrayal (USA)/Bloodrayne - Betrayal (USA).json
+developer: WayForward Technologies
+publisher: Majesco Entertainment
+genre: Action
+description:
+  The original video game femme fatale, Rayne, has returned to battle and feed in
+  a brand new hack ‘n slash adventure. Slay ghastly enemies as Rayne, the sexy
+  dhampir with superhuman strength, speed, and agility, recruited by the vampire
+  hunting Brimstone Society for one last mission. The target is a lavish, yet
+  sinister ball in a secluded castle with plenty of dark and gruesome surprises.
+  With the help of a mysterious friend, and members of Brimstone, Rayne must
+  infiltrate the manor, take out the fiendish horde, and stop an evil master plot
+  once and for all.
+release: 2011-09-16
+players: 1
+assets.boxfront: BoxFront/Bloodrayne - Betrayal (USA).jpg
+assets.boxback: BoxBack/Bloodrayne - Betrayal (USA).jpg
+assets.background: Background/Bloodrayne - Betrayal (USA).jpg
+assets.screenshot: Screenshot/Bloodrayne - Betrayal (USA).jpg
+x-co-op: Yes
+
+
+game: Bomberman Ultra (USA) (En,Ja,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Bomberman Ultra (USA) (En,Ja,Fr,De,Es,It)/Bomberman Ultra (USA) (En,Ja,Fr,De,Es,It).json
+developer: Hudson Soft
+publisher: Hudson Soft
+genre: Action
+description:
+  Bomberman Ultra retains classic gameplay elements combined with online
+  multiplayer, full character customization and high-definition graphics. Fans of
+  the popular series will be able to compete with the best Bomberman players
+  worldwide, as Bomberman Ultra delivers frantic 8-player multiplayer battles
+  online in 14 exotic arenas, as well as 4-player local multiplayer. Players can
+  customize their own Bomberman characters with more than 50 character costumes,
+  resulting in more than 150,000 possible combinations!
+release: 2009-06-11
+players: 4
+assets.boxfront: BoxFront/Bomberman Ultra (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Bomberman Ultra (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.background: Background/Bomberman Ultra (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Bomberman Ultra (USA) (En,Ja,Fr,De,Es,It).jpg
+x-co-op: No
+
+
+game: Capcom Arcade Cabinet (USA) (En,Ja,Fr,De,Es,It,Pt)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Capcom Arcade Cabinet (USA) (En,Ja,Fr,De,Es,It,Pt)/Capcom Arcade Cabinet (USA) (En,Ja,Fr,De,Es,It,Pt).json
+developer: M2 Co.,LTD
+publisher: Capcom
+genre: Miscellaneous;Compilation
+description:
+  Capcom Arcade Cabinet is a digital compilation of seventeen Capcom 1980s arcade
+  games for the PlayStation 3 and Xbox 360. The compilation was released in five
+  separate packs of three games during February–May 2013; players who purchased
+  all five packs received two additional games free. The full compilation pack was
+  released in April 2013. An arcade machine was made to promote the Capcom Arcade
+  Cabinet series at the Gadget Show Live 2013 in Birmingham, UK.
+release: 2013-02-19
+players: 2
+assets.boxfront: BoxFront/Capcom Arcade Cabinet (USA) (En,Ja,Fr,De,Es,It,Pt).jpg
+assets.boxback: BoxBack/Capcom Arcade Cabinet (USA) (En,Ja,Fr,De,Es,It,Pt).jpg
+assets.background: Background/Capcom Arcade Cabinet (USA) (En,Ja,Fr,De,Es,It,Pt).jpg
+assets.screenshot: Screenshot/Capcom Arcade Cabinet (USA) (En,Ja,Fr,De,Es,It,Pt).jpg
+x-co-op: Yes
+
+
+game: Castle Crashers (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Castle Crashers (USA)/Castle Crashers (USA).json
+developer: The Behemoth
+publisher: Microsoft Game Studios
+genre: Action;Role-Playing;Beat 'em Up
+description:
+  Castle Crashers is a 2D beat 'em up video game independently developed by The
+  Behemoth and published by Microsoft Game Studios. It features music created by
+  members of Newgrounds. The Xbox 360 version was released on August 27, 2008 via
+  Xbox Live Arcade as part of the Xbox Live Summer of Arcade. The PlayStation 3
+  version was released in North America on August 31, 2010 and November 3, 2010 in
+  Europe via the PlayStation Network. A Microsoft Windows version, exclusive to
+  Steam, was announced on August 16, 2012.[2] The game is set in a fictional
+  medieval universe in which a dark wizard steals a mystical gem and captures four
+  princesses. Four knights are charged by the king to rescue the princesses,
+  recover the jewel, and bring the wizard to justice. On June 15, 2015, The
+  Behemoth announced a remastered version of the game for Xbox One.[4]
+  .
+  Castle Crashers was well received by critics on all platforms on which it was
+  released. The Xbox 360 version holds a score of 82.73% at GameRankings and
+  82/100 at Metacritic, while the PlayStation 3 version averages 88.67% and 85/100
+  at the same sites. The PC version holds a score of 7.9 on Metacritic, indicating
+  generally favorable reviews. The game was a commercial success, and the Xbox 360
+  version has sold over 2.6 million copies alone as of year-end 2011. The
+  PlayStation 3 version has also done well, moving over 181,000 units as of
+  December 2010.
+release: 2010-08-31
+players: 4
+assets.boxfront: BoxFront/Castle Crashers (USA).jpg
+assets.boxback: BoxBack/Castle Crashers (USA).jpg
+assets.background: Background/Castle Crashers (USA).jpg
+assets.screenshot: Screenshot/Castle Crashers (USA).jpg
+x-co-op: No
+
+
+game: Castlevania - Harmony of Despair (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Castlevania - Harmony of Despair (USA)/Castlevania - Harmony of Despair (USA).json
+developer: Konami
+publisher: Konami
+genre: Action;Platform
+description:
+  Castlevania: Harmony of Despair, known in Japan as Akumajō Dracula: Harmony of
+  Despair (悪魔城ドラキュラ ハーモニー オブ ディスペアー, officially translated Devil's Castle Dracula:
+  Harmony of Despair), is a crossover platform-adventure game that features a new
+  map system which allows players to see the current quest map's entire setup.
+  .
+  Gameplay includes a co-op mode (The PlayStation 3 release supports local and
+  online multiplayer) which plays like the "Boss Rush Mode" of previous 2D
+  Castlevania games, but with several rooms and items to find, culminating in a
+  boss to fight. It also includes a versus mode, with battle occurring between
+  players. Some bosses are able to attack players on their way to the fight. The
+  game features playable characters such as Alucard, Soma Cruz, Jonathan Morris,
+  Shanoa and Charlotte Aulin, all from previous 2D Castlevania games.
+release: 2011-09-27
+players: 6
+assets.boxfront: BoxFront/Castlevania - Harmony of Despair (USA).jpg
+assets.boxback: BoxBack/Castlevania - Harmony of Despair (USA).jpg
+assets.background: Background/Castlevania - Harmony of Despair (USA).jpg
+assets.screenshot: Screenshot/Castlevania - Harmony of Despair (USA).jpg
+x-co-op: Yes
+
+
+game: Castlevania - Lords of Shadow - Mirror of Fate HD (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Castlevania - Lords of Shadow - Mirror of Fate HD (USA)/Castlevania - Lords of Shadow - Mirror of Fate HD (USA).json
+developer: Mercury Steam
+publisher: Konami
+genre: Action;Adventure
+description:
+  This sequel to Castlevania: Lords of Shadow reveals the story of the Belmonts as
+  they battle destiny across generations to discover their true fate. Trevor
+  Belmont, knight of the Brotherhood of Light, embarks on an epic quest to avenge
+  his mother who was killed by his father Gabriel.
+release: 2013-10-25
+players: 1
+assets.boxfront: BoxFront/Castlevania - Lords of Shadow - Mirror of Fate HD (USA).jpg
+assets.boxback: BoxBack/Castlevania - Lords of Shadow - Mirror of Fate HD (USA).jpg
+assets.background: Background/Castlevania - Lords of Shadow - Mirror of Fate HD (USA).jpg
+assets.screenshot: Screenshot/Castlevania - Lords of Shadow - Mirror of Fate HD (USA).jpg
+x-co-op: No
+
+
+game: Comix Zone (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Comix Zone (USA)/Comix Zone (USA).json
+developer: Sega
+publisher: Sega
+genre: Action
+description:
+  A downloadable version of the 1995 Genesis/MegaDrive game.
+  .
+  Sketch Turner is an artist in New York City. One day while Sketch is drawing,
+  there is a huge thunderstorm and a bolt of lightning hits Sketch's image,
+  bringing it to life. That image is Mortus, a megalomaniac mutant who wants to
+  become real and rule the earth. Mortus magically transports Sketch into the
+  pages of his comic book so that he can end his creator's life and become real.
+  Inside the comic book, Sketch meets General Alissa Cyan, who believes he is a
+  superhero that came to save their post-apocalyptic world from the evil brought
+  by Mortus' hand. Now Sketch must save the comic book world and get back to his
+  own...
+release: 2011-07-19
+players: 1
+assets.boxfront: BoxFront/Comix Zone (USA).jpg
+assets.boxback: BoxBack/Comix Zone (USA).jpg
+assets.background: Background/Comix Zone (USA).jpg
+assets.screenshot: Screenshot/Comix Zone (USA).jpg
+x-co-op: No
+
+
+game: Costume Quest (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Costume Quest (USA)/Costume Quest (USA).json
+developer: Double Fine Productions
+publisher: Double Fine Productions
+genre: Adventure;Role-Playing
+description:
+  Costume Quest is a Halloween adventure from Tim Schafer's Double Fine
+  Productions. In this charming role-playing game, choose your hero and
+  trick-or-treat through three beautiful environments full of Double Fine humor
+  and story. Complete quests, build your party, and collect costumes along the way
+  that allow you to transform into powerful champions and take down the evil
+  Repugians. This heroic holiday tale will capture the imaginations of kids and
+  kids-at-heart.
+  .
+  Continue the Costume Quest adventure with the Grubbins on Ice DLC pack, included
+  free in the PC version! Face new enemies while collecting additional quests,
+  costumes, battle stamps and creepy treat cards. Help the monsters overthrow
+  Araxia to bring peace back to Repugia!
+release: 2010-10-19
+players: 1
+assets.boxfront: BoxFront/Costume Quest (USA).jpg
+assets.boxback: BoxBack/Costume Quest (USA).jpg
+assets.background: Background/Costume Quest (USA).jpg
+assets.screenshot: Screenshot/Costume Quest (USA).jpg
+x-co-op: No
+
+
+game: Costume Quest 2 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Costume Quest 2 (USA)/Costume Quest 2 (USA).json
+developer: Double Fine Productions
+publisher: Majesco Entertainment
+genre: Role-Playing
+description:
+  Trick, treat and pick a fight with villianous dental soldiers in Costume Quest
+  2, the sweet sequel to Double Fine’s hit original, Costume Quest, that turned
+  fans of all ages into candy obsessed crusaders. This inspired RPG adventure
+  includes a range of new features and gameplay improvements to double the amount
+  of mischievous fun. Explore spooky time-traversing landscapes, don adorable new
+  costumes that transform into powerful Hallo-warriors, and collect even Creepier
+  Treat Cards to wield in combat against a legion of hygiene obsessed baddies.
+  Only heroic siblings Wren and Reynold can save Halloween forever!
+release: 2014-10-31
+players: 1
+assets.boxfront: BoxFront/Costume Quest 2 (USA).jpg
+assets.boxback: BoxBack/Costume Quest 2 (USA).jpg
+assets.background: Background/Costume Quest 2 (USA).jpg
+assets.screenshot: Screenshot/Costume Quest 2 (USA).jpg
+x-co-op: No
+
+
+game: Crazy Taxi (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Crazy Taxi (USA)/Crazy Taxi (USA).json
+developer: Sega
+publisher: Sega
+genre: Action;Racing
+description:
+  Crazy Taxi is an open world racing video game developed by Kenji Kanno and his
+  team at Hitmaker and published by Sega.[4] It is the first game in the Crazy
+  Taxi series. The game was first released in arcades in 1999 and then was ported
+  to the Dreamcast in 2000. Gameplay is based on picking up taxi customers, and
+  driving to their destination as quickly as possible. Reception to Crazy Taxi has
+  been mostly positive. It was ported to other platforms numerous times, including
+  the PlayStation 2 and Nintendo GameCube by Acclaim in 2001, and then Microsoft
+  Windows in 2002. The game has also been re-released for the PlayStation Network,
+  Xbox Live Arcade, iOS, and is featured on the Dreamcast Collection.[5] It became
+  one of the few Sega All Stars on the Dreamcast, and also earned Greatest Hits
+  and Player's Choice status on PlayStation 2 and GameCube respectively. Sega
+  followed up on the success of Crazy Taxi with numerous sequels, the first being
+  Crazy Taxi 2 for the Dreamcast, which included several gameplay changes
+release: 2010-11-16
+players: 1
+assets.boxfront: BoxFront/Crazy Taxi (USA).jpg
+assets.boxback: BoxBack/Crazy Taxi (USA).jpg
+assets.background: Background/Crazy Taxi (USA).jpg
+assets.screenshot: Screenshot/Crazy Taxi (USA).jpg
+x-co-op: No
+
+
+game: Dead Nation (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Dead Nation (USA)/Dead Nation (USA).json
+developer: Housemarque
+publisher: Sony Computer Entertainment
+genre: Shooter
+description:
+  Sometime in the not-too-distant future, a deadly virus is once again sweeping
+  the globe, infecting everyone in its path and killing off almost all the human
+  race. But that’s just the start.
+  .
+  To the horror of the survivors, the dead have begun rising from the grave,
+  hell-bent on feeding on the living and wiping out mankind for good. But, just as
+  it seems all is lost, a small pocket of survivors emerges, determined to take
+  back the world from the undead.
+  .
+  You are one of these survivors. Armed to the teeth and totally outnumbered,
+  you’re the last hope of discovering a cure for the virus and saving humanity.
+  Just remember to lock, load, and aim for the brain!
+release: 2010-11-30
+players: 2
+assets.boxfront: BoxFront/Dead Nation (USA).jpg
+assets.boxback: BoxBack/Dead Nation (USA).jpg
+assets.background: Background/Dead Nation (USA).jpg
+assets.screenshot: Screenshot/Dead Nation (USA).jpg
+x-co-op: Yes
+
+
+game: Dead Space - Ignition (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Dead Space - Ignition (USA)/Dead Space - Ignition (USA).json
+developer: Megatube
+publisher: Electronic Arts
+genre: Action;Puzzle
+description:
+  Dead Space Ignition is an action puzzle game developed by Megatube and Sumo
+  Digital and published by Electronic Arts for the Xbox Live Arcade and the
+  PlayStation Network. It is a followup to the survival horror third-person
+  shooter video game Dead Space 2, set between the two main games,which was
+  released on October 12, 2010. The game takes the form of what executive producer
+  Steve Papoutsis describes as an "interactive comic-style game" and is written by
+  Antony Johnston, the writer of the Dead Space games and comic book series.
+  .
+  After completing the game, players will receive bonus items for Dead Space 2,
+  including a hacker-themed suit with 15% armor and 15 inventory slots, as well as
+  a bonus to the hacking portions of the game. Players also receive a
+  hacker-themed Contact Beam weapon, extra power nodes, health packs, ammunition,
+  and audio logs. These bonuses are found in "conduit rooms" unlocked with a Dead
+  Space Ignition completed save file.
+  .
+  The EA press release outlined the basic plot of Ignition, revealing that the
+  game "takes place on the Sprawl [the setting of Dead Space 2] and challenges
+  players to survive the initial Necromorph outbreak", which then sets up the plot
+  of Dead Space 2. Executive producer Steve Papoutsis suggested that the game, the
+  first of a number of related additions to the series, "will give Dead Space fans
+  a unique perspective on the events leading up to Dead Space 2, and will also
+  introduce the storyline to a brand-new audience of gamers." Dead Space Ignition
+  takes place before the events of Dead Space 2.
+release: 2010-10-12
+players: 1
+assets.boxfront: BoxFront/Dead Space - Ignition (USA).jpg
+assets.boxback: BoxBack/Dead Space - Ignition (USA).jpg
+assets.background: Background/Dead Space - Ignition (USA).jpg
+assets.screenshot: Screenshot/Dead Space - Ignition (USA).jpg
+x-co-op: No
+
+
+game: Deadliest Warrior - Legends (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Deadliest Warrior - Legends (USA)/Deadliest Warrior - Legends (USA).json
+developer: Pipeworks Software, Inc.
+publisher: Spike Games
+genre: Action;Fighting;3D
+description:
+  Deadliest Warrior: Legends is a fighting game developed by Pipeworks Software
+  and published by 345 Games & Spike Games. Based on the Spike documentary TV
+  series Deadliest Warrior and the sequel to Deadliest Warrior: The Game,
+  Deadliest Warrior: Legends allows players to take control of various individual
+  warriors from different time periods, utilizing their own unique set of weapons,
+  armor, and fight styles. The game was announced on April 7th, 2011 by Spike
+  Games, featuring a new campaign mode and a new line-up of playable warriors. On
+  June 6th, 2011, a gameplay trailer was released on E3 Live on GT.[1] On July 6th
+  the game was released for the Xbox 360's Xbox Live Arcade, and July 26 for the
+  PlayStation 3's PlayStation Network.
+release: 2011-07-26
+players: 2
+assets.boxfront: BoxFront/Deadliest Warrior - Legends (USA).jpg
+assets.boxback: BoxBack/Deadliest Warrior - Legends (USA).jpg
+assets.background: Background/Deadliest Warrior - Legends (USA).jpg
+assets.screenshot: Screenshot/Deadliest Warrior - Legends (USA).jpg
+x-co-op: No
+
+
+game: Deadliest Warrior - The Game (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Deadliest Warrior - The Game (USA)/Deadliest Warrior - The Game (USA).json
+developer: Pipeworks Software, Inc.
+publisher: Pipeworks Software, Inc.
+genre: Action;Fighting;3D
+description:
+  Deadliest Warrior The Game allows you to choose from history's greatest
+  warriors, equip them with signature weaponry, and go head to head against the
+  greatest fighters that ever lived. Deadliest Warrior features five play modes,
+  customizable warriors, and true-to-life action with interactive environments.
+  This is a unique fighting game that is easy to play and hard to master. Sever
+  limbs, decapitate heads, and taunt your enemy's lifeless corpse to build up
+  ranking points and compete on a global scale to become The Deadliest Warrior.
+release: 2010-07-14
+players: 2
+assets.boxfront: BoxFront/Deadliest Warrior - The Game (USA).jpg
+assets.boxback: BoxBack/Deadliest Warrior - The Game (USA).jpg
+assets.background: Background/Deadliest Warrior - The Game (USA).jpg
+assets.screenshot: Screenshot/Deadliest Warrior - The Game (USA).jpg
+x-co-op: No
+
+
+game: Deadly Premonition - Director's Cut (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Deadly Premonition - Director's Cut (USA)/Deadly Premonition - Director's Cut (USA).json
+developer: Access Games
+publisher: Ignition Entertainment
+genre: Action;Horror
+description:
+  Deadly Premonition is an open world, survival horror video game developed by
+  Access Games for Xbox 360 and PlayStation 3. In 2010, the Xbox 360 version was
+  published by Ignition Entertainment in North America, Marvelous Entertainment in
+  Japan, and Rising Star Games in Europe, while the PlayStation 3 version was
+  simultaneously released only in Japan by Marvelous Entertainment. A director's
+  cut for the PlayStation 3 and Microsoft Windows was published worldwide by
+  Rising Star Games in 2013. Set in the fictional, rural American town of
+  Greenvale, Washington, Deadly Premonition follows FBI Special Agent Francis York
+  Morgan as he investigates the murder of an eighteen-year-old woman, which is
+  similar to a series of murders across the United States.
+  .
+  Deadly Premonition is a reboot of Access Game's earlier, multi-platform video
+  game Rainy Woods. In production since 2004, Rainy Woods was cancelled soon after
+  its debut at the 2007 convention Tokyo Game Show due to technological issues.
+  .
+  The game is notable for introducing open world, nonlinear gameplay and a comedy
+  horror theme to the survival horror genre. It is also notable for implementing a
+  free-roaming storyline within an open game world where all the characters have
+  their own schedules.
+  .
+  It has become known for its "headline making strangeness" and is considered one
+  of the most critically polarising games of all-time (holding the Guinness World
+  Record for most critically polarizing survival horror game), receiving both
+  extremely negative and extremely positive reviews and is seen by some as an
+  example of games as art.
+release: 2013-04-30
+players: 1
+assets.boxfront: BoxFront/Deadly Premonition - Director's Cut (USA).jpg
+assets.boxback: BoxBack/Deadly Premonition - Director's Cut (USA).jpg
+assets.background: Background/Deadly Premonition - Director's Cut (USA).jpg
+assets.screenshot: Screenshot/Deadly Premonition - Director's Cut (USA).jpg
+x-co-op: No
+
+
+game: Disney Castle of Illusion Starring Mickey Mouse (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Disney Castle of Illusion Starring Mickey Mouse (USA)/Disney Castle of Illusion Starring Mickey Mouse (USA).json
+developer: Sega
+publisher: Sega
+genre: Action;Platformer;2D
+description:
+  Mickey Mouse returns to star in Castle of Illusion, a fantastical re-imagining
+  of the Sega Genesis classic. With all-new HD graphics and gameplay, Castle of
+  Illusion brings Mickey and his world to life in this magical Disney adventure!
+  When the evil witch Mizrabel kidnaps Minnie, its up to Mickey to brave the
+  dangers of the Castle of Illusion to re... more »
+release: 2013-09-03
+players: 1
+assets.boxfront: BoxFront/Disney Castle of Illusion Starring Mickey Mouse (USA).jpg
+assets.boxback: BoxBack/Disney Castle of Illusion Starring Mickey Mouse (USA).jpg
+assets.background: Background/Disney Castle of Illusion Starring Mickey Mouse (USA).jpg
+assets.screenshot: Screenshot/Disney Castle of Illusion Starring Mickey Mouse (USA).jpg
+x-co-op: No
+
+
+game: Disney Castle of Illusion Starring Mickey Mouse - Original Retro Game (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Disney Castle of Illusion Starring Mickey Mouse - Original Retro Game (USA)/Disney Castle of Illusion Starring Mickey Mouse - Original Retro Game (USA).json
+developer: Sega
+publisher: Sega
+genre: Action;Platformer;2D
+description:
+  Mickey Mouse returns to star in Castle of Illusion, a fantastical re-imagining
+  of the Sega Genesis classic. With all-new HD graphics and gameplay, Castle of
+  Illusion brings Mickey and his world to life in this magical Disney adventure!
+  When the evil witch Mizrabel kidnaps Minnie, its up to Mickey to brave the
+  dangers of the Castle of Illusion to rescue Minnie. Gather your courage and
+  traverse enchanted forests, take on hordes of rebellious toys and navigate mazes
+  of living books. Play as Mickey and save Minnie from Mizrabels evil clutches!
+  .
+  .
+  Features:
+  .
+  .
+  Play as Mickey Mouse in this reimagining of the classic Sega Genesis/Mega Drive
+  game.
+  .
+  .
+  Experience aworld of wonder, brought to life with all-new graphics and magical
+  adventures.
+  .
+  .
+  Journey across five magical worlds filled with Mizrabels powerful minions.
+  .
+  .
+  Complete hidden challenges to customize Mickey with classic costumes!
+release: 2013-09-03
+players: 1
+assets.boxfront: BoxFront/Disney Castle of Illusion Starring Mickey Mouse - Original Retro Game (USA).jpg
+assets.boxback: BoxBack/Disney Castle of Illusion Starring Mickey Mouse - Original Retro Game (USA).jpg
+assets.background: Background/Disney Castle of Illusion Starring Mickey Mouse - Original Retro Game (USA).jpg
+assets.screenshot: Screenshot/Disney Castle of Illusion Starring Mickey Mouse - Original Retro Game (USA).jpg
+x-co-op: No
+
+
+game: Doki-Doki Universe (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Doki-Doki Universe (USA)/Doki-Doki Universe (USA).json
+developer: Atari
+publisher: Atari
+genre: Adventure
+description:
+  Doki-Doki Universe is a video game published and developed by HumaNature Studios
+  for the PlayStation 4, PlayStation 3, and PlayStation Vita. The game is unique
+  because it is essentially a large interactive personality test. The game starts
+  with a robot named QT3 and a talking red balloon accidentally getting left on an
+  asteroid by a human family traveling through space. Roughly forty years later
+  Alien Jeff locates QT3 and informs him that his model is being discontinued for
+  lacking humanity. Alien Jeff has been tasked with determining if QT3, an
+  emotionless and obedient robot, is capable of learning humanity. Alien Jeff then
+  takes QT3 and Balloon to a planet called home.
+release: 2013-12-10
+players: 1
+assets.boxfront: BoxFront/Doki-Doki Universe (USA).jpg
+assets.boxback: BoxBack/Doki-Doki Universe (USA).jpg
+assets.background: Background/Doki-Doki Universe (USA).jpg
+assets.screenshot: Screenshot/Doki-Doki Universe (USA).jpg
+x-co-op: No
+
+
+game: Dragon Quest Builders - Alefgard o Fukkatsu Niseyo (Japan)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Dragon Quest Builders - Alefgard o Fukkatsu Niseyo (Japan)/Dragon Quest Builders - Alefgard o Fukkatsu Niseyo (Japan).json
+developer: Square Enix
+publisher: Square Enix
+genre: Action Adventure;Sandbox
+description:
+  Generations ago, the realm of Alefgard was plunged into darkness by the terrible
+  and treacherous Dragonlord, ruller of all monsters. Mankind was robbed of the
+  power to build and forced to wander the ruins of their former home, scrounging
+  and scavenging in the dust to survive.
+  .
+  .
+  Now its up to you, a Legendary Builder chosen by the Goddess herself, to return
+  the power of creation to the people and rebuild Alefgard. Only when the wonder
+  of imagination has been returned will mankind be able to overthrow the evil
+  Dragonlord once and for all!
+  .
+  .
+  * Build for fun!
+  .
+  Gather materials, craft items, and build everything imaginable!
+  .
+  .
+  * Build for adventure!
+  .
+  Play through a tale of epic proportions in a sandbox world packed with memorable
+  characters and dangerous monsters.
+  .
+  .
+  * Build to save the world!
+  .
+  Use the power of creation in battle against the reigning Dragonlord and restore
+  peace to the shattered realm.
+release: 2016-01-28
+players: 1
+assets.boxfront: BoxFront/Dragon Quest Builders - Alefgard o Fukkatsu Niseyo (Japan).jpg
+assets.boxback: BoxBack/Dragon Quest Builders - Alefgard o Fukkatsu Niseyo (Japan).jpg
+assets.background: Background/Dragon Quest Builders - Alefgard o Fukkatsu Niseyo (Japan).jpg
+assets.screenshot: Screenshot/Dragon Quest Builders - Alefgard o Fukkatsu Niseyo (Japan).jpg
+x-co-op: No
+
+
+game: Dungeon Hunter - Alliance (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Dungeon Hunter - Alliance (USA)/Dungeon Hunter - Alliance (USA).json
+developer: Gameloft Montreal
+publisher: Gameloft
+genre: Action;Role-Playing
+description:
+  Dungeon Hunter: Alliance is a hack and slash action role-playing video game
+  developed and publishd by Gameloft in 2011. The game is a sequel to the 2009
+  iPhone game Dungeon Hunter, with the addition of a multiplayer mode and support
+  for the PlayStation Move controller.[1]
+release: 2011-04-12
+players: 1
+assets.boxfront: BoxFront/Dungeon Hunter - Alliance (USA).jpg
+assets.boxback: BoxBack/Dungeon Hunter - Alliance (USA).jpg
+assets.background: Background/Dungeon Hunter - Alliance (USA).jpg
+assets.screenshot: Screenshot/Dungeon Hunter - Alliance (USA).jpg
+x-co-op: No
+
+
+game: Dungeons & Dragons - Chronicles of Mystara (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Dungeons & Dragons - Chronicles of Mystara (USA)/Dungeons & Dragons - Chronicles of Mystara (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Role-Playing;Beat 'em Up
+description:
+  Dungeons & Dragons: Chronicles of Mystara brings reworkings of two of Capcom’s
+  classic arcade hits - Dungeons & Dragons: Tower of Doom and Dungeons & Dragons:
+  Shadow over Mystara – together in one definitive digital package.
+  .
+  Just as in the arcades, up to four players will select their character class
+  before doing battle against the mythical beasts from the Dungeons and Dragons’
+  universe with a mix of melee, range and magic attacks. Battle through a rich
+  fantasy universe with a host of new features, including HD visuals,
+  drop-in/drop-out 4 player online co-op, customizable House Rules, leaderboards,
+  and a trove of extras.
+release: 2013-06-18
+players: 4
+assets.boxfront: BoxFront/Dungeons & Dragons - Chronicles of Mystara (USA).jpg
+assets.boxback: BoxBack/Dungeons & Dragons - Chronicles of Mystara (USA).jpg
+assets.background: Background/Dungeons & Dragons - Chronicles of Mystara (USA).jpg
+assets.screenshot: Screenshot/Dungeons & Dragons - Chronicles of Mystara (USA).jpg
+x-co-op: Yes
+
+
+game: Flower (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Flower (USA)/Flower (USA).json
+developer: ThatGameCompany
+publisher: Sony Computer Entertainment
+genre: Adventure
+description:
+  The pioneers that brought you the award-winning PlayStation Network title flOw
+  are back with another concept that challenges traditional gaming conventions.
+  Flower expands the team's tradition of delivering simple gameplay, accessible
+  controls and a medium to explore emotional chords uncommon in video games. In
+  Flower, the surrounding environment, most often pushed to the background in
+  games, is pulled to the forefront and becomes the primary "character." The
+  player fades from an external and stressful world in the opening of this fresh
+  and genuine game only for PS3, and journeys through beautifully vivid
+  landscapes, changing the his surroundings and exploring nature along the way.
+  .
+  Playing as the wind, the player guides and grows a swarm of pedals by
+  interacting with other flowers and the surrounding environment. The goals and
+  journey in each level vary, but all involve flight, exploration and interaction
+  with the level. Using simple SIXAXIS wireless controls, the player guides the
+  lead petal and accumulates a swarm of flower petals as he moves at his own pace
+  within the environment, causing the on-screen world to change. Flower's gameplay
+  offers different experiences, pacing and rhythm to all players. Along the way,
+  the environment will pose challenges to the player's progress.
+  .
+  Both pastoral and at times chaotic, Flower is a visual, audio and interactive
+  escape on PS3.
+release: 2009-02-12
+players: 1
+assets.boxfront: BoxFront/Flower (USA).jpg
+assets.boxback: BoxBack/Flower (USA).jpg
+assets.background: Background/Flower (USA).jpg
+assets.screenshot: Screenshot/Flower (USA).jpg
+x-co-op: No
+
+
+game: Galaga Legions DX (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Galaga Legions DX (USA)/Galaga Legions DX (USA).json
+developer: Namco Bandai Games
+publisher: Namco Bandai Games
+genre: Shooter
+description:
+  Galaga Legions DX is a downloadable game that is part of the Galaga series. It
+  is a follow-up to the 2008 game, Galaga Legions, and the second game with the
+  Namco Generations label. The game was released for Xbox Live Arcade on June 29,
+  2011 and PlayStation Network on August 3, 2011.
+release: 2011-08-02
+players: 1
+assets.boxfront: BoxFront/Galaga Legions DX (USA).jpg
+assets.boxback: BoxBack/Galaga Legions DX (USA).jpg
+assets.background: Background/Galaga Legions DX (USA).jpg
+assets.screenshot: Screenshot/Galaga Legions DX (USA).jpg
+x-co-op: No
+
+
+game: Ghostbusters - Sanctum of Slime (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Ghostbusters - Sanctum of Slime (USA)/Ghostbusters - Sanctum of Slime (USA).json
+developer: Behavior Studios
+publisher: Atari SA
+genre: Action Adventure;General
+description:
+  Ghostbusters: Sanctum of Slime is an action-adventure video game developed by
+  Behaviour Santiago, and published by Atari.[1] The game features four-player
+  cooperative gameplay where players control Ghostbusters to defeat enemy
+  ghosts.[2] It was released on March 23, 2011 for Microsoft Windows, PlayStation
+  Network and Xbox Live Arcade.[3]
+release: 2011-03-23
+players: 4
+assets.boxfront: BoxFront/Ghostbusters - Sanctum of Slime (USA).jpg
+assets.boxback: BoxBack/Ghostbusters - Sanctum of Slime (USA).jpg
+assets.background: Background/Ghostbusters - Sanctum of Slime (USA).jpg
+assets.screenshot: Screenshot/Ghostbusters - Sanctum of Slime (USA).jpg
+x-co-op: Yes
+
+
+game: Go! Sudoku (USA) (v2.00)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Go! Sudoku (USA) (v2.00)/Go! Sudoku (USA) (v2.00).json
+developer: Sumo Digital
+publisher: Ubisoft
+genre: Puzzle;Logic
+description:
+  Up to 1000 Puzzles - Download up to 1000 puzzles with various play modes
+  including multiplayer, battle and classic Sudoku. Animated Background and Music
+  - Demonstrating the power of the PS3 system, the animated backgrounds and
+  ambient sounds are generated in real time and react to the player. Multiplayer
+  Mode - Engage in 4-player multiplayer fun.
+release: 2005-12-02
+players: 4
+assets.boxfront: BoxFront/Go! Sudoku (USA) (v2.00).jpg
+assets.boxback: BoxBack/Go! Sudoku (USA) (v2.00).jpg
+assets.background: Background/Go! Sudoku (USA) (v2.00).jpg
+assets.screenshot: Screenshot/Go! Sudoku (USA) (v2.00).jpg
+x-co-op: No
+
+
+game: Golden Axe (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Golden Axe (USA)/Golden Axe (USA).json
+developer: Sega
+publisher: Sega
+genre: Action
+description:
+  In the original game that launched the popular series, the evil Death Adder has
+  invaded your land and taken the king and princess prisoner. Three mighty
+  warriors step forward to bring the villain to justice. The powerful fighter, Ax
+  Battler, the female amazon, Tyris Flare, and the mighty dwarf, Gilius
+  Thunderhead, will use their weapons and magic to fight their way through Death
+  Adder's hordes. Along the way, they'll mount fearsome, fire-spitting beasts to
+  help even the odds. Team up with a friend and enjoy two-player simultaneous
+  gameplay for a better chance of survival.
+release: 2011-07-26
+players: 3
+assets.boxfront: BoxFront/Golden Axe (USA).jpg
+assets.boxback: BoxBack/Golden Axe (USA).jpg
+assets.background: Background/Golden Axe (USA).jpg
+assets.screenshot: Screenshot/Golden Axe (USA).jpg
+x-co-op: Yes
+
+
+game: Hard Corps - Uprising (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Hard Corps - Uprising (USA)/Hard Corps - Uprising (USA).json
+developer: Arc System Works
+publisher: Konami
+genre: Platform
+description:
+  Hard Corps: Uprising is a video game developed by Arc System Works. It is a
+  prequel to Contra: Hard Corps as well as the original Contra. Kenji Yamamoto,
+  the producer, has said that the intention is to make the Hard Corps series into
+  a brand new franchise. The player assumes role of Colonel Bahamut, along with
+  other main characters. Konami has added three additional player characters
+  (Sayuri, Harley Daniels, and Leviathan) via downloadable content. The game was
+  released on Xbox Live Arcade in February 16, 2011 and on the PlayStation Network
+  in March 15, 2011.
+  .
+  In 2613, twenty years before the events of original Contra, the world is ruled
+  by an empire known as the Commonwealth, under the reign of Tiberius. Neighboring
+  nations have suffered under the Commonwealth's oppression and resistance forces
+  rise across the land. However, so many resistance fighters have fallen to the
+  overwhelming might of the empire, that their strength is now severely
+  diminished. A group of elite soldiers rise through the ranks of the resistance
+  and band together to execute a desperate plan. The leader of this group is the
+  war hero Bahamut.
+release: 2011-03-15
+players: 2
+assets.boxfront: BoxFront/Hard Corps - Uprising (USA).jpg
+assets.boxback: BoxBack/Hard Corps - Uprising (USA).jpg
+assets.background: Background/Hard Corps - Uprising (USA).jpg
+assets.screenshot: Screenshot/Hard Corps - Uprising (USA).jpg
+x-co-op: Yes
+
+
+game: Helldivers (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Helldivers (USA)/Helldivers (USA).json
+developer: Arrowhead Game Studios
+publisher: SCEI
+genre: Shooter
+description:
+  Helldivers is a top-down shooter game developed by Arrowhead Game Studios and
+  published by Sony Computer Entertainment. The game was released for the
+  PlayStation 3, PlayStation 4 and PlayStation Vita with cross-play, on March 3,
+  2015 in North America and on March 4, 2015 in Europe, respectively. A version
+  for Microsoft Windows was also released via Steam on December 7, 2015. It
+  features couch or online co-op, or a combination of both, for up to four
+  players. Helldivers takes inspiration from military science fiction such as
+  Aliens and Starship Troopers. While solo play is possible, the intent is for two
+  to four players to cooperate on missions to enemy-controlled planets. Almost
+  every weapon or tool accessible to players can hurt their teammates, making
+  discipline and coordination paramount.
+release: 2015-03-03
+players: 4
+assets.boxfront: BoxFront/Helldivers (USA).jpg
+assets.boxback: BoxBack/Helldivers (USA).jpg
+assets.background: Background/Helldivers (USA).jpg
+assets.screenshot: Screenshot/Helldivers (USA).jpg
+x-co-op: Yes
+
+
+game: House of the Dead 4, The (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/House of the Dead 4, The (USA)/House of the Dead 4, The (USA).json
+developer: WOW Entertainment
+publisher: Sega
+genre: Horror;Shooter
+description:
+  Save the world from nuclear disaster while old enemies and evil creatures stand
+  in your way in this exciting shooting game. Enhanced graphics, co-op play, and
+  PlayStation Move motion controller compatibility bring an intense arcade
+  experience right to your living room. Play as AMS Agent James Taylor or Kate
+  Green through a series of gory levels and see if you have what it takes to save
+  the world before it's too late.
+release: 2012-04-17
+players: 2
+assets.boxfront: BoxFront/House of the Dead 4, The (USA).jpg
+assets.boxback: BoxBack/House of the Dead 4, The (USA).jpg
+assets.background: Background/House of the Dead 4, The (USA).jpg
+assets.screenshot: Screenshot/House of the Dead 4, The (USA).jpg
+x-co-op: Yes
+
+
+game: House of the Dead III, The (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/House of the Dead III, The (USA)/House of the Dead III, The (USA).json
+developer: WOW Entertainment
+publisher: Sega
+genre: Horror;Shooter
+description:
+  Run fast. Shoot faster. Straight from the arcades, this fast-paced shooting game
+  is more realistic than ever with enhanced graphics and PlayStation Move
+  compatibility. Unload shotgun rounds on relentless armies of evil creatures
+  turned loose in a post-apocalyptic world. As Lisa Rogan or Agent G, you must
+  rescue Ex-AMS Agent Thomas Rogan before the unthinkable happens. Team up or
+  battle alone through various routes filled with horrific creatures.
+release: 2012-02-14
+players: 2
+assets.boxfront: BoxFront/House of the Dead III, The (USA).jpg
+assets.boxback: BoxBack/House of the Dead III, The (USA).jpg
+assets.background: Background/House of the Dead III, The (USA).jpg
+assets.screenshot: Screenshot/House of the Dead III, The (USA).jpg
+x-co-op: Yes
+
+
+game: Hydrophobia - Prophecy (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Hydrophobia - Prophecy (USA)/Hydrophobia - Prophecy (USA).json
+developer: Dark Energy Digital Ltd.
+publisher: Dark Energy Digital Ltd.
+genre: Adventure
+description:
+  Hydrophobia is a survival-adventure video game developed and published by Dark
+  Energy Digital for Microsoft Windows, the PlayStation 3 and by Microsoft Studios
+  for Xbox Live Arcade. The game was released for Xbox Live Arcade on September
+  29, 2010,[2] as part of Xbox Live's 'Games Feast' promotion, marking the first
+  of three episodes. The PC version was released on May 9, 2011.[3] The
+  PlayStation 3 version was released on November 1, 2011 in North America and
+  November 2, 2011 in Europe.
+  .
+  The game's engine, HydroEngine, provides realistic fluid dynamics technology for
+  flowing water, allowing it to interact with the surroundings. The levels in the
+  game were designed using InfiniteWorlds; a game creation system which uses
+  bespoke procedural technology to significantly reduce file sizes, decreasing the
+  overall file size of the game.
+  .
+  Hydrophobia was met with a mixed reception, with an aggregate score of 59/100 on
+  Metacritic and 61.43% at GameRankings. Reviews have been polarized, ranging from
+  a 20% approval to 90%. Reviewers generally praised the game's dynamic water
+  system, but felt the game was too short and repetitive. The developers released
+  a title update on December 21, 2010 addressing the complaints from feedback and
+  reviews.
+release: 2011-11-01
+players: 1
+assets.boxfront: BoxFront/Hydrophobia - Prophecy (USA).jpg
+assets.boxback: BoxBack/Hydrophobia - Prophecy (USA).jpg
+assets.background: Background/Hydrophobia - Prophecy (USA).jpg
+assets.screenshot: Screenshot/Hydrophobia - Prophecy (USA).jpg
+x-co-op: No
+
+
+game: I Am Alive (USA) (En,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/I Am Alive (USA) (En,Fr,De,Es,It)/I Am Alive (USA) (En,Fr,De,Es,It).json
+developer: Darkworks
+publisher: Ubisoft
+genre: Action
+description:
+  Chicago, June 2009. A 10.3 magnitude earthquake destroys the city and shatters
+  your life as an ordinary citizen. As the rescue mysteriously fails to arrive,
+  you are trapped in an environmental and social chaos that gets worse by the
+  hour. Your only way out is to set up a massive refugee camp to hopefully attract
+  rescue's attention. You will need to find resources and organize survivors to
+  create your headquarters. In the midst of Chicago’s ruins, you’ll have to both
+  preserve and sacrifice in order to survive during 7 days. Rescue, heal, protect,
+  kill, ambush or steal. But first, try staying alive. It could happen to you, so
+  ask yourself: what would you do?
+  .
+  The city is falling apart all around you! Survive the earthquake and its
+  aftershocks, the collapsing buildings and the devastating rifts in this never
+  before seen hostile environment.\n
+  Make your way through social chaos. Evolve among other survivors in an urban
+  jungle where there are no more rules and where violent groups dictate their
+  law.\n
+  Learn to survive. Use tactics, diversion and discretion to survive against the
+  odds.\n
+  Rescue or hunt. In this new era where everyone is for himself and where water is
+  gold, hunt for precious resources, save people in distress and restore order to
+  unify survivors in one base camp.
+release: 2011-12-31
+players: 1
+assets.boxfront: BoxFront/I Am Alive (USA) (En,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/I Am Alive (USA) (En,Fr,De,Es,It).jpg
+assets.background: Background/I Am Alive (USA) (En,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/I Am Alive (USA) (En,Fr,De,Es,It).jpg
+x-co-op: No
+
+
+game: Kick-Ass - The Game (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Kick-Ass - The Game (USA)/Kick-Ass - The Game (USA).json
+developer: Frozen Codebase
+publisher: Frozen Codebase
+genre: Adventure;General
+description:
+  How come nobodys ever tried to be a superhero? When Dave Lizewski ordinary New
+  York teenager and rabid comic-book geek dons a green-and-yellow internet-bought
+  wetsuit to become the no-nonsense vigilante, Kick-Ass, he soon finds an answer
+  to his own question: because it hurts.
+  .
+  .
+  3 playable characters (Kick-Ass, Big Daddy and Hit Girl)
+  .
+  Twin Stick Shooter Action
+  .
+  Weapon Upgrades
+  .
+  12 missions with multiple environments, bosses and mini-bosses
+  .
+  Frantic superhero action!
+  .
+  Finishers
+  .
+  Sub-missions and mini-games in the form of Arena Mode.
+release: 2010-04-17
+players: 1
+assets.boxfront: BoxFront/Kick-Ass - The Game (USA).jpg
+assets.boxback: BoxBack/Kick-Ass - The Game (USA).jpg
+assets.background: Background/Kick-Ass - The Game (USA).jpg
+assets.screenshot: Screenshot/Kick-Ass - The Game (USA).jpg
+x-co-op: No
+
+
+game: Last Guy, The (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Last Guy, The (USA)/Last Guy, The (USA).json
+developer: Japan Studio
+publisher: Sony Computer Entertainment Japan
+genre: Action;Puzzle
+description:
+  Earth has been struck by a mysterious purple beam of light and everyone touched
+  by it has turned into a giant zombie. You are the chosen one, a zombie hero from
+  the Himalayan mountains, and it is up to you to rescue the last survivors on
+  Earth by leading them to safety through zombie-infested streets. Make your way
+  through 15 detailed real-world cities, shown from a classic arcade style
+  overhead view, and lead the remaining survivors to the Escape Zone before time
+  runs out in this frantic, addictive game.
+release: 2008-07-31
+players: 1
+assets.boxfront: BoxFront/Last Guy, The (USA).jpg
+assets.boxback: BoxBack/Last Guy, The (USA).jpg
+assets.background: Background/Last Guy, The (USA).jpg
+assets.screenshot: Screenshot/Last Guy, The (USA).jpg
+x-co-op: No
+
+
+game: Legasista (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Legasista (USA)/Legasista (USA).json
+developer: System Prisma
+publisher: Nippon Ichi Software
+genre: Action;Role-Playing
+description:
+  Legasista (迷宮塔路 レガシスタ, Meikyuu Touro Legasista) is a PlayStation 3 game
+  published by Nippon Ichi Software. It was released in Japan on disc in March
+  2012 then in North America and Europe exclusively as a downloadable game through
+  the PlayStation Network in August 2012. It is a dungeon crawling action
+  role-playing game. For the game's North American and European releases, it was
+  not dubbed, spoken dialog remaining in the original Japanese.
+release: 2012-08-21
+players: 1
+assets.boxfront: BoxFront/Legasista (USA).jpg
+assets.boxback: BoxBack/Legasista (USA).jpg
+assets.background: Background/Legasista (USA).jpg
+assets.screenshot: Screenshot/Legasista (USA).jpg
+x-co-op: No
+
+
+game: Magic - The Gathering - Duels of the Planeswalkers (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Magic - The Gathering - Duels of the Planeswalkers (USA)/Magic - The Gathering - Duels of the Planeswalkers (USA).json
+developer: Wizards of the Coast
+publisher: Wizards of the Coast
+genre: Strategy
+description:
+  All-new and redesigned, Magic: The Gathering® - Duels of the Planeswalkers® 2012
+  takes last year’s massive hit game to even greater heights with better graphics,
+  more options, and new challenges!
+  .
+  Face off against the AI, or gather your allies for the new multiplayer format:
+  Archenemy, where you team up to take down a boss opponent. And if one of your
+  fellow Planeswalkers drops out, no problem–the AI will drop in for uninterrupted
+  action!
+  .
+  Featuring ten unique decks, Duels of the Planeswalkers 2012 also lets you
+  customize those decks. As you progress in the game, you can enhance your deck by
+  swapping in new, unlockable cards!
+  .
+  Gather your allies. A challenge awaits.
+release: 2011-07-14
+players: 2
+assets.boxfront: BoxFront/Magic - The Gathering - Duels of the Planeswalkers (USA).jpg
+assets.boxback: BoxBack/Magic - The Gathering - Duels of the Planeswalkers (USA).jpg
+assets.background: Background/Magic - The Gathering - Duels of the Planeswalkers (USA).jpg
+assets.screenshot: Screenshot/Magic - The Gathering - Duels of the Planeswalkers (USA).jpg
+x-co-op: Yes
+
+
+game: Marvel Puzzle Quest (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Marvel Puzzle Quest (USA)/Marvel Puzzle Quest (USA).json
+developer: Demiurge Studios
+publisher: D3Publisher
+genre: Puzzle;Matching
+description:
+  The best in match-3 puzzle gameplay meets Marvel's biggest Super Heroes and
+  Super Villains in the most epic puzzle adventure game out on your phone, tablet
+  and PC! Marvel Puzzle Quest combines your favorite Marvel characters with deep
+  RPG leveling, player-vs-player tournaments, Alliances, and much more. It's time
+  to unleash your inner Super Hero and wage war against your enemies.
+release: 2013-10-03
+players: 1
+assets.boxfront: BoxFront/Marvel Puzzle Quest (USA).jpg
+assets.boxback: BoxBack/Marvel Puzzle Quest (USA).jpg
+assets.background: Background/Marvel Puzzle Quest (USA).jpg
+assets.screenshot: Screenshot/Marvel Puzzle Quest (USA).jpg
+x-co-op: No
+
+
+game: Mega Man 10 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Mega Man 10 (USA)/Mega Man 10 (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Platform
+description:
+  The year is 20XX and a suspicious outbreak of Roboenza, a Robot Flu, has broken
+  out. It spreads through the world like wildfire bringing down robots everywhere.
+  Infected robots have rampaged out of control, destroying the city and holding it
+  hostage! Who’s behind this mess? It’s up to Mega Man to take on this sinister
+  threat and get to the bottom of this viral mystery.
+  .
+  Mega Man 10 once again brings back the nostalgic perfection of classic 2D Mega
+  Man gameplay, embracing retro platform action and NES-inspired old-school
+  graphics. Through-out Mega Man’s adventure he’ll take on the malfunctioning
+  infected robots and classic-style bosses that can only found in Mega Man games.
+  Each one has their own unique weapons and vulnerabilities. Great new additions
+  to Mega Man 10 include the option to play as fan-favorite character Proto Man
+  from the start, as well as an all new "Easy Mode" which will allow more fans to
+  indulge in the challenges that make the series great. Additionally, “Mega Man
+  Challenges” mode will allow players to practice their skills and prepare for the
+  hair-raising adventures ahead of them.
+release: 2010-03-09
+players: 1
+assets.boxfront: BoxFront/Mega Man 10 (USA).jpg
+assets.boxback: BoxBack/Mega Man 10 (USA).jpg
+assets.background: Background/Mega Man 10 (USA).jpg
+assets.screenshot: Screenshot/Mega Man 10 (USA).jpg
+x-co-op: No
+
+
+game: Mega Man 9 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Mega Man 9 (USA)/Mega Man 9 (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Platform
+description:
+  Mega Man fans, your wait is over! The classic Blue Bomber that debuted in 1987
+  is back with the ninth installment in the classic series. It's a new adventure
+  for Mega Man all done in an 8-bit style - graphics, music, and gameplay are all
+  like you remember them!
+  .
+  Peace at last in the future... but wait! Robots are rampaging across the cities,
+  and they've been built by... Dr. Light? Dr. Wily insists that he is not to
+  blame, and asks for contributions to his Swiss Bank account to build his own
+  robots to stop Dr. Light's robots and save the world. Mega Man knows that
+  something fishy is up, and sets out to stop these new eight robots himself, and
+  clear his creator's name!
+release: 2008-09-25
+players: 1
+assets.boxfront: BoxFront/Mega Man 9 (USA).jpg
+assets.boxback: BoxBack/Mega Man 9 (USA).jpg
+assets.background: Background/Mega Man 9 (USA).jpg
+assets.screenshot: Screenshot/Mega Man 9 (USA).jpg
+x-co-op: No
+
+
+game: Might & Magic - Clash of Heroes (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Might & Magic - Clash of Heroes (USA)/Might & Magic - Clash of Heroes (USA).json
+developer: Capybara Games
+publisher: Ubisoft
+genre: Puzzle
+description:
+  Might and Magic Clash of Heroes takes place 40 years before the Heroes V saga.
+  Scattered across five different regions of Ashan, 5 special heroes must travel
+  their own dangerous paths to grow in strength, unravel a demonic plot, and
+  ultimately save the world from Chaos.
+release: 2011-04-13
+players: 2
+assets.boxfront: BoxFront/Might & Magic - Clash of Heroes (USA).jpg
+assets.boxback: BoxBack/Might & Magic - Clash of Heroes (USA).jpg
+assets.background: Background/Might & Magic - Clash of Heroes (USA).jpg
+assets.screenshot: Screenshot/Might & Magic - Clash of Heroes (USA).jpg
+x-co-op: Yes
+
+
+game: NiGHTS into Dreams... (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/NiGHTS into Dreams... (USA)/NiGHTS into Dreams... (USA).json
+developer: Sonic Team
+publisher: Sega
+genre: Action;Adventure
+description:
+  Slip off into the dream world and go on an aerial adventure as NiGHTS in this
+  classic Saturn remake. Collect Ideya (colored orbs), rack up points, and battle
+  bosses to help Elliot and Claris save Nightopia from Wizeman the Wicked. With
+  enhanced graphics, achievements, leaderboards, and playable content from
+  Christmas NiGHTS, this beloved title is back and better than ever.
+release: 2012-10-02
+players: 2
+assets.boxfront: BoxFront/NiGHTS into Dreams... (USA).jpg
+assets.boxback: BoxBack/NiGHTS into Dreams... (USA).jpg
+assets.background: Background/NiGHTS into Dreams... (USA).jpg
+assets.screenshot: Screenshot/NiGHTS into Dreams... (USA).jpg
+x-co-op: No
+
+
+game: Nucleus (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Nucleus (USA)/Nucleus (USA).json
+developer: Kuju Entertainment
+publisher: SCEA
+genre: Action;Shooter;Shoot-'Em-Up;Top-Down
+description:
+  Nucleus is a mechanics-based shooter in which the players must take on an ever
+  expanding and dividing organism ('The Scourge') viewed entirely through a
+  microscope on a cellular level. Take control of your remote unit and reduce the
+  infestation.
+release: 2007-07-06
+players: 2
+assets.boxfront: BoxFront/Nucleus (USA).jpg
+assets.boxback: BoxBack/Nucleus (USA).jpg
+assets.background: Background/Nucleus (USA).jpg
+assets.screenshot: Screenshot/Nucleus (USA).jpg
+x-co-op: Yes
+
+
+game: Pinballistik (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Pinballistik (USA)/Pinballistik (USA).json
+developer: Creat Studios
+publisher: Creat Studios
+genre: Action;Pinball
+description:
+  The greatest multi-player pinball game ever is now completely FREE!!
+  .
+  .
+  Pinball evolves into Battle Pinball! PINBALLISTIK brings more thrills, action
+  and effects to traditional pinball. The bumpers, kickers, flippers, targets and
+  more are enhanced, animated and improved with amazing physics and story
+  features. Engage your friends or the AI side-by-side on the Battle Tables. Blast
+  your way onto your opponents table for extra points. Take control of their
+  balls, switch their color, and increase your attack. Play the authentic, classic
+  Single Tables for an unforgettable experience.
+  .
+  .
+  Mosey through the Wild West on the Circle the Wagons table. Visit the saloon for
+  a game of cards or target practice. Lose your opponent in a sand storm, load up
+  the pistol for Revolver Multiball and blast your opponent.
+release: 2011-11-01
+players: 1
+assets.boxfront: BoxFront/Pinballistik (USA).jpg
+assets.boxback: BoxBack/Pinballistik (USA).jpg
+assets.background: Background/Pinballistik (USA).jpg
+assets.screenshot: Screenshot/Pinballistik (USA).jpg
+x-co-op: No
+
+
+game: PixelJunk 4am (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/PixelJunk 4am (USA)/PixelJunk 4am (USA).json
+developer: Q-Games
+publisher: Q-Games
+genre: Music
+description:
+  PixelJunk 4am, formerly called PixelJunk Lifelike, is a music video game and
+  music visualizer developed by Q-Games. It is part of the PixelJunk series of
+  downloadable games for the PlayStation 3. PixelJunk 4am makes use of the
+  PlayStation Move controller to visualize included music (by Baiyon) and users'
+  own music. The first trailer was released in September 2010. The game was
+  released on May 15, 2012.
+release: 2012-05-15
+players: 1
+assets.boxfront: BoxFront/PixelJunk 4am (USA).jpg
+assets.boxback: BoxBack/PixelJunk 4am (USA).jpg
+assets.background: Background/PixelJunk 4am (USA).jpg
+assets.screenshot: Screenshot/PixelJunk 4am (USA).jpg
+x-co-op: No
+
+
+game: PlayStation Home (World) (v1.00, PS3 v2.40)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/PlayStation Home (World) (v1.00, PS3 v2.40)/PlayStation Home (World) (v1.00, PS3 v2.40).json
+developer: SCE Cambridge Studio
+publisher: SCEA
+genre: Life Simulation
+description:
+  PS Home is a 3D social gaming service for the ever-growing community of
+  PLAYSTATION 3 users. Set in a beautifully rendered High Definition world, you'll
+  be able to create a unique avatar and interact with other PS3 users, sharing
+  game experiences and creating your own personal space.
+  .
+  Fitting seamlessly into the PS3 experience, PS Home is unique and only available
+  on PS3 as a free download from PLAYSTATION Store, and can be launched directly
+  from the Home Menu on PS3.
+release: 2008-12-11
+players: 1
+assets.boxfront: BoxFront/PlayStation Home (World) (v1.00, PS3 v2.40).jpg
+assets.boxback: BoxBack/PlayStation Home (World) (v1.00, PS3 v2.40).jpg
+assets.background: Background/PlayStation Home (World) (v1.00, PS3 v2.40).jpg
+assets.screenshot: Screenshot/PlayStation Home (World) (v1.00, PS3 v2.40).jpg
+x-co-op: Yes
+
+
+game: PlayStation Home (World) (v1.00, PS3 v4.40)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/PlayStation Home (World) (v1.00, PS3 v4.40)/PlayStation Home (World) (v1.00, PS3 v4.40).json
+developer: SCE Cambridge Studio
+publisher: SCEA
+genre: Life Simulation
+description:
+  PS Home is a 3D social gaming service for the ever-growing community of
+  PLAYSTATION 3 users. Set in a beautifully rendered High Definition world, you'll
+  be able to create a unique avatar and interact with other PS3 users, sharing
+  game experiences and creating your own personal space.
+  .
+  Fitting seamlessly into the PS3 experience, PS Home is unique and only available
+  on PS3 as a free download from PLAYSTATION Store, and can be launched directly
+  from the Home Menu on PS3.
+release: 2008-12-11
+players: 1
+assets.boxfront: BoxFront/PlayStation Home (World) (v1.00, PS3 v4.40).jpg
+assets.boxback: BoxBack/PlayStation Home (World) (v1.00, PS3 v4.40).jpg
+assets.background: Background/PlayStation Home (World) (v1.00, PS3 v4.40).jpg
+assets.screenshot: Screenshot/PlayStation Home (World) (v1.00, PS3 v4.40).jpg
+x-co-op: Yes
+
+
+game: PlayStation Home (World) (v1.01)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/PlayStation Home (World) (v1.01)/PlayStation Home (World) (v1.01).json
+developer: SCE Cambridge Studio
+publisher: SCEA
+genre: Life Simulation
+description:
+  PS Home is a 3D social gaming service for the ever-growing community of
+  PLAYSTATION 3 users. Set in a beautifully rendered High Definition world, you'll
+  be able to create a unique avatar and interact with other PS3 users, sharing
+  game experiences and creating your own personal space.
+  .
+  Fitting seamlessly into the PS3 experience, PS Home is unique and only available
+  on PS3 as a free download from PLAYSTATION Store, and can be launched directly
+  from the Home Menu on PS3.
+release: 2008-12-11
+players: 1
+assets.boxfront: BoxFront/PlayStation Home (World) (v1.01).jpg
+assets.boxback: BoxBack/PlayStation Home (World) (v1.01).jpg
+assets.background: Background/PlayStation Home (World) (v1.01).jpg
+assets.screenshot: Screenshot/PlayStation Home (World) (v1.01).jpg
+x-co-op: Yes
+
+
+game: PlayStation Home (World) (v1.17)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/PlayStation Home (World) (v1.17)/PlayStation Home (World) (v1.17).json
+developer: SCE Cambridge Studio
+publisher: SCEA
+genre: Life Simulation
+description:
+  PS Home is a 3D social gaming service for the ever-growing community of
+  PLAYSTATION 3 users. Set in a beautifully rendered High Definition world, you'll
+  be able to create a unique avatar and interact with other PS3 users, sharing
+  game experiences and creating your own personal space.
+  .
+  Fitting seamlessly into the PS3 experience, PS Home is unique and only available
+  on PS3 as a free download from PLAYSTATION Store, and can be launched directly
+  from the Home Menu on PS3.
+release: 2008-12-11
+players: 1
+assets.boxfront: BoxFront/PlayStation Home (World) (v1.17).jpg
+assets.boxback: BoxBack/PlayStation Home (World) (v1.17).jpg
+assets.background: Background/PlayStation Home (World) (v1.17).jpg
+assets.screenshot: Screenshot/PlayStation Home (World) (v1.17).jpg
+x-co-op: Yes
+
+
+game: Rain (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Rain (USA)/Rain (USA).json
+developer: Acquire
+publisher: Sony Computer Entertainment
+genre: Adventure
+description:
+  Rain (stylized as rain), known in Asia as Lost in the Rain, is an adventure
+  video game developed by SCE Japan Studio published by Sony Computer
+  Entertainment for the PlayStation 3 video game console. The game was revealed at
+  Gamescom and was released as a digital download on the PlayStation Network in
+  2013. While the digital version is available in all regions, the games physical
+  disc based release was limited to in Japan, with only Japanese language options,
+  and a Hong Kong and Taiwan release containing English and Traditional Chinese
+  language options. This last version is the only way to acquire an English
+  language copy of the game in physical form, making it a sought after
+  collectible.
+release: 2013-10-01
+players: 1
+assets.boxfront: BoxFront/Rain (USA).jpg
+assets.boxback: BoxBack/Rain (USA).jpg
+assets.background: Background/Rain (USA).jpg
+assets.screenshot: Screenshot/Rain (USA).jpg
+x-co-op: No
+
+
+game: Ratchet & Clank - Full Frontal Assault (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Ratchet & Clank - Full Frontal Assault (USA)/Ratchet & Clank - Full Frontal Assault (USA).json
+developer: Insomniac Games
+publisher: Sony Computer Entertainment
+genre: Action;Platform;Strategy
+description:
+  Ratchet, Clank, and Captain Qwark embark on their newest adventure in Ratchet &
+  Clank: Full Frontal Assault. Packed with replay value, the game features online
+  / split-screen co-op and online competitive modes.
+  .
+  This fun-sized adventure offers a campaign you can play single-player or in
+  co-op (split screen or online). It’s classic Ratchet & Clank gameplay with a
+  base defense twist. Even after you play it once, you’ll want to try again to
+  improve your scores and times.
+  .
+  On top of the campaign, Ratchet & Clank: Full Frontal Assault has a multiplayer
+  mode that you can play 1v1 or 2v2. And, for those of you who also own a
+  PlayStation Vita system, the game supports cross-buy, cross-save, and
+  competitive multiplayer cross-play.
+release: 2012-11-27
+players: 1
+assets.boxfront: BoxFront/Ratchet & Clank - Full Frontal Assault (USA).jpg
+assets.boxback: BoxBack/Ratchet & Clank - Full Frontal Assault (USA).jpg
+assets.background: Background/Ratchet & Clank - Full Frontal Assault (USA).jpg
+assets.screenshot: Screenshot/Ratchet & Clank - Full Frontal Assault (USA).jpg
+x-co-op: No
+
+
+game: Ratchet - Deadlocked HD (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Ratchet - Deadlocked HD (USA)/Ratchet - Deadlocked HD (USA).json
+developer: Insomniac Games
+publisher: SCEA
+genre: Action;Shooter;Third-Person;Arcade
+description:
+  In Ratchet: Deadlocked, Ratchet and Clank are captured and forced to compete on
+  an underground reality combat sport show. The show, which features abducted
+  heroes fighting for their lives against a gruesome gang of deadly Exterminators,
+  is run by a deranged media mogul named Gleeman Vox, who intends to use Ratchet
+  and Clank as his next contestants. It doesn't take Vox long to realize that
+  Ratchet is the most promising contestant the show has ever seen. Vox subjects
+  our hero to a series of deadly battles and elaborate games of death, much to the
+  delight of the show's enormous audience. To keep himself and his friends alive,
+  Ratchet has no choice but to participate in the games and keep driving up the
+  show's ratings with spectacular victories -- at least until our heroes can
+  figure out a way to break free from Vox's control, the explosive Deadlock collar
+  fastened to his neck, and bring the mighty Vox Network crashing down. Ratchet:
+  Deadlocked features non-linear gameplay, allowing players greater freedom to
+  choose their missions. In addition, all single-player levels will be available
+  for multiplayer use. With much of the combat taking place in battlefields and
+  arenas, gameplay will be more sports-oriented and will include announcer
+  commentary. Featuring a new mission-structure approach, players will be rewarded
+  with a constant progression of items such as weapons, armor and health. Players
+  can take advantage of the new co-op gameplay functionality available throughout
+  the game by choosing either single-player or multiplayer story mode. In
+  addition, squad-based gameplay will enable players to demolish the competition
+  by commandeering their allied combat bots through critical and strategic
+  battles.
+release: 2005-10-25
+players: 1
+assets.boxfront: BoxFront/Ratchet - Deadlocked HD (USA).jpg
+assets.boxback: BoxBack/Ratchet - Deadlocked HD (USA).jpg
+assets.background: Background/Ratchet - Deadlocked HD (USA).jpg
+assets.screenshot: Screenshot/Ratchet - Deadlocked HD (USA).jpg
+x-co-op: No
+
+
+game: Resident Evil - Code - Veronica X (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Resident Evil - Code - Veronica X (USA)/Resident Evil - Code - Veronica X (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Horror
+description:
+  Raccoon City was just the beginning. Claire and Chris Redfield’s nightmare
+  continues as the siblings fight to survive against zombies and other
+  monstrosities within Umbrella’s deadly facilities. Scavenge for weapons and
+  precious ammo to battle undead canines, a gigantic subterranean worm, and other
+  terrors lurking in the shadows. Explore the mysterious Rockfort Island facility
+  and the freezing Antarctic Base for clues exposing the Umbrella Corporation’s
+  sordid goals and the truth behind the mysterious and unsettling Ashford twins.
+release: 2011-09-27
+players: 1
+assets.boxfront: BoxFront/Resident Evil - Code - Veronica X (USA).jpg
+assets.boxback: BoxBack/Resident Evil - Code - Veronica X (USA).jpg
+assets.background: Background/Resident Evil - Code - Veronica X (USA).jpg
+assets.screenshot: Screenshot/Resident Evil - Code - Veronica X (USA).jpg
+x-co-op: No
+
+
+game: Resident Evil - The Darkside Chronicles HD (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Resident Evil - The Darkside Chronicles HD (USA)/Resident Evil - The Darkside Chronicles HD (USA).json
+developer: Cavia Inc.
+publisher: Capcom
+genre: Action;Shooter;Light Gun
+description:
+  Resident Evil: The Darkside Chronicles's story is based on "Resident Evil 2" and
+  includes the popular characters, Leon S Kenney and Claire Redfield. Its on-rails
+  style gameplay and active camera creates a more immersive Chronicles survival
+  experience. As in the last installment, this is a first-person game with extreme
+  shooting gameplay and interactive pathways. Filling in many of the missing
+  pieces of storyline that were not covered in the original Umbrella Chronicles,
+  Resident Evil: The Darkside Chronicles gives hardcore fans the chance to re-live
+  some of the most classic moments of the Resident Evil franchise, while allowing
+  new players to take advantage of the intense action-horror experience only
+  possible on the Wii. Gamers can choose to take on their enemies with the help of
+  an A.I.-controlled character or enlist the help of a friend to fight via two-
+  player co-op. Adding new dimension and strategy to the arcade-style gameplay in
+  the Chronicles experience, the new Evade system will utilize the Wii Remote for
+  a more intense experience when fighting enemies.
+release: 2009-11-17
+players: 2
+assets.boxfront: BoxFront/Resident Evil - The Darkside Chronicles HD (USA).jpg
+assets.boxback: BoxBack/Resident Evil - The Darkside Chronicles HD (USA).jpg
+assets.background: Background/Resident Evil - The Darkside Chronicles HD (USA).jpg
+assets.screenshot: Screenshot/Resident Evil - The Darkside Chronicles HD (USA).jpg
+x-co-op: Yes
+
+
+game: Resident Evil - The Umbrella Chronicles HD (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Resident Evil - The Umbrella Chronicles HD (USA)/Resident Evil - The Umbrella Chronicles HD (USA).json
+developer: Cavia Inc.
+publisher: Capcom
+genre: Action;Shooter;Light Gun
+description:
+  Get ready for a Resident Evil guided shooting experience!
+  .
+  .
+  Use the PlayStation®Move or traditional wireless controller to take down zombies
+  in HD re-mastered graphics for a new kind of Resident Evil horror experience.
+  .
+  .
+  Relive events from the original series through new perspectives with classic
+  characters.
+  .
+  .
+  You may think you know everything about the Umbrella Corporation, but The
+  Umbrella Chronicles will lay bare this mysterious company's dark dealings.
+release: 2007-11-13
+players: 2
+assets.boxfront: BoxFront/Resident Evil - The Umbrella Chronicles HD (USA).jpg
+assets.boxback: BoxBack/Resident Evil - The Umbrella Chronicles HD (USA).jpg
+assets.background: Background/Resident Evil - The Umbrella Chronicles HD (USA).jpg
+assets.screenshot: Screenshot/Resident Evil - The Umbrella Chronicles HD (USA).jpg
+x-co-op: Yes
+
+
+game: Resident Evil 0 HD (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Resident Evil 0 HD (USA)/Resident Evil 0 HD (USA).json
+developer: Flagship
+publisher: Capcom
+genre: Action Adventure;Survival
+description:
+  The year is 1998 and reports have begun mounting about unusual murders on the
+  outskirts of Raccoon City. The city's special forces division, S.T.A.R.S., sends
+  Bravo Team to investigate. Among the six team members is rookie Rebecca
+  Chambers.
+  .
+  .
+  En route to the murder scene, their helicopter suddenly experiences engine
+  trouble and is forced to make a crash landing in the forest.After the rough
+  landing, the team finds an overturned prisoner transport vehicle with the
+  brutally murdered bodies of military police scattered close by.
+  .
+  .
+  A document found amongst the wreckage indicates they were transporting a
+  prisoner who was wanted for murder: ex-lieutenant Billy Coen.Team leader Enrico
+  tells everyone to split up to search the area. Rebecca searches the dark forest
+  alone and eventually stumbles upon a train stopped on the tracks. She enters the
+  train unaware of the nightmare that awaits her inside.
+release: 2002-11-12
+players: 1
+assets.boxfront: BoxFront/Resident Evil 0 HD (USA).jpg
+assets.boxback: BoxBack/Resident Evil 0 HD (USA).jpg
+assets.background: Background/Resident Evil 0 HD (USA).jpg
+assets.screenshot: Screenshot/Resident Evil 0 HD (USA).jpg
+x-co-op: No
+
+
+game: Resident Evil 4 HD (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Resident Evil 4 HD (USA)/Resident Evil 4 HD (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Horror;Shooter
+description:
+  Resident Evil 4, the gold standard of the survival horror genre, finally arrives
+  on the PlayStation Store!
+  .
+  Six years after the destruction of Raccoon City, Leon Kennedy, now an agent with
+  the US Secret Service, is sent on a rescue mission in Europe. His target is
+  Ashley Graham, the president's daughter. Leon locates a man in a remote house in
+  the mountains and inquires about Ashley's whereabouts, but receives no answer.
+  Suddenly, the man turns and attempts to strike Leon! Visions of the horror of
+  Raccoon City flood Leon's mind as he realizes his nightmare has not yet ended.
+release: 2011-09-20
+players: 1
+assets.boxfront: BoxFront/Resident Evil 4 HD (USA).jpg
+assets.boxback: BoxBack/Resident Evil 4 HD (USA).jpg
+assets.background: Background/Resident Evil 4 HD (USA).jpg
+assets.screenshot: Screenshot/Resident Evil 4 HD (USA).jpg
+x-co-op: No
+
+
+game: Resident Evil HD (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Resident Evil HD (USA)/Resident Evil HD (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Horror
+description:
+  Turn out the lights. Lock the Doors... Live the nightmare.
+  .
+  Racoon City. Secluded mountain community, plagued by a storm of vicious attacks,
+  is completely overrun. Mutant beasts, blood-thirsty zombies infest the
+  landscape. You are S.T.A.R.S - Special Tactics and Rescue Squad. Your mission:
+  investigate the ominous mansion at the core of the horrific disaster. Uncover
+  secrets behind a radical, genetic research facility. With unspeakable horrors
+  lurking around every corner, the ultimate test may be just to make it out alive!
+release: 2015-01-20
+players: 1
+assets.boxfront: BoxFront/Resident Evil HD (USA).jpg
+assets.boxback: BoxBack/Resident Evil HD (USA).jpg
+assets.background: Background/Resident Evil HD (USA).jpg
+assets.screenshot: Screenshot/Resident Evil HD (USA).jpg
+x-co-op: No
+
+
+game: Rocket Knight (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Rocket Knight (USA)/Rocket Knight (USA).json
+developer: Climax Studios
+publisher: Konami
+genre: Action;Platform
+description:
+  Rocket Knight (ロケットナイト Roketto Naito?) is a 2010 2.5D platforming video game
+  developed by Climax Studios and published by Konami for the Xbox Live Arcade,
+  PlayStation Network and Steam. The game was released on May 12, 2010 on all
+  platforms, with the exception of the PSN release in North America, which was
+  released on May 18, 2010. It wasn't released in Europe for PC.
+  .
+  Rocket Knight is a revival of the Sparkster series, which first began with
+  Rocket Knight Adventures. The game is a sequel to the Sega Genesis game
+  Sparkster: Rocket Knight Adventures 2, and not a remake of Rocket Knight
+  Adventures.[2]
+release: 2010-05-11
+players: 1
+assets.boxfront: BoxFront/Rocket Knight (USA).jpg
+assets.boxback: BoxBack/Rocket Knight (USA).jpg
+assets.background: Background/Rocket Knight (USA).jpg
+assets.screenshot: Screenshot/Rocket Knight (USA).jpg
+x-co-op: No
+
+
+game: Rush'N Attack - Ex-Patriot (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Rush'N Attack - Ex-Patriot (USA)/Rush'N Attack - Ex-Patriot (USA).json
+developer: Vatra Games
+publisher: Konami Digital Entertainment
+genre: Action;Platform
+description:
+  Rush'n Attack: Ex-Patriot is inspired by many of the action gameplay elements
+  from the original Rush'n Attack. The game is played from a 2.5D perspective,
+  with players being able to move horizontally and vertically. The game has
+  several new features over its predecessor such as non-linear levels,
+  stealth-based combat, attack combos and usable equipment such as gas masks and
+  night vision goggles. Associate Producer James Wong stated in an interview that
+  the original game was "wave after wave of enemies" and that the development team
+  sought to "go a little deeper" while retaining the "pick up and play nature of
+  the original game." The game spans three large levels that are traversed both
+  horizontally and vertically.
+  .
+  The player character is initially armed only with a knife, but can pick up other
+  temporary-use weaponry such as grenades, rifles and rocket launchers. The game
+  sometimes requires the player character to use stealth to avoid enemy units or
+  security cameras. Triggering any alarm will result in nearby enemies rushing to
+  the source of the alarm trigger. Alarms can by triggered by making too much
+  noise or by being noticed by one of the security cameras within the game's
+  setting. In a departure from Rush'n Attack, the player character is given a
+  health bar instead of the original one hit death.
+  .
+  shank combos are the primary way in which players can earn points.The combat
+  system is based on systema, a Russian martial art. As the character progresses
+  new combos can be unlocked. Chaining combos together will result in the player
+  gaining more points earned. The character can also dispatch enemies using
+  stealth tactics. Generally stealth kills reward the player with a higher score.
+  Stealth kills can be performed by hiding in dark areas or by entering dark
+  doorways, then exiting for the kill as an enemy passes.
+release: 2011-03-29
+players: 1
+assets.boxfront: BoxFront/Rush'N Attack - Ex-Patriot (USA).jpg
+assets.boxback: BoxBack/Rush'N Attack - Ex-Patriot (USA).jpg
+assets.background: Background/Rush'N Attack - Ex-Patriot (USA).jpg
+assets.screenshot: Screenshot/Rush'N Attack - Ex-Patriot (USA).jpg
+x-co-op: No
+
+
+game: Shake Spears! (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Shake Spears! (USA)/Shake Spears! (USA).json
+developer: Alawar Entertainment
+publisher: Alawar Entertainment
+genre: Action
+description:
+  Shake Spears is a game of GLORY, HONOR, and FAME! Become a valiant knight and
+  enter tournaments to compete for the heart of a beautiful lady. Travel through
+  four worlds of wonder, win battles in 20 cities, and beat challenging bosses in
+  this epic game. It's time to become a hero for the ages!
+  .
+  Take out opponents with well-aimed strikes in knightly competitions of strategy
+  and precision! Only a steady hand and a trusty steed can guarantee your victory!
+  Upgrade your skills, armor, and weapons, and remember to use a dash of magic to
+  overcome your enemies. Will you answer the call of destiny and become the most
+  honored knight in the land?
+release: 2014-12-23
+players: 1
+assets.boxfront: BoxFront/Shake Spears! (USA).jpg
+assets.boxback: BoxBack/Shake Spears! (USA).jpg
+assets.background: Background/Shake Spears! (USA).jpg
+assets.screenshot: Screenshot/Shake Spears! (USA).jpg
+x-co-op: No
+
+
+game: Simpsons, The - Arcade Game (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Simpsons, The - Arcade Game (USA)/Simpsons, The - Arcade Game (USA).json
+developer: Konami
+publisher: Konami
+genre: Role-Playing;Beat 'em Up
+description:
+  Waylon Smithers has just stolen a diamond from Springfield Jewelers for Mr.
+  Burns. While trying to make a getaway, he crashes into Homer, which knocks the
+  diamond out of his hand. Maggie catches it in her mouth, prompting Smithers to
+  grab her and run off. The Simpsons decide to go after him, but Mr. Burns has
+  tons of henchmen, who want to prevent the family getting their daughter back.
+  .
+  The Simpsons is basically a side-scrolling beat-em-up featuring the characters
+  from The Simpsons TV show. The player can choose to play as each of the four
+  Simpson characters. Homer, who punches and kicks; Marge, who swings her vacuum
+  cleaner; Bart, who wields his skateboard; and Lisa, who uses a jump rope as a
+  whip. Other weapons such as hammers and bowling balls are also available to use.
+  The game's levels are Downtown Springfield, Krustyland, Springfield Discount
+  Cemetery, Moe's Tavern, Springfield Gorge, Dreamland, the Channel 6 studio, and
+  the Power Plant. Each level ends with a boss whose speed and strength will
+  increase after taking a certain amount of damage. End level bosses are the
+  wrestler Professor Werner von Brawn, a hot air balloon shaped like Krusty the
+  Clown, a pair of bouncers, a drunk at Moe's Tavern, a henchman in a bear suit,
+  an imaginary, gigantic bowling ball, and a martial arts sensei dressed like a
+  kabuki actor. There's also the showdown finale against Smithers and Mr. Burns in
+  a robotic outfit.
+  .
+  Between levels, the player can compete against the other characters in two
+  mini-games to be first to complete a task (inflating a balloon and waking up
+  their character).
+release: 2012-02-07
+players: 4
+assets.boxfront: BoxFront/Simpsons, The - Arcade Game (USA).jpg
+assets.boxback: BoxBack/Simpsons, The - Arcade Game (USA).jpg
+assets.background: Background/Simpsons, The - Arcade Game (USA).jpg
+assets.screenshot: Screenshot/Simpsons, The - Arcade Game (USA).jpg
+x-co-op: Yes
+
+
+game: Slam Bolt Scrappers (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Slam Bolt Scrappers (USA)/Slam Bolt Scrappers (USA).json
+developer: Fire Hose Games
+publisher: Sony Online Entertainment
+genre: Puzzle;Action
+description:
+  Slam Bolt Scrappers is a puzzle video game produced by independent developer
+  Fire Hose Games. Players control characters who fight enemies in a beat'em up
+  style and build towers to destroy other players. The game blends aspects of
+  several video game genres including puzzle, action, and strategy.[2] Slam Bolt
+  Scrappers was released on March 15, 2011 for digital download on PlayStation
+  Network.[3]
+release: 2011-03-15
+players: 1
+assets.boxfront: BoxFront/Slam Bolt Scrappers (USA).jpg
+assets.boxback: BoxBack/Slam Bolt Scrappers (USA).jpg
+assets.background: Background/Slam Bolt Scrappers (USA).jpg
+assets.screenshot: Screenshot/Slam Bolt Scrappers (USA).jpg
+x-co-op: No
+
+
+game: Sonic CD (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Sonic CD (USA)/Sonic CD (USA).json
+developer: Sonic Team
+publisher: Sega
+genre: Platform
+description:
+  Sonic the Hedgehog CD (ソニック・ザ・ヘッジホッグCD Sonikku za Hejjihoggu Shī Dī?), or Sonic
+  CD (ソニックCD Sonikku Shī Dī?), is a platform video game developed by Sonic Team
+  and published by Sega originally for the Sega/Mega-CD in 1993. It is the first
+  game in the Sonic series to make use of the CD-ROM format, featuring high
+  quality audio and full motion video. Development began in Japan around the same
+  time as Sonic the Hedgehog 2 in the United States. Originally, the games had
+  many similarities, but over time became vastly different projects.[3]
+  .
+  The story of Sonic CD follows Sonic the Hedgehog as he utilizes time travel to
+  save Amy Rose and Little Planet from Doctor Eggman and Metal Sonic. The game
+  features the debut appearances of Amy Rose and Metal Sonic, both of whom have
+  gone on to become recurring characters in the Sonic series. Time travel is a key
+  aspect to both the story and gameplay, with nearly every stage containing four
+  different variations (one for each time period) featuring alternate stage
+  layouts, music, and graphics.
+  .
+  Sonic CD received critical acclaim, being considered both one of the best
+  platform and Sega/Mega-CD games of all-time.[4][5][6] It was ported to Microsoft
+  Windows 9x as part of the Sega PC brand in 1996, and to both the PlayStation 2
+  and GameCube as part of the Sonic Gems Collection in 2005. An enhanced port of
+  the game was also released for Xbox Live Arcade, PlayStation Network, iOS,
+  Android, Windows, Windows Phone, and Ouya.
+release: 2011-12-20
+players: 1
+assets.boxfront: BoxFront/Sonic CD (USA).jpg
+assets.boxback: BoxBack/Sonic CD (USA).jpg
+assets.background: Background/Sonic CD (USA).jpg
+assets.screenshot: Screenshot/Sonic CD (USA).jpg
+x-co-op: No
+
+
+game: Sonic The Fighters (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Sonic The Fighters (USA)/Sonic The Fighters (USA).json
+developer: Sega AM2
+publisher: Sega
+genre: Action;Fighting;3D
+description:
+  Sonic Championship is a 3D fighting game, featuring characters from the Sonic
+  the Hedgehog franchise. The background story is that Doctor Eggman built the
+  Death Egg II, a new version of his facility that appeared in previous games.
+  Stopping him requires Chaos Emeralds, and various individuals including heroes
+  like Sonic the Hedgehog and Miles "Tails" Prower participate in a fighting
+  tournament to gather them. In total there are eight playable characters (nine in
+  later console releases) and two bosses (Metal Sonic and Doctor Eggman).
+  .
+  Gameplay is mostly typical for a versus fighter, it is a one-on-one fight on a
+  best two out of three basis. Players use jumps, punches, kicks and special
+  weapons. Bean the Dynamite for example, a duck-like character who makes his
+  debut in the Sonic universe, uses bombs. Blocking is done by making use of a
+  limited supply of barriers. The whole action is illustrated in a comical fashion
+  though, like one would expect from a Sonic game. A round is won when a player
+  managed to deplete an opponent's health, unless the timer runs out, in which
+  case the character with the most energy left is the winner. Environments are 3D
+  closed arenas, but the gameplay is mostly 2D, allowing limited sidestep
+  maneuvers.
+release: 2012-11-27
+players: 1
+assets.boxfront: BoxFront/Sonic The Fighters (USA).jpg
+assets.boxback: BoxBack/Sonic The Fighters (USA).jpg
+assets.background: Background/Sonic The Fighters (USA).jpg
+assets.screenshot: Screenshot/Sonic The Fighters (USA).jpg
+x-co-op: No
+
+
+game: Sonic The Hedgehog (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Sonic The Hedgehog (USA)/Sonic The Hedgehog (USA).json
+developer: Sonic Team
+publisher: Sega
+genre: Platform
+description:
+  Sonic celebrates his 15th anniversary by blazing his way onto the
+  next-generation consoles, with his first adventure set in the human world!
+  Featuring interactive 3D environments and a large cast of returning and new
+  characters, get ready for the reinvention of Sonic The Hedgehog, in his most
+  intense, high velocity escapade to date!
+release: 2006-12-21
+players: 1
+assets.boxfront: BoxFront/Sonic The Hedgehog (USA).jpg
+assets.boxback: BoxBack/Sonic The Hedgehog (USA).jpg
+assets.background: Background/Sonic The Hedgehog (USA).jpg
+assets.screenshot: Screenshot/Sonic The Hedgehog (USA).jpg
+x-co-op: No
+
+
+game: Sonic The Hedgehog 2 (USA) (v1.00)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Sonic The Hedgehog 2 (USA) (v1.00)/Sonic The Hedgehog 2 (USA) (v1.00).json
+developer: Backbone Entertainment
+publisher: Sega
+genre: Platform
+description:
+  Super Speed! Sonic's back and better than ever. He's a blur in blue! A blaze of
+  action! With his new Super Spin Dash. And a new, fabulous friend, "Tails" the
+  Fox. You won't believe it 'til you see it. And when you play, you won't stop.
+  Super Play! Defy gravity in hair-raising loop-de-loops. Grab Power Sneakers and
+  race like lightning through the mazes. All at break-neck speed! Super Power!
+  Sonic's attitude is can-do. The mad scientist Dr. Robotnik is planning a world
+  takeover. Sonic gets tough in the fight to save his friends and squash Robotnik
+  for good!
+release: 2011-04-19
+players: 2
+assets.boxfront: BoxFront/Sonic The Hedgehog 2 (USA) (v1.00).jpg
+assets.boxback: BoxBack/Sonic The Hedgehog 2 (USA) (v1.00).jpg
+assets.background: Background/Sonic The Hedgehog 2 (USA) (v1.00).jpg
+assets.screenshot: Screenshot/Sonic The Hedgehog 2 (USA) (v1.00).jpg
+x-co-op: Yes
+
+
+game: Sonic The Hedgehog 4 - Episode I (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Sonic The Hedgehog 4 - Episode I (USA)/Sonic The Hedgehog 4 - Episode I (USA).json
+developer: Sonic Team
+publisher: Sega
+genre: Platform
+description:
+  Sonic the Hedgehog 4: Episode I is a 2010 episodic platform video game in the
+  Sonic the Hedgehog series. The game was developed by Dimps, with assistance from
+  Sonic Team, and is intended to emulate the original Sonic the Hedgehog titles on
+  the Sega Genesis.
+  .
+  Episode I was released in October 2010 for iOS, PlayStation Network, WiiWare and
+  Xbox Live Arcade. A release for Windows Phone 7 followed in June 2011, for PC
+  (via Steam) and Android in January 2012, for BlackBerry PlayBook in July 2012,
+  and for Ouya in July 2013. A sequel, Sonic the Hedgehog 4: Episode II, was
+  released in 2012.
+release: 2010-10-12
+players: 1
+assets.boxfront: BoxFront/Sonic The Hedgehog 4 - Episode I (USA).jpg
+assets.boxback: BoxBack/Sonic The Hedgehog 4 - Episode I (USA).jpg
+assets.background: Background/Sonic The Hedgehog 4 - Episode I (USA).jpg
+assets.screenshot: Screenshot/Sonic The Hedgehog 4 - Episode I (USA).jpg
+x-co-op: No
+
+
+game: Sonic The Hedgehog 4 - Episode II (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Sonic The Hedgehog 4 - Episode II (USA)/Sonic The Hedgehog 4 - Episode II (USA).json
+developer: Sonic Team
+publisher: Sega
+genre: Platform
+description:
+  The Sonic 4 Saga continues in Episode II with the return of a beloved side kick
+  and fan-favorite villains! Following the events of Episode I, Metal Sonic has
+  returned to form an alliance with Dr. Eggman! To face this new evil, Sonic will
+  have to call upon an old friend to help him save the day! Now joined by Tails,
+  race across four new Zones and take down fearsome new badniks with deadly
+  combination moves in order to put an end to this dastardly duos plans!
+  Experience the Sonic 4 saga as never before with the addition of a brand new
+  engine; bringing you gameplay with updated physics and zones in stunning HD
+  graphics! Also new to Episode II is the addition of online/local collaborative
+  play where players can team up with a friend to take control of Sonic and Tails
+  as they battle against Dr. Eggman!
+release: 2012-05-15
+players: 1
+assets.boxfront: BoxFront/Sonic The Hedgehog 4 - Episode II (USA).jpg
+assets.boxback: BoxBack/Sonic The Hedgehog 4 - Episode II (USA).jpg
+assets.background: Background/Sonic The Hedgehog 4 - Episode II (USA).jpg
+assets.screenshot: Screenshot/Sonic The Hedgehog 4 - Episode II (USA).jpg
+x-co-op: No
+
+
+game: Soulcalibur II HD Online (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Soulcalibur II HD Online (USA)/Soulcalibur II HD Online (USA).json
+developer: Project Soul
+publisher: Bandai Namco Games America Inc.
+genre: Fighting
+description:
+  Mortal Kombat-style one-on-one fighting is one thing, but fighting with weapons
+  is completely different. Soul Calibur II continues the tradition set by Soul
+  Blade and the Dreamcast Soul Calibur with intense action and plenty of weapons
+  to deal the massive blows.
+  .
+  A majority of the action takes place in Weapon Master mode, as you choose a
+  character and travel a set map to fight the many other warriors through a
+  collection of different terrain styles and challenges. One minute you'll be
+  fighting in quicksand; the next you'll have to defeat an opponent by only using
+  throwing attacks.
+  .
+  Other modes include the usual arcade, survival, and practice modes, and
+  multiplayer options for two people to battle it out.
+  .
+  Each version of Soul Calibur II also includes a unique character for the
+  platform. Spawn appears on Xbox, Link from The Legend of Zelda series can be
+  found on GameCube, and Tekken fighter Heihachi finds his way to PS2.
+release: 2013-11-19
+players: 2
+assets.boxfront: BoxFront/Soulcalibur II HD Online (USA).jpg
+assets.boxback: BoxBack/Soulcalibur II HD Online (USA).jpg
+assets.background: Background/Soulcalibur II HD Online (USA).jpg
+assets.screenshot: Screenshot/Soulcalibur II HD Online (USA).jpg
+x-co-op: No
+
+
+game: Spelunker HD (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Spelunker HD (USA)/Spelunker HD (USA).json
+developer: Irem Software Engineering
+publisher: Irem Software Engineering
+genre: Platform
+description:
+  The legendary game, Spelunker™, is back, pairing all-new levels and features
+  with the technically challenging gameplay that made it famous. Evade enemies,
+  unlock vaults and amass treasure as you wind deep below the surface of the
+  earth.
+  .
+  Play with up to 6 players online explore with a friend or race to the finish!
+  Experience all-new 3D graphics or go retro and explore in 2D. What awaits the
+  nimble Spelunker who completes all 100 stages?\n
+  - A cult favorite in Japan! 2009 PlayStation®Store Top Sales Award.\n
+  - Gaming’s legendary, weakest character is back and ready for action!\n
+  - 10 captivating worlds, each with unique terrain features.\n
+  - 100 massive caverns with multiple rounds of difficulty to test the most avid
+  explorers.\n
+  - Hoards of enemies, including all-new boss characters and the famous nasty
+  ghosts.\n
+  - Dozens of natural threats, including boulders, steam vents, waterfalls and
+  avalanches.\n
+  - Now with 10 challenging Championship Area bonus stages!\n
+  - More ways to die than you can count...
+release: 2010-11-23
+players: 6
+assets.boxfront: BoxFront/Spelunker HD (USA).jpg
+assets.boxback: BoxBack/Spelunker HD (USA).jpg
+assets.background: Background/Spelunker HD (USA).jpg
+assets.screenshot: Screenshot/Spelunker HD (USA).jpg
+x-co-op: Yes
+
+
+game: Star Ocean - Second Evolution (Japan)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Star Ocean - Second Evolution (Japan)/Star Ocean - Second Evolution (Japan).json
+developer: Tri-Ace
+publisher: Enix Corporation
+genre: Role-Playing;Action RPG
+description:
+  Following the exploits of humankind's journey across the stars, the STAR OCEAN
+  saga comes to life in the completely remastered STAR OCEAN: Second Evolution,
+  exclusively for the PSP system. Now with a revised game engine, an improved
+  battle system and fully voiced, all-new animated scenes displayed in 16:9
+  widescreen, players can experience their journey through the rich STAR OCEAN
+  universe like never before.
+release: 2015-12-24
+players: 1
+assets.boxfront: BoxFront/Star Ocean - Second Evolution (Japan).jpg
+assets.boxback: BoxBack/Star Ocean - Second Evolution (Japan).jpg
+assets.background: Background/Star Ocean - Second Evolution (Japan).jpg
+assets.screenshot: Screenshot/Star Ocean - Second Evolution (Japan).jpg
+x-co-op: No
+
+
+game: Streets of Rage 2 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Streets of Rage 2 (USA)/Streets of Rage 2 (USA).json
+developer: Sega
+publisher: Sega
+genre: Beat 'em Up
+description:
+  To celebrate their defeat of the syndicate exactly one year before, Blaze, Adam
+  and Axel met for drinks. The next morning, Axel received a frantic phone call
+  from Eddie 'Skate' Hunter, Adam's younger brother, whom he was living with on
+  the edge of the city. Blaze and Axel found Adam and Skate's house wrecked and a
+  picture of Adam chained to a wall at the feet of Mr. X. The city then once again
+  returned to its nightmarish state and criminals ran rampant. Unable to contact
+  their old friend from the military, Axel and Blaze team up with Skate and Max
+  Thunder to free the city and rescue Adam from the Syndicate. It is up to you to
+  take down Mr. X once and for all.
+release: 2011-06-28
+players: 2
+assets.boxfront: BoxFront/Streets of Rage 2 (USA).jpg
+assets.boxback: BoxBack/Streets of Rage 2 (USA).jpg
+assets.background: Background/Streets of Rage 2 (USA).jpg
+assets.screenshot: Screenshot/Streets of Rage 2 (USA).jpg
+x-co-op: Yes
+
+
+game: Super Stardust HD (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Ru) (v7.00)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Super Stardust HD (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Ru) (v7.00)/Super Stardust HD (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Ru) (v7.00).json
+developer: Housemarque
+publisher: Sony Computer Entertainment
+genre: Shooter
+description:
+  Super Stardust HD for the PlayStation 3 system is a fully updated version of the
+  classic game Stardust. Your mission is simple: destroy everything in sight!
+  Visit different planets and fend off giant asteroids and waves of enemies by
+  utilizing three upgradeable weapons to save your home solar system from total
+  annihilation.
+  .
+  With five highly detailed 3D planets to save, hordes of enemies and asteroids to
+  destroy, and various game play modes, Super Stardust HD presents super intense
+  action.
+release: 2007-06-28
+players: 1
+assets.boxfront: BoxFront/Super Stardust HD (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Ru) (v7.00).jpg
+assets.boxback: BoxBack/Super Stardust HD (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Ru) (v7.00).jpg
+assets.background: Background/Super Stardust HD (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Ru) (v7.00).jpg
+assets.screenshot: Screenshot/Super Stardust HD (USA) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Ru) (v7.00).jpg
+x-co-op: No
+
+
+game: Supersonic Acrobatic Rocket-Powered Battle-Cars (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Supersonic Acrobatic Rocket-Powered Battle-Cars (USA)/Supersonic Acrobatic Rocket-Powered Battle-Cars (USA).json
+developer: Psyonix
+publisher: Psyonix
+genre: Action;Racing;Sports
+description:
+  Supersonic Acrobatic Rocket-Powered Battle-Cars features unique rocket-powered
+  cars with incredible manoeuverability, including the ability to rocket into the
+  air or accelerate at supersonic speeds.
+  .
+  In this team-based football game, players maoneuver their vehicles to perform
+  breathtaking saves, awe-inspiring shots and achieve speeds that literally turn
+  your opponents into scrap metal.
+  .
+  Wide-ranging community involvement is supported through team play, as well as
+  extensive and thorough statistical tracking, rankings and rewards for
+  individuals and teams, including support for trophies.
+  .
+  The game features three single player modes as well as team and league matches
+  and scrimmage matches online.
+  .
+  Using the full featured in-game video editor, players will have the ability to
+  save, upload and share their amazing triumphs and hysterical battle-car antics
+  to their hard drive or even upload clips directly to YouTube.
+release: 2008-10-09
+players: 4
+assets.boxfront: BoxFront/Supersonic Acrobatic Rocket-Powered Battle-Cars (USA).jpg
+assets.boxback: BoxBack/Supersonic Acrobatic Rocket-Powered Battle-Cars (USA).jpg
+assets.background: Background/Supersonic Acrobatic Rocket-Powered Battle-Cars (USA).jpg
+assets.screenshot: Screenshot/Supersonic Acrobatic Rocket-Powered Battle-Cars (USA).jpg
+x-co-op: Yes
+
+
+game: Swords and Soldiers (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Swords and Soldiers (USA)/Swords and Soldiers (USA).json
+developer: Ronimo
+publisher: Ronimo
+genre: Strategy
+description:
+  Designed by the innovative game designers at Ronimo Games, Swords & Soldiers is
+  a sidescrolling real time strategy game in which three distinct factions battle
+  for the powers of the gods. The game will feature a single player campaign and a
+  competitive splitscreen multiplayer mode as well as several other game modes.
+release: 2010-09-28
+players: 1
+assets.boxfront: BoxFront/Swords and Soldiers (USA).jpg
+assets.boxback: BoxBack/Swords and Soldiers (USA).jpg
+assets.background: Background/Swords and Soldiers (USA).jpg
+assets.screenshot: Screenshot/Swords and Soldiers (USA).jpg
+x-co-op: No
+
+
+game: Tales from Space - About a Blob (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Tales from Space - About a Blob (USA)/Tales from Space - About a Blob (USA).json
+developer: Drinkbox Studios
+publisher: Drinkbox Studios
+genre: Platform
+description:
+  Tales from Space: About a Blob is a side-scrolling puzzle-platformer video game
+  about a race of alien Blobs developed and published by Drinkbox Studios for the
+  PlayStation 3 video game console. The game features a retro-inspired
+  monster-movie art style and local co-op gameplay.
+release: 2011-02-01
+players: 1
+assets.boxfront: BoxFront/Tales from Space - About a Blob (USA).jpg
+assets.boxback: BoxBack/Tales from Space - About a Blob (USA).jpg
+assets.background: Background/Tales from Space - About a Blob (USA).jpg
+assets.screenshot: Screenshot/Tales from Space - About a Blob (USA).jpg
+x-co-op: No
+
+
+game: Tokyo Jungle (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Tokyo Jungle (USA)/Tokyo Jungle (USA).json
+developer: SCE Japan Studio
+publisher: Sony Computer Entertainment
+genre: Action;Life Simulation;Sandbox
+description:
+  In TOKYO JUNGLE, everything is the enemy, and only the strongest will survive!
+  .
+  With over 50 playable animals to choose from, unleash your inner beast to hunt
+  your way to the top of Tokyo's post-apocalyptic food chain. Whether in Story or
+  Survival Mode, you never know where your next meal will come from or the dangers
+  you'll face, so be prepared for anything and everything. Forage through this
+  desolate but dangerous city to complete story-based challenges using a variety
+  of survival skills, from all-out attack to stealth. Beware - you are not the
+  only animal out there hunting for survival!
+release: 2012-09-25
+players: 2
+assets.boxfront: BoxFront/Tokyo Jungle (USA).jpg
+assets.boxback: BoxBack/Tokyo Jungle (USA).jpg
+assets.background: Background/Tokyo Jungle (USA).jpg
+assets.screenshot: Screenshot/Tokyo Jungle (USA).jpg
+x-co-op: Yes
+
+
+game: Trash Panic (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Trash Panic (USA)/Trash Panic (USA).json
+developer: SCE Japan Studio
+publisher: Sony Computer Entertainment
+genre: Puzzle
+description:
+  The Trash Panic game adds a whole new element to puzzle video games - waste
+  management! This PS3 system downloadable exclusive will challenge players to be
+  "eco-friendly" in disposing of garbage.
+  .
+  Throughout each stage, trash items will be dropped into a trash can that will
+  quickly reach full capacity unless you dispose of it strategically. Act quickly
+  - if the trash overflows too much you lose! Each level features a giant Boss
+  item for players to destroy in a certain amount of time, but don't just resort
+  to any means necessary... at the end of each stage, you will be rated by how
+  “eco-friendly” or “ego-friendly” you choose to be!
+release: 2009-06-04
+players: 1
+assets.boxfront: BoxFront/Trash Panic (USA).jpg
+assets.boxback: BoxBack/Trash Panic (USA).jpg
+assets.background: Background/Trash Panic (USA).jpg
+assets.screenshot: Screenshot/Trash Panic (USA).jpg
+x-co-op: No
+
+
+game: Trine 2 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Trine 2 (USA)/Trine 2 (USA).json
+developer: Frozenbyte
+publisher: Atlus
+genre: Action;Adventure
+description:
+  Trine 2 is the sequel to the action puzzle platformer Trine. It once again stars
+  three characters – Amadeus the wizard, Zoya the thief, and Pontius the knight –
+  who need to work together and use their complimentary skills to progress through
+  levels filled with enemies and physics-based puzzles. The game picks up the
+  story when the trine is rediscovered and brings the three characters back
+  together. It transports them to an unknown world where their progress is
+  overlooked by a mysterious figure referred to as The Witch. Later in the game
+  her true identity and purposes are revealed. The story further involves the
+  Goblin King and his minions, as well as the tale of two sisters who are also
+  princesses.
+  .
+  Just like in the first game players can freely switch between the three
+  characters to tackle the environment-based challenges. The knight is strong and
+  most suited for close combat, the thief is agile and has long-ranged attacks,
+  and the wizard is a feeble character that uses magic to manipulate items. Many
+  of the original abilities are still present. The wizard creates boxes and planks
+  as temporary platforms, the thief uses grapple to cross large gaps, and the
+  knight is able to deflect projectiles with his shield. New abilities are
+  unlocked through a skill tree shared by the characters, and some of the new
+  options allow the wizard to chuck opponents around or for the thief to upgrade
+  her arrows with new enhancements. Skill points are earned by locating vials.
+  There is no longer an inventory with items gathered from treasure chests for
+  additional upgrades. Instead the chests yield poetry that reveal bits of the
+  story.
+  .
+  The game can be played cooperatively with three players each controlling a
+  character simultaneously. This can be done both offline and, new for this
+  sequel, online. When a character dies, it can be revived at the next checkpoint.
+  There are two new gameplay modes that are available right away. There is Game+
+  that allows players to go through the game again with their fully upgraded
+  characters from the start. The second one is called Unlimited Character Mode and
+  it allows players to assemble a party of any combination of characters, for
+  instance using just three thieves. The game design always offers multiple
+  approaches to over the challenges.
+release: 2011-12-20
+players: 3
+assets.boxfront: BoxFront/Trine 2 (USA).jpg
+assets.boxback: BoxBack/Trine 2 (USA).jpg
+assets.background: Background/Trine 2 (USA).jpg
+assets.screenshot: Screenshot/Trine 2 (USA).jpg
+x-co-op: Yes
+
+
+game: Ugly Americans - Apocalypsegeddon (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Ugly Americans - Apocalypsegeddon (USA)/Ugly Americans - Apocalypsegeddon (USA).json
+developer: Backbone Entertainment
+publisher: Comedy Central Games
+genre: Shooter
+description:
+  With four-player top-down co-op gameplay that hearkens back to such classics as
+  Gauntlet and Robotron, “Ugly Americans: Apocalypsegeddon” features four playable
+  characters, each with their own unique abilities, weapons and strengths. Players
+  must comb the streets of New York City and pacify raving demons, delinquent man
+  birds and zombies by lactating fire or hurling wacky objects like flying demon
+  skulls, fish, baseballs and wrenches. Investigate case files from the Department
+  of Integration and battle devastating and distinctive bosses at the end of each
+  mission, each bringing you one step closer to finding out who is trying to bring
+  about the end of days!
+release: 2011-08-30
+players: 4
+assets.boxfront: BoxFront/Ugly Americans - Apocalypsegeddon (USA).jpg
+assets.boxback: BoxBack/Ugly Americans - Apocalypsegeddon (USA).jpg
+assets.background: Background/Ugly Americans - Apocalypsegeddon (USA).jpg
+assets.screenshot: Screenshot/Ugly Americans - Apocalypsegeddon (USA).jpg
+x-co-op: Yes
+
+
+game: Vandal Hearts - Flames of Judgment (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Vandal Hearts - Flames of Judgment (USA)/Vandal Hearts - Flames of Judgment (USA).json
+developer: Hijinx Studios
+publisher: Konami
+genre: Strategy;Turn-Based;Tactics
+description:
+  Konami's legendary tactical RPG series returns with the all-new Vandal Hearts:
+  Flames of Judgment for Xbox Live Arcade and PlayStation Network! On the
+  continent of Sostegaria, two rival kingdoms stand on the brink of war. In a
+  small town on their border is a simple church orphanage, home to young Tobias
+  Martin. Caught in the tide of battle, Tobias and his comrades enlist to fight
+  for peace - and revenge. But they face an unstoppable warrior, who wields the
+  almighty Flames of Judgment, and will let no one stand in his way.
+release: 2010-01-20
+players: 1
+assets.boxfront: BoxFront/Vandal Hearts - Flames of Judgment (USA).jpg
+assets.boxback: BoxBack/Vandal Hearts - Flames of Judgment (USA).jpg
+assets.background: Background/Vandal Hearts - Flames of Judgment (USA).jpg
+assets.screenshot: Screenshot/Vandal Hearts - Flames of Judgment (USA).jpg
+x-co-op: No
+
+
+game: Wizardry - Labyrinth of Lost Souls (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Wizardry - Labyrinth of Lost Souls (USA)/Wizardry - Labyrinth of Lost Souls (USA).json
+developer: Acquire
+publisher: Xseed Games
+genre: Adventure
+description:
+  Wizardry: Labyrinth of Lost Souls is a video game developed by Acquire and
+  published by Xseed Games for the PlayStation 3 and iOS. The game is a localized
+  version of the Japanese game Wizardry: Torawareshi Tamashii no Meikyū (ウィザードリィ
+  囚われし魂の迷宮) originally released in December 2009. Although originally developed
+  for the Apple II and released in the U.S. in 1981, the Wizardry series has been
+  kept alive in Japan by various developers. The dungeon-crawling role-playing
+  game franchise hasn't been seen in the West since 2001's duo of Wizardry 8 for
+  the PC and Wizardry: Tale of the Forsaken Land for the PlayStation 2.
+release: 2009-12-09
+players: 1
+assets.boxfront: BoxFront/Wizardry - Labyrinth of Lost Souls (USA).jpg
+assets.boxback: BoxBack/Wizardry - Labyrinth of Lost Souls (USA).jpg
+assets.background: Background/Wizardry - Labyrinth of Lost Souls (USA).jpg
+assets.screenshot: Screenshot/Wizardry - Labyrinth of Lost Souls (USA).jpg
+x-co-op: No
+
+
+game: Wolfenstein 3D (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Wolfenstein 3D (USA)/Wolfenstein 3D (USA).json
+developer: Logicware, Inc.
+publisher: Interplay
+genre: Action;Shooter
+description:
+  Wolfenstein 3D is a first-person shooter video game developed by id Software and
+  published by Apogee Software. Originally released on May 5, 1992, for the PC
+  operating system DOS, the game was inspired by the 1980s Muse Software video
+  games Castle Wolfenstein and Beyond Castle Wolfenstein. A promotional version of
+  Wolfenstein 3D was released as shareware, which permitted it to be copied
+  widely. The game was later ported to a wide range of computer systems and video
+  game consoles.
+  .
+  The shareware release contains one episode consisting of ten levels. The
+  commercial release consists of three episodes, which include the shareware
+  episode and two subsequent episodes. Later releases included a three-episode
+  mission pack titled The Nocturnal Missions. The player assumes the role of a
+  World War II Allied spy William "B.J." Blazkowicz, who is trying to escape from
+  Castle Wolfenstein, a Nazi German prison. After the initial escape episode,
+  Blazkowicz carries out a series of crucial missions against the Nazis.
+  .
+  Wolfenstein 3D was a critical and commercial success. It is widely regarded as
+  having helped popularize the genre on the PC and having established the basic
+  run-and-gun archetype for many subsequent first-person shooter games.
+release: 2009-06-04
+players: 1
+assets.boxfront: BoxFront/Wolfenstein 3D (USA).jpg
+assets.boxback: BoxBack/Wolfenstein 3D (USA).jpg
+assets.background: Background/Wolfenstein 3D (USA).jpg
+assets.screenshot: Screenshot/Wolfenstein 3D (USA).jpg
+x-co-op: No
+
+
+game: Worms (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Worms (USA)/Worms (USA).json
+developer: Team17
+publisher: Sony Computer Entertainment
+genre: Action;Strategy
+description:
+  Players control a small platoon of worms across a deformable landscape, battling
+  computer or player controlled teams. The game features bright and humorous
+  cartoon-style animation and a varied arsenal of weapons. Full voice
+  communication is also available among the players of the game.
+release: 2007-03-07
+players: 4
+assets.boxfront: BoxFront/Worms (USA).jpg
+assets.boxback: BoxBack/Worms (USA).jpg
+assets.background: Background/Worms (USA).jpg
+assets.screenshot: Screenshot/Worms (USA).jpg
+x-co-op: Yes
+
+
+game: Worms 2 - Armageddon (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Worms 2 - Armageddon (USA)/Worms 2 - Armageddon (USA).json
+developer: Team 17
+publisher: Team 17
+genre: Strategy
+description:
+  This is a 2D turn-based strategy game in which players control worms in a battle
+  to be the last man (worm) standing. Players take turns positioning their worms
+  around fantastical landscapes and use a variety of over-the-top weapons
+  ('cartoony' bazookas, grenades, uzis, exploding sheep, etc.) to defeat
+  opponents' worms.
+release: 2010-09-08
+players: 4
+assets.boxfront: BoxFront/Worms 2 - Armageddon (USA).jpg
+assets.boxback: BoxBack/Worms 2 - Armageddon (USA).jpg
+assets.background: Background/Worms 2 - Armageddon (USA).jpg
+assets.screenshot: Screenshot/Worms 2 - Armageddon (USA).jpg
+x-co-op: Yes
+
+
+game: X-Men (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/X-Men (USA)/X-Men (USA).json
+developer: Konami
+publisher: Konami
+genre: Beat 'em Up
+description:
+  Experience the classic 1992 X-Men arcade game right in the comfort of your own
+  home! Choose from some of your favorite classic X-Men characters including:
+  Cyclops, Colossus, Wolverine, Storm, Nightcrawler, or Dazzler. Fight your way
+  through hundreds of Sentinels and battle classic super villains such as Pyro,
+  The Blob, Wendigo, Nimrod, The White Queen, Juggernaut, Mystique and the Master
+  of Magnetism himself, Magneto!
+release: 2010-12-14
+players: 6
+assets.boxfront: BoxFront/X-Men (USA).jpg
+assets.boxback: BoxBack/X-Men (USA).jpg
+assets.background: Background/X-Men (USA).jpg
+assets.screenshot: Screenshot/X-Men (USA).jpg
+x-co-op: Yes
+
+
+game: Zen Pinball 2 (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Zen Pinball 2 (USA)/Zen Pinball 2 (USA).json
+developer: Zen Studios Ltd.
+publisher: Sony
+genre: Action
+description:
+  The sequel to the popular pinball game by Zen Studios, Zen Pinball 2 features an
+  abundance of exciting new features and updates, making it the premiere pinball
+  platform on any digital distribution network.
+  .
+  In Zen Pinball 2, players will enjoy cross-platform entitlement and any Zen
+  Pinball 2 purchase will entitle players to both the PS3 and PS Vita versions at
+  no additional charge.
+release: 2012-09-04
+players: 2
+assets.boxfront: BoxFront/Zen Pinball 2 (USA).jpg
+assets.boxback: BoxBack/Zen Pinball 2 (USA).jpg
+assets.background: Background/Zen Pinball 2 (USA).jpg
+assets.screenshot: Screenshot/Zen Pinball 2 (USA).jpg
+x-co-op: No
+
+
+game: Zombie Apocalypse - Never Die Alone (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/Zombie Apocalypse - Never Die Alone (USA)/Zombie Apocalypse - Never Die Alone (USA).json
+developer: Backbone Entertainment
+publisher: Konami
+genre: Action
+description:
+  Zombie Apocalypse: Never Die Alone is a downloadable shoot 'em up game published
+  by Konami in October 2011 for the PlayStation Network and Xbox Live Arcade. It
+  is a direct sequel to 2009's Zombie Apocalypse, starring four new heroes.
+  .
+  Four unlikely heroes find themselves caught in a fight for their lives when the
+  Zombie Apocalypse hits their Canadian community. Banding together for both humor
+  and survival - and armed with everything from guns to cricket bats - the four
+  must find a way off the island... together.
+release: 2011-10-26
+players: 1
+assets.boxfront: BoxFront/Zombie Apocalypse - Never Die Alone (USA).jpg
+assets.boxback: BoxBack/Zombie Apocalypse - Never Die Alone (USA).jpg
+assets.background: Background/Zombie Apocalypse - Never Die Alone (USA).jpg
+assets.screenshot: Screenshot/Zombie Apocalypse - Never Die Alone (USA).jpg
+x-co-op: No
+
+
+game: inFamous - Festival of Blood (USA)
+file: $ROM_JSON_ROOT/Sony/Sony PlayStation Network - PlayStation 3/inFamous - Festival of Blood (USA)/inFamous - Festival of Blood (USA).json
+developer: Sucker Punch
+publisher: Sony Interactive Entertainment
+genre: Action;Sandbox
+description:
+  inFAMOUS Festival of Blood is a brand new single player game for download via
+  PSN. Vampires swarm New Marais, and revered superhero Cole MacGrath has been
+  bitten. To save his soul and city, he has just one night to find and kill the
+  head vampire. Featuring hours of new gameplay, themed environment settings and
+  new characters/enemies, Festival of Blood explores the darker side of the
+  inFAMOUS universe. Previous inFAMOUS games are not needed to play.
+release: 2011-10-25
+players: 1
+assets.boxfront: BoxFront/inFamous - Festival of Blood (USA).jpg
+assets.boxback: BoxBack/inFamous - Festival of Blood (USA).jpg
+assets.background: Background/inFamous - Festival of Blood (USA).jpg
+assets.screenshot: Screenshot/inFamous - Festival of Blood (USA).jpg
+x-co-op: No
+
+

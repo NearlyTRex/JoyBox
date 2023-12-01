@@ -1,0 +1,11 @@
+{
+    "dlc": [
+        "$SETUP_MAIN_ROOT/dlc/setup_the_evil_within_the_assignment_1.0_(36732).exe",
+        "$SETUP_MAIN_ROOT/dlc/setup_the_evil_within_the_consequence_1.0_(36732).exe",
+        "$SETUP_MAIN_ROOT/dlc/setup_the_evil_within_the_executioner_1.0_(36732).exe"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/setup_the_evil_within_1.0_(36732).exe"
+    ],
+    "transform_file": "setup_the_evil_within_1.0_(36732).exe"
+}

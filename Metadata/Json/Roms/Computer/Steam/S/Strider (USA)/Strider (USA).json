@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Strider (USA).exe"
+    ],
+    "transform_file": "Strider (USA).exe"
+}

@@ -1,0 +1,37 @@
+{
+    "main_game_exe": [
+        "ResidentEvil3/BIOHAZARD(R) 3 PC.exe"
+    ],
+    "main_game_exe_cwd": {
+        "ResidentEvil3/BIOHAZARD(R) 3 PC.exe": "ResidentEvil3"
+    },
+    "sandbox": {
+        "wine": {
+            "overrides": {
+                "game": [
+                    "ddraw=n,b"
+                ]
+            }
+        }
+    },
+    "steps": {
+        "preinstall": [
+            {
+                "from": "$DISC_TWO_ROOT/data",
+                "to": "$HDD_MAIN_ROOT/ResidentEvil3",
+                "type": "copy"
+            },
+            {
+                "from": "$DISC_THREE_ROOT/*",
+                "to": "$HDD_MAIN_ROOT/ResidentEvil3",
+                "type": "copy"
+            },
+            {
+                "from": "$SETUP_MAIN_ROOT/fix/*",
+                "to": "$HDD_MAIN_ROOT/ResidentEvil3",
+                "type": "copy"
+            }
+        ]
+    },
+    "transform_file": "Resident Evil 3 - Nemesis (USA).m3u"
+}

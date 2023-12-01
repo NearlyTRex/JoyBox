@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Amelie (USA).exe"
+    ],
+    "transform_file": "Amelie (USA).exe"
+}

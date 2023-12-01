@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Rebop Blasters (USA).exe"
+    ],
+    "transform_file": "Rebop Blasters (USA).exe"
+}

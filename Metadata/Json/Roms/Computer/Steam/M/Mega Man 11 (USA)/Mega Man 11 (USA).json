@@ -1,0 +1,22 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Mega Man 11 (USA).exe"
+    ],
+    "main_game_exe": [
+        "Mega Man 11/game.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Mega Man 11/game.exe": "Mega Man 11"
+    },
+    "sandbox": {
+        "wine": {
+            "overrides": {
+                "game": [
+                    "d3d9,d3d10core,d3d11,dxgi=n,b"
+                ]
+            },
+            "use_dxvk": true
+        }
+    },
+    "transform_file": "Mega Man 11 (USA).exe"
+}

@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Patches Of Adventure (USA).exe"
+    ],
+    "transform_file": "Patches Of Adventure (USA).exe"
+}

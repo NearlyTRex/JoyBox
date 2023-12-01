@@ -1,0 +1,1555 @@
+collection: Nintendo Wii U
+launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Wii U" {file.path}
+
+
+game: Animal Crossing - Amiibo Festival (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Animal Crossing - Amiibo Festival (USA)/Animal Crossing - Amiibo Festival (USA).json
+developer: Nd Cube
+publisher: Nintendo
+genre: Board Game;Party
+description:
+  The Animal Crossing: amiibo Festival game is a brand-new way to play with your
+  favorite Animal Crossing characters. Your amiibo figures are front-and-center in
+  this party game, and you’ll get to use them with fun content. Bring to life an
+  expansive and dynamic board game where the board is based on the months of the
+  year like the core Animal Crossing series. The goal? Make your villager the
+  happiest in town and party hard with your friends.
+  .
+  Features:\n
+  Party with favorite Animal Crossing characters like Isabelle and Tom Nook—who
+  have become amiibo.\n
+  Experience the Animal Crossing universe in light-hearted board games based on
+  the calendar, including the four seasons and seasonal events.\n
+  Bring your amiibo to the party, collect Happy Points, play with your friends,
+  and save your Happy Points to your amiibo to expand your own game even more.
+  .
+  Use Animal Crossing amiibo cards in fun minigames.
+release: 2015-11-13
+players: 4
+assets.boxfront: BoxFront/Animal Crossing - Amiibo Festival (USA).jpg
+assets.boxback: BoxBack/Animal Crossing - Amiibo Festival (USA).jpg
+assets.background: Background/Animal Crossing - Amiibo Festival (USA).jpg
+assets.screenshot: Screenshot/Animal Crossing - Amiibo Festival (USA).jpg
+assets.video: Video/Animal Crossing - Amiibo Festival (USA).mp4
+x-co-op: Yes
+
+
+game: Axiom Verge (USA) (En,Fr,De,Es,It,Pt)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Axiom Verge (USA) (En,Fr,De,Es,It,Pt)/Axiom Verge (USA) (En,Fr,De,Es,It,Pt).json
+developer: Thomas Happ Games
+publisher: Thomas Happ Games, LLC
+genre: Action;Adventure
+description:
+  Axiom Verge is a retro-styled 2D action game focused on unusual weaponry and
+  exploration of an maze-like, infested world. You play as Trace, a relatively
+  normal (if quirky) guy who suffers a near-fatal injury, after which he wakes up
+  in a strange, unsettling new world that is both high-tech and incredibly
+  ancient. Why is he here? Where are the world's inhabitants? And what is the
+  mysterious force that seems intent on ending his life?
+release: 2016-09-01
+players: 1
+assets.boxfront: BoxFront/Axiom Verge (USA) (En,Fr,De,Es,It,Pt).jpg
+assets.boxback: BoxBack/Axiom Verge (USA) (En,Fr,De,Es,It,Pt).jpg
+assets.background: Background/Axiom Verge (USA) (En,Fr,De,Es,It,Pt).jpg
+assets.screenshot: Screenshot/Axiom Verge (USA) (En,Fr,De,Es,It,Pt).jpg
+x-co-op: No
+
+
+game: Bayonetta (USA) (En,Ja,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Bayonetta (USA) (En,Ja,Fr,De,Es,It)/Bayonetta (USA) (En,Ja,Fr,De,Es,It).json
+developer: PlatinumGames
+publisher: Nintendo
+genre: Action
+description:
+  Bayonetta is a cinematic and stylish action game from the creative mind of
+  Hideki Kamiya. As a gun-wielding witch with powers beyond the comprehension of
+  mere mortals, Bayonetta faces-off against countless enemies in a game of 100%
+  pure all-out action. Outlandish finishing moves are performed with acrobatic
+  grace as Bayonetta flows from one fight to another. Bayonetta pushes the limits
+  of the action genre with magnificent over-the-top action and fast-paced, dynamic
+  climax combat.
+release: 2014-10-24
+players: 2
+assets.boxfront: BoxFront/Bayonetta (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Bayonetta (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.background: Background/Bayonetta (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Bayonetta (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.video: Video/Bayonetta (USA) (En,Ja,Fr,De,Es,It).mp4
+x-co-op: Yes
+
+
+game: Bayonetta 2 (USA) (En,Ja,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Bayonetta 2 (USA) (En,Ja,Fr,De,Es,It)/Bayonetta 2 (USA) (En,Ja,Fr,De,Es,It).json
+developer: PlatinumGames
+publisher: Nintendo
+genre: Action
+description:
+  Bayonetta 2 is an action hack and slash video game developed by PlatinumGames
+  and published by Nintendo for the Wii U, with Sega as the franchise owners
+  serving as its advisor. It is the direct sequel to the 2009 game, Bayonetta, and
+  was directed by Yusuke Hashimoto and produced by Atsushi Inaba, under
+  supervision by series creator Hideki Kamiya. It was announced on September 13,
+  2012, and will be exclusive to the Wii U, unlike the previous game which was
+  only available on the PlayStation 3 and Xbox 360. The titular character,
+  Bayonetta, sports a new costume and hairstyle and the game itself features a new
+  two-player mode. The game is also the second Bayonetta product to receive
+  Japanese voiceovers, using the same cast that voiced the Bayonetta: Bloody Fate
+  anime film by Gonzo. The game was released in September 2014 and includes a port
+  of the original Bayonetta as a separate disc inside the case.
+release: 2014-10-24
+players: 2
+assets.boxfront: BoxFront/Bayonetta 2 (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Bayonetta 2 (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.background: Background/Bayonetta 2 (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Bayonetta 2 (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.video: Video/Bayonetta 2 (USA) (En,Ja,Fr,De,Es,It).mp4
+x-co-op: Yes
+
+
+game: Captain Toad - Treasure Tracker (USA) (En,Fr,Es) (v1.00)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Captain Toad - Treasure Tracker (USA) (En,Fr,Es) (v1.00)/Captain Toad - Treasure Tracker (USA) (En,Fr,Es) (v1.00).json
+developer: Nintendo EAD Tokyo
+publisher: Nintendo
+genre: Platform;Puzzle
+description:
+  The intrepid Captain Toad sets off on his own adventure for the very first time
+  through a wide variety of tricky, enemy-infested, maze-like stages to find
+  hidden gems and nab elusive gold stars.
+release: 2014-12-05
+players: 1
+assets.boxfront: BoxFront/Captain Toad - Treasure Tracker (USA) (En,Fr,Es) (v1.00).jpg
+assets.boxback: BoxBack/Captain Toad - Treasure Tracker (USA) (En,Fr,Es) (v1.00).jpg
+assets.background: Background/Captain Toad - Treasure Tracker (USA) (En,Fr,Es) (v1.00).jpg
+assets.screenshot: Screenshot/Captain Toad - Treasure Tracker (USA) (En,Fr,Es) (v1.00).jpg
+assets.video: Video/Captain Toad - Treasure Tracker (USA) (En,Fr,Es) (v1.00).mp4
+x-co-op: No
+
+
+game: Devil's Third (USA) (En,Fr)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Devil's Third (USA) (En,Fr)/Devil's Third (USA) (En,Fr).json
+developer: Valhalla Game Studio
+publisher: Nintendo
+genre: Action
+description:
+  From the creative mind of legendary designer Tomonobu Itagaki, Devil's Third is
+  an over-the-top, third-person action shooter that combines modern military
+  weaponry with ninja-style swordplay and melee combat.
+  .
+  The Wii U version of Devil's Third features both a full multiplayer mode as well
+  as an exciting single-player story mode. Its single player mode immerses players
+  in an engrossing storyline set against a background of intrigue and global
+  military conflict. In parallel, the multiplayer mode lets players blast and
+  slash each other in deep and challenging online combat that blends clan-based
+  action, resource management and strategy.
+release: 2015-12-11
+players: 1
+assets.boxfront: BoxFront/Devil's Third (USA) (En,Fr).jpg
+assets.boxback: BoxBack/Devil's Third (USA) (En,Fr).jpg
+assets.background: Background/Devil's Third (USA) (En,Fr).jpg
+assets.screenshot: Screenshot/Devil's Third (USA) (En,Fr).jpg
+assets.video: Video/Devil's Third (USA) (En,Fr).mp4
+x-co-op: No
+
+
+game: Disney DuckTales - Remastered (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Disney DuckTales - Remastered (USA) (En,Fr,Es,Pt)/Disney DuckTales - Remastered (USA) (En,Fr,Es,Pt).json
+developer: WayForward Technologies
+publisher: Capcom
+genre: Action;Adventure;Platform
+description:
+  DuckTales: Remastered is a hand-crafted, beautiful reimagining of one of the
+  most cherished 8-bit titles of all time. Embark on an authentic DuckTales
+  adventure, as Scrooge McDuck and his three nephews; Huey, Dewey and Louie travel
+  to exotic locations throughout the world in their quest to retrieve the five
+  Legendary Treasures.
+  .
+  Go back to one of the golden ages of gaming, but now refined with a level of
+  detail that will please the most devoted Disney or retro Capcom fan, alike.
+  Featuring hand-drawn animated sprites, authentic Disney character voices talent
+  and richly painted level backgrounds from the classic cartoon TV series, Scrooge
+  McDuck and family come to life like never before. The gameplay retains the
+  authenticity of its 8-bit predecessor, simple and fun, with slight modifications
+  to improve gameplay flow and design.
+release: 2013-08-13
+players: 1
+assets.boxfront: BoxFront/Disney DuckTales - Remastered (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/Disney DuckTales - Remastered (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/Disney DuckTales - Remastered (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/Disney DuckTales - Remastered (USA) (En,Fr,Es,Pt).jpg
+assets.video: Video/Disney DuckTales - Remastered (USA) (En,Fr,Es,Pt).mp4
+x-co-op: No
+
+
+game: Disney Epic Mickey 2 - The Power of Two (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Disney Epic Mickey 2 - The Power of Two (USA) (En,Fr,Es)/Disney Epic Mickey 2 - The Power of Two (USA) (En,Fr,Es).json
+developer: Junction Point Studios
+publisher: Disney Interactive
+genre: Adventure
+description:
+  Epic Mickey 2 takes place in a world based on classic and retired Disney
+  characters and attractions. The story begins sometime after the conclusion of
+  the original Epic Mickey, with Oswald and the other Wasteland characters
+  starting to rebuild their world. A series of earthquakes threaten to undo the
+  work, but the Mad Doctor appears and convinces Oswald to join forces and combat
+  the new menace. Ortensia, Oswald's girlfriend, doesn't trust the Doctor, so she
+  and Gus, Oswald's gremlin assistant, bring Mickey Mouse back to Wasteland to
+  help.
+release: 2012-11-18
+players: 2
+assets.boxfront: BoxFront/Disney Epic Mickey 2 - The Power of Two (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Disney Epic Mickey 2 - The Power of Two (USA) (En,Fr,Es).jpg
+assets.background: Background/Disney Epic Mickey 2 - The Power of Two (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Disney Epic Mickey 2 - The Power of Two (USA) (En,Fr,Es).jpg
+assets.video: Video/Disney Epic Mickey 2 - The Power of Two (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Donkey Kong Country - Tropical Freeze (USA) (En,Fr,Es) (v1.01)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Donkey Kong Country - Tropical Freeze (USA) (En,Fr,Es) (v1.01)/Donkey Kong Country - Tropical Freeze (USA) (En,Fr,Es) (v1.01).json
+developer: Retro Studios
+publisher: Nintendo
+genre: Platform
+description:
+  Help Donkey Kong and his friends save their home and banana hoard from marauding
+  Vikings in Donkey Kong Country: Tropical Freeze, the second entry in the
+  blockbuster platformer series from Retro Studios. he Snowmads, who have invaded
+  and frozen their home, Donkey Kong Island. Players will jump from island to
+  island as they explore a huge variety of new environments, from lush mangroves
+  to burning savannahs and Donkey Kong’s frozen island.
+  .
+  All the challenging ground-pounding, barrel-blasting, side-scrolling mine cart
+  action from the Donkey Kong Country series is back along with a bushel of new
+  game-play elements and features. And now, there are four playable characters!
+  Dixie Kong is back to join the adventure as a playable character alongside Diddy
+  Kong, and for the first time in Donkey Kong Contry, bearded old hero Cranky Kong
+  joins the adventure with his bouncy cane. Any of the three can buddy up with
+  Donkey Kong, and each character offers a different gameplay experience. On their
+  journey to reclaim Donkey Kong Island, Donkey Kong and his friends travel across
+  five islands with a variety of stages that include underwater areas and frozen
+  environments.
+release: 2014-02-21
+players: 2
+assets.boxfront: BoxFront/Donkey Kong Country - Tropical Freeze (USA) (En,Fr,Es) (v1.01).jpg
+assets.boxback: BoxBack/Donkey Kong Country - Tropical Freeze (USA) (En,Fr,Es) (v1.01).jpg
+assets.background: Background/Donkey Kong Country - Tropical Freeze (USA) (En,Fr,Es) (v1.01).jpg
+assets.screenshot: Screenshot/Donkey Kong Country - Tropical Freeze (USA) (En,Fr,Es) (v1.01).jpg
+assets.video: Video/Donkey Kong Country - Tropical Freeze (USA) (En,Fr,Es) (v1.01).mp4
+x-co-op: Yes
+
+
+game: Finding Teddy II - Definitive Edition (Europe) (En,De,Fr,Es,Pt,It,Ru)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Finding Teddy II - Definitive Edition (Europe) (En,De,Fr,Es,Pt,It,Ru)/Finding Teddy II - Definitive Edition (Europe) (En,De,Fr,Es,Pt,It,Ru).json
+developer: Storybird
+publisher: PixelHeart
+genre: Platform
+description:
+  A little girl enters a portal to a world of fantasy called Exidus attempting to
+  save her favorite plush friend...\n
+  In Exidus, King Tarant rules over his kingdom with the love of his subjects. But
+  this harmony creates envy and hatred among the most malicious subjects. Anguis
+  the Magician decides to usurp the throne and takes control of the land. To
+  prevent all creatures from escaping Exidus, Anguis the Magician seals the gates,
+  and hides the four crystal eggs spreading them all over the kingdom. The little
+  girl is trapped in Exidus, but can’t accept her faith. She embarks on a quest to
+  save the Kingdom from all evil. Help King Tarant escape from his prison, and
+  return the crystals to their rightful places where their common energy enables
+  to open up the gate and defeat Anguis.
+  .
+  Finding Teddy 2, is the new 2D nightmare adventure / action game with a pixel
+  art retro twist. In this side scrolling platform adventure, you will need to
+  upgrade your equipment and fight the evil forces of Anguis the Magician. Your
+  mission will be complete when you’ll find your way out of this nightmare.
+  .
+  Features:\n
+  – Great Design and Pixel Art render.\n
+  – Many riddles and mysteries to be solved.\n
+  – Dozens of enemies to defeat.\n
+  – Superb soundtrack to accompany your quest.\n
+  – More than 20 hours of pure gaming adventure.\n
+  – The perfect mixture of RPG, adventure and platform fun.\n
+  (Please update your system if you want to play this game properly)
+release: 2020-01-01
+players: 1
+assets.boxfront: BoxFront/Finding Teddy II - Definitive Edition (Europe) (En,De,Fr,Es,Pt,It,Ru).jpg
+assets.boxback: BoxBack/Finding Teddy II - Definitive Edition (Europe) (En,De,Fr,Es,Pt,It,Ru).jpg
+assets.background: Background/Finding Teddy II - Definitive Edition (Europe) (En,De,Fr,Es,Pt,It,Ru).jpg
+assets.screenshot: Screenshot/Finding Teddy II - Definitive Edition (Europe) (En,De,Fr,Es,Pt,It,Ru).jpg
+x-co-op: No
+
+
+game: Game & Wario (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Game & Wario (USA) (En,Fr,Es)/Game & Wario (USA) (En,Fr,Es).json
+developer: Intelligent Systems Co., Ltd.
+publisher: Nintendo
+genre: Action;Puzzle
+description:
+  Wario has gotten into the business of designing games. With the help of his
+  development crew at WarioWare, Inc., he has set out to make the greatest
+  collection of games Diamond City has ever seen. Game & Wario features these fun
+  and refreshingly unusual games that are played exclusively with the Wii U
+  GamePad controller.
+release: 2013-06-23
+players: 5
+assets.boxfront: BoxFront/Game & Wario (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Game & Wario (USA) (En,Fr,Es).jpg
+assets.background: Background/Game & Wario (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Game & Wario (USA) (En,Fr,Es).jpg
+assets.video: Video/Game & Wario (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Hyrule Warriors (USA) (En,Fr,Es) (v1.01)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Hyrule Warriors (USA) (En,Fr,Es) (v1.01)/Hyrule Warriors (USA) (En,Fr,Es) (v1.01).json
+developer: Team Ninja
+publisher: Nintendo
+genre: Action;Adventure;Strategy;Beat 'em Up
+description:
+  The delicate balance of the Triforce has been disrupted, and Hyrule Kingdom is
+  once again being torn apart by a dark power, this time lead by Sorceress Cia.
+  Now its up to the legendary hero Link to face hordes of enemies and find the
+  missing Princess Zelda. Advance the story to unlock new playable characters with
+  unique moves and weapon types. Collect Rupees and other useful items to upgrade
+  weapons and craft badges, which you can use to bolster each warriors abilities.
+  Then unleash the full power of your attacks with intense combos to clear wave
+  after wave of Bokoblin hordes. Youll have to get your gloves dirty to save
+  Hyrule this time.
+  .
+  * Play as fan-favorite characters like Link and Impa for the first time in the
+  series!\n
+  * Battle the fiercest Legend of Zelda enemies across Hyrules most famous
+  locales.\n
+  * Lay waste to your opponents with brutally efficient attacks and intense
+  combos\n
+  * Think tactically and complete missions in the most efficient way possible
+release: 2014-09-26
+players: 2
+assets.boxfront: BoxFront/Hyrule Warriors (USA) (En,Fr,Es) (v1.01).jpg
+assets.boxback: BoxBack/Hyrule Warriors (USA) (En,Fr,Es) (v1.01).jpg
+assets.background: Background/Hyrule Warriors (USA) (En,Fr,Es) (v1.01).jpg
+assets.screenshot: Screenshot/Hyrule Warriors (USA) (En,Fr,Es) (v1.01).jpg
+assets.video: Video/Hyrule Warriors (USA) (En,Fr,Es) (v1.01).mp4
+x-co-op: Yes
+
+
+game: Just Dance 2014 (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Just Dance 2014 (USA)/Just Dance 2014 (USA).json
+developer: Ubisoft, Inc.
+publisher: Ubisoft, Inc.
+genre: Music
+description:
+  Just Dance 2014 is a dance video game developed by Ubisoft Paris, in
+  collaboration with Ubisoft Milan, Ubisoft Reflections, Ubisoft Bucharest,
+  Ubisoft Pune and Ubisoft Montpellier. The fifth main installment in the
+  franchise, it was officially announced at Ubisoft's E3 2014 press event, and
+  released for PlayStation 3, Xbox 360, Wii, and Wii U on 9 October 2013, and for
+  PlayStation 4 and Xbox One as launch titles on 15 November and 22 November 2013
+  respectively. A sequel, Just Dance 2015 was released in October 2014.
+  .
+  The game introduced several new features to the franchise, including expanded
+  second screen support for Wii U and Xbox platforms, the ability to record and
+  share video clips of gameplay on supported platforms, and online multiplayer
+  through the "World Dance Floor" mode.
+release: 2013-10-01
+players: 2
+assets.boxfront: BoxFront/Just Dance 2014 (USA).jpg
+assets.boxback: BoxBack/Just Dance 2014 (USA).jpg
+assets.background: Background/Just Dance 2014 (USA).jpg
+assets.screenshot: Screenshot/Just Dance 2014 (USA).jpg
+assets.video: Video/Just Dance 2014 (USA).mp4
+x-co-op: Yes
+
+
+game: Just Dance 2015 (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Just Dance 2015 (USA)/Just Dance 2015 (USA).json
+developer: Ubisoft
+publisher: Ubisoft
+genre: Music
+description:
+  Just Dance 2015 is dance video game developed by Ubisoft Paris and Ubisoft Milan
+  and published by Ubisoft. The sixth main installment in the franchise, it was
+  officially announced at Ubisoft's E3 2014 press event on 9 June 2014 alongside
+  Just Dance Now—a web-based spin-off of the franchise. It was released for
+  PlayStation 3, PlayStation 4, Xbox 360, Xbox One, Wii, and Wii U on 21 October
+  2014 in North America, 23 October in Europe, 24 October in the UK and 25 October
+  in Asia.[1] A sequel, Just Dance 2016 was released in October 2015.
+  .
+  2015 introduced additional social networking features to the series, including
+  the ability for players to challenge other players online, and submit clips of
+  themselves playing for inclusion into compilation videos featured in-game. The
+  game also added the ability for a smartphone to be used as a controller with a
+  companion app.
+  .
+  Just Dance 2015 received mostly positive reviews by critics, praising the
+  franchise's continued focus on a casual audience through its forgiving motion
+  detection, multiplayer functionality, and pop-oriented soundtrack, although
+  criticism was directed at the soundtrack for focusing too much on teen pop, as
+  well as its user interface for having confusing and irregular conventions. As of
+  December 31, 2014, over 5 million copies have been shipped worldwide.[2]
+release: 2014-10-21
+players: 2
+assets.boxfront: BoxFront/Just Dance 2015 (USA).jpg
+assets.boxback: BoxBack/Just Dance 2015 (USA).jpg
+assets.background: Background/Just Dance 2015 (USA).jpg
+assets.screenshot: Screenshot/Just Dance 2015 (USA).jpg
+assets.video: Video/Just Dance 2015 (USA).mp4
+x-co-op: Yes
+
+
+game: Just Dance 2016 (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Just Dance 2016 (USA)/Just Dance 2016 (USA).json
+developer: Ubisoft France
+publisher: Ubisoft
+genre: Music
+description:
+  Introducing Just Dance 2016 - the newest game from the top-selling franchise -
+  with a brand new way to play! All you need is your smartphone and the Just Dance
+  Controller App to play Just Dance 2016 on PS4 system, no PlayStationCamera or
+  PlayStationMove needed.
+  .
+  Bust a move to Uptown Funk by Mark Ronson Ft. Bruno Mars and feel the beat in
+  All About That Bass by Meghan Trainor - Just Dance 2016 features an amazing
+  tracklist with visuals that are more creative and breath-taking than ever
+  before. Join over 100MM players and dance to fun favorites and hot hits, today!
+release: 2015-10-20
+players: 4
+assets.boxfront: BoxFront/Just Dance 2016 (USA).jpg
+assets.boxback: BoxBack/Just Dance 2016 (USA).jpg
+assets.background: Background/Just Dance 2016 (USA).jpg
+assets.screenshot: Screenshot/Just Dance 2016 (USA).jpg
+assets.video: Video/Just Dance 2016 (USA).mp4
+x-co-op: Yes
+
+
+game: Just Dance 2017 (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Just Dance 2017 (USA) (En,Fr,Es,Pt)/Just Dance 2017 (USA) (En,Fr,Es,Pt).json
+developer: Ubisoft
+publisher: Ubisoft Entertainment
+genre: Music
+description:
+  Grab your friends and family because it's time to dance! The biggest music video
+  game franchise of all time is back, with over 60 million units sold. Just Dance
+  2017 brings you over 40 new tracks, six game modes, updated content all year
+  long and access to 200+ songs through Just Dance Unlimited!
+release: 2016-10-25
+players: 6
+assets.boxfront: BoxFront/Just Dance 2017 (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/Just Dance 2017 (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/Just Dance 2017 (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/Just Dance 2017 (USA) (En,Fr,Es,Pt).jpg
+assets.video: Video/Just Dance 2017 (USA) (En,Fr,Es,Pt).mp4
+x-co-op: Yes
+
+
+game: Just Dance 2018 (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Just Dance 2018 (USA) (En,Fr,Es,Pt)/Just Dance 2018 (USA) (En,Fr,Es,Pt).json
+developer: Ubisoft Paris
+publisher: Ubisoft
+genre: Action;Music
+description:
+  No matter where you come from, how old you are, if you are a panda or a carrot:
+  turn up the volume and get ready to unleash your inner dancer, because Just
+  Dance 2018 brings out the dancer in everyone! The biggest music video game
+  franchise of all time, with over 63 million units sold is coming back this fall.
+  Whether you are a party starter, a young dancer in the making or a pro dancer
+  looking for new challenges, it's never been so easy to Just Dance!
+  .
+  Join a community of more than 118 million players around the world and bust out
+  your best moves! Dance your heart out to 24K Magic by Bruno Mars, Side to Side
+  by Ariana Grande ft. Nicki Minaj, The Way I Are (Dance With Somebody) by Bebe
+  Rexha ft. Lil Wayne and Chantaje by Shakira ft. Maluma. Relive classics
+  including Daddy Cool by Groove Century, or if K-Pop is your thing get down to
+  Bubble Pop by Hyuna!
+release: 2017-10-24
+players: 6
+assets.boxfront: BoxFront/Just Dance 2018 (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/Just Dance 2018 (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/Just Dance 2018 (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/Just Dance 2018 (USA) (En,Fr,Es,Pt).jpg
+x-co-op: Yes
+
+
+game: Just Dance 4 (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Just Dance 4 (USA)/Just Dance 4 (USA).json
+developer: Ubisoft
+publisher: Ubisoft
+genre: Music;Sports
+description:
+  Just Dance 4 features more than 40 new tracks, ranging from chart-topping
+  Billboard hits to classic dance party tracks. Whether it's pop, Hip-Hop, rock,
+  R&B, country or funk, there is something for everyone.
+release: 2012-11-13
+players: 4
+assets.boxfront: BoxFront/Just Dance 4 (USA).jpg
+assets.boxback: BoxBack/Just Dance 4 (USA).jpg
+assets.background: Background/Just Dance 4 (USA).jpg
+assets.screenshot: Screenshot/Just Dance 4 (USA).jpg
+assets.video: Video/Just Dance 4 (USA).mp4
+x-co-op: Yes
+
+
+game: Kirby and the Rainbow Curse (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Kirby and the Rainbow Curse (USA) (En,Fr,Es)/Kirby and the Rainbow Curse (USA) (En,Fr,Es).json
+developer: HAL Laboratory
+publisher: Nintendo
+genre: Platform
+description:
+  Kirby and the Rainbow Curse is a 2015 platforming video game in the Kirby series
+  developed by HAL Laboratory for the Wii U. The title is a follow-up to the 2005
+  Nintendo DS title Kirby: Canvas Curse and sees Kirby turned into a ball. As
+  Kirby is only able to roll it's up to the player to use the Wii U's touch screen
+  to draw rainbow lines for Kirby to roll on and help him navigate through the
+  game's levels.
+release: 2015-01-22
+players: 4
+assets.boxfront: BoxFront/Kirby and the Rainbow Curse (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Kirby and the Rainbow Curse (USA) (En,Fr,Es).jpg
+assets.background: Background/Kirby and the Rainbow Curse (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Kirby and the Rainbow Curse (USA) (En,Fr,Es).jpg
+assets.video: Video/Kirby and the Rainbow Curse (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: LEGO Batman 2 - DC Super Heroes (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/LEGO Batman 2 - DC Super Heroes (USA) (En,Fr,Es,Pt)/LEGO Batman 2 - DC Super Heroes (USA) (En,Fr,Es,Pt).json
+developer: Traveller's Tales
+publisher: Warner Bros. Interactive Entertainment
+genre: Action
+description:
+  LEGO Batman 2: DC Super Heroes is an action game and the sequel to LEGO Batman:
+  The Videogame. Just like the first game it draws elements from the Batman
+  universe but built entirely in LEGO-style bricks. It starts when a "Man of the
+  Year" award ceremony in Gotham City is interrupted by the Joker and a gang of
+  bandits. Bruce Wayne is a candidate for the award and changes into Batman to
+  pursue them, teaming up with members of the Justice League.
+release: 2013-05-21
+players: 2
+assets.boxfront: BoxFront/LEGO Batman 2 - DC Super Heroes (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/LEGO Batman 2 - DC Super Heroes (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/LEGO Batman 2 - DC Super Heroes (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/LEGO Batman 2 - DC Super Heroes (USA) (En,Fr,Es,Pt).jpg
+assets.video: Video/LEGO Batman 2 - DC Super Heroes (USA) (En,Fr,Es,Pt).mp4
+x-co-op: Yes
+
+
+game: LEGO Dimensions (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/LEGO Dimensions (USA) (En,Fr,Es)/LEGO Dimensions (USA) (En,Fr,Es).json
+developer: Warner Home Video Games
+publisher: Warner Home Video Games
+genre: Action;Adventure
+description:
+  When a mysterious and powerful vortex suddenly appears in various LEGO worlds,
+  different characters from DC Comics, The Lord of the Rings and The LEGO Movie
+  are swept away. To save their friends, Batman, Gandalf and Wyldstyle bravely
+  jump into the vortex and quickly find themselves fighting to save all of LEGO
+  humanity. Let creativity be the guide to a building and gaming adventure -
+  journey through unexpected worlds and team-up with unlikely allies on the quest
+  to defeat the evil Lord Vortech. Play with different from different worlds
+  together in one LEGO videogame, and use each other's vehicles and gadgets in a
+  way never before possible. LEGO Bad Cop driving the DeLorean Time Machine. Why
+  not?! The LEGO Ninja go Masters of Spinjitsu fighting alongside Wonder
+  Woman...yes, please! Get ready to break the rules, because the only rule with
+  LEGO Dimensions is that there are no rules.
+release: 2015-09-27
+players: 2
+assets.boxfront: BoxFront/LEGO Dimensions (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/LEGO Dimensions (USA) (En,Fr,Es).jpg
+assets.background: Background/LEGO Dimensions (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/LEGO Dimensions (USA) (En,Fr,Es).jpg
+assets.video: Video/LEGO Dimensions (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: LEGO Jurassic World (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/LEGO Jurassic World (USA) (En,Fr,Es,Pt)/LEGO Jurassic World (USA) (En,Fr,Es,Pt).json
+developer: TT Games
+publisher: Warner Bros Interactive Entertainment
+genre: Action;Adventure
+description:
+  LEGO Jurassic World is the first videogame to let players experience all four
+  Jurassic films in humorous LEGO form. The thrilling adventure recreates
+  unforgettable scenes and action sequences from the films, allowing fans to play
+  through key moments and giving them the opportunity to fully explore the
+  expansive grounds of Isla Nublar & Isla Sorna.
+release: 2015-06-12
+players: 2
+assets.boxfront: BoxFront/LEGO Jurassic World (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/LEGO Jurassic World (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/LEGO Jurassic World (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/LEGO Jurassic World (USA) (En,Fr,Es,Pt).jpg
+assets.video: Video/LEGO Jurassic World (USA) (En,Fr,Es,Pt).mp4
+x-co-op: Yes
+
+
+game: LEGO Marvel Super Heroes (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/LEGO Marvel Super Heroes (USA) (En,Fr,Es,Pt)/LEGO Marvel Super Heroes (USA) (En,Fr,Es,Pt).json
+developer: Traveller's Tales
+publisher: WB Games
+genre: Action
+description:
+  When the villainous Doctor Doom and Loki attacked the space-faring Silver
+  Surfer, his board's shattered remains rained down upon an unsuspecting Earth.
+  Now the race is on to recover the powerful Cosmic Bricks that once comprised the
+  board as Nick Fury gathers the Earth's mightiest heroes to recover them - all
+  before Loki, Doctor Doom and their cabal of villains can assemble their Super
+  Weapon and take over the world. Meanwhile, Silver Surfer's master, the
+  planet-eating Galactus, comes in search of his Herald and his next meal...
+  Earth.
+release: 2013-10-22
+players: 2
+assets.boxfront: BoxFront/LEGO Marvel Super Heroes (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/LEGO Marvel Super Heroes (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/LEGO Marvel Super Heroes (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/LEGO Marvel Super Heroes (USA) (En,Fr,Es,Pt).jpg
+assets.video: Video/LEGO Marvel Super Heroes (USA) (En,Fr,Es,Pt).mp4
+x-co-op: Yes
+
+
+game: LEGO Star Wars - The Force Awakens (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/LEGO Star Wars - The Force Awakens (USA) (En,Fr,Es,Pt)/LEGO Star Wars - The Force Awakens (USA) (En,Fr,Es,Pt).json
+developer: TT Games
+publisher: Warner Bros. Interactive Entertainment
+genre: Action;Adventure
+description:
+  LEGO Star Wars: The Force Awakens is a Lego-themed action-adventure video game
+  developed by TT Fusion, based on the film Star Wars: The Force Awakens. It is
+  the fifth entry in TT Games' Lego Star Wars series. Under license from
+  Lucasfilm, the game was released by Warner Bros. Interactive Entertainment for
+  iOS, Microsoft Windows, PlayStation 3, PlayStation 4, Xbox 360, Xbox One,
+  Nintendo 3DS, PlayStation Vita, and Wii U, on 28 June 2016, and for Android on
+  27 July 2016. The game was ported and released by Feral Interactive for OS X on
+  30 June 2016.
+  .
+  .
+  .
+  In addition to adapting the film, the game includes content which covers the
+  period between Return of the Jedi and The Force Awakens.
+  .
+  .
+  .
+  The gameplay of Lego Star Wars: The Force Awakens is similar to previous Lego
+  video games. New systems were introduced including Multi-Builds which grant
+  players access to various building options. These options can be destroyed and
+  rebuilt in certain brick-building sections of the game, allowing for new path to
+  be opened within the game's world. Players can also hide behind cover and engage
+  in "Blaster Battles" with enemies throughout the game. The game features over
+  200 playable characters, including Rey, Finn, Captain Phasma, Poe Dameron, Han
+  Solo, Kylo Ren and droids, including C-3PO and BB-8, and locations, including
+  Jakku and Starkiller Base. In addition to adapting the film, the game also
+  bridged the gap between Return of the Jedi and The Force Awakens, with Lucasfilm
+  allowing for creative freedom in the additional content that will explore the
+  characters' backstories.
+release: 2016-06-28
+players: 2
+assets.boxfront: BoxFront/LEGO Star Wars - The Force Awakens (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/LEGO Star Wars - The Force Awakens (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/LEGO Star Wars - The Force Awakens (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/LEGO Star Wars - The Force Awakens (USA) (En,Fr,Es,Pt).jpg
+assets.video: Video/LEGO Star Wars - The Force Awakens (USA) (En,Fr,Es,Pt).mp4
+x-co-op: Yes
+
+
+game: Legend of Zelda, The - Breath of the Wild (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Legend of Zelda, The - Breath of the Wild (USA) (En,Fr,Es)/Legend of Zelda, The - Breath of the Wild (USA) (En,Fr,Es).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action;Role-Playing
+description:
+  Step into a world of adventure
+  .
+  Forget everything you know about The Legend of Zelda games. Step into a world of
+  discovery, exploration and adventure in The Legend of Zelda: Breath of the Wild,
+  a boundary-breaking new game in the acclaimed series. Travel across fields,
+  through forests and to mountain peaks as you discover what has become of the
+  ruined kingdom of Hyrule in this stunning open-air adventure.
+  .
+  Explore the wilds of Hyrule any way you like - Climb up towers and mountain
+  peaks in search of new destinations, then set your own path to get there and
+  plunge into the wilderness. Along the way, you'll battle towering enemies, hunt
+  wild beasts and gather ingredients for the food and elixirs you'll need to
+  sustain you on your journey.
+  .
+  More than 100 Shrines of Trials to discover and explore - Shrines dot the
+  landscape, waiting to be discovered in any order you want. Search for them in
+  various ways, and solve a variety of puzzles inside. Work your way through the
+  traps and devices inside to earn special items and other rewards that will help
+  you on your adventure.
+  .
+  Be prepared and properly equipped - With an entire world waiting to be explored,
+  you'll need a variety of outfits and gear to reach every corner. You may need to
+  bundle up with warmer clothes or change into something better suited to the
+  desert heat. Some clothing even has special effects that, for example, can make
+  you faster and stealthier.
+  .
+  Battling enemies requires strategy - The world is inhabited with enemies of all
+  shapes and sizes. Each one has its own attack method and weaponry, so you must
+  think quickly and develop the right strategies to defeat them.
+release: 2017-03-03
+players: 1
+assets.boxfront: BoxFront/Legend of Zelda, The - Breath of the Wild (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Breath of the Wild (USA) (En,Fr,Es).jpg
+assets.background: Background/Legend of Zelda, The - Breath of the Wild (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Breath of the Wild (USA) (En,Fr,Es).jpg
+assets.video: Video/Legend of Zelda, The - Breath of the Wild (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Legend of Zelda, The - The Wind Waker HD (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Legend of Zelda, The - The Wind Waker HD (USA) (En,Fr,Es)/Legend of Zelda, The - The Wind Waker HD (USA) (En,Fr,Es).json
+developer: Nintendo
+publisher: Nintendo
+genre: Action;Adventure
+description:
+  The game is set on a group of islands in a vast sea—a first for the series. The
+  player controls Link, the protagonist of the Zelda series. He struggles against
+  his nemesis, Ganondorf, for control of a sacred relic known as the Triforce.
+  Link spends a large portion of the game sailing, traveling between islands, and
+  traversing dungeons and temples to gain the power necessary to defeat Ganondorf.
+  He also spends time trying to find his little sister Aryll.The Wind Waker HD
+  expands on the original with updated 1080p-resolution graphics, an alternative
+  lighting engine, as well as new gameplay features and modifications. The release
+  of the game marks the ten-year anniversary of the international release of the
+  original, and the first game in the The Legend of Zelda series released on the
+  Wii U.
+release: 2013-09-20
+players: 1
+assets.boxfront: BoxFront/Legend of Zelda, The - The Wind Waker HD (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - The Wind Waker HD (USA) (En,Fr,Es).jpg
+assets.background: Background/Legend of Zelda, The - The Wind Waker HD (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - The Wind Waker HD (USA) (En,Fr,Es).jpg
+assets.video: Video/Legend of Zelda, The - The Wind Waker HD (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Legend of Zelda, The - Twilight Princess HD (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Legend of Zelda, The - Twilight Princess HD (USA) (En,Fr,Es)/Legend of Zelda, The - Twilight Princess HD (USA) (En,Fr,Es).json
+developer: Tantalus
+publisher: Nintendo
+genre: Action;Adventure;Puzzle;Role-Playing
+description:
+  The Legend of Zelda: Twilight Princess is a critically acclaimed masterpiece,
+  set in a massive world bursting with life - but also shadow. A dark figure from
+  the Twilight Realm has invaded the world of light. As Link, a farmhand turned
+  cursed beast, you'll join forces with the impish Midna, the Hyrule Resistance,
+  and trusted (albeit unusual) allies to survive a quest that will take you to the
+  farthest corners of Hyrule and beyond... to the Twilight Realm. This epic,
+  emotional adventure is now on the Wii U console.
+release: 2016-03-04
+players: 1
+assets.boxfront: BoxFront/Legend of Zelda, The - Twilight Princess HD (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Legend of Zelda, The - Twilight Princess HD (USA) (En,Fr,Es).jpg
+assets.background: Background/Legend of Zelda, The - Twilight Princess HD (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Legend of Zelda, The - Twilight Princess HD (USA) (En,Fr,Es).jpg
+assets.video: Video/Legend of Zelda, The - Twilight Princess HD (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Mario Party 10 (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Mario Party 10 (USA)/Mario Party 10 (USA).json
+developer: NDcube
+publisher: Nintendo
+genre: Strategy;Party
+description:
+  Mario Party 10 is a 2015 party video game for the Nintendo Wii U. Developed by
+  Nd Cube and published by Nintendo, it is the tenth "main" game in the Mario
+  Party series, the fourteenth in the franchise, and the first game in the series
+  for the Wii U. The game was released worldwide in March 2015.
+release: 2015-03-20
+players: 5
+assets.boxfront: BoxFront/Mario Party 10 (USA).jpg
+assets.boxback: BoxBack/Mario Party 10 (USA).jpg
+assets.background: Background/Mario Party 10 (USA).jpg
+assets.screenshot: Screenshot/Mario Party 10 (USA).jpg
+assets.video: Video/Mario Party 10 (USA).mp4
+x-co-op: Yes
+
+
+game: Mighty No. 9 (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Mighty No. 9 (USA)/Mighty No. 9 (USA).json
+developer: Abstraction Games
+publisher: Deep Silver
+genre: Action;Platform
+description:
+  Mighty No. 9 is a Japanese 2D Side-scrolling Action game that takes the best
+  elements from the 8 and 16-bit classics that you know and love and transforms
+  them with modern tech, fresh mechanics, and fan input into something amazing!
+  Led by a veteran team with decades of experience, Mighty No. 9 promises to be an
+  evolution in the well-known genre. STORY - In a world of advanced robotic
+  engineering, nine robot siblings known as the "Mighty Numbers" rule in the
+  Battle Colosseum. But when a sudden act of cyber terror turns the battle robots
+  into rampaging menaces, it's up to Beck, the lone member of the team unaffected
+  by the virus to save the future of humanity!
+release: 2016-06-21
+players: 4
+assets.boxfront: BoxFront/Mighty No. 9 (USA).jpg
+assets.boxback: BoxBack/Mighty No. 9 (USA).jpg
+assets.background: Background/Mighty No. 9 (USA).jpg
+assets.screenshot: Screenshot/Mighty No. 9 (USA).jpg
+assets.video: Video/Mighty No. 9 (USA).mp4
+x-co-op: Yes
+
+
+game: Monster Hunter 3 Ultimate (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Monster Hunter 3 Ultimate (USA)/Monster Hunter 3 Ultimate (USA).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Adventure;Role-Playing
+description:
+  Discover the epic world of Monster Hunter as you journey through more than 200
+  exhilarating quests, battle larger-than-life monsters, and create hundreds of
+  weapons and armor. Hunt with your two AI companions in single player quests or
+  connect the Wii U system with up to three friends in four player online battles.
+  Visually stunning 1080p HD graphics and online voice chat make this the best
+  Monster Hunter experience to date.
+release: 2013-03-19
+players: 1
+assets.boxfront: BoxFront/Monster Hunter 3 Ultimate (USA).jpg
+assets.boxback: BoxBack/Monster Hunter 3 Ultimate (USA).jpg
+assets.background: Background/Monster Hunter 3 Ultimate (USA).jpg
+assets.screenshot: Screenshot/Monster Hunter 3 Ultimate (USA).jpg
+assets.video: Video/Monster Hunter 3 Ultimate (USA).mp4
+x-co-op: No
+
+
+game: NES Remix Pack (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/NES Remix Pack (USA) (En,Fr,Es)/NES Remix Pack (USA) (En,Fr,Es).json
+developer: Nintendo EAD Tokyo
+publisher: Nintendo
+genre: Action;Platform;Sports
+description:
+  THE CLASSICS - REMIXED AND REBORN!\n
+  Classic gameplay reimagined! Got the skills to take on Nintendo history? Compete
+  in the Nintendo World Championships Remix!
+  .
+  INCLUDES:
+  .
+  NES Remix: Super Mario Bros./The Legend of Zelda/Donkey Kong/Mario Bros./Balloon
+  Fight/Excitebike/Ice Climber/Golf/Baseball/Tennis/Donkey Kong Jr./Donkey Kong
+  3/Pinball/Clu Clu Land/Urban Champion/Wrecking Crew\n
+  +\n
+  NES Remix 2: Super Mario Bros. 3/Metroid/Kid Icarus/The Adventure of
+  Link/Punch-Out!!/Ice Hockey/Dr. Mario/Super Mario Bros. 2/Wario's Woods/Super
+  Mario Bros.: Lost Levels/NES Open Tournament Golf/Kirby's Adventure\n
+  +\n
+  The original Super Mario Bros., reversed and starring Luigi!
+release: 2014-12-05
+players: 2
+assets.boxfront: BoxFront/NES Remix Pack (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/NES Remix Pack (USA) (En,Fr,Es).jpg
+assets.background: Background/NES Remix Pack (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/NES Remix Pack (USA) (En,Fr,Es).jpg
+assets.video: Video/NES Remix Pack (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: New Super Mario Bros. U + New Super Luigi U (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/New Super Mario Bros. U + New Super Luigi U (USA) (En,Fr,Es)/New Super Mario Bros. U + New Super Luigi U (USA) (En,Fr,Es).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Platform
+description:
+  New Super Mario Bros. U + New Super Luigi U is a compilation title for the Wii U
+  console. It is the first compilation of Mario games on the Wii U and includes
+  New Super Mario Bros. U and New Super Luigi U on a single disc.
+release: 2013-11-01
+players: 4
+assets.boxfront: BoxFront/New Super Mario Bros. U + New Super Luigi U (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/New Super Mario Bros. U + New Super Luigi U (USA) (En,Fr,Es).jpg
+assets.background: Background/New Super Mario Bros. U + New Super Luigi U (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/New Super Mario Bros. U + New Super Luigi U (USA) (En,Fr,Es).jpg
+assets.video: Video/New Super Mario Bros. U + New Super Luigi U (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: Nintendo Land (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Nintendo Land (USA) (En,Fr,Es)/Nintendo Land (USA) (En,Fr,Es).json
+developer: Nintendo EAD
+publisher: Nintendo
+genre: Action;Adventure;Platform;Racing;Shooter;Sports
+description:
+  Nintendo Land is a fun and lively theme park filled with 12 different
+  attractions, each with its own take on a Nintendo franchise. Each attraction
+  features unique and innovative game-play experiences made possible by the Wii U
+  GamePad controller. Depending on the attraction, players can compete solo or
+  against other players, or even team up to play cooperatively. Up to five players
+  can participate in dynamic multiplayer modes in select attractions.* The
+  experiences change every time, depending on whether players are using the
+  GamePad, holding a Wii Remote or just watching others play on the TV screen.
+release: 2012-11-18
+players: 5
+assets.boxfront: BoxFront/Nintendo Land (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Nintendo Land (USA) (En,Fr,Es).jpg
+assets.background: Background/Nintendo Land (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Nintendo Land (USA) (En,Fr,Es).jpg
+assets.video: Video/Nintendo Land (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: Paper Mario - Color Splash (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Paper Mario - Color Splash (USA) (En,Fr,Es)/Paper Mario - Color Splash (USA) (En,Fr,Es).json
+developer: Intelligent Systems
+publisher: Nintendo
+genre: Adventure
+description:
+  A mystery is afoot on Prism Island - and only Paper Mario can solve it by
+  restoring the island's vanishing colors with his new Paint Hammer and the
+  powerful Battle Cards up his sleeve. These fresh layers of strategy, along with
+  the hilarious action adventure gameplay the series is known for, make this one
+  of the most colorful Paper Mario action-adventure games ever.
+release: 2016-10-07
+players: 1
+assets.boxfront: BoxFront/Paper Mario - Color Splash (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Paper Mario - Color Splash (USA) (En,Fr,Es).jpg
+assets.background: Background/Paper Mario - Color Splash (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Paper Mario - Color Splash (USA) (En,Fr,Es).jpg
+assets.video: Video/Paper Mario - Color Splash (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Pikmin 3 (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Pikmin 3 (USA) (En,Fr,Es)/Pikmin 3 (USA) (En,Fr,Es).json
+developer: Nintendo
+publisher: Nintendo
+genre: Puzzle;Strategy
+description:
+  Pikmin 3 is a fully reimagined, mass-action strategy title from the critically
+  acclaimed Pikmin series. Players will discover a beautiful world filled with
+  strange creatures and take command of a swarm of ant-like Pikmin trying to
+  survive. The world is densely packed with treasures and enemies, which makes the
+  game much more action focused and fills it with layers of potential strategies
+  and paths, adding greater replayability to challenge modes.
+release: 2013-08-04
+players: 2
+assets.boxfront: BoxFront/Pikmin 3 (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Pikmin 3 (USA) (En,Fr,Es).jpg
+assets.background: Background/Pikmin 3 (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Pikmin 3 (USA) (En,Fr,Es).jpg
+assets.video: Video/Pikmin 3 (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Pokken Tournament (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Pokken Tournament (USA)/Pokken Tournament (USA).json
+developer: Bandai Namco Games
+publisher: Nintendo
+genre: Action;Fighting
+description:
+  Pokkén Tournament is a fighting game in which all the playable characters are
+  Pokémon. Combat takes place in a circular arena, with two Pokémon fighting at a
+  time. Battles are divided into Field Phase, which focuses on maintaining
+  distance between the player and opponent while attacking at strategic moments,
+  and Duel Phase, in which the battle shifts to a horizontal plane. Connecting
+  with certain kinds of attacks will trigger the switch between the two phases.
+  Pokémon can jump, guard, and unleash various attacks in order to bring their
+  opponent's health meter down, while keeping their own health up. Successful
+  attacks and guards will fill the Pokémon's Resonance Gauge, which will allow
+  them to activate Burst Mode when it is full. In Burst Mode, the Pokémon can
+  unleash more powerful attacks, and certain ones will even be able to Mega
+  Evolve. Two Support Pokémon can be chosen at the beginning of a match, one of
+  which will then be chosen to be active for the round, and may be summoned to
+  attack the opponent or give the player beneficial effects for a short amount of
+  time. Support Pokémon need to recharge before being used again.
+release: 2016-03-18
+players: 2
+assets.boxfront: BoxFront/Pokken Tournament (USA).jpg
+assets.boxback: BoxBack/Pokken Tournament (USA).jpg
+assets.background: Background/Pokken Tournament (USA).jpg
+assets.screenshot: Screenshot/Pokken Tournament (USA).jpg
+assets.video: Video/Pokken Tournament (USA).mp4
+x-co-op: No
+
+
+game: Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It,Nl,Pt,Pl,Ru)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It,Nl,Pt,Pl,Ru)/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It,Nl,Pt,Pl,Ru).json
+developer: Capcom
+publisher: Capcom
+genre: Action;Horror
+description:
+  Resident Evil: Revelations returns to the survival horror gameplay of earlier
+  series installments, with returning elements such as a limited supply of
+  ammunition, and more emphasis on exploration and puzzle solving. The game's
+  camera keeps an over-the-shoulder view from behind the playable character. The
+  player may move the protagonist while aiming a weapon, and has the option to
+  switch between a first-person and third-person perspective. A new device, the
+  Genesis, detects items hidden throughout the game's environments.
+release: 2013-05-21
+players: 1
+assets.boxfront: BoxFront/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It,Nl,Pt,Pl,Ru).jpg
+assets.boxback: BoxBack/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It,Nl,Pt,Pl,Ru).jpg
+assets.background: Background/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It,Nl,Pt,Pl,Ru).jpg
+assets.screenshot: Screenshot/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It,Nl,Pt,Pl,Ru).jpg
+assets.video: Video/Resident Evil - Revelations (USA) (En,Ja,Fr,De,Es,It,Nl,Pt,Pl,Ru).mp4
+x-co-op: No
+
+
+game: Rodea the Sky Soldier (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Rodea the Sky Soldier (USA)/Rodea the Sky Soldier (USA).json
+developer: Kadokawa Games
+publisher: NIS America
+genre: Action
+description:
+  A thousand years ago, Emperor Geardo of the Naga Empire sent an army of machine
+  soldiers to invade the sky kingdom of Garuda. Thanks to the efforts of Princess
+  Cecilia and Rodea, a machine soldier who promised to protect Garuda, Emperor
+  Geardo's assault was thwarted. In present day, a spirited inventor named Ion
+  discovers an abandoned robot that has fallen into disrepair in the heart of a
+  scorching desert. Upon completing her repairs, the robot stirs to life and
+  reveals itself to be none other than Rodea. Stunned to find himself in the
+  future, Rodea learns that the Naga Empire is no more and that Garuda has known
+  peace for a thousand years. But this peace was not meant to last, for the forces
+  of Naga have returned to wage war against Garuda. Remembering the promise he
+  made 1,000 years ago, Rodea takes to the skies to defend Garuda from the Naga
+  Empire once again.
+release: 2015-11-10
+players: 1
+assets.boxfront: BoxFront/Rodea the Sky Soldier (USA).jpg
+assets.boxback: BoxBack/Rodea the Sky Soldier (USA).jpg
+assets.background: Background/Rodea the Sky Soldier (USA).jpg
+assets.screenshot: Screenshot/Rodea the Sky Soldier (USA).jpg
+assets.video: Video/Rodea the Sky Soldier (USA).mp4
+x-co-op: No
+
+
+game: Runbow - Deluxe Edition (USA) (En,Ja,Fr,De,Es,It)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Runbow - Deluxe Edition (USA) (En,Ja,Fr,De,Es,It)/Runbow - Deluxe Edition (USA) (En,Ja,Fr,De,Es,It).json
+developer: 13AM Games
+publisher: 13AM Games
+genre: Racing;Fighting
+description:
+  Runbow is a fast, frantic game that you can play with up to 9 people on the same
+  console, or online with friends all around the world. Conquer over 140 levels in
+  the single player Adventure, or go head to head in one of Runbow's four
+  multiplayer modes. The world changes with each swipe of color, so you'll have to
+  stay on your toes as platforms and obstacles disappear!
+  .
+  Runbow: Deluxe Edition includes - The original Game, Satura's Space Adventure,
+  All DLC add-on packs, and the Runbow OST Volumes 1 & 2.
+release: 2016-11-01
+players: 9
+assets.boxfront: BoxFront/Runbow - Deluxe Edition (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.boxback: BoxBack/Runbow - Deluxe Edition (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.background: Background/Runbow - Deluxe Edition (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.screenshot: Screenshot/Runbow - Deluxe Edition (USA) (En,Ja,Fr,De,Es,It).jpg
+assets.video: Video/Runbow - Deluxe Edition (USA) (En,Ja,Fr,De,Es,It).mp4
+x-co-op: Yes
+
+
+game: Scribblenauts Unlimited (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Scribblenauts Unlimited (USA)/Scribblenauts Unlimited (USA).json
+developer: 5th Cell
+publisher: Warner Bros
+genre: Adventure;Puzzle
+description:
+  Scribblenauts Unlimited features a huge side-scrolling open world with new,
+  high-definition hand-drawn scenery and objects where players can help the game's
+  hero, Maxwell, solve robust puzzles and challenges by summoning any object they
+  can imagine. And for the first time, players learn the backstory of Maxwell's
+  parents, his twin sister Lily, and how he acquired his magical notepad.
+release: 2012-11-18
+players: 4
+assets.boxfront: BoxFront/Scribblenauts Unlimited (USA).jpg
+assets.boxback: BoxBack/Scribblenauts Unlimited (USA).jpg
+assets.background: Background/Scribblenauts Unlimited (USA).jpg
+assets.screenshot: Screenshot/Scribblenauts Unlimited (USA).jpg
+assets.video: Video/Scribblenauts Unlimited (USA).mp4
+x-co-op: No
+
+
+game: Scribblenauts Unmasked - A DC Comics Adventure (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Scribblenauts Unmasked - A DC Comics Adventure (USA)/Scribblenauts Unmasked - A DC Comics Adventure (USA).json
+developer: 5th Cell
+publisher: Warner Brothers Interactive Entertainment
+genre: Action;Adventure;Puzzle
+description:
+  Challenge your imagination as you battle the mightiest villains in an exciting
+  and action-filled adventure through GOTHAM CITY, METROPOLIS, ATLANTIS and other
+  iconic locales from the DC Comics universe. Enjoy endless replayability with
+  new, dynamic puzzles that feature a different mission every time you play.
+  .
+  Bring out your inner super hero (or villain!) with the all-new Super Hero
+  Creator by crafting completely original objects out of parts of existing DC
+  Comics characters. Then assign unique properties to your creations and use them
+  to solve puzzles, or share them online with friends - which they can use in game
+  or further modify as they like.
+release: 2013-09-24
+players: 4
+assets.boxfront: BoxFront/Scribblenauts Unmasked - A DC Comics Adventure (USA).jpg
+assets.boxback: BoxBack/Scribblenauts Unmasked - A DC Comics Adventure (USA).jpg
+assets.background: Background/Scribblenauts Unmasked - A DC Comics Adventure (USA).jpg
+assets.screenshot: Screenshot/Scribblenauts Unmasked - A DC Comics Adventure (USA).jpg
+assets.video: Video/Scribblenauts Unmasked - A DC Comics Adventure (USA).mp4
+x-co-op: No
+
+
+game: Shakedown - Hawaii (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Shakedown - Hawaii (USA)/Shakedown - Hawaii (USA).json
+developer: VBlank Entertainment
+publisher: VBlank Entertainment
+genre: Action
+description:
+  Shakedown: Hawaii is an open world action-adventure video game developed by
+  Canadian studio Vblank Entertainment. Like its predecessor Retro City Rampage,
+  it is a parody of multiple subjects, including retro games, 1980s pop culture,
+  manipulative business practices, and Grand Theft Auto and similar games.
+  .
+  Decades after founding Hawaii-based conglomerate Feeble Multinational and
+  writing a best-selling business advice book, the aging and out-of-touch CEO of
+  Feeble learns that his company is on the verge of bankruptcy, with online
+  shopping, video streaming, and vehicle for hire mobile apps sapping Feeble's
+  profits from its retail stores, VHS rentals, and taxi services. The CEO,
+  together with his unemployed adult son Scooter and a henchman known only as "The
+  Consultant", band together to rebuild Feeble into a corporate empire. Their
+  arsenal of unscrupulous tactics includes violating consumer protection
+  standards, razing buildings to make way for redevelopment, competing on a
+  dangerous game show, destroying package delivery trucks, raiding a drug cartel,
+  and shaking down other businesses. A subplot centers around the CEO's son
+  Scooter as he joins a gang and performs tasks for the gang's leader, Tad.
+release: 2020-08-20
+players: 1
+assets.boxfront: BoxFront/Shakedown - Hawaii (USA).jpg
+assets.boxback: BoxBack/Shakedown - Hawaii (USA).jpg
+assets.background: Background/Shakedown - Hawaii (USA).jpg
+assets.screenshot: Screenshot/Shakedown - Hawaii (USA).jpg
+x-co-op: No
+
+
+game: Shovel Knight (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Shovel Knight (USA)/Shovel Knight (USA).json
+developer: Yacht Club Games
+publisher: Yacht Club Games
+genre: Action;Adventure;Platform
+description:
+  Shovel Knight is a sweeping classic action adventure game with awesome gameplay,
+  memorable characters, and an 8-bit retro aesthetic. It's a hot mashup of new and
+  old! You play as the eponymous Shovel Knight, a small knight with a huge quest.
+  Shovel Knight has come to this land with two goals: to defeat the evil
+  Enchantress and quest for his lost beloved. He wields a Shovel Blade: a
+  multipurpose weapon whose techniques have now been lost to the ages. Always
+  honest and helpful, Shovel Knight is a shining example of the code of Shovelry:
+  Slash Mercilessly and Dig Tirelessly!
+  .
+  But, between Shovel Knight and his beloved stands a cadre of villainous knights.
+  These terrible foes, known as The Order of No Quarter, have been dispatched to
+  prevent Shovel Knight from reaching the Enchantress, and will pursue their
+  mission at any cost. If you love games with perfect platforming, beautiful art,
+  infectious music, crazy bosses, humor and levity, and real heart... Shovel Knight
+  is for you!
+release: 2014-06-26
+players: 1
+assets.boxfront: BoxFront/Shovel Knight (USA).jpg
+assets.boxback: BoxBack/Shovel Knight (USA).jpg
+assets.background: Background/Shovel Knight (USA).jpg
+assets.screenshot: Screenshot/Shovel Knight (USA).jpg
+assets.video: Video/Shovel Knight (USA).mp4
+x-co-op: No
+
+
+game: Sonic & All-Stars Racing Transformed (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Sonic & All-Stars Racing Transformed (USA)/Sonic & All-Stars Racing Transformed (USA).json
+developer: Sega
+publisher: Sega
+genre: Racing;Sports
+description:
+  Sonic and the All-Stars cast line up on the starting grid once again to battle
+  for supremacy in the ultimate race. Compete across land, water and air in
+  incredible transforming vehicles that change from cars to boats to planes
+  mid-race. Master your driving skills as you drift, barrel role and boost to
+  overtake your rivals, or use your weapons tactically and unleash your All-Star
+  move to gain the winning advantage. It's not just your fellow racers you need to
+  watch out for, as the road falls away beneath you, or the river runs dry, new
+  routes emerge and your vehicle transforms to take advantage of the terrain.
+  Discover alternative routes and short cuts as you perfect the course in this
+  adrenaline fuelled dash to the finish line - racing will never be the same
+  again. This is not just racing, it's racing transformed!
+release: 2012-11-18
+players: 1
+assets.boxfront: BoxFront/Sonic & All-Stars Racing Transformed (USA).jpg
+assets.boxback: BoxBack/Sonic & All-Stars Racing Transformed (USA).jpg
+assets.background: Background/Sonic & All-Stars Racing Transformed (USA).jpg
+assets.screenshot: Screenshot/Sonic & All-Stars Racing Transformed (USA).jpg
+assets.video: Video/Sonic & All-Stars Racing Transformed (USA).mp4
+x-co-op: No
+
+
+game: Sonic Boom - Rise of Lyric (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Sonic Boom - Rise of Lyric (USA)/Sonic Boom - Rise of Lyric (USA).json
+developer: Big Red Button Entertainment
+publisher: Sega
+genre: Action;Adventure;Platform
+description:
+  Sonic Boom: Rise of Lyric is an action-adventure video game developed by Big Red
+  Button and published by Sega for the Wii U console.Along with Sonic Boom:
+  Shattered Crystal for the Nintendo 3DS, the game is a spin-off of Sega's Sonic
+  the Hedgehog series and is a part of the Sonic Boom franchise, which also
+  consists of an animated television series (whose games serve as prequel), a
+  comic series by Archie Comics, and a toyline by Tomy.
+  .
+  The two games together formed the third and final part in Sega's exclusivity
+  agreement with Nintendo, following Sonic Lost World and Mario & Sonic at the
+  Sochi 2014 Olympic Winter Games in 2013. Both games were released in North
+  America, Europe, and Australia in November 2014,and in Japan the following
+  month.The game was retitled as Sonic Toon: Ancient Treasure for its Japanese
+  release.
+  .
+  Rise of Lyric was met with very negative reception from critics, where it was
+  heavily criticized for its numerous glitches, camera system, controls, combat,
+  story, dialogue, and character development. The game did not perform well
+  commercially, with the combined sales of Rise of Lyric and Shattered Crystal
+  totaling 620,000 copies by May 2015.
+release: 2014-11-11
+players: 4
+assets.boxfront: BoxFront/Sonic Boom - Rise of Lyric (USA).jpg
+assets.boxback: BoxBack/Sonic Boom - Rise of Lyric (USA).jpg
+assets.background: Background/Sonic Boom - Rise of Lyric (USA).jpg
+assets.screenshot: Screenshot/Sonic Boom - Rise of Lyric (USA).jpg
+assets.video: Video/Sonic Boom - Rise of Lyric (USA).mp4
+x-co-op: Yes
+
+
+game: Star Fox Guard (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Star Fox Guard (USA) (En,Fr,Es)/Star Fox Guard (USA) (En,Fr,Es).json
+developer: PlatinumGames
+publisher: Nintendo
+genre: Strategy
+description:
+  Star Fox Guard is a 3D tower defense game in which players must protect various
+  bases, owned by Slippy Toad's uncle, Grippy, from oncoming attackers by
+  monitoring security cameras. The television displays footage from all of the
+  available security cameras while the Wii U GamePad features an overhead view of
+  the base. To defend the base's core, players must watch the monitors carefully
+  for any oncoming attackers and switch control to one of the available cameras in
+  order to fire its weapon. Enemies are divided into two classes; Combat robots,
+  which must all be defeated in order to progress, and Chaos robots, which hinder
+  the player by tampering with the cameras, such as obscuring the view or showing
+  fake footage. The game features 100 missions and an editor mode that allows
+  players to edit the behavior of enemies in levels and share them online.
+release: 2016-04-22
+players: 2
+assets.boxfront: BoxFront/Star Fox Guard (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Star Fox Guard (USA) (En,Fr,Es).jpg
+assets.background: Background/Star Fox Guard (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Star Fox Guard (USA) (En,Fr,Es).jpg
+assets.video: Video/Star Fox Guard (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Star Fox Zero (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Star Fox Zero (USA) (En,Fr,Es)/Star Fox Zero (USA) (En,Fr,Es).json
+developer: PlatinumGames
+publisher: Nintendo
+genre: Shooter
+description:
+  As legendary space pilot Fox McCloud, blast through an onslaught of enemy forces
+  to bring peace to the galaxy. In this white-knuckle space shooter, it'll take
+  more than luck to master the Arwing jet, the Gyrowing flight drone, and the
+  Landmaster tank! You have what it takes. Now prove it. General Pepper needs your
+  help! Use your TV's cinematic view to fly and identify targets and see through
+  the eyes of Fox with the Wii U™ GamePad's screen as you lock onto enemies and
+  fire. You'll also have to use advanced flight techniques like boosting and
+  barrel rolls to survive the relentless assault. With the help of the rest of
+  Team Star Fox , tackle missions in the air and on the ground in a variety of
+  planets teeming with enemies. Then engage vast armadas of powerful ships in
+  outer space dogfights. Master your craft, defy the odds, and earn your
+  face-to-face meeting with Andross. Only you can restore peace to the galaxy!\n
+  • Take down an intergalactic onslaught of enemy forces\n
+  • Pilot a variety of vehicles in the air and on the ground\n
+  • Hone your skills as the legendary pilot, Fox McCloud\n
+  • See your surroundings on your TV, and get a different view on the GamePad by
+  tilting it to aim
+release: 2016-04-22
+players: 2
+assets.boxfront: BoxFront/Star Fox Zero (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Star Fox Zero (USA) (En,Fr,Es).jpg
+assets.background: Background/Star Fox Zero (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Star Fox Zero (USA) (En,Fr,Es).jpg
+assets.video: Video/Star Fox Zero (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Super Mario 3D World (USA) (En,Fr,Es) (v1.00)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Super Mario 3D World (USA) (En,Fr,Es) (v1.00)/Super Mario 3D World (USA) (En,Fr,Es) (v1.00).json
+developer: Nintendo EAD Tokyo
+publisher: Nintendo
+genre: Adventure;Platform
+description:
+  Super Mario Fun
+  .
+  Work together with your friends or compete for the crown in the first
+  multiplayer 3D Mario game for the Wii U console. In the Super Mario 3D World
+  game, players can choose to play as Mario, Luigi, Princess Peach, or Toad.
+  .
+  Features:
+  .
+  * Each character has unique abilities and play styles. For example, Princess
+  Peach glides over gaps, while Luigi has his trademark extra-high jump.\n
+  * The new cat transformation allows players to run on all fours, pounce on
+  enemies, attack in midair, or use their claws to scamper up walls and goal
+  poles.\n
+  * Explore colorful 3D environments filled with obstacles and contraptions like
+  transparent pipes and vertical conveyor belts, which add new puzzle elements.\n
+  * Use the Wii U GamePad Controller's touch screen to search for hidden blocks
+  and freeze enemies in place.
+release: 2013-11-21
+players: 4
+assets.boxfront: BoxFront/Super Mario 3D World (USA) (En,Fr,Es) (v1.00).jpg
+assets.boxback: BoxBack/Super Mario 3D World (USA) (En,Fr,Es) (v1.00).jpg
+assets.background: Background/Super Mario 3D World (USA) (En,Fr,Es) (v1.00).jpg
+assets.screenshot: Screenshot/Super Mario 3D World (USA) (En,Fr,Es) (v1.00).jpg
+assets.video: Video/Super Mario 3D World (USA) (En,Fr,Es) (v1.00).mp4
+x-co-op: Yes
+
+
+game: Super Mario Maker (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Super Mario Maker (USA) (En,Fr,Es)/Super Mario Maker (USA) (En,Fr,Es).json
+developer: Nintendo
+publisher: Nintendo
+genre: Platform
+description:
+  Super Mario Maker lets people’s imaginations run wild. For the first time ever,
+  friends can have fun playing through levels they create for one another. The Wii
+  U GamePad controller makes it so easy for anyone to create levels; it may feel
+  like simply sketching out ideas on paper. Players can enjoy a seemingly endless
+  supply of inventive Mario levels from players around the world.
+release: 2015-09-11
+players: 1
+assets.boxfront: BoxFront/Super Mario Maker (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Super Mario Maker (USA) (En,Fr,Es).jpg
+assets.background: Background/Super Mario Maker (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Super Mario Maker (USA) (En,Fr,Es).jpg
+assets.video: Video/Super Mario Maker (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Super Smash Bros. for Wii U (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Super Smash Bros. for Wii U (USA) (En,Fr,Es)/Super Smash Bros. for Wii U (USA) (En,Fr,Es).json
+developer: Nintendo
+publisher: Nintendo
+genre: Fighting
+description:
+  Mario! Link! Samus! Pikachu! All of your favorite Nintendo characters are back,
+  along with plenty of new faces, in Super Smash Bros. for Wii U, the next entry
+  in the beloved Super Smash Bros. series.
+  .
+  Up to four players can battle each other locally or online across beautifully
+  designed stages inspired by classic Nintendo home console games. With a variety
+  of control options and amiibo compatibility, the timeless Super Smash Bros.
+  battles come alive.
+release: 2014-11-21
+players: 8
+assets.boxfront: BoxFront/Super Smash Bros. for Wii U (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Super Smash Bros. for Wii U (USA) (En,Fr,Es).jpg
+assets.background: Background/Super Smash Bros. for Wii U (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Super Smash Bros. for Wii U (USA) (En,Fr,Es).jpg
+assets.video: Video/Super Smash Bros. for Wii U (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: Tank! Tank! Tank! (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Tank! Tank! Tank! (USA) (En,Fr,Es)/Tank! Tank! Tank! (USA) (En,Fr,Es).json
+developer: Bandai Namco Entertainment
+publisher: Bandai Namco of America
+genre: Action
+description:
+  Get ready for one of the most bombastic battle-party-games ever with TANK! TANK!
+  TANK! Players will find a fantastic armament of tanks and weapons at their
+  disposal to dispatch the enemy threat, including mechanical insects, gigantic
+  dragons and even other players. Team up with three other friends to battle with
+  or against each other in fully destructible environments in a variety of action-
+  packed story and multiplayer modes where weapons are never in short supply and
+  threats are hiding behind every corner. Players will be able to arm their tanks
+  with lasers, machine guns, missile pods, the dreaded Colossus Missile along with
+  power-ups scattered throughout each map.
+release: 2012-11-18
+players: 4
+assets.boxfront: BoxFront/Tank! Tank! Tank! (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Tank! Tank! Tank! (USA) (En,Fr,Es).jpg
+assets.background: Background/Tank! Tank! Tank! (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Tank! Tank! Tank! (USA) (En,Fr,Es).jpg
+assets.video: Video/Tank! Tank! Tank! (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: Tokyo Mirage Sessions FE (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Tokyo Mirage Sessions FE (USA)/Tokyo Mirage Sessions FE (USA).json
+developer: Atlus
+publisher: Nintendo
+genre: Role-Playing
+description:
+  Slay monsters—and slay like a pop star—in this brand-new RPG from acclaimed
+  developer Atlus. An interdimensional evil has invaded modern-day Tokyo,
+  resulting in this fantastical barrage of music, style, and yes, danger. So fight
+  back! Battle through dungeons to pump up your strategy and creatively decimate
+  your foes...before all hope fades to black.
+release: 2016-06-24
+players: 1
+assets.boxfront: BoxFront/Tokyo Mirage Sessions FE (USA).jpg
+assets.boxback: BoxBack/Tokyo Mirage Sessions FE (USA).jpg
+assets.background: Background/Tokyo Mirage Sessions FE (USA).jpg
+assets.screenshot: Screenshot/Tokyo Mirage Sessions FE (USA).jpg
+x-co-op: No
+
+
+game: Wii Fit U (USA)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Wii Fit U (USA)/Wii Fit U (USA).json
+developer: Nintendo
+publisher: Nintendo
+genre: Sports
+description:
+  Wii Fit U is a new installment in the Wii Fit series, a brand that has sold more
+  than 40 million units worldwide. The game combines fun and fitness with new
+  exercises and activities, and incorporates the GamePad in unique ways. It's
+  compatible with the existing Wii Balance Board, and Wii Fit and Wii Fit Plus
+  owners can transfer their existing workout data. Nintendo also revealed the Fit
+  Meter, an advanced activity monitor that will be packaged with the game and
+  enables users to track fitness activities throughout the day and upload that
+  data back into Wii Fit U.
+release: 2013-10-31
+players: 1
+assets.boxfront: BoxFront/Wii Fit U (USA).jpg
+assets.boxback: BoxBack/Wii Fit U (USA).jpg
+assets.background: Background/Wii Fit U (USA).jpg
+assets.screenshot: Screenshot/Wii Fit U (USA).jpg
+assets.video: Video/Wii Fit U (USA).mp4
+x-co-op: No
+
+
+game: Wonderful 101, The (USA) (En,Ja)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Wonderful 101, The (USA) (En,Ja)/Wonderful 101, The (USA) (En,Ja).json
+developer: PlatinumGames
+publisher: Nintendo
+genre: Action;Strategy
+description:
+  Earth is under attack from an invasion of enormous aliens, and the only thing
+  that can protect the planet is a group of unlikely, yet mighty, heroes with
+  special abilities. Unfortunately, the aliens are too powerful for the heroes to
+  fight individually. They must join forces and work together to defeat their
+  common enemy. These uniquely different heroes can morph into powerful weapons to
+  crush the invaders or turn into objects like a giant fist or bridge to interact
+  with and traverse the environments.
+release: 2013-09-15
+players: 5
+assets.boxfront: BoxFront/Wonderful 101, The (USA) (En,Ja).jpg
+assets.boxback: BoxBack/Wonderful 101, The (USA) (En,Ja).jpg
+assets.background: Background/Wonderful 101, The (USA) (En,Ja).jpg
+assets.screenshot: Screenshot/Wonderful 101, The (USA) (En,Ja).jpg
+assets.video: Video/Wonderful 101, The (USA) (En,Ja).mp4
+x-co-op: Yes
+
+
+game: Xenoblade Chronicles X (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Xenoblade Chronicles X (USA) (En,Fr,Es)/Xenoblade Chronicles X (USA) (En,Fr,Es).json
+developer: Monolith Soft
+publisher: Nintendo
+genre: Role-Playing
+description:
+  The next massive sci-fi role-playing game from Monolith Soft, the creators of
+  Baten Kaitos and Xenoblade Chronicles, comes exclusively to Wii U. A terrible
+  intergalactic war leaves just a handful of Earth survivors trying to live in a
+  beautiful yet hostile environment. Players engage in battles against powerful
+  creatures of all forms and sizes using the deep battle system that builds on the
+  triumphs of Xenoblade Chronicles for Wii.
+  .
+  FEATURES:
+  .
+  Riding and controlling a weaponized mech, players can explore every inch of the
+  massive open world displayed in gorgeous high-definition graphics. The world is
+  filled with strange and imaginative creatures, from small bugs to giant
+  dinosaurs.\n
+  As characters improve in different classes, they will learn new combat and
+  defensive skills, or Arts. Players can customize the Arts palette as their
+  characters learn new Arts. All Arts have a “recast" time – once cast, the player
+  must wait out a “cooldown" period before that Art can be used again.\n
+  Players can customize everything about the main character's appearance,
+  including gender, shapes, height, skin color, voice and tattoos.
+release: 2015-04-29
+players: 4
+assets.boxfront: BoxFront/Xenoblade Chronicles X (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Xenoblade Chronicles X (USA) (En,Fr,Es).jpg
+assets.background: Background/Xenoblade Chronicles X (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Xenoblade Chronicles X (USA) (En,Fr,Es).jpg
+assets.video: Video/Xenoblade Chronicles X (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: Yoshi's Woolly World (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Yoshi's Woolly World (USA) (En,Fr,Es)/Yoshi's Woolly World (USA) (En,Fr,Es).json
+developer: Good-Feel
+publisher: Nintendo
+genre: Platform
+description:
+  Yoshi's Woolly World is a platform game in which the player assumes the role of
+  Yoshi. Similar to developer Good-Feel's previous title Kirby's Epic Yarn, the
+  game is set in a world where the characters and environment are composed of yarn
+  and cloth. Yoshi retains much of his moveset from the Yoshi's Island series of
+  games, including using his tongue to swallow enemies and using his flutter jump
+  to reach hard areas, and many elements such as flowers and mystery clouds
+  return. However, unlike other games where swallowing enemies would produce eggs
+  which Yoshi could then throw, Yoshi instead produces balls of yarn. These yarn
+  balls have various uses when thrown, such as tying up enemies or filling in
+  certain platforms and objects. Players can also gather white chicks, which
+  produce temporary cloud platforms when thrown. The game also supports up to two
+  players cooperatively, with players able to swallow and throw their partners,
+  allowing them to reach otherwise inaccessible areas.
+  .
+  The game supports Nintendo's Amiibo figurines and Yoshi has the capability of
+  using woolen transformations to progress through the game. For example Yoshi can
+  transform his legs into wheels.
+release: 2015-06-26
+players: 2
+assets.boxfront: BoxFront/Yoshi's Woolly World (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Yoshi's Woolly World (USA) (En,Fr,Es).jpg
+assets.background: Background/Yoshi's Woolly World (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Yoshi's Woolly World (USA) (En,Fr,Es).jpg
+assets.video: Video/Yoshi's Woolly World (USA) (En,Fr,Es).mp4
+x-co-op: Yes
+
+
+game: Your Shape - Fitness Evolved 2013 (USA) (En,Fr,Es)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/Your Shape - Fitness Evolved 2013 (USA) (En,Fr,Es)/Your Shape - Fitness Evolved 2013 (USA) (En,Fr,Es).json
+developer: Blue Byte Software
+publisher: Ubisoft Entertainment
+genre: Sports
+description:
+  Your Shape Fitness Evolved 2013 is a leading-edge fitness products that will
+  help achieving and setting goals in an engaging and motivating way. Players can
+  create a personalized fitness program lasting up to four weeks, choose workout
+  frequency and tailor to their current fitness level and preferences. With 125
+  different workouts and 215 moves Your Shape Fitness Evolved 2013 delivers a
+  massive array of activities. Players can also connect online with friends to
+  compete and collaborate their way to fitness.
+release: 2012-11-18
+players: 4
+assets.boxfront: BoxFront/Your Shape - Fitness Evolved 2013 (USA) (En,Fr,Es).jpg
+assets.boxback: BoxBack/Your Shape - Fitness Evolved 2013 (USA) (En,Fr,Es).jpg
+assets.background: Background/Your Shape - Fitness Evolved 2013 (USA) (En,Fr,Es).jpg
+assets.screenshot: Screenshot/Your Shape - Fitness Evolved 2013 (USA) (En,Fr,Es).jpg
+assets.video: Video/Your Shape - Fitness Evolved 2013 (USA) (En,Fr,Es).mp4
+x-co-op: No
+
+
+game: ZombiU (USA) (En,Fr,Es,Pt)
+file: $ROM_JSON_ROOT/Nintendo/Nintendo Wii U/ZombiU (USA) (En,Fr,Es,Pt)/ZombiU (USA) (En,Fr,Es,Pt).json
+developer: Ubisoft Montpellier
+publisher: Ubisoft
+genre: Horror;Shooter
+description:
+  Developed by Ubisoft Montpellier, the studio behind critically acclaimed titles
+  like From Dust, Beyond Good & Evil and, Ghost Recon Advanced Warfighter, ZombiU
+  puts players in the middle of London circa 2012, where an outbreak has infected
+  the population, destroying their humanity and turning them into mindless
+  monsters preying on the flesh of the few remaining survivors. This fear-fueled
+  first-person shooter invites takes all the horror, chaos and tension found in
+  the best of the horror genre and adds original interactive elements, including a
+  unique death mechanic that puts players in the body of a different survivor each
+  time they die, allowing them to track and take down their old, infected
+  characters, recover their equipment and see if they can stay alive just a little
+  bit longer this time.
+release: 2012-11-18
+players: 2
+assets.boxfront: BoxFront/ZombiU (USA) (En,Fr,Es,Pt).jpg
+assets.boxback: BoxBack/ZombiU (USA) (En,Fr,Es,Pt).jpg
+assets.background: Background/ZombiU (USA) (En,Fr,Es,Pt).jpg
+assets.screenshot: Screenshot/ZombiU (USA) (En,Fr,Es,Pt).jpg
+assets.video: Video/ZombiU (USA) (En,Fr,Es,Pt).mp4
+x-co-op: No
+
+

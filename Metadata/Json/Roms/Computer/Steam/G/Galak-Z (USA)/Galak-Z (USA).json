@@ -1,0 +1,18 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Galak-Z (USA).exe"
+    ],
+    "main_game_exe": [
+        "Galak-Z/Galak-Z.exe"
+    ],
+    "main_game_exe_cwd": {
+        "Galak-Z/Galak-Z.exe": "Galak-Z"
+    },
+    "sync": {
+        "data": [
+            "SaveData.dat"
+        ],
+        "search": "Galak-Z/Galak-Z.exe"
+    },
+    "transform_file": "Galak-Z (USA).exe"
+}

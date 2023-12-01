@@ -1,0 +1,8 @@
+{
+    "files": [
+        "Dragon's Crown (USA).chd",
+        "Dragon's Crown (USA).dkey"
+    ],
+    "launch_file": "PS3_GAME/USRDIR/EBOOT.BIN",
+    "transform_file": "Dragon's Crown (USA).chd"
+}

@@ -1,0 +1,22 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Complex, The (USA).exe"
+    ],
+    "main_game_exe": [
+        "The Complex/TheComplex.exe"
+    ],
+    "main_game_exe_cwd": {
+        "The Complex/TheComplex.exe": "The Complex"
+    },
+    "sandbox": {
+        "wine": {
+            "overrides": {
+                "game": [
+                    "d3d9,d3d10core,d3d11,dxgi=n,b"
+                ]
+            },
+            "use_dxvk": true
+        }
+    },
+    "transform_file": "Complex, The (USA).exe"
+}

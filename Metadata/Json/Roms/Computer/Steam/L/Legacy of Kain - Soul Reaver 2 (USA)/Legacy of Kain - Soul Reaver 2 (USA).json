@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Legacy of Kain - Soul Reaver 2 (USA).exe"
+    ],
+    "transform_file": "Legacy of Kain - Soul Reaver 2 (USA).exe"
+}

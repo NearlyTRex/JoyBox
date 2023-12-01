@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Heavy Bullets (USA).exe"
+    ],
+    "transform_file": "Heavy Bullets (USA).exe"
+}

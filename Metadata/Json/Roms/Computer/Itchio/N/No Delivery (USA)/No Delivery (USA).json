@@ -1,0 +1,6 @@
+{
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/No Delivery (USA).exe"
+    ],
+    "transform_file": "No Delivery (USA).exe"
+}

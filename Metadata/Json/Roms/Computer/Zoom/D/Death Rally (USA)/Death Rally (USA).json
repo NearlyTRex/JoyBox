@@ -1,0 +1,9 @@
+{
+    "extra": [
+        "$SETUP_MAIN_ROOT/extra/Death-Rally-Manual-1.0.pdf"
+    ],
+    "installer_exe": [
+        "$SETUP_MAIN_ROOT/Death-Rally-English-Setup-1.1.exe"
+    ],
+    "transform_file": "Death-Rally-English-Setup-1.1.exe"
+}
