@@ -4,3 +4,12 @@
 [submodule "Scripts/ext/Pegasus/linux/config/themes/PegasusThemeGrid"]
 	path = Scripts/ext/Pegasus/linux/config/themes/PegasusThemeGrid
 	url = https://github.com/NearlyTRex/PegasusThemeGrid.git
+[submodule "Scripts/lib/thirdparty/PyLnk"]
+	path = Scripts/lib/thirdparty/PyLnk
+	url = https://github.com/NearlyTRex/PyLnk.git
+[submodule "Scripts/lib/thirdparty/PSVTools"]
+	path = Scripts/lib/thirdparty/PSVTools
+	url = https://github.com/NearlyTRex/PSVTools.git
+[submodule "Scripts/lib/thirdparty/PSNGetPkgInfo"]
+	path = Scripts/lib/thirdparty/PSNGetPkgInfo
+	url = https://github.com/NearlyTRex/PSNGetPkgInfo.git
