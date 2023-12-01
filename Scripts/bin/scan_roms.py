@@ -45,10 +45,6 @@ def main():
                 "-c", game_category,
                 "-s", game_subcategory,
                 "-o", metadata_file,
-            ]
-
-            build_game_list_cmd += [
-                "-j",
                 local_rom_path
             ]
             command.RunCheckedCommand(

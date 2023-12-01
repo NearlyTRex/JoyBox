@@ -179,8 +179,8 @@ environment_vars = [
 ]
 
 # Tokens
-token_arcade_rom_root = "$ARCADE_ROM_ROOT"
-token_arcade_json_rom_root = "$ARCADE_JSON_ROM_ROOT"
+token_rom_storage_root = "$ROM_STORAGE_ROOT"
+token_rom_json_root = "$ROM_JSON_ROOT"
 token_tool_main_root = "$TOOL_MAIN_ROOT"
 token_emulator_main_root = "$EMULATOR_MAIN_ROOT"
 token_setup_main_root = "$SETUP_MAIN_ROOT"

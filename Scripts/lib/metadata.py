@@ -153,47 +153,44 @@ class Metadata:
                 self.set_game(game_platform, game_name, game_entry)
 
     # Scan roms
-    def scan_roms(self, rom_path, rom_category, rom_subcategory, use_json_file = False):
+    def scan_roms(self, rom_path, rom_category, rom_subcategory):
         for dir in system.BuildDirectoryList(rom_path):
 
             # Skip non-game folders
             if not IsGameFolder(dir):
                 continue
 
-            # Get game info
-            game_name = system.GetDirectoryName(dir)
-            game_platform = DeriveMetadataPlatform(rom_category, rom_subcategory)
+            # Get info
+            rom_name = system.GetDirectoryName(dir)
+            rom_platform = DeriveMetadataPlatform(rom_category, rom_subcategory)
 
-            # Get main game file
-            game_file = ""
-            if use_json_file:
-                game_file = environment.GetJsonRomMetadataFile(rom_category, rom_subcategory, game_name)
+            # Get file
+            rom_file = ""
+            if rom_category == config.game_category_computer:
+                letter = DeriveGameLetterFromName(rom_name)
+                rom_file = os.path.join(config.token_rom_json_root, rom_category, rom_subcategory, letter, rom_name, rom_name + ".json")
             else:
-                game_file = FindBestGameFile(dir)
-
-            # Make adjustments as necessary
-            game_file = game_file.replace(environment.GetRomRootDir(), config.token_arcade_rom_root)
-            game_file = game_file.replace(environment.GetJsonRomsMetadataRootDir(), config.token_arcade_json_rom_root)
-            game_file = system.NormalizeFilePath(game_file)
+                rom_file = os.path.join(config.token_rom_json_root, rom_category, rom_subcategory, rom_name, rom_name + ".json")
+            rom_file = system.NormalizeFilePath(rom_file)
 
             # Get asset strings
-            game_boxfront = DeriveMetadataAssetString(game_name, config.asset_type_boxfront)
-            game_boxback = DeriveMetadataAssetString(game_name, config.asset_type_boxback)
-            game_background = DeriveMetadataAssetString(game_name, config.asset_type_background)
-            game_screenshot = DeriveMetadataAssetString(game_name, config.asset_type_screenshot)
-            game_video = DeriveMetadataAssetString(game_name, config.asset_type_video)
+            rom_boxfront = DeriveMetadataAssetString(rom_name, config.asset_type_boxfront)
+            rom_boxback = DeriveMetadataAssetString(rom_name, config.asset_type_boxback)
+            rom_background = DeriveMetadataAssetString(rom_name, config.asset_type_background)
+            rom_screenshot = DeriveMetadataAssetString(rom_name, config.asset_type_screenshot)
+            rom_video = DeriveMetadataAssetString(rom_name, config.asset_type_video)
 
             # Create new entry
-            print("Found game: '%s' - '%s'" % (game_platform, game_name))
+            print("Found game: '%s' - '%s'" % (rom_platform, rom_name))
             game_entry = {}
-            game_entry[config.metadata_key_platform] = game_platform
-            game_entry[config.metadata_key_game] = game_name
-            game_entry[config.metadata_key_file] = game_file
-            game_entry[config.metadata_key_boxfront] = game_boxfront
-            game_entry[config.metadata_key_boxback] = game_boxback
-            game_entry[config.metadata_key_background] = game_background
-            game_entry[config.metadata_key_screenshot] = game_screenshot
-            game_entry[config.metadata_key_video] = game_video
+            game_entry[config.metadata_key_platform] = rom_platform
+            game_entry[config.metadata_key_game] = rom_name
+            game_entry[config.metadata_key_file] = rom_file
+            game_entry[config.metadata_key_boxfront] = rom_boxfront
+            game_entry[config.metadata_key_boxback] = rom_boxback
+            game_entry[config.metadata_key_background] = rom_background
+            game_entry[config.metadata_key_screenshot] = rom_screenshot
+            game_entry[config.metadata_key_video] = rom_video
             game_entry[config.metadata_key_players] = "1"
             game_entry[config.metadata_key_coop] = "No"
             self.add_game(game_entry)

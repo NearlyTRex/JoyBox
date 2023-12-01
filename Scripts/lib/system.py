@@ -1049,7 +1049,7 @@ def IsVirtualPath(path, token):
 
 # Determine if virtual rom path
 def IsVirtualRomPath(path):
-    for token in [config.token_arcade_rom_root, config.token_arcade_json_rom_root]:
+    for token in [config.token_rom_storage_root, config.token_rom_json_root]:
         if IsVirtualPath(path, token):
             return True
     return False
@@ -1064,15 +1064,15 @@ def ResolveVirtualPath(path, token, replacement):
 
 # Resolve virtual rom path
 def ResolveVirtualRomPath(path):
-    if config.token_arcade_rom_root in path:
+    if config.token_rom_storage_root in path:
         return ResolveVirtualPath(
             path = path,
-            token = config.token_arcade_rom_root,
+            token = config.token_rom_storage_root,
             replacement = environment.GetRomRootDir())
-    elif config.token_arcade_json_rom_root in path:
+    elif config.token_rom_json_root in path:
         return ResolveVirtualPath(
             path = path,
-            token = config.token_arcade_json_rom_root,
+            token = config.token_rom_json_root,
             replacement = environment.GetJsonRomsMetadataRootDir())
     return path
 

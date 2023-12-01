@@ -29,7 +29,6 @@ parser.add_argument("-f", "--metadata_format",
 parser.add_argument("-c", "--rom_category", required=True, type=str, help="Rom category")
 parser.add_argument("-s", "--rom_subcategory", required=True, type=str, help="Rom subcategory")
 parser.add_argument("-o", "--output_file", type=str, default="gamelist.txt", help="Output gamelist file")
-parser.add_argument("-j", "--json_files_only", action="store_true", help="Use only json files in the search")
 args, unknown = parser.parse_known_args()
 
 # Check rom path
@@ -52,8 +51,7 @@ def main():
     metadata_obj.scan_roms(
         rom_path = rom_root_path,
         rom_category = args.rom_category,
-        rom_subcategory = args.rom_subcategory,
-        use_json_file = args.json_files_only)
+        rom_subcategory = args.rom_subcategory)
     metadata_obj.export_to_metadata_file(output_file, args.metadata_format)
 
 # Start

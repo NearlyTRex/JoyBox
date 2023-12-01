@@ -45,10 +45,7 @@ def main():
 
     # Get launch info
     launch_platform = args.launch_platform
-    launch_file = system.ResolveVirtualPath(
-        path = args.rom,
-        token = config.token_arcade_rom_root,
-        replacement = environment.GetRomRootDir())
+    launch_file = system.ResolveVirtualRomPath(args.rom)
     launch_name = metadata.DeriveGameNameFromPath(launch_file)
     if not launch_name:
         gui.DisplayErrorPopup(
