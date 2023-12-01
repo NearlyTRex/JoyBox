@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+
+# Imports
+import os
+import os.path
+import sys
+import argparse
+
+# Custom imports
+lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
+sys.path.append(lib_folder)
+import environment
+import system
+import playstation
+import setup
+
+# Parse arguments
+parser = argparse.ArgumentParser(description="Sony PlayStation Vita rom tool.")
+parser.add_argument("path", help="Input path")
+parser.add_argument("-s", "--strip", action="store_true", help="Strip PSV files")
+parser.add_argument("-u", "--unstrip", action="store_true", help="Unstrip PSV files")
+parser.add_argument("-t", "--trim", action="store_true", help="Trim PSV files")
+parser.add_argument("-n", "--untrim", action="store_true", help="Untrim PSV files")
+parser.add_argument("-v", "--verify", action="store_true", help="Verify PSV files")
+parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
+args, unknown = parser.parse_known_args()
+if not args.path:
+    parser.print_help()
+    sys.exit(-1)
+
+# Check input path
+input_path = os.path.realpath(args.path)
+if not os.path.exists(input_path):
+    print("Path '%s' does not exist" % args.path)
+    sys.exit(-1)
+
+# Main
+def main():
+
+    # Check requirements
+    setup.CheckRequirements()
+
+    # Find psv files
+    for file in system.BuildFileListByExtensions(input_path, extensions = [".psv"]):
+        current_file = file
+        current_file_dir = system.GetFilenameDirectory(current_file)
+        current_file_basename = system.GetFilenameBasename(current_file)
+
+        # Strip psv
+        if args.strip:
+            playstation.StripPSV(
+                unstripped_psv_file = current_file,
+                stripped_psv_file = os.path.join(current_file_dir, current_file_basename + "_stripped.psv"),
+                delete_original = args.delete_originals,
+                verbose = config.default_flag_verbose,
+                exit_on_failure = config.default_flag_exit_on_failure)
+
+        # Unstrip psv
+        elif args.unstrip:
+            playstation.UnstripPSV(
+                stripped_psv_file = current_file,
+                stripped_psve_file = os.path.join(current_file_dir, current_file_basename + ".psve"),
+                unstripped_psv_file = os.path.join(current_file_dir, current_file_basename + "_unstripped.psv"),
+                delete_original = args.delete_originals,
+                verbose = config.default_flag_verbose,
+                exit_on_failure = config.default_flag_exit_on_failure)
+
+        # Trim psv
+        elif args.trim:
+            playstation.TrimPSV(
+                untrimmed_psv_file = current_file,
+                trimmed_psv_file = os.path.join(current_file_dir, current_file_basename + "_trimmed.psv"),
+                delete_original = args.delete_originals,
+                verbose = config.default_flag_verbose,
+                exit_on_failure = config.default_flag_exit_on_failure)
+
+        # Untrim psv
+        elif args.untrim:
+            playstation.UntrimPSV(
+                trimmed_psv_file = current_file,
+                untrimmed_psv_file = os.path.join(current_file_dir, current_file_basename + "_untrimmed.psv"),
+                delete_original = args.delete_originals,
+                verbose = config.default_flag_verbose,
+                exit_on_failure = config.default_flag_exit_on_failure)
+
+        # Verify psv
+        elif args.verify:
+            playstation.VerifyPSV(
+                psv_file = current_file,
+                verbose = config.default_flag_verbose,
+                exit_on_failure = config.default_flag_exit_on_failure)
+
+# Start
+environment.RunAsRootIfNecessary(main)
