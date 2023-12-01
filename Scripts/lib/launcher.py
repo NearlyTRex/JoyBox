@@ -353,8 +353,8 @@ def LaunchGame(launch_platform, file_path, capture_type = None, verbose = False,
     # Replace tokens in config file
     system.ReplaceStringsInFile(launcher_config_file, [
         {"from": config.token_arcade_rom_root, "to": environment.GetRomRootDir()},
-        {"from": config.token_arcade_tool_root, "to": tools.GetBaseDirectory()},
-        {"from": config.token_arcade_emulator_root, "to": emulators.GetBaseDirectory()},
+        {"from": config.token_tool_main_root, "to": tools.GetBaseDirectory()},
+        {"from": config.token_emulator_main_root, "to": emulators.GetBaseDirectory()},
         {"from": config.token_game_save_dir, "to": config_file_save_dir}
     ])
 
@@ -371,8 +371,8 @@ def LaunchGame(launch_platform, file_path, capture_type = None, verbose = False,
     # Revert to tokens in config file
     system.ReplaceStringsInFile(launcher_config_file, [
         {"from": environment.GetRomRootDir(), "to": config.token_arcade_rom_root},
-        {"from": tools.GetBaseDirectory(), "to": config.token_arcade_tool_root},
-        {"from": emulators.GetBaseDirectory(), "to": config.token_arcade_emulator_root},
+        {"from": tools.GetBaseDirectory(), "to": config.token_tool_main_root},
+        {"from": emulators.GetBaseDirectory(), "to": config.token_emulator_main_root},
         {"from": config_file_save_dir, "to": config.token_game_save_dir}
     ])
 
