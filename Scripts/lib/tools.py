@@ -80,11 +80,11 @@ def GetConfig():
         "CDecrypt": {
             "program": {
                 "windows": "CDecrypt/windows/cdecrypt.exe",
-                "linux": "CDecrypt/windows/cdecrypt.exe"
+                "linux": "CDecrypt/windows/CDecrypt.AppImage"
             },
             "run_sandboxed": {
                 "windows": False,
-                "linux": True
+                "linux": False
             }
         },
 

@@ -129,37 +129,6 @@ def ShouldLibraryBeInstalled(base_dir):
 # Download required tools
 def DownloadRequiredTools(force_downloads = False):
 
-    # 7-Zip
-    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "7-Zip", "windows"):
-        network.DownloadLatestWebpageRelease(
-            webpage_url = "https://www.7-zip.org/download.html",
-            starts_with = "https://www.7-zip.org/a/7z",
-            ends_with = "-x64.exe",
-            search_file = "7z.exe",
-            install_name = "7-Zip",
-            install_dir = os.path.join(tools.GetBaseDirectory(), "7-Zip", "windows"),
-            prefix_dir = tools.GetPrefixDir(),
-            prefix_name = tools.GetPrefixName(),
-            installer_type = config.installer_format_nsis,
-            is_installer = True,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
-
-    # 7-Zip-Standalone
-    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "7-Zip-Standalone", "windows"):
-        network.DownloadLatestWebpageRelease(
-            webpage_url = "https://www.7-zip.org/download.html",
-            starts_with = "https://www.7-zip.org/a/7z",
-            ends_with = "-extra.7z",
-            search_file = "x64/7za.exe",
-            install_name = "7-Zip",
-            install_dir = os.path.join(tools.GetBaseDirectory(), "7-Zip", "windows"),
-            prefix_dir = tools.GetPrefixDir(),
-            prefix_name = tools.GetPrefixName(),
-            install_files = ["7za.dll", "7za.exe", "7zxa.dll"],
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
-
     # 3DSRomTool
     if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "3DSRomTool", "windows"):
         network.DownloadLatestGithubRelease(
@@ -196,6 +165,37 @@ def DownloadRequiredTools(force_downloads = False):
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
 
+    # 7-Zip
+    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "7-Zip", "windows"):
+        network.DownloadLatestWebpageRelease(
+            webpage_url = "https://www.7-zip.org/download.html",
+            starts_with = "https://www.7-zip.org/a/7z",
+            ends_with = "-x64.exe",
+            search_file = "7z.exe",
+            install_name = "7-Zip",
+            install_dir = os.path.join(tools.GetBaseDirectory(), "7-Zip", "windows"),
+            prefix_dir = tools.GetPrefixDir(),
+            prefix_name = tools.GetPrefixName(),
+            installer_type = config.installer_format_nsis,
+            is_installer = True,
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
+
+    # 7-Zip-Standalone
+    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "7-Zip-Standalone", "windows"):
+        network.DownloadLatestWebpageRelease(
+            webpage_url = "https://www.7-zip.org/download.html",
+            starts_with = "https://www.7-zip.org/a/7z",
+            ends_with = "-extra.7z",
+            search_file = "x64/7za.exe",
+            install_name = "7-Zip",
+            install_dir = os.path.join(tools.GetBaseDirectory(), "7-Zip", "windows"),
+            prefix_dir = tools.GetPrefixDir(),
+            prefix_name = tools.GetPrefixName(),
+            install_files = ["7za.dll", "7za.exe", "7zxa.dll"],
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
+
     # AppImageTool
     if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "AppImageTool", "linux"):
         network.DownloadLatestGithubRelease(
@@ -224,6 +224,24 @@ def DownloadRequiredTools(force_downloads = False):
             prefix_dir = tools.GetPrefixDir(),
             prefix_name = tools.GetPrefixName(),
             install_files = ["cdecrypt.exe"],
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
+    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "CDecrypt", "linux"):
+        network.BuildAppImageFromSource(
+            release_url = "https://github.com/NearlyTRex/CDecrypt.git",
+            output_name = "CDecrypt",
+            output_dir = os.path.join(tools.GetBaseDirectory(), "CDecrypt", "linux"),
+            build_cmd = [
+                "make", "-j", "4"
+            ],
+            internal_copies = [
+                {"from": "Source/cdecrypt", "to": "AppImage/usr/bin/cdecrypt"},
+                {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
+                {"from": "AppImageTool/linux/icon.png", "to": "AppImage/icon.png"}
+            ],
+            internal_symlinks = [
+                {"from": "usr/bin/cdecrypt", "to": "AppRun"}
+            ],
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
 
