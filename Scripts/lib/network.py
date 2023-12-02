@@ -538,47 +538,6 @@ def DownloadLatestWebpageRelease(
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-# Generate appimage from package
-def GenerateAppImageFromPackage(
-    recipe_file,
-    output_name,
-    output_dir,
-    verbose = False,
-    exit_on_failure = False):
-
-    # Only works on linux systems
-    if not environment.IsLinuxPlatform():
-        return
-
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
-    if not tmp_dir_success:
-        return
-
-    # Generate appimage
-    command.RunCheckedCommand(
-        cmd = [
-            programs.GetToolProgram("Pkg2AppImage"),
-            recipe_file
-        ],
-        options = command.CommandOptions(
-            cwd = tmp_dir_result),
-        verbose = verbose)
-
-    # Copy appimage
-    out_dir = os.path.join(tmp_dir_result, "out")
-    for obj in system.GetDirectoryContents(out_dir):
-        if obj.endswith(".AppImage"):
-            system.CopyFileOrDirectory(
-                src = os.path.join(out_dir, obj),
-                dest = os.path.join(output_dir, output_name + ".AppImage"),
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-            break
-
-    # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
-
 # Build appimage from source
 def BuildAppImageFromSource(
     release_url = "",
