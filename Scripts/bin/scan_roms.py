@@ -23,10 +23,10 @@ def main():
     setup.CheckRequirements()
 
     # Scripts
-    build_metadata_file_bin = os.path.join(environment.GetGameScriptsBinDir(), "build_metadata_file" + environment.GetGameScriptsCommandExtension())
-    publish_metadata_files_bin = os.path.join(environment.GetGameScriptsBinDir(), "publish_metadata_files" + environment.GetGameScriptsCommandExtension())
-    add_missing_metadata_bin = os.path.join(environment.GetGameScriptsBinDir(), "add_missing_metadata" + environment.GetGameScriptsCommandExtension())
-    sort_metadata_files_bin = os.path.join(environment.GetGameScriptsBinDir(), "sort_metadata_files" + environment.GetGameScriptsCommandExtension())
+    build_metadata_file_bin = os.path.join(environment.GetScriptsBinDir(), "build_metadata_file" + environment.GetScriptsCommandExtension())
+    publish_metadata_files_bin = os.path.join(environment.GetScriptsBinDir(), "publish_metadata_files" + environment.GetScriptsCommandExtension())
+    add_missing_metadata_bin = os.path.join(environment.GetScriptsBinDir(), "add_missing_metadata" + environment.GetScriptsCommandExtension())
+    sort_metadata_files_bin = os.path.join(environment.GetScriptsBinDir(), "sort_metadata_files" + environment.GetScriptsCommandExtension())
 
     # Build metadata for each category/subcategory
     for game_category in metadata.GetMetadataCategories():

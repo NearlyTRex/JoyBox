@@ -11,7 +11,7 @@ import sandbox
 
 # Get base directory
 def GetBaseDirectory():
-    return environment.GetGameEmulatorsRootDir()
+    return environment.GetEmulatorsRootDir()
 
 # Get prefix name
 def GetPrefixName():

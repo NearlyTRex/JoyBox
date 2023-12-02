@@ -117,7 +117,7 @@ def IsCachedGameCommand(cmd):
 # Check if local script command
 def IsLocalScriptCommand(cmd):
     starter_cmd = os.path.normpath(GetStarterCommand(cmd)).lower()
-    scripts_dir = os.path.normpath(environment.GetGameScriptsBinDir()).lower()
+    scripts_dir = os.path.normpath(environment.GetScriptsBinDir()).lower()
     return starter_cmd.startswith(scripts_dir)
 
 # Check if local program command

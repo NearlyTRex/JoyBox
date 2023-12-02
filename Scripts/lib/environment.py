@@ -373,7 +373,7 @@ def SetEnvironmentVariables(verbose = False, exit_on_failure = False):
 
 # Set environment path
 def SetEnvironmentPath(verbose = False, exit_on_failure = False):
-    AddEnvironmentPath(GetGameScriptsBinDir(), verbose = verbose, exit_on_failure = exit_on_failure)
+    AddEnvironmentPath(GetScriptsBinDir(), verbose = verbose, exit_on_failure = exit_on_failure)
 
 # Clear environment variables
 def ClearEnvironmentVariables(verbose = False, exit_on_failure = False):
@@ -585,7 +585,21 @@ def GetLaunchRomProgram():
     if IsEnvironmentVariableSet(config.environment_launchrom_program):
         return GetEnvironmentVariable(config.environment_launchrom_program)
     else:
-        return os.path.join(GetGameScriptsBinDir(), "launch_rom" + GetGameScriptsCommandExtension())
+        return os.path.join(GetScriptsBinDir(), "launch_rom" + GetScriptsCommandExtension())
+
+###########################################################
+
+# Get scripts root dir
+def GetScriptsRootDir():
+    return os.path.join(GetRepositoriesRootDir(), config.project_name, "Scripts")
+
+# Get emulators root dir
+def GetEmulatorsRootDir():
+    return os.path.join(GetRepositoriesRootDir(), config.project_name, "Emulators")
+
+# Get metadata root dir
+def GetMetadataRootDir():
+    return os.path.join(GetRepositoriesRootDir(), config.project_name, "Metadata")
 
 ###########################################################
 
@@ -640,19 +654,9 @@ def GetSyncedProgramsRootDir():
 
 ###########################################################
 
-# Get game emulators root dir
-def GetGameEmulatorsRootDir():
-    return os.path.join(GetRepositoriesRootDir(), "GameEmulators")
-
-###########################################################
-
-# Get game metadata root dir
-def GetGameMetadataRootDir():
-    return os.path.join(GetRepositoriesRootDir(), "GameMetadata")
-
 # Get pegasus metadata root dir
 def GetPegasusMetadataRootDir():
-    return os.path.join(GetGameMetadataRootDir(), "Pegasus")
+    return os.path.join(GetMetadataRootDir(), "Pegasus")
 
 # Get pegasus metadata file
 def GetPegasusMetadataFile(game_category, game_subcategory):
@@ -664,7 +668,7 @@ def GetPegasusMetadataAssetDir(game_category, game_subcategory, asset_type):
 
 # Get gamelist metadata root dir
 def GetGameListMetadataRootDir():
-    return os.path.join(GetGameMetadataRootDir(), "GameList")
+    return os.path.join(GetMetadataRootDir(), "GameList")
 
 # Get gamelist metadata file
 def GetGameListMetadataFile(game_category, game_subcategory):
@@ -672,11 +676,11 @@ def GetGameListMetadataFile(game_category, game_subcategory):
 
 # Get published metadata root dir
 def GetPublishedMetadataRootDir():
-    return os.path.join(GetGameMetadataRootDir(), "Published")
+    return os.path.join(GetMetadataRootDir(), "Published")
 
 # Get hashes metadata root dir
 def GetHashesMetadataRootDir():
-    return os.path.join(GetGameMetadataRootDir(), "Hashes")
+    return os.path.join(GetMetadataRootDir(), "Hashes")
 
 # Get hashes metadata file
 def GetHashesMetadataFile(game_supercategory, game_category, game_subcategory):
@@ -684,7 +688,7 @@ def GetHashesMetadataFile(game_supercategory, game_category, game_subcategory):
 
 # Get misc metadata root dir
 def GetMiscMetadataRootDir():
-    return os.path.join(GetGameMetadataRootDir(), "Misc")
+    return os.path.join(GetMetadataRootDir(), "Misc")
 
 # Get main metadata hashes dir
 def GetMainMetadataHashesDir():
@@ -696,7 +700,7 @@ def GetDiscMetadataHashesDir():
 
 # Get json metadata root dir
 def GetJsonMetadataRootDir():
-    return os.path.join(GetGameMetadataRootDir(), "Json")
+    return os.path.join(GetMetadataRootDir(), "Json")
 
 # Get json roms metadata root dir
 def GetJsonRomsMetadataRootDir():
@@ -712,35 +716,31 @@ def GetJsonRomMetadataFile(game_category, game_subcategory, game_name):
 
 ###########################################################
 
-# Get game scripts root dir
-def GetGameScriptsRootDir():
-    return os.path.join(GetRepositoriesRootDir(), "GameScripts")
+# Get scripts bin dir
+def GetScriptsBinDir():
+    return os.path.join(GetScriptsRootDir(), "bin")
 
-# Get game scripts bin dir
-def GetGameScriptsBinDir():
-    return os.path.join(GetGameScriptsRootDir(), "bin")
+# Get scripts ext dir
+def GetScriptsExtDir():
+    return os.path.join(GetScriptsRootDir(), "ext")
 
-# Get game scripts ext dir
-def GetGameScriptsExtDir():
-    return os.path.join(GetGameScriptsRootDir(), "ext")
+# Get scripts lib dir
+def GetScriptsLibDir():
+    return os.path.join(GetScriptsRootDir(), "lib")
 
-# Get game scripts lib dir
-def GetGameScriptsLibDir():
-    return os.path.join(GetGameScriptsRootDir(), "lib")
+# Get scripts third party lib dir
+def GetScriptsThirdPartyLibDir():
+    return os.path.join(GetScriptsLibDir(), "thirdparty")
 
-# Get game scripts third party lib dir
-def GetGameScriptsThirdPartyLibDir():
-    return os.path.join(GetGameScriptsLibDir(), "thirdparty")
-
-# Get game scripts command extension
-def GetGameScriptsCommandExtension():
+# Get scripts command extension
+def GetScriptsCommandExtension():
     if IsWindowsPlatform():
         return ".bat"
     else:
         return ""
 
-# Get game scripts executable extension
-def GetGameScriptsExecutableExtension():
+# Get scripts executable extension
+def GetScriptsExecutableExtension():
     if IsWindowsPlatform():
         return ".exe"
     else:
@@ -750,7 +750,7 @@ def GetGameScriptsExecutableExtension():
 
 # Get dxvk lib dir
 def GetDXVKLibDir():
-    return os.path.join(GetGameScriptsThirdPartyLibDir(), "DXVK")
+    return os.path.join(GetScriptsThirdPartyLibDir(), "DXVK")
 
 # Get 32-bit dxvk libs
 def GetDXVKLibs32():
@@ -772,7 +772,7 @@ def GetDXVKLibs64():
 
 # Get vkd3d-proton lib dir
 def GetVKD3DProtonLibDir():
-    return os.path.join(GetGameScriptsThirdPartyLibDir(), "VKD3D-Proton")
+    return os.path.join(GetScriptsThirdPartyLibDir(), "VKD3D-Proton")
 
 # Get 32-bit vkd3d-proton libs
 def GetVKD3DProtonLibs32():

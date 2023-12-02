@@ -11,7 +11,7 @@ import sandbox
 
 # Get base directory
 def GetBaseDirectory():
-    return environment.GetGameScriptsExtDir()
+    return environment.GetScriptsExtDir()
 
 # Get prefix name
 def GetPrefixName():

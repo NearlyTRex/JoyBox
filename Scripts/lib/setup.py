@@ -1770,7 +1770,7 @@ def SetupRequiredEmulators():
 def DownloadRequiredLibraries(force_downloads = False):
 
     # DXVK
-    if force_downloads or ShouldLibraryBeInstalled(os.path.join(environment.GetGameScriptsThirdPartyLibDir(), "DXVK")):
+    if force_downloads or ShouldLibraryBeInstalled(os.path.join(environment.GetScriptsThirdPartyLibDir(), "DXVK")):
         network.DownloadLatestGithubRelease(
             github_user = "doitsujin",
             github_repo = "dxvk",
@@ -1778,12 +1778,12 @@ def DownloadRequiredLibraries(force_downloads = False):
             ends_with = ".tar.gz",
             search_file = "x64/d3d9.dll",
             install_name = "DXVK",
-            install_dir = os.path.join(environment.GetGameScriptsThirdPartyLibDir(), "DXVK"),
+            install_dir = os.path.join(environment.GetScriptsThirdPartyLibDir(), "DXVK"),
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
 
     # VKD3D-Proton
-    if force_downloads or ShouldLibraryBeInstalled(os.path.join(environment.GetGameScriptsThirdPartyLibDir(), "VKD3D-Proton")):
+    if force_downloads or ShouldLibraryBeInstalled(os.path.join(environment.GetScriptsThirdPartyLibDir(), "VKD3D-Proton")):
         network.DownloadLatestGithubRelease(
             github_user = "HansKristian-Work",
             github_repo = "vkd3d-proton",
@@ -1791,7 +1791,7 @@ def DownloadRequiredLibraries(force_downloads = False):
             ends_with = ".tar.zst",
             search_file = "x64/d3d12.dll",
             install_name = "VKD3D-Proton",
-            install_dir = os.path.join(environment.GetGameScriptsThirdPartyLibDir(), "VKD3D-Proton"),
+            install_dir = os.path.join(environment.GetScriptsThirdPartyLibDir(), "VKD3D-Proton"),
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
 

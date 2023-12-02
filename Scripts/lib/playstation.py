@@ -214,7 +214,7 @@ def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = Fals
     # Get extract command
     extract_cmd = [
         environment.GetPythonVirtualEnvInterpreter(),
-        os.path.join(environment.GetGameScriptsThirdPartyLibDir(), "PSNGetPkgInfo", "PSN_get_pkg_info.py"),
+        os.path.join(environment.GetScriptsThirdPartyLibDir(), "PSNGetPkgInfo", "PSN_get_pkg_info.py"),
         "--content", extract_dir,
         pkg_file
     ]

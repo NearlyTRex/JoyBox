@@ -5,6 +5,9 @@ import getpass
 import collections
 import configprivate
 
+############# Project #############
+project_name = "JoyBox"
+
 ############# Defaults #############
 
 # Default drive roots
