@@ -242,7 +242,7 @@ def DownloadRequiredTools(force_downloads = False):
     # ExifTool
     if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "ExifTool", "windows"):
         network.DownloadGeneralRelease(
-            archive_url = "https://exiftool.org/exiftool-12.65.zip",
+            archive_url = "https://exiftool.org/exiftool-12.70.zip",
             search_file = "exiftool(-k).exe",
             install_name = "ExifTool",
             install_dir = os.path.join(tools.GetBaseDirectory(), "ExifTool", "windows"),
@@ -254,6 +254,16 @@ def DownloadRequiredTools(force_downloads = False):
                     "to": "exiftool.exe"
                 }
             ],
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
+    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "ExifTool", "linux"):
+        network.DownloadGeneralRelease(
+            archive_url = "https://exiftool.org/Image-ExifTool-12.70.tar.gz",
+            search_file = "exiftool",
+            install_name = "ExifTool",
+            install_dir = os.path.join(tools.GetBaseDirectory(), "ExifTool", "linux"),
+            prefix_dir = tools.GetPrefixDir(),
+            prefix_name = tools.GetPrefixName(),
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
 
@@ -393,7 +403,9 @@ def DownloadRequiredTools(force_downloads = False):
             prefix_name = tools.GetPrefixName(),
             install_files = ["chdman.exe"],
             installer_type = config.installer_format_7zip,
-            is_installer = True,
+            is_installer = False,
+            is_archive = True,
+            get_latest = True,
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
 
@@ -410,6 +422,26 @@ def DownloadRequiredTools(force_downloads = False):
             prefix_dir = tools.GetPrefixDir(),
             prefix_name = tools.GetPrefixName(),
             install_files = ["NDecrypt.exe"],
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
+    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "NDecrypt", "linux"):
+        network.DownloadLatestGithubRelease(
+            github_user = "SabreTools",
+            github_repo = "NDecrypt",
+            starts_with = "NDecrypt",
+            ends_with = "linux-x64.zip",
+            search_file = "NDecrypt",
+            install_name = "NDecrypt",
+            install_dir = os.path.join(tools.GetBaseDirectory(), "NDecrypt", "linux"),
+            prefix_dir = tools.GetPrefixDir(),
+            prefix_name = tools.GetPrefixName(),
+            install_files = ["NDecrypt"],
+            chmod_files = [
+                {
+                    "file": "NDecrypt",
+                    "perms": 755
+                }
+            ],
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
 
@@ -475,20 +507,6 @@ def DownloadRequiredTools(force_downloads = False):
             install_dir = os.path.join(tools.GetBaseDirectory(), "Pkg2AppImage", "linux"),
             prefix_dir = tools.GetPrefixDir(),
             prefix_name = tools.GetPrefixName(),
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
-
-    # PowerISO
-    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "PowerISO", "windows"):
-        network.DownloadGeneralRelease(
-            archive_url = "https://www.poweriso.com/BD92EC3F-82F9-887E-8857-FE98BC7E2755/PowerISO8-x64-Full.exe",
-            search_file = "piso.exe",
-            install_name = "PowerISO",
-            install_dir = os.path.join(tools.GetBaseDirectory(), "PowerISO", "windows"),
-            prefix_dir = tools.GetPrefixDir(),
-            prefix_name = tools.GetPrefixName(),
-            installer_type = config.installer_format_unknown,
-            is_installer = True,
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
 

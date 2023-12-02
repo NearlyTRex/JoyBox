@@ -116,11 +116,11 @@ def GetConfig():
         "ExifTool": {
             "program": {
                 "windows": "ExifTool/windows/exiftool.exe",
-                "linux": "ExifTool/windows/exiftool.exe"
+                "linux": "ExifTool/linux/exiftool"
             },
             "run_sandboxed": {
                 "windows": False,
-                "linux": True
+                "linux": False
             }
         },
 
@@ -200,11 +200,11 @@ def GetConfig():
         "NDecrypt": {
             "program": {
                 "windows": "NDecrypt/windows/NDecrypt.exe",
-                "linux": "NDecrypt/windows/NDecrypt.exe"
+                "linux": "NDecrypt/linux/NDecrypt"
             },
             "run_sandboxed": {
                 "windows": False,
-                "linux": True
+                "linux": False
             }
         },
 
@@ -241,19 +241,6 @@ def GetConfig():
             "run_sandboxed": {
                 "windows": False,
                 "linux": False
-            }
-        },
-
-        # PowerISO
-        "PowerISO": {
-            "program": {
-                "windows": "PowerISO/windows/piso.exe",
-                "linux": "PowerISO/windows/piso.exe"
-            },
-            "registry": "PowerISO/windows/PowerISO.reg",
-            "run_sandboxed": {
-                "windows": True,
-                "linux": True
             }
         },
 
