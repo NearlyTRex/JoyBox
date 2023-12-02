@@ -27,68 +27,32 @@ def CreateISO(iso_file, source_dir = None, source_dirs = [], volume_name = None,
 
     # Get tool
     iso_tool = None
-    if command.IsRunnableCommand(config.default_poweriso_exe, config.default_poweriso_install_dirs):
-        iso_tool = command.GetRunnableCommandPath(config.default_poweriso_exe, config.default_poweriso_install_dirs)
-    elif programs.IsToolInstalled("PowerISO"):
-        iso_tool = programs.GetToolProgram("PowerISO")
+    if command.IsRunnableCommand(config.default_xorriso_exe, config.default_xorriso_install_dirs):
+        iso_tool = command.GetRunnableCommandPath(config.default_xorriso_exe, config.default_xorriso_install_dirs)
     if not iso_tool:
         return False
-
-    # Check if tool needs to be run in prefix
-    should_run_via_wine = sandbox.ShouldBeRunViaWine(iso_tool)
-    should_run_via_sandboxie = sandbox.ShouldBeRunViaSandboxie(iso_tool)
-
-    # Get prefix
-    prefix_dir = programs.GetProgramPrefixDir("PowerISO")
-    prefix_name = programs.GetProgramPrefixName("PowerISO")
-
-    # Create prefix
-    sandbox.CreateBasicPrefix(
-        prefix_dir = prefix_dir,
-        prefix_name = prefix_name,
-        is_wine_prefix = should_run_via_wine,
-        is_sandboxie_prefix = should_run_via_sandboxie,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-
-    # Install registry file
-    registry.ImportRegistryFile(
-        registry_file = programs.GetToolPathConfigValue("PowerISO", "registry"),
-        prefix_dir = prefix_dir,
-        prefix_name = prefix_name,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
 
     # Get create command
     create_command = [
         iso_tool,
-        "create",
-        "-y",
-        "-udf", "on",
-        "-o", iso_file,
-        "-file-datetime", "01-01-2000-01:00:00",
-        "-vol-creation-datetime", "01-01-2000-01:00:00",
-        "-vol-modification-datetime", "01-01-2000-01:00:00",
-        "-vol-effective-datetime", "01-01-2000-01:00:00",
-        "-vol-expiration-datetime", "01-01-2000-01:00:00",
+        "-preparer_id", "xorriso",
+        "-as", "mkisofs",
+        "-iso-level", "3",
+        "-graft-points",
+        "-full-iso9660-filenames",
+        "-joliet",
+        "-o", iso_file
     ]
-    if system.IsPathValid(source_dir):
-        create_command += ["-add", source_dir, config.os_pathsep]
-    else:
-        for source_dir in source_dirs:
-            if system.IsPathValid(source_dir):
-                create_command += ["-add", source_dir, config.os_pathsep + system.GetDirectoryName(source_dir)]
+
     if volume_name:
-        create_command += ["-label", volume_name]
+        create_command += ["-volid", volume_name]
+    if system.IsPathValid(source_dir):
+        create_command += [source_dir]
 
     # Run create command
     command.RunBlockingCommand(
         cmd = create_command,
         options = command.CommandOptions(
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            is_wine_prefix = should_run_via_wine,
-            is_sandboxie_prefix = should_run_via_sandboxie,
             output_paths = [iso_file],
             blocking_processes = [iso_tool]),
         verbose = verbose,
@@ -106,20 +70,18 @@ def ExtractISO(iso_file, extract_dir, delete_original = False, verbose = False, 
 
     # Get tool
     iso_tool = None
-    if command.IsRunnableCommand(config.default_poweriso_exe, config.default_poweriso_install_dirs):
-        iso_tool = command.GetRunnableCommandPath(config.default_poweriso_exe, config.default_poweriso_install_dirs)
-    elif programs.IsToolInstalled("PowerISO"):
-        iso_tool = programs.GetToolProgram("PowerISO")
+    if command.IsRunnableCommand(config.default_xorriso_exe, config.default_xorriso_install_dirs):
+        iso_tool = command.GetRunnableCommandPath(config.default_xorriso_exe, config.default_xorriso_install_dirs)
     if not iso_tool:
         return False
 
     # Get extract command
     extract_cmd = [
         iso_tool,
-        "extract",
-        iso_file, "/",
-        "-od", extract_dir,
-        "-y"
+        "-osirrox", "on",
+        "-indev", iso_file,
+        "-extract", "/",
+        extract_dir
     ]
 
     # Run extract command

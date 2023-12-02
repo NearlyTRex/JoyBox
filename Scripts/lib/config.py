@@ -84,10 +84,11 @@ default_7zip_install_dirs = [
     os.path.join(default_drive_root_posix, "usr", "bin")
 ]
 
-# Default PowerISO install
-default_poweriso_exe = "piso"
-default_poweriso_install_dirs = [
-    os.path.join(default_drive_root_windows, "Program Files", "PowerISO")
+# Default XorrISO install
+default_xorriso_exe = "xorriso"
+default_xorriso_install_dirs = [
+    os.path.join(default_drive_root_windows, "cygwin64", "bin"),
+    os.path.join(default_drive_root_posix, "usr", "bin")
 ]
 
 # Default MameTools install
