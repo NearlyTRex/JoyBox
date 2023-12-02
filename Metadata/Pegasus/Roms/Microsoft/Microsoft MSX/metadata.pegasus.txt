@@ -1,5 +1,5 @@
 collection: Microsoft MSX
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Microsoft MSX" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Microsoft MSX" {file.path}
 
 
 game: Antarctic Adventure (Japan)

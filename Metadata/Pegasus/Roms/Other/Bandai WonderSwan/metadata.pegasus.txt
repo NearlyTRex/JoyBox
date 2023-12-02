@@ -1,5 +1,5 @@
 collection: Bandai WonderSwan
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Bandai WonderSwan" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Bandai WonderSwan" {file.path}
 
 
 game: Clock Tower for WonderSwan (Japan)

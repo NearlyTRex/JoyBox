@@ -1,5 +1,5 @@
 collection: Atari Jaguar CD
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Atari Jaguar CD" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Atari Jaguar CD" {file.path}
 
 
 game: Blue Lightning (USA)

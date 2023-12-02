@@ -1,5 +1,5 @@
 collection: Mattel Intellivision
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Mattel Intellivision" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Mattel Intellivision" {file.path}
 
 
 game: ABPA Backgammon ~ Backgammon (World)

@@ -1,5 +1,5 @@
 collection: Computer - Amazon Games
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Computer - Amazon Games" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Computer - Amazon Games" {file.path}
 
 
 game: ACA Neo Geo - 3 Count Bout (USA)

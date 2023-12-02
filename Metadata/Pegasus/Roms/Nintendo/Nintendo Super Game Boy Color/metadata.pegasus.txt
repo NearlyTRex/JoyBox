@@ -1,5 +1,5 @@
 collection: Nintendo Super Game Boy Color
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Super Game Boy Color" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo Super Game Boy Color" {file.path}
 
 
 game: Blaster Master - Enemy Below (USA, Europe) (SGB Enhanced) (GB Compatible)

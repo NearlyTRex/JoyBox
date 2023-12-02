@@ -1,5 +1,5 @@
 collection: Nintendo Super Game Boy
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Super Game Boy" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo Super Game Boy" {file.path}
 
 
 game: Donkey Kong (Japan, USA) (SGB Enhanced)

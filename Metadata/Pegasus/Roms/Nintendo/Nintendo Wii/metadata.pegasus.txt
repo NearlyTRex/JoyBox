@@ -1,5 +1,5 @@
 collection: Nintendo Wii
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Wii" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo Wii" {file.path}
 
 
 game: Alien Syndrome (USA)

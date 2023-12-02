@@ -1,5 +1,5 @@
 collection: Nintendo Wii U eShop
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Wii U eShop" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo Wii U eShop" {file.path}
 
 
 game: 3Souls (USA) (eShop)

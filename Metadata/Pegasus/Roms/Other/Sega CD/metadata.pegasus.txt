@@ -1,5 +1,5 @@
 collection: Sega CD
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sega CD" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sega CD" {file.path}
 
 
 game: Bram Stoker's Dracula (USA)

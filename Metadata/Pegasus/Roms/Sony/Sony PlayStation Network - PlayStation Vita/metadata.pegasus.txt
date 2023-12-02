@@ -1,5 +1,5 @@
 collection: Sony PlayStation Network - PlayStation Vita
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation Network - PlayStation Vita" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sony PlayStation Network - PlayStation Vita" {file.path}
 
 
 game: Accel World vs. Sword Art Online (USA)

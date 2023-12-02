@@ -1,5 +1,5 @@
 collection: Sony PlayStation Portable Video
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation Portable Video" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sony PlayStation Portable Video" {file.path}
 
 
 game: Dark Tales of Japan (Japan) (En,Ja)

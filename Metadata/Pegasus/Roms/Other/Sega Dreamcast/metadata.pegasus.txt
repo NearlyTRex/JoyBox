@@ -1,5 +1,5 @@
 collection: Sega Dreamcast
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sega Dreamcast" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sega Dreamcast" {file.path}
 
 
 game: Alien Front Online (USA)

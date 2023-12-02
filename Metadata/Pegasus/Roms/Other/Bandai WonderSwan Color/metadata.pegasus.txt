@@ -1,5 +1,5 @@
 collection: Bandai WonderSwan Color
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Bandai WonderSwan Color" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Bandai WonderSwan Color" {file.path}
 
 
 game: Star Hearts - Hoshi to Daichi no Shisha (Japan)

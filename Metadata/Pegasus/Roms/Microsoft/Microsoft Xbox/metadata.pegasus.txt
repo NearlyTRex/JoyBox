@@ -1,5 +1,5 @@
 collection: Microsoft Xbox
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Microsoft Xbox" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Microsoft Xbox" {file.path}
 
 
 game: Big Bumpin' (USA)

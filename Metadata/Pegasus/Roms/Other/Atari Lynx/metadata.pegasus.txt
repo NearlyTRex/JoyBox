@@ -1,5 +1,5 @@
 collection: Atari Lynx
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Atari Lynx" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Atari Lynx" {file.path}
 
 
 game: Basketbrawl (USA, Europe)

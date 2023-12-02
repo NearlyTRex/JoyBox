@@ -1,5 +1,5 @@
 collection: Sega Master System
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sega Master System" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sega Master System" {file.path}
 
 
 game: Alien Syndrome (USA, Europe)

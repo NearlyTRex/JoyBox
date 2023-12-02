@@ -1,5 +1,5 @@
 collection: Sony PlayStation 2
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation 2" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sony PlayStation 2" {file.path}
 
 
 game: Activision Anthology (USA)

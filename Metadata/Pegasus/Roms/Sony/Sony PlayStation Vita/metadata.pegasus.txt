@@ -1,5 +1,5 @@
 collection: Sony PlayStation Vita
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation Vita" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sony PlayStation Vita" {file.path}
 
 
 game: Alone With You (USA)

@@ -1,5 +1,5 @@
 collection: Panasonic 3DO
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Panasonic 3DO" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Panasonic 3DO" {file.path}
 
 
 game: Alone in the Dark (USA)

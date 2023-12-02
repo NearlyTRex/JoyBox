@@ -1,5 +1,5 @@
 collection: Texas Instruments TI-99-4A
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Texas Instruments TI-99-4A" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Texas Instruments TI-99-4A" {file.path}
 
 
 game: A-Maze-Ing (USA)

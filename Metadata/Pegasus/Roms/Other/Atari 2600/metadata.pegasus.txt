@@ -1,5 +1,5 @@
 collection: Atari 2600
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Atari 2600" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Atari 2600" {file.path}
 
 
 game: 3-D Tic-Tac-Toe (USA)

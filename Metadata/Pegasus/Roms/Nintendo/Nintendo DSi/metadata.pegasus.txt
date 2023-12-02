@@ -1,5 +1,5 @@
 collection: Nintendo DSi
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo DSi" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo DSi" {file.path}
 
 
 game: 7 Wonders II (USA)

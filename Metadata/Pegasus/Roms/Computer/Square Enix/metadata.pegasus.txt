@@ -1,5 +1,5 @@
 collection: Computer - Square Enix
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Computer - Square Enix" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Computer - Square Enix" {file.path}
 
 
 game: Final Fantasy XI - Ultimate Collection Seekers Edition (USA)

@@ -1,5 +1,5 @@
 collection: Magnavox Odyssey 2
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Magnavox Odyssey 2" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Magnavox Odyssey 2" {file.path}
 
 
 game: Invaders from Hyperspace (USA)

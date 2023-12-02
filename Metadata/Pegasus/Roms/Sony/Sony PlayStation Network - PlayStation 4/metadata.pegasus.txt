@@ -1,5 +1,5 @@
 collection: Sony PlayStation Network - PlayStation 4
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation Network - PlayStation 4" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sony PlayStation Network - PlayStation 4" {file.path}
 
 
 game: Abzu (USA)

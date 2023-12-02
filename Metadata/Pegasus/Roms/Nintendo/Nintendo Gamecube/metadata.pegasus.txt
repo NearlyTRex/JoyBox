@@ -1,5 +1,5 @@
 collection: Nintendo Gamecube
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Gamecube" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo Gamecube" {file.path}
 
 
 game: 007 - Agent Under Fire (USA)

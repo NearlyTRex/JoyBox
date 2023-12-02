@@ -1,5 +1,5 @@
 collection: Nintendo SNES
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo SNES" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo SNES" {file.path}
 
 
 game: 7th Saga, The (USA)

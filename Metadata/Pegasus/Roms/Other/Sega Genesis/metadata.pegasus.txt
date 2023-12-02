@@ -1,5 +1,5 @@
 collection: Sega Genesis
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sega Genesis" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sega Genesis" {file.path}
 
 
 game: 6-Pak (USA)

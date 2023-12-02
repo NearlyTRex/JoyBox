@@ -1,5 +1,5 @@
 collection: Nintendo 3DS Apps
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo 3DS Apps" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo 3DS Apps" {file.path}
 
 
 game: AR Games (USA) (Embedded App)

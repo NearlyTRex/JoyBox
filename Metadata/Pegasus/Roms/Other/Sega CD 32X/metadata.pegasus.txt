@@ -1,5 +1,5 @@
 collection: Sega CD 32X
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sega CD 32X" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sega CD 32X" {file.path}
 
 
 game: Corpse Killer (USA) (Sega CD 32X)

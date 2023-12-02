@@ -1,5 +1,5 @@
 collection: Nintendo Game Boy Color
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Game Boy Color" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo Game Boy Color" {file.path}
 
 
 game: Alone in the Dark - The New Nightmare (USA) (En,Fr,Es)

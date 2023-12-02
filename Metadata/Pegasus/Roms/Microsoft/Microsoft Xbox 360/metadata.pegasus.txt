@@ -1,5 +1,5 @@
 collection: Microsoft Xbox 360
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Microsoft Xbox 360" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Microsoft Xbox 360" {file.path}
 
 
 game: Alan Wake (World) (En,Ja,Fr,De,Es,It,Zh,Ko,Pl,Ru)

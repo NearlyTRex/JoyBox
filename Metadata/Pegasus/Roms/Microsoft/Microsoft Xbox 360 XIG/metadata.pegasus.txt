@@ -1,5 +1,5 @@
 collection: Microsoft Xbox 360 XIG
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Microsoft Xbox 360 XIG" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Microsoft Xbox 360 XIG" {file.path}
 
 
 game: Breath of Death VII (USA) (XIG)

@@ -1,5 +1,5 @@
 collection: Nintendo Famicom
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Famicom" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo Famicom" {file.path}
 
 
 game: ASO - Armored Scrum Object (Japan) (En)

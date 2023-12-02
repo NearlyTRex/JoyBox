@@ -1,5 +1,5 @@
 collection: Nintendo Virtual Boy
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Virtual Boy" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo Virtual Boy" {file.path}
 
 
 game: Mario Clash (Japan, USA)

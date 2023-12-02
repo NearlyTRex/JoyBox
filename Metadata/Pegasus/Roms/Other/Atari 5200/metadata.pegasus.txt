@@ -1,5 +1,5 @@
 collection: Atari 5200
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Atari 5200" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Atari 5200" {file.path}
 
 
 game: Asteroids (USA) (Proto)

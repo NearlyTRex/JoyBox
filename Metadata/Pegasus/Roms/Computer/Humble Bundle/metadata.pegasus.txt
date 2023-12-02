@@ -1,5 +1,5 @@
 collection: Computer - Humble Bundle
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Computer - Humble Bundle" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Computer - Humble Bundle" {file.path}
 
 
 game: Amnesia - The Dark Descent (USA)

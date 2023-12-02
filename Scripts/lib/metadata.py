@@ -335,7 +335,7 @@ class Metadata:
 
                 # Write header
                 file.write("collection: %s\n" % game_platform)
-                file.write("launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l \"%s\" {file.path}\n" % game_platform)
+                file.write("launch: {env.JB_LAUNCHROM_PROGRAM} -l \"%s\" {file.path}\n" % game_platform)
                 file.write("\n\n")
 
                 # Write each entry

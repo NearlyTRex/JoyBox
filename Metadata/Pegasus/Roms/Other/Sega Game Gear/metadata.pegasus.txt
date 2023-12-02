@@ -1,5 +1,5 @@
 collection: Sega Game Gear
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sega Game Gear" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sega Game Gear" {file.path}
 
 
 game: Bare Knuckle ~ Streets of Rage (World)

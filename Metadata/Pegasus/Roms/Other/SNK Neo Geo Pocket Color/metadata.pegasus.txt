@@ -1,5 +1,5 @@
 collection: SNK Neo Geo Pocket Color
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "SNK Neo Geo Pocket Color" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "SNK Neo Geo Pocket Color" {file.path}
 
 
 game: Baseball Stars Color - Pocket Sports Series (World) (En,Ja)

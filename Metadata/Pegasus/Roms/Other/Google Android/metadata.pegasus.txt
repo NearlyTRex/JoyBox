@@ -1,5 +1,5 @@
 collection: Google Android
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Google Android" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Google Android" {file.path}
 
 
 game: 12 Orbits (USA)

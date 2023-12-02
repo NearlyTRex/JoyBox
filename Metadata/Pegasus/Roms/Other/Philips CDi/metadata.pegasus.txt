@@ -1,5 +1,5 @@
 collection: Philips CDi
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Philips CDi" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Philips CDi" {file.path}
 
 
 game: Apprentice, The (Europe)

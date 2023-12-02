@@ -1,5 +1,5 @@
 collection: NEC SuperGrafx
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "NEC SuperGrafx" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "NEC SuperGrafx" {file.path}
 
 
 game: Aldynes - The Misson Code for Rage Crisis (Japan)

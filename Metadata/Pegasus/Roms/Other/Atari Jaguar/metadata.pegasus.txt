@@ -1,5 +1,5 @@
 collection: Atari Jaguar
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Atari Jaguar" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Atari Jaguar" {file.path}
 
 
 game: Alien vs Predator (World)

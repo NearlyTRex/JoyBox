@@ -1,5 +1,5 @@
 collection: Tiger Game.com
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Tiger Game.com" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Tiger Game.com" {file.path}
 
 
 game: Castlevania - Symphony of the Night (Unknown) (Proto)

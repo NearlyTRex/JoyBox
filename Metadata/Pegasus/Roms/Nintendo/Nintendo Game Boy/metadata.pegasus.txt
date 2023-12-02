@@ -1,5 +1,5 @@
 collection: Nintendo Game Boy
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Game Boy" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo Game Boy" {file.path}
 
 
 game: Adventure Island (USA, Europe)

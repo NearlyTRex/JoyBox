@@ -1,5 +1,5 @@
 collection: Nintendo Switch
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Switch" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo Switch" {file.path}
 
 
 game: 2064 - Read Only Memories INTEGRAL (USA) (En,Ja)

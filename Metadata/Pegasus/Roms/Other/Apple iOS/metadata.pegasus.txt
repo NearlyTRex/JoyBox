@@ -1,5 +1,5 @@
 collection: Apple iOS
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Apple iOS" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Apple iOS" {file.path}
 
 
 game: 7th Guest, The (USA)

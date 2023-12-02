@@ -1,5 +1,5 @@
 collection: Computer - Steam
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Computer - Steam" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Computer - Steam" {file.path}
 
 
 game: 7 Days to Die (USA) (Alpha 20.6 b9)

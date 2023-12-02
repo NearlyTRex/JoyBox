@@ -1,5 +1,5 @@
 collection: NEC TurboGrafx CD & PC-Engine CD
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "NEC TurboGrafx CD & PC-Engine CD" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "NEC TurboGrafx CD & PC-Engine CD" {file.path}
 
 
 game: Akumajou Dracula X - Chi no Rondo (Japan) (FABT, FACT)

@@ -1,5 +1,5 @@
 collection: Sinclair ZX Spectrum
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sinclair ZX Spectrum" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sinclair ZX Spectrum" {file.path}
 
 
 game: Alien 8 (Europe) (Ultimate Play The Game)

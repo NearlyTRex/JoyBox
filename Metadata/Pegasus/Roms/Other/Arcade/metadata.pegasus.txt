@@ -1,5 +1,5 @@
 collection: Arcade
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Arcade" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Arcade" {file.path}
 
 
 game: 1941 - Counter Attack (World) (1941)

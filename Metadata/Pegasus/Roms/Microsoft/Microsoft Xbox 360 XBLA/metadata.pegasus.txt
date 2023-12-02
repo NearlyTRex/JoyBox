@@ -1,5 +1,5 @@
 collection: Microsoft Xbox 360 XBLA
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Microsoft Xbox 360 XBLA" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Microsoft Xbox 360 XBLA" {file.path}
 
 
 game: Abyss Odyssey (USA) (XBLA)

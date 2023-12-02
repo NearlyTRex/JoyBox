@@ -1,5 +1,5 @@
 collection: Sony PlayStation
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sony PlayStation" {file.path}
 
 
 game: Activision Classics (USA)

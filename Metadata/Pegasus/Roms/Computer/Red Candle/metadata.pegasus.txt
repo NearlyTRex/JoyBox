@@ -1,5 +1,5 @@
 collection: Computer - Red Candle
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Computer - Red Candle" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Computer - Red Candle" {file.path}
 
 
 game: Detention (USA)

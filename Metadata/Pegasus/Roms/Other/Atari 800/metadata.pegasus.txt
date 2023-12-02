@@ -1,5 +1,5 @@
 collection: Atari 800
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Atari 800" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Atari 800" {file.path}
 
 
 game: Bounty Bob Strikes Back! (USA)

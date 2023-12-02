@@ -1,5 +1,5 @@
 collection: Sony PlayStation Network - PlayStation Portable
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation Network - PlayStation Portable" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sony PlayStation Network - PlayStation Portable" {file.path}
 
 
 game: Ape Quest (USA)

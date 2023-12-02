@@ -1,5 +1,5 @@
 collection: Microsoft Xbox One GOD
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Microsoft Xbox One GOD" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Microsoft Xbox One GOD" {file.path}
 
 
 game: 7 Days to Die (USA)

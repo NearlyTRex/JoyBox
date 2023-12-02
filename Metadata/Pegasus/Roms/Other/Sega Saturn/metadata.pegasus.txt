@@ -1,5 +1,5 @@
 collection: Sega Saturn
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sega Saturn" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sega Saturn" {file.path}
 
 
 game: Alone in the Dark - One-Eyed Jack's Revenge (USA)

@@ -1,5 +1,5 @@
 collection: Computer - Epic Games
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Computer - Epic Games" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Computer - Epic Games" {file.path}
 
 
 game: 3 out of 10 - Season One (USA)

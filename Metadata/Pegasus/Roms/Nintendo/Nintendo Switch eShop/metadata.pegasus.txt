@@ -1,5 +1,5 @@
 collection: Nintendo Switch eShop
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Switch eShop" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo Switch eShop" {file.path}
 
 
 game: Bad Dream - Coma (World) (eShop)

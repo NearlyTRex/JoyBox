@@ -1,5 +1,5 @@
 collection: Nintendo 3DS eShop
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo 3DS eShop" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo 3DS eShop" {file.path}
 
 
 game: 3D After Burner II (USA) (eShop)

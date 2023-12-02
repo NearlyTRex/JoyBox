@@ -1,5 +1,5 @@
 collection: Nintendo 3DS
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo 3DS" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo 3DS" {file.path}
 
 
 game: Animal Crossing - New Leaf (USA) (En,Fr,Es)

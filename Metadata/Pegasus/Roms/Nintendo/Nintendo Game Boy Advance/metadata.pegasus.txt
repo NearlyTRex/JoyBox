@@ -1,5 +1,5 @@
 collection: Nintendo Game Boy Advance
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Game Boy Advance" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo Game Boy Advance" {file.path}
 
 
 game: Animal Snap - Rescue Them 2 by 2 (USA)

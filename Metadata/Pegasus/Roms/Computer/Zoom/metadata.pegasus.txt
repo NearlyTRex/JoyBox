@@ -1,5 +1,5 @@
 collection: Computer - Zoom
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Computer - Zoom" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Computer - Zoom" {file.path}
 
 
 game: Alien Carnage - Halloween Harry (USA)

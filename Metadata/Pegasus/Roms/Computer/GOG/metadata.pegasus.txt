@@ -1,5 +1,5 @@
 collection: Computer - GOG
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Computer - GOG" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Computer - GOG" {file.path}
 
 
 game: 11th Hour, The (USA)

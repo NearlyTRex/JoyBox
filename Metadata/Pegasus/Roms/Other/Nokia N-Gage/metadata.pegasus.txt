@@ -1,5 +1,5 @@
 collection: Nokia N-Gage
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nokia N-Gage" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nokia N-Gage" {file.path}
 
 
 game: Ashen (USA, Europe) (En,Fr,De,Es,It) (v1.06)

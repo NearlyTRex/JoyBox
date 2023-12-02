@@ -1,5 +1,5 @@
 collection: Microsoft Xbox One
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Microsoft Xbox One" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Microsoft Xbox One" {file.path}
 
 
 game: Rare Replay (USA)

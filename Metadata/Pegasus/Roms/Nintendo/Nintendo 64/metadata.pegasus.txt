@@ -1,5 +1,5 @@
 collection: Nintendo 64
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo 64" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo 64" {file.path}
 
 
 game: 007 - The World Is Not Enough (USA)

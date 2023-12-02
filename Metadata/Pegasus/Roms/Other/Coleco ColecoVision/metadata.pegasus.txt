@@ -1,5 +1,5 @@
 collection: Coleco ColecoVision
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Coleco ColecoVision" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Coleco ColecoVision" {file.path}
 
 
 game: Antarctic Adventure (USA, Europe)

@@ -1,5 +1,5 @@
 collection: NEC TurboGrafx-16 & PC-Engine
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "NEC TurboGrafx-16 & PC-Engine" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "NEC TurboGrafx-16 & PC-Engine" {file.path}
 
 
 game: Air Zonk (USA)

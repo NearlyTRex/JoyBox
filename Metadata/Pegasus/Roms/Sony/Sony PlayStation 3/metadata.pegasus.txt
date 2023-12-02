@@ -1,5 +1,5 @@
 collection: Sony PlayStation 3
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sony PlayStation 3" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sony PlayStation 3" {file.path}
 
 
 game: 3D Dot Game Heroes (USA)

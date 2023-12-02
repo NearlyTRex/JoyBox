@@ -1,5 +1,5 @@
 collection: Nintendo Game Boy Advance e-Reader
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Nintendo Game Boy Advance e-Reader" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Nintendo Game Boy Advance e-Reader" {file.path}
 
 
 game: NES-e - Balloon Fight-e (USA)

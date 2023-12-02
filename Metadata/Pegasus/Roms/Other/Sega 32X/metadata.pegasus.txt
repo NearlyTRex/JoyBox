@@ -1,5 +1,5 @@
 collection: Sega 32X
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Sega 32X" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Sega 32X" {file.path}
 
 
 game: Chaotix ~ Knuckles' Chaotix (Japan, USA)

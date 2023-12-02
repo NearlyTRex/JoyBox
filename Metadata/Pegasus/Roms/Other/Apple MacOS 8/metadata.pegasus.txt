@@ -1,5 +1,5 @@
 collection: Apple MacOS 8
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Apple MacOS 8" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Apple MacOS 8" {file.path}
 
 
 game: Harry the Handsome Executive (USA)

@@ -1,5 +1,5 @@
 collection: Computer - Disc
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Computer - Disc" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Computer - Disc" {file.path}
 
 
 game: 1000 Best Games for Windows (USA)

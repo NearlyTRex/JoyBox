@@ -1,5 +1,5 @@
 collection: Atari 7800
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Atari 7800" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Atari 7800" {file.path}
 
 
 game: Asteroids (USA)

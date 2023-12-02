@@ -1,5 +1,5 @@
 collection: Commodore Amiga
-launch: {env.JOYMELLOW_LAUNCHROM_PROGRAM} -l "Commodore Amiga" {file.path}
+launch: {env.JB_LAUNCHROM_PROGRAM} -l "Commodore Amiga" {file.path}
 
 
 game: B.C. Kid (Europe)
