@@ -245,6 +245,42 @@ def DownloadRequiredTools(force_downloads = False):
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
 
+    # CtrMakeRom
+    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "CtrMakeRom", "windows"):
+        network.DownloadLatestGithubRelease(
+            github_user = "3DSGuy",
+            github_repo = "Project_CTR",
+            starts_with = "makerom",
+            ends_with = "win_x86_64.zip",
+            search_file = "makerom.exe",
+            install_name = "CtrMakeRom",
+            install_dir = os.path.join(tools.GetBaseDirectory(), "CtrMakeRom", "windows"),
+            prefix_dir = tools.GetPrefixDir(),
+            prefix_name = tools.GetPrefixName(),
+            install_files = ["makerom.exe"],
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
+    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "CtrMakeRom", "linux"):
+        network.DownloadLatestGithubRelease(
+            github_user = "3DSGuy",
+            github_repo = "Project_CTR",
+            starts_with = "makerom",
+            ends_with = "ubuntu_x86_64.zip",
+            search_file = "makerom",
+            install_name = "CtrMakeRom",
+            install_dir = os.path.join(tools.GetBaseDirectory(), "CtrMakeRom", "linux"),
+            prefix_dir = tools.GetPrefixDir(),
+            prefix_name = tools.GetPrefixName(),
+            install_files = ["makerom"],
+            chmod_files = [
+                {
+                    "file": "makerom",
+                    "perms": 755
+                }
+            ],
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
+
     # CtrTool
     if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "CtrTool", "windows"):
         network.DownloadLatestGithubRelease(
@@ -260,20 +296,24 @@ def DownloadRequiredTools(force_downloads = False):
             install_files = ["ctrtool.exe"],
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
-
-    # CtrToolMakeRom
-    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "CtrToolMakeRom", "windows"):
+    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "CtrTool", "linux"):
         network.DownloadLatestGithubRelease(
             github_user = "3DSGuy",
             github_repo = "Project_CTR",
-            starts_with = "makerom",
-            ends_with = "win_x86_64.zip",
-            search_file = "makerom.exe",
+            starts_with = "ctrtool",
+            ends_with = "ubuntu_x86_64.zip",
+            search_file = "ctrtool",
             install_name = "CtrTool",
-            install_dir = os.path.join(tools.GetBaseDirectory(), "CtrTool", "windows"),
+            install_dir = os.path.join(tools.GetBaseDirectory(), "CtrTool", "linux"),
             prefix_dir = tools.GetPrefixDir(),
             prefix_name = tools.GetPrefixName(),
-            install_files = ["makerom.exe"],
+            install_files = ["ctrtool"],
+            chmod_files = [
+                {
+                    "file": "ctrtool",
+                    "perms": 755
+                }
+            ],
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
 

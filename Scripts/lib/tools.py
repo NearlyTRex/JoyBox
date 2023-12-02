@@ -88,27 +88,27 @@ def GetConfig():
             }
         },
 
+        # CtrMakeRom
+        "CtrMakeRom": {
+            "program": {
+                "windows": "CtrMakeRom/windows/makerom.exe",
+                "linux": "CtrMakeRom/linux/makerom"
+            },
+            "run_sandboxed": {
+                "windows": False,
+                "linux": False
+            }
+        },
+
         # CtrTool
         "CtrTool": {
             "program": {
                 "windows": "CtrTool/windows/ctrtool.exe",
-                "linux": "CtrTool/windows/ctrtool.exe"
+                "linux": "CtrTool/linux/ctrtool"
             },
             "run_sandboxed": {
                 "windows": False,
-                "linux": True
-            }
-        },
-
-        # CtrToolMakeRom
-        "CtrToolMakeRom": {
-            "program": {
-                "windows": "CtrTool/windows/makerom.exe",
-                "linux": "CtrTool/windows/makerom.exe"
-            },
-            "run_sandboxed": {
-                "windows": False,
-                "linux": True
+                "linux": False
             }
         },
 

@@ -79,8 +79,8 @@ def Convert3DSCIAtoCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_fai
 
     # Get tool
     convert_tool = None
-    if programs.IsToolInstalled("CtrToolMakeRom"):
-        convert_tool = programs.GetToolProgram("CtrToolMakeRom")
+    if programs.IsToolInstalled("CtrMakeRom"):
+        convert_tool = programs.GetToolProgram("CtrMakeRom")
     if not convert_tool:
         return False
 
@@ -110,8 +110,8 @@ def Convert3DSCCItoCIA(src_3ds_file, dest_3ds_file, verbose = False, exit_on_fai
 
     # Get tool
     convert_tool = None
-    if programs.IsToolInstalled("CtrToolMakeRom"):
-        convert_tool = programs.GetToolProgram("CtrToolMakeRom")
+    if programs.IsToolInstalled("CtrMakeRom"):
+        convert_tool = programs.GetToolProgram("CtrMakeRom")
     if not convert_tool:
         return False
 
