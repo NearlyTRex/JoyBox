@@ -358,6 +358,26 @@ def DownloadRequiredTools(force_downloads = False):
             install_files = ["hactool.exe"],
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
+    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "HacTool", "linux"):
+        network.BuildAppImageFromSource(
+            release_url = "https://github.com/SciresM/hactool.git",
+            output_name = "HacTool",
+            output_dir = os.path.join(tools.GetBaseDirectory(), "HacTool", "linux"),
+            build_cmd = [
+                "cp", "config.mk.template", "config.mk",
+                "&&",
+                "make", "-j", "4"
+            ],
+            internal_copies = [
+                {"from": "Source/hactool", "to": "AppImage/usr/bin/hactool"},
+                {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
+                {"from": "AppImageTool/linux/icon.png", "to": "AppImage/icon.png"}
+            ],
+            internal_symlinks = [
+                {"from": "usr/bin/hactool", "to": "AppRun"}
+            ],
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
 
     # Ludusavi
     if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "Ludusavi", "windows"):

@@ -164,11 +164,11 @@ def GetConfig():
         "HacTool": {
             "program": {
                 "windows": "HacTool/windows/hactool.exe",
-                "linux": "HacTool/windows/hactool.exe"
+                "linux": "HacTool/linux/HacTool.AppImage"
             },
             "run_sandboxed": {
                 "windows": False,
-                "linux": True
+                "linux": False
             }
         },
 
