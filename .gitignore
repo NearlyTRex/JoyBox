@@ -29,6 +29,7 @@ Scripts/ext/3DSRomTool/**
 Scripts/ext/7-Zip/**
 Scripts/ext/AppImageTool/**
 Scripts/ext/CDecrypt/**
+Scripts/ext/CtrMakeRom/**
 Scripts/ext/CtrTool/**
 Scripts/ext/ExifTool/**
 Scripts/ext/ExtractXIso/**
