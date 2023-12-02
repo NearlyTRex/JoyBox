@@ -32,7 +32,7 @@ def GetConfig():
         "3DSRomTool": {
             "program": {
                 "windows": "3DSRomTool/windows/rom_tool.exe",
-                "linux": "3DSRomTool/windows/3DSRomTool.AppImage"
+                "linux": "3DSRomTool/linux/3DSRomTool.AppImage"
             },
             "run_sandboxed": {
                 "windows": False,
@@ -80,7 +80,7 @@ def GetConfig():
         "CDecrypt": {
             "program": {
                 "windows": "CDecrypt/windows/cdecrypt.exe",
-                "linux": "CDecrypt/windows/CDecrypt.AppImage"
+                "linux": "CDecrypt/linux/CDecrypt.AppImage"
             },
             "run_sandboxed": {
                 "windows": False,
@@ -248,11 +248,11 @@ def GetConfig():
         "PS3Dec": {
             "program": {
                 "windows": "PS3Dec/windows/PS3Dec.exe",
-                "linux": "PS3Dec/windows/PS3Dec.exe"
+                "linux": "PS3Dec/linux/PS3Dec.AppImage"
             },
             "run_sandboxed": {
                 "windows": False,
-                "linux": True
+                "linux": False
             }
         },
 

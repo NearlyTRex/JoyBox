@@ -583,6 +583,27 @@ def DownloadRequiredTools(force_downloads = False):
             install_files = ["PS3Dec.exe"],
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
+    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "PS3Dec", "linux"):
+        network.BuildAppImageFromSource(
+            release_url = "https://github.com/NearlyTRex/PS3Dec.git",
+            output_name = "PS3Dec",
+            output_dir = os.path.join(tools.GetBaseDirectory(), "PS3Dec", "linux"),
+            build_cmd = [
+                "cmake", "-G", "Ninja", "..",
+                "&&",
+                "ninja"
+            ],
+            build_dir = "Build",
+            internal_copies = [
+                {"from": "Source/Build/Release/PS3Dec", "to": "AppImage/usr/bin/PS3Dec"},
+                {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
+                {"from": "AppImageTool/linux/icon.png", "to": "AppImage/icon.png"}
+            ],
+            internal_symlinks = [
+                {"from": "usr/bin/PS3Dec", "to": "AppRun"}
+            ],
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
 
     # PSVStrip
     if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "PSVStrip", "windows"):
