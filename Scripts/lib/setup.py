@@ -320,6 +320,27 @@ def DownloadRequiredTools(force_downloads = False):
             install_files = ["extract-xiso.exe"],
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
+    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "ExtractXIso", "linux"):
+        network.BuildAppImageFromSource(
+            release_url = "https://github.com/NearlyTRex/ExtractXIso.git",
+            output_name = "ExtractXIso",
+            output_dir = os.path.join(tools.GetBaseDirectory(), "ExtractXIso", "linux"),
+            build_cmd = [
+                "cmake", "..",
+                "&&",
+                "make"
+            ],
+            build_dir = "Build",
+            internal_copies = [
+                {"from": "Source/Build/extract-xiso", "to": "AppImage/usr/bin/extract-xiso"},
+                {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
+                {"from": "AppImageTool/linux/icon.png", "to": "AppImage/icon.png"}
+            ],
+            internal_symlinks = [
+                {"from": "usr/bin/extract-xiso", "to": "AppRun"}
+            ],
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
 
     # FFMpeg
     if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "FFMpeg", "windows"):
@@ -553,21 +574,6 @@ def DownloadRequiredTools(force_downloads = False):
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
 
-    # Pkg2AppImage
-    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "Pkg2AppImage", "linux"):
-        network.DownloadLatestGithubRelease(
-            github_user = "AppImageCommunity",
-            github_repo = "pkg2appimage",
-            starts_with = "pkg2appimage",
-            ends_with = ".AppImage",
-            search_file = "Pkg2AppImage.AppImage",
-            install_name = "Pkg2AppImage",
-            install_dir = os.path.join(tools.GetBaseDirectory(), "Pkg2AppImage", "linux"),
-            prefix_dir = tools.GetPrefixDir(),
-            prefix_name = tools.GetPrefixName(),
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
-
     # PS3Dec
     if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "PS3Dec", "windows"):
         network.DownloadLatestGithubRelease(
@@ -701,22 +707,6 @@ def DownloadRequiredTools(force_downloads = False):
             prefix_dir = tools.GetPrefixDir(),
             prefix_name = tools.GetPrefixName(),
             install_files = ["XCI-Cutter.exe"],
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
-
-    # XexTool
-    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "XexTool", "windows"):
-        network.DownloadLatestGithubRelease(
-            github_user = "XboxChef",
-            github_repo = "XexToolGUI",
-            starts_with = "XeXGUI",
-            ends_with = ".zip",
-            search_file = "xextool.exe",
-            install_name = "XexTool",
-            install_dir = os.path.join(tools.GetBaseDirectory(), "XexTool", "windows"),
-            prefix_dir = tools.GetPrefixDir(),
-            prefix_name = tools.GetPrefixName(),
-            install_files = ["xextool.exe"],
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
 

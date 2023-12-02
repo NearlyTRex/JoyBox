@@ -128,11 +128,11 @@ def GetConfig():
         "ExtractXIso": {
             "program": {
                 "windows": "ExtractXIso/windows/extract-xiso.exe",
-                "linux": "ExtractXIso/windows/extract-xiso.exe"
+                "linux": "ExtractXIso/linux/ExtractXIso.AppImage"
             },
             "run_sandboxed": {
                 "windows": False,
-                "linux": True
+                "linux": False
             }
         },
 
@@ -232,18 +232,6 @@ def GetConfig():
             }
         },
 
-        # Pkg2AppImage
-        "Pkg2AppImage": {
-            "program": {
-                "windows": None,
-                "linux": "Pkg2AppImage/linux/Pkg2AppImage.AppImage"
-            },
-            "run_sandboxed": {
-                "windows": False,
-                "linux": False
-            }
-        },
-
         # PS3Dec
         "PS3Dec": {
             "program": {
@@ -317,18 +305,6 @@ def GetConfig():
             "program": {
                 "windows": "XCICutter/windows/XCI-Cutter.exe",
                 "linux": "XCICutter/windows/XCI-Cutter.exe"
-            },
-            "run_sandboxed": {
-                "windows": False,
-                "linux": True
-            }
-        },
-
-        # XexTool
-        "XexTool": {
-            "program": {
-                "windows": "XexTool/windows/xextool.exe",
-                "linux": "XexTool/windows/xextool.exe"
             },
             "run_sandboxed": {
                 "windows": False,
