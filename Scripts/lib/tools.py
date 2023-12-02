@@ -32,11 +32,11 @@ def GetConfig():
         "3DSRomTool": {
             "program": {
                 "windows": "3DSRomTool/windows/rom_tool.exe",
-                "linux": "3DSRomTool/windows/rom_tool.exe"
+                "linux": "3DSRomTool/windows/3DSRomTool.AppImage"
             },
             "run_sandboxed": {
                 "windows": False,
-                "linux": True
+                "linux": False
             }
         },
 

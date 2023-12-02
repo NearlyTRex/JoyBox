@@ -175,6 +175,26 @@ def DownloadRequiredTools(force_downloads = False):
             install_files = ["rom_tool.exe"],
             verbose = config.default_flag_verbose,
             exit_on_failure = config.default_flag_exit_on_failure)
+    if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "3DSRomTool", "linux"):
+        network.BuildAppImageFromSource(
+            release_url = "https://github.com/NearlyTRex/3DSRomTool.git",
+            output_name = "3DSRomTool",
+            output_dir = os.path.join(tools.GetBaseDirectory(), "3DSRomTool", "linux"),
+            build_cmd = [
+                "cd", "rom_tool",
+                "&&",
+                "make", "-j", "4"
+            ],
+            internal_copies = [
+                {"from": "Source/rom_tool/rom_tool", "to": "AppImage/usr/bin/rom_tool"},
+                {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
+                {"from": "AppImageTool/linux/icon.png", "to": "AppImage/icon.png"}
+            ],
+            internal_symlinks = [
+                {"from": "usr/bin/rom_tool", "to": "AppRun"}
+            ],
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
 
     # AppImageTool
     if force_downloads or ShouldProgramBeInstalled(tools.GetConfig(), tools.GetBaseDirectory(), "AppImageTool", "linux"):
