@@ -22,8 +22,9 @@ import metadata
 # The following emulators need periodic checks to get the latest
 # Likely because their git-master doesn't build or the download link is not automatic
 # Try to make these automatic if possible in the future
-# - Ares (linux)
+# - BasiliskII (windows)
 # - BigPEmu (windows)
+# - FS-UAE (linux)
 # - PPSSPP (windows)
 
 # Check requirements
@@ -1128,7 +1129,7 @@ def DownloadRequiredEmulators(force_downloads = False):
             exit_on_failure = config.default_flag_exit_on_failure)
     if force_downloads or ShouldProgramBeInstalled(emulators.GetConfig(), emulators.GetBaseDirectory(), "FS-UAE", "linux"):
         network.BuildAppImageFromSource(
-            release_url = "https://fs-uae.net/files/FS-UAE/Stable/3.1.66/fs-uae-3.1.66.tar.xz",
+            release_url = "https://github.com/FrodeSolheim/fs-uae/releases/download/v3.1.66/fs-uae-3.1.66.tar.xz",
             output_name = "FS-UAE",
             output_dir = os.path.join(emulators.GetBaseDirectory(), "FS-UAE", "linux"),
             build_cmd = [
@@ -1372,8 +1373,10 @@ def DownloadRequiredEmulators(force_downloads = False):
 
     # ScummVM
     if force_downloads or ShouldProgramBeInstalled(emulators.GetConfig(), emulators.GetBaseDirectory(), "ScummVM", "windows"):
-        network.DownloadGeneralRelease(
-            archive_url = "https://downloads.scummvm.org/frs/scummvm/2.7.1/scummvm-2.7.1-win32-x86_64.zip",
+        network.DownloadLatestWebpageRelease(
+            webpage_url = "https://www.scummvm.org/downloads",
+            starts_with = "https://downloads.scummvm.org/frs/scummvm/",
+            ends_with = "win32-x86_64.zip",
             search_file = "scummvm.exe",
             install_name = "ScummVM",
             install_dir = os.path.join(emulators.GetBaseDirectory(), "ScummVM", "windows"),
