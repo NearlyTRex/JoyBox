@@ -23,6 +23,18 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Find extra json files
+    for json_file in system.BuildFileListByExtensions(environment.GetJsonMetadataRootDir(), extensions = [".json"]):
+
+        # Check if json file matches up to a real rom path
+        print("Checking if rom matching '%s' exists ..." % json_file)
+        game_supercategory, game_category, game_subcategory = metadata.DeriveMetadataCategoriesFromFile(json_file)
+        game_name = metadata.DeriveGameNameFromPath(json_file)
+        game_rom_dir = environment.GetRomDir(game_category, game_subcategory, game_name)
+        if not os.path.exists(game_rom_dir):
+            print("Extraneous json file '%s' found" % json_file)
+            sys.exit(1)
+
     # Verify metadata files
     for game_category in metadata.GetMetadataCategories():
         for game_subcategory in metadata.GetMetadataSubcategories(game_category):
