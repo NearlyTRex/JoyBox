@@ -213,6 +213,16 @@ def HashCustomFiles(input_path, disc_name, file_supercategory, file_category, fi
     else:
         hash_file = os.path.join(environment.GetMainMetadataHashesDir(), file_supercategory, file_category, file_subcategory + ".txt")
 
+    # Make directories/files
+    system.MakeDirectory(
+        dir = system.GetFilenameDirectory(hash_file),
+        verbose = True,
+        exit_on_failure = True)
+    system.TouchFile(
+        src = hash_file,
+        verbose = True,
+        exit_on_failure = True)
+
     # Hash files
     if all_files:
         HashAllFiles(
@@ -243,6 +253,16 @@ def HashStandardFiles(input_path, file_supercategory, file_category, file_subcat
 
     # Get hash file
     hash_file = os.path.join(environment.GetMainMetadataHashesDir(), file_supercategory, file_category, file_subcategory + ".txt")
+
+    # Make directories/files
+    system.MakeDirectory(
+        dir = system.GetFilenameDirectory(hash_file),
+        verbose = True,
+        exit_on_failure = True)
+    system.TouchFile(
+        src = hash_file,
+        verbose = True,
+        exit_on_failure = True)
 
     # Hash files
     if all_files:
