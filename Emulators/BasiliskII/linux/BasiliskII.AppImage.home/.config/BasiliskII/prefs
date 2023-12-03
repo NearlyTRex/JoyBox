@@ -7,7 +7,7 @@ seriala /dev/ttyS0
 serialb /dev/ttyS1
 udptunnel false
 udpport 6066
-rom $ARCADE_EMULATOR_ROOT/BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/quadra.rom
+rom $EMULATOR_MAIN_ROOT/BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/quadra.rom
 bootdrive 0
 bootdriver 0
 ramsize 67108864

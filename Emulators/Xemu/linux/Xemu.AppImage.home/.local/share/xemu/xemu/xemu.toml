@@ -6,7 +6,7 @@ last_viewed_menu_index = 1
 port1 = 'keyboard'
 
 [sys.files]
-bootrom_path = '$ARCADE_EMULATOR_ROOT/Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/bios/mcpx_1.0.bin'
-flashrom_path = '$ARCADE_EMULATOR_ROOT/Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/bios/complex_4627.bin'
+bootrom_path = '$EMULATOR_MAIN_ROOT/Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/bios/mcpx_1.0.bin'
+flashrom_path = '$EMULATOR_MAIN_ROOT/Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/bios/complex_4627.bin'
 eeprom_path = '$GAME_SAVE_DIR/eeprom.bin'
 hdd_path = '$GAME_SAVE_DIR/xbox_hdd.qcow2'

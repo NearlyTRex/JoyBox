@@ -53,7 +53,7 @@ Rewind
   Frequency: 10
 Paths
   Home
-  Saves: $ARCADE_EMULATOR_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Saves/
+  Saves: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Saves/
   Screenshots
   Debugging
   SuperFamicom
@@ -271,7 +271,7 @@ PocketChallengeV2
 ColecoVision
   Path
   Firmware
-    BIOS.World: $ARCADE_EMULATOR_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/colecovision.rom
+    BIOS.World: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/colecovision.rom
   Visible: true
 MSX
   Path
@@ -291,8 +291,8 @@ PCEngine
 PCEngineCD
   Path
   Firmware
-    BIOS.US: $ARCADE_EMULATOR_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/syscard3u.pce
-    BIOS.Japan: $ARCADE_EMULATOR_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/syscard3j.pce
+    BIOS.US: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/syscard3u.pce
+    BIOS.Japan: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/syscard3j.pce
   Visible: true
 SuperGrafx
   Path
@@ -358,9 +358,9 @@ Mega32X
 MegaCD
   Path
   Firmware
-    BIOS.US: $ARCADE_EMULATOR_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/bios_CD_U.bin
-    BIOS.Japan: $ARCADE_EMULATOR_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/bios_CD_J.bin
-    BIOS.Europe: $ARCADE_EMULATOR_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/bios_CD_E.bin
+    BIOS.US: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/bios_CD_U.bin
+    BIOS.Japan: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/bios_CD_J.bin
+    BIOS.Europe: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/bios_CD_E.bin
   Visible: true
 MegaCD32X
   Path
