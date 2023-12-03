@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/An American Werewolf in LA (USA).exe"
-    ],
-    "transform_file": "An American Werewolf in LA (USA).exe"
-}

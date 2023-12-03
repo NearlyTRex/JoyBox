@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Towertale (USA).exe"
-    ],
-    "transform_file": "Towertale (USA).exe"
-}

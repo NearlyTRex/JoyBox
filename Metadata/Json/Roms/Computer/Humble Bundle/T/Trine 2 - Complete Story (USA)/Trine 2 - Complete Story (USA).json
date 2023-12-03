@@ -1,9 +1,0 @@
-{
-    "extra": [
-        "$SETUP_MAIN_ROOT/extra/trine2_ost_mp3_1378755341.zip"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Trine2_complete_story_v2_01_build_425_humble_win_full.exe"
-    ],
-    "transform_file": "Trine2_complete_story_v2_01_build_425_humble_win_full.exe"
-}

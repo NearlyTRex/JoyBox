@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/WARLOCK_WINDOWS_487115.exe"
-    ],
-    "transform_file": "WARLOCK_WINDOWS_487115.exe"
-}

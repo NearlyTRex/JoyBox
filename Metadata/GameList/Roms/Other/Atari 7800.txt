@@ -1,8 +1,0 @@
-Atari 7800 || Asteroids (USA) || $ROM_JSON_ROOT/Other/Atari 7800/Asteroids (USA)/Asteroids (USA).json
-Atari 7800 || Basketbrawl (USA) || $ROM_JSON_ROOT/Other/Atari 7800/Basketbrawl (USA)/Basketbrawl (USA).json
-Atari 7800 || Centipede (USA) || $ROM_JSON_ROOT/Other/Atari 7800/Centipede (USA)/Centipede (USA).json
-Atari 7800 || Dark Chambers (USA) || $ROM_JSON_ROOT/Other/Atari 7800/Dark Chambers (USA)/Dark Chambers (USA).json
-Atari 7800 || Donkey Kong (USA) || $ROM_JSON_ROOT/Other/Atari 7800/Donkey Kong (USA)/Donkey Kong (USA).json
-Atari 7800 || Fatal Run (USA) || $ROM_JSON_ROOT/Other/Atari 7800/Fatal Run (USA)/Fatal Run (USA).json
-Atari 7800 || Ninja Golf (USA) || $ROM_JSON_ROOT/Other/Atari 7800/Ninja Golf (USA)/Ninja Golf (USA).json
-Atari 7800 || Scrapyard Dog (USA) || $ROM_JSON_ROOT/Other/Atari 7800/Scrapyard Dog (USA)/Scrapyard Dog (USA).json

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Oikospiel Book I (USA).exe"
-    ],
-    "transform_file": "Oikospiel Book I (USA).exe"
-}

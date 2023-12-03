@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Witch Thief (USA).exe"
-    ],
-    "transform_file": "Witch Thief (USA).exe"
-}

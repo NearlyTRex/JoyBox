@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Box (USA).exe"
-    ],
-    "transform_file": "Box (USA).exe"
-}

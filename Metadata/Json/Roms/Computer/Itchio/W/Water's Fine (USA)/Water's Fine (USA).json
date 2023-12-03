@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Water's Fine (USA).exe"
-    ],
-    "transform_file": "Water's Fine (USA).exe"
-}

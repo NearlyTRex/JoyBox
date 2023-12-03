@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Starcats (USA).exe"
-    ],
-    "transform_file": "Starcats (USA).exe"
-}

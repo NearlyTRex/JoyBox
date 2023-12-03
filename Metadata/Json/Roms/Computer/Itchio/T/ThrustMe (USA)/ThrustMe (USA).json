@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/ThrustMe (USA).exe"
-    ],
-    "transform_file": "ThrustMe (USA).exe"
-}

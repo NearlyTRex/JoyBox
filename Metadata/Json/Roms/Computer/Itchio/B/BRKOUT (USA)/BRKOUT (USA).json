@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/BRKOUT (USA).exe"
-    ],
-    "transform_file": "BRKOUT (USA).exe"
-}

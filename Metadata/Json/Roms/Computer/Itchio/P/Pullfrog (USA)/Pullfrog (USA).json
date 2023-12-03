@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Pullfrog (USA).exe"
-    ],
-    "transform_file": "Pullfrog (USA).exe"
-}

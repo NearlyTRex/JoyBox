@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Drive to Hell (USA).exe"
-    ],
-    "transform_file": "Drive to Hell (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Last Word (USA).exe"
-    ],
-    "transform_file": "Last Word (USA).exe"
-}

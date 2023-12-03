@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Galactic Wars (USA).exe"
-    ],
-    "transform_file": "Galactic Wars (USA).exe"
-}

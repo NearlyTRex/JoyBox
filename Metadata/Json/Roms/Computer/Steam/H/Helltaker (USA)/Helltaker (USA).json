@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Helltaker (USA).exe"
-    ],
-    "transform_file": "Helltaker (USA).exe"
-}

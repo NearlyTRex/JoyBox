@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Double Dragon Trilogy (USA).exe"
-    ],
-    "transform_file": "Double Dragon Trilogy (USA).exe"
-}

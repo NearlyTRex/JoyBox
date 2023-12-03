@@ -1,2 +1,0 @@
-Atari Jaguar CD || Blue Lightning (USA) || $ROM_JSON_ROOT/Other/Atari Jaguar CD/Blue Lightning (USA)/Blue Lightning (USA).json
-Atari Jaguar CD || Myst (USA) || $ROM_JSON_ROOT/Other/Atari Jaguar CD/Myst (USA)/Myst (USA).json

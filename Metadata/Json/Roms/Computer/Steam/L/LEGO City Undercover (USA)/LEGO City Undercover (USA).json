@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/LEGO City Undercover (USA).exe"
-    ],
-    "transform_file": "LEGO City Undercover (USA).exe"
-}

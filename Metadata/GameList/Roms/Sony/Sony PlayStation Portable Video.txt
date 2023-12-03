@@ -1,2 +1,0 @@
-Sony PlayStation Portable Video || Dark Tales of Japan (Japan) (En,Ja) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable Video/Dark Tales of Japan (Japan) (En,Ja)/Dark Tales of Japan (Japan) (En,Ja).json
-Sony PlayStation Portable Video || Galerians - Rion (USA) (En,Ja) || $ROM_JSON_ROOT/Sony/Sony PlayStation Portable Video/Galerians - Rion (USA) (En,Ja)/Galerians - Rion (USA) (En,Ja).json

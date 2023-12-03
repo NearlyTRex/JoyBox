@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/2D Flight Simulator (USA).exe"
-    ],
-    "transform_file": "2D Flight Simulator (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Cascadio (USA).exe"
-    ],
-    "transform_file": "Cascadio (USA).exe"
-}

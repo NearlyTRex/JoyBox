@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Pony Island (USA).exe"
-    ],
-    "transform_file": "Pony Island (USA).exe"
-}

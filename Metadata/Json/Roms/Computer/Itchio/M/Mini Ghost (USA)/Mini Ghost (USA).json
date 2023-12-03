@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Mini Ghost (USA).exe"
-    ],
-    "transform_file": "Mini Ghost (USA).exe"
-}

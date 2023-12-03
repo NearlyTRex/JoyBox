@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/No Brakes Valet (USA).exe"
-    ],
-    "transform_file": "No Brakes Valet (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Danger Scavenger (USA).exe"
-    ],
-    "transform_file": "Danger Scavenger (USA).exe"
-}

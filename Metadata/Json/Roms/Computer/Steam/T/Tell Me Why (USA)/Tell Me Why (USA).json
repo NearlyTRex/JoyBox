@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Tell Me Why (USA).exe"
-    ],
-    "transform_file": "Tell Me Why (USA).exe"
-}

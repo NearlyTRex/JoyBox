@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/crawl-1-0-1-win.exe"
-    ],
-    "transform_file": "crawl-1-0-1-win.exe"
-}

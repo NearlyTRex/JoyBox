@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Not the Robots (USA).exe"
-    ],
-    "transform_file": "Not the Robots (USA).exe"
-}

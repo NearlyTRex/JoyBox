@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Bird Bakery (USA).exe"
-    ],
-    "transform_file": "Bird Bakery (USA).exe"
-}

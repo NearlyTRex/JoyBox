@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Moon Hunters (USA).exe"
-    ],
-    "transform_file": "Moon Hunters (USA).exe"
-}

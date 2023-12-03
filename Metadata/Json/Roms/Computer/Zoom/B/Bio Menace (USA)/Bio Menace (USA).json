@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Bio-Menace-English-Setup-1.1.exe"
-    ],
-    "transform_file": "Bio-Menace-English-Setup-1.1.exe"
-}

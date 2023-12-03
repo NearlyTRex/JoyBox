@@ -1,7 +1,0 @@
-{
-    "installer_exe": [
-        "$DISC_MAIN_ROOT/braid_full_1015.exe",
-        "$DISC_MAIN_ROOT/Vegas/MysteriousCityVegasSetup-Retail.exe"
-    ],
-    "transform_file": "Braid & Welcome to Mysterious City - Vegas (USA).chd"
-}

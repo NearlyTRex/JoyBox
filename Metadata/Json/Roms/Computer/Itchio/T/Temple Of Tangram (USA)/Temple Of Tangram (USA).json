@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Temple Of Tangram (USA).exe"
-    ],
-    "transform_file": "Temple Of Tangram (USA).exe"
-}

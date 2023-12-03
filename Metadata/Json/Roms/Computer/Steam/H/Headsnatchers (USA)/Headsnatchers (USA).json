@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Headsnatchers (USA).exe"
-    ],
-    "transform_file": "Headsnatchers (USA).exe"
-}

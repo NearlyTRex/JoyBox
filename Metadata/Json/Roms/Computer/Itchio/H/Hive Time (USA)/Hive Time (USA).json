@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Hive Time (USA).exe"
-    ],
-    "transform_file": "Hive Time (USA).exe"
-}

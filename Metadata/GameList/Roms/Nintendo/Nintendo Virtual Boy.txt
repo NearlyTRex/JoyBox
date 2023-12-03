@@ -1,2 +1,0 @@
-Nintendo Virtual Boy || Mario Clash (Japan, USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Virtual Boy/Mario Clash (Japan, USA)/Mario Clash (Japan, USA).json
-Nintendo Virtual Boy || Virtual Boy Wario Land (Japan, USA) || $ROM_JSON_ROOT/Nintendo/Nintendo Virtual Boy/Virtual Boy Wario Land (Japan, USA)/Virtual Boy Wario Land (Japan, USA).json

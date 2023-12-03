@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Ruya (USA).exe"
-    ],
-    "transform_file": "Ruya (USA).exe"
-}

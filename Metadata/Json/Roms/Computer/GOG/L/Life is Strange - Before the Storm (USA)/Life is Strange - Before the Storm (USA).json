@@ -1,9 +1,0 @@
-{
-    "dlc": [
-        "$SETUP_MAIN_ROOT/dlc/setup_life_is_strange_before_the_storm_-_deluxe_upgrade_1.0_hotfix_(64bit)_(39227).exe"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_life_is_strange_before_the_storm_1.0_hotfix_(64bit)_(39227).exe"
-    ],
-    "transform_file": "setup_life_is_strange_before_the_storm_1.0_hotfix_(64bit)_(39227).exe"
-}

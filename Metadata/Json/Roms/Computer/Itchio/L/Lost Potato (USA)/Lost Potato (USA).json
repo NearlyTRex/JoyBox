@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Lost Potato (USA).exe"
-    ],
-    "transform_file": "Lost Potato (USA).exe"
-}

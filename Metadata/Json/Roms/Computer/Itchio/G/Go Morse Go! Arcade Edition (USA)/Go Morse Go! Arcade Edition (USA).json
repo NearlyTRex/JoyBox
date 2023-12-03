@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Go Morse Go! Arcade Edition (USA).exe"
-    ],
-    "transform_file": "Go Morse Go! Arcade Edition (USA).exe"
-}

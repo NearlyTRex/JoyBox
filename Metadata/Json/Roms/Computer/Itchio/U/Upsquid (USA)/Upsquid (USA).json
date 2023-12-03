@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Upsquid (USA).exe"
-    ],
-    "transform_file": "Upsquid (USA).exe"
-}

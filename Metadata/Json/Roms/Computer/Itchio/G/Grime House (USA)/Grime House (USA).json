@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Grime House (USA).exe"
-    ],
-    "transform_file": "Grime House (USA).exe"
-}

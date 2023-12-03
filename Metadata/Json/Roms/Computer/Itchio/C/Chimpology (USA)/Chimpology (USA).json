@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Chimpology (USA).exe"
-    ],
-    "transform_file": "Chimpology (USA).exe"
-}

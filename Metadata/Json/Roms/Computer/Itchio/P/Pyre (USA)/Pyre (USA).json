@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Pyre (USA).exe"
-    ],
-    "transform_file": "Pyre (USA).exe"
-}

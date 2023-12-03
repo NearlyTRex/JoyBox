@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Aerannis (USA).exe"
-    ],
-    "transform_file": "Aerannis (USA).exe"
-}

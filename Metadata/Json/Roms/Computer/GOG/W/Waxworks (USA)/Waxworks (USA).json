@@ -1,9 +1,0 @@
-{
-    "extra": [
-        "$SETUP_MAIN_ROOT/extra/waxworks_manual.zip"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_waxworks_1.0_(28045).exe"
-    ],
-    "transform_file": "setup_waxworks_1.0_(28045).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Hyper Sentinel (USA).exe"
-    ],
-    "transform_file": "Hyper Sentinel (USA).exe"
-}

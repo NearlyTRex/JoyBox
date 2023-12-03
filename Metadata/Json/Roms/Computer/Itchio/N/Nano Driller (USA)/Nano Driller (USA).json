@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Nano Driller (USA).exe"
-    ],
-    "transform_file": "Nano Driller (USA).exe"
-}

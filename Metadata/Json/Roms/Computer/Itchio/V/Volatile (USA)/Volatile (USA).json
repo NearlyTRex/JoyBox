@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Volatile (USA).exe"
-    ],
-    "transform_file": "Volatile (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/LEGO Batman - The Videogame (USA).exe"
-    ],
-    "transform_file": "LEGO Batman - The Videogame (USA).exe"
-}

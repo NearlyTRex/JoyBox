@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Mysterium (USA).exe"
-    ],
-    "transform_file": "Mysterium (USA).exe"
-}

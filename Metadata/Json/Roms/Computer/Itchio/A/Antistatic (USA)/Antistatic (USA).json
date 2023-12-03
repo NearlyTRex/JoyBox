@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Antistatic (USA).exe"
-    ],
-    "transform_file": "Antistatic (USA).exe"
-}

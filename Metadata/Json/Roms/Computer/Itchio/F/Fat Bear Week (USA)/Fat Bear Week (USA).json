@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Fat Bear Week (USA).exe"
-    ],
-    "transform_file": "Fat Bear Week (USA).exe"
-}

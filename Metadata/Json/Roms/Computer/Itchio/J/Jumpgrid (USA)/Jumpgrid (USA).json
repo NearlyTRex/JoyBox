@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Jumpgrid (USA).exe"
-    ],
-    "transform_file": "Jumpgrid (USA).exe"
-}

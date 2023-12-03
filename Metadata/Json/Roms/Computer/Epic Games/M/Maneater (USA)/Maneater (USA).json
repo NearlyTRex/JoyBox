@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Maneater (USA).exe"
-    ],
-    "transform_file": "Maneater (USA).exe"
-}

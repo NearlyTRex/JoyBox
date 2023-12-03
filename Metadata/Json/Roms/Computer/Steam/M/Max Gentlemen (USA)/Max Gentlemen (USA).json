@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Max Gentlemen (USA).exe"
-    ],
-    "transform_file": "Max Gentlemen (USA).exe"
-}

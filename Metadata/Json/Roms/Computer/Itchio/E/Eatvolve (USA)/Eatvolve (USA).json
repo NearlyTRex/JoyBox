@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Eatvolve (USA).exe"
-    ],
-    "transform_file": "Eatvolve (USA).exe"
-}

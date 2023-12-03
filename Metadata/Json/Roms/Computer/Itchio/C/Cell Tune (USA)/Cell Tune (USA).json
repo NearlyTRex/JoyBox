@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Cell Tune (USA).exe"
-    ],
-    "transform_file": "Cell Tune (USA).exe"
-}

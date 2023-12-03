@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/WretchWorks Arcade Pack (USA).exe"
-    ],
-    "transform_file": "WretchWorks Arcade Pack (USA).exe"
-}

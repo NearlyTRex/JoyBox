@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Vylan (USA).exe"
-    ],
-    "transform_file": "Vylan (USA).exe"
-}

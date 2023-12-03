@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/What Never Was (USA).exe"
-    ],
-    "transform_file": "What Never Was (USA).exe"
-}

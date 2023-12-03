@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Atomic Reconstruction (USA).exe"
-    ],
-    "transform_file": "Atomic Reconstruction (USA).exe"
-}

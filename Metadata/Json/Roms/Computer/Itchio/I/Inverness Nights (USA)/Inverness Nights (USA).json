@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Inverness Nights (USA).exe"
-    ],
-    "transform_file": "Inverness Nights (USA).exe"
-}

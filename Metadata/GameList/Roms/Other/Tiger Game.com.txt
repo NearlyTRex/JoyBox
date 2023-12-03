@@ -1,5 +1,0 @@
-Tiger Game.com || Castlevania - Symphony of the Night (Unknown) (Proto) || $ROM_JSON_ROOT/Other/Tiger Game.com/Castlevania - Symphony of the Night (Unknown) (Proto)/Castlevania - Symphony of the Night (Unknown) (Proto).json
-Tiger Game.com || Fighters Megamix (USA) || $ROM_JSON_ROOT/Other/Tiger Game.com/Fighters Megamix (USA)/Fighters Megamix (USA).json
-Tiger Game.com || Jurassic Park - The Lost World (USA) || $ROM_JSON_ROOT/Other/Tiger Game.com/Jurassic Park - The Lost World (USA)/Jurassic Park - The Lost World (USA).json
-Tiger Game.com || Resident Evil 2 (USA) || $ROM_JSON_ROOT/Other/Tiger Game.com/Resident Evil 2 (USA)/Resident Evil 2 (USA).json
-Tiger Game.com || Sonic Jam (USA) || $ROM_JSON_ROOT/Other/Tiger Game.com/Sonic Jam (USA)/Sonic Jam (USA).json

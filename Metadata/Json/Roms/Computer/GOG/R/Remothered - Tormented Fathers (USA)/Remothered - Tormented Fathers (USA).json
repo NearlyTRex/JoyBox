@@ -1,9 +1,0 @@
-{
-    "extra": [
-        "$SETUP_MAIN_ROOT/extra/wallpapers.zip"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_remothered_tormented_fathers_1.5.1_(64bit)_(22016).exe"
-    ],
-    "transform_file": "setup_remothered_tormented_fathers_1.5.1_(64bit)_(22016).exe"
-}

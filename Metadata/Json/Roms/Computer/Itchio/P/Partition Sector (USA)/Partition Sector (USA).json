@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Partition Sector (USA).exe"
-    ],
-    "transform_file": "Partition Sector (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Good Mourning (USA).exe"
-    ],
-    "transform_file": "Good Mourning (USA).exe"
-}

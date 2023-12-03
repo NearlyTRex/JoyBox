@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/As We Know It (USA).exe"
-    ],
-    "transform_file": "As We Know It (USA).exe"
-}

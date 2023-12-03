@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Tabletop Simulator (USA).exe"
-    ],
-    "transform_file": "Tabletop Simulator (USA).exe"
-}

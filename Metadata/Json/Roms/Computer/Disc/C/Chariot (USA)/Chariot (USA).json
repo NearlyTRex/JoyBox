@@ -1,5 +1,0 @@
-{
-    "installer_exe": "$DISC_MAIN_ROOT/ChariotInstall.exe",
-    "transform_file": "Chariot (USA).chd",
-    "winver": "win10"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/SubDivide (USA).exe"
-    ],
-    "transform_file": "SubDivide (USA).exe"
-}

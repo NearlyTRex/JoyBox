@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_grim_dawn_1.1.9.8_(64bit)_(65199).exe"
-    ],
-    "transform_file": "setup_grim_dawn_1.1.9.8_(64bit)_(65199).exe"
-}

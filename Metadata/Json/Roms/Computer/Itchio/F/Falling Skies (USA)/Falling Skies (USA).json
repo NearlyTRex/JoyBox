@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Falling Skies (USA).exe"
-    ],
-    "transform_file": "Falling Skies (USA).exe"
-}

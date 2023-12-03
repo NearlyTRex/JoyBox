@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Frick, Inc. (USA).exe"
-    ],
-    "transform_file": "Frick, Inc. (USA).exe"
-}

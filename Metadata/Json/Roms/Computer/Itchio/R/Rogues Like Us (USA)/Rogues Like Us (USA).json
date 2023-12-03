@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Rogues Like Us (USA).exe"
-    ],
-    "transform_file": "Rogues Like Us (USA).exe"
-}

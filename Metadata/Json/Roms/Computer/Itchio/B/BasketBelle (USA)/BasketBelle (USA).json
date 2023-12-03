@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/BasketBelle (USA).exe"
-    ],
-    "transform_file": "BasketBelle (USA).exe"
-}

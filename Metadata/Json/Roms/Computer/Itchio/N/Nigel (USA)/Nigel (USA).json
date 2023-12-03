@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Nigel (USA).exe"
-    ],
-    "transform_file": "Nigel (USA).exe"
-}

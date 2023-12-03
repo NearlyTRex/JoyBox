@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Chipmonk! (USA).exe"
-    ],
-    "transform_file": "Chipmonk! (USA).exe"
-}

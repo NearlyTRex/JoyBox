@@ -1,9 +1,0 @@
-{
-    "extra": [
-        "$SETUP_MAIN_ROOT/extra/witchaven_original_build_access_instructions.zip"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_witchaven_1.0_(47551).exe"
-    ],
-    "transform_file": "setup_witchaven_1.0_(47551).exe"
-}

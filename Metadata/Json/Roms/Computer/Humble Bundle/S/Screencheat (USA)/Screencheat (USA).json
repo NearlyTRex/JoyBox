@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Screencheat_3_3_0_win32.exe"
-    ],
-    "transform_file": "Screencheat_3_3_0_win32.exe"
-}

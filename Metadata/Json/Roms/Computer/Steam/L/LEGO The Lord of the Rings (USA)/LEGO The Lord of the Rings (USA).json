@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/LEGO The Lord of the Rings (USA).exe"
-    ],
-    "transform_file": "LEGO The Lord of the Rings (USA).exe"
-}

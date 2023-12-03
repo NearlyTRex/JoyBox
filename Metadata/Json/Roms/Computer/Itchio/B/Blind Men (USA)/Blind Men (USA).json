@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Blind Men (USA).exe"
-    ],
-    "transform_file": "Blind Men (USA).exe"
-}

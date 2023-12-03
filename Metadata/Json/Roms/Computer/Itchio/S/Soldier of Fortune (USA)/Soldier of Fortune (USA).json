@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Soldier of Fortune (USA).exe"
-    ],
-    "transform_file": "Soldier of Fortune (USA).exe"
-}

@@ -1,6 +1,0 @@
-Microsoft Xbox 360 XIG || Breath of Death VII (USA) (XIG) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox 360 XIG/Breath of Death VII (USA) (XIG)/Breath of Death VII (USA) (XIG).json
-Microsoft Xbox 360 XIG || Cthulhu Saves the World (USA) (XIG) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox 360 XIG/Cthulhu Saves the World (USA) (XIG)/Cthulhu Saves the World (USA) (XIG).json
-Microsoft Xbox 360 XIG || Dead Pixels (USA) (XIG) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox 360 XIG/Dead Pixels (USA) (XIG)/Dead Pixels (USA) (XIG).json
-Microsoft Xbox 360 XIG || EvilQuest (USA) (XIG) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox 360 XIG/EvilQuest (USA) (XIG)/EvilQuest (USA) (XIG).json
-Microsoft Xbox 360 XIG || White Noise - A Tale of Horror (USA) (XIG) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox 360 XIG/White Noise - A Tale of Horror (USA) (XIG)/White Noise - A Tale of Horror (USA) (XIG).json
-Microsoft Xbox 360 XIG || Zombie Snowmen (USA) (XIG) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox 360 XIG/Zombie Snowmen (USA) (XIG)/Zombie Snowmen (USA) (XIG).json

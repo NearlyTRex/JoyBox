@@ -1,9 +1,0 @@
-{
-    "extra": [
-        "$SETUP_MAIN_ROOT/extra/knockknock_ost_mp3_1414095807.zip"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/knockknock_win_1393371335.exe"
-    ],
-    "transform_file": "knockknock_win_1393371335.exe"
-}

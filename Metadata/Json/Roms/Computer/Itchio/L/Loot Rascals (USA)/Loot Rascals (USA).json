@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Loot Rascals (USA).exe"
-    ],
-    "transform_file": "Loot Rascals (USA).exe"
-}

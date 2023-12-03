@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Veritas (USA).exe"
-    ],
-    "transform_file": "Veritas (USA).exe"
-}

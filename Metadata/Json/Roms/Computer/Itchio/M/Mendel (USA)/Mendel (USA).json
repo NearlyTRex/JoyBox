@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Mendel (USA).exe"
-    ],
-    "transform_file": "Mendel (USA).exe"
-}

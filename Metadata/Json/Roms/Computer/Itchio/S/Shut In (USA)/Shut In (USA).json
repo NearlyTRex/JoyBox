@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Shut In (USA).exe"
-    ],
-    "transform_file": "Shut In (USA).exe"
-}

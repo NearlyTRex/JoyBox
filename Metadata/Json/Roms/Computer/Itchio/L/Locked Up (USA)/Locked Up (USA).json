@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Locked Up (USA).exe"
-    ],
-    "transform_file": "Locked Up (USA).exe"
-}

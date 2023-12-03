@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Evader (USA).exe"
-    ],
-    "transform_file": "Evader (USA).exe"
-}

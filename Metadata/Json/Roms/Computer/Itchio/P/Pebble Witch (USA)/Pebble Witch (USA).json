@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Pebble Witch (USA).exe"
-    ],
-    "transform_file": "Pebble Witch (USA).exe"
-}

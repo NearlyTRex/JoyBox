@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Codemancer (USA).exe"
-    ],
-    "transform_file": "Codemancer (USA).exe"
-}

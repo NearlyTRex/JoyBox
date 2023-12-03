@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Paint Game (USA).exe"
-    ],
-    "transform_file": "Paint Game (USA).exe"
-}

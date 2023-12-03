@@ -1,6 +1,0 @@
-Commodore Amiga || B.C. Kid (Europe) || $ROM_JSON_ROOT/Other/Commodore Amiga/B.C. Kid (Europe)/B.C. Kid (Europe).json
-Commodore Amiga || Katakis (Europe) (v1.1) || $ROM_JSON_ROOT/Other/Commodore Amiga/Katakis (Europe) (v1.1)/Katakis (Europe) (v1.1).json
-Commodore Amiga || R-Type (Europe) || $ROM_JSON_ROOT/Other/Commodore Amiga/R-Type (Europe)/R-Type (Europe).json
-Commodore Amiga || Turrican (Europe) || $ROM_JSON_ROOT/Other/Commodore Amiga/Turrican (Europe)/Turrican (Europe).json
-Commodore Amiga || Turrican 3 (Europe) || $ROM_JSON_ROOT/Other/Commodore Amiga/Turrican 3 (Europe)/Turrican 3 (Europe).json
-Commodore Amiga || Turrican II - The Final Fight (Europe) || $ROM_JSON_ROOT/Other/Commodore Amiga/Turrican II - The Final Fight (Europe)/Turrican II - The Final Fight (Europe).json

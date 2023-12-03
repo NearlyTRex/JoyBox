@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Depanneur Nocturne (USA).exe"
-    ],
-    "transform_file": "Depanneur Nocturne (USA).exe"
-}

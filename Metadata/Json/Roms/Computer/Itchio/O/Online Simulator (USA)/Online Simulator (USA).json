@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Online Simulator (USA).exe"
-    ],
-    "transform_file": "Online Simulator (USA).exe"
-}

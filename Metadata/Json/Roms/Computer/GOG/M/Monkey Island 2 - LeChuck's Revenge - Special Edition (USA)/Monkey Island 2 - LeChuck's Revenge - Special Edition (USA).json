@@ -1,9 +1,0 @@
-{
-    "extra": [
-        "$SETUP_MAIN_ROOT/extra/monkey_island_2_manual_original_ver.zip"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_monkey_island2_se_2.0.0.10.exe"
-    ],
-    "transform_file": "setup_monkey_island2_se_2.0.0.10.exe"
-}

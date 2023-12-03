@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Sunlight (USA).exe"
-    ],
-    "transform_file": "Sunlight (USA).exe"
-}

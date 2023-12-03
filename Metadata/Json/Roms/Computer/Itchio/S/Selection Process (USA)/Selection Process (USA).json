@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Selection Process (USA).exe"
-    ],
-    "transform_file": "Selection Process (USA).exe"
-}

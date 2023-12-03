@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Color Jumper (USA).exe"
-    ],
-    "transform_file": "Color Jumper (USA).exe"
-}

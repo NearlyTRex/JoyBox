@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Resident Evil Resistance (USA).exe"
-    ],
-    "transform_file": "Resident Evil Resistance (USA).exe"
-}

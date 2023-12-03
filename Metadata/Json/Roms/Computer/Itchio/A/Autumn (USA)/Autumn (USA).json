@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Autumn (USA).exe"
-    ],
-    "transform_file": "Autumn (USA).exe"
-}

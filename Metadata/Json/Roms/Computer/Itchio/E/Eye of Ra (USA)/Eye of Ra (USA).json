@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Eye of Ra (USA).exe"
-    ],
-    "transform_file": "Eye of Ra (USA).exe"
-}

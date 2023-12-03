@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/KeyCars (USA).exe"
-    ],
-    "transform_file": "KeyCars (USA).exe"
-}

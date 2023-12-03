@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Typoman (USA).exe"
-    ],
-    "transform_file": "Typoman (USA).exe"
-}

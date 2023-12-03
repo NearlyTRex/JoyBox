@@ -1,9 +1,0 @@
-{
-    "extra": [
-        "$SETUP_MAIN_ROOT/extra/mghd_manual.zip"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_majesty_gold_hd_1.5.2.28_(24283).exe"
-    ],
-    "transform_file": "setup_majesty_gold_hd_1.5.2.28_(24283).exe"
-}

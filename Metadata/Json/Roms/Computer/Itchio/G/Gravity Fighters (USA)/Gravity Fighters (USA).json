@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Gravity Fighters (USA).exe"
-    ],
-    "transform_file": "Gravity Fighters (USA).exe"
-}

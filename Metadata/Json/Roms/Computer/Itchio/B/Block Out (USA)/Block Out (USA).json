@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Block Out (USA).exe"
-    ],
-    "transform_file": "Block Out (USA).exe"
-}

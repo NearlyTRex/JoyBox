@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Cayne (USA).exe"
-    ],
-    "transform_file": "Cayne (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/manos_windows_1386702035.exe"
-    ],
-    "transform_file": "manos_windows_1386702035.exe"
-}

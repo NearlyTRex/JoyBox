@@ -1,5 +1,0 @@
-Texas Instruments TI-99-4A || A-Maze-Ing (USA) || $ROM_JSON_ROOT/Other/Texas Instruments TI-99-4A/A-Maze-Ing (USA)/A-Maze-Ing (USA).json
-Texas Instruments TI-99-4A || Hunt The Wumpus (USA) || $ROM_JSON_ROOT/Other/Texas Instruments TI-99-4A/Hunt The Wumpus (USA)/Hunt The Wumpus (USA).json
-Texas Instruments TI-99-4A || Moon Mine (USA) || $ROM_JSON_ROOT/Other/Texas Instruments TI-99-4A/Moon Mine (USA)/Moon Mine (USA).json
-Texas Instruments TI-99-4A || Munch Man (USA) || $ROM_JSON_ROOT/Other/Texas Instruments TI-99-4A/Munch Man (USA)/Munch Man (USA).json
-Texas Instruments TI-99-4A || Parsec (USA) || $ROM_JSON_ROOT/Other/Texas Instruments TI-99-4A/Parsec (USA)/Parsec (USA).json

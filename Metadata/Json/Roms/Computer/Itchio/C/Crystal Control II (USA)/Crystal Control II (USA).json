@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Crystal Control II (USA).exe"
-    ],
-    "transform_file": "Crystal Control II (USA).exe"
-}

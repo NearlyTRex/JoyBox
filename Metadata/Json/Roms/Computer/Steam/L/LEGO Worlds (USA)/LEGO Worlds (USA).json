@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/LEGO Worlds (USA).exe"
-    ],
-    "transform_file": "LEGO Worlds (USA).exe"
-}

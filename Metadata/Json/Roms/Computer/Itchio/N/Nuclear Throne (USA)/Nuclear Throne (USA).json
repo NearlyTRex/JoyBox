@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Nuclear Throne (USA).exe"
-    ],
-    "transform_file": "Nuclear Throne (USA).exe"
-}

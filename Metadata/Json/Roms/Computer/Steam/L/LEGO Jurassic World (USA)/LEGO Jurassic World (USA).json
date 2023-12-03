@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/LEGO Jurassic World (USA).exe"
-    ],
-    "transform_file": "LEGO Jurassic World (USA).exe"
-}

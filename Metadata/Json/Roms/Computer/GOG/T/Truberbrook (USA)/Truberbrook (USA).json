@@ -1,9 +1,0 @@
-{
-    "extra": [
-        "$SETUP_MAIN_ROOT/extra/truberbrook_travel_guide.zip"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_truberbrook_1.6_(30927).exe"
-    ],
-    "transform_file": "setup_truberbrook_1.6_(30927).exe"
-}

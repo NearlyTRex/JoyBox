@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Attrition (USA).exe"
-    ],
-    "transform_file": "Attrition (USA).exe"
-}

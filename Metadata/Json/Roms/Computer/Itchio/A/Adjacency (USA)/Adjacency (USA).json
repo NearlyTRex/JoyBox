@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Adjacency (USA).exe"
-    ],
-    "transform_file": "Adjacency (USA).exe"
-}

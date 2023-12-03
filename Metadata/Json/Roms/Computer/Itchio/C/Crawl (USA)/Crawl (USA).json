@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Crawl (USA).exe"
-    ],
-    "transform_file": "Crawl (USA).exe"
-}

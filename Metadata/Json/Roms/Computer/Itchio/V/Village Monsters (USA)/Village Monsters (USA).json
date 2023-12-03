@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Village Monsters (USA).exe"
-    ],
-    "transform_file": "Village Monsters (USA).exe"
-}

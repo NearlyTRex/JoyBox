@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Emberlight (USA).exe"
-    ],
-    "transform_file": "Emberlight (USA).exe"
-}

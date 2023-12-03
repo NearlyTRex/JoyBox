@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Pikuniku (USA).exe"
-    ],
-    "transform_file": "Pikuniku (USA).exe"
-}

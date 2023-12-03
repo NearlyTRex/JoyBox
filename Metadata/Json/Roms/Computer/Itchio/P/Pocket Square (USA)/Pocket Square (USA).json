@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Pocket Square (USA).exe"
-    ],
-    "transform_file": "Pocket Square (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Pandemonium (USA).exe"
-    ],
-    "transform_file": "Pandemonium (USA).exe"
-}

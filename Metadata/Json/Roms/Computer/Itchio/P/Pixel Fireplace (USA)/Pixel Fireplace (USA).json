@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Pixel Fireplace (USA).exe"
-    ],
-    "transform_file": "Pixel Fireplace (USA).exe"
-}

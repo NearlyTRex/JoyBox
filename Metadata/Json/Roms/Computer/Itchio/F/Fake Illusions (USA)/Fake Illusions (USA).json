@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Fake Illusions (USA).exe"
-    ],
-    "transform_file": "Fake Illusions (USA).exe"
-}

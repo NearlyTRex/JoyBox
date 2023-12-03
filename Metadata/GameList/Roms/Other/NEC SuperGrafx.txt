@@ -1,2 +1,0 @@
-NEC SuperGrafx || Aldynes - The Misson Code for Rage Crisis (Japan) || $ROM_JSON_ROOT/Other/NEC SuperGrafx/Aldynes - The Misson Code for Rage Crisis (Japan)/Aldynes - The Misson Code for Rage Crisis (Japan).json
-NEC SuperGrafx || Daimakai Mura (Japan) || $ROM_JSON_ROOT/Other/NEC SuperGrafx/Daimakai Mura (Japan)/Daimakai Mura (Japan).json

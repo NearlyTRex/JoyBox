@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Sonic CD (USA).exe"
-    ],
-    "transform_file": "Sonic CD (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Dates & Wires (USA).exe"
-    ],
-    "transform_file": "Dates & Wires (USA).exe"
-}

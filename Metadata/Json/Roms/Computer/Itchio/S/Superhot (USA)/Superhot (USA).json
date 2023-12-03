@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Superhot (USA).exe"
-    ],
-    "transform_file": "Superhot (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/ponyisland_windows_v1.20.exe"
-    ],
-    "transform_file": "ponyisland_windows_v1.20.exe"
-}

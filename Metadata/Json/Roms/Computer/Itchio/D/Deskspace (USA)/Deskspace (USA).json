@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Deskspace (USA).exe"
-    ],
-    "transform_file": "Deskspace (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Grand Theft Auto V (USA).exe"
-    ],
-    "transform_file": "Grand Theft Auto V (USA).exe"
-}

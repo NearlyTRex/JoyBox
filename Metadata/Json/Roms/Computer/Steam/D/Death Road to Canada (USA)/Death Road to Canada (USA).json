@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Death Road to Canada (USA).exe"
-    ],
-    "transform_file": "Death Road to Canada (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Little Comet (USA).exe"
-    ],
-    "transform_file": "Little Comet (USA).exe"
-}

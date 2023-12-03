@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Astrologaster (USA).exe"
-    ],
-    "transform_file": "Astrologaster (USA).exe"
-}

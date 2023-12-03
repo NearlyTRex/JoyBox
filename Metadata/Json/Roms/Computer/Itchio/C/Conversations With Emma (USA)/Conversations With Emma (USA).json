@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Conversations With Emma (USA).exe"
-    ],
-    "transform_file": "Conversations With Emma (USA).exe"
-}

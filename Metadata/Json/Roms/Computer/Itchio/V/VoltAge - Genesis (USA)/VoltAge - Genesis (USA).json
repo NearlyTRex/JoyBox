@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/VoltAge - Genesis (USA).exe"
-    ],
-    "transform_file": "VoltAge - Genesis (USA).exe"
-}

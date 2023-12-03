@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Barrel Roll (USA).exe"
-    ],
-    "transform_file": "Barrel Roll (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Space Mayhem (USA).exe"
-    ],
-    "transform_file": "Space Mayhem (USA).exe"
-}

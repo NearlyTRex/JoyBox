@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/LEGO The Incredibles (USA).exe"
-    ],
-    "transform_file": "LEGO The Incredibles (USA).exe"
-}

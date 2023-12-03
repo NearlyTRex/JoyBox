@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Mutiny Island (USA).exe"
-    ],
-    "transform_file": "Mutiny Island (USA).exe"
-}

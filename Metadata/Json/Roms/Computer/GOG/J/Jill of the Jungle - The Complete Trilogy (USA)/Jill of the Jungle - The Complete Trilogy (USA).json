@@ -1,9 +1,0 @@
-{
-    "extra": [
-        "$SETUP_MAIN_ROOT/extra/jill_of_the_jungle_manual.zip"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_jill_of_the_jungle_1.0_cs_(28162).exe"
-    ],
-    "transform_file": "setup_jill_of_the_jungle_1.0_cs_(28162).exe"
-}

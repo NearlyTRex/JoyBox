@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Spirits of Xanadu (USA).exe"
-    ],
-    "transform_file": "Spirits of Xanadu (USA).exe"
-}

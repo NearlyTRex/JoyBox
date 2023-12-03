@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Mnemonic MV (USA).exe"
-    ],
-    "transform_file": "Mnemonic MV (USA).exe"
-}

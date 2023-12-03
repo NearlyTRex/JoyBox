@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/East Van EP (USA).exe"
-    ],
-    "transform_file": "East Van EP (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Double Cross (USA).exe"
-    ],
-    "transform_file": "Double Cross (USA).exe"
-}

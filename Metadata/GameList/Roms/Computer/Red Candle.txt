@@ -1,2 +1,0 @@
-Computer - Red Candle || Detention (USA) || $ROM_JSON_ROOT/Computer/Red Candle/D/Detention (USA)/Detention (USA).json
-Computer - Red Candle || Devotion (USA) || $ROM_JSON_ROOT/Computer/Red Candle/D/Devotion (USA)/Devotion (USA).json

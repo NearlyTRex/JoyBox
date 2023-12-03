@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Atomic Heist (USA).exe"
-    ],
-    "transform_file": "Atomic Heist (USA).exe"
-}

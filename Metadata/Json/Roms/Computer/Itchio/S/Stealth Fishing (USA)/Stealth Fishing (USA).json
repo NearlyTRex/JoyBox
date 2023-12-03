@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Stealth Fishing (USA).exe"
-    ],
-    "transform_file": "Stealth Fishing (USA).exe"
-}

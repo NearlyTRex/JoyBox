@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Fuzz Dungeon (USA).exe"
-    ],
-    "transform_file": "Fuzz Dungeon (USA).exe"
-}

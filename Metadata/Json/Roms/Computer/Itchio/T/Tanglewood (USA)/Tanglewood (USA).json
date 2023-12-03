@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Tanglewood (USA).exe"
-    ],
-    "transform_file": "Tanglewood (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Football Drama (USA).exe"
-    ],
-    "transform_file": "Football Drama (USA).exe"
-}

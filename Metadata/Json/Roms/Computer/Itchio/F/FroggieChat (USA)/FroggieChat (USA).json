@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/FroggieChat (USA).exe"
-    ],
-    "transform_file": "FroggieChat (USA).exe"
-}

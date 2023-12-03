@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Cube Rampage (USA).exe"
-    ],
-    "transform_file": "Cube Rampage (USA).exe"
-}

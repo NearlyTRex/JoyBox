@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Doom (USA).exe"
-    ],
-    "transform_file": "Doom (USA).exe"
-}

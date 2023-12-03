@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Runner3 (USA).exe"
-    ],
-    "transform_file": "Runner3 (USA).exe"
-}

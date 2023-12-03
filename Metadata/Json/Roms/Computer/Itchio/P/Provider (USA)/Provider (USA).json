@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Provider (USA).exe"
-    ],
-    "transform_file": "Provider (USA).exe"
-}

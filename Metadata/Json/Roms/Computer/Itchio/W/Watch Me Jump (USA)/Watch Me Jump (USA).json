@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Watch Me Jump (USA).exe"
-    ],
-    "transform_file": "Watch Me Jump (USA).exe"
-}

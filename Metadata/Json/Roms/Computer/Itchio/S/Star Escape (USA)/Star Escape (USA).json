@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Star Escape (USA).exe"
-    ],
-    "transform_file": "Star Escape (USA).exe"
-}

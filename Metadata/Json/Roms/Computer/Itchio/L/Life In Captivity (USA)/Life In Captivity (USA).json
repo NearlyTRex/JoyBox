@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Life In Captivity (USA).exe"
-    ],
-    "transform_file": "Life In Captivity (USA).exe"
-}

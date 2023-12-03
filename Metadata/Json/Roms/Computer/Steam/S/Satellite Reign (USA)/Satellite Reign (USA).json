@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Satellite Reign (USA).exe"
-    ],
-    "transform_file": "Satellite Reign (USA).exe"
-}

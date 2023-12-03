@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Toki Tori (USA).exe"
-    ],
-    "transform_file": "Toki Tori (USA).exe"
-}

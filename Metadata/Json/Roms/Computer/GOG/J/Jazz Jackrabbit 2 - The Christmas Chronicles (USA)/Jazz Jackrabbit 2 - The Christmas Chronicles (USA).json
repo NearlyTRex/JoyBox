@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_jazz_jackrabbit_2_cc_1.2x_(16742).exe"
-    ],
-    "transform_file": "setup_jazz_jackrabbit_2_cc_1.2x_(16742).exe"
-}

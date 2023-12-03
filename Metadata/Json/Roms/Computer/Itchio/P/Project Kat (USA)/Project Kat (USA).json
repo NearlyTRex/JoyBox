@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Project Kat (USA).exe"
-    ],
-    "transform_file": "Project Kat (USA).exe"
-}

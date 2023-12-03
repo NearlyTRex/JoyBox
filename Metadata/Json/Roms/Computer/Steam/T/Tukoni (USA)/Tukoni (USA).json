@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Tukoni (USA).exe"
-    ],
-    "transform_file": "Tukoni (USA).exe"
-}

@@ -1,9 +1,0 @@
-{
-    "dlc": [
-        "$SETUP_MAIN_ROOT/dlc/setup_batman_arkham_knight_-_season_pass_1.98_(37902).exe"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_batman_arkham_knight_1.98_(37902).exe"
-    ],
-    "transform_file": "setup_batman_arkham_knight_1.98_(37902).exe"
-}

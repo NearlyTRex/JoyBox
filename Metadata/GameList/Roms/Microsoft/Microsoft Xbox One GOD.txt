@@ -1,9 +1,0 @@
-Microsoft Xbox One GOD || 7 Days to Die (USA) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox One GOD/7 Days to Die (USA)/7 Days to Die (USA).json
-Microsoft Xbox One GOD || Bunker, The (USA) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox One GOD/Bunker, The (USA)/Bunker, The (USA).json
-Microsoft Xbox One GOD || Claire - Extended Cut (USA) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox One GOD/Claire - Extended Cut (USA)/Claire - Extended Cut (USA).json
-Microsoft Xbox One GOD || D4 - Dark Dreams Don't Die (USA) (Demo) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox One GOD/D4 - Dark Dreams Don't Die (USA) (Demo)/D4 - Dark Dreams Don't Die (USA) (Demo).json
-Microsoft Xbox One GOD || Divinity - Original Sin - Enhanced Edition (USA) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox One GOD/Divinity - Original Sin - Enhanced Edition (USA)/Divinity - Original Sin - Enhanced Edition (USA).json
-Microsoft Xbox One GOD || Emily Wants to Play (USA) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox One GOD/Emily Wants to Play (USA)/Emily Wants to Play (USA).json
-Microsoft Xbox One GOD || Layers of Fear (USA) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox One GOD/Layers of Fear (USA)/Layers of Fear (USA).json
-Microsoft Xbox One GOD || Soda Drinker Pro (USA) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox One GOD/Soda Drinker Pro (USA)/Soda Drinker Pro (USA).json
-Microsoft Xbox One GOD || Zoo Tycoon (USA) || $ROM_JSON_ROOT/Microsoft/Microsoft Xbox One GOD/Zoo Tycoon (USA)/Zoo Tycoon (USA).json

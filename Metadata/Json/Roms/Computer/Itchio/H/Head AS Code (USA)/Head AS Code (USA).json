@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Head AS Code (USA).exe"
-    ],
-    "transform_file": "Head AS Code (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Fantom Feast (USA).exe"
-    ],
-    "transform_file": "Fantom Feast (USA).exe"
-}

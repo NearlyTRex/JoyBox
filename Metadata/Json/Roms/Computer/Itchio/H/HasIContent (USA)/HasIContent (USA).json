@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/HasIContent (USA).exe"
-    ],
-    "transform_file": "HasIContent (USA).exe"
-}

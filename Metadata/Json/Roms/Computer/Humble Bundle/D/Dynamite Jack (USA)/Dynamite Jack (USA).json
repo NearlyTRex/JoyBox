@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/DynamiteJack-125.exe"
-    ],
-    "transform_file": "DynamiteJack-125.exe"
-}

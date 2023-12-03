@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Peck N Run (USA).exe"
-    ],
-    "transform_file": "Peck N Run (USA).exe"
-}

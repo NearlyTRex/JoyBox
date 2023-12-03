@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Make Your Adventure (USA).exe"
-    ],
-    "transform_file": "Make Your Adventure (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Gigabit (USA).exe"
-    ],
-    "transform_file": "Gigabit (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/WarpThrough (USA).exe"
-    ],
-    "transform_file": "WarpThrough (USA).exe"
-}

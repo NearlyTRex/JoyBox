@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Omeganaut (USA).exe"
-    ],
-    "transform_file": "Omeganaut (USA).exe"
-}

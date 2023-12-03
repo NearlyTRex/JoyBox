@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Minit (USA).exe"
-    ],
-    "transform_file": "Minit (USA).exe"
-}

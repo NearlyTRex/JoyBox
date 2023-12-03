@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_openttd_13.4_(64bit)_(66414).exe"
-    ],
-    "transform_file": "setup_openttd_13.4_(64bit)_(66414).exe"
-}

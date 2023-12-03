@@ -1,9 +1,0 @@
-{
-    "extra": [
-        "$SETUP_MAIN_ROOT/extra/ss_second_encounter_music.zip"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_serious_sam_the_second_encounter_1.07_(21759).exe"
-    ],
-    "transform_file": "setup_serious_sam_the_second_encounter_1.07_(21759).exe"
-}

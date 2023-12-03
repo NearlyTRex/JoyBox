@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/One Night Stand (USA).exe"
-    ],
-    "transform_file": "One Night Stand (USA).exe"
-}

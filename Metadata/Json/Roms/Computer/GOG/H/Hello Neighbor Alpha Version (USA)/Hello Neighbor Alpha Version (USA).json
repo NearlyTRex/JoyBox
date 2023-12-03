@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_hello_neighbor_demo_pre-alpha_(13261).exe"
-    ],
-    "transform_file": "setup_hello_neighbor_demo_pre-alpha_(13261).exe"
-}

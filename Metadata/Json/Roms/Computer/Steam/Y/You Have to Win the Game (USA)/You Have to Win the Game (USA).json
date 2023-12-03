@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/You Have to Win the Game (USA).exe"
-    ],
-    "transform_file": "You Have to Win the Game (USA).exe"
-}

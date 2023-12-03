@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Rite (USA).exe"
-    ],
-    "transform_file": "Rite (USA).exe"
-}

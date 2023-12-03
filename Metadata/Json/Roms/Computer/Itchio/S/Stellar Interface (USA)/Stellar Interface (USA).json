@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Stellar Interface (USA).exe"
-    ],
-    "transform_file": "Stellar Interface (USA).exe"
-}

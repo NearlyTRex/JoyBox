@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Vignettes (USA).exe"
-    ],
-    "transform_file": "Vignettes (USA).exe"
-}

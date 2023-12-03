@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Ambidangerous (USA).exe"
-    ],
-    "transform_file": "Ambidangerous (USA).exe"
-}

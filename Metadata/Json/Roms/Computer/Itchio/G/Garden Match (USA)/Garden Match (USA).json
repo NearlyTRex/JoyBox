@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Garden Match (USA).exe"
-    ],
-    "transform_file": "Garden Match (USA).exe"
-}

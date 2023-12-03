@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Brathian (USA).exe"
-    ],
-    "transform_file": "Brathian (USA).exe"
-}

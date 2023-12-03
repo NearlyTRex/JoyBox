@@ -1,9 +1,0 @@
-{
-    "extra": [
-        "$SETUP_MAIN_ROOT/extra/mm_swords_of_xeen_manual.zip"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_might_and_magic_-_swords_of_xeen_1.0_(28044).exe"
-    ],
-    "transform_file": "setup_might_and_magic_-_swords_of_xeen_1.0_(28044).exe"
-}

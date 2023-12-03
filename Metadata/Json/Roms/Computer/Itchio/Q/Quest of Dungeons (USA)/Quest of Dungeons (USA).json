@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Quest of Dungeons (USA).exe"
-    ],
-    "transform_file": "Quest of Dungeons (USA).exe"
-}

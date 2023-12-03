@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Dimension Drive (USA).exe"
-    ],
-    "transform_file": "Dimension Drive (USA).exe"
-}

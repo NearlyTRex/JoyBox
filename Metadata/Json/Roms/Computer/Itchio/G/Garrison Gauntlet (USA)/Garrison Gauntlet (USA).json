@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Garrison Gauntlet (USA).exe"
-    ],
-    "transform_file": "Garrison Gauntlet (USA).exe"
-}

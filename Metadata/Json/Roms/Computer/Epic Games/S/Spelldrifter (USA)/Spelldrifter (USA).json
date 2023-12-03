@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Spelldrifter (USA).exe"
-    ],
-    "transform_file": "Spelldrifter (USA).exe"
-}

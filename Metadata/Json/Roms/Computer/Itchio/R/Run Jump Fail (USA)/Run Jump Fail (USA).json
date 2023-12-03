@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Run Jump Fail (USA).exe"
-    ],
-    "transform_file": "Run Jump Fail (USA).exe"
-}

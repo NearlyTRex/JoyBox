@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/CHESTO - At the Checkout (USA).exe"
-    ],
-    "transform_file": "CHESTO - At the Checkout (USA).exe"
-}

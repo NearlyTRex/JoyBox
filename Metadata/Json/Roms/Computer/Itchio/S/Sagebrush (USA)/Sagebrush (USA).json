@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Sagebrush (USA).exe"
-    ],
-    "transform_file": "Sagebrush (USA).exe"
-}

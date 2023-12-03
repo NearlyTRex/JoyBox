@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Paranautical Activity (USA).exe"
-    ],
-    "transform_file": "Paranautical Activity (USA).exe"
-}

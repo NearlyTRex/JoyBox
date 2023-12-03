@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/TimeOut (USA).exe"
-    ],
-    "transform_file": "TimeOut (USA).exe"
-}

@@ -1,9 +1,0 @@
-{
-    "extra": [
-        "$SETUP_MAIN_ROOT/extra/jazz_jackrabbit_manual.zip"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_jazz_jackrabbit_collection_2.0_csv2_(51327).exe"
-    ],
-    "transform_file": "setup_jazz_jackrabbit_collection_2.0_csv2_(51327).exe"
-}

@@ -1,9 +1,0 @@
-{
-    "dlc": [
-        "$SETUP_MAIN_ROOT/dlc/setup_deus_ex_mankind_dividedtm_dlc_-_season_pass_1.19_hotfix_(38078).exe"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_deus_ex_mankind_divided_1.19_hotfix_(38078).exe"
-    ],
-    "transform_file": "setup_deus_ex_mankind_divided_1.19_hotfix_(38078).exe"
-}

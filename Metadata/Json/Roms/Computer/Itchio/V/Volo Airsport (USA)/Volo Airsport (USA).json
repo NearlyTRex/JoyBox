@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Volo Airsport (USA).exe"
-    ],
-    "transform_file": "Volo Airsport (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Portal 2 (USA).exe"
-    ],
-    "transform_file": "Portal 2 (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Steam Marines 2 (USA).exe"
-    ],
-    "transform_file": "Steam Marines 2 (USA).exe"
-}

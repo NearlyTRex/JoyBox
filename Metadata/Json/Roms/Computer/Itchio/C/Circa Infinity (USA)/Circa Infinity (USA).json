@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Circa Infinity (USA).exe"
-    ],
-    "transform_file": "Circa Infinity (USA).exe"
-}

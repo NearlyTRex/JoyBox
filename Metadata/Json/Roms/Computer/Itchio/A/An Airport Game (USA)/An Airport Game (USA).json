@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/An Airport Game (USA).exe"
-    ],
-    "transform_file": "An Airport Game (USA).exe"
-}

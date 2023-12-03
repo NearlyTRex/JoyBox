@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Dead Rising 4 (USA).exe"
-    ],
-    "transform_file": "Dead Rising 4 (USA).exe"
-}

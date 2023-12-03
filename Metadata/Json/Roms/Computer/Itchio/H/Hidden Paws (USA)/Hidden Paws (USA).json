@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Hidden Paws (USA).exe"
-    ],
-    "transform_file": "Hidden Paws (USA).exe"
-}

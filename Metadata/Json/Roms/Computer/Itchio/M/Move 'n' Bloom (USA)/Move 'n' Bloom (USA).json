@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Move 'n' Bloom (USA).exe"
-    ],
-    "transform_file": "Move 'n' Bloom (USA).exe"
-}

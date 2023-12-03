@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Walking Tourist (USA).exe"
-    ],
-    "transform_file": "Walking Tourist (USA).exe"
-}

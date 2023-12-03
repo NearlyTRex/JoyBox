@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Un Pas Fragile (USA).exe"
-    ],
-    "transform_file": "Un Pas Fragile (USA).exe"
-}

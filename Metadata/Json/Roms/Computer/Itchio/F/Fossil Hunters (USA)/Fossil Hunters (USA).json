@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Fossil Hunters (USA).exe"
-    ],
-    "transform_file": "Fossil Hunters (USA).exe"
-}

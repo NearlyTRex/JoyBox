@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Final Spike (USA).exe"
-    ],
-    "transform_file": "Final Spike (USA).exe"
-}

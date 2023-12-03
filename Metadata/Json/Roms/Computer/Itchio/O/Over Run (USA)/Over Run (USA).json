@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Over Run (USA).exe"
-    ],
-    "transform_file": "Over Run (USA).exe"
-}

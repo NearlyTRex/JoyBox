@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Containment (USA).exe"
-    ],
-    "transform_file": "Containment (USA).exe"
-}

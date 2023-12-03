@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/SOMOS (USA).exe"
-    ],
-    "transform_file": "SOMOS (USA).exe"
-}

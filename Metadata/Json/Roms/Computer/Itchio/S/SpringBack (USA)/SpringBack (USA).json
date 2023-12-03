@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/SpringBack (USA).exe"
-    ],
-    "transform_file": "SpringBack (USA).exe"
-}

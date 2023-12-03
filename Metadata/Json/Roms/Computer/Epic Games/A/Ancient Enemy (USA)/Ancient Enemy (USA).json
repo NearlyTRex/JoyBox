@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Ancient Enemy (USA).exe"
-    ],
-    "transform_file": "Ancient Enemy (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Dr. Trolley's Problem (USA).exe"
-    ],
-    "transform_file": "Dr. Trolley's Problem (USA).exe"
-}

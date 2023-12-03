@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Sonar Smash (USA).exe"
-    ],
-    "transform_file": "Sonar Smash (USA).exe"
-}

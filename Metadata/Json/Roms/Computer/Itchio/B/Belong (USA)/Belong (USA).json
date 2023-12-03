@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Belong (USA).exe"
-    ],
-    "transform_file": "Belong (USA).exe"
-}

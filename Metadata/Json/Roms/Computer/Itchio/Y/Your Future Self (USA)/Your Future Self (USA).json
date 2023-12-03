@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Your Future Self (USA).exe"
-    ],
-    "transform_file": "Your Future Self (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Corpse Reviver (USA).exe"
-    ],
-    "transform_file": "Corpse Reviver (USA).exe"
-}

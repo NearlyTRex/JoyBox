@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Eldritch (USA).exe"
-    ],
-    "transform_file": "Eldritch (USA).exe"
-}

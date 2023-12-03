@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/HeroRun (USA).exe"
-    ],
-    "transform_file": "HeroRun (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_project_zomboid_41.78.16_(64bit)_(60900).exe"
-    ],
-    "transform_file": "setup_project_zomboid_41.78.16_(64bit)_(60900).exe"
-}

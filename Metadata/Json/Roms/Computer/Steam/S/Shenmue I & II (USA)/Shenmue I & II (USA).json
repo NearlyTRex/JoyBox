@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Shenmue I & II (USA).exe"
-    ],
-    "transform_file": "Shenmue I & II (USA).exe"
-}

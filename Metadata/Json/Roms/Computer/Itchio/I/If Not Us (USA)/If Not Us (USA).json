@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/If Not Us (USA).exe"
-    ],
-    "transform_file": "If Not Us (USA).exe"
-}

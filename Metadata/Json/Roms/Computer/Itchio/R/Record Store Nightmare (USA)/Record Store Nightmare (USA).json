@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Record Store Nightmare (USA).exe"
-    ],
-    "transform_file": "Record Store Nightmare (USA).exe"
-}

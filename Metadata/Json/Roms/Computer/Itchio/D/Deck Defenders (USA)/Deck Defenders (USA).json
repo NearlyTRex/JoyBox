@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Deck Defenders (USA).exe"
-    ],
-    "transform_file": "Deck Defenders (USA).exe"
-}

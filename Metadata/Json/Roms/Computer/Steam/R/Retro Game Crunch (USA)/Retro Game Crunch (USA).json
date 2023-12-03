@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Retro Game Crunch (USA).exe"
-    ],
-    "transform_file": "Retro Game Crunch (USA).exe"
-}

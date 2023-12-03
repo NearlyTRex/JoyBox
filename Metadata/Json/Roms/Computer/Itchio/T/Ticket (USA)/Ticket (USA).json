@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Ticket (USA).exe"
-    ],
-    "transform_file": "Ticket (USA).exe"
-}

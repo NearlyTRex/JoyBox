@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Golf Peaks (USA).exe"
-    ],
-    "transform_file": "Golf Peaks (USA).exe"
-}

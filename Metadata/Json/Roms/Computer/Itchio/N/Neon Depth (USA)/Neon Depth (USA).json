@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Neon Depth (USA).exe"
-    ],
-    "transform_file": "Neon Depth (USA).exe"
-}

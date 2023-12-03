@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Silk (USA).exe"
-    ],
-    "transform_file": "Silk (USA).exe"
-}

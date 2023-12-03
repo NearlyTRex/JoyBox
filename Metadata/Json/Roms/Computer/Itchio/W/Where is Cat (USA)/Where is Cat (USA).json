@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Where is Cat (USA).exe"
-    ],
-    "transform_file": "Where is Cat (USA).exe"
-}

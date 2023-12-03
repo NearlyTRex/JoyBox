@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Cubefall (USA).exe"
-    ],
-    "transform_file": "Cubefall (USA).exe"
-}

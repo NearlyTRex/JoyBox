@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Perfect Park (USA).exe"
-    ],
-    "transform_file": "Perfect Park (USA).exe"
-}

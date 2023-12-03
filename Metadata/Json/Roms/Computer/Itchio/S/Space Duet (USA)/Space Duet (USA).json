@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Space Duet (USA).exe"
-    ],
-    "transform_file": "Space Duet (USA).exe"
-}

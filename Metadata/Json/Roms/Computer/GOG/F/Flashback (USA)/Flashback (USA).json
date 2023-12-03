@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_flashbacktm_1.0.0_(25550).exe"
-    ],
-    "transform_file": "setup_flashbacktm_1.0.0_(25550).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Tales from the Road (USA).exe"
-    ],
-    "transform_file": "Tales from the Road (USA).exe"
-}

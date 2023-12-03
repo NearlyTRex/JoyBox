@@ -1,9 +1,0 @@
-{
-    "extra": [
-        "$SETUP_MAIN_ROOT/extra/Riven_manual.zip"
-    ],
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/setup_riven_-_the_sequel_to_myst_1.2_svm_no_launcher_(55114).exe"
-    ],
-    "transform_file": "setup_riven_-_the_sequel_to_myst_1.2_svm_no_launcher_(55114).exe"
-}

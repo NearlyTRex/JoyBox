@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Deeper Into Space (USA).exe"
-    ],
-    "transform_file": "Deeper Into Space (USA).exe"
-}

@@ -1,6 +1,0 @@
-{
-    "installer_exe": [
-        "$SETUP_MAIN_ROOT/Word After Word (USA).exe"
-    ],
-    "transform_file": "Word After Word (USA).exe"
-}
