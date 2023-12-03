@@ -19,13 +19,26 @@ import programs
 import metadata
 
 # Important Note:
-# The following emulators need periodic checks to get the latest
+# The following tools/emulators need periodic checks to get the latest
 # Likely because their git-master doesn't build or the download link is not automatic
 # Try to make these automatic if possible in the future
+#
+# Tools:
+# - ExifTool
+#
+# Emulators
 # - BasiliskII (windows)
 # - BigPEmu (windows)
 # - FS-UAE (linux)
 # - PPSSPP (windows)
+
+# These are tools to try to get native linux builds for in the future
+# Or find a way to reduce the need for these
+# - MameToolsChdman
+# - NirCmd
+# - PSVStrip
+# - Wad2Bin
+# - XCICutter
 
 # Check requirements
 def CheckRequirements():
