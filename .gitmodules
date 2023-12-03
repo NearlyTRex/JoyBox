@@ -13,3 +13,6 @@
 [submodule "Scripts/lib/thirdparty/PSNGetPkgInfo"]
 	path = Scripts/lib/thirdparty/PSNGetPkgInfo
 	url = https://github.com/NearlyTRex/PSNGetPkgInfo.git
+[submodule "Metadata"]
+	path = Metadata
+	url = https://github.com/NearlyTRex/GameMetadata
