@@ -1659,6 +1659,18 @@ def DownloadRequiredEmulators(force_downloads = False):
 # Setup required emulators
 def SetupRequiredEmulators():
 
+    # Create example files
+    for example_file in system.BuildFileListByExtensions(environment.GetEmulatorsRootDir(), extensions = [".example"]):
+        example_file_name = system.GetFilenameFile(example_file).replace(".example", "")
+        example_file_dir = system.GetFilenameDirectory(example_file)
+        real_file = os.path.join(example_file_dir, example_file_name)
+        if not os.path.exists(real_file):
+            system.CopyFileOrDirectory(
+                src = example_file,
+                dest = real_file,
+                verbose = config.default_flag_verbose,
+                exit_on_failure = config.default_flag_exit_on_failure)
+
     # Ares
     system.CopyContents(
         src = environment.GetSyncedGameEmulatorSetupDir("Ares"),
