@@ -1,0 +1,170 @@
+Updates/Sony/Sony PlayStation 4/Abzu (USA)/Abzu (USA) (v1.02) (Update) (DP).pkg || 70ee72fa65b743a8 || 867808
+Updates/Sony/Sony PlayStation 4/Abzu (USA)/Abzu (USA) (v1.02) (Update).json || cfdf61076b1fbefa || 438
+Updates/Sony/Sony PlayStation 4/Abzu (USA)/Abzu (USA) (v1.02) (Update).pkg || fe7bae77d031968a || 466223104
+Updates/Sony/Sony PlayStation 4/Allumette (USA)/Allumette (USA) (v1.01) (Update).json || baa25818eac919bf || 438
+Updates/Sony/Sony PlayStation 4/Allumette (USA)/Allumette (USA) (v1.01) (Update).pkg || de4bc9495212b9c7 || 917241856
+Updates/Sony/Sony PlayStation 4/Astro Bot - Rescue Mission (USA)/Astro Bot - Rescue Mission (USA) (v1.04) (Update) (DP).pkg || 301c8cbaebdf0837 || 1667552
+Updates/Sony/Sony PlayStation 4/Astro Bot - Rescue Mission (USA)/Astro Bot - Rescue Mission (USA) (v1.04) (Update).json || 6ce010dfdc001b91 || 440
+Updates/Sony/Sony PlayStation 4/Astro Bot - Rescue Mission (USA)/Astro Bot - Rescue Mission (USA) (v1.04) (Update).pkg || b7d480ad6072f2ec || 1166475264
+Updates/Sony/Sony PlayStation 4/Bloodborne (USA)/Bloodborne (USA) (v1.09) (Update) (DP).pkg || 958db0671ffef942 || 17912720
+Updates/Sony/Sony PlayStation 4/Bloodborne (USA)/Bloodborne (USA) (v1.09) (Update) (Part 1).pkg || 0dc779e8736631e3 || 4294967296
+Updates/Sony/Sony PlayStation 4/Bloodborne (USA)/Bloodborne (USA) (v1.09) (Update) (Part 2).pkg || e8f6c4a406471d05 || 4294967296
+Updates/Sony/Sony PlayStation 4/Bloodborne (USA)/Bloodborne (USA) (v1.09) (Update) (Part 3).pkg || eb486a1af2b0a5c0 || 709689344
+Updates/Sony/Sony PlayStation 4/Bloodborne (USA)/Bloodborne (USA) (v1.09) (Update).json || 57bd302958dc3239 || 1050
+Updates/Sony/Sony PlayStation 4/Dead Rising (USA)/Dead Rising (USA) (v1.01) (Update).json || fb8e6d766d36d464 || 438
+Updates/Sony/Sony PlayStation 4/Dead Rising (USA)/Dead Rising (USA) (v1.01) (Update).pkg || bea8b2ec2a93e211 || 308543488
+Updates/Sony/Sony PlayStation 4/Dead Rising 2 (USA)/Dead Rising 2 (USA) (v1.02) (Update).json || 6dc9e623d54eaeb1 || 436
+Updates/Sony/Sony PlayStation 4/Dead Rising 2 (USA)/Dead Rising 2 (USA) (v1.02) (Update).pkg || 3413c7e5a6f1661b || 50593792
+Updates/Sony/Sony PlayStation 4/Enter the Gungeon (USA)/Enter the Gungeon (USA) (v1.16) (Update).json || c8e31ace3184310d || 439
+Updates/Sony/Sony PlayStation 4/Enter the Gungeon (USA)/Enter the Gungeon (USA) (v1.16) (Update).pkg || 093515dd97fbc34d || 378077184
+Updates/Sony/Sony PlayStation 4/Fallout Shelter (USA)/Fallout Shelter (USA) (v1.01) (Update).json || 2abb239495f3b95b || 438
+Updates/Sony/Sony PlayStation 4/Fallout Shelter (USA)/Fallout Shelter (USA) (v1.01) (Update).pkg || eb45d8fd528e9e94 || 309657600
+Updates/Sony/Sony PlayStation 4/Friday the 13th - The Game (USA)/Friday the 13th - The Game (USA) (v1.40) (Update) (DP).pkg || 7e847c22151baa8f || 42909824
+Updates/Sony/Sony PlayStation 4/Friday the 13th - The Game (USA)/Friday the 13th - The Game (USA) (v1.40) (Update) (Part 1).pkg || 20377b0c1b6cb8b6 || 4294967296
+Updates/Sony/Sony PlayStation 4/Friday the 13th - The Game (USA)/Friday the 13th - The Game (USA) (v1.40) (Update) (Part 2).pkg || f6825490de6d747c || 4294967296
+Updates/Sony/Sony PlayStation 4/Friday the 13th - The Game (USA)/Friday the 13th - The Game (USA) (v1.40) (Update) (Part 3).pkg || 407c24e1a2a0e812 || 451149824
+Updates/Sony/Sony PlayStation 4/Friday the 13th - The Game (USA)/Friday the 13th - The Game (USA) (v1.40) (Update).json || 451ce3c42b100f52 || 1050
+Updates/Sony/Sony PlayStation 4/Grim Fandango Remastered (USA)/Grim Fandango Remastered (USA) (v1.02) (Update) (DP).pkg || 2498f64e82e6e56b || 557504
+Updates/Sony/Sony PlayStation 4/Grim Fandango Remastered (USA)/Grim Fandango Remastered (USA) (v1.02) (Update).json || 447fe6ef00faa3b4 || 436
+Updates/Sony/Sony PlayStation 4/Grim Fandango Remastered (USA)/Grim Fandango Remastered (USA) (v1.02) (Update).pkg || 5343d7cd7c793344 || 42532864
+Updates/Sony/Sony PlayStation 4/Here They Lie (Europe)/Here They Lie (Europe) (v1.03) (Update) (DP).pkg || 35acccee88ae8da6 || 2950944
+Updates/Sony/Sony PlayStation 4/Here They Lie (Europe)/Here They Lie (Europe) (v1.03) (Update).json || 8960fe58409791f1 || 440
+Updates/Sony/Sony PlayStation 4/Here They Lie (Europe)/Here They Lie (Europe) (v1.03) (Update).pkg || 2858c45342b16eb8 || 2594570240
+Updates/Sony/Sony PlayStation 4/Hidden Agenda (USA)/Hidden Agenda (USA) (v1.11) (Update) (DP).pkg || 25281266957a8de4 || 30618080
+Updates/Sony/Sony PlayStation 4/Hidden Agenda (USA)/Hidden Agenda (USA) (v1.11) (Update) (Part 1).pkg || 448f3d587813f2b7 || 4294967296
+Updates/Sony/Sony PlayStation 4/Hidden Agenda (USA)/Hidden Agenda (USA) (v1.11) (Update) (Part 2).pkg || 290771a148e34729 || 4294967296
+Updates/Sony/Sony PlayStation 4/Hidden Agenda (USA)/Hidden Agenda (USA) (v1.11) (Update) (Part 3).pkg || 000e773dde0da82f || 4294967296
+Updates/Sony/Sony PlayStation 4/Hidden Agenda (USA)/Hidden Agenda (USA) (v1.11) (Update) (Part 4).pkg || 2df25e173d3fb970 || 3099525120
+Updates/Sony/Sony PlayStation 4/Hidden Agenda (USA)/Hidden Agenda (USA) (v1.11) (Update).json || 58274eefeb311d1a || 1357
+Updates/Sony/Sony PlayStation 4/Home Sweet Home VR (USA)/Home Sweet Home VR (USA) (v1.02) (Update) (DP).pkg || 8574741873a8b7a8 || 4804352
+Updates/Sony/Sony PlayStation 4/Home Sweet Home VR (USA)/Home Sweet Home VR (USA) (v1.02) (Update) (Part 1).pkg || 4b3679b4f07352cc || 4294967296
+Updates/Sony/Sony PlayStation 4/Home Sweet Home VR (USA)/Home Sweet Home VR (USA) (v1.02) (Update) (Part 2).pkg || f9bd4fdbe1747ddd || 114294784
+Updates/Sony/Sony PlayStation 4/Home Sweet Home VR (USA)/Home Sweet Home VR (USA) (v1.02) (Update).json || 45a585a3bd625689 || 744
+Updates/Sony/Sony PlayStation 4/Horizon Zero Dawn - Complete Edition (USA)/Horizon Zero Dawn - Complete Edition (USA) (v1.52) (Update).json || 0428177d8b6c00eb || 439
+Updates/Sony/Sony PlayStation 4/Horizon Zero Dawn - Complete Edition (USA)/Horizon Zero Dawn - Complete Edition (USA) (v1.52) (Update).pkg || 4e9a83f61e8f2ccc || 312934400
+Updates/Sony/Sony PlayStation 4/Inpatient, The (USA)/Inpatient, The (USA) (v1.02) (Update) (DP).pkg || ce9fffd4a7e570ec || 11261120
+Updates/Sony/Sony PlayStation 4/Inpatient, The (USA)/Inpatient, The (USA) (v1.02) (Update) (Part 1).pkg || e75ee3a5eac09858 || 4294967296
+Updates/Sony/Sony PlayStation 4/Inpatient, The (USA)/Inpatient, The (USA) (v1.02) (Update) (Part 2).pkg || 2f55fc2a0ddc43ec || 4294967296
+Updates/Sony/Sony PlayStation 4/Inpatient, The (USA)/Inpatient, The (USA) (v1.02) (Update) (Part 3).pkg || bf74007645cdb5c6 || 1771634688
+Updates/Sony/Sony PlayStation 4/Inpatient, The (USA)/Inpatient, The (USA) (v1.02) (Update).json || bc6f0b038c9c3564 || 1049
+Updates/Sony/Sony PlayStation 4/Invasion! (USA)/Invasion! (USA) (v1.01) (Update) (DP).pkg || 36c0d742104619a8 || 812112
+Updates/Sony/Sony PlayStation 4/Invasion! (USA)/Invasion! (USA) (v1.01) (Update).json || 553a584ccb864e6d || 438
+Updates/Sony/Sony PlayStation 4/Invasion! (USA)/Invasion! (USA) (v1.01) (Update).pkg || 23782147dea2552b || 469893120
+Updates/Sony/Sony PlayStation 4/Job Simulator (USA)/Job Simulator (USA) (v1.06) (Update) (DP).pkg || e5766f6f372fc662 || 3408128
+Updates/Sony/Sony PlayStation 4/Job Simulator (USA)/Job Simulator (USA) (v1.06) (Update).json || 61c4c5a1327f8ea9 || 441
+Updates/Sony/Sony PlayStation 4/Job Simulator (USA)/Job Simulator (USA) (v1.06) (Update).pkg || 408bed9ff3aadb90 || 1927872512
+Updates/Sony/Sony PlayStation 4/Keep Talking and Nobody Explodes (USA)/Keep Talking and Nobody Explodes (USA) (v1.07) (Update) (DP).pkg || 09afb49e9c4d65f4 || 1241280
+Updates/Sony/Sony PlayStation 4/Keep Talking and Nobody Explodes (USA)/Keep Talking and Nobody Explodes (USA) (v1.07) (Update).json || a4ea57d4d24bbbe4 || 439
+Updates/Sony/Sony PlayStation 4/Keep Talking and Nobody Explodes (USA)/Keep Talking and Nobody Explodes (USA) (v1.07) (Update).pkg || cd24944aa6661704 || 582287360
+Updates/Sony/Sony PlayStation 4/Light Tracer (USA)/Light Tracer (USA) (v1.12) (Update) (DP).pkg || 1a29faa136dda144 || 2325472
+Updates/Sony/Sony PlayStation 4/Light Tracer (USA)/Light Tracer (USA) (v1.12) (Update).json || 9396bc1d3ff863cb || 439
+Updates/Sony/Sony PlayStation 4/Light Tracer (USA)/Light Tracer (USA) (v1.12) (Update).pkg || fc2b2056a8cc970b || 915865600
+Updates/Sony/Sony PlayStation 4/Loading Human - Chapter 1 (USA)/Loading Human - Chapter 1 (USA) (v1.02) (Update).json || f70adae374a9757c || 436
+Updates/Sony/Sony PlayStation 4/Loading Human - Chapter 1 (USA)/Loading Human - Chapter 1 (USA) (v1.02) (Update).pkg || 6b4fd288451209a9 || 94371840
+Updates/Sony/Sony PlayStation 4/Mega Man Legacy Collection (USA)/Mega Man Legacy Collection (USA) (v1.02) (Update) (DP).pkg || 70ee0e8619c55cfa || 687520
+Updates/Sony/Sony PlayStation 4/Mega Man Legacy Collection (USA)/Mega Man Legacy Collection (USA) (v1.02) (Update).json || 83acc2008f8d97aa || 438
+Updates/Sony/Sony PlayStation 4/Mega Man Legacy Collection (USA)/Mega Man Legacy Collection (USA) (v1.02) (Update).pkg || b46efd8f09a4ccea || 265748480
+Updates/Sony/Sony PlayStation 4/Moss (USA)/Moss (USA) (v1.09) (Update) (DP).pkg || de95fac9079ade55 || 9619616
+Updates/Sony/Sony PlayStation 4/Moss (USA)/Moss (USA) (v1.09) (Update) (Part 1).pkg || d95e0c7ae16ddfcb || 4294967296
+Updates/Sony/Sony PlayStation 4/Moss (USA)/Moss (USA) (v1.09) (Update) (Part 2).pkg || 0c39421d4c96fdbe || 769916928
+Updates/Sony/Sony PlayStation 4/Moss (USA)/Moss (USA) (v1.09) (Update).json || c8c3766cdf34d0ad || 746
+Updates/Sony/Sony PlayStation 4/Nuclear Throne (USA)/Nuclear Throne (USA) (v1.01) (Update).json || daa82d842ae6abb7 || 438
+Updates/Sony/Sony PlayStation 4/Nuclear Throne (USA)/Nuclear Throne (USA) (v1.01) (Update).pkg || 504b8899514f00e7 || 123535360
+Updates/Sony/Sony PlayStation 4/Paper Beast (USA)/Paper Beast (USA) (v1.04) (Update) (DP).pkg || 8e05c1211d81866e || 2868320
+Updates/Sony/Sony PlayStation 4/Paper Beast (USA)/Paper Beast (USA) (v1.04) (Update).json || 8ab1f23623489740 || 440
+Updates/Sony/Sony PlayStation 4/Paper Beast (USA)/Paper Beast (USA) (v1.04) (Update).pkg || 0e97e2c8192df6a6 || 1859190784
+Updates/Sony/Sony PlayStation 4/Paranormal Activity - The Lost Soul (USA)/Paranormal Activity - The Lost Soul (USA) (v1.05) (Update) (DP).pkg || 04a0f61a9da61604 || 3013568
+Updates/Sony/Sony PlayStation 4/Paranormal Activity - The Lost Soul (USA)/Paranormal Activity - The Lost Soul (USA) (v1.05) (Update).json || a9b9d4d0ab1d6b9d || 441
+Updates/Sony/Sony PlayStation 4/Paranormal Activity - The Lost Soul (USA)/Paranormal Activity - The Lost Soul (USA) (v1.05) (Update).pkg || c005e1c560b63b2e || 3217752064
+Updates/Sony/Sony PlayStation 4/PlayStation VR Demo Disc (USA)/PlayStation VR Demo Disc (USA) (v1.03) (Update) (DP).pkg || de76b9ca1f0507ca || 538032
+Updates/Sony/Sony PlayStation 4/PlayStation VR Demo Disc (USA)/PlayStation VR Demo Disc (USA) (v1.03) (Update).json || 404e8d0574ce785b || 436
+Updates/Sony/Sony PlayStation 4/PlayStation VR Demo Disc (USA)/PlayStation VR Demo Disc (USA) (v1.03) (Update).pkg || 8016be9cb58b0de7 || 20840448
+Updates/Sony/Sony PlayStation 4/PlayStation VR Demo Disc 2 (USA)/PlayStation VR Demo Disc 2 (USA) (v1.02) (Update) (DP).pkg || 58688253c6b509f8 || 1612288
+Updates/Sony/Sony PlayStation 4/PlayStation VR Demo Disc 2 (USA)/PlayStation VR Demo Disc 2 (USA) (v1.02) (Update).json || 72220316582b743e || 440
+Updates/Sony/Sony PlayStation 4/PlayStation VR Demo Disc 2 (USA)/PlayStation VR Demo Disc 2 (USA) (v1.02) (Update).pkg || 6d753415bbc6368f || 1482686464
+Updates/Sony/Sony PlayStation 4/PlayStation VR Worlds (USA)/PlayStation VR Worlds (USA) (v1.05) (Update) (DP).pkg || 6af8444905342b01 || 1091712
+Updates/Sony/Sony PlayStation 4/PlayStation VR Worlds (USA)/PlayStation VR Worlds (USA) (v1.05) (Update).json || 0365522d5bf3d1c8 || 438
+Updates/Sony/Sony PlayStation 4/PlayStation VR Worlds (USA)/PlayStation VR Worlds (USA) (v1.05) (Update).pkg || 2349d9811c971b32 || 576847872
+Updates/Sony/Sony PlayStation 4/Playroom VR, The (USA)/Playroom VR, The (USA) (v1.05) (Update) (DP).pkg || 556f7da265ffcde1 || 1702576
+Updates/Sony/Sony PlayStation 4/Playroom VR, The (USA)/Playroom VR, The (USA) (v1.05) (Update).json || 39eedc484ff62b0f || 440
+Updates/Sony/Sony PlayStation 4/Playroom VR, The (USA)/Playroom VR, The (USA) (v1.05) (Update).pkg || d79fb3b2bf30ecd7 || 1067843584
+Updates/Sony/Sony PlayStation 4/Playroom, The (USA)/Playroom, The (USA) (v1.07) (Update).json || 59219a99673e4d1f || 436
+Updates/Sony/Sony PlayStation 4/Playroom, The (USA)/Playroom, The (USA) (v1.07) (Update).pkg || 97948fa7ff028d33 || 36569088
+Updates/Sony/Sony PlayStation 4/Prison Boss VR (USA)/Prison Boss VR (USA) (v1.06) (Update) (DP).pkg || 01fb00f93dc66cf7 || 1872800
+Updates/Sony/Sony PlayStation 4/Prison Boss VR (USA)/Prison Boss VR (USA) (v1.06) (Update).json || 326805924a6ea632 || 440
+Updates/Sony/Sony PlayStation 4/Prison Boss VR (USA)/Prison Boss VR (USA) (v1.06) (Update).pkg || a3e3dabd7629eb69 || 1099628544
+Updates/Sony/Sony PlayStation 4/Ratchet & Clank (USA)/Ratchet & Clank (USA) (v1.09) (Update) (DP).pkg || 409801f6e762da7e || 677728
+Updates/Sony/Sony PlayStation 4/Ratchet & Clank (USA)/Ratchet & Clank (USA) (v1.09) (Update).json || aa18d8976dd21ae9 || 439
+Updates/Sony/Sony PlayStation 4/Ratchet & Clank (USA)/Ratchet & Clank (USA) (v1.09) (Update).pkg || 4651330e5543ff74 || 135004160
+Updates/Sony/Sony PlayStation 4/Resident Evil (USA)/Resident Evil (USA) (v1.01) (Update) (DP).pkg || 26a2c6faa32c3409 || 710640
+Updates/Sony/Sony PlayStation 4/Resident Evil (USA)/Resident Evil (USA) (v1.01) (Update).json || 33e9421a571e19a9 || 438
+Updates/Sony/Sony PlayStation 4/Resident Evil (USA)/Resident Evil (USA) (v1.01) (Update).pkg || 925c7fe3e05efb20 || 303628288
+Updates/Sony/Sony PlayStation 4/Resident Evil - Code - Veronica X (USA)/Resident Evil - Code - Veronica X (USA) (v1.01) (Update).json || 8d7591d128abe07b || 436
+Updates/Sony/Sony PlayStation 4/Resident Evil - Code - Veronica X (USA)/Resident Evil - Code - Veronica X (USA) (v1.01) (Update).pkg || 1338e980624a01a4 || 14876672
+Updates/Sony/Sony PlayStation 4/Resident Evil - Origins Collection (USA)/Resident Evil - Origins Collection (USA) (v1.01) (Update) (DP).pkg || be8b8105e5891b5b || 2787680
+Updates/Sony/Sony PlayStation 4/Resident Evil - Origins Collection (USA)/Resident Evil - Origins Collection (USA) (v1.01) (Update).json || 7638614787e898f0 || 440
+Updates/Sony/Sony PlayStation 4/Resident Evil - Origins Collection (USA)/Resident Evil - Origins Collection (USA) (v1.01) (Update).pkg || 533043e472cfb94b || 2847670272
+Updates/Sony/Sony PlayStation 4/Resident Evil - Revelations (USA)/Resident Evil - Revelations (USA) (v1.01) (Update) (DP).pkg || 656c57ab01db11fe || 564992
+Updates/Sony/Sony PlayStation 4/Resident Evil - Revelations (USA)/Resident Evil - Revelations (USA) (v1.01) (Update).json || 48ee124463d54441 || 436
+Updates/Sony/Sony PlayStation 4/Resident Evil - Revelations (USA)/Resident Evil - Revelations (USA) (v1.01) (Update).pkg || b1e848cdb86e5086 || 65011712
+Updates/Sony/Sony PlayStation 4/Resident Evil - Revelations 2 (USA)/Resident Evil - Revelations 2 (USA) (v1.05) (Update) (DP).pkg || 4ff29520b0d917e3 || 717664
+Updates/Sony/Sony PlayStation 4/Resident Evil - Revelations 2 (USA)/Resident Evil - Revelations 2 (USA) (v1.05) (Update).json || 396d883ff45c9a76 || 439
+Updates/Sony/Sony PlayStation 4/Resident Evil - Revelations 2 (USA)/Resident Evil - Revelations 2 (USA) (v1.05) (Update).pkg || 214711d77d7520ff || 261226496
+Updates/Sony/Sony PlayStation 4/Resident Evil 2 (USA)/Resident Evil 2 (USA) (v1.05) (Update) (DP).pkg || f7dd4dfc346fc9de || 2098576
+Updates/Sony/Sony PlayStation 4/Resident Evil 2 (USA)/Resident Evil 2 (USA) (v1.05) (Update).json || 1f240369588caf1d || 440
+Updates/Sony/Sony PlayStation 4/Resident Evil 2 (USA)/Resident Evil 2 (USA) (v1.05) (Update).pkg || 098394dd0732ccc0 || 1428291584
+Updates/Sony/Sony PlayStation 4/Resident Evil 3 (USA)/Resident Evil 3 (USA) (v1.05) (Update) (DP).pkg || 2c635e6e725b4d30 || 794080
+Updates/Sony/Sony PlayStation 4/Resident Evil 3 (USA)/Resident Evil 3 (USA) (v1.05) (Update).json || 0a011e81b81de6c0 || 438
+Updates/Sony/Sony PlayStation 4/Resident Evil 3 (USA)/Resident Evil 3 (USA) (v1.05) (Update).pkg || 804c6b73afc206a1 || 272039936
+Updates/Sony/Sony PlayStation 4/Resident Evil 6 (USA)/Resident Evil 6 (USA) (v1.01) (Update) (DP).pkg || b090026ef174a407 || 588272
+Updates/Sony/Sony PlayStation 4/Resident Evil 6 (USA)/Resident Evil 6 (USA) (v1.01) (Update).json || 64afd3f36a7396de || 438
+Updates/Sony/Sony PlayStation 4/Resident Evil 6 (USA)/Resident Evil 6 (USA) (v1.01) (Update).pkg || 6ebb1e6bca7f3140 || 103153664
+Updates/Sony/Sony PlayStation 4/Resident Evil 7 - Biohazard - Gold Edition (USA)/Resident Evil 7 - Biohazard - Gold Edition (USA) (v1.04) (Update) (DP).pkg || f1b4e6e7656cf141 || 903040
+Updates/Sony/Sony PlayStation 4/Resident Evil 7 - Biohazard - Gold Edition (USA)/Resident Evil 7 - Biohazard - Gold Edition (USA) (v1.04) (Update).json || 468c58ec7c36477a || 438
+Updates/Sony/Sony PlayStation 4/Resident Evil 7 - Biohazard - Gold Edition (USA)/Resident Evil 7 - Biohazard - Gold Edition (USA) (v1.04) (Update).pkg || 54e4a317906ce5b4 || 383647744
+Updates/Sony/Sony PlayStation 4/Retro City Rampage DX (USA)/Retro City Rampage DX (USA) (v1.01) (Update).json || 868c2842a8d9f940 || 436
+Updates/Sony/Sony PlayStation 4/Retro City Rampage DX (USA)/Retro City Rampage DX (USA) (v1.01) (Update).pkg || 56e0c12cd779dd7c || 24182784
+Updates/Sony/Sony PlayStation 4/Rez Infinite (USA)/Rez Infinite (USA) (v1.06) (Update) (DP).pkg || 5a6b52c9cb1d6209 || 1078016
+Updates/Sony/Sony PlayStation 4/Rez Infinite (USA)/Rez Infinite (USA) (v1.06) (Update).json || 832e1c50dedac99b || 438
+Updates/Sony/Sony PlayStation 4/Rez Infinite (USA)/Rez Infinite (USA) (v1.06) (Update).pkg || 0d5e35486716485f || 499318784
+Updates/Sony/Sony PlayStation 4/Robinson - The Journey (USA)/Robinson - The Journey (USA) (v1.03) (Update) (DP).pkg || 44a395786f7d0e91 || 910928
+Updates/Sony/Sony PlayStation 4/Robinson - The Journey (USA)/Robinson - The Journey (USA) (v1.03) (Update).json || 63d7a6a1e9e7899d || 438
+Updates/Sony/Sony PlayStation 4/Robinson - The Journey (USA)/Robinson - The Journey (USA) (v1.03) (Update).pkg || 2a528bf3091f03a6 || 448856064
+Updates/Sony/Sony PlayStation 4/Rollercoaster Dreams (USA)/Rollercoaster Dreams (USA) (v1.02) (Update).json || 32762e334bf3b05d || 438
+Updates/Sony/Sony PlayStation 4/Rollercoaster Dreams (USA)/Rollercoaster Dreams (USA) (v1.02) (Update).pkg || 554479a9184012de || 234749952
+Updates/Sony/Sony PlayStation 4/Spider-Man - Far From Home VR (USA)/Spider-Man - Far From Home VR (USA) (v1.01) (Update) (DP).pkg || 1e4e6d61c5993218 || 1980192
+Updates/Sony/Sony PlayStation 4/Spider-Man - Far From Home VR (USA)/Spider-Man - Far From Home VR (USA) (v1.01) (Update).json || b4ab6efb5c0c70a8 || 440
+Updates/Sony/Sony PlayStation 4/Spider-Man - Far From Home VR (USA)/Spider-Man - Far From Home VR (USA) (v1.01) (Update).pkg || 5c2e8c27f9976a9a || 2383675392
+Updates/Sony/Sony PlayStation 4/Spider-Man - Homecoming VR (USA)/Spider-Man - Homecoming VR (USA) (v1.01) (Update) (DP).pkg || 289e66412925c75a || 977040
+Updates/Sony/Sony PlayStation 4/Spider-Man - Homecoming VR (USA)/Spider-Man - Homecoming VR (USA) (v1.01) (Update).json || 780b8353762cac86 || 438
+Updates/Sony/Sony PlayStation 4/Spider-Man - Homecoming VR (USA)/Spider-Man - Homecoming VR (USA) (v1.01) (Update).pkg || 9d1e8d6cabdb86d3 || 740098048
+Updates/Sony/Sony PlayStation 4/Star Trek - Bridge Crew (USA)/Star Trek - Bridge Crew (USA) (v1.08) (Update) (DP).pkg || d1548e4f87ec8226 || 6555776
+Updates/Sony/Sony PlayStation 4/Star Trek - Bridge Crew (USA)/Star Trek - Bridge Crew (USA) (v1.08) (Update).json || 5ab12bdf209c687a || 441
+Updates/Sony/Sony PlayStation 4/Star Trek - Bridge Crew (USA)/Star Trek - Bridge Crew (USA) (v1.08) (Update).pkg || d09b60287fa65b5c || 3396075520
+Updates/Sony/Sony PlayStation 4/Statik (USA)/Statik (USA) (v1.01) (Update).json || 031e2bd2ce830327 || 436
+Updates/Sony/Sony PlayStation 4/Statik (USA)/Statik (USA) (v1.01) (Update).pkg || d5497b360299f690 || 84934656
+Updates/Sony/Sony PlayStation 4/Subnautica (USA)/Subnautica (USA) (v1.12) (Update) (DP).pkg || 17e41a00a4ff3f2e || 13776992
+Updates/Sony/Sony PlayStation 4/Subnautica (USA)/Subnautica (USA) (v1.12) (Update) (Part 1).pkg || ee171729c8a7f806 || 4294967296
+Updates/Sony/Sony PlayStation 4/Subnautica (USA)/Subnautica (USA) (v1.12) (Update) (Part 2).pkg || 3b01b047e5649e91 || 4294967296
+Updates/Sony/Sony PlayStation 4/Subnautica (USA)/Subnautica (USA) (v1.12) (Update) (Part 3).pkg || c77c028f5be2debf || 114163712
+Updates/Sony/Sony PlayStation 4/Subnautica (USA)/Subnautica (USA) (v1.12) (Update).json || 47887750d62007ed || 1050
+Updates/Sony/Sony PlayStation 4/Superhypercube (USA)/Superhypercube (USA) (v1.02) (Update) (DP).pkg || 3576dcf255d86295 || 792032
+Updates/Sony/Sony PlayStation 4/Superhypercube (USA)/Superhypercube (USA) (v1.02) (Update).json || bc20af22763ed3e3 || 438
+Updates/Sony/Sony PlayStation 4/Superhypercube (USA)/Superhypercube (USA) (v1.02) (Update).pkg || 2def360f5df2b41f || 362741760
+Updates/Sony/Sony PlayStation 4/Tetris Effect (USA)/Tetris Effect (USA) (v1.10) (Update) (DP).pkg || b9b83e26823df4ce || 2353408
+Updates/Sony/Sony PlayStation 4/Tetris Effect (USA)/Tetris Effect (USA) (v1.10) (Update).json || d80bbd83c79ad11d || 441
+Updates/Sony/Sony PlayStation 4/Tetris Effect (USA)/Tetris Effect (USA) (v1.10) (Update).pkg || 14a84afec89c2de8 || 1064304640
+Updates/Sony/Sony PlayStation 4/Thumper (USA)/Thumper (USA) (v1.06) (Update) (DP).pkg || 555fcaeffd0f1ec6 || 1487392
+Updates/Sony/Sony PlayStation 4/Thumper (USA)/Thumper (USA) (v1.06) (Update).json || e48053f5bfbc84dd || 438
+Updates/Sony/Sony PlayStation 4/Thumper (USA)/Thumper (USA) (v1.06) (Update).pkg || 73b05cb6ead3278f || 783941632
+Updates/Sony/Sony PlayStation 4/Until Dawn (USA)/Until Dawn (USA) (v1.03) (Update) (DP).pkg || c3a11754c25d41c8 || 10772608
+Updates/Sony/Sony PlayStation 4/Until Dawn (USA)/Until Dawn (USA) (v1.03) (Update) (Part 1).pkg || 2de414538be47a27 || 4294967296
+Updates/Sony/Sony PlayStation 4/Until Dawn (USA)/Until Dawn (USA) (v1.03) (Update) (Part 2).pkg || 22fadb42292cf6c1 || 4294967296
+Updates/Sony/Sony PlayStation 4/Until Dawn (USA)/Until Dawn (USA) (v1.03) (Update) (Part 3).pkg || f845ff9817c6d8bf || 332070912
+Updates/Sony/Sony PlayStation 4/Until Dawn (USA)/Until Dawn (USA) (v1.03) (Update).json || 621063790b1366b0 || 1047
+Updates/Sony/Sony PlayStation 4/Volume (USA)/Volume (USA) (v1.08) (Update) (DP).pkg || 45a26b4045d80dcf || 1229520
+Updates/Sony/Sony PlayStation 4/Volume (USA)/Volume (USA) (v1.08) (Update).json || 01d239d05015ac3d || 441
+Updates/Sony/Sony PlayStation 4/Volume (USA)/Volume (USA) (v1.08) (Update).pkg || e169f22f6b25461c || 1153761280
+Updates/Sony/Sony PlayStation 4/Witness, The (USA)/Witness, The (USA) (v1.05) (Update) (DP).pkg || 951df1fa050a1cdc || 4913280
+Updates/Sony/Sony PlayStation 4/Witness, The (USA)/Witness, The (USA) (v1.05) (Update).json || 000ba1801f9b5ded || 441
+Updates/Sony/Sony PlayStation 4/Witness, The (USA)/Witness, The (USA) (v1.05) (Update).pkg || 0fb16d3e12d8722f || 3953262592
