@@ -275,7 +275,7 @@ def GetConfig():
             },
             "config_file": {
                 "windows": "DuckStation/windows/settings.ini",
-                "linux": "DuckStation/linux/DuckStation.AppImage.home/.local/share/duckstation/settings.ini"
+                "linux": "DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/settings.ini"
             },
             "run_sandboxed": {
                 "windows": False,
