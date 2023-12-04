@@ -646,7 +646,7 @@ def GetConfig():
             },
             "setup_dir": {
                 "windows": "Xemu/windows",
-                "linux": "Xemu/windows/linux/Xemu.AppImage.home/.local/share/xemu/xemu"
+                "linux": "Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu"
             },
             "config_file": {
                 "windows": "Xemu/windows/xemu.toml",
