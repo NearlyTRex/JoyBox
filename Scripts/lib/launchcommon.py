@@ -79,7 +79,7 @@ def SimpleLaunch(
             run_func = HandleGameSelection)
 
     # Nothing to run
-    if len(selected_launch_file) == 0:
+    if len(selected_launch_file) == 0 and not json_launch_name:
         return
 
     # Replace game tokens
