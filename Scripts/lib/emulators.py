@@ -294,8 +294,8 @@ def GetConfig():
                 "linux": None
             },
             "config_file": {
-                "windows": None,
-                "linux": None
+                "windows": "EKA2L1/windows/config.yml",
+                "linux": "EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1/config.yml"
             },
             "run_sandboxed": {
                 "windows": False,
