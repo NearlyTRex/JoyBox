@@ -24,8 +24,7 @@ def LaunchViaYuzu(
     launch_cmd = [
         programs.GetEmulatorProgram("Yuzu"),
         "-g",
-        config.token_game_file,
-        "-f"
+        config.token_game_file
     ]
 
     # Launch game

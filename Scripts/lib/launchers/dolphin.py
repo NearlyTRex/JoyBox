@@ -23,8 +23,6 @@ def LaunchViaDolphin(
     # Get launch command
     launch_cmd = [
         programs.GetEmulatorProgram("Dolphin"),
-        "--config",
-        "Dolphin.Display.Fullscreen=True",
         config.token_game_file
     ]
 

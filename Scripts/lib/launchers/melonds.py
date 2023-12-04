@@ -23,7 +23,6 @@ def LaunchViaMelonDS(
     # Get launch command
     launch_cmd = [
         programs.GetEmulatorProgram("melonDS"),
-        "--fullscreen",
         config.token_game_file
     ]
 

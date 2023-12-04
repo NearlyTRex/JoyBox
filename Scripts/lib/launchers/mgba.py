@@ -23,7 +23,6 @@ def LaunchViaMGBA(
     # Get launch command
     launch_cmd = [
         programs.GetEmulatorProgram("mGBA"),
-        "--fullscreen",
         config.token_game_file
     ]
 

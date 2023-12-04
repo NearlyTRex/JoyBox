@@ -23,7 +23,6 @@ def LaunchViaDuckStation(
     # Get launch command
     launch_cmd = [
         programs.GetEmulatorProgram("DuckStation"),
-        "-fullscreen",
         config.token_game_file
     ]
 

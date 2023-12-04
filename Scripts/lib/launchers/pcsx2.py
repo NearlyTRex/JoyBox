@@ -23,7 +23,6 @@ def LaunchViaPCSX2(
     # Get launch command
     launch_cmd = [
         programs.GetEmulatorProgram("PCSX2"),
-        "-fullscreen",
         config.token_game_file
     ]
 

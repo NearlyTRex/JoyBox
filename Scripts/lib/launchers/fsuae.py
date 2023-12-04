@@ -23,7 +23,6 @@ def LaunchViaFSUAE(
     # Get launch command
     launch_cmd = [
         programs.GetEmulatorProgram("FS-UAE"),
-        "--fullscreen=1",
         config.token_game_file
     ]
 

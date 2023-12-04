@@ -24,8 +24,7 @@ def LaunchViaCemu(
     launch_cmd = [
         programs.GetEmulatorProgram("Cemu"),
         "-g",
-        config.token_game_file,
-        "-f"
+        config.token_game_file
     ]
 
     # Launch game

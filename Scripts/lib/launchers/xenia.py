@@ -23,7 +23,6 @@ def LaunchViaXenia(
     # Get launch command
     launch_cmd = [
         programs.GetEmulatorProgram("Xenia"),
-        "--fullscreen=true",
         config.token_game_file
     ]
 

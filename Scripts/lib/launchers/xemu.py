@@ -23,7 +23,6 @@ def LaunchViaXemu(
     # Get launch command
     launch_cmd = [
         programs.GetEmulatorProgram("Xemu"),
-        "-full-screen",
         "-dvd_path",
         config.token_game_file
     ]

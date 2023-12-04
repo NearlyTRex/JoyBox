@@ -23,8 +23,6 @@ def LaunchViaFlycast(
     # Get launch command
     launch_cmd = [
         programs.GetEmulatorProgram("Flycast"),
-        "-config",
-        "window:fullscreen=yes",
         config.token_game_file
     ]
 

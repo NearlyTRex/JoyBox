@@ -35,7 +35,6 @@ def LaunchViaAres(
         programs.GetEmulatorProgram("Ares"),
         "--system",
         system_types[launch_platform],
-        "--fullscreen",
         config.token_game_file
     ]
 

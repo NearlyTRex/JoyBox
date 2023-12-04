@@ -56,8 +56,6 @@ def LaunchViaRPCS3(
     # Get launch command
     launch_cmd = [
         programs.GetEmulatorProgram("RPCS3"),
-        "--fullscreen",
-        "--no-gui",
         config.token_game_file
     ]
 
