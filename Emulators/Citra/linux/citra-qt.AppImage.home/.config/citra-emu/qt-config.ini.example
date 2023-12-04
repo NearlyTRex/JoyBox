@@ -1,0 +1,6 @@
+[Data%20Storage]
+nand_directory=$EMULATOR_MAIN_ROOT/Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu/nand/
+sdmc_directory=$EMULATOR_MAIN_ROOT/Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu/sdmc/
+
+[UI]
+Paths\screenshotPath=$EMULATOR_MAIN_ROOT/Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu/screenshots/
