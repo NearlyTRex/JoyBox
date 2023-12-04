@@ -1,0 +1,6 @@
+[ports.qt]
+gb.bios=$EMULATOR_MAIN_ROOT/mGBA/linux/mGBA.AppImage.home/.config/mgba/bios/gb_bios.bin
+gbc.bios=$EMULATOR_MAIN_ROOT/mGBA/linux/mGBA.AppImage.home/.config/mgba/bios/gbc_bios.bin
+gba.bios=$EMULATOR_MAIN_ROOT/mGBA/linux/mGBA.AppImage.home/.config/mgba/bios/gba_bios.bin
+sgb.bios=$EMULATOR_MAIN_ROOT/mGBA/linux/mGBA.AppImage.home/.config/mgba/bios/sgb_bios.bin
+savegamePath=$GAME_SAVE_DIR
