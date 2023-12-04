@@ -1,0 +1,20 @@
+[BIOS]
+SearchDirectory = $EMULATOR_MAIN_ROOT/DuckStation/windows/bios
+
+[MemoryCards]
+Card1Type = PerGameTitle
+Card2Type = None
+UsePlaylistTitle = true
+Directory = $GAME_SAVE_DIR
+
+[Folders]
+Cache = cache
+Cheats = cheats
+Covers = covers
+Dumps = dump
+GameSettings = gamesettings
+InputProfiles = inputprofiles
+SaveStates = savestates
+Screenshots = screenshots
+Shaders = shaders
+Textures = textures
