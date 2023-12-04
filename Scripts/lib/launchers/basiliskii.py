@@ -23,8 +23,7 @@ def LaunchViaBasiliskII(
     # Get launch command
     launch_cmd = [
         programs.GetEmulatorProgram("BasiliskII"),
-        "--disk",
-        config.token_game_file
+        "--disk", config.token_game_file
     ]
 
     # Launch game

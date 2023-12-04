@@ -25,20 +25,17 @@ def LaunchViaMame(
 
     # Add ini path
     launch_cmd += [
-        "-inipath",
-        programs.GetEmulatorPathConfigValue("Mame", "config_dir")
+        "-inipath", programs.GetEmulatorPathConfigValue("Mame", "config_dir")
     ]
 
     # Add rom path
     if launch_platform == "Arcade":
         launch_cmd += [
-            "-rompath",
-            config.token_game_dir
+            "-rompath", config.token_game_dir
         ]
     else:
         launch_cmd += [
-            "-rompath",
-            programs.GetEmulatorPathConfigValue("Mame", "roms_dir")
+            "-rompath", programs.GetEmulatorPathConfigValue("Mame", "roms_dir")
         ]
 
     # Add launch file
@@ -49,44 +46,37 @@ def LaunchViaMame(
     elif launch_platform == "Atari 5200":
         launch_cmd += [
             "a5200",
-            "-cart",
-            config.token_game_file
+            "-cart", config.token_game_file
         ]
     elif launch_platform == "Atari 7800":
         launch_cmd += [
             "a7800",
-            "-cart",
-            config.token_game_file
+            "-cart", config.token_game_file
         ]
     elif launch_platform == "Magnavox Odyssey 2":
         launch_cmd += [
             "odyssey2",
-            "-cart",
-            config.token_game_file
+            "-cart", config.token_game_file
         ]
     elif launch_platform == "Mattel Intellivision":
         launch_cmd += [
             "intv",
-            "-cart",
-            config.token_game_file
+            "-cart", config.token_game_file
         ]
     elif launch_platform == "Philips CDi":
         launch_cmd += [
             "cdimono1",
-            "-cdrom",
-            config.token_game_file
+            "-cdrom", config.token_game_file
         ]
     elif launch_platform == "Texas Instruments TI-99-4A":
         launch_cmd += [
             "ti99_4a",
-            "-cart",
-            config.token_game_file
+            "-cart", config.token_game_file
         ]
     elif launch_platform == "Tiger Game.com":
         launch_cmd += [
             "gamecom",
-            "-cart1",
-            config.token_game_file
+            "-cart1", config.token_game_file
         ]
 
     # Launch game

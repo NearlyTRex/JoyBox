@@ -23,8 +23,7 @@ def LaunchViaXemu(
     # Get launch command
     launch_cmd = [
         programs.GetEmulatorProgram("Xemu"),
-        "-dvd_path",
-        config.token_game_file
+        "-dvd_path", config.token_game_file
     ]
 
     # Launch game

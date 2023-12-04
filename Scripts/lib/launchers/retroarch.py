@@ -42,8 +42,7 @@ def LaunchViaRetroArch(
     # Get launch command
     launch_cmd = [
         programs.GetEmulatorProgram("RetroArch"),
-        "-L",
-        os.path.join(cores_dir, cores_mapping[launch_platform] + cores_ext),
+        "-L", os.path.join(cores_dir, cores_mapping[launch_platform] + cores_ext),
         config.token_game_file
     ]
 
