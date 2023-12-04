@@ -17,3 +17,23 @@ MegaCD
     BIOS.US: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/bios_CD_U.bin
     BIOS.Japan: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/bios_CD_J.bin
     BIOS.Europe: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/bios_CD_E.bin
+Hotkey
+  ToggleFullscreen: 0x1/0/0;;
+  ToggleMouseCapture: ;;
+  ToggleKeyboardCapture: ;;
+  FastForward: ;;
+  ToggleFastForward: ;;
+  Rewind: ;;
+  FrameAdvance: ;;
+  CaptureScreenshot: ;;
+  SaveState: ;;
+  LoadState: ;;
+  DecrementStateSlot: ;;
+  IncrementStateSlot: ;;
+  PauseEmulation: ;;
+  ResetSystem: ;;
+  ReloadCurrentGame: ;;
+  QuitEmulator: ;;
+  MuteAudio: ;;
+  IncreaseAudio: ;;
+  DecreaseAudio: ;;
