@@ -8,13 +8,13 @@ UsePlaylistTitle = true
 Directory = $GAME_SAVE_DIR
 
 [Folders]
-Cache = cache
-Cheats = cheats
-Covers = covers
-Dumps = dump
-GameSettings = gamesettings
-InputProfiles = inputprofiles
-SaveStates = savestates
-Screenshots = screenshots
-Shaders = shaders
-Textures = textures
+Cache = $EMULATOR_MAIN_ROOT/DuckStation/windows/cache
+Cheats = $EMULATOR_MAIN_ROOT/DuckStation/windows/cheats
+Covers = $EMULATOR_MAIN_ROOT/DuckStation/windows/covers
+Dumps = $EMULATOR_MAIN_ROOT/DuckStation/windows/dump
+GameSettings = $EMULATOR_MAIN_ROOT/DuckStation/windows/gamesettings
+InputProfiles = $EMULATOR_MAIN_ROOT/DuckStation/windows/inputprofiles
+SaveStates = $EMULATOR_MAIN_ROOT/DuckStation/windows/savestates
+Screenshots = $EMULATOR_MAIN_ROOT/DuckStation/windows/screenshots
+Shaders = $EMULATOR_MAIN_ROOT/DuckStation/windows/shaders
+Textures = $EMULATOR_MAIN_ROOT/DuckStation/windows/textures
