@@ -57,6 +57,9 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
 
     # Get json info
     json_file_data = system.ReadJsonFile(game_file, verbose = verbose, exit_on_failure = exit_on_failure)
+    json_launch_name = None
+    if config.general_key_launch_name in json_file_data:
+        json_launch_name = json_file_data[config.general_key_launch_name]
     json_launch_file = None
     if config.general_key_launch_file in json_file_data:
         json_launch_file = json_file_data[config.general_key_launch_file]
@@ -71,6 +74,8 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
         source_file = os.path.join(source_dir, json_launch_file)
     if json_transform_file:
         source_file = os.path.join(source_dir, json_transform_file)
+    if json_launch_name and len(source_file) == 0:
+        source_file = os.path.join(source_dir, json_launch_name)
 
     # Check mounted storage share
     if not network.IsNetworkShareMounted(
@@ -81,11 +86,17 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
             title_text = "Storage share not mounted",
             message_text = "Storage share must be mounted for cache installation\n%s\n%s" % (game_name, game_platform))
 
-    # Check if source file is available
-    if not os.path.exists(source_file):
-        gui.DisplayErrorPopup(
-            title_text = "Source file unavailable",
-            message_text = "Source file is not available\n%s\n%s" % (game_name, game_platform))
+    # Check if source files are available
+    if json_launch_name and source_file.endswith(json_launch_name):
+        if not os.path.isdir(source_dir):
+            gui.DisplayErrorPopup(
+                title_text = "Source dir unavailable",
+                message_text = "Source dir is not available\n%s\n%s" % (game_name, game_platform))
+    else:
+        if not os.path.isfile(source_file):
+            gui.DisplayErrorPopup(
+                title_text = "Source file unavailable",
+                message_text = "Source file is not available\n%s\n%s" % (game_name, game_platform))
 
     # Check if transformation is required
     if transform.IsTransformRequired(game_platform):
