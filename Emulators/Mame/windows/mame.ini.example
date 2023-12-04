@@ -1,0 +1,28 @@
+﻿#
+# CORE SEARCH PATH OPTIONS
+#
+homepath                  .
+rompath                   roms
+hashpath                  hash
+samplepath                samples
+artpath                   artwork
+ctrlrpath                 ctrlr
+inipath                   .;ini;ini/presets
+fontpath                  .
+cheatpath                 cheat
+crosshairpath             crosshair
+pluginspath               plugins
+languagepath              language
+swpath                    software
+
+#
+# CORE OUTPUT DIRECTORY OPTIONS
+#
+cfg_directory             cfg
+nvram_directory           nvram
+input_directory           inp
+state_directory           sta
+snapshot_directory        snap
+diff_directory            diff
+comment_directory         comments
+share_directory           share
