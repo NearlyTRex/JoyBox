@@ -6,50 +6,128 @@ import getpass
 # Custom imports
 lib_folder = os.path.realpath(os.path.dirname(__file__))
 sys.path.append(lib_folder)
+import config
 import environment
 import system
 import tools
 import emulators
+import thirdparty
+
+###########################################################
 
 # Get config value
-def GetConfigValue(config, app_name, app_key, platform):
-    app_value = None
+def GetConfigValue(program_config, program_name, program_key, program_platform = None):
+    if not program_platform:
+        program_platform = environment.GetCurrentPlatform()
+    program_value = None
     try:
-        app_value = config[app_name][app_key]
+        program_value = program_config[program_name][program_key]
     except:
         pass
-    if isinstance(app_value, dict):
-        if platform in app_value.keys():
-            return app_value[platform]
+    if isinstance(program_value, dict):
+        if program_platform in program_value.keys():
+            return program_value[program_platform]
         else:
-            return app_value
+            return program_value
     else:
-        return app_value
+        return program_value
 
 # Get path config value
-def GetPathConfigValue(config, base_dir, app_name, app_key, platform):
-    app_path = GetConfigValue(config, app_name, app_key, platform)
-    if app_path:
-        return os.path.join(base_dir, app_path)
+def GetPathConfigValue(program_config, base_dir, program_name, program_key, program_platform = None):
+    program_path = GetConfigValue(program_config, program_name, program_key, program_platform)
+    if program_path:
+        return os.path.join(base_dir, program_path)
     return None
 
 # Get program
-def GetProgram(config, base_dir, app_name, platform = None):
-    if not platform:
-        platform = environment.GetCurrentPlatform()
-    return GetPathConfigValue(config, base_dir, app_name, "program", platform)
+def GetProgram(program_config, base_dir, program_name, program_platform = None):
+    return GetPathConfigValue(program_config, base_dir, program_name, "program", program_platform)
+
+###########################################################
+
+# Get tools
+def GetTools():
+    return tools.GetTools()
+
+# Get emulators
+def GetEmulators():
+    return emulators.GetEmulators()
+
+# Get third-party libraries
+def GetThirdPartyLibraries():
+    return thirdparty.GetThirdPartyLibraries()
+
+# Get tool config
+def GetToolConfig():
+    merged_config = {}
+    for tool in tools.GetTools():
+        merged_config.update(tool.GetConfig())
+    return merged_config
+
+# Get emulator config
+def GetEmulatorConfig():
+    merged_config = {}
+    for emulator in emulators.GetEmulators():
+        merged_config.update(emulator.GetConfig())
+    return merged_config
+
+# Get third-party library config
+def GetThirdPartyLibraryConfig():
+    merged_config = {}
+    for library in thirdparty.GetThirdPartyLibraries():
+        merged_config.update(library.GetConfig())
+    return merged_config
+
+###########################################################
+
+# Get program install dir
+def GetProgramInstallDir(program_name, program_platform = None):
+    if IsProgramNameTool(program_name, program_platform):
+        return os.path.join(environment.GetScriptsExtDir(), program_name, program_platform)
+    elif IsProgramNameEmulator(program_name, program_platform):
+        return os.path.join(environment.GetEmulatorsRootDir(), program_name, program_platform)
+    return None
+
+# Get third-party library install dir
+def GetThirdPartyLibraryInstallDir(library_name):
+    return os.path.join(environment.GetScriptsThirdPartyLibDir(), library_name)
+
+# Determine if program should be installed
+def ShouldProgramBeInstalled(program_name, program_platform = None):
+
+    # Get default platform if none specified
+    if not program_platform:
+        program_platform = environment.GetCurrentPlatform()
+
+    # Get program path
+    program_path = None
+    if IsProgramNameTool(program_name, program_platform):
+        program_path = GetProgram(GetToolConfig(), environment.GetScriptsExtDir(), program_name, program_platform)
+    elif IsProgramNameEmulator(program_name, program_platform):
+        program_path = GetProgram(GetEmulatorConfig(), environment.GetEmulatorsRootDir(), program_name, program_platform)
+
+    # Check program path
+    if not program_path:
+        return False
+    if program_platform == "linux" and not environment.IsLinuxPlatform():
+        return False
+    if os.path.exists(program_path):
+        return False
+    return True
+
+# Determine if third-party library should be installed
+def ShouldThirdPartyLibraryBeInstalled(library_name):
+    return system.IsDirectoryEmpty(GetThirdPartyLibraryInstallDir(library_name))
+
+###########################################################
 
 # Get tool program
 def GetToolProgram(tool_name, tool_platform = None):
-    if not tool_platform:
-        tool_platform = environment.GetCurrentPlatform()
-    return GetProgram(tools.GetConfig(), tools.GetBaseDirectory(), tool_name, tool_platform)
+    return GetProgram(GetToolConfig(), environment.GetScriptsExtDir(), tool_name, tool_platform)
 
 # Get emulator program
 def GetEmulatorProgram(emulator_name, emulator_platform = None):
-    if not emulator_platform:
-        emulator_platform = environment.GetCurrentPlatform()
-    return GetProgram(emulators.GetConfig(), emulators.GetBaseDirectory(), emulator_name, emulator_platform)
+    return GetProgram(GetEmulatorConfig(), environment.GetEmulatorsRootDir(), emulator_name, emulator_platform)
 
 # Get tool program dir
 def GetToolProgramDir(tool_name, tool_platform = None):
@@ -60,68 +138,52 @@ def GetEmulatorProgramDir(emulator_name, emulator_platform = None):
     return system.GetFilenameDirectory(GetEmulatorProgram(emulator_name, emulator_platform))
 
 # Get tool config value
-def GetToolConfigValue(tool_name, app_key, tool_platform = None):
-    if not tool_platform:
-        tool_platform = environment.GetCurrentPlatform()
-    return GetConfigValue(tools.GetConfig(), tool_name, app_key, tool_platform)
+def GetToolConfigValue(tool_name, tool_key, tool_platform = None):
+    return GetConfigValue(GetToolConfig(), tool_name, tool_key, tool_platform)
 
 # Get emulator config value
-def GetEmulatorConfigValue(emulator_name, app_key, emulator_platform = None):
-    if not emulator_platform:
-        emulator_platform = environment.GetCurrentPlatform()
-    return GetConfigValue(emulators.GetConfig(), emulator_name, app_key, emulator_platform)
+def GetEmulatorConfigValue(emulator_name, emulator_key, emulator_platform = None):
+    return GetConfigValue(GetEmulatorConfig(), emulator_name, emulator_key, emulator_platform)
 
 # Get tool path config value
-def GetToolPathConfigValue(tool_name, app_key, tool_platform = None):
-    if not tool_platform:
-        tool_platform = environment.GetCurrentPlatform()
-    return GetPathConfigValue(tools.GetConfig(), tools.GetBaseDirectory(), tool_name, app_key, tool_platform)
+def GetToolPathConfigValue(tool_name, tool_key, tool_platform = None):
+    return GetPathConfigValue(GetToolConfig(), environment.GetScriptsExtDir(), tool_name, tool_key, tool_platform)
 
 # Get emulator path config value
-def GetEmulatorPathConfigValue(emulator_name, app_key, emulator_platform = None):
-    if not emulator_platform:
-        emulator_platform = environment.GetCurrentPlatform()
-    return GetPathConfigValue(emulators.GetConfig(), emulators.GetBaseDirectory(), emulator_name, app_key, emulator_platform)
+def GetEmulatorPathConfigValue(emulator_name, emulator_key, emulator_platform = None):
+    return GetPathConfigValue(GetEmulatorConfig(), environment.GetEmulatorsRootDir(), emulator_name, emulator_key, emulator_platform)
 
-# Get emulator save dir
-def GetEmulatorSaveDir(emulator_name, emulator_platform = None, game_platform = None):
-    if not emulator_platform:
-        emulator_platform = environment.GetCurrentPlatform()
-    saves_dir = GetEmulatorPathConfigValue(emulator_name, "save_dir", emulator_platform)
-    saves_base_dir = GetEmulatorPathConfigValue(emulator_name, "save_base_dir", emulator_platform)
-    save_sub_dirs = GetEmulatorConfigValue(emulator_name, "save_sub_dirs")
-    if saves_base_dir and save_sub_dirs and game_platform:
-        if game_platform in save_sub_dirs.keys():
-            return os.path.join(saves_base_dir, save_sub_dirs[game_platform])
-    return saves_dir
-
-# Get emulator save base dir
-def GetEmulatorSaveBaseDir(emulator_name, emulator_platform = None):
-    if not emulator_platform:
-        emulator_platform = environment.GetCurrentPlatform()
-    return GetEmulatorPathConfigValue(emulator_name, "save_base_dir", emulator_platform)
-
-# Get emulator config file
-def GetEmulatorConfigFile(emulator_name, emulator_platform = None):
-    if not emulator_platform:
-        emulator_platform = environment.GetCurrentPlatform()
-    return GetEmulatorPathConfigValue(emulator_name, "config_file", emulator_platform)
-
-# Get program prefix name
-def GetProgramPrefixName(program_name, program_platform = None):
-    if IsProgramNameTool(program_name, program_platform):
-        return tools.GetPrefixName()
-    elif IsProgramNameEmulator(program_name, program_platform):
-        return emulators.GetPrefixName()
+# Derive tool name from program path
+def DeriveToolNameFromProgramPath(program_path, tool_platform = None):
+    if not program_path or not os.path.exists(program_path):
+        return None
+    for tool_name in GetToolConfig().keys():
+        tool_path = GetToolProgram(tool_name, tool_platform)
+        if tool_path and os.path.normpath(tool_path) == os.path.normpath(program_path):
+            return tool_name
     return None
 
-# Get program prefix dir
-def GetProgramPrefixDir(program_name, program_platform = None):
-    if IsProgramNameTool(program_name, program_platform):
-        return tools.GetPrefixDir()
-    elif IsProgramNameEmulator(program_name, program_platform):
-        return emulators.GetPrefixDir()
+# Derive emulator name from program path
+def DeriveEmulatorNameFromProgramPath(program_path, emulator_platform = None):
+    if not program_path or not os.path.exists(program_path):
+        return None
+    for emulator_name in GetEmulatorConfig().keys():
+        emulator_path = GetEmulatorProgram(emulator_name, emulator_platform)
+        if emulator_path and os.path.normpath(emulator_path) == os.path.normpath(program_path):
+            return emulator_name
     return None
+
+###########################################################
+
+# Determine if program name is a tool
+def IsProgramNameTool(program_name, program_platform = None):
+    tool_program = GetProgram(GetToolConfig(), environment.GetScriptsExtDir(), program_name, program_platform)
+    return tool_program is not None
+
+# Determine if program name is an emulator
+def IsProgramNameEmulator(program_name, program_platform = None):
+    emulator_program = GetProgram(GetEmulatorConfig(), environment.GetEmulatorsRootDir(), program_name, program_platform)
+    return emulator_program is not None
 
 # Determine if tool is installed
 def IsToolInstalled(tool_name, tool_platform = None):
@@ -137,48 +199,14 @@ def IsEmulatorInstalled(emulator_name, emulator_platform = None):
         return os.path.exists(emulator_program)
     return False
 
-# Derive tool name from program
-def DeriveToolNameFromProgram(program_path, tool_platform = None):
-    if not tool_platform:
-        tool_platform = environment.GetCurrentPlatform()
-    if not program_path or not os.path.exists(program_path):
-        return None
-    for tool_name in tools.GetConfig().keys():
-        tool_path = GetToolProgram(tool_name, tool_platform)
-        if tool_path and os.path.normpath(tool_path) == os.path.normpath(program_path):
-            return tool_name
-    return None
-
-# Derive emulator name from program
-def DeriveEmulatorNameFromProgram(program_path, emulator_platform = None):
-    if not emulator_platform:
-        emulator_platform = environment.GetCurrentPlatform()
-    if not program_path or not os.path.exists(program_path):
-        return None
-    for emulator_name in emulators.GetConfig().keys():
-        emulator_path = GetEmulatorProgram(emulator_name, emulator_platform)
-        if emulator_path and os.path.normpath(emulator_path) == os.path.normpath(program_path):
-            return emulator_name
-    return None
-
-# Determine if program name is a tool
-def IsProgramNameTool(program_name, program_platform = None):
-    tool_program = GetToolProgram(program_name, program_platform)
-    return tool_program is not None
-
-# Determine if program name is an emulator
-def IsProgramNameEmulator(program_name, program_platform = None):
-    emulator_program = GetToolProgram(program_name, program_platform)
-    return emulator_program is not None
-
 # Determine if program path is a tool
 def IsProgramPathTool(program_path, program_platform = None):
-    tool_name = DeriveToolNameFromProgram(program_path, program_platform)
+    tool_name = DeriveToolNameFromProgramPath(program_path, program_platform)
     return tool_name is None
 
 # Determine if program path is an emulator
 def IsProgramPathEmulator(program_path, program_platform = None):
-    emulator_name = DeriveEmulatorNameFromProgram(program_path, program_platform)
+    emulator_name = DeriveEmulatorNameFromProgramPath(program_path, program_platform)
     return emulator_name is None
 
 # Determine if program name is a sandboxed tool
@@ -193,7 +221,7 @@ def IsProgramNameSandboxedEmulator(program_name, program_platform = None):
 
 # Determine if program path is a sandboxed tool
 def IsProgramPathSandboxedTool(program_path, program_platform = None):
-    tool_name = DeriveToolNameFromProgram(program_path, program_platform)
+    tool_name = DeriveToolNameFromProgramPath(program_path, program_platform)
     if not tool_name:
         return False
     tool_config = GetToolConfigValue(tool_name, "run_sandboxed", program_platform)
@@ -203,10 +231,12 @@ def IsProgramPathSandboxedTool(program_path, program_platform = None):
 
 # Determine if program path is a sandboxed emulator
 def IsProgramPathSandboxedEmulator(program_path, program_platform = None):
-    emulator_name = DeriveEmulatorNameFromProgram(program_path, program_platform)
+    emulator_name = DeriveEmulatorNameFromProgramPath(program_path, program_platform)
     if not emulator_name:
         return False
     emulator_config = GetEmulatorConfigValue(emulator_name, "run_sandboxed", program_platform)
     if emulator_config:
         return emulator_config
     return False
+
+###########################################################

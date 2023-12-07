@@ -14,7 +14,6 @@ import system
 import environment
 import archive
 import programs
-import tools
 import installer
 import webpage
 import registry
@@ -636,7 +635,7 @@ def BuildAppImageFromSource(
         src_obj = os.path.join(tmp_dir_result, obj["from"])
         dest_obj = os.path.join(tmp_dir_result, obj["to"])
         if obj["from"].startswith("AppImageTool"):
-            src_obj = os.path.join(tools.GetBaseDirectory(), obj["from"])
+            src_obj = os.path.join(environment.GetScriptsExtDir(), obj["from"])
         system.MakeDirectory(
             dir = os.path.dirname(dest_obj),
             verbose = verbose,
