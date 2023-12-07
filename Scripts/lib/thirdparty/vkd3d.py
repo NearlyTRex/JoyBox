@@ -12,8 +12,8 @@ import programs
 # Local imports
 from . import base
 
-# DXVK library
-class DXVK(base.ThirdPartyLibraryBase):
+# VKD3D library
+class VKD3D(base.ThirdPartyLibraryBase):
 
     # Get name
     def GetName():
