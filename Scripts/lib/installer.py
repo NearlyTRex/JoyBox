@@ -18,7 +18,7 @@ import programs
 import chd
 import install
 import registry
-from launchers import computer
+from emulators import computer
 
 # Inno Setup parameters
 #
