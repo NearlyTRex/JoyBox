@@ -21,15 +21,15 @@ from . import base
 class Mednafen(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Mednafen"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.mednafen_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Mednafen": {
                 "program": {
@@ -56,7 +56,7 @@ class Mednafen(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Mednafen", "windows"):
             network.DownloadLatestWebpageRelease(
                 webpage_url = "https://mednafen.github.io/",
@@ -93,7 +93,7 @@ class Mednafen(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         system.CopyContents(
             src = environment.GetSyncedGameEmulatorSetupDir("Mednafen"),
             dest = programs.GetEmulatorPathConfigValue("Mednafen", "setup_dir", "linux"),
@@ -109,6 +109,7 @@ class Mednafen(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

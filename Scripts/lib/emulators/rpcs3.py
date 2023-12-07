@@ -22,15 +22,15 @@ from . import base
 class RPCS3(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "RPCS3"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.rpcs3_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "RPCS3": {
                 "program": {
@@ -57,7 +57,7 @@ class RPCS3(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("RPCS3", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "RPCS3",
@@ -84,7 +84,7 @@ class RPCS3(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         for obj in ["dev_flash"]:
             if not os.path.exists(os.path.join(programs.GetEmulatorPathConfigValue("RPCS3", "setup_dir", "linux"), obj)):
                 archive.ExtractArchive(
@@ -103,6 +103,7 @@ class RPCS3(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

@@ -13,50 +13,50 @@ import environment
 class EmulatorBase:
 
     # Get name
-    def GetName():
+    def GetName(self):
         return ""
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return []
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {}
 
     # Get save format
-    def GetSaveFormat():
+    def GetSaveFormat(self):
         return None
 
     # Get config file
-    def GetConfigFile(emulator_platform = None):
+    def GetConfigFile(self, emulator_platform = None):
         return programs.GetPathConfigValue(
-            program_config = GetConfig(),
+            program_config = self.GetConfig(),
             base_dir = environment.GetEmulatorsRootDir(),
-            program_name = GetName(),
+            program_name = self.GetName(),
             program_key = "config_file",
             program_platform = emulator_platform)
 
     # Get save base dir
-    def GetSaveBaseDir(emulator_platform = None):
+    def GetSaveBaseDir(self, emulator_platform = None):
         return programs.GetPathConfigValue(
-            program_config = GetConfig(),
+            program_config = self.GetConfig(),
             base_dir = environment.GetEmulatorsRootDir(),
-            program_name = GetName(),
+            program_name = self.GetName(),
             program_key = "save_base_dir",
             program_platform = emulator_platform)
 
     # Get save sub dirs
-    def GetSaveSubDirs(emulator_platform = None):
+    def GetSaveSubDirs(self, emulator_platform = None):
         return programs.GetPathConfigValue(
-            program_config = GetConfig(),
+            program_config = self.GetConfig(),
             base_dir = environment.GetEmulatorsRootDir(),
-            program_name = GetName(),
+            program_name = self.GetName(),
             program_key = "save_sub_dirs",
             program_platform = emulator_platform)
 
     # Get save dir
-    def GetSaveDir(emulator_platform = None):
+    def GetSaveDir(self, emulator_platform = None):
 
         # Use current platform if none specified
         if not emulator_platform:
@@ -64,15 +64,15 @@ class EmulatorBase:
 
         # Get basic saves dir
         saves_dir = programs.GetPathConfigValue(
-            program_config = GetConfig(),
-            base_dir = GetBaseDir(),
-            program_name = GetName(),
+            program_config = self.GetConfig(),
+            base_dir = environment.GetEmulatorsRootDir(),
+            program_name = self.GetName(),
             program_key = "save_dir",
             program_platform = emulator_platform)
 
         # Get base dir and sub dirs
-        saves_base_dir = GetSaveBaseDir(emulator_platform)
-        save_sub_dirs = GetSaveSubDirs(emulator_platform)
+        saves_base_dir = self.GetSaveBaseDir(emulator_platform)
+        save_sub_dirs = self.GetSaveSubDirs(emulator_platform)
 
         # Construct actual saves dir
         if saves_base_dir and save_sub_dirs and emulator_platform:
@@ -81,15 +81,16 @@ class EmulatorBase:
         return saves_dir
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         pass
 
     # Setup
-    def Setup():
+    def Setup(self):
         pass
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

@@ -21,15 +21,15 @@ from . import base
 class MelonDS(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "melonDS"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.melonds_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "melonDS": {
                 "program": {
@@ -56,7 +56,7 @@ class MelonDS(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("melonDS", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "melonDS-emu",
@@ -92,7 +92,7 @@ class MelonDS(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         system.CopyContents(
             src = environment.GetSyncedGameEmulatorSetupDir("melonDS"),
             dest = programs.GetEmulatorPathConfigValue("melonDS", "setup_dir", "linux"),
@@ -108,6 +108,7 @@ class MelonDS(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

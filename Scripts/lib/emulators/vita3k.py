@@ -21,15 +21,15 @@ from . import base
 class Vita3K(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Vita3K"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.vita3k_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Vita3K": {
                 "program": {
@@ -60,7 +60,7 @@ class Vita3K(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Vita3K", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "Vita3K",
@@ -87,7 +87,7 @@ class Vita3K(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         for obj in ["os0", "sa0", "vs0"]:
             if not os.path.exists(os.path.join(programs.GetEmulatorPathConfigValue("Vita3K", "setup_dir", "linux"), obj)):
                 archive.ExtractArchive(
@@ -106,6 +106,7 @@ class Vita3K(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

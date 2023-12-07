@@ -20,15 +20,15 @@ from . import base
 class EKA2L1(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "EKA2L1"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.eka2l1_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "EKA2L1": {
                 "program": {
@@ -51,7 +51,7 @@ class EKA2L1(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("EKA2L1", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "EKA2L1",
@@ -79,6 +79,7 @@ class EKA2L1(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

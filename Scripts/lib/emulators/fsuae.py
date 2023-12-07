@@ -20,15 +20,15 @@ from . import base
 class FSUAE(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "FS-UAE"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.fsuae_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "FS-UAE": {
                 "program": {
@@ -55,7 +55,7 @@ class FSUAE(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("FS-UAE", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "FrodeSolheim",
@@ -95,7 +95,7 @@ class FSUAE(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         system.CopyContents(
             src = environment.GetSyncedGameEmulatorSetupDir("FS-UAE"),
             dest = programs.GetEmulatorPathConfigValue("FS-UAE", "setup_dir", "linux"),
@@ -111,6 +111,7 @@ class FSUAE(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

@@ -20,15 +20,15 @@ from . import base
 class DuckStation(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "DuckStation"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.duckstation_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "DuckStation": {
                 "program": {
@@ -55,7 +55,7 @@ class DuckStation(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("DuckStation", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "stenzek",
@@ -82,7 +82,7 @@ class DuckStation(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         system.CopyContents(
             src = environment.GetSyncedGameEmulatorSetupDir("DuckStation"),
             dest = programs.GetEmulatorPathConfigValue("DuckStation", "setup_dir", "linux"),
@@ -98,6 +98,7 @@ class DuckStation(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

@@ -21,15 +21,15 @@ from . import base
 class MGBA(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "mGBA"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.mgba_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "mGBA": {
                 "program": {
@@ -56,7 +56,7 @@ class MGBA(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("mGBA", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "mgba-emu",
@@ -83,7 +83,7 @@ class MGBA(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         system.CopyContents(
             src = environment.GetSyncedGameEmulatorSetupDir("mGBA"),
             dest = programs.GetEmulatorPathConfigValue("mGBA", "setup_dir", "linux"),
@@ -99,6 +99,7 @@ class MGBA(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

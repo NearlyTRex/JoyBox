@@ -20,15 +20,15 @@ from . import base
 class Cemu(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Cemu"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.cemu_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Cemu": {
                 "program": {
@@ -59,7 +59,7 @@ class Cemu(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Cemu", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "cemu-project",
@@ -84,7 +84,7 @@ class Cemu(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         system.CopyContents(
             src = environment.GetSyncedGameEmulatorSetupDir("Cemu"),
             dest = programs.GetEmulatorPathConfigValue("Cemu", "setup_dir", "linux"),
@@ -100,6 +100,7 @@ class Cemu(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

@@ -21,15 +21,15 @@ from . import base
 class RetroArch(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "RetroArch"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.retroarch_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "RetroArch": {
                 "program": {
@@ -79,7 +79,7 @@ class RetroArch(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("RetroArch", "windows"):
             network.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch.7z",
@@ -112,7 +112,7 @@ class RetroArch(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         system.CopyContents(
             src = environment.GetSyncedGameEmulatorSetupDir("RetroArch"),
             dest = programs.GetEmulatorPathConfigValue("RetroArch", "setup_dir", "linux"),
@@ -128,6 +128,7 @@ class RetroArch(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

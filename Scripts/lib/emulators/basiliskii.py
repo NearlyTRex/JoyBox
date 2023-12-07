@@ -20,15 +20,15 @@ from . import base
 class BasiliskII(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "BasiliskII"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.basiliskii_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "BasiliskII": {
                 "program": {
@@ -55,7 +55,7 @@ class BasiliskII(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("BasiliskII", "windows"):
             network.DownloadGeneralRelease(
                 archive_url = "https://surfdrive.surf.nl/files/index.php/s/C7E6HIZKWuHHR1P/download",
@@ -78,7 +78,7 @@ class BasiliskII(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         system.CopyContents(
             src = os.path.join(environment.GetSyncedGameEmulatorSetupDir("BasiliskII"), "bios"),
             dest = programs.GetEmulatorPathConfigValue("BasiliskII", "setup_dir", "linux"),
@@ -94,6 +94,7 @@ class BasiliskII(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

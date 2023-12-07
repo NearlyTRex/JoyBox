@@ -447,15 +447,15 @@ def GetSelectedLaunchInfo(
 class Computer(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Computer"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.computer_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
 
             # DosBoxX
@@ -480,7 +480,7 @@ class Computer(base.EmulatorBase):
                     "windows": False,
                     "linux": False
                 }
-            }
+            },
 
             # ScummVM
             "ScummVM": {
@@ -504,30 +504,30 @@ class Computer(base.EmulatorBase):
         }
 
     # Get save format
-    def GetSaveFormat():
+    def GetSaveFormat(self):
         if environment.IsWindowsPlatform():
             return config.save_format_sandboxie
         else:
             return config.save_format_wine
 
     # Get config file
-    def GetConfigFile(emulator_platform = None):
+    def GetConfigFile(self, emulator_platform = None):
         return None
 
     # Get save base dir
-    def GetSaveBaseDir(emulator_platform = None):
+    def GetSaveBaseDir(self, emulator_platform = None):
         return None
 
     # Get save sub dirs
-    def GetSaveSubDirs(emulator_platform = None):
+    def GetSaveSubDirs(self, emulator_platform = None):
         return None
 
     # Get save dir
-    def GetSaveDir(emulator_platform = None):
+    def GetSaveDir(self, emulator_platform = None):
         return None
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
 
         # DosBoxX
         if force_downloads or programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
@@ -633,6 +633,7 @@ class Computer(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

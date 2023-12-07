@@ -21,15 +21,15 @@ from . import base
 class Xemu(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Xemu"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.xemu_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Xemu": {
                 "program": {
@@ -56,7 +56,7 @@ class Xemu(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Xemu", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "mborgerson",
@@ -89,7 +89,7 @@ class Xemu(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         system.CopyContents(
             src = environment.GetSyncedGameEmulatorSetupDir("Xemu"),
             dest = programs.GetEmulatorPathConfigValue("Xemu", "setup_dir", "linux"),
@@ -105,6 +105,7 @@ class Xemu(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

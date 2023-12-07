@@ -21,15 +21,15 @@ from . import base
 class ViceC64(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "VICE-C64"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.vicec64_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "VICE-C64": {
                 "program": {
@@ -52,7 +52,7 @@ class ViceC64(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("VICE-C64", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "VICE-Team",
@@ -93,6 +93,7 @@ class ViceC64(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

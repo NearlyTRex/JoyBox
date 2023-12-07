@@ -20,15 +20,15 @@ from . import base
 class BigPEmu(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "BigPEmu"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.bigpemu_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "BigPEmu": {
                 "program": {
@@ -51,7 +51,7 @@ class BigPEmu(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("BigPEmu", "windows"):
             network.DownloadGeneralRelease(
                 archive_url = "https://www.richwhitehouse.com/jaguar/builds/BigPEmu_v1092.zip",
@@ -63,6 +63,7 @@ class BigPEmu(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

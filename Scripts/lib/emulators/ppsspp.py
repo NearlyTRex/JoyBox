@@ -21,15 +21,15 @@ from . import base
 class PPSSPP(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "PPSSPP"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.ppsspp_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "PPSSPP": {
                 "program": {
@@ -52,7 +52,7 @@ class PPSSPP(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("PPSSPP", "windows"):
             network.DownloadGeneralRelease(
                 archive_url = "https://www.ppsspp.org/files/1_16_6/ppsspp_win.zip",
@@ -86,6 +86,7 @@ class PPSSPP(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

@@ -21,15 +21,15 @@ from . import base
 class Mame(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Mame"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.mame_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Mame": {
                 "program": {
@@ -64,7 +64,7 @@ class Mame(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Mame", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "mamedev",
@@ -114,7 +114,7 @@ class Mame(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         system.CopyContents(
             src = environment.GetSyncedGameEmulatorSetupDir("Mame"),
             dest = programs.GetEmulatorPathConfigValue("Mame", "setup_dir", "linux"),
@@ -130,6 +130,7 @@ class Mame(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

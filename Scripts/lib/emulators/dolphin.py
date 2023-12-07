@@ -20,15 +20,15 @@ from . import base
 class Dolphin(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Dolphin"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.dolphin_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Dolphin": {
                 "program": {
@@ -65,7 +65,7 @@ class Dolphin(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Dolphin", "windows"):
             network.DownloadLatestWebpageRelease(
                 webpage_url = "https://dolphin-emu.org/download/",
@@ -101,7 +101,7 @@ class Dolphin(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         for obj in ["Wii"]:
             if not os.path.exists(os.path.join(programs.GetEmulatorPathConfigValue("Dolphin", "setup_dir", "linux"), obj)):
                 archive.ExtractArchive(
@@ -120,6 +120,7 @@ class Dolphin(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

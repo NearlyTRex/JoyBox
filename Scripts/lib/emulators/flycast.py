@@ -20,15 +20,15 @@ from . import base
 class Flycast(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Flycast"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.flycast_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Flycast": {
                 "program": {
@@ -51,7 +51,7 @@ class Flycast(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Flycast", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "flyinghead",
@@ -88,6 +88,7 @@ class Flycast(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

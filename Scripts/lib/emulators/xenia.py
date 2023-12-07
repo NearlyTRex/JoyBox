@@ -21,15 +21,15 @@ from . import base
 class Xenia(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Xenia"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.xenia_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Xenia": {
                 "program": {
@@ -52,7 +52,7 @@ class Xenia(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Xenia", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "xenia-project",
@@ -68,6 +68,7 @@ class Xenia(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

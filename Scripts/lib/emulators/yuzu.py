@@ -21,15 +21,15 @@ from . import base
 class Yuzu(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Yuzu"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.yuzu_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Yuzu": {
                 "program": {
@@ -56,7 +56,7 @@ class Yuzu(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Yuzu", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "yuzu-emu",
@@ -83,7 +83,7 @@ class Yuzu(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         system.CopyContents(
             src = environment.GetSyncedGameEmulatorSetupDir("Yuzu"),
             dest = programs.GetEmulatorPathConfigValue("Yuzu", "setup_dir", "linux"),
@@ -99,6 +99,7 @@ class Yuzu(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

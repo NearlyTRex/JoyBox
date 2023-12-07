@@ -20,15 +20,15 @@ from . import base
 class Citra(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Citra"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.citra_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Citra": {
                 "program": {
@@ -55,7 +55,7 @@ class Citra(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Citra", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "citra-emu",
@@ -82,7 +82,7 @@ class Citra(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         for obj in ["nand", "sysdata"]:
             if not os.path.exists(os.path.join(programs.GetEmulatorPathConfigValue("Citra", "setup_dir", "linux"), obj)):
                 archive.ExtractArchive(
@@ -101,6 +101,7 @@ class Citra(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

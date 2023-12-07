@@ -21,15 +21,15 @@ from . import base
 class PCSX2(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "PCSX2"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.pcsx2_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "PCSX2": {
                 "program": {
@@ -56,7 +56,7 @@ class PCSX2(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("PCSX2", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "PCSX2",
@@ -81,7 +81,7 @@ class PCSX2(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
 
     # Setup
-    def Setup():
+    def Setup(self):
         system.CopyContents(
             src = environment.GetSyncedGameEmulatorSetupDir("PCSX2"),
             dest = programs.GetEmulatorPathConfigValue("PCSX2", "setup_dir", "linux"),
@@ -97,6 +97,7 @@ class PCSX2(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,

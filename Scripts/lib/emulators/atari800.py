@@ -21,15 +21,15 @@ from . import base
 class Atari800(base.EmulatorBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Atari800"
 
     # Get platforms
-    def GetPlatforms():
+    def GetPlatforms(self):
         return config.atari800_platforms
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Atari800": {
                 "program": {
@@ -52,7 +52,7 @@ class Atari800(base.EmulatorBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Atari800", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "atari800",
@@ -91,6 +91,7 @@ class Atari800(base.EmulatorBase):
 
     # Launch
     def Launch(
+        self,
         launch_name,
         launch_platform,
         launch_file,
