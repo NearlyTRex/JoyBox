@@ -19,3 +19,6 @@
 [submodule "Scripts/lib/thirdparty/ExifTool"]
 	path = Scripts/lib/thirdparty/ExifTool
 	url = https://github.com/NearlyTRex/ExifTool.git
+[submodule "Scripts/lib/thirdparty/XCITrimmer"]
+	path = Scripts/lib/thirdparty/XCITrimmer
+	url = https://github.com/NearlyTRex/XCITrimmer
