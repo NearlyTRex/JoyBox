@@ -84,7 +84,7 @@ class Dolphin(base.EmulatorBase):
                 exit_on_failure = config.default_flag_exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("Dolphin", "linux"):
             network.BuildAppImageFromSource(
-                release_url = "https://github.com/dolphin-emu/dolphin.git",
+                release_url = "https://github.com/NearlyTRex/Dolphin.git",
                 output_name = "Dolphin",
                 output_dir = programs.GetProgramInstallDir("Dolphin", "linux"),
                 build_cmd = [
