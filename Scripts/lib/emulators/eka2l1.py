@@ -16,6 +16,11 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["EKA2L1/windows/config.yml"] = ""
+config_files["EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1/config.yml"] = ""
+
 # EKA2L1 emulator
 class EKA2L1(base.EmulatorBase):
 

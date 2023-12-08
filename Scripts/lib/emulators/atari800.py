@@ -17,6 +17,11 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["Atari800/windows/.atari800.cfg"] = ""
+config_files["Atari800/linux/Atari800.AppImage.home/.atari800.cfg"] = ""
+
 # Atari800 emulator
 class Atari800(base.EmulatorBase):
 
@@ -41,8 +46,8 @@ class Atari800(base.EmulatorBase):
                     "linux": None
                 },
                 "config_file": {
-                    "windows": None,
-                    "linux": None
+                    "windows": "Atari800/windows/.atari800.cfg",
+                    "linux": "Atari800/linux/Atari800.AppImage.home/.atari800.cfg"
                 },
                 "run_sandboxed": {
                     "windows": False,

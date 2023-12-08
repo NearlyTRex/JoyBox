@@ -17,6 +17,11 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["RetroArch/windows/retroarch.cfg"] = ""
+config_files["RetroArch/linux/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch/retroarch.cfg"] = ""
+
 # RetroArch emulator
 class RetroArch(base.EmulatorBase):
 
@@ -68,8 +73,8 @@ class RetroArch(base.EmulatorBase):
                     "Sega Saturn": "mednafen_saturn_libretro"
                 },
                 "config_file": {
-                    "windows": None,
-                    "linux": None
+                    "windows": "RetroArch/windows/retroarch.cfg",
+                    "linux": "RetroArch/linux/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch/retroarch.cfg"
                 },
                 "run_sandboxed": {
                     "windows": False,

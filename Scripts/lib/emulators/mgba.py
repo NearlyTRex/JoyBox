@@ -17,6 +17,26 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["mGBA/windows/portable.ini"] = ""
+config_files["mGBA/windows/config.ini"] = """
+[ports.qt]
+gb.bios=$EMULATOR_MAIN_ROOT/mGBA/windows/bios/gb_bios.bin
+gbc.bios=$EMULATOR_MAIN_ROOT/mGBA/windows/bios/gbc_bios.bin
+gba.bios=$EMULATOR_MAIN_ROOT/mGBA/windows/bios/gba_bios.bin
+sgb.bios=$EMULATOR_MAIN_ROOT/mGBA/windows/bios/sgb_bios.bin
+savegamePath=$GAME_SAVE_DIR
+"""
+config_files["mGBA/linux/mGBA.AppImage.home/.config/mgba/config.ini"] = """
+[ports.qt]
+gb.bios=$EMULATOR_MAIN_ROOT/mGBA/linux/mGBA.AppImage.home/.config/mgba/bios/gb_bios.bin
+gbc.bios=$EMULATOR_MAIN_ROOT/mGBA/linux/mGBA.AppImage.home/.config/mgba/bios/gbc_bios.bin
+gba.bios=$EMULATOR_MAIN_ROOT/mGBA/linux/mGBA.AppImage.home/.config/mgba/bios/gba_bios.bin
+sgb.bios=$EMULATOR_MAIN_ROOT/mGBA/linux/mGBA.AppImage.home/.config/mgba/bios/sgb_bios.bin
+savegamePath=$GAME_SAVE_DIR
+"""
+
 # MGBA emulator
 class MGBA(base.EmulatorBase):
 

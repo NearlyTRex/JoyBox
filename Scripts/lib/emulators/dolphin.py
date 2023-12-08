@@ -16,6 +16,12 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["Dolphin/windows/portable.txt"] = ""
+config_files["Dolphin/windows/User/Config/Dolphin.ini"] = ""
+config_files["Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/Dolphin.ini"] = ""
+
 # Dolphin emulator
 class Dolphin(base.EmulatorBase):
 
@@ -54,8 +60,8 @@ class Dolphin(base.EmulatorBase):
                     "linux": "Dolphin/linux/Dolphin.AppImage.home/.local/share/dolphin-emu"
                 },
                 "config_file": {
-                    "windows": None,
-                    "linux": None
+                    "windows": "Dolphin/windows/User/Config/Dolphin.ini",
+                    "linux": "Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/Dolphin.ini"
                 },
                 "run_sandboxed": {
                     "windows": False,

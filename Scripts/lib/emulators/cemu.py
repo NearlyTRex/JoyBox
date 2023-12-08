@@ -16,6 +16,13 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["Cemu/windows/settings.xml"] = ""
+config_files["Cemu/windows/keys.txt"] = ""
+config_files["Cemu/linux/Cemu.AppImage.home/.config/Cemu/settings.xml"] = ""
+config_files["Cemu/linux/Cemu.AppImage.home/.local/share/Cemu/keys.txt"] = ""
+
 # Cemu emulator
 class Cemu(base.EmulatorBase):
 
@@ -44,8 +51,8 @@ class Cemu(base.EmulatorBase):
                     "linux": "Cemu/linux/Cemu.AppImage.home/.local/share/Cemu"
                 },
                 "config_file": {
-                    "windows": None,
-                    "linux": None
+                    "windows": "Cemu/windows/settings.xml",
+                    "linux": "Cemu/linux/Cemu.AppImage.home/.config/Cemu/settings.xml"
                 },
                 "keys_file": {
                     "windows": "Cemu/windows/keys.txt",

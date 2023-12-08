@@ -16,6 +16,10 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["BigPEmu/windows/placeholder.txt"] = ""
+
 # BigPEmu emulator
 class BigPEmu(base.EmulatorBase):
 

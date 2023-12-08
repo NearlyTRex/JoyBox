@@ -17,6 +17,29 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["melonDS/windows/melonDS.ini"] = """
+BIOS9Path=$EMULATOR_MAIN_ROOT/melonDS/windows/sysdata/nds_arm9_usa.bin
+BIOS7Path=$EMULATOR_MAIN_ROOT/melonDS/windows/sysdata/nds_arm7_usa.bin
+FirmwarePath=$EMULATOR_MAIN_ROOT/melonDS/windows/sysdata/nds_firmware_usa.bin
+DSiBIOS9Path=$EMULATOR_MAIN_ROOT/melonDS/windows/sysdata/dsi_arm9_usa.bin
+DSiBIOS7Path=$EMULATOR_MAIN_ROOT/melonDS/windows/sysdata/dsi_arm7_usa.bin
+DSiFirmwarePath=$EMULATOR_MAIN_ROOT/melonDS/windows/sysdata/dsi_firmware_usa.bin
+DSiNANDPath=$EMULATOR_MAIN_ROOT/melonDS/windows/nand/dsi_nand_usa.bin
+SaveFilePath=$GAME_SAVE_DIR
+"""
+config_files["melonDS/linux/melonDS.AppImage.home/.config/melonDS/melonDS.ini"] = """
+BIOS9Path=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/sysdata/nds_arm9_usa.bin
+BIOS7Path=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/sysdata/nds_arm7_usa.bin
+FirmwarePath=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/sysdata/nds_firmware_usa.bin
+DSiBIOS9Path=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/sysdata/dsi_arm9_usa.bin
+DSiBIOS7Path=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/sysdata/dsi_arm7_usa.bin
+DSiFirmwarePath=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/sysdata/dsi_firmware_usa.bin
+DSiNANDPath=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/nand/dsi_nand_usa.bin
+SaveFilePath=$GAME_SAVE_DIR
+"""
+
 # MelonDS emulator
 class MelonDS(base.EmulatorBase):
 

@@ -17,6 +17,11 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["PPSSPP/windows/memstick/PSP/SYSTEM/ppsspp.ini"] = ""
+config_files["PPSSPP/linux/PPSSPP.AppImage.home/.config/ppsspp/PSP/SYSTEM/ppsspp.ini"] = ""
+
 # PPSSPP emulator
 class PPSSPP(base.EmulatorBase):
 
@@ -41,8 +46,8 @@ class PPSSPP(base.EmulatorBase):
                     "linux": "PPSSPP/linux/PPSSPP.AppImage.home/.config/ppsspp/PSP/SAVEDATA"
                 },
                 "config_file": {
-                    "windows": None,
-                    "linux": None
+                    "windows": "PPSSPP/windows/memstick/PSP/SYSTEM/ppsspp.ini",
+                    "linux": "PPSSPP/linux/PPSSPP.AppImage.home/.config/ppsspp/PSP/SYSTEM/ppsspp.ini"
                 },
                 "run_sandboxed": {
                     "windows": False,

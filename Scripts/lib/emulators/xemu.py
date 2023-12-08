@@ -17,6 +17,23 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["Xemu/windows/xemu.toml"] = """
+[sys.files]
+bootrom_path = '$EMULATOR_MAIN_ROOT/Xemu/windows/bios/mcpx_1.0.bin'
+flashrom_path = '$EMULATOR_MAIN_ROOT/Xemu/windows/bios/complex_4627.bin'
+eeprom_path = '$GAME_SAVE_DIR/eeprom.bin'
+hdd_path = '$GAME_SAVE_DIR/xbox_hdd.qcow2'
+"""
+config_files["Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/xemu.toml"] = """
+[sys.files]
+bootrom_path = '$EMULATOR_MAIN_ROOT/Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/bios/mcpx_1.0.bin'
+flashrom_path = '$EMULATOR_MAIN_ROOT/Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/bios/complex_4627.bin'
+eeprom_path = '$GAME_SAVE_DIR/eeprom.bin'
+hdd_path = '$GAME_SAVE_DIR/xbox_hdd.qcow2'
+"""
+
 # Xemu emulator
 class Xemu(base.EmulatorBase):
 

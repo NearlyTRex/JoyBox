@@ -16,6 +16,20 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["FS-UAE/windows/Portable.ini"] = ""
+config_files["FS-UAE/windows/Configurations/Default.fs-uae"] = """
+[config]
+amiga_model = A500
+governor_warning = 0
+"""
+config_files["FS-UAE/linux/FS-UAE.AppImage.home/FS-UAE/Configurations/Default.fs-uae"] = """
+[config]
+amiga_model = A500
+governor_warning = 0
+"""
+
 # FSUAE emulator
 class FSUAE(base.EmulatorBase):
 
@@ -44,8 +58,8 @@ class FSUAE(base.EmulatorBase):
                     "linux": "FS-UAE/linux/FS-UAE.AppImage.home/FS-UAE"
                 },
                 "config_file": {
-                    "windows": None,
-                    "linux": None
+                    "windows": "FS-UAE/windows/Configurations/Default.fs-uae",
+                    "linux": "FS-UAE/linux/FS-UAE.AppImage.home/FS-UAE/Configurations/Default.fs-uae"
                 },
                 "run_sandboxed": {
                     "windows": False,

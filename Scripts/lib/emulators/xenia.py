@@ -17,6 +17,14 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["Xenia/windows/portable.txt"] = ""
+config_files["Xenia/windows/xenia.config.toml"] = """
+[Storage]
+content_root = "$GAME_SAVE_DIR"
+"""
+
 # Xenia emulator
 class Xenia(base.EmulatorBase):
 

@@ -16,6 +16,54 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["DuckStation/windows/portable.txt"] = ""
+config_files["DuckStation/windows/settings.ini"] = """
+[BIOS]
+SearchDirectory = $EMULATOR_MAIN_ROOT/DuckStation/windows/bios
+
+[MemoryCards]
+Card1Type = PerGameTitle
+Card2Type = None
+UsePlaylistTitle = true
+Directory = $GAME_SAVE_DIR
+
+[Folders]
+Cache = $EMULATOR_MAIN_ROOT/DuckStation/windows/cache
+Cheats = $EMULATOR_MAIN_ROOT/DuckStation/windows/cheats
+Covers = $EMULATOR_MAIN_ROOT/DuckStation/windows/covers
+Dumps = $EMULATOR_MAIN_ROOT/DuckStation/windows/dump
+GameSettings = $EMULATOR_MAIN_ROOT/DuckStation/windows/gamesettings
+InputProfiles = $EMULATOR_MAIN_ROOT/DuckStation/windows/inputprofiles
+SaveStates = $EMULATOR_MAIN_ROOT/DuckStation/windows/savestates
+Screenshots = $EMULATOR_MAIN_ROOT/DuckStation/windows/screenshots
+Shaders = $EMULATOR_MAIN_ROOT/DuckStation/windows/shaders
+Textures = $EMULATOR_MAIN_ROOT/DuckStation/windows/textures
+"""
+config_files["DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/settings.ini"] = """
+[BIOS]
+SearchDirectory = $EMULATOR_MAIN_ROOT/DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/bios
+
+[MemoryCards]
+Card1Type = PerGameTitle
+Card2Type = None
+UsePlaylistTitle = true
+Directory = $GAME_SAVE_DIR
+
+[Folders]
+Cache = $EMULATOR_MAIN_ROOT/DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/cache
+Cheats = $EMULATOR_MAIN_ROOT/DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/cheats
+Covers = $EMULATOR_MAIN_ROOT/DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/covers
+Dumps = $EMULATOR_MAIN_ROOT/DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/dump
+GameSettings = $EMULATOR_MAIN_ROOT/DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/gamesettings
+InputProfiles = $EMULATOR_MAIN_ROOT/DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/inputprofiles
+SaveStates = $EMULATOR_MAIN_ROOT/DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/savestates
+Screenshots = $EMULATOR_MAIN_ROOT/DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/screenshots
+Shaders = $EMULATOR_MAIN_ROOT/DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/shaders
+Textures = $EMULATOR_MAIN_ROOT/DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/textures
+"""
+
 # DuckStation emulator
 class DuckStation(base.EmulatorBase):
 

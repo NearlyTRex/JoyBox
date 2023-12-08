@@ -17,6 +17,19 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["Vita3K/windows/config.yml"] = """
+---
+pref-path: $EMULATOR_MAIN_ROOT/Vita3K/windows/data
+...
+"""
+config_files["Vita3K/linux/Vita3K.AppImage.home/.config/Vita3K/config.yml"] = """
+---
+pref-path: $EMULATOR_MAIN_ROOT/Vita3K/linux/Vita3K.AppImage.home/.local/share/Vita3K/Vita3K/
+...
+"""
+
 # Vita3K emulator
 class Vita3K(base.EmulatorBase):
 

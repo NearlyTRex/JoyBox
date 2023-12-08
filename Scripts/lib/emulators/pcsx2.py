@@ -17,6 +17,88 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["PCSX2/windows/portable.ini"] = ""
+config_files["PCSX2/windows/inis/PCSX2.ini"] = """
+[Folders]
+Bios = $EMULATOR_MAIN_ROOT/PCSX2/windows/bios
+Snapshots = $EMULATOR_MAIN_ROOT/PCSX2/windows/snaps
+SaveStates = $EMULATOR_MAIN_ROOT/PCSX2/windows/sstates
+MemoryCards = $GAME_SAVE_DIR
+Logs = $EMULATOR_MAIN_ROOT/PCSX2/windows/logs
+Cheats = $EMULATOR_MAIN_ROOT/PCSX2/windows/cheats
+CheatsWS = $EMULATOR_MAIN_ROOT/PCSX2/windows/cheats_ws
+CheatsNI = $EMULATOR_MAIN_ROOT/PCSX2/windows/cheats_ni
+Cache = $EMULATOR_MAIN_ROOT/PCSX2/windows/cache
+Textures = $EMULATOR_MAIN_ROOT/PCSX2/windows/textures
+InputProfiles = $EMULATOR_MAIN_ROOT/PCSX2/windows/inputprofiles
+
+[Filenames]
+BIOS = ps2-0170a-20030325.bin
+
+[MemoryCards]
+Slot1_Enable = true
+Slot1_Filename = Mcd001.ps2
+Slot2_Enable = false
+Slot2_Filename =
+Multitap1_Slot2_Enable = false
+Multitap1_Slot2_Filename = Mcd-Multitap1-Slot02.ps2
+Multitap1_Slot3_Enable = false
+Multitap1_Slot3_Filename = Mcd-Multitap1-Slot03.ps2
+Multitap1_Slot4_Enable = false
+Multitap1_Slot4_Filename = Mcd-Multitap1-Slot04.ps2
+Multitap2_Slot2_Enable = false
+Multitap2_Slot2_Filename = Mcd-Multitap2-Slot02.ps2
+Multitap2_Slot3_Enable = false
+Multitap2_Slot3_Filename = Mcd-Multitap2-Slot03.ps2
+Multitap2_Slot4_Enable = false
+Multitap2_Slot4_Filename = Mcd-Multitap2-Slot04.ps2
+
+[EmuCore]
+McdEnableEjection = true
+McdFolderAutoManage = true
+"""
+config_files["PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/inis/PCSX2.ini"] = """
+[Folders]
+Bios = $EMULATOR_MAIN_ROOT/PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/bios
+Snapshots = $EMULATOR_MAIN_ROOT/PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/snaps
+SaveStates = $EMULATOR_MAIN_ROOT/PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/sstates
+MemoryCards = $GAME_SAVE_DIR
+Logs = $EMULATOR_MAIN_ROOT/PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/logs
+Cheats = $EMULATOR_MAIN_ROOT/PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/cheats
+CheatsWS = $EMULATOR_MAIN_ROOT/PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/cheats_ws
+CheatsNI = $EMULATOR_MAIN_ROOT/PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/cheats_ni
+Cache = $EMULATOR_MAIN_ROOT/PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/cache
+Textures = $EMULATOR_MAIN_ROOT/PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/textures
+InputProfiles = $EMULATOR_MAIN_ROOT/PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/inputprofiles
+
+[Filenames]
+BIOS = ps2-0170a-20030325.bin
+
+[MemoryCards]
+Slot1_Enable = true
+Slot1_Filename = Mcd001.ps2
+Slot2_Enable = false
+Slot2_Filename =
+Multitap1_Slot2_Enable = false
+Multitap1_Slot2_Filename = Mcd-Multitap1-Slot02.ps2
+Multitap1_Slot3_Enable = false
+Multitap1_Slot3_Filename = Mcd-Multitap1-Slot03.ps2
+Multitap1_Slot4_Enable = false
+Multitap1_Slot4_Filename = Mcd-Multitap1-Slot04.ps2
+Multitap2_Slot2_Enable = false
+Multitap2_Slot2_Filename = Mcd-Multitap2-Slot02.ps2
+Multitap2_Slot3_Enable = false
+Multitap2_Slot3_Filename = Mcd-Multitap2-Slot03.ps2
+Multitap2_Slot4_Enable = false
+Multitap2_Slot4_Filename = Mcd-Multitap2-Slot04.ps2
+
+[EmuCore]
+McdEnableEjection = true
+McdFolderAutoManage = true
+"""
+
 # PCSX2 emulator
 class PCSX2(base.EmulatorBase):
 

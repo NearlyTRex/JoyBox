@@ -16,6 +16,25 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["Citra/windows/user/config/qt-config.ini"] = """
+[Data%20Storage]
+nand_directory=$EMULATOR_MAIN_ROOT/Citra/windows/user/nand/
+sdmc_directory=$EMULATOR_MAIN_ROOT/Citra/windows/user/sdmc/
+
+[UI]
+Paths\screenshotPath=$EMULATOR_MAIN_ROOT/Citra/windows/user/screenshots/
+"""
+config_files["Citra/linux/citra-qt.AppImage.home/.config/citra-emu/qt-config.ini"] = """
+[Data%20Storage]
+nand_directory=$EMULATOR_MAIN_ROOT/Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu/nand/
+sdmc_directory=$EMULATOR_MAIN_ROOT/Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu/sdmc/
+
+[UI]
+Paths\screenshotPath=$EMULATOR_MAIN_ROOT/Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu/screenshots/
+"""
+
 # Citra emulator
 class Citra(base.EmulatorBase):
 

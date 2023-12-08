@@ -17,6 +17,11 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["VICE-C64/windows/sdl-vice.ini"] = ""
+config_files["VICE-C64/linux/VICE-C64.AppImage.home/.config/vice/vicerc"] = ""
+
 # ViceC64 emulator
 class ViceC64(base.EmulatorBase):
 

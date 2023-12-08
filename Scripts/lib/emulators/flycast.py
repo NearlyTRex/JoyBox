@@ -16,6 +16,11 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["Flycast/windows/emu.cfg"] = ""
+config_files["Flycast/linux/Flycast.AppImage.home/.config/flycast/emu.cfg"] = ""
+
 # Flycast emulator
 class Flycast(base.EmulatorBase):
 

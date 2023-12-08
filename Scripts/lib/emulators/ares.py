@@ -16,6 +16,51 @@ import gui
 # Local imports
 from . import base
 
+# Config file
+config_files = {}
+config_files["Ares/windows/settings.bml"] = """
+Paths
+  Home
+  Saves: $EMULATOR_MAIN_ROOT/Ares/windows/Saves/
+  Screenshots: $EMULATOR_MAIN_ROOT/Ares/windows/Screenshots/
+ColecoVision
+  Path
+  Firmware
+    BIOS.World: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/colecovision.rom
+PCEngineCD
+  Path
+  Firmware
+    BIOS.US: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/syscard3u.pce
+    BIOS.Japan: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/syscard3j.pce
+MegaCD
+  Path
+  Firmware
+    BIOS.US: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/bios_CD_U.bin
+    BIOS.Japan: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/bios_CD_J.bin
+    BIOS.Europe: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/bios_CD_E.bin
+"""
+config_files["Ares/linux/Ares.AppImage.home/.local/share/ares/settings.bml"] = """
+Paths
+  Home
+  Saves: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Saves/
+  Screenshots: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Screenshots/
+ColecoVision
+  Path
+  Firmware
+    BIOS.World: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/colecovision.rom
+PCEngineCD
+  Path
+  Firmware
+    BIOS.US: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/syscard3u.pce
+    BIOS.Japan: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/syscard3j.pce
+MegaCD
+  Path
+  Firmware
+    BIOS.US: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/bios_CD_U.bin
+    BIOS.Japan: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/bios_CD_J.bin
+    BIOS.Europe: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/bios_CD_E.bin
+"""
+
 # Ares emulator
 class Ares(base.EmulatorBase):
 
@@ -75,6 +120,34 @@ class Ares(base.EmulatorBase):
                 "setup_dir": {
                     "windows": "Ares/windows",
                     "linux": "Ares/linux/Ares.AppImage.home/.local/share/ares"
+                },
+                "setup_files": {
+                    [
+                        {
+                            "file": "Bios/bios_CD_E.bin",
+                            "md5": "e66fa1dc5820d254611fdcdba0662372"
+                        },
+                        {
+                            "file": "Bios/bios_CD_J.bin",
+                            "md5": "278a9397d192149e84e820ac621a8edd"
+                        },
+                        {
+                            "file": "Bios/bios_CD_U.bin",
+                            "md5": "2efd74e3232ff260e371b99f84024f7f"
+                        },
+                        {
+                            "file": "Bios/colecovision.rom",
+                            "md5": "2c66f5911e5b42b8ebe113403548eee7"
+                        },
+                        {
+                            "file": "Bios/syscard3j.pce",
+                            "md5": "38179df8f4ac870017db21ebcbf53114"
+                        },
+                        {
+                            "file": "Bios/syscard3u.pce",
+                            "md5": "0754f903b52e3b3342202bdafb13efa5"
+                        }
+                    ]
                 },
                 "config_file": {
                     "windows": "Ares/windows/settings.bml",

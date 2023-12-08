@@ -17,6 +17,11 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["Mednafen/windows/mednafen.cfg"] = ""
+config_files["Mednafen/linux/Mednafen.AppImage.home/.mednafen/mednafen.cfg"] = ""
+
 # Mednafen emulator
 class Mednafen(base.EmulatorBase):
 

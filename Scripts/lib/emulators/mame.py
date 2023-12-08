@@ -17,6 +17,69 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["Mame/windows/mame.ini"] = """
+#
+# CORE SEARCH PATH OPTIONS
+#
+homepath                  .
+rompath                   roms
+hashpath                  hash
+samplepath                samples
+artpath                   artwork
+ctrlrpath                 ctrlr
+inipath                   .;ini;ini/presets
+fontpath                  .
+cheatpath                 cheat
+crosshairpath             crosshair
+pluginspath               plugins
+languagepath              language
+swpath                    software
+
+#
+# CORE OUTPUT DIRECTORY OPTIONS
+#
+cfg_directory             cfg
+nvram_directory           nvram
+input_directory           inp
+state_directory           sta
+snapshot_directory        snap
+diff_directory            diff
+comment_directory         comments
+share_directory           share
+"""
+config_files["Mame/linux/Mame.AppImage.home/.mame/mame.ini"] = """
+#
+# CORE SEARCH PATH OPTIONS
+#
+homepath                  $HOME/.mame
+rompath                   $HOME/.mame/roms
+hashpath                  $HOME/.mame/hash
+samplepath                $HOME/.mame/samples
+artpath                   $HOME/.mame/artwork
+ctrlrpath                 $HOME/.mame/ctrlr
+inipath                   $HOME/.mame;$HOME/.mame/ini
+fontpath                  $HOME/.mame
+cheatpath                 $HOME/.mame/cheat
+crosshairpath             $HOME/.mame/crosshair
+pluginspath               $HOME/.mame/plugins
+languagepath              $HOME/.mame/language
+swpath                    $HOME/.mame/software
+
+#
+# CORE OUTPUT DIRECTORY OPTIONS
+#
+cfg_directory             $HOME/.mame/cfg
+nvram_directory           $HOME/.mame/nvram
+input_directory           $HOME/.mame/inp
+state_directory           $HOME/.mame/sta
+snapshot_directory        $HOME/.mame/snap
+diff_directory            $HOME/.mame/diff
+comment_directory         $HOME/.mame/comments
+share_directory           $HOME/.mame/share
+"""
+
 # Mame emulator
 class Mame(base.EmulatorBase):
 

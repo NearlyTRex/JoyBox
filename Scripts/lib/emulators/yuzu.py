@@ -17,6 +17,31 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["Yuzu/windows/user/config/qt-config.ini"] = """
+[Data%20Storage]
+dump_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/dump"
+load_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/load"
+nand_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/nand"
+sdmc_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/sdmc"
+tas_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/tas"
+
+[UI]
+Screenshots\screenshot_path="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/screenshots"
+"""
+config_files["Yuzu/linux/Yuzu.AppImage.home/.config/yuzu/qt-config.ini"] = """
+[Data%20Storage]
+dump_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/dump"
+load_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/load"
+nand_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/nand"
+sdmc_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/sdmc"
+tas_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/tas"
+
+[UI]
+Screenshots\screenshot_path="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/screenshots"
+"""
+
 # Yuzu emulator
 class Yuzu(base.EmulatorBase):
 
@@ -47,6 +72,10 @@ class Yuzu(base.EmulatorBase):
                 "config_file": {
                     "windows": "Yuzu/windows/user/config/qt-config.ini",
                     "linux": "Yuzu/linux/Yuzu.AppImage.home/.config/yuzu/qt-config.ini"
+                },
+                "profiles_file": {
+                    "windows": "Yuzu/windows/user/nand/system/save/8000000000000010/su/avators/profiles.dat",
+                    "linux": "Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/nand/system/save/8000000000000010/su/avators/profiles.dat"
                 },
                 "run_sandboxed": {
                     "windows": False,

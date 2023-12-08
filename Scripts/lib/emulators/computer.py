@@ -21,6 +21,62 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["DosBoxX/windows/dosbox-x.conf"] = """
+[dosbox]
+working directory default = $EMULATOR_MAIN_ROOT/DosBoxX/windows
+"""
+config_files["DosBoxX/windows/dosbox-x.win31.conf"] = """
+[dosbox]
+working directory default = $EMULATOR_MAIN_ROOT/DosBoxX/windows
+memsize = 256
+machine = svga_s3trio64
+
+[cpu]
+cputype = pentium
+core = normal
+
+[pci]
+voodoo = false
+
+[dos]
+hard drive data rate limit = 0
+floppy drive data rate limit = 0
+
+[ide, primary]
+int13fakeio = true
+int13fakev86io = false
+"""
+
+config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.conf"] = """
+[dosbox]
+working directory default = $EMULATOR_MAIN_ROOT/DosBoxX/linux
+"""
+config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.win31.conf"] = """
+[dosbox]
+working directory default = $EMULATOR_MAIN_ROOT/DosBoxX/linux
+memsize = 256
+machine = svga_s3trio64
+
+[cpu]
+cputype = pentium
+core = normal
+
+[pci]
+voodoo = false
+
+[dos]
+hard drive data rate limit = 0
+floppy drive data rate limit = 0
+
+[ide, primary]
+int13fakeio = true
+int13fakev86io = false
+"""
+config_files["ScummVM/windows/scummvm.ini"] = ""
+config_files["ScummVM/linux/ScummVM.AppImage.home/.config/scummvm/scummvm.ini"] = ""
+
 # Parse computer json
 def ParseComputerJson(json_file):
     game_info = {}
@@ -493,8 +549,8 @@ class Computer(base.EmulatorBase):
                     "linux": None
                 },
                 "config_file": {
-                    "windows": None,
-                    "linux": None
+                    "windows": "ScummVM/windows/scummvm.ini",
+                    "linux": "ScummVM/linux/ScummVM.AppImage.home/.config/scummvm/scummvm.ini"
                 },
                 "run_sandboxed": {
                     "windows": False,

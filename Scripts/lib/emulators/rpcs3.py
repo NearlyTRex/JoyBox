@@ -18,6 +18,11 @@ import gui
 # Local imports
 from . import base
 
+# Config files
+config_files = {}
+config_files["RPCS3/windows/GuiConfigs/CurrentSettings.ini"] = ""
+config_files["RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3/GuiConfigs/CurrentSettings.ini"] = ""
+
 # RPCS3 emulator
 class RPCS3(base.EmulatorBase):
 
@@ -46,8 +51,8 @@ class RPCS3(base.EmulatorBase):
                     "linux": "RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3"
                 },
                 "config_file": {
-                    "windows": None,
-                    "linux": None
+                    "windows": "RPCS3/windows/GuiConfigs/CurrentSettings.ini",
+                    "linux": "RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3/GuiConfigs/CurrentSettings.ini"
                 },
                 "run_sandboxed": {
                     "windows": False,
