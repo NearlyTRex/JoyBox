@@ -952,7 +952,8 @@ no_launcher_platforms = [
 
     # Sony
     "Sony PlayStation 4",
-    "Sony PlayStation Network - PlayStation 4"
+    "Sony PlayStation Network - PlayStation 4",
+    "Sony PlayStation Portable Video"
 ]
 
 ############# Json Config #############
