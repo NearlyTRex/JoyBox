@@ -16,11 +16,11 @@ from . import base
 class SevenZip(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "7-Zip"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
 
             # "7-Zip"
@@ -49,7 +49,7 @@ class SevenZip(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
 
         # 7-Zip
         if force_downloads or programs.ShouldProgramBeInstalled("7-Zip", "windows"):

@@ -16,11 +16,11 @@ from . import base
 class PS3Dec(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "PS3Dec"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "PS3Dec": {
                 "program": {
@@ -35,7 +35,7 @@ class PS3Dec(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("PS3Dec", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "NearlyTRex",

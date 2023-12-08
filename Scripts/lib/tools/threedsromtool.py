@@ -16,11 +16,11 @@ from . import base
 class ThreeDSRomTool(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "3DSRomTool"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "3DSRomTool": {
                 "program": {
@@ -35,7 +35,7 @@ class ThreeDSRomTool(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("3DSRomTool", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "NearlyTRex",

@@ -16,11 +16,11 @@ from . import base
 class NDecrypt(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "NDecrypt"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "NDecrypt": {
                 "program": {
@@ -35,7 +35,7 @@ class NDecrypt(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "SabreTools",

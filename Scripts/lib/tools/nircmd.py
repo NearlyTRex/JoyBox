@@ -16,11 +16,11 @@ from . import base
 class NirCmd(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "NirCmd"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "NirCmd": {
                 "program": {
@@ -35,7 +35,7 @@ class NirCmd(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("NirCmd", "windows"):
             network.DownloadGeneralRelease(
                 archive_url = "https://www.nirsoft.net/utils/nircmd-x64.zip",

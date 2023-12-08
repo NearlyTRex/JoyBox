@@ -16,11 +16,11 @@ from . import base
 class PSVStrip(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "PSVStrip"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "PSVStrip": {
                 "program": {
@@ -35,7 +35,7 @@ class PSVStrip(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("PSVStrip", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "Kippykip",

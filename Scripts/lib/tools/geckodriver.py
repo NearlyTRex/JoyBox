@@ -16,11 +16,11 @@ from . import base
 class GeckoDriver(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "GeckoDriver"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "GeckoDriver": {
                 "program": {
@@ -35,7 +35,7 @@ class GeckoDriver(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("GeckoDriver", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "mozilla",

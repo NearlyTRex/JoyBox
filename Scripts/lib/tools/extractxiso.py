@@ -16,11 +16,11 @@ from . import base
 class ExtractXIso(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "ExtractXIso"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "ExtractXIso": {
                 "program": {
@@ -35,7 +35,7 @@ class ExtractXIso(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("ExtractXIso", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "XboxDev",

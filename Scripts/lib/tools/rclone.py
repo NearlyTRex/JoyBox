@@ -16,11 +16,11 @@ from . import base
 class RClone(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "RClone"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "RClone": {
                 "program": {
@@ -43,7 +43,7 @@ class RClone(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("RClone", "windows"):
             network.DownloadGeneralRelease(
                 archive_url = "https://downloads.rclone.org/rclone-current-windows-amd64.zip",

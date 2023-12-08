@@ -6,13 +6,13 @@ import sys
 class ToolBase:
 
     # Get name
-    def GetName():
+    def GetName(self):
         return ""
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {}
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         pass

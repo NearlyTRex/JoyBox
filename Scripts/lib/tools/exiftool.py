@@ -16,11 +16,11 @@ from . import base
 class ExifTool(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "ExifTool"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "ExifTool": {
                 "program": {
@@ -35,7 +35,7 @@ class ExifTool(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("ExifTool", "windows"):
             network.DownloadGeneralRelease(
                 archive_url = "https://exiftool.org/exiftool-12.70.zip",

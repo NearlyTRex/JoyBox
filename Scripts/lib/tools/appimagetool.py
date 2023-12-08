@@ -16,11 +16,11 @@ from . import base
 class AppImageTool(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "AppImageTool"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "AppImageTool": {
                 "program": {
@@ -35,7 +35,7 @@ class AppImageTool(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("AppImageTool", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "AppImage",

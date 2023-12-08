@@ -16,11 +16,11 @@ from . import base
 class CDecrypt(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "CDecrypt"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "CDecrypt": {
                 "program": {
@@ -35,7 +35,7 @@ class CDecrypt(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("CDecrypt", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "VitaSmith",

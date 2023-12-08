@@ -16,11 +16,11 @@ from . import base
 class XCICutter(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "XCICutter"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "XCICutter": {
                 "program": {
@@ -35,7 +35,7 @@ class XCICutter(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("XCICutter", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "Destiny1984",

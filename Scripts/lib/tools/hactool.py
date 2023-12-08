@@ -16,11 +16,11 @@ from . import base
 class HacTool(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "HacTool"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "HacTool": {
                 "program": {
@@ -35,7 +35,7 @@ class HacTool(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("HacTool", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "SciresM",

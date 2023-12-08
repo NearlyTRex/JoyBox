@@ -16,11 +16,11 @@ from . import base
 class Ludusavi(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Ludusavi"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Ludusavi": {
                 "program": {
@@ -35,7 +35,7 @@ class Ludusavi(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Ludusavi", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "mtkennerly",

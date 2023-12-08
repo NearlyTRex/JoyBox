@@ -16,11 +16,11 @@ from . import base
 class FFMpeg(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "FFMpeg"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "FFMpeg": {
                 "program": {
@@ -35,7 +35,7 @@ class FFMpeg(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("FFMpeg", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "BtbN",

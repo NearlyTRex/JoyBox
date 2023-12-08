@@ -16,11 +16,11 @@ from . import base
 class Sunshine(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Sunshine"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Sunshine": {
                 "program": {
@@ -35,7 +35,7 @@ class Sunshine(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Sunshine", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "LizardByte",

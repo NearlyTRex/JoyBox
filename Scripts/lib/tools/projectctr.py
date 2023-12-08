@@ -16,11 +16,11 @@ from . import base
 class ProjectCTR(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "ProjectCTR"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
 
             # CtrMakeRom
@@ -49,7 +49,7 @@ class ProjectCTR(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
 
         # CtrMakeRom
         if force_downloads or programs.ShouldProgramBeInstalled("CtrMakeRom", "windows"):

@@ -16,11 +16,11 @@ from . import base
 class MameTools(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "MameTools"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
 
         # MameToolsChdman
         return {
@@ -37,7 +37,7 @@ class MameTools(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
 
         # MameToolsChdman
         if force_downloads or programs.ShouldProgramBeInstalled("MameToolsChdman", "windows"):

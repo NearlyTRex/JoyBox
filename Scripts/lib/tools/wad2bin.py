@@ -16,11 +16,11 @@ from . import base
 class Wad2Bin(base.ToolBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "Wad2Bin"
 
     # Get config
-    def GetConfig():
+    def GetConfig(self):
         return {
             "Wad2Bin": {
                 "program": {
@@ -35,7 +35,7 @@ class Wad2Bin(base.ToolBase):
         }
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Wad2Bin", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "DarkMatterCore",
