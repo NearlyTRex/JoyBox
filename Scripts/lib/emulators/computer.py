@@ -14,6 +14,7 @@ import environment
 import cache
 import command
 import programs
+import network
 import sandbox
 import metadata
 import gui
