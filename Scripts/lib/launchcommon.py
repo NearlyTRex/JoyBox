@@ -20,7 +20,9 @@ def SimpleLaunch(
     launch_file,
     launch_artwork,
     launch_save_dir,
-    launch_capture_type):
+    launch_capture_type,
+    verbose = False,
+    exit_on_failure = False):
 
     # Get launch categories
     launch_supercategory, launch_category, launch_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(launch_platform)
@@ -31,7 +33,8 @@ def SimpleLaunch(
         game_name = launch_name,
         game_file = launch_file,
         game_artwork = launch_artwork,
-        verbose = config.default_flag_verbose)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
     # Get cache dir
     cache_dir = environment.GetCachedRomDir(launch_category, launch_subcategory, launch_name)
@@ -43,8 +46,8 @@ def SimpleLaunch(
         game_name = launch_name)
     json_file_data = system.ReadJsonFile(
         src = json_file_path,
-        verbose = config.default_flag_verbose,
-        exit_on_failure = config.default_flag_exit_on_failure)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
     # Get json launch info
     json_launch_name = None
@@ -107,4 +110,5 @@ def SimpleLaunch(
         game_file = launch_file,
         launch_cmd = real_launch_cmd,
         capture_type = launch_capture_type,
-        verbose = config.default_flag_verbose)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)

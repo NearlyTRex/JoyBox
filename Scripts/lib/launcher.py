@@ -92,7 +92,9 @@ def LaunchGame(launch_platform, file_path, capture_type = None, verbose = False,
         launch_artwork = launch_artwork,
         launch_save_dir = save_dir_real,
         launch_general_save_dir = save_dir_general,
-        launch_capture_type = capture_type)
+        launch_capture_type = capture_type,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
     # Revert to tokens in config file
     system.ReplaceStringsInFile(
