@@ -11,6 +11,7 @@ import environment
 import system
 import network
 import programs
+import nintendo
 import launchcommon
 import gui
 
@@ -77,6 +78,8 @@ class Yuzu(base.EmulatorBase):
                     "windows": "Yuzu/windows/user/nand/system/save/8000000000000010/su/avators/profiles.dat",
                     "linux": "Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/nand/system/save/8000000000000010/su/avators/profiles.dat"
                 },
+                "profile_user_id": "F6F389D41D6BC0BDD6BD928C526AE556",
+                "profile_account_name": "yuzu",
                 "run_sandboxed": {
                     "windows": False,
                     "linux": False
@@ -113,18 +116,32 @@ class Yuzu(base.EmulatorBase):
 
     # Setup
     def Setup(self):
-        system.CopyContents(
-            src = environment.GetSyncedGameEmulatorSetupDir("Yuzu"),
-            dest = programs.GetEmulatorPathConfigValue("Yuzu", "setup_dir", "linux"),
-            skip_existing = True,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
-        system.CopyContents(
-            src = environment.GetSyncedGameEmulatorSetupDir("Yuzu"),
-            dest = programs.GetEmulatorPathConfigValue("Yuzu", "setup_dir", "windows"),
-            skip_existing = True,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+
+        # Create config files
+        for config_filename, config_contents in config_files.items():
+            system.TouchFile(
+                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                contents = config_contents,
+                verbose = config.default_flag_verbose,
+                exit_on_failure = config.default_flag_exit_on_failure)
+
+        # Create profiles
+        for platform in ["windows", "linux"]:
+            nintendo.CreateSwitchProfilesDat(
+                profiles_file = programs.GetEmulatorPathConfigValue("Yuzu", "profiles_file", platform),
+                user_id = programs.GetEmulatorConfigValue("Yuzu", "profile_user_id"),
+                account_name = programs.GetEmulatorConfigValue("Yuzu", "profile_account_name"),
+                verbose = config.default_flag_verbose,
+                exit_on_failure = config.default_flag_exit_on_failure)
+
+        # Copy setup files
+        for platform in ["windows", "linux"]:
+            system.CopyContents(
+                src = environment.GetSyncedGameEmulatorSetupDir("Yuzu"),
+                dest = programs.GetEmulatorPathConfigValue("Yuzu", "setup_dir", platform),
+                skip_existing = True,
+                verbose = config.default_flag_verbose,
+                exit_on_failure = config.default_flag_exit_on_failure)
 
     # Launch
     def Launch(
