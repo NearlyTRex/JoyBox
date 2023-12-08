@@ -3,6 +3,7 @@ import os
 import os.path
 import sys
 import bs4
+import textwrap
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.dirname(__file__))
@@ -554,6 +555,48 @@ def UpdateWiiUKeys(new_key_file, verbose = False, exit_on_failure = False):
 ######################################################
 # Nintendo Switch
 ######################################################
+
+# Create Switch profiles dat
+def CreateSwitchProfilesDat(profiles_file, user_id, account_name, verbose = False, exit_on_failure = False):
+
+    # Check params
+    system.AssertIsStringOfSpecificLength(user_id, 0x10 * 2, "user_id")
+    system.AssertIsStringOfSpecificLength(account_name, 0x20, "account_name")
+
+    # Get profile bytes
+    user_id_bytes = bytearray.fromhex("".join(reversed(textwrap.wrap(user_id, 2))))
+    account_name_bytes = bytearray(account_name, encoding = "utf-8")
+
+    # Initialize file contents
+    file_contents = [b'\x00'] * 1616
+
+    # Write user_id_1
+    file_index = 0x10
+    for offset in range(0, len(id_bytes)):
+        file_contents[file_index + offset] = bytes([id_bytes[offset]])
+
+    # Write user_id_2
+    file_index = 0x20
+    for offset in range(0, len(id_bytes)):
+        file_contents[file_index + offset] = bytes([id_bytes[offset]])
+
+    # Write account_name
+    file_index = 0x38
+    for offset in range(0, len(name_bytes)):
+        file_contents[file_index + offset] = bytes([name_bytes[offset]])
+
+    # Write file
+    success = system.TouchFile(
+        src = profiles_file,
+        contents = file_contents,
+        contents_mode = "wb",
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Check result
+    return os.path.exists(profiles_file)
 
 # Extract Switch NSP file
 def ExtractSwitchNSP(nsp_file, extract_dir, verbose = False, exit_on_failure = False):
