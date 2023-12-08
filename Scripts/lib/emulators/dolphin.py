@@ -32,7 +32,10 @@ class Dolphin(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.dolphin_platforms
+        return [
+            "Nintendo Gamecube",
+            "Nintendo Wii"
+        ]
 
     # Get config
     def GetConfig(self):

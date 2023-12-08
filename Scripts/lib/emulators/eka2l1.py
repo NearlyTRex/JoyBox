@@ -30,7 +30,9 @@ class EKA2L1(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.eka2l1_platforms
+        return [
+            "Nokia N-Gage"
+        ]
 
     # Get config
     def GetConfig(self):

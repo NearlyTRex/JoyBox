@@ -31,7 +31,10 @@ class RetroArch(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.retroarch_platforms
+        return [
+            "Panasonic 3DO",
+            "Sega Saturn"
+        ]
 
     # Get config
     def GetConfig(self):

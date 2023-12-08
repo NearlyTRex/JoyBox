@@ -70,7 +70,35 @@ class Ares(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.ares_platforms
+        return [
+
+            # Microsoft
+            "Microsoft MSX",
+
+            # Nintendo
+            "Nintendo 64",
+            "Nintendo Famicom",
+            "Nintendo NES",
+            "Nintendo SNES",
+            "Nintendo Super Famicom",
+
+            # Other
+            "Atari 2600",
+            "Bandai WonderSwan Color",
+            "Bandai WonderSwan",
+            "Coleco ColecoVision",
+            "NEC SuperGrafx",
+            "NEC TurboGrafx CD & PC-Engine CD",
+            "NEC TurboGrafx-16 & PC-Engine",
+            "Sega 32X",
+            "Sega CD 32X",
+            "Sega CD",
+            "Sega Game Gear",
+            "Sega Genesis",
+            "Sega Master System",
+            "Sinclair ZX Spectrum",
+            "SNK Neo Geo Pocket Color"
+        ]
 
     # Get config
     def GetConfig(self):

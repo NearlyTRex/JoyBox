@@ -40,7 +40,10 @@ class Vita3K(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.vita3k_platforms
+        return [
+            "Sony PlayStation Network - PlayStation Vita",
+            "Sony PlayStation Vita"
+        ]
 
     # Get config
     def GetConfig(self):

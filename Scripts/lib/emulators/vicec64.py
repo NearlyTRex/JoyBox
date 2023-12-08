@@ -31,7 +31,9 @@ class ViceC64(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.vicec64_platforms
+        return [
+            "Commodore 64"
+        ]
 
     # Get config
     def GetConfig(self):

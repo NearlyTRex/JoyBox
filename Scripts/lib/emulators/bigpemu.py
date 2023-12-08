@@ -29,7 +29,10 @@ class BigPEmu(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.bigpemu_platforms
+        return [
+            "Atari Jaguar",
+            "Atari Jaguar CD"
+        ]
 
     # Get config
     def GetConfig(self):

@@ -32,7 +32,10 @@ class Cemu(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.cemu_platforms
+        return [
+            "Nintendo Wii U",
+            "Nintendo Wii U eShop"
+        ]
 
     # Get config
     def GetConfig(self):

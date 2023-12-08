@@ -73,7 +73,9 @@ class DuckStation(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.duckstation_platforms
+        return [
+            "Sony PlayStation"
+        ]
 
     # Get config
     def GetConfig(self):

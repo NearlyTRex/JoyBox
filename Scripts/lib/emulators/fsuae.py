@@ -39,7 +39,9 @@ class FSUAE(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.fsuae_platforms
+        return [
+            "Commodore Amiga"
+        ]
 
     # Get config
     def GetConfig(self):

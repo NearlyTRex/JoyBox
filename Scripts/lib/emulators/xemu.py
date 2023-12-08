@@ -43,7 +43,9 @@ class Xemu(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.xemu_platforms
+        return [
+            "Microsoft Xbox"
+        ]
 
     # Get config
     def GetConfig(self):

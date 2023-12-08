@@ -49,7 +49,6 @@ floppy drive data rate limit = 0
 int13fakeio = true
 int13fakev86io = false
 """
-
 config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.conf"] = """
 [dosbox]
 working directory default = $EMULATOR_MAIN_ROOT/DosBoxX/linux
@@ -509,7 +508,19 @@ class Computer(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.computer_platforms
+        return [
+            "Computer - Amazon Games",
+            "Computer - Disc",
+            "Computer - Epic Games",
+            "Computer - GOG",
+            "Computer - Humble Bundle",
+            "Computer - Itchio",
+            "Computer - Puppet Combo",
+            "Computer - Red Candle",
+            "Computer - Square Enix",
+            "Computer - Steam",
+            "Computer - Zoom",
+        ]
 
     # Get config
     def GetConfig(self):

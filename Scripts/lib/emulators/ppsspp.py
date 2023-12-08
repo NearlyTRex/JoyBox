@@ -31,7 +31,11 @@ class PPSSPP(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.ppsspp_platforms
+        return [
+            "Sony PlayStation Network - PlayStation Portable",
+            "Sony PlayStation Network - PlayStation Portable Minis",
+            "Sony PlayStation Portable"
+        ]
 
     # Get config
     def GetConfig(self):

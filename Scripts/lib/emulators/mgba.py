@@ -46,7 +46,14 @@ class MGBA(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.mgba_platforms
+        return [
+            "Nintendo Game Boy Advance e-Reader",
+            "Nintendo Game Boy Advance",
+            "Nintendo Game Boy Color",
+            "Nintendo Game Boy",
+            "Nintendo Super Game Boy Color",
+            "Nintendo Super Game Boy"
+        ]
 
     # Get config
     def GetConfig(self):

@@ -108,7 +108,9 @@ class PCSX2(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.pcsx2_platforms
+        return [
+            "Sony PlayStation 2"
+        ]
 
     # Get config
     def GetConfig(self):

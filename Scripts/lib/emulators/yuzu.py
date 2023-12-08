@@ -53,7 +53,10 @@ class Yuzu(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.yuzu_platforms
+        return [
+            "Nintendo Switch",
+            "Nintendo Switch eShop"
+        ]
 
     # Get config
     def GetConfig(self):

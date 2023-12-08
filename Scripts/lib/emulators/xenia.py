@@ -34,7 +34,12 @@ class Xenia(base.EmulatorBase):
 
     # Get platforms
     def GetPlatforms(self):
-        return config.xenia_platforms
+        return [
+            "Microsoft Xbox 360 GOD",
+            "Microsoft Xbox 360 XBLA",
+            "Microsoft Xbox 360 XIG",
+            "Microsoft Xbox 360"
+        ]
 
     # Get config
     def GetConfig(self):
