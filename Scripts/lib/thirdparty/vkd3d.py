@@ -16,11 +16,11 @@ from . import base
 class VKD3D(base.ThirdPartyLibraryBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "VKD3D"
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldThirdPartyLibraryBeInstalled("VKD3D"):
             network.DownloadLatestGithubRelease(
                 github_user = "HansKristian-Work",

@@ -16,11 +16,11 @@ from . import base
 class DXVK(base.ThirdPartyLibraryBase):
 
     # Get name
-    def GetName():
+    def GetName(self):
         return "DXVK"
 
     # Download
-    def Download(force_downloads = False):
+    def Download(self, force_downloads = False):
         if force_downloads or programs.ShouldThirdPartyLibraryBeInstalled("DXVK"):
             network.DownloadLatestGithubRelease(
                 github_user = "doitsujin",
