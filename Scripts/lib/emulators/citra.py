@@ -10,6 +10,7 @@ import environment
 import system
 import network
 import programs
+import archive
 import launchcommon
 import gui
 
@@ -74,7 +75,7 @@ class Citra(base.EmulatorBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Citra", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "citra-emu",
@@ -85,8 +86,8 @@ class Citra(base.EmulatorBase):
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "windows"),
                 get_latest = True,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("Citra", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "citra-emu",
@@ -97,26 +98,30 @@ class Citra(base.EmulatorBase):
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "linux"),
                 get_latest = True,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Setup
-    def Setup(self):
-        for obj in ["nand", "sysdata"]:
-            if not os.path.exists(os.path.join(programs.GetEmulatorPathConfigValue("Citra", "setup_dir", "linux"), obj)):
-                archive.ExtractArchive(
-                    archive_file = os.path.join(environment.GetSyncedGameEmulatorSetupDir("Citra"), obj + ".zip"),
-                    extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("Citra", "setup_dir", "linux"), obj),
-                    skip_existing = True,
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
-            if not os.path.exists(os.path.join(programs.GetEmulatorPathConfigValue("Citra", "setup_dir", "windows"), obj)):
-                archive.ExtractArchive(
-                    archive_file = os.path.join(environment.GetSyncedGameEmulatorSetupDir("Citra"), obj + ".zip"),
-                    extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("Citra", "setup_dir", "windows"), obj),
-                    skip_existing = True,
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Create config files
+        for config_filename, config_contents in config_files.items():
+            system.TouchFile(
+                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                contents = config_contents,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+        # Extract setup files
+        for platform in ["windows", "linux"]:
+            for obj in ["nand", "sysdata"]:
+                if os.path.exists(os.path.join(environment.GetSyncedGameEmulatorSetupDir("Citra"), obj + ".zip")):
+                    archive.ExtractArchive(
+                        archive_file = os.path.join(environment.GetSyncedGameEmulatorSetupDir("Citra"), obj + ".zip"),
+                        extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("Citra", "setup_dir", platform), obj),
+                        skip_existing = True,
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
 
     # Launch
     def Launch(
@@ -127,7 +132,9 @@ class Citra(base.EmulatorBase):
         launch_artwork,
         launch_save_dir,
         launch_general_save_dir,
-        launch_capture_type):
+        launch_capture_type,
+        verbose = False,
+        exit_on_failure = False):
 
         # Get launch command
         launch_cmd = [
@@ -143,4 +150,6 @@ class Citra(base.EmulatorBase):
             launch_file = launch_file,
             launch_artwork = launch_artwork,
             launch_save_dir = launch_save_dir,
-            launch_capture_type = launch_capture_type)
+            launch_capture_type = launch_capture_type,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)

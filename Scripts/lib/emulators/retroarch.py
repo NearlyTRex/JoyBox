@@ -84,52 +84,57 @@ class RetroArch(base.EmulatorBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         if force_downloads or programs.ShouldProgramBeInstalled("RetroArch", "windows"):
             network.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch.7z",
                 search_file = "retroarch.exe",
                 install_name = "RetroArch",
                 install_dir = programs.GetProgramInstallDir("RetroArch", "windows"),
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
             network.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch_cores.7z",
                 search_file = "snes9x_libretro.dll",
                 install_name = "RetroArch",
                 install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "windows"),
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("RetroArch", "linux"):
             network.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch.7z",
                 search_file = "RetroArch-Linux-x86_64.AppImage",
                 install_name = "RetroArch",
                 install_dir = programs.GetProgramInstallDir("RetroArch", "linux"),
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
             network.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch_cores.7z",
                 search_file = "snes9x_libretro.so",
                 install_name = "RetroArch",
                 install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "linux"),
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Setup
-    def Setup(self):
-        system.CopyContents(
-            src = environment.GetSyncedGameEmulatorSetupDir("RetroArch"),
-            dest = programs.GetEmulatorPathConfigValue("RetroArch", "setup_dir", "linux"),
-            skip_existing = True,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
-        system.CopyContents(
-            src = environment.GetSyncedGameEmulatorSetupDir("RetroArch"),
-            dest = programs.GetEmulatorPathConfigValue("RetroArch", "setup_dir", "windows"),
-            skip_existing = True,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Create config files
+        for config_filename, config_contents in config_files.items():
+            system.TouchFile(
+                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                contents = config_contents,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+        # Copy setup files
+        for platform in ["windows", "linux"]:
+            system.CopyContents(
+                src = environment.GetSyncedGameEmulatorSetupDir("RetroArch"),
+                dest = programs.GetEmulatorPathConfigValue("RetroArch", "setup_dir", platform),
+                skip_existing = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Launch
     def Launch(
@@ -140,7 +145,9 @@ class RetroArch(base.EmulatorBase):
         launch_artwork,
         launch_save_dir,
         launch_general_save_dir,
-        launch_capture_type):
+        launch_capture_type,
+        verbose = False,
+        exit_on_failure = False):
 
         # Get core info
         cores_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir")
@@ -175,4 +182,6 @@ class RetroArch(base.EmulatorBase):
             launch_file = launch_file,
             launch_artwork = launch_artwork,
             launch_save_dir = launch_save_dir,
-            launch_capture_type = launch_capture_type)
+            launch_capture_type = launch_capture_type,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)

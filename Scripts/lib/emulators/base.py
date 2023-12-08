@@ -81,11 +81,11 @@ class EmulatorBase:
         return saves_dir
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         pass
 
     # Setup
-    def Setup(self):
+    def Setup(self, verbose = False, exit_on_failure = False):
         pass
 
     # Launch
@@ -97,5 +97,7 @@ class EmulatorBase:
         launch_artwork,
         launch_save_dir,
         launch_general_save_dir,
-        launch_capture_type):
+        launch_capture_type,
+        verbose = False,
+        exit_on_failure = False):
         pass

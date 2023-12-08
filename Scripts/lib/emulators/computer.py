@@ -584,7 +584,7 @@ class Computer(base.EmulatorBase):
         return None
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
 
         # DosBoxX
         if force_downloads or programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
@@ -597,8 +597,8 @@ class Computer(base.EmulatorBase):
                 install_name = "DosBoxX",
                 install_dir = programs.GetProgramInstallDir("DosBoxX", "windows"),
                 get_latest = True,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/joncampbell123/dosbox-x.git",
@@ -636,8 +636,8 @@ class Computer(base.EmulatorBase):
                 internal_symlinks = [
                     {"from": "usr/bin/dosbox-x", "to": "AppRun"}
                 ],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
         # ScummVM
         if force_downloads or programs.ShouldProgramBeInstalled("ScummVM", "windows"):
@@ -648,8 +648,8 @@ class Computer(base.EmulatorBase):
                 search_file = "scummvm.exe",
                 install_name = "ScummVM",
                 install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("ScummVM", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/scummvm/scummvm.git",
@@ -685,8 +685,19 @@ class Computer(base.EmulatorBase):
                 internal_symlinks = [
                     {"from": "usr/bin/scummvm", "to": "AppRun"}
                 ],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Create config files
+        for config_filename, config_contents in config_files.items():
+            system.TouchFile(
+                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                contents = config_contents,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Launch
     def Launch(
@@ -697,7 +708,9 @@ class Computer(base.EmulatorBase):
         launch_artwork,
         launch_save_dir,
         launch_general_save_dir,
-        launch_capture_type):
+        launch_capture_type,
+        verbose = False,
+        exit_on_failure = False):
 
         # Check if command should be run via wine/sandboxie
         should_run_via_wine = environment.IsLinuxPlatform()
@@ -727,8 +740,8 @@ class Computer(base.EmulatorBase):
             game_file = launch_file,
             game_artwork = launch_artwork,
             keep_setup_files = config.default_flag_keep_setup_files,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
         # Get expected rom dir
         expected_rom_dir = environment.GetCachedRomDir(launch_category, launch_subcategory, launch_name)
@@ -755,8 +768,8 @@ class Computer(base.EmulatorBase):
                 wine_setup = launch_info_wine_setup,
                 sandboxie_setup = launch_info_sandboxie_setup,
                 is_32_bit = launch_info_is_32_bit,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         gui.DisplayLoadingWindow(
             title_text = "Creating game prefix",
             message_text = "Creating game prefix\n%s\n%s" % (launch_name, launch_platform),
@@ -773,13 +786,13 @@ class Computer(base.EmulatorBase):
                 system.TouchFile(
                     src = sandbox.GetGoldbergSteamEmuUserNameFile(launch_general_save_dir),
                     contents = "%s\n" % config.default_steam_username,
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
                 system.TouchFile(
                     src = sandbox.GetGoldbergSteamEmuUserIDFile(launch_general_save_dir),
                     contents = "%s\n" % config.default_steam_userid,
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
 
         # Get user profile temp directory
         user_profile_dir = sandbox.GetUserProfilePath(
@@ -932,8 +945,8 @@ class Computer(base.EmulatorBase):
                 system.SyncData(
                     data_src = sync_obj["stored"],
                     data_dest = sync_obj["live"],
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
 
             # Launch game
             command.RunGameCommand(
@@ -943,7 +956,7 @@ class Computer(base.EmulatorBase):
                 cmd = launch_info_cmd,
                 options = launch_info_options,
                 capture_type = launch_capture_type,
-                verbose = config.default_flag_verbose)
+                verbose = verbose)
 
             # Move sandboxed data back
             if should_run_via_sandboxie:
@@ -953,26 +966,26 @@ class Computer(base.EmulatorBase):
                     system.MoveContents(
                         src = temp_cache_dir,
                         dest = real_cache_dir,
-                        verbose = config.default_flag_verbose,
-                        exit_on_failure = config.default_flag_exit_on_failure)
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
 
             # Clean dirs
             for dir_to_clear in dirs_to_clear:
                 if os.path.exists(dir_to_clear):
                     system.RemoveDirectoryContents(
                         dir = dir_to_clear,
-                        verbose = config.default_flag_verbose,
-                        exit_on_failure = config.default_flag_exit_on_failure)
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
 
             # Backup user data
             for sync_obj in sync_objs:
                 system.SyncData(
                     data_src = sync_obj["live"],
                     data_dest = sync_obj["stored"],
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
 
             # Restore default screen resolution
             environment.RestoreDefaultScreenResolution(
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)

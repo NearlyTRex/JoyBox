@@ -12,6 +12,7 @@ import environment
 import system
 import network
 import programs
+import archive
 import launchcommon
 import gui
 
@@ -62,7 +63,7 @@ class RPCS3(base.EmulatorBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         if force_downloads or programs.ShouldProgramBeInstalled("RPCS3", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "RPCS3",
@@ -73,8 +74,8 @@ class RPCS3(base.EmulatorBase):
                 install_name = "RPCS3",
                 install_dir = programs.GetProgramInstallDir("RPCS3", "windows"),
                 get_latest = True,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("RPCS3", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "RPCS3",
@@ -85,26 +86,30 @@ class RPCS3(base.EmulatorBase):
                 install_name = "RPCS3",
                 install_dir = programs.GetProgramInstallDir("RPCS3", "linux"),
                 get_latest = True,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Setup
-    def Setup(self):
-        for obj in ["dev_flash"]:
-            if not os.path.exists(os.path.join(programs.GetEmulatorPathConfigValue("RPCS3", "setup_dir", "linux"), obj)):
-                archive.ExtractArchive(
-                    archive_file = os.path.join(environment.GetSyncedGameEmulatorSetupDir("RPCS3"), obj + ".zip"),
-                    extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("RPCS3", "setup_dir", "linux"), obj),
-                    skip_existing = True,
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
-            if not os.path.exists(os.path.join(programs.GetEmulatorPathConfigValue("RPCS3", "setup_dir", "windows"), obj)):
-                archive.ExtractArchive(
-                    archive_file = os.path.join(environment.GetSyncedGameEmulatorSetupDir("RPCS3"), obj + ".zip"),
-                    extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("RPCS3", "setup_dir", "windows"), obj),
-                    skip_existing = True,
-                    verbose = False,
-                    exit_on_failure = False)
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Create config files
+        for config_filename, config_contents in config_files.items():
+            system.TouchFile(
+                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                contents = config_contents,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+        # Extract setup files
+        for platform in ["windows", "linux"]:
+            for obj in ["dev_flash"]:
+                if os.path.exists(os.path.join(environment.GetSyncedGameEmulatorSetupDir("RPCS3"), obj + ".zip")):
+                    archive.ExtractArchive(
+                        archive_file = os.path.join(environment.GetSyncedGameEmulatorSetupDir("RPCS3"), obj + ".zip"),
+                        extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("RPCS3", "setup_dir", platform), obj),
+                        skip_existing = True,
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
 
     # Launch
     def Launch(
@@ -115,7 +120,9 @@ class RPCS3(base.EmulatorBase):
         launch_artwork,
         launch_save_dir,
         launch_general_save_dir,
-        launch_capture_type):
+        launch_capture_type,
+        verbose = False,
+        exit_on_failure = False):
 
         # Get launch categories
         launch_supercategory, launch_category, launch_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(launch_platform)
@@ -126,7 +133,7 @@ class RPCS3(base.EmulatorBase):
             game_name = launch_name,
             game_file = launch_file,
             game_artwork = launch_artwork,
-            verbose = config.default_flag_verbose)
+            verbose = verbose)
 
         # Get directories
         cache_dir = environment.GetCachedRomDir(launch_category, launch_subcategory, launch_name)
@@ -135,8 +142,8 @@ class RPCS3(base.EmulatorBase):
         # Make directories
         system.MakeDirectory(
             dir = exdata_dir,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
         # Copy exdata files
         if launch_platform == "Sony PlayStation Network - PlayStation 3":
@@ -144,7 +151,7 @@ class RPCS3(base.EmulatorBase):
                 system.CopyFileOrDirectory(
                     src = exdata_file,
                     dest = exdata_dir,
-                    verbose = config.default_flag_verbose)
+                    verbose = verbose)
 
         # Get launch command
         launch_cmd = [
@@ -160,4 +167,6 @@ class RPCS3(base.EmulatorBase):
             launch_file = launch_file,
             launch_artwork = launch_artwork,
             launch_save_dir = launch_save_dir,
-            launch_capture_type = launch_capture_type)
+            launch_capture_type = launch_capture_type,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)

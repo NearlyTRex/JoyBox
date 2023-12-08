@@ -61,7 +61,7 @@ class Mednafen(base.EmulatorBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Mednafen", "windows"):
             network.DownloadLatestWebpageRelease(
                 webpage_url = "https://mednafen.github.io/",
@@ -70,8 +70,8 @@ class Mednafen(base.EmulatorBase):
                 search_file = "mednafen.exe",
                 install_name = "Mednafen",
                 install_dir = programs.GetProgramInstallDir("Mednafen", "windows"),
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("Mednafen", "linux"):
             network.BuildAppImageFromSource(
                 webpage_url = "https://mednafen.github.io/",
@@ -94,23 +94,28 @@ class Mednafen(base.EmulatorBase):
                 internal_symlinks = [
                     {"from": "usr/bin/mednafen", "to": "AppRun"}
                 ],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Setup
-    def Setup(self):
-        system.CopyContents(
-            src = environment.GetSyncedGameEmulatorSetupDir("Mednafen"),
-            dest = programs.GetEmulatorPathConfigValue("Mednafen", "setup_dir", "linux"),
-            skip_existing = True,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
-        system.CopyContents(
-            src = environment.GetSyncedGameEmulatorSetupDir("Mednafen"),
-            dest = programs.GetEmulatorPathConfigValue("Mednafen", "setup_dir", "windows"),
-            skip_existing = True,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Create config files
+        for config_filename, config_contents in config_files.items():
+            system.TouchFile(
+                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                contents = config_contents,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+        # Copy setup files
+        for platform in ["windows", "linux"]:
+            system.CopyContents(
+                src = environment.GetSyncedGameEmulatorSetupDir("Mednafen"),
+                dest = programs.GetEmulatorPathConfigValue("Mednafen", "setup_dir", platform),
+                skip_existing = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Launch
     def Launch(
@@ -121,7 +126,9 @@ class Mednafen(base.EmulatorBase):
         launch_artwork,
         launch_save_dir,
         launch_general_save_dir,
-        launch_capture_type):
+        launch_capture_type,
+        verbose = False,
+        exit_on_failure = False):
 
         # Get launch command
         launch_cmd = [
@@ -137,4 +144,6 @@ class Mednafen(base.EmulatorBase):
             launch_file = launch_file,
             launch_artwork = launch_artwork,
             launch_save_dir = launch_save_dir,
-            launch_capture_type = launch_capture_type)
+            launch_capture_type = launch_capture_type,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)

@@ -154,15 +154,15 @@ class BasiliskII(base.EmulatorBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         if force_downloads or programs.ShouldProgramBeInstalled("BasiliskII", "windows"):
             network.DownloadGeneralRelease(
                 archive_url = "https://surfdrive.surf.nl/files/index.php/s/C7E6HIZKWuHHR1P/download",
                 search_file = "BasiliskII.exe",
                 install_name = "BasiliskII",
                 install_dir = programs.GetProgramInstallDir("BasiliskII", "windows"),
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("BasiliskII", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "Korkman",
@@ -173,23 +173,27 @@ class BasiliskII(base.EmulatorBase):
                 install_name = "BasiliskII",
                 install_dir = programs.GetProgramInstallDir("BasiliskII", "linux"),
                 get_latest = True,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Setup
-    def Setup(self):
-        system.CopyContents(
-            src = os.path.join(environment.GetSyncedGameEmulatorSetupDir("BasiliskII"), "bios"),
-            dest = programs.GetEmulatorPathConfigValue("BasiliskII", "setup_dir", "linux"),
-            skip_existing = True,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
-        system.CopyContents(
-            src = os.path.join(environment.GetSyncedGameEmulatorSetupDir("BasiliskII"), "bios"),
-            dest = programs.GetEmulatorPathConfigValue("BasiliskII", "setup_dir", "windows"),
-            skip_existing = True,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Create config files
+        for config_filename, config_contents in config_files.items():
+            system.TouchFile(
+                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                contents = config_contents,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+        # Copy setup files
+        for platform in ["windows", "linux"]:
+            system.CopyContents(
+                src = os.path.join(environment.GetSyncedGameEmulatorSetupDir("BasiliskII"), "bios"),
+                dest = programs.GetEmulatorPathConfigValue("BasiliskII", "setup_dir", platform),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Launch
     def Launch(
@@ -200,7 +204,9 @@ class BasiliskII(base.EmulatorBase):
         launch_artwork,
         launch_save_dir,
         launch_general_save_dir,
-        launch_capture_type):
+        launch_capture_type,
+        verbose = False,
+        exit_on_failure = False):
 
         # Get launch command
         launch_cmd = [
@@ -216,4 +222,6 @@ class BasiliskII(base.EmulatorBase):
             launch_file = launch_file,
             launch_artwork = launch_artwork,
             launch_save_dir = launch_save_dir,
-            launch_capture_type = launch_capture_type)
+            launch_capture_type = launch_capture_type,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)

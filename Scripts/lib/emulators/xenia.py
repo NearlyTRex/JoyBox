@@ -60,7 +60,7 @@ class Xenia(base.EmulatorBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Xenia", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "xenia-project",
@@ -71,8 +71,19 @@ class Xenia(base.EmulatorBase):
                 install_name = "Xenia",
                 install_dir = programs.GetProgramInstallDir("Xenia", "windows"),
                 get_latest = True,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Create config files
+        for config_filename, config_contents in config_files.items():
+            system.TouchFile(
+                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                contents = config_contents,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Launch
     def Launch(
@@ -83,7 +94,9 @@ class Xenia(base.EmulatorBase):
         launch_artwork,
         launch_save_dir,
         launch_general_save_dir,
-        launch_capture_type):
+        launch_capture_type,
+        verbose = False,
+        exit_on_failure = False):
 
         # Get launch command
         launch_cmd = [
@@ -99,4 +112,6 @@ class Xenia(base.EmulatorBase):
             launch_file = launch_file,
             launch_artwork = launch_artwork,
             launch_save_dir = launch_save_dir,
-            launch_capture_type = launch_capture_type)
+            launch_capture_type = launch_capture_type,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)

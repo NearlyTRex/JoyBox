@@ -69,7 +69,7 @@ class FSUAE(base.EmulatorBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         if force_downloads or programs.ShouldProgramBeInstalled("FS-UAE", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "FrodeSolheim",
@@ -80,8 +80,8 @@ class FSUAE(base.EmulatorBase):
                 install_name = "FS-UAE",
                 install_dir = programs.GetProgramInstallDir("FS-UAE", "windows"),
                 get_latest = True,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("FS-UAE", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/FrodeSolheim/fs-uae/releases/download/v3.1.66/fs-uae-3.1.66.tar.xz",
@@ -105,23 +105,28 @@ class FSUAE(base.EmulatorBase):
                 external_copies = [
                     {"from": "Source/fs-uae-3.1.66/fs-uae.dat", "to": "fs-uae.dat"}
                 ],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Setup
-    def Setup(self):
-        system.CopyContents(
-            src = environment.GetSyncedGameEmulatorSetupDir("FS-UAE"),
-            dest = programs.GetEmulatorPathConfigValue("FS-UAE", "setup_dir", "linux"),
-            skip_existing = True,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
-        system.CopyContents(
-            src = environment.GetSyncedGameEmulatorSetupDir("FS-UAE"),
-            dest = programs.GetEmulatorPathConfigValue("FS-UAE", "setup_dir", "windows"),
-            skip_existing = True,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Create config files
+        for config_filename, config_contents in config_files.items():
+            system.TouchFile(
+                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                contents = config_contents,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+        # Copy setup files
+        for platform in ["windows", "linux"]:
+            system.CopyContents(
+                src = environment.GetSyncedGameEmulatorSetupDir("FS-UAE"),
+                dest = programs.GetEmulatorPathConfigValue("FS-UAE", "setup_dir", platform),
+                skip_existing = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Launch
     def Launch(
@@ -132,7 +137,9 @@ class FSUAE(base.EmulatorBase):
         launch_artwork,
         launch_save_dir,
         launch_general_save_dir,
-        launch_capture_type):
+        launch_capture_type,
+        verbose = False,
+        exit_on_failure = False):
 
         # Get launch command
         launch_cmd = [
@@ -148,4 +155,6 @@ class FSUAE(base.EmulatorBase):
             launch_file = launch_file,
             launch_artwork = launch_artwork,
             launch_save_dir = launch_save_dir,
-            launch_capture_type = launch_capture_type)
+            launch_capture_type = launch_capture_type,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
