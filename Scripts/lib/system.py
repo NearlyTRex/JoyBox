@@ -40,6 +40,10 @@ def AssertIsString(var_value, var_name):
 def AssertIsNonEmptyString(var_value, var_name):
     assert (type(var_value) == str) and (len(var_value) > 0), "%s should be a non-empty string" % var_name
 
+# Assert that variable is non-empty string of specific length
+def AssertIsStringOfSpecificLength(var_value, var_len, var_name):
+    assert (type(var_value) == str) and (len(var_value) == var_len), "%s should be a string of size %s" % (var_name, var_len)
+
 # Assert that variable is valid path
 def AssertIsValidPath(var_value, var_name):
     assert IsPathValid(var_value), "%s should be a valid path" % var_name
@@ -322,14 +326,14 @@ def LowercaseAllPaths(dir, verbose = False, pretend_run = False, exit_on_failure
 ###########################################################
 
 # Touch file
-def TouchFile(src, contents = "", verbose = False, pretend_run = False, exit_on_failure = False):
+def TouchFile(src, contents = "", contents_mode = "w", verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
             print("Touching file %s" % src)
         if not pretend_run:
             os.makedirs(GetFilenameDirectory(src), exist_ok = True)
             if len(contents):
-                with open(src, "w") as f:
+                with open(src, contents_mode) as f:
                     f.write(contents)
             else:
                 open(src, "a").close()
