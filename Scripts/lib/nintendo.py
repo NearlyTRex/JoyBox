@@ -559,36 +559,42 @@ def UpdateWiiUKeys(new_key_file, verbose = False, exit_on_failure = False):
 # Create Switch profiles dat
 def CreateSwitchProfilesDat(profiles_file, user_id, account_name, verbose = False, exit_on_failure = False):
 
-    # Check params
-    system.AssertIsStringOfSpecificLength(user_id, 0x10 * 2, "user_id")
-    system.AssertIsStringOfSpecificLength(account_name, 0x20, "account_name")
+    # Get user id bytes
+    user_id_bytes = []
+    if isinstance(user_id, str) and len(user_id) == 32:
+        user_id_bytes = bytearray.fromhex("".join(reversed(textwrap.wrap(user_id, 2))))
+    if len(user_id_bytes) == 0:
+        return False
 
-    # Get profile bytes
-    user_id_bytes = bytearray.fromhex("".join(reversed(textwrap.wrap(user_id, 2))))
-    account_name_bytes = bytearray(account_name, encoding = "utf-8")
+    # Get account name bytes
+    account_name_bytes = []
+    if isinstance(account_name, str) and len(account_name) > 0 and len(account_name) <= 32:
+        account_name_bytes = bytearray(account_name, encoding = "utf-8")
+    if len(account_name_bytes) == 0:
+        return False
 
     # Initialize file contents
     file_contents = [b'\x00'] * 1616
 
     # Write user_id_1
     file_index = 0x10
-    for offset in range(0, len(id_bytes)):
-        file_contents[file_index + offset] = bytes([id_bytes[offset]])
+    for offset in range(0, len(user_id_bytes)):
+        file_contents[file_index + offset] = bytes([user_id_bytes[offset]])
 
     # Write user_id_2
     file_index = 0x20
-    for offset in range(0, len(id_bytes)):
-        file_contents[file_index + offset] = bytes([id_bytes[offset]])
+    for offset in range(0, len(user_id_bytes)):
+        file_contents[file_index + offset] = bytes([user_id_bytes[offset]])
 
     # Write account_name
     file_index = 0x38
-    for offset in range(0, len(name_bytes)):
-        file_contents[file_index + offset] = bytes([name_bytes[offset]])
+    for offset in range(0, len(account_name_bytes)):
+        file_contents[file_index + offset] = bytes([account_name_bytes[offset]])
 
     # Write file
     success = system.TouchFile(
         src = profiles_file,
-        contents = file_contents,
+        contents = b"".join(file_contents),
         contents_mode = "wb",
         verbose = verbose,
         exit_on_failure = exit_on_failure)
