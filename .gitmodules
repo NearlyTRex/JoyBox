@@ -16,3 +16,6 @@
 [submodule "Metadata"]
 	path = Metadata
 	url = https://github.com/NearlyTRex/GameMetadata
+[submodule "Scripts/lib/thirdparty/ExifTool"]
+	path = Scripts/lib/thirdparty/ExifTool
+	url = https://github.com/NearlyTRex/ExifTool.git
