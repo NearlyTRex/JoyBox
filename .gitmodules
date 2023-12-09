@@ -1,9 +1,3 @@
-[submodule "Scripts/ext/Pegasus/windows/config/themes/PegasusThemeGrid"]
-	path = Scripts/ext/Pegasus/windows/config/themes/PegasusThemeGrid
-	url = https://github.com/NearlyTRex/PegasusThemeGrid.git
-[submodule "Scripts/ext/Pegasus/linux/config/themes/PegasusThemeGrid"]
-	path = Scripts/ext/Pegasus/linux/config/themes/PegasusThemeGrid
-	url = https://github.com/NearlyTRex/PegasusThemeGrid.git
 [submodule "Scripts/lib/thirdparty/PyLnk"]
 	path = Scripts/lib/thirdparty/PyLnk
 	url = https://github.com/NearlyTRex/PyLnk.git
