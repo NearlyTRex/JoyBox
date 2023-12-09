@@ -11,6 +11,7 @@ import system
 import network
 import programs
 import archive
+import nintendo
 import launchcommon
 import gui
 
@@ -73,6 +74,13 @@ class Dolphin(base.EmulatorBase):
                 }
             }
         }
+
+    # Install add-ons
+    def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, exit_on_failure = False):
+        for package_dirset in [dlc_dirs, update_dirs]:
+            for package_dir in package_dirset:
+                for wad_file in system.BuildFileListByExtensions(package_dir, extensions = [".wad"]):
+                    pass
 
     # Download
     def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):

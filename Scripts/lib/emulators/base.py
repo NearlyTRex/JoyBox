@@ -80,6 +80,10 @@ class EmulatorBase:
                 return os.path.join(saves_base_dir, save_sub_dirs[emulator_platform])
         return saves_dir
 
+    # Install add-ons
+    def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, exit_on_failure = False):
+        pass
+
     # Download
     def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         pass

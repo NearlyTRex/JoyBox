@@ -10,6 +10,7 @@ import environment
 import system
 import network
 import programs
+import nintendo
 import launchcommon
 import gui
 
@@ -67,6 +68,19 @@ class Cemu(base.EmulatorBase):
                 }
             }
         }
+
+    # Install add-ons
+    def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, exit_on_failure = False):
+        for package_dirset in [dlc_dirs, update_dirs]:
+            for package_dir in package_dirset:
+                for tik_file in system.BuildFileListByExtensions(package_dir, extensions = [".tik"]):
+                    if tik_file.endswith("title.tik"):
+                        tik_dir = system.GetFilenameDirectory(tik_file)
+                        nintendo.InstallWiiUNusPackage(
+                            nus_package_dir = tik_dir,
+                            nand_dir = os.path.join(programs.GetEmulatorPathConfigValue("Cemu", "setup_dir"), "mlc01"),
+                            verbose = verbose,
+                            exit_on_failure = exit_on_failure)
 
     # Download
     def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):

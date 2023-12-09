@@ -11,6 +11,7 @@ import system
 import network
 import programs
 import archive
+import nintendo
 import launchcommon
 import gui
 
@@ -77,6 +78,17 @@ class Citra(base.EmulatorBase):
                 }
             }
         }
+
+    # Install add-ons
+    def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, exit_on_failure = False):
+        for package_dirset in [dlc_dirs, update_dirs]:
+            for package_dir in package_dirset:
+                for cia_file in system.BuildFileListByExtensions(package_dir, extensions = [".cia"]):
+                    nintendo.Install3DSCIA(
+                        src_3ds_file = cia_file,
+                        sdmc_dir = os.path.join(programs.GetEmulatorPathConfigValue("Citra", "setup_dir"), "sdmc"),
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
 
     # Download
     def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
