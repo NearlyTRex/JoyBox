@@ -14,13 +14,17 @@ from . import nircmd
 from . import pegasus
 from . import projectctr
 from . import ps3dec
+from . import psngetpkginfo
 from . import psvstrip
+from . import psvtools
+from . import pylnk
 from . import rclone
 from . import sunshine
 from . import threedsromtool
 from . import vkd3d
 from . import wad2bin
 from . import xcicutter
+from . import xcitrimmer
 
 # Tool instances
 instances = [
@@ -39,13 +43,17 @@ instances = [
     pegasus.Pegasus(),
     projectctr.ProjectCTR(),
     ps3dec.PS3Dec(),
+    psngetpkginfo.PSNGetPkgInfo(),
     psvstrip.PSVStrip(),
+    psvtools.PSVTools(),
+    pylnk.PyLnk(),
     rclone.RClone(),
     sunshine.Sunshine(),
     threedsromtool.ThreeDSRomTool(),
     vkd3d.VKD3D(),
     wad2bin.Wad2Bin(),
-    xcicutter.XCICutter()
+    xcicutter.XCICutter(),
+    xcitrimmer.XCITrimmer()
 ]
 
 # Get tools
