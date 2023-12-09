@@ -3,7 +3,7 @@ import os
 import sys
 import getpass
 import collections
-import configprivate
+from . import private
 
 ############# Project #############
 project_name = "JoyBox"
@@ -16,11 +16,11 @@ default_drive_root_posix = "/"
 default_drive_root_wine = "drive_c"
 
 # Default network share info
-default_network_share_base_location = configprivate.nas_base_location
-default_network_share_storage_folder = configprivate.nas_storage_folder
-default_network_share_cache_folder = configprivate.nas_cache_folder
-default_network_share_username = configprivate.nas_account
-default_network_share_password = configprivate.nas_password
+default_network_share_base_location = private.nas_base_location
+default_network_share_storage_folder = private.nas_storage_folder
+default_network_share_cache_folder = private.nas_cache_folder
+default_network_share_username = private.nas_account
+default_network_share_password = private.nas_password
 
 # Default setup locations
 default_user_dir = os.path.expanduser("~")
@@ -145,8 +145,8 @@ default_capture_resolution = (default_capture_resolution_w, default_capture_reso
 default_capture_framerate = 30
 
 # Steam options
-default_steam_username = configprivate.steam_username
-default_steam_userid = configprivate.steam_userid
+default_steam_username = private.steam_username
+default_steam_userid = private.steam_userid
 
 ############# Other Config #############
 
