@@ -121,30 +121,22 @@ def MountRequiredNetworkShares():
         password = environment.GetNetworkSharePassword(),
         verbose = config.default_flag_verbose)
 
-# Download required tools
-def DownloadRequiredTools(force_downloads = False):
+# Setup required tools
+def SetupRequiredTools(force_downloads = False):
     for tool in programs.GetTools():
         tool.Download(force_downloads, verbose = True, exit_on_failure = True)
-
-# Download required emulators
-def DownloadRequiredEmulators(force_downloads = False):
-    for emulator in programs.GetEmulators():
-        emulator.Download(force_downloads, verbose = True, exit_on_failure = True)
-
-# Download required libraries
-def DownloadRequiredLibraries(force_downloads = False):
-    for library in programs.GetThirdPartyLibraries():
-        library.Download(force_downloads)
-
-# Setup required tools
-def SetupRequiredTools():
-    for tool in programs.GetTools():
         tool.Setup(verbose = True, exit_on_failure = True)
 
 # Setup required emulators
-def SetupRequiredEmulators():
+def SetupRequiredEmulators(force_downloads = False):
     for emulator in programs.GetEmulators():
+        emulator.Download(force_downloads, verbose = True, exit_on_failure = True)
         emulator.Setup(verbose = True, exit_on_failure = True)
+
+# Setup required libraries
+def SetupRequiredLibraries(force_downloads = False):
+    for library in programs.GetThirdPartyLibraries():
+        library.Download(force_downloads)
 
 # Setup required metadata assets
 def SetupRequiredMetadataAssets():

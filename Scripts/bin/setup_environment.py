@@ -51,17 +51,15 @@ def main():
 
     # Setup tools
     if args.type == "tools" or args.type == "all":
-        setup.DownloadRequiredTools(force_downloads = args.force)
-        setup.SetupRequiredTools()
+        setup.SetupRequiredTools(force_downloads = args.force)
 
     # Setup emulators
     if args.type == "emulators" or args.type == "all":
-        setup.DownloadRequiredEmulators(force_downloads = args.force)
-        setup.SetupRequiredEmulators()
+        setup.SetupRequiredEmulators(force_downloads = args.force)
 
     # Setup libraries
     if args.type == "libs" or args.type == "all":
-        setup.DownloadRequiredLibraries(force_downloads = args.force)
+        setup.SetupRequiredLibraries(force_downloads = args.force)
 
     # Setup assets
     if args.type == "assets" or args.type == "all":
