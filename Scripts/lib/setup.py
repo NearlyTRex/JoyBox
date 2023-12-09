@@ -124,22 +124,27 @@ def MountRequiredNetworkShares():
 # Download required tools
 def DownloadRequiredTools(force_downloads = False):
     for tool in programs.GetTools():
-        tool.Download(force_downloads)
+        tool.Download(force_downloads, verbose = True, exit_on_failure = True)
 
 # Download required emulators
 def DownloadRequiredEmulators(force_downloads = False):
     for emulator in programs.GetEmulators():
-        emulator.Download(force_downloads)
+        emulator.Download(force_downloads, verbose = True, exit_on_failure = True)
 
 # Download required libraries
 def DownloadRequiredLibraries(force_downloads = False):
     for library in programs.GetThirdPartyLibraries():
         library.Download(force_downloads)
 
+# Setup required tools
+def SetupRequiredTools():
+    for tool in programs.GetTools():
+        tool.Setup(verbose = True, exit_on_failure = True)
+
 # Setup required emulators
 def SetupRequiredEmulators():
     for emulator in programs.GetEmulators():
-        emulator.Setup()
+        emulator.Setup(verbose = True, exit_on_failure = True)
 
 # Setup required metadata assets
 def SetupRequiredMetadataAssets():

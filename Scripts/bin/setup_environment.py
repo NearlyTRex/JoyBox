@@ -52,6 +52,7 @@ def main():
     # Setup tools
     if args.type == "tools" or args.type == "all":
         setup.DownloadRequiredTools(force_downloads = args.force)
+        setup.SetupRequiredTools()
 
     # Setup emulators
     if args.type == "emulators" or args.type == "all":
