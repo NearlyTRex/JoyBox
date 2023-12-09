@@ -50,7 +50,7 @@ Scripts/ext/Sunshine/**
 Scripts/ext/Wad2Bin/**
 Scripts/ext/XCICutter/**
 Scripts/ext/XexTool/**
-Scripts/lib/configprivate.py
+Scripts/lib/config/private.py
 Scripts/lib/thirdparty/DXVK/**
 Scripts/lib/thirdparty/VKD3D-Proton/**
 *.pyc
