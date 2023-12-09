@@ -16,11 +16,10 @@ import json
 # Custom imports
 lib_folder = os.path.realpath(os.path.dirname(__file__))
 sys.path.append(lib_folder)
-sys.path.append(os.path.join(lib_folder, "thirdparty", "PyLnk"))
 import config
 import environment
 import hashing
-import pylnk3
+import programs
 
 ###########################################################
 
@@ -1261,6 +1260,11 @@ def GetFilenameInfo(path):
 # Get link info
 def GetLinkInfo(lnk_path, lnk_base_path):
 
+    # Import pylnk
+    environment.ImportPythonModule(
+        module_path = programs.GetToolProgram("PyLnk"),
+        module_name = "pylnk")
+
     # Link info
     info = {}
     info["target"] = ""
@@ -1275,7 +1279,7 @@ def GetLinkInfo(lnk_path, lnk_base_path):
 
     # Parse link file
     try:
-        lnk = pylnk3.Lnk(lnk_path)
+        lnk = pylnk.Lnk(lnk_path)
         has_full_path = lnk._link_info
         has_relative_path = lnk.link_flags.HasRelativePath
         has_working_dir = lnk.link_flags.HasWorkingDir
