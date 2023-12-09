@@ -1,18 +1,3 @@
-[submodule "Scripts/lib/thirdparty/PyLnk"]
-	path = Scripts/lib/thirdparty/PyLnk
-	url = https://github.com/NearlyTRex/PyLnk.git
-[submodule "Scripts/lib/thirdparty/PSVTools"]
-	path = Scripts/lib/thirdparty/PSVTools
-	url = https://github.com/NearlyTRex/PSVTools.git
-[submodule "Scripts/lib/thirdparty/PSNGetPkgInfo"]
-	path = Scripts/lib/thirdparty/PSNGetPkgInfo
-	url = https://github.com/NearlyTRex/PSNGetPkgInfo.git
 [submodule "Metadata"]
 	path = Metadata
 	url = https://github.com/NearlyTRex/GameMetadata
-[submodule "Scripts/lib/thirdparty/ExifTool"]
-	path = Scripts/lib/thirdparty/ExifTool
-	url = https://github.com/NearlyTRex/ExifTool.git
-[submodule "Scripts/lib/thirdparty/XCITrimmer"]
-	path = Scripts/lib/thirdparty/XCITrimmer
-	url = https://github.com/NearlyTRex/XCITrimmer
