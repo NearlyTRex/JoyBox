@@ -45,41 +45,6 @@ def GetProgram(program_config, base_dir, program_name, program_platform = None):
 
 ###########################################################
 
-# Get tools
-def GetTools():
-    return tools.GetTools()
-
-# Get emulators
-def GetEmulators():
-    return emulators.GetEmulators()
-
-# Get third-party libraries
-def GetThirdPartyLibraries():
-    return thirdparty.GetThirdPartyLibraries()
-
-# Get tool config
-def GetToolConfig():
-    merged_config = {}
-    for tool in tools.GetTools():
-        merged_config.update(tool.GetConfig())
-    return merged_config
-
-# Get emulator config
-def GetEmulatorConfig():
-    merged_config = {}
-    for emulator in emulators.GetEmulators():
-        merged_config.update(emulator.GetConfig())
-    return merged_config
-
-# Get third-party library config
-def GetThirdPartyLibraryConfig():
-    merged_config = {}
-    for library in thirdparty.GetThirdPartyLibraries():
-        merged_config.update(library.GetConfig())
-    return merged_config
-
-###########################################################
-
 # Get program install dir
 def GetProgramInstallDir(program_name, program_platform = None):
     if IsProgramNameTool(program_name, program_platform):
@@ -118,6 +83,41 @@ def ShouldProgramBeInstalled(program_name, program_platform = None):
 # Determine if third-party library should be installed
 def ShouldThirdPartyLibraryBeInstalled(library_name):
     return system.IsDirectoryEmpty(GetThirdPartyLibraryInstallDir(library_name))
+
+###########################################################
+
+# Get tools
+def GetTools():
+    return tools.GetTools()
+
+# Get emulators
+def GetEmulators():
+    return emulators.GetEmulators()
+
+# Get third-party libraries
+def GetThirdPartyLibraries():
+    return thirdparty.GetThirdPartyLibraries()
+
+# Get tool config
+def GetToolConfig():
+    merged_config = {}
+    for tool in tools.GetTools():
+        merged_config.update(tool.GetConfig())
+    return merged_config
+
+# Get emulator config
+def GetEmulatorConfig():
+    merged_config = {}
+    for emulator in emulators.GetEmulators():
+        merged_config.update(emulator.GetConfig())
+    return merged_config
+
+# Get third-party library config
+def GetThirdPartyLibraryConfig():
+    merged_config = {}
+    for library in thirdparty.GetThirdPartyLibraries():
+        merged_config.update(library.GetConfig())
+    return merged_config
 
 ###########################################################
 
