@@ -80,5 +80,3 @@ class VKD3D(base.ToolBase):
             skip_existing = True,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-
-
