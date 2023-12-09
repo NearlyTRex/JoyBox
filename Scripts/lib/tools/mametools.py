@@ -22,9 +22,9 @@ class MameTools(base.ToolBase):
     # Get config
     def GetConfig(self):
 
-        # MameToolsChdman
+        # MameChdman
         return {
-            "MameToolsChdman": {
+            "MameChdman": {
                 "program": {
                     "windows": "MameChdman/windows/chdman.exe",
                     "linux": "MameChdman/windows/chdman.exe"
@@ -37,22 +37,22 @@ class MameTools(base.ToolBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
 
-        # MameToolsChdman
-        if force_downloads or programs.ShouldProgramBeInstalled("MameToolsChdman", "windows"):
+        # MameChdman
+        if force_downloads or programs.ShouldProgramBeInstalled("MameChdman", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "mamedev",
                 github_repo = "mame",
                 starts_with = "mame",
                 ends_with = "64bit.exe",
                 search_file = "chdman.exe",
-                install_name = "MameToolsChdman",
-                install_dir = programs.GetProgramInstallDir("MameTools", "windows"),
+                install_name = "MameChdman",
+                install_dir = programs.GetProgramInstallDir("MameChdman", "windows"),
                 install_files = ["chdman.exe"],
                 installer_type = config.installer_format_7zip,
                 is_installer = False,
                 is_archive = True,
                 get_latest = True,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)

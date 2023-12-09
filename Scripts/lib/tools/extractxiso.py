@@ -35,7 +35,7 @@ class ExtractXIso(base.ToolBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         if force_downloads or programs.ShouldProgramBeInstalled("ExtractXIso", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "XboxDev",
@@ -46,8 +46,8 @@ class ExtractXIso(base.ToolBase):
                 install_name = "ExtractXIso",
                 install_dir = programs.GetProgramInstallDir("ExtractXIso", "windows"),
                 install_files = ["extract-xiso.exe"],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("ExtractXIso", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ExtractXIso.git",
@@ -67,5 +67,5 @@ class ExtractXIso(base.ToolBase):
                 internal_symlinks = [
                     {"from": "usr/bin/extract-xiso", "to": "AppRun"}
                 ],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)

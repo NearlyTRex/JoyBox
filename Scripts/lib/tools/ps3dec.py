@@ -35,7 +35,7 @@ class PS3Dec(base.ToolBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         if force_downloads or programs.ShouldProgramBeInstalled("PS3Dec", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "NearlyTRex",
@@ -46,8 +46,8 @@ class PS3Dec(base.ToolBase):
                 install_name = "PS3Dec",
                 install_dir = programs.GetProgramInstallDir("PS3Dec", "windows"),
                 install_files = ["PS3Dec.exe"],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("PS3Dec", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/PS3Dec.git",
@@ -67,5 +67,5 @@ class PS3Dec(base.ToolBase):
                 internal_symlinks = [
                     {"from": "usr/bin/PS3Dec", "to": "AppRun"}
                 ],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)

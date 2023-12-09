@@ -49,7 +49,7 @@ class SevenZip(base.ToolBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
 
         # 7-Zip
         if force_downloads or programs.ShouldProgramBeInstalled("7-Zip", "windows"):
@@ -62,8 +62,8 @@ class SevenZip(base.ToolBase):
                 install_dir = programs.GetProgramInstallDir("7-Zip", "windows"),
                 installer_type = config.installer_format_nsis,
                 is_installer = True,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
         # 7-Zip-Standalone
         if force_downloads or programs.ShouldProgramBeInstalled("7-Zip-Standalone", "windows"):
@@ -75,5 +75,5 @@ class SevenZip(base.ToolBase):
                 install_name = "7-Zip",
                 install_dir = programs.GetProgramInstallDir("7-Zip", "windows"),
                 install_files = ["7za.dll", "7za.exe", "7zxa.dll"],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)

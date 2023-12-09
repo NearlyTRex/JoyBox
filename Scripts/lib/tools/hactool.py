@@ -35,7 +35,7 @@ class HacTool(base.ToolBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         if force_downloads or programs.ShouldProgramBeInstalled("HacTool", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "SciresM",
@@ -46,8 +46,8 @@ class HacTool(base.ToolBase):
                 install_name = "HacTool",
                 install_dir = programs.GetProgramInstallDir("HacTool", "windows"),
                 install_files = ["hactool.exe"],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("HacTool", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/SciresM/hactool.git",
@@ -66,5 +66,5 @@ class HacTool(base.ToolBase):
                 internal_symlinks = [
                     {"from": "usr/bin/hactool", "to": "AppRun"}
                 ],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)

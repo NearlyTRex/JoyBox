@@ -14,5 +14,5 @@ class ToolBase:
         return {}
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         pass

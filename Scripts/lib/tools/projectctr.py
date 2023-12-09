@@ -49,7 +49,7 @@ class ProjectCTR(base.ToolBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
 
         # CtrMakeRom
         if force_downloads or programs.ShouldProgramBeInstalled("CtrMakeRom", "windows"):
@@ -62,8 +62,8 @@ class ProjectCTR(base.ToolBase):
                 install_name = "CtrMakeRom",
                 install_dir = programs.GetProgramInstallDir("CtrMakeRom", "windows"),
                 install_files = ["makerom.exe"],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("CtrMakeRom", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "3DSGuy",
@@ -80,8 +80,8 @@ class ProjectCTR(base.ToolBase):
                         "perms": 755
                     }
                 ],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
         # CtrTool
         if force_downloads or programs.ShouldProgramBeInstalled("CtrTool", "windows"):
@@ -94,8 +94,8 @@ class ProjectCTR(base.ToolBase):
                 install_name = "CtrTool",
                 install_dir = programs.GetProgramInstallDir("CtrTool", "windows"),
                 install_files = ["ctrtool.exe"],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("CtrTool", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "3DSGuy",
@@ -112,5 +112,5 @@ class ProjectCTR(base.ToolBase):
                         "perms": 755
                     }
                 ],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)

@@ -35,7 +35,7 @@ class ExifTool(base.ToolBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         if force_downloads or programs.ShouldProgramBeInstalled("ExifTool", "windows"):
             network.DownloadGeneralRelease(
                 archive_url = "https://exiftool.org/exiftool-12.70.zip",
@@ -48,13 +48,13 @@ class ExifTool(base.ToolBase):
                         "to": "exiftool.exe"
                     }
                 ],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("ExifTool", "linux"):
             network.DownloadGeneralRelease(
                 archive_url = "https://exiftool.org/Image-ExifTool-12.70.tar.gz",
                 search_file = "exiftool",
                 install_name = "ExifTool",
                 install_dir = programs.GetProgramInstallDir("ExifTool", "linux"),
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)

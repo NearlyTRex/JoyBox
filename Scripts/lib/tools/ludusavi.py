@@ -35,7 +35,7 @@ class Ludusavi(base.ToolBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         if force_downloads or programs.ShouldProgramBeInstalled("Ludusavi", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "mtkennerly",
@@ -46,8 +46,8 @@ class Ludusavi(base.ToolBase):
                 install_name = "Ludusavi",
                 install_dir = programs.GetProgramInstallDir("Ludusavi", "windows"),
                 install_files = ["ludusavi.exe"],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("Ludusavi", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "mtkennerly",
@@ -58,5 +58,5 @@ class Ludusavi(base.ToolBase):
                 install_name = "Ludusavi",
                 install_dir = programs.GetProgramInstallDir("Ludusavi", "linux"),
                 install_files = ["ludusavi"],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)

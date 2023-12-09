@@ -35,7 +35,7 @@ class NDecrypt(base.ToolBase):
         }
 
     # Download
-    def Download(self, force_downloads = False):
+    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         if force_downloads or programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "SabreTools",
@@ -46,8 +46,8 @@ class NDecrypt(base.ToolBase):
                 install_name = "NDecrypt",
                 install_dir = programs.GetProgramInstallDir("NDecrypt", "windows"),
                 install_files = ["NDecrypt.exe"],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("NDecrypt", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "SabreTools",
@@ -64,5 +64,5 @@ class NDecrypt(base.ToolBase):
                         "perms": 755
                     }
                 ],
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
