@@ -5,6 +5,7 @@ import getpass
 import time
 import signal
 import ntpath
+import importlib
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.dirname(__file__))
@@ -460,6 +461,13 @@ def InstallPythonModules(modules, verbose = False):
     if modules and len(modules) > 0:
         for module in modules:
             InstallPythonModule(module, verbose)
+
+# Import python module
+def ImportPythonModule(module_path, module_name):
+    spec = importlib.util.spec_from_file_location(module_name, module_path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
 
 ###########################################################
 
