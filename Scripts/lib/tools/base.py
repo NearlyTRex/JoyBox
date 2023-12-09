@@ -16,3 +16,7 @@ class ToolBase:
     # Download
     def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
         pass
+
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+        pass
