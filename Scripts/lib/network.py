@@ -129,6 +129,7 @@ def DownloadGitUrl(url, output_dir, clean_first = False, verbose = False, exit_o
     code = command.RunBlockingCommand(
         cmd = download_cmd,
         options = command.CommandOptions(
+            cwd = config.default_user_dir,
             blocking_processes = [download_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
@@ -639,6 +640,7 @@ def BuildAppImageFromSource(
         success = DownloadGitUrl(
             url = release_url,
             output_dir = source_dir,
+            clean_first = True,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not success:
@@ -679,7 +681,7 @@ def BuildAppImageFromSource(
         src_obj = os.path.join(tmp_dir_result, obj["from"])
         dest_obj = os.path.join(tmp_dir_result, obj["to"])
         if obj["from"].startswith("AppImageTool"):
-            src_obj = os.path.join(environment.GetScriptsExtDir(), obj["from"])
+            src_obj = os.path.join(environment.GetToolsRootDir(), obj["from"])
         system.MakeDirectory(
             dir = os.path.dirname(dest_obj),
             verbose = verbose,
