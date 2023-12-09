@@ -22,7 +22,9 @@ class PyLnk(base.ToolBase):
     # Get config
     def GetConfig(self):
         return {
-            "PyLnk": {}
+            "PyLnk": {
+                "program": "PyLnk/pylnk3.py"
+            }
         }
 
     # Download
