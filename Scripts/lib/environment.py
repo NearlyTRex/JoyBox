@@ -748,50 +748,6 @@ def GetScriptsExecutableExtension():
 
 ###########################################################
 
-# Get dxvk lib dir
-def GetDXVKLibDir():
-    return os.path.join(GetScriptsThirdPartyLibDir(), "DXVK")
-
-# Get 32-bit dxvk libs
-def GetDXVKLibs32():
-    libs = []
-    for path in system.BuildFileList(GetDXVKLibDir()):
-        if "x32" in path:
-            libs.append(path)
-    return libs
-
-# Get 64-bit dxvk libs
-def GetDXVKLibs64():
-    libs = []
-    for path in system.BuildFileList(GetDXVKLibDir()):
-        if "x64" in path:
-            libs.append(path)
-    return libs
-
-###########################################################
-
-# Get vkd3d-proton lib dir
-def GetVKD3DProtonLibDir():
-    return os.path.join(GetScriptsThirdPartyLibDir(), "VKD3D-Proton")
-
-# Get 32-bit vkd3d-proton libs
-def GetVKD3DProtonLibs32():
-    libs = []
-    for path in system.BuildFileList(GetVKD3DProtonLibDir()):
-        if "x86" in path:
-            libs.append(path)
-    return libs
-
-# Get 64-bit vkd3d-proton libs
-def GetVKD3DProtonLibs64():
-    libs = []
-    for path in system.BuildFileList(GetVKD3DProtonLibDir()):
-        if "x64" in path:
-            libs.append(path)
-    return libs
-
-###########################################################
-
 # Get gaming storage root dir
 def GetGamingStorageRootDir():
     return os.path.join(GetStorageRootDir(), "Gaming")

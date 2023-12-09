@@ -11,7 +11,6 @@ import environment
 import system
 import tools
 import emulators
-import thirdparty
 
 ###########################################################
 
@@ -53,9 +52,9 @@ def GetProgramInstallDir(program_name, program_platform = None):
         return os.path.join(environment.GetEmulatorsRootDir(), program_name, program_platform)
     return None
 
-# Get third-party library install dir
-def GetThirdPartyLibraryInstallDir(library_name):
-    return os.path.join(environment.GetScriptsThirdPartyLibDir(), library_name)
+# Get library install dir
+def GetLibraryInstallDir(library_name):
+    return os.path.join(environment.GetToolsRootDir(), library_name)
 
 # Determine if program should be installed
 def ShouldProgramBeInstalled(program_name, program_platform = None):
@@ -80,9 +79,9 @@ def ShouldProgramBeInstalled(program_name, program_platform = None):
         return False
     return True
 
-# Determine if third-party library should be installed
-def ShouldThirdPartyLibraryBeInstalled(library_name):
-    return system.IsDirectoryEmpty(GetThirdPartyLibraryInstallDir(library_name))
+# Determine if library should be installed
+def ShouldLibraryBeInstalled(library_name):
+    return system.IsDirectoryEmpty(GetLibraryInstallDir(library_name))
 
 ###########################################################
 
@@ -93,10 +92,6 @@ def GetTools():
 # Get emulators
 def GetEmulators():
     return emulators.GetEmulators()
-
-# Get third-party libraries
-def GetThirdPartyLibraries():
-    return thirdparty.GetThirdPartyLibraries()
 
 # Get tool config
 def GetToolConfig():
@@ -110,13 +105,6 @@ def GetEmulatorConfig():
     merged_config = {}
     for emulator in emulators.GetEmulators():
         merged_config.update(emulator.GetConfig())
-    return merged_config
-
-# Get third-party library config
-def GetThirdPartyLibraryConfig():
-    merged_config = {}
-    for library in thirdparty.GetThirdPartyLibraries():
-        merged_config.update(library.GetConfig())
     return merged_config
 
 ###########################################################

@@ -1,6 +1,7 @@
 # Imports
 from . import appimagetool
 from . import cdecrypt
+from . import dxvk
 from . import exiftool
 from . import extractxiso
 from . import ffmpeg
@@ -17,6 +18,7 @@ from . import psvstrip
 from . import rclone
 from . import sunshine
 from . import threedsromtool
+from . import vkd3d
 from . import wad2bin
 from . import xcicutter
 
@@ -24,6 +26,7 @@ from . import xcicutter
 instances = [
     appimagetool.AppImageTool(),
     cdecrypt.CDecrypt(),
+    dxvk.DXVK(),
     exiftool.ExifTool(),
     extractxiso.ExtractXIso(),
     ffmpeg.FFMpeg(),
@@ -40,6 +43,7 @@ instances = [
     rclone.RClone(),
     sunshine.Sunshine(),
     threedsromtool.ThreeDSRomTool(),
+    vkd3d.VKD3D(),
     wad2bin.Wad2Bin(),
     xcicutter.XCICutter()
 ]

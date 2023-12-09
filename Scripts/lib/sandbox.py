@@ -580,13 +580,13 @@ def SetupPrefixEnvironment(
         # Get wine setup
         wine_setup_overrides = {}
         wine_setup_use_dxvk = False
-        wine_setup_use_vkd3dproton = False
+        wine_setup_use_vkd3d = False
         if config.computer_key_sandbox_wine_overrides in new_options.wine_setup:
             wine_setup_overrides = new_options.wine_setup[config.computer_key_sandbox_wine_overrides]
         if config.computer_key_sandbox_wine_use_dxvk in new_options.wine_setup:
             wine_setup_use_dxvk = new_options.wine_setup[config.computer_key_sandbox_wine_use_dxvk]
-        if config.computer_key_sandbox_wine_use_vkd3dproton in new_options.wine_setup:
-            wine_setup_use_vkd3dproton = new_options.wine_setup[config.computer_key_sandbox_wine_use_vkd3dproton]
+        if config.computer_key_sandbox_wine_use_vkd3d in new_options.wine_setup:
+            wine_setup_use_vkd3d = new_options.wine_setup[config.computer_key_sandbox_wine_use_vkd3d]
 
         # Set dxvk options
         if wine_setup_use_dxvk:
@@ -759,13 +759,13 @@ def CreateWinePrefix(
     # Get wine setup
     wine_setup_tricks = {}
     wine_setup_use_dxvk = False
-    wine_setup_use_vkd3dproton = False
+    wine_setup_use_vkd3d = False
     if config.computer_key_sandbox_wine_tricks in wine_setup:
         wine_setup_tricks = wine_setup[config.computer_key_sandbox_wine_tricks]
     if config.computer_key_sandbox_wine_use_dxvk in wine_setup:
         wine_setup_use_dxvk = wine_setup[config.computer_key_sandbox_wine_use_dxvk]
-    if config.computer_key_sandbox_wine_use_vkd3dproton in wine_setup:
-        wine_setup_use_vkd3dproton = wine_setup[config.computer_key_sandbox_wine_use_vkd3dproton]
+    if config.computer_key_sandbox_wine_use_vkd3d in wine_setup:
+        wine_setup_use_vkd3d = wine_setup[config.computer_key_sandbox_wine_use_vkd3d]
 
     # Get list of winetricks
     winetricks = []
@@ -805,16 +805,16 @@ def CreateWinePrefix(
     if wine_setup_use_dxvk:
         InstallWineDlls(
             prefix_dir = prefix_dir,
-            dlls_32 = environment.GetDXVKLibs32(),
-            dlls_64 = environment.GetDXVKLibs64(),
+            dlls_32 = dxvk.GetLibs32(),
+            dlls_64 = dxvk.GetLibs64(),
             is_32_bit = is_32_bit)
 
-    # Copy vkd3d-proton libraries
-    if wine_setup_use_vkd3dproton:
+    # Copy vkd3d libraries
+    if wine_setup_use_vkd3d:
         InstallWineDlls(
             prefix_dir = prefix_dir,
-            dlls_32 = environment.GetVKD3DProtonLibs32(),
-            dlls_64 = environment.GetVKD3DProtonLibs64(),
+            dlls_32 = vkd3d.GetLibs32(),
+            dlls_64 = vkd3d.GetLibs64(),
             is_32_bit = is_32_bit)
 
     # Creation successful
