@@ -593,6 +593,10 @@ def GetLaunchRomProgram():
 def GetScriptsRootDir():
     return os.path.join(GetRepositoriesRootDir(), config.project_name, "Scripts")
 
+# Get tools root dir
+def GetToolsRootDir():
+    return os.path.join(GetRepositoriesRootDir(), config.project_name, "Tools")
+
 # Get emulators root dir
 def GetEmulatorsRootDir():
     return os.path.join(GetRepositoriesRootDir(), config.project_name, "Emulators")
