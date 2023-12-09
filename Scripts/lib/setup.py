@@ -133,11 +133,6 @@ def SetupRequiredEmulators(force_downloads = False):
         emulator.Download(force_downloads, verbose = True, exit_on_failure = True)
         emulator.Setup(verbose = True, exit_on_failure = True)
 
-# Setup required libraries
-def SetupRequiredLibraries(force_downloads = False):
-    for library in programs.GetThirdPartyLibraries():
-        library.Download(force_downloads)
-
 # Setup required metadata assets
 def SetupRequiredMetadataAssets():
     for game_category in metadata.GetMetadataCategories():

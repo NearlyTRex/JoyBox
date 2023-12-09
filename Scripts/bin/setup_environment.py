@@ -57,10 +57,6 @@ def main():
     if args.type == "emulators" or args.type == "all":
         setup.SetupRequiredEmulators(force_downloads = args.force)
 
-    # Setup libraries
-    if args.type == "libs" or args.type == "all":
-        setup.SetupRequiredLibraries(force_downloads = args.force)
-
     # Setup assets
     if args.type == "assets" or args.type == "all":
         setup.SetupRequiredMetadataAssets()
