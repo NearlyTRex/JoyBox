@@ -27,15 +27,15 @@ def IsDiscCHDMounted(chd_file, mount_dir):
 def CreateDiscCHD(chd_file, source_iso, delete_original = False, verbose = False, exit_on_failure = False):
 
     # Get prefix
-    prefix_dir = programs.GetProgramPrefixDir("MameToolsChdman")
-    prefix_name = programs.GetProgramPrefixName("MameToolsChdman")
+    prefix_dir = programs.GetProgramPrefixDir("MameChdman")
+    prefix_name = programs.GetProgramPrefixName("MameChdman")
 
     # Get tool
     chd_tool = None
     if command.IsRunnableCommand(config.default_mame_chdman_exe, config.default_mame_chdman_install_dirs):
         chd_tool = command.GetRunnableCommandPath(config.default_mame_chdman_exe, config.default_mame_chdman_install_dirs)
-    elif programs.IsToolInstalled("MameToolsChdman"):
-        chd_tool = programs.GetToolProgram("MameToolsChdman")
+    elif programs.IsToolInstalled("MameChdman"):
+        chd_tool = programs.GetToolProgram("MameChdman")
     if not chd_tool:
         return False
 
@@ -71,15 +71,15 @@ def CreateDiscCHD(chd_file, source_iso, delete_original = False, verbose = False
 def ExtractDiscCHD(chd_file, binary_file, toc_file, delete_original = False, verbose = False, exit_on_failure = False):
 
     # Get prefix
-    prefix_dir = programs.GetProgramPrefixDir("MameToolsChdman")
-    prefix_name = programs.GetProgramPrefixName("MameToolsChdman")
+    prefix_dir = programs.GetProgramPrefixDir("MameChdman")
+    prefix_name = programs.GetProgramPrefixName("MameChdman")
 
     # Get tool
     chd_tool = None
     if command.IsRunnableCommand(config.default_mame_chdman_exe, config.default_mame_chdman_install_dirs):
         chd_tool = command.GetRunnableCommandPath(config.default_mame_chdman_exe, config.default_mame_chdman_install_dirs)
-    elif programs.IsToolInstalled("MameToolsChdman"):
-        chd_tool = programs.GetToolProgram("MameToolsChdman")
+    elif programs.IsToolInstalled("MameChdman"):
+        chd_tool = programs.GetToolProgram("MameChdman")
     if not chd_tool:
         return False
 
@@ -154,8 +154,8 @@ def VerifyDiscCHD(chd_file, verbose = False, exit_on_failure = False):
     chd_tool = None
     if command.IsRunnableCommand(config.default_mame_chdman_exe, config.default_mame_chdman_install_dirs):
         chd_tool = command.GetRunnableCommandPath(config.default_mame_chdman_exe, config.default_mame_chdman_install_dirs)
-    elif programs.IsToolInstalled("MameToolsChdman"):
-        chd_tool = programs.GetToolProgram("MameToolsChdman")
+    elif programs.IsToolInstalled("MameChdman"):
+        chd_tool = programs.GetToolProgram("MameChdman")
     if not chd_tool:
         return False
 
