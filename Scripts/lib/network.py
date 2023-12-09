@@ -96,10 +96,10 @@ def DownloadUrl(url, output_dir = None, output_file = None, verbose = False, exi
     return False
 
 # Download git url
-def DownloadGitUrl(url, output_dir, clear_output_dir = False, verbose = False, exit_on_failure = False):
+def DownloadGitUrl(url, output_dir, clean_first = False, verbose = False, exit_on_failure = False):
 
     # Clear output dir
-    if clear_output_dir:
+    if clean_first:
         system.RemoveDirectoryContents(
             dir = output_dir,
             verbose = verbose,
@@ -426,6 +426,7 @@ def DownloadLatestGithubSource(
     github_user,
     github_repo,
     output_dir = "",
+    clean_first = False,
     verbose = False,
     exit_on_failure = False):
 
@@ -436,6 +437,7 @@ def DownloadLatestGithubSource(
     success = DownloadGitUrl(
         url = github_url,
         output_dir = output_dir,
+        clean_first = clean_first,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
