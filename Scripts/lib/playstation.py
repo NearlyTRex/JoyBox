@@ -6,7 +6,6 @@ import sys
 # Custom imports
 lib_folder = os.path.realpath(os.path.dirname(__file__))
 sys.path.append(lib_folder)
-sys.path.append(os.path.join(lib_folder, "thirdparty", "PSVTools"))
 import config
 import command
 import programs
@@ -14,9 +13,6 @@ import system
 import environment
 import iso
 import chd
-import psvtools.trim as psvtrim
-import psvtools.expand as psvuntrim
-import psvtools.verify as psvverify
 
 # Get decryption key
 def GetPS3DecryptionKey(dkey_file):
@@ -47,13 +43,11 @@ def EncryptPS3ISO(iso_file_dec, iso_file_enc, dkey_file, verbose = False, exit_o
     ]
 
     # Run encrypt command
-    try:
-        command.RunExceptionCommand(
-            cmd = encrypt_cmd,
-            options = command.CommandOptions(
-                allow_processing = environment.IsWinePlatform()),
-            verbose = verbose)
-    except:
+    code = command.RunBlockingCommand(
+        cmd = encrypt_cmd,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
         if exit_on_failure:
             print("Unable to encrypt ps3 iso '%s' to '%s'" % (iso_file_dec, iso_file_enc))
             sys.exit(1)
@@ -83,13 +77,11 @@ def DecryptPS3ISO(iso_file_enc, iso_file_dec, dkey_file, verbose = False, exit_o
     ]
 
     # Run decrypt command
-    try:
-        command.RunExceptionCommand(
-            cmd = decrypt_cmd,
-            options = command.CommandOptions(
-                allow_processing = environment.IsWinePlatform()),
-            verbose = verbose)
-    except:
+    code = command.RunBlockingCommand(
+        cmd = decrypt_cmd,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
         if exit_on_failure:
             print("Unable to decrypt ps3 iso '%s' to '%s'" % (iso_file_enc, iso_file_dec))
             sys.exit(1)
@@ -214,7 +206,7 @@ def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = Fals
     # Get extract command
     extract_cmd = [
         environment.GetPythonVirtualEnvInterpreter(),
-        os.path.join(environment.GetScriptsThirdPartyLibDir(), "PSNGetPkgInfo", "PSN_get_pkg_info.py"),
+        programs.GetToolProgram("PSNGetPkgInfo")
         "--content", extract_dir,
         pkg_file
     ]
@@ -249,13 +241,11 @@ def StripPSV(unstripped_psv_file, stripped_psv_file, delete_original = False, ve
     ]
 
     # Run strip command
-    try:
-        command.RunExceptionCommand(
-            cmd = strip_cmd,
-            options = command.CommandOptions(
-                allow_processing = environment.IsWinePlatform()),
-            verbose = verbose)
-    except:
+    code = command.RunBlockingCommand(
+        cmd = strip_cmd,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
         if exit_on_failure:
             print("Unable to strip psv file '%s'" % unstripped_psv_file)
             sys.exit(1)
@@ -272,7 +262,7 @@ def StripPSV(unstripped_psv_file, stripped_psv_file, delete_original = False, ve
 def UnstripPSV(stripped_psv_file, stripped_psve_file, unstripped_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
 
     # Get unstrip command
-    strip_cmd = [
+    unstrip_cmd = [
         programs.GetToolProgram("PSVStrip"),
         "-applypsve",
         stripped_psv_file,
@@ -281,13 +271,11 @@ def UnstripPSV(stripped_psv_file, stripped_psve_file, unstripped_psv_file, delet
     ]
 
     # Run unstrip command
-    try:
-        command.RunExceptionCommand(
-            cmd = strip_cmd,
-            options = command.CommandOptions(
-                allow_processing = environment.IsWinePlatform()),
-            verbose = verbose)
-    except:
+    code = command.RunBlockingCommand(
+        cmd = unstrip_cmd,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
         if exit_on_failure:
             print("Unable to unstrip psv file '%s'" % stripped_psv_file)
             sys.exit(1)
@@ -303,12 +291,21 @@ def UnstripPSV(stripped_psv_file, stripped_psve_file, unstripped_psv_file, delet
 # Trim psv file
 def TrimPSV(untrimmed_psv_file, trimmed_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
 
+    # Get trim command
+    trim_cmd = [
+        environment.GetPythonVirtualEnvInterpreter(),
+        programs.GetToolProgram("PSVTools"),
+        "--trim",
+        "-o", trimmed_psv_file,
+        untrimmed_psv_file
+    ]
+
     # Run trim command
-    try:
-        with open(untrimmed_psv_file, 'rb') as input_fp:
-            with open(trimmed_psv_file, 'wb') as output_fp:
-                psvtrim.trim_file(input_fp, output_fp)
-    except:
+    code = command.RunBlockingCommand(
+        cmd = trim_cmd,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
         if exit_on_failure:
             print("Unable to trim psv file '%s'" % untrimmed_psv_file)
             sys.exit(1)
@@ -324,12 +321,21 @@ def TrimPSV(untrimmed_psv_file, trimmed_psv_file, delete_original = False, verbo
 # Untrim psv file
 def UntrimPSV(trimmed_psv_file, untrimmed_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
 
+    # Get untrim command
+    untrim_cmd = [
+        environment.GetPythonVirtualEnvInterpreter(),
+        programs.GetToolProgram("PSVTools"),
+        "--expand",
+        "-o", untrimmed_psv_file,
+        trimmed_psv_file
+    ]
+
     # Run untrim command
-    try:
-        with open(trimmed_psv_file, 'rb') as input_fp:
-            with open(untrimmed_psv_file, 'wb') as output_fp:
-                psvuntrim.expand_file(input_fp, output_fp)
-    except:
+    code = command.RunBlockingCommand(
+        cmd = untrim_cmd,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
         if exit_on_failure:
             print("Unable to untrim psv file '%s'" % trimmed_psv_file)
             sys.exit(1)
@@ -345,11 +351,20 @@ def UntrimPSV(trimmed_psv_file, untrimmed_psv_file, delete_original = False, ver
 # Verify psv file
 def VerifyPSV(psv_file, verbose = False, exit_on_failure = False):
 
+    # Get verify command
+    verify_cmd = [
+        environment.GetPythonVirtualEnvInterpreter(),
+        programs.GetToolProgram("PSVTools"),
+        "--verify",
+        psv_file
+    ]
+
     # Run verify command
-    try:
-        with open(psv_file, 'rb') as input_fp:
-            psvverify.verify_file(input_fp)
-    except:
+    code = command.RunBlockingCommand(
+        cmd = verify_cmd,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
         if exit_on_failure:
             print("Unable to verify psv file '%s'" % psv_file)
             sys.exit(1)
