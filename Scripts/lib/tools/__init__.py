@@ -15,7 +15,6 @@ from . import projectctr
 from . import ps3dec
 from . import psvstrip
 from . import rclone
-from . import sevenzip
 from . import sunshine
 from . import threedsromtool
 from . import wad2bin
@@ -39,7 +38,6 @@ instances = [
     ps3dec.PS3Dec(),
     psvstrip.PSVStrip(),
     rclone.RClone(),
-    sevenzip.SevenZip(),
     sunshine.Sunshine(),
     threedsromtool.ThreeDSRomTool(),
     wad2bin.Wad2Bin(),
