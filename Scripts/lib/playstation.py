@@ -14,6 +14,10 @@ import environment
 import iso
 import chd
 
+######################################################
+# Sony PlayStation 3
+######################################################
+
 # Get decryption key
 def GetPS3DecryptionKey(dkey_file):
     dkey_contents = ""
@@ -194,12 +198,6 @@ def VerifyPS3CHD(chd_file, verbose = False, exit_on_failure = False):
     # Should be verified now
     return True
 
-# Get psn pkg content id
-def GetPSNPKGContentID(pkg_file):
-    with open(pkg_file, 'rb') as f:
-        f.seek(0x30)
-        return f.read(0x24).decode("utf-8")
-
 # Extract psn pkg
 def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = False, exit_on_failure = False):
 
@@ -228,6 +226,10 @@ def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = Fals
 
     # Check result
     return os.path.exists(extract_dir)
+
+######################################################
+# Sony PlayStation Vita
+######################################################
 
 # Strip psv file
 def StripPSV(unstripped_psv_file, stripped_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
@@ -372,3 +374,13 @@ def VerifyPSV(psv_file, verbose = False, exit_on_failure = False):
 
     # Must be good
     return True
+
+######################################################
+# Sony PlayStation Network
+######################################################
+
+# Get psn pkg content id
+def GetPSNPKGContentID(pkg_file):
+    with open(pkg_file, 'rb') as f:
+        f.seek(0x30)
+        return f.read(0x24).decode("utf-8")
