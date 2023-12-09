@@ -23,38 +23,17 @@ class ExifTool(base.ToolBase):
     def GetConfig(self):
         return {
             "ExifTool": {
-                "program": {
-                    "windows": "ExifTool/windows/exiftool.exe",
-                    "linux": "ExifTool/linux/exiftool"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
+                "program": "ExifTool/exiftool"
             }
         }
 
     # Download
     def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("ExifTool", "windows"):
-            network.DownloadGeneralRelease(
-                archive_url = "https://exiftool.org/exiftool-12.70.zip",
-                search_file = "exiftool(-k).exe",
-                install_name = "ExifTool",
-                install_dir = programs.GetProgramInstallDir("ExifTool", "windows"),
-                rename_files = [
-                    {
-                        "from": "exiftool(-k).exe",
-                        "to": "exiftool.exe"
-                    }
-                ],
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("ExifTool", "linux"):
-            network.DownloadGeneralRelease(
-                archive_url = "https://exiftool.org/Image-ExifTool-12.70.tar.gz",
-                search_file = "exiftool",
-                install_name = "ExifTool",
-                install_dir = programs.GetProgramInstallDir("ExifTool", "linux"),
+        if force_downloads or programs.ShouldLibraryBeInstalled("ExifTool"):
+            network.DownloadLatestGithubSource(
+                github_user = "NearlyTRex",
+                github_repo = "ExifTool",
+                output_dir = programs.GetLibraryInstallDir("ExifTool"),
+                clean_first = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
