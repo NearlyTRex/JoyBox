@@ -1,9 +1,0 @@
-[Data%20Storage]
-dump_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/dump"
-load_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/load"
-nand_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/nand"
-sdmc_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/sdmc"
-tas_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/tas"
-
-[UI]
-Screenshots\screenshot_path="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/screenshots"

@@ -1,6 +1,0 @@
-[Data%20Storage]
-nand_directory=$EMULATOR_MAIN_ROOT/Citra/windows/user/nand/
-sdmc_directory=$EMULATOR_MAIN_ROOT/Citra/windows/user/sdmc/
-
-[UI]
-Paths\screenshotPath=$EMULATOR_MAIN_ROOT/Citra/windows/user/screenshots/

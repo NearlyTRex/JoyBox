@@ -1,9 +1,0 @@
-[Data%20Storage]
-dump_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/dump"
-load_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/load"
-nand_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/nand"
-sdmc_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/sdmc"
-tas_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/tas"
-
-[UI]
-Screenshots\screenshot_path="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/screenshots"

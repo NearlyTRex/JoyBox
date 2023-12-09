@@ -1,5 +1,0 @@
-;Enable fullscreen mode.
-video.fs 1
-
-;Display to use with fullscreen mode.
-video.fs.display -1

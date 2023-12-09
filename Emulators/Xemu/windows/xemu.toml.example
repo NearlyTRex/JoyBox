@@ -1,5 +1,0 @@
-[sys.files]
-bootrom_path = '$EMULATOR_MAIN_ROOT/Xemu/windows/bios/mcpx_1.0.bin'
-flashrom_path = '$EMULATOR_MAIN_ROOT/Xemu/windows/bios/complex_4627.bin'
-eeprom_path = '$GAME_SAVE_DIR/eeprom.bin'
-hdd_path = '$GAME_SAVE_DIR/xbox_hdd.qcow2'
