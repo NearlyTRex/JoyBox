@@ -724,10 +724,6 @@ def GetJsonRomMetadataFile(game_category, game_subcategory, game_name):
 def GetScriptsBinDir():
     return os.path.join(GetScriptsRootDir(), "bin")
 
-# Get scripts ext dir
-def GetScriptsExtDir():
-    return os.path.join(GetScriptsRootDir(), "ext")
-
 # Get scripts lib dir
 def GetScriptsLibDir():
     return os.path.join(GetScriptsRootDir(), "lib")
