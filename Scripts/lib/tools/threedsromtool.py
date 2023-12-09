@@ -61,7 +61,7 @@ class ThreeDSRomTool(base.ToolBase):
                 internal_copies = [
                     {"from": "Source/rom_tool/rom_tool", "to": "AppImage/usr/bin/rom_tool"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
-                    {"from": "AppImageTool/linux/icon.png", "to": "AppImage/icon.png"}
+                    {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/rom_tool", "to": "AppRun"}

@@ -59,7 +59,7 @@ class CDecrypt(base.ToolBase):
                 internal_copies = [
                     {"from": "Source/cdecrypt", "to": "AppImage/usr/bin/cdecrypt"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
-                    {"from": "AppImageTool/linux/icon.png", "to": "AppImage/icon.png"}
+                    {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/cdecrypt", "to": "AppRun"}

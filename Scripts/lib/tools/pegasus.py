@@ -156,7 +156,7 @@ class Pegasus(base.ToolBase):
         # Create config files
         for config_filename, config_contents in config_files.items():
             system.TouchFile(
-                src = os.path.join(environment.GetScriptsExtDir(), config_filename),
+                src = os.path.join(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

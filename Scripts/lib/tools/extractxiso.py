@@ -62,7 +62,7 @@ class ExtractXIso(base.ToolBase):
                 internal_copies = [
                     {"from": "Source/Build/extract-xiso", "to": "AppImage/usr/bin/extract-xiso"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
-                    {"from": "AppImageTool/linux/icon.png", "to": "AppImage/icon.png"}
+                    {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/extract-xiso", "to": "AppRun"}

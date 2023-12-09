@@ -50,7 +50,7 @@ class HacTool(base.ToolBase):
                 exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("HacTool", "linux"):
             network.BuildAppImageFromSource(
-                release_url = "https://github.com/SciresM/hactool.git",
+                release_url = "https://github.com/NearlyTRex/HacTool.git",
                 output_name = "HacTool",
                 output_dir = programs.GetProgramInstallDir("HacTool", "linux"),
                 build_cmd = [
@@ -61,7 +61,7 @@ class HacTool(base.ToolBase):
                 internal_copies = [
                     {"from": "Source/hactool", "to": "AppImage/usr/bin/hactool"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
-                    {"from": "AppImageTool/linux/icon.png", "to": "AppImage/icon.png"}
+                    {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/hactool", "to": "AppRun"}
