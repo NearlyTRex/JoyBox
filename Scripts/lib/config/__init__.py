@@ -76,6 +76,13 @@ default_firefox_install_dirs = [
     os.path.join(default_drive_root_posix, "snap", "bin")
 ]
 
+# Default Git install
+default_git_exe = "git"
+default_git_install_dirs = [
+    os.path.join(default_drive_root_windows, "Program Files", "Git", "bin"),
+    os.path.join(default_drive_root_posix, "usr", "bin")
+]
+
 # Default 7-Zip install
 default_7zip_exe = "7z"
 default_7zip_standalone_exe = "7za"
