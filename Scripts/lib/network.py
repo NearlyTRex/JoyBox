@@ -42,7 +42,7 @@ def GetRemoteJson(url):
         return None
 
 # Download url to local dir
-def DownloadUrl(url, output_dir = None, output_file = None):
+def DownloadUrl(url, output_dir = None, output_file = None, verbose = False, exit_on_failure = False):
 
     # Check download tools
     has_wget = command.IsRunnableCommand(config.default_wget_exe, config.default_system_tools_dirs)
@@ -74,7 +74,7 @@ def DownloadUrl(url, output_dir = None, output_file = None):
 
     # Create output directory
     if output_dir:
-        system.MakeDirectory(output_dir, verbose = True, exit_on_failure = True)
+        system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Run download command
     command.RunBlockingCommand(
@@ -82,7 +82,8 @@ def DownloadUrl(url, output_dir = None, output_file = None):
         options = command.CommandOptions(
             allow_processing = environment.IsWinePlatform(),
             blocking_processes = [download_tool]),
-        verbose = True)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
     # Check result
     if output_dir:
@@ -93,6 +94,45 @@ def DownloadUrl(url, output_dir = None, output_file = None):
     elif output_file:
         return os.path.isfile(output_file)
     return False
+
+# Download git url
+def DownloadGitUrl(url, output_dir, clear_output_dir = False, verbose = False, exit_on_failure = False):
+
+    # Clear output dir
+    if clear_output_dir:
+        system.RemoveDirectoryContents(
+            dir = output_dir,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
+    # Check output dir
+    if os.path.isdir(output_dir) and system.DoesDirectoryContainFiles(output_dir):
+        return False
+
+    # Get tool
+    download_tool = None
+    if command.IsRunnableCommand(config.default_git_exe, config.default_git_install_dirs):
+        download_tool = command.GetRunnableCommandPath(config.default_git_exe, config.default_git_install_dirs)
+    if not download_tool:
+        return False
+
+    # Get download command
+    download_cmd = [
+        download_tool,
+        "clone",
+        "--recursive",
+        url,
+        output_dir
+    ]
+
+    # Run download command
+    code = command.RunBlockingCommand(
+        cmd = download_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [download_tool]),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    return (code == 0)
 
 # Determine if network share is mounted
 def IsNetworkShareMounted(mount_dir, base_location, network_share):
@@ -115,7 +155,7 @@ def IsNetworkShareMounted(mount_dir, base_location, network_share):
     return False
 
 # Mount network share
-def MountNetworkShare(mount_dir, base_location, network_share, username, password, verbose = False):
+def MountNetworkShare(mount_dir, base_location, network_share, username, password, verbose = False, exit_on_failure = False):
 
     # Windows
     if environment.IsWindowsPlatform():
@@ -383,31 +423,22 @@ def DownloadGeneralRelease(
 
 # Download latest github sources
 def DownloadLatestGithubSource(
-    github_url = "",
+    github_user,
+    github_repo,
     output_dir = "",
     verbose = False,
     exit_on_failure = False):
 
-    # Check for valid github url
-    if not github_url.startswith("https://github.com") and not github_url.endswith(".git"):
-        print("Invalid github url %s" % github_url)
-        return False
-
-    # Ignore already checked out files
-    if os.path.isdir(output_dir):
-        return True
-
-    # Make directories
-    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    # Get github url
+    github_url = "https://github.com/%s/%s.git" % (github_user, github_repo)
 
     # Download sources
-    try:
-        command.RunExceptionCommand(
-            cmd = ["git", "clone", "--recursive", github_url, "."],
-            options = command.CommandOptions(
-                cwd = output_dir),
-            verbose = verbose)
-    except:
+    success = DownloadGitUrl(
+        url = github_url,
+        output_dir = output_dir,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
         return False
 
     # Remove git folder
@@ -601,19 +632,30 @@ def BuildAppImageFromSource(
 
     # Download sources
     if release_url.endswith(".git"):
-        command.RunCheckedCommand(
-            cmd = ["git", "clone", "--recursive", release_url, "."],
-            options = command.CommandOptions(
-                cwd = source_dir),
-            verbose = verbose)
+
+        # Download git release
+        success = DownloadGitUrl(
+            url = release_url,
+            output_dir = source_dir,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            print("Unable to download release from '%s'" % release_url)
+            sys.exit(1)
     else:
+
         # Get archive info
         archive_basename = system.GetFilenameBasename(release_url)
         archive_extension = system.GetFilenameExtension(release_url)
         archive_file = os.path.join(download_dir, archive_basename + archive_extension)
-        if not DownloadUrl(url=release_url, output_file=archive_file):
+
+        # Download source archive
+        success = DownloadUrl(url = release_url, output_file = archive_file)
+        if not success:
             print("Unable to download release from '%s'" % release_url)
             sys.exit(1)
+
+        # Extract source archive
         archive.ExtractArchive(
             archive_file = archive_file,
             extract_dir = source_dir,
