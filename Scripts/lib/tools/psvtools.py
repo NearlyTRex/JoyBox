@@ -37,7 +37,3 @@ class PSVTools(base.ToolBase):
                 clean_first = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
-        pass
