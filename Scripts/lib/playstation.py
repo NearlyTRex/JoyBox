@@ -204,7 +204,7 @@ def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = Fals
     # Get extract command
     extract_cmd = [
         environment.GetPythonVirtualEnvInterpreter(),
-        programs.GetToolProgram("PSNGetPkgInfo")
+        programs.GetToolProgram("PSNGetPkgInfo"),
         "--content", extract_dir,
         pkg_file
     ]
