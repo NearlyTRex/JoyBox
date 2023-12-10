@@ -10,6 +10,7 @@ import environment
 import system
 import network
 import programs
+import archive
 import launchcommon
 import gui
 
@@ -45,6 +46,10 @@ class EKA2L1(base.EmulatorBase):
                 "save_dir": {
                     "windows": None,
                     "linux": None
+                },
+                "setup_dir": {
+                    "windows": "EKA2L1/windows",
+                    "linux": "EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1"
                 },
                 "config_file": {
                     "windows": "EKA2L1/windows/config.yml",
@@ -94,6 +99,17 @@ class EKA2L1(base.EmulatorBase):
                 contents = config_contents,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+
+        # Extract setup files
+        for platform in ["windows", "linux"]:
+            for obj in ["data"]:
+                if os.path.exists(os.path.join(environment.GetSyncedGameEmulatorSetupDir("EKA2L1"), obj + ".zip")):
+                    archive.ExtractArchive(
+                        archive_file = os.path.join(environment.GetSyncedGameEmulatorSetupDir("EKA2L1"), obj + ".zip"),
+                        extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("EKA2L1", "setup_dir", platform), obj),
+                        skip_existing = True,
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
 
     # Launch
     def Launch(
