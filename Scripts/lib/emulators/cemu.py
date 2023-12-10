@@ -118,15 +118,6 @@ class Cemu(base.EmulatorBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 
-        # Copy setup files
-        for platform in ["windows", "linux"]:
-            system.CopyContents(
-                src = environment.GetSyncedGameEmulatorSetupDir("Cemu"),
-                dest = programs.GetEmulatorPathConfigValue("Cemu", "setup_dir", platform),
-                skip_existing = True,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-
     # Launch
     def Launch(
         self,
@@ -139,6 +130,31 @@ class Cemu(base.EmulatorBase):
         launch_capture_type,
         verbose = False,
         exit_on_failure = False):
+
+        # Get launch categories
+        launch_supercategory, launch_category, launch_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(launch_platform)
+
+        # Install game to cache
+        cache.InstallGameToCache(
+            game_platform = launch_platform,
+            game_name = launch_name,
+            game_file = launch_file,
+            game_artwork = launch_artwork,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
+        # Get directories
+        cache_dir = environment.GetCachedRomDir(launch_category, launch_subcategory, launch_name)
+
+        # Update keys
+        for key_file in system.BuildFileListByExtensions(cache_dir, extensions = [".txt"]):
+            if key_file.endswith(".key.txt"):
+                for platform in ["windows", "linux"]:
+                    nintendo.UpdateWiiUKeys(
+                        src_key_file = key_file,
+                        dest_key_file = programs.GetEmulatorPathConfigValue("Cemu", "keys_file", platform),
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
 
         # Get launch command
         launch_cmd = [

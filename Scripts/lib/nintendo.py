@@ -527,20 +527,17 @@ def InstallWiiUNusPackage(nus_package_dir, nand_dir, verbose = False, exit_on_fa
     return True
 
 # Update Wii U keys file
-def UpdateWiiUKeys(new_key_file, verbose = False, exit_on_failure = False):
-
-    # Get main keys file
-    wiiu_keys_file = programs.GetEmulatorPathConfigValue("Cemu", "keys_file")
+def UpdateWiiUKeys(src_key_file, dest_key_file, verbose = False, exit_on_failure = False):
 
     # Read existing keys
     existing_keys = set()
-    with open(wiiu_keys_file, "r") as f:
+    with open(dest_key_file, "r") as f:
         for line in f.readlines():
             existing_keys.add(line.strip())
 
     # Get new keys
     new_keys = set()
-    with open(new_key_file, "r") as f:
+    with open(src_key_file, "r") as f:
         for line in f.readlines():
             new_keys.add(line.strip())
 
@@ -548,7 +545,7 @@ def UpdateWiiUKeys(new_key_file, verbose = False, exit_on_failure = False):
     updated_keys = existing_keys.union(new_keys)
 
     # Write keys
-    with open(wiiu_keys_file, "w") as f:
+    with open(dest_key_file, "w") as f:
         for key in sorted(updated_keys):
             f.write("%s\n" % key)
 
