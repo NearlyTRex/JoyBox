@@ -9,6 +9,7 @@ import argparse
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
+import config
 import environment
 import system
 import playstation
@@ -49,8 +50,8 @@ def main():
         # Strip psv
         if args.strip:
             playstation.StripPSV(
-                unstripped_psv_file = current_file,
-                stripped_psv_file = os.path.join(current_file_dir, current_file_basename + "_stripped.psv"),
+                src_psv_file = current_file,
+                dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_stripped.psv"),
                 delete_original = args.delete_originals,
                 verbose = config.default_flag_verbose,
                 exit_on_failure = config.default_flag_exit_on_failure)
@@ -58,9 +59,9 @@ def main():
         # Unstrip psv
         elif args.unstrip:
             playstation.UnstripPSV(
-                stripped_psv_file = current_file,
-                stripped_psve_file = os.path.join(current_file_dir, current_file_basename + ".psve"),
-                unstripped_psv_file = os.path.join(current_file_dir, current_file_basename + "_unstripped.psv"),
+                src_psv_file = current_file,
+                src_psve_file = os.path.join(current_file_dir, current_file_basename + ".psve"),
+                dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_unstripped.psv"),
                 delete_original = args.delete_originals,
                 verbose = config.default_flag_verbose,
                 exit_on_failure = config.default_flag_exit_on_failure)
@@ -68,8 +69,8 @@ def main():
         # Trim psv
         elif args.trim:
             playstation.TrimPSV(
-                untrimmed_psv_file = current_file,
-                trimmed_psv_file = os.path.join(current_file_dir, current_file_basename + "_trimmed.psv"),
+                src_psv_file = current_file,
+                dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_trimmed.psv"),
                 delete_original = args.delete_originals,
                 verbose = config.default_flag_verbose,
                 exit_on_failure = config.default_flag_exit_on_failure)
@@ -77,8 +78,8 @@ def main():
         # Untrim psv
         elif args.untrim:
             playstation.UntrimPSV(
-                trimmed_psv_file = current_file,
-                untrimmed_psv_file = os.path.join(current_file_dir, current_file_basename + "_untrimmed.psv"),
+                src_psv_file = current_file,
+                dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_untrimmed.psv"),
                 delete_original = args.delete_originals,
                 verbose = config.default_flag_verbose,
                 exit_on_failure = config.default_flag_exit_on_failure)

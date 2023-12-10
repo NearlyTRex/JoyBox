@@ -232,14 +232,14 @@ def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = Fals
 ######################################################
 
 # Strip psv file
-def StripPSV(unstripped_psv_file, stripped_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
+def StripPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
 
     # Get strip command
     strip_cmd = [
         programs.GetToolProgram("PSVStrip"),
         "-psvstrip",
-        unstripped_psv_file,
-        stripped_psv_file
+        src_psv_file,
+        dest_psv_file
     ]
 
     # Run strip command
@@ -249,27 +249,27 @@ def StripPSV(unstripped_psv_file, stripped_psv_file, delete_original = False, ve
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            print("Unable to strip psv file '%s'" % unstripped_psv_file)
+            print("Unable to strip psv file '%s'" % src_psv_file)
             sys.exit(1)
         return False
 
     # Clean up
     if delete_original:
-        system.RemoveFile(unstripped_psv_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.RemoveFile(src_psv_file, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Check result
-    return os.path.exists(stripped_psv_file)
+    return os.path.exists(dest_psv_file)
 
 # Unstrip psv file
-def UnstripPSV(stripped_psv_file, stripped_psve_file, unstripped_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
+def UnstripPSV(src_psv_file, src_psve_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
 
     # Get unstrip command
     unstrip_cmd = [
         programs.GetToolProgram("PSVStrip"),
         "-applypsve",
-        stripped_psv_file,
-        unstripped_psv_file,
-        stripped_psve_file
+        src_psv_file,
+        dest_psv_file,
+        src_psve_file
     ]
 
     # Run unstrip command
@@ -279,27 +279,27 @@ def UnstripPSV(stripped_psv_file, stripped_psve_file, unstripped_psv_file, delet
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            print("Unable to unstrip psv file '%s'" % stripped_psv_file)
+            print("Unable to unstrip psv file '%s'" % src_psv_file)
             sys.exit(1)
         return False
 
     # Clean up
     if delete_original:
-        system.RemoveFile(stripped_psv_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.RemoveFile(src_psv_file, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Check result
-    return os.path.exists(unstripped_psv_file)
+    return os.path.exists(dest_psv_file)
 
 # Trim psv file
-def TrimPSV(untrimmed_psv_file, trimmed_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
+def TrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
 
     # Get trim command
     trim_cmd = [
         environment.GetPythonVirtualEnvInterpreter(),
         programs.GetToolProgram("PSVTools"),
         "--trim",
-        "-o", trimmed_psv_file,
-        untrimmed_psv_file
+        "-o", dest_psv_file,
+        src_psv_file
     ]
 
     # Run trim command
@@ -309,27 +309,27 @@ def TrimPSV(untrimmed_psv_file, trimmed_psv_file, delete_original = False, verbo
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            print("Unable to trim psv file '%s'" % untrimmed_psv_file)
+            print("Unable to trim psv file '%s'" % src_psv_file)
             sys.exit(1)
         return False
 
     # Clean up
     if delete_original:
-        system.RemoveFile(untrimmed_psv_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.RemoveFile(src_psv_file, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Check result
-    return os.path.exists(trimmed_psv_file)
+    return os.path.exists(dest_psv_file)
 
 # Untrim psv file
-def UntrimPSV(trimmed_psv_file, untrimmed_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
+def UntrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
 
     # Get untrim command
     untrim_cmd = [
         environment.GetPythonVirtualEnvInterpreter(),
         programs.GetToolProgram("PSVTools"),
         "--expand",
-        "-o", untrimmed_psv_file,
-        trimmed_psv_file
+        "-o", dest_psv_file,
+        src_psv_file
     ]
 
     # Run untrim command
@@ -339,16 +339,16 @@ def UntrimPSV(trimmed_psv_file, untrimmed_psv_file, delete_original = False, ver
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            print("Unable to untrim psv file '%s'" % trimmed_psv_file)
+            print("Unable to untrim psv file '%s'" % src_psv_file)
             sys.exit(1)
         return False
 
     # Clean up
     if delete_original:
-        system.RemoveFile(trimmed_psv_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.RemoveFile(src_psv_file, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Check result
-    return os.path.exists(untrimmed_psv_file)
+    return os.path.exists(dest_psv_file)
 
 # Verify psv file
 def VerifyPSV(psv_file, verbose = False, exit_on_failure = False):
