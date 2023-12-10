@@ -1,0 +1,84 @@
+[UserData.Dirs]
+local_cache_dir = ~/Cache
+remote_cache_dir = /mnt/Cache
+sync_dir = ~/Sync
+repositories_dir = ~/Repositories
+storage_dir = /mnt/Storage
+
+[UserData.NAS]
+nas_base_location =
+nas_storage_folder =
+nas_cache_folder =
+nas_account =
+nas_password =
+
+[UserData.Resolution]
+screen_resolution_w = 1920
+screen_resolution_h = 1080
+screen_resolution_c = 32
+
+[UserData.Flags]
+verbose = True
+exit_on_failure = True
+fullscreen = True
+keep_setup_files = False
+
+[UserData.Capture]
+capture_duration = 300
+capture_interval = 1
+capture_origin_x = 0
+capture_origin_y = 0
+capture_resolution_w = 1920
+capture_resolution_h = 1080
+capture_framerate = 30
+
+[UserData.Steam]
+steam_username =
+steam_userid =
+
+[Tools.Python]
+python_exe = python3
+python_pip_exe = pip3
+python_install_dir = /usr/bin
+python_venv_dir = ~/.venv
+
+[Tools.Wine]
+wine_exe = wine
+wine_boot_exe = wineboot
+wine_server_exe = wineserver
+wine_tricks_exe = winetricks
+wine_install_dir = /usr/bin
+wine_sandbox_dir = ~/Sandbox
+
+[Tools.Firefox]
+firefox_exe = firefox
+firefox_install_dir = /usr/bin
+
+[Tools.Git]
+git_exe = git
+git_install_dir = /usr/bin
+
+[Tools.7Zip]
+7z_exe = 7z
+7z_standalone_exe = 7za
+7z_install_dir = /usr/bin
+
+[Tools.XorrISO]
+xorriso_exe = xorriso
+xorriso_install_dir = /usr/bin
+
+[Tools.Wget]
+wget_exe = wget
+wget_install_dir = /usr/bin
+
+[Tools.Curl]
+curl_exe = curl
+curl_install_dir = /usr/bin
+
+[Tools.File]
+file_exe = file
+file_install_dir = /usr/bin
+
+[Tools.Reg]
+reg_exe = reg
+reg_install_dir =

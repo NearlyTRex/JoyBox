@@ -1,0 +1,84 @@
+[UserData.Dirs]
+local_cache_dir = %USERPROFILE%/Cache
+remote_cache_dir = Y:\
+sync_dir = %USERPROFILE%/Sync
+repositories_dir = %USERPROFILE%/Repositories
+storage_dir = X:\
+
+[UserData.NAS]
+nas_base_location =
+nas_storage_folder =
+nas_cache_folder =
+nas_account =
+nas_password =
+
+[UserData.Resolution]
+screen_resolution_w = 1920
+screen_resolution_h = 1080
+screen_resolution_c = 32
+
+[UserData.Flags]
+verbose = True
+exit_on_failure = True
+fullscreen = True
+keep_setup_files = False
+
+[UserData.Capture]
+capture_duration = 300
+capture_interval = 1
+capture_origin_x = 0
+capture_origin_y = 0
+capture_resolution_w = 1920
+capture_resolution_h = 1080
+capture_framerate = 30
+
+[UserData.Steam]
+steam_username =
+steam_userid =
+
+[Tools.Python]
+python_exe = python
+python_pip_exe = pip
+python_install_dir = C:\Python311
+python_venv_dir = %USERPROFILE%/.venv
+
+[Tools.Sandboxie]
+sandboxie_exe = Start
+sandboxie_ini_exe = SbiIni
+sandboxie_rpcss_exe = SandboxieRpcSs
+sandboxie_dcomlaunch_exe = SandboxieDcomLaunch
+sandboxie_install_dir = %ProgramFiles%\Sandboxie-Plus
+sandboxie_sandbox_dir = %USERPROFILE%/Sandbox/%USERNAME%
+
+[Tools.Firefox]
+firefox_exe = firefox
+firefox_install_dir = %ProgramFiles%\Mozilla Firefox
+
+[Tools.Git]
+git_exe = git
+git_install_dir = %ProgramFiles%\Git\bin
+
+[Tools.7Zip]
+7z_exe = 7z
+7z_standalone_exe = 7za
+7z_install_dir = %ProgramFiles%\7-Zip
+
+[Tools.XorrISO]
+xorriso_exe = xorriso
+xorriso_install_dir = C:\cygwin64\bin
+
+[Tools.Wget]
+wget_exe = wget
+wget_install_dir = C:\cygwin64\bin
+
+[Tools.Curl]
+curl_exe = curl
+curl_install_dir = C:\Windows\System32
+
+[Tools.File]
+file_exe = file
+file_install_dir = C:\cygwin64\bin
+
+[Tools.Reg]
+reg_exe = reg
+reg_install_dir = C:\Windows\System32
