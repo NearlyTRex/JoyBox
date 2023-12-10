@@ -23,7 +23,6 @@ from . import sunshine
 from . import threedsromtool
 from . import vkd3d
 from . import wad2bin
-from . import xcicutter
 from . import xcitrimmer
 
 # Tool instances
@@ -52,7 +51,6 @@ instances = [
     threedsromtool.ThreeDSRomTool(),
     vkd3d.VKD3D(),
     wad2bin.Wad2Bin(),
-    xcicutter.XCICutter(),
     xcitrimmer.XCITrimmer()
 ]
 
