@@ -44,8 +44,8 @@ class EKA2L1(base.EmulatorBase):
                     "linux": "EKA2L1/linux/EKA2L1.AppImage"
                 },
                 "save_dir": {
-                    "windows": None,
-                    "linux": None
+                    "windows": "EKA2L1/windows/data/drives/c/system/apps",
+                    "linux": "EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1/data/drives/c/system/apps"
                 },
                 "setup_dir": {
                     "windows": "EKA2L1/windows",
@@ -127,7 +127,8 @@ class EKA2L1(base.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.GetEmulatorProgram("EKA2L1"),
-            config.token_game_file
+            "--mount", config.token_game_dir,
+            "--app", config.token_game_name
         ]
 
         # Launch game
