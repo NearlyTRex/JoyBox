@@ -601,6 +601,124 @@ def CreateSwitchProfilesDat(profiles_file, user_id, account_name, verbose = Fals
     # Check result
     return os.path.exists(profiles_file)
 
+# Trim Switch XCI file
+def TrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbose = False, exit_on_failure = False):
+
+    # Get tool
+    trim_tool = None
+    if programs.IsToolInstalled("XCITrimmer"):
+        trim_tool = programs.GetToolProgram("XCITrimmer")
+    if not trim_tool:
+        return False
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    if not tmp_dir_success:
+        return False
+
+    # Temporary files
+    tmp_xci_basename = system.GetFilenameBasename(src_xci_file)
+    tmp_xci_src_file = os.path.join(tmp_dir_result, tmp_xci_basename + ".xci")
+    tmp_xci_dest_file = os.path.join(tmp_dir_result, tmp_xci_basename + "_trimmed.xci")
+
+    # Copy source file
+    system.CopyFileOrDirectory(
+        src = src_xci_file,
+        dest = tmp_xci_src_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+    # Get trim command
+    trim_cmd = [
+        environment.GetPythonVirtualEnvInterpreter(),
+        trim_tool,
+        "--trim",
+        "--copy",
+        tmp_xci_src_file
+    ]
+
+    # Run trim command
+    code = command.RunBlockingCommand(
+        cmd = trim_cmd,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        return False
+
+    # Move new file
+    system.MoveFileOrDirectory(
+        src = tmp_xci_dest_file,
+        dest = dest_xci_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+    # Clean up
+    if delete_original:
+        system.RemoveFile(src_xci_file, verbose = verbose)
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+
+    # Check result
+    return os.path.exists(dest_xci_file)
+
+# Untrim Switch XCI file
+def UntrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbose = False, exit_on_failure = False):
+
+    # Get tool
+    trim_tool = None
+    if programs.IsToolInstalled("XCITrimmer"):
+        trim_tool = programs.GetToolProgram("XCITrimmer")
+    if not trim_tool:
+        return False
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    if not tmp_dir_success:
+        return False
+
+    # Temporary files
+    tmp_xci_basename = system.GetFilenameBasename(src_xci_file)
+    tmp_xci_src_file = os.path.join(tmp_dir_result, tmp_xci_basename + ".xci")
+    tmp_xci_dest_file = os.path.join(tmp_dir_result, tmp_xci_basename + "_padded.xci")
+
+    # Copy source file
+    system.CopyFileOrDirectory(
+        src = src_xci_file,
+        dest = tmp_xci_src_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+    # Get trim command
+    untrim_cmd = [
+        environment.GetPythonVirtualEnvInterpreter(),
+        trim_tool,
+        "--pad",
+        "--copy",
+        tmp_xci_src_file
+    ]
+
+    # Run untrim command
+    code = command.RunBlockingCommand(
+        cmd = untrim_cmd,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        return False
+
+    # Move new file
+    system.MoveFileOrDirectory(
+        src = tmp_xci_dest_file,
+        dest = dest_xci_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+    # Clean up
+    if delete_original:
+        system.RemoveFile(src_xci_file, verbose = verbose)
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+
+    # Check result
+    return os.path.exists(dest_xci_file)
+
 # Extract Switch NSP file
 def ExtractSwitchNSP(nsp_file, extract_dir, verbose = False, exit_on_failure = False):
 
