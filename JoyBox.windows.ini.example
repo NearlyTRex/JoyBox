@@ -1,9 +1,12 @@
 [UserData.Dirs]
-local_cache_dir = %USERPROFILE%/Cache
+local_cache_dir = %USERPROFILE%\Cache
 remote_cache_dir = Y:\
-sync_dir = %USERPROFILE%/Sync
-repositories_dir = %USERPROFILE%/Repositories
+sync_dir = %USERPROFILE%\Sync
 storage_dir = X:\
+scripts_dir = $HOME\Repositories\JoyBox\Scripts
+tools_dir = $HOME\Repositories\JoyBox\Tools
+emulators_dir = $HOME\Repositories\JoyBox\Emulators
+metadata_dir = $HOME\Repositories\JoyBox\Metadata
 
 [UserData.NAS]
 nas_base_location =
@@ -40,7 +43,7 @@ steam_userid =
 python_exe = python
 python_pip_exe = pip
 python_install_dir = C:\Python311
-python_venv_dir = %USERPROFILE%/.venv
+python_venv_dir = %USERPROFILE%\.venv
 
 [Tools.Sandboxie]
 sandboxie_exe = Start
@@ -48,7 +51,7 @@ sandboxie_ini_exe = SbiIni
 sandboxie_rpcss_exe = SandboxieRpcSs
 sandboxie_dcomlaunch_exe = SandboxieDcomLaunch
 sandboxie_install_dir = %ProgramFiles%\Sandboxie-Plus
-sandboxie_sandbox_dir = %USERPROFILE%/Sandbox/%USERNAME%
+sandboxie_sandbox_dir = %USERPROFILE%\Sandbox\%USERNAME%
 
 [Tools.Firefox]
 firefox_exe = firefox
