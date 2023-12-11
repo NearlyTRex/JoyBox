@@ -17,6 +17,7 @@ import programs
 import network
 import sandbox
 import metadata
+import display
 import gui
 
 # Local imports
@@ -493,7 +494,6 @@ def GetSelectedLaunchInfo(
         title_text = "Select Program",
         message_text = "Select program to run",
         button_text = "Run program",
-        window_size = environment.GetCurrentScreenResolution(),
         run_func = HandleGameSelection)
 
     # Return launch info
@@ -786,7 +786,6 @@ class Computer(base.EmulatorBase):
             message_text = "Creating game prefix\n%s\n%s" % (launch_name, launch_platform),
             failure_text = "Unable to create game prefix",
             image_file = launch_artwork,
-            window_size = environment.GetCurrentScreenResolution(),
             run_func = CreateGamePrefix)
 
         # Create user files
@@ -997,6 +996,6 @@ class Computer(base.EmulatorBase):
                     exit_on_failure = exit_on_failure)
 
             # Restore default screen resolution
-            environment.RestoreDefaultScreenResolution(
+            display.RestoreDefaultScreenResolution(
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
