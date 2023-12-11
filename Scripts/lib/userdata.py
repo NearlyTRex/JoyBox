@@ -4,7 +4,7 @@ import sys
 import configparser
 
 # Ini file location
-ini_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+ini_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", ".."))
 ini_file = os.path.join(ini_folder, "JoyBox.ini")
 
 # Ini file parser
