@@ -38,7 +38,7 @@ def main():
     system.AssertIsBool(verbose, "verbose")
     system.AssertIsBool(exit_on_failure, "exit_on_failure")
 
-    # Mount shares
+    # Mount storage
     network.MountNetworkShare(
         mount_dir = environment.GetStorageRootDir(),
         base_location = nas_base_location,
