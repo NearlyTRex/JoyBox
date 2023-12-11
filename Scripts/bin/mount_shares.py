@@ -8,6 +8,7 @@ import sys
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
+import system
 import environment
 import network
 import setup
@@ -19,18 +20,25 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Get network share info
+    # Get config info
     nas_base_location = userdata.GetIniValue("UserData.NAS", "nas_base_location")
     nas_storage_folder = userdata.GetIniValue("UserData.NAS", "nas_storage_folder")
     nas_cache_folder = userdata.GetIniValue("UserData.NAS", "nas_cache_folder")
     nas_username = userdata.GetIniValue("UserData.NAS", "nas_username")
     nas_password = userdata.GetIniValue("UserData.NAS", "nas_password")
+    verbose = userdata.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = userdata.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
-    # Get flags
-    verbose = userdata.GetIniValue("UserData.Flags", "verbose")
-    exit_on_failure = userdata.GetIniValue("UserData.Flags", "exit_on_failure")
+    # Check config info
+    system.AssertIsNonEmptyString(nas_base_location, "nas_base_location")
+    system.AssertIsNonEmptyString(nas_storage_folder, "nas_storage_folder")
+    system.AssertIsNonEmptyString(nas_cache_folder, "nas_cache_folder")
+    system.AssertIsNonEmptyString(nas_username, "nas_username")
+    system.AssertIsNonEmptyString(nas_password, "nas_password")
+    system.AssertIsBool(verbose, "verbose")
+    system.AssertIsBool(exit_on_failure, "exit_on_failure")
 
-    # Mount storage
+    # Mount shares
     network.MountNetworkShare(
         mount_dir = environment.GetStorageRootDir(),
         base_location = nas_base_location,
