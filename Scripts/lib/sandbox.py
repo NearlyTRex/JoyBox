@@ -67,42 +67,40 @@ def ShouldBeRunViaSandboxie(cmd):
 
 # Determine if wine is installed
 def IsWineInstalled():
-    has_wine_system = command.IsRunnableCommand(config.default_wine_exe, config.default_wine_install_dirs)
-    has_winetricks_system = command.IsRunnableCommand(config.default_wine_tricks_exe, config.default_wine_install_dirs)
+    has_wine_system = command.IsRunnableCommand(programs.GetToolProgram("Wine"))
+    has_winetricks_system = command.IsRunnableCommand(programs.GetToolProgram("WineTricks"))
     return has_wine_system and has_winetricks_system
 
 # Determine if sandboxie is installed
 def IsSandboxieInstalled():
-    has_sandboxie_system = command.IsRunnableCommand(config.default_sandboxie_exe, config.default_sandboxie_install_dirs)
+    has_sandboxie_system = command.IsRunnableCommand(programs.GetToolProgram("Sandboxie"))
     return has_sandboxie_system
 
 ###########################################################
 
 # Get wine command
 def GetWineCommand():
-    if command.IsRunnableCommand(config.default_wine_exe, config.default_wine_install_dirs):
-        return command.GetRunnableCommandPath(config.default_wine_exe, config.default_wine_install_dirs)
-    return None
+    return programs.GetToolProgram("Wine")
 
 # Get sandboxie command
 def GetSandboxieCommand():
-    if command.IsRunnableCommand(config.default_sandboxie_exe, config.default_sandboxie_install_dirs):
-        return command.GetRunnableCommandPath(config.default_sandboxie_exe, config.default_sandboxie_install_dirs)
-    return None
+    return programs.GetToolProgram("Sandboxie")
 
 ###########################################################
 
 # Get wine blocking processes
 def GetWineBlockingProcesses():
-    return [config.default_wine_server_exe]
+    return [
+        programs.GetToolProgram("WineServer")
+    ]
 
 # Get sandboxie blocking processes
 def GetSandboxieBlockingProcesses():
     return [
-        config.default_sandboxie_exe + ".exe",
-        config.default_sandboxie_ini_exe + ".exe",
-        config.default_sandboxie_rpcss_exe + ".exe",
-        config.default_sandboxie_dcomlaunch_exe + ".exe"
+        programs.GetToolProgram("Sandboxie"),
+        programs.GetToolProgram("SandboxieIni"),
+        programs.GetToolProgram("SandboxieRpcss"),
+        programs.GetToolProgram("SandboxieDcomlaunch")
     ]
 
 # Get blocking processes
@@ -118,11 +116,11 @@ def GetBlockingProcesses(initial_processes = [], is_wine_prefix = False, is_sand
 
 # Get wine prefix
 def GetWinePrefix(name):
-    return os.path.join(config.default_wine_sandbox_dir, name)
+    return os.path.join(programs.GetToolPathConfigValue("Wine", "sandbox_dir"), name)
 
 # Get sandboxie prefix
 def GetSandboxiePrefix(name):
-    return os.path.join(config.default_sandboxie_sandbox_dir, name)
+    return os.path.join(programs.GetToolPathConfigValue("Sandboxie", "sandbox_dir"), name)
 
 # Get prefix
 def GetPrefix(name, is_wine_prefix = False, is_sandboxie_prefix = False):
@@ -711,21 +709,19 @@ def SetupPrefixCommand(
 # Cleanup wine
 def CleanupWine(cmd, options, verbose = False, exit_on_failure = False):
 
-    # Get wine server
-    wine_server_exe = command.GetRunnableCommandPath(
-        config.default_wine_server_exe,
-        config.default_wine_install_dirs)
+    # Get wine server tool
+    wine_server_tool = programs.GetToolProgram("WineServer")
 
     # Kill processes running under wine
     command.RunBlockingCommand(
-        cmd = [wine_server_exe, "-k"],
+        cmd = [wine_server_tool, "-k"],
         options = command.CommandOptions(
             shell = True),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
     # Kill wine itself
-    environment.KillActiveNamedProcesses([wine_server_exe])
+    environment.KillActiveNamedProcesses([wine_server_tool])
 
 # Cleanup sandboxie
 def CleanupSandboxie(cmd, options, verbose = False, exit_on_failure = False):
@@ -746,15 +742,11 @@ def CreateWinePrefix(
     # Make directory
     system.MakeDirectory(prefix_dir, verbose = verbose, exit_on_failure = exit_on_failure)
 
-    # Get wine boot cmd
-    wine_boot_cmd = command.GetRunnableCommandPath(
-        config.default_wine_boot_exe,
-        config.default_wine_install_dirs)
+    # Get wine boot tool
+    wine_boot_tool = programs.GetToolProgram("WineBoot")
 
-    # Get wine tricks cmd
-    wine_tricks_cmd = command.GetRunnableCommandPath(
-        config.default_wine_tricks_exe,
-        config.default_wine_install_dirs)
+    # Get wine tricks tool
+    wine_tricks_tool = programs.GetToolProgram("WineTricks")
 
     # Get wine setup
     wine_setup_tricks = {}
@@ -771,17 +763,14 @@ def CreateWinePrefix(
     winetricks = []
     if prefix_winver and isinstance(prefix_winver, str) and len(prefix_winver):
         winetricks += [prefix_winver]
-    else:
-        if len(config.default_option_winver):
-            winetricks += [config.default_option_winver]
     if prefix_name and prefix_name.lower() in wine_setup_tricks:
         winetricks += wine_setup_tricks[prefix_name.lower()]
 
     # Initialize prefix
     cmds_to_run = []
-    cmds_to_run.append([wine_boot_cmd])
+    cmds_to_run.append([wine_boot_tool])
     if len(winetricks):
-        cmds_to_run.append([wine_tricks_cmd] + winetricks)
+        cmds_to_run.append([wine_tricks_tool] + winetricks)
     for cmd in cmds_to_run:
         options = command.CommandOptions(
             is_wine_prefix = True,
@@ -835,19 +824,17 @@ def CreateSandboxiePrefix(
     system.MakeDirectory(GetSandboxieRealDrivePath(prefix_dir, "C"), verbose = verbose, exit_on_failure = exit_on_failure)
     system.MakeDirectory(GetSandboxieUserProfilePath(prefix_dir), verbose = verbose, exit_on_failure = exit_on_failure)
 
-    # Get sandboxie ini cmd
-    sandboxie_ini_cmd = command.GetRunnableCommandPath(
-        config.default_sandboxie_ini_exe,
-        config.default_sandboxie_install_dirs)
+    # Get sandboxie ini tool
+    sandboxie_ini_tool = programs.GetToolProgram("SandboxieIni")
 
     # Set sandboxie param
     def SetSandboxieBoxParam(sandbox_name, sandbox_param, sandbox_value):
-        cmd = [sandboxie_ini_cmd, "set", sandbox_name, sandbox_param, sandbox_value]
+        cmd = [sandboxie_ini_tool, "set", sandbox_name, sandbox_param, sandbox_value]
         options = command.CommandOptions(
             is_sandboxie_prefix = True,
             prefix_dir = prefix_dir,
             prefix_name = prefix_name,
-            blocking_processes = [sandboxie_ini_cmd],
+            blocking_processes = [sandboxie_ini_tool],
             shell = True)
         cmd, options = SetupPrefixEnvironment(
             cmd = cmd,
