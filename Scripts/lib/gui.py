@@ -9,6 +9,7 @@ sys.path.append(lib_folder)
 import config
 import environment
 import system
+import display
 
 # Display popup
 def DisplayPopup(
@@ -218,6 +219,10 @@ def DisplayLoadingWindow(
     system.AssertIsString(completion_text, "completion_text")
     system.AssertIsString(failure_text, "failure_text")
 
+    # Get window size
+    if window_size == (None, None):
+        window_size = display.GetCurrentScreenResolution()
+
     # Set theme
     import PySimpleGUI as psg
     psg.theme(theme)
@@ -334,6 +339,10 @@ def DisplayChoicesWindow(
     system.AssertIsNonEmptyString(title_text, "title_text")
     system.AssertIsNonEmptyString(message_text, "message_text")
     system.AssertIsNonEmptyString(button_text, "button_text")
+
+    # Get window size
+    if window_size == (None, None):
+        window_size = display.GetCurrentScreenResolution()
 
     # Run selected choice
     def RunSelectedChoice(choice):
