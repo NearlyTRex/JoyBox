@@ -1,7 +1,6 @@
 # Imports
 import os, os.path
 import sys
-import getpass
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.dirname(__file__))
@@ -35,7 +34,10 @@ def GetConfigValue(program_config, program_name, program_key, program_platform =
 def GetPathConfigValue(program_config, base_dir, program_name, program_key, program_platform = None):
     program_path = GetConfigValue(program_config, program_name, program_key, program_platform)
     if program_path:
-        return os.path.join(base_dir, program_path)
+        if os.path.exists(program_path):
+            return program_path
+        else:
+            return os.path.join(base_dir, program_path)
     return None
 
 # Get program
