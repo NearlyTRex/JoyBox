@@ -176,7 +176,7 @@ def RunWindowsInstallers(
         command.RunBlockingCommand(
             cmd = program_setup_cmd,
             options = command.CommandOptions(
-                cwd = config.default_user_dir,
+                cwd = os.path.expanduser("~"),
                 prefix_dir = prefix_dir,
                 prefix_name = prefix_name,
                 is_wine_prefix = is_wine_prefix,

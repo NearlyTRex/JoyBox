@@ -129,7 +129,7 @@ def DownloadGitUrl(url, output_dir, clean_first = False, verbose = False, exit_o
     code = command.RunBlockingCommand(
         cmd = download_cmd,
         options = command.CommandOptions(
-            cwd = config.default_user_dir,
+            cwd = os.path.expanduser("~"),
             blocking_processes = [download_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)

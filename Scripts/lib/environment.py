@@ -61,8 +61,8 @@ def AreSymlinksSupported():
     if IsUnixPlatform():
         return True
     else:
-        test_file_src = os.path.join(config.default_user_dir, ".symsrc")
-        test_file_dest = os.path.join(config.default_user_dir, ".symdest")
+        test_file_src = os.path.join(os.path.expanduser("~"), ".symsrc")
+        test_file_dest = os.path.join(os.path.expanduser("~"), ".symdest")
         if os.path.islink(test_file_dest):
             return True
         system.TouchFile(test_file_src)
