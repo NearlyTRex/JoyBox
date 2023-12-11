@@ -42,9 +42,26 @@ def GetIniIntegerValue(section, field):
     except:
         return None
 
+# Get ini bool value
+def GetIniBoolValue(section, field):
+    value = GetIniValue(section, field)
+    if not value:
+        return None
+    try:
+        return bool(value)
+    except:
+        return None
+
 # Get ini path value
 def GetIniPathValue(section, field):
     value = GetIniValue(section, field)
     if not value:
         return None
     return os.path.expandvars(value)
+
+# Get ini list value
+def GetIniListValue(section, field, delimiter = ","):
+    value = GetIniValue(section, field)
+    if not value:
+        return None
+    return value.split(delimiter)
