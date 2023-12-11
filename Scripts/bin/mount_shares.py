@@ -12,7 +12,7 @@ import system
 import environment
 import network
 import setup
-import userdata
+import ini
 
 # Main
 def main():
@@ -21,13 +21,13 @@ def main():
     setup.CheckRequirements()
 
     # Get config info
-    nas_base_location = userdata.GetIniValue("UserData.NAS", "nas_base_location")
-    nas_storage_folder = userdata.GetIniValue("UserData.NAS", "nas_storage_folder")
-    nas_cache_folder = userdata.GetIniValue("UserData.NAS", "nas_cache_folder")
-    nas_username = userdata.GetIniValue("UserData.NAS", "nas_username")
-    nas_password = userdata.GetIniValue("UserData.NAS", "nas_password")
-    verbose = userdata.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = userdata.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+    nas_base_location = ini.GetIniValue("UserData.NAS", "nas_base_location")
+    nas_storage_folder = ini.GetIniValue("UserData.NAS", "nas_storage_folder")
+    nas_cache_folder = ini.GetIniValue("UserData.NAS", "nas_cache_folder")
+    nas_username = ini.GetIniValue("UserData.NAS", "nas_username")
+    nas_password = ini.GetIniValue("UserData.NAS", "nas_password")
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Check config info
     system.AssertIsNonEmptyString(nas_base_location, "nas_base_location")

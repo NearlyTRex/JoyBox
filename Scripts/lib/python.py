@@ -8,19 +8,19 @@ lib_folder = os.path.realpath(os.path.dirname(__file__))
 sys.path.append(lib_folder)
 import command
 import environment
-import userdata
+import ini
 
 # Get python program
 def GetPythonProgram():
-    python_exe = userdata.GetIniValue("Tools.Python", "python_exe")
-    python_install_dir = userdata.GetIniValue("Tools.Python", "python_install_dir")
+    python_exe = ini.GetIniValue("Tools.Python", "python_exe")
+    python_install_dir = ini.GetIniValue("Tools.Python", "python_install_dir")
     return command.GetRunnableCommandPath(
         cmd = python_exe,
         search_dirs = [python_install_dir])
 
 # Get python virtual environment program
 def GetPythonVirtualEnvProgram(program):
-    python_venv_dir = userdata.GetIniValue("Tools.Python", "python_venv_dir")
+    python_venv_dir = ini.GetIniValue("Tools.Python", "python_venv_dir")
     if environment.IsWindowsPlatform():
         return os.path.join(python_venv_dir, "Scripts", program)
     else:
@@ -28,7 +28,7 @@ def GetPythonVirtualEnvProgram(program):
 
 # Get python virtual environment interpreter
 def GetPythonVirtualEnvInterpreter():
-    python_exe = userdata.GetIniValue("Tools.Python", "python_exe")
+    python_exe = ini.GetIniValue("Tools.Python", "python_exe")
     return GetPythonVirtualEnvProgram(python_exe)
 
 # Setup python environment
@@ -39,7 +39,7 @@ def SetupPythonEnvironment(verbose = False, exit_on_failure = False):
         GetPythonProgram(),
         "-m",
         "venv",
-        userdata.GetIniValue("Tools.Python", "python_venv_dir")
+        ini.GetIniValue("Tools.Python", "python_venv_dir")
     ]
 
     # Run setup command
@@ -58,7 +58,7 @@ def InstallPythonModule(module, verbose = False, exit_on_failure = False):
     install_cmd = [
         GetPythonVirtualEnvInterpreter(),
         "-m",
-        userdata.GetIniValue("Tools.Python", "python_pip_exe"),
+        ini.GetIniValue("Tools.Python", "python_pip_exe"),
         "install",
         "--upgrade",
         module

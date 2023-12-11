@@ -12,7 +12,6 @@ import system
 import metadata
 import transform
 import addon
-import userdata
 import gui
 
 # Check if game file is in cache already

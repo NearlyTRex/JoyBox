@@ -12,7 +12,7 @@ import config
 import command
 import system
 import metadata
-import userdata
+import ini
 
 ###########################################################
 # System capabilities
@@ -164,7 +164,7 @@ def WaitForNamedProcesses(process_names = []):
 
 # Get tools root dir
 def GetToolsRootDir():
-    tools_dir = userdata.GetIniPathValue("UserData.Dirs", "tools_dir")
+    tools_dir = ini.GetIniPathValue("UserData.Dirs", "tools_dir")
     system.AssertPathExists(tools_dir, "tools_dir")
     return tools_dir
 
@@ -174,7 +174,7 @@ def GetToolsRootDir():
 
 # Get emulators root dir
 def GetEmulatorsRootDir():
-    emulators_dir = userdata.GetIniPathValue("UserData.Dirs", "emulators_dir")
+    emulators_dir = ini.GetIniPathValue("UserData.Dirs", "emulators_dir")
     system.AssertPathExists(emulators_dir, "emulators_dir")
     return emulators_dir
 
@@ -184,7 +184,7 @@ def GetEmulatorsRootDir():
 
 # Get sync root dir
 def GetSyncRootDir():
-    sync_dir = userdata.GetIniPathValue("UserData.Dirs", "sync_dir")
+    sync_dir = ini.GetIniPathValue("UserData.Dirs", "sync_dir")
     system.AssertPathExists(sync_dir, "sync_dir")
     return sync_dir
 
@@ -243,7 +243,7 @@ def GetSyncedProgramsRootDir():
 
 # Get metadata root dir
 def GetMetadataRootDir():
-    metadata_dir = userdata.GetIniPathValue("UserData.Dirs", "metadata_dir")
+    metadata_dir = ini.GetIniPathValue("UserData.Dirs", "metadata_dir")
     system.AssertPathExists(metadata_dir, "metadata_dir")
     return metadata_dir
 
@@ -313,7 +313,7 @@ def GetJsonRomMetadataFile(game_category, game_subcategory, game_name):
 
 # Get scripts root dir
 def GetScriptsRootDir():
-    scripts_dir = userdata.GetIniPathValue("UserData.Dirs", "scripts_dir")
+    scripts_dir = ini.GetIniPathValue("UserData.Dirs", "scripts_dir")
     system.AssertPathExists(scripts_dir, "scripts_dir")
     return scripts_dir
 
@@ -345,7 +345,7 @@ def GetScriptsExecutableExtension():
 
 # Get storage root dir
 def GetStorageRootDir():
-    storage_dir = userdata.GetIniPathValue("UserData.Dirs", "storage_dir")
+    storage_dir = ini.GetIniPathValue("UserData.Dirs", "storage_dir")
     system.AssertPathExists(storage_dir, "storage_dir")
     return storage_dir
 
@@ -388,13 +388,13 @@ def GetSupercategoryRootDir(supercategory):
 
 # Get local cache root dir
 def GetLocalCacheRootDir():
-    local_cache_dir = userdata.GetIniPathValue("UserData.Dirs", "local_cache_dir")
+    local_cache_dir = ini.GetIniPathValue("UserData.Dirs", "local_cache_dir")
     system.AssertPathExists(local_cache_dir, "local_cache_dir")
     return local_cache_dir
 
 # Get remote cache root dir
 def GetRemoteCacheRootDir():
-    remote_cache_dir = userdata.GetIniPathValue("UserData.Dirs", "remote_cache_dir")
+    remote_cache_dir = ini.GetIniPathValue("UserData.Dirs", "remote_cache_dir")
     system.AssertPathExists(remote_cache_dir, "remote_cache_dir")
     return remote_cache_dir
 
