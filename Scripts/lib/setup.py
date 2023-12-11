@@ -1,42 +1,18 @@
 # Imports
 import os, os.path
 import sys
-import getpass
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.dirname(__file__))
 sys.path.append(lib_folder)
 import config
-import command
 import sandbox
 import environment
 import system
-import archive
-import network
 import programs
 import metadata
-
-# Important Note:
-# The following tools/emulators need periodic checks to get the latest
-# Likely because their git-master doesn't build or the download link is not automatic
-# Try to make these automatic if possible in the future
-#
-# Tools:
-# - ExifTool
-#
-# Emulators
-# - BasiliskII (windows)
-# - BigPEmu (windows)
-# - FS-UAE (linux)
-# - PPSSPP (windows)
-
-# These are tools to try to get native linux builds for in the future
-# Or find a way to reduce the need for these
-# - MameToolsChdman
-# - NirCmd
-# - PSVStrip
-# - Wad2Bin
-# - XCICutter
+import python
+import packages
 
 # Check requirements
 def CheckRequirements():
@@ -59,13 +35,6 @@ def CheckRequirements():
         print("Symlinks are required, please enable them for your system")
         sys.exit(1)
 
-    # Check system tools
-    has_system_tools = environment.AreSystemToolsInstalled()
-    if has_system_tools == False:
-        print("System tools are required, please install them and make sure they are in the path")
-        print("These include: %s" % ", ".join(environment.GetSystemTools()))
-        sys.exit(1)
-
     # Check wine
     has_wine = sandbox.IsWineInstalled()
     if is_linux and has_wine == False:
@@ -78,72 +47,74 @@ def CheckRequirements():
         print("Sandboxie is required for windows environments, please install it and make sure it is in the path")
         sys.exit(1)
 
-# Write required environment variables
-def WriteRequiredEnvironmentVariables():
-    environment.ClearEnvironmentVariables(verbose = config.default_flag_verbose, exit_on_failure = config.default_flag_exit_on_failure)
-    environment.SetEnvironmentVariables(verbose = config.default_flag_verbose, exit_on_failure = config.default_flag_exit_on_failure)
-    environment.SetEnvironmentPath(verbose = config.default_flag_verbose, exit_on_failure = config.default_flag_exit_on_failure)
+# Setup environment
+def SetupEnvironment():
 
-# Install required python environment
-def InstallRequiredPythonEnvironment():
-    environment.SetupPythonEnvironment(verbose = config.default_flag_verbose)
+    # Setup python environment
+    python.SetupPythonEnvironment(verbose = config.default_flag_verbose)
 
-# Install required python modules
-def InstallRequiredPythonModules():
-    environment.InstallPythonModules(
-        modules = environment.GetRequiredPythonModules(),
-        verbose = config.default_flag_verbose)
+    # Get required python modules
+    required_modules = config.required_python_modules_all
+    if environment.IsWindowsPlatform():
+        required_modules += config.required_python_modules_windows
+    elif environment.IsLinuxPlatform():
+        required_modules += config.required_python_modules_linux
 
-# Install required system packages
-def InstallRequiredSystemPackages():
-    environment.InstallSystemPackages(
-        packages = environment.GetRequiredSystemPackages(),
-        verbose = config.default_flag_verbose)
+    # Get required system packages
+    required_packages = config.required_system_packages_all
+    if environment.IsWindowsPlatform():
+        required_packages += config.required_system_packages_windows
+    elif environment.IsLinuxPlatform():
+        required_packages += config.required_system_packages_linux
 
-# Mount required network shares
-def MountRequiredNetworkShares():
+    # Install required python modules
+    for module in required_modules:
+        python.InstallPythonModule(
+            module = module,
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
 
-    # Storage share
-    network.MountNetworkShare(
-        mount_dir = environment.GetStorageRootDir(),
-        base_location = environment.GetNetworkShareBaseLocation(),
-        network_share = environment.GetNetworkShareStorageFolder(),
-        username = environment.GetNetworkShareUsername(),
-        password = environment.GetNetworkSharePassword(),
-        verbose = config.default_flag_verbose)
+    # Install required system packages
+    for package in required_packages:
+        packages.InstallSystemPackage(
+            package = package,
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
 
-    # Remote cache share
-    network.MountNetworkShare(
-        mount_dir = environment.GetRemoteCacheRootDir(),
-        base_location = environment.GetNetworkShareBaseLocation(),
-        network_share = environment.GetNetworkShareCacheFolder(),
-        username = environment.GetNetworkShareUsername(),
-        password = environment.GetNetworkSharePassword(),
-        verbose = config.default_flag_verbose)
-
-# Setup required tools
-def SetupRequiredTools(force_downloads = False):
+    # Setup required tools
     for tool in programs.GetTools():
-        tool.Download(force_downloads, verbose = True, exit_on_failure = True)
-        tool.Setup(verbose = True, exit_on_failure = True)
+        tool.Download(
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
+        tool.Setup(
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
 
-# Setup required emulators
-def SetupRequiredEmulators(force_downloads = False):
+    # Setup required emulators
     for emulator in programs.GetEmulators():
-        emulator.Download(force_downloads, verbose = True, exit_on_failure = True)
-        emulator.Setup(verbose = True, exit_on_failure = True)
+        emulator.Download(
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
+        emulator.Setup(
+            verbose = config.default_flag_verbose,
+            exit_on_failure = config.default_flag_exit_on_failure)
 
-# Setup required metadata assets
-def SetupRequiredMetadataAssets():
+    # Loop through categories and asset types
     for game_category in metadata.GetMetadataCategories():
         for game_subcategory in metadata.GetMetadataSubcategories(game_category):
             for asset_type in config.asset_types_all:
+
+                # Get directories
                 source_dir = environment.GetSyncedGameAssetDir(game_category, game_subcategory, asset_type)
                 dest_dir = environment.GetPegasusMetadataAssetDir(game_category, game_subcategory, asset_type)
+
+                # Remove existing symlink
                 system.RemoveSymlink(
                     symlink = dest_dir,
                     verbose = config.default_flag_verbose,
                     exit_on_failure = config.default_flag_exit_on_failure)
+
+                # Make new symlink
                 system.CreateSymlink(
                     src = source_dir,
                     dest = dest_dir,

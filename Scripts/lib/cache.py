@@ -9,12 +9,10 @@ import config
 import command
 import environment
 import system
-import network
 import metadata
-import launcher
 import transform
 import addon
-import install
+import userdata
 import gui
 
 # Check if game file is in cache already
@@ -76,15 +74,6 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
         source_file = os.path.join(source_dir, json_transform_file)
     if json_launch_name and len(source_file) == 0:
         source_file = os.path.join(source_dir, json_launch_name)
-
-    # Check mounted storage share
-    if not network.IsNetworkShareMounted(
-        mount_dir = environment.GetStorageRootDir(),
-        base_location = environment.GetNetworkShareBaseLocation(),
-        network_share = environment.GetNetworkShareStorageFolder()):
-        gui.DisplayErrorPopup(
-            title_text = "Storage share not mounted",
-            message_text = "Storage share must be mounted for cache installation\n%s\n%s" % (game_name, game_platform))
 
     # Check if source files are available
     if json_launch_name and source_file.endswith(json_launch_name):
