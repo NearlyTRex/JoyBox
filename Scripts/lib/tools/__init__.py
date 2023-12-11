@@ -1,11 +1,14 @@
 # Imports
 from . import appimagetool
 from . import cdecrypt
+from . import curl
 from . import dxvk
 from . import exiftool
 from . import extractxiso
 from . import ffmpeg
+from . import firefox
 from . import geckodriver
+from . import git
 from . import hactool
 from . import ludusavi
 from . import mametools
@@ -19,21 +22,28 @@ from . import psvstrip
 from . import psvtools
 from . import pylnk
 from . import rclone
+from . import sandboxie
+from . import sevenzip
 from . import sunshine
 from . import threedsromtool
 from . import vkd3d
 from . import wad2bin
+from . import wine
 from . import xcitrimmer
+from . import xorriso
 
 # Tool instances
 instances = [
     appimagetool.AppImageTool(),
     cdecrypt.CDecrypt(),
+    curl.Curl(),
     dxvk.DXVK(),
     exiftool.ExifTool(),
     extractxiso.ExtractXIso(),
     ffmpeg.FFMpeg(),
+    firefox.Firefox(),
     geckodriver.GeckoDriver(),
+    git.Git(),
     hactool.HacTool(),
     ludusavi.Ludusavi(),
     mametools.MameTools(),
@@ -47,11 +57,15 @@ instances = [
     psvtools.PSVTools(),
     pylnk.PyLnk(),
     rclone.RClone(),
+    sandboxie.Sandboxie(),
+    sevenzip.SevenZip(),
     sunshine.Sunshine(),
     threedsromtool.ThreeDSRomTool(),
     vkd3d.VKD3D(),
     wad2bin.Wad2Bin(),
-    xcitrimmer.XCITrimmer()
+    wine.Wine(),
+    xcitrimmer.XCITrimmer(),
+    xorriso.XorrISO()
 ]
 
 # Get tools
