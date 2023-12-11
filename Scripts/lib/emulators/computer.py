@@ -933,7 +933,7 @@ class Computer(base.EmulatorBase):
                 is_wine_prefix = should_run_via_wine,
                 is_sandboxie_prefix = should_run_via_sandboxie)
             launch_info_options = command.CommandOptions(
-                cwd = config.default_user_dir,
+                cwd = os.path.expanduser("~"),
                 force_prefix = True,
                 prefix_dir = launch_save_dir,
                 prefix_name = config.prefix_name_game,
