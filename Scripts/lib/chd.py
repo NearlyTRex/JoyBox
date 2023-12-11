@@ -32,9 +32,7 @@ def CreateDiscCHD(chd_file, source_iso, delete_original = False, verbose = False
 
     # Get tool
     chd_tool = None
-    if command.IsRunnableCommand(config.default_mame_chdman_exe, config.default_mame_chdman_install_dirs):
-        chd_tool = command.GetRunnableCommandPath(config.default_mame_chdman_exe, config.default_mame_chdman_install_dirs)
-    elif programs.IsToolInstalled("MameChdman"):
+    if programs.IsToolInstalled("MameChdman"):
         chd_tool = programs.GetToolProgram("MameChdman")
     if not chd_tool:
         return False
@@ -76,9 +74,7 @@ def ExtractDiscCHD(chd_file, binary_file, toc_file, delete_original = False, ver
 
     # Get tool
     chd_tool = None
-    if command.IsRunnableCommand(config.default_mame_chdman_exe, config.default_mame_chdman_install_dirs):
-        chd_tool = command.GetRunnableCommandPath(config.default_mame_chdman_exe, config.default_mame_chdman_install_dirs)
-    elif programs.IsToolInstalled("MameChdman"):
+    if programs.IsToolInstalled("MameChdman"):
         chd_tool = programs.GetToolProgram("MameChdman")
     if not chd_tool:
         return False
@@ -152,9 +148,7 @@ def VerifyDiscCHD(chd_file, verbose = False, exit_on_failure = False):
 
     # Get tool
     chd_tool = None
-    if command.IsRunnableCommand(config.default_mame_chdman_exe, config.default_mame_chdman_install_dirs):
-        chd_tool = command.GetRunnableCommandPath(config.default_mame_chdman_exe, config.default_mame_chdman_install_dirs)
-    elif programs.IsToolInstalled("MameChdman"):
+    if programs.IsToolInstalled("MameChdman"):
         chd_tool = programs.GetToolProgram("MameChdman")
     if not chd_tool:
         return False
