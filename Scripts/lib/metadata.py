@@ -696,6 +696,19 @@ def FindBestGameFile(game_directory):
         break
     return game_file
 
+# Get possible game names
+def GetPossibleGameNames(base_dir, game_category, game_subcategory):
+    game_names = []
+    base_path = os.path.join(base_dir, game_category, game_subcategory)
+    if game_category == config.game_category_computer:
+        for game_letter in system.GetDirectoryContents(base_path):
+            for game_name in system.GetDirectoryContents(os.path.join(base_path, game_letter)):
+                game_names.append(game_name)
+    else:
+        for game_name in system.GetDirectoryContents(base_path):
+            game_names.append(game_name)
+    return game_names
+
 # Convert metadata name to regular name
 def ConvertMetadataNameToRegularName(name):
     regular_name = name
