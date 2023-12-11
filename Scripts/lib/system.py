@@ -1098,7 +1098,7 @@ def ResolveVirtualRomPath(path):
             path = path,
             token = config.token_rom_json_root,
             replacement = environment.GetJsonRomsMetadataRootDir())
-    return path
+    return os.path.join(environment.GetJsonRomsMetadataRootDir(), path)
 
 ###########################################################
 
