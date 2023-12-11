@@ -78,7 +78,6 @@ def SimpleLaunch(
             title_text = "Select Game",
             message_text = "Select game to run",
             button_text = "Run game",
-            window_size = environment.GetCurrentScreenResolution(),
             run_func = HandleGameSelection)
 
     # Nothing to run

@@ -116,7 +116,6 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
             message_text = "Transforming and adding game to cache\n%s\n%s" % (game_name, game_platform),
             failure_text = "Unable to install game to cache",
             image_file = game_artwork,
-            window_size = environment.GetCurrentScreenResolution(),
             run_func = InstallTransformedGame)
     else:
 
@@ -134,7 +133,6 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
             message_text = "Adding game to cache\n%s\n%s" % (game_name, game_platform),
             failure_text = "Unable to install game to cache",
             image_file = game_artwork,
-            window_size = environment.GetCurrentScreenResolution(),
             run_func = InstallGame)
 
     # Check if game is now installed
