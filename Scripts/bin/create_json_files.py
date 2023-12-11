@@ -30,7 +30,7 @@ def main():
     for game_category in metadata.GetMetadataCategories():
         for game_subcategory in sorted(metadata.GetMetadataSubcategories(game_category)):
             game_platform = metadata.DeriveMetadataPlatform(game_category, game_subcategory)
-            for game_name in environment.GetGameNames(environment.GetRomRootDir(), game_category, game_subcategory):
+            for game_name in metadata.GetPossibleGameNames(environment.GetRomRootDir(), game_category, game_subcategory):
                 base_rom_path = environment.GetRomDir(game_category, game_subcategory, game_name)
 
                 # Get json file path
