@@ -46,8 +46,8 @@ def CreateZipFromFile(zip_file, source_file, delete_original = False, verbose = 
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(config.default_7zip_standalone_exe, config.default_7zip_install_dirs):
-        archive_tool = command.GetRunnableCommandPath(config.default_7zip_standalone_exe, config.default_7zip_install_dirs)
+    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip-Standalone")):
+        archive_tool = programs.GetToolProgram("7-Zip-Standalone")
     if not archive_tool:
         return False
 
@@ -95,8 +95,8 @@ def CreateZipFromFolder(zip_file, source_dir, excludes = [], delete_original = F
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(config.default_7zip_standalone_exe, config.default_7zip_install_dirs):
-        archive_tool = command.GetRunnableCommandPath(config.default_7zip_standalone_exe, config.default_7zip_install_dirs)
+    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip-Standalone")):
+        archive_tool = programs.GetToolProgram("7-Zip-Standalone")
     if not archive_tool:
         return False
 
@@ -149,8 +149,8 @@ def CreateExeFromFolder(exe_file, source_dir, excludes = [], delete_original = F
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(config.default_7zip_standalone_exe, config.default_7zip_install_dirs):
-        archive_tool = command.GetRunnableCommandPath(config.default_7zip_standalone_exe, config.default_7zip_install_dirs)
+    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip-Standalone")):
+        archive_tool = programs.GetToolProgram("7-Zip-Standalone")
     if not archive_tool:
         return False
 
@@ -200,8 +200,8 @@ def ExtractArchive(archive_file, extract_dir, skip_existing = False, delete_orig
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(config.default_7zip_exe, config.default_7zip_install_dirs):
-        archive_tool = command.GetRunnableCommandPath(config.default_7zip_exe, config.default_7zip_install_dirs)
+    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip")):
+        archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
         return False
 
@@ -249,8 +249,8 @@ def TestArchive(archive_file, verbose = False, exit_on_failure = False):
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(config.default_7zip_standalone_exe, config.default_7zip_install_dirs):
-        archive_tool = command.GetRunnableCommandPath(config.default_7zip_standalone_exe, config.default_7zip_install_dirs)
+    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip-Standalone")):
+        archive_tool = programs.GetToolProgram("7-Zip-Standalone")
     if not archive_tool:
         return False
 
