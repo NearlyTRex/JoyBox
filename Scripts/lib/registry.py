@@ -119,20 +119,9 @@ def ExportRegistryFile(
     system.AssertIsNonEmptyString(registry_key, "registry_key")
     system.AssertPathExists(prefix_dir, "prefix_dir")
 
-    # Get registry tool
-    registry_tool = None
-    if environment.IsWinePlatform():
-        registry_tool = config.default_reg_exe
-    else:
-        registry_tool = command.GetRunnableCommandPath(
-            config.default_reg_exe,
-            config.default_system_tools_dirs)
-    if not registry_tool:
-        return False
-
     # Get registry command
     registry_cmd = [
-        registry_tool,
+        "reg",
         "export",
         "\"%s\"" % registry_key,
         registry_file,
@@ -167,19 +156,11 @@ def ImportRegistryFile(
     # Check params
     system.AssertPathExists(registry_file, "registry_file")
 
-    # Get registry tool
-    registry_tool = None
-    if environment.IsWinePlatform():
-        registry_tool = config.default_reg_exe
-    else:
-        registry_tool = command.GetRunnableCommandPath(
-            config.default_reg_exe,
-            config.default_system_tools_dirs)
-    if not registry_tool:
-        return False
-
     # Get registry command
-    registry_cmd = [registry_tool, "import", registry_file]
+    registry_cmd = [
+        "reg",
+        "import", registry_file
+    ]
 
     # Run registry command
     command.RunBlockingCommand(
