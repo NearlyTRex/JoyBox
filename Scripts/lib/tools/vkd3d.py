@@ -61,8 +61,8 @@ class VKD3D(base.ToolBase):
                 search_file = "x64/d3d12.dll",
                 install_name = "VKD3D-Proton",
                 install_dir = programs.GetLibraryInstallDir("VKD3D"),
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):

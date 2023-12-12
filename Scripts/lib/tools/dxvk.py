@@ -63,5 +63,5 @@ class DXVK(base.ToolBase):
                 search_file = "x64/d3d9.dll",
                 install_name = "DXVK",
                 install_dir = programs.GetLibraryInstallDir("DXVK"),
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
