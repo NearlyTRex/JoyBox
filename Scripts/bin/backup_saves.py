@@ -12,6 +12,7 @@ import command
 import environment
 import programs
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Backup save files.")
@@ -24,6 +25,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Start ludusavi
     command.RunCheckedCommand(
         cmd = [
@@ -33,7 +38,8 @@ def main():
             "--merge",
             "--path", os.path.realpath(args.output_path)
         ],
-        verbose = True)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

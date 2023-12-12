@@ -13,6 +13,7 @@ import environment
 import system
 import chd
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Convert CHD files into zip files.")
@@ -35,6 +36,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Convert disc image files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".chd"]):
 
@@ -54,8 +59,8 @@ def main():
             zip_file = output_zip,
             disc_type = None,
             delete_original = args.delete_originals,
-            verbose = True,
-            exit_on_failure = True)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

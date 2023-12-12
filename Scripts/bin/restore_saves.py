@@ -11,6 +11,7 @@ sys.path.append(lib_folder)
 import command
 import environment
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Restore save files.")
@@ -28,6 +29,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Start ludusavi
     command.RunCheckedCommand(
         cmd = [
@@ -35,7 +40,8 @@ def main():
             "restore",
             "--path", os.path.realpath(args.input_path)
         ],
-        verbose = True)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

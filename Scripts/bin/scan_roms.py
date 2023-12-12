@@ -15,12 +15,17 @@ import environment
 import metadata
 import system
 import setup
+import ini
 
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Scripts
     build_metadata_file_bin = os.path.join(environment.GetScriptsBinDir(), "build_metadata_file" + environment.GetScriptsCommandExtension())
@@ -49,25 +54,29 @@ def main():
             ]
             command.RunCheckedCommand(
                 cmd = build_game_list_cmd,
-                verbose = True)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Add missing metadata
     print("Adding missing metadata ...")
     command.RunCheckedCommand(
         cmd = add_missing_metadata_bin,
-        verbose = True)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
     # Sort metadata files
     print("Sorting metadata files ...")
     command.RunCheckedCommand(
         cmd = sort_metadata_files_bin,
-        verbose = True)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
     # Publish metadata files
     print("Publishing metadata files ...")
     command.RunCheckedCommand(
         cmd = publish_metadata_files_bin,
-        verbose = True)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

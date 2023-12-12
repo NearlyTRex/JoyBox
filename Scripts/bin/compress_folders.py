@@ -12,6 +12,7 @@ import environment
 import archive
 import system
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Compress folders.")
@@ -41,6 +42,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Compress files
     for obj in system.GetDirectoryContents(root_path):
         obj_path = os.path.join(root_path, obj)
@@ -58,13 +63,15 @@ def main():
                 zip_file = output_file,
                 source_dir = obj_path,
                 delete_original = args.delete_originals,
-                verbose = True)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         elif args.output_type == "exe":
             archive.CreateExeFromFolder(
                 exe_file = output_file,
                 source_dir = obj_path,
                 delete_original = args.delete_originals,
-                verbose = True)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

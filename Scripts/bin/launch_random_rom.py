@@ -13,6 +13,7 @@ import environment
 import metadata
 import launcher
 import setup
+import ini
 
 # Setup argument parser
 parser = argparse.ArgumentParser(description="Launch random ROM.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -27,6 +28,10 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Set filter options
     filter_options = {}
@@ -45,8 +50,8 @@ def main():
     launcher.LaunchGame(
         launch_platform = game_entry[config.metadata_key_platform],
         file_path = game_entry[config.metadata_key_file],
-        verbose = config.default_flag_verbose,
-        exit_on_failure = config.default_flag_exit_on_failure)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

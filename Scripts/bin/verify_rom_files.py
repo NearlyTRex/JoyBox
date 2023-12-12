@@ -16,12 +16,17 @@ import system
 import metadata
 import hashing
 import setup
+import ini
 
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Find extra json files
     for json_file in system.BuildFileListByExtensions(environment.GetJsonMetadataRootDir(), extensions = [".json"]):
@@ -67,8 +72,8 @@ def main():
                 # Read json file
                 json_file_data = system.ReadJsonFile(
                     src = json_file_path,
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
 
                 # Get json info
                 json_file_list = None

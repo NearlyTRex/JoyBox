@@ -16,6 +16,7 @@ import launcher
 import cache
 import setup
 import gui
+import ini
 
 # Setup argument parser
 parser = argparse.ArgumentParser(description="Launch ROM.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -43,6 +44,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Get launch info
     launch_platform = args.launch_platform
     launch_file = system.ResolveVirtualRomPath(args.rom)
@@ -65,16 +70,16 @@ def main():
             game_platform = launch_platform,
             game_name = launch_name,
             game_file = launch_file,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     # Launch rom
     launcher.LaunchGame(
         launch_platform = launch_platform,
         file_path = launch_file,
         capture_type = args.capture_type,
-        verbose = config.default_flag_verbose,
-        exit_on_failure = config.default_flag_exit_on_failure)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

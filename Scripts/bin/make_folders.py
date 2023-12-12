@@ -13,6 +13,7 @@ sys.path.append(lib_folder)
 import environment
 import system
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Create folders from certain file types.")
@@ -35,6 +36,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Make folders from file types
     for obj in system.GetDirectoryContents(input_path):
         obj_path = os.path.join(input_path, obj)
@@ -45,8 +50,8 @@ def main():
                 selected_file_basename = selected_file_path.stem
                 new_folder = os.path.join(input_path, selected_file_basename)
                 new_file = os.path.join(input_path, selected_file_basename, obj)
-                system.MakeDirectory(new_folder, exit_on_failure = True)
-                system.MoveFileOrDirectory(selected_file, new_file, exit_on_failure = True)
+                system.MakeDirectory(new_folder, verbose = verbose, exit_on_failure = exit_on_failure)
+                system.MoveFileOrDirectory(selected_file, new_file, verbose = verbose, exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

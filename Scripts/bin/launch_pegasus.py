@@ -13,6 +13,7 @@ import environment
 import command
 import programs
 import setup
+import ini
 
 # Main
 def main():
@@ -20,13 +21,17 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Start pegasus
     command.RunCheckedCommand(
         cmd = [programs.GetToolProgram("Pegasus")],
         options = command.CommandOptions(
             cwd = os.path.dirname(programs.GetToolProgram("Pegasus"))),
-        verbose = config.default_flag_verbose,
-        exit_on_failure = config.default_flag_exit_on_failure)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

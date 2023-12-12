@@ -14,6 +14,7 @@ import environment
 import system
 import nintendo
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Nintendo Switch rom tool.")
@@ -38,6 +39,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Find xci files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".xci"]):
         current_file = file
@@ -50,8 +55,8 @@ def main():
                 src_xci_file = current_file,
                 dest_xci_file = os.path.join(current_file_dir, current_file_basename + "_trimmed.xci"),
                 delete_original = args.delete_originals,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
         # Untrim xci
         elif args.untrim:
@@ -59,8 +64,8 @@ def main():
                 src_xci_file = current_file,
                 dest_xci_file = os.path.join(current_file_dir, current_file_basename + "_untrimmed.xci"),
                 delete_original = args.delete_originals,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

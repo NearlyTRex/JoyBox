@@ -17,6 +17,7 @@ import metadata
 import cache
 import setup
 import gui
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Cache game files.")
@@ -33,6 +34,10 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Get game file
     game_file = args.path
@@ -65,8 +70,8 @@ def main():
             game_platform = game_platform,
             game_name = game_name,
             game_file = game_file,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     # Get game artwork
     game_artwork = environment.GetSyncedGameAssetFile(
@@ -82,8 +87,8 @@ def main():
         game_file = game_file,
         game_artwork = game_artwork,
         keep_setup_files = args.keep_setup_files,
-        verbose = config.default_flag_verbose,
-        exit_on_failure = config.default_flag_exit_on_failure)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

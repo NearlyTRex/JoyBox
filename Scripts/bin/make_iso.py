@@ -14,6 +14,7 @@ import system
 import archive
 import iso
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Make ISO images out of all folders or zips in a path.")
@@ -45,6 +46,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Create iso images from folders
     if args.input_type == "folder":
         for obj in system.GetDirectoryContents(input_path):
@@ -68,7 +73,8 @@ def main():
                 source_dir = obj_path,
                 volume_name = volume_name,
                 delete_original = args.delete_originals,
-                verbose = True)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Create iso images from zips
     elif args.input_type == "zip":
@@ -91,7 +97,8 @@ def main():
                 extract_dir = extracted_dir,
                 work_dir = current_dir,
                 delete_original = args.delete_originals,
-                verbose = True)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
             # Get volume name
             volume_name = args.volume_name
@@ -105,7 +112,8 @@ def main():
                 work_dir = extracted_dir,
                 volume_name = volume_name,
                 delete_original = args.delete_originals,
-                verbose = True)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

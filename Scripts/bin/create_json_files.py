@@ -15,6 +15,7 @@ import metadata
 import transform
 import system
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Create or update json files.")
@@ -25,6 +26,10 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Create json files
     for game_category in metadata.GetMetadataCategories():
@@ -43,8 +48,8 @@ def main():
                 if os.path.exists(json_file_path):
                     json_file_data = system.ReadJsonFile(
                         src = json_file_path,
-                        verbose = config.default_flag_verbose,
-                        exit_on_failure = config.default_flag_exit_on_failure)
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
 
                 # Set transform file
                 needs_transform_file = transform.IsTransformRequired(game_platform)
@@ -133,21 +138,21 @@ def main():
                 # Write json file
                 system.MakeDirectory(
                     dir = system.GetFilenameDirectory(json_file_path),
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
                 system.WriteJsonFile(
                     src = json_file_path,
                     json_data = json_file_data,
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
 
                 # Clean json file
                 system.CleanJsonFile(
                     src = json_file_path,
                     sort_keys = True,
                     remove_empty_values = True,
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

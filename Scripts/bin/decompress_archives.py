@@ -12,6 +12,7 @@ import environment
 import system
 import archive
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Decompress archive files.")
@@ -36,6 +37,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Decompress archives
     for file in system.BuildFileListByExtensions(root_path, extensions = args.archive_types.split(",")):
 
@@ -52,7 +57,8 @@ def main():
             archive_file = current_file,
             extract_dir = output_dir,
             delete_original = args.delete_originals,
-            verbose = True)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

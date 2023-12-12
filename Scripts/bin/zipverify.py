@@ -13,6 +13,7 @@ import environment
 import system
 import setup
 import archive
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Verify zip files.")
@@ -34,6 +35,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Convert disc image files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".zip"]):
 
@@ -41,8 +46,8 @@ def main():
         system.Log("Verifying %s ..." % file)
         verification_success = archive.TestArchive(
             archive_file = file,
-            verbose = True,
-            exit_on_failure = True)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
         if verification_success:
             system.LogSuccess("Verified!")
         else:

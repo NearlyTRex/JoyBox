@@ -12,12 +12,17 @@ import environment
 import music
 import system
 import setup
+import ini
 
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Paths
     music_base_dir = environment.GetSyncedMusicRootDir()
@@ -29,7 +34,7 @@ def main():
             music.GenerateMusicPlaylist(
                 source_dir = obj_path,
                 output_file = os.path.join(music_base_dir, obj + ".m3u"),
-                verbose = True)
+                verbose = verbose)
 
 # Start
 environment.RunAsRootIfNecessary(main)

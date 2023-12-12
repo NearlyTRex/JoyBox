@@ -13,6 +13,7 @@ import environment
 import system
 import chd
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Convert disc images to CHD files.")
@@ -36,6 +37,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Convert disc image files
     for file in system.BuildFileListByExtensions(input_path, extensions = args.disc_image_types.split(",")):
 
@@ -54,8 +59,8 @@ def main():
             chd_file = output_chd,
             source_iso = current_file,
             delete_original = args.delete_originals,
-            verbose = True,
-            exit_on_failure = True)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

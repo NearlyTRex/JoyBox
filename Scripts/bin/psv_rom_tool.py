@@ -14,6 +14,7 @@ import environment
 import system
 import playstation
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Sony PlayStation Vita rom tool.")
@@ -41,6 +42,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Find psv files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".psv"]):
         current_file = file
@@ -53,8 +58,8 @@ def main():
                 src_psv_file = current_file,
                 dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_stripped.psv"),
                 delete_original = args.delete_originals,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
         # Unstrip psv
         elif args.unstrip:
@@ -63,8 +68,8 @@ def main():
                 src_psve_file = os.path.join(current_file_dir, current_file_basename + ".psve"),
                 dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_unstripped.psv"),
                 delete_original = args.delete_originals,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
         # Trim psv
         elif args.trim:
@@ -72,8 +77,8 @@ def main():
                 src_psv_file = current_file,
                 dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_trimmed.psv"),
                 delete_original = args.delete_originals,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
         # Untrim psv
         elif args.untrim:
@@ -81,15 +86,15 @@ def main():
                 src_psv_file = current_file,
                 dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_untrimmed.psv"),
                 delete_original = args.delete_originals,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
         # Verify psv
         elif args.verify:
             playstation.VerifyPSV(
                 psv_file = current_file,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

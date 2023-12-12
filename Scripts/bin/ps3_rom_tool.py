@@ -13,6 +13,7 @@ import environment
 import system
 import setup
 import playstation
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Sony PlayStation 3 rom tool.")
@@ -35,6 +36,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Find rom files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".chd"]):
 
@@ -42,8 +47,8 @@ def main():
         if args.verify_chd:
             playstation.VerifyPS3CHD(
                 chd_file = file,
-                verbose = config.default_flag_verbose,
-                exit_on_failure = config.default_flag_exit_on_failure)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)

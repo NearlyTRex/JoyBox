@@ -13,6 +13,7 @@ import environment
 import system
 import nintendo
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Nintendo Wii U rom tool.")
@@ -37,6 +38,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Find rom files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".tik"]):
         if file.endswith("title.tik"):
@@ -49,15 +54,15 @@ def main():
                 nintendo.DecryptWiiUNUSPackage(
                     nus_package_dir = current_file_dir,
                     delete_original = args.delete_originals,
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
 
             # Verify NUS package
             elif args.verify_nus:
                 nintendo.VerifyWiiUNUSPackage(
                     nus_package_dir = current_file_dir,
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
 
 # Start
 environment.RunAsRootIfNecessary(main)
