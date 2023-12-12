@@ -272,23 +272,6 @@ def SortFileContents(src, verbose = False, pretend_run = False, exit_on_failure 
             sys.exit(1)
         return False
 
-# Create image
-def CreateImage(src, dimensions = (128,128), color = "rgb(0,0,0)", verbose = False, pretend_run = False, exit_on_failure = False):
-    try:
-        if verbose:
-            print("Creating image file %s" % src)
-        if not pretend_run:
-            import PIL.Image
-            img = PIL.Image.new("RGB", dimensions, color)
-            img.save(src)
-        return True
-    except Exception as e:
-        if exit_on_failure:
-            print("Unable to create image file %s" % src)
-            print(e)
-            sys.exit(1)
-        return False
-
 ###########################################################
 
 # Remove empty directories
