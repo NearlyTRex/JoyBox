@@ -18,6 +18,7 @@ import network
 import sandbox
 import metadata
 import display
+import ini
 import gui
 
 # Local imports
@@ -750,7 +751,6 @@ class Computer(base.EmulatorBase):
             game_name = launch_name,
             game_file = launch_file,
             game_artwork = launch_artwork,
-            keep_setup_files = config.default_flag_keep_setup_files,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
@@ -793,16 +793,24 @@ class Computer(base.EmulatorBase):
 
             # Steam
             if launch_subcategory == "Steam":
-                system.TouchFile(
-                    src = sandbox.GetGoldbergSteamEmuUserNameFile(launch_general_save_dir),
-                    contents = "%s\n" % config.default_steam_username,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
-                system.TouchFile(
-                    src = sandbox.GetGoldbergSteamEmuUserIDFile(launch_general_save_dir),
-                    contents = "%s\n" % config.default_steam_userid,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
+
+                # Create steam username file
+                steam_username = ini.GetIniValue("UserData.Steam", "steam_username")
+                if steam_username:
+                    system.TouchFile(
+                        src = sandbox.GetGoldbergSteamEmuUserNameFile(launch_general_save_dir),
+                        contents = "%s\n" % steam_username,
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
+
+                # Create steam userid file
+                steam_userid = ini.GetIniValue("UserData.Steam", "steam_userid")
+                if steam_userid:
+                    system.TouchFile(
+                        src = sandbox.GetGoldbergSteamEmuUserIDFile(launch_general_save_dir),
+                        contents = "%s\n" % steam_userid,
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
 
         # Get user profile temp directory
         user_profile_dir = sandbox.GetUserProfilePath(
