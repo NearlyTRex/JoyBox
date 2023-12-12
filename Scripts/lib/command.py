@@ -630,6 +630,8 @@ def RunGameCommand(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Blocking game start method
     def run_game():
         RunBlockingCommand(
             cmd = cmd,
@@ -637,22 +639,61 @@ def RunGameCommand(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+
+    # Get capture info
+    capture_duration = ini.GetIniIntegerValue("UserData.Capture", "capture_duration")
+    capture_interval = ini.GetIniIntegerValue("UserData.Capture", "capture_interval")
+    capture_origin_x = ini.GetIniIntegerValue("UserData.Capture", "capture_origin_x")
+    capture_origin_y = ini.GetIniIntegerValue("UserData.Capture", "capture_origin_y")
+    capture_resolution_w = ini.GetIniIntegerValue("UserData.Capture", "capture_resolution_w")
+    capture_resolution_h = ini.GetIniIntegerValue("UserData.Capture", "capture_resolution_h")
+    capture_framerate = ini.GetIniIntegerValue("UserData.Capture", "capture_framerate")
+    overwrite_screenshots = ini.GetIniBoolValue("UserData.Capture", "overwrite_screenshots")
+    overwrite_videos = ini.GetIniBoolValue("UserData.Capture", "overwrite_videos")
+
+    # Screenshot capturing
     if capture_type == config.capture_type_screenshot:
+
+        # Get output file
         output_file = environment.GetSyncedGameAssetFile(category, subcategory, name, config.asset_type_screenshot)
-        capture.CaptureScreenshotWhileRunning(
-            run_func = run_game,
-            output_file = output_file,
-            current_win = True,
-            verbose = verbose)
+
+        # Run game while capturing screenshots
+        if os.path.exists(output_file) and not overwrite_screenshots:
+            run_game()
+        else:
+            capture.CaptureScreenshotWhileRunning(
+                run_func = run_game,
+                output_file = output_file,
+                current_win = True,
+                capture_origin = (capture_origin_x, capture_origin_y),
+                capture_resolution = (capture_resolution_w, capture_resolution_h),
+                time_duration = capture_duration,
+                time_interval = capture_interval,
+                time_units_type = config.unit_type_seconds,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+    # Video capturing
     elif capture_type == config.capture_type_video:
+
+        # Get output file
         output_file = environment.GetSyncedGameAssetFile(category, subcategory, name, config.asset_type_video)
-        if os.path.exists(output_file):
+
+        # Run game while capturing video
+        if os.path.exists(output_file) and not overwrite_videos:
             run_game()
         else:
             capture.CaptureVideoWhileRunning(
                 run_func = run_game,
                 output_file = output_file,
-                verbose = verbose)
+                capture_origin = (capture_origin_x, capture_origin_y),
+                capture_resolution = (capture_resolution_w, capture_resolution_h),
+                capture_framerate = capture_framerate,
+                capture_duration = capture_duration,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+    # No capture
     else:
         run_game()
 
