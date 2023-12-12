@@ -721,6 +721,7 @@ class Computer(base.EmulatorBase):
         launch_save_dir,
         launch_general_save_dir,
         launch_capture_type,
+        fullscreen = False,
         verbose = False,
         exit_on_failure = False):
 
@@ -874,7 +875,7 @@ class Computer(base.EmulatorBase):
                     start_program = selected_cmd,
                     start_letter = "c",
                     start_offset = selected_cwd,
-                    fullscreen = config.default_flag_fullscreen)
+                    fullscreen = fullscreen)
                 launch_info_options = command.CommandOptions(
                     prefix_dir = launch_save_dir,
                     prefix_name = config.prefix_name_game,
@@ -901,7 +902,7 @@ class Computer(base.EmulatorBase):
                     start_letter = "c",
                     start_offset = selected_cwd,
                     disc_letter = "d",
-                    fullscreen = config.default_flag_fullscreen)
+                    fullscreen = fullscreen)
                 launch_info_options = command.CommandOptions(
                     prefix_dir = launch_save_dir,
                     prefix_name = config.prefix_name_game,
@@ -916,7 +917,7 @@ class Computer(base.EmulatorBase):
                 prefix_dir = launch_save_dir,
                 is_wine_prefix = should_run_via_wine,
                 is_sandboxie_prefix = should_run_via_sandboxie,
-                fullscreen = config.default_flag_fullscreen)
+                fullscreen = fullscreen)
             launch_info_options = command.CommandOptions(
                 prefix_dir = launch_save_dir,
                 prefix_name = config.prefix_name_game,

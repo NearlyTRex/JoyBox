@@ -128,6 +128,7 @@ class Cemu(base.EmulatorBase):
         launch_save_dir,
         launch_general_save_dir,
         launch_capture_type,
+        fullscreen = False,
         verbose = False,
         exit_on_failure = False):
 
@@ -161,6 +162,10 @@ class Cemu(base.EmulatorBase):
             programs.GetEmulatorProgram("Cemu"),
             "-g", config.token_game_file
         ]
+        if fullscreen:
+            launch_cmd += [
+                "-f"
+            ]
 
         # Launch game
         launchcommon.SimpleLaunch(

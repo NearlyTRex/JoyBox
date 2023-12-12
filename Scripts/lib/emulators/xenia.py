@@ -100,6 +100,7 @@ class Xenia(base.EmulatorBase):
         launch_save_dir,
         launch_general_save_dir,
         launch_capture_type,
+        fullscreen = False,
         verbose = False,
         exit_on_failure = False):
 
@@ -108,6 +109,10 @@ class Xenia(base.EmulatorBase):
             programs.GetEmulatorProgram("Xenia"),
             config.token_game_file
         ]
+        if fullscreen:
+            launch_cmd += [
+                "--fullscreen=true"
+            ]
 
         # Launch game
         launchcommon.SimpleLaunch(

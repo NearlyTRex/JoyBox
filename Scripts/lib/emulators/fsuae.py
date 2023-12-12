@@ -140,6 +140,7 @@ class FSUAE(base.EmulatorBase):
         launch_save_dir,
         launch_general_save_dir,
         launch_capture_type,
+        fullscreen = False,
         verbose = False,
         exit_on_failure = False):
 
@@ -148,6 +149,10 @@ class FSUAE(base.EmulatorBase):
             programs.GetEmulatorProgram("FS-UAE"),
             config.token_game_file
         ]
+        if fullscreen:
+            launch_cmd += [
+                "--fullscreen=1"
+            ]
 
         # Launch game
         launchcommon.SimpleLaunch(

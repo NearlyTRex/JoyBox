@@ -194,6 +194,7 @@ class PCSX2(base.EmulatorBase):
         launch_save_dir,
         launch_general_save_dir,
         launch_capture_type,
+        fullscreen = False,
         verbose = False,
         exit_on_failure = False):
 
@@ -202,6 +203,10 @@ class PCSX2(base.EmulatorBase):
             programs.GetEmulatorProgram("PCSX2"),
             config.token_game_file
         ]
+        if fullscreen:
+            launch_cmd += [
+                "-fullscreen"
+            ]
 
         # Launch game
         launchcommon.SimpleLaunch(

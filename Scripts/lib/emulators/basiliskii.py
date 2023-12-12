@@ -207,6 +207,7 @@ class BasiliskII(base.EmulatorBase):
         launch_save_dir,
         launch_general_save_dir,
         launch_capture_type,
+        fullscreen = False,
         verbose = False,
         exit_on_failure = False):
 
@@ -215,6 +216,10 @@ class BasiliskII(base.EmulatorBase):
             programs.GetEmulatorProgram("BasiliskII"),
             "--disk", config.token_game_file
         ]
+        if fullscreen:
+            launch_cmd += [
+                "--nogui", "true"
+            ]
 
         # Launch game
         launchcommon.SimpleLaunch(

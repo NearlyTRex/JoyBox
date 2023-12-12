@@ -137,6 +137,7 @@ class Xemu(base.EmulatorBase):
         launch_save_dir,
         launch_general_save_dir,
         launch_capture_type,
+        fullscreen = False,
         verbose = False,
         exit_on_failure = False):
 
@@ -145,6 +146,10 @@ class Xemu(base.EmulatorBase):
             programs.GetEmulatorProgram("Xemu"),
             "-dvd_path", config.token_game_file
         ]
+        if fullscreen:
+            launch_cmd += [
+                "-full-screen"
+            ]
 
         # Launch game
         launchcommon.SimpleLaunch(
