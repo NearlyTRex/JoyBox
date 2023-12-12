@@ -44,46 +44,42 @@ def GetRemoteJson(url):
 # Download url to local dir
 def DownloadUrl(url, output_dir = None, output_file = None, verbose = False, exit_on_failure = False):
 
-    # Check download tools
-    has_wget = command.IsRunnableCommand(config.default_wget_exe, config.default_system_tools_dirs)
-    has_curl = command.IsRunnableCommand(config.default_curl_exe, config.default_system_tools_dirs)
-    wget_path = command.GetRunnableCommandPath(config.default_wget_exe, config.default_system_tools_dirs)
-    curl_path = command.GetRunnableCommandPath(config.default_curl_exe, config.default_system_tools_dirs)
+    # Get tool
+    download_tool = None
+    if command.IsRunnableCommand(programs.GetToolProgram("Curl")):
+        download_tool = programs.GetToolProgram("Curl")
+    if not download_tool:
+        return False
 
     # Get download command
-    download_cmd = None
-    download_tool = None
-    if has_wget:
-        download_tool = wget_path
-        download_cmd = [wget_path]
-        if output_dir:
-            download_cmd += ["-P", output_dir]
-        elif output_file:
-            download_cmd += ["-O", output_file]
-        download_cmd += [url]
-    elif has_curl:
-        download_tool = curl_path
-        download_cmd = [curl_path, "-L"]
-        if output_dir:
-            download_cmd += ["--output-dir", output_dir, "-O"]
-        elif output_file:
-            download_cmd += ["--output", output_file]
-        download_cmd += [url]
-    if not download_cmd:
-        return False
+    download_cmd = [
+        download_tool,
+        "-L"
+    ]
+    if output_dir:
+        download_cmd += [
+            "--output-dir", output_dir,
+            "-O"
+        ]
+    elif output_file:
+        download_cmd += [
+            "--output", output_file
+        ]
+    download_cmd += [url]
 
     # Create output directory
     if output_dir:
         system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Run download command
-    command.RunBlockingCommand(
+    code = command.RunBlockingCommand(
         cmd = download_cmd,
         options = command.CommandOptions(
-            allow_processing = environment.IsWinePlatform(),
             blocking_processes = [download_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if code != 0:
+        return False
 
     # Check result
     if output_dir:
@@ -111,8 +107,8 @@ def DownloadGitUrl(url, output_dir, clean_first = False, verbose = False, exit_o
 
     # Get tool
     download_tool = None
-    if command.IsRunnableCommand(config.default_git_exe, config.default_git_install_dirs):
-        download_tool = command.GetRunnableCommandPath(config.default_git_exe, config.default_git_install_dirs)
+    if command.IsRunnableCommand(programs.GetToolProgram("Git")):
+        download_tool = programs.GetToolProgram("Git")
     if not download_tool:
         return False
 
