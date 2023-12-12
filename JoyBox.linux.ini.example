@@ -34,6 +34,8 @@ capture_origin_y = 0
 capture_resolution_w = 1920
 capture_resolution_h = 1080
 capture_framerate = 30
+overwrite_screenshots = False
+overwrite_videos = False
 
 [UserData.Steam]
 steam_username =
