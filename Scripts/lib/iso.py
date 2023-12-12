@@ -27,8 +27,8 @@ def CreateISO(iso_file, source_dir = None, source_dirs = [], volume_name = None,
 
     # Get tool
     iso_tool = None
-    if command.IsRunnableCommand(config.default_xorriso_exe, config.default_xorriso_install_dirs):
-        iso_tool = command.GetRunnableCommandPath(config.default_xorriso_exe, config.default_xorriso_install_dirs)
+    if command.IsRunnableCommand(programs.GetToolProgram("XorrISO")):
+        iso_tool = programs.GetToolProgram("XorrISO")
     if not iso_tool:
         return False
 
@@ -70,8 +70,8 @@ def ExtractISO(iso_file, extract_dir, delete_original = False, verbose = False, 
 
     # Get tool
     iso_tool = None
-    if command.IsRunnableCommand(config.default_xorriso_exe, config.default_xorriso_install_dirs):
-        iso_tool = command.GetRunnableCommandPath(config.default_xorriso_exe, config.default_xorriso_install_dirs)
+    if command.IsRunnableCommand(programs.GetToolProgram("XorrISO")):
+        iso_tool = programs.GetToolProgram("XorrISO")
     if not iso_tool:
         return False
 

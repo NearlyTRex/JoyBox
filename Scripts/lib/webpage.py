@@ -27,9 +27,7 @@ def CreateWebDriver(download_dir = None, make_headless = False, verbose = False)
             options.set_preference("browser.download.dir", download_dir)
         if make_headless:
             options.headless = True
-        options.binary_location = command.GetRunnableCommandPath(
-            config.default_firefox_exe,
-            config.default_firefox_install_dirs)
+        options.binary_location = programs.GetToolProgram("Firefox")
         return Firefox(service=service, options=options)
     except Exception as e:
         if verbose:
