@@ -15,7 +15,7 @@ import programs
 import saves
 
 # Launch game
-def LaunchGame(launch_platform, file_path, capture_type = None, verbose = False, exit_on_failure = False):
+def LaunchGame(launch_platform, file_path, capture_type = None, fullscreen = False, verbose = False, exit_on_failure = False):
 
     # Get real file path
     real_file_path = system.ResolveVirtualRomPath(file_path)
@@ -93,6 +93,7 @@ def LaunchGame(launch_platform, file_path, capture_type = None, verbose = False,
         launch_save_dir = save_dir_real,
         launch_general_save_dir = save_dir_general,
         launch_capture_type = capture_type,
+        fullscreen = fullscreen,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
