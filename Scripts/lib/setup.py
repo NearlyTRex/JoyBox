@@ -48,10 +48,10 @@ def CheckRequirements():
         sys.exit(1)
 
 # Setup environment
-def SetupEnvironment():
+def SetupEnvironment(verbose = False, exit_on_failure = False):
 
     # Setup python environment
-    python.SetupPythonEnvironment(verbose = config.default_flag_verbose)
+    python.SetupPythonEnvironment(verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Get required python modules
     required_modules = config.required_python_modules_all
@@ -71,33 +71,33 @@ def SetupEnvironment():
     for module in required_modules:
         python.InstallPythonModule(
             module = module,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     # Install required system packages
     for package in required_packages:
         packages.InstallSystemPackage(
             package = package,
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     # Setup required tools
     for tool in programs.GetTools():
         tool.Download(
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
         tool.Setup(
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     # Setup required emulators
     for emulator in programs.GetEmulators():
         emulator.Download(
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
         emulator.Setup(
-            verbose = config.default_flag_verbose,
-            exit_on_failure = config.default_flag_exit_on_failure)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     # Loop through categories and asset types
     for game_category in metadata.GetMetadataCategories():
@@ -111,13 +111,13 @@ def SetupEnvironment():
                 # Remove existing symlink
                 system.RemoveSymlink(
                     symlink = dest_dir,
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
 
                 # Make new symlink
                 system.CreateSymlink(
                     src = source_dir,
                     dest = dest_dir,
                     cwd = system.GetDirectoryParent(dest_dir),
-                    verbose = config.default_flag_verbose,
-                    exit_on_failure = config.default_flag_exit_on_failure)
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
