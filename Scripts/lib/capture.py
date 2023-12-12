@@ -17,52 +17,16 @@ import background
 # Capture screenshot
 def CaptureScreenshot(
     output_file,
-    current_win = False,
-    full_win = False,
-    capture_origin = config.default_capture_origin,
-    capture_resolution = config.default_capture_resolution,
     verbose = False,
     exit_on_failure = False):
 
     # Check params
     system.AssertIsValidPath(output_file, "output_file")
 
-    # Get prefix
-    prefix_dir = programs.GetProgramPrefixDir("NirCmd")
-    prefix_name = programs.GetProgramPrefixName("NirCmd")
-
-    # Get tool
-    nircmd_tool = None
-    if programs.IsToolInstalled("NirCmd"):
-        nircmd_tool = programs.GetToolProgram("NirCmd")
-    if not nircmd_tool:
-        return False
-
-    # Get capture command
-    capture_cmd = [nircmd_tool]
-    if current_win:
-        capture_cmd += ["savescreenshotwin"]
-    elif full_win:
-        capture_cmd += ["savescreenshotfull"]
-    else:
-        capture_cmd += ["savescreenshot"]
-    capture_cmd += [output_file]
-    if not current_win and not full_win:
-        capture_cmd += list(capture_origin)
-        capture_cmd += list(capture_resolution)
-
-    # Run capture command
-    command.RunBlockingCommand(
-        cmd = capture_cmd,
-        options = command.CommandOptions(
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            is_wine_prefix = sandbox.ShouldBeRunViaWine(nircmd_tool),
-            is_sandboxie_prefix = sandbox.ShouldBeRunViaSandboxie(nircmd_tool),
-            output_paths = [output_file],
-            blocking_processes = [nircmd_tool]),
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+    # Capture screenshot
+    import PIL.ImageGrab
+    screenshot = Pil.ImageGrab.grab()
+    screenshot.save(output_file)
 
     # Check result
     return os.path.exists(output_file)
@@ -71,13 +35,9 @@ def CaptureScreenshot(
 def CaptureScreenshotWhileRunning(
     run_func,
     output_file,
-    current_win = False,
-    full_win = False,
-    capture_origin = config.default_capture_origin,
-    capture_resolution = config.default_capture_resolution,
-    time_duration = config.default_capture_duration,
-    time_interval = config.default_capture_interval,
-    time_units_type = config.unit_type_seconds,
+    time_duration,
+    time_interval,
+    time_units_type,
     verbose = False,
     exit_on_failure = False):
 
@@ -88,10 +48,6 @@ def CaptureScreenshotWhileRunning(
     def capture_func():
         CaptureScreenshot(
             output_file = output_file,
-            current_win = current_win,
-            full_win = full_win,
-            capture_origin = capture_origin,
-            capture_resolution = capture_resolution,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
@@ -113,10 +69,10 @@ def CaptureScreenshotWhileRunning(
 # Capture video
 def CaptureVideo(
     output_file,
-    capture_origin = config.default_capture_origin,
-    capture_resolution = config.default_capture_resolution,
-    capture_framerate = config.default_capture_framerate,
-    capture_duration = config.default_capture_duration,
+    capture_origin,
+    capture_resolution,
+    capture_framerate,
+    capture_duration,
     verbose = False,
     exit_on_failure = False):
 
@@ -201,10 +157,10 @@ def CaptureVideo(
 def CaptureVideoWhileRunning(
     run_func,
     output_file,
-    capture_origin = config.default_capture_origin,
-    capture_resolution = config.default_capture_resolution,
-    capture_framerate = config.default_capture_framerate,
-    capture_duration = config.default_capture_duration,
+    capture_origin,
+    capture_resolution,
+    capture_framerate,
+    capture_duration,
     verbose = False,
     exit_on_failure = False):
 
