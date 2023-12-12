@@ -11,25 +11,11 @@ import programs
 
 # Get current screen resolution
 def GetCurrentScreenResolution():
-
-    # Linux
-    if IsLinuxPlatform():
-        output = command.RunOutputCommand(
-            cmd = ["xdpyinfo"],
-            options = command.CommandOptions(shell = True))
-        for line in output.split("\n"):
-            if "dimensions:" in line:
-                line_tokens = line.split()
-                if len(line_tokens) < 2:
-                    continue
-                dimensions = line_tokens[1].split("x")
-                return (int(dimensions[0]), int(dimensions[1]))
-
-    # Other
-    else:
-        import pyautogui
-        size = pyautogui.size()
-        return (size.width, size.height)
+    import screeninfo
+    for monitor in screeninfo.get_monitors():
+        if monitor.is_primary:
+            return (monitor.width, monitor.height)
+    return (0, 0)
 
 # Set screen resolution
 def SetScreenResolution(width, height, colors, verbose = False, exit_on_failure = False):
@@ -62,17 +48,22 @@ def SetScreenResolution(width, height, colors, verbose = False, exit_on_failure 
 # Restore default screen resolution
 def RestoreDefaultScreenResolution(verbose = False, exit_on_failure = False):
 
+    # Get resolution info
+    screen_resolution_w = ini.GetIniIntegerValue("UserData.Resolution", "screen_resolution_w")
+    screen_resolution_h = ini.GetIniIntegerValue("UserData.Resolution", "screen_resolution_h")
+    screen_resolution_c = ini.GetIniIntegerValue("UserData.Resolution", "screen_resolution_c")
+
     # Ignore if already at the default resolution
     current_w, current_h = GetCurrentScreenResolution()
-    is_default_w = (current_w == config.default_screen_resolution_w)
-    is_default_h = (current_h == config.default_screen_resolution_h)
+    is_default_w = (current_w == screen_resolution_w)
+    is_default_h = (current_h == screen_resolution_h)
     if is_default_w and is_default_h:
         return True
 
     # Set the new resolution otherwise
     return SetScreenResolution(
-        width = config.default_screen_resolution_w,
-        height = config.default_screen_resolution_h,
-        colors = config.default_screen_resolution_c,
+        width = screen_resolution_w,
+        height = screen_resolution_h,
+        colors = screen_resolution_c,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
