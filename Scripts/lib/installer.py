@@ -445,7 +445,7 @@ def InstallComputerGame(json_file, output_image, keep_setup_files = False, verbo
         exit_on_failure = exit_on_failure)
 
     # Get prefix C drive
-    prefix_c_drive_virtual = config.default_drive_root_windows
+    prefix_c_drive_virtual = config.drive_root_windows
     prefix_c_drive_real = sandbox.GetRealDrivePath(
         prefix_dir = prefix_dir,
         drive = "c",

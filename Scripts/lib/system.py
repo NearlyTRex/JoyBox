@@ -1116,7 +1116,7 @@ def GetDirectoryContents(path):
 
 # Get directory anchor
 def GetDirectoryAnchor(path):
-    if path.startswith(config.default_drive_root_posix):
+    if path.startswith(config.drive_root_posix):
         return str(pathlib.PurePosixPath(path).anchor)
     else:
         return str(pathlib.PureWindowsPath(path).anchor)
@@ -1198,7 +1198,7 @@ def GetFilenameExtension(path):
 
 # Get filename anchor
 def GetFilenameAnchor(path):
-    if path.startswith(config.default_drive_root_posix):
+    if path.startswith(config.drive_root_posix):
         return str(pathlib.PurePosixPath(path).anchor)
     else:
         return str(pathlib.PureWindowsPath(path).anchor)

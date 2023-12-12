@@ -8,186 +8,12 @@ from . import private
 ############# Project #############
 project_name = "JoyBox"
 
-############# Defaults #############
-
-# Default drive roots
-default_drive_root_windows = "C:\\"
-default_drive_root_posix = "/"
-default_drive_root_wine = "drive_c"
-
-# Default network share info
-default_network_share_base_location = private.nas_base_location
-default_network_share_storage_folder = private.nas_storage_folder
-default_network_share_cache_folder = private.nas_cache_folder
-default_network_share_username = private.nas_account
-default_network_share_password = private.nas_password
-
-# Default setup locations
-default_user_dir = os.path.expanduser("~")
-default_local_cache_dir_windows = os.path.join(default_user_dir, "Cache")
-default_local_cache_dir_linux = os.path.join(default_user_dir, "Cache")
-default_remote_cache_dir_windows = "Y:\\"
-default_remote_cache_dir_linux = os.path.join(default_drive_root_posix, "mnt", "Cache")
-default_sync_dir_windows = os.path.join(default_user_dir, "Sync")
-default_sync_dir_linux = os.path.join(default_user_dir, "Sync")
-default_repositories_dir_windows = os.path.join(default_drive_root_windows, "Repositories")
-default_repositories_dir_linux = os.path.join(default_user_dir, "Repositories")
-default_storage_dir_windows = "X:\\"
-default_storage_dir_linux = os.path.join(default_drive_root_posix, "mnt", "Storage")
-default_login_script = os.path.join(default_user_dir, ".bashrc")
-default_environment_script = os.path.join(default_user_dir, ".environment")
-
-# Default Python install
-default_python_exe = "python"
-default_python3_exe = "python3"
-default_python_pip_exe = "pip"
-default_python3_pip_exe = "pip3"
-default_python_install_dirs = [
-    os.path.join(default_drive_root_windows, "Python311"),
-    os.path.join(default_drive_root_posix, "usr", "bin")
-]
-default_python_venv_dir = os.path.join(default_user_dir, ".venv")
-
-# Default Wine install
-default_wine_exe = "wine"
-default_wine_boot_exe = "wineboot"
-default_wine_server_exe = "wineserver"
-default_wine_tricks_exe = "winetricks"
-default_wine_install_dirs = [
-    os.path.join(default_drive_root_posix, "usr", "bin")
-]
-default_wine_sandbox_dir = os.path.join(default_user_dir, "Sandbox")
-
-# Default Sandboxie install
-default_sandboxie_exe = "Start"
-default_sandboxie_ini_exe = "SbieIni"
-default_sandboxie_rpcss_exe = "SandboxieRpcSs"
-default_sandboxie_dcomlaunch_exe = "SandboxieDcomLaunch"
-default_sandboxie_install_dirs = [
-    os.path.join(default_drive_root_windows, "Program Files", "Sandboxie-Plus")
-]
-default_sandboxie_sandbox_dir = os.path.join(default_drive_root_windows, "Sandbox", getpass.getuser())
-
-# Default Firefox install
-default_firefox_exe = "firefox"
-default_firefox_install_dirs = [
-    os.path.join(default_drive_root_windows, "Program Files", "Mozilla Firefox"),
-    os.path.join(default_drive_root_posix, "usr", "bin"),
-    os.path.join(default_drive_root_posix, "snap", "bin")
-]
-
-# Default Git install
-default_git_exe = "git"
-default_git_install_dirs = [
-    os.path.join(default_drive_root_windows, "Program Files", "Git", "bin"),
-    os.path.join(default_drive_root_posix, "usr", "bin")
-]
-
-# Default 7-Zip install
-default_7zip_exe = "7z"
-default_7zip_standalone_exe = "7za"
-default_7zip_install_dirs = [
-    os.path.join(default_drive_root_windows, "Program Files", "7-Zip"),
-    os.path.join(default_drive_root_posix, "usr", "bin")
-]
-
-# Default XorrISO install
-default_xorriso_exe = "xorriso"
-default_xorriso_install_dirs = [
-    os.path.join(default_drive_root_windows, "cygwin64", "bin"),
-    os.path.join(default_drive_root_posix, "usr", "bin")
-]
-
-# Default MameTools install
-default_mame_chdman_exe = "chdman"
-default_mame_chdman_install_dirs = [
-    os.path.join(default_drive_root_posix, "usr", "bin")
-]
-
-# Default system tools
-default_wget_exe = "wget"
-default_curl_exe = "curl"
-default_file_exe = "file"
-default_reg_exe = "reg"
-default_xrandr_exe = "xrandr"
-default_system_tools_names_windows = [
-    default_curl_exe,
-    default_file_exe,
-    default_reg_exe
-]
-default_system_tools_names_linux = [
-    default_wget_exe,
-    default_curl_exe,
-    default_file_exe,
-    default_xrandr_exe
-]
-default_system_tools_dirs = [
-    os.path.join(default_drive_root_windows, "Windows", "System32"),
-    os.path.join(default_drive_root_windows, "cygwin64", "bin"),
-    os.path.join(default_drive_root_posix, "usr", "bin")
-]
-
-# Default resolution
-default_screen_resolution_w = 1920
-default_screen_resolution_h = 1080
-default_screen_resolution_c = 32
-
-# Default flags
-default_flag_verbose = True
-default_flag_exit_on_failure = True
-default_flag_fullscreen = True
-default_flag_keep_setup_files = False
-
-# Default options
-default_option_winver = ""
-default_hash_chunk_size = 2 ** 32
-
-# Default capture
-default_capture_duration = 300
-default_capture_interval = 1
-default_capture_origin = (0, 0)
-default_capture_resolution_w = default_screen_resolution_w
-default_capture_resolution_h = default_screen_resolution_h
-default_capture_resolution = (default_capture_resolution_w, default_capture_resolution_h)
-default_capture_framerate = 30
-
-# Steam options
-default_steam_username = private.steam_username
-default_steam_userid = private.steam_userid
-
 ############# Other Config #############
 
 # Units
 unit_type_seconds = "seconds"
 unit_type_minutes = "minutes"
 unit_type_hours = "hours"
-
-# Environment variables
-environment_path = "PATH"
-environment_local_cache_root_dir = "JB_LOCAL_CACHE_ROOT_DIR"
-environment_remote_cache_root_dir = "JB_REMOTE_CACHE_ROOT_DIR"
-environment_sync_root_dir = "JB_SYNC_ROOT_DIR"
-environment_repositories_root_dir = "JB_REPOSITORIES_ROOT_DIR"
-environment_storage_root_dir = "JB_STORAGE_ROOT_DIR"
-environment_network_share_base_location = "JB_NETWORK_SHARE_BASE_LOCATION"
-environment_network_share_storage_folder = "JB_NETWORK_SHARE_STORAGE_FOLDER"
-environment_network_share_cache_folder = "JB_NETWORK_SHARE_CACHE_FOLDER"
-environment_network_share_username = "JB_NETWORK_SHARE_USERNAME"
-environment_network_share_password = "JB_NETWORK_SHARE_PASSWORD"
-environment_launchrom_program = "JB_LAUNCHROM_PROGRAM"
-environment_vars = [
-    environment_local_cache_root_dir,
-    environment_remote_cache_root_dir,
-    environment_sync_root_dir,
-    environment_repositories_root_dir,
-    environment_storage_root_dir,
-    environment_network_share_base_location,
-    environment_network_share_storage_folder,
-    environment_network_share_cache_folder,
-    environment_network_share_username,
-    environment_network_share_password,
-    environment_launchrom_program
-]
 
 # Tokens
 token_rom_storage_root = "$ROM_STORAGE_ROOT"
@@ -248,6 +74,10 @@ os_pardir = os.pardir
 os_sep = os.sep
 os_pathsep = "/"
 os_envpathsep = os.pathsep
+
+# Drive roots
+drive_root_windows = "C:\\"
+drive_root_posix = "/"
 
 # Extensions
 computer_program_extensions = [".exe", ".lnk", ".bat"]
@@ -378,6 +208,9 @@ max_disc_data_size_25gb = 22 * bytes_per_gigabyte
 max_disc_data_size_50gb = 44 * bytes_per_gigabyte
 max_disc_data_size_100gb = 88 * bytes_per_gigabyte
 
+# Hash sizes
+hash_chunk_size = 2 ** 32
+
 # Ignored install paths
 ignored_paths_install = [
     "ProgramData/Microsoft",
@@ -459,7 +292,8 @@ required_python_modules_all = [
     "make_playlist",
     "schedule",
     "python-dateutil",
-    "xxhash"
+    "xxhash",
+    "screeninfo"
 ]
 
 ############# Packages Config #############

@@ -386,7 +386,7 @@ def GetPrefixPathInfo(
 
     # Fix path inconsistencies
     if is_wine_prefix:
-        if is_virtual_path and path.startswith(config.default_drive_root_posix):
+        if is_virtual_path and path.startswith(config.drive_root_posix):
             is_virtual_path = False
             is_real_path = True
 

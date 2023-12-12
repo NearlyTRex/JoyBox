@@ -70,7 +70,7 @@ def CalculateStringXXH3(string):
     return xxhash.xxh3_64(string).hexdigest()
 
 # Calculate file crc32
-def CalculateFileCRC32(filename, chunksize = config.default_hash_chunk_size):
+def CalculateFileCRC32(filename, chunksize = config.hash_chunk_size):
     import zlib
     with open(filename, "rb") as file:
         checksum = 0
@@ -79,7 +79,7 @@ def CalculateFileCRC32(filename, chunksize = config.default_hash_chunk_size):
         return "%x" % checksum
 
 # Calculate file md5
-def CalculateFileMD5(filename, chunksize = config.default_hash_chunk_size):
+def CalculateFileMD5(filename, chunksize = config.hash_chunk_size):
     import hashlib
     with open(filename, "rb") as file:
         md5_hash = hashlib.md5()
@@ -88,7 +88,7 @@ def CalculateFileMD5(filename, chunksize = config.default_hash_chunk_size):
         return md5_hash.hexdigest()
 
 # Calculate file sha1
-def CalculateFileSHA1(filename, chunksize = config.default_hash_chunk_size):
+def CalculateFileSHA1(filename, chunksize = config.hash_chunk_size):
     import hashlib
     with open(filename, "rb") as file:
         sha1_hash = hashlib.sha1()
@@ -97,7 +97,7 @@ def CalculateFileSHA1(filename, chunksize = config.default_hash_chunk_size):
         return sha1_hash.hexdigest()
 
 # Calculate file sha256
-def CalculateFileSHA256(filename, chunksize = config.default_hash_chunk_size):
+def CalculateFileSHA256(filename, chunksize = config.hash_chunk_size):
     import hashlib
     with open(filename, "rb") as file:
         sha256_hash = hashlib.sha256()
@@ -106,7 +106,7 @@ def CalculateFileSHA256(filename, chunksize = config.default_hash_chunk_size):
         return sha256_hash.hexdigest()
 
 # Calculate file xxh3
-def CalculateFileXXH3(filename, chunksize = config.default_hash_chunk_size):
+def CalculateFileXXH3(filename, chunksize = config.hash_chunk_size):
     import xxhash
     with open(filename, "rb") as file:
         xxh3_hash = xxhash.xxh3_64()
