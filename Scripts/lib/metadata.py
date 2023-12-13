@@ -16,6 +16,7 @@ sys.path.append(lib_folder)
 import config
 import system
 import webpage
+import platforms
 import environment
 import network
 
@@ -53,14 +54,14 @@ class Metadata:
 
     # Get sorted platforms
     def get_sorted_platforms(self, filter_options = {}):
-        platforms = []
+        potential_platforms = []
         for platform in self.game_database.keys():
             only_launchable = GetFilterOption(filter_options, config.filter_launchable_only)
             no_launcher_set = platforms.HasNoLauncher(platform)
             if only_launchable and no_launcher_set:
                 continue
-            platforms.append(platform)
-        return sorted(platforms)
+            potential_platforms.append(platform)
+        return sorted(potential_platforms)
 
     # Get sorted names within a platform
     def get_sorted_names(self, game_platform, filter_options = {}):
@@ -168,9 +169,9 @@ class Metadata:
             rom_file = ""
             if rom_category == config.game_category_computer:
                 letter = DeriveGameLetterFromName(rom_name)
-                rom_file = os.path.join(config.token_rom_json_root, rom_category, rom_subcategory, letter, rom_name, rom_name + ".json")
+                rom_file = os.path.join(rom_category, rom_subcategory, letter, rom_name, rom_name + ".json")
             else:
-                rom_file = os.path.join(config.token_rom_json_root, rom_category, rom_subcategory, rom_name, rom_name + ".json")
+                rom_file = os.path.join(rom_category, rom_subcategory, rom_name, rom_name + ".json")
             rom_file = system.NormalizeFilePath(rom_file)
 
             # Get asset strings
@@ -335,7 +336,7 @@ class Metadata:
 
                 # Write header
                 file.write("collection: %s\n" % game_platform)
-                file.write("launch: {env.JB_LAUNCHROM_PROGRAM} -l \"%s\" {file.path}\n" % game_platform)
+                file.write("launch: launch_rom -l \"%s\" {file.path}\n" % game_platform)
                 file.write("\n\n")
 
                 # Write each entry
@@ -437,20 +438,20 @@ def GetMetadataDefaultSupercategory():
 
 # Get metadata categories
 def GetMetadataCategories():
-    categories = []
+    categories = set()
     for section in config.platforms.values():
-        categories.append(section[config.platforms.key_category])
-    return categories
+        categories.add(section[config.key_category])
+    return sorted(list(categories))
 
 # Get metadata subcategories
 def GetMetadataSubcategories(game_category = None, filter_options = {}):
-    potential_subcategories = []
+    potential_subcategories = set()
     for section in config.platforms.values():
-        if platform_category and section[config.key_category] != platform_category:
+        if game_category and section[config.key_category] != game_category:
             continue
-        potential_subcategories.append(section[config.key_subcategory])
+        potential_subcategories.add(section[config.key_subcategory])
     subcategories = []
-    for game_subcategory in potential_subcategories:
+    for game_subcategory in sorted(list(potential_subcategories)):
         only_launchable = GetFilterOption(filter_options, config.filter_launchable_only)
         no_launcher_set = platforms.HasNoLauncher(DeriveMetadataPlatform(game_category, game_subcategory))
         if only_launchable and no_launcher_set:
