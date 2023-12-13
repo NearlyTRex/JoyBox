@@ -106,29 +106,29 @@ def LogColored(message, color = None, on_color = None, attrs = None):
     except:
         Log(message)
 
-# Log warning
-def LogWarning(message):
+# Log colored with header
+def LogColoredWithHeader(message, header, color):
     try:
         from termcolor import colored
-        Log("\n" + colored("WARNING:", "yellow") + " " + message)
+        Log("\n" + colored("%s:" % header, color) + " " + message)
     except:
-        Log("WARNING: " + message)
+        Log("%s: " % header + message)
+
+# Log info
+def LogInfo(message):
+    LogColoredWithHeader(message, "INFO", "light_blue")
+
+# Log warning
+def LogWarning(message):
+    LogColoredWithHeader(message, "WARNING", "yellow")
 
 # Log error
 def LogError(message):
-    try:
-        from termcolor import colored
-        Log("\n" + colored("ERROR:", "red") + " " + message)
-    except:
-        Log("ERROR: " + message)
+    LogColoredWithHeader(message, "ERROR", "red")
 
 # Log success
 def LogSuccess(message):
-    try:
-        from termcolor import colored
-        Log("\n" + colored("SUCCESS:", "green") + " " + message)
-    except:
-        Log("SUCCESS: " + message)
+    LogColoredWithHeader(message, "SUCCESS", "green")
 
 ###########################################################
 
