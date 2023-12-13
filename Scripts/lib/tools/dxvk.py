@@ -2,15 +2,11 @@
 import os, os.path
 import sys
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import network
 import programs
-
-# Local imports
-from . import base
+import toolbase
 
 # Get 32-bit libs
 def GetLibs32():
@@ -27,7 +23,7 @@ def GetLibs32():
     return lib_files
 
 # DXVK tool
-class DXVK(base.ToolBase):
+class DXVK(toolbase.ToolBase):
 
     # Get name
     def GetName(self):

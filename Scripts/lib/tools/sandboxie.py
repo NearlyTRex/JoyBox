@@ -2,17 +2,13 @@
 import os, os.path
 import sys
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(lib_folder)
+# Local imports
 import environment
 import ini
-
-# Local imports
-from . import base
+import toolbase
 
 # Sandboxie tool
-class Sandboxie(base.ToolBase):
+class Sandboxie(toolbase.ToolBase):
 
     # Get name
     def GetName(self):
