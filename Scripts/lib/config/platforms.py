@@ -22,7 +22,7 @@ computer_amazon_games[keys.platform_key_subcategory] = categories.game_subcatego
 computer_amazon_games[keys.platform_key_transforms] = [types.transform_type_exe_to_raw_plain]
 computer_amazon_games[keys.platform_key_addons] = []
 computer_amazon_games[keys.platform_key_launcher] = [types.launch_type_file]
-platforms["Computer - Amazon Games"] = computer_amazon_games
+platforms[categories.game_category_computer + " - " + categories.game_subcategory_amazon_games] = computer_amazon_games
 
 ###########################################################
 # Computer - Disc
@@ -34,7 +34,7 @@ computer_disc[keys.platform_key_subcategory] = categories.game_subcategory_disc
 computer_disc[keys.platform_key_transforms] = [types.transform_type_exe_to_install]
 computer_disc[keys.platform_key_addons] = []
 computer_disc[keys.platform_key_launcher] = [types.launch_type_file]
-platforms["Computer - Disc"] = computer_disc
+platforms[categories.game_category_computer + " - " + categories.game_subcategory_disc] = computer_disc
 
 ###########################################################
 # Computer - Epic Games
@@ -46,7 +46,7 @@ computer_epic_games[keys.platform_key_subcategory] = categories.game_subcategory
 computer_epic_games[keys.platform_key_transforms] = [types.transform_type_exe_to_raw_plain]
 computer_epic_games[keys.platform_key_addons] = []
 computer_epic_games[keys.platform_key_launcher] = [types.launch_type_file]
-platforms["Computer - Epic Games"] = computer_epic_games
+platforms[categories.game_category_computer + " - " + categories.game_subcategory_epic_games] = computer_epic_games
 
 ###########################################################
 # Computer - GOG
@@ -58,7 +58,7 @@ computer_gog[keys.platform_key_subcategory] = categories.game_subcategory_gog
 computer_gog[keys.platform_key_transforms] = [types.transform_type_exe_to_install]
 computer_gog[keys.platform_key_addons] = []
 computer_gog[keys.platform_key_launcher] = [types.launch_type_file]
-platforms["Computer - GOG"] = computer_gog
+platforms[categories.game_category_computer + " - " + categories.game_subcategory_gog] = computer_gog
 
 ###########################################################
 # Computer - Humble Bundle
@@ -70,7 +70,7 @@ computer_humble_bundle[keys.platform_key_subcategory] = categories.game_subcateg
 computer_humble_bundle[keys.platform_key_transforms] = [types.transform_type_exe_to_install]
 computer_humble_bundle[keys.platform_key_addons] = []
 computer_humble_bundle[keys.platform_key_launcher] = [types.launch_type_file]
-platforms["Computer - Humble Bundle"] = computer_humble_bundle
+platforms[categories.game_category_computer + " - " + categories.game_subcategory_humble_bundle] = computer_humble_bundle
 
 ###########################################################
 # Computer - Itchio
@@ -82,7 +82,7 @@ computer_itchio[keys.platform_key_subcategory] = categories.game_subcategory_itc
 computer_itchio[keys.platform_key_transforms] = [types.transform_type_exe_to_raw_plain]
 computer_itchio[keys.platform_key_addons] = []
 computer_itchio[keys.platform_key_launcher] = [types.launch_type_file]
-platforms["Computer - Itchio"] = computer_itchio
+platforms[categories.game_category_computer + " - " + categories.game_subcategory_itchio] = computer_itchio
 
 ###########################################################
 # Computer - Puppet Combo
@@ -94,7 +94,7 @@ computer_puppet_combo[keys.platform_key_subcategory] = categories.game_subcatego
 computer_puppet_combo[keys.platform_key_transforms] = [types.transform_type_exe_to_raw_plain]
 computer_puppet_combo[keys.platform_key_addons] = []
 computer_puppet_combo[keys.platform_key_launcher] = [types.launch_type_file]
-platforms["Computer - Puppet Combo"] = computer_puppet_combo
+platforms[categories.game_category_computer + " - " + categories.game_subcategory_puppet_combo] = computer_puppet_combo
 
 ###########################################################
 # Computer - Red Candle
@@ -106,7 +106,7 @@ computer_red_candle[keys.platform_key_subcategory] = categories.game_subcategory
 computer_red_candle[keys.platform_key_transforms] = [types.transform_type_exe_to_install]
 computer_red_candle[keys.platform_key_addons] = []
 computer_red_candle[keys.platform_key_launcher] = [types.launch_type_file]
-platforms["Computer - Red Candle"] = computer_red_candle
+platforms[categories.game_category_computer + " - " + categories.game_subcategory_red_candle] = computer_red_candle
 
 ###########################################################
 # Computer - Square Enix
@@ -118,7 +118,7 @@ computer_square_enix[keys.platform_key_subcategory] = categories.game_subcategor
 computer_square_enix[keys.platform_key_transforms] = [types.transform_type_exe_to_install]
 computer_square_enix[keys.platform_key_addons] = []
 computer_square_enix[keys.platform_key_launcher] = [types.launch_type_file]
-platforms["Computer - Square Enix"] = computer_square_enix
+platforms[categories.game_category_computer + " - " + categories.game_subcategory_square_enix] = computer_square_enix
 
 ###########################################################
 # Computer - Steam
@@ -130,7 +130,7 @@ computer_steam[keys.platform_key_subcategory] = categories.game_subcategory_stea
 computer_steam[keys.platform_key_transforms] = [types.transform_type_exe_to_raw_plain]
 computer_steam[keys.platform_key_addons] = []
 computer_steam[keys.platform_key_launcher] = [types.launch_type_file]
-platforms["Computer - Steam"] = computer_steam
+platforms[categories.game_category_computer + " - " + categories.game_subcategory_steam] = computer_steam
 
 ###########################################################
 # Computer - Zoom
@@ -142,7 +142,7 @@ computer_zoom[keys.platform_key_subcategory] = categories.game_subcategory_zoom
 computer_zoom[keys.platform_key_transforms] = [types.transform_type_exe_to_install]
 computer_zoom[keys.platform_key_addons] = []
 computer_zoom[keys.platform_key_launcher] = [types.launch_type_file]
-platforms["Computer - Zoom"] = computer_zoom
+platforms[categories.game_category_computer + " - " + categories.game_subcategory_zoom] = computer_zoom
 
 ######################################################################################
 
