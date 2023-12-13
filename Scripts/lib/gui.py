@@ -3,9 +3,7 @@ import os, os.path
 import sys
 import time
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__)))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import environment
 import system

@@ -3,9 +3,7 @@ import os, os.path
 import sys
 import importlib
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.dirname(__file__))
-sys.path.append(lib_folder)
+# Local imports
 import command
 import environment
 import ini

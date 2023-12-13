@@ -3,9 +3,7 @@ import os
 import os.path
 import sys
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.dirname(__file__))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import command
 import programs
