@@ -47,38 +47,28 @@ def CheckRequirements():
 def SetupEnvironment(verbose = False, exit_on_failure = False):
 
     # Setup python environment
+    system.LogInfo("Creating python virtual environment")
     python.SetupPythonEnvironment(verbose = verbose, exit_on_failure = exit_on_failure)
 
-    # Get required python modules
-    required_modules = config.required_python_modules_all
-    if environment.IsWindowsPlatform():
-        required_modules += config.required_python_modules_windows
-    elif environment.IsLinuxPlatform():
-        required_modules += config.required_python_modules_linux
-
-    # Get required system packages
-    required_packages = config.required_system_packages_all
-    if environment.IsWindowsPlatform():
-        required_packages += config.required_system_packages_windows
-    elif environment.IsLinuxPlatform():
-        required_packages += config.required_system_packages_linux
-
-    # Install required python modules
-    for module in required_modules:
+    # Install python modules
+    for module in python.GetRequiredPythonModules():
+        system.LogInfo("Installing python module %s ..." % module)
         python.InstallPythonModule(
             module = module,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-    # Install required system packages
-    for package in required_packages:
+    # Install system packages
+    for package in packages.GetRequiredSystemPackages():
+        system.LogInfo("Installing system package %s ..." % package)
         packages.InstallSystemPackage(
             package = package,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-    # Setup required tools
+    # Install tools
     for tool in programs.GetTools():
+        system.LogInfo("Installing tool %s ..." % tool.GetName())
         tool.Download(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -86,8 +76,9 @@ def SetupEnvironment(verbose = False, exit_on_failure = False):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-    # Setup required emulators
+    # Install emulators
     for emulator in programs.GetEmulators():
+        system.LogInfo("Installing emulator %s ..." % emulator.GetName())
         emulator.Download(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -95,9 +86,10 @@ def SetupEnvironment(verbose = False, exit_on_failure = False):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-    # Loop through categories and asset types
+    # Create asset symlinks
     for game_category in metadata.GetMetadataCategories():
         for game_subcategory in metadata.GetMetadataSubcategories(game_category):
+            system.LogInfo("Creating asset symlinks for %s - %s ..." % (game_category, game_subcategory))
             for asset_type in config.asset_types_all:
 
                 # Get directories

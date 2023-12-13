@@ -3,8 +3,18 @@ import os, os.path
 import sys
 
 # Local imports
+import config
 import command
 import environment
+
+# Get required system packages
+def GetRequiredSystemPackages():
+    required_packages = config.required_system_packages_all
+    if environment.IsWindowsPlatform():
+        required_packages += config.required_system_packages_windows
+    elif environment.IsLinuxPlatform():
+        required_packages += config.required_system_packages_linux
+    return required_packages
 
 # Install windows system package
 def InstallWindowsSystemPackage(package, verbose = False, exit_on_failure = False):

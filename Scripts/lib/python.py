@@ -4,9 +4,19 @@ import sys
 import importlib
 
 # Local imports
+import config
 import command
 import environment
 import programs
+
+# Get required python modules
+def GetRequiredPythonModules():
+    required_modules = config.required_python_modules_all
+    if environment.IsWindowsPlatform():
+        required_modules += config.required_python_modules_windows
+    elif environment.IsLinuxPlatform():
+        required_modules += config.required_python_modules_linux
+    return required_modules
 
 # Setup python environment
 def SetupPythonEnvironment(verbose = False, exit_on_failure = False):
