@@ -506,17 +506,17 @@ class Computer(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            "Computer - Amazon Games",
-            "Computer - Disc",
-            "Computer - Epic Games",
-            "Computer - GOG",
-            "Computer - Humble Bundle",
-            "Computer - Itchio",
-            "Computer - Puppet Combo",
-            "Computer - Red Candle",
-            "Computer - Square Enix",
-            "Computer - Steam",
-            "Computer - Zoom",
+            config.platform_computer_amazon_games,
+            config.platform_computer_disc,
+            config.platform_computer_epic_games,
+            config.platform_computer_gog,
+            config.platform_computer_humble_bundle,
+            config.platform_computer_itchio,
+            config.platform_computer_puppet_combo,
+            config.platform_computer_red_candle,
+            config.platform_computer_square_enix,
+            config.platform_computer_steam,
+            config.platform_computer_zoom
         ]
 
     # Get config
