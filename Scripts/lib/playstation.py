@@ -199,10 +199,17 @@ def VerifyPS3CHD(chd_file, verbose = False, exit_on_failure = False):
 # Extract psn pkg
 def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = False, exit_on_failure = False):
 
+    # Get tool
+    extract_tool = None
+    if programs.IsToolInstalled("PSNGetPkgInfo"):
+        extract_tool = programs.GetToolProgram("PSNGetPkgInfo")
+    if not extract_tool:
+        return False
+
     # Get extract command
     extract_cmd = [
-        environment.GetPythonVirtualEnvInterpreter(),
-        programs.GetToolProgram("PSNGetPkgInfo"),
+        programs.GetToolProgram("PythonVenvPython"),
+        extract_tool,
         "--content", extract_dir,
         pkg_file
     ]
@@ -291,10 +298,17 @@ def UnstripPSV(src_psv_file, src_psve_file, dest_psv_file, delete_original = Fal
 # Trim psv file
 def TrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
 
+    # Get tool
+    trim_tool = None
+    if programs.IsToolInstalled("PSVTools"):
+        trim_tool = programs.GetToolProgram("PSVTools")
+    if not trim_tool:
+        return False
+
     # Get trim command
     trim_cmd = [
-        environment.GetPythonVirtualEnvInterpreter(),
-        programs.GetToolProgram("PSVTools"),
+        programs.GetToolProgram("PythonVenvPython"),
+        trim_tool,
         "--trim",
         "-o", dest_psv_file,
         src_psv_file
@@ -321,10 +335,17 @@ def TrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fals
 # Untrim psv file
 def UntrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
 
+    # Get tool
+    untrim_tool = None
+    if programs.IsToolInstalled("PSVTools"):
+        untrim_tool = programs.GetToolProgram("PSVTools")
+    if not untrim_tool:
+        return False
+
     # Get untrim command
     untrim_cmd = [
-        environment.GetPythonVirtualEnvInterpreter(),
-        programs.GetToolProgram("PSVTools"),
+        programs.GetToolProgram("PythonVenvPython"),
+        untrim_tool,
         "--expand",
         "-o", dest_psv_file,
         src_psv_file
@@ -351,10 +372,17 @@ def UntrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fa
 # Verify psv file
 def VerifyPSV(psv_file, verbose = False, exit_on_failure = False):
 
+    # Get tool
+    verify_tool = None
+    if programs.IsToolInstalled("PSVTools"):
+        verify_tool = programs.GetToolProgram("PSVTools")
+    if not verify_tool:
+        return False
+
     # Get verify command
     verify_cmd = [
-        environment.GetPythonVirtualEnvInterpreter(),
-        programs.GetToolProgram("PSVTools"),
+        programs.GetToolProgram("PythonVenvPython"),
+        verify_tool,
         "--verify",
         psv_file
     ]

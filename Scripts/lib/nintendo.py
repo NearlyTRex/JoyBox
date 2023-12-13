@@ -628,7 +628,7 @@ def TrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbose 
 
     # Get trim command
     trim_cmd = [
-        environment.GetPythonVirtualEnvInterpreter(),
+        programs.GetToolProgram("PythonVenvPython"),
         trim_tool,
         "--trim",
         "--copy",
@@ -687,7 +687,7 @@ def UntrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbos
 
     # Get trim command
     untrim_cmd = [
-        environment.GetPythonVirtualEnvInterpreter(),
+        programs.GetToolProgram("PythonVenvPython"),
         trim_tool,
         "--pad",
         "--copy",
