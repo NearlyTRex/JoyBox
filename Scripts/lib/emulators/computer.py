@@ -101,14 +101,14 @@ def ParseComputerJson(json_file):
             if dict_key in dict_var and dict_subkey not in dict_var[dict_key]:
                 dict_var[dict_key][dict_subkey] = default_subvalue
 
-        # Fill gaps for general types
-        for key in config.computer_keys_list_type:
+        # Fill gaps for general keys
+        for key in config.computer_keys_list_keys:
             SetDefaultValue(game_info, key, [])
-        for key in config.computer_keys_dict_type:
+        for key in config.computer_keys_dict_keys:
             SetDefaultValue(game_info, key, {})
-        for key in config.computer_keys_bool_type:
+        for key in config.computer_keys_bool_keys:
             SetDefaultValue(game_info, key, False)
-        for key in config.computer_keys_str_type:
+        for key in config.computer_keys_str_keys:
             SetDefaultValue(game_info, key, None)
 
         # Fill gaps for special dictionaries

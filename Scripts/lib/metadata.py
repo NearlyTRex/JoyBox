@@ -54,7 +54,7 @@ class Metadata:
     def get_sorted_platforms(self, filter_options = {}):
         potential_platforms = []
         for platform in self.game_database.keys():
-            only_launchable = GetFilterOption(filter_options, config.filter_launchable_only)
+            only_launchable = GetFilterOption(filter_options, config.filter_key_launchable_only)
             no_launcher_set = platforms.HasNoLauncher(platform)
             if only_launchable and no_launcher_set:
                 continue
@@ -450,7 +450,7 @@ def GetMetadataSubcategories(game_category = None, filter_options = {}):
         potential_subcategories.add(section[config.platform_key_subcategory])
     subcategories = []
     for game_subcategory in sorted(list(potential_subcategories)):
-        only_launchable = GetFilterOption(filter_options, config.filter_launchable_only)
+        only_launchable = GetFilterOption(filter_options, config.filter_key_launchable_only)
         no_launcher_set = platforms.HasNoLauncher(DeriveMetadataPlatform(game_category, game_subcategory))
         if only_launchable and no_launcher_set:
             continue

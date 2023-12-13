@@ -85,7 +85,7 @@ computer_key_is_32_bit = "is_32_bit"
 computer_key_is_dos = "is_dos"
 computer_key_is_win31 = "is_win31"
 computer_key_is_scumm = "is_scumm"
-computer_keys_list_type = [
+computer_keys_list_keys = [
     computer_key_installer_exe,
     computer_key_installer_dos_exe,
     computer_key_main_game_exe,
@@ -96,7 +96,7 @@ computer_keys_list_type = [
     computer_key_update,
     computer_key_extra
 ]
-computer_keys_dict_type = [
+computer_keys_dict_keys = [
     computer_key_main_game_exe_cwd,
     computer_key_main_game_exe_args,
     computer_key_main_game_dos_exe_cwd,
@@ -108,20 +108,20 @@ computer_keys_dict_type = [
     computer_key_sync,
     computer_key_registry
 ]
-computer_keys_bool_type = [
+computer_keys_bool_keys = [
     computer_key_is_32_bit,
     computer_key_is_dos,
     computer_key_is_win31,
     computer_key_is_scumm
 ]
-computer_keys_str_type = [
+computer_keys_str_keys = [
     computer_key_installer_type,
     computer_key_disc_type,
     computer_key_winver
 ]
 
-# Metadata filter keys
-filter_launchable_only = "launchable_only"
+# Filter keys
+filter_key_launchable_only = "launchable_only"
 filter_bool_keys = [
-    filter_launchable_only
+    filter_key_launchable_only
 ]
