@@ -18,8 +18,8 @@ import packages
 def CheckRequirements():
 
     # Check python version
-    if sys.version_info < config.minimum_python_version:
-        print("Minimum required python version is %s.%s.%s" % config.minimum_python_version)
+    if sys.version_info < config.python.minimum_python_version:
+        print("Minimum required python version is %s.%s.%s" % config.python.minimum_python_version)
         print("Please upgrade your python version")
         sys.exit(1)
 
@@ -54,18 +54,18 @@ def SetupEnvironment(verbose = False, exit_on_failure = False):
     python.SetupPythonEnvironment(verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Get required python modules
-    required_modules = config.required_python_modules_all
+    required_modules = config.python.required_python_modules_all
     if environment.IsWindowsPlatform():
-        required_modules += config.required_python_modules_windows
+        required_modules += config.python.required_python_modules_windows
     elif environment.IsLinuxPlatform():
-        required_modules += config.required_python_modules_linux
+        required_modules += config.python.required_python_modules_linux
 
     # Get required system packages
-    required_packages = config.required_system_packages_all
+    required_packages = config.packages.required_system_packages_all
     if environment.IsWindowsPlatform():
-        required_packages += config.required_system_packages_windows
+        required_packages += config.packages.required_system_packages_windows
     elif environment.IsLinuxPlatform():
-        required_packages += config.required_system_packages_linux
+        required_packages += config.packages.required_system_packages_linux
 
     # Install required python modules
     for module in required_modules:
