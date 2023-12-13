@@ -9,9 +9,7 @@ minimum_python_patch_version = 0
 minimum_python_version = (minimum_python_major_version, minimum_python_minor_version, minimum_python_patch_version)
 
 # Required python modules
-required_python_modules_linux = [
-    "python-apt"
-]
+required_python_modules_linux = []
 required_python_modules_windows = [
     "pywin32",
     "pyuac"
