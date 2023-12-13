@@ -438,16 +438,16 @@ def GetMetadataDefaultSupercategory():
 def GetMetadataCategories():
     categories = set()
     for section in config.platforms.values():
-        categories.add(section[config.key_category])
+        categories.add(section[config.platform_key_category])
     return sorted(list(categories))
 
 # Get metadata subcategories
 def GetMetadataSubcategories(game_category = None, filter_options = {}):
     potential_subcategories = set()
     for section in config.platforms.values():
-        if game_category and section[config.key_category] != game_category:
+        if game_category and section[config.platform_key_category] != game_category:
             continue
-        potential_subcategories.add(section[config.key_subcategory])
+        potential_subcategories.add(section[config.platform_key_subcategory])
     subcategories = []
     for game_subcategory in sorted(list(potential_subcategories)):
         only_launchable = GetFilterOption(filter_options, config.filter_launchable_only)

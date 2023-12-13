@@ -35,7 +35,7 @@ def GetPlatformValue(platform_name, platform_value):
 
 # Get transform types
 def GetTransformTypes(platform_name):
-    return GetPlatformValue(platform_name, config.key_transforms)
+    return GetPlatformValue(platform_name, config.platform_key_transforms)
 
 # Check if platform has transform type
 def HasTransformType(platform_name, transform_type):
@@ -49,7 +49,7 @@ def AreTransformsRequired(platform_name):
 
 # Get addons types
 def GetAddonTypes(platform_name):
-    return GetPlatformValue(platform_name, config.key_addons)
+    return GetPlatformValue(platform_name, config.platform_key_addons)
 
 # Check if updates are possible
 def AreUpdatesPossible(platform_name):
@@ -67,7 +67,7 @@ def AreAddonsPossible(platform_name):
 
 # Get launcher types
 def GetLauncherTypes(platform_name):
-    return GetPlatformValue(platform_name, config.key_launcher)
+    return GetPlatformValue(platform_name, config.platform_key_launcher)
 
 # Check if no launcher available
 def HasNoLauncher(platform_name):
