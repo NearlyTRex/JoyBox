@@ -779,12 +779,9 @@ def CollectMetadataFromTGDB(web_driver, game_platform, game_name, select_automat
     # Metadata result
     metadata_result = {}
 
-    # Get platform id
-    thegamesdb_platform_id = config.thegamesdb_platform_ids[game_platform]
-
     # Go to the search page and pull the results
     try:
-        web_driver.get("https://thegamesdb.net/search.php?name=" + keywords_name + "&platform_id%5B%5D=" + thegamesdb_platform_id)
+        web_driver.get("https://thegamesdb.net/search.php?name=" + keywords_name
     except:
         return None
 
