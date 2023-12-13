@@ -49,7 +49,7 @@ def LaunchGame(launch_platform, file_path, capture_type = None, fullscreen = Fal
         asset_type = config.asset_type_boxfront)
 
     # Get save directories
-    save_dir_launcher = game_launcher.GetSaveDir()
+    save_dir_launcher = game_launcher.GetSaveDir(launch_platform)
     save_dir_real = environment.GetCachedSaveDir(game_category, game_subcategory, launch_name, game_launcher.GetSaveFormat())
     save_dir_general = environment.GetCachedSaveDir(game_category, game_subcategory, launch_name, config.save_format_general)
 
