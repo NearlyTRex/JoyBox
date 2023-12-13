@@ -2,9 +2,7 @@
 import os, os.path
 import sys
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import environment
 import system
@@ -12,9 +10,7 @@ import network
 import programs
 import launchcommon
 import gui
-
-# Local imports
-from . import base
+import emulatorbase
 
 # Config files
 config_files = {}
@@ -31,7 +27,7 @@ governor_warning = 0
 """
 
 # FSUAE emulator
-class FSUAE(base.EmulatorBase):
+class FSUAE(emulatorbase.EmulatorBase):
 
     # Get name
     def GetName(self):

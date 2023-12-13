@@ -3,9 +3,7 @@ import os
 import os.path
 import sys
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import environment
 import system
@@ -14,9 +12,7 @@ import programs
 import archive
 import launchcommon
 import gui
-
-# Local imports
-from . import base
+import emulatorbase
 
 # Config files
 config_files = {}
@@ -32,7 +28,7 @@ pref-path: $EMULATOR_MAIN_ROOT/Vita3K/linux/Vita3K.AppImage.home/.local/share/Vi
 """
 
 # Vita3K emulator
-class Vita3K(base.EmulatorBase):
+class Vita3K(emulatorbase.EmulatorBase):
 
     # Get name
     def GetName(self):

@@ -2,9 +2,7 @@
 import os, os.path
 import sys
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import environment
 import system
@@ -14,9 +12,7 @@ import archive
 import nintendo
 import launchcommon
 import gui
-
-# Local imports
-from . import base
+import emulatorbase
 
 # Config files
 config_files = {}
@@ -25,7 +21,7 @@ config_files["Dolphin/windows/User/Config/Dolphin.ini"] = ""
 config_files["Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/Dolphin.ini"] = ""
 
 # Dolphin emulator
-class Dolphin(base.EmulatorBase):
+class Dolphin(emulatorbase.EmulatorBase):
 
     # Get name
     def GetName(self):

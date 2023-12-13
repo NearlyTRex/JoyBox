@@ -5,9 +5,7 @@ import sys
 import getpass
 import json
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import system
 import environment
@@ -20,9 +18,7 @@ import metadata
 import display
 import ini
 import gui
-
-# Local imports
-from . import base
+import emulatorbase
 
 # Config files
 config_files = {}
@@ -501,7 +497,7 @@ def GetSelectedLaunchInfo(
     return [launch_cmd, launch_cwd, launch_args]
 
 # Computer emulator
-class Computer(base.EmulatorBase):
+class Computer(emulatorbase.EmulatorBase):
 
     # Get name
     def GetName(self):

@@ -2,9 +2,7 @@
 import os, os.path
 import sys
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import environment
 import system
@@ -13,9 +11,7 @@ import programs
 import archive
 import launchcommon
 import gui
-
-# Local imports
-from . import base
+import emulatorbase
 
 # Config files
 config_files = {}
@@ -23,7 +19,7 @@ config_files["EKA2L1/windows/config.yml"] = ""
 config_files["EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1/config.yml"] = ""
 
 # EKA2L1 emulator
-class EKA2L1(base.EmulatorBase):
+class EKA2L1(emulatorbase.EmulatorBase):
 
     # Get name
     def GetName(self):

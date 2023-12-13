@@ -3,9 +3,7 @@ import os
 import os.path
 import sys
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import environment
 import system
@@ -13,9 +11,7 @@ import network
 import programs
 import launchcommon
 import gui
-
-# Local imports
-from . import base
+import emulatorbase
 
 # Config files
 config_files = {}
@@ -23,7 +19,7 @@ config_files["RetroArch/windows/retroarch.cfg"] = ""
 config_files["RetroArch/linux/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch/retroarch.cfg"] = ""
 
 # RetroArch emulator
-class RetroArch(base.EmulatorBase):
+class RetroArch(emulatorbase.EmulatorBase):
 
     # Get name
     def GetName(self):

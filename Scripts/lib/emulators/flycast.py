@@ -2,9 +2,7 @@
 import os, os.path
 import sys
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import environment
 import system
@@ -12,9 +10,7 @@ import network
 import programs
 import launchcommon
 import gui
-
-# Local imports
-from . import base
+import emulatorbase
 
 # Config files
 config_files = {}
@@ -22,7 +18,7 @@ config_files["Flycast/windows/emu.cfg"] = ""
 config_files["Flycast/linux/Flycast.AppImage.home/.config/flycast/emu.cfg"] = ""
 
 # Flycast emulator
-class Flycast(base.EmulatorBase):
+class Flycast(emulatorbase.EmulatorBase):
 
     # Get name
     def GetName(self):

@@ -3,9 +3,7 @@ import os
 import os.path
 import sys
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import environment
 import system
@@ -13,9 +11,7 @@ import network
 import programs
 import launchcommon
 import gui
-
-# Local imports
-from . import base
+import emulatorbase
 
 # Config files
 config_files = {}
@@ -23,7 +19,7 @@ config_files["Atari800/windows/.atari800.cfg"] = ""
 config_files["Atari800/linux/Atari800.AppImage.home/.atari800.cfg"] = ""
 
 # Atari800 emulator
-class Atari800(base.EmulatorBase):
+class Atari800(emulatorbase.EmulatorBase):
 
     # Get name
     def GetName(self):

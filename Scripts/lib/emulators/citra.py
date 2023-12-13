@@ -2,9 +2,7 @@
 import os, os.path
 import sys
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import environment
 import system
@@ -14,9 +12,7 @@ import archive
 import nintendo
 import launchcommon
 import gui
-
-# Local imports
-from . import base
+import emulatorbase
 
 # Config files
 config_files = {}
@@ -38,7 +34,7 @@ Paths\screenshotPath=$EMULATOR_MAIN_ROOT/Citra/linux/citra-qt.AppImage.home/.loc
 """
 
 # Citra emulator
-class Citra(base.EmulatorBase):
+class Citra(emulatorbase.EmulatorBase):
 
     # Get name
     def GetName(self):

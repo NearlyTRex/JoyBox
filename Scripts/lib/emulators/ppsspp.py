@@ -3,9 +3,7 @@ import os
 import os.path
 import sys
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import environment
 import system
@@ -13,9 +11,7 @@ import network
 import programs
 import launchcommon
 import gui
-
-# Local imports
-from . import base
+import emulatorbase
 
 # Config files
 config_files = {}
@@ -23,7 +19,7 @@ config_files["PPSSPP/windows/memstick/PSP/SYSTEM/ppsspp.ini"] = ""
 config_files["PPSSPP/linux/PPSSPP.AppImage.home/.config/ppsspp/PSP/SYSTEM/ppsspp.ini"] = ""
 
 # PPSSPP emulator
-class PPSSPP(base.EmulatorBase):
+class PPSSPP(emulatorbase.EmulatorBase):
 
     # Get name
     def GetName(self):

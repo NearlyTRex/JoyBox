@@ -3,9 +3,7 @@ import os
 import os.path
 import sys
 
-# Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(lib_folder)
+# Local imports
 import config
 import cache
 import environment
@@ -15,9 +13,7 @@ import programs
 import archive
 import launchcommon
 import gui
-
-# Local imports
-from . import base
+import emulatorbase
 
 # Config files
 config_files = {}
@@ -25,7 +21,7 @@ config_files["RPCS3/windows/GuiConfigs/CurrentSettings.ini"] = ""
 config_files["RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3/GuiConfigs/CurrentSettings.ini"] = ""
 
 # RPCS3 emulator
-class RPCS3(base.EmulatorBase):
+class RPCS3(emulatorbase.EmulatorBase):
 
     # Get name
     def GetName(self):
