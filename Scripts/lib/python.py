@@ -6,38 +6,24 @@ import importlib
 # Local imports
 import command
 import environment
-import ini
-
-# Get python program
-def GetPythonProgram():
-    python_exe = ini.GetIniValue("Tools.Python", "python_exe")
-    python_install_dir = ini.GetIniValue("Tools.Python", "python_install_dir")
-    return command.GetRunnableCommandPath(
-        cmd = python_exe,
-        search_dirs = [python_install_dir])
-
-# Get python virtual environment program
-def GetPythonVirtualEnvProgram(program):
-    python_venv_dir = ini.GetIniValue("Tools.Python", "python_venv_dir")
-    if environment.IsWindowsPlatform():
-        return os.path.join(python_venv_dir, "Scripts", program)
-    else:
-        return os.path.join(python_venv_dir, "bin", program)
-
-# Get python virtual environment interpreter
-def GetPythonVirtualEnvInterpreter():
-    python_exe = ini.GetIniValue("Tools.Python", "python_exe")
-    return GetPythonVirtualEnvProgram(python_exe)
+import programs
 
 # Setup python environment
 def SetupPythonEnvironment(verbose = False, exit_on_failure = False):
 
+    # Get tool
+    python_tool = None
+    if programs.IsToolInstalled("Python"):
+        python_tool = programs.GetToolProgram("Python")
+    if not python_tool:
+        return False
+
     # Get setup command
     setup_cmd = [
-        GetPythonProgram(),
+        python_tool,
         "-m",
         "venv",
-        ini.GetIniValue("Tools.Python", "python_venv_dir")
+        programs.GetToolPathConfigValue("Python", "venv_dir")
     ]
 
     # Run setup command
@@ -52,11 +38,16 @@ def SetupPythonEnvironment(verbose = False, exit_on_failure = False):
 # Install python module
 def InstallPythonModule(module, verbose = False, exit_on_failure = False):
 
+    # Get tool
+    pip_tool = None
+    if programs.IsToolInstalled("PythonVenvPip"):
+        pip_tool = programs.GetToolProgram("PythonVenvPip")
+    if not pip_tool:
+        return False
+
     # Get install command
     install_cmd = [
-        GetPythonVirtualEnvInterpreter(),
-        "-m",
-        ini.GetIniValue("Tools.Python", "python_pip_exe"),
+        pip_tool,
         "install",
         "--upgrade",
         module
