@@ -53,11 +53,11 @@ def GetAddonTypes(platform_name):
 
 # Check if updates are possible
 def AreUpdatesPossible(platform_name):
-    return config.addon_type_updates in GetAddonTypes(platform_name)
+    return config.addon_updates in GetAddonTypes(platform_name)
 
 # Check if dlc are possible
 def AreDLCPossible(platform_name):
-    return config.addon_type_dlc in GetAddonTypes(platform_name)
+    return config.addon_dlc in GetAddonTypes(platform_name)
 
 # Check if addons are possible
 def AreAddonsPossible(platform_name):
@@ -71,14 +71,14 @@ def GetLauncherTypes(platform_name):
 
 # Check if no launcher available
 def HasNoLauncher(platform_name):
-    return config.launch_type_none in GetLauncherTypes(platform_name)
+    return config.launch_none in GetLauncherTypes(platform_name)
 
 # Check if launched by name
 def IsLaunchedByName(platform_name):
-    return config.launch_type_name in GetLauncherTypes(platform_name)
+    return config.launch_name in GetLauncherTypes(platform_name)
 
 # Check if launched by file
 def IsLaunchedByFile(platform_name):
-    return config.launch_type_file in GetLauncherTypes(platform_name)
+    return config.launch_file in GetLauncherTypes(platform_name)
 
 ###########################################################
