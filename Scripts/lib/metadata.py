@@ -781,7 +781,7 @@ def CollectMetadataFromTGDB(web_driver, game_platform, game_name, select_automat
 
     # Go to the search page and pull the results
     try:
-        web_driver.get("https://thegamesdb.net/search.php?name=" + keywords_name
+        web_driver.get("https://thegamesdb.net/search.php?name=" + keywords_name)
     except:
         return None
 
