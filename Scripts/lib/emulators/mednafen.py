@@ -28,8 +28,12 @@ class Mednafen(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            "Atari Lynx",
-            "Nintendo Virtual Boy"
+
+            # Nintendo
+            config.game_subcategory_nintendo_virtual_boy,
+
+            # Other
+            config.game_subcategory_atari_lynx
         ]
 
     # Get config

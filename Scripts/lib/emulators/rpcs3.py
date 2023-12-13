@@ -30,8 +30,8 @@ class RPCS3(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            "Sony PlayStation 3",
-            "Sony PlayStation Network - PlayStation 3"
+            config.game_subcategory_sony_playstation_3,
+            config.game_subcategory_sony_playstation_network_ps3
         ]
 
     # Get config

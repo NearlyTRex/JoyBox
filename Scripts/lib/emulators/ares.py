@@ -69,31 +69,31 @@ class Ares(emulatorbase.EmulatorBase):
         return [
 
             # Microsoft
-            "Microsoft MSX",
+            config.game_subcategory_microsoft_msx,
 
             # Nintendo
-            "Nintendo 64",
-            "Nintendo Famicom",
-            "Nintendo NES",
-            "Nintendo SNES",
-            "Nintendo Super Famicom",
+            config.game_subcategory_nintendo_64,
+            config.game_subcategory_nintendo_famicom,
+            config.game_subcategory_nintendo_nes,
+            config.game_subcategory_nintendo_snes,
+            config.game_subcategory_nintendo_super_famicom,
 
             # Other
-            "Atari 2600",
-            "Bandai WonderSwan Color",
-            "Bandai WonderSwan",
-            "Coleco ColecoVision",
-            "NEC SuperGrafx",
-            "NEC TurboGrafx CD & PC-Engine CD",
-            "NEC TurboGrafx-16 & PC-Engine",
-            "Sega 32X",
-            "Sega CD 32X",
-            "Sega CD",
-            "Sega Game Gear",
-            "Sega Genesis",
-            "Sega Master System",
-            "Sinclair ZX Spectrum",
-            "SNK Neo Geo Pocket Color"
+            config.game_subcategory_atari_2600,
+            config.game_subcategory_bandai_wonderswan_color,
+            config.game_subcategory_bandai_wonderswan,
+            config.game_subcategory_coleco_colecovision,
+            config.game_subcategory_nec_supergrafx,
+            config.game_subcategory_nec_turbografx_pcengine_cd,
+            config.game_subcategory_nec_turbografx_pcengine,
+            config.game_subcategory_sega_32x,
+            config.game_subcategory_sega_cd_32x,
+            config.game_subcategory_sega_cd,
+            config.game_subcategory_sega_game_gear,
+            config.game_subcategory_sega_genesis,
+            config.game_subcategory_sega_master_system,
+            config.game_subcategory_sinclair_zx_spectrum,
+            config.game_subcategory_snk_neogeo_pocket_color
         ]
 
     # Get config
@@ -115,31 +115,31 @@ class Ares(emulatorbase.EmulatorBase):
                 "save_sub_dirs": {
 
                     # Microsoft
-                    "Microsoft MSX": "MSX",
+                    config.game_subcategory_microsoft_msx: "MSX",
 
                     # Nintendo
-                    "Nintendo 64": "Nintendo 64",
-                    "Nintendo Famicom": "Famicom",
-                    "Nintendo NES": "Famicom",
-                    "Nintendo SNES": "Super Famicom",
-                    "Nintendo Super Famicom": "Super Famicom",
+                    config.game_subcategory_nintendo_64: "Nintendo 64",
+                    config.game_subcategory_nintendo_famicom: "Famicom",
+                    config.game_subcategory_nintendo_nes: "Famicom",
+                    config.game_subcategory_nintendo_snes: "Super Famicom",
+                    config.game_subcategory_nintendo_super_famicom: "Super Famicom",
 
                     # Other
-                    "Atari 2600": "Atari 2600",
-                    "Bandai WonderSwan": "WonderSwan",
-                    "Bandai WonderSwan Color": "WonderSwan Color",
-                    "Coleco ColecoVision": "ColecoVision",
-                    "NEC SuperGrafx": "SuperGrafx",
-                    "NEC TurboGrafx CD & PC-Engine CD": "PC Engine CD",
-                    "NEC TurboGrafx-16 & PC-Engine": "PC Engine",
-                    "Sega 32X": "Mega 32X",
-                    "Sega CD": "Mega CD",
-                    "Sega CD 32X": "Mega CD 32X",
-                    "Sega Game Gear": "Game Gear",
-                    "Sega Genesis": "Mega Drive",
-                    "Sega Master System": "Master System",
-                    "Sinclair ZX Spectrum": "ZX Spectrum",
-                    "SNK Neo Geo Pocket Color": "Neo Geo Pocket Color"
+                    config.game_subcategory_atari_2600: "Atari 2600",
+                    config.game_subcategory_bandai_wonderswan: "WonderSwan",
+                    config.game_subcategory_bandai_wonderswan_color: "WonderSwan Color",
+                    config.game_subcategory_coleco_colecovision: "ColecoVision",
+                    config.game_subcategory_nec_supergrafx: "SuperGrafx",
+                    config.game_subcategory_nec_turbografx_pcengine_cd: "PC Engine CD",
+                    config.game_subcategory_nec_turbografx_pcengine: "PC Engine",
+                    config.game_subcategory_sega_32x: "Mega 32X",
+                    config.game_subcategory_sega_cd: "Mega CD",
+                    config.game_subcategory_sega_cd_32x: "Mega CD 32X",
+                    config.game_subcategory_sega_game_gear: "Game Gear",
+                    config.game_subcategory_sega_genesis: "Mega Drive",
+                    config.game_subcategory_sega_master_system: "Master System",
+                    config.game_subcategory_sinclair_zx_spectrum: "ZX Spectrum",
+                    config.game_subcategory_snk_neogeo_pocket_color: "Neo Geo Pocket Color"
                 },
                 "setup_dir": {
                     "windows": "Ares/windows",

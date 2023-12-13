@@ -36,7 +36,7 @@ class FSUAE(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            "Commodore Amiga"
+            config.game_subcategory_commodore_amiga
         ]
 
     # Get config

@@ -27,7 +27,7 @@ class Flycast(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            "Sega Dreamcast"
+            config.game_subcategory_sega_dreamcast
         ]
 
     # Get config

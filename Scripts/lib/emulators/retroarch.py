@@ -28,8 +28,8 @@ class RetroArch(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            "Panasonic 3DO",
-            "Sega Saturn"
+            config.game_subcategory_panasonic_3do,
+            config.game_subcategory_sega_saturn
         ]
 
     # Get config
@@ -51,7 +51,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 "save_sub_dirs": {
 
                     # Other
-                    "Panasonic 3DO": "opera/per_game"
+                    config.game_subcategory_panasonic_3do: "opera/per_game"
                 },
                 "setup_dir": {
                     "windows": "RetroArch/windows",
@@ -68,8 +68,8 @@ class RetroArch(emulatorbase.EmulatorBase):
                 "cores_mapping": {
 
                     # Other
-                    "Panasonic 3DO": "opera_libretro",
-                    "Sega Saturn": "mednafen_saturn_libretro"
+                    config.game_subcategory_panasonic_3do: "opera_libretro",
+                    config.game_subcategory_sega_saturn: "mednafen_saturn_libretro"
                 },
                 "config_file": {
                     "windows": "RetroArch/windows/retroarch.cfg",

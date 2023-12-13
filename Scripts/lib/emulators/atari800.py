@@ -28,7 +28,7 @@ class Atari800(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            "Atari 800"
+            config.game_subcategory_atari_800
         ]
 
     # Get config

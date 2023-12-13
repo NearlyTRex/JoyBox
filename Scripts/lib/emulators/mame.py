@@ -86,14 +86,14 @@ class Mame(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            "Arcade",
-            "Atari 5200",
-            "Atari 7800",
-            "Magnavox Odyssey 2",
-            "Mattel Intellivision",
-            "Philips CDi",
-            "Texas Instruments TI-99-4A",
-            "Tiger Game.com",
+            config.game_subcategory_arcade,
+            config.game_subcategory_atari_5200,
+            config.game_subcategory_atari_7800,
+            config.game_subcategory_magnavox_odyssey_2,
+            config.game_subcategory_mattel_intellivision,
+            config.game_subcategory_philips_cdi,
+            config.game_subcategory_texas_instruments_ti994a,
+            config.game_subcategory_tiger_gamecom,
         ]
 
     # Get config
