@@ -26,8 +26,8 @@ class Sandboxie(toolbase.ToolBase):
         sandboxie_ini_exe = ini.GetIniValue("Tools.Sandboxie", "sandboxie_ini_exe")
         sandboxie_rpcss_exe = ini.GetIniValue("Tools.Sandboxie", "sandboxie_rpcss_exe")
         sandboxie_dcomlaunch_exe = ini.GetIniValue("Tools.Sandboxie", "sandboxie_dcomlaunch_exe")
-        sandboxie_install_dir = ini.GetIniValue("Tools.Sandboxie", "sandboxie_install_dir")
-        sandboxie_sandbox_dir = ini.GetIniValue("Tools.Sandboxie", "sandboxie_sandbox_dir")
+        sandboxie_install_dir = ini.GetIniPathValue("Tools.Sandboxie", "sandboxie_install_dir")
+        sandboxie_sandbox_dir = ini.GetIniPathValue("Tools.Sandboxie", "sandboxie_sandbox_dir")
 
         # Return config
         return {
