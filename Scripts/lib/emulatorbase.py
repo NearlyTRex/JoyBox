@@ -46,9 +46,8 @@ class EmulatorBase:
 
     # Get save sub dirs
     def GetSaveSubDirs(self, emulator_platform = None):
-        return programs.GetPathConfigValue(
+        return programs.GetConfigValue(
             program_config = self.GetConfig(),
-            base_dir = environment.GetEmulatorsRootDir(),
             program_name = self.GetName(),
             program_key = "save_sub_dirs",
             program_platform = emulator_platform)
