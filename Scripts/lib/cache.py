@@ -149,7 +149,7 @@ def AddGameToCache(game_platform, game_name, game_file, json_file, verbose = Fal
         exit_on_failure = exit_on_failure)
 
     # Install addons
-    if addon.AreAddonsPossible(game_platform):
+    if platforms.AreAddonsPossible(game_platform):
         addon.InstallAddons(
             game_platform = game_platform,
             game_name = game_name,
