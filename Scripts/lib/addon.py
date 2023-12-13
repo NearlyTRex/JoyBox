@@ -9,25 +9,8 @@ import config
 import system
 import environment
 import metadata
+import platforms
 import programs
-
-# Check if addons are possible
-def AreAddonsPossible(game_platform):
-    return game_platform in config.addon_platform_mapping
-
-# Check if updates are possible
-def AreUpdatesPossible(game_platform):
-    if game_platform in config.addon_platform_mapping:
-        if "updates" in config.addon_platform_mapping[game_platform]:
-            return config.addon_platform_mapping[game_platform]["updates"]
-    return False
-
-# Check if dlc are possible
-def AreDLCPossible(game_platform):
-    if game_platform in config.addon_platform_mapping:
-        if "dlc" in config.addon_platform_mapping[game_platform]:
-            return config.addon_platform_mapping[game_platform]["dlc"]
-    return False
 
 # Install addons
 def InstallAddons(
@@ -38,7 +21,7 @@ def InstallAddons(
     exit_on_failure = False):
 
     # No addon possible
-    if not AreAddonsPossible(game_platform):
+    if not platforms.AreAddonsPossible(game_platform):
         return True
 
     # Get categories

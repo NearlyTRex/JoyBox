@@ -115,7 +115,7 @@ def main():
                         sys.exit(1)
 
     # Verify hash files
-    for game_supercategory in config.game_supercategories:
+    for game_supercategory in metadata.GetMetadataSupercategories():
         for game_category in metadata.GetMetadataCategories():
             for game_subcategory in sorted(metadata.GetMetadataSubcategories(game_category)):
 

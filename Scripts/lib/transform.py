@@ -8,6 +8,7 @@ sys.path.append(lib_folder)
 import config
 import system
 import environment
+import platforms
 import metadata
 import install
 import installer
@@ -16,10 +17,6 @@ import iso
 import chd
 import playstation
 import xbox
-
-# Check if transform is required
-def IsTransformRequired(game_platform):
-    return game_platform in config.transform_platform_mapping
 
 # Transform game file
 def TransformGameFile(
@@ -33,7 +30,7 @@ def TransformGameFile(
     exit_on_failure = False):
 
     # No transform needed
-    if not IsTransformRequired(game_platform):
+    if not platforms.AreTransformsRequired(game_platform):
         return (True, source_game_file)
 
     # Output dir doesn't exist
@@ -41,15 +38,14 @@ def TransformGameFile(
         return (False, "Output directory doesn't exist")
 
     # Flags
-    transform_info = config.transform_platform_mapping[game_platform]
-    has_chd_to_iso = "chd_to_iso" in transform_info and transform_info["chd_to_iso"]
-    has_iso_to_xiso = "iso_to_xiso" in transform_info and transform_info["iso_to_xiso"]
-    has_iso_to_raw_plain = "iso_to_raw_plain" in transform_info and transform_info["iso_to_raw_plain"]
-    has_iso_to_raw_ps3 = "iso_to_raw_ps3" in transform_info and transform_info["iso_to_raw_ps3"]
-    has_pkg_to_raw_ps3 = "pkg_to_raw_ps3" in transform_info and transform_info["pkg_to_raw_ps3"]
-    has_pkg_to_raw_psv = "pkg_to_raw_psv" in transform_info and transform_info["pkg_to_raw_psv"]
-    has_exe_to_install = "exe_to_install" in transform_info and transform_info["exe_to_install"]
-    has_exe_to_raw_plain = "exe_to_raw_plain" in transform_info and transform_info["exe_to_raw_plain"]
+    has_exe_to_install = platforms.HasTransformType(game_platform, config.transform_type_exe_to_install)
+    has_exe_to_raw_plain = platforms.HasTransformType(game_platform, config.transform_type_exe_to_raw_plain)
+    has_chd_to_iso = platforms.HasTransformType(game_platform, config.transform_type_chd_to_iso)
+    has_iso_to_xiso = platforms.HasTransformType(game_platform, config.transform_type_iso_to_xiso)
+    has_iso_to_raw_plain = platforms.HasTransformType(game_platform, config.transform_type_iso_to_raw_plain)
+    has_iso_to_raw_ps3 = platforms.HasTransformType(game_platform, config.transform_type_iso_to_raw_ps3)
+    has_pkg_to_raw_ps3 = platforms.HasTransformType(game_platform, config.transform_type_pkg_to_raw_ps3)
+    has_pkg_to_raw_psv = platforms.HasTransformType(game_platform, config.transform_type_pkg_to_raw_psv)
 
     # Create temporary directory
     tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)

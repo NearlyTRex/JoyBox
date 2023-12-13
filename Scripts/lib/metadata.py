@@ -56,7 +56,7 @@ class Metadata:
         platforms = []
         for platform in self.game_database.keys():
             only_launchable = GetFilterOption(filter_options, config.filter_launchable_only)
-            no_launcher_set = (platform in config.no_launcher_platforms)
+            no_launcher_set = platforms.HasNoLauncher(platform)
             if only_launchable and no_launcher_set:
                 continue
             platforms.append(platform)
@@ -437,20 +437,22 @@ def GetMetadataDefaultSupercategory():
 
 # Get metadata categories
 def GetMetadataCategories():
-    return list(config.game_platforms.keys())
+    categories = []
+    for section in config.platforms.values():
+        categories.append(section[config.platforms.key_category])
+    return categories
 
 # Get metadata subcategories
 def GetMetadataSubcategories(game_category = None, filter_options = {}):
     potential_subcategories = []
-    if game_category and game_category in config.game_platforms.keys():
-        potential_subcategories = config.game_platforms[game_category]
-    else:
-        for game_category in config.game_platforms.keys():
-            potential_subcategories += config.game_platforms[game_category]
+    for section in config.platforms.values():
+        if platform_category and section[config.key_category] != platform_category:
+            continue
+        potential_subcategories.append(section[config.key_subcategory])
     subcategories = []
     for game_subcategory in potential_subcategories:
         only_launchable = GetFilterOption(filter_options, config.filter_launchable_only)
-        no_launcher_set = (DeriveMetadataPlatform(game_category, game_subcategory) in config.no_launcher_platforms)
+        no_launcher_set = platforms.HasNoLauncher(DeriveMetadataPlatform(game_category, game_subcategory))
         if only_launchable and no_launcher_set:
             continue
         subcategories.append(game_subcategory)
@@ -618,7 +620,7 @@ def DeriveMetadataCategoriesFromFile(input_file):
 
     # Derive supercategory
     derived_supercategory = ""
-    for possible_supercategory in config.game_supercategories:
+    for possible_supercategory in GetMetadataSupercategories():
         if relative_source_dir.startswith(possible_supercategory):
             derived_supercategory = possible_supercategory
     if len(derived_supercategory) == 0:

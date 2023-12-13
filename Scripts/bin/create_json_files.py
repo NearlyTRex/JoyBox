@@ -122,13 +122,13 @@ def main():
                         use_relative_paths = True)
 
                     # Try to set launch name
-                    needs_launch_name = game_platform in config.json_launch_name_platforms
+                    needs_launch_name = platforms.IsLaunchedByName(game_platform)
                     has_launch_name = config.general_key_launch_name in json_file_data
                     if needs_launch_name and not has_launch_name:
                         json_file_data[config.general_key_launch_name] = "REPLACEME"
 
                     # Try to set launch file
-                    needs_launch_file = game_platform not in config.json_launch_name_platforms
+                    needs_launch_file = platforms.IsLaunchedByFile(game_platform)
                     has_launch_file = config.general_key_launch_file in json_file_data
                     if needs_launch_file and not has_launch_file:
                         best_game_file = metadata.FindBestGameFile(base_rom_path)
