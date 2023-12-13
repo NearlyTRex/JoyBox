@@ -10,6 +10,7 @@ import system
 import metadata
 import transform
 import addon
+import platforms
 import gui
 
 # Check if game file is in cache already
@@ -85,7 +86,7 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
                 message_text = "Source file is not available\n%s\n%s" % (game_name, game_platform))
 
     # Check if transformation is required
-    if transform.IsTransformRequired(game_platform):
+    if platforms.AreTransformsRequired(game_platform):
 
         # Install transformed game
         def InstallTransformedGame():
