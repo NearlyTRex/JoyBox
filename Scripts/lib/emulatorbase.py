@@ -53,7 +53,7 @@ class EmulatorBase:
             program_platform = emulator_platform)
 
     # Get save dir
-    def GetSaveDir(self, emulator_platform = None):
+    def GetSaveDir(self, game_platform, emulator_platform = None):
 
         # Use current platform if none specified
         if not emulator_platform:
@@ -72,9 +72,9 @@ class EmulatorBase:
         save_sub_dirs = self.GetSaveSubDirs(emulator_platform)
 
         # Construct actual saves dir
-        if saves_base_dir and save_sub_dirs and emulator_platform:
-            if emulator_platform in save_sub_dirs.keys():
-                return os.path.join(saves_base_dir, save_sub_dirs[emulator_platform])
+        if saves_base_dir and save_sub_dirs and game_platform:
+            if game_platform in save_sub_dirs.keys():
+                return os.path.join(saves_base_dir, save_sub_dirs[game_platform])
         return saves_dir
 
     # Install add-ons
