@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 # Imports
-import os
-import os.path
+import os, os.path
 import sys
 
 # Custom imports
@@ -37,4 +36,4 @@ def main():
                 verbose = verbose)
 
 # Start
-environment.RunAsRootIfNecessary(main)
+main()

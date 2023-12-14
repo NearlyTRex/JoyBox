@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 
 # Imports
-import os
-import os.path
+import os, os.path
 import sys
 import argparse
-import pathlib
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
-import command
-import environment
 import metadata
 import setup
 
@@ -38,4 +34,4 @@ def main():
             metadata_pegasus.export_to_pegasus_file(pegasus_file)
 
 # Start
-environment.RunAsRootIfNecessary(main)
+main()

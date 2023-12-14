@@ -8,8 +8,6 @@ import argparse
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
-import command
-import environment
 import system
 import archive
 import iso
@@ -116,4 +114,4 @@ def main():
                 exit_on_failure = exit_on_failure)
 
 # Start
-environment.RunAsRootIfNecessary(main)
+main()

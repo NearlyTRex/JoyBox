@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 # Imports
-import os
-import os.path
+import os, os.path
 import sys
 import argparse
 
@@ -10,10 +9,7 @@ import argparse
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
-import command
-import environment
 import metadata
-import system
 import setup
 
 # Parse arguments
@@ -55,4 +51,4 @@ def main():
     metadata_obj.export_to_metadata_file(output_file, args.metadata_format)
 
 # Start
-environment.RunAsRootIfNecessary(main)
+main()

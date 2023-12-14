@@ -10,7 +10,6 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import config
 import system
-import environment
 import webpage
 import metadata
 import setup
@@ -149,4 +148,4 @@ def main():
     webpage.DestroyWebDriver(web_driver)
 
 # Start
-environment.RunAsRootIfNecessary(main)
+main()

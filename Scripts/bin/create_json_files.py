@@ -3,7 +3,6 @@
 # Imports
 import os, os.path
 import sys
-import json
 import argparse
 
 # Custom imports
@@ -12,7 +11,7 @@ sys.path.append(lib_folder)
 import config
 import environment
 import metadata
-import transform
+import platforms
 import system
 import setup
 import ini
@@ -52,7 +51,7 @@ def main():
                         exit_on_failure = exit_on_failure)
 
                 # Set transform file
-                needs_transform_file = transform.IsTransformRequired(game_platform)
+                needs_transform_file = platform.AreTransformsRequired(game_platform)
                 has_transform_file = config.general_key_transform_file in json_file_data
                 if needs_transform_file and not has_transform_file:
                     best_game_file = metadata.FindBestGameFile(base_rom_path)
@@ -155,4 +154,4 @@ def main():
                     exit_on_failure = exit_on_failure)
 
 # Start
-environment.RunAsRootIfNecessary(main)
+main()

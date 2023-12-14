@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 
 # Imports
-import os
-import os.path
+import os, os.path
 import sys
 import argparse
-from pathlib import Path
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
-import environment
 import system
 import setup
 import ini
@@ -46,12 +43,11 @@ def main():
         if os.path.isfile(obj_path):
             if obj.endswith(tuple(args.file_types.split(","))):
                 selected_file = obj_path
-                selected_file_path = Path(selected_file)
-                selected_file_basename = selected_file_path.stem
+                selected_file_basename = system.GetFilenameBasename(selected_file)
                 new_folder = os.path.join(input_path, selected_file_basename)
                 new_file = os.path.join(input_path, selected_file_basename, obj)
                 system.MakeDirectory(new_folder, verbose = verbose, exit_on_failure = exit_on_failure)
                 system.MoveFileOrDirectory(selected_file, new_file, verbose = verbose, exit_on_failure = exit_on_failure)
 
 # Start
-environment.RunAsRootIfNecessary(main)
+main()

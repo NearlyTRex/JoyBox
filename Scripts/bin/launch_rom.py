@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Imports
-import os
+import os, os.path
 import sys
 import argparse
 
@@ -9,7 +9,6 @@ import argparse
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
-import environment
 import system
 import metadata
 import launcher
@@ -82,4 +81,4 @@ def main():
         exit_on_failure = exit_on_failure)
 
 # Start
-environment.RunAsRootIfNecessary(main)
+main()

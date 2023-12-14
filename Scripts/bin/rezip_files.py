@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 # Imports
-import os
-import os.path
+import os, os.path
 import sys
 import argparse
 
@@ -64,4 +63,4 @@ def main():
             exit_on_failure = exit_on_failure)
 
 # Start
-environment.RunAsRootIfNecessary(main)
+main()

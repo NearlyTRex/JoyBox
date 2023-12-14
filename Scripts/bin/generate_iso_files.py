@@ -12,7 +12,6 @@ import config
 import system
 import environment
 import metadata
-import archive
 import hashing
 import setup
 
@@ -112,4 +111,4 @@ def main():
                 print(file_entry)
 
 # Start
-environment.RunAsRootIfNecessary(main)
+main()
