@@ -464,6 +464,49 @@ def MoveFileOrDirectory(
             sys.exit(1)
         return False
 
+# Transfer file
+def TransferFile(
+    src,
+    dest,
+    callback = None,
+    delete_afterwards = False,
+    skip_existing = False,
+    skip_identical = False,
+    case_sensitive_paths = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    try:
+        if skip_existing and DoesPathExist(dest, case_sensitive_paths):
+            return True
+        if skip_identical and hashing.AreFilesIdentical(src, dest, case_sensitive_paths):
+            return True
+        if verbose:
+            print("Transferring %s to %s" % (src, dest))
+        if not pretend_run:
+            total_size = os.stat(src).st_size
+            with open(src, "rb") as fsrc:
+                with open(dest, "wb") as fdest:
+                    num_bytes_transferred = 0
+                    while True:
+                        buf = fsrc.read(config.transfer_chunk_size)
+                        if not buf:
+                            break
+                        fdest.write(buf)
+                        num_bytes_transferred += len(buf)
+                        if callable(callback):
+                            callback(len(buf), num_bytes_transferred, total_size)
+            shutil.copymode(src, dest)
+            if delete_afterwards:
+                os.remove(src)
+        return True
+    except Exception as e:
+        if exit_on_failure:
+            print("Unable to transfer %s to %s" % (src, dest))
+            print(e)
+            sys.exit(1)
+        return False
+
 # Copy contents
 def CopyContents(
     src,
