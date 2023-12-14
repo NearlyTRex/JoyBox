@@ -4,7 +4,6 @@ import sys
 
 # Local imports
 import config
-import sandbox
 import environment
 import system
 import programs
@@ -12,26 +11,37 @@ import metadata
 import python
 import ini
 
-# Check requirements
-def CheckRequirements():
+# Check basics
+def CheckBasics():
 
     # Check python version
     if sys.version_info < config.minimum_python_version:
-        print("Minimum required python version is %s.%s.%s" % config.minimum_python_version)
-        print("Please upgrade your python version")
+        system.LogError("Minimum required python version is %s.%s.%s" % config.minimum_python_version)
+        system.LogError("Please upgrade your python version")
         sys.exit(1)
 
     # Check operating system
     is_windows = environment.IsWindowsPlatform()
     is_linux = environment.IsLinuxPlatform()
     if is_windows == False and is_linux == False:
-        print("Only windows and linux are supported right now")
+        system.LogError("Only windows and linux are supported right now")
         sys.exit(1)
 
     # Check symlink support
     if not environment.AreSymlinksSupported():
-        print("Symlinks are required, please enable them for your system")
+        system.LogError("Symlinks are required, please enable them for your system")
         sys.exit(1)
+
+# Check ini
+def CheckIni():
+
+    # Check ini file
+    if not ini.IsIniPresent():
+        system.LogError("Ini file not found, please run setup first")
+        sys.exit(1)
+
+# Check programs
+def CheckPrograms():
 
     # Get required programs
     required_programs = []
@@ -54,11 +64,20 @@ def CheckRequirements():
     # Check required programs
     for required_program in required_programs:
         if not programs.IsProgramInstalled(required_program):
-            system.LogError("Required program %s was not found, please install it")
+            system.LogError("Required program '%s' was not found, please install it")
             sys.exit(1)
+
+# Check requirements
+def CheckRequirements():
+    CheckBasics()
+    CheckIni()
+    CheckPrograms()
 
 # Setup environment
 def SetupEnvironment(verbose = False, exit_on_failure = False):
+
+    # Check basics
+    CheckBasics()
 
     # Setup ini file
     system.LogInfo("Initializing ini file")
