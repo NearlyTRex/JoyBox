@@ -93,7 +93,7 @@ class Mame(emulatorbase.EmulatorBase):
             config.game_subcategory_mattel_intellivision,
             config.game_subcategory_philips_cdi,
             config.game_subcategory_texas_instruments_ti994a,
-            config.game_subcategory_tiger_gamecom,
+            config.game_subcategory_tiger_gamecom
         ]
 
     # Get config
@@ -224,7 +224,7 @@ class Mame(emulatorbase.EmulatorBase):
         ]
 
         # Add rom path
-        if launch_platform == "Arcade":
+        if launch_platform == config.game_subcategory_arcade:
             launch_cmd += [
                 "-rompath", config.token_game_dir
             ]
@@ -234,41 +234,41 @@ class Mame(emulatorbase.EmulatorBase):
             ]
 
         # Add launch file
-        if launch_platform == "Arcade":
+        if launch_platform == config.game_subcategory_arcade:
             launch_cmd += [
                 config.token_game_name
             ]
-        elif launch_platform == "Atari 5200":
+        elif launch_platform == config.game_subcategory_atari_5200:
             launch_cmd += [
                 "a5200",
                 "-cart", config.token_game_file
             ]
-        elif launch_platform == "Atari 7800":
+        elif launch_platform == config.game_subcategory_atari_7800:
             launch_cmd += [
                 "a7800",
                 "-cart", config.token_game_file
             ]
-        elif launch_platform == "Magnavox Odyssey 2":
+        elif launch_platform == config.game_subcategory_magnavox_odyssey_2:
             launch_cmd += [
                 "odyssey2",
                 "-cart", config.token_game_file
             ]
-        elif launch_platform == "Mattel Intellivision":
+        elif launch_platform == config.game_subcategory_mattel_intellivision:
             launch_cmd += [
                 "intv",
                 "-cart", config.token_game_file
             ]
-        elif launch_platform == "Philips CDi":
+        elif launch_platform == config.game_subcategory_philips_cdi:
             launch_cmd += [
                 "cdimono1",
                 "-cdrom", config.token_game_file
             ]
-        elif launch_platform == "Texas Instruments TI-99-4A":
+        elif launch_platform == config.game_subcategory_texas_instruments_ti994a:
             launch_cmd += [
                 "ti99_4a",
                 "-cart", config.token_game_file
             ]
-        elif launch_platform == "Tiger Game.com":
+        elif launch_platform == config.game_subcategory_tiger_gamecom:
             launch_cmd += [
                 "gamecom",
                 "-cart1", config.token_game_file
