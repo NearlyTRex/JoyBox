@@ -99,11 +99,6 @@ def RunAsRoot(func):
         except:
             raise
 
-# Run as root if necessary
-def RunAsRootIfNecessary(func):
-    if callable(func):
-        func()
-
 ###########################################################
 # Process management
 ###########################################################
