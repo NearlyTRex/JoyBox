@@ -204,8 +204,9 @@ max_disc_data_size_25gb = 22 * bytes_per_gigabyte
 max_disc_data_size_50gb = 44 * bytes_per_gigabyte
 max_disc_data_size_100gb = 88 * bytes_per_gigabyte
 
-# Hash sizes
+# Buffer sizes
 hash_chunk_size = 2 ** 32
+transfer_chunk_size = 4096 * 1024
 
 # Ignored install paths
 ignored_paths_install = [
