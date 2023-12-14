@@ -8,10 +8,8 @@ import config
 import command
 import programs
 import system
-import environment
 import iso
 import archive
-import sandbox
 
 # Check if disc chd is mounted
 def IsDiscCHDMounted(chd_file, mount_dir):
@@ -23,10 +21,6 @@ def IsDiscCHDMounted(chd_file, mount_dir):
 
 # Create disc chd
 def CreateDiscCHD(chd_file, source_iso, delete_original = False, verbose = False, exit_on_failure = False):
-
-    # Get prefix
-    prefix_dir = programs.GetProgramPrefixDir("MameChdman")
-    prefix_name = programs.GetProgramPrefixName("MameChdman")
 
     # Get tool
     chd_tool = None
@@ -47,10 +41,6 @@ def CreateDiscCHD(chd_file, source_iso, delete_original = False, verbose = False
     command.RunBlockingCommand(
         cmd = create_command,
         options = command.CommandOptions(
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            is_wine_prefix = sandbox.ShouldBeRunViaWine(chd_tool),
-            is_sandboxie_prefix = sandbox.ShouldBeRunViaSandboxie(chd_tool),
             output_paths = [chd_file],
             blocking_processes = [chd_tool]),
         verbose = verbose,
@@ -65,10 +55,6 @@ def CreateDiscCHD(chd_file, source_iso, delete_original = False, verbose = False
 
 # Extract disc chd
 def ExtractDiscCHD(chd_file, binary_file, toc_file, delete_original = False, verbose = False, exit_on_failure = False):
-
-    # Get prefix
-    prefix_dir = programs.GetProgramPrefixDir("MameChdman")
-    prefix_name = programs.GetProgramPrefixName("MameChdman")
 
     # Get tool
     chd_tool = None
@@ -90,10 +76,6 @@ def ExtractDiscCHD(chd_file, binary_file, toc_file, delete_original = False, ver
     command.RunBlockingCommand(
         cmd = extract_cmd,
         options = command.CommandOptions(
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            is_wine_prefix = sandbox.ShouldBeRunViaWine(chd_tool),
-            is_sandboxie_prefix = sandbox.ShouldBeRunViaSandboxie(chd_tool),
             output_paths = [toc_file, binary_file],
             blocking_processes = [chd_tool]),
         verbose = verbose,
