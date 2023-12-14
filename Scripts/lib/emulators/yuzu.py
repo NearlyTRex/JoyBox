@@ -13,6 +13,7 @@ import archive
 import nintendo
 import launchcommon
 import gui
+import ini
 import emulatorbase
 
 # Config files
