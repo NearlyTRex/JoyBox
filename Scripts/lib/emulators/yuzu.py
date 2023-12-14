@@ -56,6 +56,16 @@ class Yuzu(emulatorbase.EmulatorBase):
 
     # Get config
     def GetConfig(self):
+
+        # Get switch info
+        profile_user_id = ini.GetIniValue("UserData.Switch", "profile_user_id")
+        profile_account_name = ini.GetIniValue("UserData.Switch", "profile_account_name")
+        if not nintendo.IsValidSwitchProfileInfo(profile_user_id, profile_account_name):
+            system.LogWarning("No Switch profile found in ini, using default")
+            profile_user_id = "F6F389D41D6BC0BDD6BD928C526AE556"
+            profile_account_name = "yuzu"
+
+        # Return config
         return {
             "Yuzu": {
                 "program": {
@@ -63,8 +73,8 @@ class Yuzu(emulatorbase.EmulatorBase):
                     "linux": "Yuzu/linux/Yuzu.AppImage"
                 },
                 "save_dir": {
-                    "windows": "Yuzu/windows/user/nand/user/save/0000000000000000/F6F389D41D6BC0BDD6BD928C526AE556",
-                    "linux": "Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/nand/user/save/0000000000000000/F6F389D41D6BC0BDD6BD928C526AE556"
+                    "windows": "Yuzu/windows/user/nand/user/save/0000000000000000/%s" % profile_user_id,
+                    "linux": "Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/nand/user/save/0000000000000000/%s" % profile_user_id
                 },
                 "setup_dir": {
                     "windows": "Yuzu/windows/user",
@@ -78,8 +88,8 @@ class Yuzu(emulatorbase.EmulatorBase):
                     "windows": "Yuzu/windows/user/nand/system/save/8000000000000010/su/avators/profiles.dat",
                     "linux": "Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/nand/system/save/8000000000000010/su/avators/profiles.dat"
                 },
-                "profile_user_id": "F6F389D41D6BC0BDD6BD928C526AE556",
-                "profile_account_name": "yuzu",
+                "profile_user_id": profile_user_id,
+                "profile_account_name": profile_account_name,
                 "run_sandboxed": {
                     "windows": False,
                     "linux": False
