@@ -45,6 +45,7 @@ def CheckRequirements():
             "Sandboxie"
         ]
     required_programs += [
+        "Curl",
         "Git",
         "7-Zip",
         "Firefox"
