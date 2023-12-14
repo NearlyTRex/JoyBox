@@ -30,6 +30,7 @@ required_system_packages_linux = [
     "flex",
     "gettext",
     "git",
+    "openssl",
     "zip",
 
     # GTK
@@ -92,7 +93,6 @@ required_system_packages_linux = [
     "ca-certificates",
     "libmbedtls-dev",
     "libssl-dev",
-    "openssl",
 
     # Compression
     "libarchive-dev",
