@@ -551,20 +551,34 @@ def UpdateWiiUKeys(src_key_file, dest_key_file, verbose = False, exit_on_failure
 # Nintendo Switch
 ######################################################
 
+# Check if switch profile info is valid
+def IsValidSwitchProfileInfo(user_id, account_name):
+
+    # Check user id
+    if not isinstance(user_id, str) or len(user_id) != 32:
+        return False
+
+    # Check account name
+    if not isinstance(account_name, str) or len(account_name) > 32:
+        return False
+
+    # Should be good
+    return True
+
 # Create Switch profiles dat
 def CreateSwitchProfilesDat(profiles_file, user_id, account_name, verbose = False, exit_on_failure = False):
 
+    # Check profile info
+    if not IsValidSwitchProfileInfo(user_id, account_name):
+        return False
+
     # Get user id bytes
-    user_id_bytes = []
-    if isinstance(user_id, str) and len(user_id) == 32:
-        user_id_bytes = bytearray.fromhex("".join(reversed(textwrap.wrap(user_id, 2))))
+    user_id_bytes = bytearray.fromhex("".join(reversed(textwrap.wrap(user_id, 2))))
     if len(user_id_bytes) == 0:
         return False
 
     # Get account name bytes
-    account_name_bytes = []
-    if isinstance(account_name, str) and len(account_name) > 0 and len(account_name) <= 32:
-        account_name_bytes = bytearray(account_name, encoding = "utf-8")
+    account_name_bytes = bytearray(account_name, encoding = "utf-8")
     if len(account_name_bytes) == 0:
         return False
 
