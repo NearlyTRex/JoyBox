@@ -65,7 +65,6 @@ git_install_dir = %ProgramFiles%\Git\bin
 
 [Tools.7Zip]
 7z_exe = 7z
-7z_standalone_exe = 7za
 7z_install_dir = %ProgramFiles%\7-Zip
 
 [Tools.Firefox]
