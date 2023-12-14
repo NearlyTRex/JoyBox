@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import config
+import command
 import environment
 import system
 import tools
@@ -82,6 +83,14 @@ def ShouldProgramBeInstalled(program_name, program_platform = None):
 # Determine if library should be installed
 def ShouldLibraryBeInstalled(library_name):
     return system.IsDirectoryEmpty(GetLibraryInstallDir(library_name))
+
+# Determine if program is installed
+def IsProgramInstalled(program_name, program_platform = None):
+    if IsProgramNameTool(program_name, program_platform):
+        return command.IsRunnableCommand(GetToolProgram(program_name, program_platform))
+    elif IsProgramNameEmulator(program_name, program_platform):
+        return command.IsRunnableCommand(GetEmulatorProgram(program_name, program_platform))
+    return False
 
 ###########################################################
 
