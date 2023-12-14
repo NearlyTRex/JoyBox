@@ -68,22 +68,6 @@ git_install_dir = %ProgramFiles%\Git\bin
 7z_standalone_exe = 7za
 7z_install_dir = %ProgramFiles%\7-Zip
 
-[Tools.XorrISO]
-xorriso_exe = xorriso
-xorriso_install_dir = C:\cygwin64\bin
-
-[Tools.Wget]
-wget_exe = wget
-wget_install_dir = C:\cygwin64\bin
-
 [Tools.Curl]
 curl_exe = curl
 curl_install_dir = C:\Windows\System32
-
-[Tools.File]
-file_exe = file
-file_install_dir = C:\cygwin64\bin
-
-[Tools.Reg]
-reg_exe = reg
-reg_install_dir = C:\Windows\System32

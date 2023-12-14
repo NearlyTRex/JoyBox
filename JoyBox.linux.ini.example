@@ -68,22 +68,6 @@ git_install_dir = /usr/bin
 7z_standalone_exe = 7za
 7z_install_dir = /usr/bin
 
-[Tools.XorrISO]
-xorriso_exe = xorriso
-xorriso_install_dir = /usr/bin
-
-[Tools.Wget]
-wget_exe = wget
-wget_install_dir = /usr/bin
-
 [Tools.Curl]
 curl_exe = curl
 curl_install_dir = /usr/bin
-
-[Tools.File]
-file_exe = file
-file_install_dir = /usr/bin
-
-[Tools.Reg]
-reg_exe = reg
-reg_install_dir =
