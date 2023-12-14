@@ -41,6 +41,10 @@ overwrite_videos = False
 steam_username =
 steam_userid =
 
+[UserData.Switch]
+profile_user_id =
+profile_account_name =
+
 [Tools.Python]
 python_exe = python
 python_pip_exe = pip
