@@ -55,9 +55,9 @@ sandboxie_dcomlaunch_exe = SandboxieDcomLaunch
 sandboxie_install_dir = %ProgramFiles%\Sandboxie-Plus
 sandboxie_sandbox_dir = %USERPROFILE%\Sandbox\%USERNAME%
 
-[Tools.Firefox]
-firefox_exe = firefox
-firefox_install_dir = %ProgramFiles%\Mozilla Firefox
+[Tools.Curl]
+curl_exe = curl
+curl_install_dir = C:\Windows\System32
 
 [Tools.Git]
 git_exe = git
@@ -68,6 +68,6 @@ git_install_dir = %ProgramFiles%\Git\bin
 7z_standalone_exe = 7za
 7z_install_dir = %ProgramFiles%\7-Zip
 
-[Tools.Curl]
-curl_exe = curl
-curl_install_dir = C:\Windows\System32
+[Tools.Firefox]
+firefox_exe = firefox
+firefox_install_dir = %ProgramFiles%\Mozilla Firefox

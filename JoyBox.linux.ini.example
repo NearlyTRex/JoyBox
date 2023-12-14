@@ -55,9 +55,9 @@ wine_tricks_exe = winetricks
 wine_install_dir = /usr/bin
 wine_sandbox_dir = $HOME/Sandbox
 
-[Tools.Firefox]
-firefox_exe = firefox
-firefox_install_dir = /usr/bin
+[Tools.Curl]
+curl_exe = curl
+curl_install_dir = /usr/bin
 
 [Tools.Git]
 git_exe = git
@@ -68,6 +68,6 @@ git_install_dir = /usr/bin
 7z_standalone_exe = 7za
 7z_install_dir = /usr/bin
 
-[Tools.Curl]
-curl_exe = curl
-curl_install_dir = /usr/bin
+[Tools.Firefox]
+firefox_exe = firefox
+firefox_install_dir = /usr/bin
