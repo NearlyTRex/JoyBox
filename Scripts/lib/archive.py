@@ -44,8 +44,8 @@ def CreateZipFromFile(zip_file, source_file, delete_original = False, verbose = 
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip-Standalone")):
-        archive_tool = programs.GetToolProgram("7-Zip-Standalone")
+    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip")):
+        archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
         return False
 
@@ -53,7 +53,7 @@ def CreateZipFromFile(zip_file, source_file, delete_original = False, verbose = 
     path_to_add = sandbox.TranslatePathIfNecessary(
         path = source_file,
         program_exe = archive_tool,
-        program_name = "7-Zip-Standalone")
+        program_name = "7-Zip")
 
     # Get create command
     create_command = [
@@ -93,8 +93,8 @@ def CreateZipFromFolder(zip_file, source_dir, excludes = [], delete_original = F
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip-Standalone")):
-        archive_tool = programs.GetToolProgram("7-Zip-Standalone")
+    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip")):
+        archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
         return False
 
@@ -106,7 +106,7 @@ def CreateZipFromFolder(zip_file, source_dir, excludes = [], delete_original = F
         path_to_add = sandbox.TranslatePathIfNecessary(
             path = os.path.join(source_dir, obj),
             program_exe = archive_tool,
-            program_name = "7-Zip-Standalone")
+            program_name = "7-Zip")
         objs_to_add.append(path_to_add)
 
     # Get create command
@@ -147,8 +147,8 @@ def CreateExeFromFolder(exe_file, source_dir, excludes = [], delete_original = F
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip-Standalone")):
-        archive_tool = programs.GetToolProgram("7-Zip-Standalone")
+    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip")):
+        archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
         return False
 
@@ -160,7 +160,7 @@ def CreateExeFromFolder(exe_file, source_dir, excludes = [], delete_original = F
         path_to_add = sandbox.TranslatePathIfNecessary(
             path = os.path.join(source_dir, obj),
             program_exe = archive_tool,
-            program_name = "7-Zip-Standalone")
+            program_name = "7-Zip")
         objs_to_add.append(path_to_add)
 
     # Get create command
@@ -247,8 +247,8 @@ def TestArchive(archive_file, verbose = False, exit_on_failure = False):
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip-Standalone")):
-        archive_tool = programs.GetToolProgram("7-Zip-Standalone")
+    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip")):
+        archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
         return False
 
