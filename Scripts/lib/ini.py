@@ -15,11 +15,15 @@ ini_file = os.path.join(ini_folder, "JoyBox.ini")
 # Ini file parser
 ini_parser = configparser.ConfigParser()
 
+# Check if ini is present
+def IsIniPresent():
+    return os.path.exists(ini_file)
+
 # Initialize ini file
 def InitializeIniFile(verbose = False, exit_on_failure = False):
 
     # Ignore already existing file
-    if os.path.exists(ini_file):
+    if IsIniPresent():
         return
 
     # Get example file
