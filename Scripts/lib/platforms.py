@@ -43,7 +43,7 @@ def HasTransformType(platform_name, transform_type):
 
 # Check if transforms are required
 def AreTransformsRequired(platform_name):
-    return len(GetTransformTypes(platform_name)) == 0
+    return len(GetTransformTypes(platform_name)) > 0
 
 ###########################################################
 
@@ -61,7 +61,7 @@ def AreDLCPossible(platform_name):
 
 # Check if addons are possible
 def AreAddonsPossible(platform_name):
-    return len(GetAddonTypes(platform_name)) == 0
+    return len(GetAddonTypes(platform_name)) > 0
 
 ###########################################################
 
