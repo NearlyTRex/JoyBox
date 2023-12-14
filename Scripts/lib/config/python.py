@@ -41,5 +41,6 @@ required_python_modules_all = [
     "schedule",
     "python-dateutil",
     "xxhash",
-    "screeninfo"
+    "screeninfo",
+    "tqdm"
 ]
