@@ -10,7 +10,7 @@ import system
 import programs
 import metadata
 import python
-import packages
+import ini
 
 # Check requirements
 def CheckRequirements():
@@ -60,6 +60,10 @@ def CheckRequirements():
 # Setup environment
 def SetupEnvironment(verbose = False, exit_on_failure = False):
 
+    # Setup ini file
+    system.LogInfo("Initializing ini file")
+    ini.InitializeIniFile(verbose = verbose, exit_on_failure = exit_on_failure)
+
     # Setup python environment
     system.LogInfo("Creating python virtual environment")
     python.SetupPythonEnvironment(verbose = verbose, exit_on_failure = exit_on_failure)
@@ -69,14 +73,6 @@ def SetupEnvironment(verbose = False, exit_on_failure = False):
         system.LogInfo("Installing python module %s ..." % module)
         python.InstallPythonModule(
             module = module,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-    # Install system packages
-    for package in packages.GetRequiredSystemPackages():
-        system.LogInfo("Installing system package %s ..." % package)
-        packages.InstallSystemPackage(
-            package = package,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
