@@ -33,15 +33,28 @@ def CheckRequirements():
         print("Symlinks are required, please enable them for your system")
         sys.exit(1)
 
-    # Check wine
-    if environment.IsWinePlatform() and not sandbox.IsWineInstalled():
-        print("Wine (including winetricks) is required for this environment, please install it and make sure it is in the path")
-        sys.exit(1)
+    # Get required programs
+    required_programs = []
+    if environment.IsWinePlatform():
+        required_programs += [
+            "Wine",
+            "WineTricks"
+        ]
+    elif environment.IsSandboxiePlatform():
+        required_programs += [
+            "Sandboxie"
+        ]
+    required_programs += [
+        "Git",
+        "7-Zip",
+        "Firefox"
+    ]
 
-    # Check sandboxie
-    if environment.IsSandboxiePlatform() and not sandbox.IsSandboxieInstalled():
-        print("Sandboxie is required for this environment, please install it and make sure it is in the path")
-        sys.exit(1)
+    # Check required programs
+    for required_program in required_programs:
+        if not programs.IsProgramInstalled(required_program):
+            system.LogError("Required program %s was not found, please install it")
+            sys.exit(1)
 
 # Setup environment
 def SetupEnvironment(verbose = False, exit_on_failure = False):

@@ -63,19 +63,6 @@ def ShouldBeRunViaSandboxie(cmd):
 
 ###########################################################
 
-# Determine if wine is installed
-def IsWineInstalled():
-    has_wine_system = command.IsRunnableCommand(programs.GetToolProgram("Wine"))
-    has_winetricks_system = command.IsRunnableCommand(programs.GetToolProgram("WineTricks"))
-    return has_wine_system and has_winetricks_system
-
-# Determine if sandboxie is installed
-def IsSandboxieInstalled():
-    has_sandboxie_system = command.IsRunnableCommand(programs.GetToolProgram("Sandboxie"))
-    return has_sandboxie_system
-
-###########################################################
-
 # Get wine command
 def GetWineCommand():
     return programs.GetToolProgram("Wine")
