@@ -578,7 +578,6 @@ def BuildAppImageFromSource(
     internal_copies = [],
     internal_symlinks = [],
     external_copies = [],
-    dependencies = [],
     verbose = False,
     exit_on_failure = False):
 
@@ -609,9 +608,6 @@ def BuildAppImageFromSource(
     tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
     if not tmp_dir_success:
         return
-
-    # Install dependencies
-    environment.InstallSystemPackages(dependencies)
 
     # Get directories
     appimage_dir = os.path.join(tmp_dir_result, "AppImage")
