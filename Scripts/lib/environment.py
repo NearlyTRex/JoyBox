@@ -157,9 +157,7 @@ def WaitForNamedProcesses(process_names = []):
 
 # Get tools root dir
 def GetToolsRootDir():
-    tools_dir = ini.GetIniPathValue("UserData.Dirs", "tools_dir")
-    system.AssertPathExists(tools_dir, "tools_dir")
-    return tools_dir
+    return ini.GetIniPathValue("UserData.Dirs", "tools_dir")
 
 ###########################################################
 # Emulators
@@ -167,9 +165,7 @@ def GetToolsRootDir():
 
 # Get emulators root dir
 def GetEmulatorsRootDir():
-    emulators_dir = ini.GetIniPathValue("UserData.Dirs", "emulators_dir")
-    system.AssertPathExists(emulators_dir, "emulators_dir")
-    return emulators_dir
+    return ini.GetIniPathValue("UserData.Dirs", "emulators_dir")
 
 ###########################################################
 # Sync
@@ -177,9 +173,7 @@ def GetEmulatorsRootDir():
 
 # Get sync root dir
 def GetSyncRootDir():
-    sync_dir = ini.GetIniPathValue("UserData.Dirs", "sync_dir")
-    system.AssertPathExists(sync_dir, "sync_dir")
-    return sync_dir
+    return ini.GetIniPathValue("UserData.Dirs", "sync_dir")
 
 # Get synced gaming root dir
 def GetSyncedGamingRootDir():
@@ -236,9 +230,7 @@ def GetSyncedProgramsRootDir():
 
 # Get metadata root dir
 def GetMetadataRootDir():
-    metadata_dir = ini.GetIniPathValue("UserData.Dirs", "metadata_dir")
-    system.AssertPathExists(metadata_dir, "metadata_dir")
-    return metadata_dir
+    return ini.GetIniPathValue("UserData.Dirs", "metadata_dir")
 
 # Get pegasus metadata root dir
 def GetPegasusMetadataRootDir():
@@ -306,9 +298,7 @@ def GetJsonRomMetadataFile(game_category, game_subcategory, game_name):
 
 # Get scripts root dir
 def GetScriptsRootDir():
-    scripts_dir = ini.GetIniPathValue("UserData.Dirs", "scripts_dir")
-    system.AssertPathExists(scripts_dir, "scripts_dir")
-    return scripts_dir
+    return ini.GetIniPathValue("UserData.Dirs", "scripts_dir")
 
 # Get scripts bin dir
 def GetScriptsBinDir():
@@ -338,9 +328,7 @@ def GetScriptsExecutableExtension():
 
 # Get storage root dir
 def GetStorageRootDir():
-    storage_dir = ini.GetIniPathValue("UserData.Dirs", "storage_dir")
-    system.AssertPathExists(storage_dir, "storage_dir")
-    return storage_dir
+    return ini.GetIniPathValue("UserData.Dirs", "storage_dir")
 
 # Get gaming storage root dir
 def GetGamingStorageRootDir():
@@ -381,15 +369,11 @@ def GetSupercategoryRootDir(supercategory):
 
 # Get local cache root dir
 def GetLocalCacheRootDir():
-    local_cache_dir = ini.GetIniPathValue("UserData.Dirs", "local_cache_dir")
-    system.AssertPathExists(local_cache_dir, "local_cache_dir")
-    return local_cache_dir
+    return ini.GetIniPathValue("UserData.Dirs", "local_cache_dir")
 
 # Get remote cache root dir
 def GetRemoteCacheRootDir():
-    remote_cache_dir = ini.GetIniPathValue("UserData.Dirs", "remote_cache_dir")
-    system.AssertPathExists(remote_cache_dir, "remote_cache_dir")
-    return remote_cache_dir
+    return ini.GetIniPathValue("UserData.Dirs", "remote_cache_dir")
 
 # Get gaming cache root dir
 def GetGamingLocalCacheRootDir():
