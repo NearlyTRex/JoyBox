@@ -679,7 +679,7 @@ def SmartCopy(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        if os.path.isdir(src) and os.path.isdir(dest):
+        if os.path.isdir(src):
             CopyContents(
                 src = src,
                 dest = dest,
@@ -730,7 +730,7 @@ def SmartMove(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        if os.path.isdir(src) and os.path.isdir(dest):
+        if os.path.isdir(src):
             MoveContents(
                 src = src,
                 dest = dest,
