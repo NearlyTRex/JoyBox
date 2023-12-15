@@ -145,6 +145,7 @@ def AddGameToCache(game_platform, game_name, game_file, json_file, verbose = Fal
     system.CopyContents(
         src = source_dir,
         dest = dest_dir,
+        show_progress = True,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
