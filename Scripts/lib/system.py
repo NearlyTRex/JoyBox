@@ -468,8 +468,8 @@ def MoveFileOrDirectory(
 def TransferFile(
     src,
     dest,
-    callback = None,
     delete_afterwards = False,
+    show_progress = False,
     skip_existing = False,
     skip_identical = False,
     case_sensitive_paths = True,
@@ -484,7 +484,13 @@ def TransferFile(
         if verbose:
             print("Transferring %s to %s" % (src, dest))
         if not pretend_run:
-            total_size = os.stat(src).st_size
+            total_size = GetFileSize(src)
+            progress_bar = None
+            progress_callback = None
+            if show_progress:
+                import tqdm
+                progress_bar = tqdm.tqdm(total = total_size)
+                progress_callback = lambda copied, total_copied, total: progress_bar.update(copied)
             with open(src, "rb") as fsrc:
                 with open(dest, "wb") as fdest:
                     num_bytes_transferred = 0
@@ -494,8 +500,8 @@ def TransferFile(
                             break
                         fdest.write(buf)
                         num_bytes_transferred += len(buf)
-                        if callable(callback):
-                            callback(len(buf), num_bytes_transferred, total_size)
+                        if callable(progress_callback):
+                            progress_callback(len(buf), num_bytes_transferred, total_size)
             shutil.copymode(src, dest)
             if delete_afterwards:
                 os.remove(src)
@@ -511,6 +517,7 @@ def TransferFile(
 def CopyContents(
     src,
     dest,
+    show_progress = False,
     skip_existing = False,
     skip_identical = False,
     case_sensitive_paths = True,
@@ -526,10 +533,15 @@ def CopyContents(
         input_file = os.path.join(src, file)
         output_file = os.path.join(dest, file)
         output_dir = os.path.dirname(output_file)
-        MakeDirectory(output_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-        CopyFileOrDirectory(
+        MakeDirectory(
+            dir = output_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        TransferFile(
             src = input_file,
             dest = output_file,
+            show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
             case_sensitive_paths = case_sensitive_paths,
@@ -541,6 +553,7 @@ def CopyContents(
 def MoveContents(
     src,
     dest,
+    show_progress = False,
     skip_existing = False,
     skip_identical = False,
     case_sensitive_paths = True,
@@ -556,10 +569,16 @@ def MoveContents(
         input_file = os.path.join(src, file)
         output_file = os.path.join(dest, file)
         output_dir = os.path.dirname(output_file)
-        MakeDirectory(output_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-        MoveFileOrDirectory(
+        MakeDirectory(
+            dir = output_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        TransferFile(
             src = input_file,
             dest = output_file,
+            delete_afterwards = True,
+            show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
             case_sensitive_paths = case_sensitive_paths,
