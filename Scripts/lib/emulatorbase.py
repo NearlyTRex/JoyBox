@@ -22,10 +22,6 @@ class EmulatorBase:
     def GetConfig(self):
         return {}
 
-    # Get save format
-    def GetSaveFormat(self):
-        return None
-
     # Get config file
     def GetConfigFile(self, emulator_platform = None):
         return programs.GetPathConfigValue(
@@ -34,6 +30,19 @@ class EmulatorBase:
             program_name = self.GetName(),
             program_key = "config_file",
             program_platform = emulator_platform)
+
+    # Get setup dir
+    def GetSetupDir(self, emulator_platform = None):
+        return programs.GetPathConfigValue(
+            program_config = self.GetConfig(),
+            base_dir = environment.GetEmulatorsRootDir(),
+            program_name = self.GetName(),
+            program_key = "setup_dir",
+            program_platform = emulator_platform)
+
+    # Get save format
+    def GetSaveFormat(self):
+        return None
 
     # Get save base dir
     def GetSaveBaseDir(self, emulator_platform = None):
