@@ -76,6 +76,7 @@ def LaunchGame(launch_platform, file_path, capture_type = None, fullscreen = Fal
     system.ReplaceStringsInFile(
         src = game_launcher.GetConfigFile(),
         replacements = [
+            {"from": config.token_emulator_setup_root, "to": game_launcher.GetSetupDir()},
             {"from": config.token_emulator_main_root, "to": environment.GetEmulatorsRootDir()},
             {"from": config.token_game_save_dir, "to": save_dir_real}
         ],
@@ -99,6 +100,7 @@ def LaunchGame(launch_platform, file_path, capture_type = None, fullscreen = Fal
     system.ReplaceStringsInFile(
         src = game_launcher.GetConfigFile(),
         replacements = [
+            {"from": game_launcher.GetSetupDir(), "to": config.token_emulator_setup_root},
             {"from": environment.GetEmulatorsRootDir(), "to": config.token_emulator_main_root},
             {"from": save_dir_real, "to": config.token_game_save_dir}
         ],
