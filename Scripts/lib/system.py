@@ -590,6 +590,7 @@ def MoveContents(
 def CopyGlobbedFiles(
     glob_pattern,
     dest_dir,
+    show_progress = False,
     skip_existing = False,
     skip_identical = False,
     case_sensitive_paths = True,
@@ -606,9 +607,10 @@ def CopyGlobbedFiles(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        CopyFileOrDirectory(
+        TransferFile(
             src = os.path.join(glob_source_dir, glob_file),
             dest = os.path.join(dest_dir, glob_file),
+            show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
             case_sensitive_paths = case_sensitive_paths,
@@ -620,6 +622,7 @@ def CopyGlobbedFiles(
 def MoveGlobbedFiles(
     glob_pattern,
     dest_dir,
+    show_progress = False,
     skip_existing = False,
     skip_identical = False,
     case_sensitive_paths = True,
@@ -636,9 +639,11 @@ def MoveGlobbedFiles(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        MoveFileOrDirectory(
+        TransferFile(
             src = os.path.join(glob_source_dir, glob_file),
             dest = os.path.join(dest_dir, glob_file),
+            delete_afterwards = True,
+            show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
             case_sensitive_paths = case_sensitive_paths,
@@ -650,6 +655,7 @@ def MoveGlobbedFiles(
 def SmartCopy(
     src,
     dest,
+    show_progress = False,
     skip_existing = False,
     skip_identical = False,
     case_sensitive_paths = True,
@@ -665,6 +671,7 @@ def SmartCopy(
         CopyGlobbedFiles(
             glob_pattern = src,
             dest_dir = dest,
+            show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
             case_sensitive_paths = case_sensitive_paths,
@@ -676,6 +683,7 @@ def SmartCopy(
             CopyContents(
                 src = src,
                 dest = dest,
+                show_progress = show_progress,
                 skip_existing = skip_existing,
                 skip_identical = skip_identical,
                 case_sensitive_paths = case_sensitive_paths,
@@ -683,9 +691,10 @@ def SmartCopy(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         else:
-            CopyFileOrDirectory(
+            TransferFile(
                 src = src,
                 dest = dest,
+                show_progress = show_progress,
                 skip_existing = skip_existing,
                 skip_identical = skip_identical,
                 case_sensitive_paths = case_sensitive_paths,
@@ -697,6 +706,7 @@ def SmartCopy(
 def SmartMove(
     src,
     dest,
+    show_progress = False,
     skip_existing = False,
     skip_identical = False,
     case_sensitive_paths = True,
@@ -712,6 +722,7 @@ def SmartMove(
         MoveGlobbedFiles(
             glob_pattern = src,
             dest_dir = dest,
+            show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
             case_sensitive_paths = case_sensitive_paths,
@@ -723,6 +734,7 @@ def SmartMove(
             MoveContents(
                 src = src,
                 dest = dest,
+                show_progress = show_progress,
                 skip_existing = skip_existing,
                 skip_identical = skip_identical,
                 case_sensitive_paths = case_sensitive_paths,
@@ -730,9 +742,11 @@ def SmartMove(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         else:
-            MoveFileOrDirectory(
+            TransferFile(
                 src = src,
                 dest = dest,
+                delete_afterwards = True,
+                show_progress = show_progress,
                 skip_existing = skip_existing,
                 skip_identical = skip_identical,
                 case_sensitive_paths = case_sensitive_paths,
