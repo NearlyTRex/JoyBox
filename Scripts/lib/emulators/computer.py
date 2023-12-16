@@ -111,7 +111,7 @@ def ParseComputerJson(json_file):
         SetDefaultValue(game_info, config.computer_key_platform, json_platform)
 
         # Convert some string fields to list
-        for key in config.computer_keys_list_type:
+        for key in config.computer_keys_list_keys:
             if isinstance(game_info[key], str):
                 game_info[key] = [game_info[key]]
     return game_info
