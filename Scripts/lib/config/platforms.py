@@ -35,6 +35,8 @@ computer_amazon_games[keys.platform_key_subcategory] = categories.game_subcatego
 computer_amazon_games[keys.platform_key_transforms] = [types.transform_exe_to_raw_plain]
 computer_amazon_games[keys.platform_key_addons] = []
 computer_amazon_games[keys.platform_key_launcher] = [types.launch_file]
+computer_amazon_games[keys.platform_key_autofill_json] = [keys.computer_key_installer_exe, keys.general_key_transform_file]
+computer_amazon_games[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_amazon_games] = computer_amazon_games
 
 ###########################################################
@@ -47,6 +49,8 @@ computer_disc[keys.platform_key_subcategory] = categories.game_subcategory_disc
 computer_disc[keys.platform_key_transforms] = [types.transform_exe_to_install]
 computer_disc[keys.platform_key_addons] = []
 computer_disc[keys.platform_key_launcher] = [types.launch_file]
+computer_disc[keys.platform_key_autofill_json] = [keys.general_key_transform_file]
+computer_disc[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_disc] = computer_disc
 
 ###########################################################
@@ -59,6 +63,8 @@ computer_epic_games[keys.platform_key_subcategory] = categories.game_subcategory
 computer_epic_games[keys.platform_key_transforms] = [types.transform_exe_to_raw_plain]
 computer_epic_games[keys.platform_key_addons] = []
 computer_epic_games[keys.platform_key_launcher] = [types.launch_file]
+computer_epic_games[keys.platform_key_autofill_json] = [keys.computer_key_installer_exe, keys.general_key_transform_file]
+computer_epic_games[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_epic_games] = computer_epic_games
 
 ###########################################################
@@ -71,6 +77,8 @@ computer_gog[keys.platform_key_subcategory] = categories.game_subcategory_gog
 computer_gog[keys.platform_key_transforms] = [types.transform_exe_to_install]
 computer_gog[keys.platform_key_addons] = []
 computer_gog[keys.platform_key_launcher] = [types.launch_file]
+computer_gog[keys.platform_key_autofill_json] = [keys.computer_key_installer_exe, keys.general_key_transform_file, keys.general_key_dlc]
+computer_gog[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_gog] = computer_gog
 
 ###########################################################
@@ -83,6 +91,8 @@ computer_humble_bundle[keys.platform_key_subcategory] = categories.game_subcateg
 computer_humble_bundle[keys.platform_key_transforms] = [types.transform_exe_to_install]
 computer_humble_bundle[keys.platform_key_addons] = []
 computer_humble_bundle[keys.platform_key_launcher] = [types.launch_file]
+computer_humble_bundle[keys.platform_key_autofill_json] = [keys.computer_key_installer_exe, keys.general_key_transform_file, keys.general_key_dlc]
+computer_humble_bundle[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_humble_bundle] = computer_humble_bundle
 
 ###########################################################
@@ -95,6 +105,8 @@ computer_itchio[keys.platform_key_subcategory] = categories.game_subcategory_itc
 computer_itchio[keys.platform_key_transforms] = [types.transform_exe_to_raw_plain]
 computer_itchio[keys.platform_key_addons] = []
 computer_itchio[keys.platform_key_launcher] = [types.launch_file]
+computer_itchio[keys.platform_key_autofill_json] = [keys.computer_key_installer_exe, keys.general_key_transform_file]
+computer_itchio[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_itchio] = computer_itchio
 
 ###########################################################
@@ -107,6 +119,8 @@ computer_puppet_combo[keys.platform_key_subcategory] = categories.game_subcatego
 computer_puppet_combo[keys.platform_key_transforms] = [types.transform_exe_to_raw_plain]
 computer_puppet_combo[keys.platform_key_addons] = []
 computer_puppet_combo[keys.platform_key_launcher] = [types.launch_file]
+computer_puppet_combo[keys.platform_key_autofill_json] = [keys.computer_key_installer_exe, keys.general_key_transform_file]
+computer_puppet_combo[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_puppet_combo] = computer_puppet_combo
 
 ###########################################################
@@ -119,6 +133,8 @@ computer_red_candle[keys.platform_key_subcategory] = categories.game_subcategory
 computer_red_candle[keys.platform_key_transforms] = [types.transform_exe_to_install]
 computer_red_candle[keys.platform_key_addons] = []
 computer_red_candle[keys.platform_key_launcher] = [types.launch_file]
+computer_red_candle[keys.platform_key_autofill_json] = [keys.computer_key_installer_exe, keys.general_key_transform_file, keys.general_key_dlc]
+computer_red_candle[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_red_candle] = computer_red_candle
 
 ###########################################################
@@ -131,6 +147,8 @@ computer_square_enix[keys.platform_key_subcategory] = categories.game_subcategor
 computer_square_enix[keys.platform_key_transforms] = [types.transform_exe_to_install]
 computer_square_enix[keys.platform_key_addons] = []
 computer_square_enix[keys.platform_key_launcher] = [types.launch_file]
+computer_square_enix[keys.platform_key_autofill_json] = [keys.computer_key_installer_exe, keys.general_key_transform_file, keys.general_key_dlc]
+computer_square_enix[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_square_enix] = computer_square_enix
 
 ###########################################################
@@ -143,6 +161,8 @@ computer_steam[keys.platform_key_subcategory] = categories.game_subcategory_stea
 computer_steam[keys.platform_key_transforms] = [types.transform_exe_to_raw_plain]
 computer_steam[keys.platform_key_addons] = []
 computer_steam[keys.platform_key_launcher] = [types.launch_file]
+computer_steam[keys.platform_key_autofill_json] = [keys.computer_key_installer_exe, keys.general_key_transform_file]
+computer_steam[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_steam] = computer_steam
 
 ###########################################################
@@ -155,6 +175,8 @@ computer_zoom[keys.platform_key_subcategory] = categories.game_subcategory_zoom
 computer_zoom[keys.platform_key_transforms] = [types.transform_exe_to_install]
 computer_zoom[keys.platform_key_addons] = []
 computer_zoom[keys.platform_key_launcher] = [types.launch_file]
+computer_zoom[keys.platform_key_autofill_json] = [keys.computer_key_installer_exe, keys.general_key_transform_file, keys.general_key_dlc]
+computer_zoom[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_zoom] = computer_zoom
 
 ######################################################################################
@@ -169,6 +191,8 @@ microsoft_msx[keys.platform_key_subcategory] = categories.game_subcategory_micro
 microsoft_msx[keys.platform_key_transforms] = []
 microsoft_msx[keys.platform_key_addons] = []
 microsoft_msx[keys.platform_key_launcher] = [types.launch_file]
+microsoft_msx[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+microsoft_msx[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_microsoft_msx] = microsoft_msx
 
 ###########################################################
@@ -181,6 +205,8 @@ microsoft_xbox[keys.platform_key_subcategory] = categories.game_subcategory_micr
 microsoft_xbox[keys.platform_key_transforms] = [types.transform_chd_to_iso, types.transform_iso_to_xiso]
 microsoft_xbox[keys.platform_key_addons] = []
 microsoft_xbox[keys.platform_key_launcher] = [types.launch_file]
+microsoft_xbox[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_transform_file]
+microsoft_xbox[keys.platform_key_fillonce_json] = [keys.general_key_launch_file]
 platforms[categories.game_subcategory_microsoft_xbox] = microsoft_xbox
 
 ###########################################################
@@ -193,6 +219,8 @@ microsoft_xbox_360[keys.platform_key_subcategory] = categories.game_subcategory_
 microsoft_xbox_360[keys.platform_key_transforms] = [types.transform_chd_to_iso, types.transform_iso_to_xiso]
 microsoft_xbox_360[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 microsoft_xbox_360[keys.platform_key_launcher] = [types.launch_file]
+microsoft_xbox_360[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_transform_file]
+microsoft_xbox_360[keys.platform_key_fillonce_json] = [keys.general_key_launch_file]
 platforms[categories.game_subcategory_microsoft_xbox_360] = microsoft_xbox_360
 
 ###########################################################
@@ -205,6 +233,8 @@ microsoft_xbox_360_god[keys.platform_key_subcategory] = categories.game_subcateg
 microsoft_xbox_360_god[keys.platform_key_transforms] = []
 microsoft_xbox_360_god[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 microsoft_xbox_360_god[keys.platform_key_launcher] = [types.launch_file]
+microsoft_xbox_360_god[keys.platform_key_autofill_json] = [keys.general_key_files]
+microsoft_xbox_360_god[keys.platform_key_fillonce_json] = [keys.general_key_launch_file]
 platforms[categories.game_subcategory_microsoft_xbox_360_god] = microsoft_xbox_360_god
 
 ###########################################################
@@ -217,6 +247,8 @@ microsoft_xbox_360_xbla[keys.platform_key_subcategory] = categories.game_subcate
 microsoft_xbox_360_xbla[keys.platform_key_transforms] = []
 microsoft_xbox_360_xbla[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 microsoft_xbox_360_xbla[keys.platform_key_launcher] = [types.launch_file]
+microsoft_xbox_360_xbla[keys.platform_key_autofill_json] = [keys.general_key_files]
+microsoft_xbox_360_xbla[keys.platform_key_fillonce_json] = [keys.general_key_launch_file]
 platforms[categories.game_subcategory_microsoft_xbox_360_xbla] = microsoft_xbox_360_xbla
 
 ###########################################################
@@ -229,6 +261,8 @@ microsoft_xbox_360_xig[keys.platform_key_subcategory] = categories.game_subcateg
 microsoft_xbox_360_xig[keys.platform_key_transforms] = []
 microsoft_xbox_360_xig[keys.platform_key_addons] = []
 microsoft_xbox_360_xig[keys.platform_key_launcher] = [types.launch_file]
+microsoft_xbox_360_xig[keys.platform_key_autofill_json] = [keys.general_key_files]
+microsoft_xbox_360_xig[keys.platform_key_fillonce_json] = [keys.general_key_launch_file]
 platforms[categories.game_subcategory_microsoft_xbox_360_xig] = microsoft_xbox_360_xig
 
 ###########################################################
@@ -241,6 +275,8 @@ microsoft_xbox_one[keys.platform_key_subcategory] = categories.game_subcategory_
 microsoft_xbox_one[keys.platform_key_transforms] = []
 microsoft_xbox_one[keys.platform_key_addons] = []
 microsoft_xbox_one[keys.platform_key_launcher] = [types.launch_none]
+microsoft_xbox_one[keys.platform_key_autofill_json] = [keys.general_key_files]
+microsoft_xbox_one[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_microsoft_xbox_one] = microsoft_xbox_one
 
 ###########################################################
@@ -253,6 +289,8 @@ microsoft_xbox_one_god[keys.platform_key_subcategory] = categories.game_subcateg
 microsoft_xbox_one_god[keys.platform_key_transforms] = []
 microsoft_xbox_one_god[keys.platform_key_addons] = []
 microsoft_xbox_one_god[keys.platform_key_launcher] = [types.launch_none]
+microsoft_xbox_one_god[keys.platform_key_autofill_json] = [keys.general_key_files]
+microsoft_xbox_one_god[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_microsoft_xbox_one_god] = microsoft_xbox_one_god
 
 ######################################################################################
@@ -267,6 +305,8 @@ nintendo_3ds[keys.platform_key_subcategory] = categories.game_subcategory_ninten
 nintendo_3ds[keys.platform_key_transforms] = []
 nintendo_3ds[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 nintendo_3ds[keys.platform_key_launcher] = [types.launch_file]
+nintendo_3ds[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_3ds[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_3ds] = nintendo_3ds
 
 ###########################################################
@@ -279,6 +319,8 @@ nintendo_3ds_apps[keys.platform_key_subcategory] = categories.game_subcategory_n
 nintendo_3ds_apps[keys.platform_key_transforms] = []
 nintendo_3ds_apps[keys.platform_key_addons] = []
 nintendo_3ds_apps[keys.platform_key_launcher] = [types.launch_file]
+nintendo_3ds_apps[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_3ds_apps[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_3ds_apps] = nintendo_3ds_apps
 
 ###########################################################
@@ -291,6 +333,8 @@ nintendo_3ds_eshop[keys.platform_key_subcategory] = categories.game_subcategory_
 nintendo_3ds_eshop[keys.platform_key_transforms] = []
 nintendo_3ds_eshop[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 nintendo_3ds_eshop[keys.platform_key_launcher] = [types.launch_file]
+nintendo_3ds_eshop[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_3ds_eshop[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_3ds_eshop] = nintendo_3ds_eshop
 
 ###########################################################
@@ -303,6 +347,8 @@ nintendo_64[keys.platform_key_subcategory] = categories.game_subcategory_nintend
 nintendo_64[keys.platform_key_transforms] = []
 nintendo_64[keys.platform_key_addons] = []
 nintendo_64[keys.platform_key_launcher] = [types.launch_file]
+nintendo_64[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_64[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_64] = nintendo_64
 
 ###########################################################
@@ -315,6 +361,8 @@ nintendo_ds[keys.platform_key_subcategory] = categories.game_subcategory_nintend
 nintendo_ds[keys.platform_key_transforms] = []
 nintendo_ds[keys.platform_key_addons] = []
 nintendo_ds[keys.platform_key_launcher] = [types.launch_file]
+nintendo_ds[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_ds[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_ds] = nintendo_ds
 
 ###########################################################
@@ -327,6 +375,8 @@ nintendo_dsi[keys.platform_key_subcategory] = categories.game_subcategory_ninten
 nintendo_dsi[keys.platform_key_transforms] = []
 nintendo_dsi[keys.platform_key_addons] = []
 nintendo_dsi[keys.platform_key_launcher] = [types.launch_file]
+nintendo_dsi[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_dsi[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_dsi] = nintendo_dsi
 
 ###########################################################
@@ -339,6 +389,8 @@ nintendo_famicom[keys.platform_key_subcategory] = categories.game_subcategory_ni
 nintendo_famicom[keys.platform_key_transforms] = []
 nintendo_famicom[keys.platform_key_addons] = []
 nintendo_famicom[keys.platform_key_launcher] = [types.launch_file]
+nintendo_famicom[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_famicom[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_famicom] = nintendo_famicom
 
 ###########################################################
@@ -351,6 +403,8 @@ nintendo_game_boy[keys.platform_key_subcategory] = categories.game_subcategory_n
 nintendo_game_boy[keys.platform_key_transforms] = []
 nintendo_game_boy[keys.platform_key_addons] = []
 nintendo_game_boy[keys.platform_key_launcher] = [types.launch_file]
+nintendo_game_boy[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_game_boy[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_game_boy] = nintendo_game_boy
 
 ###########################################################
@@ -363,6 +417,8 @@ nintendo_game_boy_advance[keys.platform_key_subcategory] = categories.game_subca
 nintendo_game_boy_advance[keys.platform_key_transforms] = []
 nintendo_game_boy_advance[keys.platform_key_addons] = []
 nintendo_game_boy_advance[keys.platform_key_launcher] = [types.launch_file]
+nintendo_game_boy_advance[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_game_boy_advance[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_game_boy_advance] = nintendo_game_boy_advance
 
 ###########################################################
@@ -375,6 +431,8 @@ nintendo_game_boy_advance_ereader[keys.platform_key_subcategory] = categories.ga
 nintendo_game_boy_advance_ereader[keys.platform_key_transforms] = []
 nintendo_game_boy_advance_ereader[keys.platform_key_addons] = []
 nintendo_game_boy_advance_ereader[keys.platform_key_launcher] = [types.launch_file]
+nintendo_game_boy_advance_ereader[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_game_boy_advance_ereader[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_game_boy_advance_ereader] = nintendo_game_boy_advance_ereader
 
 ###########################################################
@@ -387,6 +445,8 @@ nintendo_game_boy_color[keys.platform_key_subcategory] = categories.game_subcate
 nintendo_game_boy_color[keys.platform_key_transforms] = []
 nintendo_game_boy_color[keys.platform_key_addons] = []
 nintendo_game_boy_color[keys.platform_key_launcher] = [types.launch_file]
+nintendo_game_boy_color[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_game_boy_color[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_game_boy_color] = nintendo_game_boy_color
 
 ###########################################################
@@ -399,6 +459,8 @@ nintendo_gamecube[keys.platform_key_subcategory] = categories.game_subcategory_n
 nintendo_gamecube[keys.platform_key_transforms] = []
 nintendo_gamecube[keys.platform_key_addons] = []
 nintendo_gamecube[keys.platform_key_launcher] = [types.launch_file]
+nintendo_gamecube[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_gamecube[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_gamecube] = nintendo_gamecube
 
 ###########################################################
@@ -411,6 +473,8 @@ nintendo_nes[keys.platform_key_subcategory] = categories.game_subcategory_ninten
 nintendo_nes[keys.platform_key_transforms] = []
 nintendo_nes[keys.platform_key_addons] = []
 nintendo_nes[keys.platform_key_launcher] = [types.launch_file]
+nintendo_nes[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_nes[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_nes] = nintendo_nes
 
 ###########################################################
@@ -423,6 +487,8 @@ nintendo_snes[keys.platform_key_subcategory] = categories.game_subcategory_ninte
 nintendo_snes[keys.platform_key_transforms] = []
 nintendo_snes[keys.platform_key_addons] = []
 nintendo_snes[keys.platform_key_launcher] = [types.launch_file]
+nintendo_snes[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_snes[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_snes] = nintendo_snes
 
 ###########################################################
@@ -435,6 +501,8 @@ nintendo_super_famicom[keys.platform_key_subcategory] = categories.game_subcateg
 nintendo_super_famicom[keys.platform_key_transforms] = []
 nintendo_super_famicom[keys.platform_key_addons] = []
 nintendo_super_famicom[keys.platform_key_launcher] = [types.launch_file]
+nintendo_super_famicom[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_super_famicom[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_super_famicom] = nintendo_super_famicom
 
 ###########################################################
@@ -447,6 +515,8 @@ nintendo_super_game_boy[keys.platform_key_subcategory] = categories.game_subcate
 nintendo_super_game_boy[keys.platform_key_transforms] = []
 nintendo_super_game_boy[keys.platform_key_addons] = []
 nintendo_super_game_boy[keys.platform_key_launcher] = [types.launch_file]
+nintendo_super_game_boy[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_super_game_boy[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_super_game_boy] = nintendo_super_game_boy
 
 ###########################################################
@@ -459,6 +529,8 @@ nintendo_super_game_boy_color[keys.platform_key_subcategory] = categories.game_s
 nintendo_super_game_boy_color[keys.platform_key_transforms] = []
 nintendo_super_game_boy_color[keys.platform_key_addons] = []
 nintendo_super_game_boy_color[keys.platform_key_launcher] = [types.launch_file]
+nintendo_super_game_boy_color[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_super_game_boy_color[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_super_game_boy_color] = nintendo_super_game_boy_color
 
 ###########################################################
@@ -471,6 +543,8 @@ nintendo_switch[keys.platform_key_subcategory] = categories.game_subcategory_nin
 nintendo_switch[keys.platform_key_transforms] = []
 nintendo_switch[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 nintendo_switch[keys.platform_key_launcher] = [types.launch_file]
+nintendo_switch[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_switch[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_switch] = nintendo_switch
 
 ###########################################################
@@ -483,6 +557,8 @@ nintendo_switch_eshop[keys.platform_key_subcategory] = categories.game_subcatego
 nintendo_switch_eshop[keys.platform_key_transforms] = []
 nintendo_switch_eshop[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 nintendo_switch_eshop[keys.platform_key_launcher] = [types.launch_file]
+nintendo_switch_eshop[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_switch_eshop[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_switch_eshop] = nintendo_switch_eshop
 
 ###########################################################
@@ -495,6 +571,8 @@ nintendo_virtual_boy[keys.platform_key_subcategory] = categories.game_subcategor
 nintendo_virtual_boy[keys.platform_key_transforms] = []
 nintendo_virtual_boy[keys.platform_key_addons] = []
 nintendo_virtual_boy[keys.platform_key_launcher] = [types.launch_file]
+nintendo_virtual_boy[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_virtual_boy[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_virtual_boy] = nintendo_virtual_boy
 
 ###########################################################
@@ -507,6 +585,8 @@ nintendo_wii[keys.platform_key_subcategory] = categories.game_subcategory_ninten
 nintendo_wii[keys.platform_key_transforms] = []
 nintendo_wii[keys.platform_key_addons] = [types.addon_dlc]
 nintendo_wii[keys.platform_key_launcher] = [types.launch_file]
+nintendo_wii[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_wii[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_wii] = nintendo_wii
 
 ###########################################################
@@ -519,6 +599,8 @@ nintendo_wii_u[keys.platform_key_subcategory] = categories.game_subcategory_nint
 nintendo_wii_u[keys.platform_key_transforms] = []
 nintendo_wii_u[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 nintendo_wii_u[keys.platform_key_launcher] = [types.launch_file]
+nintendo_wii_u[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_wii_u[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_wii_u] = nintendo_wii_u
 
 ###########################################################
@@ -531,6 +613,8 @@ nintendo_wii_u_eshop[keys.platform_key_subcategory] = categories.game_subcategor
 nintendo_wii_u_eshop[keys.platform_key_transforms] = []
 nintendo_wii_u_eshop[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 nintendo_wii_u_eshop[keys.platform_key_launcher] = [types.launch_file]
+nintendo_wii_u_eshop[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nintendo_wii_u_eshop[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_wii_u_eshop] = nintendo_wii_u_eshop
 
 ######################################################################################
@@ -545,6 +629,8 @@ apple_ios[keys.platform_key_subcategory] = categories.game_subcategory_apple_ios
 apple_ios[keys.platform_key_transforms] = []
 apple_ios[keys.platform_key_addons] = []
 apple_ios[keys.platform_key_launcher] = [types.launch_none]
+apple_ios[keys.platform_key_autofill_json] = [keys.general_key_files]
+apple_ios[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_apple_ios] = apple_ios
 
 ###########################################################
@@ -557,6 +643,8 @@ apple_macos_8[keys.platform_key_subcategory] = categories.game_subcategory_apple
 apple_macos_8[keys.platform_key_transforms] = []
 apple_macos_8[keys.platform_key_addons] = []
 apple_macos_8[keys.platform_key_launcher] = [types.launch_file]
+apple_macos_8[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+apple_macos_8[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_apple_macos_8] = apple_macos_8
 
 ###########################################################
@@ -569,6 +657,8 @@ arcade[keys.platform_key_subcategory] = categories.game_subcategory_arcade
 arcade[keys.platform_key_transforms] = []
 arcade[keys.platform_key_addons] = []
 arcade[keys.platform_key_launcher] = [types.launch_name]
+arcade[keys.platform_key_autofill_json] = [keys.general_key_files]
+arcade[keys.platform_key_fillonce_json] = [keys.general_key_launch_name]
 platforms[categories.game_subcategory_arcade] = arcade
 
 ###########################################################
@@ -581,6 +671,8 @@ atari_800[keys.platform_key_subcategory] = categories.game_subcategory_atari_800
 atari_800[keys.platform_key_transforms] = []
 atari_800[keys.platform_key_addons] = []
 atari_800[keys.platform_key_launcher] = [types.launch_file]
+atari_800[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+atari_800[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_atari_800] = atari_800
 
 ###########################################################
@@ -593,6 +685,8 @@ atari_2600[keys.platform_key_subcategory] = categories.game_subcategory_atari_26
 atari_2600[keys.platform_key_transforms] = []
 atari_2600[keys.platform_key_addons] = []
 atari_2600[keys.platform_key_launcher] = [types.launch_file]
+atari_2600[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+atari_2600[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_atari_2600] = atari_2600
 
 ###########################################################
@@ -605,6 +699,8 @@ atari_5200[keys.platform_key_subcategory] = categories.game_subcategory_atari_52
 atari_5200[keys.platform_key_transforms] = []
 atari_5200[keys.platform_key_addons] = []
 atari_5200[keys.platform_key_launcher] = [types.launch_file]
+atari_5200[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+atari_5200[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_atari_5200] = atari_5200
 
 ###########################################################
@@ -617,6 +713,8 @@ atari_7800[keys.platform_key_subcategory] = categories.game_subcategory_atari_78
 atari_7800[keys.platform_key_transforms] = []
 atari_7800[keys.platform_key_addons] = []
 atari_7800[keys.platform_key_launcher] = [types.launch_file]
+atari_7800[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+atari_7800[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_atari_7800] = atari_7800
 
 ###########################################################
@@ -629,6 +727,8 @@ atari_jaguar[keys.platform_key_subcategory] = categories.game_subcategory_atari_
 atari_jaguar[keys.platform_key_transforms] = []
 atari_jaguar[keys.platform_key_addons] = []
 atari_jaguar[keys.platform_key_launcher] = [types.launch_file]
+atari_jaguar[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+atari_jaguar[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_atari_jaguar] = atari_jaguar
 
 ###########################################################
@@ -641,6 +741,8 @@ atari_jaguar_cd[keys.platform_key_subcategory] = categories.game_subcategory_ata
 atari_jaguar_cd[keys.platform_key_transforms] = []
 atari_jaguar_cd[keys.platform_key_addons] = []
 atari_jaguar_cd[keys.platform_key_launcher] = [types.launch_file]
+atari_jaguar_cd[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+atari_jaguar_cd[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_atari_jaguar_cd] = atari_jaguar_cd
 
 ###########################################################
@@ -653,6 +755,8 @@ atari_lynx[keys.platform_key_subcategory] = categories.game_subcategory_atari_ly
 atari_lynx[keys.platform_key_transforms] = []
 atari_lynx[keys.platform_key_addons] = []
 atari_lynx[keys.platform_key_launcher] = [types.launch_file]
+atari_lynx[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+atari_lynx[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_atari_lynx] = atari_lynx
 
 ###########################################################
@@ -665,6 +769,8 @@ bandai_wonderswan[keys.platform_key_subcategory] = categories.game_subcategory_b
 bandai_wonderswan[keys.platform_key_transforms] = []
 bandai_wonderswan[keys.platform_key_addons] = []
 bandai_wonderswan[keys.platform_key_launcher] = [types.launch_file]
+bandai_wonderswan[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+bandai_wonderswan[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_bandai_wonderswan] = bandai_wonderswan
 
 ###########################################################
@@ -677,6 +783,8 @@ bandai_wonderswan_color[keys.platform_key_subcategory] = categories.game_subcate
 bandai_wonderswan_color[keys.platform_key_transforms] = []
 bandai_wonderswan_color[keys.platform_key_addons] = []
 bandai_wonderswan_color[keys.platform_key_launcher] = [types.launch_file]
+bandai_wonderswan_color[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+bandai_wonderswan_color[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_bandai_wonderswan_color] = bandai_wonderswan_color
 
 ###########################################################
@@ -689,6 +797,8 @@ coleco_colecovision[keys.platform_key_subcategory] = categories.game_subcategory
 coleco_colecovision[keys.platform_key_transforms] = []
 coleco_colecovision[keys.platform_key_addons] = []
 coleco_colecovision[keys.platform_key_launcher] = [types.launch_file]
+coleco_colecovision[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+coleco_colecovision[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_coleco_colecovision] = coleco_colecovision
 
 ###########################################################
@@ -701,6 +811,8 @@ commodore_64[keys.platform_key_subcategory] = categories.game_subcategory_commod
 commodore_64[keys.platform_key_transforms] = []
 commodore_64[keys.platform_key_addons] = []
 commodore_64[keys.platform_key_launcher] = [types.launch_file]
+commodore_64[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+commodore_64[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_commodore_64] = commodore_64
 
 ###########################################################
@@ -713,6 +825,8 @@ commodore_amiga[keys.platform_key_subcategory] = categories.game_subcategory_com
 commodore_amiga[keys.platform_key_transforms] = []
 commodore_amiga[keys.platform_key_addons] = []
 commodore_amiga[keys.platform_key_launcher] = [types.launch_file]
+commodore_amiga[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+commodore_amiga[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_commodore_amiga] = commodore_amiga
 
 ###########################################################
@@ -725,6 +839,8 @@ google_android[keys.platform_key_subcategory] = categories.game_subcategory_goog
 google_android[keys.platform_key_transforms] = []
 google_android[keys.platform_key_addons] = []
 google_android[keys.platform_key_launcher] = [types.launch_none]
+google_android[keys.platform_key_autofill_json] = [keys.general_key_files]
+google_android[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_google_android] = google_android
 
 ###########################################################
@@ -737,6 +853,8 @@ magnavox_odyssey_2[keys.platform_key_subcategory] = categories.game_subcategory_
 magnavox_odyssey_2[keys.platform_key_transforms] = []
 magnavox_odyssey_2[keys.platform_key_addons] = []
 magnavox_odyssey_2[keys.platform_key_launcher] = [types.launch_file]
+magnavox_odyssey_2[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+magnavox_odyssey_2[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_magnavox_odyssey_2] = magnavox_odyssey_2
 
 ###########################################################
@@ -749,6 +867,8 @@ mattel_intellivision[keys.platform_key_subcategory] = categories.game_subcategor
 mattel_intellivision[keys.platform_key_transforms] = []
 mattel_intellivision[keys.platform_key_addons] = []
 mattel_intellivision[keys.platform_key_launcher] = [types.launch_file]
+mattel_intellivision[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+mattel_intellivision[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_mattel_intellivision] = mattel_intellivision
 
 ###########################################################
@@ -761,6 +881,8 @@ nec_supergrafx[keys.platform_key_subcategory] = categories.game_subcategory_nec_
 nec_supergrafx[keys.platform_key_transforms] = []
 nec_supergrafx[keys.platform_key_addons] = []
 nec_supergrafx[keys.platform_key_launcher] = [types.launch_file]
+nec_supergrafx[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nec_supergrafx[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nec_supergrafx] = nec_supergrafx
 
 ###########################################################
@@ -773,6 +895,8 @@ nec_turbografx_pcengine_cd[keys.platform_key_subcategory] = categories.game_subc
 nec_turbografx_pcengine_cd[keys.platform_key_transforms] = []
 nec_turbografx_pcengine_cd[keys.platform_key_addons] = []
 nec_turbografx_pcengine_cd[keys.platform_key_launcher] = [types.launch_file]
+nec_turbografx_pcengine_cd[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nec_turbografx_pcengine_cd[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nec_turbografx_pcengine_cd] = nec_turbografx_pcengine_cd
 
 ###########################################################
@@ -785,6 +909,8 @@ nec_turbografx_pcengine[keys.platform_key_subcategory] = categories.game_subcate
 nec_turbografx_pcengine[keys.platform_key_transforms] = []
 nec_turbografx_pcengine[keys.platform_key_addons] = []
 nec_turbografx_pcengine[keys.platform_key_launcher] = [types.launch_file]
+nec_turbografx_pcengine[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+nec_turbografx_pcengine[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nec_turbografx_pcengine] = nec_turbografx_pcengine
 
 ###########################################################
@@ -797,6 +923,8 @@ nokia_ngage[keys.platform_key_subcategory] = categories.game_subcategory_nokia_n
 nokia_ngage[keys.platform_key_transforms] = []
 nokia_ngage[keys.platform_key_addons] = []
 nokia_ngage[keys.platform_key_launcher] = [types.launch_name]
+nokia_ngage[keys.platform_key_autofill_json] = [keys.general_key_files]
+nokia_ngage[keys.platform_key_fillonce_json] = [keys.general_key_launch_name]
 platforms[categories.game_subcategory_nokia_ngage] = nokia_ngage
 
 ###########################################################
@@ -809,6 +937,8 @@ panasonic_3do[keys.platform_key_subcategory] = categories.game_subcategory_panas
 panasonic_3do[keys.platform_key_transforms] = []
 panasonic_3do[keys.platform_key_addons] = []
 panasonic_3do[keys.platform_key_launcher] = [types.launch_file]
+panasonic_3do[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+panasonic_3do[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_panasonic_3do] = panasonic_3do
 
 ###########################################################
@@ -821,6 +951,8 @@ philips_cdi[keys.platform_key_subcategory] = categories.game_subcategory_philips
 philips_cdi[keys.platform_key_transforms] = []
 philips_cdi[keys.platform_key_addons] = []
 philips_cdi[keys.platform_key_launcher] = [types.launch_file]
+philips_cdi[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+philips_cdi[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_philips_cdi] = philips_cdi
 
 ###########################################################
@@ -833,6 +965,8 @@ snk_neogeo_pocket_color[keys.platform_key_subcategory] = categories.game_subcate
 snk_neogeo_pocket_color[keys.platform_key_transforms] = []
 snk_neogeo_pocket_color[keys.platform_key_addons] = []
 snk_neogeo_pocket_color[keys.platform_key_launcher] = [types.launch_file]
+snk_neogeo_pocket_color[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+snk_neogeo_pocket_color[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_snk_neogeo_pocket_color] = snk_neogeo_pocket_color
 
 ###########################################################
@@ -845,6 +979,8 @@ sega_32x[keys.platform_key_subcategory] = categories.game_subcategory_sega_32x
 sega_32x[keys.platform_key_transforms] = []
 sega_32x[keys.platform_key_addons] = []
 sega_32x[keys.platform_key_launcher] = [types.launch_file]
+sega_32x[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sega_32x[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sega_32x] = sega_32x
 
 ###########################################################
@@ -857,6 +993,8 @@ sega_cd[keys.platform_key_subcategory] = categories.game_subcategory_sega_cd
 sega_cd[keys.platform_key_transforms] = []
 sega_cd[keys.platform_key_addons] = []
 sega_cd[keys.platform_key_launcher] = [types.launch_file]
+sega_cd[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sega_cd[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sega_cd] = sega_cd
 
 ###########################################################
@@ -869,6 +1007,8 @@ sega_cd_32x[keys.platform_key_subcategory] = categories.game_subcategory_sega_cd
 sega_cd_32x[keys.platform_key_transforms] = []
 sega_cd_32x[keys.platform_key_addons] = []
 sega_cd_32x[keys.platform_key_launcher] = [types.launch_file]
+sega_cd_32x[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sega_cd_32x[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sega_cd_32x] = sega_cd_32x
 
 ###########################################################
@@ -881,6 +1021,8 @@ sega_dreamcast[keys.platform_key_subcategory] = categories.game_subcategory_sega
 sega_dreamcast[keys.platform_key_transforms] = []
 sega_dreamcast[keys.platform_key_addons] = []
 sega_dreamcast[keys.platform_key_launcher] = [types.launch_file]
+sega_dreamcast[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sega_dreamcast[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sega_dreamcast] = sega_dreamcast
 
 ###########################################################
@@ -893,6 +1035,8 @@ sega_game_gear[keys.platform_key_subcategory] = categories.game_subcategory_sega
 sega_game_gear[keys.platform_key_transforms] = []
 sega_game_gear[keys.platform_key_addons] = []
 sega_game_gear[keys.platform_key_launcher] = [types.launch_file]
+sega_game_gear[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sega_game_gear[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sega_game_gear] = sega_game_gear
 
 ###########################################################
@@ -905,6 +1049,8 @@ sega_genesis[keys.platform_key_subcategory] = categories.game_subcategory_sega_g
 sega_genesis[keys.platform_key_transforms] = []
 sega_genesis[keys.platform_key_addons] = []
 sega_genesis[keys.platform_key_launcher] = [types.launch_file]
+sega_genesis[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sega_genesis[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sega_genesis] = sega_genesis
 
 ###########################################################
@@ -917,6 +1063,8 @@ sega_master_system[keys.platform_key_subcategory] = categories.game_subcategory_
 sega_master_system[keys.platform_key_transforms] = []
 sega_master_system[keys.platform_key_addons] = []
 sega_master_system[keys.platform_key_launcher] = [types.launch_file]
+sega_master_system[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sega_master_system[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sega_master_system] = sega_master_system
 
 ###########################################################
@@ -929,6 +1077,8 @@ sega_saturn[keys.platform_key_subcategory] = categories.game_subcategory_sega_sa
 sega_saturn[keys.platform_key_transforms] = []
 sega_saturn[keys.platform_key_addons] = []
 sega_saturn[keys.platform_key_launcher] = [types.launch_file]
+sega_saturn[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sega_saturn[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sega_saturn] = sega_saturn
 
 ###########################################################
@@ -941,6 +1091,8 @@ sinclair_zx_spectrum[keys.platform_key_subcategory] = categories.game_subcategor
 sinclair_zx_spectrum[keys.platform_key_transforms] = []
 sinclair_zx_spectrum[keys.platform_key_addons] = []
 sinclair_zx_spectrum[keys.platform_key_launcher] = [types.launch_file]
+sinclair_zx_spectrum[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sinclair_zx_spectrum[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sinclair_zx_spectrum] = sinclair_zx_spectrum
 
 ###########################################################
@@ -953,6 +1105,8 @@ texas_instruments_ti994a[keys.platform_key_subcategory] = categories.game_subcat
 texas_instruments_ti994a[keys.platform_key_transforms] = []
 texas_instruments_ti994a[keys.platform_key_addons] = []
 texas_instruments_ti994a[keys.platform_key_launcher] = [types.launch_file]
+texas_instruments_ti994a[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+texas_instruments_ti994a[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_texas_instruments_ti994a] = texas_instruments_ti994a
 
 ###########################################################
@@ -965,6 +1119,8 @@ tiger_gamecom[keys.platform_key_subcategory] = categories.game_subcategory_tiger
 tiger_gamecom[keys.platform_key_transforms] = []
 tiger_gamecom[keys.platform_key_addons] = []
 tiger_gamecom[keys.platform_key_launcher] = [types.launch_file]
+tiger_gamecom[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+tiger_gamecom[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_tiger_gamecom] = tiger_gamecom
 
 ######################################################################################
@@ -979,6 +1135,8 @@ sony_playstation[keys.platform_key_subcategory] = categories.game_subcategory_so
 sony_playstation[keys.platform_key_transforms] = []
 sony_playstation[keys.platform_key_addons] = []
 sony_playstation[keys.platform_key_launcher] = [types.launch_file]
+sony_playstation[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sony_playstation[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sony_playstation] = sony_playstation
 
 ###########################################################
@@ -991,6 +1149,8 @@ sony_playstation_2[keys.platform_key_subcategory] = categories.game_subcategory_
 sony_playstation_2[keys.platform_key_transforms] = []
 sony_playstation_2[keys.platform_key_addons] = []
 sony_playstation_2[keys.platform_key_launcher] = [types.launch_file]
+sony_playstation_2[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sony_playstation_2[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sony_playstation_2] = sony_playstation_2
 
 ###########################################################
@@ -1003,6 +1163,8 @@ sony_playstation_3[keys.platform_key_subcategory] = categories.game_subcategory_
 sony_playstation_3[keys.platform_key_transforms] = [types.transform_chd_to_iso, types.transform_iso_to_raw_ps3]
 sony_playstation_3[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 sony_playstation_3[keys.platform_key_launcher] = [types.launch_file]
+sony_playstation_3[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_transform_file]
+sony_playstation_3[keys.platform_key_fillonce_json] = [keys.general_key_launch_file]
 platforms[categories.game_subcategory_sony_playstation_3] = sony_playstation_3
 
 ###########################################################
@@ -1015,6 +1177,8 @@ sony_playstation_4[keys.platform_key_subcategory] = categories.game_subcategory_
 sony_playstation_4[keys.platform_key_transforms] = []
 sony_playstation_4[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 sony_playstation_4[keys.platform_key_launcher] = [types.launch_none]
+sony_playstation_4[keys.platform_key_autofill_json] = [keys.general_key_files]
+sony_playstation_4[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sony_playstation_4] = sony_playstation_4
 
 ###########################################################
@@ -1027,6 +1191,8 @@ sony_playstation_network_ps3[keys.platform_key_subcategory] = categories.game_su
 sony_playstation_network_ps3[keys.platform_key_transforms] = [types.transform_pkg_to_raw_ps3]
 sony_playstation_network_ps3[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 sony_playstation_network_ps3[keys.platform_key_launcher] = [types.launch_file]
+sony_playstation_network_ps3[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_transform_file]
+sony_playstation_network_ps3[keys.platform_key_fillonce_json] = [keys.general_key_launch_file]
 platforms[categories.game_subcategory_sony_playstation_network_ps3] = sony_playstation_network_ps3
 
 ###########################################################
@@ -1039,6 +1205,8 @@ sony_playstation_network_ps4[keys.platform_key_subcategory] = categories.game_su
 sony_playstation_network_ps4[keys.platform_key_transforms] = []
 sony_playstation_network_ps4[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 sony_playstation_network_ps4[keys.platform_key_launcher] = [types.launch_none]
+sony_playstation_network_ps4[keys.platform_key_autofill_json] = [keys.general_key_files]
+sony_playstation_network_ps4[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sony_playstation_network_ps4] = sony_playstation_network_ps4
 
 ###########################################################
@@ -1051,6 +1219,8 @@ sony_playstation_network_psp[keys.platform_key_subcategory] = categories.game_su
 sony_playstation_network_psp[keys.platform_key_transforms] = []
 sony_playstation_network_psp[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 sony_playstation_network_psp[keys.platform_key_launcher] = [types.launch_file]
+sony_playstation_network_psp[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sony_playstation_network_psp[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sony_playstation_network_psp] = sony_playstation_network_psp
 
 ###########################################################
@@ -1063,6 +1233,8 @@ sony_playstation_network_pspm[keys.platform_key_subcategory] = categories.game_s
 sony_playstation_network_pspm[keys.platform_key_transforms] = []
 sony_playstation_network_pspm[keys.platform_key_addons] = []
 sony_playstation_network_pspm[keys.platform_key_launcher] = [types.launch_file]
+sony_playstation_network_pspm[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sony_playstation_network_pspm[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sony_playstation_network_pspm] = sony_playstation_network_pspm
 
 ###########################################################
@@ -1075,6 +1247,8 @@ sony_playstation_network_psv[keys.platform_key_subcategory] = categories.game_su
 sony_playstation_network_psv[keys.platform_key_transforms] = [types.transform_pkg_to_raw_psv]
 sony_playstation_network_psv[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 sony_playstation_network_psv[keys.platform_key_launcher] = [types.launch_name]
+sony_playstation_network_psv[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_transform_file]
+sony_playstation_network_psv[keys.platform_key_fillonce_json] = [keys.general_key_launch_name]
 platforms[categories.game_subcategory_sony_playstation_network_psv] = sony_playstation_network_psv
 
 ###########################################################
@@ -1087,6 +1261,8 @@ sony_playstation_portable[keys.platform_key_subcategory] = categories.game_subca
 sony_playstation_portable[keys.platform_key_transforms] = []
 sony_playstation_portable[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 sony_playstation_portable[keys.platform_key_launcher] = [types.launch_file]
+sony_playstation_portable[keys.platform_key_autofill_json] = [keys.general_key_files, keys.general_key_launch_file]
+sony_playstation_portable[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sony_playstation_portable] = sony_playstation_portable
 
 ###########################################################
@@ -1099,6 +1275,8 @@ sony_playstation_portable_video[keys.platform_key_subcategory] = categories.game
 sony_playstation_portable_video[keys.platform_key_transforms] = []
 sony_playstation_portable_video[keys.platform_key_addons] = []
 sony_playstation_portable_video[keys.platform_key_launcher] = [types.launch_none]
+sony_playstation_portable_video[keys.platform_key_autofill_json] = [keys.general_key_files]
+sony_playstation_portable_video[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_sony_playstation_portable_video] = sony_playstation_portable_video
 
 ###########################################################
@@ -1111,4 +1289,6 @@ sony_playstation_vita[keys.platform_key_subcategory] = categories.game_subcatego
 sony_playstation_vita[keys.platform_key_transforms] = []
 sony_playstation_vita[keys.platform_key_addons] = [types.addon_dlc, types.addon_updates]
 sony_playstation_vita[keys.platform_key_launcher] = [types.launch_name]
+sony_playstation_vita[keys.platform_key_autofill_json] = [keys.general_key_files]
+sony_playstation_vita[keys.platform_key_fillonce_json] = [keys.general_key_launch_name]
 platforms[categories.game_subcategory_sony_playstation_vita] = sony_playstation_vita

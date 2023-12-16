@@ -50,89 +50,68 @@ def main():
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
 
-                # Set transform file
-                needs_transform_file = platforms.AreTransformsRequired(game_platform)
-                has_transform_file = config.general_key_transform_file in json_file_data
-                if needs_transform_file and not has_transform_file:
-                    best_game_file = metadata.FindBestGameFile(base_rom_path)
-                    best_game_file = system.GetFilenameFile(best_game_file)
-                    json_file_data[config.general_key_transform_file] = best_game_file
+                # Set json value
+                def SetJsonValue(json_key, json_value):
+                    if platforms.IsAutoFillJsonKey(game_platform, json_key):
+                        json_file_data[json_key] = json_value
+                    elif platforms.IsFillOnceJsonKey(game_platform, json_key):
+                        if json_key not in json_file_data:
+                            json_file_data[json_key] = json_value
+
+                # Get all files
+                all_files = system.BuildFileList(
+                    root = base_rom_path,
+                    use_relative_paths = True)
+
+                # Get best game file
+                best_game_file = metadata.FindBestGameFile(base_rom_path)
+                best_game_file = system.GetFilenameFile(best_game_file)
+
+                # Find computer installers
+                computer_installers = []
+                for file in system.GetDirectoryContents(base_rom_path):
+                    if file.endswith(".exe"):
+                        computer_installers = [os.path.join(config.token_setup_main_root, file)]
+                        break
+                for file in system.GetDirectoryContents(base_rom_path):
+                    if file.endswith(".msi"):
+                        computer_installers = [os.path.join(config.token_setup_main_root, file)]
+                        break
+
+                # Find computer dlc installers
+                computer_dlc_installers = system.BuildFileListByExtensions(
+                    root = os.path.join(base_rom_path, "dlc"),
+                    extensions = config.computer_program_extensions,
+                    new_relative_path = os.path.join(config.token_setup_main_root, "dlc"),
+                    use_relative_paths = True)
+
+                # Find computer update installers
+                computer_update_installers = system.BuildFileListByExtensions(
+                    root = os.path.join(base_rom_path, "update"),
+                    extensions = config.computer_program_extensions,
+                    new_relative_path = os.path.join(config.token_setup_main_root, "update"),
+                    use_relative_paths = True)
+
+                # Find computer extras
+                computer_extras = system.BuildFileList(
+                    root = os.path.join(base_rom_path, "extra"),
+                    new_relative_path = os.path.join(config.token_setup_main_root, "extra"),
+                    use_relative_paths = True)
 
                 # Computer
                 if game_category == config.game_category_computer:
-
-                    # Get rom data
-                    rom_dlc_path = os.path.join(base_rom_path, "dlc")
-                    rom_update_path = os.path.join(base_rom_path, "update")
-                    rom_extra_path = os.path.join(base_rom_path, "extra")
-
-                    # Try to find the best installer exe
-                    rom_installer_exe = game_name + ".exe"
-                    for file in system.GetDirectoryContents(base_rom_path):
-                        if file.endswith(".exe"):
-                            rom_installer_exe = file
-                            break
-                    for file in system.GetDirectoryContents(base_rom_path):
-                        if file.endswith(".msi"):
-                            rom_installer_exe = file
-                            break
-
-                    # Try to find all the dlc
-                    rom_dlc_installers = system.BuildFileListByExtensions(
-                        root = rom_dlc_path,
-                        extensions = config.computer_program_extensions,
-                        new_relative_path = os.path.join(config.token_setup_main_root, "dlc"),
-                        use_relative_paths = True)
-
-                    # Try to find all the updates
-                    rom_update_installers = system.BuildFileListByExtensions(
-                        root = rom_update_path,
-                        extensions = config.computer_program_extensions,
-                        new_relative_path = os.path.join(config.token_setup_main_root, "update"),
-                        use_relative_paths = True)
-
-                    # Try to find all the extras
-                    rom_extras = system.BuildFileList(
-                        root = rom_extra_path,
-                        new_relative_path = os.path.join(config.token_setup_main_root, "extra"),
-                        use_relative_paths = True)
-
-                    # Try to set cwd
-                    has_main_game_exe = config.computer_key_main_game_exe in json_file_data
-                    has_main_game_exe_cwd = config.computer_key_main_game_exe_cwd in json_file_data
-                    if has_main_game_exe and not has_main_game_exe_cwd:
-                        json_file_data[config.computer_key_main_game_exe_cwd] = {}
-                        for main_game_exe in json_file_data[config.computer_key_main_game_exe]:
-                            json_file_data[config.computer_key_main_game_exe_cwd][main_game_exe] = system.GetFilenameDirectory(main_game_exe)
-
-                    # Set initial json data
-                    if game_subcategory != "Disc":
-                        json_file_data[config.computer_key_installer_exe] = [os.path.join(config.token_setup_main_root, rom_installer_exe)]
-                        json_file_data[config.computer_key_dlc] = rom_dlc_installers
-                        json_file_data[config.computer_key_update] = rom_update_installers
-                        json_file_data[config.computer_key_extra] = rom_extras
+                    SetJsonValue(config.computer_key_installer_exe, computer_installers)
+                    SetJsonValue(config.general_key_dlc, computer_dlc_installers)
+                    SetJsonValue(config.general_key_update, computer_update_installers)
+                    SetJsonValue(config.general_key_extra, computer_extras)
+                    SetJsonValue(config.general_key_transform_file, best_game_file)
 
                 # Other platforms
                 else:
-
-                    # Set files
-                    json_file_data[config.general_key_files] = system.BuildFileList(
-                        root = base_rom_path,
-                        use_relative_paths = True)
-
-                    # Try to set launch name
-                    needs_launch_name = platforms.IsLaunchedByName(game_platform)
-                    has_launch_name = config.general_key_launch_name in json_file_data
-                    if needs_launch_name and not has_launch_name:
-                        json_file_data[config.general_key_launch_name] = "REPLACEME"
-
-                    # Try to set launch file
-                    needs_launch_file = platforms.IsLaunchedByFile(game_platform)
-                    has_launch_file = config.general_key_launch_file in json_file_data
-                    if needs_launch_file and not has_launch_file:
-                        best_game_file = metadata.FindBestGameFile(base_rom_path)
-                        best_game_file = system.GetFilenameFile(best_game_file)
-                        json_file_data[config.general_key_launch_file] = best_game_file
+                    SetJsonValue(config.general_key_files, all_files)
+                    SetJsonValue(config.general_key_launch_name, "REPLACEME")
+                    SetJsonValue(config.general_key_launch_file, best_game_file)
+                    SetJsonValue(config.general_key_transform_file, best_game_file)
 
                 # Write json file
                 system.MakeDirectory(

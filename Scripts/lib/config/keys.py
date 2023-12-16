@@ -9,6 +9,8 @@ platform_key_subcategory = "subcategory"
 platform_key_transforms = "transforms"
 platform_key_addons = "addons"
 platform_key_launcher = "launcher"
+platform_key_autofill_json = "autofill_json"
+platform_key_fillonce_json = "fillonce_json"
 
 # Metadata keys
 metadata_key_game = "game"
@@ -37,6 +39,7 @@ general_key_launch_dir = "launch_dir"
 general_key_transform_file = "transform_file"
 general_key_dlc = "dlc"
 general_key_update = "update"
+general_key_extra = "extra"
 
 # Computer json keys
 computer_key_installer_exe = "installer_exe"
@@ -61,9 +64,6 @@ computer_key_supercategory = "supercategory"
 computer_key_category = "category"
 computer_key_subcategory = "subcategory"
 computer_key_platform = "platform"
-computer_key_dlc = "dlc"
-computer_key_update = "update"
-computer_key_extra = "extra"
 computer_key_sandbox = "sandbox"
 computer_key_sandbox_sandboxie = "sandboxie"
 computer_key_sandbox_wine = "wine"
@@ -91,10 +91,7 @@ computer_keys_list_keys = [
     computer_key_main_game_exe,
     computer_key_main_game_dos_exe,
     computer_key_main_game_win31_exe,
-    computer_key_dependencies,
-    computer_key_dlc,
-    computer_key_update,
-    computer_key_extra
+    computer_key_dependencies
 ]
 computer_keys_dict_keys = [
     computer_key_main_game_exe_cwd,

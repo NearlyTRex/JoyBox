@@ -82,3 +82,21 @@ def IsLaunchedByFile(platform_name):
     return config.launch_file in GetLauncherTypes(platform_name)
 
 ###########################################################
+
+# Get autofill json keys
+def GetAutoFillJsonKeys(platform_name):
+    return GetPlatformValue(platform_name, config.platform_key_autofill_json)
+
+# Get fillonce json keys
+def GetFillOnceJsonKeys(platform_name):
+    return GetPlatformValue(platform_name, config.platform_key_fillonce_json)
+
+# Check if autofill key
+def IsAutoFillJsonKey(platform_name, json_key):
+    return json_key in GetAutoFillJsonKeys(platform_name)
+
+# Check if fillonce key
+def IsFillOnceJsonKey(platform_name, json_key):
+    return json_key in GetFillOnceJsonKeys(platform_name)
+
+###########################################################
