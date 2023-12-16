@@ -6,6 +6,7 @@ import sys
 import config
 import command
 import programs
+import ini
 
 # Get current screen resolution
 def GetCurrentScreenResolution():
