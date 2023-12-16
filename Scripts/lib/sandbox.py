@@ -12,6 +12,8 @@ import environment
 import command
 import programs
 import gui
+from tools import dxvk
+from tools import vkd3d
 
 ###########################################################
 
