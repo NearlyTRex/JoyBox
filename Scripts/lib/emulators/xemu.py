@@ -86,7 +86,7 @@ class Xemu(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("Xemu", "linux"):
             network.BuildAppImageFromSource(
-                release_url = "https://github.com/mborgerson/xemu.git",
+                release_url = "https://github.com/NearlyTRex/Xemu.git",
                 output_name = "Xemu",
                 output_dir = programs.GetProgramInstallDir("Xemu", "linux"),
                 build_cmd = [

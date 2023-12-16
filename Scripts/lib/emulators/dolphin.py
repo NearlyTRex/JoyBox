@@ -53,8 +53,8 @@ class Dolphin(emulatorbase.EmulatorBase):
                 "save_sub_dirs": {
 
                     # Nintendo
-                    "Nintendo Gamecube": "GC",
-                    "Nintendo Wii": "Wii/title/00010000"
+                    config.game_subcategory_nintendo_gamecube: "GC",
+                    config.game_subcategory_nintendo_wii: "Wii/title/00010000"
                 },
                 "setup_dir": {
                     "windows": "Dolphin/windows/User",

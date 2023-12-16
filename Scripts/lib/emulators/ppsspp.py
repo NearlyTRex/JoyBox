@@ -68,7 +68,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("PPSSPP", "linux"):
             network.BuildAppImageFromSource(
-                release_url = "https://github.com/hrydgard/ppsspp.git",
+                release_url = "https://github.com/NearlyTRex/PPSSPP.git",
                 output_name = "PPSSPP",
                 output_dir = programs.GetProgramInstallDir("PPSSPP", "linux"),
                 build_cmd = [

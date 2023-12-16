@@ -69,7 +69,7 @@ class Flycast(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("Flycast", "linux"):
             network.BuildAppImageFromSource(
-                release_url = "https://github.com/flyinghead/flycast.git",
+                release_url = "https://github.com/NearlyTRex/Flycast.git",
                 output_name = "Flycast",
                 output_dir = programs.GetProgramInstallDir("Flycast", "linux"),
                 build_cmd = [
@@ -81,7 +81,7 @@ class Flycast(emulatorbase.EmulatorBase):
                 internal_copies = [
                     {"from": "Source/Build/flycast", "to": "AppImage/usr/bin/flycast"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
-                    {"from": "AppImageTool/linux/icon.png", "to": "AppImage/icon.png"}
+                    {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/flycast", "to": "AppRun"}

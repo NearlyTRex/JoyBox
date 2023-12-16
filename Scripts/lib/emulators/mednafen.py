@@ -92,7 +92,7 @@ class Mednafen(emulatorbase.EmulatorBase):
                 internal_copies = [
                     {"from": "Source/mednafen/src/mednafen", "to": "AppImage/usr/bin/mednafen"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
-                    {"from": "AppImageTool/linux/icon.png", "to": "AppImage/icon.png"}
+                    {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/mednafen", "to": "AppRun"}

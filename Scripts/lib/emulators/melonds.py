@@ -93,7 +93,7 @@ class MelonDS(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("melonDS", "linux"):
             network.BuildAppImageFromSource(
-                release_url = "https://github.com/melonDS-emu/melonDS.git",
+                release_url = "https://github.com/NearlyTRex/melonDS.git",
                 output_name = "melonDS",
                 output_dir = programs.GetProgramInstallDir("melonDS", "linux"),
                 build_cmd = [

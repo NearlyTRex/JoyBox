@@ -70,7 +70,7 @@ class ViceC64(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("VICE-C64", "linux"):
             network.BuildAppImageFromSource(
-                release_url = "https://github.com/VICE-Team/svn-mirror.git",
+                release_url = "https://github.com/NearlyTRex/ViceC64.git",
                 output_name = "VICE-C64",
                 output_dir = programs.GetProgramInstallDir("VICE-C64", "linux"),
                 build_cmd = [
@@ -86,7 +86,7 @@ class ViceC64(emulatorbase.EmulatorBase):
                     {"from": "Source/vice/data", "to": "AppImage/usr/bin"},
                     {"from": "Source/vice/src/x64sc", "to": "AppImage/usr/bin/x64sc"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
-                    {"from": "AppImageTool/linux/icon.png", "to": "AppImage/icon.png"}
+                    {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/x64sc", "to": "AppRun"}

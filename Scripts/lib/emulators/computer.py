@@ -609,7 +609,7 @@ class Computer(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
             network.BuildAppImageFromSource(
-                release_url = "https://github.com/joncampbell123/dosbox-x.git",
+                release_url = "https://github.com/NearlyTRex/DosboxX.git",
                 output_name = "DosBoxX",
                 output_dir = programs.GetProgramInstallDir("DosBoxX", "linux"),
                 build_cmd = [
@@ -660,7 +660,7 @@ class Computer(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("ScummVM", "linux"):
             network.BuildAppImageFromSource(
-                release_url = "https://github.com/scummvm/scummvm.git",
+                release_url = "https://github.com/NearlyTRex/ScummVM.git",
                 output_name = "ScummVM",
                 output_dir = programs.GetProgramInstallDir("ScummVM", "linux"),
                 build_cmd = [

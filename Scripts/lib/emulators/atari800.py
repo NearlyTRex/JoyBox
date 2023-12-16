@@ -70,7 +70,7 @@ class Atari800(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("Atari800", "linux"):
             network.BuildAppImageFromSource(
-                release_url = "https://github.com/atari800/atari800.git",
+                release_url = "https://github.com/NearlyTRex/Atari800.git",
                 output_name = "Atari800",
                 output_dir = programs.GetProgramInstallDir("Atari800", "linux"),
                 build_cmd = [

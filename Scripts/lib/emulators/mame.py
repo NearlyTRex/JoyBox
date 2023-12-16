@@ -150,7 +150,7 @@ class Mame(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("Mame", "linux"):
             network.BuildAppImageFromSource(
-                release_url = "https://github.com/mamedev/mame.git",
+                release_url = "https://github.com/NearlyTRex/Mame.git",
                 output_name = "Mame",
                 output_dir = programs.GetProgramInstallDir("Mame", "linux"),
                 build_cmd = [
@@ -159,7 +159,7 @@ class Mame(emulatorbase.EmulatorBase):
                 internal_copies = [
                     {"from": "Source/mame", "to": "AppImage/usr/bin/mame"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
-                    {"from": "AppImageTool/linux/icon.png", "to": "AppImage/icon.png"}
+                    {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/mame", "to": "AppRun"}
