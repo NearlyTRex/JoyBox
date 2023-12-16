@@ -46,6 +46,7 @@ def main():
     # Get flags
     verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
     exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+    fullscreen = ini.GetIniBoolValue("UserData.Flags", "fullscreen")
 
     # Get launch info
     launch_platform = args.launch_platform
@@ -74,9 +75,10 @@ def main():
 
     # Launch rom
     launcher.LaunchGame(
-        launch_platform = launch_platform,
-        file_path = launch_file,
+        game_platform = launch_platform,
+        game_file = launch_file,
         capture_type = args.capture_type,
+        fullscreen = fullscreen,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
