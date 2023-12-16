@@ -12,14 +12,14 @@ import toolbase
 def GetLibs32():
     lib_files = []
     for lib_file in programs.GetToolConfigValue("DXVK", "lib32"):
-        lib_files.apend(os.path.join(programs.GetLibraryInstallDir("DXVK"), lib_file))
+        lib_files.append(os.path.join(programs.GetLibraryInstallDir("DXVK"), lib_file))
     return lib_files
 
 # Get 64-bit libs
-def GetLibs32():
+def GetLibs64():
     lib_files = []
     for lib_file in programs.GetToolConfigValue("DXVK", "lib64"):
-        lib_files.apend(os.path.join(programs.GetLibraryInstallDir("DXVK"), lib_file))
+        lib_files.append(os.path.join(programs.GetLibraryInstallDir("DXVK"), lib_file))
     return lib_files
 
 # DXVK tool
