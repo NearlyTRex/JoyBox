@@ -16,16 +16,13 @@ import emulatorbase
 
 # Config files
 config_files = {}
-config_files["Vita3K/windows/config.yml"] = """
+config_file_general = """
 ---
-pref-path: $EMULATOR_MAIN_ROOT/Vita3K/windows/data
+pref-path: $EMULATOR_SETUP_ROOT
 ...
 """
-config_files["Vita3K/linux/Vita3K.AppImage.home/.config/Vita3K/config.yml"] = """
----
-pref-path: $EMULATOR_MAIN_ROOT/Vita3K/linux/Vita3K.AppImage.home/.local/share/Vita3K/Vita3K/
-...
-"""
+config_files["Vita3K/windows/config.yml"] = config_file_general
+config_files["Vita3K/linux/Vita3K.AppImage.home/.config/Vita3K/config.yml"] = config_file_general
 
 # Vita3K emulator
 class Vita3K(emulatorbase.EmulatorBase):
@@ -106,7 +103,7 @@ class Vita3K(emulatorbase.EmulatorBase):
         for config_filename, config_contents in config_files.items():
             system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
-                contents = config_contents,
+                contents = config_contents.lstrip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 

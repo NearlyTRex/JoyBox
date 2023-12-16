@@ -18,28 +18,19 @@ import emulatorbase
 
 # Config files
 config_files = {}
-config_files["Yuzu/windows/user/config/qt-config.ini"] = """
+config_file_general = """
 [Data%20Storage]
-dump_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/dump"
-load_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/load"
-nand_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/nand"
-sdmc_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/sdmc"
-tas_directory="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/tas"
+dump_directory="$EMULATOR_SETUP_ROOT/dump"
+load_directory="$EMULATOR_SETUP_ROOT/load"
+nand_directory="$EMULATOR_SETUP_ROOT/nand"
+sdmc_directory="$EMULATOR_SETUP_ROOT/sdmc"
+tas_directory="$EMULATOR_SETUP_ROOT/tas"
 
 [UI]
-Screenshots\screenshot_path="$EMULATOR_MAIN_ROOT/Yuzu/windows/user/screenshots"
+Screenshots\screenshot_path="$EMULATOR_SETUP_ROOT/screenshots"
 """
-config_files["Yuzu/linux/Yuzu.AppImage.home/.config/yuzu/qt-config.ini"] = """
-[Data%20Storage]
-dump_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/dump"
-load_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/load"
-nand_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/nand"
-sdmc_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/sdmc"
-tas_directory="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/tas"
-
-[UI]
-Screenshots\screenshot_path="$EMULATOR_MAIN_ROOT/Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/screenshots"
-"""
+config_files["Yuzu/windows/user/config/qt-config.ini"] = config_file_general
+config_files["Yuzu/linux/Yuzu.AppImage.home/.config/yuzu/qt-config.ini"] = config_file_general
 
 # Yuzu emulator
 class Yuzu(emulatorbase.EmulatorBase):
@@ -143,7 +134,7 @@ class Yuzu(emulatorbase.EmulatorBase):
         for config_filename, config_contents in config_files.items():
             system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
-                contents = config_contents,
+                contents = config_contents.lstrip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 

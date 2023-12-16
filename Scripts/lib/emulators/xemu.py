@@ -15,20 +15,15 @@ import emulatorbase
 
 # Config files
 config_files = {}
-config_files["Xemu/windows/xemu.toml"] = """
+config_file_general = """
 [sys.files]
-bootrom_path = '$EMULATOR_MAIN_ROOT/Xemu/windows/bios/mcpx_1.0.bin'
-flashrom_path = '$EMULATOR_MAIN_ROOT/Xemu/windows/bios/complex_4627.bin'
-eeprom_path = '$GAME_SAVE_DIR/eeprom.bin'
-hdd_path = '$GAME_SAVE_DIR/xbox_hdd.qcow2'
+bootrom_path = '$EMULATOR_SETUP_ROOT/bios/mcpx_1.0.bin'
+flashrom_path = '$EMULATOR_SETUP_ROOT/bios/complex_4627.bin'
+eeprom_path = "$GAME_SAVE_DIR/eeprom.bin"
+hdd_path = "$GAME_SAVE_DIR/xbox_hdd.qcow2"
 """
-config_files["Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/xemu.toml"] = """
-[sys.files]
-bootrom_path = '$EMULATOR_MAIN_ROOT/Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/bios/mcpx_1.0.bin'
-flashrom_path = '$EMULATOR_MAIN_ROOT/Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/bios/complex_4627.bin'
-eeprom_path = '$GAME_SAVE_DIR/eeprom.bin'
-hdd_path = '$GAME_SAVE_DIR/xbox_hdd.qcow2'
-"""
+config_files["Xemu/windows/xemu.toml"] = config_file_general
+config_files["Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/xemu.toml"] = config_file_general
 
 # Xemu emulator
 class Xemu(emulatorbase.EmulatorBase):
@@ -110,7 +105,7 @@ class Xemu(emulatorbase.EmulatorBase):
         for config_filename, config_contents in config_files.items():
             system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
-                contents = config_contents,
+                contents = config_contents.lstrip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 

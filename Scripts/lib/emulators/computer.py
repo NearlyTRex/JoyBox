@@ -22,13 +22,13 @@ import emulatorbase
 
 # Config files
 config_files = {}
-config_files["DosBoxX/windows/dosbox-x.conf"] = """
+config_file_general_dos = """
 [dosbox]
-working directory default = $EMULATOR_MAIN_ROOT/DosBoxX/windows
+working directory default = $EMULATOR_SETUP_ROOT
 """
-config_files["DosBoxX/windows/dosbox-x.win31.conf"] = """
+config_file_general_win31 = """
 [dosbox]
-working directory default = $EMULATOR_MAIN_ROOT/DosBoxX/windows
+working directory default = $EMULATOR_SETUP_ROOT
 memsize = 256
 machine = svga_s3trio64
 
@@ -47,31 +47,10 @@ floppy drive data rate limit = 0
 int13fakeio = true
 int13fakev86io = false
 """
-config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.conf"] = """
-[dosbox]
-working directory default = $EMULATOR_MAIN_ROOT/DosBoxX/linux
-"""
-config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.win31.conf"] = """
-[dosbox]
-working directory default = $EMULATOR_MAIN_ROOT/DosBoxX/linux
-memsize = 256
-machine = svga_s3trio64
-
-[cpu]
-cputype = pentium
-core = normal
-
-[pci]
-voodoo = false
-
-[dos]
-hard drive data rate limit = 0
-floppy drive data rate limit = 0
-
-[ide, primary]
-int13fakeio = true
-int13fakev86io = false
-"""
+config_files["DosBoxX/windows/dosbox-x.conf"] = config_file_general_dos
+config_files["DosBoxX/windows/dosbox-x.win31.conf"] = config_file_general_win31
+config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.conf"] = config_file_general_dos
+config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.win31.conf"] = config_file_general_win31
 config_files["ScummVM/windows/scummvm.ini"] = ""
 config_files["ScummVM/linux/ScummVM.AppImage.home/.config/scummvm/scummvm.ini"] = ""
 
@@ -533,6 +512,10 @@ class Computer(emulatorbase.EmulatorBase):
                     "windows": None,
                     "linux": None
                 },
+                "setup_dir": {
+                    "windows": "DosBoxX/windows",
+                    "linux": "DosBoxX/linux"
+                },
                 "config_file": {
                     "windows": "DosBoxX/windows/dosbox-x.conf",
                     "linux": "DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.conf"
@@ -556,6 +539,10 @@ class Computer(emulatorbase.EmulatorBase):
                 "save_dir": {
                     "windows": None,
                     "linux": None
+                },
+                "setup_dir": {
+                    "windows": "ScummVM/windows",
+                    "linux": "ScummVM/linux"
                 },
                 "config_file": {
                     "windows": "ScummVM/windows/scummvm.ini",
@@ -703,7 +690,7 @@ class Computer(emulatorbase.EmulatorBase):
         for config_filename, config_contents in config_files.items():
             system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
-                contents = config_contents,
+                contents = config_contents.lstrip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 

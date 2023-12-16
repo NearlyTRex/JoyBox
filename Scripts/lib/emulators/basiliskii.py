@@ -14,7 +14,7 @@ import emulatorbase
 
 # Config files
 config_files = {}
-config_files["BasiliskII/windows/BasiliskII_prefs"] = """
+config_file_general = """
 displaycolordepth 0
 disk
 cdrom /dev/cdrom
@@ -24,7 +24,7 @@ seriala /dev/ttyS0
 serialb /dev/ttyS1
 udptunnel false
 udpport 6066
-rom $EMULATOR_MAIN_ROOT/BasiliskII/windows/quadra.rom
+rom $EMULATOR_SETUP_ROOT/quadra.rom
 bootdrive 0
 bootdriver 0
 ramsize 67108864
@@ -62,54 +62,8 @@ mixer /dev/mixer
 idlewait true
 sdlrender software
 """
-config_files["BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs"] = """
-displaycolordepth 0
-disk
-cdrom /dev/cdrom
-extfs /
-screen dga/1024/768
-seriala /dev/ttyS0
-serialb /dev/ttyS1
-udptunnel false
-udpport 6066
-rom $EMULATOR_MAIN_ROOT/BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/quadra.rom
-bootdrive 0
-bootdriver 0
-ramsize 67108864
-frameskip 1
-modelid 14
-cpu 4
-fpu true
-nocdrom false
-nosound false
-noclipconversion false
-nogui false
-jit false
-jitfpu true
-jitdebug false
-jitcachesize 8192
-jitlazyflush true
-jitinline true
-keyboardtype 5
-keycodes false
-mousewheelmode 1
-mousewheellines 3
-hotkey 0
-scale_nearest false
-scale_integer false
-yearofs 0
-dayofs 0
-mag_rate 0
-swap_opt_cmd true
-ignoresegv true
-sound_buffer 0
-name_encoding 0
-delay 0
-dsp /dev/dsp
-mixer /dev/mixer
-idlewait true
-sdlrender software
-"""
+config_files["BasiliskII/windows/BasiliskII_prefs"] = config_file_general
+config_files["BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs"] = config_file_general
 
 # BasiliskII emulator
 class BasiliskII(emulatorbase.EmulatorBase):
@@ -181,7 +135,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
         for config_filename, config_contents in config_files.items():
             system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
-                contents = config_contents,
+                contents = config_contents.lstrip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 

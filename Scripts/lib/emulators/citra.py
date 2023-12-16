@@ -16,22 +16,16 @@ import emulatorbase
 
 # Config files
 config_files = {}
-config_files["Citra/windows/user/config/qt-config.ini"] = """
+config_file_general = """
 [Data%20Storage]
-nand_directory=$EMULATOR_MAIN_ROOT/Citra/windows/user/nand/
-sdmc_directory=$EMULATOR_MAIN_ROOT/Citra/windows/user/sdmc/
+nand_directory=$EMULATOR_SETUP_ROOT/nand/
+sdmc_directory=$EMULATOR_SETUP_ROOT/sdmc/
 
 [UI]
-Paths\screenshotPath=$EMULATOR_MAIN_ROOT/Citra/windows/user/screenshots/
+Paths\screenshotPath=$EMULATOR_SETUP_ROOT/screenshots/
 """
-config_files["Citra/linux/citra-qt.AppImage.home/.config/citra-emu/qt-config.ini"] = """
-[Data%20Storage]
-nand_directory=$EMULATOR_MAIN_ROOT/Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu/nand/
-sdmc_directory=$EMULATOR_MAIN_ROOT/Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu/sdmc/
-
-[UI]
-Paths\screenshotPath=$EMULATOR_MAIN_ROOT/Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu/screenshots/
-"""
+config_files["Citra/windows/user/config/qt-config.ini"] = config_file_general
+config_files["Citra/linux/citra-qt.AppImage.home/.config/citra-emu/qt-config.ini"] = config_file_general
 
 # Citra emulator
 class Citra(emulatorbase.EmulatorBase):
@@ -120,7 +114,7 @@ class Citra(emulatorbase.EmulatorBase):
         for config_filename, config_contents in config_files.items():
             system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
-                contents = config_contents,
+                contents = config_contents.lstrip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 

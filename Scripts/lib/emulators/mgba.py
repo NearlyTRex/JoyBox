@@ -15,23 +15,17 @@ import emulatorbase
 
 # Config files
 config_files = {}
+config_file_general = """
+[ports.qt]
+gb.bios=$EMULATOR_SETUP_ROOT/bios/gb_bios.bin
+gbc.bios=$EMULATOR_SETUP_ROOT/bios/gbc_bios.bin
+gba.bios=$EMULATOR_SETUP_ROOT/bios/gba_bios.bin
+sgb.bios=$EMULATOR_SETUP_ROOT/bios/sgb_bios.bin
+savegamePath=$GAME_SAVE_DIR
+"""
 config_files["mGBA/windows/portable.ini"] = ""
-config_files["mGBA/windows/config.ini"] = """
-[ports.qt]
-gb.bios=$EMULATOR_MAIN_ROOT/mGBA/windows/bios/gb_bios.bin
-gbc.bios=$EMULATOR_MAIN_ROOT/mGBA/windows/bios/gbc_bios.bin
-gba.bios=$EMULATOR_MAIN_ROOT/mGBA/windows/bios/gba_bios.bin
-sgb.bios=$EMULATOR_MAIN_ROOT/mGBA/windows/bios/sgb_bios.bin
-savegamePath=$GAME_SAVE_DIR
-"""
-config_files["mGBA/linux/mGBA.AppImage.home/.config/mgba/config.ini"] = """
-[ports.qt]
-gb.bios=$EMULATOR_MAIN_ROOT/mGBA/linux/mGBA.AppImage.home/.config/mgba/bios/gb_bios.bin
-gbc.bios=$EMULATOR_MAIN_ROOT/mGBA/linux/mGBA.AppImage.home/.config/mgba/bios/gbc_bios.bin
-gba.bios=$EMULATOR_MAIN_ROOT/mGBA/linux/mGBA.AppImage.home/.config/mgba/bios/gba_bios.bin
-sgb.bios=$EMULATOR_MAIN_ROOT/mGBA/linux/mGBA.AppImage.home/.config/mgba/bios/sgb_bios.bin
-savegamePath=$GAME_SAVE_DIR
-"""
+config_files["mGBA/windows/config.ini"] = config_file_general
+config_files["mGBA/linux/mGBA.AppImage.home/.config/mgba/config.ini"] = config_file_general
 
 # MGBA emulator
 class MGBA(emulatorbase.EmulatorBase):
@@ -112,7 +106,7 @@ class MGBA(emulatorbase.EmulatorBase):
         for config_filename, config_contents in config_files.items():
             system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
-                contents = config_contents,
+                contents = config_contents.lstrip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 

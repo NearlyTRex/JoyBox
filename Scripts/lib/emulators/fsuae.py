@@ -14,17 +14,14 @@ import emulatorbase
 
 # Config files
 config_files = {}
+config_file_general = """
+[config]
+amiga_model = A500
+governor_warning = 0
+"""
 config_files["FS-UAE/windows/Portable.ini"] = ""
-config_files["FS-UAE/windows/Configurations/Default.fs-uae"] = """
-[config]
-amiga_model = A500
-governor_warning = 0
-"""
-config_files["FS-UAE/linux/FS-UAE.AppImage.home/FS-UAE/Configurations/Default.fs-uae"] = """
-[config]
-amiga_model = A500
-governor_warning = 0
-"""
+config_files["FS-UAE/windows/Configurations/Default.fs-uae"] = config_file_general
+config_files["FS-UAE/linux/FS-UAE.AppImage.home/FS-UAE/Configurations/Default.fs-uae"] = config_file_general
 
 # FSUAE emulator
 class FSUAE(emulatorbase.EmulatorBase):
@@ -113,7 +110,7 @@ class FSUAE(emulatorbase.EmulatorBase):
         for config_filename, config_contents in config_files.items():
             system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
-                contents = config_contents,
+                contents = config_contents.lstrip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 

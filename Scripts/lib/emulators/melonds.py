@@ -15,26 +15,18 @@ import emulatorbase
 
 # Config files
 config_files = {}
-config_files["melonDS/windows/melonDS.ini"] = """
-BIOS9Path=$EMULATOR_MAIN_ROOT/melonDS/windows/sysdata/nds_arm9_usa.bin
-BIOS7Path=$EMULATOR_MAIN_ROOT/melonDS/windows/sysdata/nds_arm7_usa.bin
-FirmwarePath=$EMULATOR_MAIN_ROOT/melonDS/windows/sysdata/nds_firmware_usa.bin
-DSiBIOS9Path=$EMULATOR_MAIN_ROOT/melonDS/windows/sysdata/dsi_arm9_usa.bin
-DSiBIOS7Path=$EMULATOR_MAIN_ROOT/melonDS/windows/sysdata/dsi_arm7_usa.bin
-DSiFirmwarePath=$EMULATOR_MAIN_ROOT/melonDS/windows/sysdata/dsi_firmware_usa.bin
-DSiNANDPath=$EMULATOR_MAIN_ROOT/melonDS/windows/nand/dsi_nand_usa.bin
+config_file_general = """
+BIOS9Path=$EMULATOR_SETUP_ROOT/sysdata/nds_arm9_usa.bin
+BIOS7Path=$EMULATOR_SETUP_ROOT/sysdata/nds_arm7_usa.bin
+FirmwarePath=$EMULATOR_SETUP_ROOT/sysdata/nds_firmware_usa.bin
+DSiBIOS9Path=$EMULATOR_SETUP_ROOT/sysdata/dsi_arm9_usa.bin
+DSiBIOS7Path=$EMULATOR_SETUP_ROOT/sysdata/dsi_arm7_usa.bin
+DSiFirmwarePath=$EMULATOR_SETUP_ROOT/sysdata/dsi_firmware_usa.bin
+DSiNANDPath=$EMULATOR_SETUP_ROOT/nand/dsi_nand_usa.bin
 SaveFilePath=$GAME_SAVE_DIR
 """
-config_files["melonDS/linux/melonDS.AppImage.home/.config/melonDS/melonDS.ini"] = """
-BIOS9Path=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/sysdata/nds_arm9_usa.bin
-BIOS7Path=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/sysdata/nds_arm7_usa.bin
-FirmwarePath=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/sysdata/nds_firmware_usa.bin
-DSiBIOS9Path=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/sysdata/dsi_arm9_usa.bin
-DSiBIOS7Path=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/sysdata/dsi_arm7_usa.bin
-DSiFirmwarePath=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/sysdata/dsi_firmware_usa.bin
-DSiNANDPath=$EMULATOR_MAIN_ROOT/melonDS/linux/melonDS.AppImage.home/.config/melonDS/nand/dsi_nand_usa.bin
-SaveFilePath=$GAME_SAVE_DIR
-"""
+config_files["melonDS/windows/melonDS.ini"] = config_file_general
+config_files["melonDS/linux/melonDS.AppImage.home/.config/melonDS/melonDS.ini"] = config_file_general
 
 # MelonDS emulator
 class MelonDS(emulatorbase.EmulatorBase):
@@ -120,7 +112,7 @@ class MelonDS(emulatorbase.EmulatorBase):
         for config_filename, config_contents in config_files.items():
             system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
-                contents = config_contents,
+                contents = config_contents.lstrip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 

@@ -14,48 +14,29 @@ import emulatorbase
 
 # Config file
 config_files = {}
-config_files["Ares/windows/settings.bml"] = """
+config_file_general = """
 Paths
   Home
-  Saves: $EMULATOR_MAIN_ROOT/Ares/windows/Saves/
-  Screenshots: $EMULATOR_MAIN_ROOT/Ares/windows/Screenshots/
+  Saves: $EMULATOR_SETUP_ROOT/Saves/
+  Screenshots: $EMULATOR_SETUP_ROOT/Screenshots/
 ColecoVision
   Path
   Firmware
-    BIOS.World: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/colecovision.rom
+    BIOS.World: $EMULATOR_SETUP_ROOT/Bios/colecovision.rom
 PCEngineCD
   Path
   Firmware
-    BIOS.US: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/syscard3u.pce
-    BIOS.Japan: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/syscard3j.pce
+    BIOS.US: $EMULATOR_SETUP_ROOT/Bios/syscard3u.pce
+    BIOS.Japan: $EMULATOR_SETUP_ROOT/Bios/syscard3j.pce
 MegaCD
   Path
   Firmware
-    BIOS.US: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/bios_CD_U.bin
-    BIOS.Japan: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/bios_CD_J.bin
-    BIOS.Europe: $EMULATOR_MAIN_ROOT/Ares/windows/Bios/bios_CD_E.bin
+    BIOS.US: $EMULATOR_SETUP_ROOT/Bios/bios_CD_U.bin
+    BIOS.Japan: $EMULATOR_SETUP_ROOT/Bios/bios_CD_J.bin
+    BIOS.Europe: $EMULATOR_SETUP_ROOT/Bios/bios_CD_E.bin
 """
-config_files["Ares/linux/Ares.AppImage.home/.local/share/ares/settings.bml"] = """
-Paths
-  Home
-  Saves: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Saves/
-  Screenshots: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Screenshots/
-ColecoVision
-  Path
-  Firmware
-    BIOS.World: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/colecovision.rom
-PCEngineCD
-  Path
-  Firmware
-    BIOS.US: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/syscard3u.pce
-    BIOS.Japan: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/syscard3j.pce
-MegaCD
-  Path
-  Firmware
-    BIOS.US: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/bios_CD_U.bin
-    BIOS.Japan: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/bios_CD_J.bin
-    BIOS.Europe: $EMULATOR_MAIN_ROOT/Ares/linux/Ares.AppImage.home/.local/share/ares/Bios/bios_CD_E.bin
-"""
+config_files["Ares/windows/settings.bml"] = config_file_general
+config_files["Ares/linux/Ares.AppImage.home/.local/share/ares/settings.bml"] = config_file_general
 
 # Ares emulator
 class Ares(emulatorbase.EmulatorBase):
@@ -198,7 +179,7 @@ class Ares(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
         if force_downloads or programs.ShouldProgramBeInstalled("Ares", "linux"):
             network.BuildAppImageFromSource(
-                release_url = "https://github.com/ares-emulator/ares.git",
+                release_url = "https://github.com/NearlyTRex/Ares.git",
                 output_name = "Ares",
                 output_dir = programs.GetProgramInstallDir("Ares", "linux"),
                 build_cmd = [
@@ -222,7 +203,7 @@ class Ares(emulatorbase.EmulatorBase):
         for config_filename, config_contents in config_files.items():
             system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
-                contents = config_contents,
+                contents = config_contents.lstrip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 
