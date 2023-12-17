@@ -12,54 +12,34 @@ import toolbase
 
 # Config file
 config_files = {}
+config_file_general = """
+general.theme: themes/PegasusThemeGrid/
+general.verify-files: false
+general.input-mouse-support: true
+general.fullscreen: true
+providers.steam.enabled: false
+providers.gog.enabled: false
+providers.es2.enabled: false
+providers.launchbox.enabled: false
+providers.logiqx.enabled: false
+providers.playnite.enabled: false
+providers.skraper.enabled: false
+keys.menu: F1,GamepadStart
+keys.page-down: PgDown,GamepadR2
+keys.prev-page: Q,A,GamepadL1
+keys.next-page: E,D,GamepadR1
+keys.filters: F,GamepadY
+keys.details: I,GamepadX
+keys.cancel: Esc,Backspace,GamepadB
+keys.page-up: PgUp,GamepadL2
+keys.accept: Return,Enter,GamepadA
+"""
 config_files["Pegasus/windows/portable.txt"] = ""
 config_files["Pegasus/windows/config/game_dirs.txt"] = ""
-config_files["Pegasus/windows/config/settings.txt"] = """
-general.theme: themes/PegasusThemeGrid/
-general.verify-files: false
-general.input-mouse-support: true
-general.fullscreen: true
-providers.steam.enabled: false
-providers.gog.enabled: false
-providers.es2.enabled: false
-providers.launchbox.enabled: false
-providers.logiqx.enabled: false
-providers.playnite.enabled: false
-providers.skraper.enabled: false
-keys.menu: F1,GamepadStart
-keys.page-down: PgDown,GamepadR2
-keys.prev-page: Q,A,GamepadL1
-keys.next-page: E,D,GamepadR1
-keys.filters: F,GamepadY
-keys.details: I,GamepadX
-keys.cancel: Esc,Backspace,GamepadB
-keys.page-up: PgUp,GamepadL2
-keys.accept: Return,Enter,GamepadA
-"""
+config_files["Pegasus/windows/config/settings.txt"] = config_file_general
 config_files["Pegasus/linux/portable.txt"] = ""
 config_files["Pegasus/linux/config/game_dirs.txt"] = ""
-config_files["Pegasus/linux/config/settings.txt"] = """
-general.theme: themes/PegasusThemeGrid/
-general.verify-files: false
-general.input-mouse-support: true
-general.fullscreen: true
-providers.steam.enabled: false
-providers.gog.enabled: false
-providers.es2.enabled: false
-providers.launchbox.enabled: false
-providers.logiqx.enabled: false
-providers.playnite.enabled: false
-providers.skraper.enabled: false
-keys.menu: F1,GamepadStart
-keys.page-down: PgDown,GamepadR2
-keys.prev-page: Q,A,GamepadL1
-keys.next-page: E,D,GamepadR1
-keys.filters: F,GamepadY
-keys.details: I,GamepadX
-keys.cancel: Esc,Backspace,GamepadB
-keys.page-up: PgUp,GamepadL2
-keys.accept: Return,Enter,GamepadA
-"""
+config_files["Pegasus/linux/config/settings.txt"] = config_file_general
 
 # Pegasus tool
 class Pegasus(toolbase.ToolBase):
@@ -153,7 +133,6 @@ class Pegasus(toolbase.ToolBase):
         for config_filename, config_contents in config_files.items():
             system.TouchFile(
                 src = os.path.join(environment.GetToolsRootDir(), config_filename),
-                contents = config_contents,
+                contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
