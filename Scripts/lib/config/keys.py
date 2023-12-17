@@ -40,6 +40,12 @@ general_key_transform_file = "transform_file"
 general_key_dlc = "dlc"
 general_key_update = "update"
 general_key_extra = "extra"
+general_keys_list_keys = [
+    general_key_files,
+    general_key_dlc,
+    general_key_update,
+    general_key_extra
+]
 
 # Computer json keys
 computer_key_installer_exe = "installer_exe"

@@ -81,6 +81,8 @@ def ParseComputerJson(json_file):
                 dict_var[dict_key][dict_subkey] = default_subvalue
 
         # Fill gaps for general keys
+        for key in config.general_keys_list_keys:
+            SetDefaultValue(game_info, key, [])
         for key in config.computer_keys_list_keys:
             SetDefaultValue(game_info, key, [])
         for key in config.computer_keys_dict_keys:
