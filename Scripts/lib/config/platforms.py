@@ -318,9 +318,9 @@ nintendo_3ds_apps[keys.platform_key_category] = categories.game_category_nintend
 nintendo_3ds_apps[keys.platform_key_subcategory] = categories.game_subcategory_nintendo_3ds_apps
 nintendo_3ds_apps[keys.platform_key_transforms] = []
 nintendo_3ds_apps[keys.platform_key_addons] = []
-nintendo_3ds_apps[keys.platform_key_launcher] = [types.launch_name]
+nintendo_3ds_apps[keys.platform_key_launcher] = [types.launch_none]
 nintendo_3ds_apps[keys.platform_key_autofill_json] = [keys.general_key_files]
-nintendo_3ds_apps[keys.platform_key_fillonce_json] = [keys.general_key_launch_name]
+nintendo_3ds_apps[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_3ds_apps] = nintendo_3ds_apps
 
 ###########################################################
