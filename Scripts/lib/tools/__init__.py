@@ -10,6 +10,7 @@ from . import firefox
 from . import geckodriver
 from . import git
 from . import hactool
+from . import lgogdownloader
 from . import ludusavi
 from . import mametools
 from . import ndecrypt
@@ -46,6 +47,7 @@ instances = [
     geckodriver.GeckoDriver(),
     git.Git(),
     hactool.HacTool(),
+    lgogdownloader.LGOGDownloader(),
     ludusavi.Ludusavi(),
     mametools.MameTools(),
     ndecrypt.NDecrypt(),
