@@ -134,7 +134,7 @@ class Yuzu(emulatorbase.EmulatorBase):
         for config_filename, config_contents in config_files.items():
             system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
-                contents = config_contents.lstrip(),
+                contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 
