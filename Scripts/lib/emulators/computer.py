@@ -1,9 +1,7 @@
 # Imports
-import os
+import os, os.path
 import os.path
 import sys
-import getpass
-import json
 
 # Local imports
 import config
@@ -18,6 +16,7 @@ import metadata
 import display
 import ini
 import gui
+import jsoncommon
 import emulatorbase
 
 # Config files
@@ -53,70 +52,6 @@ config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.conf
 config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.win31.conf"] = config_file_general_win31
 config_files["ScummVM/windows/scummvm.ini"] = ""
 config_files["ScummVM/linux/ScummVM.AppImage.home/.config/scummvm/scummvm.ini"] = ""
-
-# Parse computer json
-def ParseComputerJson(json_file):
-    game_info = {}
-    with open(json_file, "r") as file:
-
-        # Get automatic info based on json location
-        json_directory = system.GetFilenameDirectory(json_file)
-        json_base_name = system.GetFilenameBasename(json_file)
-        json_regular_name = metadata.ConvertMetadataNameToRegularName(json_base_name)
-        json_supercategory, json_category, json_subcategory = metadata.DeriveMetadataCategoriesFromFile(json_file)
-        json_platform = metadata.DeriveMetadataPlatform(json_category, json_subcategory)
-
-        # Read json file
-        game_json = file.read()
-        game_info = json.loads(game_json)
-        if len(game_info) == 0:
-            game_info = {}
-
-        # Gap filling funcs
-        def SetDefaultValue(dict_var, dict_key, default_value):
-            if dict_key not in dict_var:
-                dict_var[dict_key] = default_value
-        def SetDefaultSubValue(dict_var, dict_key, dict_subkey, default_subvalue):
-            if dict_key in dict_var and dict_subkey not in dict_var[dict_key]:
-                dict_var[dict_key][dict_subkey] = default_subvalue
-
-        # Fill gaps for general keys
-        for key in config.general_keys_list_keys:
-            SetDefaultValue(game_info, key, [])
-        for key in config.computer_keys_list_keys:
-            SetDefaultValue(game_info, key, [])
-        for key in config.computer_keys_dict_keys:
-            SetDefaultValue(game_info, key, {})
-        for key in config.computer_keys_bool_keys:
-            SetDefaultValue(game_info, key, False)
-        for key in config.computer_keys_str_keys:
-            SetDefaultValue(game_info, key, None)
-
-        # Fill gaps for special dictionaries
-        SetDefaultSubValue(game_info, config.computer_key_sandbox, config.computer_key_sandbox_sandboxie, {})
-        SetDefaultSubValue(game_info, config.computer_key_sandbox, config.computer_key_sandbox_wine, {})
-        SetDefaultSubValue(game_info, config.computer_key_steps, config.computer_key_steps_preinstall, [])
-        SetDefaultSubValue(game_info, config.computer_key_steps, config.computer_key_steps_postinstall, [])
-        SetDefaultSubValue(game_info, config.computer_key_sync, config.computer_key_sync_search, "")
-        SetDefaultSubValue(game_info, config.computer_key_sync, config.computer_key_sync_data, [])
-        SetDefaultSubValue(game_info, config.computer_key_registry, config.computer_key_registry_keep_setup, False)
-        SetDefaultSubValue(game_info, config.computer_key_registry, config.computer_key_registry_setup_keys, [])
-
-        # Fill gaps for derived json data
-        SetDefaultValue(game_info, config.computer_key_source_dir, json_directory)
-        SetDefaultValue(game_info, config.computer_key_source_file, json_file)
-        SetDefaultValue(game_info, config.computer_key_base_name, json_base_name)
-        SetDefaultValue(game_info, config.computer_key_regular_name, json_regular_name)
-        SetDefaultValue(game_info, config.computer_key_supercategory, json_supercategory)
-        SetDefaultValue(game_info, config.computer_key_category, json_category)
-        SetDefaultValue(game_info, config.computer_key_subcategory, json_subcategory)
-        SetDefaultValue(game_info, config.computer_key_platform, json_platform)
-
-        # Convert some string fields to list
-        for key in config.computer_keys_list_keys:
-            if isinstance(game_info[key], str):
-                game_info[key] = [game_info[key]]
-    return game_info
 
 # Build disc token map
 def BuildDiscTokenMap(disc_files = [], use_drive_letters = False):
@@ -718,7 +653,7 @@ class Computer(emulatorbase.EmulatorBase):
         launch_supercategory, launch_category, launch_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(launch_platform)
 
         # Get launch info
-        launch_info = ParseComputerJson(launch_file)
+        launch_info = jsoncommon.ParseComputerJson(launch_file)
         launch_info_sandbox = launch_info[config.computer_key_sandbox]
         launch_info_wine_setup = launch_info_sandbox[config.computer_key_sandbox_wine]
         launch_info_sandboxie_setup = launch_info_sandbox[config.computer_key_sandbox_sandboxie]
@@ -775,10 +710,10 @@ class Computer(emulatorbase.EmulatorBase):
             run_func = CreateGamePrefix)
 
         # Create user files
-        if launch_category == "Computer":
+        if launch_category == config.game_category_computer:
 
             # Steam
-            if launch_subcategory == "Steam":
+            if launch_subcategory == config.game_subcategory_steam:
 
                 # Create steam username file
                 steam_username = ini.GetIniValue("UserData.Steam", "steam_username")
