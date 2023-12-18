@@ -543,10 +543,9 @@ def ChooseRandomGame(rom_category = None, rom_subcategory = None, filter_options
 # Derive game name from path
 def DeriveGameNameFromPath(rom_path):
     rom_dir = system.GetFilenameDirectory(rom_path)
-    rom_basename = os.path.basename(rom_dir)
-    if not rom_basename.endswith(")"):
+    if not IsGameFolder(rom_dir):
         return ""
-    return rom_basename
+    return os.path.basename(rom_dir)
 
 # Derive game letter from name
 def DeriveGameLetterFromName(rom_name):
