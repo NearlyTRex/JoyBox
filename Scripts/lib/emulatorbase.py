@@ -98,6 +98,10 @@ class EmulatorBase:
     def Setup(self, verbose = False, exit_on_failure = False):
         pass
 
+    # Check if launchable
+    def IsLaunchable(self, launch_name, launch_platform, launch_file):
+        return True
+
     # Launch
     def Launch(
         self,
