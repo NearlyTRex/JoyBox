@@ -483,6 +483,7 @@ def InstallComputerGame(json_file, output_image, keep_setup_files = False, verbo
     system.CopyContents(
         src = game_rom_dir,
         dest = game_setup_dir,
+        show_progress = True,
         skip_existing = True,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
