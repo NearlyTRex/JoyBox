@@ -4,7 +4,6 @@ import sys
 
 # Local imports
 import config
-import command
 import system
 import gui
 import environment
