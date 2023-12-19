@@ -334,7 +334,7 @@ class Metadata:
 
                 # Write header
                 file.write("collection: %s\n" % game_platform)
-                file.write("launch: launch_rom -l \"%s\" {file.path}\n" % game_platform)
+                file.write("launch: launch_json {file.path}\n")
                 file.write("\n\n")
 
                 # Write each entry
