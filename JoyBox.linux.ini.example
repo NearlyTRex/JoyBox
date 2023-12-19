@@ -27,6 +27,7 @@ fullscreen = True
 keep_setup_files = False
 
 [UserData.Capture]
+capture_type = none
 capture_duration = 300
 capture_interval = 1
 capture_origin_x = 0
