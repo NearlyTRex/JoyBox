@@ -15,66 +15,38 @@ import emulatorbase
 
 # Config files
 config_files = {}
-config_files["Mame/windows/mame.ini"] = """
+config_file_general = """
 #
 # CORE SEARCH PATH OPTIONS
 #
-homepath                  .
-rompath                   roms
-hashpath                  hash
-samplepath                samples
-artpath                   artwork
-ctrlrpath                 ctrlr
-inipath                   .;ini;ini/presets
-fontpath                  .
-cheatpath                 cheat
-crosshairpath             crosshair
-pluginspath               plugins
-languagepath              language
-swpath                    software
+homepath                  $EMULATOR_SETUP_ROOT
+rompath                   $EMULATOR_SETUP_ROOT/roms
+hashpath                  $EMULATOR_SETUP_ROOT/hash
+samplepath                $EMULATOR_SETUP_ROOT/samples
+artpath                   $EMULATOR_SETUP_ROOT/artwork
+ctrlrpath                 $EMULATOR_SETUP_ROOT/ctrlr
+inipath                   $EMULATOR_SETUP_ROOT;$EMULATOR_SETUP_ROOT/ini
+fontpath                  $EMULATOR_SETUP_ROOT
+cheatpath                 $EMULATOR_SETUP_ROOT/cheat
+crosshairpath             $EMULATOR_SETUP_ROOT/crosshair
+pluginspath               $EMULATOR_SETUP_ROOT/plugins
+languagepath              $EMULATOR_SETUP_ROOT/language
+swpath                    $EMULATOR_SETUP_ROOT/software
 
 #
 # CORE OUTPUT DIRECTORY OPTIONS
 #
-cfg_directory             cfg
-nvram_directory           nvram
-input_directory           inp
-state_directory           sta
-snapshot_directory        snap
-diff_directory            diff
-comment_directory         comments
-share_directory           share
+cfg_directory             $EMULATOR_SETUP_ROOT/cfg
+nvram_directory           $EMULATOR_SETUP_ROOT/nvram
+input_directory           $EMULATOR_SETUP_ROOT/inp
+state_directory           $EMULATOR_SETUP_ROOT/sta
+snapshot_directory        $EMULATOR_SETUP_ROOT/snap
+diff_directory            $EMULATOR_SETUP_ROOT/diff
+comment_directory         $EMULATOR_SETUP_ROOT/comments
+share_directory           $EMULATOR_SETUP_ROOT/share
 """
-config_files["Mame/linux/Mame.AppImage.home/.mame/mame.ini"] = """
-#
-# CORE SEARCH PATH OPTIONS
-#
-homepath                  $HOME/.mame
-rompath                   $HOME/.mame/roms
-hashpath                  $HOME/.mame/hash
-samplepath                $HOME/.mame/samples
-artpath                   $HOME/.mame/artwork
-ctrlrpath                 $HOME/.mame/ctrlr
-inipath                   $HOME/.mame;$HOME/.mame/ini
-fontpath                  $HOME/.mame
-cheatpath                 $HOME/.mame/cheat
-crosshairpath             $HOME/.mame/crosshair
-pluginspath               $HOME/.mame/plugins
-languagepath              $HOME/.mame/language
-swpath                    $HOME/.mame/software
-
-#
-# CORE OUTPUT DIRECTORY OPTIONS
-#
-cfg_directory             $HOME/.mame/cfg
-nvram_directory           $HOME/.mame/nvram
-input_directory           $HOME/.mame/inp
-state_directory           $HOME/.mame/sta
-snapshot_directory        $HOME/.mame/snap
-diff_directory            $HOME/.mame/diff
-comment_directory         $HOME/.mame/comments
-share_directory           $HOME/.mame/share
-"""
+config_files["Mame/windows/mame.ini"] = config_file_general
+config_files["Mame/linux/Mame.AppImage.home/.mame/mame.ini"] = config_file_general
 
 # Mame emulator
 class Mame(emulatorbase.EmulatorBase):
