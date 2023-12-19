@@ -40,8 +40,8 @@ class EmulatorBase:
             program_key = "setup_dir",
             program_platform = emulator_platform)
 
-    # Get save format
-    def GetSaveFormat(self):
+    # Get save type
+    def GetSaveType(self):
         return None
 
     # Get save base dir

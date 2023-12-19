@@ -40,10 +40,10 @@ def LaunchGame(game_platform, game_file, capture_type = None, fullscreen = False
         game_name = game_name,
         asset_type = config.asset_type_boxfront)
     game_config_file = game_launcher.GetConfigFile()
-    game_save_format = game_launcher.GetSaveFormat()
+    game_save_type = game_launcher.GetSaveType()
     game_save_dir_launcher = game_launcher.GetSaveDir(game_platform)
-    game_save_dir_real = environment.GetCachedSaveDir(game_category, game_subcategory, game_name, game_save_format)
-    game_save_dir_general = environment.GetCachedSaveDir(game_category, game_subcategory, game_name, config.save_format_general)
+    game_save_dir_real = environment.GetCachedSaveDir(game_category, game_subcategory, game_name, game_save_type)
+    game_save_dir_general = environment.GetCachedSaveDir(game_category, game_subcategory, game_name, config.save_type_general)
 
     # Unpack save if possible
     if saves.CanSaveBeUnpacked(game_category, game_subcategory, game_name):

@@ -77,13 +77,13 @@ def CanSaveBeUnpacked(save_category, save_subcategory, save_name):
 # Pack individual save
 def PackSave(save_category, save_subcategory, save_name, verbose = False, exit_on_failure = False):
 
-    # Get save format
-    save_format = metadata.DeriveGameSaveFormatFromCategory(save_category)
+    # Get save type
+    save_type = metadata.DeriveGameSaveTypeFromCategory(save_category)
 
     # Get input save dirs
     input_save_dir = environment.GetCachedSaveDir(save_category, save_subcategory, save_name)
-    input_save_format_dir = environment.GetCachedSaveDir(save_category, save_subcategory, save_name, save_format)
-    if system.IsDirectoryEmpty(input_save_format_dir) or not system.DoesDirectoryContainFiles(input_save_format_dir):
+    input_save_type_dir = environment.GetCachedSaveDir(save_category, save_subcategory, save_name, save_type)
+    if system.IsDirectoryEmpty(input_save_type_dir) or not system.DoesDirectoryContainFiles(input_save_type_dir):
         return False
 
     # Get output save dir
@@ -102,7 +102,7 @@ def PackSave(save_category, save_subcategory, save_name, verbose = False, exit_o
     # Get excludes
     input_excludes = []
     if save_category == config.game_category_computer:
-        input_excludes = [config.save_format_wine, config.save_format_sandboxie]
+        input_excludes = [config.save_type_wine, config.save_type_sandboxie]
 
     # Archive save
     success = archive.CreateZipFromFolder(

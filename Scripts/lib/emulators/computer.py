@@ -492,12 +492,12 @@ class Computer(emulatorbase.EmulatorBase):
             }
         }
 
-    # Get save format
-    def GetSaveFormat(self):
+    # Get save type
+    def GetSaveType(self):
         if environment.IsWindowsPlatform():
-            return config.save_format_sandboxie
+            return config.save_type_sandboxie
         else:
-            return config.save_format_wine
+            return config.save_type_wine
 
     # Get config file
     def GetConfigFile(self, emulator_platform = None):

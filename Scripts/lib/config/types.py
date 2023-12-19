@@ -46,10 +46,10 @@ prefix_name_emulator = "Emulator"
 prefix_name_game = "Game"
 prefix_name_setup = "Setup"
 
-# Save formats
-save_format_general = "General"
-save_format_wine = "Wine"
-save_format_sandboxie = "Sandboxie"
+# Save types
+save_type_general = "General"
+save_type_wine = "Wine"
+save_type_sandboxie = "Sandboxie"
 
 # Capture types
 capture_type_none = "none"

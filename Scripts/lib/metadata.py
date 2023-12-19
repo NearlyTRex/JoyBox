@@ -556,10 +556,10 @@ def DeriveGameLetterFromName(rom_name):
         letter = config.general_numeric_folder
     return letter
 
-# Derive game save format from category
-def DeriveGameSaveFormatFromCategory(rom_category):
+# Derive game save type from category
+def DeriveGameSaveTypeFromCategory(rom_category):
     if rom_category == config.game_category_computer:
-        return config.save_format_general
+        return config.save_type_general
     return None
 
 # Derive platform from rom category/subcategory
