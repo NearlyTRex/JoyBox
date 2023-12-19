@@ -50,7 +50,7 @@ def main():
 
     # Get launch info
     launch_platform = args.launch_platform
-    launch_file = system.ResolveVirtualRomPath(args.rom)
+    launch_file = os.path.realpath(args.rom)
     launch_name = metadata.DeriveGameNameFromPath(launch_file)
     if not launch_name:
         gui.DisplayErrorPopup(

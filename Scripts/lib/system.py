@@ -1122,43 +1122,6 @@ def RebaseFilePath(path, old_base_path, new_base_path):
 
 ###########################################################
 
-# Determine if virtual path
-def IsVirtualPath(path, token):
-    if IsPathValid(path):
-        return token in path
-    return False
-
-# Determine if virtual rom path
-def IsVirtualRomPath(path):
-    for token in [config.token_rom_storage_root, config.token_rom_json_root]:
-        if IsVirtualPath(path, token):
-            return True
-    return False
-
-# Resolve virtual path
-def ResolveVirtualPath(path, token, replacement):
-    if not IsVirtualPath(path, token):
-        return path
-    for path_token in path.split(token):
-        path = path_token.strip("\\/")
-    return NormalizeFilePath(os.path.join(replacement, path))
-
-# Resolve virtual rom path
-def ResolveVirtualRomPath(path):
-    if config.token_rom_storage_root in path:
-        return ResolveVirtualPath(
-            path = path,
-            token = config.token_rom_storage_root,
-            replacement = environment.GetRomRootDir())
-    elif config.token_rom_json_root in path:
-        return ResolveVirtualPath(
-            path = path,
-            token = config.token_rom_json_root,
-            replacement = environment.GetJsonRomsMetadataRootDir())
-    return os.path.join(environment.GetJsonRomsMetadataRootDir(), path)
-
-###########################################################
-
 # Get directory name
 def GetDirectoryName(path):
     return str(pathlib.Path(path).name)
