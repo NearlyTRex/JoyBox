@@ -332,7 +332,7 @@ def DownloadGeneralRelease(
 
         # Set search directory to best location for installed files
         search_dir = prefix_dir
-        if installer_type != config.installer_format_unknown:
+        if installer_type != config.installer_type_unknown:
             search_dir = real_install_path
         if not search_dir:
             return False

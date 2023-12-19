@@ -46,7 +46,7 @@ class MameTools(toolbase.ToolBase):
                 install_name = "MameChdman",
                 install_dir = programs.GetProgramInstallDir("MameChdman", "windows"),
                 install_files = ["chdman.exe"],
-                installer_type = config.installer_format_7zip,
+                installer_type = config.installer_type_7zip,
                 is_installer = False,
                 is_archive = True,
                 get_latest = True,

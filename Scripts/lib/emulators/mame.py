@@ -142,7 +142,7 @@ class Mame(emulatorbase.EmulatorBase):
                 search_file = "mame.exe",
                 install_name = "Mame",
                 install_dir = programs.GetProgramInstallDir("Mame", "windows"),
-                installer_type = config.installer_format_7zip,
+                installer_type = config.installer_type_7zip,
                 is_installer = False,
                 is_archive = True,
                 get_latest = True,

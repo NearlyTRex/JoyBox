@@ -86,16 +86,16 @@ def GetInstallerType(installer_file):
             if not file_contents:
                 break
             if "Inno Setup" in file_contents:
-                return config.installer_format_inno
+                return config.installer_type_inno
             if "Nullsoft.NSIS.exehead" in file_contents:
-                return config.installer_format_nsis
+                return config.installer_type_nsis
             if "InstallShieldSetup" in file_contents:
-                return config.installer_format_ins
+                return config.installer_type_ins
             if "7-Zip" in file_contents:
-                return config.installer_format_7zip
+                return config.installer_type_7zip
             if "WinRAR SFX" in file_contents:
-                return config.installer_format_winrar
-    return config.installer_format_unknown
+                return config.installer_type_winrar
+    return config.installer_type_unknown
 
 # Get installer setup command
 def GetInstallerSetupCommand(
@@ -106,23 +106,23 @@ def GetInstallerSetupCommand(
 
     # Create installer command
     installer_cmd = [installer_file]
-    if installer_type == config.installer_format_inno:
+    if installer_type == config.installer_type_inno:
         if silent_install:
             installer_cmd += inno_setup_silent_params
         installer_cmd += inno_setup_normal_params
         if install_dir:
             installer_cmd = ["/DIR=%s" % install_dir]
-    elif installer_type == config.installer_format_nsis:
+    elif installer_type == config.installer_type_nsis:
         if silent_install:
             installer_cmd += ["/S"]
         if install_dir:
             installer_cmd += ["/D=%s" % install_dir]
-    elif installer_type == config.installer_format_7zip:
+    elif installer_type == config.installer_type_7zip:
         if silent_install:
             installer_cmd += ["-y"]
         if install_dir:
             installer_cmd += ["-o%s" % install_dir]
-    elif installer_type == config.installer_format_winrar:
+    elif installer_type == config.installer_type_winrar:
         if silent_install:
             installer_cmd += ["-s2"]
         if install_dir:
@@ -156,7 +156,7 @@ def RunWindowsInstallers(
             game_installer_type = installer_type
 
         # Get setup command
-        if game_installer_type in [config.installer_format_7zip, config.installer_format_winrar]:
+        if game_installer_type in [config.installer_type_7zip, config.installer_type_winrar]:
             install_name = metadata.ConvertMetadataNameToRegularName(system.GetFilenameBasename(windows_program))
             program_setup_cmd = GetInstallerSetupCommand(
                 installer_file = windows_program,

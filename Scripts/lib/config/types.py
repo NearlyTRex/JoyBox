@@ -102,10 +102,10 @@ message_type_get_text = "get_text"
 message_type_get_file = "get_file"
 message_type_get_folder = "get_folder"
 
-# Installer formats
-installer_format_inno = "inno"
-installer_format_nsis = "nsis"
-installer_format_ins = "installshield"
-installer_format_7zip = "7zip"
-installer_format_winrar = "winrar"
-installer_format_unknown = "unknown"
+# Installer types
+installer_type_inno = "inno"
+installer_type_nsis = "nsis"
+installer_type_ins = "installshield"
+installer_type_7zip = "7zip"
+installer_type_winrar = "winrar"
+installer_type_unknown = "unknown"
