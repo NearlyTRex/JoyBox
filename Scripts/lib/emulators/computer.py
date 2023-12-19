@@ -654,17 +654,17 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Get launch info
         launch_info = jsoncommon.ParseComputerJson(launch_file)
-        launch_info_sandbox = launch_info[config.computer_key_sandbox]
-        launch_info_wine_setup = launch_info_sandbox[config.computer_key_sandbox_wine]
-        launch_info_sandboxie_setup = launch_info_sandbox[config.computer_key_sandbox_sandboxie]
-        launch_info_sync = launch_info[config.computer_key_sync]
-        launch_info_sync_search = system.NormalizeFilePath(launch_info_sync[config.computer_key_sync_search])
-        launch_info_sync_data = launch_info_sync[config.computer_key_sync_data]
-        launch_info_winver = launch_info[config.computer_key_winver]
-        launch_info_is_32_bit = launch_info[config.computer_key_is_32_bit]
-        launch_info_is_dos = launch_info[config.computer_key_is_dos]
-        launch_info_is_win31 = launch_info[config.computer_key_is_win31]
-        launch_info_is_scumm = launch_info[config.computer_key_is_scumm]
+        launch_info_sandbox = launch_info[config.json_key_sandbox]
+        launch_info_wine_setup = launch_info_sandbox[config.json_key_sandbox_wine]
+        launch_info_sandboxie_setup = launch_info_sandbox[config.json_key_sandbox_sandboxie]
+        launch_info_sync = launch_info[config.json_key_sync]
+        launch_info_sync_search = system.NormalizeFilePath(launch_info_sync[config.json_key_sync_search])
+        launch_info_sync_data = launch_info_sync[config.json_key_sync_data]
+        launch_info_winver = launch_info[config.json_key_winver]
+        launch_info_is_32_bit = launch_info[config.json_key_is_32_bit]
+        launch_info_is_dos = launch_info[config.json_key_is_dos]
+        launch_info_is_win31 = launch_info[config.json_key_is_win31]
+        launch_info_is_scumm = launch_info[config.json_key_is_scumm]
 
         # Install game to cache
         cache.InstallGameToCache(
@@ -784,9 +784,9 @@ class Computer(emulatorbase.EmulatorBase):
                 json_file = launch_file,
                 base_dir = dos_c_drive,
                 default_cwd = dos_c_drive,
-                key_exe_list = config.computer_key_main_game_dos_exe,
-                key_exe_cwd_dict = config.computer_key_main_game_dos_exe_cwd,
-                key_exe_args_dict = config.computer_key_main_game_dos_exe_args)
+                key_exe_list = config.json_key_main_game_dos_exe,
+                key_exe_cwd_dict = config.json_key_main_game_dos_exe_cwd,
+                key_exe_args_dict = config.json_key_main_game_dos_exe_args)
             if selected_cmd:
                 launch_info_cmd = GetDosLaunchCommand(
                     prefix_dir = launch_save_dir,
@@ -810,9 +810,9 @@ class Computer(emulatorbase.EmulatorBase):
                 json_file = launch_file,
                 base_dir = dos_c_drive,
                 default_cwd = dos_c_drive,
-                key_exe_list = config.computer_key_main_game_win31_exe,
-                key_exe_cwd_dict = config.computer_key_main_game_win31_exe_cwd,
-                key_exe_args_dict = config.computer_key_main_game_win31_exe_args)
+                key_exe_list = config.json_key_main_game_win31_exe,
+                key_exe_cwd_dict = config.json_key_main_game_win31_exe_cwd,
+                key_exe_args_dict = config.json_key_main_game_win31_exe_args)
             if selected_cmd:
                 launch_info_cmd = GetWin31LaunchCommand(
                     prefix_dir = launch_save_dir,
@@ -852,9 +852,9 @@ class Computer(emulatorbase.EmulatorBase):
                 json_file = launch_file,
                 base_dir = prefix_c_drive,
                 default_cwd = launch_general_save_dir,
-                key_exe_list = config.computer_key_main_game_exe,
-                key_exe_cwd_dict = config.computer_key_main_game_exe_cwd,
-                key_exe_args_dict = config.computer_key_main_game_exe_args)
+                key_exe_list = config.json_key_main_game_exe,
+                key_exe_cwd_dict = config.json_key_main_game_exe_cwd,
+                key_exe_args_dict = config.json_key_main_game_exe_args)
             launch_info_cmd = [launch_info_cmd_str] + launch_info_args
             launch_program = command.GetStarterCommand(launch_info_cmd_str)
             blocking_processes = sandbox.GetBlockingProcesses(

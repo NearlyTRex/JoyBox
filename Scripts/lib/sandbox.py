@@ -566,12 +566,12 @@ def SetupPrefixEnvironment(
         wine_setup_overrides = {}
         wine_setup_use_dxvk = False
         wine_setup_use_vkd3d = False
-        if config.computer_key_sandbox_wine_overrides in new_options.wine_setup:
-            wine_setup_overrides = new_options.wine_setup[config.computer_key_sandbox_wine_overrides]
-        if config.computer_key_sandbox_wine_use_dxvk in new_options.wine_setup:
-            wine_setup_use_dxvk = new_options.wine_setup[config.computer_key_sandbox_wine_use_dxvk]
-        if config.computer_key_sandbox_wine_use_vkd3d in new_options.wine_setup:
-            wine_setup_use_vkd3d = new_options.wine_setup[config.computer_key_sandbox_wine_use_vkd3d]
+        if config.json_key_sandbox_wine_overrides in new_options.wine_setup:
+            wine_setup_overrides = new_options.wine_setup[config.json_key_sandbox_wine_overrides]
+        if config.json_key_sandbox_wine_use_dxvk in new_options.wine_setup:
+            wine_setup_use_dxvk = new_options.wine_setup[config.json_key_sandbox_wine_use_dxvk]
+        if config.json_key_sandbox_wine_use_vkd3d in new_options.wine_setup:
+            wine_setup_use_vkd3d = new_options.wine_setup[config.json_key_sandbox_wine_use_vkd3d]
 
         # Set dxvk options
         if wine_setup_use_dxvk:
@@ -739,12 +739,12 @@ def CreateWinePrefix(
     wine_setup_tricks = {}
     wine_setup_use_dxvk = False
     wine_setup_use_vkd3d = False
-    if config.computer_key_sandbox_wine_tricks in wine_setup:
-        wine_setup_tricks = wine_setup[config.computer_key_sandbox_wine_tricks]
-    if config.computer_key_sandbox_wine_use_dxvk in wine_setup:
-        wine_setup_use_dxvk = wine_setup[config.computer_key_sandbox_wine_use_dxvk]
-    if config.computer_key_sandbox_wine_use_vkd3d in wine_setup:
-        wine_setup_use_vkd3d = wine_setup[config.computer_key_sandbox_wine_use_vkd3d]
+    if config.json_key_sandbox_wine_tricks in wine_setup:
+        wine_setup_tricks = wine_setup[config.json_key_sandbox_wine_tricks]
+    if config.json_key_sandbox_wine_use_dxvk in wine_setup:
+        wine_setup_use_dxvk = wine_setup[config.json_key_sandbox_wine_use_dxvk]
+    if config.json_key_sandbox_wine_use_vkd3d in wine_setup:
+        wine_setup_use_vkd3d = wine_setup[config.json_key_sandbox_wine_use_vkd3d]
 
     # Get list of winetricks
     winetricks = []

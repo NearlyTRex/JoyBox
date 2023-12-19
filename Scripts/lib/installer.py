@@ -388,24 +388,24 @@ def InstallComputerGame(json_file, output_image, keep_setup_files = False, verbo
     game_info_base_name = game_info[config.json_key_base_name]
     game_info_category = game_info[config.json_key_category]
     game_info_subcategory = game_info[config.json_key_subcategory]
-    game_info_installer_type = game_info[config.computer_key_installer_type]
-    game_info_disc_type = game_info[config.computer_key_disc_type]
-    game_info_installer_exe_list = game_info[config.computer_key_installer_exe]
-    game_info_installer_dos_exe_list = game_info[config.computer_key_installer_dos_exe]
+    game_info_installer_type = game_info[config.json_key_installer_type]
+    game_info_disc_type = game_info[config.json_key_disc_type]
+    game_info_installer_exe_list = game_info[config.json_key_installer_exe]
+    game_info_installer_dos_exe_list = game_info[config.json_key_installer_dos_exe]
     game_info_dependencies_list = game_info[config.json_key_dependencies]
     game_info_dlc_list = game_info[config.json_key_dlc]
     game_info_update_list = game_info[config.json_key_update]
-    game_info_sandbox = game_info[config.computer_key_sandbox]
-    game_info_wine_setup = game_info_sandbox[config.computer_key_sandbox_wine]
-    game_info_sandboxie_setup = game_info_sandbox[config.computer_key_sandbox_sandboxie]
-    game_info_registry = game_info[config.computer_key_registry]
-    game_info_keep_setup_registry = game_info_registry[config.computer_key_registry_keep_setup]
-    game_info_setup_registry_keys = game_info_registry[config.computer_key_registry_setup_keys]
-    game_info_steps = game_info[config.computer_key_steps]
-    game_info_winver = game_info[config.computer_key_winver]
-    game_info_is_dos = game_info[config.computer_key_is_dos]
-    game_info_is_win31 = game_info[config.computer_key_is_win31]
-    game_info_is_scumm = game_info[config.computer_key_is_scumm]
+    game_info_sandbox = game_info[config.json_key_sandbox]
+    game_info_wine_setup = game_info_sandbox[config.json_key_sandbox_wine]
+    game_info_sandboxie_setup = game_info_sandbox[config.json_key_sandbox_sandboxie]
+    game_info_registry = game_info[config.json_key_registry]
+    game_info_keep_setup_registry = game_info_registry[config.json_key_registry_keep_setup]
+    game_info_setup_registry_keys = game_info_registry[config.json_key_registry_setup_keys]
+    game_info_steps = game_info[config.json_key_steps]
+    game_info_winver = game_info[config.json_key_winver]
+    game_info_is_dos = game_info[config.json_key_is_dos]
+    game_info_is_win31 = game_info[config.json_key_is_win31]
+    game_info_is_scumm = game_info[config.json_key_is_scumm]
 
     # Get game rom dir
     game_rom_dir = environment.GetRomDir(game_info_category, game_info_subcategory, game_info_base_name)
@@ -510,7 +510,7 @@ def InstallComputerGame(json_file, output_image, keep_setup_files = False, verbo
 
     # Run pre-install steps
     RunSetupSteps(
-        steps = game_info_steps[config.computer_key_steps_preinstall],
+        steps = game_info_steps[config.json_key_steps_preinstall],
         setup_base_dir = game_setup_dir,
         hdd_base_dir = prefix_c_drive_real,
         disc_base_dir = game_setup_dir,
@@ -572,7 +572,7 @@ def InstallComputerGame(json_file, output_image, keep_setup_files = False, verbo
 
     # Run post-install steps
     RunSetupSteps(
-        steps = game_info_steps[config.computer_key_steps_postinstall],
+        steps = game_info_steps[config.json_key_steps_postinstall],
         setup_base_dir = game_setup_dir,
         hdd_base_dir = prefix_c_drive_real,
         disc_base_dir = game_setup_dir,

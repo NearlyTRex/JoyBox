@@ -100,7 +100,7 @@ def main():
 
                 # Computer
                 if game_category == config.game_category_computer:
-                    SetJsonValue(config.computer_key_installer_exe, computer_installers)
+                    SetJsonValue(config.json_key_installer_exe, computer_installers)
                     SetJsonValue(config.json_key_dlc, computer_dlc_installers)
                     SetJsonValue(config.json_key_update, computer_update_installers)
                     SetJsonValue(config.json_key_extra, computer_extras)

@@ -76,14 +76,14 @@ def ParseComputerJson(json_file, verbose = False, exit_on_failure = False):
     json_data = ParseGeneralJson(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Fill gaps
-    SetDefaultSubValue(json_data, config.computer_key_sandbox, config.computer_key_sandbox_sandboxie, {})
-    SetDefaultSubValue(json_data, config.computer_key_sandbox, config.computer_key_sandbox_wine, {})
-    SetDefaultSubValue(json_data, config.computer_key_steps, config.computer_key_steps_preinstall, [])
-    SetDefaultSubValue(json_data, config.computer_key_steps, config.computer_key_steps_postinstall, [])
-    SetDefaultSubValue(json_data, config.computer_key_sync, config.computer_key_sync_search, "")
-    SetDefaultSubValue(json_data, config.computer_key_sync, config.computer_key_sync_data, [])
-    SetDefaultSubValue(json_data, config.computer_key_registry, config.computer_key_registry_keep_setup, False)
-    SetDefaultSubValue(json_data, config.computer_key_registry, config.computer_key_registry_setup_keys, [])
+    SetDefaultSubValue(json_data, config.json_key_sandbox, config.json_key_sandbox_sandboxie, {})
+    SetDefaultSubValue(json_data, config.json_key_sandbox, config.json_key_sandbox_wine, {})
+    SetDefaultSubValue(json_data, config.json_key_steps, config.json_key_steps_preinstall, [])
+    SetDefaultSubValue(json_data, config.json_key_steps, config.json_key_steps_postinstall, [])
+    SetDefaultSubValue(json_data, config.json_key_sync, config.json_key_sync_search, "")
+    SetDefaultSubValue(json_data, config.json_key_sync, config.json_key_sync_data, [])
+    SetDefaultSubValue(json_data, config.json_key_registry, config.json_key_registry_keep_setup, False)
+    SetDefaultSubValue(json_data, config.json_key_registry, config.json_key_registry_setup_keys, [])
 
     # Return json
     return json_data

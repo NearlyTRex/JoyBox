@@ -51,40 +51,40 @@ json_key_extra = "extra"
 json_key_dependencies = "dependencies"
 
 # Computer json keys
-computer_key_installer_exe = "installer_exe"
-computer_key_installer_dos_exe = "installer_dos_exe"
-computer_key_installer_type = "installer_type"
-computer_key_disc_type = "disc_type"
-computer_key_main_game_exe = "main_game_exe"
-computer_key_main_game_exe_cwd = "main_game_exe_cwd"
-computer_key_main_game_exe_args = "main_game_exe_args"
-computer_key_main_game_dos_exe = "main_game_dos_exe"
-computer_key_main_game_dos_exe_cwd = "main_game_dos_exe_cwd"
-computer_key_main_game_dos_exe_args = "main_game_dos_exe_args"
-computer_key_main_game_win31_exe = "main_game_win31_exe"
-computer_key_main_game_win31_exe_cwd = "main_game_win31_exe_cwd"
-computer_key_main_game_win31_exe_args = "main_game_win31_exe_args"
-computer_key_sandbox = "sandbox"
-computer_key_sandbox_sandboxie = "sandboxie"
-computer_key_sandbox_wine = "wine"
-computer_key_sandbox_wine_tricks = "tricks"
-computer_key_sandbox_wine_overrides = "overrides"
-computer_key_sandbox_wine_use_dxvk = "use_dxvk"
-computer_key_sandbox_wine_use_vkd3d = "use_vkd3d"
-computer_key_steps = "steps"
-computer_key_steps_preinstall = "preinstall"
-computer_key_steps_postinstall = "postinstall"
-computer_key_sync = "sync"
-computer_key_sync_search = "search"
-computer_key_sync_data = "data"
-computer_key_registry = "registry"
-computer_key_registry_keep_setup = "keep_setup"
-computer_key_registry_setup_keys = "setup_keys"
-computer_key_winver = "winver"
-computer_key_is_32_bit = "is_32_bit"
-computer_key_is_dos = "is_dos"
-computer_key_is_win31 = "is_win31"
-computer_key_is_scumm = "is_scumm"
+json_key_installer_exe = "installer_exe"
+json_key_installer_dos_exe = "installer_dos_exe"
+json_key_installer_type = "installer_type"
+json_key_disc_type = "disc_type"
+json_key_main_game_exe = "main_game_exe"
+json_key_main_game_exe_cwd = "main_game_exe_cwd"
+json_key_main_game_exe_args = "main_game_exe_args"
+json_key_main_game_dos_exe = "main_game_dos_exe"
+json_key_main_game_dos_exe_cwd = "main_game_dos_exe_cwd"
+json_key_main_game_dos_exe_args = "main_game_dos_exe_args"
+json_key_main_game_win31_exe = "main_game_win31_exe"
+json_key_main_game_win31_exe_cwd = "main_game_win31_exe_cwd"
+json_key_main_game_win31_exe_args = "main_game_win31_exe_args"
+json_key_sandbox = "sandbox"
+json_key_sandbox_sandboxie = "sandboxie"
+json_key_sandbox_wine = "wine"
+json_key_sandbox_wine_tricks = "tricks"
+json_key_sandbox_wine_overrides = "overrides"
+json_key_sandbox_wine_use_dxvk = "use_dxvk"
+json_key_sandbox_wine_use_vkd3d = "use_vkd3d"
+json_key_steps = "steps"
+json_key_steps_preinstall = "preinstall"
+json_key_steps_postinstall = "postinstall"
+json_key_sync = "sync"
+json_key_sync_search = "search"
+json_key_sync_data = "data"
+json_key_registry = "registry"
+json_key_registry_keep_setup = "keep_setup"
+json_key_registry_setup_keys = "setup_keys"
+json_key_winver = "winver"
+json_key_is_32_bit = "is_32_bit"
+json_key_is_dos = "is_dos"
+json_key_is_win31 = "is_win31"
+json_key_is_scumm = "is_scumm"
 
 # Json list keys
 json_keys_list_keys = [
@@ -97,37 +97,37 @@ json_keys_list_keys = [
     json_key_dependencies,
 
     # Computer
-    computer_key_installer_exe,
-    computer_key_installer_dos_exe,
-    computer_key_main_game_exe,
-    computer_key_main_game_dos_exe,
-    computer_key_main_game_win31_exe
+    json_key_installer_exe,
+    json_key_installer_dos_exe,
+    json_key_main_game_exe,
+    json_key_main_game_dos_exe,
+    json_key_main_game_win31_exe
 ]
 
 # Json dictionary keys
 json_keys_dict_keys = [
 
     # Computer
-    computer_key_main_game_exe_cwd,
-    computer_key_main_game_exe_args,
-    computer_key_main_game_dos_exe_cwd,
-    computer_key_main_game_dos_exe_args,
-    computer_key_main_game_win31_exe_cwd,
-    computer_key_main_game_win31_exe_args,
-    computer_key_sandbox,
-    computer_key_steps,
-    computer_key_sync,
-    computer_key_registry
+    json_key_main_game_exe_cwd,
+    json_key_main_game_exe_args,
+    json_key_main_game_dos_exe_cwd,
+    json_key_main_game_dos_exe_args,
+    json_key_main_game_win31_exe_cwd,
+    json_key_main_game_win31_exe_args,
+    json_key_sandbox,
+    json_key_steps,
+    json_key_sync,
+    json_key_registry
 ]
 
 # Json bool keys
 json_keys_bool_keys = [
 
     # Computer
-    computer_key_is_32_bit,
-    computer_key_is_dos,
-    computer_key_is_win31,
-    computer_key_is_scumm
+    json_key_is_32_bit,
+    json_key_is_dos,
+    json_key_is_win31,
+    json_key_is_scumm
 ]
 
 # Json string keys
@@ -148,9 +148,9 @@ json_keys_str_keys = [
     json_key_platform,
 
     # Computer
-    computer_key_installer_type,
-    computer_key_disc_type,
-    computer_key_winver
+    json_key_installer_type,
+    json_key_disc_type,
+    json_key_winver
 ]
 
 # Filter keys
