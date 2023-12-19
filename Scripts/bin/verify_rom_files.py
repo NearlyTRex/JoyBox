@@ -13,6 +13,7 @@ import environment
 import system
 import metadata
 import hashing
+import jsoncommon
 import setup
 import ini
 
@@ -68,42 +69,25 @@ def main():
                     continue
 
                 # Read json file
-                json_file_data = system.ReadJsonFile(
-                    src = json_file_path,
+                json_data = jsoncommon.ParseGeneralJson(
+                    json_file = json_file_path,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
 
                 # Get json info
-                json_file_list = None
-                json_launch_file = None
-                json_transform_file = None
-                if config.json_key_files in json_file_data:
-                    json_file_list = json_file_data[config.json_key_files]
-                if config.json_key_launch_file in json_file_data:
-                    json_launch_file = json_file_data[config.json_key_launch_file]
-                if config.json_key_transform_file in json_file_data:
-                    json_transform_file = json_file_data[config.json_key_transform_file]
+                json_file_list = json_data[config.json_key_files]
+                json_launch_file = json_data[config.json_key_launch_file]
+                json_transform_file = json_data[config.json_key_transform_file]
 
                 # Files to check
                 files_to_check = []
 
-                # Add file lists
-                if isinstance(json_file_list, list):
-                    files_to_check += json_file_list
-
-                # Add launch files
-                if json_launch_file and not json_transform_file:
-                    if isinstance(json_launch_file, list):
-                        files_to_check += json_launch_file
-                    elif isinstance(json_launch_file, str):
-                        files_to_check += [json_launch_file]
-
-                # Add transform files
-                if json_launch_file and json_transform_file:
-                    if isinstance(json_transform_file, list):
-                        files_to_check += json_transform_file
-                    elif isinstance(json_transform_file, str):
-                        files_to_check += [json_transform_file]
+                # Add files
+                files_to_check += json_file_list
+                if len(json_transform_file):
+                    files_to_check += json_transform_file
+                else:
+                    files_to_check += json_launch_file
 
                 # Each of these files should exist
                 for file_to_check in files_to_check:

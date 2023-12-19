@@ -32,19 +32,19 @@ metadata_key_screenshot = "screenshot"
 metadata_key_video = "video"
 
 # General json keys
-json_key_files = "files"
 json_key_launch_name = "launch_name"
 json_key_launch_file = "launch_file"
 json_key_launch_dir = "launch_dir"
 json_key_transform_file = "transform_file"
-json_key_cache_source_file = "cache_source_file"
-json_key_cache_source_dir = "cache_source_dir"
+json_key_source_file = "source_file"
+json_key_source_dir = "source_dir"
 json_key_base_name = "base_name"
 json_key_regular_name = "regular_name"
 json_key_supercategory = "supercategory"
 json_key_category = "category"
 json_key_subcategory = "subcategory"
 json_key_platform = "platform"
+json_key_files = "files"
 json_key_dlc = "dlc"
 json_key_update = "update"
 json_key_extra = "extra"
@@ -86,10 +86,33 @@ json_key_is_dos = "is_dos"
 json_key_is_win31 = "is_win31"
 json_key_is_scumm = "is_scumm"
 
+# Json string keys
+json_keys_str_keys = [
+
+    # General
+    json_key_launch_name,
+    json_key_launch_dir,
+    json_key_source_dir,
+    json_key_base_name,
+    json_key_regular_name,
+    json_key_supercategory,
+    json_key_category,
+    json_key_subcategory,
+    json_key_platform,
+
+    # Computer
+    json_key_installer_type,
+    json_key_disc_type,
+    json_key_winver
+]
+
 # Json list keys
 json_keys_list_keys = [
 
     # General
+    json_key_launch_file,
+    json_key_transform_file,
+    json_key_source_file,
     json_key_files,
     json_key_dlc,
     json_key_update,
@@ -128,29 +151,6 @@ json_keys_bool_keys = [
     json_key_is_dos,
     json_key_is_win31,
     json_key_is_scumm
-]
-
-# Json string keys
-json_keys_str_keys = [
-
-    # General
-    json_key_launch_name,
-    json_key_launch_file,
-    json_key_launch_dir,
-    json_key_transform_file,
-    json_key_cache_source_file,
-    json_key_cache_source_dir,
-    json_key_base_name,
-    json_key_regular_name,
-    json_key_supercategory,
-    json_key_category,
-    json_key_subcategory,
-    json_key_platform,
-
-    # Computer
-    json_key_installer_type,
-    json_key_disc_type,
-    json_key_winver
 ]
 
 # Filter keys

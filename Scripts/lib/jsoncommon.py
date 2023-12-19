@@ -47,24 +47,13 @@ def ParseGeneralJson(json_file, verbose = False, exit_on_failure = False):
     for key in config.json_keys_str_keys:
         SetDefaultValue(json_data, key, None)
 
-    # Get potential cache source info
-    potential_cache_source_name = json_data[config.json_key_launch_name]
-    potential_cache_source_file = json_data[config.json_key_launch_file]
-    potential_cache_transform_file = json_data[config.json_key_transform_file]
-
-    # Derive actual cache source
-    cache_source_file = ""
-    cache_source_dir = environment.GetRomDir(json_category, json_subcategory, json_base_name)
-    if potential_cache_source_file:
-        cache_source_file = os.path.join(cache_source_dir, potential_cache_source_file)
-    if potential_cache_transform_file:
-        cache_source_file = os.path.join(cache_source_dir, potential_cache_transform_file)
-    if potential_cache_source_name and len(source_file) == 0:
-        cache_source_file = os.path.join(cache_source_dir, potential_cache_source_name)
-
-    # Set cache source
-    json_data[config.json_key_cache_source_file] = cache_source_file
-    json_data[config.json_key_cache_source_dir] = cache_source_dir
+    # Upcast list keys if they are strings
+    for key in config.json_keys_list_keys:
+        if isinstance(json_data[key], str):
+            if json_data[key]:
+                json_data[key] = [json_data[key]]
+            else:
+                json_data[key] = []
 
     # Return json
     return json_data
