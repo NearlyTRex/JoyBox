@@ -69,7 +69,7 @@ def main():
                     continue
 
                 # Read json file
-                json_data = jsoncommon.ParseGeneralJson(
+                json_data = jsoncommon.ParseGameJson(
                     json_file = json_file_path,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)

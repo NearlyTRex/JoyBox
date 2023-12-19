@@ -8,6 +8,7 @@ import cache
 import system
 import metadata
 import environment
+import jsoncommon
 import gui
 
 # Simple generic launcher
@@ -38,32 +39,19 @@ def SimpleLaunch(
     cache_dir = environment.GetCachedRomDir(launch_category, launch_subcategory, launch_name)
 
     # Get json info
-    json_file_path = environment.GetJsonRomMetadataFile(
-        game_category = launch_category,
-        game_subcategory = launch_subcategory,
-        game_name = launch_name)
-    json_file_data = system.ReadJsonFile(
-        src = json_file_path,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-
-    # Get json launch info
-    json_launch_name = None
-    json_launch_file = None
-    if config.json_key_launch_name in json_file_data:
-        json_launch_name = json_file_data[config.json_key_launch_name]
-    if config.json_key_launch_file in json_file_data:
-        json_launch_file = json_file_data[config.json_key_launch_file]
+    json_data = jsoncommon.ParseGameJson(launch_file, verbose = verbose, exit_on_failure = exit_on_failure)
+    json_launch_name = json_data[config.json_key_launch_name]
+    json_launch_file = json_data[config.json_key_launch_file]
 
     # Selected launch file
     selected_launch_file = ""
 
     # Single choice
-    if isinstance(json_launch_file, str):
-        selected_launch_file = json_launch_file
+    if isinstance(json_launch_file, list) and len(json_launch_file) == 1:
+        selected_launch_file = json_launch_file[0]
 
     # More than one potential choice
-    elif isinstance(json_launch_file, list):
+    elif isinstance(json_launch_file, list) and len(json_launch_file) > 1:
 
         # Handle game selection
         def HandleGameSelection(selected_file):

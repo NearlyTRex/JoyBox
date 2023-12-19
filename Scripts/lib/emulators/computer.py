@@ -312,13 +312,13 @@ def GetSelectedLaunchInfo(
     key_exe_cwd_dict,
     key_exe_args_dict):
 
-    # Get original game json
-    game_json_data = system.ReadJsonFile(json_file)
+    # Get json info
+    json_data = jsoncommon.ParseGameJson(json_file)
 
     # Get game exe list
     game_exe_list = []
-    if key_exe_list in game_json_data:
-        json_value = game_json_data[key_exe_list]
+    if key_exe_list in json_data:
+        json_value = json_data[key_exe_list]
         if isinstance(json_value, str):
             game_exe_list = [json_value]
         elif isinstance(json_value, list):
@@ -327,10 +327,10 @@ def GetSelectedLaunchInfo(
     # Get cwd and arg dicts
     game_exe_cwds = {}
     game_exe_args = {}
-    if key_exe_cwd_dict in game_json_data:
-        game_exe_cwds = game_json_data[key_exe_cwd_dict]
-    if key_exe_args_dict in game_json_data:
-        game_exe_args = game_json_data[key_exe_args_dict]
+    if key_exe_cwd_dict in json_data:
+        game_exe_cwds = json_data[key_exe_cwd_dict]
+    if key_exe_args_dict in json_data:
+        game_exe_args = json_data[key_exe_args_dict]
 
     # No existing entries
     if len(game_exe_list) == 0:
@@ -364,9 +364,9 @@ def GetSelectedLaunchInfo(
         game_exe_list = runnable_files_likely
 
         # Try to record this for later
-        game_json_data[key_exe_list] = runnable_files_likely
-        game_json_data[key_exe_cwd_dict] = runnable_files_cwds
-        system.WriteJsonFile(json_file, game_json_data)
+        json_data[key_exe_list] = runnable_files_likely
+        json_data[key_exe_cwd_dict] = runnable_files_cwds
+        system.WriteJsonFile(json_file, json_data)
 
     # Get launch info
     def GetLaunchInfo(game_exe):
@@ -653,7 +653,7 @@ class Computer(emulatorbase.EmulatorBase):
         launch_supercategory, launch_category, launch_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(launch_platform)
 
         # Get launch info
-        launch_info = jsoncommon.ParseComputerJson(launch_file)
+        launch_info = jsoncommon.ParseGameJson(launch_file)
         launch_info_sandbox = launch_info[config.json_key_sandbox]
         launch_info_wine_setup = launch_info_sandbox[config.json_key_sandbox_wine]
         launch_info_sandboxie_setup = launch_info_sandbox[config.json_key_sandbox_sandboxie]

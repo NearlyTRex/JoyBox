@@ -11,6 +11,7 @@ import metadata
 import transform
 import addon
 import platforms
+import jsoncommon
 import gui
 
 # Check if game file is in cache already
@@ -52,38 +53,20 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
     game_supercategory, game_category, game_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(game_platform)
 
     # Get json info
-    json_file_data = system.ReadJsonFile(game_file, verbose = verbose, exit_on_failure = exit_on_failure)
-    json_launch_name = None
-    if config.json_key_launch_name in json_file_data:
-        json_launch_name = json_file_data[config.json_key_launch_name]
-    json_launch_file = None
-    if config.json_key_launch_file in json_file_data:
-        json_launch_file = json_file_data[config.json_key_launch_file]
-    json_transform_file = None
-    if config.json_key_transform_file in json_file_data:
-        json_transform_file = json_file_data[config.json_key_transform_file]
-
-    # Get source info
-    source_dir = environment.GetRomDir(game_category, game_subcategory, game_name)
-    source_file = ""
-    if json_launch_file:
-        source_file = os.path.join(source_dir, json_launch_file)
-    if json_transform_file:
-        source_file = os.path.join(source_dir, json_transform_file)
-    if json_launch_name and len(source_file) == 0:
-        source_file = os.path.join(source_dir, json_launch_name)
+    json_data = jsoncommon.ParseGameJson(game_file, verbose = verbose, exit_on_failure = exit_on_failure)
+    json_source_file = json_data[config.json_key_source_file]
+    json_source_dir = json_data[config.json_key_source_dir]
 
     # Check if source files are available
-    if json_launch_name and source_file.endswith(json_launch_name):
-        if not os.path.isdir(source_dir):
-            gui.DisplayErrorPopup(
-                title_text = "Source dir unavailable",
-                message_text = "Source dir is not available\n%s\n%s" % (game_name, game_platform))
-    else:
-        if not os.path.isfile(source_file):
-            gui.DisplayErrorPopup(
-                title_text = "Source file unavailable",
-                message_text = "Source file is not available\n%s\n%s" % (game_name, game_platform))
+    files_available = False
+    if len(json_source_file) and os.path.isfile(json_source_file):
+        files_available = True
+    elif len(json_source_dir) and os.path.isdir(json_source_dir):
+        files_available = True
+    if not files_available:
+        gui.DisplayErrorPopup(
+            title_text = "Source files unavailable",
+            message_text = "Source files are not available\n%s\n%s" % (game_name, game_platform))
 
     # Check if transformation is required
     if platforms.AreTransformsRequired(game_platform):
@@ -93,7 +76,7 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
             return AddTransformedGameToCache(
                 game_platform = game_platform,
                 game_name = game_name,
-                game_file = source_file,
+                game_file = json_source_file,
                 json_file = game_file,
                 keep_setup_files = keep_setup_files,
                 verbose = verbose,
@@ -111,7 +94,7 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
             return AddGameToCache(
                 game_platform = game_platform,
                 game_name = game_name,
-                game_file = source_file,
+                game_file = json_source_file,
                 json_file = game_file,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

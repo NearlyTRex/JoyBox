@@ -9,6 +9,7 @@ import environment
 import metadata
 import platforms
 import programs
+import jsoncommon
 
 # Install addons
 def InstallAddons(
@@ -22,24 +23,19 @@ def InstallAddons(
     if not platforms.AreAddonsPossible(game_platform):
         return True
 
-    # Get categories
-    game_supercategory, game_category, game_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(game_platform)
-
     # Get json info
-    json_file_data = system.ReadJsonFile(
-        src = json_file,
+    json_data = jsoncommon.ParseGameJson(
+        json_file = json_file,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
     # Get directories
     source_dlc_dirs = []
     source_update_dirs = []
-    if config.json_key_dlc in json_file_data:
-        if isinstance(json_file_data[config.json_key_dlc], str):
-            source_dlc_dirs += [os.path.join(environment.GetDLCRootDir(), json_file_data[config.json_key_dlc])]
-    if config.json_key_update in json_file_data:
-        if isinstance(json_file_data[config.json_key_update], str):
-            source_update_dirs += [os.path.join(environment.GetUpdateRootDir(), json_file_data[config.json_key_update])]
+    for filename in json_data[config.json_key_dlc]:
+        source_dlc_dirs += [os.path.join(environment.GetDLCRootDir(), filename)]
+    for filename in json_data[config.json_key_update]:
+        source_update_dirs += [os.path.join(environment.GetUpdateRootDir(), filename)]
 
     # Install add-ons
     for emulator in programs.GetEmulators():
@@ -49,4 +45,3 @@ def InstallAddons(
                 update_dirs = source_update_dirs,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            break
