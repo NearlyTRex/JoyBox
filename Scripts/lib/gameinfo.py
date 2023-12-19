@@ -7,16 +7,7 @@ import config
 import system
 import environment
 import metadata
-
-# Set default value
-def SetDefaultValue(dict_var, dict_key, default_value):
-    if dict_key not in dict_var:
-        dict_var[dict_key] = default_value
-
-# Set default sub-value
-def SetDefaultSubValue(dict_var, dict_key, dict_subkey, default_subvalue):
-    if dict_key in dict_var and dict_subkey not in dict_var[dict_key]:
-        dict_var[dict_key][dict_subkey] = default_subvalue
+import platforms
 
 # Parse game json
 def ParseGameJson(json_file, verbose = False, exit_on_failure = False):
@@ -30,6 +21,16 @@ def ParseGameJson(json_file, verbose = False, exit_on_failure = False):
     json_regular_name = metadata.ConvertMetadataNameToRegularName(json_base_name)
     json_supercategory, json_category, json_subcategory = metadata.DeriveMetadataCategoriesFromFile(json_file)
     json_platform = metadata.DeriveMetadataPlatform(json_category, json_subcategory)
+
+    # Set default value
+    def SetDefaultValue(dict_var, dict_key, default_value):
+        if dict_key not in dict_var:
+            dict_var[dict_key] = default_value
+
+    # Set default sub-value
+    def SetDefaultSubValue(dict_var, dict_key, dict_subkey, default_subvalue):
+        if dict_key in dict_var and dict_subkey not in dict_var[dict_key]:
+            dict_var[dict_key][dict_subkey] = default_subvalue
 
     # Fill gaps
     SetDefaultValue(json_data, config.json_key_base_name, json_base_name)

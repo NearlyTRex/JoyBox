@@ -1,12 +1,10 @@
 # Imports
-import os
-import os.path
+import os, os.path
 import sys
 import re
 import urllib.parse
 import datetime
 import time
-import pathlib
 import textwrap
 import random
 
@@ -16,7 +14,6 @@ import system
 import webpage
 import platforms
 import environment
-import network
 
 # General metadata class
 class Metadata:
@@ -55,8 +52,8 @@ class Metadata:
         potential_platforms = []
         for platform in self.game_database.keys():
             only_launchable = GetFilterOption(filter_options, config.filter_key_launchable_only)
-            no_launcher_set = platforms.HasNoLauncher(platform)
-            if only_launchable and no_launcher_set:
+            not_launchable = platforms.HasNoLauncher(platform)
+            if only_launchable and not_launchable:
                 continue
             potential_platforms.append(platform)
         return sorted(potential_platforms)
@@ -65,7 +62,14 @@ class Metadata:
     def get_sorted_names(self, game_platform, filter_options = {}):
         if not game_platform in self.game_database:
             return []
-        return sorted(self.game_database[game_platform].keys())
+        potential_names = []
+        for name in self.game_database[game_platform].keys():
+            only_launchable = GetFilterOption(filter_options, config.filter_key_launchable_only)
+            not_launchable = self.game_database[game_platform][name][config.metadata_key_playable] == "No"
+            if only_launchable and not_launchable:
+                continue
+            potential_names.append(name)
+        return sorted(potential_names)
 
     # Get all sorted names
     def get_all_sorted_names(self, filter_options = {}):
@@ -192,6 +196,7 @@ class Metadata:
             game_entry[config.metadata_key_video] = rom_video
             game_entry[config.metadata_key_players] = "1"
             game_entry[config.metadata_key_coop] = "No"
+            game_entry[config.metadata_key_playable] = "Yes"
             self.add_game(game_entry)
 
     # Import from pegasus file
@@ -294,6 +299,11 @@ class Metadata:
                         in_description_section = False
                         game_entry[config.metadata_key_coop] = line.replace("x-co-op:", "").strip()
 
+                    # Playable
+                    elif line.startswith("x-playable:"):
+                        in_description_section = False
+                        game_entry[config.metadata_key_playable] = line.replace("x-playable:", "").strip()
+
                 # Check minimum keys
                 has_minimum_keys = True
                 for key in GetMinimumMetadataKeys():
@@ -317,6 +327,7 @@ class Metadata:
                 game_entry[config.metadata_key_file] = tokens[2]
                 game_entry[config.metadata_key_players] = "1"
                 game_entry[config.metadata_key_coop] = "No"
+                game_entry[config.metadata_key_playable] = "Yes"
                 self.add_game(game_entry)
 
     # Import from metadata file
@@ -401,6 +412,10 @@ class Metadata:
                     # Co-op
                     if config.metadata_key_coop in game_entry:
                         file.write("x-co-op: " + game_entry[config.metadata_key_coop] + "\n")
+
+                    # Playable
+                    if config.metadata_key_playable in game_entry:
+                        file.write("x-playable: " + game_entry[config.metadata_key_playable] + "\n")
 
                     # Divider
                     file.write("\n\n")
@@ -491,6 +506,7 @@ def GetMissingMetadataKeys():
         config.metadata_key_genre,
         config.metadata_key_players,
         config.metadata_key_coop,
+        config.metadata_key_playable,
         config.metadata_key_release
     ]
 
