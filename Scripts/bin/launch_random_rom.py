@@ -19,14 +19,6 @@ parser = argparse.ArgumentParser(description="Launch random ROM.", formatter_cla
 parser.add_argument("-c", "--category", type=str, help="Rom category")
 parser.add_argument("-s", "--subcategory", type=str, help="Rom subcategory")
 parser.add_argument("-f", "--force_cache_refresh", action="store_true", help="Force refresh of cached files")
-parser.add_argument("-c", "--capture_type",
-    choices=[
-        config.capture_type_none,
-        config.capture_type_screenshot,
-        config.capture_type_video,
-    ],
-    default=config.capture_type_none, help="Capture type"
-)
 
 # Parse arguments
 args, unknownargs = parser.parse_known_args()
@@ -41,6 +33,9 @@ def main():
     verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
     exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
     fullscreen = ini.GetIniBoolValue("UserData.Flags", "fullscreen")
+
+    # Get capture type
+    capture_type = ini.GetIniValue("UserData.Capture", "capture_type")
 
     # Set filter options
     filter_options = {}
@@ -68,7 +63,7 @@ def main():
     launcher.LaunchGame(
         game_platform = game_entry[config.metadata_key_platform],
         game_file = game_entry[config.metadata_key_file],
-        capture_type = args.capture_type,
+        capture_type = capture_type,
         fullscreen = fullscreen,
         verbose = verbose,
         exit_on_failure = exit_on_failure)

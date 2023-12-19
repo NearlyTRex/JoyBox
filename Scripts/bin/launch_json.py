@@ -21,14 +21,6 @@ import ini
 parser = argparse.ArgumentParser(description="Launch json file.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("path", help="Json path to launch")
 parser.add_argument("-f", "--force_cache_refresh", action="store_true", help="Force refresh of cached files")
-parser.add_argument("-c", "--capture_type",
-    choices=[
-        config.capture_type_none,
-        config.capture_type_screenshot,
-        config.capture_type_video,
-    ],
-    default=config.capture_type_none, help="Capture type"
-)
 
 # Parse arguments
 args, unknownargs = parser.parse_known_args()
@@ -46,6 +38,9 @@ def main():
     verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
     exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
     fullscreen = ini.GetIniBoolValue("UserData.Flags", "fullscreen")
+
+    # Get capture type
+    capture_type = ini.GetIniValue("UserData.Capture", "capture_type")
 
     # Get json file
     json_file = args.path
@@ -74,7 +69,7 @@ def main():
     launcher.LaunchGame(
         game_platform = json_platform,
         game_file = json_file,
-        capture_type = args.capture_type,
+        capture_type = capture_type,
         fullscreen = fullscreen,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
