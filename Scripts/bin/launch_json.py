@@ -24,7 +24,7 @@ parser.add_argument("-f", "--force_cache_refresh", action="store_true", help="Fo
 
 # Parse arguments
 args, unknownargs = parser.parse_known_args()
-if not args.rom:
+if not args.path:
     parser.print_help()
     sys.exit(1)
 
