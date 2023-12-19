@@ -385,11 +385,14 @@ def InstallComputerGame(json_file, output_image, keep_setup_files = False, verbo
 
     # Get game info
     game_info = jsoncommon.ParseComputerJson(json_file)
+    game_info_base_name = game_info[config.general_key_base_name]
+    game_info_category = game_info[config.general_key_category]
+    game_info_subcategory = game_info[config.general_key_subcategory]
     game_info_installer_type = game_info[config.computer_key_installer_type]
     game_info_disc_type = game_info[config.computer_key_disc_type]
     game_info_installer_exe_list = game_info[config.computer_key_installer_exe]
     game_info_installer_dos_exe_list = game_info[config.computer_key_installer_dos_exe]
-    game_info_dependencies_list = game_info[config.computer_key_dependencies]
+    game_info_dependencies_list = game_info[config.general_key_dependencies]
     game_info_dlc_list = game_info[config.general_key_dlc]
     game_info_update_list = game_info[config.general_key_update]
     game_info_sandbox = game_info[config.computer_key_sandbox]
@@ -399,10 +402,6 @@ def InstallComputerGame(json_file, output_image, keep_setup_files = False, verbo
     game_info_keep_setup_registry = game_info_registry[config.computer_key_registry_keep_setup]
     game_info_setup_registry_keys = game_info_registry[config.computer_key_registry_setup_keys]
     game_info_steps = game_info[config.computer_key_steps]
-    game_info_base_name = game_info[config.computer_key_base_name]
-    game_info_category = game_info[config.computer_key_category]
-    game_info_subcategory = game_info[config.computer_key_subcategory]
-    game_info_platform = game_info[config.computer_key_platform]
     game_info_winver = game_info[config.computer_key_winver]
     game_info_is_dos = game_info[config.computer_key_is_dos]
     game_info_is_win31 = game_info[config.computer_key_is_win31]

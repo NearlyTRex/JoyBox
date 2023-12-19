@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import environment
 import metadata
 
 # Set default value
@@ -18,7 +19,7 @@ def SetDefaultSubValue(dict_var, dict_key, dict_subkey, default_subvalue):
         dict_var[dict_key][dict_subkey] = default_subvalue
 
 # Parse general json
-def ParseGeneralJson(game_name, game_platform, json_file, verbose = False, exit_on_failure = False):
+def ParseGeneralJson(json_file, verbose = False, exit_on_failure = False):
 
     # Read json data
     json_data = system.ReadJsonFile(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
@@ -30,61 +31,51 @@ def ParseGeneralJson(game_name, game_platform, json_file, verbose = False, exit_
     json_supercategory, json_category, json_subcategory = metadata.DeriveMetadataCategoriesFromFile(json_file)
     json_platform = metadata.DeriveMetadataPlatform(json_category, json_subcategory)
 
-    # Get json info
-    json_launch_name = None
-    if config.general_key_launch_name in json_data:
-        json_launch_name = json_data[config.general_key_launch_name]
-    json_launch_file = None
-    if config.general_key_launch_file in json_data:
-        json_launch_file = json_data[config.general_key_launch_file]
-    json_transform_file = None
-    if config.general_key_transform_file in json_data:
-        json_transform_file = json_data[config.general_key_transform_file]
+    # Fill gaps
+    SetDefaultValue(json_data, config.general_key_base_name, json_base_name)
+    SetDefaultValue(json_data, config.general_key_regular_name, json_regular_name)
+    SetDefaultValue(json_data, config.general_key_supercategory, json_supercategory)
+    SetDefaultValue(json_data, config.general_key_category, json_category)
+    SetDefaultValue(json_data, config.general_key_subcategory, json_subcategory)
+    SetDefaultValue(json_data, config.general_key_platform, json_platform)
+    for key in config.json_keys_list_keys:
+        SetDefaultValue(json_data, key, [])
+    for key in config.json_keys_dict_keys:
+        SetDefaultValue(json_data, key, {})
+    for key in config.json_keys_bool_keys:
+        SetDefaultValue(json_data, key, False)
+    for key in config.json_keys_str_keys:
+        SetDefaultValue(json_data, key, None)
 
-    # Get source info
-    source_file = ""
-    source_dir = environment.GetRomDir(json_category, json_subcategory, json_base_name)
-    if json_launch_file:
-        source_file = os.path.join(source_dir, json_launch_file)
-    if json_transform_file:
-        source_file = os.path.join(source_dir, json_transform_file)
-    if json_launch_name and len(source_file) == 0:
-        source_file = os.path.join(source_dir, json_launch_name)
+    # Get potential cache source info
+    potential_cache_source_name = json_data[config.general_key_launch_name]
+    potential_cache_source_file = json_data[config.general_key_launch_file]
+    potential_cache_transform_file = json_data[config.general_key_transform_file]
 
-    # Build game info
-    game_info[config.general_key_launch_name] = json_launch_name
-    game_info[config.general_key_launch_file] = json_launch_file
-    game_info[config.general_key_transform_file] = json_transform_file
-    game_info[config.general_key_source_file] = source_file
-    game_info[config.general_key_source_dir] = source_dir
-    return game_info
+    # Derive actual cache source
+    cache_source_file = ""
+    cache_source_dir = environment.GetRomDir(json_category, json_subcategory, json_base_name)
+    if potential_cache_source_file:
+        cache_source_file = os.path.join(cache_source_dir, potential_cache_source_file)
+    if potential_cache_transform_file:
+        cache_source_file = os.path.join(cache_source_dir, potential_cache_transform_file)
+    if potential_cache_source_name and len(source_file) == 0:
+        cache_source_file = os.path.join(cache_source_dir, potential_cache_source_name)
+
+    # Set cache source
+    json_data[config.general_key_cache_source_file] = cache_source_file
+    json_data[config.general_key_cache_source_dir] = cache_source_dir
+
+    # Return json
+    return json_data
 
 # Parse computer json
 def ParseComputerJson(json_file, verbose = False, exit_on_failure = False):
 
-    # Read json data
-    json_data = system.ReadJsonFile(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
+    # Get general json info
+    json_data = ParseGeneralJson(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
 
-    # Get automatic info based on json location
-    json_directory = system.GetFilenameDirectory(json_file)
-    json_base_name = system.GetFilenameBasename(json_file)
-    json_regular_name = metadata.ConvertMetadataNameToRegularName(json_base_name)
-    json_supercategory, json_category, json_subcategory = metadata.DeriveMetadataCategoriesFromFile(json_file)
-    json_platform = metadata.DeriveMetadataPlatform(json_category, json_subcategory)
-
-    # Fill gaps for general keys
-    for key in config.general_keys_list_keys:
-        SetDefaultValue(json_data, key, [])
-    for key in config.computer_keys_list_keys:
-        SetDefaultValue(json_data, key, [])
-    for key in config.computer_keys_dict_keys:
-        SetDefaultValue(json_data, key, {})
-    for key in config.computer_keys_bool_keys:
-        SetDefaultValue(json_data, key, False)
-    for key in config.computer_keys_str_keys:
-        SetDefaultValue(json_data, key, None)
-
-    # Fill gaps for special dictionaries
+    # Fill gaps
     SetDefaultSubValue(json_data, config.computer_key_sandbox, config.computer_key_sandbox_sandboxie, {})
     SetDefaultSubValue(json_data, config.computer_key_sandbox, config.computer_key_sandbox_wine, {})
     SetDefaultSubValue(json_data, config.computer_key_steps, config.computer_key_steps_preinstall, [])
@@ -93,21 +84,6 @@ def ParseComputerJson(json_file, verbose = False, exit_on_failure = False):
     SetDefaultSubValue(json_data, config.computer_key_sync, config.computer_key_sync_data, [])
     SetDefaultSubValue(json_data, config.computer_key_registry, config.computer_key_registry_keep_setup, False)
     SetDefaultSubValue(json_data, config.computer_key_registry, config.computer_key_registry_setup_keys, [])
-
-    # Fill gaps for derived json data
-    SetDefaultValue(json_data, config.computer_key_source_dir, json_directory)
-    SetDefaultValue(json_data, config.computer_key_source_file, json_file)
-    SetDefaultValue(json_data, config.computer_key_base_name, json_base_name)
-    SetDefaultValue(json_data, config.computer_key_regular_name, json_regular_name)
-    SetDefaultValue(json_data, config.computer_key_supercategory, json_supercategory)
-    SetDefaultValue(json_data, config.computer_key_category, json_category)
-    SetDefaultValue(json_data, config.computer_key_subcategory, json_subcategory)
-    SetDefaultValue(json_data, config.computer_key_platform, json_platform)
-
-    # Convert some string fields to list
-    for key in config.computer_keys_list_keys:
-        if isinstance(json_data[key], str):
-            json_data[key] = [json_data[key]]
 
     # Return json
     return json_data

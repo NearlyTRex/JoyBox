@@ -37,17 +37,18 @@ general_key_launch_name = "launch_name"
 general_key_launch_file = "launch_file"
 general_key_launch_dir = "launch_dir"
 general_key_transform_file = "transform_file"
-general_key_source_file = "source_file"
-general_key_source_dir = "source_dir"
+general_key_cache_source_file = "cache_source_file"
+general_key_cache_source_dir = "cache_source_dir"
+general_key_base_name = "base_name"
+general_key_regular_name = "regular_name"
+general_key_supercategory = "supercategory"
+general_key_category = "category"
+general_key_subcategory = "subcategory"
+general_key_platform = "platform"
 general_key_dlc = "dlc"
 general_key_update = "update"
 general_key_extra = "extra"
-general_keys_list_keys = [
-    general_key_files,
-    general_key_dlc,
-    general_key_update,
-    general_key_extra
-]
+general_key_dependencies = "dependencies"
 
 # Computer json keys
 computer_key_installer_exe = "installer_exe"
@@ -63,15 +64,6 @@ computer_key_main_game_dos_exe_args = "main_game_dos_exe_args"
 computer_key_main_game_win31_exe = "main_game_win31_exe"
 computer_key_main_game_win31_exe_cwd = "main_game_win31_exe_cwd"
 computer_key_main_game_win31_exe_args = "main_game_win31_exe_args"
-computer_key_dependencies = "dependencies"
-computer_key_source_dir = "source_dir"
-computer_key_source_file = "source_file"
-computer_key_base_name = "base_name"
-computer_key_regular_name = "regular_name"
-computer_key_supercategory = "supercategory"
-computer_key_category = "category"
-computer_key_subcategory = "subcategory"
-computer_key_platform = "platform"
 computer_key_sandbox = "sandbox"
 computer_key_sandbox_sandboxie = "sandboxie"
 computer_key_sandbox_wine = "wine"
@@ -93,15 +85,29 @@ computer_key_is_32_bit = "is_32_bit"
 computer_key_is_dos = "is_dos"
 computer_key_is_win31 = "is_win31"
 computer_key_is_scumm = "is_scumm"
-computer_keys_list_keys = [
+
+# Json list keys
+json_keys_list_keys = [
+
+    # General
+    general_key_files,
+    general_key_dlc,
+    general_key_update,
+    general_key_extra,
+    general_key_dependencies,
+
+    # Computer
     computer_key_installer_exe,
     computer_key_installer_dos_exe,
     computer_key_main_game_exe,
     computer_key_main_game_dos_exe,
-    computer_key_main_game_win31_exe,
-    computer_key_dependencies
+    computer_key_main_game_win31_exe
 ]
-computer_keys_dict_keys = [
+
+# Json dictionary keys
+json_keys_dict_keys = [
+
+    # Computer
     computer_key_main_game_exe_cwd,
     computer_key_main_game_exe_args,
     computer_key_main_game_dos_exe_cwd,
@@ -113,13 +119,35 @@ computer_keys_dict_keys = [
     computer_key_sync,
     computer_key_registry
 ]
-computer_keys_bool_keys = [
+
+# Json bool keys
+json_keys_bool_keys = [
+
+    # Computer
     computer_key_is_32_bit,
     computer_key_is_dos,
     computer_key_is_win31,
     computer_key_is_scumm
 ]
-computer_keys_str_keys = [
+
+# Json string keys
+json_keys_str_keys = [
+
+    # General
+    general_key_launch_name,
+    general_key_launch_file,
+    general_key_launch_dir,
+    general_key_transform_file,
+    general_key_cache_source_file,
+    general_key_cache_source_dir,
+    general_key_base_name,
+    general_key_regular_name,
+    general_key_supercategory,
+    general_key_category,
+    general_key_subcategory,
+    general_key_platform,
+
+    # Computer
     computer_key_installer_type,
     computer_key_disc_type,
     computer_key_winver
@@ -127,6 +155,6 @@ computer_keys_str_keys = [
 
 # Filter keys
 filter_key_launchable_only = "launchable_only"
-filter_bool_keys = [
+keys_filter_keys = [
     filter_key_launchable_only
 ]

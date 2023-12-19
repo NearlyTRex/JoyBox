@@ -459,7 +459,7 @@ def GetMetadataSubcategories(game_category = None, filter_options = {}):
 
 # Get filter option
 def GetFilterOption(options, key):
-    if key in config.filter_bool_keys:
+    if key in config.keys_filter_keys:
         if options and key in options:
             return bool(options[key])
         return False
