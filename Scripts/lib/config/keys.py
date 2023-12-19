@@ -32,23 +32,23 @@ metadata_key_screenshot = "screenshot"
 metadata_key_video = "video"
 
 # General json keys
-general_key_files = "files"
-general_key_launch_name = "launch_name"
-general_key_launch_file = "launch_file"
-general_key_launch_dir = "launch_dir"
-general_key_transform_file = "transform_file"
-general_key_cache_source_file = "cache_source_file"
-general_key_cache_source_dir = "cache_source_dir"
-general_key_base_name = "base_name"
-general_key_regular_name = "regular_name"
-general_key_supercategory = "supercategory"
-general_key_category = "category"
-general_key_subcategory = "subcategory"
-general_key_platform = "platform"
-general_key_dlc = "dlc"
-general_key_update = "update"
-general_key_extra = "extra"
-general_key_dependencies = "dependencies"
+json_key_files = "files"
+json_key_launch_name = "launch_name"
+json_key_launch_file = "launch_file"
+json_key_launch_dir = "launch_dir"
+json_key_transform_file = "transform_file"
+json_key_cache_source_file = "cache_source_file"
+json_key_cache_source_dir = "cache_source_dir"
+json_key_base_name = "base_name"
+json_key_regular_name = "regular_name"
+json_key_supercategory = "supercategory"
+json_key_category = "category"
+json_key_subcategory = "subcategory"
+json_key_platform = "platform"
+json_key_dlc = "dlc"
+json_key_update = "update"
+json_key_extra = "extra"
+json_key_dependencies = "dependencies"
 
 # Computer json keys
 computer_key_installer_exe = "installer_exe"
@@ -90,11 +90,11 @@ computer_key_is_scumm = "is_scumm"
 json_keys_list_keys = [
 
     # General
-    general_key_files,
-    general_key_dlc,
-    general_key_update,
-    general_key_extra,
-    general_key_dependencies,
+    json_key_files,
+    json_key_dlc,
+    json_key_update,
+    json_key_extra,
+    json_key_dependencies,
 
     # Computer
     computer_key_installer_exe,
@@ -134,18 +134,18 @@ json_keys_bool_keys = [
 json_keys_str_keys = [
 
     # General
-    general_key_launch_name,
-    general_key_launch_file,
-    general_key_launch_dir,
-    general_key_transform_file,
-    general_key_cache_source_file,
-    general_key_cache_source_dir,
-    general_key_base_name,
-    general_key_regular_name,
-    general_key_supercategory,
-    general_key_category,
-    general_key_subcategory,
-    general_key_platform,
+    json_key_launch_name,
+    json_key_launch_file,
+    json_key_launch_dir,
+    json_key_transform_file,
+    json_key_cache_source_file,
+    json_key_cache_source_dir,
+    json_key_base_name,
+    json_key_regular_name,
+    json_key_supercategory,
+    json_key_category,
+    json_key_subcategory,
+    json_key_platform,
 
     # Computer
     computer_key_installer_type,

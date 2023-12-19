@@ -54,14 +54,14 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
     # Get json info
     json_file_data = system.ReadJsonFile(game_file, verbose = verbose, exit_on_failure = exit_on_failure)
     json_launch_name = None
-    if config.general_key_launch_name in json_file_data:
-        json_launch_name = json_file_data[config.general_key_launch_name]
+    if config.json_key_launch_name in json_file_data:
+        json_launch_name = json_file_data[config.json_key_launch_name]
     json_launch_file = None
-    if config.general_key_launch_file in json_file_data:
-        json_launch_file = json_file_data[config.general_key_launch_file]
+    if config.json_key_launch_file in json_file_data:
+        json_launch_file = json_file_data[config.json_key_launch_file]
     json_transform_file = None
-    if config.general_key_transform_file in json_file_data:
-        json_transform_file = json_file_data[config.general_key_transform_file]
+    if config.json_key_transform_file in json_file_data:
+        json_transform_file = json_file_data[config.json_key_transform_file]
 
     # Get source info
     source_dir = environment.GetRomDir(game_category, game_subcategory, game_name)

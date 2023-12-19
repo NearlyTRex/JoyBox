@@ -385,16 +385,16 @@ def InstallComputerGame(json_file, output_image, keep_setup_files = False, verbo
 
     # Get game info
     game_info = jsoncommon.ParseComputerJson(json_file)
-    game_info_base_name = game_info[config.general_key_base_name]
-    game_info_category = game_info[config.general_key_category]
-    game_info_subcategory = game_info[config.general_key_subcategory]
+    game_info_base_name = game_info[config.json_key_base_name]
+    game_info_category = game_info[config.json_key_category]
+    game_info_subcategory = game_info[config.json_key_subcategory]
     game_info_installer_type = game_info[config.computer_key_installer_type]
     game_info_disc_type = game_info[config.computer_key_disc_type]
     game_info_installer_exe_list = game_info[config.computer_key_installer_exe]
     game_info_installer_dos_exe_list = game_info[config.computer_key_installer_dos_exe]
-    game_info_dependencies_list = game_info[config.general_key_dependencies]
-    game_info_dlc_list = game_info[config.general_key_dlc]
-    game_info_update_list = game_info[config.general_key_update]
+    game_info_dependencies_list = game_info[config.json_key_dependencies]
+    game_info_dlc_list = game_info[config.json_key_dlc]
+    game_info_update_list = game_info[config.json_key_update]
     game_info_sandbox = game_info[config.computer_key_sandbox]
     game_info_wine_setup = game_info_sandbox[config.computer_key_sandbox_wine]
     game_info_sandboxie_setup = game_info_sandbox[config.computer_key_sandbox_sandboxie]

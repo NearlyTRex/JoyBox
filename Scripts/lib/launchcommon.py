@@ -50,10 +50,10 @@ def SimpleLaunch(
     # Get json launch info
     json_launch_name = None
     json_launch_file = None
-    if config.general_key_launch_name in json_file_data:
-        json_launch_name = json_file_data[config.general_key_launch_name]
-    if config.general_key_launch_file in json_file_data:
-        json_launch_file = json_file_data[config.general_key_launch_file]
+    if config.json_key_launch_name in json_file_data:
+        json_launch_name = json_file_data[config.json_key_launch_name]
+    if config.json_key_launch_file in json_file_data:
+        json_launch_file = json_file_data[config.json_key_launch_file]
 
     # Selected launch file
     selected_launch_file = ""

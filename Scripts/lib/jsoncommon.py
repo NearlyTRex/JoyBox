@@ -32,12 +32,12 @@ def ParseGeneralJson(json_file, verbose = False, exit_on_failure = False):
     json_platform = metadata.DeriveMetadataPlatform(json_category, json_subcategory)
 
     # Fill gaps
-    SetDefaultValue(json_data, config.general_key_base_name, json_base_name)
-    SetDefaultValue(json_data, config.general_key_regular_name, json_regular_name)
-    SetDefaultValue(json_data, config.general_key_supercategory, json_supercategory)
-    SetDefaultValue(json_data, config.general_key_category, json_category)
-    SetDefaultValue(json_data, config.general_key_subcategory, json_subcategory)
-    SetDefaultValue(json_data, config.general_key_platform, json_platform)
+    SetDefaultValue(json_data, config.json_key_base_name, json_base_name)
+    SetDefaultValue(json_data, config.json_key_regular_name, json_regular_name)
+    SetDefaultValue(json_data, config.json_key_supercategory, json_supercategory)
+    SetDefaultValue(json_data, config.json_key_category, json_category)
+    SetDefaultValue(json_data, config.json_key_subcategory, json_subcategory)
+    SetDefaultValue(json_data, config.json_key_platform, json_platform)
     for key in config.json_keys_list_keys:
         SetDefaultValue(json_data, key, [])
     for key in config.json_keys_dict_keys:
@@ -48,9 +48,9 @@ def ParseGeneralJson(json_file, verbose = False, exit_on_failure = False):
         SetDefaultValue(json_data, key, None)
 
     # Get potential cache source info
-    potential_cache_source_name = json_data[config.general_key_launch_name]
-    potential_cache_source_file = json_data[config.general_key_launch_file]
-    potential_cache_transform_file = json_data[config.general_key_transform_file]
+    potential_cache_source_name = json_data[config.json_key_launch_name]
+    potential_cache_source_file = json_data[config.json_key_launch_file]
+    potential_cache_transform_file = json_data[config.json_key_transform_file]
 
     # Derive actual cache source
     cache_source_file = ""
@@ -63,8 +63,8 @@ def ParseGeneralJson(json_file, verbose = False, exit_on_failure = False):
         cache_source_file = os.path.join(cache_source_dir, potential_cache_source_name)
 
     # Set cache source
-    json_data[config.general_key_cache_source_file] = cache_source_file
-    json_data[config.general_key_cache_source_dir] = cache_source_dir
+    json_data[config.json_key_cache_source_file] = cache_source_file
+    json_data[config.json_key_cache_source_dir] = cache_source_dir
 
     # Return json
     return json_data

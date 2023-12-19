@@ -77,12 +77,12 @@ def main():
                 json_file_list = None
                 json_launch_file = None
                 json_transform_file = None
-                if config.general_key_files in json_file_data:
-                    json_file_list = json_file_data[config.general_key_files]
-                if config.general_key_launch_file in json_file_data:
-                    json_launch_file = json_file_data[config.general_key_launch_file]
-                if config.general_key_transform_file in json_file_data:
-                    json_transform_file = json_file_data[config.general_key_transform_file]
+                if config.json_key_files in json_file_data:
+                    json_file_list = json_file_data[config.json_key_files]
+                if config.json_key_launch_file in json_file_data:
+                    json_launch_file = json_file_data[config.json_key_launch_file]
+                if config.json_key_transform_file in json_file_data:
+                    json_transform_file = json_file_data[config.json_key_transform_file]
 
                 # Files to check
                 files_to_check = []

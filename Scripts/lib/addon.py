@@ -34,12 +34,12 @@ def InstallAddons(
     # Get directories
     source_dlc_dirs = []
     source_update_dirs = []
-    if config.general_key_dlc in json_file_data:
-        if isinstance(json_file_data[config.general_key_dlc], str):
-            source_dlc_dirs += [os.path.join(environment.GetDLCRootDir(), json_file_data[config.general_key_dlc])]
-    if config.general_key_update in json_file_data:
-        if isinstance(json_file_data[config.general_key_update], str):
-            source_update_dirs += [os.path.join(environment.GetUpdateRootDir(), json_file_data[config.general_key_update])]
+    if config.json_key_dlc in json_file_data:
+        if isinstance(json_file_data[config.json_key_dlc], str):
+            source_dlc_dirs += [os.path.join(environment.GetDLCRootDir(), json_file_data[config.json_key_dlc])]
+    if config.json_key_update in json_file_data:
+        if isinstance(json_file_data[config.json_key_update], str):
+            source_update_dirs += [os.path.join(environment.GetUpdateRootDir(), json_file_data[config.json_key_update])]
 
     # Install add-ons
     for emulator in programs.GetEmulators():

@@ -101,17 +101,17 @@ def main():
                 # Computer
                 if game_category == config.game_category_computer:
                     SetJsonValue(config.computer_key_installer_exe, computer_installers)
-                    SetJsonValue(config.general_key_dlc, computer_dlc_installers)
-                    SetJsonValue(config.general_key_update, computer_update_installers)
-                    SetJsonValue(config.general_key_extra, computer_extras)
-                    SetJsonValue(config.general_key_transform_file, best_game_file)
+                    SetJsonValue(config.json_key_dlc, computer_dlc_installers)
+                    SetJsonValue(config.json_key_update, computer_update_installers)
+                    SetJsonValue(config.json_key_extra, computer_extras)
+                    SetJsonValue(config.json_key_transform_file, best_game_file)
 
                 # Other platforms
                 else:
-                    SetJsonValue(config.general_key_files, all_files)
-                    SetJsonValue(config.general_key_launch_name, "REPLACEME")
-                    SetJsonValue(config.general_key_launch_file, best_game_file)
-                    SetJsonValue(config.general_key_transform_file, best_game_file)
+                    SetJsonValue(config.json_key_files, all_files)
+                    SetJsonValue(config.json_key_launch_name, "REPLACEME")
+                    SetJsonValue(config.json_key_launch_file, best_game_file)
+                    SetJsonValue(config.json_key_transform_file, best_game_file)
 
                 # Write json file
                 system.MakeDirectory(
