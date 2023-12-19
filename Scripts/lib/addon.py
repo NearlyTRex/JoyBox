@@ -9,7 +9,7 @@ import environment
 import metadata
 import platforms
 import programs
-import jsoncommon
+import gameinfo
 
 # Install addons
 def InstallAddons(
@@ -24,7 +24,7 @@ def InstallAddons(
         return True
 
     # Get json info
-    json_data = jsoncommon.ParseGameJson(
+    json_data = gameinfo.ParseGameJson(
         json_file = json_file,
         verbose = verbose,
         exit_on_failure = exit_on_failure)

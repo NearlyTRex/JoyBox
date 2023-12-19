@@ -16,7 +16,7 @@ import programs
 import chd
 import install
 import registry
-import jsoncommon
+import gameinfo
 from emulators import computer
 
 # Inno Setup parameters
@@ -384,7 +384,7 @@ def RunSetupSteps(
 def InstallComputerGame(json_file, output_image, keep_setup_files = False, verbose = False, exit_on_failure = False):
 
     # Get game info
-    game_info = jsoncommon.ParseGameJson(json_file)
+    game_info = gameinfo.ParseGameJson(json_file)
     game_info_base_name = game_info[config.json_key_base_name]
     game_info_category = game_info[config.json_key_category]
     game_info_subcategory = game_info[config.json_key_subcategory]

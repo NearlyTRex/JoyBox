@@ -8,7 +8,7 @@ import cache
 import system
 import metadata
 import environment
-import jsoncommon
+import gameinfo
 import gui
 
 # Simple generic launcher
@@ -39,7 +39,7 @@ def SimpleLaunch(
     cache_dir = environment.GetCachedRomDir(launch_category, launch_subcategory, launch_name)
 
     # Get json info
-    json_data = jsoncommon.ParseGameJson(launch_file, verbose = verbose, exit_on_failure = exit_on_failure)
+    json_data = gameinfo.ParseGameJson(launch_file, verbose = verbose, exit_on_failure = exit_on_failure)
     json_launch_name = json_data[config.json_key_launch_name]
     json_launch_file = json_data[config.json_key_launch_file]
 

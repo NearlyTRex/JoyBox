@@ -13,7 +13,7 @@ import environment
 import system
 import metadata
 import hashing
-import jsoncommon
+import gameinfo
 import setup
 import ini
 
@@ -69,7 +69,7 @@ def main():
                     continue
 
                 # Read json file
-                json_data = jsoncommon.ParseGameJson(
+                json_data = gameinfo.ParseGameJson(
                     json_file = json_file_path,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)

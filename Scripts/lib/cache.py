@@ -11,7 +11,7 @@ import metadata
 import transform
 import addon
 import platforms
-import jsoncommon
+import gameinfo
 import gui
 
 # Check if game file is in cache already
@@ -53,7 +53,7 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
     game_supercategory, game_category, game_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(game_platform)
 
     # Get json info
-    json_data = jsoncommon.ParseGameJson(game_file, verbose = verbose, exit_on_failure = exit_on_failure)
+    json_data = gameinfo.ParseGameJson(game_file, verbose = verbose, exit_on_failure = exit_on_failure)
     json_source_file = json_data[config.json_key_source_file]
     json_source_dir = json_data[config.json_key_source_dir]
 
