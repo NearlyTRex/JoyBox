@@ -10,8 +10,8 @@ import system
 import network
 import programs
 import archive
-import launchcommon
 import gui
+import emulatorcommon
 import emulatorbase
 
 # Config files
@@ -138,7 +138,7 @@ class Vita3K(emulatorbase.EmulatorBase):
         ]
 
         # Launch game
-        launchcommon.SimpleLaunch(
+        emulatorcommon.SimpleLaunch(
             launch_cmd = launch_cmd,
             launch_name = launch_name,
             launch_platform = launch_platform,

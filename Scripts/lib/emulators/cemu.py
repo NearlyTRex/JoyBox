@@ -9,8 +9,8 @@ import system
 import network
 import programs
 import nintendo
-import launchcommon
 import gui
+import emulatorcommon
 import emulatorbase
 
 # Config files
@@ -164,7 +164,7 @@ class Cemu(emulatorbase.EmulatorBase):
             ]
 
         # Launch game
-        launchcommon.SimpleLaunch(
+        emulatorcommon.SimpleLaunch(
             launch_cmd = launch_cmd,
             launch_name = launch_name,
             launch_platform = launch_platform,
