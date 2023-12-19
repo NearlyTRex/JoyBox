@@ -653,7 +653,7 @@ class Computer(emulatorbase.EmulatorBase):
         launch_supercategory, launch_category, launch_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(launch_platform)
 
         # Get launch info
-        launch_info = jsoncommon.ParseGameJson(launch_file)
+        launch_info = jsoncommon.ParseGameJson(launch_file, verbose = verbose, exit_on_failure = exit_on_failure)
         launch_info_sandbox = launch_info[config.json_key_sandbox]
         launch_info_wine_setup = launch_info_sandbox[config.json_key_sandbox_wine]
         launch_info_sandboxie_setup = launch_info_sandbox[config.json_key_sandbox_sandboxie]
