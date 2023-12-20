@@ -11,7 +11,7 @@ sys.path.append(lib_folder)
 import config
 import command
 import environment
-import metadata
+import gameinfo
 import setup
 import ini
 
