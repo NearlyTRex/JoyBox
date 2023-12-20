@@ -10,6 +10,7 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import config
 import environment
+import gameinfo
 import metadata
 import cache
 import setup
@@ -39,7 +40,7 @@ def main():
     # Get game file
     game_file = args.path
     if os.path.isdir(args.path):
-        game_file = metadata.FindBestGameFile(args.path)
+        game_file = gameinfo.FindBestGameFile(args.path)
 
     # Get game categories
     game_supercategory, game_category, game_subcategory = metadata.DeriveMetadataCategoriesFromFile(game_file)

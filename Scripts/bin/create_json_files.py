@@ -11,6 +11,7 @@ sys.path.append(lib_folder)
 import config
 import environment
 import metadata
+import gameinfo
 import platforms
 import system
 import setup
@@ -34,7 +35,7 @@ def main():
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
             game_platform = metadata.DeriveMetadataPlatform(game_category, game_subcategory)
-            for game_name in metadata.GetPossibleGameNames(environment.GetRomRootDir(), game_category, game_subcategory):
+            for game_name in gameinfo.FindAllGameNames(environment.GetRomRootDir(), game_category, game_subcategory):
                 base_rom_path = environment.GetRomDir(game_category, game_subcategory, game_name)
 
                 # Get json file path
@@ -64,7 +65,7 @@ def main():
                     use_relative_paths = True)
 
                 # Get best game file
-                best_game_file = metadata.FindBestGameFile(base_rom_path)
+                best_game_file = gameinfo.FindBestGameFile(base_rom_path)
                 best_game_file = system.GetFilenameFile(best_game_file)
 
                 # Find computer installers

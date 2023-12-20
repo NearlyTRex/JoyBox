@@ -10,6 +10,7 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import environment
 import metadata
+import gameinfo
 import system
 import setup
 import ini
@@ -32,7 +33,7 @@ def main():
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
             game_platform = metadata.DeriveMetadataPlatform(game_category, game_subcategory)
-            for game_name in metadata.GetPossibleGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
+            for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
 
                 # Get json file path
                 json_file_path = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name)
