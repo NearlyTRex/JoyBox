@@ -116,7 +116,7 @@ def main():
     setup.CheckRequirements()
 
     # Build new published file for each category
-    for game_category in metadata.GetMetadataCategories():
+    for game_category in config.game_categories:
 
         # Reset odd/even counter
         metadata_counter = 1
@@ -127,7 +127,7 @@ def main():
 
             # Write header
             file.write(html_header % game_category)
-            for game_subcategory in metadata.GetMetadataSubcategories(game_category):
+            for game_subcategory in config.game_subcategories[game_category]:
 
                 # Get metadata contents
                 metadata_file = metadata.DeriveMetadataFile(game_category, game_subcategory, config.metadata_format_pegasus)

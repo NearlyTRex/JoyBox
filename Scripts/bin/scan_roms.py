@@ -32,8 +32,8 @@ def main():
     sort_metadata_files_bin = os.path.join(environment.GetScriptsBinDir(), "sort_metadata_files" + environment.GetScriptsCommandExtension())
 
     # Build metadata for each category/subcategory
-    for game_category in metadata.GetMetadataCategories():
-        for game_subcategory in metadata.GetMetadataSubcategories(game_category):
+    for game_category in config.game_categories:
+        for game_subcategory in config.game_subcategories[game_category]:
             game_platform = metadata.DeriveMetadataPlatform(game_category, game_subcategory)
 
             # Metadata info
