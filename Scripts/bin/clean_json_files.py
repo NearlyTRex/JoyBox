@@ -29,8 +29,8 @@ def main():
     exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Clean json files
-    for game_category in metadata.GetMetadataCategories():
-        for game_subcategory in sorted(metadata.GetMetadataSubcategories(game_category)):
+    for game_category in config.game_categories:
+        for game_subcategory in config.game_subcategories[game_category]:
             game_platform = metadata.DeriveMetadataPlatform(game_category, game_subcategory)
             for game_name in metadata.GetPossibleGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
 
