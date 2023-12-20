@@ -116,8 +116,8 @@ def SetupEnvironment(verbose = False, exit_on_failure = False):
             exit_on_failure = exit_on_failure)
 
     # Create asset symlinks
-    for game_category in metadata.GetMetadataCategories():
-        for game_subcategory in metadata.GetMetadataSubcategories(game_category):
+    for game_category in config.game_categories:
+        for game_subcategory in config.game_subcategories[game_category]:
             system.LogInfo("Creating asset symlinks for %s - %s ..." % (game_category, game_subcategory))
             for asset_type in config.asset_types_all:
 

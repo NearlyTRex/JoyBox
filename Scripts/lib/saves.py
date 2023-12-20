@@ -139,8 +139,8 @@ def PackSave(save_category, save_subcategory, save_name, verbose = False, exit_o
 
 # Pack all saves
 def PackSaves(verbose = False, exit_on_failure = False):
-    for save_category in metadata.GetMetadataCategories():
-        for save_subcategory in metadata.GetMetadataSubcategories(save_category):
+    for save_category in config.game_categories:
+        for save_subcategory in config.game_subcategories[save_category]:
             save_base_dir = os.path.join(environment.GetCachedSavesRootDir(), save_category, save_subcategory)
             for save_name in system.GetDirectoryContents(save_base_dir):
                 success = PackSave(
@@ -184,8 +184,8 @@ def UnpackSave(save_category, save_subcategory, save_name, verbose = False, exit
 
 # Unpack all saves
 def UnpackSaves(verbose = False, exit_on_failure = False):
-    for save_category in metadata.GetMetadataCategories():
-        for save_subcategory in metadata.GetMetadataSubcategories(save_category):
+    for save_category in config.game_categories:
+        for save_subcategory in config.game_subcategories[save_category]:
             save_base_dir = os.path.join(environment.GetSyncedGamingSavesRootDir(), save_category, save_subcategory)
             for save_name in system.GetDirectoryContents(save_base_dir):
                 if CanSaveBeUnpacked(save_category, save_subcategory, save_name):
