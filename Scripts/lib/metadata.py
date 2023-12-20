@@ -34,6 +34,12 @@ class Metadata:
         game_platform = game_entry[config.metadata_key_platform]
         game_name = game_entry[config.metadata_key_game]
 
+        # Inject categories
+        game_supercategory, game_category, game_subcategory = DeriveMetadataCategoriesFromPlatform(game_platform)
+        game_entry[config.metadata_key_supercategory] = game_supercategory
+        game_entry[config.metadata_key_category] = game_category
+        game_entry[config.metadata_key_subcategory] = game_subcategory
+
         # Add game
         if not game_platform in self.game_database.keys():
             self.game_database[game_platform] = {}

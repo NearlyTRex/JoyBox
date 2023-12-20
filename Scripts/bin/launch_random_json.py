@@ -9,9 +9,11 @@ import argparse
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
+import environment
 import metadata
 import launcher
 import setup
+import gameinfo
 import ini
 
 # Setup argument parser
@@ -39,7 +41,7 @@ def main():
 
     # Set filter options
     filter_options = {}
-    filter_options[config.filter_launchable_only] = True
+    filter_options[config.filter_key_launchable_only] = True
 
     # Get random game
     game_entry = metadata.ChooseRandomGame(
@@ -50,19 +52,24 @@ def main():
         print("Unable to select random game for launching")
         sys.exit(1)
 
+    # Get json info
+    json_file = environment.GetJsonRomMetadataFile(
+        game_category = game_entry[config.metadata_key_category],
+        game_subcategory = game_entry[config.metadata_key_subcategory],
+        game_name = game_entry[config.metadata_key_game])
+
     # Force cache refresh
     if args.force_cache_refresh:
         cache.RemoveGameFromCache(
             game_platform = game_entry[config.metadata_key_platform],
             game_name = game_entry[config.metadata_key_game],
-            game_file = game_entry[config.metadata_key_file],
+            game_file = json_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
     # Launch game
     launcher.LaunchGame(
-        game_platform = game_entry[config.metadata_key_platform],
-        game_file = game_entry[config.metadata_key_file],
+        json_file = json_file,
         capture_type = capture_type,
         fullscreen = fullscreen,
         verbose = verbose,

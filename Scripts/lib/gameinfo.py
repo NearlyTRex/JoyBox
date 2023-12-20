@@ -9,6 +9,37 @@ import environment
 import metadata
 import platforms
 
+# Check if game is launchable
+def IsGameLaunchable(json_file):
+
+    # Get json info
+    json_data = ParseGameJson(json_file)
+    json_base_name = json_data[config.json_key_base_name]
+    json_category = json_data[config.json_key_category]
+    json_subcategory = json_data[config.json_key_subcategory]
+    json_platform = json_data[config.json_key_platform]
+
+    # Check platform
+    if platforms.HasNoLauncher(json_platform):
+        return False
+
+    # Get metadata file
+    metadata_file = metadata.DeriveMetadataFile(json_category, json_subcategory, config.metadata_format_pegasus)
+    if not os.path.isfile(metadata_file):
+        return False
+
+    # Parse metadata file
+    metadata_obj = metadata.Metadata()
+    metadata_obj.import_from_pegasus_file(metadata_file)
+
+    # Check metadata
+    game_entry = metadata_obj.get_game(json_platform, json_base_name)
+    if game_entry[config.metadata_key_playable] != "Yes":
+        return False
+
+    # Should be launchable
+    return True
+
 # Parse game json
 def ParseGameJson(json_file, verbose = False, exit_on_failure = False):
 

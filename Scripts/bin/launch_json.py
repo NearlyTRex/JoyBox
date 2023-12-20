@@ -19,7 +19,7 @@ import ini
 
 # Setup argument parser
 parser = argparse.ArgumentParser(description="Launch json file.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("path", help="Json path to launch")
+parser.add_argument("path", type=str, help="Json path to launch")
 parser.add_argument("-f", "--force_cache_refresh", action="store_true", help="Force refresh of cached files")
 
 # Parse arguments
@@ -51,6 +51,12 @@ def main():
             title_text = "Json file not found",
             message_text = "Json file %s was not found" % json_file)
 
+    # Check ability to launch
+    if not gameinfo.IsGameLaunchable(json_file):
+        gui.DisplayErrorPopup(
+            title_text = "Json file not launchable",
+            message_text = "Json file '%s' is not launchable" % json_file)
+
     # Get json info
     json_data = gameinfo.ParseGameJson(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
     json_base_name = json_data[config.json_key_base_name]
@@ -67,8 +73,7 @@ def main():
 
     # Launch game
     launcher.LaunchGame(
-        game_platform = json_platform,
-        game_file = json_file,
+        json_file = json_file,
         capture_type = capture_type,
         fullscreen = fullscreen,
         verbose = verbose,
