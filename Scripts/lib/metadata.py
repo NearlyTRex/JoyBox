@@ -181,7 +181,7 @@ class Metadata:
             # Get file
             rom_file = ""
             if rom_category == config.game_category_computer:
-                letter = DeriveGameLetterFromName(rom_name)
+                letter = gameinfo.DeriveGameLetterFromName(rom_name)
                 rom_file = os.path.join(rom_category, rom_subcategory, letter, rom_name, rom_name + ".json")
             else:
                 rom_file = os.path.join(rom_category, rom_subcategory, rom_name, rom_name + ".json")
