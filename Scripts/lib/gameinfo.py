@@ -9,8 +9,41 @@ import environment
 import metadata
 import platforms
 
-# Check if game is launchable
-def IsGameLaunchable(json_file):
+# Find best suited game file
+def FindBestGameFile(game_directory):
+    game_file_entries = []
+    for obj in system.GetDirectoryContents(game_directory):
+        obj_path = os.path.join(game_directory, obj)
+        if os.path.isfile(obj_path):
+            game_file_entry = {}
+            game_file_entry["file"] = os.path.abspath(obj_path)
+            game_file_entry["weight"] = config.gametype_weight_else
+            for key in config.gametype_weights.keys():
+                if obj.endswith(key):
+                    game_file_entry["weight"] = config.gametype_weights[key]
+                    break
+            game_file_entries.append(game_file_entry)
+    game_file = ""
+    for game_file_entry in sorted(game_file_entries, key=lambda d: d["weight"]):
+        game_file = game_file_entry["file"]
+        break
+    return game_file
+
+# Find all game names
+def FindAllGameNames(base_dir, game_category, game_subcategory):
+    game_names = []
+    base_path = os.path.join(base_dir, game_category, game_subcategory)
+    if game_category == config.game_category_computer:
+        for game_letter in system.GetDirectoryContents(base_path):
+            for game_name in system.GetDirectoryContents(os.path.join(base_path, game_letter)):
+                game_names.append(game_name)
+    else:
+        for game_name in system.GetDirectoryContents(base_path):
+            game_names.append(game_name)
+    return game_names
+
+# Check if game json is launchable
+def IsGameJsonLaunchable(json_file):
 
     # Get json info
     json_data = ParseGameJson(json_file)
