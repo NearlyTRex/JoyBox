@@ -41,7 +41,7 @@ def main():
 
     # Verify metadata files
     for game_category in config.game_categories:
-        for game_subcategory in config.game_subcategories[game_subcategory]:
+        for game_subcategory in config.game_subcategories[game_category]:
 
             # Verify gamelist roms
             gamelist_file = environment.GetMetadataFile(game_category, game_subcategory, config.metadata_format_gamelist)
