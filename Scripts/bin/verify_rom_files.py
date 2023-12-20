@@ -40,8 +40,8 @@ def main():
             sys.exit(1)
 
     # Verify metadata files
-    for game_category in metadata.GetMetadataCategories():
-        for game_subcategory in metadata.GetMetadataSubcategories(game_category):
+    for game_category in config.game_categories:
+        for game_subcategory in config.game_subcategories[game_subcategory]:
 
             # Verify gamelist roms
             gamelist_file = metadata.DeriveMetadataFile(game_category, game_subcategory, config.metadata_format_gamelist)
@@ -58,8 +58,8 @@ def main():
                 metadata_pegasus.verify_roms()
 
     # Verify json files
-    for game_category in metadata.GetMetadataCategories():
-        for game_subcategory in sorted(metadata.GetMetadataSubcategories(game_category)):
+    for game_category in config.game_categories:
+        for game_subcategory in config.game_subcategories[game_category]:
             game_platform = metadata.DeriveMetadataPlatform(game_category, game_subcategory)
             for game_name in metadata.GetPossibleGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
 
@@ -97,9 +97,9 @@ def main():
                         sys.exit(1)
 
     # Verify hash files
-    for game_supercategory in metadata.GetMetadataSupercategories():
-        for game_category in metadata.GetMetadataCategories():
-            for game_subcategory in sorted(metadata.GetMetadataSubcategories(game_category)):
+    for game_supercategory in config.game_supercategories:
+        for game_category in config.game_categories:
+            for game_subcategory in config.game_subcategories[game_category]:
 
                 # Get hash file path
                 hash_file_path = environment.GetHashesMetadataFile(game_supercategory, game_category, game_subcategory)
