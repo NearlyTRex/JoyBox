@@ -1,6 +1,7 @@
 # Imports
 import os, os.path
 import sys
+import re
 
 # Local imports
 import config
@@ -8,6 +9,8 @@ import system
 import environment
 import metadata
 import platforms
+
+###########################################################
 
 # Find best suited game file
 def FindBestGameFile(game_directory):
@@ -42,6 +45,121 @@ def FindAllGameNames(base_dir, game_category, game_subcategory):
             game_names.append(game_name)
     return game_names
 
+###########################################################
+
+# Derive regular name from game name
+def DeriveRegularNameFromGameName(game_name):
+    regular_name = game_name
+    if ", The " in regular_name:
+        regular_name = regular_name.replace(", The ", " ")
+        regular_name = "The " + regular_name
+    if ", A " in regular_name:
+        regular_name = regular_name.replace(", A ", " ")
+        regular_name = "A " + regular_name
+    regular_name = re.sub(r"\((.*?)\)", "", regular_name).strip()
+    return regular_name
+
+# Derive game name from path
+def DeriveGameNameFromPath(game_path):
+    rom_dir = system.GetFilenameDirectory(game_path)
+    if not rom_dir.endswith(")"):
+        return ""
+    return os.path.basename(rom_dir)
+
+# Derive game letter from name
+def DeriveGameLetterFromName(game_name):
+    letter = ""
+    if len(game_name):
+        letter = game_name[0].upper()
+    if letter.isnumeric():
+        letter = config.general_numeric_folder
+    return letter
+
+# Derive game categories from platform
+def DeriveGameCategoriesFromPlatform(game_platform):
+    if not game_platform:
+        return (None, None, None)
+    derived_rom_category = ""
+    derived_rom_subcategory = ""
+    if game_platform.startswith(config.game_category_computer):
+        derived_rom_category = config.game_category_computer
+        derived_rom_subcategory = game_platform.replace(config.game_category_computer + " - ", "")
+    elif game_platform.startswith(config.game_category_microsoft):
+        derived_rom_category = config.game_category_microsoft
+        derived_rom_subcategory = game_platform
+    elif game_platform.startswith(config.game_category_nintendo):
+        derived_rom_category = config.game_category_nintendo
+        derived_rom_subcategory = game_platform
+    elif game_platform.startswith(config.game_category_sony):
+        derived_rom_category = config.game_category_sony
+        derived_rom_subcategory = game_platform
+    else:
+        derived_rom_category = config.game_category_other
+        derived_rom_subcategory = game_platform
+    return (config.game_supercategory_roms, derived_rom_category, derived_rom_subcategory)
+
+# Derive game categories from file
+def DeriveGameCategoriesFromFile(game_file):
+
+    # Check file
+    if not system.IsPathValid(game_file):
+        return (None, None, None)
+
+    # Get source directory and basename
+    source_dir = system.GetFilenameDirectory(system.NormalizeFilePath(game_file))
+    base_name = system.GetFilenameBasename(system.NormalizeFilePath(game_file))
+
+    # Get possible root dirs
+    root_dirs = [
+        system.NormalizeFilePath(environment.GetGamingStorageRootDir()),
+        system.NormalizeFilePath(environment.GetGamingLocalCacheRootDir()),
+        system.NormalizeFilePath(environment.GetGamingRemoteCacheRootDir()),
+        system.NormalizeFilePath(environment.GetJsonMetadataRootDir())
+    ]
+
+    # Get relative source directory
+    relative_source_dir = source_dir
+    for root_dir in root_dirs:
+        relative_source_dir = system.RebaseFilePath(relative_source_dir, root_dir, "")
+
+    # Derive supercategory
+    derived_supercategory = ""
+    for possible_supercategory in config.game_supercategories:
+        if relative_source_dir.startswith(possible_supercategory):
+            derived_supercategory = possible_supercategory
+    if len(derived_supercategory) == 0:
+        return (None, None, None)
+
+    # Get relative path
+    relative_file_path = relative_source_dir[relative_source_dir.index(derived_supercategory) + len(derived_supercategory):].strip(os.sep)
+    relative_file_path_tokens = relative_file_path.split(os.sep)
+    if len(relative_file_path_tokens) < 2:
+        return (None, None, None)
+
+    # Get derived category and subcategory
+    derived_category = ""
+    derived_subcategory = relative_file_path_tokens[1]
+    if relative_file_path.startswith(config.game_category_computer):
+        derived_category = config.game_category_computer
+    elif relative_file_path.startswith(config.game_category_microsoft):
+        derived_category = config.game_category_microsoft
+    elif relative_file_path.startswith(config.game_category_nintendo):
+        derived_category = config.game_category_nintendo
+    elif relative_file_path.startswith(config.game_category_sony):
+        derived_category = config.game_category_sony
+    else:
+        derived_category = config.game_category_other
+    return (derived_supercategory, derived_category, derived_subcategory)
+
+# Derive game platform from categories
+def DeriveGamePlatformFromCategories(rom_category, rom_subcategory):
+    game_platform = rom_subcategory
+    if rom_category == config.game_category_computer:
+        game_platform = rom_category + " - " + rom_subcategory
+    return game_platform
+
+###########################################################
+
 # Check if game json is launchable
 def IsGameJsonLaunchable(json_file):
 
@@ -57,7 +175,7 @@ def IsGameJsonLaunchable(json_file):
         return False
 
     # Get metadata file
-    metadata_file = metadata.DeriveMetadataFile(json_category, json_subcategory, config.metadata_format_pegasus)
+    metadata_file = environment.GetMetadataFile(json_category, json_subcategory, config.metadata_format_pegasus)
     if not os.path.isfile(metadata_file):
         return False
 
@@ -82,9 +200,9 @@ def ParseGameJson(json_file, verbose = False, exit_on_failure = False):
     # Get automatic info based on json location
     json_directory = system.GetFilenameDirectory(json_file)
     json_base_name = system.GetFilenameBasename(json_file)
-    json_regular_name = metadata.ConvertMetadataNameToRegularName(json_base_name)
-    json_supercategory, json_category, json_subcategory = metadata.DeriveMetadataCategoriesFromFile(json_file)
-    json_platform = metadata.DeriveMetadataPlatform(json_category, json_subcategory)
+    json_regular_name = DeriveRegularNameFromGameName(json_base_name)
+    json_supercategory, json_category, json_subcategory = DeriveGameCategoriesFromFile(json_file)
+    json_platform = DeriveGamePlatformFromCategories(json_category, json_subcategory)
 
     # Set default value
     def SetDefaultValue(dict_var, dict_key, default_value):
@@ -151,3 +269,5 @@ def ParseGameJson(json_file, verbose = False, exit_on_failure = False):
 
     # Return json
     return json_data
+
+###########################################################

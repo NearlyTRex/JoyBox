@@ -10,7 +10,6 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import config
 import environment
-import metadata
 import gameinfo
 import platforms
 import system
@@ -34,7 +33,7 @@ def main():
     # Create json files
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
-            game_platform = metadata.DeriveMetadataPlatform(game_category, game_subcategory)
+            game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
             for game_name in gameinfo.FindAllGameNames(environment.GetRomRootDir(), game_category, game_subcategory):
                 base_rom_path = environment.GetRomDir(game_category, game_subcategory, game_name)
 

@@ -10,7 +10,6 @@ import environment
 import programs
 import archive
 import hashing
-import metadata
 
 # Backup saves
 def BackupSaves(output_path, verbose = False, exit_on_failure = False):
@@ -78,7 +77,9 @@ def CanSaveBeUnpacked(save_category, save_subcategory, save_name):
 def PackSave(save_category, save_subcategory, save_name, verbose = False, exit_on_failure = False):
 
     # Get save type
-    save_type = metadata.DeriveGameSaveTypeFromCategory(save_category)
+    save_type = None
+    if rom_category == config.game_category_computer:
+        save_type = config.save_type_general
 
     # Get input save dirs
     input_save_dir = environment.GetCachedSaveDir(save_category, save_subcategory, save_name)

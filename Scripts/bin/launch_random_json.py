@@ -13,7 +13,6 @@ import environment
 import metadata
 import launcher
 import setup
-import gameinfo
 import ini
 
 # Setup argument parser
@@ -39,30 +38,42 @@ def main():
     # Get capture type
     capture_type = ini.GetIniValue("UserData.Capture", "capture_type")
 
-    # Set filter options
-    filter_options = {}
-    filter_options[config.filter_key_launchable_only] = True
+    # Get category
+    game_category = args.category
+    if not game_category:
+        game_category = random.choice(config.game_categories)
 
-    # Get random game
-    game_entry = metadata.ChooseRandomGame(
-        rom_category = args.category,
-        rom_subcategory = args.subcategory,
-        filter_options = filter_options)
-    if not game_entry:
+    # Check subcategory
+    game_subcategory = args.subcategory
+    if not game_subcategory:
+        potential_subcategories = []
+        for game_subcategory in config.game_subcategories[game_category]:
+            if platforms.HasNoLauncher(DeriveGamePlatformFromCategories(game_category, game_subcategory)):
+                potential_subcategories.append(game_subcategory)
+        game_subcategory = random.choice(potential_subcategories)
+
+    # Read metadata
+    metadata_file = environment.GetMetadataFile(game_category, game_subcategory, config.metadata_format_gamelist)
+    metadata_obj = metadata.Metadata()
+    metadata_obj.import_from_gamelist_file(metadata_file)
+
+    # Select random game entry
+    random_game_entry = metadata_obj.get_random_entry()
+    if not random_game_entry:
         print("Unable to select random game for launching")
         sys.exit(1)
 
-    # Get json info
+    # Get json file
     json_file = environment.GetJsonRomMetadataFile(
-        game_category = game_entry[config.metadata_key_category],
-        game_subcategory = game_entry[config.metadata_key_subcategory],
-        game_name = game_entry[config.metadata_key_game])
+        game_category = random_game_entry[config.metadata_key_category],
+        game_subcategory = random_game_entry[config.metadata_key_subcategory],
+        game_name = random_game_entry[config.metadata_key_game])
 
     # Force cache refresh
     if args.force_cache_refresh:
         cache.RemoveGameFromCache(
-            game_platform = game_entry[config.metadata_key_platform],
-            game_name = game_entry[config.metadata_key_game],
+            game_platform = random_game_entry[config.metadata_key_platform],
+            game_name = random_game_entry[config.metadata_key_game],
             game_file = json_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)

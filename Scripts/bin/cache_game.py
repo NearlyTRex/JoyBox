@@ -11,7 +11,6 @@ sys.path.append(lib_folder)
 import config
 import environment
 import gameinfo
-import metadata
 import cache
 import setup
 import gui
@@ -43,7 +42,7 @@ def main():
         game_file = gameinfo.FindBestGameFile(args.path)
 
     # Get game categories
-    game_supercategory, game_category, game_subcategory = metadata.DeriveMetadataCategoriesFromFile(game_file)
+    game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromFile(game_file)
 
     # Check metadata categories
     invalid_supercategory = (game_supercategory != config.game_supercategory_roms)
@@ -55,8 +54,8 @@ def main():
             message_text = "Unable to recognize game categories from path %s" % args.path)
 
     # Get game platform
-    game_platform = metadata.DeriveMetadataPlatform(game_category, game_subcategory)
-    game_name = metadata.DeriveGameNameFromPath(game_file)
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_name = gameinfo.DeriveGameNameFromPath(game_file)
     if not game_platform or not game_name:
         gui.DisplayErrorPopup(
             title_text = "Unable to derive game platform or name",

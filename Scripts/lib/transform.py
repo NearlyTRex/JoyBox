@@ -7,7 +7,7 @@ import config
 import system
 import environment
 import platforms
-import metadata
+import gameinfo
 import install
 import installer
 import archive
@@ -51,7 +51,7 @@ def TransformGameFile(
         return (False, tmp_dir_result)
 
     # Get game categories
-    game_supercategory, game_category, game_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(game_platform)
+    game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
 
     # Get game file info
     iso_tmp_dir = os.path.join(tmp_dir_result, "iso")
@@ -302,7 +302,7 @@ def TransformGameFile(
         # Extract file
         success = archive.ExtractArchive(
             archive_file = extract_file,
-            extract_dir = os.path.join(raw_tmp_dir, metadata.ConvertMetadataNameToRegularName(game_name)),
+            extract_dir = os.path.join(raw_tmp_dir, gameinfo.DeriveRegularNameFromGameName(game_name)),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not success:

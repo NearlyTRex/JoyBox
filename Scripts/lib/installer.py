@@ -10,7 +10,6 @@ import environment
 import system
 import command
 import sandbox
-import metadata
 import archive
 import programs
 import chd
@@ -157,7 +156,7 @@ def RunWindowsInstallers(
 
         # Get setup command
         if game_installer_type in [config.installer_type_7zip, config.installer_type_winrar]:
-            install_name = metadata.ConvertMetadataNameToRegularName(system.GetFilenameBasename(windows_program))
+            install_name = gameinfo.DeriveRegularNameFromGameName(system.GetFilenameBasename(windows_program))
             program_setup_cmd = GetInstallerSetupCommand(
                 installer_file = windows_program,
                 installer_type = game_installer_type,

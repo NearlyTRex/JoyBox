@@ -34,11 +34,11 @@ def main():
     # Build metadata for each category/subcategory
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
-            game_platform = metadata.DeriveMetadataPlatform(game_category, game_subcategory)
+            game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
             # Metadata info
             local_rom_path = os.path.join(environment.GetRomRootDir(), game_category, game_subcategory)
-            metadata_file = metadata.DeriveMetadataFile(game_category, game_subcategory, config.metadata_format_gamelist)
+            metadata_file = environment.GetMetadataFile(game_category, game_subcategory, config.metadata_format_gamelist)
 
             # Build metadata
             print("Building metadata [Category: '%s', Subcategory: '%s'] ..." % (game_category, game_subcategory))

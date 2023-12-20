@@ -11,6 +11,7 @@ sys.path.append(lib_folder)
 import config
 import environment
 import metadata
+import gameinfo
 import system
 import setup
 
@@ -38,7 +39,7 @@ def main():
     found_assets = set()
     missing_assets = dict()
     for filename in system.BuildFileList(metadata_dir):
-        if metadata.IsMetadataFile(filename, metadata_format):
+        if environment.IsMetadataFile(filename, metadata_format):
 
             # Load metadata
             metadata_obj = metadata.Metadata()
@@ -49,7 +50,7 @@ def main():
 
                         # Get game info
                         game_name = game_entry[config.metadata_key_game]
-                        game_supercategory, game_category, game_subcategory =metadata.DeriveMetadataCategoriesFromPlatform(game_platform)
+                        game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
 
                         # Get asset file
                         asset_file = environment.GetSyncedGameAssetFile(game_category, game_subcategory, game_name, asset_type)

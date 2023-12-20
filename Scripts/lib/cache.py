@@ -16,7 +16,7 @@ import gui
 
 # Check if game file is in cache already
 def IsGameInCache(game_platform, game_name):
-    game_supercategory, game_category, game_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(game_platform)
+    game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
     game_dir = environment.GetCachedRomDir(game_category, game_subcategory, game_name)
     if not os.path.exists(game_dir):
         return False
@@ -32,7 +32,7 @@ def RemoveGameFromCache(game_platform, game_name, game_file, verbose = False, ex
         return
 
     # Get categories
-    game_supercategory, game_category, game_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(game_platform)
+    game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
 
     # Get directories
     cached_rom_dir = environment.GetCachedRomDir(game_category, game_subcategory, game_name)
@@ -50,7 +50,7 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
         return
 
     # Get categories
-    game_supercategory, game_category, game_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(game_platform)
+    game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
 
     # Get json info
     json_data = gameinfo.ParseGameJson(game_file, verbose = verbose, exit_on_failure = exit_on_failure)
@@ -115,7 +115,7 @@ def InstallGameToCache(game_platform, game_name, game_file, game_artwork, keep_s
 def AddGameToCache(game_platform, game_name, game_file, json_file, verbose = False, exit_on_failure = False):
 
     # Get categories
-    game_supercategory, game_category, game_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(game_platform)
+    game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
 
     # Get directories
     source_dir = system.GetFilenameDirectory(game_file)
@@ -199,7 +199,7 @@ def LaunchCachedGame(
         return
 
     # Get game categories
-    game_supercategory, game_category, game_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(game_platform)
+    game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
 
     # Launch game
     command.RunGameCommand(

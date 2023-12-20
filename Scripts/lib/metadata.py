@@ -14,6 +14,7 @@ import system
 import webpage
 import platforms
 import environment
+import gameinfo
 
 # General metadata class
 class Metadata:
@@ -26,7 +27,7 @@ class Metadata:
     def add_game(self, game_entry):
 
         # Check minimum keys
-        for key in GetMinimumMetadataKeys():
+        for key in config.metadata_keys_minimum:
             if not key in game_entry:
                 return
 
@@ -35,7 +36,7 @@ class Metadata:
         game_name = game_entry[config.metadata_key_game]
 
         # Inject categories
-        game_supercategory, game_category, game_subcategory = DeriveMetadataCategoriesFromPlatform(game_platform)
+        game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
         game_entry[config.metadata_key_supercategory] = game_supercategory
         game_entry[config.metadata_key_category] = game_category
         game_entry[config.metadata_key_subcategory] = game_subcategory
@@ -54,54 +55,46 @@ class Metadata:
         self.game_database[game_platform][game_name] = game_entry
 
     # Get sorted platforms
-    def get_sorted_platforms(self, filter_options = {}):
+    def get_sorted_platforms(self):
         potential_platforms = []
         for platform in self.game_database.keys():
-            only_launchable = GetFilterOption(filter_options, config.filter_key_launchable_only)
-            not_launchable = platforms.HasNoLauncher(platform)
-            if only_launchable and not_launchable:
-                continue
             potential_platforms.append(platform)
         return sorted(potential_platforms)
 
     # Get sorted names within a platform
-    def get_sorted_names(self, game_platform, filter_options = {}):
+    def get_sorted_names(self, game_platform):
         if not game_platform in self.game_database:
             return []
         potential_names = []
         for name in self.game_database[game_platform].keys():
-            only_launchable = GetFilterOption(filter_options, config.filter_key_launchable_only)
-            not_launchable = self.game_database[game_platform][name][config.metadata_key_playable] == "No"
-            if only_launchable and not_launchable:
-                continue
             potential_names.append(name)
         return sorted(potential_names)
 
     # Get all sorted names
-    def get_all_sorted_names(self, filter_options = {}):
+    def get_all_sorted_names(self):
         names = []
-        for game_platform in self.get_sorted_platforms(filter_options):
-            names += self.get_sorted_names(game_platform, filter_options)
+        for game_platform in self.get_sorted_platforms():
+            names += self.get_sorted_names(game_platform)
         return names
 
     # Get sorted entries
-    def get_sorted_entries(self, game_platform, filter_options = {}):
+    def get_sorted_entries(self, game_platform):
         entries = []
-        for game_name in self.get_sorted_names(game_platform, filter_options):
+        for game_name in self.get_sorted_names(game_platform):
             entries.append(self.get_game(game_platform, game_name))
         return entries
 
     # Get all sorted entries
-    def get_all_sorted_entries(self, filter_options = {}):
+    def get_all_sorted_entries(self):
         entries = []
-        for game_platform in self.get_sorted_platforms(filter_options):
-            entries += self.get_sorted_entries(game_platform, filter_options)
+        for game_platform in self.get_sorted_platforms():
+            entries += self.get_sorted_entries(game_platform)
         return entries
 
     # Get random entry
-    def get_random_entry(self, filter_options = {}):
-        game_platform = random.choice(self.get_sorted_platforms(filter_options))
-        game_name = random.choice(self.get_sorted_names(game_platform, filter_options))
+    def get_random_entry(self):
+        game_platform = random.choice(self.get_sorted_platforms())
+        game_name = random.choice(self.get_sorted_names(game_platform))
         game_entry = self.get_game(game_platform, game_name)
         return game_entry
 
@@ -146,11 +139,23 @@ class Metadata:
         for game_platform in self.get_sorted_platforms():
             for game_name in self.get_sorted_names(game_platform):
                 game_entry = self.get_game(game_platform, game_name)
-                game_supercategory, game_category, game_subcategory = DeriveMetadataCategoriesFromPlatform(game_platform)
+                game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
                 for asset_type in config.asset_types_all:
-                    game_asset_string = DeriveMetadataAssetString(game_name, asset_type)
+                    game_asset_string = "%s/%s%s" % (asset_type, game_name, config.asset_type_extensions[asset_type])
                     game_asset_file = environment.GetSyncedGameAssetFile(game_category, game_subcategory, game_name, asset_type)
-                    game_metadata_key = DeriveMetadataKeyFromAssetType(asset_type)
+                    game_metadata_key = None
+                    if asset_type == config.asset_type_background:
+                        game_metadata_key = config.metadata_key_background
+                    elif asset_type == config.asset_type_boxback:
+                        game_metadata_key = config.metadata_key_boxback
+                    elif asset_type == config.asset_type_boxfront:
+                        game_metadata_key = config.metadata_key_boxfront
+                    elif asset_type == config.asset_type_label:
+                        game_metadata_key = config.metadata_key_label
+                    elif asset_type == config.asset_type_screenshot:
+                        game_metadata_key = config.metadata_key_screenshot
+                    elif asset_type == config.asset_type_video:
+                        game_metadata_key = config.metadata_key_video
                     if asset_type in config.asset_types_min:
                         game_entry[game_metadata_key] = game_asset_string
                         continue
@@ -166,12 +171,12 @@ class Metadata:
         for dir in system.BuildDirectoryList(rom_path):
 
             # Skip non-game folders
-            if not IsGameFolder(dir):
+            if not dir.endswith(")"):
                 continue
 
             # Get info
             rom_name = system.GetDirectoryName(dir)
-            rom_platform = DeriveMetadataPlatform(rom_category, rom_subcategory)
+            rom_platform = gameinfo.DeriveGamePlatformFromCategories(rom_category, rom_subcategory)
 
             # Get file
             rom_file = ""
@@ -183,11 +188,11 @@ class Metadata:
             rom_file = system.NormalizeFilePath(rom_file)
 
             # Get asset strings
-            rom_boxfront = DeriveMetadataAssetString(rom_name, config.asset_type_boxfront)
-            rom_boxback = DeriveMetadataAssetString(rom_name, config.asset_type_boxback)
-            rom_background = DeriveMetadataAssetString(rom_name, config.asset_type_background)
-            rom_screenshot = DeriveMetadataAssetString(rom_name, config.asset_type_screenshot)
-            rom_video = DeriveMetadataAssetString(rom_name, config.asset_type_video)
+            rom_boxfront = "%s/%s%s" % (config.asset_type_boxfront, rom_name, config.asset_type_extensions[config.asset_type_boxfront])
+            rom_boxback = "%s/%s%s" % (config.asset_type_boxback, rom_name, config.asset_type_extensions[config.asset_type_boxback])
+            rom_background = "%s/%s%s" % (config.asset_type_background, rom_name, config.asset_type_extensions[config.asset_type_background])
+            rom_screenshot = "%s/%s%s" % (config.asset_type_screenshot, rom_name, config.asset_type_extensions[config.asset_type_screenshot])
+            rom_video = "%s/%s%s" % (config.asset_type_video, rom_name, config.asset_type_extensions[config.asset_type_video])
 
             # Create new entry
             print("Found game: '%s' - '%s'" % (rom_platform, rom_name))
@@ -312,7 +317,7 @@ class Metadata:
 
                 # Check minimum keys
                 has_minimum_keys = True
-                for key in GetMinimumMetadataKeys():
+                for key in config.metadata_keys_minimum:
                     if not key in game_entry:
                         has_minimum_keys = False
 
@@ -443,359 +448,119 @@ class Metadata:
         elif metadata_format == "pegasus":
             self.export_to_pegasus_file(metadata_file, append_existing)
 
-# Get metadata formats
-def GetMetadataFormats():
-    return [config.metadata_format_gamelist, config.metadata_format_pegasus]
+# Collect metadata
+def CollectMetadata(
+    metadata_dir,
+    metadata_type,
+    metadata_source,
+    only_check_description = False,
+    only_check_genre = False,
+    only_check_developer = False,
+    only_check_publisher = False,
+    only_check_release = False,
+    force_download = False,
+    select_automatically = False,
+    ignore_unowned = False):
 
-# Get metadata supercategories
-def GetMetadataSupercategories():
-    return [config.game_supercategory_roms, config.game_supercategory_dlc, config.game_supercategory_updates]
+    # Create web driver
+    web_driver = webpage.CreateWebDriver()
 
-# Get metadata default supercategory
-def GetMetadataDefaultSupercategory():
-    return config.game_supercategory_roms
+    # Find missing metadata
+    metadata_dir = os.path.realpath(metadata_dir)
+    for file in system.BuildFileList(metadata_dir):
+        if environment.IsMetadataFile(file, metadata_type):
+            metadata_obj = Metadata()
+            metadata_obj.import_from_metadata_file(file, metadata_type)
 
-# Get metadata categories
-def GetMetadataCategories():
-    categories = set()
-    for section in config.platforms.values():
-        categories.add(section[config.platform_key_category])
-    return sorted(list(categories))
+            # Check for missing metadata keys
+            metadata_keys_to_check = []
+            is_missing_metadata = False
+            if force_download:
+                is_missing_metadata = True
+            else:
+                if only_check_description:
+                    metadata_keys_to_check = [config.metadata_key_description]
+                elif only_check_genre:
+                    metadata_keys_to_check = [config.metadata_key_genre]
+                elif only_check_developer:
+                    metadata_keys_to_check = [config.metadata_key_developer]
+                elif only_check_publisher:
+                    metadata_keys_to_check = [config.metadata_key_publisher]
+                elif only_check_release:
+                    metadata_keys_to_check = [config.metadata_key_release]
+                else:
+                    metadata_keys_to_check = config.metadata_keys_missing
+                is_missing_metadata = metadata_obj.is_missing_data(metadata_keys_to_check)
+            if not is_missing_metadata:
+                continue
 
-# Get metadata subcategories
-def GetMetadataSubcategories(game_category = None, filter_options = {}):
-    potential_subcategories = set()
-    for section in config.platforms.values():
-        if game_category and section[config.platform_key_category] != game_category:
-            continue
-        potential_subcategories.add(section[config.platform_key_subcategory])
-    subcategories = []
-    for game_subcategory in sorted(list(potential_subcategories)):
-        only_launchable = GetFilterOption(filter_options, config.filter_key_launchable_only)
-        no_launcher_set = platforms.HasNoLauncher(DeriveMetadataPlatform(game_category, game_subcategory))
-        if only_launchable and no_launcher_set:
-            continue
-        subcategories.append(game_subcategory)
-    return subcategories
+            # Iterate through each game entry to fill in any missing data
+            for game_platform in metadata_obj.get_sorted_platforms():
+                for game_name in metadata_obj.get_sorted_names(game_platform):
+                    if not force_download:
+                        if not metadata_obj.is_entry_missing_data(game_platform, game_name, metadata_keys_to_check):
+                            continue
 
-# Get filter option
-def GetFilterOption(options, key):
-    if key in config.keys_filter_keys:
-        if options and key in options:
-            return bool(options[key])
-        return False
-    return None
+                    # Get entry
+                    game_entry = metadata_obj.get_game(game_platform, game_name)
 
-# Check if subcategory is a valid child of the given category
-def IsValidCategoryPair(game_category, game_subcategory):
-    if not game_category in GetMetadataCategories():
-        return False
-    if not game_subcategory in GetMetadataSubcategories(game_category):
-        return False
-    return True
+                    # Collect metadata
+                    metadata_result = None
+                    if metadata_source == config.metadata_source_thegamesdb:
+                        metadata_result = CollectMetadataFromTGDB(
+                            web_driver = web_driver,
+                            game_platform = game_platform,
+                            game_name = game_name,
+                            select_automatically = select_automatically,
+                            ignore_unowned = ignore_unowned)
+                    elif metadata_source == config.metadata_source_gamefaqs:
+                        metadata_result = CollectMetadataFromGameFAQS(
+                            web_driver = web_driver,
+                            game_platform = game_platform,
+                            game_name = game_name,
+                            select_automatically = select_automatically,
+                            ignore_unowned = ignore_unowned)
+                    elif metadata_source == config.metadata_source_itchio:
+                        metadata_result = CollectMetadataFromItchio(
+                            web_driver = web_driver,
+                            game_platform = game_platform,
+                            game_name = game_name,
+                            select_automatically = select_automatically,
+                            ignore_unowned = ignore_unowned)
 
-# Get minimum metadata keys
-def GetMinimumMetadataKeys():
-    return [
-        config.metadata_key_platform,
-        config.metadata_key_game,
-        config.metadata_key_file,
-        config.metadata_key_players
-    ]
+                    # Set metadata that was not already present in the file
+                    if metadata_result:
+                        for metadata_key in config.metadata_keys_replaceable:
 
-# Get missing metadata keys
-def GetMissingMetadataKeys():
-    return [
-        config.metadata_key_description,
-        config.metadata_key_developer,
-        config.metadata_key_publisher,
-        config.metadata_key_genre,
-        config.metadata_key_players,
-        config.metadata_key_coop,
-        config.metadata_key_playable,
-        config.metadata_key_release
-    ]
+                            # Ignore keys not in result
+                            if not metadata_key in metadata_result.keys():
+                                continue
 
-# Get replaceable metadata keys
-def GetReplaceableMetadataKeys():
-    return [
-        config.metadata_key_description,
-        config.metadata_key_genre,
-        config.metadata_key_tag,
-        config.metadata_key_developer,
-        config.metadata_key_publisher,
-        config.metadata_key_players,
-        config.metadata_key_coop,
-        config.metadata_key_release
-    ]
+                            # Check if we should set the new data
+                            should_set_data = False
+                            if metadata_key == config.metadata_key_players:
+                                should_set_data = True
+                            if metadata_key == config.metadata_key_coop:
+                                should_set_data = True
+                            elif not metadata_key in game_entry.keys():
+                                should_set_data = True
 
-# Check if file is a metadata file
-def IsMetadataFile(metadata_file, metadata_format):
-    if metadata_format == config.metadata_format_pegasus:
-        return metadata_file.endswith("metadata.pegasus.txt")
-    elif metadata_format == config.metadata_format_gamelist:
-        if system.GetFilenameBasename(metadata_file) in GetMetadataSubcategories():
-            return True
-    return False
+                            # Set new data
+                            if should_set_data:
+                                game_entry[metadata_key] = metadata_result[metadata_key]
 
-# Check if folder is a game folder
-def IsGameFolder(rom_directory):
-    potential_folder = system.GetDirectoryName(rom_directory)
-    is_versioned = "(v" in potential_folder
-    is_eshop = "(eShop)" in potential_folder
-    if is_versioned and is_eshop:
-        return False
-    if potential_folder.endswith(")"):
-        return True
-    return False
+                    # Write metadata back to file
+                    metadata_obj.set_game(game_platform, game_name, game_entry)
+                    metadata_obj.export_to_metadata_file(file, metadata_type)
 
-# Choose random game
-def ChooseRandomGame(rom_category = None, rom_subcategory = None, filter_options = {}):
-    if not rom_category:
-        rom_category = random.choice(GetMetadataCategories())
-    if not rom_subcategory:
-        rom_subcategory = random.choice(GetMetadataSubcategories(rom_category, filter_options))
-    if not IsValidCategoryPair(rom_category, rom_subcategory):
-        return None
-    metadata_file = DeriveMetadataFile(rom_category, rom_subcategory, config.metadata_format_gamelist)
-    metadata_obj = Metadata()
-    metadata_obj.import_from_gamelist_file(metadata_file)
-    return metadata_obj.get_random_entry(filter_options)
-
-# Derive game name from path
-def DeriveGameNameFromPath(rom_path):
-    rom_dir = system.GetFilenameDirectory(rom_path)
-    if not IsGameFolder(rom_dir):
-        return ""
-    return os.path.basename(rom_dir)
-
-# Derive game letter from name
-def DeriveGameLetterFromName(rom_name):
-    letter = ""
-    if len(rom_name):
-        letter = rom_name[0].upper()
-    if letter.isnumeric():
-        letter = config.general_numeric_folder
-    return letter
-
-# Derive game save type from category
-def DeriveGameSaveTypeFromCategory(rom_category):
-    if rom_category == config.game_category_computer:
-        return config.save_type_general
-    return None
-
-# Derive platform from rom category/subcategory
-def DeriveMetadataPlatform(rom_category, rom_subcategory):
-    game_platform = rom_subcategory
-    if rom_category == config.game_category_computer:
-        game_platform = rom_category + " - " + rom_subcategory
-    return game_platform
-
-# Derive categories from rom platform
-def DeriveMetadataCategoriesFromPlatform(rom_platform):
-    if not rom_platform:
-        return (None, None, None)
-    derived_rom_category = ""
-    derived_rom_subcategory = ""
-    if rom_platform.startswith(config.game_category_computer):
-        derived_rom_category = config.game_category_computer
-        derived_rom_subcategory = rom_platform.replace(config.game_category_computer + " - ", "")
-    elif rom_platform.startswith(config.game_category_microsoft):
-        derived_rom_category = config.game_category_microsoft
-        derived_rom_subcategory = rom_platform
-    elif rom_platform.startswith(config.game_category_nintendo):
-        derived_rom_category = config.game_category_nintendo
-        derived_rom_subcategory = rom_platform
-    elif rom_platform.startswith(config.game_category_sony):
-        derived_rom_category = config.game_category_sony
-        derived_rom_subcategory = rom_platform
-    else:
-        derived_rom_category = config.game_category_other
-        derived_rom_subcategory = rom_platform
-    return (config.game_supercategory_roms, derived_rom_category, derived_rom_subcategory)
-
-# Derive categories from file
-def DeriveMetadataCategoriesFromFile(input_file):
-
-    # Check file
-    if not system.IsPathValid(input_file):
-        return (None, None, None)
-
-    # Get source directory and basename
-    source_dir = system.GetFilenameDirectory(system.NormalizeFilePath(input_file))
-    base_name = system.GetFilenameBasename(system.NormalizeFilePath(input_file))
-
-    # Get possible root dirs
-    root_dirs = [
-        system.NormalizeFilePath(environment.GetGamingStorageRootDir()),
-        system.NormalizeFilePath(environment.GetGamingLocalCacheRootDir()),
-        system.NormalizeFilePath(environment.GetGamingRemoteCacheRootDir()),
-        system.NormalizeFilePath(environment.GetJsonMetadataRootDir())
-    ]
-
-    # Get relative source directory
-    relative_source_dir = source_dir
-    for root_dir in root_dirs:
-        relative_source_dir = system.RebaseFilePath(relative_source_dir, root_dir, "")
-
-    # Derive supercategory
-    derived_supercategory = ""
-    for possible_supercategory in GetMetadataSupercategories():
-        if relative_source_dir.startswith(possible_supercategory):
-            derived_supercategory = possible_supercategory
-    if len(derived_supercategory) == 0:
-        return (None, None, None)
-
-    # Get relative path
-    relative_file_path = relative_source_dir[relative_source_dir.index(derived_supercategory) + len(derived_supercategory):].strip(os.sep)
-    relative_file_path_tokens = relative_file_path.split(os.sep)
-    if len(relative_file_path_tokens) < 2:
-        return (None, None, None)
-
-    # Get derived category and subcategory
-    derived_category = ""
-    derived_subcategory = relative_file_path_tokens[1]
-    if relative_file_path.startswith(config.game_category_computer):
-        derived_category = config.game_category_computer
-    elif relative_file_path.startswith(config.game_category_microsoft):
-        derived_category = config.game_category_microsoft
-    elif relative_file_path.startswith(config.game_category_nintendo):
-        derived_category = config.game_category_nintendo
-    elif relative_file_path.startswith(config.game_category_sony):
-        derived_category = config.game_category_sony
-    else:
-        derived_category = config.game_category_other
-    return (derived_supercategory, derived_category, derived_subcategory)
-
-# Derive metadata file from game category/subcategory
-def DeriveMetadataFile(game_category, game_subcategory, metadata_format):
-    game_file = ""
-    if metadata_format == config.metadata_format_gamelist:
-        game_file = environment.GetGameListMetadataFile(game_category, game_subcategory)
-    elif metadata_format == config.metadata_format_pegasus:
-        game_file = environment.GetPegasusMetadataFile(game_category, game_subcategory)
-    return game_file
-
-# Derive metadata key from asset type
-def DeriveMetadataKeyFromAssetType(asset_type):
-    if asset_type == config.asset_type_background:
-        return config.metadata_key_background
-    elif asset_type == config.asset_type_boxback:
-        return config.metadata_key_boxback
-    elif asset_type == config.asset_type_boxfront:
-        return config.metadata_key_boxfront
-    elif asset_type == config.asset_type_label:
-        return config.metadata_key_label
-    elif asset_type == config.asset_type_screenshot:
-        return config.metadata_key_screenshot
-    elif asset_type == config.asset_type_video:
-        return config.metadata_key_video
-    return None
-
-# Derive metadata asset string
-def DeriveMetadataAssetString(game_name, asset_type):
-    asset_ext = config.asset_type_extensions[asset_type]
-    asset_string = "%s/%s%s" % (asset_type, game_name, asset_ext)
-    return asset_string
-
-# Find best suited game file
-def FindBestGameFile(game_directory):
-    game_file_entries = []
-    for obj in system.GetDirectoryContents(game_directory):
-        obj_path = os.path.join(game_directory, obj)
-        if os.path.isfile(obj_path):
-            game_file_entry = {}
-            game_file_entry["file"] = os.path.abspath(obj_path)
-            game_file_entry["weight"] = config.gametype_weight_else
-            for key in config.gametype_weights.keys():
-                if obj.endswith(key):
-                    game_file_entry["weight"] = config.gametype_weights[key]
-                    break
-            game_file_entries.append(game_file_entry)
-    game_file = ""
-    for game_file_entry in sorted(game_file_entries, key=lambda d: d["weight"]):
-        game_file = game_file_entry["file"]
-        break
-    return game_file
-
-# Get possible game names
-def GetPossibleGameNames(base_dir, game_category, game_subcategory):
-    game_names = []
-    base_path = os.path.join(base_dir, game_category, game_subcategory)
-    if game_category == config.game_category_computer:
-        for game_letter in system.GetDirectoryContents(base_path):
-            for game_name in system.GetDirectoryContents(os.path.join(base_path, game_letter)):
-                game_names.append(game_name)
-    else:
-        for game_name in system.GetDirectoryContents(base_path):
-            game_names.append(game_name)
-    return game_names
-
-# Convert metadata name to regular name
-def ConvertMetadataNameToRegularName(name):
-    regular_name = name
-    if ", The " in regular_name:
-        regular_name = regular_name.replace(", The ", " ")
-        regular_name = "The " + regular_name
-    if ", A " in regular_name:
-        regular_name = regular_name.replace(", A ", " ")
-        regular_name = "A " + regular_name
-    regular_name = re.sub(r"\((.*?)\)", "", regular_name).strip()
-    return regular_name
-
-# Convert raw game description to metadata format
-def ConvertRawDescriptionToMetadataFormat(raw_description):
-
-    # Replace special characters
-    new_description = raw_description.strip()
-    new_description = new_description.replace("“", "\"")
-    new_description = new_description.replace("”", "\"")
-    new_description = new_description.replace("’", "'")
-    new_description = new_description.replace("ʻ", "'")
-    new_description = new_description.replace("‘", "'")
-    new_description = new_description.replace("…", "...")
-    new_description = new_description.replace("•", "*")
-    new_description = new_description.replace("—", "-")
-    new_description = new_description.replace("–", "-")
-
-    # Replace leftover html
-    new_description = new_description.replace("<span>", " ")
-    new_description = new_description.replace("</span>", " ")
-    new_description = new_description.replace("&lt;", " ")
-    new_description = new_description.replace("&gt;", " ")
-    new_description = new_description.replace("&quot;", " ")
-    new_description = new_description.replace("&amp;", " ")
-    new_description = new_description.replace("amp;", " ")
-
-    # Replace non-ascii characters
-    cleared_description = new_description.encode("ascii", "ignore")
-    new_description = cleared_description.decode()
-
-    # Final cleanup
-    new_description = new_description.replace("()", "")
-
-    # Create metadata lines
-    metadata_lines = []
-    original_lines = new_description.split("\n")
-    for i in range(0, len(original_lines)):
-        original_line = original_lines[i].strip()
-        for wrapped_line in textwrap.wrap(original_line, width=80):
-            metadata_lines.append(wrapped_line)
-        if i < len(original_lines) - 1:
-            metadata_lines.append(".")
-
-    # Remove duplicate adjacent lines
-    result = []
-    for metadata_line in metadata_lines:
-        if len(result) == 0 or metadata_line != result[-1]:
-            result.append(metadata_line)
-    return result
+    # Cleanup web driver
+    webpage.DestroyWebDriver(web_driver)
 
 # Collect metadata from TheGamesDB
 def CollectMetadataFromTGDB(web_driver, game_platform, game_name, select_automatically = False, ignore_unowned = False):
 
     # Get keywords name
-    natural_name = ConvertMetadataNameToRegularName(game_name)
+    natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
     keywords_name = urllib.parse.quote_plus(natural_name.strip())
 
     # Metadata result
@@ -855,7 +620,7 @@ def CollectMetadataFromTGDB(web_driver, game_platform, game_name, select_automat
 
     # Convert description to metadata format
     if raw_game_description:
-        metadata_result[config.metadata_key_description] = ConvertRawDescriptionToMetadataFormat(raw_game_description)
+        metadata_result[config.metadata_key_description] = CleanRawGameDescription(raw_game_description)
 
     # Look for game details
     for section_game_details in webpage.GetElement(web_driver, class_name = "card-body", all_elements = True):
@@ -896,7 +661,7 @@ def CollectMetadataFromTGDB(web_driver, game_platform, game_name, select_automat
 def CollectMetadataFromGameFAQS(web_driver, game_platform, game_name, select_automatically = False, ignore_unowned = False):
 
     # Get keywords name
-    natural_name = ConvertMetadataNameToRegularName(game_name)
+    natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
     keywords_name = urllib.parse.quote_plus(natural_name.strip())
 
     # Metadata result
@@ -927,7 +692,7 @@ def CollectMetadataFromGameFAQS(web_driver, game_platform, game_name, select_aut
 
     # Convert description to metadata format
     if raw_game_description:
-        metadata_result[config.metadata_key_description] = ConvertRawDescriptionToMetadataFormat(raw_game_description)
+        metadata_result[config.metadata_key_description] = CleanRawGameDescription(raw_game_description)
 
     # Look for game details
     for section_game_details in webpage.GetElement(web_driver, class_name = "content", all_elements = True):
@@ -970,7 +735,7 @@ def CollectMetadataFromGameFAQS(web_driver, game_platform, game_name, select_aut
 def CollectMetadataFromItchio(web_driver, game_platform, game_name, select_automatically = False, ignore_unowned = False):
 
     # Get keywords name
-    natural_name = ConvertMetadataNameToRegularName(game_name)
+    natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
     keywords_name = urllib.parse.quote_plus(natural_name.strip())
 
     # Metadata result
@@ -1040,7 +805,7 @@ def CollectMetadataFromItchio(web_driver, game_platform, game_name, select_autom
 
     # Convert description to metadata format
     if raw_game_description:
-        metadata_result[config.metadata_key_description] = ConvertRawDescriptionToMetadataFormat(raw_game_description)
+        metadata_result[config.metadata_key_description] = CleanRawGameDescription(raw_game_description)
 
     # Grab the information text
     raw_game_information = webpage.GetElementText(section_game_information)
@@ -1088,3 +853,51 @@ def CollectMetadataFromItchio(web_driver, game_platform, game_name, select_autom
 
     # Return metadata
     return metadata_result
+
+# Clean raw game description
+def CleanRawGameDescription(raw_description):
+
+    # Replace special characters
+    new_description = raw_description.strip()
+    new_description = new_description.replace("“", "\"")
+    new_description = new_description.replace("”", "\"")
+    new_description = new_description.replace("’", "'")
+    new_description = new_description.replace("ʻ", "'")
+    new_description = new_description.replace("‘", "'")
+    new_description = new_description.replace("…", "...")
+    new_description = new_description.replace("•", "*")
+    new_description = new_description.replace("—", "-")
+    new_description = new_description.replace("–", "-")
+
+    # Replace leftover html
+    new_description = new_description.replace("<span>", " ")
+    new_description = new_description.replace("</span>", " ")
+    new_description = new_description.replace("&lt;", " ")
+    new_description = new_description.replace("&gt;", " ")
+    new_description = new_description.replace("&quot;", " ")
+    new_description = new_description.replace("&amp;", " ")
+    new_description = new_description.replace("amp;", " ")
+
+    # Replace non-ascii characters
+    cleared_description = new_description.encode("ascii", "ignore")
+    new_description = cleared_description.decode()
+
+    # Final cleanup
+    new_description = new_description.replace("()", "")
+
+    # Create metadata lines
+    metadata_lines = []
+    original_lines = new_description.split("\n")
+    for i in range(0, len(original_lines)):
+        original_line = original_lines[i].strip()
+        for wrapped_line in textwrap.wrap(original_line, width=80):
+            metadata_lines.append(wrapped_line)
+        if i < len(original_lines) - 1:
+            metadata_lines.append(".")
+
+    # Remove duplicate adjacent lines
+    result = []
+    for metadata_line in metadata_lines:
+        if len(result) == 0 or metadata_line != result[-1]:
+            result.append(metadata_line)
+    return result

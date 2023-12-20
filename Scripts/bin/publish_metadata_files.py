@@ -130,7 +130,7 @@ def main():
             for game_subcategory in config.game_subcategories[game_category]:
 
                 # Get metadata contents
-                metadata_file = metadata.DeriveMetadataFile(game_category, game_subcategory, config.metadata_format_pegasus)
+                metadata_file = environment.GetMetadataFile(game_category, game_subcategory, config.metadata_format_pegasus)
                 if os.path.isfile(metadata_file):
                     metadata_obj = metadata.Metadata()
                     metadata_obj.import_from_metadata_file(metadata_file, config.metadata_format_pegasus)

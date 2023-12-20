@@ -23,7 +23,7 @@ def main():
         for game_subcategory in config.game_subcategories[game_category]:
 
             # Get pegasus file
-            pegasus_file = metadata.DeriveMetadataFile(game_category, game_subcategory, config.metadata_format_pegasus)
+            pegasus_file = environment.GetMetadataFile(game_category, game_subcategory, config.metadata_format_pegasus)
             if not os.path.isfile(pegasus_file):
                 continue
 

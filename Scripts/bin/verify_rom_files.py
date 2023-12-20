@@ -32,8 +32,8 @@ def main():
 
         # Check if json file matches up to a real rom path
         print("Checking if rom matching '%s' exists ..." % json_file)
-        game_supercategory, game_category, game_subcategory = metadata.DeriveMetadataCategoriesFromFile(json_file)
-        game_name = metadata.DeriveGameNameFromPath(json_file)
+        game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromFile(json_file)
+        game_name = gameinfo.DeriveGameNameFromPath(json_file)
         game_rom_dir = environment.GetRomDir(game_category, game_subcategory, game_name)
         if not os.path.exists(game_rom_dir):
             print("Extraneous json file '%s' found" % json_file)
@@ -44,14 +44,14 @@ def main():
         for game_subcategory in config.game_subcategories[game_subcategory]:
 
             # Verify gamelist roms
-            gamelist_file = metadata.DeriveMetadataFile(game_category, game_subcategory, config.metadata_format_gamelist)
+            gamelist_file = environment.GetMetadataFile(game_category, game_subcategory, config.metadata_format_gamelist)
             if os.path.isfile(gamelist_file):
                 metadata_gamelist = metadata.Metadata()
                 metadata_gamelist.import_from_gamelist_file(gamelist_file)
                 metadata_gamelist.verify_roms()
 
             # Verify pegasus roms
-            pegasus_file = metadata.DeriveMetadataFile(game_category, game_subcategory, config.metadata_format_pegasus)
+            pegasus_file = environment.GetMetadataFile(game_category, game_subcategory, config.metadata_format_pegasus)
             if os.path.isfile(pegasus_file):
                 metadata_pegasus = metadata.Metadata()
                 metadata_pegasus.import_from_pegasus_file(pegasus_file)
@@ -60,7 +60,7 @@ def main():
     # Verify json files
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
-            game_platform = metadata.DeriveMetadataPlatform(game_category, game_subcategory)
+            game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
             for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
 
                 # Get json file path

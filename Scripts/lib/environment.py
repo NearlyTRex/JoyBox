@@ -9,7 +9,7 @@ import ntpath
 import config
 import command
 import system
-import metadata
+import gameinfo
 import ini
 
 ###########################################################
@@ -207,7 +207,7 @@ def GetSyncedGamingSavesRootDir():
 # Get synced game save dir
 def GetSyncedGameSaveDir(game_category, game_subcategory, game_name):
     if game_category == config.game_category_computer:
-        letter = metadata.DeriveGameLetterFromName(game_name)
+        letter = gameinfo.DeriveGameLetterFromName(game_name)
         return os.path.join(GetSyncedGamingSavesRootDir(), game_category, game_subcategory, letter, game_name)
     else:
         return os.path.join(GetSyncedGamingSavesRootDir(), game_category, game_subcategory, game_name)
@@ -252,6 +252,24 @@ def GetGameListMetadataRootDir():
 def GetGameListMetadataFile(game_category, game_subcategory):
     return os.path.join(GetGameListMetadataRootDir(), config.game_supercategory_roms, game_category, game_subcategory + ".txt")
 
+# Get metadata file
+def GetMetadataFile(game_category, game_subcategory, metadata_format):
+    game_file = ""
+    if metadata_format == config.metadata_format_gamelist:
+        game_file = GetGameListMetadataFile(game_category, game_subcategory)
+    elif metadata_format == config.metadata_format_pegasus:
+        game_file = GetPegasusMetadataFile(game_category, game_subcategory)
+    return game_file
+
+# Check if file is a metadata file
+def IsMetadataFile(metadata_file, metadata_format):
+    if metadata_format == config.metadata_format_pegasus:
+        return metadata_file.endswith("metadata.pegasus.txt")
+    elif metadata_format == config.metadata_format_gamelist:
+        if system.GetFilenameBasename(metadata_file) in config.game_subcategories_all:
+            return True
+    return False
+
 # Get published metadata root dir
 def GetPublishedMetadataRootDir():
     return os.path.join(GetMetadataRootDir(), "Published")
@@ -287,7 +305,7 @@ def GetJsonRomsMetadataRootDir():
 # Get json rom metadata file
 def GetJsonRomMetadataFile(game_category, game_subcategory, game_name):
     if game_category == config.game_category_computer:
-        letter = metadata.DeriveGameLetterFromName(game_name)
+        letter = gameinfo.DeriveGameLetterFromName(game_name)
         return os.path.join(GetJsonRomsMetadataRootDir(), game_category, game_subcategory, letter, game_name, game_name + ".json")
     else:
         return os.path.join(GetJsonRomsMetadataRootDir(), game_category, game_subcategory, game_name, game_name + ".json")
@@ -341,7 +359,7 @@ def GetRomRootDir():
 # Get rom dir
 def GetRomDir(rom_category, rom_subcategory, rom_name):
     if rom_category == config.game_category_computer:
-        letter = metadata.DeriveGameLetterFromName(rom_name)
+        letter = gameinfo.DeriveGameLetterFromName(rom_name)
         return os.path.join(GetRomRootDir(), rom_category, rom_subcategory, letter, rom_name)
     else:
         return os.path.join(GetRomRootDir(), rom_category, rom_subcategory, rom_name)
@@ -394,7 +412,7 @@ def GetInstallRomRootDir():
 # Get install rom dir
 def GetInstallRomDir(rom_category, rom_subcategory, rom_name):
     if rom_category == config.game_category_computer:
-        letter = metadata.DeriveGameLetterFromName(rom_name)
+        letter = gameinfo.DeriveGameLetterFromName(rom_name)
         return os.path.join(GetInstallRomRootDir(), rom_category, rom_subcategory, letter, rom_name)
     else:
         return os.path.join(GetInstallRomRootDir(), rom_category, rom_subcategory, rom_name)

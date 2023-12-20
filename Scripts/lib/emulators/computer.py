@@ -650,7 +650,7 @@ class Computer(emulatorbase.EmulatorBase):
         should_run_via_sandboxie = environment.IsWindowsPlatform()
 
         # Get launch categories
-        launch_supercategory, launch_category, launch_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(launch_platform)
+        launch_supercategory, launch_category, launch_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(launch_platform)
 
         # Get launch info
         launch_info = gameinfo.ParseGameJson(launch_file, verbose = verbose, exit_on_failure = exit_on_failure)

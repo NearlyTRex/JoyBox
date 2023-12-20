@@ -125,7 +125,7 @@ class RPCS3(emulatorbase.EmulatorBase):
         exit_on_failure = False):
 
         # Get launch categories
-        launch_supercategory, launch_category, launch_subcategory = metadata.DeriveMetadataCategoriesFromPlatform(launch_platform)
+        launch_supercategory, launch_category, launch_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(launch_platform)
 
         # Install game to cache
         cache.InstallGameToCache(
