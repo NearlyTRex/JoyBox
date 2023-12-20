@@ -19,8 +19,8 @@ def main():
     setup.CheckRequirements()
 
     # Sort metadata files
-    for game_category in metadata.GetMetadataCategories():
-        for game_subcategory in metadata.GetMetadataSubcategories(game_category):
+    for game_category in config.game_categories:
+        for game_subcategory in config.game_subcategories[game_category]:
 
             # Sort gamelist file
             gamelist_file = metadata.DeriveMetadataFile(game_category, game_subcategory, config.metadata_format_gamelist)
