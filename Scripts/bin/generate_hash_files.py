@@ -18,8 +18,8 @@ parser = argparse.ArgumentParser(description="Generate file hashes.")
 parser.add_argument("-i", "--input_path", type=str, help="Input path")
 parser.add_argument("-d", "--disc_name", type=str, help="Disc name")
 parser.add_argument("-u", "--file_supercategory",
-    choices=metadata.GetMetadataSupercategories(),
-    default=metadata.GetMetadataDefaultSupercategory(),
+    choices=config.game_supercategories,
+    default=config.game_supercategory_roms,
     help="File supercategory"
 )
 parser.add_argument("-c", "--file_category", type=str, help="File category")
@@ -92,7 +92,7 @@ def main():
 
         # Specific category/all subcategories in that category
         elif args.file_category:
-            for file_subcategory in metadata.GetMetadataSubcategories(args.file_category):
+            for file_subcategory in config.game_subcategories[args.file_category]:
                 hashing.HashStandardFiles(
                     input_path = os.path.join(source_file_root, args.file_category, file_subcategory),
                     file_supercategory = args.file_supercategory,
@@ -102,8 +102,8 @@ def main():
 
         # All categories/subcategories
         else:
-            for file_category in metadata.GetMetadataCategories():
-                for file_subcategory in metadata.GetMetadataSubcategories(file_category):
+            for file_category in config.game_categories:
+                for file_subcategory in config.game_subcategories[file_category]:
                     hashing.HashStandardFiles(
                         input_path = os.path.join(source_file_root, file_category, file_subcategory),
                         file_supercategory = args.file_supercategory,

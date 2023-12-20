@@ -18,8 +18,8 @@ import setup
 # Parse arguments
 parser = argparse.ArgumentParser(description="Generate iso files.")
 parser.add_argument("-u", "--file_supercategory",
-    choices=metadata.GetMetadataSupercategories(),
-    default=metadata.GetMetadataDefaultSupercategory(),
+    choices=config.game_supercategories,
+    default=config.game_supercategory_roms,
     help="File supercategory"
 )
 parser.add_argument("-c", "--file_category", type=str, help="File category")
@@ -95,11 +95,11 @@ def main():
     if args.file_category and args.file_subcategory:
         hash_files.append(os.path.join(hashes_base_dir, args.file_category, args.file_subcategory + ".txt"))
     elif args.file_category:
-        for file_subcategory in metadata.GetMetadataSubcategories(args.file_category):
+        for file_subcategory in config.game_subcategories[args.file_category]:
             hash_files.append(os.path.join(files_root_dir, args.file_category, file_subcategory))
     else:
-        for file_category in metadata.GetMetadataCategories():
-            for file_subcategory in metadata.GetMetadataSubcategories(file_category):
+        for file_category in config.game_categories:
+            for file_subcategory in config.game_subcategories[file_category]:
                 hash_files.append(os.path.join(files_root_dir, file_category, file_subcategory))
 
     # Generate iso files
