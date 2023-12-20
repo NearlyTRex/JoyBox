@@ -166,16 +166,17 @@ class Metadata:
                             del game_entry[game_metadata_key]
                 self.set_game(game_platform, game_name, game_entry)
 
-    # Scan roms
-    def scan_roms(self, rom_path, rom_category, rom_subcategory):
-        for dir in system.BuildDirectoryList(rom_path):
+    # Scan rom base directory
+    def scan_rom_base_dir(self, rom_base_dir, rom_category, rom_subcategory):
+        for obj in system.GetDirectoryContents(rom_base_dir):
+            rom_dir = os.path.join(rom_base_dir, obj)
 
             # Skip non-game folders
-            if not dir.endswith(")"):
+            if not rom_dir.endswith(")"):
                 continue
 
             # Get info
-            rom_name = system.GetDirectoryName(dir)
+            rom_name = system.GetDirectoryName(rom_dir)
             rom_platform = gameinfo.DeriveGamePlatformFromCategories(rom_category, rom_subcategory)
 
             # Get file
@@ -209,6 +210,14 @@ class Metadata:
             game_entry[config.metadata_key_coop] = "No"
             game_entry[config.metadata_key_playable] = "Yes"
             self.add_game(game_entry)
+
+    # Scan roms
+    def scan_roms(self, rom_path, rom_category, rom_subcategory):
+        if rom_category == config.game_category_computer:
+            for obj in system.GetDirectoryContents(rom_path):
+                self.scan_rom_base_dir(os.path.join(rom_path, obj), rom_category, rom_subcategory)
+        else:
+            self.scan_rom_base_dir(rom_path, rom_category, rom_subcategory)
 
     # Import from pegasus file
     def import_from_pegasus_file(self, pegasus_file):
