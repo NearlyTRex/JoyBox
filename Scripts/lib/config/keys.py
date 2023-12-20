@@ -34,6 +34,32 @@ metadata_key_boxfront = "boxfront"
 metadata_key_label = "label"
 metadata_key_screenshot = "screenshot"
 metadata_key_video = "video"
+metadata_keys_minimum = [
+    metadata_key_platform,
+    metadata_key_game,
+    metadata_key_file,
+    metadata_key_players
+]
+metadata_keys_missing = [
+    metadata_key_description,
+    metadata_key_developer,
+    metadata_key_publisher,
+    metadata_key_genre,
+    metadata_key_players,
+    metadata_key_coop,
+    metadata_key_playable,
+    metadata_key_release
+]
+metadata_keys_replaceable = [
+    metadata_key_description,
+    metadata_key_genre,
+    metadata_key_tag,
+    metadata_key_developer,
+    metadata_key_publisher,
+    metadata_key_players,
+    metadata_key_coop,
+    metadata_key_release
+]
 
 # General json keys
 json_key_launch_name = "launch_name"
