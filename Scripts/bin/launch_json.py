@@ -52,7 +52,7 @@ def main():
             message_text = "Json file %s was not found" % json_file)
 
     # Check ability to launch
-    if not gameinfo.IsGameLaunchable(json_file):
+    if not gameinfo.IsGameJsonLaunchable(json_file):
         gui.DisplayErrorPopup(
             title_text = "Json file not launchable",
             message_text = "Json file '%s' is not launchable" % json_file)
