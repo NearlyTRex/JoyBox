@@ -79,24 +79,24 @@ def DeriveGameLetterFromName(game_name):
 def DeriveGameCategoriesFromPlatform(game_platform):
     if not game_platform:
         return (None, None, None)
-    derived_rom_category = ""
-    derived_rom_subcategory = ""
+    derived_category = ""
+    derived_subcategory = ""
     if game_platform.startswith(config.game_category_computer):
-        derived_rom_category = config.game_category_computer
-        derived_rom_subcategory = game_platform.replace(config.game_category_computer + " - ", "")
+        derived_category = config.game_category_computer
+        derived_subcategory = game_platform.replace(config.game_category_computer + " - ", "")
     elif game_platform.startswith(config.game_category_microsoft):
-        derived_rom_category = config.game_category_microsoft
-        derived_rom_subcategory = game_platform
+        derived_category = config.game_category_microsoft
+        derived_subcategory = game_platform
     elif game_platform.startswith(config.game_category_nintendo):
-        derived_rom_category = config.game_category_nintendo
-        derived_rom_subcategory = game_platform
+        derived_category = config.game_category_nintendo
+        derived_subcategory = game_platform
     elif game_platform.startswith(config.game_category_sony):
-        derived_rom_category = config.game_category_sony
-        derived_rom_subcategory = game_platform
+        derived_category = config.game_category_sony
+        derived_subcategory = game_platform
     else:
-        derived_rom_category = config.game_category_other
-        derived_rom_subcategory = game_platform
-    return (config.game_supercategory_roms, derived_rom_category, derived_rom_subcategory)
+        derived_category = config.game_category_other
+        derived_subcategory = game_platform
+    return (config.game_supercategory_roms, derived_category, derived_subcategory)
 
 # Derive game categories from file
 def DeriveGameCategoriesFromFile(game_file):
@@ -152,10 +152,10 @@ def DeriveGameCategoriesFromFile(game_file):
     return (derived_supercategory, derived_category, derived_subcategory)
 
 # Derive game platform from categories
-def DeriveGamePlatformFromCategories(rom_category, rom_subcategory):
-    game_platform = rom_subcategory
-    if rom_category == config.game_category_computer:
-        game_platform = rom_category + " - " + rom_subcategory
+def DeriveGamePlatformFromCategories(game_category, game_subcategory):
+    game_platform = game_subcategory
+    if game_category == config.game_category_computer:
+        game_platform = game_category + " - " + game_subcategory
     return game_platform
 
 ###########################################################
