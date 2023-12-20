@@ -8,8 +8,8 @@ import argparse
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
+import config
 import environment
-import metadata
 import hashing
 import setup
 
