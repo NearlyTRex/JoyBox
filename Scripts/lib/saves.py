@@ -78,7 +78,7 @@ def PackSave(save_category, save_subcategory, save_name, verbose = False, exit_o
 
     # Get save type
     save_type = None
-    if rom_category == config.game_category_computer:
+    if save_category == config.game_category_computer:
         save_type = config.save_type_general
 
     # Get input save dirs
