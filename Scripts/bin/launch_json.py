@@ -9,6 +9,7 @@ import argparse
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
+import system
 import environment
 import launcher
 import cache
@@ -55,7 +56,7 @@ def main():
     if not gameinfo.IsGameJsonLaunchable(json_file):
         gui.DisplayErrorPopup(
             title_text = "Json file not launchable",
-            message_text = "Json file '%s' is not launchable" % json_file)
+            message_text = "Json file '%s' is not launchable" % system.GetFilenameFile(json_file))
 
     # Get json info
     json_data = gameinfo.ParseGameJson(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
