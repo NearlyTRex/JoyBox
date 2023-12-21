@@ -2,4 +2,4 @@
 if not exist %USERPROFILE%\.venv\ (
     python -m venv %USERPROFILE%\.venv
 )
-%USERPROFILE%\.venv\Scripts\python "%~dp0generate_playlists.py" %*
+%USERPROFILE%\.venv\Scripts\python "%~dp0generate_playlist.py" %*
