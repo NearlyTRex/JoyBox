@@ -16,6 +16,12 @@ import emulatorbase
 # Config files
 config_files = {}
 config_file_general = """
+[general]
+show_welcome = false
+
+[input.bindings]
+port1 = '030003f05e0400008e02000014010000'
+
 [sys.files]
 bootrom_path = '$EMULATOR_SETUP_ROOT/bios/mcpx_1.0.bin'
 flashrom_path = '$EMULATOR_SETUP_ROOT/bios/complex_4627.bin'
