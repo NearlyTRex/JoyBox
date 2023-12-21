@@ -253,12 +253,18 @@ def ParseGameJson(json_file, verbose = False, exit_on_failure = False):
     json_launch_file = json_data[config.json_key_launch_file]
     json_transform_file = json_data[config.json_key_transform_file]
 
-    # Get source info
-    source_file = ""
+    # Get source dir
     source_dir = environment.GetRomDir(json_category, json_subcategory, json_base_name)
+
+    # Get source file
+    # In order of preference:
+    # - Use launch file
+    # - Use transform file
+    # - Use launch name
+    source_file = ""
     if isinstance(json_launch_file, list) and len(json_launch_file) == 1:
         source_file = os.path.join(source_dir, json_launch_file[0])
-    elif isinstance(json_transform_file, list) and len(json_transform_file) == 1:
+    if isinstance(json_transform_file, list) and len(json_transform_file) == 1:
         source_file = os.path.join(source_dir, json_transform_file[0])
     if isinstance(json_launch_name, str) and len(source_file) == 0:
         source_file = os.path.join(source_dir, json_launch_name)
