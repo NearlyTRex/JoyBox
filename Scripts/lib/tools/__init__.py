@@ -10,6 +10,7 @@ from . import firefox
 from . import geckodriver
 from . import git
 from . import hactool
+from . import jdupes
 from . import mkpl
 from . import lgogdownloader
 from . import ludusavi
@@ -48,6 +49,7 @@ instances = [
     geckodriver.GeckoDriver(),
     git.Git(),
     hactool.HacTool(),
+    jdupes.Jdupes(),
     mkpl.Mkpl(),
     lgogdownloader.LGOGDownloader(),
     ludusavi.Ludusavi(),
