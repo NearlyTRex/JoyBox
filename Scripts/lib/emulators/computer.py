@@ -821,7 +821,6 @@ class Computer(emulatorbase.EmulatorBase):
                     start_program = selected_cmd,
                     start_letter = "c",
                     start_offset = selected_cwd,
-                    disc_letter = "d",
                     fullscreen = fullscreen)
                 launch_info_options = command.CommandOptions(
                     prefix_dir = launch_save_dir,
