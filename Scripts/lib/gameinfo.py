@@ -161,10 +161,9 @@ def DeriveGamePlatformFromCategories(game_category, game_subcategory):
 ###########################################################
 
 # Check if game json is launchable
-def IsGameJsonLaunchable(json_file):
+def IsGameJsonLaunchable(json_data):
 
     # Get json info
-    json_data = ParseGameJson(json_file)
     json_base_name = json_data[config.json_key_base_name]
     json_category = json_data[config.json_key_category]
     json_subcategory = json_data[config.json_key_subcategory]
@@ -202,7 +201,11 @@ def ParseGameJson(json_file, verbose = False, exit_on_failure = False):
     json_base_name = system.GetFilenameBasename(json_file)
     json_regular_name = DeriveRegularNameFromGameName(json_base_name)
     json_supercategory, json_category, json_subcategory = DeriveGameCategoriesFromFile(json_file)
+    if not json_supercategory or not json_category or not json_subcategory:
+        return None
     json_platform = DeriveGamePlatformFromCategories(json_category, json_subcategory)
+    if not json_platform:
+        return None
 
     # Set default value
     def SetDefaultValue(dict_var, dict_key, default_value):
@@ -272,6 +275,16 @@ def ParseGameJson(json_file, verbose = False, exit_on_failure = False):
     # Set source info
     json_data[config.json_key_source_file] = source_file
     json_data[config.json_key_source_dir] = source_dir
+
+    # Get artwork
+    artwork_file = environment.GetSyncedGameAssetFile(
+        game_category = json_category,
+        game_subcategory = json_subcategory,
+        game_name = json_base_name,
+        asset_type = config.asset_type_boxfront)
+
+    # Set game artwork
+    json_data[config.json_key_artwork] = artwork_file
 
     # Return json
     return json_data

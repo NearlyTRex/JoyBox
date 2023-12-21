@@ -36,56 +36,30 @@ def main():
     verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
     exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
-    # Get game file
-    game_file = args.path
+    # Get json file
+    json_files = [args.path]
     if os.path.isdir(args.path):
-        game_file = gameinfo.FindBestGameFile(args.path)
+        json_files = system.BuildFileListByExtensions(args.path, extensions = [".json"])
 
-    # Get game categories
-    game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromFile(game_file)
+    # Cache each game
+    for json_file in json_files:
 
-    # Check metadata categories
-    invalid_supercategory = (game_supercategory != config.game_supercategory_roms)
-    invalid_category = (game_category == None)
-    invalid_subcategory = (game_subcategory == None)
-    if invalid_supercategory or invalid_category or invalid_subcategory:
-        gui.DisplayErrorPopup(
-            title_text = "Unable to recognize game categories",
-            message_text = "Unable to recognize game categories from path %s" % args.path)
+        # Get json info
+        json_data = gameinfo.ParseGameJson(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
 
-    # Get game platform
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-    game_name = gameinfo.DeriveGameNameFromPath(game_file)
-    if not game_platform or not game_name:
-        gui.DisplayErrorPopup(
-            title_text = "Unable to derive game platform or name",
-            message_text = "Unable to derive game platform or name from path %s" % args.path)
+        # Force cache refresh
+        if args.force_cache_refresh:
+            cache.RemoveGameFromCache(
+                json_data = json_data,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
-    # Force cache refresh
-    if args.force_cache_refresh:
-        cache.RemoveGameFromCache(
-            game_platform = game_platform,
-            game_name = game_name,
-            game_file = game_file,
+        # Install game to cache
+        cache.InstallGameToCache(
+            json_data = json_data,
+            keep_setup_files = args.keep_setup_files,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-
-    # Get game artwork
-    game_artwork = environment.GetSyncedGameAssetFile(
-        game_category = game_category,
-        game_subcategory = game_subcategory,
-        game_name = game_name,
-        asset_type = config.asset_type_boxfront)
-
-    # Install game to cache
-    cache.InstallGameToCache(
-        game_platform = game_platform,
-        game_name = game_name,
-        game_file = game_file,
-        game_artwork = game_artwork,
-        keep_setup_files = args.keep_setup_files,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
 
 # Start
 main()

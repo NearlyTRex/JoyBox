@@ -113,31 +113,28 @@ class RPCS3(emulatorbase.EmulatorBase):
     # Launch
     def Launch(
         self,
-        launch_name,
-        launch_platform,
-        launch_file,
-        launch_artwork,
-        launch_save_dir,
-        launch_general_save_dir,
-        launch_capture_type,
+        json_data,
+        capture_type,
         fullscreen = False,
         verbose = False,
         exit_on_failure = False):
 
-        # Get launch categories
-        launch_supercategory, launch_category, launch_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(launch_platform)
+        # Get game info
+        game_name = json_data[config.json_key_base_name]
+        game_category = json_data[config.json_key_category]
+        game_subcategory = json_data[config.json_key_subcategory]
+        game_platform = json_data[config.json_key_platform]
+        game_artwork = json_data[config.json_key_artwork]
+        game_save_dir = json_data[config.json_key_save_dir]
 
         # Install game to cache
         cache.InstallGameToCache(
-            game_platform = launch_platform,
-            game_name = launch_name,
-            game_file = launch_file,
-            game_artwork = launch_artwork,
+            json_data = launch_data,
             verbose = verbose)
 
         # Get directories
-        cache_dir = environment.GetCachedRomDir(launch_category, launch_subcategory, launch_name)
-        exdata_dir = os.path.join(launch_save_dir, "exdata")
+        cache_dir = environment.GetCachedRomDir(game_category, game_subcategory, game_name)
+        exdata_dir = os.path.join(game_save_dir, "exdata")
 
         # Make directories
         system.MakeDirectory(
@@ -146,7 +143,7 @@ class RPCS3(emulatorbase.EmulatorBase):
             exit_on_failure = exit_on_failure)
 
         # Copy exdata files
-        if launch_platform == "Sony PlayStation Network - PlayStation 3":
+        if launch_platform == config.game_subcategory_sony_playstation_network_ps3:
             for exdata_file in system.BuildFileListByExtensions(cache_dir, extensions = [".rap", ".edat"]):
                 system.CopyFileOrDirectory(
                     src = exdata_file,
@@ -166,12 +163,8 @@ class RPCS3(emulatorbase.EmulatorBase):
 
         # Launch game
         emulatorcommon.SimpleLaunch(
+            json_data = json_data,
             launch_cmd = launch_cmd,
-            launch_name = launch_name,
-            launch_platform = launch_platform,
-            launch_file = launch_file,
-            launch_artwork = launch_artwork,
-            launch_save_dir = launch_save_dir,
-            launch_capture_type = launch_capture_type,
+            capture_type = capture_type,
             verbose = verbose,
             exit_on_failure = exit_on_failure)

@@ -13,19 +13,18 @@ import saves
 import gui
 
 # Launch game
-def LaunchGame(json_file, capture_type = None, fullscreen = False, verbose = False, exit_on_failure = False):
+def LaunchGame(json_data, capture_type = None, fullscreen = False, verbose = False, exit_on_failure = False):
 
-    # Get json info
-    json_data = gameinfo.ParseGameJson(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
-    json_base_name = json_data[config.json_key_base_name]
-    json_category = json_data[config.json_key_category]
-    json_subcategory = json_data[config.json_key_subcategory]
-    json_platform = json_data[config.json_key_platform]
+    # Get game info
+    game_name = json_data[config.json_key_base_name]
+    game_category = json_data[config.json_key_category]
+    game_subcategory = json_data[config.json_key_subcategory]
+    game_platform = json_data[config.json_key_platform]
 
     # Get launcher
     game_launcher = None
     for emulator in programs.GetEmulators():
-        if json_platform in emulator.GetPlatforms():
+        if game_platform in emulator.GetPlatforms():
             game_launcher = emulator
             break
 
@@ -33,23 +32,22 @@ def LaunchGame(json_file, capture_type = None, fullscreen = False, verbose = Fal
     if not game_launcher:
         gui.DisplayErrorPopup(
             title_text = "Launcher not found",
-            message_text = "Launcher for game '%s' in platform '%s' could not be found" % (json_base_name, json_platform))
+            message_text = "Launcher for game '%s' in platform '%s' could not be found" % (game_name, game_platform))
 
     # Get game info
-    game_artwork_file = environment.GetSyncedGameAssetFile(
-        game_category = json_category,
-        game_subcategory = json_subcategory,
-        game_name = json_base_name,
-        asset_type = config.asset_type_boxfront)
     game_config_file = game_launcher.GetConfigFile()
     game_save_type = game_launcher.GetSaveType()
-    game_save_dir_launcher = game_launcher.GetSaveDir(json_platform)
-    game_save_dir_real = environment.GetCachedSaveDir(json_category, json_subcategory, json_base_name, game_save_type)
-    game_save_dir_general = environment.GetCachedSaveDir(json_category, json_subcategory, json_base_name, config.save_type_general)
+    game_save_dir_launcher = game_launcher.GetSaveDir(game_platform)
+    game_save_dir_real = environment.GetCachedSaveDir(game_category, game_subcategory, game_name, game_save_type)
+    game_save_dir_general = environment.GetCachedSaveDir(game_category, game_subcategory, game_name, config.save_type_general)
+
+    # Set save dirs
+    json_data[config.json_key_save_dir] = game_save_dir_real
+    json_data[config.json_key_general_save_dir] = game_save_dir_general
 
     # Unpack save if possible
-    if saves.CanSaveBeUnpacked(json_category, json_subcategory, json_base_name):
-        saves.UnpackSave(json_category, json_subcategory, json_base_name, verbose = verbose, exit_on_failure = exit_on_failure)
+    if saves.CanSaveBeUnpacked(game_category, game_subcategory, game_name):
+        saves.UnpackSave(game_category, game_subcategory, game_name, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Make sure real save directory exists
     system.MakeDirectory(game_save_dir_real, verbose = verbose, exit_on_failure = exit_on_failure)
@@ -74,13 +72,8 @@ def LaunchGame(json_file, capture_type = None, fullscreen = False, verbose = Fal
 
     # Launch game
     game_launcher.Launch(
-        launch_name = json_base_name,
-        launch_platform = json_platform,
-        launch_file = json_file,
-        launch_artwork = game_artwork_file,
-        launch_save_dir = game_save_dir_real,
-        launch_general_save_dir = game_save_dir_general,
-        launch_capture_type = capture_type,
+        json_data = json_data,
+        capture_type = capture_type,
         fullscreen = fullscreen,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
@@ -103,4 +96,4 @@ def LaunchGame(json_file, capture_type = None, fullscreen = False, verbose = Fal
         system.MakeDirectory(game_save_dir_launcher, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Pack save
-    saves.PackSave(json_category, json_subcategory, json_base_name, verbose = verbose, exit_on_failure = exit_on_failure)
+    saves.PackSave(game_category, game_subcategory, game_name, verbose = verbose, exit_on_failure = exit_on_failure)

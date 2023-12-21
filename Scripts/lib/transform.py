@@ -18,18 +18,20 @@ import xbox
 
 # Transform game file
 def TransformGameFile(
-    game_platform,
-    game_name,
-    source_game_file,
-    source_json_file,
+    json_data,
+    source_file,
     output_dir,
     keep_setup_files = False,
     verbose = False,
     exit_on_failure = False):
 
+    # Get game info
+    game_name = json_data[config.json_key_base_name]
+    game_platform = json_data[config.json_key_platform]
+
     # No transform needed
     if not platforms.AreTransformsRequired(game_platform):
-        return (True, source_game_file)
+        return (True, source_file)
 
     # Output dir doesn't exist
     if not os.path.isdir(output_dir):
@@ -59,9 +61,9 @@ def TransformGameFile(
     raw_tmp_dir = os.path.join(tmp_dir_result, "raw")
     cached_install_dir = environment.GetInstallRomDir(game_category, game_subcategory, game_name)
     cached_install_file = os.path.join(cached_install_dir, game_name + ".install")
-    source_game_file_dir = system.GetFilenameDirectory(source_game_file)
-    source_game_file_basename = system.GetFilenameBasename(source_game_file)
-    source_game_file_ext = system.GetFilenameExtension(source_game_file)
+    source_game_file_dir = system.GetFilenameDirectory(source_file)
+    source_game_file_basename = system.GetFilenameBasename(source_file)
+    source_game_file_ext = system.GetFilenameExtension(source_file)
     tmp_iso_bin_file = os.path.join(iso_tmp_dir, source_game_file_basename + ".iso")
     tmp_iso_toc_file = os.path.join(iso_tmp_dir, source_game_file_basename + ".toc")
     tmp_install_file = os.path.join(install_tmp_dir, source_game_file_basename + ".install")
@@ -82,7 +84,7 @@ def TransformGameFile(
 
         # Extract CHD
         chd.ExtractDiscCHD(
-            chd_file = source_game_file,
+            chd_file = source_file,
             binary_file = tmp_iso_bin_file,
             toc_file = tmp_iso_toc_file,
             verbose = verbose,
@@ -250,7 +252,7 @@ def TransformGameFile(
 
             # Create install image
             success = installer.InstallComputerGame(
-                json_file = source_json_file,
+                json_data = json_data,
                 output_image = tmp_install_file,
                 keep_setup_files = keep_setup_files,
                 verbose = verbose,
@@ -321,7 +323,7 @@ def TransformGameFile(
 
     # No transformation was able to be done, so default to the original file
     if not os.path.exists(transformed_game_output):
-        return (True, source_game_file)
+        return (True, source_file)
 
     # Move transformed output
     system.MoveContents(

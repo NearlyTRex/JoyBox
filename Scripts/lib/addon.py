@@ -13,21 +13,17 @@ import gameinfo
 
 # Install addons
 def InstallAddons(
-    game_platform,
-    game_name,
-    json_file,
+    json_data,
     verbose = False,
     exit_on_failure = False):
+
+    # Get game info
+    game_name = json_data[config.json_key_base_name]
+    game_platform = json_data[config.json_key_platform]
 
     # No addon possible
     if not platforms.AreAddonsPossible(game_platform):
         return True
-
-    # Get json info
-    json_data = gameinfo.ParseGameJson(
-        json_file = json_file,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
 
     # Get directories
     source_dlc_dirs = []

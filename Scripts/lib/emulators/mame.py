@@ -176,16 +176,14 @@ class Mame(emulatorbase.EmulatorBase):
     # Launch
     def Launch(
         self,
-        launch_name,
-        launch_platform,
-        launch_file,
-        launch_artwork,
-        launch_save_dir,
-        launch_general_save_dir,
-        launch_capture_type,
+        json_data,
+        capture_type,
         fullscreen = False,
         verbose = False,
         exit_on_failure = False):
+
+        # Get game info
+        game_platform = json_data[config.json_key_platform]
 
         # Get launch command
         launch_cmd = [programs.GetEmulatorProgram("Mame")]
@@ -196,7 +194,7 @@ class Mame(emulatorbase.EmulatorBase):
         ]
 
         # Add rom path
-        if launch_platform == config.game_subcategory_arcade:
+        if game_platform == config.game_subcategory_arcade:
             launch_cmd += [
                 "-rompath", config.token_game_dir
             ]
@@ -206,41 +204,41 @@ class Mame(emulatorbase.EmulatorBase):
             ]
 
         # Add launch file
-        if launch_platform == config.game_subcategory_arcade:
+        if game_platform == config.game_subcategory_arcade:
             launch_cmd += [
                 config.token_game_name
             ]
-        elif launch_platform == config.game_subcategory_atari_5200:
+        elif game_platform == config.game_subcategory_atari_5200:
             launch_cmd += [
                 "a5200",
                 "-cart", config.token_game_file
             ]
-        elif launch_platform == config.game_subcategory_atari_7800:
+        elif game_platform == config.game_subcategory_atari_7800:
             launch_cmd += [
                 "a7800",
                 "-cart", config.token_game_file
             ]
-        elif launch_platform == config.game_subcategory_magnavox_odyssey_2:
+        elif game_platform == config.game_subcategory_magnavox_odyssey_2:
             launch_cmd += [
                 "odyssey2",
                 "-cart", config.token_game_file
             ]
-        elif launch_platform == config.game_subcategory_mattel_intellivision:
+        elif game_platform == config.game_subcategory_mattel_intellivision:
             launch_cmd += [
                 "intv",
                 "-cart", config.token_game_file
             ]
-        elif launch_platform == config.game_subcategory_philips_cdi:
+        elif game_platform == config.game_subcategory_philips_cdi:
             launch_cmd += [
                 "cdimono1",
                 "-cdrom", config.token_game_file
             ]
-        elif launch_platform == config.game_subcategory_texas_instruments_ti994a:
+        elif game_platform == config.game_subcategory_texas_instruments_ti994a:
             launch_cmd += [
                 "ti99_4a",
                 "-cart", config.token_game_file
             ]
-        elif launch_platform == config.game_subcategory_tiger_gamecom:
+        elif game_platform == config.game_subcategory_tiger_gamecom:
             launch_cmd += [
                 "gamecom",
                 "-cart1", config.token_game_file
@@ -248,12 +246,8 @@ class Mame(emulatorbase.EmulatorBase):
 
         # Launch game
         emulatorcommon.SimpleLaunch(
+            json_data = json_data,
             launch_cmd = launch_cmd,
-            launch_name = launch_name,
-            launch_platform = launch_platform,
-            launch_file = launch_file,
-            launch_artwork = launch_artwork,
-            launch_save_dir = launch_save_dir,
-            launch_capture_type = launch_capture_type,
+            capture_type = capture_type,
             verbose = verbose,
             exit_on_failure = exit_on_failure)

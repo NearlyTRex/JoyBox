@@ -123,13 +123,8 @@ class Mednafen(emulatorbase.EmulatorBase):
     # Launch
     def Launch(
         self,
-        launch_name,
-        launch_platform,
-        launch_file,
-        launch_artwork,
-        launch_save_dir,
-        launch_general_save_dir,
-        launch_capture_type,
+        json_data,
+        capture_type,
         fullscreen = False,
         verbose = False,
         exit_on_failure = False):
@@ -142,12 +137,8 @@ class Mednafen(emulatorbase.EmulatorBase):
 
         # Launch game
         emulatorcommon.SimpleLaunch(
+            json_data = json_data,
             launch_cmd = launch_cmd,
-            launch_name = launch_name,
-            launch_platform = launch_platform,
-            launch_file = launch_file,
-            launch_artwork = launch_artwork,
-            launch_save_dir = launch_save_dir,
-            launch_capture_type = launch_capture_type,
+            capture_type = capture_type,
             verbose = verbose,
             exit_on_failure = exit_on_failure)

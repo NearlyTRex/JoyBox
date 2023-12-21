@@ -138,16 +138,14 @@ class RetroArch(emulatorbase.EmulatorBase):
     # Launch
     def Launch(
         self,
-        launch_name,
-        launch_platform,
-        launch_file,
-        launch_artwork,
-        launch_save_dir,
-        launch_general_save_dir,
-        launch_capture_type,
+        json_data,
+        capture_type,
         fullscreen = False,
         verbose = False,
         exit_on_failure = False):
+
+        # Get game info
+        game_platform = json_data[config.json_key_platform]
 
         # Get core info
         cores_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir")
@@ -155,22 +153,22 @@ class RetroArch(emulatorbase.EmulatorBase):
         cores_mapping = programs.GetEmulatorConfigValue("RetroArch", "cores_mapping")
 
         # Check if this platform is valid
-        if not launch_platform in cores_mapping:
+        if not game_platform in cores_mapping:
             gui.DisplayErrorPopup(
                 title_text = "Launch platform not defined",
-                message_text = "Launch platform %s not defined in RetroArch config" % launch_platform)
+                message_text = "Launch platform %s not defined in RetroArch config" % game_platform)
 
         # Check if core is installed
-        core_file = os.path.join(cores_dir, cores_mapping[launch_platform] + cores_ext)
+        core_file = os.path.join(cores_dir, cores_mapping[game_platform] + cores_ext)
         if not os.path.exists(core_file):
             gui.DisplayErrorPopup(
                 title_text = "RetroArch core not found",
-                message_text = "RetroArch core '%s' could not be found!" % cores_mapping[launch_platform])
+                message_text = "RetroArch core '%s' could not be found!" % cores_mapping[game_platform])
 
         # Get launch command
         launch_cmd = [
             programs.GetEmulatorProgram("RetroArch"),
-            "-L", os.path.join(cores_dir, cores_mapping[launch_platform] + cores_ext),
+            "-L", os.path.join(cores_dir, cores_mapping[game_platform] + cores_ext),
             config.token_game_file
         ]
         if fullscreen:
@@ -180,12 +178,8 @@ class RetroArch(emulatorbase.EmulatorBase):
 
         # Launch game
         emulatorcommon.SimpleLaunch(
+            json_data = json_data,
             launch_cmd = launch_cmd,
-            launch_name = launch_name,
-            launch_platform = launch_platform,
-            launch_file = launch_file,
-            launch_artwork = launch_artwork,
-            launch_save_dir = launch_save_dir,
-            launch_capture_type = launch_capture_type,
+            capture_type = capture_type,
             verbose = verbose,
             exit_on_failure = exit_on_failure)

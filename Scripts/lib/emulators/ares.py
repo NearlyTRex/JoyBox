@@ -245,31 +245,29 @@ class Ares(emulatorbase.EmulatorBase):
     # Launch
     def Launch(
         self,
-        launch_name,
-        launch_platform,
-        launch_file,
-        launch_artwork,
-        launch_save_dir,
-        launch_general_save_dir,
-        launch_capture_type,
+        json_data,
+        capture_type,
         fullscreen = False,
         verbose = False,
         exit_on_failure = False):
+
+        # Get game info
+        game_platform = json_data[config.json_key_platform]
 
         # Get system types
         system_types = programs.GetEmulatorConfigValue("Ares", "save_sub_dirs")
 
         # Check if this platform is valid
-        if not launch_platform in system_types:
+        if not game_platform in system_types:
             gui.DisplayErrorPopup(
                 title_text = "Launch platform not defined",
-                message_text = "Launch platform %s not defined in Ares config" % launch_platform)
+                message_text = "Launch platform %s not defined in Ares config" % game_platform)
 
         # Get launch command
         launch_cmd = [
             programs.GetEmulatorProgram("Ares"),
             "--system",
-            system_types[launch_platform],
+            system_types[game_platform],
             config.token_game_file
         ]
         if fullscreen:
@@ -279,12 +277,8 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Launch game
         emulatorcommon.SimpleLaunch(
+            json_data = json_data,
             launch_cmd = launch_cmd,
-            launch_name = launch_name,
-            launch_platform = launch_platform,
-            launch_file = launch_file,
-            launch_artwork = launch_artwork,
-            launch_save_dir = launch_save_dir,
-            launch_capture_type = launch_capture_type,
+            capture_type = capture_type,
             verbose = verbose,
             exit_on_failure = exit_on_failure)

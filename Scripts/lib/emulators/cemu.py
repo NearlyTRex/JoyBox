@@ -117,31 +117,25 @@ class Cemu(emulatorbase.EmulatorBase):
     # Launch
     def Launch(
         self,
-        launch_name,
-        launch_platform,
-        launch_file,
-        launch_artwork,
-        launch_save_dir,
-        launch_general_save_dir,
-        launch_capture_type,
+        json_data,
+        capture_type,
         fullscreen = False,
         verbose = False,
         exit_on_failure = False):
 
-        # Get launch categories
-        launch_supercategory, launch_category, launch_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(launch_platform)
+        # Get game info
+        game_name = json_data[config.json_key_base_name]
+        game_category = json_data[config.json_key_category]
+        game_subcategory = json_data[config.json_key_subcategory]
 
         # Install game to cache
         cache.InstallGameToCache(
-            game_platform = launch_platform,
-            game_name = launch_name,
-            game_file = launch_file,
-            game_artwork = launch_artwork,
+            json_data = json_data,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
         # Get directories
-        cache_dir = environment.GetCachedRomDir(launch_category, launch_subcategory, launch_name)
+        cache_dir = environment.GetCachedRomDir(game_category, game_subcategory, game_name)
 
         # Update keys
         for key_file in system.BuildFileListByExtensions(cache_dir, extensions = [".txt"]):
@@ -165,12 +159,8 @@ class Cemu(emulatorbase.EmulatorBase):
 
         # Launch game
         emulatorcommon.SimpleLaunch(
+            json_data = json_data,
             launch_cmd = launch_cmd,
-            launch_name = launch_name,
-            launch_platform = launch_platform,
-            launch_file = launch_file,
-            launch_artwork = launch_artwork,
-            launch_save_dir = launch_save_dir,
-            launch_capture_type = launch_capture_type,
+            capture_type = capture_type,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
