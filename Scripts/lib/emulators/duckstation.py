@@ -15,6 +15,9 @@ import emulatorbase
 # Config files
 config_files = {}
 config_file_general = """
+[Main]
+SettingsVersion = 3
+
 [BIOS]
 SearchDirectory = $EMULATOR_SETUP_ROOT/bios
 
@@ -35,6 +38,42 @@ SaveStates = $EMULATOR_SETUP_ROOT/savestates
 Screenshots = $EMULATOR_SETUP_ROOT/screenshots
 Shaders = $EMULATOR_SETUP_ROOT/shaders
 Textures = $EMULATOR_SETUP_ROOT/textures
+
+[ControllerPorts]
+ControllerSettingsMigrated = true
+
+[InputSources]
+SDL = true
+
+[Pad1]
+Type = AnalogController
+Up = SDL-0/DPadUp
+Right = SDL-0/DPadRight
+Down = SDL-0/DPadDown
+Left = SDL-0/DPadLeft
+Triangle = SDL-0/Y
+Circle = SDL-0/B
+Cross = SDL-0/A
+Square = SDL-0/X
+Select = SDL-0/Back
+Start = SDL-0/Start
+L1 = SDL-0/LeftShoulder
+R1 = SDL-0/RightShoulder
+L2 = SDL-0/+LeftTrigger
+R2 = SDL-0/+RightTrigger
+L3 = SDL-0/LeftStick
+R3 = SDL-0/RightStick
+LLeft = SDL-0/-LeftX
+LRight = SDL-0/+LeftX
+LDown = SDL-0/+LeftY
+LUp = SDL-0/-LeftY
+RLeft = SDL-0/-RightX
+RRight = SDL-0/+RightX
+RDown = SDL-0/+RightY
+RUp = SDL-0/-RightY
+Analog = SDL-0/Guide
+SmallMotor = SDL-0/SmallMotor
+LargeMotor = SDL-0/LargeMotor
 """
 config_files["DuckStation/windows/portable.txt"] = ""
 config_files["DuckStation/windows/settings.ini"] = config_file_general
