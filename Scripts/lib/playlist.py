@@ -10,25 +10,37 @@ import programs
 import system
 import environment
 
-# Generate music playlist
-def GenerateMusicPlaylist(source_dir, output_file, verbose = False):
+# Generate playlist
+def GeneratePlaylist(source_dir, source_format, output_file, verbose = False, exit_on_failure = False):
+
+    # Get tool
+    playlist_tool = None
+    if programs.IsToolInstalled("Mkpl"):
+        playlist_tool = programs.GetToolProgram("Mkpl")
+    if not playlist_tool:
+        return False
 
     # Get create command
     create_cmd = [
-        "mkpl",
+        programs.GetToolProgram("PythonVenvPython"),
+        playlist_tool,
+        output_file,
         "-r",
         "-d", source_dir,
-        "-f", "mp3",
-        output_file
+        "-i", source_format
     ]
 
     # Run create command
     command.RunCheckedCommand(
         cmd = create_cmd,
-        verbose = verbose)
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
     # Sort playlist
     system.SortFileContents(
-        path = output_file,
+        src = output_file,
         verbose = verbose,
-        exit_on_failure = True)
+        exit_on_failure = exit_on_failure)
+
+    # Check result
+    return os.path.exists(output_file)
