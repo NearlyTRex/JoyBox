@@ -34,6 +34,33 @@ MegaCD
     BIOS.US: $EMULATOR_SETUP_ROOT/Bios/bios_CD_U.bin
     BIOS.Japan: $EMULATOR_SETUP_ROOT/Bios/bios_CD_J.bin
     BIOS.Europe: $EMULATOR_SETUP_ROOT/Bios/bios_CD_E.bin
+Hotkey
+  ToggleFullscreen: 0x1/0/0;;
+VirtualPad1
+  Pad.Up: 0x3/1/1/Lo;;
+  Pad.Down: 0x3/1/1/Hi;;
+  Pad.Left: 0x3/1/0/Lo;;
+  Pad.Right: 0x3/1/0/Hi;;
+  Select: 0x3/3/6;;
+  Start: 0x3/3/7;;
+  A..South: 0x3/3/0;;
+  B..East: 0x3/3/1;;
+  X..West: 0x3/3/2;;
+  Y..North: 0x3/3/3;;
+  L-Bumper: 0x3/3/4;;
+  R-Bumper: 0x3/3/5;;
+  L-Trigger: 0x3/0/2/Hi;;
+  R-Trigger: 0x3/0/5/Hi;;
+  L-Stick..Click: 0x3/3/9;;
+  R-Stick..Click: 0x3/3/10;;
+  L-Up: 0x3/0/1/Lo;;
+  L-Down: 0x3/0/1/Hi;;
+  L-Left: 0x3/0/0/Lo;;
+  L-Right: 0x3/0/0/Hi;;
+  R-Up: 0x3/0/4/Lo;;
+  R-Down: 0x3/0/4/Hi;;
+  R-Left: 0x3/0/3/Lo;;
+  R-Right: 0x3/0/3/Hi;;
 """
 config_files["Ares/windows/settings.bml"] = config_file_general
 config_files["Ares/linux/Ares.AppImage.home/.local/share/ares/settings.bml"] = config_file_general
