@@ -18,7 +18,7 @@ import xbox
 
 # Transform game file
 def TransformGameFile(
-    json_data,
+    game_info,
     source_file,
     output_dir,
     keep_setup_files = False,
@@ -26,8 +26,8 @@ def TransformGameFile(
     exit_on_failure = False):
 
     # Get game info
-    game_name = json_data[config.json_key_base_name]
-    game_platform = json_data[config.json_key_platform]
+    game_name = game_info.get_name()
+    game_platform = game_info.get_platform()
 
     # No transform needed
     if not platforms.AreTransformsRequired(game_platform):

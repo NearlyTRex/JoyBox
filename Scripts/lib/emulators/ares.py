@@ -245,14 +245,14 @@ class Ares(emulatorbase.EmulatorBase):
     # Launch
     def Launch(
         self,
-        json_data,
+        game_info,
         capture_type,
         fullscreen = False,
         verbose = False,
         exit_on_failure = False):
 
         # Get game info
-        game_platform = json_data[config.json_key_platform]
+        game_platform = game_info.get_platform()
 
         # Get system types
         system_types = programs.GetEmulatorConfigValue("Ares", "save_sub_dirs")

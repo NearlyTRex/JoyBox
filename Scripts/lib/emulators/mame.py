@@ -176,14 +176,14 @@ class Mame(emulatorbase.EmulatorBase):
     # Launch
     def Launch(
         self,
-        json_data,
+        game_info,
         capture_type,
         fullscreen = False,
         verbose = False,
         exit_on_failure = False):
 
         # Get game info
-        game_platform = json_data[config.json_key_platform]
+        game_platform = game_info.get_platform()
 
         # Get launch command
         launch_cmd = [programs.GetEmulatorProgram("Mame")]
@@ -246,7 +246,7 @@ class Mame(emulatorbase.EmulatorBase):
 
         # Launch game
         emulatorcommon.SimpleLaunch(
-            json_data = json_data,
+            game_info = game_info,
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,

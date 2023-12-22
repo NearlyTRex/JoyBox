@@ -305,35 +305,19 @@ def GetScummLaunchCommand(
 
 # Get selected launch info
 def GetSelectedLaunchInfo(
-    json_data,
+    game_info,
     base_dir,
     default_cwd,
     key_exe_list,
     key_exe_cwd_dict,
     key_exe_args_dict):
 
-    # Get json file
-    json_file = environment.GetJsonRomMetadataFile(
-        game_category = json_data[config.json_key_category],
-        game_subcategory = json_data[config.json_key_subcategory],
-        game_name = json_data[config.json_key_base_name])
-
     # Get game exe list
-    game_exe_list = []
-    if key_exe_list in json_data:
-        json_value = json_data[key_exe_list]
-        if isinstance(json_value, str):
-            game_exe_list = [json_value]
-        elif isinstance(json_value, list):
-            game_exe_list = json_value
+    game_exe_list = game_info.get_value(key_exe_list)
 
     # Get cwd and arg dicts
-    game_exe_cwds = {}
-    game_exe_args = {}
-    if key_exe_cwd_dict in json_data:
-        game_exe_cwds = json_data[key_exe_cwd_dict]
-    if key_exe_args_dict in json_data:
-        game_exe_args = json_data[key_exe_args_dict]
+    game_exe_cwds = game_info.get_value(key_exe_cwd_dict)
+    game_exe_args = game_info.get_value(key_exe_args_dict)
 
     # No existing entries
     if len(game_exe_list) == 0:
@@ -366,7 +350,13 @@ def GetSelectedLaunchInfo(
         # Use list of likely files
         game_exe_list = runnable_files_likely
 
-        # Try to record this for later
+        # Get original json file
+        json_file = environment.GetJsonRomMetadataFile(
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name())
+
+        # Try to record these for later
         new_json_data = system.ReadJsonFile(json_file)
         new_json_data[key_exe_list] = runnable_files_likely
         new_json_data[key_exe_cwd_dict] = runnable_files_cwds
@@ -638,7 +628,7 @@ class Computer(emulatorbase.EmulatorBase):
     # Launch
     def Launch(
         self,
-        json_data,
+        game_info,
         capture_type,
         fullscreen = False,
         verbose = False,
@@ -649,39 +639,35 @@ class Computer(emulatorbase.EmulatorBase):
         should_run_via_sandboxie = environment.IsWindowsPlatform()
 
         # Get launch info
-        launch_name = json_data[config.json_key_base_name]
-        launch_category = json_data[config.json_key_category]
-        launch_subcategory = json_data[config.json_key_subcategory]
-        launch_platform = json_data[config.json_key_platform]
-        launch_artwork = json_data[config.json_key_artwork]
-        launch_save_dir = json_data[config.json_key_save_dir]
-        launch_general_save_dir = json_data[config.json_key_general_save_dir]
-        launch_info_sandbox = json_data[config.json_key_sandbox]
-        launch_info_wine_setup = launch_info_sandbox[config.json_key_sandbox_wine]
-        launch_info_sandboxie_setup = launch_info_sandbox[config.json_key_sandbox_sandboxie]
-        launch_info_sync = json_data[config.json_key_sync]
-        launch_info_sync_search = system.NormalizeFilePath(launch_info_sync[config.json_key_sync_search])
-        launch_info_sync_data = launch_info_sync[config.json_key_sync_data]
-        launch_info_winver = json_data[config.json_key_winver]
-        launch_info_is_32_bit = json_data[config.json_key_is_32_bit]
-        launch_info_is_dos = json_data[config.json_key_is_dos]
-        launch_info_is_win31 = json_data[config.json_key_is_win31]
-        launch_info_is_scumm = json_data[config.json_key_is_scumm]
+        launch_name = game_info.get_name()
+        launch_category = game_info.get_category()
+        launch_subcategory = game_info.get_subcategory()
+        launch_platform = game_info.get_platform()
+        launch_artwork = game_info.get_boxfront_asset()
+        launch_save_dir = game_info.get_save_dir()
+        launch_general_save_dir = game_info.get_general_save_dir()
+        launch_cache_dir = game_info.get_local_cache_dir()
+        launch_info_wine_setup = game_info.get_wine_setup()
+        launch_info_sandboxie_setup = game_info.get_sandboxie_setup()
+        launch_info_sync_search = system.NormalizeFilePath(game_info.get_sync_search())
+        launch_info_sync_data = game_info.get_sync_data()
+        launch_info_winver = game_info.get_winver()
+        launch_info_is_32_bit = game_info.is_32_bit()
+        launch_info_is_dos = game_info.is_dos()
+        launch_info_is_win31 = game_info.is_win31()
+        launch_info_is_scumm = game_info.is_scumm()
 
         # Install game to cache
         cache.InstallGameToCache(
-            json_data = json_data,
+            game_info = game_info,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-        # Get expected rom dir
-        expected_rom_dir = environment.GetCachedRomDir(launch_category, launch_subcategory, launch_name)
-
         # Get mount links
         mount_links = []
-        for obj in system.GetDirectoryContents(expected_rom_dir):
+        for obj in system.GetDirectoryContents(launch_cache_dir):
             mount_links.append({
-                "from": os.path.join(expected_rom_dir, obj),
+                "from": os.path.join(launch_cache_dir, obj),
                 "to": obj
             })
 
@@ -746,7 +732,7 @@ class Computer(emulatorbase.EmulatorBase):
         # Find sync base directory
         sync_basedir = None
         if len(launch_info_sync_search):
-            for sync_search_file in system.BuildFileList(expected_rom_dir):
+            for sync_search_file in system.BuildFileList(launch_cache_dir):
                 if sync_search_file.endswith(launch_info_sync_search):
                     sync_basedir = system.GetFilenameDirectory(sync_search_file)
                     break
@@ -780,7 +766,7 @@ class Computer(emulatorbase.EmulatorBase):
         # Dos launcher
         if launch_info_is_dos:
             selected_cmd, selected_cwd, selected_args = GetSelectedLaunchInfo(
-                json_data = json_data,
+                game_info = game_info,
                 base_dir = dos_c_drive,
                 default_cwd = dos_c_drive,
                 key_exe_list = config.json_key_main_game_dos_exe,
@@ -806,7 +792,7 @@ class Computer(emulatorbase.EmulatorBase):
         # Win31 launcher
         elif launch_info_is_win31:
             selected_cmd, selected_cwd, selected_args = GetSelectedLaunchInfo(
-                json_data = json_data,
+                game_info = game_info,
                 base_dir = dos_c_drive,
                 default_cwd = dos_c_drive,
                 key_exe_list = config.json_key_main_game_win31_exe,
@@ -847,7 +833,7 @@ class Computer(emulatorbase.EmulatorBase):
         # Regular launcher
         else:
             launch_info_cmd_str, launch_info_cwd, launch_info_args = GetSelectedLaunchInfo(
-                json_data = json_data,
+                game_info = game_info,
                 base_dir = prefix_c_drive,
                 default_cwd = launch_general_save_dir,
                 key_exe_list = config.json_key_main_game_exe,
@@ -871,7 +857,7 @@ class Computer(emulatorbase.EmulatorBase):
                 wine_setup = launch_info_wine_setup,
                 sandboxie_setup = launch_info_sandboxie_setup,
                 is_32_bit = launch_info_is_32_bit,
-                lnk_base_path = expected_rom_dir,
+                lnk_base_path = launch_cache_dir,
                 blocking_processes = blocking_processes)
 
         # Check launch command

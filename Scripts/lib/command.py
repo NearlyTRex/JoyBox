@@ -620,18 +620,13 @@ def RunBlockingCommand(
 
 # Run game command
 def RunGameCommand(
-    json_data,
+    game_info,
     cmd,
     options = CommandOptions(),
     capture_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get game info
-    game_name = json_data[config.json_key_base_name]
-    game_category = json_data[config.json_key_category]
-    game_subcategory = json_data[config.json_key_subcategory]
 
     # Blocking game start method
     def run_game():
@@ -657,7 +652,7 @@ def RunGameCommand(
     if capture_type == config.capture_type_screenshot:
 
         # Get output file
-        output_file = environment.GetSyncedGameAssetFile(game_category, game_subcategory, game_name, config.asset_type_screenshot)
+        output_file = game_info.get_screenshot_asset()
 
         # Run game while capturing screenshots
         if os.path.exists(output_file) and not overwrite_screenshots:
@@ -679,7 +674,7 @@ def RunGameCommand(
     elif capture_type == config.capture_type_video:
 
         # Get output file
-        output_file = environment.GetSyncedGameAssetFile(game_category, game_subcategory, game_name, config.asset_type_video)
+        output_file = game_info.get_video_asset()
 
         # Run game while capturing video
         if os.path.exists(output_file) and not overwrite_videos:

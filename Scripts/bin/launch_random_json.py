@@ -69,19 +69,22 @@ def main():
         game_subcategory = random_game_entry[config.metadata_key_subcategory],
         game_name = random_game_entry[config.metadata_key_game])
 
-    # Get json info
-    json_data = gameinfo.ParseGameJson(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
+    # Get game info
+    game_info = gameinfo.GameInfo(
+        json_file = json_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
     # Force cache refresh
     if args.force_cache_refresh:
         cache.RemoveGameFromCache(
-            json_data = json_data,
+            game_info = game_info,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
     # Launch game
     launcher.LaunchGame(
-        json_data = json_data,
+        game_info = game_info,
         capture_type = capture_type,
         fullscreen = fullscreen,
         verbose = verbose,

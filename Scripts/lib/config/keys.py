@@ -68,15 +68,11 @@ json_key_launch_dir = "launch_dir"
 json_key_transform_file = "transform_file"
 json_key_source_file = "source_file"
 json_key_source_dir = "source_dir"
-json_key_base_name = "base_name"
-json_key_regular_name = "regular_name"
-json_key_supercategory = "supercategory"
-json_key_category = "category"
-json_key_subcategory = "subcategory"
-json_key_platform = "platform"
-json_key_artwork = "artwork"
+json_key_metadata = "metadata"
 json_key_save_dir = "save_dir"
 json_key_general_save_dir = "general_save_dir"
+json_key_local_cache_dir = "local_cache_dir"
+json_key_remote_cache_dir = "remote_cache_dir"
 json_key_files = "files"
 json_key_dlc = "dlc"
 json_key_update = "update"
@@ -126,12 +122,6 @@ json_keys_str_keys = [
     json_key_launch_name,
     json_key_launch_dir,
     json_key_source_dir,
-    json_key_base_name,
-    json_key_regular_name,
-    json_key_supercategory,
-    json_key_category,
-    json_key_subcategory,
-    json_key_platform,
 
     # Computer
     json_key_installer_type,

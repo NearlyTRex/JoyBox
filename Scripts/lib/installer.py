@@ -380,36 +380,35 @@ def RunSetupSteps(
                 exit_on_failure = exit_on_failure)
 
 # Install computer game
-def InstallComputerGame(json_data, output_image, keep_setup_files = False, verbose = False, exit_on_failure = False):
+def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbose = False, exit_on_failure = False):
 
     # Get game info
-    game_info_base_name = game_info[config.json_key_base_name]
-    game_info_category = game_info[config.json_key_category]
-    game_info_subcategory = game_info[config.json_key_subcategory]
-    game_info_installer_type = game_info[config.json_key_installer_type]
-    game_info_disc_type = game_info[config.json_key_disc_type]
-    game_info_installer_exe_list = game_info[config.json_key_installer_exe]
-    game_info_installer_dos_exe_list = game_info[config.json_key_installer_dos_exe]
-    game_info_dependencies_list = game_info[config.json_key_dependencies]
-    game_info_dlc_list = game_info[config.json_key_dlc]
-    game_info_update_list = game_info[config.json_key_update]
-    game_info_sandbox = game_info[config.json_key_sandbox]
-    game_info_wine_setup = game_info_sandbox[config.json_key_sandbox_wine]
-    game_info_sandboxie_setup = game_info_sandbox[config.json_key_sandbox_sandboxie]
-    game_info_registry = game_info[config.json_key_registry]
-    game_info_keep_setup_registry = game_info_registry[config.json_key_registry_keep_setup]
-    game_info_setup_registry_keys = game_info_registry[config.json_key_registry_setup_keys]
-    game_info_steps = game_info[config.json_key_steps]
-    game_info_winver = game_info[config.json_key_winver]
-    game_info_is_dos = game_info[config.json_key_is_dos]
-    game_info_is_win31 = game_info[config.json_key_is_win31]
-    game_info_is_scumm = game_info[config.json_key_is_scumm]
+    game_name = game_info.get_name()
+    game_category = game_info.get_category()
+    game_subcategory = game_info.get_subcategory()
+    game_dependencies_list = game_info.get_dependencies()
+    game_dlc_list = game_info.get_dlc()
+    game_update_list = game_info.get_updates()
+    game_installer_type = game_info.get_installer_type()
+    game_disc_type = game_info.get_disc_type()
+    game_installer_exe_list = game_info.get_installer_exe()
+    game_installer_dos_exe_list = game_info.get_installer_dos_exe()
+    game_wine_setup = game_info.get_wine_setup()
+    game_sandboxie_setup = game_info.get_sandboxie_setup()
+    game_keep_setup_registry = game_info.get_keep_setup_registry()
+    game_setup_registry_keys = game_info.get_setup_registry_keys()
+    game_steps_preinstall = game_info.get_preinstall_steps()
+    game_steps_postinstall = game_info.get_postinstall_steps()
+    game_winver = game_info.get_winver()
+    game_is_dos = game_info.is_dos()
+    game_is_win31 = game_info.is_win31()
+    game_is_scumm = game_info.is_scumm()
 
     # Get game rom dir
-    game_rom_dir = environment.GetRomDir(game_info_category, game_info_subcategory, game_info_base_name)
+    game_rom_dir = environment.GetRomDir(game_category, game_subcategory, game_name)
 
     # Get setup directory
-    game_setup_dir = environment.GetCachedSetupDir(game_info_category, game_info_subcategory, game_info_base_name)
+    game_setup_dir = environment.GetCachedSetupDir(game_category, game_subcategory, game_name)
     system.MakeDirectory(game_setup_dir, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Get game disc files
@@ -432,11 +431,11 @@ def InstallComputerGame(json_data, output_image, keep_setup_files = False, verbo
     sandbox.CreateBasicPrefix(
         prefix_dir = prefix_dir,
         prefix_name = prefix_name,
-        prefix_winver = game_info_winver,
+        prefix_winver = game_winver,
         is_wine_prefix = should_run_via_wine,
         is_sandboxie_prefix = should_run_via_sandboxie,
-        wine_setup = game_info_wine_setup,
-        sandboxie_setup = game_info_sandboxie_setup,
+        wine_setup = game_wine_setup,
+        sandboxie_setup = game_sandboxie_setup,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
@@ -453,15 +452,15 @@ def InstallComputerGame(json_data, output_image, keep_setup_files = False, verbo
     # Build disc token map
     game_disc_token_map = computer.BuildDiscTokenMap(
         disc_files = game_disc_files,
-        use_drive_letters = game_info_is_dos or game_info_is_win31)
+        use_drive_letters = game_is_dos or game_is_win31)
 
     # Resolve paths
     resolved_paths = {}
-    resolved_paths["installer_exe"] = game_info_installer_exe_list
-    resolved_paths["installer_dos_exe"] = game_info_installer_dos_exe_list
-    resolved_paths["dependencies"] = game_info_dependencies_list
-    resolved_paths["dlc"] = game_info_dlc_list
-    resolved_paths["updates"] = game_info_update_list
+    resolved_paths["installer_exe"] = game_installer_exe_list
+    resolved_paths["installer_dos_exe"] = game_installer_dos_exe_list
+    resolved_paths["dependencies"] = game_dependencies_list
+    resolved_paths["dlc"] = game_dlc_list
+    resolved_paths["updates"] = game_update_list
     for key, value in resolved_paths.items():
         resolved_paths[key] = computer.ResolveJsonPaths(
             paths = value,
@@ -495,7 +494,7 @@ def InstallComputerGame(json_data, output_image, keep_setup_files = False, verbo
         chd.MountDiscCHD(
             chd_file = game_disc_file,
             mount_dir = mount_dir,
-            disc_type = game_info_disc_type,
+            disc_type = game_disc_type,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         sandbox.MountDirectoryToAvailableDrive(
@@ -508,7 +507,7 @@ def InstallComputerGame(json_data, output_image, keep_setup_files = False, verbo
 
     # Run pre-install steps
     RunSetupSteps(
-        steps = game_info_steps[config.json_key_steps_preinstall],
+        steps = game_steps_preinstall,
         setup_base_dir = game_setup_dir,
         hdd_base_dir = prefix_c_drive_real,
         disc_base_dir = game_setup_dir,
@@ -519,7 +518,7 @@ def InstallComputerGame(json_data, output_image, keep_setup_files = False, verbo
     # Run windows installers
     RunWindowsInstallers(
         installer_programs = sorted_windows_installers,
-        installer_type = game_info_installer_type,
+        installer_type = game_installer_type,
         prefix_dir = prefix_dir,
         prefix_name = prefix_name,
         prefix_c_drive_virtual = prefix_c_drive_virtual,
@@ -530,7 +529,7 @@ def InstallComputerGame(json_data, output_image, keep_setup_files = False, verbo
         exit_on_failure = exit_on_failure)
 
     # Setup dos programs
-    if game_info_is_dos:
+    if game_is_dos:
         SetupDosPrograms(
             installer_programs = resolved_paths["installer_dos_exe"],
             installer_discs = game_disc_files,
@@ -544,7 +543,7 @@ def InstallComputerGame(json_data, output_image, keep_setup_files = False, verbo
             exit_on_failure = exit_on_failure)
 
     # Setup win31 programs
-    if game_info_is_win31:
+    if game_is_win31:
         SetupWin31Programs(
             installer_discs = game_disc_files,
             prefix_dir = prefix_dir,
@@ -557,7 +556,7 @@ def InstallComputerGame(json_data, output_image, keep_setup_files = False, verbo
             exit_on_failure = exit_on_failure)
 
     # Setup scumm programs
-    if game_info_is_scumm:
+    if game_is_scumm:
         SetupScummPrograms(
             prefix_dir = prefix_dir,
             prefix_name = prefix_name,
@@ -570,7 +569,7 @@ def InstallComputerGame(json_data, output_image, keep_setup_files = False, verbo
 
     # Run post-install steps
     RunSetupSteps(
-        steps = game_info_steps[config.json_key_steps_postinstall],
+        steps = game_steps_postinstall,
         setup_base_dir = game_setup_dir,
         hdd_base_dir = prefix_c_drive_real,
         disc_base_dir = game_setup_dir,
@@ -596,7 +595,7 @@ def InstallComputerGame(json_data, output_image, keep_setup_files = False, verbo
             exit_on_failure = exit_on_failure)
 
     # Backup registry
-    if game_info_keep_setup_registry:
+    if game_keep_setup_registry:
         prefix_registry_dir = os.path.join(prefix_c_drive_real, config.computer_registry_folder)
         prefix_registry_path = os.path.join(prefix_registry_dir, config.registry_filename_setup)
         system.MakeDirectory(
@@ -609,7 +608,7 @@ def InstallComputerGame(json_data, output_image, keep_setup_files = False, verbo
             prefix_name = prefix_name,
             export_keys = config.registry_export_keys_setup,
             ignore_keys = config.ignored_registry_keys_setup,
-            keep_keys = game_info_setup_registry_keys,
+            keep_keys = game_setup_registry_keys,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 

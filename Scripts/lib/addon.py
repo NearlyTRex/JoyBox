@@ -13,13 +13,12 @@ import gameinfo
 
 # Install addons
 def InstallAddons(
-    json_data,
+    game_info,
     verbose = False,
     exit_on_failure = False):
 
     # Get game info
-    game_name = json_data[config.json_key_base_name]
-    game_platform = json_data[config.json_key_platform]
+    game_platform = game_info.get_platform()
 
     # No addon possible
     if not platforms.AreAddonsPossible(game_platform):
@@ -28,9 +27,9 @@ def InstallAddons(
     # Get directories
     source_dlc_dirs = []
     source_update_dirs = []
-    for filename in json_data[config.json_key_dlc]:
+    for filename in game_info.get_value(config.json_key_dlc):
         source_dlc_dirs += [os.path.join(environment.GetDLCRootDir(), filename)]
-    for filename in json_data[config.json_key_update]:
+    for filename in game_info.get_value(config.json_key_update):
         source_update_dirs += [os.path.join(environment.GetUpdateRootDir(), filename)]
 
     # Install add-ons

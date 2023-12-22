@@ -5,69 +5,46 @@ import sys
 # Local imports
 import config
 import command
-import environment
 import system
-import metadata
 import transform
-import addon
 import platforms
 import gameinfo
 import gui
 
 # Check if game file is in cache already
-def IsGameInCache(json_data):
-
-    # Get game info
-    game_name = json_data[config.json_key_base_name]
-    game_category = json_data[config.json_key_category]
-    game_subcategory = json_data[config.json_key_subcategory]
-
-    # Get cache dir
-    cache_dir = environment.GetCachedRomDir(game_category, game_subcategory, game_name)
-
-    # Non-existent cache dir
-    if not os.path.exists(cache_dir):
-        return False
-
-    # Empty cache dir
-    if system.IsDirectoryEmpty(cache_dir):
-        return False
-
-    # Should be in cache
-    return True
+def IsGameInCache(game_info):
+    cache_dir = game_info.get_local_cache_dir()
+    return system.DoesDirectoryContainFiles(cache_dir)
 
 # Remove game from cache
-def RemoveGameFromCache(json_data, verbose = False, exit_on_failure = False):
-
-    # Get game info
-    game_name = json_data[config.json_key_base_name]
-    game_category = json_data[config.json_key_category]
-    game_subcategory = json_data[config.json_key_subcategory]
+def RemoveGameFromCache(game_info, verbose = False, exit_on_failure = False):
 
     # Ignore if not in cache
-    if not IsGameInCache(json_data):
+    if not IsGameInCache(game_info):
         return
 
-    # Get directories
-    cached_rom_dir = environment.GetCachedRomDir(game_category, game_subcategory, game_name)
-    cached_install_dir = environment.GetInstallRomDir(game_category, game_subcategory, game_name)
-
     # Remove directories
-    system.RemoveDirectory(cached_rom_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-    system.RemoveDirectory(cached_install_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.RemoveDirectory(
+        dir = game_info.get_local_cache_dir(),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    system.RemoveDirectory(
+        dir = game_info.get_remote_cache_dir(),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Install game to cache
-def InstallGameToCache(json_data, keep_setup_files = False, verbose = False, exit_on_failure = False):
+def InstallGameToCache(game_info, keep_setup_files = False, verbose = False, exit_on_failure = False):
 
     # Get game info
-    game_name = json_data[config.json_key_base_name]
-    game_platform = json_data[config.json_key_platform]
-    game_artwork = json_data[config.json_key_artwork]
-    game_source_file = json_data[config.json_key_source_file]
-    game_source_dir = json_data[config.json_key_source_dir]
+    game_name = game_info.get_name()
+    game_platform = game_info.get_platform()
+    game_artwork = game_info.get_boxfront_asset()
+    game_source_file = game_info.get_source_file()
+    game_source_dir = game_info.get_source_dir()
 
     # Check if already installed
-    if IsGameInCache(json_data):
+    if IsGameInCache(game_info):
         return
 
     # Check if source files are available
@@ -87,7 +64,7 @@ def InstallGameToCache(json_data, keep_setup_files = False, verbose = False, exi
         # Install transformed game
         def InstallTransformedGame():
             return AddTransformedGameToCache(
-                json_data = json_data,
+                game_info = game_info,
                 source_file = game_source_file,
                 keep_setup_files = keep_setup_files,
                 verbose = verbose,
@@ -103,7 +80,7 @@ def InstallGameToCache(json_data, keep_setup_files = False, verbose = False, exi
         # Install game
         def InstallGame():
             return AddGameToCache(
-                json_data = json_data,
+                game_info = game_info,
                 source_file = game_source_file,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -115,47 +92,27 @@ def InstallGameToCache(json_data, keep_setup_files = False, verbose = False, exi
             run_func = InstallGame)
 
     # Check if game is now installed
-    if not IsGameInCache(json_data):
+    if not IsGameInCache(game_info):
         gui.DisplayErrorPopup(
             title_text = "Failed to cache game",
             message_text = "Game could not be cached\n%s\n%s" % (game_name, game_platform))
 
 # Add game to cache
-def AddGameToCache(json_data, source_file, verbose = False, exit_on_failure = False):
-
-    # Get game info
-    game_name = json_data[config.json_key_base_name]
-    game_category = json_data[config.json_key_category]
-    game_subcategory = json_data[config.json_key_subcategory]
-    game_platform = json_data[config.json_key_platform]
-
-    # Get directories
-    source_dir = system.GetFilenameDirectory(source_file)
-    dest_dir = environment.GetCachedRomDir(game_category, game_subcategory, game_name)
-
-    # Make directories
-    system.MakeDirectory(dest_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+def AddGameToCache(game_info, source_file, verbose = False, exit_on_failure = False):
 
     # Copy game files
     system.CopyContents(
-        src = source_dir,
-        dest = dest_dir,
+        src = system.GetFilenameDirectory(source_file),
+        dest = game_info.get_local_cache_dir(),
         show_progress = True,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-    # Install addons
-    if platforms.AreAddonsPossible(game_platform):
-        addon.InstallAddons(
-            json_data = json_data,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
     # Return result
-    return IsGameInCache(json_data)
+    return IsGameInCache(game_info)
 
 # Add transformed game to cache
-def AddTransformedGameToCache(json_data, source_file, keep_setup_files = False, verbose = False, exit_on_failure = False):
+def AddTransformedGameToCache(game_info, source_file, keep_setup_files = False, verbose = False, exit_on_failure = False):
 
     # Create temporary directory
     tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
@@ -164,7 +121,7 @@ def AddTransformedGameToCache(json_data, source_file, keep_setup_files = False, 
 
     # Transform game file
     transform_success, transform_result = transform.TransformGameFile(
-        json_data = json_data,
+        game_info = game_info,
         source_file = source_file,
         output_dir = tmp_dir_result,
         keep_setup_files = keep_setup_files,
@@ -174,7 +131,7 @@ def AddTransformedGameToCache(json_data, source_file, keep_setup_files = False, 
     # Add to cache
     if transform_success:
         AddGameToCache(
-            json_data = json_data,
+            game_info = game_info,
             source_file = transform_result,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -183,11 +140,11 @@ def AddTransformedGameToCache(json_data, source_file, keep_setup_files = False, 
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
 
     # Return result
-    return IsGameInCache(json_data)
+    return IsGameInCache(game_info)
 
 # Launch cached game
 def LaunchCachedGame(
-    json_data,
+    game_info,
     launch_cmd,
     launch_options = None,
     capture_type = None,
@@ -195,12 +152,12 @@ def LaunchCachedGame(
     exit_on_failure = False):
 
     # Check if already cached
-    if not IsGameInCache(json_data):
+    if not IsGameInCache(game_info):
         return
 
     # Launch game
     command.RunGameCommand(
-        json_data = json_data,
+        game_info = game_info,
         cmd = launch_cmd,
         options = launch_options,
         capture_type = capture_type,

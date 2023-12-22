@@ -117,28 +117,23 @@ class Cemu(emulatorbase.EmulatorBase):
     # Launch
     def Launch(
         self,
-        json_data,
+        game_info,
         capture_type,
         fullscreen = False,
         verbose = False,
         exit_on_failure = False):
 
         # Get game info
-        game_name = json_data[config.json_key_base_name]
-        game_category = json_data[config.json_key_category]
-        game_subcategory = json_data[config.json_key_subcategory]
+        game_cache_dir = game_info.get_local_cache_dir()
 
         # Install game to cache
         cache.InstallGameToCache(
-            json_data = json_data,
+            game_info = game_info,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-        # Get directories
-        cache_dir = environment.GetCachedRomDir(game_category, game_subcategory, game_name)
-
         # Update keys
-        for key_file in system.BuildFileListByExtensions(cache_dir, extensions = [".txt"]):
+        for key_file in system.BuildFileListByExtensions(game_cache_dir, extensions = [".txt"]):
             if key_file.endswith(".key.txt"):
                 for platform in ["windows", "linux"]:
                     nintendo.UpdateWiiUKeys(
@@ -159,7 +154,7 @@ class Cemu(emulatorbase.EmulatorBase):
 
         # Launch game
         emulatorcommon.SimpleLaunch(
-            json_data = json_data,
+            game_info = game_info,
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,

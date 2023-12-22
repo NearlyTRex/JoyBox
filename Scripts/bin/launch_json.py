@@ -52,11 +52,14 @@ def main():
             title_text = "Json file not found",
             message_text = "Json file %s was not found" % json_file)
 
-    # Get json info
-    json_data = gameinfo.ParseGameJson(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
+    # Get game info
+    game_info = gameinfo.GameInfo(
+        json_file = json_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
     # Check ability to launch
-    if not gameinfo.IsGameJsonLaunchable(json_data):
+    if not game_info.is_playable():
         gui.DisplayErrorPopup(
             title_text = "Json file not launchable",
             message_text = "Json file '%s' is not launchable" % system.GetFilenameFile(json_file))
@@ -64,13 +67,13 @@ def main():
     # Force cache refresh
     if args.force_cache_refresh:
         cache.RemoveGameFromCache(
-            json_data = json_data,
+            game_info = game_info,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
     # Launch game
     launcher.LaunchGame(
-        json_data = json_data,
+        game_info = game_info,
         capture_type = capture_type,
         fullscreen = fullscreen,
         verbose = verbose,

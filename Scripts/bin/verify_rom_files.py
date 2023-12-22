@@ -63,21 +63,21 @@ def main():
             game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
             for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
 
-                # Get json file path
-                json_file_path = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name)
-                if not os.path.exists(json_file_path):
+                # Get json file
+                json_file = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name)
+                if not os.path.exists(json_file):
                     continue
 
-                # Read json file
-                json_data = gameinfo.ParseGameJson(
-                    json_file = json_file_path,
+                # Get game info
+                game_info = gameinfo.GameInfo(
+                    json_file = json_file,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
 
-                # Get json info
-                json_file_list = json_data[config.json_key_files]
-                json_launch_file = json_data[config.json_key_launch_file]
-                json_transform_file = json_data[config.json_key_transform_file]
+                # Get game info
+                json_file_list = game_info.get_files()
+                json_launch_file = game_info.get_launch_file()
+                json_transform_file = game_info.get_transform_file()
 
                 # Files to check
                 files_to_check = []

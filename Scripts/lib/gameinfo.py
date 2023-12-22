@@ -12,6 +12,395 @@ import platforms
 
 ###########################################################
 
+# General gameinfo class
+class GameInfo:
+
+    # Constructor
+    def __init__(self, json_file, verbose = False, exit_on_failure = False):
+        self.parse_json_file(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Parse game json
+    def parse_json_file(self, json_file, verbose = False, exit_on_failure = False):
+
+        # Read json data
+        self.json_data = system.ReadJsonFile(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
+
+        ##############################
+        # Upcast keys
+        ##############################
+
+        # Upcast list keys if they are strings
+        for key in config.json_keys_list_keys:
+            self.upcast_str_to_list(key)
+
+        ##############################
+        # Fill basic info
+        ##############################
+
+        # Get basic info based on json location
+        json_directory = system.GetFilenameDirectory(json_file)
+        json_base_name = system.GetFilenameBasename(json_file)
+        json_supercategory, json_category, json_subcategory = DeriveGameCategoriesFromFile(json_file)
+        json_platform = DeriveGamePlatformFromCategories(json_category, json_subcategory)
+        system.AssertIsNotNone(json_supercategory, "json_supercategory")
+        system.AssertIsNotNone(json_category, "json_category")
+        system.AssertIsNotNone(json_subcategory, "json_subcategory")
+        system.AssertIsNotNone(json_platform, "json_platform")
+
+        # Get metadata
+        metadata_file = environment.GetMetadataFile(json_category, json_subcategory, config.metadata_format_pegasus)
+        metadata_obj = metadata.Metadata()
+        metadata_obj.import_from_pegasus_file(metadata_file)
+        metadata_dict = metadata_obj.get_game(json_platform, json_base_name)
+
+        # Set metadata
+        self.set_value(config.json_key_metadata, metadata_dict)
+
+        ##############################
+        # Fill default info
+        ##############################
+
+        # Fill json keys defaults
+        for key in config.json_keys_list_keys:
+            self.set_default_value(key, [])
+        for key in config.json_keys_dict_keys:
+            self.set_default_value(key, {})
+        for key in config.json_keys_bool_keys:
+            self.set_default_value(key, False)
+        for key in config.json_keys_str_keys:
+            self.set_default_value(key, None)
+
+        # Fill sub-value defaults
+        self.set_default_subvalue(config.json_key_sandbox, config.json_key_sandbox_sandboxie, {})
+        self.set_default_subvalue(config.json_key_sandbox, config.json_key_sandbox_wine, {})
+        self.set_default_subvalue(config.json_key_steps, config.json_key_steps_preinstall, [])
+        self.set_default_subvalue(config.json_key_steps, config.json_key_steps_postinstall, [])
+        self.set_default_subvalue(config.json_key_sync, config.json_key_sync_search, "")
+        self.set_default_subvalue(config.json_key_sync, config.json_key_sync_data, [])
+        self.set_default_subvalue(config.json_key_registry, config.json_key_registry_keep_setup, False)
+        self.set_default_subvalue(config.json_key_registry, config.json_key_registry_setup_keys, [])
+
+        ##############################
+        # Fill path info
+        ##############################
+
+        # Get paths
+        save_dir = environment.GetCachedSaveDir(json_category, json_subcategory, json_base_name)
+        if json_category == config.game_category_computer:
+            if environment.IsWindowsPlatform():
+                save_dir = environment.GetCachedSaveDir(json_category, json_subcategory, json_base_name, config.save_type_sandboxie)
+            else:
+                save_dir = environment.GetCachedSaveDir(json_category, json_subcategory, json_base_name, config.save_type_wine)
+        general_save_dir = environment.GetCachedSaveDir(json_category, json_subcategory, json_base_name, config.save_type_general)
+        local_cache_dir = environment.GetCachedRomDir(json_category, json_subcategory, json_base_name)
+        remote_cache_dir = environment.GetInstallRomDir(json_category, json_subcategory, json_base_name)
+
+        # Set paths
+        self.set_value(config.json_key_save_dir, save_dir)
+        self.set_value(config.json_key_general_save_dir, general_save_dir)
+        self.set_value(config.json_key_local_cache_dir, local_cache_dir)
+        self.set_value(config.json_key_remote_cache_dir, remote_cache_dir)
+
+        ##############################
+        # Fill source info
+        ##############################
+
+        # Get launch/transform info
+        json_launch_name = self.get_value(config.json_key_launch_name)
+        json_launch_file = self.get_value(config.json_key_launch_file)
+        json_transform_file = self.get_value(config.json_key_transform_file)
+
+        # Get source dir
+        source_dir = environment.GetRomDir(json_category, json_subcategory, json_base_name)
+
+        # Get source file
+        # In order of preference:
+        # - Use launch file
+        # - Use transform file
+        # - Use launch name
+        source_file = ""
+        if isinstance(json_launch_file, list) and len(json_launch_file) == 1:
+            source_file = os.path.join(source_dir, json_launch_file[0])
+        if isinstance(json_transform_file, list) and len(json_transform_file) == 1:
+            source_file = os.path.join(source_dir, json_transform_file[0])
+        if isinstance(json_launch_name, str) and len(source_file) == 0:
+            source_file = os.path.join(source_dir, json_launch_name)
+
+        # Set source info
+        self.set_value(config.json_key_source_file, source_file)
+        self.set_value(config.json_key_source_dir, source_dir)
+
+    ##############################
+
+    # Check if key exists
+    def has_key(self, key):
+        return key in self.json_data
+
+    # Check if subkey exists
+    def has_subkey(self, key, subkey):
+        if key in self.json_data:
+            return subkey in self.json_data[key]
+        return False
+
+    # Get value
+    def get_value(self, key):
+        if key in self.json_data:
+            return self.json_data[key]
+        return None
+
+    # Get sub-value
+    def get_subvalue(self, key, subkey):
+        if key in self.json_data:
+            if subkey in self.json_data[key]:
+                return self.json_data[key][subkey]
+        return None
+
+    # Set value
+    def set_value(self, key, value):
+        self.json_data[key] = value
+
+    # Set default value
+    def set_default_value(self, key, value):
+        if key not in self.json_data:
+            self.json_data[key] = value
+
+    # Set default sub-value
+    def set_default_subvalue(self, key, subkey, value):
+        if key in self.json_data and subkey not in self.json_data[key]:
+            self.json_data[key][subkey] = value
+
+    # Get metadata value
+    def get_metadata_value(self, key):
+        if key in self.json_data[config.json_key_metadata]:
+            return self.json_data[config.json_key_metadata][key]
+        return None
+
+    # Upcast string to list
+    def upcast_str_to_list(self, key):
+        if key in self.json_data and isinstance(self.json_data[key], str):
+            if self.json_data[key]:
+                self.json_data[key] = [self.json_data[key]]
+            else:
+                self.json_data[key] = []
+
+    ##############################
+
+    # Get name
+    def get_name(self):
+        return self.get_metadata_value(config.metadata_key_game)
+
+    # Get supercategory
+    def get_supercategory(self):
+        return self.get_metadata_value(config.metadata_key_supercategory)
+
+    # Get category
+    def get_category(self):
+        return self.get_metadata_value(config.metadata_key_category)
+
+    # Get subcategory
+    def get_subcategory(self):
+        return self.get_metadata_value(config.metadata_key_subcategory)
+
+    # Get platform
+    def get_platform(self):
+        return self.get_metadata_value(config.metadata_key_platform)
+
+    # Check if coop
+    def is_coop(self):
+        return self.get_metadata_value(config.metadata_key_coop) == "Yes"
+
+    # Check if playable
+    def is_playable(self):
+        return self.get_metadata_value(config.metadata_key_playable) == "Yes"
+
+    ##############################
+
+    # Get background asset
+    def get_background_asset(self):
+        return environment.GetSyncedGameAssetFile(
+            game_category = self.get_category(),
+            game_subcategory = self.get_subcategory(),
+            game_name = self.get_name(),
+            asset_type = config.asset_type_background)
+
+    # Get boxback asset
+    def get_boxback_asset(self):
+        return environment.GetSyncedGameAssetFile(
+            game_category = self.get_category(),
+            game_subcategory = self.get_subcategory(),
+            game_name = self.get_name(),
+            asset_type = config.asset_type_boxback)
+
+    # Get boxfront asset
+    def get_boxfront_asset(self):
+        return environment.GetSyncedGameAssetFile(
+            game_category = self.get_category(),
+            game_subcategory = self.get_subcategory(),
+            game_name = self.get_name(),
+            asset_type = config.asset_type_boxfront)
+
+    # Get label asset
+    def get_label_asset(self):
+        return environment.GetSyncedGameAssetFile(
+            game_category = self.get_category(),
+            game_subcategory = self.get_subcategory(),
+            game_name = self.get_name(),
+            asset_type = config.asset_type_label)
+
+    # Get screenshot asset
+    def get_screenshot_asset(self):
+        return environment.GetSyncedGameAssetFile(
+            game_category = self.get_category(),
+            game_subcategory = self.get_subcategory(),
+            game_name = self.get_name(),
+            asset_type = config.asset_type_screenshot)
+
+    # Get video asset
+    def get_video_asset(self):
+        return environment.GetSyncedGameAssetFile(
+            game_category = self.get_category(),
+            game_subcategory = self.get_subcategory(),
+            game_name = self.get_name(),
+            asset_type = config.asset_type_video)
+
+    ##############################
+
+    # Get launch name
+    def get_launch_name(self):
+        return self.get_value(config.json_key_launch_name)
+
+    # Get launch file
+    def get_launch_file(self):
+        return self.get_value(config.json_key_launch_file)
+
+    # Get launch dir
+    def get_launch_dir(self):
+        return self.get_value(config.json_key_launch_dir)
+
+    # Get transform file
+    def get_transform_file(self):
+        return self.get_value(config.json_key_transform_file)
+
+    # Get source file
+    def get_source_file(self):
+        return self.get_value(config.json_key_source_file)
+
+    # Get source dir
+    def get_source_dir(self):
+        return self.get_value(config.json_key_source_dir)
+
+    # Get save dir
+    def get_save_dir(self):
+        return self.get_value(config.json_key_save_dir)
+
+    # Get general save dir
+    def get_general_save_dir(self):
+        return self.get_value(config.json_key_general_save_dir)
+
+    # Get local cache dir
+    def get_local_cache_dir(self):
+        return self.get_value(config.json_key_local_cache_dir)
+
+    # Get remote cache dir
+    def get_remote_cache_dir(self):
+        return self.get_value(config.json_key_remote_cache_dir)
+
+    ##############################
+
+    # Get files
+    def get_files(self):
+        return self.get_value(config.json_key_files)
+
+    # Get dlc
+    def get_dlc(self):
+        return self.get_value(config.json_key_dlc)
+
+    # Get updates
+    def get_update(self):
+        return self.get_value(config.json_key_update)
+
+    # Get extras
+    def get_extras(self):
+        return self.get_value(config.json_key_extra)
+
+    # Get dependencies
+    def get_dependencies(self):
+        return self.get_value(config.json_key_dependencies)
+
+    ##############################
+
+    # Get installer exe
+    def get_installer_exe(self):
+        return self.get_value(config.json_key_installer_exe)
+
+    # Get installer dos exe
+    def get_installer_dos_exe(self):
+        return self.get_value(config.json_key_installer_dos_exe)
+
+    # Get installer type
+    def get_installer_type(self):
+        return self.get_value(config.json_key_installer_type)
+
+    # Get disc type
+    def get_disc_type(self):
+        return self.get_value(config.json_key_disc_type)
+
+    ##############################
+
+    # Get wine setup
+    def get_wine_setup(self):
+        return self.get_subvalue(config.json_key_sandbox, config.json_key_sandbox_wine)
+
+    # Get sandboxie setup
+    def get_sandboxie_setup(self):
+        return self.get_subvalue(config.json_key_sandbox, config.json_key_sandbox_sandboxie)
+
+    # Get preinstall steps
+    def get_preinstall_steps(self):
+        return self.get_subvalue(config.json_key_steps, config.json_key_steps_preinstall)
+
+    # Get postinstall steps
+    def get_postinstall_steps(self):
+        return self.get_subvalue(config.json_key_steps, config.json_key_steps_postinstall)
+
+    # Get sync search
+    def get_sync_search(self):
+        return self.get_subvalue(config.json_key_sync, config.json_key_sync_search)
+
+    # Get sync data
+    def get_sync_data(self):
+        return self.get_subvalue(config.json_key_sync, config.json_key_sync_data)
+
+    # Get whether to keep setup registry
+    def get_keep_setup_registry(self):
+        return self.get_subvalue(config.json_key_registry, config.json_key_registry_keep_setup)
+
+    # Get setup registry keys
+    def get_setup_registry_keys(self):
+        return self.get_subvalue(config.json_key_registry, config.json_key_registry_setup_keys)
+
+    # Get windows version
+    def get_winver(self):
+        return self.get_value(config.json_key_winver)
+
+    # Check if 32bit
+    def is_32_bit(self):
+        return self.get_value(config.json_key_is_32_bit)
+
+    # Check if dos
+    def is_dos(self):
+        return self.get_value(config.json_key_is_dos)
+
+    # Check if windows 3.1
+    def is_win31(self):
+        return self.get_value(config.json_key_is_win31)
+
+    # Check if scumm
+    def is_scumm(self):
+        return self.get_value(config.json_key_is_scumm)
+
+###########################################################
+
 # Find best suited game file
 def FindBestGameFile(game_directory):
     game_file_entries = []
@@ -157,136 +546,5 @@ def DeriveGamePlatformFromCategories(game_category, game_subcategory):
     if game_category == config.game_category_computer:
         game_platform = game_category + " - " + game_subcategory
     return game_platform
-
-###########################################################
-
-# Check if game json is launchable
-def IsGameJsonLaunchable(json_data):
-
-    # Get json info
-    json_base_name = json_data[config.json_key_base_name]
-    json_category = json_data[config.json_key_category]
-    json_subcategory = json_data[config.json_key_subcategory]
-    json_platform = json_data[config.json_key_platform]
-
-    # Check platform
-    if platforms.HasNoLauncher(json_platform):
-        return False
-
-    # Get metadata file
-    metadata_file = environment.GetMetadataFile(json_category, json_subcategory, config.metadata_format_pegasus)
-    if not os.path.isfile(metadata_file):
-        return False
-
-    # Parse metadata file
-    metadata_obj = metadata.Metadata()
-    metadata_obj.import_from_pegasus_file(metadata_file)
-
-    # Check metadata
-    game_entry = metadata_obj.get_game(json_platform, json_base_name)
-    if game_entry[config.metadata_key_playable] != "Yes":
-        return False
-
-    # Should be launchable
-    return True
-
-# Parse game json
-def ParseGameJson(json_file, verbose = False, exit_on_failure = False):
-
-    # Read json data
-    json_data = system.ReadJsonFile(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
-
-    # Get automatic info based on json location
-    json_directory = system.GetFilenameDirectory(json_file)
-    json_base_name = system.GetFilenameBasename(json_file)
-    json_regular_name = DeriveRegularNameFromGameName(json_base_name)
-    json_supercategory, json_category, json_subcategory = DeriveGameCategoriesFromFile(json_file)
-    if not json_supercategory or not json_category or not json_subcategory:
-        return None
-    json_platform = DeriveGamePlatformFromCategories(json_category, json_subcategory)
-    if not json_platform:
-        return None
-
-    # Set default value
-    def SetDefaultValue(dict_var, dict_key, default_value):
-        if dict_key not in dict_var:
-            dict_var[dict_key] = default_value
-
-    # Set default sub-value
-    def SetDefaultSubValue(dict_var, dict_key, dict_subkey, default_subvalue):
-        if dict_key in dict_var and dict_subkey not in dict_var[dict_key]:
-            dict_var[dict_key][dict_subkey] = default_subvalue
-
-    # Fill gaps
-    SetDefaultValue(json_data, config.json_key_base_name, json_base_name)
-    SetDefaultValue(json_data, config.json_key_regular_name, json_regular_name)
-    SetDefaultValue(json_data, config.json_key_supercategory, json_supercategory)
-    SetDefaultValue(json_data, config.json_key_category, json_category)
-    SetDefaultValue(json_data, config.json_key_subcategory, json_subcategory)
-    SetDefaultValue(json_data, config.json_key_platform, json_platform)
-    for key in config.json_keys_list_keys:
-        SetDefaultValue(json_data, key, [])
-    for key in config.json_keys_dict_keys:
-        SetDefaultValue(json_data, key, {})
-    for key in config.json_keys_bool_keys:
-        SetDefaultValue(json_data, key, False)
-    for key in config.json_keys_str_keys:
-        SetDefaultValue(json_data, key, None)
-
-    # Upcast list keys if they are strings
-    for key in config.json_keys_list_keys:
-        if isinstance(json_data[key], str):
-            if json_data[key]:
-                json_data[key] = [json_data[key]]
-            else:
-                json_data[key] = []
-
-    # Fill sub-value gaps
-    SetDefaultSubValue(json_data, config.json_key_sandbox, config.json_key_sandbox_sandboxie, {})
-    SetDefaultSubValue(json_data, config.json_key_sandbox, config.json_key_sandbox_wine, {})
-    SetDefaultSubValue(json_data, config.json_key_steps, config.json_key_steps_preinstall, [])
-    SetDefaultSubValue(json_data, config.json_key_steps, config.json_key_steps_postinstall, [])
-    SetDefaultSubValue(json_data, config.json_key_sync, config.json_key_sync_search, "")
-    SetDefaultSubValue(json_data, config.json_key_sync, config.json_key_sync_data, [])
-    SetDefaultSubValue(json_data, config.json_key_registry, config.json_key_registry_keep_setup, False)
-    SetDefaultSubValue(json_data, config.json_key_registry, config.json_key_registry_setup_keys, [])
-
-    # Get launch/transform info
-    json_launch_name = json_data[config.json_key_launch_name]
-    json_launch_file = json_data[config.json_key_launch_file]
-    json_transform_file = json_data[config.json_key_transform_file]
-
-    # Get source dir
-    source_dir = environment.GetRomDir(json_category, json_subcategory, json_base_name)
-
-    # Get source file
-    # In order of preference:
-    # - Use launch file
-    # - Use transform file
-    # - Use launch name
-    source_file = ""
-    if isinstance(json_launch_file, list) and len(json_launch_file) == 1:
-        source_file = os.path.join(source_dir, json_launch_file[0])
-    if isinstance(json_transform_file, list) and len(json_transform_file) == 1:
-        source_file = os.path.join(source_dir, json_transform_file[0])
-    if isinstance(json_launch_name, str) and len(source_file) == 0:
-        source_file = os.path.join(source_dir, json_launch_name)
-
-    # Set source info
-    json_data[config.json_key_source_file] = source_file
-    json_data[config.json_key_source_dir] = source_dir
-
-    # Get artwork
-    artwork_file = environment.GetSyncedGameAssetFile(
-        game_category = json_category,
-        game_subcategory = json_subcategory,
-        game_name = json_base_name,
-        asset_type = config.asset_type_boxfront)
-
-    # Set game artwork
-    json_data[config.json_key_artwork] = artwork_file
-
-    # Return json
-    return json_data
 
 ###########################################################

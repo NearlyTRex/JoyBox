@@ -127,7 +127,7 @@ class Xemu(emulatorbase.EmulatorBase):
     # Launch
     def Launch(
         self,
-        json_data,
+        game_info,
         capture_type,
         fullscreen = False,
         verbose = False,
@@ -145,7 +145,7 @@ class Xemu(emulatorbase.EmulatorBase):
 
         # Launch game
         emulatorcommon.SimpleLaunch(
-            json_data = json_data,
+            game_info = game_info,
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,

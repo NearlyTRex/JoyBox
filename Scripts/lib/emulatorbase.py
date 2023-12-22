@@ -101,7 +101,7 @@ class EmulatorBase:
     # Launch
     def Launch(
         self,
-        json_data,
+        game_info,
         capture_type,
         fullscreen = False,
         verbose = False,

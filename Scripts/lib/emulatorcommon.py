@@ -13,7 +13,7 @@ import gui
 
 # Simple generic launcher
 def SimpleLaunch(
-    json_data,
+    game_info,
     launch_cmd,
     launch_options = None,
     capture_type = None,
@@ -21,20 +21,18 @@ def SimpleLaunch(
     exit_on_failure = False):
 
     # Get game info
-    game_name = json_data[config.json_key_base_name]
-    game_category = json_data[config.json_key_category]
-    game_subcategory = json_data[config.json_key_subcategory]
-    game_launch_name = json_data[config.json_key_launch_name]
-    game_launch_file = json_data[config.json_key_launch_file]
+    game_name = game_info.get_name()
+    game_category = game_info.get_category()
+    game_subcategory = game_info.get_subcategory()
+    game_launch_name = game_info.get_launch_name()
+    game_launch_file = game_info.get_launch_file()
+    game_cache_dir = game_info.get_local_cache_dir()
 
     # Install game to cache
     cache.InstallGameToCache(
-        json_data = json_data,
+        game_info = game_info,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
-
-    # Get cache dir
-    cache_dir = environment.GetCachedRomDir(game_category, game_subcategory, game_name)
 
     # Selected launch file
     selected_launch_file = ""
@@ -73,17 +71,17 @@ def SimpleLaunch(
 
         # Replace game file
         if selected_launch_file:
-            cmd_segment = cmd_segment.replace(config.token_game_file, os.path.join(cache_dir, selected_launch_file))
+            cmd_segment = cmd_segment.replace(config.token_game_file, os.path.join(game_cache_dir, selected_launch_file))
 
         # Replace game dir
-        cmd_segment = cmd_segment.replace(config.token_game_dir, cache_dir)
+        cmd_segment = cmd_segment.replace(config.token_game_dir, game_cache_dir)
 
         # Add segment
         real_launch_cmd += [cmd_segment]
 
     # Launch game
     cache.LaunchCachedGame(
-        json_data = json_data,
+        game_info = game_info,
         launch_cmd = real_launch_cmd,
         launch_options = launch_options,
         capture_type = capture_type,

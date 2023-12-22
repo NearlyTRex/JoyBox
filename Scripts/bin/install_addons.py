@@ -10,15 +10,13 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import config
 import gameinfo
-import cache
+import addons
 import setup
 import ini
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Cache game files.")
+parser = argparse.ArgumentParser(description="Install addons.")
 parser.add_argument("path", help="Input path")
-parser.add_argument("-k", "--keep_setup_files", action="store_true", help="Keep setup files")
-parser.add_argument("-f", "--force_cache_refresh", action="store_true", help="Force refresh of cached files")
 args, unknown = parser.parse_known_args()
 if not args.path:
     parser.print_help()
@@ -39,7 +37,7 @@ def main():
     if os.path.isdir(args.path):
         json_files = system.BuildFileListByExtensions(args.path, extensions = [".json"])
 
-    # Cache games
+    # Install addons
     for json_file in json_files:
 
         # Get game info
@@ -48,17 +46,9 @@ def main():
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-        # Force cache refresh
-        if args.force_cache_refresh:
-            cache.RemoveGameFromCache(
-                game_info = game_info,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-
-        # Install game to cache
-        cache.InstallGameToCache(
+        # Install addons
+        addon.InstallAddons(
             game_info = game_info,
-            keep_setup_files = args.keep_setup_files,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
