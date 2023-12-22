@@ -28,7 +28,6 @@ def main():
     # Get search info
     assets_dir = environment.GetSyncedGamingAssetsRootDir()
     metadata_dir = environment.GetPegasusMetadataRootDir()
-    metadata_format = config.metadata_format_pegasus
 
     # Find all possible assets
     all_assets = set()
@@ -39,11 +38,11 @@ def main():
     found_assets = set()
     missing_assets = dict()
     for filename in system.BuildFileList(metadata_dir):
-        if environment.IsMetadataFile(filename, metadata_format):
+        if environment.IsMetadataFile(filename):
 
             # Load metadata
             metadata_obj = metadata.Metadata()
-            metadata_obj.import_from_metadata_file(filename, metadata_format)
+            metadata_obj.import_from_metadata_file(filename)
             for game_platform in metadata_obj.get_sorted_platforms():
                 for game_entry in metadata_obj.get_sorted_entries(game_platform):
                     for asset_type in config.asset_types_all:

@@ -15,14 +15,7 @@ import setup
 # Parse arguments
 parser = argparse.ArgumentParser(description="Download missing metadata.")
 parser.add_argument("metadata_dir", help="Metadata dir")
-parser.add_argument("-f", "--metadata_type",
-    choices=[
-        config.metadata_format_gamelist,
-        config.metadata_format_pegasus
-    ],
-    default=config.metadata_format_pegasus
-)
-parser.add_argument("-p", "--metadata_source",
+parser.add_argument("-s", "--metadata_source",
     choices=[
         config.metadata_source_thegamesdb,
         config.metadata_source_gamefaqs,
@@ -40,9 +33,9 @@ parser.add_argument("-a", "--select_automatically", action="store_true", help="S
 parser.add_argument("-i", "--ignore_unowned", action="store_true", help="Ignore unowned games")
 args, unknown = parser.parse_known_args()
 
-# Check pegasus dir
+# Check metadata dir
 if not os.path.exists(args.metadata_dir):
-    print("Could not find pegasus path '%s'" % args.metadata_dir)
+    print("Could not find metadata path '%s'" % args.metadata_dir)
     sys.exit(1)
 
 # Main
@@ -54,7 +47,6 @@ def main():
     # Collect metadata
     metadata.CollectMetadata(
         metadata_dir = args.metadata_dir,
-        metadata_type = args.metadata_type,
         metadata_source = args.metadata_source,
         only_check_description = args.only_check_description,
         only_check_genre = args.only_check_genre,

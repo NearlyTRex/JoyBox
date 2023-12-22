@@ -3,10 +3,8 @@ import os
 import sys
 
 # Metadata formats
-metadata_format_gamelist = "gamelist"
 metadata_format_pegasus = "pegasus"
 metadata_formats = [
-    metadata_format_gamelist,
     metadata_format_pegasus
 ]
 

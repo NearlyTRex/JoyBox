@@ -22,20 +22,11 @@ def main():
     # Sort metadata files
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
-
-            # Sort gamelist file
-            gamelist_file = environment.GetMetadataFile(game_category, game_subcategory, config.metadata_format_gamelist)
-            if os.path.isfile(gamelist_file):
-                metadata_gamelist = metadata.Metadata()
-                metadata_gamelist.import_from_gamelist_file(gamelist_file)
-                metadata_gamelist.export_to_gamelist_file(gamelist_file)
-
-            # Sort pegasus file
-            pegasus_file = environment.GetMetadataFile(game_category, game_subcategory, config.metadata_format_pegasus)
-            if os.path.isfile(pegasus_file):
-                metadata_pegasus = metadata.Metadata()
-                metadata_pegasus.import_from_pegasus_file(pegasus_file)
-                metadata_pegasus.export_to_pegasus_file(pegasus_file)
+            metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
+            if os.path.isfile(metadata_file):
+                metadata_obj = metadata.Metadata()
+                metadata_obj.import_from_metadata_file(metadata_file)
+                metadata_obj.export_to_metadata_file(metadata_file)
 
 # Start
 main()

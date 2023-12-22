@@ -334,27 +334,9 @@ class Metadata:
                 if has_minimum_keys:
                     self.add_game(game_entry)
 
-    # Import from gamelist file
-    def import_from_gamelist_file(self, gamelist_file):
-        with open(gamelist_file, "r", encoding="utf8") as file:
-            for line in file.readlines():
-                tokens = line.strip().split(" || ")
-                if len(tokens) != 3:
-                   continue
-                game_entry = {}
-                game_entry[config.metadata_key_platform] = tokens[0]
-                game_entry[config.metadata_key_game] = tokens[1]
-                game_entry[config.metadata_key_file] = tokens[2]
-                game_entry[config.metadata_key_players] = "1"
-                game_entry[config.metadata_key_coop] = "No"
-                game_entry[config.metadata_key_playable] = "Yes"
-                self.add_game(game_entry)
-
     # Import from metadata file
-    def import_from_metadata_file(self, metadata_file, metadata_format):
-        if metadata_format == "gamelist":
-            self.import_from_gamelist_file(metadata_file)
-        elif metadata_format == "pegasus":
+    def import_from_metadata_file(self, metadata_file, metadata_format = config.metadata_format_pegasus):
+        if metadata_format == config.metadata_format_pegasus:
             self.import_from_pegasus_file(metadata_file)
 
     # Export to pegasus file
@@ -440,27 +422,14 @@ class Metadata:
                     # Divider
                     file.write("\n\n")
 
-    # Export to gamelist file
-    def export_to_gamelist_file(self, gamelist_file, append_existing = False):
-        file_mode = "a" if append_existing else "w"
-        with open(gamelist_file, file_mode, encoding="utf8", newline="\n") as file:
-            for game_platform in self.get_sorted_platforms():
-                for game_entry in self.get_sorted_entries(game_platform):
-                    game_name = game_entry[config.metadata_key_game]
-                    game_file = game_entry[config.metadata_key_file]
-                    file.write("%s || %s || %s\n" % (game_platform, game_name, game_file))
-
     # Export to metadata file
-    def export_to_metadata_file(self, metadata_file, metadata_format, append_existing = False):
-        if metadata_format == "gamelist":
-            self.export_to_gamelist_file(metadata_file, append_existing)
-        elif metadata_format == "pegasus":
+    def export_to_metadata_file(self, metadata_file, metadata_format = config.metadata_format_pegasus, append_existing = False):
+        if metadata_format == config.metadata_format_pegasus:
             self.export_to_pegasus_file(metadata_file, append_existing)
 
 # Collect metadata
 def CollectMetadata(
     metadata_dir,
-    metadata_type,
     metadata_source,
     only_check_description = False,
     only_check_genre = False,
@@ -477,9 +446,9 @@ def CollectMetadata(
     # Find missing metadata
     metadata_dir = os.path.realpath(metadata_dir)
     for file in system.BuildFileList(metadata_dir):
-        if environment.IsMetadataFile(file, metadata_type):
+        if environment.IsMetadataFile(file):
             metadata_obj = Metadata()
-            metadata_obj.import_from_metadata_file(file, metadata_type)
+            metadata_obj.import_from_metadata_file(file)
 
             # Check for missing metadata keys
             metadata_keys_to_check = []

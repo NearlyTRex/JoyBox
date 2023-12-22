@@ -48,9 +48,9 @@ class GameInfo:
         system.AssertIsNotNone(json_platform, "json_platform")
 
         # Get metadata
-        metadata_file = environment.GetMetadataFile(json_category, json_subcategory, config.metadata_format_pegasus)
+        metadata_file = environment.GetMetadataFile(json_category, json_subcategory)
         metadata_obj = metadata.Metadata()
-        metadata_obj.import_from_pegasus_file(metadata_file)
+        metadata_obj.import_from_metadata_file(metadata_file)
         metadata_dict = metadata_obj.get_game(json_platform, json_base_name)
 
         # Set metadata

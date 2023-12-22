@@ -23,16 +23,16 @@ def main():
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
 
-            # Get pegasus file
-            pegasus_file = environment.GetMetadataFile(game_category, game_subcategory, config.metadata_format_pegasus)
-            if not os.path.isfile(pegasus_file):
+            # Get metadata file
+            metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
+            if not os.path.isfile(metadata_file):
                 continue
 
-            # Sort pegasus file
-            metadata_pegasus = metadata.Metadata()
-            metadata_pegasus.import_from_pegasus_file(pegasus_file)
-            metadata_pegasus.sync_assets()
-            metadata_pegasus.export_to_pegasus_file(pegasus_file)
+            # Sort metadata file
+            metadata_obj = metadata.Metadata()
+            metadata_obj.import_from_metadata_file(metadata_file)
+            metadata_obj.sync_assets()
+            metadata_obj.export_to_metadata_file(metadata_file)
 
 # Start
 main()

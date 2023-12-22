@@ -15,16 +15,9 @@ import setup
 # Parse arguments
 parser = argparse.ArgumentParser(description="Build metadata file.")
 parser.add_argument("rom_path", help="Rom path")
-parser.add_argument("-f", "--metadata_format",
-    choices=[
-        config.metadata_format_gamelist,
-        config.metadata_format_pegasus
-    ],
-    default=config.metadata_format_pegasus
-)
 parser.add_argument("-c", "--rom_category", required=True, type=str, help="Rom category")
 parser.add_argument("-s", "--rom_subcategory", required=True, type=str, help="Rom subcategory")
-parser.add_argument("-o", "--output_file", type=str, default="gamelist.txt", help="Output gamelist file")
+parser.add_argument("-o", "--output_file", type=str, default="metadata.txt", help="Output metadata file")
 args, unknown = parser.parse_known_args()
 
 # Check rom path
@@ -48,7 +41,7 @@ def main():
         rom_path = rom_root_path,
         rom_category = args.rom_category,
         rom_subcategory = args.rom_subcategory)
-    metadata_obj.export_to_metadata_file(output_file, args.metadata_format)
+    metadata_obj.export_to_metadata_file(output_file)
 
 # Start
 main()

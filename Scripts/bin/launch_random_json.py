@@ -53,9 +53,9 @@ def main():
         game_subcategory = random.choice(potential_subcategories)
 
     # Read metadata
-    metadata_file = environment.GetMetadataFile(game_category, game_subcategory, config.metadata_format_gamelist)
+    metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
     metadata_obj = metadata.Metadata()
-    metadata_obj.import_from_gamelist_file(metadata_file)
+    metadata_obj.import_from_metadata_file(metadata_file)
 
     # Select random game entry
     random_game_entry = metadata_obj.get_random_entry()

@@ -28,7 +28,6 @@ def main():
     # Scripts
     build_metadata_file_bin = os.path.join(environment.GetScriptsBinDir(), "build_metadata_file" + environment.GetScriptsCommandExtension())
     publish_metadata_files_bin = os.path.join(environment.GetScriptsBinDir(), "publish_metadata_files" + environment.GetScriptsCommandExtension())
-    add_missing_metadata_bin = os.path.join(environment.GetScriptsBinDir(), "add_missing_metadata" + environment.GetScriptsCommandExtension())
     sort_metadata_files_bin = os.path.join(environment.GetScriptsBinDir(), "sort_metadata_files" + environment.GetScriptsCommandExtension())
 
     # Build metadata for each category/subcategory
@@ -38,13 +37,12 @@ def main():
 
             # Metadata info
             local_rom_path = os.path.join(environment.GetRomRootDir(), game_category, game_subcategory)
-            metadata_file = environment.GetMetadataFile(game_category, game_subcategory, config.metadata_format_gamelist)
+            metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
 
             # Build metadata
             print("Building metadata [Category: '%s', Subcategory: '%s'] ..." % (game_category, game_subcategory))
             build_game_list_cmd = [
                 build_metadata_file_bin,
-                "-f", config.metadata_format_gamelist,
                 "-c", game_category,
                 "-s", game_subcategory,
                 "-o", metadata_file,
@@ -54,13 +52,6 @@ def main():
                 cmd = build_game_list_cmd,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Add missing metadata
-    print("Adding missing metadata ...")
-    command.RunCheckedCommand(
-        cmd = add_missing_metadata_bin,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
 
     # Sort metadata files
     print("Sorting metadata files ...")

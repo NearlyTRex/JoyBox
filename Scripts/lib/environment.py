@@ -244,31 +244,15 @@ def GetPegasusMetadataFile(game_category, game_subcategory):
 def GetPegasusMetadataAssetDir(game_category, game_subcategory, asset_type):
     return os.path.join(GetPegasusMetadataRootDir(), config.game_supercategory_roms, game_category, game_subcategory, asset_type)
 
-# Get gamelist metadata root dir
-def GetGameListMetadataRootDir():
-    return os.path.join(GetMetadataRootDir(), "GameList")
-
-# Get gamelist metadata file
-def GetGameListMetadataFile(game_category, game_subcategory):
-    return os.path.join(GetGameListMetadataRootDir(), config.game_supercategory_roms, game_category, game_subcategory + ".txt")
-
 # Get metadata file
-def GetMetadataFile(game_category, game_subcategory, metadata_format):
-    game_file = ""
-    if metadata_format == config.metadata_format_gamelist:
-        game_file = GetGameListMetadataFile(game_category, game_subcategory)
-    elif metadata_format == config.metadata_format_pegasus:
-        game_file = GetPegasusMetadataFile(game_category, game_subcategory)
-    return game_file
+def GetMetadataFile(game_category, game_subcategory, metadata_format = config.metadata_format_pegasus):
+    if metadata_format == config.metadata_format_pegasus:
+        return GetPegasusMetadataFile(game_category, game_subcategory)
+    return None
 
 # Check if file is a metadata file
-def IsMetadataFile(metadata_file, metadata_format):
-    if metadata_format == config.metadata_format_pegasus:
-        return metadata_file.endswith("metadata.pegasus.txt")
-    elif metadata_format == config.metadata_format_gamelist:
-        if system.GetFilenameBasename(metadata_file) in config.game_subcategories_all:
-            return True
-    return False
+def IsMetadataFile(metadata_file):
+    return metadata_file.endswith("metadata.pegasus.txt")
 
 # Get published metadata root dir
 def GetPublishedMetadataRootDir():

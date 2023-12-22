@@ -130,15 +130,15 @@ def main():
             for game_subcategory in config.game_subcategories[game_category]:
 
                 # Get metadata contents
-                metadata_file = environment.GetMetadataFile(game_category, game_subcategory, config.metadata_format_pegasus)
+                metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
                 if os.path.isfile(metadata_file):
                     metadata_obj = metadata.Metadata()
-                    metadata_obj.import_from_metadata_file(metadata_file, config.metadata_format_pegasus)
+                    metadata_obj.import_from_metadata_file(metadata_file)
 
                     # Iterate through each platform/entry
-                    for gamelist_platform in metadata_obj.get_sorted_platforms():
+                    for game_platform in metadata_obj.get_sorted_platforms():
                         game_entry_id = 1
-                        for game_entry in metadata_obj.get_sorted_entries(gamelist_platform):
+                        for game_entry in metadata_obj.get_sorted_entries(game_platform):
 
                                 # Get entry info
                                 game_entry_name = game_entry[config.metadata_key_game]
@@ -147,7 +147,7 @@ def main():
                                 game_entry_urlname = urllib.parse.quote(game_entry_name)
                                 game_entry_info = (
                                     game_entry_id,
-                                    gamelist_platform,
+                                    game_platform,
                                     game_entry_name,
                                     game_entry_players,
                                     game_entry_coop,
