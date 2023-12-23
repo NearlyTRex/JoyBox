@@ -252,7 +252,7 @@ def TransformGameFile(
 
             # Create install image
             success = installer.InstallComputerGame(
-                json_data = json_data,
+                game_info = game_info,
                 output_image = tmp_install_file,
                 keep_setup_files = keep_setup_files,
                 verbose = verbose,
