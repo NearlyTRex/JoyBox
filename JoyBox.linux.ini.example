@@ -12,7 +12,7 @@ metadata_dir = $HOME/Repositories/JoyBox/Metadata
 nas_base_location =
 nas_storage_folder =
 nas_cache_folder =
-nas_account =
+nas_username =
 nas_password =
 
 [UserData.Resolution]
