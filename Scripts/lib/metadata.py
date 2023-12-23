@@ -41,10 +41,16 @@ class Metadata:
         game_entry[config.metadata_key_category] = game_category
         game_entry[config.metadata_key_subcategory] = game_subcategory
 
-        # Add game
+        # Add platform if not already there
         if not game_platform in self.game_database.keys():
             self.game_database[game_platform] = {}
-        self.game_database[game_platform][game_name] = game_entry
+
+        # Add entry
+        import mergedeep
+        if game_name in self.game_database[game_platform]:
+            self.game_database[game_platform][game_name] = mergedeep.merge(game_entry, self.game_database[game_platform][game_name])
+        else:
+            self.game_database[game_platform][game_name] = game_entry
 
     # Get game entry
     def get_game(self, game_platform, game_name):
@@ -205,7 +211,6 @@ class Metadata:
             game_entry[config.metadata_key_boxback] = rom_boxback
             game_entry[config.metadata_key_background] = rom_background
             game_entry[config.metadata_key_screenshot] = rom_screenshot
-            game_entry[config.metadata_key_video] = rom_video
             game_entry[config.metadata_key_players] = "1"
             game_entry[config.metadata_key_coop] = "No"
             game_entry[config.metadata_key_playable] = "Yes"

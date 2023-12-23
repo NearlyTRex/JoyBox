@@ -37,6 +37,8 @@ def main():
 
     # Build metadata file
     metadata_obj = metadata.Metadata()
+    if os.path.isfile(output_file):
+        metadata_obj.import_from_metadata_file(output_file)
     metadata_obj.scan_roms(
         rom_path = rom_root_path,
         rom_category = args.rom_category,
