@@ -3,10 +3,10 @@ local_cache_dir = %USERPROFILE%\Cache
 remote_cache_dir = Y:\
 sync_dir = %USERPROFILE%\Sync
 storage_dir = X:\
-scripts_dir = $HOME\Repositories\JoyBox\Scripts
-tools_dir = $HOME\Repositories\JoyBox\Tools
-emulators_dir = $HOME\Repositories\JoyBox\Emulators
-metadata_dir = $HOME\Repositories\JoyBox\Metadata
+scripts_dir = C:\Repositories\JoyBox\Scripts
+tools_dir = C:\Repositories\JoyBox\Tools
+emulators_dir = C:\Repositories\JoyBox\Emulators
+metadata_dir = C:\Repositories\JoyBox\Metadata
 
 [UserData.NAS]
 nas_base_location =
