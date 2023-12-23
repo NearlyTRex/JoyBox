@@ -75,8 +75,9 @@ class AppImageTool(toolbase.ToolBase):
                 exit_on_failure = exit_on_failure)
 
         # Copy icon
-        system.CopyFileOrDirectory(
-            src = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
-            dest = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+        if environment.IsLinuxPlatform():
+            system.CopyFileOrDirectory(
+                src = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
+                dest = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
