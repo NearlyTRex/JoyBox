@@ -316,7 +316,7 @@ class GameInfo:
         return self.get_value(config.json_key_dlc)
 
     # Get updates
-    def get_update(self):
+    def get_updates(self):
         return self.get_value(config.json_key_update)
 
     # Get extras
