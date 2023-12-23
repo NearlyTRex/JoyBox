@@ -63,6 +63,26 @@ def main():
                     root = base_rom_path,
                     use_relative_paths = True)
 
+                # Get all dlc
+                all_dlc = system.BuildFileList(
+                    root = os.path.join(base_rom_path, config.json_key_dlc),
+                    use_relative_paths = True)
+
+                # Get all updates
+                all_updates = system.BuildFileList(
+                    root = os.path.join(base_rom_path, config.json_key_update),
+                    use_relative_paths = True)
+
+                # Get all extras
+                all_extras = system.BuildFileList(
+                    root = os.path.join(base_rom_path, config.json_key_extra),
+                    use_relative_paths = True)
+
+                # Get all dependencies
+                all_dependencies = system.BuildFileList(
+                    root = os.path.join(base_rom_path, config.json_key_dependencies),
+                    use_relative_paths = True)
+
                 # Get best game file
                 best_game_file = gameinfo.FindBestGameFile(base_rom_path)
                 best_game_file = system.GetFilenameFile(best_game_file)
@@ -78,40 +98,38 @@ def main():
                         computer_installers = [os.path.join(config.token_setup_main_root, file)]
                         break
 
-                # Find computer dlc installers
-                computer_dlc_installers = system.BuildFileListByExtensions(
-                    root = os.path.join(base_rom_path, "dlc"),
-                    extensions = config.computer_program_extensions,
-                    new_relative_path = os.path.join(config.token_setup_main_root, "dlc"),
-                    use_relative_paths = True)
-
                 # Find computer update installers
                 computer_update_installers = system.BuildFileListByExtensions(
                     root = os.path.join(base_rom_path, "update"),
                     extensions = config.computer_program_extensions,
                     new_relative_path = os.path.join(config.token_setup_main_root, "update"),
                     use_relative_paths = True)
+                computer_installers += computer_update_installers
 
-                # Find computer extras
-                computer_extras = system.BuildFileList(
-                    root = os.path.join(base_rom_path, "extra"),
-                    new_relative_path = os.path.join(config.token_setup_main_root, "extra"),
+                # Find computer dlc installers
+                computer_dlc_installers = system.BuildFileListByExtensions(
+                    root = os.path.join(base_rom_path, "dlc"),
+                    extensions = config.computer_program_extensions,
+                    new_relative_path = os.path.join(config.token_setup_main_root, "dlc"),
                     use_relative_paths = True)
+                computer_installers += computer_dlc_installers
+
+                # Common platforms
+                SetJsonValue(config.json_key_files, all_files)
+                SetJsonValue(config.json_key_dlc, all_dlc)
+                SetJsonValue(config.json_key_update, all_updates)
+                SetJsonValue(config.json_key_extra, all_extras)
+                SetJsonValue(config.json_key_dependencies, all_dependencies)
+                SetJsonValue(config.json_key_transform_file, best_game_file)
 
                 # Computer
                 if game_category == config.game_category_computer:
                     SetJsonValue(config.json_key_installer_exe, computer_installers)
-                    SetJsonValue(config.json_key_dlc, computer_dlc_installers)
-                    SetJsonValue(config.json_key_update, computer_update_installers)
-                    SetJsonValue(config.json_key_extra, computer_extras)
-                    SetJsonValue(config.json_key_transform_file, best_game_file)
 
                 # Other platforms
                 else:
-                    SetJsonValue(config.json_key_files, all_files)
                     SetJsonValue(config.json_key_launch_name, "REPLACEME")
                     SetJsonValue(config.json_key_launch_file, best_game_file)
-                    SetJsonValue(config.json_key_transform_file, best_game_file)
 
                 # Write json file
                 system.MakeDirectory(

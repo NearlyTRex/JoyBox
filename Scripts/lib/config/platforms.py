@@ -35,7 +35,15 @@ computer_amazon_games[keys.platform_key_subcategory] = categories.game_subcatego
 computer_amazon_games[keys.platform_key_transforms] = [types.transform_exe_to_raw_plain]
 computer_amazon_games[keys.platform_key_addons] = []
 computer_amazon_games[keys.platform_key_launcher] = [types.launch_file]
-computer_amazon_games[keys.platform_key_autofill_json] = [keys.json_key_installer_exe, keys.json_key_transform_file]
+computer_amazon_games[keys.platform_key_autofill_json] = [
+    keys.json_key_files,
+    keys.json_key_dlc,
+    keys.json_key_update,
+    keys.json_key_extra,
+    keys.json_key_dependencies,
+    keys.json_key_installer_exe,
+    keys.json_key_transform_file
+]
 computer_amazon_games[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_amazon_games] = computer_amazon_games
 
@@ -49,7 +57,14 @@ computer_disc[keys.platform_key_subcategory] = categories.game_subcategory_disc
 computer_disc[keys.platform_key_transforms] = [types.transform_exe_to_install]
 computer_disc[keys.platform_key_addons] = []
 computer_disc[keys.platform_key_launcher] = [types.launch_file]
-computer_disc[keys.platform_key_autofill_json] = [keys.json_key_transform_file]
+computer_disc[keys.platform_key_autofill_json] = [
+    keys.json_key_files,
+    keys.json_key_dlc,
+    keys.json_key_update,
+    keys.json_key_extra,
+    keys.json_key_dependencies,
+    keys.json_key_transform_file
+]
 computer_disc[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_disc] = computer_disc
 
@@ -63,7 +78,15 @@ computer_epic_games[keys.platform_key_subcategory] = categories.game_subcategory
 computer_epic_games[keys.platform_key_transforms] = [types.transform_exe_to_raw_plain]
 computer_epic_games[keys.platform_key_addons] = []
 computer_epic_games[keys.platform_key_launcher] = [types.launch_file]
-computer_epic_games[keys.platform_key_autofill_json] = [keys.json_key_installer_exe, keys.json_key_transform_file]
+computer_epic_games[keys.platform_key_autofill_json] = [
+    keys.json_key_files,
+    keys.json_key_dlc,
+    keys.json_key_update,
+    keys.json_key_extra,
+    keys.json_key_dependencies,
+    keys.json_key_installer_exe,
+    keys.json_key_transform_file
+]
 computer_epic_games[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_epic_games] = computer_epic_games
 
@@ -77,7 +100,15 @@ computer_gog[keys.platform_key_subcategory] = categories.game_subcategory_gog
 computer_gog[keys.platform_key_transforms] = [types.transform_exe_to_install]
 computer_gog[keys.platform_key_addons] = []
 computer_gog[keys.platform_key_launcher] = [types.launch_file]
-computer_gog[keys.platform_key_autofill_json] = [keys.json_key_installer_exe, keys.json_key_transform_file, keys.json_key_dlc]
+computer_gog[keys.platform_key_autofill_json] = [
+    keys.json_key_files,
+    keys.json_key_dlc,
+    keys.json_key_update,
+    keys.json_key_extra,
+    keys.json_key_dependencies,
+    keys.json_key_installer_exe,
+    keys.json_key_transform_file
+]
 computer_gog[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_gog] = computer_gog
 
@@ -91,7 +122,15 @@ computer_humble_bundle[keys.platform_key_subcategory] = categories.game_subcateg
 computer_humble_bundle[keys.platform_key_transforms] = [types.transform_exe_to_install]
 computer_humble_bundle[keys.platform_key_addons] = []
 computer_humble_bundle[keys.platform_key_launcher] = [types.launch_file]
-computer_humble_bundle[keys.platform_key_autofill_json] = [keys.json_key_installer_exe, keys.json_key_transform_file, keys.json_key_dlc]
+computer_humble_bundle[keys.platform_key_autofill_json] = [
+    keys.json_key_files,
+    keys.json_key_dlc,
+    keys.json_key_update,
+    keys.json_key_extra,
+    keys.json_key_dependencies,
+    keys.json_key_installer_exe,
+    keys.json_key_transform_file
+]
 computer_humble_bundle[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_humble_bundle] = computer_humble_bundle
 
@@ -105,7 +144,15 @@ computer_itchio[keys.platform_key_subcategory] = categories.game_subcategory_itc
 computer_itchio[keys.platform_key_transforms] = [types.transform_exe_to_raw_plain]
 computer_itchio[keys.platform_key_addons] = []
 computer_itchio[keys.platform_key_launcher] = [types.launch_file]
-computer_itchio[keys.platform_key_autofill_json] = [keys.json_key_installer_exe, keys.json_key_transform_file]
+computer_itchio[keys.platform_key_autofill_json] = [
+    keys.json_key_files,
+    keys.json_key_dlc,
+    keys.json_key_update,
+    keys.json_key_extra,
+    keys.json_key_dependencies,
+    keys.json_key_installer_exe,
+    keys.json_key_transform_file
+]
 computer_itchio[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_itchio] = computer_itchio
 
@@ -119,7 +166,15 @@ computer_puppet_combo[keys.platform_key_subcategory] = categories.game_subcatego
 computer_puppet_combo[keys.platform_key_transforms] = [types.transform_exe_to_raw_plain]
 computer_puppet_combo[keys.platform_key_addons] = []
 computer_puppet_combo[keys.platform_key_launcher] = [types.launch_file]
-computer_puppet_combo[keys.platform_key_autofill_json] = [keys.json_key_installer_exe, keys.json_key_transform_file]
+computer_puppet_combo[keys.platform_key_autofill_json] = [
+    keys.json_key_files,
+    keys.json_key_dlc,
+    keys.json_key_update,
+    keys.json_key_extra,
+    keys.json_key_dependencies,
+    keys.json_key_installer_exe,
+    keys.json_key_transform_file
+]
 computer_puppet_combo[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_puppet_combo] = computer_puppet_combo
 
@@ -133,7 +188,15 @@ computer_red_candle[keys.platform_key_subcategory] = categories.game_subcategory
 computer_red_candle[keys.platform_key_transforms] = [types.transform_exe_to_install]
 computer_red_candle[keys.platform_key_addons] = []
 computer_red_candle[keys.platform_key_launcher] = [types.launch_file]
-computer_red_candle[keys.platform_key_autofill_json] = [keys.json_key_installer_exe, keys.json_key_transform_file, keys.json_key_dlc]
+computer_red_candle[keys.platform_key_autofill_json] = [
+    keys.json_key_files,
+    keys.json_key_dlc,
+    keys.json_key_update,
+    keys.json_key_extra,
+    keys.json_key_dependencies,
+    keys.json_key_installer_exe,
+    keys.json_key_transform_file
+]
 computer_red_candle[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_red_candle] = computer_red_candle
 
@@ -147,7 +210,15 @@ computer_square_enix[keys.platform_key_subcategory] = categories.game_subcategor
 computer_square_enix[keys.platform_key_transforms] = [types.transform_exe_to_install]
 computer_square_enix[keys.platform_key_addons] = []
 computer_square_enix[keys.platform_key_launcher] = [types.launch_file]
-computer_square_enix[keys.platform_key_autofill_json] = [keys.json_key_installer_exe, keys.json_key_transform_file, keys.json_key_dlc]
+computer_square_enix[keys.platform_key_autofill_json] = [
+    keys.json_key_files,
+    keys.json_key_dlc,
+    keys.json_key_update,
+    keys.json_key_extra,
+    keys.json_key_dependencies,
+    keys.json_key_installer_exe,
+    keys.json_key_transform_file
+]
 computer_square_enix[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_square_enix] = computer_square_enix
 
@@ -161,7 +232,15 @@ computer_steam[keys.platform_key_subcategory] = categories.game_subcategory_stea
 computer_steam[keys.platform_key_transforms] = [types.transform_exe_to_raw_plain]
 computer_steam[keys.platform_key_addons] = []
 computer_steam[keys.platform_key_launcher] = [types.launch_file]
-computer_steam[keys.platform_key_autofill_json] = [keys.json_key_installer_exe, keys.json_key_transform_file]
+computer_steam[keys.platform_key_autofill_json] = [
+    keys.json_key_files,
+    keys.json_key_dlc,
+    keys.json_key_update,
+    keys.json_key_extra,
+    keys.json_key_dependencies,
+    keys.json_key_installer_exe,
+    keys.json_key_transform_file
+]
 computer_steam[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_steam] = computer_steam
 
@@ -175,7 +254,15 @@ computer_zoom[keys.platform_key_subcategory] = categories.game_subcategory_zoom
 computer_zoom[keys.platform_key_transforms] = [types.transform_exe_to_install]
 computer_zoom[keys.platform_key_addons] = []
 computer_zoom[keys.platform_key_launcher] = [types.launch_file]
-computer_zoom[keys.platform_key_autofill_json] = [keys.json_key_installer_exe, keys.json_key_transform_file, keys.json_key_dlc]
+computer_zoom[keys.platform_key_autofill_json] = [
+    keys.json_key_files,
+    keys.json_key_dlc,
+    keys.json_key_update,
+    keys.json_key_extra,
+    keys.json_key_dependencies,
+    keys.json_key_installer_exe,
+    keys.json_key_transform_file
+]
 computer_zoom[keys.platform_key_fillonce_json] = []
 platforms[platform_computer_zoom] = computer_zoom
 
