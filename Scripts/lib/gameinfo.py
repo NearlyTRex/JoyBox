@@ -448,13 +448,6 @@ def DeriveRegularNameFromGameName(game_name):
     regular_name = re.sub(r"\((.*?)\)", "", regular_name).strip()
     return regular_name
 
-# Derive game name from path
-def DeriveGameNameFromPath(game_path):
-    rom_dir = system.GetFilenameDirectory(game_path)
-    if not rom_dir.endswith(")"):
-        return ""
-    return os.path.basename(rom_dir)
-
 # Derive game letter from name
 def DeriveGameLetterFromName(game_name):
     letter = ""
@@ -486,6 +479,13 @@ def DeriveGameCategoriesFromPlatform(game_platform):
         derived_category = config.game_category_other
         derived_subcategory = game_platform
     return (config.game_supercategory_roms, derived_category, derived_subcategory)
+
+# Derive game platform from categories
+def DeriveGamePlatformFromCategories(game_category, game_subcategory):
+    game_platform = game_subcategory
+    if game_category == config.game_category_computer:
+        game_platform = game_category + " - " + game_subcategory
+    return game_platform
 
 # Derive game categories from file
 def DeriveGameCategoriesFromFile(game_file):
@@ -539,12 +539,5 @@ def DeriveGameCategoriesFromFile(game_file):
     else:
         derived_category = config.game_category_other
     return (derived_supercategory, derived_category, derived_subcategory)
-
-# Derive game platform from categories
-def DeriveGamePlatformFromCategories(game_category, game_subcategory):
-    game_platform = game_subcategory
-    if game_category == config.game_category_computer:
-        game_platform = game_category + " - " + game_subcategory
-    return game_platform
 
 ###########################################################

@@ -186,15 +186,12 @@ class Metadata:
             rom_platform = gameinfo.DeriveGamePlatformFromCategories(rom_category, rom_subcategory)
 
             # Get file
-            rom_file = ""
-            if rom_category == config.game_category_computer:
-                letter = gameinfo.DeriveGameLetterFromName(rom_name)
-                rom_file = os.path.join(rom_category, rom_subcategory, letter, rom_name, rom_name + ".json")
-            else:
-                rom_file = os.path.join(rom_category, rom_subcategory, rom_name, rom_name + ".json")
-            rom_file = system.NormalizeFilePath(rom_file)
+            rom_file = system.RebaseFilePath(
+                path = environment.GetJsonRomMetadataFile(rom_category, rom_subcategory, rom_name),
+                old_base_path = environment.GetJsonRomsMetadataRootDir(),
+                new_base_path = "")
 
-            # Get asset strings
+            # Get asset files
             rom_boxfront = "%s/%s%s" % (config.asset_type_boxfront, rom_name, config.asset_type_extensions[config.asset_type_boxfront])
             rom_boxback = "%s/%s%s" % (config.asset_type_boxback, rom_name, config.asset_type_extensions[config.asset_type_boxback])
             rom_background = "%s/%s%s" % (config.asset_type_background, rom_name, config.asset_type_extensions[config.asset_type_background])

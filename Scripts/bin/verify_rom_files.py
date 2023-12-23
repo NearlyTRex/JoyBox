@@ -33,7 +33,7 @@ def main():
         # Check if json file matches up to a real rom path
         print("Checking if rom matching '%s' exists ..." % json_file)
         game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromFile(json_file)
-        game_name = gameinfo.DeriveGameNameFromPath(json_file)
+        game_name = system.GetFilenameBasename(json_file)
         game_rom_dir = environment.GetRomDir(game_category, game_subcategory, game_name)
         if not os.path.exists(game_rom_dir):
             print("Extraneous json file '%s' found" % json_file)
