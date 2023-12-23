@@ -1,7 +1,7 @@
 [UserData.Dirs]
-local_cache_dir = %USERPROFILE%\Cache
+local_cache_dir = %%USERPROFILE%%\Cache
 remote_cache_dir = Y:\
-sync_dir = %USERPROFILE%\Sync
+sync_dir = %%USERPROFILE%%\Sync
 storage_dir = X:\
 scripts_dir = C:\Repositories\JoyBox\Scripts
 tools_dir = C:\Repositories\JoyBox\Tools
@@ -50,15 +50,15 @@ profile_account_name =
 python_exe = python
 python_pip_exe = pip
 python_install_dir = C:\Python311
-python_venv_dir = %USERPROFILE%\.venv
+python_venv_dir = %%USERPROFILE%%\.venv
 
 [Tools.Sandboxie]
 sandboxie_exe = Start
 sandboxie_ini_exe = SbiIni
 sandboxie_rpcss_exe = SandboxieRpcSs
 sandboxie_dcomlaunch_exe = SandboxieDcomLaunch
-sandboxie_install_dir = %ProgramFiles%\Sandboxie-Plus
-sandboxie_sandbox_dir = %USERPROFILE%\Sandbox\%USERNAME%
+sandboxie_install_dir = %%ProgramFiles%%\Sandboxie-Plus
+sandboxie_sandbox_dir = %%USERPROFILE%%\Sandbox\%%USERNAME%%
 
 [Tools.Curl]
 curl_exe = curl
@@ -66,12 +66,12 @@ curl_install_dir = C:\Windows\System32
 
 [Tools.Git]
 git_exe = git
-git_install_dir = %ProgramFiles%\Git\bin
+git_install_dir = %%ProgramFiles%%\Git\bin
 
 [Tools.7Zip]
 7z_exe = 7z
-7z_install_dir = %ProgramFiles%\7-Zip
+7z_install_dir = %%ProgramFiles%%\7-Zip
 
 [Tools.Firefox]
 firefox_exe = firefox
-firefox_install_dir = %ProgramFiles%\Mozilla Firefox
+firefox_install_dir = %%ProgramFiles%%\Mozilla Firefox
