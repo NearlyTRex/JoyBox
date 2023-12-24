@@ -38,6 +38,7 @@ def LaunchGame(game_info, capture_type = None, fullscreen = False, verbose = Fal
     # Get game launcher info
     game_launcher_config_file = game_launcher.GetConfigFile()
     game_launcher_save_dir = game_launcher.GetSaveDir(game_platform)
+    game_launcher_setup_dir = game_launcher.GetSetupDir()
 
     # Unpack save if possible
     if saves.CanSaveBeUnpacked(game_category, game_subcategory, game_name):
@@ -57,8 +58,7 @@ def LaunchGame(game_info, capture_type = None, fullscreen = False, verbose = Fal
         system.ReplaceStringsInFile(
             src = game_launcher_config_file,
             replacements = [
-                {"from": config.token_emulator_setup_root, "to": game_launcher.GetSetupDir()},
-                {"from": config.token_emulator_main_root, "to": environment.GetEmulatorsRootDir()},
+                {"from": config.token_emulator_setup_root, "to": game_launcher_setup_dir},
                 {"from": config.token_game_save_dir, "to": game_save_dir}
             ],
             verbose = verbose,
@@ -77,8 +77,7 @@ def LaunchGame(game_info, capture_type = None, fullscreen = False, verbose = Fal
         system.ReplaceStringsInFile(
             src = game_launcher_config_file,
             replacements = [
-                {"from": game_launcher.GetSetupDir(), "to": config.token_emulator_setup_root},
-                {"from": environment.GetEmulatorsRootDir(), "to": config.token_emulator_main_root},
+                {"from": game_launcher_setup_dir, "to": config.token_emulator_setup_root},
                 {"from": game_save_dir, "to": config.token_game_save_dir}
             ],
             verbose = verbose,
