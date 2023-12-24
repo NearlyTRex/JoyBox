@@ -90,10 +90,6 @@ class EmulatorBase:
     def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, exit_on_failure = False):
         pass
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        pass
-
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):
         pass

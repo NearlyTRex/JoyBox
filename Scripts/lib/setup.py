@@ -87,7 +87,7 @@ def SetupEnvironment(verbose = False, exit_on_failure = False):
     system.LogInfo("Creating python virtual environment")
     python.SetupPythonEnvironment(verbose = verbose, exit_on_failure = exit_on_failure)
 
-    # Install python modules
+    # Setup python modules
     for module in python.GetRequiredPythonModules():
         system.LogInfo("Installing python module %s ..." % module)
         python.InstallPythonModule(
@@ -95,22 +95,16 @@ def SetupEnvironment(verbose = False, exit_on_failure = False):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-    # Install tools
+    # Setup tools
     for tool in programs.GetTools():
         system.LogInfo("Installing tool %s ..." % tool.GetName())
-        tool.Download(
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
         tool.Setup(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-    # Install emulators
+    # Setup emulators
     for emulator in programs.GetEmulators():
         system.LogInfo("Installing emulator %s ..." % emulator.GetName())
-        emulator.Download(
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
         emulator.Setup(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
