@@ -40,20 +40,20 @@ def LaunchGame(game_info, capture_type = None, fullscreen = False, verbose = Fal
     game_launcher_save_dir = game_launcher.GetSaveDir(game_platform)
     game_launcher_setup_dir = game_launcher.GetSetupDir()
 
+    # Make sure save directory exists
+    system.MakeDirectory(game_save_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+
     # Unpack save if possible
     if saves.CanSaveBeUnpacked(game_category, game_subcategory, game_name):
         saves.UnpackSave(game_category, game_subcategory, game_name, verbose = verbose, exit_on_failure = exit_on_failure)
 
-    # Make sure real save directory exists
-    system.MakeDirectory(game_save_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-
-    # Setup save directory
+    # Setup launcher save directory
     if game_launcher_save_dir:
         system.MakeDirectory(system.GetFilenameDirectory(game_launcher_save_dir), verbose = verbose, exit_on_failure = exit_on_failure)
         system.RemoveObject(game_launcher_save_dir, verbose = verbose, exit_on_failure = exit_on_failure)
         system.CreateSymlink(game_save_dir, game_launcher_save_dir, verbose = verbose, exit_on_failure = exit_on_failure)
 
-    # Setup config file
+    # Setup launcher config file
     if game_launcher_config_file:
         system.ReplaceStringsInFile(
             src = game_launcher_config_file,
@@ -72,7 +72,7 @@ def LaunchGame(game_info, capture_type = None, fullscreen = False, verbose = Fal
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-    # Revert config file
+    # Revert launcher config file
     if game_launcher_config_file:
         system.ReplaceStringsInFile(
             src = game_launcher_config_file,
@@ -83,7 +83,7 @@ def LaunchGame(game_info, capture_type = None, fullscreen = False, verbose = Fal
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-    # Revert save directory
+    # Revert launcher save directory
     if game_launcher_save_dir:
         system.RemoveObject(game_launcher_save_dir, verbose = verbose, exit_on_failure = exit_on_failure)
         system.MakeDirectory(game_launcher_save_dir, verbose = verbose, exit_on_failure = exit_on_failure)
