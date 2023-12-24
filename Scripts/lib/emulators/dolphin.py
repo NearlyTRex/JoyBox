@@ -78,9 +78,11 @@ class Dolphin(emulatorbase.EmulatorBase):
                 for wad_file in system.BuildFileListByExtensions(package_dir, extensions = [".wad"]):
                     pass
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("Dolphin", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("Dolphin", "windows"):
             network.DownloadLatestWebpageRelease(
                 webpage_url = "https://dolphin-emu.org/download/",
                 starts_with = "https://dl.dolphin-emu.org/builds",
@@ -90,7 +92,9 @@ class Dolphin(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Dolphin", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("Dolphin", "linux"):
+
+        # Build linux program
+        if programs.ShouldProgramBeInstalled("Dolphin", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Dolphin.git",
                 output_name = "Dolphin",
@@ -113,9 +117,6 @@ class Dolphin(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

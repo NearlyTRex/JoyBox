@@ -105,9 +105,11 @@ class BasiliskII(emulatorbase.EmulatorBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("BasiliskII", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("BasiliskII", "windows"):
             network.DownloadGeneralRelease(
                 archive_url = "https://surfdrive.surf.nl/files/index.php/s/C7E6HIZKWuHHR1P/download",
                 search_file = "BasiliskII.exe",
@@ -115,7 +117,9 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("BasiliskII", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("BasiliskII", "linux"):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("BasiliskII", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "Korkman",
                 github_repo = "macemu-appimage-builder",
@@ -127,9 +131,6 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

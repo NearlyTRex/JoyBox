@@ -60,9 +60,11 @@ class Xenia(emulatorbase.EmulatorBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("Xenia", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("Xenia", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "xenia-project",
                 github_repo = "release-builds-windows",
@@ -74,9 +76,6 @@ class Xenia(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

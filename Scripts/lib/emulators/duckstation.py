@@ -119,9 +119,11 @@ class DuckStation(emulatorbase.EmulatorBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("DuckStation", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("DuckStation", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "stenzek",
                 github_repo = "duckstation",
@@ -133,7 +135,9 @@ class DuckStation(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("DuckStation", "linux"):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("DuckStation", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "stenzek",
                 github_repo = "duckstation",
@@ -145,9 +149,6 @@ class DuckStation(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

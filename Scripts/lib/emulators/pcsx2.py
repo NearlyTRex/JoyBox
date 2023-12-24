@@ -130,9 +130,11 @@ class PCSX2(emulatorbase.EmulatorBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("PCSX2", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("PCSX2", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "PCSX2",
                 github_repo = "pcsx2",
@@ -143,7 +145,9 @@ class PCSX2(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("PCSX2", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("PCSX2", "linux"):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("PCSX2", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "PCSX2",
                 github_repo = "pcsx2",
@@ -154,9 +158,6 @@ class PCSX2(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("PCSX2", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

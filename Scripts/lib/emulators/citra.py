@@ -80,9 +80,11 @@ class Citra(emulatorbase.EmulatorBase):
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("Citra", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("Citra", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "citra-emu",
                 github_repo = "citra-nightly",
@@ -94,7 +96,9 @@ class Citra(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("Citra", "linux"):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("Citra", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "citra-emu",
                 github_repo = "citra-nightly",
@@ -106,9 +110,6 @@ class Citra(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

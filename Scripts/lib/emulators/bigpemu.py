@@ -53,9 +53,11 @@ class BigPEmu(emulatorbase.EmulatorBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("BigPEmu", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("BigPEmu", "windows"):
             network.DownloadGeneralRelease(
                 archive_url = "https://www.richwhitehouse.com/jaguar/builds/BigPEmu_v1092.zip",
                 search_file = "BigPEmu.exe",
@@ -63,9 +65,6 @@ class BigPEmu(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("BigPEmu", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

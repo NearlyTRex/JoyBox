@@ -71,9 +71,11 @@ class Xemu(emulatorbase.EmulatorBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("Xemu", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("Xemu", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "mborgerson",
                 github_repo = "xemu",
@@ -85,7 +87,9 @@ class Xemu(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("Xemu", "linux"):
+
+        # Build linux program
+        if programs.ShouldProgramBeInstalled("Xemu", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Xemu.git",
                 output_name = "Xemu",
@@ -103,9 +107,6 @@ class Xemu(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

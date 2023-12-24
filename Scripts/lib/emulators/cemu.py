@@ -78,9 +78,11 @@ class Cemu(emulatorbase.EmulatorBase):
                             verbose = verbose,
                             exit_on_failure = exit_on_failure)
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("Cemu", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("Cemu", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "cemu-project",
                 github_repo = "Cemu",
@@ -91,7 +93,9 @@ class Cemu(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Cemu", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("Cemu", "linux"):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("Cemu", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "cemu-project",
                 github_repo = "Cemu",
@@ -102,9 +106,6 @@ class Cemu(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Cemu", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

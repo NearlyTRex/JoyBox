@@ -54,9 +54,11 @@ class ViceC64(emulatorbase.EmulatorBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("VICE-C64", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("VICE-C64", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "VICE-Team",
                 github_repo = "svn-mirror",
@@ -68,7 +70,9 @@ class ViceC64(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("VICE-C64", "linux"):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("VICE-C64", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ViceC64.git",
                 output_name = "VICE-C64",
@@ -93,9 +97,6 @@ class ViceC64(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

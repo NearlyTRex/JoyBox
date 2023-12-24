@@ -509,11 +509,11 @@ class Computer(emulatorbase.EmulatorBase):
     def GetSaveDir(self, emulator_platform = None):
         return None
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
 
-        # DosBoxX
-        if force_downloads or programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
+        # Download windows programs
+        if programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "joncampbell123",
                 github_repo = "dosbox-x",
@@ -525,7 +525,19 @@ class Computer(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
+        if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
+            network.DownloadLatestWebpageRelease(
+                webpage_url = "https://www.scummvm.org/downloads",
+                starts_with = "https://downloads.scummvm.org/frs/scummvm/",
+                ends_with = "win32-x86_64.zip",
+                search_file = "scummvm.exe",
+                install_name = "ScummVM",
+                install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+        # Build linux programs
+        if programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/DosboxX.git",
                 output_name = "DosBoxX",
@@ -564,19 +576,7 @@ class Computer(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-        # ScummVM
-        if force_downloads or programs.ShouldProgramBeInstalled("ScummVM", "windows"):
-            network.DownloadLatestWebpageRelease(
-                webpage_url = "https://www.scummvm.org/downloads",
-                starts_with = "https://downloads.scummvm.org/frs/scummvm/",
-                ends_with = "win32-x86_64.zip",
-                search_file = "scummvm.exe",
-                install_name = "ScummVM",
-                install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("ScummVM", "linux"):
+        if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ScummVM.git",
                 output_name = "ScummVM",
@@ -613,9 +613,6 @@ class Computer(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

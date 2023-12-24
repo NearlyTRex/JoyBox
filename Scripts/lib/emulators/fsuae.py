@@ -63,9 +63,11 @@ class FSUAE(emulatorbase.EmulatorBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("FS-UAE", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("FS-UAE", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "FrodeSolheim",
                 github_repo = "fs-uae",
@@ -77,7 +79,9 @@ class FSUAE(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("FS-UAE", "linux"):
+
+        # Build linux program
+        if programs.ShouldProgramBeInstalled("FS-UAE", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/FrodeSolheim/fs-uae/releases/download/v3.1.66/fs-uae-3.1.66.tar.xz",
                 output_name = "FS-UAE",
@@ -102,9 +106,6 @@ class FSUAE(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

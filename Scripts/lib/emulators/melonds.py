@@ -69,9 +69,11 @@ class MelonDS(emulatorbase.EmulatorBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("melonDS", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download program
+        if programs.ShouldProgramBeInstalled("melonDS", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "melonDS-emu",
                 github_repo = "melonDS",
@@ -83,7 +85,9 @@ class MelonDS(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("melonDS", "linux"):
+
+        # Build program
+        if programs.ShouldProgramBeInstalled("melonDS", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/melonDS.git",
                 output_name = "melonDS",
@@ -104,9 +108,6 @@ class MelonDS(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
