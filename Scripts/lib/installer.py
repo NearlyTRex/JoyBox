@@ -1,7 +1,6 @@
 # Imports
 import os, os.path
 import sys
-import json
 import ntpath
 
 # Local imports
@@ -19,61 +18,6 @@ import gameinfo
 from emulators import computer
 
 # Inno Setup parameters
-#
-# /SILENT, /VERYSILENT
-# Instructs Setup to be silent or very silent. When Setup is silent the wizard and the background window are
-# not displayed but the installation progress window is. When a setup is very silent this installation
-# progress window is not displayed. Everything else is normal so for example error messages during installation
-# are displayed and the startup prompt is (if you haven't disabled it with DisableStartupPrompt or the '/SP-'
-# command line option explained above).
-# If a restart is necessary and the '/NORESTART' command isn't used (see below) and Setup is silent, it
-# will display a Reboot now? message box. If it's very silent it will reboot without asking.
-#
-# /SUPPRESSMSGBOXES
-# Suppress message boxes
-# Instructs Setup to suppress message boxes. Only has an effect when combined with '/SILENT' or '/VERYSILENT'.
-# The default response in situations where there's a choice is:
-# - Yes in a 'Keep newer file?' situation.
-# - No in a 'File exists, confirm overwrite.' situation.
-# - Abort in Abort/Retry situations.
-# - Cancel in Retry/Cancel situations.
-# - Yes (=continue) in a DiskSpaceWarning/DirExists/DirDoesntExist/NoUninstallWarning/ExitSetupMessage/ConfirmUninstall situation.
-# - Yes (=restart) in a FinishedRestartMessage/UninstalledAndNeedsRestart situation.
-# - The recommended choice in a PrivilegesRequiredOverridesAllowed=dialog situation.
-# 5 message boxes are not suppressible:
-# - The About Setup message box.
-# - The Exit Setup? message box.
-# - The FileNotInDir2 message box displayed when Setup requires a new disk to be inserted and the disk was not found.
-# - Any (error) message box displayed before Setup (or Uninstall) could read the command line parameters.
-# - Any task dialog or message box displayed by [Code] support functions TaskDialogMsgBox and MsgBox.
-#
-# /SP-
-# Disables the This will install... Do you wish to continue? prompt at the beginning of Setup. Of course, this will
-# have no effect if the DisableStartupPrompt [Setup] section directive was set to yes.
-#
-# /NOCANCEL
-# Prevents the user from cancelling during the installation process, by disabling the Cancel button and
-# ignoring clicks on the close button. Useful along with '/SILENT' or '/VERYSILENT'.
-#
-# /NORESTART
-# Prevents Setup from restarting the system following a successful installation, or after a Preparing
-# to Install failure that requests a restart. Typically used along with /SILENT or /VERYSILENT.
-#
-# /NOCLOSEAPPLICATIONS
-# Prevents Setup from closing applications using files that need to be updated by Setup. If
-# /CLOSEAPPLICATIONS was also used, this command line parameter is ignored.
-#
-# /NOFORCECLOSEAPPLICATIONS
-# Prevents Setup from force closing when closing applications. If /FORCECLOSEAPPLICATIONS
-# was also used, this command line parameter is ignored.
-#
-# /NORESTARTAPPLICATIONS
-# Prevents Setup from restarting applications. If /RESTARTAPPLICATIONS was also used,
-# this command line parameter is ignored.
-#
-# /NOICONS
-# Instructs Setup to initially check the Don't create a Start Menu folder check box on the
-# Select Start Menu Folder wizard page.
 inno_setup_silent_params = ["/SP-"]
 inno_setup_normal_params = ["/NOCANCEL", "/NORESTART", "/NOCLOSEAPPLICATIONS", "/NOFORCECLOSEAPPLICATIONS", "/NORESTARTAPPLICATIONS", "/NOICONS"]
 
@@ -386,9 +330,6 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
     game_name = game_info.get_name()
     game_category = game_info.get_category()
     game_subcategory = game_info.get_subcategory()
-    game_dependencies_list = game_info.get_dependencies()
-    game_dlc_list = game_info.get_dlc()
-    game_update_list = game_info.get_updates()
     game_installer_type = game_info.get_installer_type()
     game_disc_type = game_info.get_disc_type()
     game_installer_exe_list = game_info.get_installer_exe()
@@ -454,27 +395,21 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         disc_files = game_disc_files,
         use_drive_letters = game_is_dos or game_is_win31)
 
-    # Resolve paths
-    resolved_paths = {}
-    resolved_paths["installer_exe"] = game_installer_exe_list
-    resolved_paths["installer_dos_exe"] = game_installer_dos_exe_list
-    resolved_paths["dependencies"] = game_dependencies_list
-    resolved_paths["dlc"] = game_dlc_list
-    resolved_paths["updates"] = game_update_list
-    for key, value in resolved_paths.items():
-        resolved_paths[key] = computer.ResolveJsonPaths(
-            paths = value,
-            setup_base_dir = game_setup_dir,
-            hdd_base_dir = prefix_c_drive_real,
-            disc_base_dir = game_setup_dir,
-            disc_token_map = game_disc_token_map)
+    # Resolve installer paths
+    game_installer_exe_list = computer.ResolveJsonPaths(
+        paths = game_installer_exe_list,
+        setup_base_dir = game_setup_dir,
+        hdd_base_dir = prefix_c_drive_real,
+        disc_base_dir = game_setup_dir,
+        disc_token_map = game_disc_token_map)
 
-    # Sort windows installers in order of when they should run
-    sorted_windows_installers = []
-    sorted_windows_installers += resolved_paths["dependencies"]
-    sorted_windows_installers += resolved_paths["installer_exe"]
-    sorted_windows_installers += resolved_paths["updates"]
-    sorted_windows_installers += resolved_paths["dlc"]
+    # Resolve dos installer paths
+    game_installer_dos_exe_list = computer.ResolveJsonPaths(
+        paths = game_installer_dos_exe_list,
+        setup_base_dir = game_setup_dir,
+        hdd_base_dir = prefix_c_drive_real,
+        disc_base_dir = game_setup_dir,
+        disc_token_map = game_disc_token_map)
 
     # Copy rom files
     system.CopyContents(
@@ -517,7 +452,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
 
     # Run windows installers
     RunWindowsInstallers(
-        installer_programs = sorted_windows_installers,
+        installer_programs = game_installer_exe_list,
         installer_type = game_installer_type,
         prefix_dir = prefix_dir,
         prefix_name = prefix_name,
@@ -531,7 +466,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
     # Setup dos programs
     if game_is_dos:
         SetupDosPrograms(
-            installer_programs = resolved_paths["installer_dos_exe"],
+            installer_programs = game_installer_dos_exe_list,
             installer_discs = game_disc_files,
             prefix_dir = prefix_dir,
             prefix_name = prefix_name,
