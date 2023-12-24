@@ -30,9 +30,11 @@ class NDecrypt(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "SabreTools",
                 github_repo = "NDecrypt",
@@ -44,7 +46,9 @@ class NDecrypt(toolbase.ToolBase):
                 install_files = ["NDecrypt.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("NDecrypt", "linux"):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("NDecrypt", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "SabreTools",
                 github_repo = "NDecrypt",

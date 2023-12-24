@@ -42,9 +42,11 @@ class AppImageTool(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("AppImageTool", "linux"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("AppImageTool", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "AppImage",
                 github_repo = "AppImageKit",
@@ -55,16 +57,15 @@ class AppImageTool(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("AppImageTool", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            network.DownloadLatestGithubSource(
-                github_user = "NearlyTRex",
-                github_repo = "BostonIcons",
-                output_dir = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "BostonIcons"),
-                clean_first = True,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
 
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+        # Download icons
+        network.DownloadLatestGithubSource(
+            github_user = "NearlyTRex",
+            github_repo = "BostonIcons",
+            output_dir = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "BostonIcons"),
+            clean_first = True,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -75,9 +76,8 @@ class AppImageTool(toolbase.ToolBase):
                 exit_on_failure = exit_on_failure)
 
         # Copy icon
-        if environment.IsLinuxPlatform():
-            system.CopyFileOrDirectory(
-                src = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
-                dest = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+        system.CopyFileOrDirectory(
+            src = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
+            dest = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)

@@ -23,9 +23,11 @@ class ExifTool(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldLibraryBeInstalled("ExifTool"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download library
+        if programs.ShouldLibraryBeInstalled("ExifTool"):
             network.DownloadLatestGithubSource(
                 github_user = "NearlyTRex",
                 github_repo = "ExifTool",

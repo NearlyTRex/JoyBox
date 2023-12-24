@@ -30,9 +30,11 @@ class FFMpeg(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("FFMpeg", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("FFMpeg", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "BtbN",
                 github_repo = "FFmpeg-Builds",
@@ -44,7 +46,9 @@ class FFMpeg(toolbase.ToolBase):
                 install_files = ["ffmpeg.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("FFMpeg", "linux"):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("FFMpeg", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "BtbN",
                 github_repo = "FFmpeg-Builds",

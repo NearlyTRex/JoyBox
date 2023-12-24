@@ -30,9 +30,11 @@ class PSVStrip(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("PSVStrip", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("PSVStrip", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "Kippykip",
                 github_repo = "PSVStrip",

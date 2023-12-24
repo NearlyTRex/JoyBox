@@ -85,9 +85,11 @@ class Ludusavi(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("Ludusavi", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("Ludusavi", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "mtkennerly",
                 github_repo = "ludusavi",
@@ -99,7 +101,9 @@ class Ludusavi(toolbase.ToolBase):
                 install_files = ["ludusavi.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("Ludusavi", "linux"):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("Ludusavi", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "mtkennerly",
                 github_repo = "ludusavi",
@@ -117,9 +121,6 @@ class Ludusavi(toolbase.ToolBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

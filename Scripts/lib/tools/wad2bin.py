@@ -30,9 +30,11 @@ class Wad2Bin(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("Wad2Bin", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("Wad2Bin", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "DarkMatterCore",
                 github_repo = "wad2bin",

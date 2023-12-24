@@ -48,9 +48,11 @@ class DXVK(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldLibraryBeInstalled("DXVK"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download library
+        if programs.ShouldLibraryBeInstalled("DXVK"):
             network.DownloadLatestGithubRelease(
                 github_user = "doitsujin",
                 github_repo = "dxvk",

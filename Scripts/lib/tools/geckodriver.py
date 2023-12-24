@@ -30,9 +30,11 @@ class GeckoDriver(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("GeckoDriver", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("GeckoDriver", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "mozilla",
                 github_repo = "geckodriver",
@@ -44,7 +46,9 @@ class GeckoDriver(toolbase.ToolBase):
                 install_files = ["geckodriver.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("GeckoDriver", "linux"):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("GeckoDriver", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "mozilla",
                 github_repo = "geckodriver",

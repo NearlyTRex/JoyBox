@@ -30,9 +30,11 @@ class ThreeDSRomTool(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("3DSRomTool", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("3DSRomTool", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "NearlyTRex",
                 github_repo = "3DSRomTool",
@@ -44,7 +46,9 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 install_files = ["rom_tool.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("3DSRomTool", "linux"):
+
+        # Build linux program
+        if programs.ShouldProgramBeInstalled("3DSRomTool", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/3DSRomTool.git",
                 output_name = "3DSRomTool",

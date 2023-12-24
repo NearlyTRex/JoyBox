@@ -23,9 +23,11 @@ class PSNGetPkgInfo(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldLibraryBeInstalled("PSNGetPkgInfo"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download library
+        if programs.ShouldLibraryBeInstalled("PSNGetPkgInfo"):
             network.DownloadLatestGithubSource(
                 github_user = "NearlyTRex",
                 github_repo = "PSNGetPkgInfo",

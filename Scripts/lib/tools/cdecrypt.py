@@ -30,9 +30,11 @@ class CDecrypt(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("CDecrypt", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("CDecrypt", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "VitaSmith",
                 github_repo = "cdecrypt",
@@ -44,7 +46,9 @@ class CDecrypt(toolbase.ToolBase):
                 install_files = ["cdecrypt.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("CDecrypt", "linux"):
+
+        # Build linux program
+        if programs.ShouldProgramBeInstalled("CDecrypt", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/CDecrypt.git",
                 output_name = "CDecrypt",

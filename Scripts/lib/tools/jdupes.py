@@ -30,9 +30,11 @@ class Jdupes(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("Jdupes", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("Jdupes", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "jbruchon",
                 github_repo = "jdupes",
@@ -43,7 +45,9 @@ class Jdupes(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Jdupes", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("Jdupes", "linux"):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("Jdupes", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "jbruchon",
                 github_repo = "jdupes",

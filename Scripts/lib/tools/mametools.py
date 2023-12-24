@@ -32,11 +32,11 @@ class MameTools(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
 
-        # MameChdman
-        if force_downloads or programs.ShouldProgramBeInstalled("MameChdman", "windows"):
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("MameChdman", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "mamedev",
                 github_repo = "mame",

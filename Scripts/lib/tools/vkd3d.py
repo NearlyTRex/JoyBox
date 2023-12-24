@@ -46,9 +46,11 @@ class VKD3D(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldLibraryBeInstalled("VKD3D"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download library
+        if programs.ShouldLibraryBeInstalled("VKD3D"):
             network.DownloadLatestGithubRelease(
                 github_user = "HansKristian-Work",
                 github_repo = "vkd3d-proton",
@@ -59,9 +61,6 @@ class VKD3D(toolbase.ToolBase):
                 install_dir = programs.GetLibraryInstallDir("VKD3D"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Find first dll file
         dll_files = system.BuildFileListByExtensions(programs.GetLibraryInstallDir("VKD3D"), extensions = [".dll"])

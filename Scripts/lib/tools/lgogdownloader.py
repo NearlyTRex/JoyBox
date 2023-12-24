@@ -36,9 +36,11 @@ class LGOGDownloader(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("LGOGDownloader", "linux"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Build linux program
+        if programs.ShouldProgramBeInstalled("LGOGDownloader", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/LGOGDownloader.git",
                 output_name = "LGOGDownloader",
@@ -59,9 +61,6 @@ class LGOGDownloader(toolbase.ToolBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

@@ -23,9 +23,11 @@ class PSVTools(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldLibraryBeInstalled("PSVTools"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download library
+        if programs.ShouldLibraryBeInstalled("PSVTools"):
             network.DownloadLatestGithubSource(
                 github_user = "NearlyTRex",
                 github_repo = "PSVTools",

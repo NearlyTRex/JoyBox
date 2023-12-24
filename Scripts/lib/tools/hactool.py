@@ -30,9 +30,11 @@ class HacTool(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("HacTool", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("HacTool", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "SciresM",
                 github_repo = "hactool",
@@ -44,7 +46,9 @@ class HacTool(toolbase.ToolBase):
                 install_files = ["hactool.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("HacTool", "linux"):
+
+        # Build linux program
+        if programs.ShouldProgramBeInstalled("HacTool", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/HacTool.git",
                 output_name = "HacTool",

@@ -30,9 +30,11 @@ class ExtractXIso(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("ExtractXIso", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("ExtractXIso", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "XboxDev",
                 github_repo = "extract-xiso",
@@ -44,7 +46,9 @@ class ExtractXIso(toolbase.ToolBase):
                 install_files = ["extract-xiso.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("ExtractXIso", "linux"):
+
+        # Build linux program
+        if programs.ShouldProgramBeInstalled("ExtractXIso", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ExtractXIso.git",
                 output_name = "ExtractXIso",

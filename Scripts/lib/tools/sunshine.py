@@ -30,9 +30,11 @@ class Sunshine(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("Sunshine", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("Sunshine", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "LizardByte",
                 github_repo = "Sunshine",
@@ -44,7 +46,9 @@ class Sunshine(toolbase.ToolBase):
                 install_files = ["sunshine.exe", "assets", "scripts", "tools"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("Sunshine", "linux"):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("Sunshine", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "LizardByte",
                 github_repo = "Sunshine",

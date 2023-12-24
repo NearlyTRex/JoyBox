@@ -30,9 +30,11 @@ class XorrISO(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("XorrISO", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("XorrISO", "windows"):
             network.DownloadLatestGithubSource(
                 github_user = "PeyTy",
                 github_repo = "xorriso-exe-for-windows",
@@ -40,7 +42,9 @@ class XorrISO(toolbase.ToolBase):
                 clean_first = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("XorrISO", "linux"):
+
+        # Build linux program
+        if programs.ShouldProgramBeInstalled("XorrISO", "linux"):
             network.BuildAppImageFromSource(
                 release_url = "https://www.gnu.org/software/xorriso/xorriso-1.5.6.pl02.tar.gz",
                 output_name = "XorrISO",

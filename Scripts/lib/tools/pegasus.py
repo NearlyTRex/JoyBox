@@ -67,9 +67,11 @@ class Pegasus(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("Pegasus", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("Pegasus", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "mmatyas",
                 github_repo = "pegasus-frontend",
@@ -89,7 +91,9 @@ class Pegasus(toolbase.ToolBase):
                 clean_first = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("Pegasus", "linux"):
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("Pegasus", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "mmatyas",
                 github_repo = "pegasus-frontend",
@@ -115,9 +119,6 @@ class Pegasus(toolbase.ToolBase):
                 clean_first = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
 
         # Generate game dirs
         game_dirs = []

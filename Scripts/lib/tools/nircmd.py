@@ -30,9 +30,11 @@ class NirCmd(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
-        if force_downloads or programs.ShouldProgramBeInstalled("NirCmd", "windows"):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
+
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("NirCmd", "windows"):
             network.DownloadGeneralRelease(
                 archive_url = "https://www.nirsoft.net/utils/nircmd-x64.zip",
                 search_file = "nircmdc.exe",

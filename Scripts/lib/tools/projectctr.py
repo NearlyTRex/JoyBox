@@ -44,11 +44,11 @@ class ProjectCTR(toolbase.ToolBase):
             }
         }
 
-    # Download
-    def Download(self, force_downloads = False, verbose = False, exit_on_failure = False):
+    # Setup
+    def Setup(self, verbose = False, exit_on_failure = False):
 
-        # CtrMakeRom
-        if force_downloads or programs.ShouldProgramBeInstalled("CtrMakeRom", "windows"):
+        # Download windows program
+        if programs.ShouldProgramBeInstalled("CtrMakeRom", "windows"):
             network.DownloadLatestGithubRelease(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
@@ -60,7 +60,21 @@ class ProjectCTR(toolbase.ToolBase):
                 install_files = ["makerom.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("CtrMakeRom", "linux"):
+        if programs.ShouldProgramBeInstalled("CtrTool", "windows"):
+            network.DownloadLatestGithubRelease(
+                github_user = "3DSGuy",
+                github_repo = "Project_CTR",
+                starts_with = "ctrtool",
+                ends_with = "win_x64.zip",
+                search_file = "ctrtool.exe",
+                install_name = "CtrTool",
+                install_dir = programs.GetProgramInstallDir("CtrTool", "windows"),
+                install_files = ["ctrtool.exe"],
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("CtrMakeRom", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
@@ -78,21 +92,7 @@ class ProjectCTR(toolbase.ToolBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-        # CtrTool
-        if force_downloads or programs.ShouldProgramBeInstalled("CtrTool", "windows"):
-            network.DownloadLatestGithubRelease(
-                github_user = "3DSGuy",
-                github_repo = "Project_CTR",
-                starts_with = "ctrtool",
-                ends_with = "win_x64.zip",
-                search_file = "ctrtool.exe",
-                install_name = "CtrTool",
-                install_dir = programs.GetProgramInstallDir("CtrTool", "windows"),
-                install_files = ["ctrtool.exe"],
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-        if force_downloads or programs.ShouldProgramBeInstalled("CtrTool", "linux"):
+        if programs.ShouldProgramBeInstalled("CtrTool", "linux"):
             network.DownloadLatestGithubRelease(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
