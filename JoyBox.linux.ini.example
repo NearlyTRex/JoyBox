@@ -6,7 +6,7 @@ storage_dir = /mnt/Storage
 scripts_dir = $HOME/Repositories/JoyBox/Scripts
 tools_dir = $HOME/Repositories/JoyBox/Tools
 emulators_dir = $HOME/Repositories/JoyBox/Emulators
-metadata_dir = $HOME/Repositories/JoyBox/Metadata
+metadata_dir = $HOME/Repositories/GameMetadata
 
 [UserData.NAS]
 nas_base_location =

@@ -6,7 +6,7 @@ storage_dir = X:\
 scripts_dir = C:\Repositories\JoyBox\Scripts
 tools_dir = C:\Repositories\JoyBox\Tools
 emulators_dir = C:\Repositories\JoyBox\Emulators
-metadata_dir = C:\Repositories\JoyBox\Metadata
+metadata_dir = C:\Repositories\GameMetadata
 
 [UserData.NAS]
 nas_base_location =
