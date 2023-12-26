@@ -94,6 +94,11 @@ def DownloadGitUrl(url, output_dir, clean_first = False, verbose = False, exit_o
 
     # Clear output dir
     if clean_first:
+        system.ChmodFileOrDirectory(
+            src = output_dir,
+            perms = 777,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
         system.RemoveDirectoryContents(
             dir = output_dir,
             verbose = verbose,
@@ -393,7 +398,7 @@ def DownloadGeneralRelease(
                 chmod_file = system.NormalizeFilePath(chmod_entry["file"])
                 chmod_perms = chmod_entry["perms"]
                 if filename.endswith(chmod_file):
-                    system.ChmodFile(
+                    system.ChmodFileOrDirectory(
                         src = filename,
                         perms = chmod_perms,
                         verbose = verbose,
