@@ -8,7 +8,6 @@ import environment
 import system
 import programs
 import metadata
-import python
 import ini
 
 # Check basics
@@ -82,18 +81,6 @@ def SetupEnvironment(verbose = False, exit_on_failure = False):
     # Setup ini file
     system.LogInfo("Initializing ini file")
     ini.InitializeIniFile(verbose = verbose, exit_on_failure = exit_on_failure)
-
-    # Setup python environment
-    system.LogInfo("Creating python virtual environment")
-    python.SetupPythonEnvironment(verbose = verbose, exit_on_failure = exit_on_failure)
-
-    # Setup python modules
-    for module in python.GetRequiredPythonModules():
-        system.LogInfo("Installing python module %s ..." % module)
-        python.InstallPythonModule(
-            module = module,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
 
     # Setup tools
     for tool in programs.GetTools():
