@@ -18,7 +18,7 @@ class Git(toolbase.ToolBase):
 
         # Get git info
         git_exe = ini.GetIniValue("Tools.Git", "git_exe")
-        git_install_dir = ini.GetIniValue("Tools.Git", "git_install_dir")
+        git_install_dir = ini.GetIniPathValue("Tools.Git", "git_install_dir")
 
         # Return config
         return {

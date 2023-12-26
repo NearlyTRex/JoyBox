@@ -18,7 +18,7 @@ class Curl(toolbase.ToolBase):
 
         # Get curl info
         curl_exe = ini.GetIniValue("Tools.Curl", "curl_exe")
-        curl_install_dir = ini.GetIniValue("Tools.Curl", "curl_install_dir")
+        curl_install_dir = ini.GetIniPathValue("Tools.Curl", "curl_install_dir")
 
         # Return config
         return {

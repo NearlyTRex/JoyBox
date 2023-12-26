@@ -18,7 +18,7 @@ class Firefox(toolbase.ToolBase):
 
         # Get firefox info
         firefox_exe = ini.GetIniValue("Tools.Firefox", "firefox_exe")
-        firefox_install_dir = ini.GetIniValue("Tools.Firefox", "firefox_install_dir")
+        firefox_install_dir = ini.GetIniPathValue("Tools.Firefox", "firefox_install_dir")
 
         # Return config
         return {
