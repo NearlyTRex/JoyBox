@@ -346,17 +346,24 @@ def TouchFile(src, contents = "", contents_mode = "w", verbose = False, pretend_
             sys.exit(1)
         return False
 
-# Chmod file
-def ChmodFile(src, perms, verbose = False, pretend_run = False, exit_on_failure = False):
+# Chmod file or directory
+def ChmodFileOrDirectory(src, perms, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            print("Changing file permissions of %s to %s" % (src, str(perms)))
+            print("Changing permissions of %s to %s" % (src, str(perms)))
         if not pretend_run:
-            os.chmod(src, int(str(perms), base=8))
+            if os.path.isfile(src):
+                os.chmod(src, int(str(perms), base=8))
+            elif os.path.isdir(src):
+                for root, dirs, files in os.walk(src):
+                    for f in files:
+                        os.chmod(os.path.join(root, f), int(str(perms), base=8))
+                    for d in dirs:
+                        os.chmod(os.path.join(root, d), int(str(perms), base=8))
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to change file permissions of %s to %s" % (src, str(perms)))
+            print("Unable to change permissions of %s to %s" % (src, str(perms)))
             print(e)
             sys.exit(1)
         return False
