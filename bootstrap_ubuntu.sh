@@ -28,6 +28,7 @@ sudo apt-get -y install git
 sudo apt-get -y install openssl
 sudo apt-get -y install p7zip-full
 sudo apt-get -y install zip
+sudo apt-get -y install python3-minimal
 
 # GTK
 sudo apt-get -y install libcanberra-gtk-module
@@ -80,9 +81,6 @@ sudo apt-get -y install libglew-dev
 
 # XML
 sudo apt-get -y install libpugixml-dev
-
-# Python
-sudo apt-get -y install python3-minimal
 
 # Security
 sudo apt-get -y install ca-certificates
@@ -156,3 +154,32 @@ sudo apt-get -y install qemu-kvm
 sudo apt-get -y install qemu-utils
 sudo apt-get -y install virt-manager
 sudo apt-get -y install virtualbox
+
+# Python
+python -m venv $HOME/.venv
+$HOME/.venv/Scripts/pip install --upgrade pip
+$HOME/.venv/Scripts/pip install --upgrade wheel
+$HOME/.venv/Scripts/pip install --upgrade psutil
+$HOME/.venv/Scripts/pip install --upgrade selenium
+$HOME/.venv/Scripts/pip install --upgrade requests
+$HOME/.venv/Scripts/pip install --upgrade pathlib
+$HOME/.venv/Scripts/pip install --upgrade PySimpleGUI
+$HOME/.venv/Scripts/pip install --upgrade Pillow
+$HOME/.venv/Scripts/pip install --upgrade bs4
+$HOME/.venv/Scripts/pip install --upgrade lxml
+$HOME/.venv/Scripts/pip install --upgrade mergedeep
+$HOME/.venv/Scripts/pip install --upgrade fuzzywuzzy
+$HOME/.venv/Scripts/pip install --upgrade dictdiffer
+$HOME/.venv/Scripts/pip install --upgrade termcolor
+$HOME/.venv/Scripts/pip install --upgrade pycryptodome
+$HOME/.venv/Scripts/pip install --upgrade pycryptodomex
+$HOME/.venv/Scripts/pip install --upgrade cryptography
+$HOME/.venv/Scripts/pip install --upgrade aenum
+$HOME/.venv/Scripts/pip install --upgrade fastxor
+$HOME/.venv/Scripts/pip install --upgrade packaging
+$HOME/.venv/Scripts/pip install --upgrade ecdsa
+$HOME/.venv/Scripts/pip install --upgrade schedule
+$HOME/.venv/Scripts/pip install --upgrade python-dateutil
+$HOME/.venv/Scripts/pip install --upgrade xxhash
+$HOME/.venv/Scripts/pip install --upgrade screeninfo
+$HOME/.venv/Scripts/pip install --upgrade tqdm
