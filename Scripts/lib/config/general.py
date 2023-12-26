@@ -6,6 +6,16 @@ import getpass
 # Project
 project_name = "JoyBox"
 
+# Minimum python version
+minimum_python_major_version = 3
+minimum_python_minor_version = 10
+minimum_python_patch_version = 0
+minimum_python_version = (
+    minimum_python_major_version,
+    minimum_python_minor_version,
+    minimum_python_patch_version
+)
+
 # Tokens
 token_rom_storage_root = "$ROM_STORAGE_ROOT"
 token_rom_json_root = "$ROM_JSON_ROOT"
