@@ -441,7 +441,8 @@ def RunOutputCommand(
                     env = options.env,
                     creationflags = options.creationflags,
                     stdout = subprocess.PIPE).stdout
-            environment.WaitForNamedProcesses(options.blocking_processes)
+            if isinstance(options.blocking_processes, list) and len(options.blocking_processes) > 0:
+                environment.WaitForNamedProcesses(options.blocking_processes)
             if options.allow_processing:
                 PostprocessCommand(
                     cmd = cmd,
@@ -506,7 +507,8 @@ def RunReturncodeCommand(
                     creationflags = options.creationflags,
                     stdout = open(os.devnull, "w"),
                     stderr = subprocess.STDOUT)
-            environment.WaitForNamedProcesses(options.blocking_processes)
+            if isinstance(options.blocking_processes, list) and len(options.blocking_processes) > 0:
+                environment.WaitForNamedProcesses(options.blocking_processes)
             if options.allow_processing:
                 PostprocessCommand(
                     cmd = cmd,
@@ -596,7 +598,8 @@ def RunBlockingCommand(
                 if output:
                     print(output.strip())
             code = process.poll()
-            environment.WaitForNamedProcesses(options.blocking_processes)
+            if isinstance(options.blocking_processes, list) and len(options.blocking_processes) > 0:
+                environment.WaitForNamedProcesses(options.blocking_processes)
             if options.allow_processing:
                 PostprocessCommand(
                     cmd = cmd,
