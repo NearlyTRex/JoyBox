@@ -1,8 +1,6 @@
 # Imports
-import os
-import os.path
+import os, os.path
 import sys
-import bs4
 import textwrap
 
 # Local imports
@@ -485,6 +483,7 @@ def InstallWiiUNusPackage(nus_package_dir, nand_dir, verbose = False, exit_on_fa
         return False
 
     # Get title id
+    import bs4
     app_titleid = ""
     with open(app_xml_file, "r") as f:
         data = f.read()
