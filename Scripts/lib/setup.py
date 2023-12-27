@@ -63,7 +63,7 @@ def CheckPrograms():
     # Check required programs
     for required_program in required_programs:
         if not programs.IsProgramInstalled(required_program):
-            system.LogError("Required program '%s' was not found, please install it")
+            system.LogError("Required program '%s' was not found, please install it" % required_program)
             sys.exit(1)
 
 # Check requirements
