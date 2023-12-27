@@ -18,7 +18,7 @@ class SevenZip(toolbase.ToolBase):
 
         # Get git info
         sevenzip_exe = ini.GetIniValue("Tools.7Zip", "7z_exe")
-        sevenzip_install_dir = ini.GetIniValue("Tools.7Zip", "7z_install_dir")
+        sevenzip_install_dir = ini.GetIniPathValue("Tools.7Zip", "7z_install_dir")
 
         # Return config
         return {
