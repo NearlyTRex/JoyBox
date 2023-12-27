@@ -77,6 +77,7 @@ class Dolphin(emulatorbase.EmulatorBase):
             for package_dir in package_dirset:
                 for wad_file in system.BuildFileListByExtensions(package_dir, extensions = [".wad"]):
                     pass
+        return True
 
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):

@@ -72,11 +72,14 @@ class Cemu(emulatorbase.EmulatorBase):
                 for tik_file in system.BuildFileListByExtensions(package_dir, extensions = [".tik"]):
                     if tik_file.endswith("title.tik"):
                         tik_dir = system.GetFilenameDirectory(tik_file)
-                        nintendo.InstallWiiUNusPackage(
+                        success = nintendo.InstallWiiUNusPackage(
                             nus_package_dir = tik_dir,
                             nand_dir = os.path.join(programs.GetEmulatorPathConfigValue("Cemu", "setup_dir"), "mlc01"),
                             verbose = verbose,
                             exit_on_failure = exit_on_failure)
+                        if not success:
+                            return False
+        return True
 
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):

@@ -94,11 +94,14 @@ class Yuzu(emulatorbase.EmulatorBase):
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
                 for nsp_file in system.BuildFileListByExtensions(package_dir, extensions = [".nsp"]):
-                    nintendo.InstallSwitchNSP(
+                    success = nintendo.InstallSwitchNSP(
                         nsp_file = nsp_file,
                         nand_dir = os.path.join(programs.GetEmulatorPathConfigValue("Yuzu", "setup_dir"), "nand"),
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
+        return True
 
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):
