@@ -24,6 +24,7 @@ def SetScreenResolution(width, height, colors, verbose = False, exit_on_failure 
     if programs.IsToolInstalled("NirCmd"):
         nircmd_tool = programs.GetToolProgram("NirCmd")
     if not nircmd_tool:
+        system.LogError("NirCmd was not found")
         return False
 
     # Get resolution command

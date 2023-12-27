@@ -44,7 +44,7 @@ def DownloadUrl(url, output_dir = None, output_file = None, verbose = False, exi
 
     # Get tool
     download_tool = None
-    if command.IsRunnableCommand(programs.GetToolProgram("Curl")):
+    if programs.IsToolInstalled("Curl"):
         download_tool = programs.GetToolProgram("Curl")
     if not download_tool:
         system.LogError("Curl was not found")
@@ -112,7 +112,7 @@ def DownloadGitUrl(url, output_dir, clean_first = False, verbose = False, exit_o
 
     # Get tool
     download_tool = None
-    if command.IsRunnableCommand(programs.GetToolProgram("Git")):
+    if programs.IsToolInstalled("Git"):
         download_tool = programs.GetToolProgram("Git")
     if not download_tool:
         system.LogError("Git was not found")
