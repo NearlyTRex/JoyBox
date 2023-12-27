@@ -86,6 +86,7 @@ def CaptureVideo(
     if programs.IsToolInstalled("FFMpeg"):
         ffmpeg_tool = programs.GetToolProgram("FFMpeg")
     if not ffmpeg_tool:
+        system.LogError("FFMpeg was not found")
         return False
 
     # Get capture command
@@ -170,6 +171,7 @@ def CaptureVideoWhileRunning(
     if programs.IsToolInstalled("FFMpeg"):
         ffmpeg_tool = programs.GetToolProgram("FFMpeg")
     if not ffmpeg_tool:
+        system.LogError("FFMpeg was not found")
         return False
 
     # Create capture func
