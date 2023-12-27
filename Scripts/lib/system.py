@@ -49,9 +49,27 @@ def AssertIsValidPath(var_value, var_name):
 def AssertIsInt(var_value, var_name):
     assert type(var_value) == int, "%s should be an integer" % var_name
 
-# Assert that variable is bool
+# Assert that variable is castable to integer
+def AssertIsCastableToInt(var_value, var_name):
+    test_value = None
+    try:
+        test_value = int(var_value)
+    except:
+        pass
+    assert type(test_value) == int, "%s should be castable to an integer" % var_name
+
+# Assert that variable is boolean
 def AssertIsBool(var_value, var_name):
     assert type(var_value) == bool, "%s should be a boolean" % var_name
+
+# Assert that variable is castable to boolean
+def AssertIsCastableToBool(var_value, var_name):
+    test_value = None
+    try:
+        test_value = int(var_value)
+    except:
+        pass
+    assert type(test_value) == bool, "%s should be castable to boolean" % var_name
 
 # Assert that variable is list
 def AssertIsList(var_value, var_name):
