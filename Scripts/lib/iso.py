@@ -25,9 +25,10 @@ def CreateISO(iso_file, source_dir = None, source_dirs = [], volume_name = None,
 
     # Get tool
     iso_tool = None
-    if command.IsRunnableCommand(programs.GetToolProgram("XorrISO")):
+    if programs.IsToolInstalled("XorrISO"):
         iso_tool = programs.GetToolProgram("XorrISO")
     if not iso_tool:
+        system.LogError("XorrISO was not found")
         return False
 
     # Get create command
@@ -68,9 +69,10 @@ def ExtractISO(iso_file, extract_dir, delete_original = False, verbose = False, 
 
     # Get tool
     iso_tool = None
-    if command.IsRunnableCommand(programs.GetToolProgram("XorrISO")):
+    if programs.IsToolInstalled("XorrISO"):
         iso_tool = programs.GetToolProgram("XorrISO")
     if not iso_tool:
+        system.LogError("XorrISO was not found")
         return False
 
     # Get extract command

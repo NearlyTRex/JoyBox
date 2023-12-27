@@ -27,6 +27,7 @@ def CreateDiscCHD(chd_file, source_iso, delete_original = False, verbose = False
     if programs.IsToolInstalled("MameChdman"):
         chd_tool = programs.GetToolProgram("MameChdman")
     if not chd_tool:
+        system.LogError("MameChdman was not found")
         return False
 
     # Get create command
@@ -61,6 +62,7 @@ def ExtractDiscCHD(chd_file, binary_file, toc_file, delete_original = False, ver
     if programs.IsToolInstalled("MameChdman"):
         chd_tool = programs.GetToolProgram("MameChdman")
     if not chd_tool:
+        system.LogError("MameChdman was not found")
         return False
 
     # Get extract command
@@ -131,6 +133,7 @@ def VerifyDiscCHD(chd_file, verbose = False, exit_on_failure = False):
     if programs.IsToolInstalled("MameChdman"):
         chd_tool = programs.GetToolProgram("MameChdman")
     if not chd_tool:
+        system.LogError("MameChdman was not found")
         return False
 
     # Get verify command
