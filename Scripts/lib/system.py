@@ -216,10 +216,10 @@ def ReplaceStringsInFile(src, replacements = [], verbose = False, pretend_run = 
     try:
         if not os.path.isfile(src):
             if verbose:
-                print("Path %s is not a file" % src)
+                Log("Path %s is not a file" % src)
             return False
         if verbose:
-            print("Replacing lines in file %s" % src)
+            Log("Replacing lines in file %s" % src)
         if not pretend_run:
             src_contents = ""
             with open(src, "r", encoding="utf-8") as f:
@@ -231,8 +231,8 @@ def ReplaceStringsInFile(src, replacements = [], verbose = False, pretend_run = 
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to replace strings in file %s" % src)
-            print(e)
+            LogError("Unable to replace strings in file %s" % src)
+            LogError(e)
             sys.exit(1)
         return False
 
@@ -241,10 +241,10 @@ def AppendLineToFile(src, line, verbose = False, pretend_run = False, exit_on_fa
     try:
         if not os.path.isfile(src):
             if verbose:
-                print("Path %s is not a file" % src)
+                Log("Path %s is not a file" % src)
             return False
         if verbose:
-            print("Adding line '%s' to file %s" % (line, src))
+            Log("Adding line '%s' to file %s" % (line, src))
         if not pretend_run:
             with open(src, "r+", encoding="utf8") as f:
                 ends_with_newline = True
@@ -259,8 +259,8 @@ def AppendLineToFile(src, line, verbose = False, pretend_run = False, exit_on_fa
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to add line '%s' to file %s" % (line, src))
-            print(e)
+            LogError("Unable to add line '%s' to file %s" % (line, src))
+            LogError(e)
             sys.exit(1)
         return False
 
@@ -269,10 +269,10 @@ def SortFileContents(src, verbose = False, pretend_run = False, exit_on_failure 
     try:
         if not os.path.isfile(src):
             if verbose:
-                print("Path %s is not a file" % src)
+                Log("Path %s is not a file" % src)
             return False
         if verbose:
-            print("Sorting contents of file %s" % src)
+            Log("Sorting contents of file %s" % src)
         if not pretend_run:
             sorted_contents = ""
             with open(src, "r", encoding="utf8") as f:
@@ -283,8 +283,8 @@ def SortFileContents(src, verbose = False, pretend_run = False, exit_on_failure 
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to sort contents of file %s" % src)
-            print(e)
+            LogError("Unable to sort contents of file %s" % src)
+            LogError(e)
             sys.exit(1)
         return False
 
@@ -325,7 +325,7 @@ def ReplaceSymlinkedDirectories(dir, verbose = False, pretend_run = False, exit_
 def LowercaseAllPaths(dir, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            print("Lowercasing all paths in directory %s" % dir)
+            Log("Lowercasing all paths in directory %s" % dir)
         def onFoundItems(root, items):
             for name in items:
                 if not pretend_run:
@@ -338,8 +338,8 @@ def LowercaseAllPaths(dir, verbose = False, pretend_run = False, exit_on_failure
             onFoundItems(root, files)
     except Exception as e:
         if exit_on_failure:
-            print("Unable to lowercase directory %s" % dir)
-            print(e)
+            LogError("Unable to lowercase directory %s" % dir)
+            LogError(e)
             sys.exit(1)
 
 ###########################################################
@@ -348,7 +348,7 @@ def LowercaseAllPaths(dir, verbose = False, pretend_run = False, exit_on_failure
 def TouchFile(src, contents = "", contents_mode = "w", verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            print("Touching file %s" % src)
+            Log("Touching file %s" % src)
         if not pretend_run:
             os.makedirs(GetFilenameDirectory(src), exist_ok = True)
             if len(contents):
@@ -359,8 +359,8 @@ def TouchFile(src, contents = "", contents_mode = "w", verbose = False, pretend_
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to touch file %s" % src)
-            print(e)
+            LogError("Unable to touch file %s" % src)
+            LogError(e)
             sys.exit(1)
         return False
 
@@ -368,7 +368,7 @@ def TouchFile(src, contents = "", contents_mode = "w", verbose = False, pretend_
 def ChmodFileOrDirectory(src, perms, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            print("Changing permissions of %s to %s" % (src, str(perms)))
+            Log("Changing permissions of %s to %s" % (src, str(perms)))
         if not pretend_run:
             if os.path.isfile(src):
                 os.chmod(src, int(str(perms), base=8))
@@ -381,8 +381,8 @@ def ChmodFileOrDirectory(src, perms, verbose = False, pretend_run = False, exit_
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to change permissions of %s to %s" % (src, str(perms)))
-            print(e)
+            LogError("Unable to change permissions of %s to %s" % (src, str(perms)))
+            LogError(e)
             sys.exit(1)
         return False
 
@@ -390,27 +390,27 @@ def ChmodFileOrDirectory(src, perms, verbose = False, pretend_run = False, exit_
 def MarkAsExecutable(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            print("Marking %s as executable" % src)
+            Log("Marking %s as executable" % src)
         if not pretend_run:
             st = os.stat(src)
             os.chmod(src, st.st_mode | stat.S_IEXEC)
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to mark %s as executable" % src)
-            print(e)
+            LogError("Unable to mark %s as executable" % src)
+            LogError(e)
             sys.exit(1)
         return False
 
 # Create temporary directory
 def CreateTemporaryDirectory(verbose = False, pretend_run = False):
     if verbose:
-        print("Creating temporary directory")
+        Log("Creating temporary directory")
     dir = ""
     if not pretend_run:
         dir = os.path.realpath(tempfile.mkdtemp())
         if verbose:
-            print("Created temporary directory %s" % dir)
+            Log("Created temporary directory %s" % dir)
     if not os.path.isdir(dir):
         return (False, "Unable to create temporary directory")
     return (True, dir)
@@ -419,7 +419,7 @@ def CreateTemporaryDirectory(verbose = False, pretend_run = False):
 def CreateSymlink(src, dest, cwd = None, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            print("Creating symlink from %s to %s" % (src, dest))
+            Log("Creating symlink from %s to %s" % (src, dest))
         if not pretend_run:
             if cwd:
                 os.chdir(cwd)
@@ -427,8 +427,8 @@ def CreateSymlink(src, dest, cwd = None, verbose = False, pretend_run = False, e
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to create symlink from %s to %s" % (src, dest))
-            print(e)
+            LogError("Unable to create symlink from %s to %s" % (src, dest))
+            LogError(e)
             sys.exit(1)
         return False
 
@@ -448,7 +448,7 @@ def CopyFileOrDirectory(
         if skip_identical and hashing.AreFilesIdentical(src, dest, case_sensitive_paths):
             return True
         if verbose:
-            print("Copying %s to %s" % (src, dest))
+            Log("Copying %s to %s" % (src, dest))
         if not pretend_run:
             if os.path.isdir(src):
                 shutil.copytree(src, dest, dirs_exist_ok=True)
@@ -457,8 +457,8 @@ def CopyFileOrDirectory(
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to copy %s to %s" % (src, dest))
-            print(e)
+            LogError("Unable to copy %s to %s" % (src, dest))
+            LogError(e)
             sys.exit(1)
         return False
 
@@ -478,14 +478,14 @@ def MoveFileOrDirectory(
         if skip_identical and hashing.AreFilesIdentical(src, dest, case_sensitive_paths):
             return True
         if verbose:
-            print("Moving %s to %s" % (src, dest))
+            Log("Moving %s to %s" % (src, dest))
         if not pretend_run:
             shutil.move(src, dest)
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to move %s to %s" % (src, dest))
-            print(e)
+            LogError("Unable to move %s to %s" % (src, dest))
+            LogError(e)
             sys.exit(1)
         return False
 
@@ -507,7 +507,7 @@ def TransferFile(
         if skip_identical and hashing.AreFilesIdentical(src, dest, case_sensitive_paths):
             return True
         if verbose:
-            print("Transferring %s to %s" % (src, dest))
+            Log("Transferring %s to %s" % (src, dest))
         if not pretend_run:
             total_size = GetFileSize(src)
             progress_bar = None
@@ -533,314 +533,25 @@ def TransferFile(
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to transfer %s to %s" % (src, dest))
-            print(e)
+            LogError("Unable to transfer %s to %s" % (src, dest))
+            LogError(e)
             sys.exit(1)
         return False
-
-# Copy contents
-def CopyContents(
-    src,
-    dest,
-    show_progress = False,
-    skip_existing = False,
-    skip_identical = False,
-    case_sensitive_paths = True,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    if not DoesPathExist(src, case_sensitive_paths):
-        if exit_on_failure:
-            print("Source %s does not exist, cannot copy" % src)
-            sys.exit(1)
-    file_list = BuildFileList(src, use_relative_paths = True)
-    for file in file_list:
-        input_file = os.path.join(src, file)
-        output_file = os.path.join(dest, file)
-        output_dir = os.path.dirname(output_file)
-        MakeDirectory(
-            dir = output_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        TransferFile(
-            src = input_file,
-            dest = output_file,
-            show_progress = show_progress,
-            skip_existing = skip_existing,
-            skip_identical = skip_identical,
-            case_sensitive_paths = case_sensitive_paths,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-# Move contents
-def MoveContents(
-    src,
-    dest,
-    show_progress = False,
-    skip_existing = False,
-    skip_identical = False,
-    case_sensitive_paths = True,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    if not DoesPathExist(src, case_sensitive_paths):
-        if exit_on_failure:
-            print("Source %s does not exist, cannot move" % src)
-            sys.exit(1)
-    file_list = BuildFileList(src, use_relative_paths = True)
-    for file in file_list:
-        input_file = os.path.join(src, file)
-        output_file = os.path.join(dest, file)
-        output_dir = os.path.dirname(output_file)
-        MakeDirectory(
-            dir = output_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        TransferFile(
-            src = input_file,
-            dest = output_file,
-            delete_afterwards = True,
-            show_progress = show_progress,
-            skip_existing = skip_existing,
-            skip_identical = skip_identical,
-            case_sensitive_paths = case_sensitive_paths,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-# Copy globbed files
-def CopyGlobbedFiles(
-    glob_pattern,
-    dest_dir,
-    show_progress = False,
-    skip_existing = False,
-    skip_identical = False,
-    case_sensitive_paths = True,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    glob_source_dir = GetFilenameDirectory(glob_pattern)
-    glob_files = ConvertFileListToRelativePaths(
-        file_list = glob.glob(glob_pattern),
-        base_dir = glob_source_dir)
-    for glob_file in glob_files:
-        MakeDirectory(
-            dir = os.path.join(dest_dir, GetFilenameDirectory(glob_file)),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        TransferFile(
-            src = os.path.join(glob_source_dir, glob_file),
-            dest = os.path.join(dest_dir, glob_file),
-            show_progress = show_progress,
-            skip_existing = skip_existing,
-            skip_identical = skip_identical,
-            case_sensitive_paths = case_sensitive_paths,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-# Move globbed files
-def MoveGlobbedFiles(
-    glob_pattern,
-    dest_dir,
-    show_progress = False,
-    skip_existing = False,
-    skip_identical = False,
-    case_sensitive_paths = True,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    glob_source_dir = GetFilenameDirectory(glob_pattern)
-    glob_files = ConvertFileListToRelativePaths(
-        file_list = glob.glob(glob_pattern),
-        base_dir = glob_source_dir)
-    for glob_file in glob_files:
-        MakeDirectory(
-            dir = os.path.join(dest_dir, GetFilenameDirectory(glob_file)),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        TransferFile(
-            src = os.path.join(glob_source_dir, glob_file),
-            dest = os.path.join(dest_dir, glob_file),
-            delete_afterwards = True,
-            show_progress = show_progress,
-            skip_existing = skip_existing,
-            skip_identical = skip_identical,
-            case_sensitive_paths = case_sensitive_paths,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-# Smart copy
-def SmartCopy(
-    src,
-    dest,
-    show_progress = False,
-    skip_existing = False,
-    skip_identical = False,
-    case_sensitive_paths = True,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    MakeDirectory(
-        dir = GetFilenameDirectory(dest),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if config.token_glob in GetFilenameBasename(src):
-        CopyGlobbedFiles(
-            glob_pattern = src,
-            dest_dir = dest,
-            show_progress = show_progress,
-            skip_existing = skip_existing,
-            skip_identical = skip_identical,
-            case_sensitive_paths = case_sensitive_paths,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    else:
-        if os.path.isdir(src):
-            CopyContents(
-                src = src,
-                dest = dest,
-                show_progress = show_progress,
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
-                case_sensitive_paths = case_sensitive_paths,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        else:
-            TransferFile(
-                src = src,
-                dest = dest,
-                show_progress = show_progress,
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
-                case_sensitive_paths = case_sensitive_paths,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-# Smart move
-def SmartMove(
-    src,
-    dest,
-    show_progress = False,
-    skip_existing = False,
-    skip_identical = False,
-    case_sensitive_paths = True,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    MakeDirectory(
-        dir = GetFilenameDirectory(dest),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if config.token_glob in GetFilenameBasename(src):
-        MoveGlobbedFiles(
-            glob_pattern = src,
-            dest_dir = dest,
-            show_progress = show_progress,
-            skip_existing = skip_existing,
-            skip_identical = skip_identical,
-            case_sensitive_paths = case_sensitive_paths,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    else:
-        if os.path.isdir(src):
-            MoveContents(
-                src = src,
-                dest = dest,
-                show_progress = show_progress,
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
-                case_sensitive_paths = case_sensitive_paths,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        else:
-            TransferFile(
-                src = src,
-                dest = dest,
-                delete_afterwards = True,
-                show_progress = show_progress,
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
-                case_sensitive_paths = case_sensitive_paths,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-# Sync contents
-def SyncContents(src, dest, verbose = False, pretend_run = False, exit_on_failure = False):
-    if not DoesPathExist(src):
-        if exit_on_failure:
-            print("Source %s does not exist, cannot sync" % src)
-            sys.exit(1)
-    MakeDirectory(
-        dir = dest,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    RemoveDirectoryContents(
-        dir = dest,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    CopyContents(
-        src = src,
-        dest = dest,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-# Sync data
-def SyncData(data_src, data_dest, verbose = False, pretend_run = False, exit_on_failure = False):
-    is_glob_src = (config.token_glob in GetFilenameBasename(data_src))
-    is_glob_dest = (config.token_glob in GetFilenameBasename(data_dest))
-    if is_glob_src and is_glob_dest:
-        CopyGlobbedFiles(
-            glob_pattern = data_src,
-            dest_dir = os.path.dirname(data_dest),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    elif os.path.isdir(data_src):
-        SyncContents(
-            src = data_src,
-            dest = data_dest,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    elif os.path.isfile(data_src):
-        SmartCopy(
-            src = data_src,
-            dest = data_dest,
-            verbose = verbose,
-            pretend_run = pretend_run)
 
 # Make directory
 def MakeDirectory(dir, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if not os.path.isdir(dir):
             if verbose:
-                print("Making directory %s" % dir)
+                Log("Making directory %s" % dir)
             if not pretend_run:
                 os.makedirs(dir)
         return True
     except Exception as e:
         if not os.path.isdir(dir):
             if exit_on_failure:
-                print("Unable to make directory %s" % dir)
-                print(e)
+                LogError("Unable to make directory %s" % dir)
+                LogError(e)
                 sys.exit(1)
             return False
         return True
@@ -849,15 +560,15 @@ def MakeDirectory(dir, verbose = False, pretend_run = False, exit_on_failure = F
 def RemoveFile(file, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            print("Removing file %s" % file)
+            Log("Removing file %s" % file)
         if not pretend_run:
             if os.path.isfile(file):
                 os.remove(file)
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to remove file %s" % file)
-            print(e)
+            LogError("Unable to remove file %s" % file)
+            LogError(e)
             sys.exit(1)
         return False
 
@@ -865,15 +576,15 @@ def RemoveFile(file, verbose = False, pretend_run = False, exit_on_failure = Fal
 def RemoveSymlink(symlink, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            print("Removing symlink %s" % symlink)
+            Log("Removing symlink %s" % symlink)
         if not pretend_run:
             if os.path.islink(symlink):
                 os.unlink(symlink)
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to remove symlink %s" % symlink)
-            print(e)
+            LogError("Unable to remove symlink %s" % symlink)
+            LogError(e)
             sys.exit(1)
         return False
 
@@ -881,15 +592,15 @@ def RemoveSymlink(symlink, verbose = False, pretend_run = False, exit_on_failure
 def RemoveDirectory(dir, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            print("Removing directory %s" % dir)
+            Log("Removing directory %s" % dir)
         if not pretend_run:
             if os.path.isdir(dir):
                 shutil.rmtree(dir)
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to remove directory %s" % dir)
-            print(e)
+            LogError("Unable to remove directory %s" % dir)
+            LogError(e)
             sys.exit(1)
         return False
 
@@ -897,7 +608,7 @@ def RemoveDirectory(dir, verbose = False, pretend_run = False, exit_on_failure =
 def RemoveDirectoryContents(dir, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            print("Removing contents of directory %s" % dir)
+            Log("Removing contents of directory %s" % dir)
         if not pretend_run:
             for root, dirs, files in os.walk(dir):
                 for f in files:
@@ -915,10 +626,331 @@ def RemoveDirectoryContents(dir, verbose = False, pretend_run = False, exit_on_f
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to remove contents of directory %s" % dir)
-            print(e)
+            LogError("Unable to remove contents of directory %s" % dir)
+            LogError(e)
             sys.exit(1)
         return False
+
+###########################################################
+
+# Copy contents
+def CopyContents(
+    src,
+    dest,
+    show_progress = False,
+    skip_existing = False,
+    skip_identical = False,
+    case_sensitive_paths = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if not DoesPathExist(src, case_sensitive_paths):
+        if exit_on_failure:
+            LogError("Source %s does not exist, cannot copy" % src)
+            sys.exit(1)
+    file_list = BuildFileList(src, use_relative_paths = True)
+    for file in file_list:
+        input_file = os.path.join(src, file)
+        output_file = os.path.join(dest, file)
+        output_dir = os.path.dirname(output_file)
+        success = MakeDirectory(
+            dir = output_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+        success = TransferFile(
+            src = input_file,
+            dest = output_file,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            case_sensitive_paths = case_sensitive_paths,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+    return True
+
+# Move contents
+def MoveContents(
+    src,
+    dest,
+    show_progress = False,
+    skip_existing = False,
+    skip_identical = False,
+    case_sensitive_paths = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if not DoesPathExist(src, case_sensitive_paths):
+        if exit_on_failure:
+            LogError("Source %s does not exist, cannot move" % src)
+            sys.exit(1)
+    file_list = BuildFileList(src, use_relative_paths = True)
+    for file in file_list:
+        input_file = os.path.join(src, file)
+        output_file = os.path.join(dest, file)
+        output_dir = os.path.dirname(output_file)
+        success = MakeDirectory(
+            dir = output_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+        success = TransferFile(
+            src = input_file,
+            dest = output_file,
+            delete_afterwards = True,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            case_sensitive_paths = case_sensitive_paths,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+    return True
+
+# Copy globbed files
+def CopyGlobbedFiles(
+    glob_pattern,
+    dest_dir,
+    show_progress = False,
+    skip_existing = False,
+    skip_identical = False,
+    case_sensitive_paths = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    glob_source_dir = GetFilenameDirectory(glob_pattern)
+    glob_files = ConvertFileListToRelativePaths(
+        file_list = glob.glob(glob_pattern),
+        base_dir = glob_source_dir)
+    for glob_file in glob_files:
+        success = MakeDirectory(
+            dir = os.path.join(dest_dir, GetFilenameDirectory(glob_file)),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+        success = TransferFile(
+            src = os.path.join(glob_source_dir, glob_file),
+            dest = os.path.join(dest_dir, glob_file),
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            case_sensitive_paths = case_sensitive_paths,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+    return True
+
+# Move globbed files
+def MoveGlobbedFiles(
+    glob_pattern,
+    dest_dir,
+    show_progress = False,
+    skip_existing = False,
+    skip_identical = False,
+    case_sensitive_paths = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    glob_source_dir = GetFilenameDirectory(glob_pattern)
+    glob_files = ConvertFileListToRelativePaths(
+        file_list = glob.glob(glob_pattern),
+        base_dir = glob_source_dir)
+    for glob_file in glob_files:
+        success = MakeDirectory(
+            dir = os.path.join(dest_dir, GetFilenameDirectory(glob_file)),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+        success = TransferFile(
+            src = os.path.join(glob_source_dir, glob_file),
+            dest = os.path.join(dest_dir, glob_file),
+            delete_afterwards = True,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            case_sensitive_paths = case_sensitive_paths,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+    return True
+
+# Smart copy
+def SmartCopy(
+    src,
+    dest,
+    show_progress = False,
+    skip_existing = False,
+    skip_identical = False,
+    case_sensitive_paths = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    success = MakeDirectory(
+        dir = GetFilenameDirectory(dest),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+    if config.token_glob in GetFilenameBasename(src):
+        return CopyGlobbedFiles(
+            glob_pattern = src,
+            dest_dir = dest,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            case_sensitive_paths = case_sensitive_paths,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    else:
+        if os.path.isdir(src):
+            return CopyContents(
+                src = src,
+                dest = dest,
+                show_progress = show_progress,
+                skip_existing = skip_existing,
+                skip_identical = skip_identical,
+                case_sensitive_paths = case_sensitive_paths,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        else:
+            return TransferFile(
+                src = src,
+                dest = dest,
+                show_progress = show_progress,
+                skip_existing = skip_existing,
+                skip_identical = skip_identical,
+                case_sensitive_paths = case_sensitive_paths,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+    return True
+
+# Smart move
+def SmartMove(
+    src,
+    dest,
+    show_progress = False,
+    skip_existing = False,
+    skip_identical = False,
+    case_sensitive_paths = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    success = MakeDirectory(
+        dir = GetFilenameDirectory(dest),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+    if config.token_glob in GetFilenameBasename(src):
+        return MoveGlobbedFiles(
+            glob_pattern = src,
+            dest_dir = dest,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            case_sensitive_paths = case_sensitive_paths,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    else:
+        if os.path.isdir(src):
+            return MoveContents(
+                src = src,
+                dest = dest,
+                show_progress = show_progress,
+                skip_existing = skip_existing,
+                skip_identical = skip_identical,
+                case_sensitive_paths = case_sensitive_paths,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        else:
+            return TransferFile(
+                src = src,
+                dest = dest,
+                delete_afterwards = True,
+                show_progress = show_progress,
+                skip_existing = skip_existing,
+                skip_identical = skip_identical,
+                case_sensitive_paths = case_sensitive_paths,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+    return True
+
+# Sync contents
+def SyncContents(src, dest, verbose = False, pretend_run = False, exit_on_failure = False):
+    if not DoesPathExist(src):
+        if exit_on_failure:
+            LogError("Source %s does not exist, cannot sync" % src)
+            sys.exit(1)
+    success = MakeDirectory(
+        dir = dest,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+    success = RemoveDirectoryContents(
+        dir = dest,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+    return CopyContents(
+        src = src,
+        dest = dest,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Sync data
+def SyncData(data_src, data_dest, verbose = False, pretend_run = False, exit_on_failure = False):
+    is_glob_src = (config.token_glob in GetFilenameBasename(data_src))
+    is_glob_dest = (config.token_glob in GetFilenameBasename(data_dest))
+    if is_glob_src and is_glob_dest:
+        return CopyGlobbedFiles(
+            glob_pattern = data_src,
+            dest_dir = os.path.dirname(data_dest),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    elif os.path.isdir(data_src):
+        return SyncContents(
+            src = data_src,
+            dest = data_dest,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    elif os.path.isfile(data_src):
+        return SmartCopy(
+            src = data_src,
+            dest = data_dest,
+            verbose = verbose,
+            pretend_run = pretend_run)
 
 # Remove object
 def RemoveObject(obj, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -956,7 +988,7 @@ def ReadJsonFile(src, verbose = False, exit_on_failure = False):
         if not src.endswith(".json"):
             return {}
         if verbose:
-            print("Reading %s" % src)
+            Log("Reading %s" % src)
         json_data = {}
         with open(src, "r") as input_file:
             file_contents = input_file.read()
@@ -964,8 +996,8 @@ def ReadJsonFile(src, verbose = False, exit_on_failure = False):
         return json_data
     except Exception as e:
         if exit_on_failure:
-            print("Unable to read %s" % src)
-            print(e)
+            LogError("Unable to read %s" % src)
+            LogError(e)
             sys.exit(1)
         return {}
 
@@ -975,7 +1007,7 @@ def WriteJsonFile(src, json_data, sort_keys = False, verbose = False, pretend_ru
         if not src.endswith(".json"):
             return False
         if verbose:
-            print("Writing %s" % src)
+            Log("Writing %s" % src)
         if not pretend_run:
             with open(src, "w", newline='\n') as output_file:
                 json_string = json.dumps(json_data, indent = 4, sort_keys = sort_keys)
@@ -983,8 +1015,8 @@ def WriteJsonFile(src, json_data, sort_keys = False, verbose = False, pretend_ru
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to write %s" % src)
-            print(e)
+            LogError("Unable to write %s" % src)
+            LogError(e)
             sys.exit(1)
         return False
 
@@ -994,7 +1026,7 @@ def CleanJsonFile(src, sort_keys = False, remove_empty_values = False, verbose =
         if not src.endswith(".json"):
             return False
         if verbose:
-            print("Cleaning %s" % src)
+            Log("Cleaning %s" % src)
         if not pretend_run:
             json_data = None
             with open(src, "r") as input_file:
@@ -1021,8 +1053,8 @@ def CleanJsonFile(src, sort_keys = False, remove_empty_values = False, verbose =
         return True
     except Exception as e:
         if exit_on_failure:
-            print("Unable to clean %s" % src)
-            print(e)
+            LogError("Unable to clean %s" % src)
+            LogError(e)
             sys.exit(1)
         return False
 
@@ -1374,7 +1406,7 @@ def GetLinkInfo(lnk_path, lnk_base_path):
             info["cwd"] = lnk_cwd
             info["args"] = lnk_arguments
     except Exception as e:
-        print(e)
+        LogError(e)
     return info
 
 ###########################################################
