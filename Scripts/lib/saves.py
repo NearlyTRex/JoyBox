@@ -14,9 +14,17 @@ import hashing
 # Backup saves
 def BackupSaves(output_path, verbose = False, exit_on_failure = False):
 
+    # Get tool
+    save_tool = None
+    if programs.IsToolInstalled("Ludusavi"):
+        save_tool = programs.GetToolProgram("Ludusavi")
+    if not save_tool:
+        system.LogError("Ludusavi was not found")
+        return False
+
     # Get backup command
     backup_command = [
-        programs.GetToolProgram("Ludusavi"),
+        save_tool,
         "backup",
         "--try-update",
         "--merge",
@@ -41,9 +49,17 @@ def BackupSaves(output_path, verbose = False, exit_on_failure = False):
 # Restore saves
 def RestoreSaves(input_path, verbose = False, exit_on_failure = False):
 
+    # Get tool
+    save_tool = None
+    if programs.IsToolInstalled("Ludusavi"):
+        save_tool = programs.GetToolProgram("Ludusavi")
+    if not save_tool:
+        system.LogError("Ludusavi was not found")
+        return False
+
     # Get restore command
     restore_command = [
-        programs.GetToolProgram("Ludusavi"),
+        save_tool,
         "restore",
         "--path", os.path.realpath(input_path)
     ]
@@ -153,6 +169,9 @@ def PackSaves(verbose = False, exit_on_failure = False):
                 if success:
                     if verbose:
                         system.LogSuccess("Packed save '%s' - '%s' successfully" % (save_name, save_subcategory))
+                else:
+                    return False
+    return True
 
 # Unpack individual save
 def UnpackSave(save_category, save_subcategory, save_name, verbose = False, exit_on_failure = False):
@@ -199,6 +218,9 @@ def UnpackSaves(verbose = False, exit_on_failure = False):
                     if success:
                         if verbose:
                             system.LogSuccess("Unpacked save '%s' - '%s' successfully" % (save_name, save_subcategory))
+                    else:
+                        return False
+    return True
 
 # Clean empty saves
 def CleanEmptySaves(verbose = False, exit_on_failure = False):

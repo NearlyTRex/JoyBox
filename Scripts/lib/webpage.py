@@ -17,8 +17,14 @@ def CreateWebDriver(download_dir = None, make_headless = False, verbose = False)
     from selenium.webdriver.firefox.service import Service as FirefoxService
     from selenium.webdriver.firefox.options import Options as FirefoxOptions
     from selenium.webdriver import Firefox
+    webdriver_tool = None
+    if programs.IsToolInstalled("GeckoDriver"):
+        webdriver_tool = programs.GetToolProgram("GeckoDriver")
+    if not webdriver_tool:
+        system.LogError("GeckoDriver was not found")
+        return None
     try:
-        service = FirefoxService(programs.GetToolProgram("GeckoDriver"), log_path=os.path.devnull)
+        service = FirefoxService(webdriver_tool, log_path=os.path.devnull)
         options = FirefoxOptions()
         if download_dir and os.path.isdir(download_dir):
             options.set_preference("browser.download.folderList", 2)
@@ -29,7 +35,7 @@ def CreateWebDriver(download_dir = None, make_headless = False, verbose = False)
         return Firefox(service=service, options=options)
     except Exception as e:
         if verbose:
-            print(e)
+            system.LogError(e)
     return None
 
 # Destroy web driver
@@ -39,7 +45,7 @@ def DestroyWebDriver(driver, verbose = False):
             driver.quit()
     except Exception as e:
         if verbose:
-            print(e)
+            system.LogError(e)
 
 # Get current page url
 def GetCurrentPageUrl(driver):
@@ -90,7 +96,7 @@ def WaitForPageElement(driver, class_name = None, id_name = None, tag_name = Non
             )
     except Exception as e:
         if verbose:
-            print(e)
+            system.LogError(e)
     return None
 
 # Get element
@@ -103,7 +109,7 @@ def GetElement(parent, class_name = None, id_name = None, tag_name = None, link_
             return parent.find_element(by_type, by_value)
     except Exception as e:
         if verbose:
-            print(e)
+            system.LogError(e)
     return None
 
 # Get element text
@@ -130,7 +136,7 @@ def GetPageSource(driver, url, verbose = False):
         return str(driver.page_source)
     except Exception as e:
         if verbose:
-            print(e)
+            system.LogError(e)
     return None
 
 # Save cookie
@@ -157,7 +163,7 @@ def GetMatchingUrls(url, params = {}, starts_with = "", ends_with = "", verbose 
             DestroyWebDriver(web_driver, verbose = verbose)
     except Exception as e:
         if verbose:
-            print(e)
+            system.LogError(e)
 
     # Fallback for getting page text
     if not page_text or len(page_text) == 0:
