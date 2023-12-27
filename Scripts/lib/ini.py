@@ -60,40 +60,36 @@ def HasIniField(section, field):
 # Get ini value
 def GetIniValue(section, field):
     ini_parser.read(ini_file)
-    if HasIniField(section, field):
-        return ini_parser[section][field]
-    return None
+    system.AssertCondition(
+        condition = HasIniField(section, field),
+        description = "No ini value found at [%s][%s]" % (section, field))
+    return ini_parser[section][field]
 
 # Get ini integer value
 def GetIniIntegerValue(section, field):
     value = GetIniValue(section, field)
-    if not value:
-        return None
-    try:
-        return int(value)
-    except:
-        return None
+    system.AssertIsCastableToInt(
+        var_value = value,
+        var_name = "Ini[%s][%s]" % (section, field))
+    return int(value)
 
 # Get ini bool value
 def GetIniBoolValue(section, field):
     value = GetIniValue(section, field)
-    if not value:
-        return None
-    try:
-        return bool(value)
-    except:
-        return None
+    system.AssertIsCastableToBool(
+        var_value = value,
+        var_name = "Ini[%s][%s]" % (section, field))
+    return bool(value)
 
 # Get ini path value
 def GetIniPathValue(section, field):
     value = GetIniValue(section, field)
-    if not value:
-        return None
+    system.AssertIsValidPath(
+        var_value = value,
+        var_name = "Ini[%s][%s]" % (section, field))
     return os.path.expandvars(value)
 
 # Get ini list value
 def GetIniListValue(section, field, delimiter = ","):
     value = GetIniValue(section, field)
-    if not value:
-        return None
     return value.split(delimiter)
