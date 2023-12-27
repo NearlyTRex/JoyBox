@@ -14,16 +14,25 @@ import environment
 def GeneratePlaylist(source_dir, source_format, output_file, verbose = False, exit_on_failure = False):
 
     # Get tool
-    playlist_tool = None
+    python_tool = None
+    if programs.IsToolInstalled("PythonVenvPython"):
+        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if not python_tool:
+        system.LogError("PythonVenvPython was not found")
+        return False
+
+    # Get script
+    playlist_script = None
     if programs.IsToolInstalled("Mkpl"):
-        playlist_tool = programs.GetToolProgram("Mkpl")
-    if not playlist_tool:
+        playlist_script = programs.GetToolProgram("Mkpl")
+    if not playlist_script:
+        system.LogError("Mkpl was not found")
         return False
 
     # Get create command
     create_cmd = [
-        programs.GetToolProgram("PythonVenvPython"),
-        playlist_tool,
+        python_tool,
+        playlist_script,
         output_file,
         "-r",
         "-d", source_dir,
