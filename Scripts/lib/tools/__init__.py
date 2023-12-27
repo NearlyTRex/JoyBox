@@ -19,6 +19,7 @@ from . import mametools
 from . import ndecrypt
 from . import nircmd
 from . import pegasus
+from . import perl
 from . import projectctr
 from . import ps3dec
 from . import psngetpkginfo
@@ -59,6 +60,7 @@ instances = [
     ndecrypt.NDecrypt(),
     nircmd.NirCmd(),
     pegasus.Pegasus(),
+    perl.Perl(),
     projectctr.ProjectCTR(),
     ps3dec.PS3Dec(),
     psngetpkginfo.PSNGetPkgInfo(),
