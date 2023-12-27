@@ -6,6 +6,7 @@ winget install -e --id Mozilla.Firefox
 winget install -e --id Sandboxie.Plus
 winget install -e --id mcmilk.7zip-zstd
 winget install -e --id Python.Python.3.11
+winget install -e --id StrawberryPerl.StrawberryPerl
 
 REM Python
 python -m venv %USERPROFILE%\.venv
