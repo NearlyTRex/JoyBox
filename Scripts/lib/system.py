@@ -66,7 +66,10 @@ def AssertIsBool(var_value, var_name):
 def AssertIsCastableToBool(var_value, var_name):
     test_value = None
     try:
-        test_value = int(var_value)
+        if var_value == "True":
+            var_value = True
+        elif var_value == "False":
+            var_value = False
     except:
         pass
     assert type(test_value) == bool, "%s should be castable to boolean" % var_name

@@ -79,7 +79,7 @@ def GetIniBoolValue(section, field):
     system.AssertIsCastableToBool(
         var_value = value,
         var_name = "Ini[%s][%s]" % (section, field))
-    return bool(value)
+    return value == "True"
 
 # Get ini path value
 def GetIniPathValue(section, field):
