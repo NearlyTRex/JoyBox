@@ -395,9 +395,9 @@ def PostprocessCommand(
 # Print command
 def PrintCommand(cmd):
     if isinstance(cmd, str):
-        print(cmd)
+        system.Log(cmd)
     if isinstance(cmd, list):
-        print(" ".join(cmd))
+        system.Log(" ".join(cmd))
 
 ###########################################################
 
@@ -455,7 +455,7 @@ def RunOutputCommand(
         return ""
     except subprocess.CalledProcessError as e:
         if verbose:
-            print(e)
+            system.LogError(e)
         if exit_on_failure:
             sys.exit(1)
         if options.include_stderr:
@@ -463,7 +463,7 @@ def RunOutputCommand(
         return ""
     except Exception as e:
         if verbose:
-            print(e)
+            system.LogError(e)
         if exit_on_failure:
             sys.exit(1)
         return ""
@@ -519,13 +519,13 @@ def RunReturncodeCommand(
         return 0
     except subprocess.CalledProcessError as e:
         if verbose:
-            print(e)
+            system.LogError(e)
         if exit_on_failure:
             sys.exit(1)
         return e.returncode
     except Exception as e:
         if verbose:
-            print(e)
+            system.LogError(e)
         if exit_on_failure:
             sys.exit(1)
         return 1
@@ -596,7 +596,7 @@ def RunBlockingCommand(
                 if output == "" and process.poll() is not None:
                     break
                 if output:
-                    print(output.strip())
+                    system.Log(output.strip())
             code = process.poll()
             if isinstance(options.blocking_processes, list) and len(options.blocking_processes) > 0:
                 environment.WaitForNamedProcesses(options.blocking_processes)
@@ -610,13 +610,13 @@ def RunBlockingCommand(
         return 0
     except subprocess.CalledProcessError as e:
         if verbose:
-            print(e)
+            system.LogError(e)
         if exit_on_failure:
             sys.exit(1)
         return e.returncode
     except Exception as e:
         if verbose:
-            print(e)
+            system.LogError(e)
         if exit_on_failure:
             sys.exit(1)
         return 1

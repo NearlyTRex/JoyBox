@@ -137,7 +137,7 @@ def KillActiveNamedProcesses(process_names = []):
         for proc in FindActiveNamedProcesses(process_names):
             proc.kill()
     except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
-        print(e)
+        system.LogError(e)
 
 # Interrupt active processes
 def InterruptActiveNamedProcesses(process_names = []):
@@ -149,7 +149,7 @@ def InterruptActiveNamedProcesses(process_names = []):
             else:
                 proc.send_signal(signal.SIGINT)
     except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
-        print(e)
+        system.LogError(e)
 
 # Wait for processes
 def WaitForNamedProcesses(process_names = []):
@@ -161,7 +161,7 @@ def WaitForNamedProcesses(process_names = []):
                     break
                 time.sleep(1)
     except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
-        print(e)
+        system.LogError(e)
 
 ###########################################################
 # Tools
