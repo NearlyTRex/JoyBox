@@ -30,8 +30,8 @@ def BackupSaves(output_path, verbose = False, exit_on_failure = False):
             verbose = verbose)
     except Exception as e:
         if exit_on_failure:
-            print("Unable to backup saves to output path '%s'" % output_path)
-            print(e)
+            system.LogError("Unable to backup saves to output path '%s'" % output_path)
+            system.LogError(e)
             sys.exit(1)
         return False
 
@@ -55,8 +55,8 @@ def RestoreSaves(input_path, verbose = False, exit_on_failure = False):
             verbose = verbose)
     except Exception as e:
         if exit_on_failure:
-            print("Unable to restore saves from input path '%s'" % input_path)
-            print(e)
+            system.LogError("Unable to restore saves from input path '%s'" % input_path)
+            system.LogError(e)
             sys.exit(1)
         return False
 
