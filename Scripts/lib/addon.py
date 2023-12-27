@@ -35,8 +35,11 @@ def InstallAddons(
     # Install add-ons
     for emulator in programs.GetEmulators():
         if game_platform in emulator.GetPlatforms():
-            emulator.InstallAddons(
+            success = emulator.InstallAddons(
                 dlc_dirs = source_dlc_dirs,
                 update_dirs = source_update_dirs,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+    return True
