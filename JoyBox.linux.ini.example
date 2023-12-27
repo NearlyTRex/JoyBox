@@ -52,6 +52,10 @@ python_pip_exe = pip3
 python_install_dir = /usr/bin
 python_venv_dir = $HOME/.venv
 
+[Tools.Perl]
+perl_exe = perl
+perl_install_dir = /usr/bin
+
 [Tools.Wine]
 wine_exe = wine
 wine_boot_exe = wineboot
