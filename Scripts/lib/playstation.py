@@ -27,19 +27,27 @@ def GetPS3DecryptionKey(dkey_file):
 # Encrypt ps3 iso
 def EncryptPS3ISO(iso_file_dec, iso_file_enc, dkey_file, verbose = False, exit_on_failure = False):
 
-    # Get decryption key
-    decryption_key = GetPS3DecryptionKey(dkey_file)
-    if len(decryption_key) == 0:
+    # Get tool
+    encrypt_tool = None
+    if programs.IsToolInstalled("PS3Dec"):
+        encrypt_tool = programs.GetToolProgram("PS3Dec")
+    if not encrypt_tool:
+        system.LogError("PS3Dec was not found")
+        return False
+
+    # Get encryption key
+    encryption_key = GetPS3DecryptionKey(dkey_file)
+    if len(encryption_key) == 0:
         if exit_on_failure:
-            print("PS3 key file '%s' is invalid" % dkey_file)
+            system.LogError("PS3 key file '%s' is invalid" % dkey_file)
             sys.exit(1)
         return False
 
     # Get encrypt command
     encrypt_cmd = [
-        programs.GetToolProgram("PS3Dec"),
+        encrypt_tool,
         "e",
-        "key", decryption_key,
+        "key", encryption_key,
         iso_file_dec,
         iso_file_enc
     ]
@@ -51,7 +59,7 @@ def EncryptPS3ISO(iso_file_dec, iso_file_enc, dkey_file, verbose = False, exit_o
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            print("Unable to encrypt ps3 iso '%s' to '%s'" % (iso_file_dec, iso_file_enc))
+            system.LogError("Unable to encrypt ps3 iso '%s' to '%s'" % (iso_file_dec, iso_file_enc))
             sys.exit(1)
         return False
 
@@ -61,17 +69,25 @@ def EncryptPS3ISO(iso_file_dec, iso_file_enc, dkey_file, verbose = False, exit_o
 # Decrypt ps3 iso
 def DecryptPS3ISO(iso_file_enc, iso_file_dec, dkey_file, verbose = False, exit_on_failure = False):
 
+    # Get tool
+    decrypt_tool = None
+    if programs.IsToolInstalled("PS3Dec"):
+        decrypt_tool = programs.GetToolProgram("PS3Dec")
+    if not decrypt_tool:
+        system.LogError("PS3Dec was not found")
+        return False
+
     # Get decryption key
     decryption_key = GetPS3DecryptionKey(dkey_file)
     if len(decryption_key) == 0:
         if exit_on_failure:
-            print("PS3 key file '%s' is invalid" % dkey_file)
+            system.LogError("PS3 key file '%s' is invalid" % dkey_file)
             sys.exit(1)
         return False
 
     # Get decrypt command
     decrypt_cmd = [
-        programs.GetToolProgram("PS3Dec"),
+        decrypt_tool,
         "d",
         "key", decryption_key,
         iso_file_enc,
@@ -85,7 +101,7 @@ def DecryptPS3ISO(iso_file_enc, iso_file_dec, dkey_file, verbose = False, exit_o
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            print("Unable to decrypt ps3 iso '%s' to '%s'" % (iso_file_enc, iso_file_dec))
+            system.LogError("Unable to decrypt ps3 iso '%s' to '%s'" % (iso_file_enc, iso_file_dec))
             sys.exit(1)
         return False
 
@@ -126,8 +142,8 @@ def ExtractPS3ISO(iso_file, dkey_file, extract_dir, delete_original = False, ver
     if os.path.exists(license_file):
         if not system.IsFileCorrectlyHeadered(license_file, "PS3LICDA"):
             if exit_on_failure:
-                print("Decryption failure, LIC.DAT '%s' has the wrong header (expected PS3LICDA)." % license_file)
-                print("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
+                system.LogError("Decryption failure, LIC.DAT '%s' has the wrong header (expected PS3LICDA)." % license_file)
+                system.LogError("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
                 sys.exit(1)
             return False
 
@@ -136,8 +152,8 @@ def ExtractPS3ISO(iso_file, dkey_file, extract_dir, delete_original = False, ver
     if os.path.exists(eboot_file):
         if not system.IsFileCorrectlyHeadered(eboot_file, "SCE"):
             if exit_on_failure:
-                print("Decryption failure, EBOOT.BIN '%s' has the wrong header (expected SCE)." % eboot_file)
-                print("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
+                system.LogError("Decryption failure, EBOOT.BIN '%s' has the wrong header (expected SCE)." % eboot_file)
+                system.LogError("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
                 sys.exit(1)
             return False
 
@@ -200,16 +216,25 @@ def VerifyPS3CHD(chd_file, verbose = False, exit_on_failure = False):
 def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = False, exit_on_failure = False):
 
     # Get tool
-    extract_tool = None
+    python_tool = None
+    if programs.IsToolInstalled("PythonVenvPython"):
+        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if not python_tool:
+        system.LogError("PythonVenvPython was not found")
+        return False
+
+    # Get script
+    extract_script = None
     if programs.IsToolInstalled("PSNGetPkgInfo"):
-        extract_tool = programs.GetToolProgram("PSNGetPkgInfo")
-    if not extract_tool:
+        extract_script = programs.GetToolProgram("PSNGetPkgInfo")
+    if not extract_script:
+        system.LogError("PSNGetPkgInfo was not found")
         return False
 
     # Get extract command
     extract_cmd = [
-        programs.GetToolProgram("PythonVenvPython"),
-        extract_tool,
+        python_tool,
+        extract_script,
         "--content", extract_dir,
         pkg_file
     ]
@@ -221,7 +246,7 @@ def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = Fals
             verbose = verbose)
     except:
         if exit_on_failure:
-            print("Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir))
+            system.LogError("Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir))
             sys.exit(1)
         return False
 
@@ -239,9 +264,17 @@ def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = Fals
 # Strip psv file
 def StripPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
 
+    # Get tool
+    strip_tool = None
+    if programs.IsToolInstalled("PSVStrip"):
+        strip_tool = programs.GetToolProgram("PSVStrip")
+    if not strip_tool:
+        system.LogError("PSVStrip was not found")
+        return False
+
     # Get strip command
     strip_cmd = [
-        programs.GetToolProgram("PSVStrip"),
+        strip_tool,
         "-psvstrip",
         src_psv_file,
         dest_psv_file
@@ -254,7 +287,7 @@ def StripPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fal
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            print("Unable to strip psv file '%s'" % src_psv_file)
+            system.LogError("Unable to strip psv file '%s'" % src_psv_file)
             sys.exit(1)
         return False
 
@@ -268,9 +301,17 @@ def StripPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fal
 # Unstrip psv file
 def UnstripPSV(src_psv_file, src_psve_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
 
+    # Get tool
+    unstrip_tool = None
+    if programs.IsToolInstalled("PSVStrip"):
+        unstrip_tool = programs.GetToolProgram("PSVStrip")
+    if not unstrip_tool:
+        system.LogError("PSVStrip was not found")
+        return False
+
     # Get unstrip command
     unstrip_cmd = [
-        programs.GetToolProgram("PSVStrip"),
+        unstrip_tool,
         "-applypsve",
         src_psv_file,
         dest_psv_file,
@@ -284,7 +325,7 @@ def UnstripPSV(src_psv_file, src_psve_file, dest_psv_file, delete_original = Fal
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            print("Unable to unstrip psv file '%s'" % src_psv_file)
+            system.LogError("Unable to unstrip psv file '%s'" % src_psv_file)
             sys.exit(1)
         return False
 
@@ -299,16 +340,25 @@ def UnstripPSV(src_psv_file, src_psve_file, dest_psv_file, delete_original = Fal
 def TrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
 
     # Get tool
-    trim_tool = None
+    python_tool = None
+    if programs.IsToolInstalled("PythonVenvPython"):
+        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if not python_tool:
+        system.LogError("PythonVenvPython was not found")
+        return False
+
+    # Get script
+    trim_script = None
     if programs.IsToolInstalled("PSVTools"):
-        trim_tool = programs.GetToolProgram("PSVTools")
-    if not trim_tool:
+        trim_script = programs.GetToolProgram("PSVTools")
+    if not trim_script:
+        system.LogError("PSVTools was not found")
         return False
 
     # Get trim command
     trim_cmd = [
-        programs.GetToolProgram("PythonVenvPython"),
-        trim_tool,
+        python_tool,
+        trim_script,
         "--trim",
         "-o", dest_psv_file,
         src_psv_file
@@ -321,7 +371,7 @@ def TrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fals
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            print("Unable to trim psv file '%s'" % src_psv_file)
+            system.LogError("Unable to trim psv file '%s'" % src_psv_file)
             sys.exit(1)
         return False
 
@@ -336,16 +386,25 @@ def TrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fals
 def UntrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
 
     # Get tool
-    untrim_tool = None
+    python_tool = None
+    if programs.IsToolInstalled("PythonVenvPython"):
+        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if not python_tool:
+        system.LogError("PythonVenvPython was not found")
+        return False
+
+    # Get script
+    untrim_script = None
     if programs.IsToolInstalled("PSVTools"):
-        untrim_tool = programs.GetToolProgram("PSVTools")
-    if not untrim_tool:
+        untrim_script = programs.GetToolProgram("PSVTools")
+    if not untrim_script:
+        system.LogError("PSVTools was not found")
         return False
 
     # Get untrim command
     untrim_cmd = [
-        programs.GetToolProgram("PythonVenvPython"),
-        untrim_tool,
+        python_tool,
+        untrim_script,
         "--expand",
         "-o", dest_psv_file,
         src_psv_file
@@ -358,7 +417,7 @@ def UntrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fa
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            print("Unable to untrim psv file '%s'" % src_psv_file)
+            system.LogError("Unable to untrim psv file '%s'" % src_psv_file)
             sys.exit(1)
         return False
 
@@ -373,16 +432,25 @@ def UntrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fa
 def VerifyPSV(psv_file, verbose = False, exit_on_failure = False):
 
     # Get tool
-    verify_tool = None
+    python_tool = None
+    if programs.IsToolInstalled("PythonVenvPython"):
+        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if not python_tool:
+        system.LogError("PythonVenvPython was not found")
+        return False
+
+    # Get script
+    verify_script = None
     if programs.IsToolInstalled("PSVTools"):
-        verify_tool = programs.GetToolProgram("PSVTools")
-    if not verify_tool:
+        verify_script = programs.GetToolProgram("PSVTools")
+    if not verify_script:
+        system.LogError("PSVTools was not found")
         return False
 
     # Get verify command
     verify_cmd = [
-        programs.GetToolProgram("PythonVenvPython"),
-        verify_tool,
+        python_tool,
+        verify_script,
         "--verify",
         psv_file
     ]
@@ -394,7 +462,7 @@ def VerifyPSV(psv_file, verbose = False, exit_on_failure = False):
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            print("Unable to verify psv file '%s'" % psv_file)
+            system.LogError("Unable to verify psv file '%s'" % psv_file)
             sys.exit(1)
         return False
 
@@ -407,6 +475,10 @@ def VerifyPSV(psv_file, verbose = False, exit_on_failure = False):
 
 # Get psn pkg content id
 def GetPSNPKGContentID(pkg_file):
-    with open(pkg_file, 'rb') as f:
-        f.seek(0x30)
-        return f.read(0x24).decode("utf-8")
+    try:
+        with open(pkg_file, 'rb') as f:
+            f.seek(0x30)
+            return f.read(0x24).decode("utf-8")
+    except:
+        pass
+    return None
