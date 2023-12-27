@@ -227,13 +227,15 @@ def ExtractArchive(archive_file, extract_dir, skip_existing = False, delete_orig
             ]
 
     # Run extract command
-    command.RunBlockingCommand(
+    code = command.RunBlockingCommand(
         cmd = extract_cmd,
         options = command.CommandOptions(
             output_paths = [extract_dir],
             blocking_processes = [archive_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if code != 0:
+        return False
 
     # Clean up
     if delete_original:

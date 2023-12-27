@@ -35,7 +35,7 @@ class NDecrypt(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "SabreTools",
                 github_repo = "NDecrypt",
                 starts_with = "NDecrypt",
@@ -46,10 +46,11 @@ class NDecrypt(toolbase.ToolBase):
                 install_files = ["NDecrypt.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup NDecrypt")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("NDecrypt", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "SabreTools",
                 github_repo = "NDecrypt",
                 starts_with = "NDecrypt",
@@ -66,3 +67,4 @@ class NDecrypt(toolbase.ToolBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup NDecrypt")

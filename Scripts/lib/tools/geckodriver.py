@@ -35,7 +35,7 @@ class GeckoDriver(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("GeckoDriver", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "mozilla",
                 github_repo = "geckodriver",
                 starts_with = "geckodriver",
@@ -46,10 +46,11 @@ class GeckoDriver(toolbase.ToolBase):
                 install_files = ["geckodriver.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup GeckoDriver")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("GeckoDriver", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "mozilla",
                 github_repo = "geckodriver",
                 starts_with = "geckodriver",
@@ -60,3 +61,4 @@ class GeckoDriver(toolbase.ToolBase):
                 install_files = ["geckodriver"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup GeckoDriver")

@@ -35,7 +35,7 @@ class ExtractXIso(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("ExtractXIso", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "XboxDev",
                 github_repo = "extract-xiso",
                 starts_with = "extract-xiso",
@@ -46,10 +46,11 @@ class ExtractXIso(toolbase.ToolBase):
                 install_files = ["extract-xiso.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup ExtractXIso")
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("ExtractXIso", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ExtractXIso.git",
                 output_name = "ExtractXIso",
                 output_dir = programs.GetProgramInstallDir("ExtractXIso", "linux"),
@@ -69,3 +70,4 @@ class ExtractXIso(toolbase.ToolBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup ExtractXIso")

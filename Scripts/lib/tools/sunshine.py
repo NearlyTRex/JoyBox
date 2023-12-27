@@ -35,7 +35,7 @@ class Sunshine(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Sunshine", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "LizardByte",
                 github_repo = "Sunshine",
                 starts_with = "sunshine",
@@ -46,10 +46,11 @@ class Sunshine(toolbase.ToolBase):
                 install_files = ["sunshine.exe", "assets", "scripts", "tools"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Sunshine")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Sunshine", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "LizardByte",
                 github_repo = "Sunshine",
                 starts_with = "sunshine",
@@ -59,3 +60,4 @@ class Sunshine(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Sunshine", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Sunshine")

@@ -35,7 +35,7 @@ class PS3Dec(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PS3Dec", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "NearlyTRex",
                 github_repo = "PS3Dec",
                 starts_with = "PS3Dec",
@@ -46,10 +46,11 @@ class PS3Dec(toolbase.ToolBase):
                 install_files = ["PS3Dec.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PS3Dec")
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("PS3Dec", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/PS3Dec.git",
                 output_name = "PS3Dec",
                 output_dir = programs.GetProgramInstallDir("PS3Dec", "linux"),
@@ -69,3 +70,4 @@ class PS3Dec(toolbase.ToolBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PS3Dec")

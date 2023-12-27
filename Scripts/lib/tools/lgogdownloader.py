@@ -41,7 +41,7 @@ class LGOGDownloader(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("LGOGDownloader", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/LGOGDownloader.git",
                 output_name = "LGOGDownloader",
                 output_dir = programs.GetProgramInstallDir("LGOGDownloader", "linux"),
@@ -61,11 +61,13 @@ class LGOGDownloader(toolbase.ToolBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup LGOGDownloader")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup LGOGDownloader config files")

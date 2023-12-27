@@ -35,17 +35,18 @@ class XorrISO(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("XorrISO", "windows"):
-            network.DownloadLatestGithubSource(
+            success = network.DownloadLatestGithubSource(
                 github_user = "PeyTy",
                 github_repo = "xorriso-exe-for-windows",
                 output_dir = programs.GetProgramInstallDir("XorrISO", "windows"),
                 clean_first = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup XorrISO")
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("XorrISO", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://www.gnu.org/software/xorriso/xorriso-1.5.6.pl02.tar.gz",
                 output_name = "XorrISO",
                 output_dir = programs.GetProgramInstallDir("XorrISO", "linux"),
@@ -67,3 +68,4 @@ class XorrISO(toolbase.ToolBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup XorrISO")

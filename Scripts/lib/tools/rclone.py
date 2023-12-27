@@ -43,20 +43,22 @@ class RClone(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("RClone", "windows"):
-            network.DownloadGeneralRelease(
+            success = network.DownloadGeneralRelease(
                 archive_url = "https://downloads.rclone.org/rclone-current-windows-amd64.zip",
                 search_file = "rclone.exe",
                 install_name = "RClone",
                 install_dir = programs.GetProgramInstallDir("RClone", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup RClone")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("RClone", "linux"):
-            network.DownloadGeneralRelease(
+            success = network.DownloadGeneralRelease(
                 archive_url = "https://downloads.rclone.org/rclone-current-linux-amd64.zip",
                 search_file = "rclone",
                 install_name = "RClone",
                 install_dir = programs.GetProgramInstallDir("RClone", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup RClone")

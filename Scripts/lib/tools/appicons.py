@@ -3,36 +3,33 @@ import os, os.path
 import sys
 
 # Local imports
-import config
+import system
 import network
 import programs
 import toolbase
 
-# ExifTool tool
-class ExifTool(toolbase.ToolBase):
+# AppIcons tool
+class AppIcons(toolbase.ToolBase):
 
     # Get name
     def GetName(self):
-        return "ExifTool"
+        return "AppIcons"
 
     # Get config
     def GetConfig(self):
         return {
-            "ExifTool": {
-                "program": "ExifTool/exiftool"
-            }
         }
 
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("ExifTool"):
+        if programs.ShouldLibraryBeInstalled("AppIcons"):
             success = network.DownloadLatestGithubSource(
                 github_user = "NearlyTRex",
-                github_repo = "ExifTool",
-                output_dir = programs.GetLibraryInstallDir("ExifTool"),
+                github_repo = "BostonIcons",
+                output_dir = programs.GetLibraryInstallDir("AppIcons"),
                 clean_first = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup ExifTool")
+            system.AssertCondition(success, "Could not download AppIcons")

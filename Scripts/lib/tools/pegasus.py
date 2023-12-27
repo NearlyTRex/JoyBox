@@ -72,7 +72,7 @@ class Pegasus(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Pegasus", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "mmatyas",
                 github_repo = "pegasus-frontend",
                 starts_with = "pegasus-fe",
@@ -84,17 +84,19 @@ class Pegasus(toolbase.ToolBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            network.DownloadLatestGithubSource(
+            system.AssertCondition(success, "Could not setup Pegasus")
+            success = network.DownloadLatestGithubSource(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
                 output_dir = os.path.join(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "windows"), "PegasusThemeGrid"),
                 clean_first = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Pegasus theme")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Pegasus", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "mmatyas",
                 github_repo = "pegasus-frontend",
                 starts_with = "pegasus-fe",
@@ -112,13 +114,15 @@ class Pegasus(toolbase.ToolBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            network.DownloadLatestGithubSource(
+            system.AssertCondition(success, "Could not setup Pegasus")
+            success = network.DownloadLatestGithubSource(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
                 output_dir = os.path.join(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "linux"), "PegasusThemeGrid"),
                 clean_first = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Pegasus theme")
 
         # Generate game dirs
         game_dirs = []
@@ -132,8 +136,9 @@ class Pegasus(toolbase.ToolBase):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Pegasus config files")

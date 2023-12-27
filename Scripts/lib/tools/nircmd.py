@@ -35,10 +35,11 @@ class NirCmd(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("NirCmd", "windows"):
-            network.DownloadGeneralRelease(
+            success = network.DownloadGeneralRelease(
                 archive_url = "https://www.nirsoft.net/utils/nircmd-x64.zip",
                 search_file = "nircmdc.exe",
                 install_name = "NirCmd",
                 install_dir = programs.GetProgramInstallDir("NirCmd", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup NirCmd")

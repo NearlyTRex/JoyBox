@@ -1,4 +1,5 @@
 # Imports
+from . import appicons
 from . import appimagetool
 from . import cdecrypt
 from . import curl
@@ -38,6 +39,7 @@ from . import xorriso
 
 # Tool instances
 instances = [
+    appicons.AppIcons(),
     appimagetool.AppImageTool(),
     cdecrypt.CDecrypt(),
     curl.Curl(),

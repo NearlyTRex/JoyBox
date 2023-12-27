@@ -49,7 +49,7 @@ class ProjectCTR(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("CtrMakeRom", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
                 starts_with = "makerom",
@@ -60,8 +60,9 @@ class ProjectCTR(toolbase.ToolBase):
                 install_files = ["makerom.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup CtrMakeRom")
         if programs.ShouldProgramBeInstalled("CtrTool", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
                 starts_with = "ctrtool",
@@ -72,10 +73,11 @@ class ProjectCTR(toolbase.ToolBase):
                 install_files = ["ctrtool.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup CtrTool")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("CtrMakeRom", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
                 starts_with = "makerom",
@@ -92,8 +94,9 @@ class ProjectCTR(toolbase.ToolBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup CtrMakeRom")
         if programs.ShouldProgramBeInstalled("CtrTool", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
                 starts_with = "ctrtool",
@@ -110,3 +113,4 @@ class ProjectCTR(toolbase.ToolBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup CtrTool")

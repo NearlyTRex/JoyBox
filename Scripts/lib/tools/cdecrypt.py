@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import config
+import system
 import network
 import programs
 import toolbase
@@ -35,7 +36,7 @@ class CDecrypt(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("CDecrypt", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "VitaSmith",
                 github_repo = "cdecrypt",
                 starts_with = "cdecrypt",
@@ -46,10 +47,11 @@ class CDecrypt(toolbase.ToolBase):
                 install_files = ["cdecrypt.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup CDecrypt")
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("CDecrypt", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/CDecrypt.git",
                 output_name = "CDecrypt",
                 output_dir = programs.GetProgramInstallDir("CDecrypt", "linux"),
@@ -66,3 +68,4 @@ class CDecrypt(toolbase.ToolBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup CDecrypt")

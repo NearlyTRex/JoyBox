@@ -28,11 +28,11 @@ class XCITrimmer(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("XCITrimmer"):
-            network.DownloadLatestGithubSource(
+            success = network.DownloadLatestGithubSource(
                 github_user = "NearlyTRex",
                 github_repo = "XCITrimmer",
                 output_dir = programs.GetLibraryInstallDir("XCITrimmer"),
                 clean_first = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
+            system.AssertCondition(success, "Could not setup XCITrimmer")

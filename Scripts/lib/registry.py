@@ -161,7 +161,7 @@ def ImportRegistryFile(
     ]
 
     # Run registry command
-    command.RunBlockingCommand(
+    code = command.RunBlockingCommand(
         cmd = registry_cmd,
         options = command.CommandOptions(
             prefix_dir = prefix_dir,
@@ -172,6 +172,8 @@ def ImportRegistryFile(
             blocking_processes = [registry_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if code != 0:
+        return False
 
     # Assume successful
     return True

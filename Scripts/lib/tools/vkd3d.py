@@ -51,7 +51,7 @@ class VKD3D(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("VKD3D"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "HansKristian-Work",
                 github_repo = "vkd3d-proton",
                 starts_with = "vkd3d-proton",
@@ -61,17 +61,22 @@ class VKD3D(toolbase.ToolBase):
                 install_dir = programs.GetLibraryInstallDir("VKD3D"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup VKD3D")
 
         # Find first dll file
         dll_files = system.BuildFileListByExtensions(programs.GetLibraryInstallDir("VKD3D"), extensions = [".dll"])
-        dll_file = dll_files.pop()
+        dll_file = None
+        if len(dll_files):
+            dll_file = dll_files.pop()
 
         # Rename path
-        dll_dir_old = system.GetDirectoryParent(system.GetFilenameDirectory(dll_file))
-        dll_dir_new = os.path.join(programs.GetLibraryInstallDir("VKD3D"), "vkd3d-proton")
-        system.MoveFileOrDirectory(
-            src = dll_dir_old,
-            dest = dll_dir_new,
-            skip_existing = True,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+        if dll_file:
+            dll_dir_old = system.GetDirectoryParent(system.GetFilenameDirectory(dll_file))
+            dll_dir_new = os.path.join(programs.GetLibraryInstallDir("VKD3D"), "vkd3d-proton")
+            success = system.MoveFileOrDirectory(
+                src = dll_dir_old,
+                dest = dll_dir_new,
+                skip_existing = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup VKD3D path")

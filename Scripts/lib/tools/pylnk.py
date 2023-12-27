@@ -28,10 +28,11 @@ class PyLnk(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("PyLnk"):
-            network.DownloadLatestGithubSource(
+            success = network.DownloadLatestGithubSource(
                 github_user = "NearlyTRex",
                 github_repo = "PyLnk",
                 output_dir = programs.GetLibraryInstallDir("PyLnk"),
                 clean_first = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PyLnk")

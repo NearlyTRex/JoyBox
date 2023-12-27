@@ -47,7 +47,7 @@ class AppImageTool(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("AppImageTool", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "AppImage",
                 github_repo = "AppImageKit",
                 starts_with = "appimagetool-x86_64",
@@ -57,27 +57,21 @@ class AppImageTool(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("AppImageTool", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup AppImageTool")
 
-        # Download icons
-        network.DownloadLatestGithubSource(
-            github_user = "NearlyTRex",
-            github_repo = "BostonIcons",
-            output_dir = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "BostonIcons"),
-            clean_first = True,
+        # Copy icon
+        success = system.CopyFileOrDirectory(
+            src = os.path.join(programs.GetLibraryInstallDir("AppIcons"), "128", "mimes", "application-x-executable-script.svg"),
+            dest = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        system.AssertCondition(success, "Could not copy AppImageTool icons")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-
-        # Copy icon
-        system.CopyFileOrDirectory(
-            src = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
-            dest = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not create AppImageTool config files")

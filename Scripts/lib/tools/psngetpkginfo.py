@@ -28,10 +28,11 @@ class PSNGetPkgInfo(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("PSNGetPkgInfo"):
-            network.DownloadLatestGithubSource(
+            success = network.DownloadLatestGithubSource(
                 github_user = "NearlyTRex",
                 github_repo = "PSNGetPkgInfo",
                 output_dir = programs.GetLibraryInstallDir("PSNGetPkgInfo"),
                 clean_first = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PSNGetPkgInfo")

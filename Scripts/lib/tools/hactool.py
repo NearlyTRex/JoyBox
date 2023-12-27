@@ -35,7 +35,7 @@ class HacTool(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("HacTool", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "SciresM",
                 github_repo = "hactool",
                 starts_with = "hactool",
@@ -46,10 +46,11 @@ class HacTool(toolbase.ToolBase):
                 install_files = ["hactool.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup HacTool")
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("HacTool", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/HacTool.git",
                 output_name = "HacTool",
                 output_dir = programs.GetProgramInstallDir("HacTool", "linux"),
@@ -68,3 +69,4 @@ class HacTool(toolbase.ToolBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup HacTool")

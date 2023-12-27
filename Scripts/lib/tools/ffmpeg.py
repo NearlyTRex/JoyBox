@@ -35,7 +35,7 @@ class FFMpeg(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("FFMpeg", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "BtbN",
                 github_repo = "FFmpeg-Builds",
                 starts_with = "ffmpeg-master-latest",
@@ -46,10 +46,11 @@ class FFMpeg(toolbase.ToolBase):
                 install_files = ["ffmpeg.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup FFMpeg")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("FFMpeg", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "BtbN",
                 github_repo = "FFmpeg-Builds",
                 starts_with = "ffmpeg-master-latest",
@@ -60,3 +61,4 @@ class FFMpeg(toolbase.ToolBase):
                 install_files = ["ffmpeg"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup FFMpeg")

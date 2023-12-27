@@ -35,7 +35,7 @@ class Wad2Bin(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Wad2Bin", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "DarkMatterCore",
                 github_repo = "wad2bin",
                 starts_with = "wad2bin",
@@ -46,3 +46,4 @@ class Wad2Bin(toolbase.ToolBase):
                 install_files = ["wad2bin.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Wad2Bin")

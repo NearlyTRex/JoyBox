@@ -47,6 +47,7 @@ def DownloadUrl(url, output_dir = None, output_file = None, verbose = False, exi
     if command.IsRunnableCommand(programs.GetToolProgram("Curl")):
         download_tool = programs.GetToolProgram("Curl")
     if not download_tool:
+        system.LogError("Curl was not found")
         return False
 
     # Get download command
@@ -77,6 +78,7 @@ def DownloadUrl(url, output_dir = None, output_file = None, verbose = False, exi
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if code != 0:
+        system.LogError("Download of %s failed" % url)
         return False
 
     # Check result
@@ -106,13 +108,14 @@ def DownloadGitUrl(url, output_dir, clean_first = False, verbose = False, exit_o
 
     # Check output dir
     if os.path.isdir(output_dir) and system.DoesDirectoryContainFiles(output_dir):
-        return False
+        return True
 
     # Get tool
     download_tool = None
     if command.IsRunnableCommand(programs.GetToolProgram("Git")):
         download_tool = programs.GetToolProgram("Git")
     if not download_tool:
+        system.LogError("Git was not found")
         return False
 
     # Get download command
@@ -132,7 +135,12 @@ def DownloadGitUrl(url, output_dir, clean_first = False, verbose = False, exit_o
             blocking_processes = [download_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
-    return (code == 0)
+    if code != 0:
+        system.LogError("Git download of %s failed" % url)
+        return False
+
+    # Check result
+    return system.DoesDirectoryContainFiles(output_dir)
 
 # Determine if network share is mounted
 def IsNetworkShareMounted(mount_dir, base_location, network_share):
@@ -177,7 +185,8 @@ def MountNetworkShare(mount_dir, base_location, network_share, username, passwor
         # Run mount command
         command.RunCheckedCommand(
             cmd = mount_cmd,
-            verbose = verbose)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
         return True
 
     # Linux
@@ -213,7 +222,8 @@ def MountNetworkShare(mount_dir, base_location, network_share, username, passwor
         # Run mount command
         command.RunCheckedCommand(
             cmd = mount_cmd,
-            verbose = verbose)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
         return True
 
     # Network share was not mounted
@@ -240,6 +250,7 @@ def DownloadGeneralRelease(
     # Create temporary directory
     tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
     if not tmp_dir_success:
+        system.LogError("Unable to create temporary directory")
         return False
 
     # Get archive info
@@ -253,14 +264,17 @@ def DownloadGeneralRelease(
 
     # Download release
     if not DownloadUrl(url=archive_url, output_dir=tmp_dir_result, output_file=archive_file):
-        print("Unable to download release from '%s'" % archive_url)
+        system.LogError("Unable to download release from '%s'" % archive_url)
         return False
 
     # Create install dir if necessary
-    system.MakeDirectory(
+    success = system.MakeDirectory(
         dir = install_dir,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if not success:
+        system.LogError("Unable to create install directory %s" % install_dir)
+        return False
 
     # Handle app images
     if archive_extension.lower() == ".appimage":
@@ -269,17 +283,23 @@ def DownloadGeneralRelease(
         appimage_file = os.path.join(tmp_dir_result, install_name + ".AppImage")
 
         # Rename app image
-        system.MoveFileOrDirectory(
+        success = system.MoveFileOrDirectory(
             src = archive_file,
             dest = appimage_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to rename app image")
+            return False
 
         # Mark app images as executable
-        system.MarkAsExecutable(
+        success = system.MarkAsExecutable(
             src = appimage_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to mark app image as executable")
+            return False
 
         # Set install files
         install_files = [system.GetFilenameFile(appimage_file)]
@@ -310,6 +330,7 @@ def DownloadGeneralRelease(
             install_dir = virtual_install_path,
             silent_install = False)
         if not installer_setup_cmd:
+            system.LogError("Unable to get installer setup command")
             return False
 
         # Create prefix
@@ -322,7 +343,7 @@ def DownloadGeneralRelease(
             exit_on_failure = exit_on_failure)
 
         # Run installer
-        command.RunBlockingCommand(
+        code = command.RunBlockingCommand(
             cmd = installer_setup_cmd,
             options = command.CommandOptions(
                 cwd = real_install_path,
@@ -334,13 +355,14 @@ def DownloadGeneralRelease(
                 blocking_processes = [archive_file]),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if code != 0:
+            system.LogError("Error occurred running the setup installer")
+            return False
 
         # Set search directory to best location for installed files
         search_dir = prefix_dir
         if installer_type != config.installer_type_unknown:
             search_dir = real_install_path
-        if not search_dir:
-            return False
 
     # Plain executable (should be just downloaded as a standalone file)
     elif archive_extension == ".exe" and not is_installer and not is_archive:
@@ -350,10 +372,14 @@ def DownloadGeneralRelease(
     else:
 
         # Extract archive
-        archive.ExtractArchive(
+        success = archive.ExtractArchive(
             archive_file = archive_file,
             extract_dir = tmp_dir_result,
-            verbose = verbose)
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to extract downloaded release archive %s" % archive_file)
+            return False
 
     # Further refine search dir if we are looking for a particular file
     if len(search_file):
@@ -369,27 +395,35 @@ def DownloadGeneralRelease(
         for install_file in install_files:
             install_file_src = os.path.abspath(os.path.join(search_dir, install_file))
             install_file_dest = os.path.join(install_dir, install_file)
-            if os.path.exists(install_file_src):
-                system.CopyFileOrDirectory(
-                    src = install_file_src,
-                    dest = install_file_dest,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
+            success = system.CopyFileOrDirectory(
+                src = install_file_src,
+                dest = install_file_dest,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                system.LogError("Unable to copy install file %s" % install_file)
+                return False
     else:
-        system.CopyContents(
+        success = system.CopyContents(
             src = search_dir,
             dest = install_dir,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to copy install files from %s" % search_dir)
+            return False
 
     # Registry files
     if len(registry_files):
         for registry_file in registry_files:
-            registry.ImportRegistryFile(
+            success = registry.ImportRegistryFile(
                 registry_file = registry_file,
                 prefix_dir = prefix_dir,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            if not success:
+                system.LogError("Unable to import registry file %s" % registry_file)
+                return False
 
     # Chmod files
     if len(chmod_files):
@@ -398,11 +432,14 @@ def DownloadGeneralRelease(
                 chmod_file = system.NormalizeFilePath(chmod_entry["file"])
                 chmod_perms = chmod_entry["perms"]
                 if filename.endswith(chmod_file):
-                    system.ChmodFileOrDirectory(
+                    success = system.ChmodFileOrDirectory(
                         src = filename,
                         perms = chmod_perms,
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
+                    if not success:
+                        system.LogError("Unable to update permissions for %s" % filename)
+                        return False
 
     # Rename files
     if len(rename_files):
@@ -411,15 +448,20 @@ def DownloadGeneralRelease(
                 rename_from = rename_entry["from"]
                 rename_to = rename_entry["to"]
                 if filename.endswith(rename_from):
-                    system.MoveFileOrDirectory(
+                    success = system.MoveFileOrDirectory(
                         src = filename,
                         dest = filename.replace(rename_from, rename_to),
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
+                    if not success:
+                        system.LogError("Unable to rename file %s" % filename)
+                        return False
 
     # Delete temporary directory
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
-    return True
+
+    # Check result
+    return system.DoesDirectoryContainFiles(install_dir)
 
 # Download latest github sources
 def DownloadLatestGithubSource(
@@ -449,7 +491,7 @@ def DownloadLatestGithubSource(
         verbose = verbose)
 
     # Check result
-    return os.path.isdir(output_dir)
+    return system.DoesDirectoryContainFiles(output_dir)
 
 # Download latest github release
 def DownloadLatestGithubRelease(
@@ -479,7 +521,7 @@ def DownloadLatestGithubRelease(
     # Get release json list
     release_json_list = GetRemoteJson(github_url)
     if not release_json_list:
-        print("Unable to find github release information from '%s'" % github_url)
+        system.LogError("Unable to find github release information from '%s'" % github_url)
         return False
     if not isinstance(release_json_list, list):
         release_json_list = [release_json_list]
@@ -506,11 +548,11 @@ def DownloadLatestGithubRelease(
 
     # Did not find any matching release
     if not archive_url:
-        print("Unable to find any release from '%s' matching start='%s' and end='%s'" % (github_url, starts_with, ends_with))
+        system.LogError("Unable to find any release from '%s' matching start='%s' and end='%s'" % (github_url, starts_with, ends_with))
         return False
 
     # Download release
-    DownloadGeneralRelease(
+    return DownloadGeneralRelease(
         archive_url = archive_url,
         search_file = search_file,
         install_name = install_name,
@@ -551,11 +593,11 @@ def DownloadLatestWebpageRelease(
         get_latest = True,
         verbose = verbose)
     if not archive_url:
-        print("Unable to find any release from '%s' matching start='%s' and end='%s'" % (webpage_url, starts_with, ends_with))
+        system.LogError("Unable to find any release from '%s' matching start='%s' and end='%s'" % (webpage_url, starts_with, ends_with))
         return False
 
     # Download release
-    DownloadGeneralRelease(
+    return DownloadGeneralRelease(
         archive_url = archive_url,
         search_file = search_file,
         install_name = install_name,
@@ -588,7 +630,8 @@ def BuildAppImageFromSource(
 
     # Only works on linux systems
     if not environment.IsLinuxPlatform():
-        return
+        system.LogError("Building app images only works on linux")
+        return False
 
     # Check params
     system.AssertIsString(release_url, "release_url")
@@ -607,12 +650,14 @@ def BuildAppImageFromSource(
             get_latest = True,
             verbose = verbose)
         if not release_url:
-            return
+            system.LogError("No release url could be found from webpage %s" % webpage_url)
+            return False
 
     # Create temporary directory
     tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
     if not tmp_dir_success:
-        return
+        system.LogError("Unable to create temporary directory")
+        return False
 
     # Get directories
     appimage_dir = os.path.join(tmp_dir_result, "AppImage")
@@ -639,8 +684,8 @@ def BuildAppImageFromSource(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not success:
-            print("Unable to download release from '%s'" % release_url)
-            sys.exit(1)
+            system.LogError("Unable to download release from '%s'" % release_url)
+            return False
     else:
 
         # Get archive info
@@ -651,14 +696,17 @@ def BuildAppImageFromSource(
         # Download source archive
         success = DownloadUrl(url = release_url, output_file = archive_file)
         if not success:
-            print("Unable to download release from '%s'" % release_url)
-            sys.exit(1)
+            system.LogError("Unable to download release from '%s'" % release_url)
+            return False
 
         # Extract source archive
-        archive.ExtractArchive(
+        success = archive.ExtractArchive(
             archive_file = archive_file,
             extract_dir = source_dir,
             verbose = verbose)
+        if not success:
+            system.LogError("Unable to extract source archive")
+            return False
 
     # Make build folder
     system.MakeDirectory(source_build_dir, verbose = verbose, exit_on_failure = exit_on_failure)
@@ -728,3 +776,6 @@ def BuildAppImageFromSource(
 
     # Delete temporary directory
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+
+    # Check result
+    return os.path.exists(os.path.join(output_dir, output_name + ".AppImage"))

@@ -35,7 +35,7 @@ class Jdupes(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Jdupes", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "jbruchon",
                 github_repo = "jdupes",
                 starts_with = "jdupes",
@@ -45,10 +45,11 @@ class Jdupes(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Jdupes", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Jdupes")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Jdupes", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "jbruchon",
                 github_repo = "jdupes",
                 starts_with = "jdupes",
@@ -58,3 +59,4 @@ class Jdupes(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Jdupes", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Jdupes")

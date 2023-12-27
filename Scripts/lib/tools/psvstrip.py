@@ -35,7 +35,7 @@ class PSVStrip(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PSVStrip", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "Kippykip",
                 github_repo = "PSVStrip",
                 starts_with = "PSVStrip",
@@ -46,3 +46,4 @@ class PSVStrip(toolbase.ToolBase):
                 install_files = ["psvstrip.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PSVStrip")

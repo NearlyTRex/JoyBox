@@ -35,7 +35,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("3DSRomTool", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "NearlyTRex",
                 github_repo = "3DSRomTool",
                 starts_with = "rom_tool",
@@ -46,10 +46,11 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 install_files = ["rom_tool.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup 3DSRomTool")
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("3DSRomTool", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/3DSRomTool.git",
                 output_name = "3DSRomTool",
                 output_dir = programs.GetProgramInstallDir("3DSRomTool", "linux"),
@@ -68,3 +69,4 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup 3DSRomTool")

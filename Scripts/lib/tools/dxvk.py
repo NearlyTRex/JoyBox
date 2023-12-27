@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import config
+import system
 import network
 import programs
 import toolbase
@@ -53,7 +54,7 @@ class DXVK(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("DXVK"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "doitsujin",
                 github_repo = "dxvk",
                 starts_with = "dxvk-2.2",
@@ -63,3 +64,4 @@ class DXVK(toolbase.ToolBase):
                 install_dir = programs.GetLibraryInstallDir("DXVK"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup DXVK")

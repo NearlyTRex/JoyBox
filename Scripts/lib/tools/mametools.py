@@ -37,7 +37,7 @@ class MameTools(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("MameChdman", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "mamedev",
                 github_repo = "mame",
                 starts_with = "mame",
@@ -52,3 +52,4 @@ class MameTools(toolbase.ToolBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup MameChdman")
