@@ -44,9 +44,10 @@ def CreateZipFromFile(zip_file, source_file, delete_original = False, verbose = 
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip")):
+    if programs.IsToolInstalled("7-Zip"):
         archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
+        system.LogError("7-Zip was not found")
         return False
 
     # Get path to add
@@ -93,9 +94,10 @@ def CreateZipFromFolder(zip_file, source_dir, excludes = [], delete_original = F
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip")):
+    if programs.IsToolInstalled("7-Zip"):
         archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
+        system.LogError("7-Zip was not found")
         return False
 
     # Create list of objects to add
@@ -147,9 +149,10 @@ def CreateExeFromFolder(exe_file, source_dir, excludes = [], delete_original = F
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip")):
+    if programs.IsToolInstalled("7-Zip"):
         archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
+        system.LogError("7-Zip was not found")
         return False
 
     # Create list of objects to add
@@ -198,9 +201,10 @@ def ExtractArchive(archive_file, extract_dir, skip_existing = False, delete_orig
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip")):
+    if programs.IsToolInstalled("7-Zip"):
         archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
+        system.LogError("7-Zip was not found")
         return False
 
     # Get extract command
@@ -249,9 +253,10 @@ def TestArchive(archive_file, verbose = False, exit_on_failure = False):
 
     # Get tool
     archive_tool = None
-    if command.IsRunnableCommand(programs.GetToolProgram("7-Zip")):
+    if programs.IsToolInstalled("7-Zip"):
         archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
+        system.LogError("7-Zip was not found")
         return False
 
     # Get test command
