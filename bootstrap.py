@@ -287,13 +287,32 @@ python_pip_exe = config["Tools.Python"]["python_pip_exe"]
 python_install_dir = os.path.expandvars(config["Tools.Python"]["python_install_dir"])
 python_venv_dir = os.path.expandvars(config["Tools.Python"]["python_venv_dir"])
 python_tool = os.path.join(python_install_dir, python_exe)
-python_pip_tool = os.path.join(python_venv_dir, "bin", python_pip_exe)
+
+# Python virtual environment tool
+python_venv_python_tool = os.path.join(python_venv_dir, "bin", python_exe)
+python_venv_pip_tool = os.path.join(python_venv_dir, "bin", python_pip_exe)
 if sys.platform.startswith("win"):
-    python_pip_tool = os.path.join(python_venv_dir, "Scripts", python_pip_exe)
+    python_venv_python_tool = os.path.join(python_venv_dir, "Scripts", python_exe)
+    python_venv_pip_tool = os.path.join(python_venv_dir, "Scripts", python_pip_exe)
 
 # Create python virtual environment
 subprocess.run([python_tool, "-m", "venv", python_venv_dir])
 
 # Install python packages
 for python_package in python_packages:
-    subprocess.run([python_pip_tool, "install", "--upgrade", python_package])
+    subprocess.run([python_venv_pip_tool, "install", "--upgrade", python_package])
+
+###########################################################
+# Environment
+###########################################################
+
+# Get environment script
+scripts_bin_dir = os.path.realpath(os.path.join(".", "Scripts", "bin"))
+environment_script = os.path.join(scripts_bin_dir, "setup_environment.py")
+
+# Run environment script
+subprocess.run([python_venv_python_tool, environment_script])
+
+# Inform user
+print("Bootstrap complete!")
+print("Add %s to your PATH to run scripts" % scripts_bin_dir)

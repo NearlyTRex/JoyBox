@@ -7,11 +7,10 @@ import config
 import environment
 import system
 import programs
-import metadata
 import ini
 
-# Check basics
-def CheckBasics():
+# Check requirements
+def CheckRequirements():
 
     # Check python version
     if sys.version_info < config.minimum_python_version:
@@ -31,56 +30,13 @@ def CheckBasics():
         system.LogError("Symlinks are required, please enable them for your system")
         sys.exit(1)
 
-# Check ini
-def CheckIni():
-
     # Check ini file
     if not ini.IsIniPresent():
         system.LogError("Ini file not found, please run setup first")
         sys.exit(1)
 
-# Check programs
-def CheckPrograms():
-
-    # Get required programs
-    required_programs = []
-    if environment.IsWinePlatform():
-        required_programs += [
-            "Wine",
-            "WineTricks"
-        ]
-    elif environment.IsSandboxiePlatform():
-        required_programs += [
-            "Sandboxie"
-        ]
-    required_programs += [
-        "Curl",
-        "Git",
-        "7-Zip",
-        "Firefox"
-    ]
-
-    # Check required programs
-    for required_program in required_programs:
-        if not programs.IsProgramInstalled(required_program):
-            system.LogError("Required program '%s' was not found, please install it" % required_program)
-            sys.exit(1)
-
-# Check requirements
-def CheckRequirements():
-    CheckBasics()
-    CheckIni()
-    CheckPrograms()
-
 # Setup environment
 def SetupEnvironment(verbose = False, exit_on_failure = False):
-
-    # Check basics
-    CheckBasics()
-
-    # Setup ini file
-    system.LogInfo("Initializing ini file")
-    ini.InitializeIniFile(verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Setup tools
     for tool in programs.GetTools():
