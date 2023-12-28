@@ -39,12 +39,12 @@ overwrite_screenshots = False
 overwrite_videos = False
 
 [UserData.Steam]
-steam_username =
-steam_userid =
+steam_username = SemiDiabolicalParka
+steam_userid = 76561198286525102
 
 [UserData.Switch]
-profile_user_id =
-profile_account_name =
+profile_user_id = F6F389D41D6BC0BDD6BD928C526AE556
+profile_account_name = yuzu
 
 [Tools.WinGet]
 winget_exe = winget.exe
