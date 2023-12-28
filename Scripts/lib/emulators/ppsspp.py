@@ -61,17 +61,18 @@ class PPSSPP(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PPSSPP", "windows"):
-            network.DownloadGeneralRelease(
+            success = network.DownloadGeneralRelease(
                 archive_url = "https://www.ppsspp.org/files/1_16_6/ppsspp_win.zip",
                 search_file = "PPSSPPWindows64.exe",
                 install_name = "PPSSPP",
                 install_dir = programs.GetProgramInstallDir("PPSSPP", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PPSSPP")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("PPSSPP", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/PPSSPP.git",
                 output_name = "PPSSPP",
                 output_dir = programs.GetProgramInstallDir("PPSSPP", "linux"),
@@ -92,14 +93,16 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PPSSPP")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PPSSPP config files")
 
     # Launch
     def Launch(

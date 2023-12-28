@@ -59,7 +59,7 @@ class ViceC64(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("VICE-C64", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "VICE-Team",
                 github_repo = "svn-mirror",
                 starts_with = "SDL2VICE",
@@ -70,10 +70,11 @@ class ViceC64(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup VICE-C64")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("VICE-C64", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ViceC64.git",
                 output_name = "VICE-C64",
                 output_dir = programs.GetProgramInstallDir("VICE-C64", "linux"),
@@ -97,14 +98,16 @@ class ViceC64(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup VICE-C64")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup VICE-C64 config files")
 
     # Launch
     def Launch(

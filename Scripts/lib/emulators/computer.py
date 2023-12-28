@@ -514,7 +514,7 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Download windows programs
         if programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "joncampbell123",
                 github_repo = "dosbox-x",
                 starts_with = "dosbox-x-vsbuild-win64",
@@ -525,8 +525,9 @@ class Computer(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup DosBoxX")
         if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
-            network.DownloadLatestWebpageRelease(
+            success = network.DownloadLatestWebpageRelease(
                 webpage_url = "https://www.scummvm.org/downloads",
                 starts_with = "https://downloads.scummvm.org/frs/scummvm/",
                 ends_with = "win32-x86_64.zip",
@@ -535,10 +536,11 @@ class Computer(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup ScummVM")
 
         # Build linux programs
         if programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/DosboxX.git",
                 output_name = "DosBoxX",
                 output_dir = programs.GetProgramInstallDir("DosBoxX", "linux"),
@@ -576,8 +578,9 @@ class Computer(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup DosBoxX")
         if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ScummVM.git",
                 output_name = "ScummVM",
                 output_dir = programs.GetProgramInstallDir("ScummVM", "linux"),
@@ -613,14 +616,16 @@ class Computer(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup ScummVM")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup DosBoxX/ScummVM config files")
 
     # Launch
     def Launch(

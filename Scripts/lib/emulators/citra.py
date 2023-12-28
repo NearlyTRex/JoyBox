@@ -88,7 +88,7 @@ class Citra(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Citra", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "citra-emu",
                 github_repo = "citra-nightly",
                 starts_with = "citra-windows-msvc",
@@ -99,10 +99,11 @@ class Citra(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Citra")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Citra", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "citra-emu",
                 github_repo = "citra-nightly",
                 starts_with = "citra-linux-appimage",
@@ -113,25 +114,28 @@ class Citra(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Citra")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Citra config files")
 
         # Extract setup files
         for platform in ["windows", "linux"]:
             for obj in ["nand", "sysdata"]:
                 if os.path.exists(os.path.join(environment.GetSyncedGameEmulatorSetupDir("Citra"), obj + ".zip")):
-                    archive.ExtractArchive(
+                    success = archive.ExtractArchive(
                         archive_file = os.path.join(environment.GetSyncedGameEmulatorSetupDir("Citra"), obj + ".zip"),
                         extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("Citra", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
+                    system.AssertCondition(success, "Could not setup Citra system files")
 
     # Launch
     def Launch(

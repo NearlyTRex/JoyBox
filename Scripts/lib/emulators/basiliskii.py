@@ -110,17 +110,18 @@ class BasiliskII(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("BasiliskII", "windows"):
-            network.DownloadGeneralRelease(
+            success = network.DownloadGeneralRelease(
                 archive_url = "https://surfdrive.surf.nl/files/index.php/s/C7E6HIZKWuHHR1P/download",
                 search_file = "BasiliskII.exe",
                 install_name = "BasiliskII",
                 install_dir = programs.GetProgramInstallDir("BasiliskII", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup BasiliskII")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("BasiliskII", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "Korkman",
                 github_repo = "macemu-appimage-builder",
                 starts_with = "BasiliskII-x86_64",
@@ -131,22 +132,25 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup BasiliskII")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup BasiliskII config files")
 
         # Copy setup files
         for platform in ["windows", "linux"]:
-            system.CopyContents(
+            success = system.CopyContents(
                 src = os.path.join(environment.GetSyncedGameEmulatorSetupDir("BasiliskII"), "bios"),
                 dest = programs.GetEmulatorPathConfigValue("BasiliskII", "setup_dir", platform),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup BasiliskII system files")
 
     # Launch
     def Launch(

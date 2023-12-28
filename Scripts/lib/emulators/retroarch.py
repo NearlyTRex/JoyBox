@@ -87,54 +87,60 @@ class RetroArch(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("RetroArch", "windows"):
-            network.DownloadGeneralRelease(
+            success = network.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch.7z",
                 search_file = "retroarch.exe",
                 install_name = "RetroArch",
                 install_dir = programs.GetProgramInstallDir("RetroArch", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            network.DownloadGeneralRelease(
+            system.AssertCondition(success, "Could not setup RetroArch")
+            success = network.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch_cores.7z",
                 search_file = "snes9x_libretro.dll",
                 install_name = "RetroArch",
                 install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup RetroArch cores")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("RetroArch", "linux"):
-            network.DownloadGeneralRelease(
+            success = network.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch.7z",
                 search_file = "RetroArch-Linux-x86_64.AppImage",
                 install_name = "RetroArch",
                 install_dir = programs.GetProgramInstallDir("RetroArch", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            network.DownloadGeneralRelease(
+            system.AssertCondition(success, "Could not setup RetroArch")
+            success = network.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch_cores.7z",
                 search_file = "snes9x_libretro.so",
                 install_name = "RetroArch",
                 install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup RetroArch cores")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup RetroArch config files")
 
         # Copy setup files
         for platform in ["windows", "linux"]:
-            system.CopyContents(
+            success = system.CopyContents(
                 src = environment.GetSyncedGameEmulatorSetupDir("RetroArch"),
                 dest = programs.GetEmulatorPathConfigValue("RetroArch", "setup_dir", platform),
                 skip_existing = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup RetroArch system files")
 
     # Launch
     def Launch(

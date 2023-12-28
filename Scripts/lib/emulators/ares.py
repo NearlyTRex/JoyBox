@@ -195,7 +195,7 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Ares", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "ares-emulator",
                 github_repo = "ares",
                 starts_with = "ares",
@@ -206,10 +206,11 @@ class Ares(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Ares")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Ares", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Ares.git",
                 output_name = "Ares",
                 output_dir = programs.GetProgramInstallDir("Ares", "linux"),
@@ -226,22 +227,25 @@ class Ares(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Ares")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Ares config files")
 
         # Copy setup files
         for platform in ["windows", "linux"]:
-            system.CopyContents(
+            success = system.CopyContents(
                 src = environment.GetSyncedGameEmulatorSetupDir("Ares"),
                 dest = programs.GetEmulatorPathConfigValue("Ares", "setup_dir", platform),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Ares system files")
 
     # Launch
     def Launch(

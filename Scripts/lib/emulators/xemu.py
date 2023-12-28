@@ -76,7 +76,7 @@ class Xemu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Xemu", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "mborgerson",
                 github_repo = "xemu",
                 starts_with = "xemu",
@@ -87,10 +87,11 @@ class Xemu(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Xemu")
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("Xemu", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Xemu.git",
                 output_name = "Xemu",
                 output_dir = programs.GetProgramInstallDir("Xemu", "linux"),
@@ -107,23 +108,26 @@ class Xemu(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Xemu")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Xemu config files")
 
         # Copy setup files
         for platform in ["windows", "linux"]:
-            system.CopyContents(
+            success = system.CopyContents(
                 src = environment.GetSyncedGameEmulatorSetupDir("Xemu"),
                 dest = programs.GetEmulatorPathConfigValue("Xemu", "setup_dir", platform),
                 skip_existing = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Xemu system files")
 
     # Launch
     def Launch(

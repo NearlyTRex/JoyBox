@@ -108,7 +108,7 @@ class Mame(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Mame", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "mamedev",
                 github_repo = "mame",
                 starts_with = "mame",
@@ -122,10 +122,11 @@ class Mame(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Mame")
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("Mame", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Mame.git",
                 output_name = "Mame",
                 output_dir = programs.GetProgramInstallDir("Mame", "linux"),
@@ -156,23 +157,26 @@ class Mame(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Mame")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Mame config files")
 
         # Copy setup files
         for platform in ["windows", "linux"]:
-            system.CopyContents(
+            success = system.CopyContents(
                 src = environment.GetSyncedGameEmulatorSetupDir("Mame"),
                 dest = programs.GetEmulatorPathConfigValue("Mame", "setup_dir", platform),
                 skip_existing = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Mame system files")
 
     # Launch
     def Launch(

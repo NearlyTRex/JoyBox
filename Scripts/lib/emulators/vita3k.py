@@ -74,7 +74,7 @@ class Vita3K(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Vita3K", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "Vita3K",
                 github_repo = "Vita3K",
                 starts_with = "windows-latest",
@@ -85,10 +85,11 @@ class Vita3K(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Vita3K")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Vita3K", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "Vita3K",
                 github_repo = "Vita3K",
                 starts_with = "Vita3K-x86_64",
@@ -99,25 +100,28 @@ class Vita3K(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Vita3K")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Vita3K config files")
 
         # Extract setup files
         for platform in ["windows", "linux"]:
             for obj in ["os0", "sa0", "vs0"]:
                 if os.path.exists(os.path.join(environment.GetSyncedGameEmulatorSetupDir("Vita3K"), obj + ".zip")):
-                    archive.ExtractArchive(
+                    success = archive.ExtractArchive(
                         archive_file = os.path.join(environment.GetSyncedGameEmulatorSetupDir("Vita3K"), obj + ".zip"),
                         extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("Vita3K", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
+                    system.AssertCondition(success, "Could not setup Vita3K system files")
 
     # Launch
     def Launch(

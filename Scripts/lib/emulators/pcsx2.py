@@ -135,7 +135,7 @@ class PCSX2(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PCSX2", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "PCSX2",
                 github_repo = "pcsx2",
                 starts_with = "pcsx2",
@@ -145,10 +145,11 @@ class PCSX2(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("PCSX2", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PCSX2")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("PCSX2", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "PCSX2",
                 github_repo = "pcsx2",
                 starts_with = "pcsx2",
@@ -158,23 +159,26 @@ class PCSX2(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("PCSX2", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PCSX2")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PCSX2 config files")
 
         # Copy setup files
         for platform in ["windows", "linux"]:
-            system.CopyContents(
+            success = system.CopyContents(
                 src = environment.GetSyncedGameEmulatorSetupDir("PCSX2"),
                 dest = programs.GetEmulatorPathConfigValue("PCSX2", "setup_dir", platform),
                 skip_existing = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PCSX2 system files")
 
     # Launch
     def Launch(

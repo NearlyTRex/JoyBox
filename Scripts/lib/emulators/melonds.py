@@ -74,7 +74,7 @@ class MelonDS(emulatorbase.EmulatorBase):
 
         # Download program
         if programs.ShouldProgramBeInstalled("melonDS", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "melonDS-emu",
                 github_repo = "melonDS",
                 starts_with = "melonDS",
@@ -85,10 +85,11 @@ class MelonDS(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup melonDS")
 
         # Build program
         if programs.ShouldProgramBeInstalled("melonDS", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/melonDS.git",
                 output_name = "melonDS",
                 output_dir = programs.GetProgramInstallDir("melonDS", "linux"),
@@ -108,23 +109,26 @@ class MelonDS(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup melonDS")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup melonDS config files")
 
         # Copy setup files
         for platform in ["windows", "linux"]:
-            system.CopyContents(
+            success = system.CopyContents(
                 src = environment.GetSyncedGameEmulatorSetupDir("melonDS"),
                 dest = programs.GetEmulatorPathConfigValue("melonDS", "setup_dir", platform),
                 skip_existing = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup melonDS system files")
 
     # Launch
     def Launch(

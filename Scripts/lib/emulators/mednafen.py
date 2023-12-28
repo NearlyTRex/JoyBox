@@ -68,7 +68,7 @@ class Mednafen(emulatorbase.EmulatorBase):
 
         # Download program
         if programs.ShouldProgramBeInstalled("Mednafen", "windows"):
-            network.DownloadLatestWebpageRelease(
+            success = network.DownloadLatestWebpageRelease(
                 webpage_url = "https://mednafen.github.io/",
                 starts_with = "https://mednafen.github.io/releases/files/mednafen",
                 ends_with = "UNSTABLE-win64.zip",
@@ -77,10 +77,11 @@ class Mednafen(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Mednafen", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Mednafen")
 
         # Build program
         if programs.ShouldProgramBeInstalled("Mednafen", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 webpage_url = "https://mednafen.github.io/",
                 starts_with = "https://mednafen.github.io/releases/files/mednafen",
                 ends_with = "UNSTABLE.tar.xz",
@@ -103,23 +104,26 @@ class Mednafen(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Mednafen")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Mednafen config files")
 
         # Copy setup files
         for platform in ["windows", "linux"]:
-            system.CopyContents(
+            success = system.CopyContents(
                 src = environment.GetSyncedGameEmulatorSetupDir("Mednafen"),
                 dest = programs.GetEmulatorPathConfigValue("Mednafen", "setup_dir", platform),
                 skip_existing = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Mednafen system files")
 
     # Launch
     def Launch(

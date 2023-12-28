@@ -58,21 +58,23 @@ class BigPEmu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("BigPEmu", "windows"):
-            network.DownloadGeneralRelease(
+            success = network.DownloadGeneralRelease(
                 archive_url = "https://www.richwhitehouse.com/jaguar/builds/BigPEmu_v1092.zip",
                 search_file = "BigPEmu.exe",
                 install_name = "BigPEmu",
                 install_dir = programs.GetProgramInstallDir("BigPEmu", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup BigPEmu")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup BigPEmu config files")
 
     # Launch
     def Launch(

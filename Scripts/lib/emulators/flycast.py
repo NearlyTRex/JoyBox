@@ -58,7 +58,7 @@ class Flycast(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Flycast", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "flyinghead",
                 github_repo = "flycast",
                 starts_with = "flycast-win64",
@@ -69,10 +69,11 @@ class Flycast(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Flycast")
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("Flycast", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Flycast.git",
                 output_name = "Flycast",
                 output_dir = programs.GetProgramInstallDir("Flycast", "linux"),
@@ -92,14 +93,16 @@ class Flycast(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Flycast")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Flycast config files")
 
     # Launch
     def Launch(

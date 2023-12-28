@@ -63,7 +63,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("EKA2L1", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "EKA2L1",
                 github_repo = "EKA2L1",
                 starts_with = "windows-latest",
@@ -74,10 +74,11 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup EKA2L1")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("EKA2L1", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "EKA2L1",
                 github_repo = "EKA2L1",
                 starts_with = "ubuntu-latest",
@@ -88,25 +89,28 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup EKA2L1")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup EKA2L1 config files")
 
         # Extract setup files
         for platform in ["windows", "linux"]:
             for obj in ["data"]:
                 if os.path.exists(os.path.join(environment.GetSyncedGameEmulatorSetupDir("EKA2L1"), obj + ".zip")):
-                    archive.ExtractArchive(
+                    success = archive.ExtractArchive(
                         archive_file = os.path.join(environment.GetSyncedGameEmulatorSetupDir("EKA2L1"), obj + ".zip"),
                         extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("EKA2L1", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
+                    system.AssertCondition(success, "Could not setup EKA2L1 system files")
 
     # Launch
     def Launch(

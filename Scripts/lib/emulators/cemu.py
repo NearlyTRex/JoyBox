@@ -86,7 +86,7 @@ class Cemu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Cemu", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "cemu-project",
                 github_repo = "Cemu",
                 starts_with = "cemu",
@@ -96,10 +96,11 @@ class Cemu(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Cemu", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Cemu")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Cemu", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "cemu-project",
                 github_repo = "Cemu",
                 starts_with = "Cemu",
@@ -109,14 +110,16 @@ class Cemu(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Cemu", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Cemu")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Cemu config files")
 
     # Launch
     def Launch(

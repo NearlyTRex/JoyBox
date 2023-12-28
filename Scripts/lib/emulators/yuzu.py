@@ -108,7 +108,7 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Yuzu", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "yuzu-emu",
                 github_repo = "yuzu-mainline",
                 starts_with = "yuzu-windows-msvc",
@@ -119,10 +119,11 @@ class Yuzu(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Yuzu")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Yuzu", "linux"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "yuzu-emu",
                 github_repo = "yuzu-mainline",
                 starts_with = "yuzu-mainline",
@@ -133,31 +134,35 @@ class Yuzu(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Yuzu")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Yuzu config files")
 
         # Create profiles
         for platform in ["windows", "linux"]:
-            nintendo.CreateSwitchProfilesDat(
+            success = nintendo.CreateSwitchProfilesDat(
                 profiles_file = programs.GetEmulatorPathConfigValue("Yuzu", "profiles_file", platform),
                 user_id = programs.GetEmulatorConfigValue("Yuzu", "profile_user_id"),
                 account_name = programs.GetEmulatorConfigValue("Yuzu", "profile_account_name"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Yuzu profiles")
 
         # Copy setup files
         for platform in ["windows", "linux"]:
-            system.CopyContents(
+            success = system.CopyContents(
                 src = environment.GetSyncedGameEmulatorSetupDir("Yuzu"),
                 dest = programs.GetEmulatorPathConfigValue("Yuzu", "setup_dir", platform),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Yuzu system files")
 
     # Launch
     def Launch(

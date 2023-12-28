@@ -84,7 +84,7 @@ class Dolphin(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Dolphin", "windows"):
-            network.DownloadLatestWebpageRelease(
+            success = network.DownloadLatestWebpageRelease(
                 webpage_url = "https://dolphin-emu.org/download/",
                 starts_with = "https://dl.dolphin-emu.org/builds",
                 ends_with = "x64.7z",
@@ -93,10 +93,11 @@ class Dolphin(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Dolphin", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Dolphin")
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("Dolphin", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Dolphin.git",
                 output_name = "Dolphin",
                 output_dir = programs.GetProgramInstallDir("Dolphin", "linux"),
@@ -118,25 +119,28 @@ class Dolphin(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Dolphin")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Dolphin config files")
 
         # Extract setup files
         for platform in ["windows", "linux"]:
             for obj in ["Wii"]:
                 if os.path.exists(os.path.join(environment.GetSyncedGameEmulatorSetupDir("Dolphin"), obj + ".zip")):
-                    archive.ExtractArchive(
+                    success = archive.ExtractArchive(
                         archive_file = os.path.join(environment.GetSyncedGameEmulatorSetupDir("Dolphin"), obj + ".zip"),
                         extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("Dolphin", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
+                    system.AssertCondition(success, "Could not setup Dolphin system files")
 
     # Launch
     def Launch(

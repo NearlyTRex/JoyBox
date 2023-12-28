@@ -59,7 +59,7 @@ class Atari800(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Atari800", "windows"):
-            network.DownloadLatestGithubRelease(
+            success = network.DownloadLatestGithubRelease(
                 github_user = "atari800",
                 github_repo = "atari800",
                 starts_with = "atari800",
@@ -70,10 +70,11 @@ class Atari800(emulatorbase.EmulatorBase):
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Atari800")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Atari800", "linux"):
-            network.BuildAppImageFromSource(
+            success = network.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Atari800.git",
                 output_name = "Atari800",
                 output_dir = programs.GetProgramInstallDir("Atari800", "linux"),
@@ -95,14 +96,16 @@ class Atari800(emulatorbase.EmulatorBase):
                 ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Atari800")
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            system.TouchFile(
+            success = system.TouchFile(
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Atari800 config files")
 
     # Launch
     def Launch(
