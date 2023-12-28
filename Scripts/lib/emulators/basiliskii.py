@@ -94,6 +94,12 @@ class BasiliskII(emulatorbase.EmulatorBase):
                     "windows": "BasiliskII/windows",
                     "linux": "BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII"
                 },
+                "setup_files": [
+                    {
+                        "file": "bios/quadra.rom",
+                        "md5": "69489153dde910a69d5ae6de5dd65323"
+                    }
+                ],
                 "config_file": {
                     "windows": "BasiliskII/windows/BasiliskII_prefs",
                     "linux": "BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs"

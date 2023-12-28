@@ -60,6 +60,12 @@ class Dolphin(emulatorbase.EmulatorBase):
                     "windows": "Dolphin/windows/User",
                     "linux": "Dolphin/linux/Dolphin.AppImage.home/.local/share/dolphin-emu"
                 },
+                "setup_files": [
+                    {
+                        "file": "Wii.zip",
+                        "md5": "2029efb1ed06ef0cb3679537b803d9ab"
+                    }
+                ],
                 "config_file": {
                     "windows": "Dolphin/windows/User/Config/Dolphin.ini",
                     "linux": "Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/Dolphin.ini"

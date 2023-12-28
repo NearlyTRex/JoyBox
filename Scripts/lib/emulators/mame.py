@@ -84,6 +84,60 @@ class Mame(emulatorbase.EmulatorBase):
                     "windows": "Mame/windows",
                     "linux": "Mame/linux/Mame.AppImage.home/.mame"
                 },
+                "setup_files": [
+                    {
+                        "file": "roms/cdimono1.zip",
+                        "md5": "d69f6a7347b9acefc65dd0822b523335"
+                    },
+                    {
+                        "file": "roms/videopac.zip",
+                        "md5": "a4fffe2ae1a7218939990430d378b059"
+                    },
+                    {
+                        "file": "roms/a5200.zip",
+                        "md5": "b44173fbccbb5dfbd97fba4fe2f2abad"
+                    },
+                    {
+                        "file": "roms/cdimono2.zip",
+                        "md5": "b3ccc0709e82aed4356e5d8a0948b4b9"
+                    },
+                    {
+                        "file": "roms/a7800.zip",
+                        "md5": "68abbc5084df34defeceb323cc9685d9"
+                    },
+                    {
+                        "file": "roms/gamecom.zip",
+                        "md5": "20506b663b593af57fb60364156b5b9f"
+                    },
+                    {
+                        "file": "roms/intv_ecs.zip",
+                        "md5": "98c257fabbb97cbf3c1ff199746ee4cc"
+                    },
+                    {
+                        "file": "roms/i8244.zip",
+                        "md5": "9fb6347babf9fc58578c56aa1e4d3dce"
+                    },
+                    {
+                        "file": "roms/ti99_4a.zip",
+                        "md5": "091448bf43235a5cae113884c0263639"
+                    },
+                    {
+                        "file": "roms/cdibios.zip",
+                        "md5": "f34b1f4badf6f587c91cb2505c3c531d"
+                    },
+                    {
+                        "file": "roms/intv_voice.zip",
+                        "md5": "60140f3f7c4409e18a65fe2799f22f79"
+                    },
+                    {
+                        "file": "roms/stic.zip",
+                        "md5": "2f4e36d03a8a2d9abaf3a94cb3583c8d"
+                    },
+                    {
+                        "file": "roms/intv.zip",
+                        "md5": "20b954b1ba6b378965050b2e887df924"
+                    }
+                ],
                 "config_dir": {
                     "windows": "Mame/windows",
                     "linux": "Mame/linux/Mame.AppImage.home/.mame"

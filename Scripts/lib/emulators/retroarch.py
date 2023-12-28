@@ -57,6 +57,68 @@ class RetroArch(emulatorbase.EmulatorBase):
                     "windows": "RetroArch/windows",
                     "linux": "RetroArch/linux/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch"
                 },
+                "setup_files": [
+
+                    # Panasonic 3DO
+                    {
+                        "file": "system/panafz1.bin",
+                        "md5": "f47264dd47fe30f73ab3c010015c155b"
+                    },
+                    {
+                        "file": "system/panafz10.bin",
+                        "md5": "51f2f43ae2f3508a14d9f56597e2d3ce"
+                    },
+                    {
+                        "file": "system/panafz10-norsa.bin",
+                        "md5": "1477bda80dc33731a65468c1f5bcbee9"
+                    },
+                    {
+                        "file": "system/panafz10e-anvil.bin",
+                        "md5": "a48e6746bd7edec0f40cff078f0bb19f"
+                    },
+                    {
+                        "file": "system/panafz10e-anvil-norsa.bin",
+                        "md5": "cf11bbb5a16d7af9875cca9de9a15e09"
+                    },
+                    {
+                        "file": "system/panafz1j.bin",
+                        "md5": "a496cfdded3da562759be3561317b605"
+                    },
+                    {
+                        "file": "system/panafz1j-norsa.bin",
+                        "md5": "f6c71de7470d16abe4f71b1444883dc8"
+                    },
+                    {
+                        "file": "system/goldstar.bin",
+                        "md5": "8639fd5e549bd6238cfee79e3e749114"
+                    },
+                    {
+                        "file": "system/sanyotry.bin",
+                        "md5": "35fa1a1ebaaeea286dc5cd15487c13ea"
+                    },
+                    {
+                        "file": "system/3do_arcade_saot.bin",
+                        "md5": "8970fc987ab89a7f64da9f8a8c4333ff"
+                    },
+
+                    # Sega Saturn
+                    {
+                        "file": "system/sega_101.bin",
+                        "md5": "85ec9ca47d8f6807718151cbcca8b964"
+                    },
+                    {
+                        "file": "system/mpr-17933.bin",
+                        "md5": "3240872c70984b6cbfda1586cab68dbe"
+                    },
+                    {
+                        "file": "system/mpr-18811-mx.ic1",
+                        "md5": "255113ba943c92a54facd25a10fd780c"
+                    },
+                    {
+                        "file": "system/mpr-19367-mx.ic1",
+                        "md5": "1cd19988d1d72a3e7caa0b73234c96b4"
+                    }
+                ],
                 "cores_dir": {
                     "windows": "RetroArch/windows/cores",
                     "linux": "RetroArch/linux/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch/cores"

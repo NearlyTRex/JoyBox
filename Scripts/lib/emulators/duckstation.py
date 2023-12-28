@@ -108,6 +108,32 @@ class DuckStation(emulatorbase.EmulatorBase):
                     "windows": "DuckStation/windows",
                     "linux": "DuckStation/linux/DuckStation.AppImage.home/.config/duckstation"
                 },
+                "setup_files": [
+                    {
+                        "file": "bios/scph5500.bin",
+                        "md5": "8dd7d5296a650fac7319bce665a6a53c"
+                    },
+                    {
+                        "file": "bios/scph7001.bin",
+                        "md5": "1e68c231d0896b7eadcad1d7d8e76129"
+                    },
+                    {
+                        "file": "bios/scph1001.bin",
+                        "md5": "924e392ed05558ffdb115408c263dccf"
+                    },
+                    {
+                        "file": "bios/scph5501.bin",
+                        "md5": "490f666e1afb15b7362b406ed1cea246"
+                    },
+                    {
+                        "file": "bios/scph5502.bin",
+                        "md5": "32736f17079d0b2b7024407c39bd3050"
+                    },
+                    {
+                        "file": "bios/scph7502.bin",
+                        "md5": "b9d9a0286c33dc6b7237bb13cd46fdee"
+                    }
+                ],
                 "config_file": {
                     "windows": "DuckStation/windows/settings.ini",
                     "linux": "DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/settings.ini"

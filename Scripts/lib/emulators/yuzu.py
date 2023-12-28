@@ -72,6 +72,44 @@ class Yuzu(emulatorbase.EmulatorBase):
                     "windows": "Yuzu/windows/user",
                     "linux": "Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu"
                 },
+                "setup_files": [
+                    {
+                        "file": "sysdata/fuses.bin",
+                        "md5": "15437331fa1cf96fdeb61f39230a9526"
+                    },
+                    {
+                        "file": "sysdata/BOOT0",
+                        "md5": "cf9fb34f7702b26aa73be5acf96ee9c6"
+                    },
+                    {
+                        "file": "sysdata/BCPKG2-1-Normal-Main.bin",
+                        "md5": "216f85fc652a56391c11f08bd4f79d4b"
+                    },
+                    {
+                        "file": "sysdata/pkg1_decr.bin",
+                        "md5": "396fc1f6445e86b75dd521cba1d94d52"
+                    },
+                    {
+                        "file": "sysdata/PRODINFO.bin",
+                        "md5": "13ce15ab30e7c2d4ddf3eff40fb31d82"
+                    },
+                    {
+                        "file": "sysdata/secmon.bin",
+                        "md5": "45bc865a44a01358c137cda7c6009e21"
+                    },
+                    {
+                        "file": "keys/console.keys",
+                        "md5": "67b5b410da0a9bdcb37f92bd32a4c63d"
+                    },
+                    {
+                        "file": "keys/title.keys",
+                        "md5": "b5890c3d737880f6dd3751ffec5b128b"
+                    },
+                    {
+                        "file": "keys/prod.keys",
+                        "md5": "4ed853d4a52e6b9b9e11954f155ecb8a"
+                    }
+                ],
                 "config_file": {
                     "windows": "Yuzu/windows/user/config/qt-config.ini",
                     "linux": "Yuzu/linux/Yuzu.AppImage.home/.config/yuzu/qt-config.ini"

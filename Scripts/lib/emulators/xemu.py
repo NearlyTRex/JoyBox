@@ -60,6 +60,20 @@ class Xemu(emulatorbase.EmulatorBase):
                     "windows": "Xemu/windows",
                     "linux": "Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu"
                 },
+                "setup_files": [
+                    {
+                        "file": "bios/mcpx_1.0.bin",
+                        "md5": "d49c52a4102f6df7bcf8d0617ac475ed"
+                    },
+                    {
+                        "file": "bios/complex_4627.bin",
+                        "md5": "ec00e31e746de2473acfe7903c5a4cb7"
+                    },
+                    {
+                        "file": "bios/complex_4627_v1.03.bin",
+                        "md5": "21445c6f28fca7285b0f167ea770d1e5"
+                    }
+                ],
                 "config_file": {
                     "windows": "Xemu/windows/xemu.toml",
                     "linux": "Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/xemu.toml"

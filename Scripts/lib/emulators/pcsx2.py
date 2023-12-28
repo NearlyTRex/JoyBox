@@ -119,6 +119,20 @@ class PCSX2(emulatorbase.EmulatorBase):
                     "windows": "PCSX2/windows",
                     "linux": "PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2"
                 },
+                "setup_files": [
+                    {
+                        "file": "bios/ps2-0170e-20030227.bin",
+                        "md5": "6e69920fa6eef8522a1d688a11e41bc6"
+                    },
+                    {
+                        "file": "bios/ps2-0170j-20030206.bin",
+                        "md5": "312ad4816c232a9606e56f946bc0678a"
+                    },
+                    {
+                        "file": "bios/ps2-0170a-20030325.bin",
+                        "md5": "8aa12ce243210128c5074552d3b86251"
+                    }
+                ],
                 "config_file": {
                     "windows": "PCSX2/windows/inis/PCSX2.ini",
                     "linux": "PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/inis/PCSX2.ini"

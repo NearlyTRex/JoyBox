@@ -61,6 +61,24 @@ class MGBA(emulatorbase.EmulatorBase):
                     "windows": "mGBA/windows",
                     "linux": "mGBA/linux/mGBA.AppImage.home/.config/mgba"
                 },
+                "setup_files": [
+                    {
+                        "file": "bios/gbc_bios.bin",
+                        "md5": "dbfce9db9deaa2567f6a84fde55f9680"
+                    },
+                    {
+                        "file": "bios/sgb_bios.bin",
+                        "md5": "d574d4f9c12f305074798f54c091a8b4"
+                    },
+                    {
+                        "file": "bios/gba_bios.bin",
+                        "md5": "a860e8c0b6d573d191e4ec7db1b1e4f6"
+                    },
+                    {
+                        "file": "bios/gb_bios.bin",
+                        "md5": "32fbbd84168d3482956eb3c5051637f5"
+                    }
+                ],
                 "config_file": {
                     "windows": "mGBA/windows/config.ini",
                     "linux": "mGBA/linux/mGBA.AppImage.home/.config/mgba/config.ini"

@@ -50,6 +50,12 @@ class RPCS3(emulatorbase.EmulatorBase):
                     "windows": "RPCS3/windows",
                     "linux": "RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3"
                 },
+                "setup_files": [
+                    {
+                        "file": "dev_flash.zip",
+                        "md5": "08f2dc11bd3c7dfefae48ebbbc8caf55"
+                    }
+                ],
                 "config_file": {
                     "windows": "RPCS3/windows/GuiConfigs/CurrentSettings.ini",
                     "linux": "RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3/GuiConfigs/CurrentSettings.ini"
