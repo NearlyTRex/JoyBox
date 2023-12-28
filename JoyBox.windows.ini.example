@@ -46,6 +46,10 @@ steam_userid =
 profile_user_id =
 profile_account_name =
 
+[Tools.WinGet]
+winget_exe = winget.exe
+winget_install_dir = %%USERPROFILE%%\AppData\Local\Microsoft\WindowsApps
+
 [Tools.Python]
 python_exe = python.exe
 python_pip_exe = pip.exe

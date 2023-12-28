@@ -46,6 +46,10 @@ steam_userid =
 profile_user_id =
 profile_account_name =
 
+[Tools.Apt]
+apt_exe = apt
+apt_install_dir = /usr/bin
+
 [Tools.Python]
 python_exe = python3
 python_pip_exe = pip3
