@@ -53,6 +53,9 @@ config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.win3
 config_files["ScummVM/windows/scummvm.ini"] = ""
 config_files["ScummVM/linux/ScummVM.AppImage.home/.config/scummvm/scummvm.ini"] = ""
 
+# System files
+system_files = {}
+
 # Build disc token map
 def BuildDiscTokenMap(disc_files = [], use_drive_letters = False):
 

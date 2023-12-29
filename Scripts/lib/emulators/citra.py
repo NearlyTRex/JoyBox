@@ -27,6 +27,11 @@ Paths\screenshotPath=$EMULATOR_SETUP_ROOT/screenshots/
 config_files["Citra/windows/user/config/qt-config.ini"] = config_file_general
 config_files["Citra/linux/citra-qt.AppImage.home/.config/citra-emu/qt-config.ini"] = config_file_general
 
+# System files
+system_files = {}
+system_files["nand.zip"] = "7c9baaa35b620bbd2b18b4620e2831e1"
+system_files["sysdata.zip"] = "dcfa1fbaf7845c735b2c7d1ec9df2ed7"
+
 # Citra emulator
 class Citra(emulatorbase.EmulatorBase):
 
@@ -58,16 +63,6 @@ class Citra(emulatorbase.EmulatorBase):
                     "windows": "Citra/windows/user",
                     "linux": "Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu"
                 },
-                "setup_files": [
-                    {
-                        "file": "nand.zip",
-                        "md5": "7c9baaa35b620bbd2b18b4620e2831e1"
-                    },
-                    {
-                        "file": "sysdata.zip",
-                        "md5": "dcfa1fbaf7845c735b2c7d1ec9df2ed7"
-                    }
-                ],
                 "config_file": {
                     "windows": "Citra/windows/user/config/qt-config.ini",
                     "linux": "Citra/linux/citra-qt.AppImage.home/.config/citra-emu/qt-config.ini"

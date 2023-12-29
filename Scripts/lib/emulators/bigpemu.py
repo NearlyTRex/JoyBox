@@ -16,6 +16,9 @@ import emulatorbase
 config_files = {}
 config_files["BigPEmu/windows/placeholder.txt"] = ""
 
+# System files
+system_files = {}
+
 # BigPEmu emulator
 class BigPEmu(emulatorbase.EmulatorBase):
 

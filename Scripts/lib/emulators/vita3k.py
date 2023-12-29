@@ -24,6 +24,12 @@ pref-path: $EMULATOR_SETUP_ROOT
 config_files["Vita3K/windows/config.yml"] = config_file_general
 config_files["Vita3K/linux/Vita3K.AppImage.home/.config/Vita3K/config.yml"] = config_file_general
 
+# System files
+system_files = {}
+system_files["vs0.zip"] = "f3c4ec664b6a2cba130eb5b3977dbc23"
+system_files["os0.zip"] = "301589989b48da90e6db41b85d2b0acc"
+system_files["sa0.zip"] = "c248704ab44184c7c47f9bcc27854696"
+
 # Vita3K emulator
 class Vita3K(emulatorbase.EmulatorBase):
 
@@ -58,20 +64,6 @@ class Vita3K(emulatorbase.EmulatorBase):
                     "windows": "Vita3K/windows/data",
                     "linux": "Vita3K/linux/Vita3K.AppImage.home/.local/share/Vita3K/Vita3K"
                 },
-                "setup_files": [
-                    {
-                        "file": "vs0.zip",
-                        "md5": "f3c4ec664b6a2cba130eb5b3977dbc23"
-                    },
-                    {
-                        "file": "os0.zip",
-                        "md5": "301589989b48da90e6db41b85d2b0acc"
-                    },
-                    {
-                        "file": "sa0.zip",
-                        "md5": "c248704ab44184c7c47f9bcc27854696"
-                    }
-                ],
                 "config_file": {
                     "windows": "Vita3K/windows/config.yml",
                     "linux": "Vita3K/linux/Vita3K.AppImage.home/.config/Vita3K/config.yml"

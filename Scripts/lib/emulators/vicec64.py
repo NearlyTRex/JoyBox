@@ -18,6 +18,9 @@ config_files = {}
 config_files["VICE-C64/windows/sdl-vice.ini"] = ""
 config_files["VICE-C64/linux/VICE-C64.AppImage.home/.config/vice/vicerc"] = ""
 
+# System files
+system_files = {}
+
 # ViceC64 emulator
 class ViceC64(emulatorbase.EmulatorBase):
 

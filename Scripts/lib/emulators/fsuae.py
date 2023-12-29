@@ -23,6 +23,12 @@ config_files["FS-UAE/windows/Portable.ini"] = ""
 config_files["FS-UAE/windows/Configurations/Default.fs-uae"] = config_file_general
 config_files["FS-UAE/linux/FS-UAE.AppImage.home/FS-UAE/Configurations/Default.fs-uae"] = config_file_general
 
+# System files
+system_files = {}
+system_files["Kickstarts/kick40068.A1200"] = "646773759326fbac3b2311fd8c8793ee"
+system_files["Kickstarts/kick34005.A500"] = "82a21c1890cae844b3df741f2762d48d"
+system_files["Kickstarts/kick40063.A600"] = "e40a5dfb3d017ba8779faba30cbd1c8e"
+
 # FSUAE emulator
 class FSUAE(emulatorbase.EmulatorBase):
 
@@ -52,20 +58,6 @@ class FSUAE(emulatorbase.EmulatorBase):
                     "windows": "FS-UAE/windows",
                     "linux": "FS-UAE/linux/FS-UAE.AppImage.home/FS-UAE"
                 },
-                "setup_files": [
-                    {
-                        "file": "Kickstarts/kick40068.A1200",
-                        "md5": "646773759326fbac3b2311fd8c8793ee"
-                    },
-                    {
-                        "file": "Kickstarts/kick34005.A500",
-                        "md5": "82a21c1890cae844b3df741f2762d48d"
-                    },
-                    {
-                        "file": "Kickstarts/kick40063.A600",
-                        "md5": "e40a5dfb3d017ba8779faba30cbd1c8e"
-                    }
-                ],
                 "config_file": {
                     "windows": "FS-UAE/windows/Configurations/Default.fs-uae",
                     "linux": "FS-UAE/linux/FS-UAE.AppImage.home/FS-UAE/Configurations/Default.fs-uae"

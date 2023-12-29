@@ -18,6 +18,9 @@ config_files = {}
 config_files["PPSSPP/windows/memstick/PSP/SYSTEM/ppsspp.ini"] = ""
 config_files["PPSSPP/linux/PPSSPP.AppImage.home/.config/ppsspp/PSP/SYSTEM/ppsspp.ini"] = ""
 
+# System files
+system_files = {}
+
 # PPSSPP emulator
 class PPSSPP(emulatorbase.EmulatorBase):
 

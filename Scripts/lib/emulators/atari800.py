@@ -18,6 +18,9 @@ config_files = {}
 config_files["Atari800/windows/.atari800.cfg"] = ""
 config_files["Atari800/linux/Atari800.AppImage.home/.atari800.cfg"] = ""
 
+# System files
+system_files = {}
+
 # Atari800 emulator
 class Atari800(emulatorbase.EmulatorBase):
 

@@ -31,6 +31,12 @@ hdd_path = "$GAME_SAVE_DIR/xbox_hdd.qcow2"
 config_files["Xemu/windows/xemu.toml"] = config_file_general
 config_files["Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/xemu.toml"] = config_file_general
 
+# System files
+system_files = {}
+system_files["bios/mcpx_1.0.bin"] = "d49c52a4102f6df7bcf8d0617ac475ed"
+system_files["bios/complex_4627.bin"] = "ec00e31e746de2473acfe7903c5a4cb7"
+system_files["bios/complex_4627_v1.03.bin"] = "21445c6f28fca7285b0f167ea770d1e5"
+
 # Xemu emulator
 class Xemu(emulatorbase.EmulatorBase):
 
@@ -60,20 +66,6 @@ class Xemu(emulatorbase.EmulatorBase):
                     "windows": "Xemu/windows",
                     "linux": "Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu"
                 },
-                "setup_files": [
-                    {
-                        "file": "bios/mcpx_1.0.bin",
-                        "md5": "d49c52a4102f6df7bcf8d0617ac475ed"
-                    },
-                    {
-                        "file": "bios/complex_4627.bin",
-                        "md5": "ec00e31e746de2473acfe7903c5a4cb7"
-                    },
-                    {
-                        "file": "bios/complex_4627_v1.03.bin",
-                        "md5": "21445c6f28fca7285b0f167ea770d1e5"
-                    }
-                ],
                 "config_file": {
                     "windows": "Xemu/windows/xemu.toml",
                     "linux": "Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/xemu.toml"

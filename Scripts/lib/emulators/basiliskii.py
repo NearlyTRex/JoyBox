@@ -65,6 +65,10 @@ sdlrender software
 config_files["BasiliskII/windows/BasiliskII_prefs"] = config_file_general
 config_files["BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs"] = config_file_general
 
+# System files
+system_files = {}
+system_files["bios/quadra.rom"] = "69489153dde910a69d5ae6de5dd65323"
+
 # BasiliskII emulator
 class BasiliskII(emulatorbase.EmulatorBase):
 
@@ -94,12 +98,6 @@ class BasiliskII(emulatorbase.EmulatorBase):
                     "windows": "BasiliskII/windows",
                     "linux": "BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII"
                 },
-                "setup_files": [
-                    {
-                        "file": "bios/quadra.rom",
-                        "md5": "69489153dde910a69d5ae6de5dd65323"
-                    }
-                ],
                 "config_file": {
                     "windows": "BasiliskII/windows/BasiliskII_prefs",
                     "linux": "BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs"

@@ -21,6 +21,9 @@ config_files["Xenia/windows/xenia.config.toml"] = """
 content_root = "$GAME_SAVE_DIR"
 """
 
+# System files
+system_files = {}
+
 # Xenia emulator
 class Xenia(emulatorbase.EmulatorBase):
 

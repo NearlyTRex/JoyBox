@@ -18,6 +18,10 @@ config_files = {}
 config_files["Mednafen/windows/mednafen.cfg"] = ""
 config_files["Mednafen/linux/Mednafen.AppImage.home/.mednafen/mednafen.cfg"] = ""
 
+# System files
+system_files = {}
+system_files["firmware/lynxboot.img"] = "fcd403db69f54290b51035d82f835e7b"
+
 # Mednafen emulator
 class Mednafen(emulatorbase.EmulatorBase):
 
@@ -52,12 +56,6 @@ class Mednafen(emulatorbase.EmulatorBase):
                     "windows": "Mednafen/windows",
                     "linux": "Mednafen/linux/Mednafen.AppImage.home/.mednafen"
                 },
-                "setup_files": [
-                    {
-                        "file": "firmware/lynxboot.img",
-                        "md5": "fcd403db69f54290b51035d82f835e7b"
-                    }
-                ],
                 "config_file": {
                     "windows": "Mednafen/windows/mednafen.cfg",
                     "linux": "Mednafen/linux/Mednafen.AppImage.home/.mednafen/mednafen.cfg"

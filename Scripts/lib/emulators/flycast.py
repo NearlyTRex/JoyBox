@@ -17,6 +17,9 @@ config_files = {}
 config_files["Flycast/windows/emu.cfg"] = ""
 config_files["Flycast/linux/Flycast.AppImage.home/.config/flycast/emu.cfg"] = ""
 
+# System files
+system_files = {}
+
 # Flycast emulator
 class Flycast(emulatorbase.EmulatorBase):
 

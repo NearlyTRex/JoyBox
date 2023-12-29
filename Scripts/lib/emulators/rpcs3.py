@@ -20,6 +20,10 @@ config_files = {}
 config_files["RPCS3/windows/GuiConfigs/CurrentSettings.ini"] = ""
 config_files["RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3/GuiConfigs/CurrentSettings.ini"] = ""
 
+# System files
+system_files = {}
+system_files["dev_flash.zip"] = "08f2dc11bd3c7dfefae48ebbbc8caf55"
+
 # RPCS3 emulator
 class RPCS3(emulatorbase.EmulatorBase):
 
@@ -50,12 +54,6 @@ class RPCS3(emulatorbase.EmulatorBase):
                     "windows": "RPCS3/windows",
                     "linux": "RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3"
                 },
-                "setup_files": [
-                    {
-                        "file": "dev_flash.zip",
-                        "md5": "08f2dc11bd3c7dfefae48ebbbc8caf55"
-                    }
-                ],
                 "config_file": {
                     "windows": "RPCS3/windows/GuiConfigs/CurrentSettings.ini",
                     "linux": "RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3/GuiConfigs/CurrentSettings.ini"

@@ -20,6 +20,9 @@ config_files["Cemu/windows/keys.txt"] = ""
 config_files["Cemu/linux/Cemu.AppImage.home/.config/Cemu/settings.xml"] = ""
 config_files["Cemu/linux/Cemu.AppImage.home/.local/share/Cemu/keys.txt"] = ""
 
+# System files
+system_files = {}
+
 # Cemu emulator
 class Cemu(emulatorbase.EmulatorBase):
 

@@ -12,7 +12,7 @@ import gui
 import emulatorcommon
 import emulatorbase
 
-# Config file
+# Config files
 config_files = {}
 config_file_general = """
 Paths
@@ -64,6 +64,15 @@ VirtualPad1
 """
 config_files["Ares/windows/settings.bml"] = config_file_general
 config_files["Ares/linux/Ares.AppImage.home/.local/share/ares/settings.bml"] = config_file_general
+
+# System files
+system_files = {}
+system_files["Bios/bios_CD_E.bin"] = "e66fa1dc5820d254611fdcdba0662372"
+system_files["Bios/bios_CD_J.bin"] = "278a9397d192149e84e820ac621a8edd"
+system_files["Bios/bios_CD_U.bin"] = "2efd74e3232ff260e371b99f84024f7f"
+system_files["Bios/colecovision.rom"] = "2c66f5911e5b42b8ebe113403548eee7"
+system_files["Bios/syscard3j.pce"] = "38179df8f4ac870017db21ebcbf53114"
+system_files["Bios/syscard3u.pce"] = "0754f903b52e3b3342202bdafb13efa5"
 
 # Ares emulator
 class Ares(emulatorbase.EmulatorBase):
@@ -153,32 +162,6 @@ class Ares(emulatorbase.EmulatorBase):
                     "windows": "Ares/windows",
                     "linux": "Ares/linux/Ares.AppImage.home/.local/share/ares"
                 },
-                "setup_files": [
-                    {
-                        "file": "Bios/bios_CD_E.bin",
-                        "md5": "e66fa1dc5820d254611fdcdba0662372"
-                    },
-                    {
-                        "file": "Bios/bios_CD_J.bin",
-                        "md5": "278a9397d192149e84e820ac621a8edd"
-                    },
-                    {
-                        "file": "Bios/bios_CD_U.bin",
-                        "md5": "2efd74e3232ff260e371b99f84024f7f"
-                    },
-                    {
-                        "file": "Bios/colecovision.rom",
-                        "md5": "2c66f5911e5b42b8ebe113403548eee7"
-                    },
-                    {
-                        "file": "Bios/syscard3j.pce",
-                        "md5": "38179df8f4ac870017db21ebcbf53114"
-                    },
-                    {
-                        "file": "Bios/syscard3u.pce",
-                        "md5": "0754f903b52e3b3342202bdafb13efa5"
-                    }
-                ],
                 "config_file": {
                     "windows": "Ares/windows/settings.bml",
                     "linux": "Ares/linux/Ares.AppImage.home/.local/share/ares/settings.bml"

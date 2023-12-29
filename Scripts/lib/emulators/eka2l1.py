@@ -18,6 +18,10 @@ config_files = {}
 config_files["EKA2L1/windows/config.yml"] = ""
 config_files["EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1/config.yml"] = ""
 
+# System files
+system_files = {}
+system_files["data.zip"] = "e4c10430ddc600cdffff1fb348a6b0c3"
+
 # EKA2L1 emulator
 class EKA2L1(emulatorbase.EmulatorBase):
 
@@ -47,12 +51,6 @@ class EKA2L1(emulatorbase.EmulatorBase):
                     "windows": "EKA2L1/windows",
                     "linux": "EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1"
                 },
-                "setup_files": [
-                    {
-                        "file": "data.zip",
-                        "md5": "e4c10430ddc600cdffff1fb348a6b0c3"
-                    }
-                ],
                 "config_file": {
                     "windows": "EKA2L1/windows/config.yml",
                     "linux": "EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1/config.yml"

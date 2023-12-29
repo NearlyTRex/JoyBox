@@ -28,6 +28,17 @@ SaveFilePath=$GAME_SAVE_DIR
 config_files["melonDS/windows/melonDS.ini"] = config_file_general
 config_files["melonDS/linux/melonDS.AppImage.home/.config/melonDS/melonDS.ini"] = config_file_general
 
+# System files
+system_files = {}
+system_files["sysdata/nds_firmware_usa.bin"] = "10ec0b038afe62b6edf5d098615c8039"
+system_files["sysdata/dsi_arm7_usa.bin"] = "559dae4ea78eb9d67702c56c1d791e81"
+system_files["sysdata/dsi_arm9_usa.bin"] = "87b665fce118f76251271c3732532777"
+system_files["sysdata/nds_arm7_usa.bin"] = "df692a80a5b1bc90728bc3dfc76cd948"
+system_files["sysdata/dsi_firmware_usa.bin"] = "74f23348012d7b3e1cc216c47192ffeb"
+system_files["sysdata/nds_arm9_usa.bin"] = "a392174eb3e572fed6447e956bde4b25"
+system_files["nds_key_world.cfg"] = "c65df953c21897b85ebc8eefbba3c22f"
+system_files["nand/dsi_nand_usa.bin"] = "d9c875ded95daed312016f5c77f84db1"
+
 # MelonDS emulator
 class MelonDS(emulatorbase.EmulatorBase):
 
@@ -58,40 +69,6 @@ class MelonDS(emulatorbase.EmulatorBase):
                     "windows": "melonDS/windows",
                     "linux": "melonDS/linux/melonDS.AppImage.home/.config/melonDS"
                 },
-                "setup_files": [
-                    {
-                        "file": "sysdata/nds_firmware_usa.bin",
-                        "md5": "10ec0b038afe62b6edf5d098615c8039"
-                    },
-                    {
-                        "file": "sysdata/dsi_arm7_usa.bin",
-                        "md5": "559dae4ea78eb9d67702c56c1d791e81"
-                    },
-                    {
-                        "file": "sysdata/dsi_arm9_usa.bin",
-                        "md5": "87b665fce118f76251271c3732532777"
-                    },
-                    {
-                        "file": "sysdata/nds_arm7_usa.bin",
-                        "md5": "df692a80a5b1bc90728bc3dfc76cd948"
-                    },
-                    {
-                        "file": "sysdata/dsi_firmware_usa.bin",
-                        "md5": "74f23348012d7b3e1cc216c47192ffeb"
-                    },
-                    {
-                        "file": "sysdata/nds_arm9_usa.bin",
-                        "md5": "a392174eb3e572fed6447e956bde4b25"
-                    },
-                    {
-                        "file": "nds_key_world.cfg",
-                        "md5": "c65df953c21897b85ebc8eefbba3c22f"
-                    },
-                    {
-                        "file": "nand/dsi_nand_usa.bin",
-                        "md5": "d9c875ded95daed312016f5c77f84db1"
-                    }
-                ],
                 "config_file": {
                     "windows": "melonDS/windows/melonDS.ini",
                     "linux": "melonDS/linux/melonDS.AppImage.home/.config/melonDS/melonDS.ini"
