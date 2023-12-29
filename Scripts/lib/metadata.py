@@ -531,7 +531,7 @@ def CollectMetadata(
 
                     # Write metadata back to file
                     metadata_obj.set_game(game_platform, game_name, game_entry)
-                    metadata_obj.export_to_metadata_file(file, metadata_type)
+                    metadata_obj.export_to_metadata_file(file)
 
     # Cleanup web driver
     webpage.DestroyWebDriver(web_driver)
