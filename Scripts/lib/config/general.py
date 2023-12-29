@@ -39,6 +39,7 @@ token_game_name = "$GAME_NAME"
 token_game_file = "$GAME_FILE"
 token_game_dir = "$GAME_DIR"
 token_game_save_dir = "$GAME_SAVE_DIR"
+token_python_bin = "$PYTHON_BIN"
 token_command_split = "@=^=@"
 token_glob = "*"
 tokens_disc = [
