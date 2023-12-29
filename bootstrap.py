@@ -1,9 +1,22 @@
+#!/usr/bin/env python3
+
 # Imports
 import os
 import sys
 import subprocess
 import shutil
 import configparser
+
+###########################################################
+# Utility
+###########################################################
+
+# Prompt for value
+def PromptForValue(description, default_value):
+    value = input(">>> %s [default: %s]: " % (description, default_value))
+    if len(value) == 0:
+        return default_value
+    return value
 
 ###########################################################
 # Ini
@@ -14,27 +27,32 @@ ini_filename = "JoyBox.ini"
 ini_example_filename_windows = "JoyBox.windows.ini.example"
 ini_example_filename_linux = "JoyBox.linux.ini.example"
 
-# Create config
+# Create config parser
 config = configparser.ConfigParser()
-if sys.platform.startswith("win"):
-    config.read(ini_example_filename_windows)
-elif sys.platform.startswith("linux"):
-    config.read(ini_example_filename_linux)
 
-# Prompt for value
-def PromptForValue(description, default_value):
-    value = input(">>> %s [default: %s]: " % (description, default_value))
-    if len(value) == 0:
-        return default_value
-    return value
+# Check if ini already exists
+if os.path.isfile(ini_filename):
 
-# Create ini file
-print("Creating ini file...")
-for userdata_section in config.sections():
-    for userdata_key in config[userdata_section]:
-        config[userdata_section][userdata_key] = PromptForValue(userdata_key, config[userdata_section][userdata_key])
-with open(ini_filename, "w") as f:
-  config.write(f)
+    # Use existing data
+    print("Loading ini file...")
+    config.read(ini_filename)
+
+else:
+
+    # Read example data
+    print("Loading example ini file...")
+    if sys.platform.startswith("win"):
+        config.read(ini_example_filename_windows)
+    elif sys.platform.startswith("linux"):
+        config.read(ini_example_filename_linux)
+
+    # Create ini file
+    print("Creating ini file...")
+    for userdata_section in config.sections():
+        for userdata_key in config[userdata_section]:
+            config[userdata_section][userdata_key] = PromptForValue(userdata_key, config[userdata_section][userdata_key])
+    with open(ini_filename, "w") as f:
+        config.write(f)
 
 ###########################################################
 # Apt
