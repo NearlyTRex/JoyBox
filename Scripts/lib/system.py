@@ -137,19 +137,19 @@ def LogColoredWithHeader(message, header, color):
 
 # Log info
 def LogInfo(message):
-    LogColoredWithHeader(message, "INFO", "light_blue")
+    LogColoredWithHeader(str(message), "INFO", "light_blue")
 
 # Log warning
 def LogWarning(message):
-    LogColoredWithHeader(message, "WARNING", "yellow")
+    LogColoredWithHeader(str(message), "WARNING", "yellow")
 
 # Log error
 def LogError(message):
-    LogColoredWithHeader(message, "ERROR", "red")
+    LogColoredWithHeader(str(message), "ERROR", "red")
 
 # Log success
 def LogSuccess(message):
-    LogColoredWithHeader(message, "SUCCESS", "green")
+    LogColoredWithHeader(str(message), "SUCCESS", "green")
 
 ###########################################################
 
