@@ -878,12 +878,10 @@ class Computer(emulatorbase.EmulatorBase):
 
             # Launch game
             command.RunGameCommand(
-                category = launch_category,
-                subcategory = launch_subcategory,
-                name = launch_name,
+                game_info = game_info,
                 cmd = launch_info_cmd,
                 options = launch_info_options,
-                capture_type = launch_capture_type,
+                capture_type = capture_type,
                 verbose = verbose)
 
             # Move sandboxed data back
