@@ -265,7 +265,7 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Launch game
         emulatorcommon.SimpleLaunch(
-            json_data = json_data,
+            game_info = game_info,
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
