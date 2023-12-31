@@ -31,6 +31,7 @@ from . import rclone
 from . import sandboxie
 from . import sevenzip
 from . import sunshine
+from . import tar
 from . import threedsromtool
 from . import vkd3d
 from . import wad2bin
@@ -72,6 +73,7 @@ instances = [
     sandboxie.Sandboxie(),
     sevenzip.SevenZip(),
     sunshine.Sunshine(),
+    tar.Tar(),
     threedsromtool.ThreeDSRomTool(),
     vkd3d.VKD3D(),
     wad2bin.Wad2Bin(),
