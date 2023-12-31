@@ -72,6 +72,10 @@ sandboxie_sandbox_dir = %USERPROFILE%\Sandbox\%USERNAME%
 curl_exe = curl.exe
 curl_install_dir = C:\Windows\System32
 
+[Tools.Tar]
+tar_exe = tar.exe
+tar_install_dir = C:\Windows\System32
+
 [Tools.Git]
 git_exe = git.exe
 git_install_dir = %ProgramFiles%\Git\bin

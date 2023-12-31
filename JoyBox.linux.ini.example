@@ -72,6 +72,10 @@ wine_sandbox_dir = $HOME/Sandbox
 curl_exe = curl
 curl_install_dir = /usr/bin
 
+[Tools.Tar]
+tar_exe = tar
+tar_install_dir = /usr/bin
+
 [Tools.Git]
 git_exe = git
 git_install_dir = /usr/bin
