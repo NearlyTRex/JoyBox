@@ -64,10 +64,11 @@ class LGOGDownloader(toolbase.ToolBase):
             system.AssertCondition(success, "Could not setup LGOGDownloader")
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
-            success = system.TouchFile(
-                src = os.path.join(environment.GetToolsRootDir(), config_filename),
-                contents = config_contents.strip(),
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup LGOGDownloader config files")
+        if environment.IsLinuxPlatform():
+            for config_filename, config_contents in config_files.items():
+                success = system.TouchFile(
+                    src = os.path.join(environment.GetToolsRootDir(), config_filename),
+                    contents = config_contents.strip(),
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+                system.AssertCondition(success, "Could not setup LGOGDownloader config files")
