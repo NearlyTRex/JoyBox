@@ -201,34 +201,40 @@ def ExtractArchive(archive_file, extract_dir, skip_existing = False, delete_orig
 
     # Get tool
     archive_tool = None
-    if programs.IsToolInstalled("7-Zip"):
-        archive_tool = programs.GetToolProgram("7-Zip")
-    if not archive_tool:
-        system.LogError("7-Zip was not found")
-        return False
+    if IsTarballArchive(archive_file):
+        if programs.IsToolInstalled("Tar"):
+            archive_tool = programs.GetToolProgram("Tar")
+        if not archive_tool:
+            system.LogError("Tar was not found")
+            return False
+    else:
+        if programs.IsToolInstalled("7-Zip"):
+            archive_tool = programs.GetToolProgram("7-Zip")
+        if not archive_tool:
+            system.LogError("7-Zip was not found")
+            return False
 
     # Get extract command
-    extract_cmd = [
-        archive_tool,
-        "x",
-        archive_file,
-        "-o" + extract_dir,
-        "-bb3"
-    ]
-    if skip_existing:
-        extract_cmd += ["-aos"]
-    else:
-        extract_cmd += ["-aoa"]
-
-    # Update command for tarball archives
+    extract_cmd = []
     if IsTarballArchive(archive_file):
-        if environment.IsLinuxPlatform():
-            extract_cmd = [
-                "tar",
-                "xvf",
-                archive_file,
-                "-C", extract_dir
-            ]
+        extract_cmd = [
+            archive_tool,
+            "xvf",
+            archive_file,
+            "-C", extract_dir
+        ]
+    else:
+        extract_cmd = [
+            archive_tool,
+            "x",
+            archive_file,
+            "-o" + extract_dir,
+            "-bb3"
+        ]
+        if skip_existing:
+            extract_cmd += ["-aos"]
+        else:
+            extract_cmd += ["-aoa"]
 
     # Run extract command
     code = command.RunBlockingCommand(
