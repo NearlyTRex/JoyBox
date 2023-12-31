@@ -13,7 +13,7 @@ ini_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", ".."
 ini_file = os.path.join(ini_folder, "JoyBox.ini")
 
 # Ini file parser
-ini_parser = configparser.ConfigParser()
+ini_parser = configparser.ConfigParser(interpolation=None)
 
 # Check if ini is present
 def IsIniPresent():
