@@ -1,7 +1,7 @@
 [UserData.Dirs]
-local_cache_dir = %%USERPROFILE%%\Cache
+local_cache_dir = %USERPROFILE%\Cache
 remote_cache_dir = Y:\
-sync_dir = %%USERPROFILE%%\Sync
+sync_dir = %USERPROFILE%\Sync
 storage_dir = X:\
 scripts_dir = C:\Repositories\JoyBox\Scripts
 tools_dir = C:\Repositories\JoyBox\Tools
@@ -48,13 +48,13 @@ profile_account_name = yuzu
 
 [Tools.WinGet]
 winget_exe = winget.exe
-winget_install_dir = %%USERPROFILE%%\AppData\Local\Microsoft\WindowsApps
+winget_install_dir = %USERPROFILE%\AppData\Local\Microsoft\WindowsApps
 
 [Tools.Python]
 python_exe = python.exe
 python_pip_exe = pip.exe
 python_install_dir = C:\Python311
-python_venv_dir = %%USERPROFILE%%\.venv
+python_venv_dir = %USERPROFILE%\.venv
 
 [Tools.Perl]
 perl_exe = perl.exe
@@ -65,8 +65,8 @@ sandboxie_exe = Start.exe
 sandboxie_ini_exe = SbiIni.exe
 sandboxie_rpcss_exe = SandboxieRpcSs.exe
 sandboxie_dcomlaunch_exe = SandboxieDcomLaunch.exe
-sandboxie_install_dir = %%ProgramFiles%%\Sandboxie-Plus
-sandboxie_sandbox_dir = %%USERPROFILE%%\Sandbox\%%USERNAME%%
+sandboxie_install_dir = %ProgramFiles%\Sandboxie-Plus
+sandboxie_sandbox_dir = %USERPROFILE%\Sandbox\%USERNAME%
 
 [Tools.Curl]
 curl_exe = curl.exe
@@ -74,12 +74,12 @@ curl_install_dir = C:\Windows\System32
 
 [Tools.Git]
 git_exe = git.exe
-git_install_dir = %%ProgramFiles%%\Git\bin
+git_install_dir = %ProgramFiles%\Git\bin
 
 [Tools.7Zip]
 7z_exe = 7z.exe
-7z_install_dir = %%ProgramFiles%%\7-Zip
+7z_install_dir = %ProgramFiles%\7-Zip-Zstandard
 
 [Tools.Firefox]
 firefox_exe = firefox.exe
-firefox_install_dir = %%ProgramFiles%%\Mozilla Firefox
+firefox_install_dir = %ProgramFiles%\Mozilla Firefox
