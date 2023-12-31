@@ -37,9 +37,17 @@ def main():
     verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
     exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
+    # Get tool
+    dupes_tool = None
+    if programs.IsToolInstalled("Jdupes"):
+        dupes_tool = programs.GetToolProgram("Jdupes")
+    if not dupes_tool:
+        system.LogError("Jdupes was not found")
+        sys.exit(1)
+
     # Get list command
     list_cmd = [
-        programs.GetToolProgram("Jdupes"),
+        dupes_tool,
         "--recurse",
         "--print-summarize",
         "--size",

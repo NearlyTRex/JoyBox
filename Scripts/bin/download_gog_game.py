@@ -45,9 +45,17 @@ def main():
     verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
     exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
+    # Get tool
+    gog_tool = None
+    if programs.IsToolInstalled("LGOGDownloader"):
+        gog_tool = programs.GetToolProgram("LGOGDownloader")
+    if not gog_tool:
+        system.LogError("LGOGDownloader was not found")
+        sys.exit(1)
+
     # Get download command
     download_cmd = [
-        programs.GetToolProgram("LGOGDownloader"),
+        gog_tool,
         "--download",
         "--platform=%s" % args.platform,
         "--include=%s" % args.include,
