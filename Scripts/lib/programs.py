@@ -35,9 +35,7 @@ def GetPathConfigValue(program_config, base_dir, program_name, program_key, prog
     if program_path:
         if os.path.exists(program_path):
             return program_path
-        elif os.path.exists(os.path.join(base_dir, program_path)):
-            return os.path.join(base_dir, program_path)
-        return None
+        return os.path.join(base_dir, program_path)
     return None
 
 # Get program
