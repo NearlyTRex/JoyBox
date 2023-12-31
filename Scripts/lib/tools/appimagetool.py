@@ -60,18 +60,20 @@ class AppImageTool(toolbase.ToolBase):
             system.AssertCondition(success, "Could not setup AppImageTool")
 
         # Copy icon
-        success = system.CopyFileOrDirectory(
-            src = os.path.join(programs.GetLibraryInstallDir("AppIcons"), "128", "mimes", "application-x-executable-script.svg"),
-            dest = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        system.AssertCondition(success, "Could not copy AppImageTool icons")
-
-        # Create config files
-        for config_filename, config_contents in config_files.items():
-            success = system.TouchFile(
-                src = os.path.join(environment.GetToolsRootDir(), config_filename),
-                contents = config_contents.strip(),
+        if environment.IsLinuxPlatform():
+            success = system.CopyFileOrDirectory(
+                src = os.path.join(programs.GetLibraryInstallDir("AppIcons"), "128", "mimes", "application-x-executable-script.svg"),
+                dest = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not create AppImageTool config files")
+            system.AssertCondition(success, "Could not copy AppImageTool icons")
+
+        # Create config files
+        if environment.IsLinuxPlatform():
+            for config_filename, config_contents in config_files.items():
+                success = system.TouchFile(
+                    src = os.path.join(environment.GetToolsRootDir(), config_filename),
+                    contents = config_contents.strip(),
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+                system.AssertCondition(success, "Could not create AppImageTool config files")
