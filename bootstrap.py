@@ -28,7 +28,7 @@ ini_example_filename_windows = "JoyBox.windows.ini.example"
 ini_example_filename_linux = "JoyBox.linux.ini.example"
 
 # Create config parser
-config = configparser.ConfigParser()
+config = configparser.ConfigParser(interpolation=None)
 
 # Check if ini already exists
 if os.path.isfile(ini_filename):
@@ -253,7 +253,7 @@ winget_packages = [
 
 # Install winget packages
 if winget_tool and os.path.isfile(winget_tool):
-    for winget_package in config.winget_packages:
+    for winget_package in winget_packages:
         subprocess.run([winget_tool, "install", "-e", "--id", winget_package])
 
 ###########################################################
