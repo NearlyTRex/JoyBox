@@ -9,6 +9,7 @@ import environment
 import system
 import network
 import programs
+import hashing
 import gui
 import emulatorcommon
 import emulatorbase
@@ -121,15 +122,24 @@ class MGBA(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup mGBA config files")
 
-        # Copy setup files
-        for platform in ["windows", "linux"]:
-            success = system.CopyContents(
-                src = environment.GetSyncedGameEmulatorSetupDir("mGBA"),
-                dest = programs.GetEmulatorPathConfigValue("mGBA", "setup_dir", platform),
-                skip_existing = True,
+        # Verify system files
+        for filename, expected_md5 in system_files.items():
+            actual_md5 = hashing.CalculateFileMD5(
+                filename = os.path.join(environment.GetSyncedGameEmulatorSetupDir("mGBA"), filename),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup mGBA system files")
+            success = (expected_md5 == actual_md5)
+            system.AssertCondition(success, "Could not verify mGBA system file %s" % filename)
+
+        # Copy system files
+        for filename in system_files.keys():
+            for platform in ["windows", "linux"]:
+                success = system.CopyFileOrDirectory(
+                    src = os.path.join(environment.GetSyncedGameEmulatorSetupDir("mGBA"), filename),
+                    dest = os.path.join(programs.GetEmulatorPathConfigValue("mGBA", "setup_dir", platform), filename),
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+                system.AssertCondition(success, "Could not setup mGBA system files")
 
     # Launch
     def Launch(

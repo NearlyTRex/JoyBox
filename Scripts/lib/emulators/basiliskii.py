@@ -8,6 +8,7 @@ import environment
 import system
 import network
 import programs
+import hashing
 import gui
 import emulatorcommon
 import emulatorbase
@@ -67,7 +68,7 @@ config_files["BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs
 
 # System files
 system_files = {}
-system_files["bios/quadra.rom"] = "69489153dde910a69d5ae6de5dd65323"
+system_files["quadra.rom"] = "69489153dde910a69d5ae6de5dd65323"
 
 # BasiliskII emulator
 class BasiliskII(emulatorbase.EmulatorBase):
@@ -147,14 +148,24 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BasiliskII config files")
 
-        # Copy setup files
-        for platform in ["windows", "linux"]:
-            success = system.CopyContents(
-                src = os.path.join(environment.GetSyncedGameEmulatorSetupDir("BasiliskII"), "bios"),
-                dest = programs.GetEmulatorPathConfigValue("BasiliskII", "setup_dir", platform),
+        # Verify system files
+        for filename, expected_md5 in system_files.items():
+            actual_md5 = hashing.CalculateFileMD5(
+                filename = os.path.join(environment.GetSyncedGameEmulatorSetupDir("BasiliskII"), filename),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup BasiliskII system files")
+            success = (expected_md5 == actual_md5)
+            system.AssertCondition(success, "Could not verify BasiliskII system file %s" % filename)
+
+        # Copy system files
+        for filename in system_files.keys():
+            for platform in ["windows", "linux"]:
+                success = system.CopyFileOrDirectory(
+                    src = os.path.join(environment.GetSyncedGameEmulatorSetupDir("BasiliskII"), filename),
+                    dest = os.path.join(programs.GetEmulatorPathConfigValue("BasiliskII", "setup_dir", platform), filename),
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+                system.AssertCondition(success, "Could not setup BasiliskII system files")
 
     # Launch
     def Launch(
