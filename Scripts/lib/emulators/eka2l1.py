@@ -8,6 +8,7 @@ import environment
 import system
 import network
 import programs
+import hashing
 import archive
 import gui
 import emulatorcommon
@@ -104,7 +105,16 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup EKA2L1 config files")
 
-        # Extract setup files
+        # Verify system files
+        for filename, expected_md5 in system_files.items():
+            actual_md5 = hashing.CalculateFileMD5(
+                filename = os.path.join(environment.GetSyncedGameEmulatorSetupDir("EKA2L1"), filename),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            success = (expected_md5 == actual_md5)
+            system.AssertCondition(success, "Could not verify EKA2L1 system file %s" % filename)
+
+        # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["data"]:
                 if os.path.exists(os.path.join(environment.GetSyncedGameEmulatorSetupDir("EKA2L1"), obj + ".zip")):
@@ -114,7 +124,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
                         skip_existing = True,
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
-                    system.AssertCondition(success, "Could not setup EKA2L1 system files")
+                    system.AssertCondition(success, "Could not extract EKA2L1 system files")
 
     # Launch
     def Launch(

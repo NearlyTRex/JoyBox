@@ -9,6 +9,7 @@ import environment
 import system
 import network
 import programs
+import hashing
 import archive
 import gui
 import emulatorcommon
@@ -117,7 +118,16 @@ class Vita3K(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Vita3K config files")
 
-        # Extract setup files
+        # Verify system files
+        for filename, expected_md5 in system_files.items():
+            actual_md5 = hashing.CalculateFileMD5(
+                filename = os.path.join(environment.GetSyncedGameEmulatorSetupDir("Vita3K"), filename),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            success = (expected_md5 == actual_md5)
+            system.AssertCondition(success, "Could not verify Vita3K system file %s" % filename)
+
+        # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["os0", "sa0", "vs0"]:
                 if os.path.exists(os.path.join(environment.GetSyncedGameEmulatorSetupDir("Vita3K"), obj + ".zip")):
@@ -127,7 +137,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                         skip_existing = True,
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
-                    system.AssertCondition(success, "Could not setup Vita3K system files")
+                    system.AssertCondition(success, "Could not extract Vita3K system files")
 
     # Launch
     def Launch(

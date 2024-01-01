@@ -8,6 +8,7 @@ import environment
 import system
 import network
 import programs
+import hashing
 import archive
 import nintendo
 import gui
@@ -130,7 +131,16 @@ class Citra(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Citra config files")
 
-        # Extract setup files
+        # Verify system files
+        for filename, expected_md5 in system_files.items():
+            actual_md5 = hashing.CalculateFileMD5(
+                filename = os.path.join(environment.GetSyncedGameEmulatorSetupDir("Citra"), filename),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            success = (expected_md5 == actual_md5)
+            system.AssertCondition(success, "Could not verify Citra system file %s" % filename)
+
+        # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["nand", "sysdata"]:
                 if os.path.exists(os.path.join(environment.GetSyncedGameEmulatorSetupDir("Citra"), obj + ".zip")):
@@ -140,7 +150,7 @@ class Citra(emulatorbase.EmulatorBase):
                         skip_existing = True,
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
-                    system.AssertCondition(success, "Could not setup Citra system files")
+                    system.AssertCondition(success, "Could not extract Citra system files")
 
     # Launch
     def Launch(

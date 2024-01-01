@@ -8,6 +8,7 @@ import environment
 import system
 import network
 import programs
+import hashing
 import archive
 import nintendo
 import gui
@@ -134,7 +135,16 @@ class Dolphin(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Dolphin config files")
 
-        # Extract setup files
+        # Verify system files
+        for filename, expected_md5 in system_files.items():
+            actual_md5 = hashing.CalculateFileMD5(
+                filename = os.path.join(environment.GetSyncedGameEmulatorSetupDir("Dolphin"), filename),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            success = (expected_md5 == actual_md5)
+            system.AssertCondition(success, "Could not verify Dolphin system file %s" % filename)
+
+        # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["Wii"]:
                 if os.path.exists(os.path.join(environment.GetSyncedGameEmulatorSetupDir("Dolphin"), obj + ".zip")):
@@ -144,7 +154,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                         skip_existing = True,
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
-                    system.AssertCondition(success, "Could not setup Dolphin system files")
+                    system.AssertCondition(success, "Could not extract Dolphin system files")
 
     # Launch
     def Launch(

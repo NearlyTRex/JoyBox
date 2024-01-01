@@ -10,6 +10,7 @@ import environment
 import system
 import network
 import programs
+import hashing
 import archive
 import gui
 import emulatorcommon
@@ -107,7 +108,16 @@ class RPCS3(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RPCS3 config files")
 
-        # Extract setup files
+        # Verify system files
+        for filename, expected_md5 in system_files.items():
+            actual_md5 = hashing.CalculateFileMD5(
+                filename = os.path.join(environment.GetSyncedGameEmulatorSetupDir("RPCS3"), filename),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            success = (expected_md5 == actual_md5)
+            system.AssertCondition(success, "Could not verify RPCS3 system file %s" % filename)
+
+        # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["dev_flash"]:
                 if os.path.exists(os.path.join(environment.GetSyncedGameEmulatorSetupDir("RPCS3"), obj + ".zip")):
@@ -117,7 +127,7 @@ class RPCS3(emulatorbase.EmulatorBase):
                         skip_existing = True,
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
-                    system.AssertCondition(success, "Could not setup RPCS3 system files")
+                    system.AssertCondition(success, "Could not extract RPCS3 system files")
 
     # Launch
     def Launch(
