@@ -346,10 +346,11 @@ class Metadata:
         file_mode = "a" if append_existing else "w"
         with open(pegasus_file, file_mode, encoding="utf8", newline="\n") as file:
             for game_platform in self.get_sorted_platforms():
+                game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
 
                 # Write header
                 file.write("collection: %s\n" % game_platform)
-                file.write("launch: launch_json {file.path}\n")
+                file.write("launch: {env.JOYBOX_LAUNCH_JSON} -c \"%s\" -s \"%s\" -n {file.basename}\n" % (game_category, game_subcategory))
                 file.write("\n\n")
 
                 # Write each entry
