@@ -9,6 +9,11 @@ import network
 import programs
 import toolbase
 
+# Config files
+config_files = {}
+config_files["Sunshine/windows/config/sunshine.conf"] = ""
+config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/sunshine.conf"] = ""
+
 # Sunshine tool
 class Sunshine(toolbase.ToolBase):
 
@@ -62,3 +67,12 @@ class Sunshine(toolbase.ToolBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Sunshine")
+
+        # Create config files
+        for config_filename, config_contents in config_files.items():
+            success = system.TouchFile(
+                src = os.path.join(environment.GetToolsRootDir(), config_filename),
+                contents = config_contents.strip(),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Sunshine config files")

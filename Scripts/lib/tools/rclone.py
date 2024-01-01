@@ -9,6 +9,9 @@ import network
 import programs
 import toolbase
 
+# Config files
+config_files = {}
+
 # RClone tool
 class RClone(toolbase.ToolBase):
 

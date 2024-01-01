@@ -7,6 +7,9 @@ import environment
 import ini
 import toolbase
 
+# Config files
+config_files = {}
+
 # Sandboxie tool
 class Sandboxie(toolbase.ToolBase):
 

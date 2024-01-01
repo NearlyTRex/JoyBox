@@ -10,6 +10,9 @@ import programs
 import environment
 import toolbase
 
+# Config files
+config_files = {}
+
 # Get 32-bit libs
 def GetLibs32():
     lib_files = []

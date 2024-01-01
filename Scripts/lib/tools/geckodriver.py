@@ -9,6 +9,9 @@ import network
 import programs
 import toolbase
 
+# Config files
+config_files = {}
+
 # GeckoDriver tool
 class GeckoDriver(toolbase.ToolBase):
 

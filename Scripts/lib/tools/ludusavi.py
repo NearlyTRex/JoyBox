@@ -10,7 +10,7 @@ import programs
 import environment
 import toolbase
 
-# Config file
+# Config files
 config_files = {}
 config_files["Ludusavi/windows/ludusavi.portable"] = ""
 config_files["Ludusavi/windows/config.yaml"] = """

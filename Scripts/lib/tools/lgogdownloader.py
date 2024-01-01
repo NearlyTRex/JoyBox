@@ -10,7 +10,7 @@ import network
 import programs
 import toolbase
 
-# Config file
+# Config files
 config_files = {}
 config_files["LGOGDownloader/linux/LGOGDownloader.AppImage.home/.config/lgogdownloader/config.cfg"] = ""
 

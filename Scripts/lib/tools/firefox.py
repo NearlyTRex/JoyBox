@@ -6,6 +6,9 @@ import sys
 import ini
 import toolbase
 
+# Config files
+config_files = {}
+
 # Firefox tool
 class Firefox(toolbase.ToolBase):
 

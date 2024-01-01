@@ -9,6 +9,9 @@ import network
 import programs
 import toolbase
 
+# Config files
+config_files = {}
+
 # Wad2Bin tool
 class Wad2Bin(toolbase.ToolBase):
 

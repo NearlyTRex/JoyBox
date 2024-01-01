@@ -9,6 +9,9 @@ import network
 import programs
 import toolbase
 
+# Config files
+config_files = {}
+
 # PS3Dec tool
 class PS3Dec(toolbase.ToolBase):
 

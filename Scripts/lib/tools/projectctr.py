@@ -9,6 +9,9 @@ import network
 import programs
 import toolbase
 
+# Config files
+config_files = {}
+
 # ProjectCTR tool
 class ProjectCTR(toolbase.ToolBase):
 

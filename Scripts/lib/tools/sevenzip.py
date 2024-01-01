@@ -6,6 +6,9 @@ import sys
 import ini
 import toolbase
 
+# Config files
+config_files = {}
+
 # 7-Zip tool
 class SevenZip(toolbase.ToolBase):
 

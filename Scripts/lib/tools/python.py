@@ -10,6 +10,9 @@ import environment
 import programs
 import toolbase
 
+# Config files
+config_files = {}
+
 # Wrapper scripts
 wrapper_script_windows = """
 @echo off

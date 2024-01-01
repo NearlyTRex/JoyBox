@@ -9,6 +9,9 @@ import network
 import programs
 import toolbase
 
+# Config files
+config_files = {}
+
 # ThreeDSRomTool tool
 class ThreeDSRomTool(toolbase.ToolBase):
 

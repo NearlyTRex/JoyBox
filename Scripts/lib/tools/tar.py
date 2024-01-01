@@ -6,6 +6,9 @@ import sys
 import ini
 import toolbase
 
+# Config files
+config_files = {}
+
 # Tar tool
 class Tar(toolbase.ToolBase):
 

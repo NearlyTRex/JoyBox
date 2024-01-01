@@ -9,6 +9,9 @@ import network
 import programs
 import toolbase
 
+# Config files
+config_files = {}
+
 # ExtractXIso tool
 class ExtractXIso(toolbase.ToolBase):
 

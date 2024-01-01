@@ -6,6 +6,9 @@ import sys
 import ini
 import toolbase
 
+# Config files
+config_files = {}
+
 # Git tool
 class Git(toolbase.ToolBase):
 

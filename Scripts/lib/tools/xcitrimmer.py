@@ -9,6 +9,9 @@ import network
 import programs
 import toolbase
 
+# Config files
+config_files = {}
+
 # XCITrimmer tool
 class XCITrimmer(toolbase.ToolBase):
 

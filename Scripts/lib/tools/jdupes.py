@@ -9,6 +9,9 @@ import network
 import programs
 import toolbase
 
+# Config files
+config_files = {}
+
 # Jdupes tool
 class Jdupes(toolbase.ToolBase):
 
