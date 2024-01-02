@@ -17,7 +17,7 @@ def ReadPlaylist(input_file, verbose = False, exit_on_failure = False):
             system.Log("Reading playlist file %s" % input_file)
         playlist_contents = []
         with open(input_file, "r", encoding="utf8") as f:
-            playlist_contents = f.readlines():
+            playlist_contents = f.readlines()
         return playlist_contents
     except Exception as e:
         if exit_on_failure:
