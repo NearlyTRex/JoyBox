@@ -1180,6 +1180,13 @@ def RebaseFilePath(path, old_base_path, new_base_path):
     rebased_path = NormalizeFilePath(norm_path.replace(norm_old_base_path, norm_new_base_path))
     return rebased_path
 
+# Rebase file paths
+def RebaseFilePaths(paths, old_base_path, new_base_path):
+    rebased_paths = []
+    for path in paths:
+        rebased_paths.append(RebaseFilePath(path, old_base_path, new_base_path))
+    return rebased_paths
+
 ###########################################################
 
 # Get directory name
