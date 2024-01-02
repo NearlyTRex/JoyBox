@@ -10,7 +10,38 @@ import programs
 import system
 import environment
 
-# Generate playlist
+# Read playlist file
+def ReadPlaylist(input_file, verbose = False, exit_on_failure = False):
+    try:
+        if verbose:
+            system.Log("Reading playlist file %s" % input_file)
+        playlist_contents = []
+        with open(input_file, "r", encoding="utf8") as f:
+            playlist_contents = f.readlines():
+        return playlist_contents
+    except Exception as e:
+        if exit_on_failure:
+            system.LogError("Unable to read playlist file %s" % input_file)
+            system.LogError(e)
+            sys.exit(1)
+        return []
+
+# Write playlist file
+def WritePlaylist(output_file, playlist_contents = [], verbose = False, exit_on_failure = False):
+    try:
+        if verbose:
+            system.Log("Writing playlist file %s" % output_file)
+        with open(output_file, "w", encoding="utf8") as f:
+            f.writelines(playlist_contents)
+        return True
+    except Exception as e:
+        if exit_on_failure:
+            system.LogError("Unable to write playlist file %s" % output_file)
+            system.LogError(e)
+            sys.exit(1)
+        return False
+
+# Generate playlist file
 def GeneratePlaylist(source_dir, source_format, output_file, verbose = False, exit_on_failure = False):
 
     # Get tool
