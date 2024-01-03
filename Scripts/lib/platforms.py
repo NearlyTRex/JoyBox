@@ -35,7 +35,7 @@ def GetPlatformValue(platform_name, platform_value):
 
 # Check if transforms are required
 def AreTransformsRequired(platform_name):
-    return platform_name in config.transform_platforms:
+    return platform_name in config.transform_platforms
 
 ###########################################################
 
