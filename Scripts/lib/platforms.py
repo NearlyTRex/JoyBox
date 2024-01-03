@@ -33,17 +33,9 @@ def GetPlatformValue(platform_name, platform_value):
 
 ###########################################################
 
-# Get transform types
-def GetTransformTypes(platform_name):
-    return GetPlatformValue(platform_name, config.platform_key_transforms)
-
-# Check if platform has transform type
-def HasTransformType(platform_name, transform_type):
-    return transform_type in GetTransformTypes(platform_name)
-
 # Check if transforms are required
 def AreTransformsRequired(platform_name):
-    return len(GetTransformTypes(platform_name)) > 0
+    return platform_name in config.transform_platforms:
 
 ###########################################################
 

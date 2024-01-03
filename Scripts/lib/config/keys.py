@@ -6,7 +6,6 @@ import sys
 platform_key_supercategory = "supercategory"
 platform_key_category = "category"
 platform_key_subcategory = "subcategory"
-platform_key_transforms = "transforms"
 platform_key_addons = "addons"
 platform_key_launcher = "launcher"
 platform_key_autofill_json = "autofill_json"

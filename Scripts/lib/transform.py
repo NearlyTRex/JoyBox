@@ -30,7 +30,6 @@ def TransformComputerPrograms(
 
     # Get game info
     game_name = game_info.get_name()
-    game_platform = game_info.get_platform()
     game_category = game_info.get_category()
     game_subcategory = game_info.get_subcategory()
 
@@ -43,8 +42,25 @@ def TransformComputerPrograms(
     system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
     system.MakeDirectory(cached_install_dir, verbose = verbose, exit_on_failure = exit_on_failure)
 
-    # Convert EXE to install files
-    if platforms.HasTransformType(game_platform, config.transform_exe_to_install):
+    # Get pre-packaged archive
+    prepackaged_archive = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".7z.001")
+    if not os.path.exists(prepackaged_archive):
+        prepackaged_archive = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".exe")
+
+    # Pre-packaged archive
+    if os.path.isfile(prepackaged_archive):
+
+        # Extract file
+        success = archive.ExtractArchive(
+            archive_file = prepackaged_archive,
+            extract_dir = os.path.join(output_dir, gameinfo.DeriveRegularNameFromGameName(game_name)),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return (False, "Unable to extract game")
+
+    # Normal installer files
+    else:
 
         # Check for existing install image
         if not os.path.exists(cached_install_file):
@@ -78,25 +94,6 @@ def TransformComputerPrograms(
             exit_on_failure = exit_on_failure)
         if not success:
             return (False, "Unable to unpack install image")
-
-    # Convert EXE to plain files
-    elif platforms.HasTransformType(game_platform, config.transform_exe_to_raw_plain):
-
-        # Get extract file
-        extract_file = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".7z.001")
-        if not os.path.exists(extract_file):
-            extract_file = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".exe")
-            if not os.path.exists(extract_file):
-                return (False, "Unable to find corresponding extract file")
-
-        # Extract file
-        success = archive.ExtractArchive(
-            archive_file = extract_file,
-            extract_dir = os.path.join(output_dir, gameinfo.DeriveRegularNameFromGameName(game_name)),
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return (False, "Unable to extract game")
 
     # Touch index file
     success = system.TouchFile(
