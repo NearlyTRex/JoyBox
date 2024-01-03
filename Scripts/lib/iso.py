@@ -93,6 +93,14 @@ def ExtractISO(iso_file, extract_dir, delete_original = False, verbose = False, 
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
+    # Reset permissions on extracted files
+    system.ChmodFileOrDirectory(
+        src = extract_dir,
+        perms = 666,
+        dperms = 777,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
     # Clean up
     if delete_original:
         system.RemoveFile(iso_file)
