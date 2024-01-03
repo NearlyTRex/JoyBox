@@ -159,12 +159,14 @@ def CalculateFileXXH3(filename, chunksize = config.hash_chunk_size, verbose = Fa
         return ""
 
 # Calculate hash
-def CalculateHash(filename, original_base_path, new_base_path, verbose = False, exit_on_failure = False):
-    system.Log("Hashing file %s ..." % filename)
+def CalculateHash(filename, base_path, verbose = False, exit_on_failure = False):
+    fullpath = os.path.join(base_path, filename)
+    system.Log("Hashing file %s ..." % fullpath)
     hash_data = {}
-    hash_data["location"] = system.RebaseFilePath(filename, original_base_path, new_base_path)
-    hash_data["hash"] = CalculateFileXXH3(filename, verbose = verbose, exit_on_failure = exit_on_failure)
-    hash_data["size"] = os.path.getsize(filename)
+    hash_data["filename"] = filename
+    hash_data["hash"] = CalculateFileXXH3(fullpath, verbose = verbose, exit_on_failure = exit_on_failure)
+    hash_data["size"] = os.path.getsize(fullpath)
+    hash_data["mtime"] = int(os.path.getmtime(fullpath))
     return hash_data
 
 # Read hash file
@@ -176,13 +178,15 @@ def ReadHashFile(filename, verbose = False, exit_on_failure = False):
         with open(filename, "r", encoding="utf8") as f:
             for line in f.readlines():
                 tokens = line.strip().split(" || ")
-                if len(tokens) >= 3:
+                if len(tokens) >= 4:
                     file_location = tokens[0]
                     file_hash = tokens[1]
                     file_size = tokens[2]
+                    file_mtime = tokens[3]
                     file_entry = {}
                     file_entry["hash"] = file_hash
                     file_entry["size"] = file_size
+                    file_entry["mtime"] = file_mtime
                     hash_contents[file_location] = file_entry
         return hash_contents
     except Exception as e:
@@ -200,7 +204,12 @@ def WriteHashFile(filename, hash_contents, verbose = False, exit_on_failure = Fa
         with open(filename, "w", encoding="utf8") as f:
             for hash_key in sorted(hash_contents.keys()):
                 hash_data = hash_contents[hash_key]
-                f.write("%s || %s || %s\n" % (hash_key, hash_data["hash"], hash_data["size"]))
+                hash_replacements = (
+                    hash_key,
+                    hash_data["hash"],
+                    hash_data["size"],
+                    hash_data["mtime"])
+                f.write("%s || %s || %s || %s\n" % hash_replacements)
         return True
     except Exception as e:
         if exit_on_failure:
@@ -221,21 +230,40 @@ def SortHashFile(filename, verbose = False, exit_on_failure = False):
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-# Hash all files
-def HashAllFiles(input_path, base_path, output_file, verbose = False, exit_on_failure = False):
+# Check if file needs to be hashed
+def DoesFileNeedToBeHashed(input_file, base_path, hash_contents = {}):
+    if input_file not in hash_contents.keys():
+        return True
+    input_file_fullpath = os.path.join(base_path, input_file)
+    input_file_size = str(os.path.getsize(input_file_fullpath))
+    input_file_mtime = str(int(os.path.getmtime(input_file_fullpath)))
+    if input_file_size != hash_contents[input_file]["size"]:
+        return True
+    if input_file_mtime != hash_contents[input_file]["mtime"]:
+        return True
+    return False
 
-    # Get the hash data
+# Hash files
+def HashFiles(input_path, base_path, output_file, verbose = False, exit_on_failure = False):
+
+    # Get hash contents
     hash_contents = {}
+    if os.path.isfile(output_file):
+        hash_contents = ReadHashFile(output_file, verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Hash the files
     for file in system.BuildFileList(input_path):
         if os.path.realpath(file) == os.path.realpath(output_file):
             continue
-        hash_data = CalculateHash(
-            filename = file,
-            original_base_path = input_path,
-            new_base_path = base_path,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        hash_contents[hash_data["location"]] = hash_data
+        relative_file = system.RebaseFilePath(file, input_path, base_path)
+        relative_base = file.replace(relative_file, "")
+        if DoesFileNeedToBeHashed(relative_file, relative_base, hash_contents):
+            hash_data = CalculateHash(
+                filename = relative_file,
+                base_path = relative_base,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            hash_contents[hash_data["filename"]] = hash_data
 
     # Write hash file
     return WriteHashFile(
@@ -244,107 +272,14 @@ def HashAllFiles(input_path, base_path, output_file, verbose = False, exit_on_fa
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-# Hash new files
-def HashNewFiles(input_path, base_path, output_file, verbose = False, exit_on_failure = False):
-
-    # Read existing hash file
-    hash_contents = {}
-    if os.path.exists(output_file):
-        hash_contents = ReadHashFile(
-            filename = output_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-    # Check for new files
-    new_files = []
-    for file in system.BuildFileList(input_path):
-        if os.path.realpath(file) == os.path.realpath(output_file):
-            continue
-        rebased_file = system.RebaseFilePath(file, input_path, base_path)
-        if not rebased_file in hash_contents.keys():
-            new_files.append(file)
-
-    # Add the new hash data
-    for new_file in new_files:
-        hash_data = CalculateHash(
-            filename = new_file,
-            original_base_path = input_path,
-            new_base_path = base_path,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        hash_contents[hash_data["location"]] = hash_data
-
-    # Write updated hash file
-    return WriteHashFile(
-        filename = output_file,
-        hash_contents = hash_contents,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-
-# Hash custom files
-def HashCustomFiles(input_path, disc_name, file_supercategory, file_category, file_subcategory, all_files = True, verbose = False, exit_on_failure = False):
+# Hash category files
+def HashCategoryFiles(input_path, file_supercategory, file_category, file_subcategory, verbose = False, exit_on_failure = False):
 
     # Check required types
-    system.AssertIsString(input_path, "input_path")
-    system.AssertIsString(file_supercategory, "file_supercategory")
-    system.AssertIsString(file_category, "file_category")
-    if disc_name:
-        system.AssertIsString(disc_name, "disc_name")
-    else:
-        system.AssertIsString(file_subcategory, "file_subcategory")
-
-    # Ignore non-existent or empty input paths
-    if not os.path.exists(input_path) or system.IsDirectoryEmpty(input_path):
-        return False
-
-    # Get hash file
-    hash_file = ""
-    if disc_name:
-        hash_file = os.path.join(environment.GetDiscMetadataHashesDir(), file_supercategory, disc_name + ".txt")
-    else:
-        hash_file = os.path.join(environment.GetMainMetadataHashesDir(), file_supercategory, file_category, file_subcategory + ".txt")
-
-    # Make directories/files
-    system.MakeDirectory(
-        dir = system.GetFilenameDirectory(hash_file),
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-    system.TouchFile(
-        src = hash_file,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-
-    # Hash files
-    if all_files:
-        HashAllFiles(
-            input_path = input_path,
-            base_path = os.path.join(file_supercategory, file_category, file_subcategory),
-            output_file = hash_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-    else:
-        HashNewFiles(
-            input_path = input_path,
-            base_path = os.path.join(file_supercategory, file_category, file_subcategory),
-            output_file = hash_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-    # Sort hash file
-    return SortHashFile(hash_file, verbose = verbose, exit_on_failure = exit_on_failure)
-
-# Hash standard files
-def HashStandardFiles(input_path, file_supercategory, file_category, file_subcategory, all_files = True, verbose = False, exit_on_failure = False):
-
-    # Check required types
-    system.AssertIsString(input_path, "input_path")
+    system.AssertPathExists(input_path, "input_path")
     system.AssertIsString(file_supercategory, "file_supercategory")
     system.AssertIsString(file_category, "file_category")
     system.AssertIsString(file_subcategory, "file_subcategory")
-
-    # Ignore non-existent or empty input paths
-    if not os.path.exists(input_path) or system.IsDirectoryEmpty(input_path):
-        return False
 
     # Get hash file
     hash_file = os.path.join(environment.GetMainMetadataHashesDir(), file_supercategory, file_category, file_subcategory + ".txt")
@@ -360,20 +295,12 @@ def HashStandardFiles(input_path, file_supercategory, file_category, file_subcat
         exit_on_failure = exit_on_failure)
 
     # Hash files
-    if all_files:
-        HashAllFiles(
-            input_path = input_path,
-            base_path = os.path.join(file_supercategory, file_category, file_subcategory),
-            output_file = hash_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-    else:
-        HashNewFiles(
-            input_path = input_path,
-            base_path = os.path.join(file_supercategory, file_category, file_subcategory),
-            output_file = hash_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+    HashFiles(
+        input_path = input_path,
+        base_path = os.path.join(file_supercategory, file_category, file_subcategory),
+        output_file = hash_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
     # Sort hash file
     return SortHashFile(hash_file, verbose = verbose, exit_on_failure = exit_on_failure)

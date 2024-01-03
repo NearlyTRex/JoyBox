@@ -9,6 +9,7 @@ import argparse
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
+import system
 import environment
 import hashing
 import setup
@@ -16,7 +17,6 @@ import setup
 # Parse arguments
 parser = argparse.ArgumentParser(description="Generate file hashes.")
 parser.add_argument("-i", "--input_path", type=str, help="Input path")
-parser.add_argument("-d", "--disc_name", type=str, help="Disc name")
 parser.add_argument("-u", "--file_supercategory",
     choices=config.game_supercategories,
     default=config.game_supercategory_roms,
@@ -24,20 +24,19 @@ parser.add_argument("-u", "--file_supercategory",
 )
 parser.add_argument("-c", "--file_category", type=str, help="File category")
 parser.add_argument("-s", "--file_subcategory", type=str, help="File subcategory")
-parser.add_argument("-a", "--all_files", action="store_true", help="All files")
 parser.add_argument("-f", "--source_files",
     choices=[
         "input",
         "stored"
     ],
-    default="input", help="Source files"
+    default="stored", help="Source files"
 )
 parser.add_argument("-m", "--generation_mode",
     choices=[
         "custom",
         "standard"
     ],
-    default="custom", help="Generation mode"
+    default="standard", help="Generation mode"
 )
 args, unknown = parser.parse_known_args()
 
@@ -46,7 +45,7 @@ input_path = ""
 if args.input_path:
     input_path = os.path.realpath(args.input_path)
     if not os.path.exists(input_path):
-        print("Path '%s' does not exist" % args.input_path)
+        system.LogError("Path '%s' does not exist" % args.input_path)
         sys.exit(-1)
 
 # Main
@@ -65,51 +64,46 @@ def main():
     # Manually specify all parameters
     if args.generation_mode == "custom":
         if not args.file_category:
-            print("File category is required for custom mode")
+            system.LogError("File category is required for custom mode")
             sys.exit(-1)
         if not args.file_subcategory:
-            print("File subcategory is required for custom mode")
+            system.LogError("File subcategory is required for custom mode")
             sys.exit(-1)
-        hashing.HashCustomFiles(
+        hashing.HashCategoryFiles(
             input_path = source_file_root,
-            disc_name = args.disc_name,
             file_supercategory = args.file_supercategory,
             file_category = args.file_category,
-            file_subcategory = args.file_subcategory,
-            all_files = args.all_files)
+            file_subcategory = args.file_subcategory)
 
     # Automatic according to standard layout
     elif args.generation_mode == "standard":
 
         # Specific category/subcategory
         if args.file_category and args.file_subcategory:
-            hashing.HashStandardFiles(
+            hashing.HashCategoryFiles(
                 input_path = os.path.join(source_file_root, args.file_category, args.file_subcategory),
                 file_supercategory = args.file_supercategory,
                 file_category = args.file_category,
-                file_subcategory = args.file_subcategory,
-                all_files = args.all_files)
+                file_subcategory = args.file_subcategory)
 
         # Specific category/all subcategories in that category
         elif args.file_category:
             for file_subcategory in config.game_subcategories[args.file_category]:
-                hashing.HashStandardFiles(
+                hashing.HashCategoryFiles(
                     input_path = os.path.join(source_file_root, args.file_category, file_subcategory),
                     file_supercategory = args.file_supercategory,
                     file_category = args.file_category,
-                    file_subcategory = file_subcategory,
-                    all_files = args.all_files)
+                    file_subcategory = file_subcategory)
 
         # All categories/subcategories
         else:
             for file_category in config.game_categories:
                 for file_subcategory in config.game_subcategories[file_category]:
-                    hashing.HashStandardFiles(
+                    hashing.HashCategoryFiles(
                         input_path = os.path.join(source_file_root, file_category, file_subcategory),
                         file_supercategory = args.file_supercategory,
                         file_category = file_category,
-                        file_subcategory = file_subcategory,
-                        all_files = args.all_files)
+                        file_subcategory = file_subcategory)
 
 # Start
 main()
