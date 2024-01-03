@@ -17,7 +17,9 @@ def ReadPlaylist(input_file, verbose = False, exit_on_failure = False):
             system.Log("Reading playlist file %s" % input_file)
         playlist_contents = []
         with open(input_file, "r", encoding="utf8") as f:
-            playlist_contents = f.readlines()
+            playlist_contents = []
+            for line in f.readlines():
+                playlist_contents.append(line.strip())
         return playlist_contents
     except Exception as e:
         if exit_on_failure:
@@ -32,7 +34,8 @@ def WritePlaylist(output_file, playlist_contents = [], verbose = False, exit_on_
         if verbose:
             system.Log("Writing playlist file %s" % output_file)
         with open(output_file, "w", encoding="utf8") as f:
-            f.writelines(playlist_contents)
+            for entry in playlist_contents:
+                f.write(entry + "\n")
         return True
     except Exception as e:
         if exit_on_failure:
