@@ -368,7 +368,7 @@ def TouchFile(src, contents = "", contents_mode = "w", verbose = False, pretend_
         return False
 
 # Chmod file or directory
-def ChmodFileOrDirectory(src, perms, verbose = False, pretend_run = False, exit_on_failure = False):
+def ChmodFileOrDirectory(src, perms, dperms = None, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
             Log("Changing permissions of %s to %s" % (src, str(perms)))
@@ -380,7 +380,10 @@ def ChmodFileOrDirectory(src, perms, verbose = False, pretend_run = False, exit_
                     for f in files:
                         os.chmod(os.path.join(root, f), int(str(perms), base=8))
                     for d in dirs:
-                        os.chmod(os.path.join(root, d), int(str(perms), base=8))
+                        if dperms:
+                            os.chmod(os.path.join(root, d), int(str(dperms), base=8))
+                        else:
+                            os.chmod(os.path.join(root, d), int(str(perms), base=8))
         return True
     except Exception as e:
         if exit_on_failure:
