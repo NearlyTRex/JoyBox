@@ -11,10 +11,364 @@ import gameinfo
 import install
 import installer
 import archive
+import playlist
 import iso
 import chd
 import playstation
 import xbox
+
+###########################################################
+
+# Transform computer programs
+def TransformComputerPrograms(
+    game_info,
+    source_file,
+    output_dir,
+    keep_setup_files = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Get game info
+    game_name = game_info.get_name()
+    game_platform = game_info.get_platform()
+    game_category = game_info.get_category()
+    game_subcategory = game_info.get_subcategory()
+
+    # Get install paths
+    output_install_file = os.path.join(output_dir, game_name + ".install")
+    cached_install_dir = environment.GetInstallRomDir(game_category, game_subcategory, game_name)
+    cached_install_file = os.path.join(cached_install_dir, game_name + ".install")
+
+    # Make directories
+    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(cached_install_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Convert EXE to install files
+    if platforms.HasTransformType(game_platform, config.transform_exe_to_install):
+
+        # Check for existing install image
+        if not os.path.exists(cached_install_file):
+
+            # Create install image
+            success = installer.InstallComputerGame(
+                game_info = game_info,
+                output_image = output_install_file,
+                keep_setup_files = keep_setup_files,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return (False, "Unable to install computer game")
+
+            # Backup install image
+            success = system.TransferFile(
+                src = output_install_file,
+                dest = cached_install_file,
+                delete_afterwards = True,
+                show_progress = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return (False, "Unable to backup computer game install")
+
+        # Unpack install image
+        success = install.UnpackInstallImage(
+            input_image = cached_install_file,
+            output_dir = os.path.join(output_dir, gameinfo.DeriveRegularNameFromGameName(game_name)),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return (False, "Unable to unpack install image")
+
+    # Convert EXE to plain files
+    elif platforms.HasTransformType(game_platform, config.transform_exe_to_raw_plain):
+
+        # Get extract file
+        extract_file = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".7z.001")
+        if not os.path.exists(extract_file):
+            extract_file = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".exe")
+            if not os.path.exists(extract_file):
+                return (False, "Unable to find corresponding extract file")
+
+        # Extract file
+        success = archive.ExtractArchive(
+            archive_file = extract_file,
+            extract_dir = os.path.join(output_dir, gameinfo.DeriveRegularNameFromGameName(game_name)),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return (False, "Unable to extract game")
+
+    # Touch index file
+    success = system.TouchFile(
+        src = os.path.join(output_dir, config.raw_files_index),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return (False, "Unable to create raw index")
+
+    # Return output
+    return (True, os.path.join(output_dir, config.raw_files_index))
+
+###########################################################
+
+# Transform disc images
+def TransformDiscImage(
+    game_info,
+    source_file,
+    output_dir,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Make directories
+    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Get disc images
+    disc_image_files = []
+    if source_file.endswith(".chd"):
+        disc_image_files = [system.GetFilenameFile(source_file)]
+    if source_file.endswith(".m3u"):
+        disc_image_files = playlist.ReadPlaylist(source_file, verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Extract disc images
+    for disc_image_file in disc_image_files:
+        if disc_image_file.endswith(".chd"):
+            success = chd.ExtractDiscCHD(
+                chd_file = os.path.join(system.GetFilenameDirectory(source_file), disc_image_file),
+                binary_file = os.path.join(output_dir, system.GetFilenameBasename(disc_image_file) + ".iso"),
+                toc_file = os.path.join(output_dir, system.GetFilenameBasename(disc_image_file) + ".toc"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return (False, "Unable to extract disc images")
+
+    # Write playlist
+    if source_file.endswith(".m3u"):
+        playlist_contents = []
+        for disc_image_file in disc_image_files:
+            playlist_contents += [disc_image_file.replace(".chd", ".iso")]
+        success = playlist.WritePlaylist(
+            output_file = os.path.join(output_dir, system.GetFilenameBasename(source_file) + ".m3u"),
+            playlist_contents = playlist_contents,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return (False, "Unable to write playlist")
+
+    # Return output
+    if source_file.endswith(".chd"):
+        return (True, os.path.join(output_dir, system.GetFilenameBasename(source_file) + ".iso"))
+    elif source_file.endswith(".m3u"):
+        return (True, os.path.join(output_dir, system.GetFilenameBasename(source_file) + ".m3u"))
+
+    # No transformation was done
+    return (False, source_file)
+
+###########################################################
+
+# Transform Xbox disc image
+def TransformXboxDiscImage(
+    game_info,
+    source_file,
+    output_dir,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Make directories
+    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Get disc images
+    disc_image_files = []
+    if source_file.endswith(".iso"):
+        disc_image_files = [system.GetFilenameFile(source_file)]
+    if source_file.endswith(".m3u"):
+        disc_image_files = playlist.ReadPlaylist(source_file, verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Rewrite xbox disc images
+    for disc_image_file in disc_image_files:
+        if disc_image_file.endswith(".iso"):
+            success = xbox.RewriteXboxISO(
+                iso_file = os.path.join(system.GetFilenameDirectory(source_file), disc_image_file),
+                delete_original = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return (False, "Unable to rewrite xbox disc images")
+
+    # Return output
+    return (True, os.path.join(output_dir, system.GetFilenameFile(source_file)))
+
+###########################################################
+
+# Transform PS3 disc image
+def TransformPS3DiscImage(
+    game_info,
+    source_file,
+    output_dir,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Get game info
+    game_name = game_info.get_name()
+    game_source_dir = game_info.get_source_dir()
+
+    # Make directories
+    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Get dkey file
+    dkey_file = os.path.join(game_source_dir, game_name + ".dkey")
+    if not os.path.exists(dkey_file):
+        return (False, "Unable to find corresponding dkey file")
+
+    # Get disc images
+    disc_image_files = []
+    if source_file.endswith(".iso"):
+        disc_image_files = [system.GetFilenameFile(source_file)]
+    if source_file.endswith(".m3u"):
+        disc_image_files = playlist.ReadPlaylist(source_file, verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Extract disc images
+    for disc_image_file in disc_image_files:
+        if disc_image_file.endswith(".iso"):
+
+            # Extract ps3 disc image
+            success = playstation.ExtractPS3ISO(
+                iso_file = os.path.join(system.GetFilenameDirectory(source_file), disc_image_file),
+                dkey_file = dkey_file,
+                extract_dir = output_dir,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return (False, "Unable to extract ps3 disc images")
+
+            # Extract ps3 pkg files
+            for pkg_file in system.BuildFileListByExtensions(output_dir, extensions = [".PKG", ".pkg"]):
+                should_extract = False
+                if "PS3_GAME/PKGDIR" in pkg_file:
+                    should_extract = True
+                if "PS3_EXTRA" in pkg_file:
+                    should_extract = True
+                if should_extract:
+                    pkg_dir = system.GetFilenameDirectory(pkg_file)
+                    pkg_name = system.GetFilenameBasename(pkg_file)
+                    success = playstation.ExtractPSNPKG(
+                        pkg_file = pkg_file,
+                        extract_dir = os.path.join(pkg_dir, pkg_name),
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
+                    if not success:
+                        return (False, "Unable to extract ps3 pkg files")
+
+    # Touch index file
+    success = system.TouchFile(
+        src = os.path.join(output_dir, config.raw_files_index),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return (False, "Unable to create raw index")
+
+    # Return output
+    return (True, os.path.join(output_dir, config.raw_files_index))
+
+###########################################################
+
+# Transform PS3 network package
+def TransformPS3NetworkPackage(
+    game_info,
+    source_file,
+    output_dir,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Make directories
+    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Copy rap files
+    for obj in system.GetDirectoryContents(system.GetFilenameDirectory(source_file)):
+        if obj.endswith(".rap"):
+            rap_file = os.path.join(system.GetFilenameDirectory(source_file), obj)
+            pkg_file = os.path.join(system.GetFilenameDirectory(source_file), obj.replace(".rap", ".pkg"))
+            content_id = playstation.GetPSNPKGContentID(pkg_file)
+            if content_id:
+                success = system.CopyFileOrDirectory(
+                    src = rap_file,
+                    dest = os.path.join(output_dir, content_id + ".rap"),
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+                if not success:
+                    return (False, "Unable to copy rap files")
+
+    # Extract ps3 pkg files
+    for obj in system.GetDirectoryContents(system.GetFilenameDirectory(source_file)):
+        if obj.endswith(".pkg"):
+            pkg_file = os.path.join(system.GetFilenameDirectory(source_file), obj)
+            success = playstation.ExtractPSNPKG(
+                pkg_file = pkg_file,
+                extract_dir = output_dir,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return (False, "Unable to extract ps3 pkg files")
+
+    # Touch index file
+    success = system.TouchFile(
+        src = os.path.join(output_dir, config.raw_files_index),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return (False, "Unable to create raw index")
+
+    # Return output
+    return (True, os.path.join(output_dir, config.raw_files_index))
+
+###########################################################
+
+# Transform PSV network package
+def TransformPSVNetworkPackage(
+    game_info,
+    source_file,
+    output_dir,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Make directories
+    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Copy work.bin files
+    for obj in system.GetDirectoryContents(system.GetFilenameDirectory(source_file)):
+        if obj.endswith(".work.bin"):
+            work_bin_file = os.path.join(system.GetFilenameDirectory(source_file), obj)
+            success = system.CopyFileOrDirectory(
+                src = os.path.join(system.GetFilenameDirectory(source_file), obj),
+                dest = os.path.join(output_dir, "work.bin"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return (False, "Unable to copy work.bin files")
+
+    # Extract psv pkg files
+    for obj in system.GetDirectoryContents(system.GetFilenameDirectory(source_file)):
+        if obj.endswith(".pkg"):
+            pkg_file = os.path.join(system.GetFilenameDirectory(source_file), obj)
+            success = playstation.ExtractPSNPKG(
+                pkg_file = pkg_file,
+                extract_dir = output_dir,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return (False, "Unable to extract psv pkg files")
+
+    # Touch index file
+    success = system.TouchFile(
+        src = os.path.join(output_dir, config.raw_files_index),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return (False, "Unable to create raw index")
+
+    # Return output
+    return (True, os.path.join(output_dir, config.raw_files_index))
+
+###########################################################
 
 # Transform game file
 def TransformGameFile(
@@ -26,317 +380,110 @@ def TransformGameFile(
     exit_on_failure = False):
 
     # Get game info
-    game_name = game_info.get_name()
-    game_platform = game_info.get_platform()
-
-    # No transform needed
-    if not platforms.AreTransformsRequired(game_platform):
-        return (True, source_file)
+    game_category = game_info.get_category()
+    game_subcategory = game_info.get_subcategory()
 
     # Output dir doesn't exist
     if not os.path.isdir(output_dir):
         return (False, "Output directory doesn't exist")
-
-    # Flags
-    has_exe_to_install = platforms.HasTransformType(game_platform, config.transform_exe_to_install)
-    has_exe_to_raw_plain = platforms.HasTransformType(game_platform, config.transform_exe_to_raw_plain)
-    has_chd_to_iso = platforms.HasTransformType(game_platform, config.transform_chd_to_iso)
-    has_iso_to_xiso = platforms.HasTransformType(game_platform, config.transform_iso_to_xiso)
-    has_iso_to_raw_plain = platforms.HasTransformType(game_platform, config.transform_iso_to_raw_plain)
-    has_iso_to_raw_ps3 = platforms.HasTransformType(game_platform, config.transform_iso_to_raw_ps3)
-    has_pkg_to_raw_ps3 = platforms.HasTransformType(game_platform, config.transform_pkg_to_raw_ps3)
-    has_pkg_to_raw_psv = platforms.HasTransformType(game_platform, config.transform_pkg_to_raw_psv)
 
     # Create temporary directory
     tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
     if not tmp_dir_success:
         return (False, tmp_dir_result)
 
-    # Get game categories
-    game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
+    # Transform result
+    transform_success = False
+    transform_result = ""
 
-    # Get game file info
-    iso_tmp_dir = os.path.join(tmp_dir_result, "iso")
-    install_tmp_dir = os.path.join(tmp_dir_result, "install")
-    raw_tmp_dir = os.path.join(tmp_dir_result, "raw")
-    cached_install_dir = environment.GetInstallRomDir(game_category, game_subcategory, game_name)
-    cached_install_file = os.path.join(cached_install_dir, game_name + ".install")
-    source_game_file_dir = system.GetFilenameDirectory(source_file)
-    source_game_file_basename = system.GetFilenameBasename(source_file)
-    source_game_file_ext = system.GetFilenameExtension(source_file)
-    tmp_iso_bin_file = os.path.join(iso_tmp_dir, source_game_file_basename + ".iso")
-    tmp_iso_toc_file = os.path.join(iso_tmp_dir, source_game_file_basename + ".toc")
-    tmp_install_file = os.path.join(install_tmp_dir, source_game_file_basename + ".install")
-    tmp_raw_file_index = os.path.join(raw_tmp_dir, config.raw_files_index)
-    transformed_game_output = ""
-
-    # Make directories
-    system.MakeDirectory(iso_tmp_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-    system.MakeDirectory(install_tmp_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-    system.MakeDirectory(raw_tmp_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-
-    ######################################################
-    # Phase 1: Convert to iso files
-    ######################################################
-
-    # Convert CHD to ISO
-    if has_chd_to_iso:
-
-        # Extract CHD
-        chd.ExtractDiscCHD(
-            chd_file = source_file,
-            binary_file = tmp_iso_bin_file,
-            toc_file = tmp_iso_toc_file,
+    # Computer
+    if game_category == config.game_category_computer:
+        transform_success, transform_result = TransformComputerPrograms(
+            game_info = game_info,
+            source_file = source_file,
+            output_dir = tmp_dir_result,
+            keep_setup_files = keep_setup_files,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if not transform_success:
+            return (False, transform_result)
 
-        # Set transformed output
-        transformed_game_output = tmp_iso_bin_file
-
-    ######################################################
-    # Phase 2: Convert/extract iso files
-    ######################################################
-
-    # Convert ISO to XISO
-    if has_chd_to_iso and has_iso_to_xiso and os.path.exists(tmp_iso_bin_file):
-
-        # Rewrite ISO
-        xbox.RewriteXboxISO(
-            iso_file = tmp_iso_bin_file,
-            delete_original = True,
+    # Microsoft Xbox/Xbox 360
+    elif game_subcategory in [config.game_subcategory_microsoft_xbox, config.game_subcategory_microsoft_xbox_360]:
+        iso_success, iso_result = TransformDiscImage(
+            game_info = game_info,
+            source_file = source_file,
+            output_dir = tmp_dir_result,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-
-        # Set transformed output
-        transformed_game_output = tmp_iso_bin_file
-
-    # Convert ISO to PS3 raw files
-    elif has_chd_to_iso and has_iso_to_raw_ps3 and os.path.exists(tmp_iso_bin_file):
-
-        # Get dkey file
-        dkey_file = os.path.join(source_game_file_dir, source_game_file_basename + ".dkey")
-        if not os.path.exists(dkey_file):
-            return (False, "Unable to find corresponding dkey file")
-
-        # Extract ISO
-        playstation.ExtractPS3ISO(
-            iso_file = tmp_iso_bin_file,
-            dkey_file = dkey_file,
-            extract_dir = raw_tmp_dir,
+        if not iso_success:
+            return (False, iso_result)
+        transform_success, transform_result = TransformXboxDiscImage(
+            game_info = game_info,
+            source_file = iso_result,
+            output_dir = tmp_dir_result,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if not transform_success:
+            return (False, transform_result)
 
-        # Extract pkg files
-        for pkg_file in system.BuildFileListByExtensions(raw_tmp_dir, extensions = [".PKG"]):
-            should_extract = False
-            if "PS3_GAME/PKGDIR" in pkg_file:
-                should_extract = True
-            if "PS3_EXTRA" in pkg_file:
-                should_extract = True
-            if should_extract:
-                pkg_dir = system.GetFilenameDirectory(pkg_file)
-                pkg_name = system.GetFilenameBasename(pkg_file)
-                playstation.ExtractPSNPKG(
-                    pkg_file = pkg_file,
-                    extract_dir = os.path.join(pkg_dir, pkg_name),
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
-
-        # Touch index file
-        system.TouchFile(
-            src = tmp_raw_file_index,
+    # Sony PlayStation 3
+    elif game_subcategory == config.game_subcategory_sony_playstation_3:
+        iso_success, iso_result = TransformDiscImage(
+            game_info = game_info,
+            source_file = source_file,
+            output_dir = os.path.join(tmp_dir_result, "iso"),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-
-        # Set transformed output
-        transformed_game_output = tmp_raw_file_index
-
-    # Convert ISO to raw files
-    elif has_chd_to_iso and has_iso_to_raw_plain and os.path.exists(tmp_iso_bin_file):
-
-        # Extract ISO
-        iso.ExtractISO(
-            iso_file = tmp_iso_bin_file,
-            extract_dir = raw_tmp_dir,
+        if not iso_success:
+            return (False, iso_result)
+        transform_success, transform_result = TransformPS3DiscImage(
+            game_info = game_info,
+            source_file = iso_result,
+            output_dir = os.path.join(tmp_dir_result, "output"),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if not transform_success:
+            return (False, transform_result)
 
-        # Touch index file
-        system.TouchFile(
-            src = tmp_raw_file_index,
+    # Sony PlayStation Network - PlayStation 3
+    elif game_subcategory == config.game_subcategory_sony_playstation_network_ps3:
+        transform_success, transform_result = TransformPS3NetworkPackage(
+            game_info = game_info,
+            source_file = source_file,
+            output_dir = tmp_dir_result,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if not transform_success:
+            return (False, transform_result)
 
-        # Set transformed output
-        transformed_game_output = tmp_raw_file_index
-
-    ######################################################
-    # Phase 3: Extract pkg files
-    ######################################################
-
-    # Convert PS3 PKG to raw PS3 files
-    if has_pkg_to_raw_ps3:
-
-        # Copy rap files
-        for obj in system.GetDirectoryContents(source_game_file_dir):
-            if obj.endswith(".rap"):
-                rap_file = os.path.join(source_game_file_dir, obj)
-                pkg_file = os.path.join(source_game_file_dir, obj.replace(".rap", ".pkg"))
-                content_id = playstation.GetPSNPKGContentID(pkg_file)
-                system.CopyFileOrDirectory(
-                    src = rap_file,
-                    dest = os.path.join(raw_tmp_dir, content_id + ".rap"),
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
-
-        # Extract pkg files
-        for obj in system.GetDirectoryContents(source_game_file_dir):
-            if obj.endswith(".pkg"):
-                pkg_file = os.path.join(source_game_file_dir, obj)
-                playstation.ExtractPSNPKG(
-                    pkg_file = pkg_file,
-                    extract_dir = raw_tmp_dir,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
-
-        # Touch index file
-        system.TouchFile(
-            src = tmp_raw_file_index,
+    # Sony PlayStation Network - PlayStation Vita
+    elif game_subcategory == config.game_subcategory_sony_playstation_network_psv:
+        transform_success, transform_result = TransformPSVNetworkPackage(
+            game_info = game_info,
+            source_file = source_file,
+            output_dir = tmp_dir_result,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-
-        # Set transformed output
-        transformed_game_output = tmp_raw_file_index
-
-    # Convert PSV PKG to raw PSV files
-    elif has_pkg_to_raw_psv:
-
-        # Copy work.bin files
-        for obj in system.GetDirectoryContents(source_game_file_dir):
-            if obj.endswith(".work.bin"):
-                work_bin_file = os.path.join(source_game_file_dir, obj)
-                system.CopyFileOrDirectory(
-                    src = os.path.join(source_game_file_dir, obj),
-                    dest = os.path.join(raw_tmp_dir, "work.bin"),
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
-
-        # Extract pkg files
-        for obj in system.GetDirectoryContents(source_game_file_dir):
-            if obj.endswith(".pkg"):
-                pkg_file = os.path.join(source_game_file_dir, obj)
-                playstation.ExtractPSNPKG(
-                    pkg_file = pkg_file,
-                    extract_dir = raw_tmp_dir,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
-
-        # Touch index file
-        system.TouchFile(
-            src = tmp_raw_file_index,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-        # Set transformed output
-        transformed_game_output = tmp_raw_file_index
-
-    ######################################################
-    # Phase 4: Install and/or extract exe files
-    ######################################################
-
-    # Convert EXE to install files
-    if has_exe_to_install:
-
-        # Check for existing install image
-        if not os.path.exists(cached_install_file):
-
-            # Create install image
-            success = installer.InstallComputerGame(
-                game_info = game_info,
-                output_image = tmp_install_file,
-                keep_setup_files = keep_setup_files,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return (False, "Unable to install computer game")
-
-            # Create install dir
-            system.MakeDirectory(
-                dir = cached_install_dir,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-
-            # Backup install image
-            system.CopyFileOrDirectory(
-                src = tmp_install_file,
-                dest = cached_install_file,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-
-        # Unpack install image
-        success = install.UnpackInstallImage(
-            input_image = cached_install_file,
-            output_dir = raw_tmp_dir,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return (False, "Unable to unpack install image")
-
-        # Touch index file
-        system.TouchFile(
-            src = tmp_raw_file_index,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-        # Set transformed output
-        transformed_game_output = tmp_raw_file_index
-
-    # Convert EXE to plain files
-    elif has_exe_to_raw_plain:
-
-        # Get extract file
-        extract_file = os.path.join(source_game_file_dir, source_game_file_basename + ".7z.001")
-        if not os.path.exists(extract_file):
-            extract_file = os.path.join(source_game_file_dir, source_game_file_basename + ".exe")
-            if not os.path.exists(extract_file):
-                return (False, "Unable to find corresponding extract file")
-
-        # Extract file
-        success = archive.ExtractArchive(
-            archive_file = extract_file,
-            extract_dir = os.path.join(raw_tmp_dir, gameinfo.DeriveRegularNameFromGameName(game_name)),
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return (False, "Unable to extract game")
-
-        # Touch index file
-        system.TouchFile(
-            src = tmp_raw_file_index,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-        # Set transformed output
-        transformed_game_output = tmp_raw_file_index
-
-    ######################################################
+        if not transform_success:
+            return (False, transform_result)
 
     # No transformation was able to be done, so default to the original file
-    if not os.path.exists(transformed_game_output):
+    if not os.path.exists(transform_result):
         return (True, source_file)
 
-    # Move transformed output
+    # Move transformed output out of temporary directory
     system.MoveContents(
-        src = system.GetFilenameDirectory(transformed_game_output),
+        src = system.GetFilenameDirectory(transform_result),
         dest = output_dir,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-    # Get new transformed file
-    new_transformed_game_output = os.path.join(output_dir, system.GetFilenameFile(transformed_game_output))
+    # Get final result
+    final_result_path = os.path.join(output_dir, system.GetFilenameFile(transform_result))
 
     # Delete temporary directory
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
 
-    # Return path to transformed output
-    return (True, new_transformed_game_output)
+    # Return final result
+    return (True, final_result_path)
