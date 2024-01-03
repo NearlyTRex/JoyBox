@@ -27,11 +27,11 @@ class MameTools(toolbase.ToolBase):
             "MameChdman": {
                 "program": {
                     "windows": "MameChdman/windows/chdman.exe",
-                    "linux": "MameChdman/windows/chdman.exe"
+                    "linux": "MameChdman/linux/MameChdman.AppImage"
                 },
                 "run_sandboxed": {
                     "windows": False,
-                    "linux": True
+                    "linux": False
                 }
             }
         }
@@ -54,6 +54,27 @@ class MameTools(toolbase.ToolBase):
                 is_installer = False,
                 is_archive = True,
                 get_latest = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup MameChdman")
+
+        # Build linux program
+        if programs.ShouldProgramBeInstalled("MameChdman", "linux"):
+            success = network.BuildAppImageFromSource(
+                release_url = "https://github.com/NearlyTRex/Mame.git",
+                output_name = "MameChdman",
+                output_dir = programs.GetProgramInstallDir("MameChdman", "linux"),
+                build_cmd = [
+                    "make", "SUBTARGET=pacem", "SOURCES=src/mame/pacman/pacman.cpp", "REGENIE=1", "TOOLS=1", "-j5",
+                ],
+                internal_copies = [
+                    {"from": "Source/chdman", "to": "AppImage/usr/bin/chdman"},
+                    {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
+                    {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
+                ],
+                internal_symlinks = [
+                    {"from": "usr/bin/chdman", "to": "AppRun"}
+                ],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup MameChdman")
