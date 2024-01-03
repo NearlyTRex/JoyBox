@@ -127,14 +127,16 @@ def AddTransformedGameToCache(game_info, source_file, keep_setup_files = False, 
         keep_setup_files = keep_setup_files,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if not transform_success:
+        system.LogError(transform_result)
+        return False
 
     # Add to cache
-    if transform_success:
-        AddGameToCache(
-            game_info = game_info,
-            source_file = transform_result,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+    AddGameToCache(
+        game_info = game_info,
+        source_file = transform_result,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
