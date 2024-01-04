@@ -151,6 +151,10 @@ def LogError(message):
 def LogSuccess(message):
     LogColoredWithHeader(str(message), "SUCCESS", "green")
 
+# Log percent complete
+def LogPercentComplete(percent_complete):
+    print(">>> Percent complete: %s%% " % percent_complete, end='\r', flush=True)
+
 ###########################################################
 
 # Check if path is valid
