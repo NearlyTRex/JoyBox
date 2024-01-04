@@ -74,9 +74,16 @@ def CalculateFileCRC32(filename, chunksize = config.hash_chunk_size, verbose = F
             system.Log("Calculating crc32 for %s" % filename)
         import zlib
         with open(filename, "rb") as file:
+            read_size = 0
+            total_size = os.path.getsize(filename)
+            percent_done = 0
             checksum = 0
+            system.LogPercentComplete(percent_done)
             while (chunk := file.read(chunksize)):
+                read_size += len(chunk)
                 checksum = zlib.crc32(chunk, checksum)
+                percent_done = int(round(100 * read_size / total_size))
+                system.LogPercentComplete(percent_done)
             return "%x" % checksum
         return ""
     except Exception as e:
@@ -93,9 +100,16 @@ def CalculateFileMD5(filename, chunksize = config.hash_chunk_size, verbose = Fal
             system.Log("Calculating md5 for %s" % filename)
         import hashlib
         with open(filename, "rb") as file:
+            read_size = 0
+            total_size = os.path.getsize(filename)
+            percent_done = 0
             md5_hash = hashlib.md5()
+            system.LogPercentComplete(percent_done)
             for chunk in iter(lambda: file.read(chunksize),b""):
+                read_size += len(chunk)
                 md5_hash.update(chunk)
+                percent_done = int(round(100 * read_size / total_size))
+                system.LogPercentComplete(percent_done)
             return md5_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
@@ -111,9 +125,16 @@ def CalculateFileSHA1(filename, chunksize = config.hash_chunk_size, verbose = Fa
             system.Log("Calculating sha1 for %s" % filename)
         import hashlib
         with open(filename, "rb") as file:
+            read_size = 0
+            total_size = os.path.getsize(filename)
+            percent_done = 0
             sha1_hash = hashlib.sha1()
+            system.LogPercentComplete(percent_done)
             for chunk in iter(lambda: file.read(chunksize),b""):
+                read_size += len(chunk)
                 sha1_hash.update(chunk)
+                percent_done = int(round(100 * read_size / total_size))
+                system.LogPercentComplete(percent_done)
             return sha1_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
@@ -129,9 +150,16 @@ def CalculateFileSHA256(filename, chunksize = config.hash_chunk_size, verbose = 
             system.Log("Calculating sha256 for %s" % filename)
         import hashlib
         with open(filename, "rb") as file:
+            read_size = 0
+            total_size = os.path.getsize(filename)
+            percent_done = 0
             sha256_hash = hashlib.sha256()
+            system.LogPercentComplete(percent_done)
             for chunk in iter(lambda: file.read(chunksize),b""):
+                read_size += len(chunk)
                 sha256_hash.update(chunk)
+                percent_done = int(round(100 * read_size / total_size))
+                system.LogPercentComplete(percent_done)
             return sha256_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
@@ -147,9 +175,16 @@ def CalculateFileXXH3(filename, chunksize = config.hash_chunk_size, verbose = Fa
             system.Log("Calculating xxh3 for %s" % filename)
         import xxhash
         with open(filename, "rb") as file:
+            read_size = 0
+            total_size = os.path.getsize(filename)
+            percent_done = 0
             xxh3_hash = xxhash.xxh3_64()
+            system.LogPercentComplete(percent_done)
             for chunk in iter(lambda: file.read(chunksize),b""):
+                read_size += len(chunk)
                 xxh3_hash.update(chunk)
+                percent_done = int(round(100 * read_size / total_size))
+                system.LogPercentComplete(percent_done)
             return xxh3_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
@@ -328,12 +363,15 @@ def HashCategoryFiles(input_path, file_supercategory, file_category, file_subcat
         exit_on_failure = exit_on_failure)
 
     # Hash files
-    HashFiles(
+    success = HashFiles(
         input_path = input_path,
         base_path = os.path.join(file_supercategory, file_category, file_subcategory),
         output_file = hash_file,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if not success:
+        system.LogError("Unable to hash files from %s" % input_path)
+        return False
 
     # Sort hash file
     return SortHashFile(hash_file, verbose = verbose, exit_on_failure = exit_on_failure)
