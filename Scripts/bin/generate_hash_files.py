@@ -12,6 +12,7 @@ import config
 import system
 import environment
 import hashing
+import ini
 import setup
 
 # Parse arguments
@@ -54,6 +55,10 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get flags
+    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
+    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
+
     # Get source file root
     source_file_root = ""
     if args.source_files == "input":
@@ -73,7 +78,9 @@ def main():
             input_path = source_file_root,
             file_supercategory = args.file_supercategory,
             file_category = args.file_category,
-            file_subcategory = args.file_subcategory)
+            file_subcategory = args.file_subcategory,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     # Automatic according to standard layout
     elif args.generation_mode == "standard":
@@ -84,7 +91,9 @@ def main():
                 input_path = os.path.join(source_file_root, args.file_category, args.file_subcategory),
                 file_supercategory = args.file_supercategory,
                 file_category = args.file_category,
-                file_subcategory = args.file_subcategory)
+                file_subcategory = args.file_subcategory,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
         # Specific category/all subcategories in that category
         elif args.file_category:
@@ -93,7 +102,9 @@ def main():
                     input_path = os.path.join(source_file_root, args.file_category, file_subcategory),
                     file_supercategory = args.file_supercategory,
                     file_category = args.file_category,
-                    file_subcategory = file_subcategory)
+                    file_subcategory = file_subcategory,
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
 
         # All categories/subcategories
         else:
@@ -103,7 +114,9 @@ def main():
                         input_path = os.path.join(source_file_root, file_category, file_subcategory),
                         file_supercategory = args.file_supercategory,
                         file_category = file_category,
-                        file_subcategory = file_subcategory)
+                        file_subcategory = file_subcategory,
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
 
 # Start
 main()
