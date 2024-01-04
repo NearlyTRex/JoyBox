@@ -78,12 +78,14 @@ def CalculateFileCRC32(filename, chunksize = config.hash_chunk_size, verbose = F
             total_size = os.path.getsize(filename)
             percent_done = 0
             checksum = 0
-            system.LogPercentComplete(percent_done)
-            while (chunk := file.read(chunksize)):
-                read_size += len(chunk)
-                checksum = zlib.crc32(chunk, checksum)
-                percent_done = int(round(100 * read_size / total_size))
+            if verbose:
                 system.LogPercentComplete(percent_done)
+            while (chunk := file.read(chunksize)):
+                checksum = zlib.crc32(chunk, checksum)
+                if verbose:
+                    read_size += len(chunk)
+                    percent_done = int(round(100 * read_size / total_size))
+                    system.LogPercentComplete(percent_done)
             return "%x" % checksum
         return ""
     except Exception as e:
@@ -104,12 +106,14 @@ def CalculateFileMD5(filename, chunksize = config.hash_chunk_size, verbose = Fal
             total_size = os.path.getsize(filename)
             percent_done = 0
             md5_hash = hashlib.md5()
-            system.LogPercentComplete(percent_done)
-            for chunk in iter(lambda: file.read(chunksize),b""):
-                read_size += len(chunk)
-                md5_hash.update(chunk)
-                percent_done = int(round(100 * read_size / total_size))
+            if verbose:
                 system.LogPercentComplete(percent_done)
+            for chunk in iter(lambda: file.read(chunksize),b""):
+                md5_hash.update(chunk)
+                if verbose:
+                    read_size += len(chunk)
+                    percent_done = int(round(100 * read_size / total_size))
+                    system.LogPercentComplete(percent_done)
             return md5_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
@@ -129,12 +133,14 @@ def CalculateFileSHA1(filename, chunksize = config.hash_chunk_size, verbose = Fa
             total_size = os.path.getsize(filename)
             percent_done = 0
             sha1_hash = hashlib.sha1()
-            system.LogPercentComplete(percent_done)
-            for chunk in iter(lambda: file.read(chunksize),b""):
-                read_size += len(chunk)
-                sha1_hash.update(chunk)
-                percent_done = int(round(100 * read_size / total_size))
+            if verbose:
                 system.LogPercentComplete(percent_done)
+            for chunk in iter(lambda: file.read(chunksize),b""):
+                sha1_hash.update(chunk)
+                if verbose:
+                    read_size += len(chunk)
+                    percent_done = int(round(100 * read_size / total_size))
+                    system.LogPercentComplete(percent_done)
             return sha1_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
@@ -154,12 +160,14 @@ def CalculateFileSHA256(filename, chunksize = config.hash_chunk_size, verbose = 
             total_size = os.path.getsize(filename)
             percent_done = 0
             sha256_hash = hashlib.sha256()
-            system.LogPercentComplete(percent_done)
-            for chunk in iter(lambda: file.read(chunksize),b""):
-                read_size += len(chunk)
-                sha256_hash.update(chunk)
-                percent_done = int(round(100 * read_size / total_size))
+            if verbose:
                 system.LogPercentComplete(percent_done)
+            for chunk in iter(lambda: file.read(chunksize),b""):
+                sha256_hash.update(chunk)
+                if verbose:
+                    read_size += len(chunk)
+                    percent_done = int(round(100 * read_size / total_size))
+                    system.LogPercentComplete(percent_done)
             return sha256_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
@@ -179,12 +187,14 @@ def CalculateFileXXH3(filename, chunksize = config.hash_chunk_size, verbose = Fa
             total_size = os.path.getsize(filename)
             percent_done = 0
             xxh3_hash = xxhash.xxh3_64()
-            system.LogPercentComplete(percent_done)
-            for chunk in iter(lambda: file.read(chunksize),b""):
-                read_size += len(chunk)
-                xxh3_hash.update(chunk)
-                percent_done = int(round(100 * read_size / total_size))
+            if verbose:
                 system.LogPercentComplete(percent_done)
+            for chunk in iter(lambda: file.read(chunksize),b""):
+                xxh3_hash.update(chunk)
+                if verbose:
+                    read_size += len(chunk)
+                    percent_done = int(round(100 * read_size / total_size))
+                    system.LogPercentComplete(percent_done)
             return xxh3_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
@@ -276,6 +286,8 @@ def AppendHashFile(filename, hash_data, verbose = False, exit_on_failure = False
 
 # Sort hash file
 def SortHashFile(filename, verbose = False, exit_on_failure = False):
+    if verbose:
+        system.Log("Sorting hash file %s" % filename)
     hash_contents = ReadHashFile(
         filename = filename,
         verbose = verbose,
