@@ -184,6 +184,7 @@ def ReadHashFile(filename, verbose = False, exit_on_failure = False):
                     file_size = tokens[2]
                     file_mtime = tokens[3]
                     file_entry = {}
+                    file_entry["filename"] = file_location
                     file_entry["hash"] = file_hash
                     file_entry["size"] = file_size
                     file_entry["mtime"] = file_mtime
@@ -205,7 +206,7 @@ def WriteHashFile(filename, hash_contents, verbose = False, exit_on_failure = Fa
             for hash_key in sorted(hash_contents.keys()):
                 hash_data = hash_contents[hash_key]
                 hash_replacements = (
-                    hash_key,
+                    hash_data["filename"],
                     hash_data["hash"],
                     hash_data["size"],
                     hash_data["mtime"])
@@ -214,6 +215,26 @@ def WriteHashFile(filename, hash_contents, verbose = False, exit_on_failure = Fa
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to write hash file %s" % filename)
+            system.LogError(e)
+            sys.exit(1)
+        return False
+
+# Append hash file
+def AppendHashFile(filename, hash_data, verbose = False, exit_on_failure = False):
+    try:
+        if verbose:
+            system.Log("Appending hash file %s" % filename)
+        with open(filename, "a", encoding="utf8") as f:
+            hash_replacements = (
+                hash_data["filename"],
+                hash_data["hash"],
+                hash_data["size"],
+                hash_data["mtime"])
+            f.write("%s || %s || %s || %s\n" % hash_replacements)
+        return True
+    except Exception as e:
+        if exit_on_failure:
+            system.LogError("Unable to append hash file %s" % filename)
             system.LogError(e)
             sys.exit(1)
         return False
@@ -251,19 +272,31 @@ def HashFiles(input_path, base_path, output_file, verbose = False, exit_on_failu
     if os.path.isfile(output_file):
         hash_contents = ReadHashFile(output_file, verbose = verbose, exit_on_failure = exit_on_failure)
 
-    # Hash the files
+    # Hash each file in the input path
     for file in system.BuildFileList(input_path):
         if os.path.realpath(file) == os.path.realpath(output_file):
             continue
+
+        # Check if file needs to be hashed
         relative_file = system.RebaseFilePath(file, input_path, base_path)
         relative_base = file.replace(relative_file, "")
         if DoesFileNeedToBeHashed(relative_file, relative_base, hash_contents):
+
+            # Calculate hash
             hash_data = CalculateHash(
                 filename = relative_file,
                 base_path = relative_base,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             hash_contents[hash_data["filename"]] = hash_data
+
+            # Append hash
+            success = AppendHashFile(
+                filename = output_file,
+                hash_data = hash_data,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
 
     # Write hash file
     return WriteHashFile(
