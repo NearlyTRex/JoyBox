@@ -470,11 +470,13 @@ def TransformGameFile(
         return (True, source_file)
 
     # Move transformed output out of temporary directory
-    system.MoveContents(
+    success = system.MoveContents(
         src = system.GetFilenameDirectory(transform_result),
         dest = output_dir,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if not success:
+        return (False, "Unable to move transformed output")
 
     # Get final result
     final_result_path = os.path.join(output_dir, system.GetFilenameFile(transform_result))
