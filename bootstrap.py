@@ -65,6 +65,26 @@ if "Tools.Apt" in config:
     apt_install_dir = os.path.expandvars(config["Tools.Apt"]["apt_install_dir"])
     apt_tool = os.path.join(apt_install_dir, apt_exe)
 
+# Apt preliminiaries
+apt_preliminiaries = [
+
+    # Codium
+    "wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | gpg --dearmor  | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg",
+    "echo 'deb [ signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg ] https://download.vscodium.com/debs vscodium main' | sudo tee /etc/apt/sources.list.d/vscodium.list",
+
+    # Signal
+    "wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg",
+    "cat signal-desktop-keyring.gpg | sudo tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null",
+    "echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main' | sudo tee /etc/apt/sources.list.d/signal-xenial.list",
+    "rm -f ./signal-desktop-keyring.gpg",
+
+    # Wine
+    "sudo dpkg --add-architecture i386",
+    "sudo mkdir -pm755 /etc/apt/keyrings",
+    "sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key",
+    "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources"
+]
+
 # Apt packages
 apt_packages = [
 
@@ -75,10 +95,6 @@ apt_packages = [
     "libvirt-daemon-system",
     "virt-manager",
     "xdg-desktop-portal",
-
-    # Custom
-    "codium",
-    "winehq-devel",
 
     # Devel
     "autoconf",
@@ -220,10 +236,14 @@ apt_packages = [
     "libpython3-dev",
     "python3-venv",
 
+    # Sandbox
+    "winehq-devel",
+
     # Sound
     "jackd",
 
     # Text
+    "codium",
     "dos2unix",
 
     # Utils
@@ -239,17 +259,24 @@ apt_packages = [
     # Web
     "curl",
     "firefox",
-    "npm",
+    "signal-desktop",
+    "telegram-desktop",
 
     # X11
     "qdirstat",
     "xorg-dev"
 ]
 
+# Install apt preliminiaries
+if apt_tool and os.path.isfile(apt_tool):
+    for apt_preliminiary in apt_preliminiaries:
+        subprocess.run(apt_preliminiary, shell=True)
+
 # Install apt packages
 if apt_tool and os.path.isfile(apt_tool):
+    subprocess.run(["sudo", apt_tool, "update"])
     for apt_package in apt_packages:
-        subprocess.run(["sudo", apt_tool, "-y", "install", apt_package])
+        subprocess.run(["sudo", apt_tool, "-y", "install", "--install-recommends", apt_package])
 
 ###########################################################
 # WinGet
@@ -264,12 +291,34 @@ if "Tools.WinGet" in config:
 
 # WinGet packages
 winget_packages = [
-    "Git.Git",
-    "Mozilla.Firefox",
-    "Sandboxie.Plus",
-    "mcmilk.7zip-zstd",
+
+    # Net
+    "subhra74.XtremeDownloadManager",
+
+    # Perl
+    "StrawberryPerl.StrawberryPerl",
+
+    # Python
     "Python.Python.3.11",
-    "StrawberryPerl.StrawberryPerl"
+
+    # Sandbox
+    "Sandboxie.Plus",
+
+    # Text
+    "VSCodium.VSCodium",
+
+    # Utils
+    "mcmilk.7zip-zstd",
+
+    # VCS
+    "Git.Git",
+    "TortoiseGit.TortoiseGit",
+
+    # Web
+    "Discord.Discord",
+    "Mozilla.Firefox",
+    "OpenWhisperSystems.Signal",
+    "Telegram.TelegramDesktop"
 ]
 
 # Install winget packages
@@ -355,3 +404,5 @@ subprocess.run([python_venv_python_tool, environment_script])
 # Inform user
 print("Bootstrap complete!")
 print("Add %s to your PATH to run scripts" % scripts_bin_dir)
+print(">>> On Linux: export PATH=\"%s:$PATH\"" % scripts_bin_dir)
+print(">>> On Windows: setx PATH \"%%PATH%%;%s\"" % scripts_bin_dir)
