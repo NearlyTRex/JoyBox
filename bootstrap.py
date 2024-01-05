@@ -68,161 +68,182 @@ if "Tools.Apt" in config:
 # Apt packages
 apt_packages = [
 
-    # Building
+    # Admin
+    "apt-file",
+    "libudev-dev",
+    "libvirt-clients",
+    "libvirt-daemon-system",
+    "virt-manager",
+    "xdg-desktop-portal",
+
+    # Custom
+    "codium",
+    "winehq-devel",
+
+    # Devel
     "autoconf",
     "automake",
+    "bison",
     "build-essential",
     "clang",
     "cmake",
-    "extra-cmake-modules",
+    "flex",
     "g++",
     "gcc",
+    "gettext",
+    "help2man",
     "libtool-bin",
     "lld",
     "make",
     "nasm",
     "ninja-build",
     "pkg-config",
+    "qmake6",
+    "qt5-qmake",
+    "qt6-base-dev-tools",
+    "qt6-tools-dev-tools",
+    "qtbase5-dev-tools",
+    "qttools5-dev-tools",
     "xa65",
 
-    # Tools
-    "bison",
-    "curl",
-    "dos2unix",
-    "firefox",
-    "flex",
-    "gettext",
-    "git",
-    "openssl",
-    "p7zip-full",
-    "zip",
-    "perl-base",
-    "winehq-devel",
-
-    # GTK
-    "libcanberra-gtk-module",
-    "libglib2.0-dev",
-    "libgtk-3-dev",
-    "libgtk2.0-dev",
-
-    # SDL
-    "libsdl-net1.2-dev",
-    "libsdl2-dev",
-    "libsdl2-net-dev",
-    "libsdl2-ttf-dev",
-
-    # SFML
-    "libsfml-dev",
-
-    # Qt
-    "libqt5gamepad5-dev",
-    "libqt5multimedia5-plugins",
-    "libqt5opengl5-dev",
-    "libqt5svg5-dev",
-    "libqt6opengl6-dev",
-    "libqt6svg6-dev",
-    "qmake6",
-    "qml-module-qtgraphicaleffects",
-    "qml-module-qtmultimedia",
-    "qt5-qmake",
-    "qt6-base-dev",
-    "qt6-base-dev-tools",
-    "qt6-base-private-dev",
-    "qt6-l10n-tools",
-    "qt6-multimedia-dev",
-    "qt6-tools-dev",
-    "qt6-tools-dev-tools",
-    "qtbase5-dev",
-    "qtbase5-dev-tools",
-    "qtbase5-private-dev",
-    "qtchooser",
-    "qtdeclarative5-dev",
-    "qtmultimedia5-dev",
-    "qttools5-dev-tools",
-
-    # OpenGL
+    # Libdevel
     "glslang-dev",
     "glslang-tools",
-    "libepoxy-dev",
-    "libgl-dev",
-    "libgl1-mesa-dev",
-    "libglew-dev",
-
-    # XML
-    "libpugixml-dev",
-
-    # Security
-    "ca-certificates",
-    "libmbedtls-dev",
-    "libssl-dev",
-
-    # Compression
     "libarchive-dev",
-    "libbz2-dev",
-    "liblzo2-dev",
-    "libzstd-dev",
-    "zlib1g-dev",
-
-    # Audiovisual
-    "jackd",
-    "libasound-dev",
     "libasound2-dev",
     "libavcodec-dev",
-    "libavcodec-extra",
     "libavdevice-dev",
     "libavformat-dev",
     "libavutil-dev",
+    "libbluetooth-dev",
+    "libboost-date-time-dev",
+    "libboost-dev",
+    "libboost-filesystem-dev",
+    "libboost-iostreams-dev",
+    "libboost-program-options-dev",
+    "libboost-regex-dev",
+    "libboost-system-dev",
+    "libbz2-dev",
+    "libcurl4-openssl-dev",
+    "libepoxy-dev",
+    "libevdev-dev",
     "libfdk-aac-dev",
     "libflac-dev",
     "libfontconfig-dev",
     "libfreetype-dev",
     "libfreetype6-dev",
+    "libgl1-mesa-dev",
+    "libglew-dev",
+    "libglib2.0-dev",
+    "libgtk-3-dev",
+    "libgtk2.0-dev",
+    "libhidapi-dev",
+    "libhtmlcxx-dev",
     "libjpeg-dev",
+    "libjsoncpp-dev",
+    "liblzo2-dev",
+    "libmbedtls-dev",
+    "libminiupnpc-dev",
     "libmpeg2-4-dev",
     "libncurses-dev",
     "libopenal-dev",
-    "libpangocairo-1.0-0",
+    "libpcap-dev",
     "libpipewire-0.3-dev",
     "libpixman-1-dev",
     "libpng-dev",
+    "libpugixml-dev",
     "libpulse-dev",
+    "libqt5gamepad5-dev",
+    "libqt5opengl5-dev",
+    "libqt5svg5-dev",
+    "libqt6opengl6-dev",
+    "libqt6svg6-dev",
+    "librhash-dev",
     "libsamplerate0-dev",
+    "libsdl-net1.2-dev",
+    "libsdl2-dev",
+    "libsdl2-net-dev",
+    "libsdl2-ttf-dev",
+    "libsfml-dev",
+    "libslirp-dev",
     "libsndio-dev",
+    "libssl-dev",
     "libswscale-dev",
+    "libsystemd-dev",
     "libtheora-dev",
+    "libtinyxml2-dev",
+    "libusb-1.0-0-dev",
     "libvorbis-dev",
     "libx11-dev",
     "libxext-dev",
-    "libxrandr-dev",
-    "xdg-desktop-portal",
-    "xorg-dev",
-
-    # Input
-    "libbluetooth-dev",
-    "libevdev-dev",
-    "libhidapi-dev",
-    "libsystemd-dev",
-    "libudev-dev",
-    "libusb-1.0-0-dev",
     "libxi-dev",
     "libxkbfile-dev",
+    "libxrandr-dev",
     "libxtst-dev",
+    "libzstd-dev",
+    "qt6-base-dev",
+    "qt6-base-private-dev",
+    "qt6-multimedia-dev",
+    "qt6-tools-dev",
+    "qtbase5-dev",
+    "qtbase5-private-dev",
+    "qtchooser",
+    "qtdeclarative5-dev",
+    "qtmultimedia5-dev",
+    "qtwebengine5-dev",
+    "zlib1g-dev",
 
-    # Networking
-    "bridge-utils",
-    "libcurl4-openssl-dev",
-    "libminiupnpc-dev",
-    "libpcap-dev",
-    "libslirp-dev",
+    # Libs
+    "extra-cmake-modules",
+    "libavcodec-extra",
+    "libcanberra-gtk-module",
+    "libgl-dev",
+    "libpangocairo-1.0-0",
+    "libqt5multimedia5-plugins",
+    "qml-module-qtgraphicaleffects",
+    "qml-module-qtmultimedia",
 
-    # Virtual machines
-    "libvirt-clients",
-    "libvirt-daemon-system",
+    # Misc
+    "ca-certificates",
     "ovmf",
     "qemu-kvm",
     "qemu-utils",
-    "virt-manager",
-    "virtualbox"
+    "virtualbox",
+
+    # Net
+    "bridge-utils",
+
+    # Perl
+    "perl-base",
+
+    # Python
+    "libpython3-dev",
+    "python3-venv",
+
+    # Sound
+    "jackd",
+
+    # Text
+    "dos2unix",
+
+    # Utils
+    "openssl",
+    "p7zip-full",
+    "qt6-l10n-tools",
+    "zip",
+
+    # VCS
+    "git",
+    "gitg",
+
+    # Web
+    "curl",
+    "firefox",
+    "npm",
+
+    # X11
+    "qdirstat",
+    "xorg-dev"
 ]
 
 # Install apt packages
