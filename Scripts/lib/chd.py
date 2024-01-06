@@ -39,13 +39,15 @@ def CreateDiscCHD(chd_file, source_iso, delete_original = False, verbose = False
     ]
 
     # Run create command
-    command.RunBlockingCommand(
+    code = command.RunBlockingCommand(
         cmd = create_command,
         options = command.CommandOptions(
             output_paths = [chd_file],
             blocking_processes = [chd_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if code != 0:
+        return False
 
     # Clean up
     if delete_original:
@@ -75,13 +77,15 @@ def ExtractDiscCHD(chd_file, binary_file, toc_file, delete_original = False, ver
     ]
 
     # Run extract command
-    command.RunBlockingCommand(
+    code = command.RunBlockingCommand(
         cmd = extract_cmd,
         options = command.CommandOptions(
             output_paths = [toc_file, binary_file],
             blocking_processes = [chd_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if code != 0:
+        return False
 
     # Clean up
     if delete_original:
