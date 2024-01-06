@@ -14,7 +14,7 @@ import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Save tool.")
-parser.add_argument("-i", "--input_path", help="Input path")
+parser.add_argument("-i", "--input_path", type=str, help="Input path")
 parser.add_argument("-o", "--output_path", type=str, help="Output path")
 parser.add_argument("-a", "--action",
     choices=[
