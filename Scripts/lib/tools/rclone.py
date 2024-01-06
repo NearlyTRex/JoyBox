@@ -11,6 +11,8 @@ import toolbase
 
 # Config files
 config_files = {}
+config_files["RClone/windows/rclone.conf"] = ""
+config_files["RClone/linux/rclone.conf"] = ""
 
 # RClone tool
 class RClone(toolbase.ToolBase):
@@ -66,3 +68,12 @@ class RClone(toolbase.ToolBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RClone")
+
+        # Create config files
+        for config_filename, config_contents in config_files.items():
+            success = system.TouchFile(
+                src = os.path.join(environment.GetToolsRootDir(), config_filename),
+                contents = config_contents.strip(),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup RClone config files")
