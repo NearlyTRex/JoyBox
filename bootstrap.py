@@ -272,7 +272,7 @@ apt_packages = [
     "xorg-dev"
 ]
 
-# Install apt preliminiaries
+# Install apt  preliminiaries
 if apt_tool and os.path.isfile(apt_tool):
     for apt_preliminary in apt_preliminaries:
         subprocess.run(apt_preliminary, shell=True)
