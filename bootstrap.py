@@ -66,19 +66,24 @@ if "Tools.Apt" in config:
     apt_tool = os.path.join(apt_install_dir, apt_exe)
 
 # Apt preliminiaries
-apt_preliminiaries = [
+apt_preliminaries = []
 
-    # Codium
+# Codium
+apt_preliminaries += [
     "wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | gpg --dearmor  | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg",
-    "echo 'deb [ signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg ] https://download.vscodium.com/debs vscodium main' | sudo tee /etc/apt/sources.list.d/vscodium.list",
+    "echo 'deb [ signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg ] https://download.vscodium.com/debs vscodium main' | sudo tee /etc/apt/sources.list.d/vscodium.list"
+]
 
-    # Signal
+# Signal
+apt_preliminaries += [
     "wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg",
     "cat signal-desktop-keyring.gpg | sudo tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null",
     "echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main' | sudo tee /etc/apt/sources.list.d/signal-xenial.list",
-    "rm -f ./signal-desktop-keyring.gpg",
+    "rm -f ./signal-desktop-keyring.gpg"
+]
 
-    # Wine
+# Wine
+apt_preliminaries += [
     "sudo dpkg --add-architecture i386",
     "sudo mkdir -pm755 /etc/apt/keyrings",
     "sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key",
@@ -269,8 +274,8 @@ apt_packages = [
 
 # Install apt preliminiaries
 if apt_tool and os.path.isfile(apt_tool):
-    for apt_preliminiary in apt_preliminiaries:
-        subprocess.run(apt_preliminiary, shell=True)
+    for apt_preliminary in apt_preliminaries:
+        subprocess.run(apt_preliminary, shell=True)
 
 # Install apt packages
 if apt_tool and os.path.isfile(apt_tool):
