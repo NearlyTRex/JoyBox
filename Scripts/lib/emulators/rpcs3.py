@@ -147,16 +147,12 @@ class RPCS3(emulatorbase.EmulatorBase):
             game_info = game_info,
             verbose = verbose)
 
-        # Make exdata dir
-        exdata_dir = os.path.join(game_save_dir, "exdata")
-        system.MakeDirectory(exdata_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-
         # Copy exdata files
         if launch_platform == config.game_subcategory_sony_playstation_network_ps3:
             for exdata_file in system.BuildFileListByExtensions(game_cache_dir, extensions = [".rap", ".edat"]):
-                system.CopyFileOrDirectory(
+                system.SmartCopy(
                     src = exdata_file,
-                    dest = exdata_dir,
+                    dest = os.path.join(game_save_dir, "exdata"),
                     verbose = verbose)
 
         # Get launch command

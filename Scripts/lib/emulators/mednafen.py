@@ -132,7 +132,7 @@ class Mednafen(emulatorbase.EmulatorBase):
         # Copy system files
         for filename in system_files.keys():
             for platform in ["windows", "linux"]:
-                success = system.CopyFileOrDirectory(
+                success = system.SmartCopy(
                     src = os.path.join(environment.GetSyncedGameEmulatorSetupDir("Mednafen"), filename),
                     dest = os.path.join(programs.GetEmulatorPathConfigValue("Mednafen", "setup_dir", platform), filename),
                     verbose = verbose,
