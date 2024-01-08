@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import environment
 import network
 import programs
 import toolbase
