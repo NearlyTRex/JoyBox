@@ -99,7 +99,7 @@ else:
     ini_defaults["Tools.Python"]["python_venv_dir"] = "$HOME/.venv"
 
 # Tools.Perl
-ini_defaults["Tools."] = {}
+ini_defaults["Tools.Perl"] = {}
 if environment.IsWindowsPlatform():
     ini_defaults["Tools.Perl"]["perl_exe"] = "perl.exe"
     ini_defaults["Tools.Perl"]["perl_install_dir"] = "C:\\Strawberry\\perl\\bin"
