@@ -1,20 +1,16 @@
 # Imports
 import os
-import sys 
-
-# Imports
-import os
 import sys
 
 ###########################################################
-# Preliminaries
+# System preliminaries
 ###########################################################
-preliminaries = []
+system_preliminaries = []
 
 ###########################################################
-# Packages
+# System packages
 ###########################################################
-packages = [
+system_packages = [
 
     # Net
     "subhra74.XtremeDownloadManager",

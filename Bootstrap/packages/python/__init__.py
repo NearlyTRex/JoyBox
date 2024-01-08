@@ -6,9 +6,9 @@ import sys
 import environment
 
 ###########################################################
-# Packages
+# Python packages
 ###########################################################
-packages = [
+python_packages = [
     "pip",
     "wheel",
     "psutil",
@@ -37,7 +37,7 @@ packages = [
     "tqdm"
 ]
 if environment.IsWindowsPlatform():
-    packages += [
+    python_packages += [
         "pywin32",
         "pyuac"
     ]

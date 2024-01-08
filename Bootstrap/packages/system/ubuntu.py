@@ -6,18 +6,18 @@ import sys
 import environment
 
 ###########################################################
-# Preliminaries
+# System preliminaries
 ###########################################################
-preliminaries = []
+system_preliminaries = []
 
 # Codium
-preliminaries += [
+system_preliminaries += [
     "wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | gpg --dearmor  | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg",
     "echo 'deb [ signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg ] https://download.vscodium.com/debs vscodium main' | sudo tee /etc/apt/sources.list.d/vscodium.list"
 ]
 
 # Signal
-preliminaries += [
+system_preliminaries += [
     "wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg",
     "cat signal-desktop-keyring.gpg | sudo tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null",
     "echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main' | sudo tee /etc/apt/sources.list.d/signal-xenial.list",
@@ -25,32 +25,32 @@ preliminaries += [
 ]
 
 # Wine
-preliminaries += [
+system_preliminaries += [
     "sudo dpkg --add-architecture i386",
     "sudo mkdir -pm755 /etc/apt/keyrings",
     "sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key"
 ]
 if "23.10" in environment.GetLinuxDistroVersion():
-    preliminaries += [
+    system_preliminaries += [
         "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/mantic/winehq-mantic.sources"
     ]
 elif "23.04" in environment.GetLinuxDistroVersion():
-    preliminaries += [
+    system_preliminaries += [
         "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/lunar/winehq-lunar.sources"
     ]
 elif "22.04" in environment.GetLinuxDistroVersion():
-    preliminaries += [
+    system_preliminaries += [
         "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources"
     ]
 elif "20.04" in environment.GetLinuxDistroVersion():
-    preliminaries += [
+    system_preliminaries += [
         "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources"
     ]
 
 ###########################################################
-# Packages
+# System packages
 ###########################################################
-packages = [
+system_packages = [
 
     # Admin
     "apt-file",
