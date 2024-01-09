@@ -8,6 +8,7 @@ import argparse
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
+import config
 import environment
 import system
 import sync
@@ -18,9 +19,9 @@ import ini
 parser = argparse.ArgumentParser(description="Sync tool.")
 parser.add_argument("-t", "--type",
     choices=[
-        "gdrive"
+        config.sync_type_gdrive
     ],
-    default="gdrive", help="Sync type"
+    default=config.sync_type_gdrive, help="Sync type"
 )
 parser.add_argument("-a", "--action",
     choices=[
@@ -48,9 +49,9 @@ def main():
 
     # Init sync
     if args.action == "init":
-        if args.type == "gdrive":
+        if args.type == config.sync_type_gdrive:
             sync.SetupGoogleDriveRemote(
-                remote_name = args.type,
+                remote_type = args.type,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 
@@ -58,7 +59,7 @@ def main():
     elif args.action == "download":
         sync.DownloadFilesFromRemote(
             local_path = args.local_path,
-            remote_name = args.type,
+            remote_type = args.type,
             remote_path = args.remote_path,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -67,7 +68,7 @@ def main():
     elif args.action == "upload":
         sync.UploadFilesToRemote(
             local_path = args.local_path,
-            remote_name = args.type,
+            remote_type = args.type,
             remote_path = args.remote_path,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -76,7 +77,7 @@ def main():
     elif args.action == "pull":
         sync.SyncFilesFromRemote(
             local_path = args.local_path,
-            remote_name = args.type,
+            remote_type = args.type,
             remote_path = args.remote_path,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -85,7 +86,7 @@ def main():
     elif args.action == "push":
         sync.SyncFilesToRemote(
             local_path = args.local_path,
-            remote_name = args.type,
+            remote_type = args.type,
             remote_path = args.remote_path,
             verbose = verbose,
             exit_on_failure = exit_on_failure)

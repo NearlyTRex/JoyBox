@@ -11,7 +11,7 @@ import system
 import environment
 
 # Setup Google Drive remote
-def SetupGoogleDriveRemote(remote_name, verbose = False, exit_on_failure = False):
+def SetupGoogleDriveRemote(remote_type, verbose = False, exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -25,7 +25,7 @@ def SetupGoogleDriveRemote(remote_name, verbose = False, exit_on_failure = False
     create_cmd = [
         rclone_tool,
         "config",
-        "create", remote_name,
+        "create", remote_type,
         "drive",
         "config_is_local=false"
     ]
@@ -46,7 +46,7 @@ def SetupGoogleDriveRemote(remote_name, verbose = False, exit_on_failure = False
     authorize_cmd = [
         rclone_tool,
         "config",
-        "reconnect", "%s:" % remote_name
+        "reconnect", "%s:" % remote_type
     ]
     if verbose:
         authorize_cmd += ["--verbose"]
@@ -61,7 +61,7 @@ def SetupGoogleDriveRemote(remote_name, verbose = False, exit_on_failure = False
     return code == 0
 
 # Download files from remote
-def DownloadFilesFromRemote(local_path, remote_name, remote_path, verbose = False, exit_on_failure = False):
+def DownloadFilesFromRemote(local_path, remote_type, remote_path, verbose = False, exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -75,10 +75,14 @@ def DownloadFilesFromRemote(local_path, remote_name, remote_path, verbose = Fals
     copy_cmd = [
         rclone_tool,
         "copy",
-        "%s:%s" % (remote_name, remote_path),
+        "%s:%s" % (remote_type, remote_path),
         local_path,
         "--create-empty-src-dirs"
     ]
+    if remote_type == config.sync_type_gdrive:
+        copy_cmd += [
+            "--drive-acknowledge-abuse"
+        ]
     if verbose:
         copy_cmd += ["--verbose"]
 
@@ -92,7 +96,7 @@ def DownloadFilesFromRemote(local_path, remote_name, remote_path, verbose = Fals
     return code == 0
 
 # Upload files to remote
-def UploadFilesToRemote(local_path, remote_name, remote_path, verbose = False, exit_on_failure = False):
+def UploadFilesToRemote(local_path, remote_type, remote_path, verbose = False, exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -107,9 +111,13 @@ def UploadFilesToRemote(local_path, remote_name, remote_path, verbose = False, e
         rclone_tool,
         "copy",
         local_path,
-        "%s:%s" % (remote_name, remote_path),
+        "%s:%s" % (remote_type, remote_path),
         "--create-empty-src-dirs"
     ]
+    if remote_type == config.sync_type_gdrive:
+        copy_cmd += [
+            "--drive-acknowledge-abuse"
+        ]
     if verbose:
         copy_cmd += ["--verbose"]
 
@@ -123,7 +131,7 @@ def UploadFilesToRemote(local_path, remote_name, remote_path, verbose = False, e
     return code == 0
 
 # Sync files from remote
-def SyncFilesFromRemote(local_path, remote_name, remote_path, verbose = False, exit_on_failure = False):
+def SyncFilesFromRemote(local_path, remote_type, remote_path, verbose = False, exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -137,10 +145,14 @@ def SyncFilesFromRemote(local_path, remote_name, remote_path, verbose = False, e
     sync_cmd = [
         rclone_tool,
         "sync",
-        "%s:%s" % (remote_name, remote_path),
+        "%s:%s" % (remote_type, remote_path),
         local_path,
         "--create-empty-src-dirs"
     ]
+    if remote_type == config.sync_type_gdrive:
+        sync_cmd += [
+            "--drive-acknowledge-abuse"
+        ]
     if verbose:
         sync_cmd += ["--verbose"]
 
@@ -154,7 +166,7 @@ def SyncFilesFromRemote(local_path, remote_name, remote_path, verbose = False, e
     return code == 0
 
 # Sync files to remote
-def SyncFilesToRemote(local_path, remote_name, remote_path, verbose = False, exit_on_failure = False):
+def SyncFilesToRemote(local_path, remote_type, remote_path, verbose = False, exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -169,9 +181,13 @@ def SyncFilesToRemote(local_path, remote_name, remote_path, verbose = False, exi
         rclone_tool,
         "sync",
         local_path,
-        "%s:%s" % (remote_name, remote_path),
+        "%s:%s" % (remote_type, remote_path),
         "--create-empty-src-dirs"
     ]
+    if remote_type == config.sync_type_gdrive:
+        sync_cmd += [
+            "--drive-acknowledge-abuse"
+        ]
     if verbose:
         sync_cmd += ["--verbose"]
 
