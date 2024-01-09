@@ -11,6 +11,15 @@ platform_key_launcher = "launcher"
 platform_key_autofill_json = "autofill_json"
 platform_key_fillonce_json = "fillonce_json"
 
+# Dat keys
+dat_key_game = "game"
+dat_key_file = "file"
+dat_key_size = "size"
+dat_key_crc = "crc"
+dat_key_md5 = "md5"
+dat_key_sha1 = "sha1"
+dat_key_sha256 = "sha256"
+
 # Metadata keys
 metadata_key_game = "game"
 metadata_key_platform = "platform"
