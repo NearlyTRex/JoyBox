@@ -13,23 +13,23 @@ ini_defaults = {}
 # UserData.Dirs
 ini_defaults["UserData.Dirs"] = {}
 if environment.IsWindowsPlatform():
+    ini_defaults["UserData.Dirs"]["tools_dir"] = "%USERPROFILE%\\Tools"
+    ini_defaults["UserData.Dirs"]["emulators_dir"] = "%USERPROFILE%\\Emulators"
+    ini_defaults["UserData.Dirs"]["sync_dir"] = "%USERPROFILE%\\Sync"
     ini_defaults["UserData.Dirs"]["local_cache_dir"] = "%USERPROFILE%\\Cache"
     ini_defaults["UserData.Dirs"]["remote_cache_dir"] = "Y:\\"
-    ini_defaults["UserData.Dirs"]["sync_dir"] = "%USERPROFILE%\\Sync"
     ini_defaults["UserData.Dirs"]["storage_dir"] = "X:\\"
-    ini_defaults["UserData.Dirs"]["scripts_dir"] = "C:\\Repositories\\JoyBox\\Scripts"
-    ini_defaults["UserData.Dirs"]["tools_dir"] = "C:\\Repositories\\JoyBox\\Tools"
-    ini_defaults["UserData.Dirs"]["emulators_dir"] = "C:\\Repositories\\JoyBox\\Emulators"
     ini_defaults["UserData.Dirs"]["metadata_dir"] = "C:\\Repositories\\GameMetadata"
+    ini_defaults["UserData.Dirs"]["scripts_dir"] = "C:\\Repositories\\JoyBox\\Scripts"
 else:
+    ini_defaults["UserData.Dirs"]["tools_dir"] = "$HOME/Tools"
+    ini_defaults["UserData.Dirs"]["emulators_dir"] = "$HOME/Emulators"
+    ini_defaults["UserData.Dirs"]["sync_dir"] = "$HOME/Sync"
     ini_defaults["UserData.Dirs"]["local_cache_dir"] = "$HOME/Cache"
     ini_defaults["UserData.Dirs"]["remote_cache_dir"] = "/mnt/Cache"
-    ini_defaults["UserData.Dirs"]["sync_dir"] = "$HOME/Sync"
     ini_defaults["UserData.Dirs"]["storage_dir"] = "/mnt/Storage"
-    ini_defaults["UserData.Dirs"]["scripts_dir"] = "$HOME/Repositories/JoyBox/Scripts"
-    ini_defaults["UserData.Dirs"]["tools_dir"] = "$HOME/Repositories/JoyBox/Tools"
-    ini_defaults["UserData.Dirs"]["emulators_dir"] = "$HOME/Repositories/JoyBox/Emulators"
     ini_defaults["UserData.Dirs"]["metadata_dir"] = "$HOME/Repositories/GameMetadata"
+    ini_defaults["UserData.Dirs"]["scripts_dir"] = "$HOME/Repositories/JoyBox/Scripts"
 
 # UserData.NAS
 ini_defaults["UserData.NAS"] = {}
