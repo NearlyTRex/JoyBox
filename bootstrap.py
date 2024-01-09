@@ -37,7 +37,3 @@ if environment.IsWindowsPlatform():
 elif environment.IsLinuxPlatform():
     print(">>> export PATH=\"%s:$PATH\"" % scripts_bin_dir)
 print("")
-print("After this is done you can setup other components:")
-print(">>> sync_tool -a download")
-print(">>> setup_emulators")
-print(">>> setup_assets")
