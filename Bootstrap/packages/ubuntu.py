@@ -1,56 +1,80 @@
 # Imports
 import os
 import sys
+import subprocess
 
 # Local imports
 import environment
 
 ###########################################################
-# System preliminaries
+# Preliminaries
 ###########################################################
-system_preliminaries = []
+preliminaries = []
 
 # Codium
-system_preliminaries += [
+preliminaries += [
     "wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | gpg --dearmor  | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg",
     "echo 'deb [ signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg ] https://download.vscodium.com/debs vscodium main' | sudo tee /etc/apt/sources.list.d/vscodium.list"
 ]
 
+# Discord
+preliminaries += [
+    "wget -O discord.deb \"https://discordapp.com/api/download?platform=linux&format=deb\"",
+    "sudo dpkg -i discord.deb",
+    "rm -f ./discord.deb"
+]
+
 # Signal
-system_preliminaries += [
+preliminaries += [
     "wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg",
     "cat signal-desktop-keyring.gpg | sudo tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null",
     "echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main' | sudo tee /etc/apt/sources.list.d/signal-xenial.list",
     "rm -f ./signal-desktop-keyring.gpg"
 ]
 
+# SmartGit
+preliminaries += [
+    "mkdir -p $TOOLS_DIR/SmartGit",
+    "wget -O smartgit-linux.tar.gz \"https://www.syntevo.com/downloads/smartgit/archive/smartgit-linux-22_1_8.tar.gz\"",
+    "tar -xvf smartgit-linux.tar.gz -C $TOOLS_DIR/SmartGit",
+    "rm -f ./smartgit-linux.tar.gz"
+]
+
+# Telegram
+preliminaries += [
+    "mkdir -p $TOOLS_DIR",
+    "wget -O tsetup.tar.xz \"https://telegram.org/dl/desktop/linux\"",
+    "tar -xvf tsetup.tar.xz -C $TOOLS_DIR",
+    "rm -f ./tsetup.tar.xz"
+]
+
 # Wine
-system_preliminaries += [
+preliminaries += [
     "sudo dpkg --add-architecture i386",
     "sudo mkdir -pm755 /etc/apt/keyrings",
     "sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key"
 ]
 if "23.10" in environment.GetLinuxDistroVersion():
-    system_preliminaries += [
+    preliminaries += [
         "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/mantic/winehq-mantic.sources"
     ]
 elif "23.04" in environment.GetLinuxDistroVersion():
-    system_preliminaries += [
+    preliminaries += [
         "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/lunar/winehq-lunar.sources"
     ]
 elif "22.04" in environment.GetLinuxDistroVersion():
-    system_preliminaries += [
+    preliminaries += [
         "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources"
     ]
 elif "20.04" in environment.GetLinuxDistroVersion():
-    system_preliminaries += [
+    preliminaries += [
         "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources"
     ]
 
 ###########################################################
-# System packages
+# Packages
 ###########################################################
-system_packages = [
+packages = [
 
     # Admin
     "apt-file",
@@ -224,9 +248,33 @@ system_packages = [
     "curl",
     "firefox",
     "signal-desktop",
-    "telegram-desktop",
 
     # X11
     "qdirstat",
     "xorg-dev"
 ]
+
+###########################################################
+# Functions
+###########################################################
+
+# Setup
+def Setup(ini_values = {}):
+
+    # Get apt tools
+    apt_exe = ini_values["Tools.Apt"]["apt_exe"]
+    apt_install_dir = os.path.expandvars(ini_values["Tools.Apt"]["apt_install_dir"])
+    apt_tool = os.path.join(apt_install_dir, apt_exe)
+
+    # Get tools dir
+    tools_dir = os.path.expandvars(ini_values["UserData.Dirs"]["tools_dir"])
+
+    # Run preliminaries
+    for preliminary in preliminaries:
+        preliminary = preliminary.replace("$TOOLS_DIR", tools_dir)
+        subprocess.run(preliminary, shell=True)
+
+    # Install packages
+    subprocess.run(["sudo", apt_tool, "update"])
+    for package in packages:
+        subprocess.run(["sudo", apt_tool, "-y", "install", "--install-recommends", package])
