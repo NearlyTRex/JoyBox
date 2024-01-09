@@ -97,3 +97,6 @@ installer_type_ins = "installshield"
 installer_type_7zip = "7zip"
 installer_type_winrar = "winrar"
 installer_type_unknown = "unknown"
+
+# Sync types
+sync_type_gdrive = "gdrive"
