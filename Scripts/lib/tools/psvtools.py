@@ -32,7 +32,7 @@ class PSVTools(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("PSVTools"):
-            success = network.DownloadGithubSource(
+            success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PSVTools",
                 output_dir = programs.GetLibraryInstallDir("PSVTools"),

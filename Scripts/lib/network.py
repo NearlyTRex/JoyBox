@@ -33,14 +33,37 @@ def IsUrlReachable(url):
         return False
 
 # Get remote json
-def GetRemoteJson(url):
+def GetRemoteJson(url, verbose = False, exit_on_failure = False):
     try:
+        if verbose:
+            system.Log("Processing GET request to '%s'" % url)
         import requests
         get = requests.get(url, headers={"Accept": "application/json"})
         if get.status_code == 200:
             return get.json()
         return None
     except Exception as e:
+        if exit_on_failure:
+            system.LogError("Unable to process GET request to '%s'" % url)
+            system.LogError(e)
+            sys.exit(1)
+        return None
+
+# Post remote json
+def PostRemoteJson(url, json_data, verbose = False, exit_on_failure = False):
+    try:
+        if verbose:
+            system.Log("Processing POST request to '%s'" % url)
+        import requests
+        post = requests.post(url, json = json_data)
+        if post.status_code == 200:
+            return post.json()
+        return None
+    except Exception as e:
+        if exit_on_failure:
+            system.LogError("Unable to process POST request to '%s'" % url)
+            system.LogError(e)
+            sys.exit(1)
         return None
 
 ###########################################################
@@ -245,32 +268,74 @@ def MountNetworkShare(mount_dir, base_location, network_share, username, passwor
 # Github
 ###########################################################
 
-# Download github sources
-def DownloadGithubSource(
+# Get github repository
+def GetGithubRepository(
     github_user,
     github_repo,
+    github_token = None,
+    verbose = False,
+    exit_on_failure = False):
+    try:
+        import github
+        if verbose:
+            system.Log("Getting github repository '%s/%s'" % (github_user, github_repo))
+        access = github.Github(github_token)
+        repo = access.get_repo("%s/%s" % (github_user, github_repo))
+        return repo
+    except Exception as e:
+        if exit_on_failure:
+            system.LogError("Unable to get github repository '%s/%s'" % (github_user, github_repo))
+            system.LogError(e)
+            sys.exit(1)
+        return None
+
+# Get github repositories
+def GetGithubRepositories(
+    github_user,
+    github_token = None,
+    exclude_forks = False,
+    exclude_private = False,
+    verbose = False,
+    exit_on_failure = False):
+    try:
+        import github
+        if verbose:
+            system.Log("Getting github repositories for '%s'" % github_user)
+        access = github.Github(github_token)
+        user = access.get_user(github_user)
+        repositories = []
+        for repo in user.get_repos():
+            if exclude_forks and repo.fork:
+                continue
+            if exclude_private and repo.private:
+                continue
+            repositories.append(repo)
+        return repositories
+    except Exception as e:
+        if exit_on_failure:
+            system.LogError("Unable to get github repositories for '%s'" % github_user)
+            system.LogError(e)
+            sys.exit(1)
+        return []
+
+# Download github repository
+def DownloadGithubRepository(
+    github_user,
+    github_repo,
+    github_token = None,
     output_dir = "",
     clean_first = False,
     verbose = False,
     exit_on_failure = False):
-
-    # Get github url
-    github_url = "https://github.com/%s/%s.git" % (github_user, github_repo)
-
-    # Download sources
-    success = DownloadGitUrl(
-        url = github_url,
+    repo = GetGithubRepository(
+        github_user = github_user,
+        github_repo = github_repo,
+        github_token = github_token,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    return DownloadGitUrl(
+        url = repo.clone_url,
         output_dir = output_dir,
         clean_first = clean_first,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
-    if not success:
-        return False
-
-    # Remove git folder
-    system.RemoveDirectory(
-        dir = os.path.join(output_dir, ".git"),
-        verbose = verbose)
-
-    # Check result
-    return system.DoesDirectoryContainFiles(output_dir)

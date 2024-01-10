@@ -86,7 +86,7 @@ class Pegasus(toolbase.ToolBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Pegasus")
-            success = network.DownloadGithubSource(
+            success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
                 output_dir = os.path.join(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "windows"), "PegasusThemeGrid"),
@@ -116,7 +116,7 @@ class Pegasus(toolbase.ToolBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Pegasus")
-            success = network.DownloadGithubSource(
+            success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
                 output_dir = os.path.join(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "linux"), "PegasusThemeGrid"),

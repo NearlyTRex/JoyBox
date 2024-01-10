@@ -32,7 +32,7 @@ class XCITrimmer(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("XCITrimmer"):
-            success = network.DownloadGithubSource(
+            success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "XCITrimmer",
                 output_dir = programs.GetLibraryInstallDir("XCITrimmer"),

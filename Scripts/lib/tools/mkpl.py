@@ -32,7 +32,7 @@ class Mkpl(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("Mkpl"):
-            success = network.DownloadGithubSource(
+            success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "Mkpl",
                 output_dir = programs.GetLibraryInstallDir("Mkpl"),

@@ -32,7 +32,7 @@ class PSNGetPkgInfo(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("PSNGetPkgInfo"):
-            success = network.DownloadGithubSource(
+            success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PSNGetPkgInfo",
                 output_dir = programs.GetLibraryInstallDir("PSNGetPkgInfo"),

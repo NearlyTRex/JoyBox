@@ -40,7 +40,7 @@ class XorrISO(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("XorrISO", "windows"):
-            success = network.DownloadGithubSource(
+            success = network.DownloadGithubRepository(
                 github_user = "PeyTy",
                 github_repo = "xorriso-exe-for-windows",
                 output_dir = programs.GetProgramInstallDir("XorrISO", "windows"),

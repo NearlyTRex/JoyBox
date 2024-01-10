@@ -28,7 +28,7 @@ class AppIcons(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("AppIcons"):
-            success = network.DownloadGithubSource(
+            success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "BostonIcons",
                 output_dir = programs.GetLibraryInstallDir("AppIcons"),

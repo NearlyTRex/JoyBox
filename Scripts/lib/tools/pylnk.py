@@ -32,7 +32,7 @@ class PyLnk(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("PyLnk"):
-            success = network.DownloadGithubSource(
+            success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PyLnk",
                 output_dir = programs.GetLibraryInstallDir("PyLnk"),
