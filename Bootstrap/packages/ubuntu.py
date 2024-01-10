@@ -209,6 +209,7 @@ packages = [
 
     # Misc
     "ca-certificates",
+    "keyutils",
     "ovmf",
     "qemu-kvm",
     "qemu-utils",
@@ -216,6 +217,9 @@ packages = [
 
     # Net
     "bridge-utils",
+
+    # OtherOSFS
+    "cifs-utils",
 
     # Perl
     "perl-base",
