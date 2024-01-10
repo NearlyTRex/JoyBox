@@ -5,6 +5,7 @@ import configparser
 
 # Local imports
 import settings
+import system
 
 # Open ini file
 def OpenIniFile(ini_path):
@@ -19,7 +20,7 @@ def OpenIniFile(ini_path):
         config.read_dict(settings.ini_defaults)
         for userdata_section in config.sections():
             for userdata_key in config[userdata_section]:
-                config[userdata_section][userdata_key] = PromptForValue(userdata_key, config[userdata_section][userdata_key])
+                config[userdata_section][userdata_key] = system.PromptForValue(userdata_key, config[userdata_section][userdata_key])
         with open(ini_path, "w") as f:
             config.write(f)
 
