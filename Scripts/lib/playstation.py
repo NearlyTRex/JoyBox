@@ -493,6 +493,16 @@ def GetPSNWorkBinContentID(workbin_file):
         pass
     return None
 
+# Get psn fake.rif content id
+def GetPSNFakeRifContentID(fakerif_file):
+    try:
+        with open(workbin_file, "rb") as f:
+            f.seek(0x50)
+            return f.read(0x24).decode("utf-8")
+    except:
+        pass
+    return None
+
 # Rename psn package file
 def RenamePSNPackageFile(pkg_file, verbose = False, exit_on_failure = False):
     content_id = GetPSNPackageContentID(pkg_file)
@@ -528,6 +538,18 @@ def RenamePSNWorkBinFile(workbin_file, verbose = False, exit_on_failure = False)
     return system.MoveFileOrDirectory(
         src = workbin_file,
         dest = os.path.join(system.GetFilenameDirectory(workbin_file), content_id + ".work.bin"),
+        skip_existing = True,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+# Rename psn fake.rif file
+def RenamePSNFakeRifFile(fakerif_file, verbose = False, exit_on_failure = False):
+    content_id = GetPSNFakeRifContentID(fakerif_file)
+    if not content_id:
+        return False
+    return system.MoveFileOrDirectory(
+        src = fakerif_file,
+        dest = os.path.join(system.GetFilenameDirectory(fakerif_file), content_id + ".fake.rif"),
         skip_existing = True,
         verbose = verbose,
         exit_on_failure = exit_on_failure)

@@ -56,6 +56,12 @@ def main():
                     workbin_file = bin_file,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
+        for rif_file in system.BuildFileListByExtensions(input_path, extensions = [".rif"]):
+            if rif_file.endswith(".fake.rif"):
+                playstation.RenamePSNFakeRifFile(
+                    fakerif_file = rif_file,
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
 
 # Start
 main()
