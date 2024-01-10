@@ -473,12 +473,61 @@ def VerifyPSV(psv_file, verbose = False, exit_on_failure = False):
 # Sony PlayStation Network
 ######################################################
 
-# Get psn pkg content id
-def GetPSNPKGContentID(pkg_file):
+# Get psn package content id
+def GetPSNPackageContentID(pkg_file):
     try:
-        with open(pkg_file, 'rb') as f:
+        with open(pkg_file, "rb") as f:
             f.seek(0x30)
             return f.read(0x24).decode("utf-8")
     except:
         pass
     return None
+
+# Get psn work.bin content id
+def GetPSNWorkBinContentID(workbin_file):
+    try:
+        with open(workbin_file, "rb") as f:
+            f.seek(0x10)
+            return f.read(0x24).decode("utf-8")
+    except:
+        pass
+    return None
+
+# Rename psn package file
+def RenamePSNPackageFile(pkg_file, verbose = False, exit_on_failure = False):
+    content_id = GetPSNPackageContentID(pkg_file)
+    if not content_id:
+        return False
+    return system.MoveFileOrDirectory(
+        src = pkg_file,
+        dest = os.path.join(system.GetFilenameDirectory(pkg_file), content_id + ".pkg"),
+        skip_existing = True,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+# Rename psn rap file
+def RenamePSNRapFile(rap_file, verbose = False, exit_on_failure = False):
+    pkg_file = os.path.join(system.GetFilenameDirectory(rap_file), system.GetFilenameBasename(rap_file) + ".pkg")
+    if not os.path.isfile(pkg_file):
+        return False
+    content_id = GetPSNPackageContentID(pkg_file)
+    if not content_id:
+        return False
+    return system.MoveFileOrDirectory(
+        src = rap_file,
+        dest = os.path.join(system.GetFilenameDirectory(rap_file), content_id + ".rap"),
+        skip_existing = True,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+# Rename psn work.bin file
+def RenamePSNWorkBinFile(workbin_file, verbose = False, exit_on_failure = False):
+    content_id = GetPSNWorkBinContentID(workbin_file)
+    if not content_id:
+        return False
+    return system.MoveFileOrDirectory(
+        src = workbin_file,
+        dest = os.path.join(system.GetFilenameDirectory(workbin_file), content_id + ".work.bin"),
+        skip_existing = True,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
