@@ -356,10 +356,13 @@ def HashFiles(input_path, base_path, output_file, verbose = False, exit_on_failu
 def HashCategoryFiles(input_path, file_supercategory, file_category, file_subcategory, verbose = False, exit_on_failure = False):
 
     # Check required types
-    system.AssertPathExists(input_path, "input_path")
     system.AssertIsString(file_supercategory, "file_supercategory")
     system.AssertIsString(file_category, "file_category")
     system.AssertIsString(file_subcategory, "file_subcategory")
+
+    # Check input path
+    if not os.path.exists(input_path):
+        return False
 
     # Get hash file
     hash_file = os.path.join(environment.GetMainMetadataHashesDir(), file_supercategory, file_category, file_subcategory + ".txt")
