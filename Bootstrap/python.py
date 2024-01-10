@@ -35,7 +35,9 @@ packages = [
     "python-dateutil",
     "xxhash",
     "screeninfo",
-    "tqdm"
+    "tqdm",
+    "GitPython",
+    "PyGithub"
 ]
 if environment.IsWindowsPlatform():
     packages += [
