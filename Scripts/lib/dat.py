@@ -119,7 +119,7 @@ class Dat:
     # Rename files
     def rename_files(self, input_dir, verbose = False, exit_on_failure = False):
         if verbose:
-            system.LogInfo("Renaming files in '%s' according to imported dats ..." % input_dir)
+            system.Log("Renaming files in '%s' according to imported dats ..." % input_dir)
         for file in system.BuildFileList(input_dir):
             if verbose:
                 system.Log("Examining '%s'" % file)
