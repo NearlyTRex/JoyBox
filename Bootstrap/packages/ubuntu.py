@@ -110,6 +110,9 @@ packages = [
     "qttools5-dev-tools",
     "xa65",
 
+    # Gnome
+    "ghex",
+
     # Libdevel
     "glslang-dev",
     "glslang-tools",
