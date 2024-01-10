@@ -10,7 +10,7 @@ import environment
 import cache
 import command
 import programs
-import network
+import release
 import sandbox
 import metadata
 import display
@@ -517,7 +517,7 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Download windows programs
         if programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "joncampbell123",
                 github_repo = "dosbox-x",
                 starts_with = "dosbox-x-vsbuild-win64",
@@ -530,7 +530,7 @@ class Computer(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DosBoxX")
         if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
-            success = network.DownloadLatestWebpageRelease(
+            success = release.DownloadLatestWebpageRelease(
                 webpage_url = "https://www.scummvm.org/downloads",
                 starts_with = "https://downloads.scummvm.org/frs/scummvm/",
                 ends_with = "win32-x86_64.zip",
@@ -543,7 +543,7 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Build linux programs
         if programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/DosboxX.git",
                 output_name = "DosBoxX",
                 output_dir = programs.GetProgramInstallDir("DosBoxX", "linux"),
@@ -583,7 +583,7 @@ class Computer(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DosBoxX")
         if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ScummVM.git",
                 output_name = "ScummVM",
                 output_dir = programs.GetProgramInstallDir("ScummVM", "linux"),

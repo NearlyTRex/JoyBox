@@ -7,7 +7,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import gui
@@ -73,7 +73,7 @@ class Mednafen(emulatorbase.EmulatorBase):
 
         # Download program
         if programs.ShouldProgramBeInstalled("Mednafen", "windows"):
-            success = network.DownloadLatestWebpageRelease(
+            success = release.DownloadLatestWebpageRelease(
                 webpage_url = "https://mednafen.github.io/",
                 starts_with = "https://mednafen.github.io/releases/files/mednafen",
                 ends_with = "UNSTABLE-win64.zip",
@@ -86,7 +86,7 @@ class Mednafen(emulatorbase.EmulatorBase):
 
         # Build program
         if programs.ShouldProgramBeInstalled("Mednafen", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 webpage_url = "https://mednafen.github.io/",
                 starts_with = "https://mednafen.github.io/releases/files/mednafen",
                 ends_with = "UNSTABLE.tar.xz",

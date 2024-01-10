@@ -4,7 +4,7 @@ import sys
 
 # Local imports
 import config
-import network
+import release
 import system
 import programs
 import environment
@@ -54,7 +54,7 @@ class VKD3D(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("VKD3D"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "HansKristian-Work",
                 github_repo = "vkd3d-proton",
                 starts_with = "vkd3d-proton",

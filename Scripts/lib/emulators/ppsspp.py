@@ -7,7 +7,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import gui
 import emulatorcommon
@@ -64,7 +64,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PPSSPP", "windows"):
-            success = network.DownloadGeneralRelease(
+            success = release.DownloadGeneralRelease(
                 archive_url = "https://www.ppsspp.org/files/1_16_6/ppsspp_win.zip",
                 search_file = "PPSSPPWindows64.exe",
                 install_name = "PPSSPP",
@@ -75,7 +75,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("PPSSPP", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/PPSSPP.git",
                 output_name = "PPSSPP",
                 output_dir = programs.GetProgramInstallDir("PPSSPP", "linux"),

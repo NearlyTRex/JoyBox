@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -41,7 +41,7 @@ class MameTools(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("MameChdman", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "mamedev",
                 github_repo = "mame",
                 starts_with = "mame",
@@ -60,7 +60,7 @@ class MameTools(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("MameChdman", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Mame.git",
                 output_name = "MameChdman",
                 output_dir = programs.GetProgramInstallDir("MameChdman", "linux"),

@@ -6,7 +6,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import gui
@@ -179,7 +179,7 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Ares", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "ares-emulator",
                 github_repo = "ares",
                 starts_with = "ares",
@@ -194,7 +194,7 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Ares", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Ares.git",
                 output_name = "Ares",
                 output_dir = programs.GetProgramInstallDir("Ares", "linux"),

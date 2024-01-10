@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -39,7 +39,7 @@ class Jdupes(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Jdupes", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "jbruchon",
                 github_repo = "jdupes",
                 starts_with = "jdupes",
@@ -53,7 +53,7 @@ class Jdupes(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Jdupes", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "jbruchon",
                 github_repo = "jdupes",
                 starts_with = "jdupes",

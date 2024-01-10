@@ -7,7 +7,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import gui
@@ -105,7 +105,7 @@ class RetroArch(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("RetroArch", "windows"):
-            success = network.DownloadGeneralRelease(
+            success = release.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch.7z",
                 search_file = "retroarch.exe",
                 install_name = "RetroArch",
@@ -113,7 +113,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch")
-            success = network.DownloadGeneralRelease(
+            success = release.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch_cores.7z",
                 search_file = "snes9x_libretro.dll",
                 install_name = "RetroArch",
@@ -124,7 +124,7 @@ class RetroArch(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("RetroArch", "linux"):
-            success = network.DownloadGeneralRelease(
+            success = release.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch.7z",
                 search_file = "RetroArch-Linux-x86_64.AppImage",
                 install_name = "RetroArch",
@@ -132,7 +132,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch")
-            success = network.DownloadGeneralRelease(
+            success = release.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch_cores.7z",
                 search_file = "snes9x_libretro.so",
                 install_name = "RetroArch",

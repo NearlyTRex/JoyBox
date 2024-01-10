@@ -6,7 +6,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import gui
 import emulatorcommon
@@ -61,7 +61,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("BigPEmu", "windows"):
-            success = network.DownloadGeneralRelease(
+            success = release.DownloadGeneralRelease(
                 archive_url = "https://www.richwhitehouse.com/jaguar/builds/BigPEmu_v1092.zip",
                 search_file = "BigPEmu.exe",
                 install_name = "BigPEmu",

@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -39,7 +39,7 @@ class Wad2Bin(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Wad2Bin", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "DarkMatterCore",
                 github_repo = "wad2bin",
                 starts_with = "wad2bin",

@@ -7,7 +7,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import archive
@@ -81,7 +81,7 @@ class Vita3K(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Vita3K", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "Vita3K",
                 github_repo = "Vita3K",
                 starts_with = "windows-latest",
@@ -96,7 +96,7 @@ class Vita3K(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Vita3K", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "Vita3K",
                 github_repo = "Vita3K",
                 starts_with = "Vita3K-x86_64",

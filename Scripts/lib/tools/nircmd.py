@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -39,7 +39,7 @@ class NirCmd(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("NirCmd", "windows"):
-            success = network.DownloadGeneralRelease(
+            success = release.DownloadGeneralRelease(
                 archive_url = "https://www.nirsoft.net/utils/nircmd-x64.zip",
                 search_file = "nircmdc.exe",
                 install_name = "NirCmd",

@@ -7,7 +7,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import gui
@@ -142,7 +142,7 @@ class PCSX2(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PCSX2", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "PCSX2",
                 github_repo = "pcsx2",
                 starts_with = "pcsx2",
@@ -156,7 +156,7 @@ class PCSX2(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("PCSX2", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "PCSX2",
                 github_repo = "pcsx2",
                 starts_with = "pcsx2",

@@ -6,6 +6,7 @@ import sys
 import config
 import system
 import network
+import release
 import programs
 import toolbase
 
@@ -39,7 +40,7 @@ class XorrISO(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("XorrISO", "windows"):
-            success = network.DownloadLatestGithubSource(
+            success = network.DownloadGithubSource(
                 github_user = "PeyTy",
                 github_repo = "xorriso-exe-for-windows",
                 output_dir = programs.GetProgramInstallDir("XorrISO", "windows"),
@@ -50,7 +51,7 @@ class XorrISO(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("XorrISO", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://www.gnu.org/software/xorriso/xorriso-1.5.6.pl02.tar.gz",
                 output_name = "XorrISO",
                 output_dir = programs.GetProgramInstallDir("XorrISO", "linux"),

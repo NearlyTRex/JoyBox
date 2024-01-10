@@ -6,7 +6,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import archive
@@ -89,7 +89,7 @@ class Dolphin(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Dolphin", "windows"):
-            success = network.DownloadLatestWebpageRelease(
+            success = release.DownloadLatestWebpageRelease(
                 webpage_url = "https://dolphin-emu.org/download/",
                 starts_with = "https://dl.dolphin-emu.org/builds",
                 ends_with = "x64.7z",
@@ -102,7 +102,7 @@ class Dolphin(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("Dolphin", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Dolphin.git",
                 output_name = "Dolphin",
                 output_dir = programs.GetProgramInstallDir("Dolphin", "linux"),

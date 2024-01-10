@@ -7,7 +7,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import gui
 import emulatorcommon
@@ -62,7 +62,7 @@ class ViceC64(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("VICE-C64", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "VICE-Team",
                 github_repo = "svn-mirror",
                 starts_with = "SDL2VICE",
@@ -77,7 +77,7 @@ class ViceC64(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("VICE-C64", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ViceC64.git",
                 output_name = "VICE-C64",
                 output_dir = programs.GetProgramInstallDir("VICE-C64", "linux"),

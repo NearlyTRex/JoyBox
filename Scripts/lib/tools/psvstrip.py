@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -39,7 +39,7 @@ class PSVStrip(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PSVStrip", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "Kippykip",
                 github_repo = "PSVStrip",
                 starts_with = "PSVStrip",

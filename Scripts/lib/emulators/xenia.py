@@ -7,7 +7,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import gui
 import emulatorcommon
@@ -68,7 +68,7 @@ class Xenia(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Xenia", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "xenia-project",
                 github_repo = "release-builds-windows",
                 starts_with = "xenia_master",

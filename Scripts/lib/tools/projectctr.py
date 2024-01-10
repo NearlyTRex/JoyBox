@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -53,7 +53,7 @@ class ProjectCTR(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("CtrMakeRom", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
                 starts_with = "makerom",
@@ -66,7 +66,7 @@ class ProjectCTR(toolbase.ToolBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup CtrMakeRom")
         if programs.ShouldProgramBeInstalled("CtrTool", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
                 starts_with = "ctrtool",
@@ -81,7 +81,7 @@ class ProjectCTR(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("CtrMakeRom", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
                 starts_with = "makerom",
@@ -100,7 +100,7 @@ class ProjectCTR(toolbase.ToolBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup CtrMakeRom")
         if programs.ShouldProgramBeInstalled("CtrTool", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
                 starts_with = "ctrtool",

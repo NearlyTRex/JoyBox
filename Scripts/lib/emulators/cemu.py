@@ -6,7 +6,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import nintendo
 import gui
@@ -89,7 +89,7 @@ class Cemu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Cemu", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "cemu-project",
                 github_repo = "Cemu",
                 starts_with = "cemu",
@@ -103,7 +103,7 @@ class Cemu(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Cemu", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "cemu-project",
                 github_repo = "Cemu",
                 starts_with = "Cemu",

@@ -6,7 +6,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import archive
@@ -68,7 +68,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("EKA2L1", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "EKA2L1",
                 github_repo = "EKA2L1",
                 starts_with = "windows-latest",
@@ -83,7 +83,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("EKA2L1", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "EKA2L1",
                 github_repo = "EKA2L1",
                 starts_with = "ubuntu-latest",

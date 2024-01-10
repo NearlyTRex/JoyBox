@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -39,7 +39,7 @@ class PS3Dec(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PS3Dec", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "NearlyTRex",
                 github_repo = "PS3Dec",
                 starts_with = "PS3Dec",
@@ -54,7 +54,7 @@ class PS3Dec(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("PS3Dec", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/PS3Dec.git",
                 output_name = "PS3Dec",
                 output_dir = programs.GetProgramInstallDir("PS3Dec", "linux"),

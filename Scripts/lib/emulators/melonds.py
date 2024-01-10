@@ -7,7 +7,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import gui
@@ -86,7 +86,7 @@ class MelonDS(emulatorbase.EmulatorBase):
 
         # Download program
         if programs.ShouldProgramBeInstalled("melonDS", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "melonDS-emu",
                 github_repo = "melonDS",
                 starts_with = "melonDS",
@@ -101,7 +101,7 @@ class MelonDS(emulatorbase.EmulatorBase):
 
         # Build program
         if programs.ShouldProgramBeInstalled("melonDS", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/melonDS.git",
                 output_name = "melonDS",
                 output_dir = programs.GetProgramInstallDir("melonDS", "linux"),

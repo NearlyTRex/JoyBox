@@ -6,7 +6,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import archive
@@ -94,7 +94,7 @@ class Citra(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Citra", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "citra-emu",
                 github_repo = "citra-nightly",
                 starts_with = "citra-windows-msvc",
@@ -109,7 +109,7 @@ class Citra(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Citra", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "citra-emu",
                 github_repo = "citra-nightly",
                 starts_with = "citra-linux-appimage",

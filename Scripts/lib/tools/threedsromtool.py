@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -39,7 +39,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("3DSRomTool", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "NearlyTRex",
                 github_repo = "3DSRomTool",
                 starts_with = "rom_tool",
@@ -54,7 +54,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("3DSRomTool", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/3DSRomTool.git",
                 output_name = "3DSRomTool",
                 output_dir = programs.GetProgramInstallDir("3DSRomTool", "linux"),

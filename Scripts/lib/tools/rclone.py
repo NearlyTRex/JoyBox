@@ -6,7 +6,7 @@ import sys
 import config
 import system
 import environment
-import network
+import release
 import programs
 import toolbase
 
@@ -50,7 +50,7 @@ class RClone(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("RClone", "windows"):
-            success = network.DownloadGeneralRelease(
+            success = release.DownloadGeneralRelease(
                 archive_url = "https://downloads.rclone.org/rclone-current-windows-amd64.zip",
                 search_file = "rclone.exe",
                 install_name = "RClone",
@@ -61,7 +61,7 @@ class RClone(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("RClone", "linux"):
-            success = network.DownloadGeneralRelease(
+            success = release.DownloadGeneralRelease(
                 archive_url = "https://downloads.rclone.org/rclone-current-linux-amd64.zip",
                 search_file = "rclone",
                 install_name = "RClone",

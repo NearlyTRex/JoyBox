@@ -7,7 +7,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import gui
 import emulatorcommon
@@ -62,7 +62,7 @@ class Atari800(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Atari800", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "atari800",
                 github_repo = "atari800",
                 starts_with = "atari800",
@@ -77,7 +77,7 @@ class Atari800(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Atari800", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Atari800.git",
                 output_name = "Atari800",
                 output_dir = programs.GetProgramInstallDir("Atari800", "linux"),

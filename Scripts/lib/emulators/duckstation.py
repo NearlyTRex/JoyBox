@@ -6,7 +6,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import gui
@@ -134,7 +134,7 @@ class DuckStation(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("DuckStation", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "stenzek",
                 github_repo = "duckstation",
                 starts_with = "duckstation",
@@ -149,7 +149,7 @@ class DuckStation(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("DuckStation", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "stenzek",
                 github_repo = "duckstation",
                 starts_with = "DuckStation",

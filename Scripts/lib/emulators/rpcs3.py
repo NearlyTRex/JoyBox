@@ -8,7 +8,7 @@ import config
 import cache
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import archive
@@ -71,7 +71,7 @@ class RPCS3(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("RPCS3", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "RPCS3",
                 github_repo = "rpcs3-binaries-win",
                 starts_with = "rpcs3",
@@ -86,7 +86,7 @@ class RPCS3(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("RPCS3", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "RPCS3",
                 github_repo = "rpcs3-binaries-linux",
                 starts_with = "rpcs3",

@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -57,7 +57,7 @@ class DXVK(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("DXVK"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "doitsujin",
                 github_repo = "dxvk",
                 starts_with = "dxvk-2.2",

@@ -7,7 +7,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import archive
@@ -121,7 +121,7 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Yuzu", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "yuzu-emu",
                 github_repo = "yuzu-mainline",
                 starts_with = "yuzu-windows-msvc",
@@ -136,7 +136,7 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Yuzu", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "yuzu-emu",
                 github_repo = "yuzu-mainline",
                 starts_with = "yuzu-mainline",

@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -39,7 +39,7 @@ class NDecrypt(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "SabreTools",
                 github_repo = "NDecrypt",
                 starts_with = "NDecrypt",
@@ -54,7 +54,7 @@ class NDecrypt(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("NDecrypt", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "SabreTools",
                 github_repo = "NDecrypt",
                 starts_with = "NDecrypt",

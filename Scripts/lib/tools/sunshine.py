@@ -6,7 +6,7 @@ import sys
 import config
 import system
 import environment
-import network
+import release
 import programs
 import toolbase
 
@@ -42,7 +42,7 @@ class Sunshine(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Sunshine", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "LizardByte",
                 github_repo = "Sunshine",
                 starts_with = "sunshine",
@@ -57,7 +57,7 @@ class Sunshine(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Sunshine", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "LizardByte",
                 github_repo = "Sunshine",
                 starts_with = "sunshine",

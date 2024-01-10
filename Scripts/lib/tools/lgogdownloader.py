@@ -6,7 +6,7 @@ import sys
 import config
 import system
 import environment
-import network
+import release
 import programs
 import toolbase
 
@@ -41,7 +41,7 @@ class LGOGDownloader(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("LGOGDownloader", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/LGOGDownloader.git",
                 output_name = "LGOGDownloader",
                 output_dir = programs.GetProgramInstallDir("LGOGDownloader", "linux"),

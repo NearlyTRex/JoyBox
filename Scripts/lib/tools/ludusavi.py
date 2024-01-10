@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import environment
 import toolbase
@@ -90,7 +90,7 @@ class Ludusavi(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Ludusavi", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "mtkennerly",
                 github_repo = "ludusavi",
                 starts_with = "ludusavi",
@@ -105,7 +105,7 @@ class Ludusavi(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Ludusavi", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "mtkennerly",
                 github_repo = "ludusavi",
                 starts_with = "ludusavi",

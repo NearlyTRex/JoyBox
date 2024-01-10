@@ -32,7 +32,7 @@ class ExifTool(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("ExifTool"):
-            success = network.DownloadLatestGithubSource(
+            success = network.DownloadGithubSource(
                 github_user = "NearlyTRex",
                 github_repo = "ExifTool",
                 output_dir = programs.GetLibraryInstallDir("ExifTool"),

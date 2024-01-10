@@ -6,7 +6,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import gui
@@ -75,7 +75,7 @@ class FSUAE(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("FS-UAE", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "FrodeSolheim",
                 github_repo = "fs-uae",
                 starts_with = "FS-UAE",
@@ -90,7 +90,7 @@ class FSUAE(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("FS-UAE", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/FrodeSolheim/fs-uae/releases/download/v3.1.66/fs-uae-3.1.66.tar.xz",
                 output_name = "FS-UAE",
                 output_dir = programs.GetProgramInstallDir("FS-UAE", "linux"),

@@ -7,7 +7,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import gui
@@ -83,7 +83,7 @@ class Xemu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Xemu", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "mborgerson",
                 github_repo = "xemu",
                 starts_with = "xemu",
@@ -98,7 +98,7 @@ class Xemu(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("Xemu", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Xemu.git",
                 output_name = "Xemu",
                 output_dir = programs.GetProgramInstallDir("Xemu", "linux"),

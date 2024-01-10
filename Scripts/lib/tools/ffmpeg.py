@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -39,7 +39,7 @@ class FFMpeg(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("FFMpeg", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "BtbN",
                 github_repo = "FFmpeg-Builds",
                 starts_with = "ffmpeg-master-latest",
@@ -54,7 +54,7 @@ class FFMpeg(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("FFMpeg", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "BtbN",
                 github_repo = "FFmpeg-Builds",
                 starts_with = "ffmpeg-master-latest",

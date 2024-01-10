@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -39,7 +39,7 @@ class HacTool(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("HacTool", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "SciresM",
                 github_repo = "hactool",
                 starts_with = "hactool",
@@ -54,7 +54,7 @@ class HacTool(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("HacTool", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/HacTool.git",
                 output_name = "HacTool",
                 output_dir = programs.GetProgramInstallDir("HacTool", "linux"),

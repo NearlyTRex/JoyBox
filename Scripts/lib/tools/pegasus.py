@@ -6,6 +6,7 @@ import sys
 import config
 import system
 import network
+import release
 import programs
 import environment
 import toolbase
@@ -72,7 +73,7 @@ class Pegasus(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Pegasus", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "mmatyas",
                 github_repo = "pegasus-frontend",
                 starts_with = "pegasus-fe",
@@ -85,7 +86,7 @@ class Pegasus(toolbase.ToolBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Pegasus")
-            success = network.DownloadLatestGithubSource(
+            success = network.DownloadGithubSource(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
                 output_dir = os.path.join(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "windows"), "PegasusThemeGrid"),
@@ -96,7 +97,7 @@ class Pegasus(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Pegasus", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "mmatyas",
                 github_repo = "pegasus-frontend",
                 starts_with = "pegasus-fe",
@@ -115,7 +116,7 @@ class Pegasus(toolbase.ToolBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Pegasus")
-            success = network.DownloadLatestGithubSource(
+            success = network.DownloadGithubSource(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
                 output_dir = os.path.join(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "linux"), "PegasusThemeGrid"),

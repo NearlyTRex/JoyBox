@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -39,7 +39,7 @@ class ExtractXIso(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("ExtractXIso", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "XboxDev",
                 github_repo = "extract-xiso",
                 starts_with = "extract-xiso",
@@ -54,7 +54,7 @@ class ExtractXIso(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("ExtractXIso", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ExtractXIso.git",
                 output_name = "ExtractXIso",
                 output_dir = programs.GetProgramInstallDir("ExtractXIso", "linux"),

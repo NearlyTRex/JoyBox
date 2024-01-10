@@ -6,7 +6,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import gui
 import emulatorcommon
@@ -61,7 +61,7 @@ class Flycast(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Flycast", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "flyinghead",
                 github_repo = "flycast",
                 starts_with = "flycast-win64",
@@ -76,7 +76,7 @@ class Flycast(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("Flycast", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Flycast.git",
                 output_name = "Flycast",
                 output_dir = programs.GetProgramInstallDir("Flycast", "linux"),

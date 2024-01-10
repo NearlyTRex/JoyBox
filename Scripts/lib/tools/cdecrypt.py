@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -39,7 +39,7 @@ class CDecrypt(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("CDecrypt", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "VitaSmith",
                 github_repo = "cdecrypt",
                 starts_with = "cdecrypt",
@@ -54,7 +54,7 @@ class CDecrypt(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("CDecrypt", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/CDecrypt.git",
                 output_name = "CDecrypt",
                 output_dir = programs.GetProgramInstallDir("CDecrypt", "linux"),

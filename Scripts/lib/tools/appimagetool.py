@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import environment
 import toolbase
@@ -47,7 +47,7 @@ class AppImageTool(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("AppImageTool", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "AppImage",
                 github_repo = "AppImageKit",
                 starts_with = "appimagetool-x86_64",

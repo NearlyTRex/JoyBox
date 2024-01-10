@@ -5,7 +5,7 @@ import sys
 # Local imports
 import config
 import system
-import network
+import release
 import programs
 import toolbase
 
@@ -39,7 +39,7 @@ class GeckoDriver(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("GeckoDriver", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "mozilla",
                 github_repo = "geckodriver",
                 starts_with = "geckodriver",
@@ -54,7 +54,7 @@ class GeckoDriver(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("GeckoDriver", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "mozilla",
                 github_repo = "geckodriver",
                 starts_with = "geckodriver",

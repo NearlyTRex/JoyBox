@@ -7,7 +7,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import gui
@@ -125,7 +125,7 @@ class Mame(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Mame", "windows"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "mamedev",
                 github_repo = "mame",
                 starts_with = "mame",
@@ -143,7 +143,7 @@ class Mame(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("Mame", "linux"):
-            success = network.BuildAppImageFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Mame.git",
                 output_name = "Mame",
                 output_dir = programs.GetProgramInstallDir("Mame", "linux"),

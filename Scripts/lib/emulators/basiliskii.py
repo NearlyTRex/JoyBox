@@ -6,7 +6,7 @@ import sys
 import config
 import environment
 import system
-import network
+import release
 import programs
 import hashing
 import gui
@@ -115,7 +115,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("BasiliskII", "windows"):
-            success = network.DownloadGeneralRelease(
+            success = release.DownloadGeneralRelease(
                 archive_url = "https://surfdrive.surf.nl/files/index.php/s/C7E6HIZKWuHHR1P/download",
                 search_file = "BasiliskII.exe",
                 install_name = "BasiliskII",
@@ -126,7 +126,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("BasiliskII", "linux"):
-            success = network.DownloadLatestGithubRelease(
+            success = release.DownloadLatestGithubRelease(
                 github_user = "Korkman",
                 github_repo = "macemu-appimage-builder",
                 starts_with = "BasiliskII-x86_64",
