@@ -284,7 +284,7 @@ def TransformPS3NetworkPackage(
         if obj.endswith(".rap"):
             rap_file = os.path.join(system.GetFilenameDirectory(source_file), obj)
             pkg_file = os.path.join(system.GetFilenameDirectory(source_file), obj.replace(".rap", ".pkg"))
-            content_id = playstation.GetPSNPKGContentID(pkg_file)
+            content_id = playstation.GetPSNPackageContentID(pkg_file)
             if content_id:
                 success = system.CopyFileOrDirectory(
                     src = rap_file,
