@@ -37,18 +37,23 @@ class Dat:
             if verbose:
                 system.Log("Importing clrmamepro dat file '%s'" % input_file)
             dom = minidom.parse(input_file)
-            games = dom.getElementsByTagName("game")
-            for game in games:
-                rom_tags = game.getElementsByTagName("rom")
-                for rom in rom_tags:
+            game_tags = dom.getElementsByTagName("game")
+            for game_tag in game_tags:
+                rom_tags = game_tag.getElementsByTagName("rom")
+                for rom_tag in rom_tags:
+                    has_name = game_tag.hasAttribute("name")
+                    has_file = rom_tag.hasAttribute("name")
+                    has_size = rom_tag.hasAttribute("size")
+                    has_crc = rom_tag.hasAttribute("crc")
+                    has_md5 = rom_tag.hasAttribute("md5")
+                    if not has_name or not has_file or not has_size or not has_crc or not has_md5:
+                        continue
                     game_entry = {}
-                    game_entry[config.dat_key_game] = game.attributes["name"].value
-                    game_entry[config.dat_key_file] = rom.attributes["name"].value
-                    game_entry[config.dat_key_size] = rom.attributes["size"].value
-                    game_entry[config.dat_key_crc] = rom.attributes["crc"].value
-                    game_entry[config.dat_key_md5] = rom.attributes["md5"].value
-                    game_entry[config.dat_key_sha1] = rom.attributes["sha1"].value
-                    game_entry[config.dat_key_sha256] = rom.attributes["sha256"].value
+                    game_entry[config.dat_key_game] = game_tag.attributes["name"].value
+                    game_entry[config.dat_key_file] = rom_tag.attributes["name"].value
+                    game_entry[config.dat_key_size] = rom_tag.attributes["size"].value
+                    game_entry[config.dat_key_crc] = rom_tag.attributes["crc"].value
+                    game_entry[config.dat_key_md5] = rom_tag.attributes["md5"].value
                     self.add_game(game_entry)
         except Exception as e:
             if exit_on_failure:
