@@ -65,12 +65,17 @@ ini_defaults["UserData.Capture"]["capture_framerate"] = "30"
 ini_defaults["UserData.Capture"]["overwrite_screenshots"] = "False"
 ini_defaults["UserData.Capture"]["overwrite_videos"] = "False"
 
+# UserData.GitHub
+ini_defaults["UserData.GitHub"] = {}
+ini_defaults["UserData.GitHub"]["github_username"] = "NearlyTRex"
+ini_defaults["UserData.GitHub"]["github_access_token"] = ""
+
 # UserData.Steam
 ini_defaults["UserData.Steam"] = {}
 ini_defaults["UserData.Steam"]["steam_username"] = "SemiDiabolicalParka"
 ini_defaults["UserData.Steam"]["steam_userid"] = "76561198286525102"
 
-# UserData.
+# UserData.Switch
 ini_defaults["UserData.Switch"] = {}
 ini_defaults["UserData.Switch"]["profile_user_id"] = "F6F389D41D6BC0BDD6BD928C526AE556"
 ini_defaults["UserData.Switch"]["profile_account_name"] = "yuzu"
