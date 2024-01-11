@@ -16,6 +16,9 @@ preliminaries = []
 ###########################################################
 packages = [
 
+    # Devel
+    "MHNexus.HxD",
+
     # Net
     "subhra74.XtremeDownloadManager",
 
@@ -32,10 +35,13 @@ packages = [
     "QmmpDevelopmentTeam.qmmp",
 
     # Text
+    "Notepad++.Notepad++",
     "VSCodium.VSCodium",
 
     # Utils
+    "GeekUninstaller.GeekUninstaller",
     "mcmilk.7zip-zstd",
+    "WinDirStat.WinDirStat",
 
     # VCS
     "Git.Git",
