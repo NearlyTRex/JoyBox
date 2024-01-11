@@ -503,6 +503,72 @@ def GetPSNFakeRifContentID(fakerif_file):
         pass
     return None
 
+# Get psn package info
+def GetPSNPackageInfo(pkg_file, verbose = False, exit_on_failure = False):
+
+    # Get tool
+    python_tool = None
+    if programs.IsToolInstalled("PythonVenvPython"):
+        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if not python_tool:
+        system.LogError("PythonVenvPython was not found")
+        return None
+
+    # Get script
+    extract_script = None
+    if programs.IsToolInstalled("PSNGetPkgInfo"):
+        extract_script = programs.GetToolProgram("PSNGetPkgInfo")
+    if not extract_script:
+        system.LogError("PSNGetPkgInfo was not found")
+        return None
+
+    # Get info command
+    info_cmd = [
+        python_tool,
+        extract_script,
+        pkg_file
+    ]
+
+    # Run info command
+    info_output = command.RunOutputCommand(
+        cmd = info_cmd,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not info_output or len(info_output) == 0:
+        return None
+
+    # Parse info
+    info = {}
+    for line in info_output.split("\n"):
+        line_tokens = line.split(":")
+        if len(len_tokens) < 2:
+            continue
+        line_field = line_tokens[0].strip()
+        line_value = line_tokens[1].strip()
+        if line_field == "NPS Type":
+            info["nps_type"] = line_value
+        elif line_field == "Title ID":
+            info["title_id"] = line_value
+        elif line_field == "Title":
+            info["title"] = line_value
+        elif line_field == "Region":
+            info["region"] = line_value
+        elif line_field == "Content ID":
+            info["content_id"] = line_value
+        elif line_field == "Content Type":
+            info["content_type"] = line_value
+        elif line_field == "DRM Type":
+            info["drm_type"] = line_value
+        elif line_field == "Min FW":
+            info["min_fw"] = line_value
+        elif line_field == "Version":
+            info["version"] = line_value
+        elif line_field == "App Ver":
+            info["app_ver"] = line_value
+        elif line_field == "Size":
+            info["size"] = line_value
+    return info
+
 # Rename psn package file
 def RenamePSNPackageFile(pkg_file, verbose = False, exit_on_failure = False):
     content_id = GetPSNPackageContentID(pkg_file)
