@@ -236,6 +236,7 @@ packages = [
 
     # Sound
     "jackd",
+    "qmmp",
 
     # Text
     "codium",

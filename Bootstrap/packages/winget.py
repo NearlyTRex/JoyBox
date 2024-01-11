@@ -28,6 +28,9 @@ packages = [
     # Sandbox
     "Sandboxie.Plus",
 
+    # Sound
+    "QmmpDevelopmentTeam.qmmp",
+
     # Text
     "VSCodium.VSCodium",
 
