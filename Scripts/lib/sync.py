@@ -72,12 +72,8 @@ def DownloadFilesFromRemote(local_path, remote_type, remote_path, interactive = 
         return False
 
     # Get copy command
-    copy_cmd = [rclone_tool]
-    if pretend_run:
-        copy_cmd += ["--dry-run "]
-    if interactive:
-        copy_cmd += ["--interactive"]
     copy_cmd = [
+        rclone_tool,
         "copy",
         "%s:%s" % (remote_type, remote_path),
         local_path,
@@ -87,6 +83,10 @@ def DownloadFilesFromRemote(local_path, remote_type, remote_path, interactive = 
         copy_cmd += [
             "--drive-acknowledge-abuse"
         ]
+    if pretend_run:
+        copy_cmd += ["--dry-run"]
+    if interactive:
+        copy_cmd += ["--interactive"]
     if verbose:
         copy_cmd += ["--verbose"]
 
@@ -111,12 +111,8 @@ def UploadFilesToRemote(local_path, remote_type, remote_path, interactive = Fals
         return False
 
     # Get copy command
-    copy_cmd = [rclone_tool]
-    if pretend_run:
-        copy_cmd += ["--dry-run "]
-    if interactive:
-        copy_cmd += ["--interactive"]
     copy_cmd = [
+        rclone_tool,
         "copy",
         local_path,
         "%s:%s" % (remote_type, remote_path),
@@ -126,6 +122,10 @@ def UploadFilesToRemote(local_path, remote_type, remote_path, interactive = Fals
         copy_cmd += [
             "--drive-acknowledge-abuse"
         ]
+    if pretend_run:
+        copy_cmd += ["--dry-run"]
+    if interactive:
+        copy_cmd += ["--interactive"]
     if verbose:
         copy_cmd += ["--verbose"]
 
@@ -150,12 +150,8 @@ def SyncFilesFromRemote(local_path, remote_type, remote_path, interactive = Fals
         return False
 
     # Get sync command
-    sync_cmd = [rclone_tool]
-    if pretend_run:
-        sync_cmd += ["--dry-run "]
-    if interactive:
-        sync_cmd += ["--interactive"]
-    sync_cmd += [
+    sync_cmd = [
+        rclone_tool,
         "sync",
         "%s:%s" % (remote_type, remote_path),
         local_path,
@@ -165,6 +161,10 @@ def SyncFilesFromRemote(local_path, remote_type, remote_path, interactive = Fals
         sync_cmd += [
             "--drive-acknowledge-abuse"
         ]
+    if pretend_run:
+        sync_cmd += ["--dry-run"]
+    if interactive:
+        sync_cmd += ["--interactive"]
     if verbose:
         sync_cmd += ["--verbose"]
 
@@ -189,12 +189,8 @@ def SyncFilesToRemote(local_path, remote_type, remote_path, interactive = False,
         return False
 
     # Get sync command
-    sync_cmd = [rclone_tool]
-    if pretend_run:
-        sync_cmd += ["--dry-run "]
-    if interactive:
-        sync_cmd += ["--interactive"]
     sync_cmd = [
+        rclone_tool,
         "sync",
         local_path,
         "%s:%s" % (remote_type, remote_path),
@@ -204,12 +200,58 @@ def SyncFilesToRemote(local_path, remote_type, remote_path, interactive = False,
         sync_cmd += [
             "--drive-acknowledge-abuse"
         ]
+    if pretend_run:
+        sync_cmd += ["--dry-run"]
+    if interactive:
+        sync_cmd += ["--interactive"]
     if verbose:
         sync_cmd += ["--verbose"]
 
     # Run sync command
     code = command.RunBlockingCommand(
         cmd = sync_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [rclone_tool]),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
+# Sync files both ways
+def SyncFilesBothWays(local_path, remote_type, remote_path, resync = False, interactive = False, verbose = False, pretend_run = False, exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
+        return False
+
+    # Get bisync command
+    bisync_cmd = [
+        rclone_tool,
+        "bisync",
+        local_path,
+        "%s:%s" % (remote_type, remote_path),
+        "--check-access",
+        "--create-empty-src-dirs"
+    ]
+    if remote_type == config.sync_type_gdrive:
+        bisync_cmd += [
+            "--drive-acknowledge-abuse"
+        ]
+    if resync:
+        bisync_cmd += ["--resync"]
+    if pretend_run:
+        bisync_cmd += ["--dry-run"]
+    if interactive:
+        bisync_cmd += ["--interactive"]
+    if verbose:
+        bisync_cmd += ["--verbose"]
+
+    # Run bisync command
+    code = command.RunBlockingCommand(
+        cmd = bisync_cmd,
         options = command.CommandOptions(
             blocking_processes = [rclone_tool]),
         verbose = verbose,

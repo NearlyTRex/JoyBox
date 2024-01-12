@@ -29,12 +29,14 @@ parser.add_argument("-a", "--action",
         "download",
         "upload",
         "pull",
-        "push"
+        "push",
+        "merge"
     ],
     default="init", help="Sync action"
 )
 parser.add_argument("-l", "--local_path", type=str, default=environment.GetSyncRootDir(), help="Local path")
 parser.add_argument("-r", "--remote_path", type=str, default="/", help="Remote path")
+parser.add_argument("-e", "--resync", action="store_true", help="Enable resync mode")
 parser.add_argument("-i", "--interactive", action="store_true", help="Enable interactive mode")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 args, unknown = parser.parse_known_args()
@@ -96,6 +98,18 @@ def main():
             local_path = args.local_path,
             remote_type = args.type,
             remote_path = args.remote_path,
+            interactive = args.interactive,
+            verbose = verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Merge files
+    elif args.action == "merge":
+        sync.SyncFilesBothWays(
+            local_path = args.local_path,
+            remote_type = args.type,
+            remote_path = args.remote_path,
+            resync = args.resync,
             interactive = args.interactive,
             verbose = verbose,
             pretend_run = args.pretend_run,
