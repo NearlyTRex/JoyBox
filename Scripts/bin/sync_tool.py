@@ -35,6 +35,8 @@ parser.add_argument("-a", "--action",
 )
 parser.add_argument("-l", "--local_path", type=str, default=environment.GetSyncRootDir(), help="Local path")
 parser.add_argument("-r", "--remote_path", type=str, default="/", help="Remote path")
+parser.add_argument("-i", "--interactive", action="store_true", help="Enable interactive mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 args, unknown = parser.parse_known_args()
 
 # Main
@@ -61,7 +63,9 @@ def main():
             local_path = args.local_path,
             remote_type = args.type,
             remote_path = args.remote_path,
+            interactive = args.interactive,
             verbose = verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Upload files
@@ -70,7 +74,9 @@ def main():
             local_path = args.local_path,
             remote_type = args.type,
             remote_path = args.remote_path,
+            interactive = args.interactive,
             verbose = verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Pull files
@@ -79,7 +85,9 @@ def main():
             local_path = args.local_path,
             remote_type = args.type,
             remote_path = args.remote_path,
+            interactive = args.interactive,
             verbose = verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Push files
@@ -88,7 +96,9 @@ def main():
             local_path = args.local_path,
             remote_type = args.type,
             remote_path = args.remote_path,
+            interactive = args.interactive,
             verbose = verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = exit_on_failure)
 
 # Start

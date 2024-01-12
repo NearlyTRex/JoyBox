@@ -61,7 +61,7 @@ def SetupGoogleDriveRemote(remote_type, verbose = False, exit_on_failure = False
     return code == 0
 
 # Download files from remote
-def DownloadFilesFromRemote(local_path, remote_type, remote_path, verbose = False, exit_on_failure = False):
+def DownloadFilesFromRemote(local_path, remote_type, remote_path, interactive = False, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -72,8 +72,12 @@ def DownloadFilesFromRemote(local_path, remote_type, remote_path, verbose = Fals
         return False
 
     # Get copy command
+    copy_cmd = [rclone_tool]
+    if pretend_run:
+        copy_cmd += ["--dry-run "]
+    if interactive:
+        copy_cmd += ["--interactive"]
     copy_cmd = [
-        rclone_tool,
         "copy",
         "%s:%s" % (remote_type, remote_path),
         local_path,
@@ -96,7 +100,7 @@ def DownloadFilesFromRemote(local_path, remote_type, remote_path, verbose = Fals
     return code == 0
 
 # Upload files to remote
-def UploadFilesToRemote(local_path, remote_type, remote_path, verbose = False, exit_on_failure = False):
+def UploadFilesToRemote(local_path, remote_type, remote_path, interactive = False, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -107,8 +111,12 @@ def UploadFilesToRemote(local_path, remote_type, remote_path, verbose = False, e
         return False
 
     # Get copy command
+    copy_cmd = [rclone_tool]
+    if pretend_run:
+        copy_cmd += ["--dry-run "]
+    if interactive:
+        copy_cmd += ["--interactive"]
     copy_cmd = [
-        rclone_tool,
         "copy",
         local_path,
         "%s:%s" % (remote_type, remote_path),
@@ -131,7 +139,7 @@ def UploadFilesToRemote(local_path, remote_type, remote_path, verbose = False, e
     return code == 0
 
 # Sync files from remote
-def SyncFilesFromRemote(local_path, remote_type, remote_path, verbose = False, exit_on_failure = False):
+def SyncFilesFromRemote(local_path, remote_type, remote_path, interactive = False, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -142,8 +150,12 @@ def SyncFilesFromRemote(local_path, remote_type, remote_path, verbose = False, e
         return False
 
     # Get sync command
-    sync_cmd = [
-        rclone_tool,
+    sync_cmd = [rclone_tool]
+    if pretend_run:
+        sync_cmd += ["--dry-run "]
+    if interactive:
+        sync_cmd += ["--interactive"]
+    sync_cmd += [
         "sync",
         "%s:%s" % (remote_type, remote_path),
         local_path,
@@ -166,7 +178,7 @@ def SyncFilesFromRemote(local_path, remote_type, remote_path, verbose = False, e
     return code == 0
 
 # Sync files to remote
-def SyncFilesToRemote(local_path, remote_type, remote_path, verbose = False, exit_on_failure = False):
+def SyncFilesToRemote(local_path, remote_type, remote_path, interactive = False, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -177,8 +189,12 @@ def SyncFilesToRemote(local_path, remote_type, remote_path, verbose = False, exi
         return False
 
     # Get sync command
+    sync_cmd = [rclone_tool]
+    if pretend_run:
+        sync_cmd += ["--dry-run "]
+    if interactive:
+        sync_cmd += ["--interactive"]
     sync_cmd = [
-        rclone_tool,
         "sync",
         local_path,
         "%s:%s" % (remote_type, remote_path),
