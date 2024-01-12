@@ -31,12 +31,12 @@ def main():
     for json_file in system.BuildFileListByExtensions(environment.GetJsonMetadataRootDir(), extensions = [".json"]):
 
         # Check if json file matches up to a real rom path
-        print("Checking if rom matching '%s' exists ..." % json_file)
+        system.Log("Checking if rom matching '%s' exists ..." % json_file)
         game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromFile(json_file)
         game_name = system.GetFilenameBasename(json_file)
         game_rom_dir = environment.GetRomDir(game_category, game_subcategory, game_name)
         if not os.path.exists(game_rom_dir):
-            print("Extraneous json file '%s' found" % json_file)
+            system.LogError("Extraneous json file '%s' found" % json_file)
             sys.exit(1)
 
     # Verify metadata files
@@ -84,7 +84,7 @@ def main():
                 for file_to_check in files_to_check:
                     stored_file = os.path.join(environment.GetRomDir(game_category, game_subcategory, game_name), file_to_check)
                     if not os.path.exists(stored_file):
-                        print("File '%s' referenced in json file not found" % file_to_check)
+                        system.LogError("File '%s' referenced in json file not found" % file_to_check)
                         sys.exit(1)
 
     # Verify hash files
@@ -98,14 +98,14 @@ def main():
                     continue
 
                 # Read hash file
-                print("Checking hash file '%s' ..." % hash_file_path)
+                system.Log("Checking hash file '%s' ..." % hash_file_path)
                 hash_file_data = hashing.ReadHashFile(hash_file_path)
                 for hash_reference_file in hash_file_data.keys():
 
                     # Check if file exists
                     stored_file = os.path.join(environment.GetGamingStorageRootDir(), hash_reference_file)
                     if not os.path.exists(stored_file):
-                        print("File '%s' referenced in hash file not found" % stored_file)
+                        system.LogError("File '%s' referenced in hash file not found" % stored_file)
                         sys.exit(1)
 
 # Start

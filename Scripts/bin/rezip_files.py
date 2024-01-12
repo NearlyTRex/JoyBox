@@ -24,7 +24,7 @@ if not args.input_path:
 # Check that path exists first
 input_path = os.path.realpath(args.input_path)
 if not os.path.exists(input_path):
-    print("Path '%s' does not exist" % args.input_path)
+    system.LogError("Path '%s' does not exist" % args.input_path)
     sys.exit(-1)
 
 # Main
@@ -45,7 +45,7 @@ def main():
         current_file_extract_dir = os.path.join(current_file_dir, current_file_basename + "_extracted")
 
         # Unzip file
-        print("Unzipping file %s ..." % current_file)
+        system.Log("Unzipping file %s ..." % current_file)
         archive.ExtractArchive(
             archive_file = current_file,
             extract_dir = current_file_extract_dir,
@@ -54,7 +54,7 @@ def main():
             exit_on_failure = exit_on_failure)
 
         # Deterministically zip file
-        print("Deterministically rezipping ...")
+        system.Log("Deterministically rezipping ...")
         archive.CreateZipFromFolder(
             zip_file = current_file,
             source_dir = current_file_extract_dir,

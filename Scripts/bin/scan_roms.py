@@ -10,6 +10,7 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import config
 import command
+import system
 import environment
 import gameinfo
 import setup
@@ -40,7 +41,7 @@ def main():
             metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
 
             # Build metadata
-            print("Building metadata [Category: '%s', Subcategory: '%s'] ..." % (game_category, game_subcategory))
+            system.Log("Building metadata [Category: '%s', Subcategory: '%s'] ..." % (game_category, game_subcategory))
             build_game_list_cmd = [
                 build_metadata_file_bin,
                 "-c", game_category,
@@ -54,14 +55,14 @@ def main():
                 exit_on_failure = exit_on_failure)
 
     # Sort metadata files
-    print("Sorting metadata files ...")
+    system.Log("Sorting metadata files ...")
     command.RunCheckedCommand(
         cmd = sort_metadata_files_bin,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
     # Publish metadata files
-    print("Publishing metadata files ...")
+    system.Log("Publishing metadata files ...")
     command.RunCheckedCommand(
         cmd = publish_metadata_files_bin,
         verbose = verbose,

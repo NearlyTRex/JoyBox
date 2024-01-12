@@ -9,6 +9,7 @@ import argparse
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import setup
+import system
 import saves
 import ini
 
@@ -33,10 +34,10 @@ if args.input_path:
     input_path = os.path.realpath(args.input_path)
 if args.action == "restore":
     if len(input_path) == 0:
-        print("Input path needs to be set for restoring saves")
+        system.LogError("Input path needs to be set for restoring saves")
         sys.exit(-1)
     if not os.path.exists(input_path):
-        print("Path '%s' does not exist" % args.input_path)
+        system.LogError("Path '%s' does not exist" % args.input_path)
         sys.exit(-1)
 
 # Check output path
@@ -45,10 +46,10 @@ if args.output_path:
     output_path = os.path.realpath(args.output_path)
 if args.action == "backup":
     if len(output_path) == 0:
-        print("Output path needs to be set for backing up saves")
+        system.LogError("Output path needs to be set for backing up saves")
         sys.exit(-1)
     if not os.path.exists(output_path):
-        print("Output path '%s' does not exist" % args.output_path)
+        system.LogError("Output path '%s' does not exist" % args.output_path)
         sys.exit(-1)
 
 # Main

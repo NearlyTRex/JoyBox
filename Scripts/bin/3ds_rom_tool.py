@@ -30,7 +30,7 @@ if not args.path:
 # Check input path
 input_path = os.path.realpath(args.path)
 if not os.path.exists(input_path):
-    print("Path '%s' does not exist" % args.path)
+    system.LogError("Path '%s' does not exist" % args.path)
     sys.exit(-1)
 
 # Main
@@ -100,7 +100,7 @@ def main():
                 src_3ds_file = current_file,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            print(info)
+            system.Log(info)
 
 # Start
 main()

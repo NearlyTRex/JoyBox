@@ -9,6 +9,7 @@ import argparse
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
+import system
 import metadata
 import setup
 
@@ -35,7 +36,7 @@ args, unknown = parser.parse_known_args()
 
 # Check metadata dir
 if not os.path.exists(args.metadata_dir):
-    print("Could not find metadata path '%s'" % args.metadata_dir)
+    system.LogError("Could not find metadata path '%s'" % args.metadata_dir)
     sys.exit(1)
 
 # Main

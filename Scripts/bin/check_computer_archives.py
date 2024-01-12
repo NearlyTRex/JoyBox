@@ -22,7 +22,7 @@ if not args.path:
 # Check that path exists first
 input_path = os.path.realpath(args.path)
 if not os.path.exists(input_path):
-    print("Path '%s' does not exist" % args.path)
+    system.LogError("Path '%s' does not exist" % args.path)
     sys.exit(-1)
 
 # Main
@@ -35,10 +35,10 @@ def main():
     for file in system.BuildFileListByExtensions(input_path, extensions = [".exe"]):
 
         # Check exe size
-        print("Checking exe file %s ..." % file)
+        system.Log("Checking exe file %s ..." % file)
         exe_filesize = os.path.getsize(file)
         if exe_filesize > 4290772992:
-            print("Executable '%s' is larger than 4092 MB" % file)
+            system.LogError("Executable '%s' is larger than 4092 MB" % file)
             sys.exit(1)
 
 # Start

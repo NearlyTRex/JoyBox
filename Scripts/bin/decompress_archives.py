@@ -27,7 +27,7 @@ if not args.path:
 # Check that path exists first
 root_path = os.path.realpath(args.path)
 if not os.path.exists(root_path):
-    print("Path '%s' does not exist" % args.path)
+    system.LogError("Path '%s' does not exist" % args.path)
     sys.exit(-1)
 
 # Main

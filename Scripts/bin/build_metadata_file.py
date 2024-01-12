@@ -9,6 +9,7 @@ import argparse
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
+import system
 import metadata
 import setup
 
@@ -23,7 +24,7 @@ args, unknown = parser.parse_known_args()
 # Check rom path
 rom_root_path = os.path.realpath(args.rom_path)
 if not os.path.exists(rom_root_path):
-    print("Could not find rom root path '%s'" % rom_root_path)
+    system.LogError("Could not find rom root path '%s'" % rom_root_path)
     sys.exit(1)
 
 # Paths
