@@ -229,6 +229,7 @@ packages = [
 
     # Python
     "libpython3-dev",
+    "python3-tk",
     "python3-venv",
 
     # Sandbox
