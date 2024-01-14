@@ -380,6 +380,15 @@ def ArchiveGithubRepository(
     if not success:
         return False
 
+    # Remove git folder
+    if clean_first:
+        success = system.RemoveDirectory(
+            dir = os.path.join(tmp_dir_result, ".git"),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
     # Archive repository
     success = archive.CreateZipFromFolder(
         zip_file = output_file,
