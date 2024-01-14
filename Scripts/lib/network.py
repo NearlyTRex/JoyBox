@@ -123,7 +123,13 @@ def DownloadUrl(url, output_dir = None, output_file = None, verbose = False, exi
     return False
 
 # Download git url
-def DownloadGitUrl(url, output_dir, clean_first = False, verbose = False, exit_on_failure = False):
+def DownloadGitUrl(
+    url,
+    output_dir,
+    recursive = True,
+    clean_first = False,
+    verbose = False,
+    exit_on_failure = False):
 
     # Clear output dir
     if clean_first:
@@ -152,8 +158,11 @@ def DownloadGitUrl(url, output_dir, clean_first = False, verbose = False, exit_o
     # Get download command
     download_cmd = [
         download_tool,
-        "clone",
-        "--recursive",
+        "clone"
+    ]
+    if recursive:
+        download_cmd += ["--recursive"]
+    download_cmd += [
         url,
         output_dir
     ]
@@ -279,8 +288,8 @@ def GetGithubRepository(
         import github
         if verbose:
             system.Log("Getting github repository '%s/%s'" % (github_user, github_repo))
-        access = github.Github(github_token)
-        repo = access.get_repo("%s/%s" % (github_user, github_repo))
+        gh = github.Github(github_token)
+        repo = gh.get_repo("%s/%s" % (github_user, github_repo))
         return repo
     except Exception as e:
         if exit_on_failure:
@@ -301,10 +310,13 @@ def GetGithubRepositories(
         import github
         if verbose:
             system.Log("Getting github repositories for '%s'" % github_user)
-        access = github.Github(github_token)
-        user = access.get_user(github_user)
+        gh = github.Github(github_token)
+        user = gh.get_user()
+        login = user.login
         repositories = []
-        for repo in user.get_repos():
+        for repo in user.get_repos(visibility = 'all'):
+            if repo.owner.login != github_user:
+                continue
             if exclude_forks and repo.fork:
                 continue
             if exclude_private and repo.private:
@@ -324,6 +336,7 @@ def DownloadGithubRepository(
     github_repo,
     github_token = None,
     output_dir = "",
+    recursive = True,
     clean_first = False,
     verbose = False,
     exit_on_failure = False):
@@ -333,6 +346,7 @@ def DownloadGithubRepository(
     return DownloadGitUrl(
         url = github_url,
         output_dir = output_dir,
+        recursive = recursive,
         clean_first = clean_first,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
@@ -343,6 +357,7 @@ def ArchiveGithubRepository(
     github_repo,
     github_token = None,
     output_file = "",
+    recursive = True,
     clean_first = False,
     verbose = False,
     exit_on_failure = False):
@@ -358,6 +373,7 @@ def ArchiveGithubRepository(
         github_repo = github_repo,
         github_token = github_token,
         output_dir = tmp_dir_result,
+        recursive = recursive,
         clean_first = clean_first,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
@@ -370,6 +386,8 @@ def ArchiveGithubRepository(
         source_dir = tmp_dir_result,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Delete temporary directory
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
