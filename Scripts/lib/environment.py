@@ -187,6 +187,14 @@ def GetEmulatorsRootDir():
 def GetSyncRootDir():
     return ini.GetIniPathValue("UserData.Dirs", "sync_dir")
 
+# Get synced development root dir
+def GetSyncedDevelopmentRootDir():
+    return os.path.join(GetSyncRootDir(), "Development")
+
+# Get synced development archive dir
+def GetSyncedDevelopmentArchiveDir():
+    return os.path.join(GetSyncedDevelopmentRootDir(), "Archive")
+
 # Get synced gaming root dir
 def GetSyncedGamingRootDir():
     return os.path.join(GetSyncRootDir(), "Gaming")
@@ -208,9 +216,17 @@ def GetSyncedGameAssetFile(game_category, game_subcategory, game_name, asset_typ
 def GetSyncedGamingEmulatorsRootDir():
     return os.path.join(GetSyncedGamingRootDir(), "Emulators")
 
+# Get synced game emulator binaries dir
+def GetSyncedGameEmulatorBinariesDir(emu_name):
+    return os.path.join(GetSyncedGamingEmulatorsRootDir(), emu_name, "Binaries")
+
 # Get synced game emulator setup dir
 def GetSyncedGameEmulatorSetupDir(emu_name):
     return os.path.join(GetSyncedGamingEmulatorsRootDir(), emu_name, "Setup")
+
+# Get synced game emulators source dir
+def GetSyncedGameEmulatorSourceDir(emu_name):
+    return os.path.join(GetSyncedGamingEmulatorsRootDir(), emu_name, "Source")
 
 # Get synced gaming saves root dir
 def GetSyncedGamingSavesRootDir():
