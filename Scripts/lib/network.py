@@ -327,15 +327,52 @@ def DownloadGithubRepository(
     clean_first = False,
     verbose = False,
     exit_on_failure = False):
-    repo = GetGithubRepository(
-        github_user = github_user,
-        github_repo = github_repo,
-        github_token = github_token,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+    github_url = "https://github.com/%s/%s.git" % (github_user, github_repo)
+    if github_token and isinstance(github_token, str) and len(github_token):
+        github_url = "https://%s@github.com/%s/%s.git" % (github_token, github_user, github_repo)
     return DownloadGitUrl(
-        url = repo.clone_url,
+        url = github_url,
         output_dir = output_dir,
         clean_first = clean_first,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+
+# Archive github repository
+def ArchiveGithubRepository(
+    github_user,
+    github_repo,
+    github_token = None,
+    output_file = "",
+    clean_first = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    if not tmp_dir_success:
+        return False
+
+    # Download repository
+    success = DownloadGithubRepository(
+        github_user = github_user,
+        github_repo = github_repo,
+        github_token = github_token,
+        output_dir = tmp_dir_result,
+        clean_first = clean_first,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Archive repository
+    success = archive.CreateZipFromFolder(
+        zip_file = output_file,
+        source_dir = tmp_dir_result,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+    # Delete temporary directory
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+
+    # Check result
+    return os.path.exists(output_file)
