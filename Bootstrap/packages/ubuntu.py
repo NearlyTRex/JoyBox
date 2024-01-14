@@ -111,7 +111,12 @@ packages = [
     "xa65",
 
     # Gnome
+    "brasero",
     "ghex",
+
+    # KDE
+    "dolphin",
+    "dolphin-plugins",
 
     # Libdevel
     "glslang-dev",
