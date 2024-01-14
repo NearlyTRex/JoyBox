@@ -1,7 +1,8 @@
 # Imports
-import os
-import os.path
+import os, os.path
 import sys
+import zlib
+import base64
 
 # Local imports
 import config
@@ -472,6 +473,20 @@ def VerifyPSV(psv_file, verbose = False, exit_on_failure = False):
 ######################################################
 # Sony PlayStation Network
 ######################################################
+
+# Get psn work.bin bytes from zrif string
+def GetPSNWorkBinBytesFromZRifString(zrif_str):
+    try:
+        zrif_base64 = b"eNpjYBgFo2AU0AsYAIElGt8MRJiDCAsw3xhEmIAIU4N4AwNdRxcXZ3+/EJCAkW6Ac7C7ARwYgviuQAaIdoPSzlDaBUo7QmknIM3ACIZM78+u7kx3VWYEAGJ9HV0="
+        zrif_dict = list(zlib.decompress(base64.b64decode(zrif_base64)))
+        zrif_str_bytes = base64.b64decode(zrif_str.encode("ascii"))
+        zrif_decompressor = zlib.decompressobj(wbits=10, zdict=bytes(zrif_dict))
+        workbin_bytes = zrif_decompressor.decompress(zrif_str_bytes)
+        workbin_bytes += zrif_decompressor.flush()
+        return workbin_bytes
+    except:
+        pass
+    return None
 
 # Get psn package content id
 def GetPSNPackageContentID(pkg_file):
