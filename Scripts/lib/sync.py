@@ -257,3 +257,37 @@ def SyncFilesBothWays(local_path, remote_type, remote_path, resync = False, inte
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     return code == 0
+
+# Check files
+def CheckFiles(local_path, remote_type, remote_path, verbose = False, exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
+        return False
+
+    # Get check command
+    check_cmd = [
+        rclone_tool,
+        "check",
+        local_path,
+        "%s:%s" % (remote_type, remote_path)
+    ]
+    if remote_type == config.sync_type_gdrive:
+        check_cmd += [
+            "--drive-acknowledge-abuse"
+        ]
+    if verbose:
+        check_cmd += ["--verbose"]
+
+    # Run check command
+    code = command.RunBlockingCommand(
+        cmd = check_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [rclone_tool]),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    return code == 0

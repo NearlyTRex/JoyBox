@@ -30,7 +30,8 @@ parser.add_argument("-a", "--action",
         "upload",
         "pull",
         "push",
-        "merge"
+        "merge",
+        "diff"
     ],
     default="init", help="Sync action"
 )
@@ -113,6 +114,15 @@ def main():
             interactive = args.interactive,
             verbose = verbose,
             pretend_run = args.pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Diff files
+    elif args.action == "diff":
+        sync.CheckFiles(
+            local_path = args.local_path,
+            remote_type = args.type,
+            remote_path = args.remote_path,
+            verbose = verbose,
             exit_on_failure = exit_on_failure)
 
 # Start
