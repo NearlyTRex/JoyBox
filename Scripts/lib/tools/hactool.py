@@ -39,7 +39,7 @@ class HacTool(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("HacTool", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "SciresM",
                 github_repo = "hactool",
                 starts_with = "hactool",

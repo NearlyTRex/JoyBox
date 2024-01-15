@@ -41,7 +41,7 @@ class MameTools(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("MameChdman", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "mamedev",
                 github_repo = "mame",
                 starts_with = "mame",

@@ -47,7 +47,7 @@ class AppImageTool(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("AppImageTool", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "AppImage",
                 github_repo = "AppImageKit",
                 starts_with = "appimagetool-x86_64",

@@ -62,7 +62,7 @@ class ViceC64(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("VICE-C64", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "VICE-Team",
                 github_repo = "svn-mirror",
                 starts_with = "SDL2VICE",

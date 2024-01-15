@@ -54,7 +54,7 @@ class VKD3D(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("VKD3D"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "HansKristian-Work",
                 github_repo = "vkd3d-proton",
                 starts_with = "vkd3d-proton",

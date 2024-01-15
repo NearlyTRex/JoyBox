@@ -39,7 +39,7 @@ class NDecrypt(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "SabreTools",
                 github_repo = "NDecrypt",
                 starts_with = "NDecrypt",
@@ -54,7 +54,7 @@ class NDecrypt(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("NDecrypt", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "SabreTools",
                 github_repo = "NDecrypt",
                 starts_with = "NDecrypt",

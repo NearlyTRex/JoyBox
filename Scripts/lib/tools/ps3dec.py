@@ -39,7 +39,7 @@ class PS3Dec(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PS3Dec", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "NearlyTRex",
                 github_repo = "PS3Dec",
                 starts_with = "PS3Dec",

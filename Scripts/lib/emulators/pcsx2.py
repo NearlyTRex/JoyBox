@@ -142,7 +142,7 @@ class PCSX2(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PCSX2", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "PCSX2",
                 github_repo = "pcsx2",
                 starts_with = "pcsx2",
@@ -156,7 +156,7 @@ class PCSX2(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("PCSX2", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "PCSX2",
                 github_repo = "pcsx2",
                 starts_with = "pcsx2",

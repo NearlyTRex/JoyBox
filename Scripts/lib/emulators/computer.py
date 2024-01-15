@@ -517,7 +517,7 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Download windows programs
         if programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "joncampbell123",
                 github_repo = "dosbox-x",
                 starts_with = "dosbox-x-vsbuild-win64",

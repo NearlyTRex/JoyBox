@@ -90,7 +90,7 @@ class Ludusavi(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Ludusavi", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "mtkennerly",
                 github_repo = "ludusavi",
                 starts_with = "ludusavi",
@@ -105,7 +105,7 @@ class Ludusavi(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Ludusavi", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "mtkennerly",
                 github_repo = "ludusavi",
                 starts_with = "ludusavi",

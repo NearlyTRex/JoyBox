@@ -39,7 +39,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("3DSRomTool", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "NearlyTRex",
                 github_repo = "3DSRomTool",
                 starts_with = "rom_tool",

@@ -134,7 +134,7 @@ class DuckStation(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("DuckStation", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "stenzek",
                 github_repo = "duckstation",
                 starts_with = "duckstation",
@@ -149,7 +149,7 @@ class DuckStation(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("DuckStation", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "stenzek",
                 github_repo = "duckstation",
                 starts_with = "DuckStation",

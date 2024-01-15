@@ -68,7 +68,7 @@ class Xenia(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Xenia", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "xenia-project",
                 github_repo = "release-builds-windows",
                 starts_with = "xenia_master",

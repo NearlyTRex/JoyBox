@@ -179,7 +179,7 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Ares", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "ares-emulator",
                 github_repo = "ares",
                 starts_with = "ares",

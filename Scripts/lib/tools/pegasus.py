@@ -73,7 +73,7 @@ class Pegasus(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Pegasus", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "mmatyas",
                 github_repo = "pegasus-frontend",
                 starts_with = "pegasus-fe",
@@ -97,7 +97,7 @@ class Pegasus(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Pegasus", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "mmatyas",
                 github_repo = "pegasus-frontend",
                 starts_with = "pegasus-fe",

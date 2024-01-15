@@ -39,7 +39,7 @@ class ExtractXIso(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("ExtractXIso", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "XboxDev",
                 github_repo = "extract-xiso",
                 starts_with = "extract-xiso",

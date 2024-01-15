@@ -121,7 +121,7 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Yuzu", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "yuzu-emu",
                 github_repo = "yuzu-mainline",
                 starts_with = "yuzu-windows-msvc",
@@ -136,7 +136,7 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Yuzu", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "yuzu-emu",
                 github_repo = "yuzu-mainline",
                 starts_with = "yuzu-mainline",

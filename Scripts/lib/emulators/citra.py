@@ -94,7 +94,7 @@ class Citra(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Citra", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "citra-emu",
                 github_repo = "citra-nightly",
                 starts_with = "citra-windows-msvc",
@@ -109,7 +109,7 @@ class Citra(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Citra", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "citra-emu",
                 github_repo = "citra-nightly",
                 starts_with = "citra-linux-appimage",

@@ -39,7 +39,7 @@ class Wad2Bin(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Wad2Bin", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "DarkMatterCore",
                 github_repo = "wad2bin",
                 starts_with = "wad2bin",

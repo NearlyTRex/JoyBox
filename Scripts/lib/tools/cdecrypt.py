@@ -39,7 +39,7 @@ class CDecrypt(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("CDecrypt", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "VitaSmith",
                 github_repo = "cdecrypt",
                 starts_with = "cdecrypt",

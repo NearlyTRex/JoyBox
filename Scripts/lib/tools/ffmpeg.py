@@ -39,7 +39,7 @@ class FFMpeg(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("FFMpeg", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "BtbN",
                 github_repo = "FFmpeg-Builds",
                 starts_with = "ffmpeg-master-latest",
@@ -54,7 +54,7 @@ class FFMpeg(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("FFMpeg", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "BtbN",
                 github_repo = "FFmpeg-Builds",
                 starts_with = "ffmpeg-master-latest",

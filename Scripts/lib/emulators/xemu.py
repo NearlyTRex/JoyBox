@@ -83,7 +83,7 @@ class Xemu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Xemu", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "mborgerson",
                 github_repo = "xemu",
                 starts_with = "xemu",

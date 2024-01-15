@@ -249,8 +249,8 @@ def DownloadGeneralRelease(
     # Check result
     return system.DoesDirectoryContainFiles(install_dir)
 
-# Download latest github release
-def DownloadLatestGithubRelease(
+# Download github release
+def DownloadGithubRelease(
     github_user,
     github_repo,
     starts_with,

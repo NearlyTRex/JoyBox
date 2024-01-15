@@ -86,7 +86,7 @@ class MelonDS(emulatorbase.EmulatorBase):
 
         # Download program
         if programs.ShouldProgramBeInstalled("melonDS", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "melonDS-emu",
                 github_repo = "melonDS",
                 starts_with = "melonDS",

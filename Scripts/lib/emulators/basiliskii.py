@@ -126,7 +126,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("BasiliskII", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "Korkman",
                 github_repo = "macemu-appimage-builder",
                 starts_with = "BasiliskII-x86_64",

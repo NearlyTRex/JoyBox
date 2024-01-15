@@ -61,7 +61,7 @@ class Flycast(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Flycast", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "flyinghead",
                 github_repo = "flycast",
                 starts_with = "flycast-win64",

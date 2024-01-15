@@ -57,7 +57,7 @@ class DXVK(toolbase.ToolBase):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("DXVK"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "doitsujin",
                 github_repo = "dxvk",
                 starts_with = "dxvk-2.2",

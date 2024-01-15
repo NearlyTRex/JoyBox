@@ -62,7 +62,7 @@ class Atari800(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Atari800", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "atari800",
                 github_repo = "atari800",
                 starts_with = "atari800",

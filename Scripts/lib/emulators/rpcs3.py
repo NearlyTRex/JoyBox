@@ -71,7 +71,7 @@ class RPCS3(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("RPCS3", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "RPCS3",
                 github_repo = "rpcs3-binaries-win",
                 starts_with = "rpcs3",
@@ -86,7 +86,7 @@ class RPCS3(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("RPCS3", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "RPCS3",
                 github_repo = "rpcs3-binaries-linux",
                 starts_with = "rpcs3",

@@ -85,7 +85,7 @@ class MGBA(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("mGBA", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "mgba-emu",
                 github_repo = "mgba",
                 starts_with = "mGBA",
@@ -100,7 +100,7 @@ class MGBA(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("mGBA", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "mgba-emu",
                 github_repo = "mgba",
                 starts_with = "mGBA",

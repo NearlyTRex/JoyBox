@@ -81,7 +81,7 @@ class Vita3K(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Vita3K", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "Vita3K",
                 github_repo = "Vita3K",
                 starts_with = "windows-latest",
@@ -96,7 +96,7 @@ class Vita3K(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Vita3K", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "Vita3K",
                 github_repo = "Vita3K",
                 starts_with = "Vita3K-x86_64",

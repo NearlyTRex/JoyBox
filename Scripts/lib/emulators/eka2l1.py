@@ -68,7 +68,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("EKA2L1", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "EKA2L1",
                 github_repo = "EKA2L1",
                 starts_with = "windows-latest",
@@ -83,7 +83,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("EKA2L1", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "EKA2L1",
                 github_repo = "EKA2L1",
                 starts_with = "ubuntu-latest",

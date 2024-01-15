@@ -75,7 +75,7 @@ class FSUAE(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("FS-UAE", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "FrodeSolheim",
                 github_repo = "fs-uae",
                 starts_with = "FS-UAE",

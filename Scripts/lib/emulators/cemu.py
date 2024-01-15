@@ -89,7 +89,7 @@ class Cemu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Cemu", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "cemu-project",
                 github_repo = "Cemu",
                 starts_with = "cemu",
@@ -103,7 +103,7 @@ class Cemu(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Cemu", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "cemu-project",
                 github_repo = "Cemu",
                 starts_with = "Cemu",

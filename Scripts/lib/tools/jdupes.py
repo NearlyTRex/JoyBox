@@ -39,7 +39,7 @@ class Jdupes(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Jdupes", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "jbruchon",
                 github_repo = "jdupes",
                 starts_with = "jdupes",
@@ -53,7 +53,7 @@ class Jdupes(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Jdupes", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "jbruchon",
                 github_repo = "jdupes",
                 starts_with = "jdupes",

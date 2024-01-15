@@ -42,7 +42,7 @@ class Sunshine(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Sunshine", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "LizardByte",
                 github_repo = "Sunshine",
                 starts_with = "sunshine",
@@ -57,7 +57,7 @@ class Sunshine(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Sunshine", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "LizardByte",
                 github_repo = "Sunshine",
                 starts_with = "sunshine",

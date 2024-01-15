@@ -39,7 +39,7 @@ class PSVStrip(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PSVStrip", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "Kippykip",
                 github_repo = "PSVStrip",
                 starts_with = "PSVStrip",

@@ -39,7 +39,7 @@ class GeckoDriver(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("GeckoDriver", "windows"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "mozilla",
                 github_repo = "geckodriver",
                 starts_with = "geckodriver",
@@ -54,7 +54,7 @@ class GeckoDriver(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("GeckoDriver", "linux"):
-            success = release.DownloadLatestGithubRelease(
+            success = release.DownloadGithubRelease(
                 github_user = "mozilla",
                 github_repo = "geckodriver",
                 starts_with = "geckodriver",
