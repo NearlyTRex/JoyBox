@@ -18,6 +18,15 @@ packages = [
 
     # Devel
     "MHNexus.HxD",
+    "Microsoft.VisualStudio.2022.Community",
+
+    # Drivers
+    "CodecGuide.K-LiteCodecPack.Mega",
+    "Nvidia.GeForceExperience",
+
+    # Graphics
+    "GIMP.GIMP",
+    "VideoLAN.VLC",
 
     # Net
     "subhra74.XtremeDownloadManager",
@@ -39,7 +48,11 @@ packages = [
     "VSCodium.VSCodium",
 
     # Utils
+    "chrisant996.Clink",
+    "Cygwin.Cygwin",
     "GeekUninstaller.GeekUninstaller",
+    "LIGHTNINGUK.ImgBurn",
+    "Maximus5.ConEmu",
     "mcmilk.7zip-zstd",
     "WinDirStat.WinDirStat",
 
@@ -51,7 +64,8 @@ packages = [
     "Discord.Discord",
     "Mozilla.Firefox",
     "OpenWhisperSystems.Signal",
-    "Telegram.TelegramDesktop"
+    "Telegram.TelegramDesktop",
+    "StefansTools.grepWin"
 ]
 
 ###########################################################
