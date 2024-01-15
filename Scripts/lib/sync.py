@@ -274,7 +274,17 @@ def SyncFilesBothWays(local_path, remote_type, remote_path, resync = False, inte
     return code == 0
 
 # Check files
-def CheckFiles(local_path, remote_type, remote_path, diff_path = None, quick = False, verbose = False, exit_on_failure = False):
+def CheckFiles(
+    local_path,
+    remote_type,
+    remote_path,
+    diff_combined_path = None,
+    diff_intersected_path = None,
+    diff_missing_src_path = None,
+    diff_missing_dest_path = None,
+    quick = False,
+    verbose = False,
+    exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -295,11 +305,14 @@ def CheckFiles(local_path, remote_type, remote_path, diff_path = None, quick = F
         check_cmd += [
             "--drive-acknowledge-abuse"
         ]
-    if system.IsPathValid(diff_path):
-        check_cmd += [
-            "--combined",
-            diff_path
-        ]
+    if system.IsPathValid(diff_combined_path):
+        check_cmd += ["--combined", diff_combined_path]
+    if system.IsPathValid(diff_intersected_path):
+        check_cmd += ["--differ", diff_intersected_path]
+    if system.IsPathValid(diff_missing_src_path):
+        check_cmd += ["--missing-on-src", diff_missing_src_path]
+    if system.IsPathValid(diff_missing_dest_path):
+        check_cmd += ["--missing-on-dst", diff_missing_dest_path]
     if quick:
         check_cmd += ["--size-only"]
     if verbose:

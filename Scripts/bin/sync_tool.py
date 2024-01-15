@@ -37,7 +37,10 @@ parser.add_argument("-a", "--action",
 )
 parser.add_argument("-l", "--local_path", type=str, default=environment.GetSyncRootDir(), help="Local path")
 parser.add_argument("-r", "--remote_path", type=str, default="/", help="Remote path")
-parser.add_argument("-d", "--diff_path", type=str, help="Diff path")
+parser.add_argument("--diff_combined_path", type=str, default="diff_combined.txt", help="Diff path (combined)")
+parser.add_argument("--diff_intersected_path", type=str, default="diff_intersected.txt", help="Diff path (intersection)")
+parser.add_argument("--diff_missing_src_path", type=str, default="diff_missing_src.txt", help="Diff path (missing src)")
+parser.add_argument("--diff_missing_dest_path", type=str, default="diff_missing_dest.txt", help="Diff path (missing dest)")
 parser.add_argument("-e", "--resync", action="store_true", help="Enable resync mode")
 parser.add_argument("-i", "--interactive", action="store_true", help="Enable interactive mode")
 parser.add_argument("-q", "--quick", action="store_true", help="Enable quick mode")
@@ -124,7 +127,10 @@ def main():
             local_path = args.local_path,
             remote_type = args.type,
             remote_path = args.remote_path,
-            diff_path = args.diff_path,
+            diff_combined_path = args.diff_combined_path,
+            diff_intersected_path = args.diff_intersected_path,
+            diff_missing_src_path = args.diff_missing_src_path,
+            diff_missing_dest_path = args.diff_missing_dest_path,
             quick = args.quick,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
