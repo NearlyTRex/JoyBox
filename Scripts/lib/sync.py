@@ -88,7 +88,10 @@ def DownloadFilesFromRemote(local_path, remote_type, remote_path, interactive = 
     if interactive:
         copy_cmd += ["--interactive"]
     if verbose:
-        copy_cmd += ["--verbose"]
+        copy_cmd += [
+            "--verbose",
+            "--progress"
+        ]
 
     # Run copy command
     code = command.RunBlockingCommand(
@@ -127,7 +130,10 @@ def UploadFilesToRemote(local_path, remote_type, remote_path, interactive = Fals
     if interactive:
         copy_cmd += ["--interactive"]
     if verbose:
-        copy_cmd += ["--verbose"]
+        copy_cmd += [
+            "--verbose",
+            "--progress"
+        ]
 
     # Run copy command
     code = command.RunBlockingCommand(
@@ -166,7 +172,10 @@ def SyncFilesFromRemote(local_path, remote_type, remote_path, interactive = Fals
     if interactive:
         sync_cmd += ["--interactive"]
     if verbose:
-        sync_cmd += ["--verbose"]
+        sync_cmd += [
+            "--verbose",
+            "--progress"
+        ]
 
     # Run sync command
     code = command.RunBlockingCommand(
@@ -205,7 +214,10 @@ def SyncFilesToRemote(local_path, remote_type, remote_path, interactive = False,
     if interactive:
         sync_cmd += ["--interactive"]
     if verbose:
-        sync_cmd += ["--verbose"]
+        sync_cmd += [
+            "--verbose",
+            "--progress"
+        ]
 
     # Run sync command
     code = command.RunBlockingCommand(
@@ -247,7 +259,10 @@ def SyncFilesBothWays(local_path, remote_type, remote_path, resync = False, inte
     if interactive:
         bisync_cmd += ["--interactive"]
     if verbose:
-        bisync_cmd += ["--verbose"]
+        bisync_cmd += [
+            "--verbose",
+            "--progress"
+        ]
 
     # Run bisync command
     code = command.RunBlockingCommand(
@@ -259,7 +274,7 @@ def SyncFilesBothWays(local_path, remote_type, remote_path, resync = False, inte
     return code == 0
 
 # Check files
-def CheckFiles(local_path, remote_type, remote_path, verbose = False, exit_on_failure = False):
+def CheckFiles(local_path, remote_type, remote_path, diff_path = None, quick = False, verbose = False, exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -280,8 +295,18 @@ def CheckFiles(local_path, remote_type, remote_path, verbose = False, exit_on_fa
         check_cmd += [
             "--drive-acknowledge-abuse"
         ]
+    if system.IsPathValid(diff_path):
+        check_cmd += [
+            "--combined",
+            diff_path
+        ]
+    if quick:
+        check_cmd += ["--size-only"]
     if verbose:
-        check_cmd += ["--verbose"]
+        check_cmd += [
+            "--verbose",
+            "--progress"
+        ]
 
     # Run check command
     code = command.RunBlockingCommand(
