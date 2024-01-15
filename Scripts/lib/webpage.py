@@ -203,8 +203,8 @@ def GetMatchingUrl(url, params = {}, starts_with = "", ends_with = "", get_lates
     if len(potential_urls) == 0:
         return None
 
-    # Find the latest possible url
-    matching_url = potential_urls[0]
+    # Select final url
+    matching_url = None
     if get_latest:
         potential_map = {}
         for potential_url in potential_urls:
@@ -214,4 +214,6 @@ def GetMatchingUrl(url, params = {}, starts_with = "", ends_with = "", get_lates
         for potential_key in sorted(potential_map.keys(), reverse = True):
             matching_url = potential_map[potential_key]
             break
+    else:
+        matching_url = potential_urls[0]
     return matching_url

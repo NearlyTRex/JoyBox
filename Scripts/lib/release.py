@@ -323,8 +323,8 @@ def DownloadLatestGithubRelease(
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-# Download latest webpage release
-def DownloadLatestWebpageRelease(
+# Download webpage release
+def DownloadWebpageRelease(
     webpage_url,
     starts_with,
     ends_with,
@@ -338,6 +338,7 @@ def DownloadLatestWebpageRelease(
     installer_type = None,
     is_installer = False,
     is_archive = False,
+    get_latest = False,
     verbose = False,
     exit_on_failure = False):
 
@@ -346,7 +347,7 @@ def DownloadLatestWebpageRelease(
         url = webpage_url,
         starts_with = starts_with,
         ends_with = ends_with,
-        get_latest = True,
+        get_latest = get_latest,
         verbose = verbose)
     if not archive_url:
         system.LogError("Unable to find any release from '%s' matching start='%s' and end='%s'" % (webpage_url, starts_with, ends_with))
