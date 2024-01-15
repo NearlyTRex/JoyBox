@@ -530,13 +530,14 @@ class Computer(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DosBoxX")
         if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
-            success = release.DownloadLatestWebpageRelease(
+            success = release.DownloadWebpageRelease(
                 webpage_url = "https://www.scummvm.org/downloads",
                 starts_with = "https://downloads.scummvm.org/frs/scummvm/",
                 ends_with = "win32-x86_64.zip",
                 search_file = "scummvm.exe",
                 install_name = "ScummVM",
                 install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
+                get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ScummVM")

@@ -61,8 +61,10 @@ class BigPEmu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("BigPEmu", "windows"):
-            success = release.DownloadGeneralRelease(
-                archive_url = "https://www.richwhitehouse.com/jaguar/builds/BigPEmu_v1092.zip",
+            success = release.DownloadWebpageRelease(
+                webpage_url = "https://www.richwhitehouse.com/jaguar/index.php?content=download",
+                starts_with = "https://www.richwhitehouse.com/jaguar/builds/BigPEmu",
+                ends_with = ".zip",
                 search_file = "BigPEmu.exe",
                 install_name = "BigPEmu",
                 install_dir = programs.GetProgramInstallDir("BigPEmu", "windows"),

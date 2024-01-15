@@ -89,13 +89,14 @@ class Dolphin(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Dolphin", "windows"):
-            success = release.DownloadLatestWebpageRelease(
+            success = release.DownloadWebpageRelease(
                 webpage_url = "https://dolphin-emu.org/download/",
                 starts_with = "https://dl.dolphin-emu.org/builds",
                 ends_with = "x64.7z",
                 search_file = "Dolphin.exe",
                 install_name = "Dolphin",
                 install_dir = programs.GetProgramInstallDir("Dolphin", "windows"),
+                get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Dolphin")

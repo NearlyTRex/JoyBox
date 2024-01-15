@@ -73,13 +73,14 @@ class Mednafen(emulatorbase.EmulatorBase):
 
         # Download program
         if programs.ShouldProgramBeInstalled("Mednafen", "windows"):
-            success = release.DownloadLatestWebpageRelease(
+            success = release.DownloadWebpageRelease(
                 webpage_url = "https://mednafen.github.io/",
                 starts_with = "https://mednafen.github.io/releases/files/mednafen",
                 ends_with = "UNSTABLE-win64.zip",
                 search_file = "mednafen.exe",
                 install_name = "Mednafen",
                 install_dir = programs.GetProgramInstallDir("Mednafen", "windows"),
+                get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Mednafen")

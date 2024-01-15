@@ -64,8 +64,10 @@ class PPSSPP(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PPSSPP", "windows"):
-            success = release.DownloadGeneralRelease(
-                archive_url = "https://www.ppsspp.org/files/1_16_6/ppsspp_win.zip",
+            success = release.DownloadWebpageRelease(
+                webpage_url = "https://www.ppsspp.org/download/",
+                starts_with = "https://www.ppsspp.org/files/",
+                ends_with = "ppsspp_win.zip",
                 search_file = "PPSSPPWindows64.exe",
                 install_name = "PPSSPP",
                 install_dir = programs.GetProgramInstallDir("PPSSPP", "windows"),
