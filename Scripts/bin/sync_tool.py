@@ -41,6 +41,7 @@ parser.add_argument("--diff_combined_path", type=str, default="diff_combined.txt
 parser.add_argument("--diff_intersected_path", type=str, default="diff_intersected.txt", help="Diff path (intersection)")
 parser.add_argument("--diff_missing_src_path", type=str, default="diff_missing_src.txt", help="Diff path (missing src)")
 parser.add_argument("--diff_missing_dest_path", type=str, default="diff_missing_dest.txt", help="Diff path (missing dest)")
+parser.add_argument("--diff_error_path", type=str, default="diff_errors.txt", help="Diff path (errors)")
 parser.add_argument("-e", "--resync", action="store_true", help="Enable resync mode")
 parser.add_argument("-i", "--interactive", action="store_true", help="Enable interactive mode")
 parser.add_argument("-q", "--quick", action="store_true", help="Enable quick mode")
@@ -131,6 +132,7 @@ def main():
             diff_intersected_path = args.diff_intersected_path,
             diff_missing_src_path = args.diff_missing_src_path,
             diff_missing_dest_path = args.diff_missing_dest_path,
+            diff_error_path = args.diff_error_path,
             quick = args.quick,
             verbose = verbose,
             exit_on_failure = exit_on_failure)

@@ -282,6 +282,7 @@ def CheckFiles(
     diff_intersected_path = None,
     diff_missing_src_path = None,
     diff_missing_dest_path = None,
+    diff_error_path = None,
     quick = False,
     verbose = False,
     exit_on_failure = False):
@@ -313,6 +314,8 @@ def CheckFiles(
         check_cmd += ["--missing-on-src", diff_missing_src_path]
     if system.IsPathValid(diff_missing_dest_path):
         check_cmd += ["--missing-on-dst", diff_missing_dest_path]
+    if system.IsPathValid(diff_error_path):
+        check_cmd += ["--error", diff_error_path]
     if quick:
         check_cmd += ["--size-only"]
     if verbose:
