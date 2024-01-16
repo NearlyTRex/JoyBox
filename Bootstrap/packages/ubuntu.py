@@ -114,6 +114,11 @@ packages = [
     "brasero",
     "ghex",
 
+    # Graphics
+    "gimp",
+    "imagemagick-6.q16",
+    "vlc",
+
     # KDE
     "dolphin",
     "dolphin-plugins",
