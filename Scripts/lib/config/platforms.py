@@ -49,6 +49,23 @@ transform_platforms = [
     categories.game_subcategory_sony_playstation_network_psv
 ]
 
+# Letter platforms
+letter_platforms = [
+
+    # Computer
+    platform_computer_amazon_games,
+    platform_computer_disc,
+    platform_computer_epic_games,
+    platform_computer_gog,
+    platform_computer_humble_bundle,
+    platform_computer_itchio,
+    platform_computer_puppet_combo,
+    platform_computer_red_candle,
+    platform_computer_square_enix,
+    platform_computer_steam,
+    platform_computer_zoom
+]
+
 ######################################################################################
 
 ###########################################################
