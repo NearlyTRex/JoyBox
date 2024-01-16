@@ -10,6 +10,7 @@ import config
 import command
 import system
 import gameinfo
+import platforms
 import ini
 
 ###########################################################
@@ -234,11 +235,9 @@ def GetSyncedGamingSavesRootDir():
 
 # Get synced game save dir
 def GetSyncedGameSaveDir(game_category, game_subcategory, game_name):
-    if game_category == config.game_category_computer:
-        letter = gameinfo.DeriveGameLetterFromName(game_name)
-        return os.path.join(GetSyncedGamingSavesRootDir(), game_category, game_subcategory, letter, game_name)
-    else:
-        return os.path.join(GetSyncedGamingSavesRootDir(), game_category, game_subcategory, game_name)
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
+    return os.path.join(GetSyncedGamingSavesRootDir(), game_category, game_subcategory, game_name_path)
 
 # Get synced music root dir
 def GetSyncedMusicRootDir():
@@ -316,11 +315,9 @@ def GetJsonRomsMetadataRootDir():
 
 # Get json rom metadata file
 def GetJsonRomMetadataFile(game_category, game_subcategory, game_name):
-    if game_category == config.game_category_computer:
-        letter = gameinfo.DeriveGameLetterFromName(game_name)
-        return os.path.join(GetJsonRomsMetadataRootDir(), game_category, game_subcategory, letter, game_name, game_name + ".json")
-    else:
-        return os.path.join(GetJsonRomsMetadataRootDir(), game_category, game_subcategory, game_name, game_name + ".json")
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
+    return os.path.join(GetJsonRomsMetadataRootDir(), game_category, game_subcategory, game_name_path, game_name + ".json")
 
 ###########################################################
 # Scripts
@@ -370,11 +367,9 @@ def GetRomRootDir():
 
 # Get rom dir
 def GetRomDir(rom_category, rom_subcategory, rom_name):
-    if rom_category == config.game_category_computer:
-        letter = gameinfo.DeriveGameLetterFromName(rom_name)
-        return os.path.join(GetRomRootDir(), rom_category, rom_subcategory, letter, rom_name)
-    else:
-        return os.path.join(GetRomRootDir(), rom_category, rom_subcategory, rom_name)
+    rom_platform = gameinfo.DeriveGamePlatformFromCategories(rom_category, rom_subcategory)
+    rom_name_path = gameinfo.DeriveGameNamePathFromName(rom_name, rom_platform)
+    return os.path.join(GetRomRootDir(), rom_category, rom_subcategory, rom_name_path)
 
 # Get dlc root dir
 def GetDLCRootDir():
@@ -423,11 +418,9 @@ def GetInstallRomRootDir():
 
 # Get install rom dir
 def GetInstallRomDir(rom_category, rom_subcategory, rom_name):
-    if rom_category == config.game_category_computer:
-        letter = gameinfo.DeriveGameLetterFromName(rom_name)
-        return os.path.join(GetInstallRomRootDir(), rom_category, rom_subcategory, letter, rom_name)
-    else:
-        return os.path.join(GetInstallRomRootDir(), rom_category, rom_subcategory, rom_name)
+    rom_platform = gameinfo.DeriveGamePlatformFromCategories(rom_category, rom_subcategory)
+    rom_name_path = gameinfo.DeriveGameNamePathFromName(rom_name, rom_platform)
+    return os.path.join(GetInstallRomRootDir(), rom_category, rom_subcategory, rom_name_path)
 
 # Get cached rom dir
 def GetCachedRomDir(rom_category, rom_subcategory, rom_name):

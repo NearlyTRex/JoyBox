@@ -457,6 +457,13 @@ def DeriveGameLetterFromName(game_name):
         letter = config.general_numeric_folder
     return letter
 
+# Derive game name path from name
+def DeriveGameNamePathFromName(game_name, game_platform):
+    if platforms.IsLetterPlatform(game_platform):
+        return os.path.join(DeriveGameLetterFromName(game_name), game_name)
+    else:
+        return game_name
+
 # Derive game categories from platform
 def DeriveGameCategoriesFromPlatform(game_platform):
     if not game_platform:
