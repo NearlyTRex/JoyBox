@@ -59,7 +59,7 @@ def InstallGameToCache(game_info, keep_setup_files = False, verbose = False, exi
             message_text = "Source files are not available\n%s\n%s" % (game_name, game_platform))
 
     # Check if transformation is required
-    if platforms.AreTransformsRequired(game_platform):
+    if platforms.IsTransformPlatform(game_platform):
 
         # Install transformed game
         def InstallTransformedGame():

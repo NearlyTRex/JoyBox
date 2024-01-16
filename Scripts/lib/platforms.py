@@ -33,9 +33,13 @@ def GetPlatformValue(platform_name, platform_value):
 
 ###########################################################
 
-# Check if transforms are required
-def AreTransformsRequired(platform_name):
+# Check if transform platform
+def IsTransformPlatform(platform_name):
     return platform_name in config.transform_platforms
+
+# Check if letter platform
+def IsLetterPlatform(platform_name):
+    return platform_name in config.letter_platforms
 
 ###########################################################
 
