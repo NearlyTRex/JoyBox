@@ -21,6 +21,7 @@ def DownloadGeneralRelease(
     search_file,
     install_name,
     install_dir,
+    backups_dir = None,
     prefix_dir = None,
     prefix_name = None,
     install_files = [],
@@ -54,10 +55,7 @@ def DownloadGeneralRelease(
         return False
 
     # Create install dir if necessary
-    success = system.MakeDirectory(
-        dir = install_dir,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+    success = system.MakeDirectory(install_dir, verbose = verbose, exit_on_failure = exit_on_failure)
     if not success:
         system.LogError("Unable to create install directory %s" % install_dir)
         return False
@@ -69,7 +67,7 @@ def DownloadGeneralRelease(
         appimage_file = os.path.join(tmp_dir_result, install_name + ".AppImage")
 
         # Rename app image
-        success = system.MoveFileOrDirectory(
+        success = system.SmartMove(
             src = archive_file,
             dest = appimage_file,
             verbose = verbose,
@@ -181,7 +179,7 @@ def DownloadGeneralRelease(
         for install_file in install_files:
             install_file_src = os.path.abspath(os.path.join(search_dir, install_file))
             install_file_dest = os.path.join(install_dir, install_file)
-            success = system.CopyFileOrDirectory(
+            success = system.SmartCopy(
                 src = install_file_src,
                 dest = install_file_dest,
                 verbose = verbose,
@@ -234,7 +232,7 @@ def DownloadGeneralRelease(
                 rename_from = rename_entry["from"]
                 rename_to = rename_entry["to"]
                 if filename.endswith(rename_from):
-                    success = system.MoveFileOrDirectory(
+                    success = system.SmartMove(
                         src = filename,
                         dest = filename.replace(rename_from, rename_to),
                         verbose = verbose,
@@ -242,6 +240,14 @@ def DownloadGeneralRelease(
                     if not success:
                         system.LogError("Unable to rename file %s" % filename)
                         return False
+
+    # Backup archive
+    if os.path.isdir(backups_dir):
+        system.SmartCopy(
+            src = archive_file,
+            dest = os.path.join(backups_dir, archive_filename),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
@@ -258,6 +264,7 @@ def DownloadGithubRelease(
     search_file,
     install_name,
     install_dir,
+    backups_dir = None,
     prefix_dir = None,
     prefix_name = None,
     install_files = [],
@@ -313,6 +320,7 @@ def DownloadGithubRelease(
         search_file = search_file,
         install_name = install_name,
         install_dir = install_dir,
+        backups_dir = backups_dir,
         prefix_dir = prefix_dir,
         prefix_name = prefix_name,
         install_files = install_files,
@@ -331,6 +339,7 @@ def DownloadWebpageRelease(
     search_file,
     install_name,
     install_dir,
+    backups_dir = None,
     prefix_dir = None,
     prefix_name = None,
     install_files = [],
@@ -359,6 +368,7 @@ def DownloadWebpageRelease(
         search_file = search_file,
         install_name = install_name,
         install_dir = install_dir,
+        backups_dir = backups_dir,
         prefix_dir = prefix_dir,
         prefix_name = prefix_name,
         install_files = install_files,
