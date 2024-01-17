@@ -14,8 +14,9 @@ import archive
 import ini
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Verify zip files.")
+parser = argparse.ArgumentParser(description="Verify archive files.")
 parser.add_argument("path", help="Input path")
+parser.add_argument("-t", "--archive_types", type=str, default=".zip,.7z,.rar", help="List of archive types (comma delimited)")
 args, unknown = parser.parse_known_args()
 if not args.path:
     parser.print_help()
@@ -38,7 +39,7 @@ def main():
     exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Convert disc image files
-    for file in system.BuildFileListByExtensions(input_path, extensions = [".zip"]):
+    for file in system.BuildFileListByExtensions(input_path, extensions = args.archive_types.split(",")):
 
         # Verify zip file
         system.Log("Verifying %s ..." % file)
