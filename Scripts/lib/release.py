@@ -66,14 +66,14 @@ def DownloadGeneralRelease(
         # Get new appimage file
         appimage_file = os.path.join(tmp_dir_result, install_name + ".AppImage")
 
-        # Rename app image
-        success = system.SmartMove(
+        # Copy app image
+        success = system.SmartCopy(
             src = archive_file,
             dest = appimage_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to rename app image")
+            system.LogError("Unable to copy app image")
             return False
 
         # Mark app images as executable
@@ -242,10 +242,14 @@ def DownloadGeneralRelease(
                         return False
 
     # Backup archive
-    if os.path.isdir(backups_dir):
+    if system.IsPathValid(backups_dir):
+        backup_file = os.path.join(backups_dir, archive_filename)
+        if archive_extension == "":
+            backup_file = os.path.join(backups_dir, archive_basename + ".zip")
         system.SmartCopy(
             src = archive_file,
-            dest = os.path.join(backups_dir, archive_filename),
+            dest = backup_file,
+            skip_identical = True,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
