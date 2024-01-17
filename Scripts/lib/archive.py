@@ -39,6 +39,67 @@ def GetArchiveChecksums(archive_file):
             checksums.append(entry)
     return checksums
 
+# Get archive compression flags
+def GetArchiveCompressionFlags(archive_type, volume_size):
+    compression_flags = []
+    if archive_type == config.archive_type_zip:
+        compression_flags += [
+            "-tzip", # Archive format
+            "-bb3", # Show files being added
+            "-mm=Deflate", # Compression method
+            "-mx=7", # Compression level
+            "-mtc=off", # Do no store NTFS timestamps for files
+            "-mcu=on", # Use UTF-8 for file names that contain non-ASCII symbols
+            "-mmt=on", # Use multithreading
+            "-ma=1", # Reproducible archive
+        ]
+    elif archive_type == config.archive_type_7z:
+        compression_flags += [
+            "-t7z", # Archive format
+            "-bb3", # Show files being added
+            "-mtc=off", # Do no store NTFS timestamps for files
+            "-mmt=on", # Use multithreading
+            "-ma=1", # Reproducible archive
+        ]
+    if isinstance(volume_size, str) and len(volume_size) > 0:
+        compression_flags += [
+            "-v%s" % volume_size
+        ]
+    return compression_flags
+
+# Check archive compression output files
+def CheckArchiveCompressionOutputFiles(archive_file, archive_type, volume_size, verbose = False, exit_on_failure = False):
+
+    # Get output files
+    output_files = []
+    if isinstance(volume_size, str) and len(volume_size) > 0:
+
+        # Search for potential volume files
+        for i in range(1, 999):
+            potential_file = archive_file + "." + str(i).zfill(3)
+            if not os.path.exists(potential_file):
+                break
+            output_files.append(potential_file)
+
+        # Rename for single files
+        if len(output_files) == 1:
+            old_output_file = output_files[0]
+            new_output_file = old_output_file.replace(".001", "")
+            system.MoveFileOrDirectory(
+                src = old_output_file,
+                dest = new_output_file,
+                verbose = True,
+                exit_on_failure = True)
+            output_files = [new_output_file]
+    else:
+        output_files.append(archive_file)
+
+    # Check output files
+    for output_file in output_files:
+        if not os.path.exists(output_file):
+            return False
+    return True
+
 # Create archive from file
 def CreateArchiveFromFile(
     archive_file,
@@ -68,26 +129,10 @@ def CreateArchiveFromFile(
         archive_tool,
         "a"
     ]
-    if volume_size:
-        create_command += [
-            "-v%s" % volume_size
-        ]
-    if archive_type == config.archive_type_zip:
-        create_command += [
-            "-tzip", # Archive format
-            "-mm=Deflate", # Compression method
-            "-mx=7" # Compression level
-        ]
-    elif archive_type == config.archive_type_7z:
-        create_command += [
-            "-t7z" # Archive format
-        ]
+    create_command += GetArchiveCompressionFlags(
+        archive_type = archive_type,
+        volume_size = volume_size)
     create_command += [
-        "-bb3", # Show files being added
-        "-mtc=off", # Do no store NTFS timestamps for files
-        "-mcu=on", # Use UTF-8 for file names that contain non-ASCII symbols
-        "-mmt=on", # Use multithreading
-        "-ma=1", # Reproducible archive
         archive_file,
         path_to_add
     ]
@@ -108,8 +153,13 @@ def CreateArchiveFromFile(
     if delete_original:
         system.RemoveFile(source_file, verbose = verbose)
 
-    # Check result
-    return os.path.exists(archive_file)
+    # Check output files
+    return CheckArchiveCompressionOutputFiles(
+        archive_file = archive_file,
+        archive_type = archive_type,
+        volume_size = volume_size,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Create zip from file
 def CreateZipFromFile(
@@ -180,26 +230,10 @@ def CreateArchiveFromFolder(
         archive_tool,
         "a"
     ]
-    if volume_size:
-        create_command += [
-            "-v%s" % volume_size
-        ]
-    if archive_type == config.archive_type_zip:
-        create_command += [
-            "-tzip", # Archive format
-            "-mm=Deflate", # Compression method
-            "-mx=7" # Compression level
-        ]
-    elif archive_type == config.archive_type_7z:
-        create_command += [
-            "-t7z" # Archive format
-        ]
+    create_command += GetArchiveCompressionFlags(
+        archive_type = archive_type,
+        volume_size = volume_size)
     create_command += [
-        "-bb3", # Show files being added
-        "-mtc=off", # Do no store NTFS timestamps for files
-        "-mcu=on", # Use UTF-8 for file names that contain non-ASCII symbols
-        "-mmt=on", # Use multithreading
-        "-ma=1", # Reproducible archive
         archive_file
     ]
     create_command += objs_to_add
@@ -220,8 +254,13 @@ def CreateArchiveFromFolder(
     if delete_original:
         system.RemoveDirectory(source_dir, verbose = verbose)
 
-    # Check result
-    return os.path.exists(archive_file)
+    # Check output files
+    return CheckArchiveCompressionOutputFiles(
+        archive_file = archive_file,
+        archive_type = archive_type,
+        volume_size = volume_size,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Create zip from folder
 def CreateZipFromFolder(

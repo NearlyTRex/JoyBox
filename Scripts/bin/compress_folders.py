@@ -8,6 +8,7 @@ import argparse
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
+import config
 import archive
 import system
 import setup
@@ -16,13 +17,14 @@ import ini
 # Parse arguments
 parser = argparse.ArgumentParser(description="Compress folders.")
 parser.add_argument("path", help="Input path")
-parser.add_argument("-t", "--output_type",
+parser.add_argument("-a", "--archive_type",
     choices=[
-        "zip",
-        "exe"
+        config.archive_type_zip,
+        config.archive_type_7z
     ],
-    default="zip", help="Output type"
+    default=config.archive_type_zip, help="Archive type"
 )
+parser.add_argument("-v", "--volume_size", type=str, help="Volume size for output files (100m, etc)")
 parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
 args, unknown = parser.parse_known_args()
 if not args.path:
@@ -45,32 +47,26 @@ def main():
     verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
     exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
-    # Compress files
+    # Compress folders
     for obj in system.GetDirectoryContents(root_path):
         obj_path = os.path.join(root_path, obj)
         if not os.path.isdir(obj_path):
             continue
 
         # Get output file
-        output_file = output_file = os.path.join(root_path, obj + "." + args.output_type)
+        output_file = output_file = os.path.join(root_path, obj + "." + args.archive_type)
         if os.path.exists(output_file):
             continue
 
         # Compress folder
-        if args.output_type == "zip":
-            archive.CreateZipFromFolder(
-                zip_file = output_file,
-                source_dir = obj_path,
-                delete_original = args.delete_originals,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-        elif args.output_type == "exe":
-            archive.CreateExeFromFolder(
-                exe_file = output_file,
-                source_dir = obj_path,
-                delete_original = args.delete_originals,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+        archive.CreateArchiveFromFolder(
+            archive_file = output_file,
+            archive_type = args.archive_type,
+            source_dir = obj_path,
+            volume_size = args.volume_size,
+            delete_original = args.delete_originals,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
 # Start
 main()
