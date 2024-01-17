@@ -102,8 +102,8 @@ def CheckArchiveCompressionOutputFiles(archive_file, archive_type, volume_size, 
             system.MoveFileOrDirectory(
                 src = old_output_file,
                 dest = new_output_file,
-                verbose = True,
-                exit_on_failure = True)
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
             output_files = [new_output_file]
     else:
         output_files.append(archive_file)
