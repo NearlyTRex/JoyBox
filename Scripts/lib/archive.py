@@ -39,8 +39,15 @@ def GetArchiveChecksums(archive_file):
             checksums.append(entry)
     return checksums
 
-# Create zip from file
-def CreateZipFromFile(zip_file, source_file, delete_original = False, verbose = False, exit_on_failure = False):
+# Create archive from file
+def CreateArchiveFromFile(
+    archive_file,
+    archive_type,
+    source_file,
+    volume_size = None,
+    delete_original = False,
+    verbose = False,
+    exit_on_failure = False):
 
     # Get tool
     archive_tool = None
@@ -59,38 +66,95 @@ def CreateZipFromFile(zip_file, source_file, delete_original = False, verbose = 
     # Get create command
     create_command = [
         archive_tool,
-        "a",
-        "-tzip", # Archive format
+        "a"
+    ]
+    if volume_size:
+        create_command += [
+            "-v%s" % volume_size
+        ]
+    if archive_type == config.archive_type_zip:
+        create_command += [
+            "-tzip", # Archive format
+            "-mm=Deflate", # Compression method
+            "-mx=7" # Compression level
+        ]
+    elif archive_type == config.archive_type_7z:
+        create_command += [
+            "-t7z" # Archive format
+        ]
+    create_command += [
         "-bb3", # Show files being added
-        "-mx=7", # Compression level
-        "-mm=Deflate", # Compression method
         "-mtc=off", # Do no store NTFS timestamps for files
         "-mcu=on", # Use UTF-8 for file names that contain non-ASCII symbols
         "-mmt=on", # Use multithreading
         "-ma=1", # Reproducible archive
-        zip_file,
+        archive_file,
         path_to_add
     ]
 
     # Run create command
-    command.RunBlockingCommand(
+    code = command.RunBlockingCommand(
         cmd = create_command,
         options = command.CommandOptions(
             cwd = system.GetFilenameDirectory(source_file),
-            output_paths = [zip_file],
+            output_paths = [archive_file],
             blocking_processes = [archive_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if code != 0:
+        return False
 
     # Clean up
     if delete_original:
         system.RemoveFile(source_file, verbose = verbose)
 
     # Check result
-    return os.path.exists(zip_file)
+    return os.path.exists(archive_file)
 
-# Create zip from folder
-def CreateZipFromFolder(zip_file, source_dir, excludes = [], delete_original = False, verbose = False, exit_on_failure = False):
+# Create zip from file
+def CreateZipFromFile(
+    zip_file,
+    source_file,
+    volume_size = None,
+    delete_original = False,
+    verbose = False,
+    exit_on_failure = False):
+    return CreateArchiveFromFile(
+        archive_file = zip_file,
+        archive_type = config.archive_type_zip,
+        source_file = source_file,
+        volume_size = volume_size,
+        delete_original = delete_original,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+# Create 7z from file
+def Create7zFromFile(
+    sevenzip_file,
+    source_file,
+    volume_size = None,
+    delete_original = False,
+    verbose = False,
+    exit_on_failure = False):
+    return CreateArchiveFromFile(
+        archive_file = sevenzip_file,
+        archive_type = config.archive_type_7z,
+        source_file = source_file,
+        volume_size = volume_size,
+        delete_original = delete_original,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+# Create archive from folder
+def CreateArchiveFromFolder(
+    archive_file,
+    archive_type,
+    source_dir,
+    excludes = [],
+    volume_size = None,
+    delete_original = False,
+    verbose = False,
+    exit_on_failure = False):
 
     # Get tool
     archive_tool = None
@@ -114,35 +178,88 @@ def CreateZipFromFolder(zip_file, source_dir, excludes = [], delete_original = F
     # Get create command
     create_command = [
         archive_tool,
-        "a",
-        "-tzip", # Archive format
+        "a"
+    ]
+    if volume_size:
+        create_command += [
+            "-v%s" % volume_size
+        ]
+    if archive_type == config.archive_type_zip:
+        create_command += [
+            "-tzip", # Archive format
+            "-mm=Deflate", # Compression method
+            "-mx=7" # Compression level
+        ]
+    elif archive_type == config.archive_type_7z:
+        create_command += [
+            "-t7z" # Archive format
+        ]
+    create_command += [
         "-bb3", # Show files being added
-        "-mx=7", # Compression level
-        "-mm=Deflate", # Compression method
         "-mtc=off", # Do no store NTFS timestamps for files
         "-mcu=on", # Use UTF-8 for file names that contain non-ASCII symbols
         "-mmt=on", # Use multithreading
         "-ma=1", # Reproducible archive
-        zip_file
+        archive_file
     ]
     create_command += objs_to_add
 
     # Run create command
-    command.RunBlockingCommand(
+    code = command.RunBlockingCommand(
         cmd = create_command,
         options = command.CommandOptions(
             cwd = source_dir,
-            output_paths = [zip_file],
+            output_paths = [archive_file],
             blocking_processes = [archive_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if code != 0:
+        return False
 
     # Clean up
     if delete_original:
         system.RemoveDirectory(source_dir, verbose = verbose)
 
     # Check result
-    return os.path.exists(zip_file)
+    return os.path.exists(archive_file)
+
+# Create zip from folder
+def CreateZipFromFolder(
+    zip_file,
+    source_dir,
+    excludes = [],
+    volume_size = None,
+    delete_original = False,
+    verbose = False,
+    exit_on_failure = False):
+    return CreateArchiveFromFolder(
+        archive_file = zip_file,
+        archive_type = config.archive_type_zip,
+        source_dir = source_dir,
+        excludes = excludes,
+        volume_size = volume_size,
+        delete_original = delete_original,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+# Create 7z from folder
+def Create7zFromFolder(
+    sevenzip_file,
+    source_dir,
+    excludes = [],
+    volume_size = None,
+    delete_original = False,
+    verbose = False,
+    exit_on_failure = False):
+    return CreateArchiveFromFolder(
+        archive_file = sevenzip_file,
+        archive_type = config.archive_type_7z,
+        source_dir = source_dir,
+        excludes = excludes,
+        volume_size = volume_size,
+        delete_original = delete_original,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Create exe from folder
 def CreateExeFromFolder(exe_file, source_dir, excludes = [], delete_original = False, verbose = False, exit_on_failure = False):
