@@ -38,10 +38,8 @@ def main():
     verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
     exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
-    # Convert disc image files
+    # Verify archives
     for file in system.BuildFileListByExtensions(input_path, extensions = args.archive_types.split(",")):
-
-        # Verify zip file
         system.Log("Verifying %s ..." % file)
         verification_success = archive.TestArchive(
             archive_file = file,
