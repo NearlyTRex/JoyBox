@@ -525,6 +525,7 @@ class Computer(emulatorbase.EmulatorBase):
                 search_file = "dosbox-x.exe",
                 install_name = "DosBoxX",
                 install_dir = programs.GetProgramInstallDir("DosBoxX", "windows"),
+                backups_dir = programs.GetProgramBackupDir("DosBoxX", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -537,6 +538,7 @@ class Computer(emulatorbase.EmulatorBase):
                 search_file = "scummvm.exe",
                 install_name = "ScummVM",
                 install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
+                backups_dir = programs.GetProgramBackupDir("ScummVM", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

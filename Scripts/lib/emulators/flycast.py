@@ -69,6 +69,7 @@ class Flycast(emulatorbase.EmulatorBase):
                 search_file = "flycast.exe",
                 install_name = "Flycast",
                 install_dir = programs.GetProgramInstallDir("Flycast", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Flycast", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

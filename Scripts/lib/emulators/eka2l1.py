@@ -76,6 +76,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 search_file = "eka2l1_qt.exe",
                 install_name = "EKA2L1",
                 install_dir = programs.GetProgramInstallDir("EKA2L1", "windows"),
+                backups_dir = programs.GetProgramBackupDir("EKA2L1", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -91,6 +92,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 search_file = "ubuntu-latest.AppImage",
                 install_name = "EKA2L1",
                 install_dir = programs.GetProgramInstallDir("EKA2L1", "linux"),
+                backups_dir = programs.GetProgramBackupDir("EKA2L1", "linux"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

@@ -102,6 +102,7 @@ class Citra(emulatorbase.EmulatorBase):
                 search_file = "citra-qt.exe",
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Citra", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -117,6 +118,7 @@ class Citra(emulatorbase.EmulatorBase):
                 search_file = "citra-qt.AppImage",
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Citra", "linux"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

@@ -71,6 +71,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 search_file = "PPSSPPWindows64.exe",
                 install_name = "PPSSPP",
                 install_dir = programs.GetProgramInstallDir("PPSSPP", "windows"),
+                backups_dir = programs.GetProgramBackupDir("PPSSPP", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PPSSPP")

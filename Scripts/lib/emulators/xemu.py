@@ -91,6 +91,7 @@ class Xemu(emulatorbase.EmulatorBase):
                 search_file = "xemu.exe",
                 install_name = "Xemu",
                 install_dir = programs.GetProgramInstallDir("Xemu", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Xemu", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

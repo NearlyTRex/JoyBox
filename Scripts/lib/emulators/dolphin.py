@@ -96,6 +96,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                 search_file = "Dolphin.exe",
                 install_name = "Dolphin",
                 install_dir = programs.GetProgramInstallDir("Dolphin", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Dolphin", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

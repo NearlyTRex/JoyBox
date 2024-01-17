@@ -68,6 +68,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
                 search_file = "BigPEmu.exe",
                 install_name = "BigPEmu",
                 install_dir = programs.GetProgramInstallDir("BigPEmu", "windows"),
+                backups_dir = programs.GetProgramBackupDir("BigPEmu", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BigPEmu")

@@ -150,6 +150,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                 search_file = "pcsx2-qt.exe",
                 install_name = "PCSX2",
                 install_dir = programs.GetProgramInstallDir("PCSX2", "windows"),
+                backups_dir = programs.GetProgramBackupDir("PCSX2", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PCSX2")
@@ -164,6 +165,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                 search_file = "PCSX2.AppImage",
                 install_name = "PCSX2",
                 install_dir = programs.GetProgramInstallDir("PCSX2", "linux"),
+                backups_dir = programs.GetProgramBackupDir("PCSX2", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PCSX2")

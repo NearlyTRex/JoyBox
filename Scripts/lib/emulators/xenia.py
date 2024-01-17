@@ -76,6 +76,7 @@ class Xenia(emulatorbase.EmulatorBase):
                 search_file = "xenia.exe",
                 install_name = "Xenia",
                 install_dir = programs.GetProgramInstallDir("Xenia", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Xenia", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

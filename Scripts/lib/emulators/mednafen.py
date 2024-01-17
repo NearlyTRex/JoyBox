@@ -80,6 +80,7 @@ class Mednafen(emulatorbase.EmulatorBase):
                 search_file = "mednafen.exe",
                 install_name = "Mednafen",
                 install_dir = programs.GetProgramInstallDir("Mednafen", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Mednafen", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

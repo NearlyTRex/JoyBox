@@ -187,6 +187,7 @@ class Ares(emulatorbase.EmulatorBase):
                 search_file = "ares.exe",
                 install_name = "Ares",
                 install_dir = programs.GetProgramInstallDir("Ares", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Ares", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

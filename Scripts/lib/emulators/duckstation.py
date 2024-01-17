@@ -142,6 +142,7 @@ class DuckStation(emulatorbase.EmulatorBase):
                 search_file = "duckstation-qt-x64-ReleaseLTCG.exe",
                 install_name = "DuckStation",
                 install_dir = programs.GetProgramInstallDir("DuckStation", "windows"),
+                backups_dir = programs.GetProgramBackupDir("DuckStation", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -157,6 +158,7 @@ class DuckStation(emulatorbase.EmulatorBase):
                 search_file = "DuckStation.AppImage",
                 install_name = "DuckStation",
                 install_dir = programs.GetProgramInstallDir("DuckStation", "linux"),
+                backups_dir = programs.GetProgramBackupDir("DuckStation", "linux"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

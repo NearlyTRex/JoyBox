@@ -129,6 +129,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                 search_file = "yuzu.exe",
                 install_name = "Yuzu",
                 install_dir = programs.GetProgramInstallDir("Yuzu", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Yuzu", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -144,6 +145,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                 search_file = "Yuzu.AppImage",
                 install_name = "Yuzu",
                 install_dir = programs.GetProgramInstallDir("Yuzu", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Yuzu", "linux"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

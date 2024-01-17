@@ -94,6 +94,7 @@ class MelonDS(emulatorbase.EmulatorBase):
                 search_file = "melonDS.exe",
                 install_name = "melonDS",
                 install_dir = programs.GetProgramInstallDir("melonDS", "windows"),
+                backups_dir = programs.GetProgramBackupDir("melonDS", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

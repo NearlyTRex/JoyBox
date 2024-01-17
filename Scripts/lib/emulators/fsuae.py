@@ -83,6 +83,7 @@ class FSUAE(emulatorbase.EmulatorBase):
                 search_file = "Plugin.ini",
                 install_name = "FS-UAE",
                 install_dir = programs.GetProgramInstallDir("FS-UAE", "windows"),
+                backups_dir = programs.GetProgramBackupDir("FS-UAE", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

@@ -70,6 +70,7 @@ class ViceC64(emulatorbase.EmulatorBase):
                 search_file = "x64sc.exe",
                 install_name = "VICE-C64",
                 install_dir = programs.GetProgramInstallDir("VICE-C64", "windows"),
+                backups_dir = programs.GetProgramBackupDir("VICE-C64", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

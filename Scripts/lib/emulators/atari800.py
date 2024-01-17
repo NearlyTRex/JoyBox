@@ -70,6 +70,7 @@ class Atari800(emulatorbase.EmulatorBase):
                 search_file = "atari800.exe",
                 install_name = "Atari800",
                 install_dir = programs.GetProgramInstallDir("Atari800", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Atari800", "windows"),
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

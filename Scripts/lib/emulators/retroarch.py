@@ -110,6 +110,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 search_file = "retroarch.exe",
                 install_name = "RetroArch",
                 install_dir = programs.GetProgramInstallDir("RetroArch", "windows"),
+                backups_dir = programs.GetProgramBackupDir("RetroArch", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch")
@@ -118,6 +119,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 search_file = "snes9x_libretro.dll",
                 install_name = "RetroArch",
                 install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "windows"),
+                backups_dir = programs.GetProgramBackupDir("RetroArch", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch cores")
@@ -129,6 +131,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 search_file = "RetroArch-Linux-x86_64.AppImage",
                 install_name = "RetroArch",
                 install_dir = programs.GetProgramInstallDir("RetroArch", "linux"),
+                backups_dir = programs.GetProgramBackupDir("RetroArch", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch")
@@ -137,6 +140,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 search_file = "snes9x_libretro.so",
                 install_name = "RetroArch",
                 install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "linux"),
+                backups_dir = programs.GetProgramBackupDir("RetroArch", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch cores")
