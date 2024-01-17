@@ -52,6 +52,12 @@ def GetProgramInstallDir(program_name, program_platform = None):
         return os.path.join(environment.GetEmulatorsRootDir(), program_name, program_platform)
     return None
 
+# Get program backup dir
+def GetProgramBackupDir(program_name, program_platform = None):
+    if IsProgramNameEmulator(program_name, program_platform):
+        return os.path.join(environment.GetSyncedGameEmulatorBinariesDir(program_name), program_platform)
+    return None
+
 # Get library install dir
 def GetLibraryInstallDir(library_name):
     return os.path.join(environment.GetToolsRootDir(), library_name)
