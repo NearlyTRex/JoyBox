@@ -113,8 +113,8 @@ def ArchiveDiscCHD(chd_file, zip_file, disc_type = None, delete_original = False
         return False
 
     # Archive contents
-    success = archive.CreateZipFromFolder(
-        zip_file = zip_file,
+    success = archive.CreateArchiveFromFolder(
+        archive_file = zip_file,
         source_dir = tmp_dir_result,
         verbose = verbose,
         exit_on_failure = exit_on_failure)

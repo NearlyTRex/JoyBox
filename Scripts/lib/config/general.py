@@ -77,7 +77,9 @@ drive_root_posix = "/"
 
 # Extensions
 computer_program_extensions = [".exe", ".lnk", ".bat"]
-computer_archive_extensions_regular = [".zip", ".7z", ".rar"]
+computer_archive_extensions_zip = [".zip", ".install"]
+computer_archive_extensions_7z = [".7z"]
+computer_archive_extensions_rar = [".rar"]
 computer_archive_extensions_tarball = [
     ".tar.bz2", ".tb2", ".tbz", ".tbz2", ".tz2",    # bzip2
     ".tar.gz", ".taz", ".tgz",                      # gzip
@@ -88,7 +90,11 @@ computer_archive_extensions_tarball = [
     ".tar.Z", ".tZ,", ".taZ",                       # compress
     ".tar.zst", ".tzst"                             # zstd
 ]
-computer_archive_extensions = computer_archive_extensions_regular + computer_archive_extensions_tarball
+computer_archive_extensions = []
+computer_archive_extensions += computer_archive_extensions_zip
+computer_archive_extensions += computer_archive_extensions_7z
+computer_archive_extensions += computer_archive_extensions_rar
+computer_archive_extensions += computer_archive_extensions_tarball
 wiiu_encrypted_extensions = [".app", ".h3", ".tik", ".tmd", ".cert"]
 
 # Folders

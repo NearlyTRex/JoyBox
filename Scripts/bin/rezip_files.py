@@ -46,21 +46,27 @@ def main():
 
         # Unzip file
         system.Log("Unzipping file %s ..." % current_file)
-        archive.ExtractArchive(
+        success = archive.ExtractArchive(
             archive_file = current_file,
             extract_dir = current_file_extract_dir,
             delete_original = True,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to unzip file %s" % current_file)
+            sys.exit(-1)
 
         # Deterministically zip file
         system.Log("Deterministically rezipping ...")
-        archive.CreateZipFromFolder(
-            zip_file = current_file,
+        success = archive.CreateArchiveFromFolder(
+            archive_file = current_file,
             source_dir = current_file_extract_dir,
             delete_original = True,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to rezip file %s" % current_file)
+            sys.exit(-1)
 
 # Start
 main()

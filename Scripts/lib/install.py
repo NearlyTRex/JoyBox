@@ -61,8 +61,8 @@ def PackInstallImage(input_dir, output_image, delete_original = False, verbose =
         return False
 
     # Create archive
-    success = archive.CreateZipFromFolder(
-        zip_file = output_image,
+    success = archive.CreateArchiveFromFolder(
+        archive_file = output_image,
         source_dir = tmp_dir_result,
         verbose = verbose,
         exit_on_failure = exit_on_failure)

@@ -19,6 +19,20 @@ def IsArchive(archive_file):
             return True
     return False
 
+# Determine if file is a zip archive
+def IsZipArchive(archive_file):
+    for ext in config.computer_archive_extensions_zip:
+        if archive_file.endswith(ext):
+            return True
+    return False
+
+# Determine if file is a 7z archive
+def Is7zArchive(archive_file):
+    for ext in config.computer_archive_extensions_7z:
+        if archive_file.endswith(ext):
+            return True
+    return False
+
 # Determine if file is a tarball archive
 def IsTarballArchive(archive_file):
     for ext in config.computer_archive_extensions_tarball:
@@ -103,7 +117,6 @@ def CheckArchiveCompressionOutputFiles(archive_file, archive_type, volume_size, 
 # Create archive from file
 def CreateArchiveFromFile(
     archive_file,
-    archive_type,
     source_file,
     volume_size = None,
     delete_original = False,
@@ -116,6 +129,16 @@ def CreateArchiveFromFile(
         archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
         system.LogError("7-Zip was not found")
+        return False
+
+    # Get archive type
+    archive_type = None
+    if IsZipArchive(archive_file):
+        archive_type = config.archive_type_zip
+    elif Is7zArchive(archive_file):
+        archive_type = config.archive_type_7z
+    if not archive_type:
+        system.LogError("Unrecognized archive type for %s" % archive_file)
         return False
 
     # Get path to add
@@ -161,44 +184,9 @@ def CreateArchiveFromFile(
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-# Create zip from file
-def CreateZipFromFile(
-    zip_file,
-    source_file,
-    volume_size = None,
-    delete_original = False,
-    verbose = False,
-    exit_on_failure = False):
-    return CreateArchiveFromFile(
-        archive_file = zip_file,
-        archive_type = config.archive_type_zip,
-        source_file = source_file,
-        volume_size = volume_size,
-        delete_original = delete_original,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-
-# Create 7z from file
-def Create7zFromFile(
-    sevenzip_file,
-    source_file,
-    volume_size = None,
-    delete_original = False,
-    verbose = False,
-    exit_on_failure = False):
-    return CreateArchiveFromFile(
-        archive_file = sevenzip_file,
-        archive_type = config.archive_type_7z,
-        source_file = source_file,
-        volume_size = volume_size,
-        delete_original = delete_original,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-
 # Create archive from folder
 def CreateArchiveFromFolder(
     archive_file,
-    archive_type,
     source_dir,
     excludes = [],
     volume_size = None,
@@ -212,6 +200,16 @@ def CreateArchiveFromFolder(
         archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
         system.LogError("7-Zip was not found")
+        return False
+
+    # Get archive type
+    archive_type = None
+    if IsZipArchive(archive_file):
+        archive_type = config.archive_type_zip
+    elif Is7zArchive(archive_file):
+        archive_type = config.archive_type_7z
+    if not archive_type:
+        system.LogError("Unrecognized archive type for %s" % archive_file)
         return False
 
     # Create list of objects to add
@@ -261,96 +259,6 @@ def CreateArchiveFromFolder(
         volume_size = volume_size,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
-
-# Create zip from folder
-def CreateZipFromFolder(
-    zip_file,
-    source_dir,
-    excludes = [],
-    volume_size = None,
-    delete_original = False,
-    verbose = False,
-    exit_on_failure = False):
-    return CreateArchiveFromFolder(
-        archive_file = zip_file,
-        archive_type = config.archive_type_zip,
-        source_dir = source_dir,
-        excludes = excludes,
-        volume_size = volume_size,
-        delete_original = delete_original,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-
-# Create 7z from folder
-def Create7zFromFolder(
-    sevenzip_file,
-    source_dir,
-    excludes = [],
-    volume_size = None,
-    delete_original = False,
-    verbose = False,
-    exit_on_failure = False):
-    return CreateArchiveFromFolder(
-        archive_file = sevenzip_file,
-        archive_type = config.archive_type_7z,
-        source_dir = source_dir,
-        excludes = excludes,
-        volume_size = volume_size,
-        delete_original = delete_original,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-
-# Create exe from folder
-def CreateExeFromFolder(exe_file, source_dir, excludes = [], delete_original = False, verbose = False, exit_on_failure = False):
-
-    # Get tool
-    archive_tool = None
-    if programs.IsToolInstalled("7-Zip"):
-        archive_tool = programs.GetToolProgram("7-Zip")
-    if not archive_tool:
-        system.LogError("7-Zip was not found")
-        return False
-
-    # Create list of objects to add
-    objs_to_add = []
-    for obj in system.GetDirectoryContents(source_dir):
-        if obj in excludes:
-            continue
-        path_to_add = sandbox.TranslatePathIfNecessary(
-            path = os.path.join(source_dir, obj),
-            program_exe = archive_tool,
-            program_name = "7-Zip")
-        objs_to_add.append(path_to_add)
-
-    # Get create command
-    create_command = [
-        archive_tool,
-        "a",
-        "-bb3", # Show files being added
-        "-mx=7", # Compression level
-        "-mmt=on", # Use multithreading
-        "-ma=1", # Reproducible archive
-        "-sfx7z.sfx", # Make self extracting
-        exe_file
-    ]
-    create_command += objs_to_add
-
-    # Run create command
-    command.RunBlockingCommand(
-        cmd = create_command,
-        options = command.CommandOptions(
-            cwd = source_dir,
-            output_paths = [exe_file],
-            blocking_processes = [archive_tool]),
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-
-    # Clean up
-    if delete_original:
-        system.RemoveDirectory(source_dir, verbose = verbose)
-
-    # Check result
-    return os.path.exists(exe_file)
 
 # Extract archive
 def ExtractArchive(archive_file, extract_dir, skip_existing = False, delete_original = False, verbose = False, exit_on_failure = False):

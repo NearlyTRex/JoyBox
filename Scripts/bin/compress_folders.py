@@ -61,7 +61,6 @@ def main():
         # Compress folder
         archive.CreateArchiveFromFolder(
             archive_file = output_file,
-            archive_type = args.archive_type,
             source_dir = obj_path,
             volume_size = args.volume_size,
             delete_original = args.delete_originals,

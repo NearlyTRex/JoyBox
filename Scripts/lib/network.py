@@ -390,8 +390,8 @@ def ArchiveGithubRepository(
             return False
 
     # Archive repository
-    success = archive.CreateZipFromFolder(
-        zip_file = output_file,
+    success = archive.CreateArchiveFromFolder(
+        archive_file = output_file,
         source_dir = tmp_dir_result,
         verbose = verbose,
         exit_on_failure = exit_on_failure)

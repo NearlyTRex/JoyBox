@@ -122,8 +122,8 @@ def PackSave(save_category, save_subcategory, save_name, verbose = False, exit_o
         input_excludes = [config.save_type_wine, config.save_type_sandboxie]
 
     # Archive save
-    success = archive.CreateZipFromFolder(
-        zip_file = tmp_save_archive_file,
+    success = archive.CreateArchiveFromFolder(
+        archive_file = tmp_save_archive_file,
         source_dir = input_save_dir,
         excludes = input_excludes,
         verbose = verbose)
@@ -142,11 +142,13 @@ def PackSave(save_category, save_subcategory, save_name, verbose = False, exit_o
         return True
 
     # Move save archive
-    system.MoveFileOrDirectory(
+    success = system.MoveFileOrDirectory(
         src = tmp_save_archive_file,
         dest = out_save_archive_file,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Delete temporary directory
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
