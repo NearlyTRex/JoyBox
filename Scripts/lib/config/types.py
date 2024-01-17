@@ -100,3 +100,7 @@ installer_type_unknown = "unknown"
 
 # Sync types
 sync_type_gdrive = "gdrive"
+
+# Archive types
+archive_type_zip = "zip"
+archive_type_7z = "7z"
