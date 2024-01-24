@@ -116,6 +116,7 @@ packages = [
 
     # Graphics
     "gimp",
+    "imagemagick",
     "imagemagick-6.q16",
     "vlc",
 
@@ -254,6 +255,7 @@ packages = [
     "dos2unix",
 
     # Utils
+    "img2pdf",
     "openssl",
     "p7zip-full",
     "qt6-l10n-tools",
