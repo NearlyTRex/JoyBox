@@ -188,9 +188,16 @@ def IsPathValid(path):
         return True
 
 # Check if path exists
-def DoesPathExist(path, case_sensitive_paths = True):
+def DoesPathExist(path, case_sensitive_paths = True, partial_paths = False):
     if case_sensitive_paths:
         return os.path.exists(path)
+    elif partial_paths:
+        path_parent = str(pathlib.Path(path).parent)
+        path_name = str(pathlib.Path(path).name)
+        if os.path.isdir(path_parent):
+            for obj in os.listdir(path_parent):
+                if obj.startswith(path_name):
+                    return True
     else:
         path_parent = str(pathlib.Path(path).parent)
         path_name = str(pathlib.Path(path).name)
