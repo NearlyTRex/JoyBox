@@ -31,6 +31,7 @@ from . import python
 from . import rclone
 from . import sandboxie
 from . import sevenzip
+from . import sigtop
 from . import sunshine
 from . import tar
 from . import threedsromtool
@@ -74,6 +75,7 @@ instances = [
     rclone.RClone(),
     sandboxie.Sandboxie(),
     sevenzip.SevenZip(),
+    sigtop.Sigtop(),
     sunshine.Sunshine(),
     tar.Tar(),
     threedsromtool.ThreeDSRomTool(),
