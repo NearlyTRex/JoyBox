@@ -71,6 +71,13 @@ elif "20.04" in environment.GetLinuxDistroVersion():
         "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources"
     ]
 
+# XDM
+preliminaries += [
+    "wget -O xdman.deb \"https://github.com/subhra74/xdm/releases/download/8.0.29/xdman_gtk_8.0.29_amd64.deb\"",
+    "sudo dpkg -i xdman.deb",
+    "rm -f ./xdman.deb"
+]
+
 ###########################################################
 # Packages
 ###########################################################
@@ -95,6 +102,7 @@ packages = [
     "g++",
     "gcc",
     "gettext",
+    "golang",
     "help2man",
     "libtool-bin",
     "lld",
