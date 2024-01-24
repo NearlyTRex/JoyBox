@@ -18,9 +18,9 @@ import network
 # Download general release
 def DownloadGeneralRelease(
     archive_url,
-    search_file,
     install_name,
     install_dir,
+    search_file = None,
     backups_dir = None,
     prefix_dir = None,
     prefix_name = None,
@@ -166,7 +166,7 @@ def DownloadGeneralRelease(
             return False
 
     # Further refine search dir if we are looking for a particular file
-    if len(search_file):
+    if isinstance(search_file, str) and len(search_file):
         for file in system.BuildFileList(search_dir):
             current_dir = system.GetFilenameDirectory(file)
             current_basefile = system.GetFilenameFile(file)
@@ -175,7 +175,7 @@ def DownloadGeneralRelease(
                 break
 
     # Copy release files
-    if len(install_files):
+    if isinstance(install_files, list) and len(install_files):
         for install_file in install_files:
             install_file_src = os.path.abspath(os.path.join(search_dir, install_file))
             install_file_dest = os.path.join(install_dir, install_file)
@@ -198,7 +198,7 @@ def DownloadGeneralRelease(
             return False
 
     # Registry files
-    if len(registry_files):
+    if isinstance(registry_files, list) and len(registry_files):
         for registry_file in registry_files:
             success = registry.ImportRegistryFile(
                 registry_file = registry_file,
@@ -210,7 +210,7 @@ def DownloadGeneralRelease(
                 return False
 
     # Chmod files
-    if len(chmod_files):
+    if isinstance(chmod_files, list) and len(chmod_files):
         for filename in system.BuildFileList(install_dir):
             for chmod_entry in chmod_files:
                 chmod_file = system.NormalizeFilePath(chmod_entry["file"])
@@ -226,7 +226,7 @@ def DownloadGeneralRelease(
                         return False
 
     # Rename files
-    if len(rename_files):
+    if isinstance(rename_files, list) and len(rename_files):
         for filename in system.BuildFileList(install_dir):
             for rename_entry in rename_files:
                 rename_from = rename_entry["from"]
@@ -265,9 +265,9 @@ def DownloadGithubRelease(
     github_repo,
     starts_with,
     ends_with,
-    search_file,
     install_name,
     install_dir,
+    search_file = None,
     backups_dir = None,
     prefix_dir = None,
     prefix_name = None,
@@ -321,9 +321,9 @@ def DownloadGithubRelease(
     # Download release
     return DownloadGeneralRelease(
         archive_url = archive_url,
-        search_file = search_file,
         install_name = install_name,
         install_dir = install_dir,
+        search_file = search_file,
         backups_dir = backups_dir,
         prefix_dir = prefix_dir,
         prefix_name = prefix_name,
@@ -340,9 +340,9 @@ def DownloadWebpageRelease(
     webpage_url,
     starts_with,
     ends_with,
-    search_file,
     install_name,
     install_dir,
+    search_file = None,
     backups_dir = None,
     prefix_dir = None,
     prefix_name = None,
@@ -369,9 +369,9 @@ def DownloadWebpageRelease(
     # Download release
     return DownloadGeneralRelease(
         archive_url = archive_url,
-        search_file = search_file,
         install_name = install_name,
         install_dir = install_dir,
+        search_file = search_file,
         backups_dir = backups_dir,
         prefix_dir = prefix_dir,
         prefix_name = prefix_name,
