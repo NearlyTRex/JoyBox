@@ -11,6 +11,7 @@ sys.path.append(lib_folder)
 import config
 import system
 import environment
+import archive
 import setup
 import ini
 
@@ -84,6 +85,29 @@ def main():
                 skip_identical = args.skip_identical,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
+
+    # Backup sync files
+    elif args.type == "sync":
+        for sync_base_obj in system.GetDirectoryContents(input_path):
+            sync_base_dir = os.path.join(input_path, sync_base_obj)
+            if os.path.isdir(sync_base_dir):
+                for sync_sub_obj in system.GetDirectoryContents(sync_base_dir):
+                    sync_sub_dir = os.path.join(sync_base_dir, sync_sub_obj)
+                    sync_sub_file = os.path.join(output_base_path, sync_base_obj, sync_sub_obj + ".7z")
+                    if not os.path.isdir(sync_sub_dir):
+                        continue
+                    if system.DoesPathExist(sync_sub_file, case_sensitive_paths = False, partial_paths = True):
+                        continue
+                    system.MakeDirectory(
+                        dir = system.GetFilenameDirectory(sync_sub_file),
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
+                    archive.CreateArchiveFromFolder(
+                        archive_file = sync_sub_file,
+                        source_dir = sync_sub_dir,
+                        volume_size = "4092m",
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
 
 # Start
 main()
