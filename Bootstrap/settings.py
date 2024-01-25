@@ -45,13 +45,6 @@ ini_defaults["UserData.Resolution"]["screen_resolution_w"] = "1920"
 ini_defaults["UserData.Resolution"]["screen_resolution_h"] = "1080"
 ini_defaults["UserData.Resolution"]["screen_resolution_c"] = "32"
 
-# UserData.Flags
-ini_defaults["UserData.Flags"] = {}
-ini_defaults["UserData.Flags"]["verbose"] = "True"
-ini_defaults["UserData.Flags"]["exit_on_failure"] = "True"
-ini_defaults["UserData.Flags"]["fullscreen"] = "True"
-ini_defaults["UserData.Flags"]["keep_setup_files"] = "False"
-
 # UserData.Capture
 ini_defaults["UserData.Capture"] = {}
 ini_defaults["UserData.Capture"]["capture_type"] = "none"
