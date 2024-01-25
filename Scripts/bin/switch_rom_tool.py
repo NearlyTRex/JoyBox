@@ -11,7 +11,6 @@ sys.path.append(lib_folder)
 import system
 import nintendo
 import setup
-import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Nintendo Switch rom tool.")
@@ -19,6 +18,8 @@ parser.add_argument("path", help="Input path")
 parser.add_argument("-t", "--trim", action="store_true", help="Trim XCI files")
 parser.add_argument("-u", "--untrim", action="store_true", help="Untrim XCI files")
 parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:
     parser.print_help()
@@ -36,10 +37,6 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
-
     # Find xci files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".xci"]):
         current_file = file
@@ -52,8 +49,8 @@ def main():
                 src_xci_file = current_file,
                 dest_xci_file = os.path.join(current_file_dir, current_file_basename + "_trimmed.xci"),
                 delete_original = args.delete_originals,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
 
         # Untrim xci
         elif args.untrim:
@@ -61,8 +58,8 @@ def main():
                 src_xci_file = current_file,
                 dest_xci_file = os.path.join(current_file_dir, current_file_basename + "_untrimmed.xci"),
                 delete_original = args.delete_originals,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

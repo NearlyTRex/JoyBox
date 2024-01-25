@@ -10,7 +10,6 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import programs
 import command
-import ini
 import setup
 
 # Parse arguments
@@ -33,6 +32,8 @@ parser.add_argument("-p", "--platform",
     help="Download platform"
 )
 parser.add_argument("-o", "--output_dir", type=str, default=".", help="Output directory for downloads")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
 # Main
@@ -40,10 +41,6 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Get tool
     gog_tool = None
@@ -66,8 +63,8 @@ def main():
     # Run download command
     command.RunCheckedCommand(
         cmd = download_cmd,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+        verbose = args.verbose,
+        exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

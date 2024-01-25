@@ -15,17 +15,18 @@ import metadata
 import hashing
 import gameinfo
 import setup
-import ini
+
+# Parse arguments
+parser = argparse.ArgumentParser(description="Verify rom files.")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+args, unknown = parser.parse_known_args()
 
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Find extra json files
     for json_file in system.BuildFileListByExtensions(environment.GetJsonMetadataRootDir(), extensions = [".json"]):
@@ -62,8 +63,8 @@ def main():
                 # Get game info
                 game_info = gameinfo.GameInfo(
                     json_file = json_file,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
 
                 # Get game info
                 json_file_list = game_info.get_files()

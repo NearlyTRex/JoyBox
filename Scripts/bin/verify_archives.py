@@ -11,12 +11,13 @@ sys.path.append(lib_folder)
 import system
 import setup
 import archive
-import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Verify archive files.")
 parser.add_argument("path", help="Input path")
 parser.add_argument("-t", "--archive_types", type=str, default=".zip,.7z,.rar", help="List of archive types (comma delimited)")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:
     parser.print_help()
@@ -34,17 +35,13 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
-
     # Verify archives
     for file in system.BuildFileListByExtensions(input_path, extensions = args.archive_types.split(",")):
         system.Log("Verifying %s ..." % file)
         verification_success = archive.TestArchive(
             archive_file = file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
         if verification_success:
             system.LogSuccess("Verified!")
         else:

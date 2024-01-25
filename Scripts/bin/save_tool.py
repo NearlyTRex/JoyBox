@@ -11,7 +11,6 @@ sys.path.append(lib_folder)
 import setup
 import system
 import saves
-import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Save tool.")
@@ -26,6 +25,8 @@ parser.add_argument("-a", "--action",
     ],
     default="backup", help="Save action"
 )
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
 # Check input path
@@ -58,35 +59,31 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
-
     # Backup saves
     if args.action == "backup":
         saves.BackupSaves(
             output_path = output_path,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
 
     # Restore saves
     elif args.action == "restore":
         saves.RestoreSaves(
             input_path = input_path,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
 
     # Pack saves
     elif args.action == "pack":
         saves.PackSaves(
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
 
     # Unpack saves
     elif args.action == "unpack":
         saves.UnpackSaves(
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

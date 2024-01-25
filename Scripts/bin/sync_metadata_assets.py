@@ -13,6 +13,12 @@ import environment
 import metadata
 import setup
 
+# Parse arguments
+parser = argparse.ArgumentParser(description="Sync metadata assets.")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+args, unknown = parser.parse_known_args()
+
 # Main
 def main():
 

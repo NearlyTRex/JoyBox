@@ -11,7 +11,6 @@ sys.path.append(lib_folder)
 import system
 import chd
 import setup
-import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Extract disc images from CHD files.")
@@ -19,6 +18,8 @@ parser.add_argument("path", help="Input path")
 parser.add_argument("-t", "--toc_ext", type=str, default=".cue", help="Table of contents output extension")
 parser.add_argument("-b", "--bin_ext", type=str, default=".bin", help="Binary output extension")
 parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:
     parser.print_help()
@@ -35,10 +36,6 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Convert disc image files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".chd"]):
@@ -60,8 +57,8 @@ def main():
             binary_file = output_bin,
             toc_file = output_toc,
             delete_original = args.delete_originals,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

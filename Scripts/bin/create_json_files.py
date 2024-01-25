@@ -14,10 +14,11 @@ import gameinfo
 import platforms
 import system
 import setup
-import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Create or update json files.")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
 # Main
@@ -25,10 +26,6 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Create json files
     for game_category in config.game_categories:
@@ -47,8 +44,8 @@ def main():
                 if os.path.exists(json_file_path):
                     json_file_data = system.ReadJsonFile(
                         src = json_file_path,
-                        verbose = verbose,
-                        exit_on_failure = exit_on_failure)
+                        verbose = args.verbose,
+                        exit_on_failure = args.exit_on_failure)
 
                 # Set json value
                 def SetJsonValue(json_key, json_value):
@@ -134,21 +131,21 @@ def main():
                 # Write json file
                 system.MakeDirectory(
                     dir = system.GetFilenameDirectory(json_file_path),
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
                 system.WriteJsonFile(
                     src = json_file_path,
                     json_data = json_file_data,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
 
                 # Clean json file
                 system.CleanJsonFile(
                     src = json_file_path,
                     sort_keys = True,
                     remove_empty_values = True,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

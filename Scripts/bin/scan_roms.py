@@ -14,17 +14,18 @@ import system
 import environment
 import gameinfo
 import setup
-import ini
+
+# Parse arguments
+parser = argparse.ArgumentParser(description="Scan roms.")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+args, unknown = parser.parse_known_args()
 
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Scripts
     build_metadata_file_bin = os.path.join(environment.GetScriptsBinDir(), "build_metadata_file" + environment.GetScriptsCommandExtension())
@@ -51,22 +52,22 @@ def main():
             ]
             command.RunCheckedCommand(
                 cmd = build_game_list_cmd,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
 
     # Sort metadata files
     system.Log("Sorting metadata files ...")
     command.RunCheckedCommand(
         cmd = sort_metadata_files_bin,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+        verbose = args.verbose,
+        exit_on_failure = args.exit_on_failure)
 
     # Publish metadata files
     system.Log("Publishing metadata files ...")
     command.RunCheckedCommand(
         cmd = publish_metadata_files_bin,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+        verbose = args.verbose,
+        exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

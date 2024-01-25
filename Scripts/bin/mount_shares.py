@@ -3,6 +3,7 @@
 # Imports
 import os, os.path
 import sys
+import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
@@ -12,6 +13,12 @@ import environment
 import network
 import setup
 import ini
+
+# Parse arguments
+parser = argparse.ArgumentParser(description="Mount shares.")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+args, unknown = parser.parse_known_args()
 
 # Main
 def main():
@@ -33,10 +40,6 @@ def main():
     system.AssertIsNonEmptyString(nas_username, "nas_username")
     system.AssertIsNonEmptyString(nas_password, "nas_password")
 
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
-
     # Mount storage
     network.MountNetworkShare(
         mount_dir = environment.GetStorageRootDir(),
@@ -44,8 +47,8 @@ def main():
         network_share = nas_storage_folder,
         username = nas_username,
         password = nas_password,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+        verbose = args.verbose,
+        exit_on_failure = args.exit_on_failure)
 
     # Mount cache
     network.MountNetworkShare(
@@ -54,8 +57,8 @@ def main():
         network_share = nas_cache_folder,
         username = nas_username,
         password = nas_password,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+        verbose = args.verbose,
+        exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

@@ -30,6 +30,8 @@ parser.add_argument("-d", "--archive_dir", type=str, default=environment.GetSync
 parser.add_argument("-f", "--force", action="store_true", help="Force action")
 parser.add_argument("-r", "--recursive", action="store_true", help="Use recursion")
 parser.add_argument("-c", "--clean_first", action="store_true", help="Use cleaning first")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
 # Check that archive dir exists first
@@ -45,10 +47,6 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Get github username
     github_username = args.github_username
@@ -68,8 +66,8 @@ def main():
         github_repos = network.GetGithubRepositories(
             github_user = github_username,
             github_token = github_access_token,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
         for github_repo in github_repos:
             github_repositories.append(github_repo.name)
 
@@ -97,8 +95,8 @@ def main():
                     output_file = os.path.join(archive_dir, github_username, github_repository + "_" + str(environment.GetCurrentTimestamp()) + ".zip"),
                     recursive = args.recursive,
                     clean_first = args.clean_first,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

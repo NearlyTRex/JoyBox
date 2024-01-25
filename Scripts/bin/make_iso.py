@@ -12,7 +12,6 @@ import system
 import archive
 import iso
 import setup
-import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Make ISO images out of all folders or zips in a path.")
@@ -27,6 +26,8 @@ parser.add_argument("-t", "--input_type",
 parser.add_argument("-n", "--volume_name", type=str, default="", help="Volume name to use")
 parser.add_argument("-a", "--auto_volume_name", action="store_true", help="Choose volume name based automatically")
 parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:
     parser.print_help()
@@ -43,10 +44,6 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Create iso images from folders
     if args.input_type == "folder":
@@ -71,8 +68,8 @@ def main():
                 source_dir = obj_path,
                 volume_name = volume_name,
                 delete_original = args.delete_originals,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
 
     # Create iso images from zips
     elif args.input_type == "zip":
@@ -95,8 +92,8 @@ def main():
                 extract_dir = extracted_dir,
                 work_dir = current_dir,
                 delete_original = args.delete_originals,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
 
             # Get volume name
             volume_name = args.volume_name
@@ -110,8 +107,8 @@ def main():
                 work_dir = extracted_dir,
                 volume_name = volume_name,
                 delete_original = args.delete_originals,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

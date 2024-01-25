@@ -13,7 +13,6 @@ import system
 import environment
 import archive
 import setup
-import ini
 
 # Setup argument parser
 parser = argparse.ArgumentParser(description="Backup tool.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -35,6 +34,8 @@ parser.add_argument("-n", "--storage_offset", type=str, help="Storage offset")
 parser.add_argument("-o", "--output_base_path", type=str, default=".", help="Output base path")
 parser.add_argument("-e", "--skip_existing", action="store_true", help="Skip existing files")
 parser.add_argument("-i", "--skip_identical", action="store_true", help="Skip identical files")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 
 # Parse arguments
 args, unknownargs = parser.parse_known_args()
@@ -50,10 +51,6 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Get input path
     input_path = ""
@@ -83,8 +80,8 @@ def main():
                 show_progress = True,
                 skip_existing = args.skip_existing,
                 skip_identical = args.skip_identical,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
 
     # Backup sync files
     elif args.type == "sync":
@@ -100,14 +97,14 @@ def main():
                         continue
                     system.MakeDirectory(
                         dir = system.GetFilenameDirectory(sync_sub_file),
-                        verbose = verbose,
-                        exit_on_failure = exit_on_failure)
+                        verbose = args.verbose,
+                        exit_on_failure = args.exit_on_failure)
                     archive.CreateArchiveFromFolder(
                         archive_file = sync_sub_file,
                         source_dir = sync_sub_dir,
                         volume_size = "4092m",
-                        verbose = verbose,
-                        exit_on_failure = exit_on_failure)
+                        verbose = args.verbose,
+                        exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

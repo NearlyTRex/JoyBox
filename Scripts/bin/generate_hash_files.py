@@ -12,7 +12,6 @@ import config
 import system
 import environment
 import hashing
-import ini
 import setup
 
 # Parse arguments
@@ -39,6 +38,8 @@ parser.add_argument("-m", "--generation_mode",
     ],
     default="standard", help="Generation mode"
 )
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
 # Check input path
@@ -54,10 +55,6 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Get source file root
     source_file_root = ""
@@ -79,8 +76,8 @@ def main():
             file_supercategory = args.file_supercategory,
             file_category = args.file_category,
             file_subcategory = args.file_subcategory,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
 
     # Automatic according to standard layout
     elif args.generation_mode == "standard":
@@ -92,8 +89,8 @@ def main():
                 file_supercategory = args.file_supercategory,
                 file_category = args.file_category,
                 file_subcategory = args.file_subcategory,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
 
         # Specific category/all subcategories in that category
         elif args.file_category:
@@ -103,8 +100,8 @@ def main():
                     file_supercategory = args.file_supercategory,
                     file_category = args.file_category,
                     file_subcategory = file_subcategory,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
 
         # All categories/subcategories
         else:
@@ -115,8 +112,8 @@ def main():
                         file_supercategory = args.file_supercategory,
                         file_category = file_category,
                         file_subcategory = file_subcategory,
-                        verbose = verbose,
-                        exit_on_failure = exit_on_failure)
+                        verbose = args.verbose,
+                        exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

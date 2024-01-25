@@ -11,14 +11,15 @@ sys.path.append(lib_folder)
 import system
 import nintendo
 import setup
-import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Nintendo Wii U rom tool.")
 parser.add_argument("path", help="Input path")
 parser.add_argument("-r", "--decrypt_nus", action="store_true", help="Decrypt NUS packages")
-parser.add_argument("-v", "--verify_nus", action="store_true", help="Verify NUS packages")
+parser.add_argument("-e", "--verify_nus", action="store_true", help="Verify NUS packages")
 parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:
     parser.print_help()
@@ -36,10 +37,6 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
-
     # Find rom files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".tik"]):
         if file.endswith("title.tik"):
@@ -52,15 +49,15 @@ def main():
                 nintendo.DecryptWiiUNUSPackage(
                     nus_package_dir = current_file_dir,
                     delete_original = args.delete_originals,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
 
             # Verify NUS package
             elif args.verify_nus:
                 nintendo.VerifyWiiUNUSPackage(
                     nus_package_dir = current_file_dir,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

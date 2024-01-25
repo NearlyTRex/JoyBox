@@ -12,7 +12,6 @@ import system
 import environment
 import dat
 import setup
-import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Dat renamer.")
@@ -20,6 +19,8 @@ parser.add_argument("input_path", type=str, help="Input path")
 parser.add_argument("-d", "--dat_directory", type=str, help="Dat directory")
 parser.add_argument("-c", "--dat_cachefile", type=str, help="Dat cachefile")
 parser.add_argument("-g", "--generate_cachefile", action="store_true", help="Generate collected cachefile (if scanning normal dats)")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.input_path:
     parser.print_help()
@@ -47,33 +48,29 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
-
     # Load game dat(s)
     game_dat = dat.Dat()
     if os.path.isdir(dat_directory):
         game_dat.import_clrmamepro_dat_files(
             dat_dir = dat_directory,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
         if args.generate_cachefile:
             game_dat.export_cache_dat_file(
                 dat_file = dat_cachefile,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
     elif os.path.isfile(dat_cachefile):
         game_dat.import_cache_dat_file(
             dat_file = dat_cachefile,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
 
     # Rename files
     game_dat.rename_files(
         input_dir = input_path,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+        verbose = args.verbose,
+        exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

@@ -14,17 +14,18 @@ import environment
 import command
 import programs
 import setup
-import ini
+
+# Parse arguments
+parser = argparse.ArgumentParser(description="Launch pegasus.")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+args, unknown = parser.parse_known_args()
 
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Get tool
     pegasus_tool = None
@@ -49,8 +50,8 @@ def main():
     command.RunCheckedCommand(
         cmd = launch_cmd,
         options = launch_options,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+        verbose = args.verbose,
+        exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

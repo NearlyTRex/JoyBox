@@ -11,11 +11,12 @@ sys.path.append(lib_folder)
 import programs
 import command
 import setup
-import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="List duplicate files.")
 parser.add_argument("path", help="Input path")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:
     parser.print_help()
@@ -32,10 +33,6 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
 
     # Get tool
     dupes_tool = None
@@ -57,8 +54,8 @@ def main():
     # Run list command
     command.RunCheckedCommand(
         cmd = list_cmd,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+        verbose = args.verbose,
+        exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

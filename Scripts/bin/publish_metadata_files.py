@@ -14,6 +14,12 @@ import environment
 import metadata
 import setup
 
+# Parse arguments
+parser = argparse.ArgumentParser(description="Publish metadata files.")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+args, unknown = parser.parse_known_args()
+
 # HTML templates
 html_header = """
 <html>
