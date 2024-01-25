@@ -24,7 +24,8 @@ parser.add_argument("-a", "--archive_type",
     ],
     default=config.archive_type_zip, help="Archive type"
 )
-parser.add_argument("-v", "--volume_size", type=str, help="Volume size for output files (100m, etc)")
+parser.add_argument("-p", "--password", type=str, help="Password to set")
+parser.add_argument("-s", "--volume_size", type=str, help="Volume size for output files (100m, etc)")
 parser.add_argument("-t", "--file_types", type=str, default="", help="List of file types (comma delimited)")
 parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
 args, unknown = parser.parse_known_args()
@@ -71,6 +72,7 @@ def main():
         archive.CreateArchiveFromFile(
             archive_file = output_file,
             source_file = obj_path,
+            password = args.password,
             volume_size = args.volume_size,
             delete_original = args.delete_originals,
             verbose = verbose,

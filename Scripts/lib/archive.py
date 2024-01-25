@@ -54,7 +54,7 @@ def GetArchiveChecksums(archive_file):
     return checksums
 
 # Get archive compression flags
-def GetArchiveCompressionFlags(archive_type, volume_size):
+def GetArchiveCompressionFlags(archive_type, password, volume_size):
     compression_flags = []
     if archive_type == config.archive_type_zip:
         compression_flags += [
@@ -75,6 +75,10 @@ def GetArchiveCompressionFlags(archive_type, volume_size):
             "-mmt=on", # Use multithreading
             "-ma=1", # Reproducible archive
         ]
+    if isinstance(password, str) and len(password) > 0:
+        compression_flags += [
+            "-p%s" % password
+        ]
     if isinstance(volume_size, str) and len(volume_size) > 0:
         compression_flags += [
             "-v%s" % volume_size
@@ -82,7 +86,12 @@ def GetArchiveCompressionFlags(archive_type, volume_size):
     return compression_flags
 
 # Check archive compression output files
-def CheckArchiveCompressionOutputFiles(archive_file, archive_type, volume_size, verbose = False, exit_on_failure = False):
+def CheckArchiveCompressionOutputFiles(
+    archive_file,
+    archive_type,
+    volume_size,
+    verbose = False,
+    exit_on_failure = False):
 
     # Get output files
     output_files = []
@@ -118,6 +127,7 @@ def CheckArchiveCompressionOutputFiles(archive_file, archive_type, volume_size, 
 def CreateArchiveFromFile(
     archive_file,
     source_file,
+    password = None,
     volume_size = None,
     delete_original = False,
     verbose = False,
@@ -154,6 +164,7 @@ def CreateArchiveFromFile(
     ]
     create_command += GetArchiveCompressionFlags(
         archive_type = archive_type,
+        password = password,
         volume_size = volume_size)
     create_command += [
         archive_file,
@@ -189,6 +200,7 @@ def CreateArchiveFromFolder(
     archive_file,
     source_dir,
     excludes = [],
+    password = None,
     volume_size = None,
     delete_original = False,
     verbose = False,
@@ -230,6 +242,7 @@ def CreateArchiveFromFolder(
     ]
     create_command += GetArchiveCompressionFlags(
         archive_type = archive_type,
+        password = password,
         volume_size = volume_size)
     create_command += [
         archive_file
@@ -261,7 +274,14 @@ def CreateArchiveFromFolder(
         exit_on_failure = exit_on_failure)
 
 # Extract archive
-def ExtractArchive(archive_file, extract_dir, skip_existing = False, delete_original = False, verbose = False, exit_on_failure = False):
+def ExtractArchive(
+    archive_file,
+    extract_dir,
+    password = None,
+    skip_existing = False,
+    delete_original = False,
+    verbose = False,
+    exit_on_failure = False):
 
     # Get tool
     archive_tool = None
@@ -295,6 +315,10 @@ def ExtractArchive(archive_file, extract_dir, skip_existing = False, delete_orig
             "-o" + extract_dir,
             "-bb3"
         ]
+        if isinstance(password, str) and len(password) > 0:
+            extract_cmd += [
+                "-p%s" % password
+            ]
         if skip_existing:
             extract_cmd += ["-aos"]
         else:
