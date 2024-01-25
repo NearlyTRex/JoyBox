@@ -33,12 +33,12 @@ def IsUrlReachable(url):
         return False
 
 # Get remote json
-def GetRemoteJson(url, verbose = False, exit_on_failure = False):
+def GetRemoteJson(url, headers, verbose = False, exit_on_failure = False):
     try:
         if verbose:
             system.Log("Processing GET request to '%s'" % url)
         import requests
-        get = requests.get(url, headers={"Accept": "application/json"})
+        get = requests.get(url, headers=headers)
         if get.status_code == 200:
             return get.json()
         return None
@@ -50,12 +50,12 @@ def GetRemoteJson(url, verbose = False, exit_on_failure = False):
         return None
 
 # Post remote json
-def PostRemoteJson(url, json_data, verbose = False, exit_on_failure = False):
+def PostRemoteJson(url, headers, json = None, verbose = False, exit_on_failure = False):
     try:
         if verbose:
             system.Log("Processing POST request to '%s'" % url)
         import requests
-        post = requests.post(url, json = json_data)
+        post = requests.post(url, headers=headers, json=json)
         if post.status_code == 200:
             return post.json()
         return None
