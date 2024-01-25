@@ -19,7 +19,6 @@ import cache
 import setup
 import gameinfo
 import gui
-import ini
 
 # Setup argument parser
 parser = argparse.ArgumentParser(description="Launch json game.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -28,6 +27,14 @@ parser.add_argument("-c", "--category", type=str, help="Json category")
 parser.add_argument("-s", "--subcategory", type=str, help="Json subcategory")
 parser.add_argument("-n", "--name", type=str, help="Json name")
 parser.add_argument("-r", "--fill_with_random", action="store_true", help="Fill unspecified fields with random values")
+parser.add_argument("-t", "--capture_type",
+    choices=[
+        config.capture_type_none,
+        config.capture_type_screenshot,
+        config.capture_type_video
+    ],
+    default=config.capture_type_none, help="Capture type"
+)
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 parser.add_argument("-f", "--fullscreen", action="store_true", help="Enable fullscreen mode")
@@ -41,9 +48,6 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get capture type
-    capture_type = ini.GetIniValue("UserData.Capture", "capture_type")
 
     # Json file to load
     json_file = None
@@ -127,7 +131,7 @@ def main():
     # Launch game
     launcher.LaunchGame(
         game_info = game_info,
-        capture_type = capture_type,
+        capture_type = args.capture_type,
         fullscreen = args.fullscreen,
         verbose = args.verbose,
         exit_on_failure = args.exit_on_failure)
