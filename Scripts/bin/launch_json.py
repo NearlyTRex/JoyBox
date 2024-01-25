@@ -28,7 +28,10 @@ parser.add_argument("-c", "--category", type=str, help="Json category")
 parser.add_argument("-s", "--subcategory", type=str, help="Json subcategory")
 parser.add_argument("-n", "--name", type=str, help="Json name")
 parser.add_argument("-r", "--fill_with_random", action="store_true", help="Fill unspecified fields with random values")
-parser.add_argument("-f", "--force_cache_refresh", action="store_true", help="Force refresh of cached files")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser.add_argument("-f", "--fullscreen", action="store_true", help="Enable fullscreen mode")
+parser.add_argument("--force_cache_refresh", action="store_true", help="Force refresh of cached files")
 
 # Parse arguments
 args, unknownargs = parser.parse_known_args()
@@ -38,11 +41,6 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get flags
-    verbose = ini.GetIniBoolValue("UserData.Flags", "verbose")
-    exit_on_failure = ini.GetIniBoolValue("UserData.Flags", "exit_on_failure")
-    fullscreen = ini.GetIniBoolValue("UserData.Flags", "fullscreen")
 
     # Get capture type
     capture_type = ini.GetIniValue("UserData.Capture", "capture_type")
@@ -110,8 +108,8 @@ def main():
     # Get game info
     game_info = gameinfo.GameInfo(
         json_file = json_file,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+        verbose = args.verbose,
+        exit_on_failure = args.exit_on_failure)
 
     # Check ability to launch
     if not game_info.is_playable():
@@ -123,16 +121,16 @@ def main():
     if args.force_cache_refresh:
         cache.RemoveGameFromCache(
             game_info = game_info,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
 
     # Launch game
     launcher.LaunchGame(
         game_info = game_info,
         capture_type = capture_type,
-        fullscreen = fullscreen,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+        fullscreen = args.fullscreen,
+        verbose = args.verbose,
+        exit_on_failure = args.exit_on_failure)
 
 # Start
 main()
