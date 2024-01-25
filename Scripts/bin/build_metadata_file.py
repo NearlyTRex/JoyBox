@@ -19,6 +19,8 @@ parser.add_argument("rom_path", help="Rom path")
 parser.add_argument("-c", "--rom_category", required=True, type=str, help="Rom category")
 parser.add_argument("-s", "--rom_subcategory", required=True, type=str, help="Rom subcategory")
 parser.add_argument("-o", "--output_file", type=str, default="metadata.txt", help="Output metadata file")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
 # Check rom path
