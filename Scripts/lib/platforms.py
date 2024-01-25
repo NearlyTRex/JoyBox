@@ -67,15 +67,15 @@ def GetLauncherTypes(platform_name):
 
 # Check if no launcher available
 def HasNoLauncher(platform_name):
-    return config.launch_none in GetLauncherTypes(platform_name)
+    return config.launch_type_none in GetLauncherTypes(platform_name)
 
 # Check if launched by name
 def IsLaunchedByName(platform_name):
-    return config.launch_name in GetLauncherTypes(platform_name)
+    return config.launch_type_name in GetLauncherTypes(platform_name)
 
 # Check if launched by file
 def IsLaunchedByFile(platform_name):
-    return config.launch_file in GetLauncherTypes(platform_name)
+    return config.launch_type_file in GetLauncherTypes(platform_name)
 
 ###########################################################
 

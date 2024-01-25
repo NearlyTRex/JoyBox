@@ -18,9 +18,9 @@ addon_dlc = "dlc"
 addon_updates = "updates"
 
 # Launch types
-launch_none = "no_launcher"
-launch_file = "launch_file"
-launch_name = "launch_name"
+launch_type_none = "no_launcher"
+launch_type_file = "launch_file"
+launch_type_name = "launch_name"
 
 # Units
 unit_type_seconds = "seconds"
