@@ -286,7 +286,11 @@ def DownloadGithubRelease(
         github_url = "https://api.github.com/repos/%s/%s/releases/latest" % (github_user, github_repo)
 
     # Get release json list
-    release_json_list = network.GetRemoteJson(github_url)
+    release_json_list = network.GetRemoteJson(
+        url = github_url,
+        headers = {"Accept": "application/json"},
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
     if not release_json_list:
         system.LogError("Unable to find github release information from '%s'" % github_url)
         return False
