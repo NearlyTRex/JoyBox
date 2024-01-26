@@ -16,6 +16,14 @@ import setup
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Analyze json files.")
+parser.add_argument("-m", "--mode",
+    choices=[
+        "all",
+        "missing_game_files",
+        "unplayable_games"
+    ],
+    default="all", help="Analyze mode"
+)
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
@@ -25,6 +33,10 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Json lists
+    json_files_no_files = []
+    json_files_unplayable = []
 
     # Clean json files
     for game_category in config.game_categories:
@@ -40,6 +52,29 @@ def main():
                     json_file = json_file,
                     verbose = args.verbose,
                     exit_on_failure = args.exit_on_failure)
+                game_files = game_info.get_files()
+
+                # No files
+                if isinstance(game_files, list) and len(game_files) == 0:
+                    json_files_no_files.append(json_file)
+
+                # Unplayable
+                if game_info.is_playable() == False:
+                    json_files_unplayable.append(json_file)
+
+    # List games with no files
+    if args.mode == "all" or args.mode == "missing_game_files":
+        if len(json_files_no_files):
+            system.LogInfo("Games with no files:")
+            for json_file in json_files_no_files:
+                system.Log(json_file)
+
+    # List unplayable games
+    if args.mode == "all" or args.mode == "unplayable_games":
+        if len(json_files_unplayable):
+            system.LogInfo("Games marked as unplayable:")
+            for json_file in json_files_unplayable:
+                system.Log(json_file)
 
 # Start
 main()
