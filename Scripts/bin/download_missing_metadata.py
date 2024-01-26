@@ -18,11 +18,11 @@ parser = argparse.ArgumentParser(description="Download missing metadata.")
 parser.add_argument("metadata_dir", help="Metadata dir")
 parser.add_argument("-s", "--metadata_source",
     choices=[
-        config.metadata_source_thegamesdb,
-        config.metadata_source_gamefaqs,
-        config.metadata_source_itchio
+        config.metadata_source_type_thegamesdb,
+        config.metadata_source_type_gamefaqs,
+        config.metadata_source_type_itchio
     ],
-    default=config.metadata_source_gamefaqs
+    default=config.metadata_source_type_gamefaqs
 )
 parser.add_argument("--only_check_description", action="store_true", help="Only check descriptions")
 parser.add_argument("--only_check_genre", action="store_true", help="Only check genres")

@@ -487,21 +487,21 @@ def CollectMetadata(
 
                     # Collect metadata
                     metadata_result = None
-                    if metadata_source == config.metadata_source_thegamesdb:
+                    if metadata_source == config.metadata_source_type_thegamesdb:
                         metadata_result = CollectMetadataFromTGDB(
                             web_driver = web_driver,
                             game_platform = game_platform,
                             game_name = game_name,
                             select_automatically = select_automatically,
                             ignore_unowned = ignore_unowned)
-                    elif metadata_source == config.metadata_source_gamefaqs:
+                    elif metadata_source == config.metadata_source_type_gamefaqs:
                         metadata_result = CollectMetadataFromGameFAQS(
                             web_driver = web_driver,
                             game_platform = game_platform,
                             game_name = game_name,
                             select_automatically = select_automatically,
                             ignore_unowned = ignore_unowned)
-                    elif metadata_source == config.metadata_source_itchio:
+                    elif metadata_source == config.metadata_source_type_itchio:
                         metadata_result = CollectMetadataFromItchio(
                             web_driver = web_driver,
                             game_platform = game_platform,

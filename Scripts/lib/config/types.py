@@ -9,9 +9,9 @@ metadata_formats = [
 ]
 
 # Metadata sources
-metadata_source_thegamesdb = "thegamesdb"
-metadata_source_gamefaqs = "gamefaqs"
-metadata_source_itchio = "itchio"
+metadata_source_type_thegamesdb = "thegamesdb"
+metadata_source_type_gamefaqs = "gamefaqs"
+metadata_source_type_itchio = "itchio"
 
 # Addon types
 addon_dlc = "dlc"
