@@ -24,6 +24,7 @@ packages = [
     "fuzzywuzzy",
     "dictdiffer",
     "termcolor",
+    "colorama",
     "pycryptodome",
     "pycryptodomex",
     "cryptography",
