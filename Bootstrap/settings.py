@@ -47,7 +47,6 @@ ini_defaults["UserData.Resolution"]["screen_resolution_c"] = "32"
 
 # UserData.Capture
 ini_defaults["UserData.Capture"] = {}
-ini_defaults["UserData.Capture"]["capture_type"] = "none"
 ini_defaults["UserData.Capture"]["capture_duration"] = "300"
 ini_defaults["UserData.Capture"]["capture_interval"] = "1"
 ini_defaults["UserData.Capture"]["capture_origin_x"] = "0"
