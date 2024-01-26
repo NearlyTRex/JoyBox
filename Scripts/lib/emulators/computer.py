@@ -683,7 +683,7 @@ class Computer(emulatorbase.EmulatorBase):
         def CreateGamePrefix():
             return sandbox.CreateLinkedPrefix(
                 prefix_dir = launch_save_dir,
-                prefix_name = config.prefix_name_game,
+                prefix_name = config.prefix_type_game,
                 prefix_winver = launch_info_winver,
                 general_prefix_dir = launch_general_save_dir,
                 other_links = mount_links,
@@ -791,7 +791,7 @@ class Computer(emulatorbase.EmulatorBase):
                     fullscreen = fullscreen)
                 launch_info_options = command.CommandOptions(
                     prefix_dir = launch_save_dir,
-                    prefix_name = config.prefix_name_game,
+                    prefix_name = config.prefix_type_game,
                     prefix_winver = launch_info_winver,
                     prefix_cwd = launch_info_cwd,
                     is_wine_prefix = should_run_via_wine,
@@ -817,7 +817,7 @@ class Computer(emulatorbase.EmulatorBase):
                     fullscreen = fullscreen)
                 launch_info_options = command.CommandOptions(
                     prefix_dir = launch_save_dir,
-                    prefix_name = config.prefix_name_game,
+                    prefix_name = config.prefix_type_game,
                     prefix_winver = launch_info_winver,
                     prefix_cwd = launch_info_cwd,
                     is_wine_prefix = should_run_via_wine,
@@ -832,7 +832,7 @@ class Computer(emulatorbase.EmulatorBase):
                 fullscreen = fullscreen)
             launch_info_options = command.CommandOptions(
                 prefix_dir = launch_save_dir,
-                prefix_name = config.prefix_name_game,
+                prefix_name = config.prefix_type_game,
                 prefix_winver = launch_info_winver,
                 prefix_cwd = launch_info_cwd,
                 is_wine_prefix = should_run_via_wine,
@@ -857,7 +857,7 @@ class Computer(emulatorbase.EmulatorBase):
                 cwd = os.path.expanduser("~"),
                 force_prefix = True,
                 prefix_dir = launch_save_dir,
-                prefix_name = config.prefix_name_game,
+                prefix_name = config.prefix_type_game,
                 prefix_winver = launch_info_winver,
                 prefix_cwd = launch_info_cwd,
                 is_wine_prefix = should_run_via_wine,

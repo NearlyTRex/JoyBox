@@ -290,7 +290,7 @@ def SetupPrefixCommand(
     if not new_options.prefix_name or not new_options.prefix_dir:
         new_options.is_wine_prefix = sandbox.ShouldBeRunViaWine(cmd)
         new_options.is_sandboxie_prefix = sandbox.ShouldBeRunViaSandboxie(cmd)
-        new_options.prefix_name = config.prefix_name_default
+        new_options.prefix_name = config.prefix_type_default
         new_options.prefix_dir = sandbox.GetPrefix(
             name = new_options.prefix_name,
             is_wine_prefix = new_options.is_wine_prefix,

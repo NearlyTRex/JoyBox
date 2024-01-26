@@ -360,7 +360,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
     should_run_via_sandboxie = environment.IsSandboxiePlatform()
 
     # Get prefix info
-    prefix_name = config.prefix_name_setup
+    prefix_name = config.prefix_type_setup
     prefix_dir = sandbox.GetPrefix(
         name = prefix_name,
         is_wine_prefix = should_run_via_wine,

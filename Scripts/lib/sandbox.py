@@ -655,7 +655,7 @@ def SetupPrefixCommand(
             GetSandboxieCommand(),
             "/box:%s" % options.prefix_name
         ]
-        if options.prefix_name == config.prefix_name_tool:
+        if options.prefix_name == config.prefix_type_tool:
             new_cmd += ["/hide_window"]
 
     # Adjust command based on executable type

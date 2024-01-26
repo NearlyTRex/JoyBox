@@ -28,11 +28,11 @@ unit_type_minutes = "minutes"
 unit_type_hours = "hours"
 
 # Prefixes
-prefix_name_default = "Default"
-prefix_name_tool = "Tool"
-prefix_name_emulator = "Emulator"
-prefix_name_game = "Game"
-prefix_name_setup = "Setup"
+prefix_type_default = "Default"
+prefix_type_tool = "Tool"
+prefix_type_emulator = "Emulator"
+prefix_type_game = "Game"
+prefix_type_setup = "Setup"
 
 # Save types
 save_type_general = "General"
