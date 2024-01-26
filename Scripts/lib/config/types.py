@@ -14,8 +14,8 @@ metadata_source_type_gamefaqs = "gamefaqs"
 metadata_source_type_itchio = "itchio"
 
 # Addon types
-addon_dlc = "dlc"
-addon_updates = "updates"
+addon_type_dlc = "dlc"
+addon_type_updates = "updates"
 
 # Launch types
 launch_type_none = "no_launcher"

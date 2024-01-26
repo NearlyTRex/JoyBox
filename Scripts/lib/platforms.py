@@ -49,11 +49,11 @@ def GetAddonTypes(platform_name):
 
 # Check if updates are possible
 def AreUpdatesPossible(platform_name):
-    return config.addon_updates in GetAddonTypes(platform_name)
+    return config.addon_type_updates in GetAddonTypes(platform_name)
 
 # Check if dlc are possible
 def AreDLCPossible(platform_name):
-    return config.addon_dlc in GetAddonTypes(platform_name)
+    return config.addon_type_dlc in GetAddonTypes(platform_name)
 
 # Check if addons are possible
 def AreAddonsPossible(platform_name):
