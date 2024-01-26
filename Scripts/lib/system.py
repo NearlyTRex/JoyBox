@@ -122,16 +122,22 @@ def Log(message):
 # Log colored
 def LogColored(message, color = None, on_color = None, attrs = None):
     try:
-        from termcolor import cprint
-        cprint(message, color, on_color, attrs)
+        import termcolor
+        if environment.IsWindowsPlatform():
+            import colorama
+            colorama.just_fix_windows_console()
+        termcolor.cprint(message, color, on_color, attrs)
     except:
         Log(message)
 
 # Log colored with header
 def LogColoredWithHeader(message, header, color):
     try:
-        from termcolor import colored
-        Log("\n" + colored("%s:" % header, color) + " " + message)
+        import termcolor
+        if environment.IsWindowsPlatform():
+            import colorama
+            colorama.just_fix_windows_console()
+        Log("\n" + termcolor.colored("%s:" % header, color) + " " + message)
     except:
         Log("%s: " % header + message)
 
