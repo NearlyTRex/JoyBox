@@ -337,8 +337,8 @@ class Metadata:
                     self.add_game(game_entry)
 
     # Import from metadata file
-    def import_from_metadata_file(self, metadata_file, metadata_format = config.metadata_format_pegasus):
-        if metadata_format == config.metadata_format_pegasus:
+    def import_from_metadata_file(self, metadata_file, metadata_format = config.metadata_format_type_pegasus):
+        if metadata_format == config.metadata_format_type_pegasus:
             self.import_from_pegasus_file(metadata_file)
 
     # Export to pegasus file
@@ -426,8 +426,8 @@ class Metadata:
                     file.write("\n\n")
 
     # Export to metadata file
-    def export_to_metadata_file(self, metadata_file, metadata_format = config.metadata_format_pegasus, append_existing = False):
-        if metadata_format == config.metadata_format_pegasus:
+    def export_to_metadata_file(self, metadata_file, metadata_format = config.metadata_format_type_pegasus, append_existing = False):
+        if metadata_format == config.metadata_format_type_pegasus:
             self.export_to_pegasus_file(metadata_file, append_existing)
 
 # Collect metadata

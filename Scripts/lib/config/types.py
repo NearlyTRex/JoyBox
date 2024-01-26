@@ -3,9 +3,9 @@ import os
 import sys
 
 # Metadata formats
-metadata_format_pegasus = "pegasus"
-metadata_formats = [
-    metadata_format_pegasus
+metadata_format_type_pegasus = "pegasus"
+metadata_format_types = [
+    metadata_format_type_pegasus
 ]
 
 # Metadata sources

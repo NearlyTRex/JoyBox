@@ -268,8 +268,8 @@ def GetPegasusMetadataAssetDir(game_category, game_subcategory, asset_type):
     return os.path.join(GetPegasusMetadataRootDir(), config.game_supercategory_roms, game_category, game_subcategory, asset_type)
 
 # Get metadata file
-def GetMetadataFile(game_category, game_subcategory, metadata_format = config.metadata_format_pegasus):
-    if metadata_format == config.metadata_format_pegasus:
+def GetMetadataFile(game_category, game_subcategory, metadata_format = config.metadata_format_type_pegasus):
+    if metadata_format == config.metadata_format_type_pegasus:
         return GetPegasusMetadataFile(game_category, game_subcategory)
     return None
 
