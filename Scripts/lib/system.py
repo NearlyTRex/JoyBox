@@ -137,7 +137,7 @@ def LogColoredWithHeader(message, header, color):
         if environment.IsWindowsPlatform():
             import colorama
             colorama.just_fix_windows_console()
-        Log("\n" + termcolor.colored("%s:" % header, color) + " " + message)
+        Log(termcolor.colored("%s:" % header, color) + " " + message)
     except:
         Log("%s: " % header + message)
 
