@@ -33,7 +33,9 @@ def TransformComputerPrograms(
     game_category = game_info.get_category()
     game_subcategory = game_info.get_subcategory()
 
-    # Get install paths
+    # Get paths
+    output_extract_dir = os.path.join(output_dir, gameinfo.DeriveRegularNameFromGameName(game_name))
+    output_extract_index_file = os.path.join(output_extract_dir, config.raw_files_index)
     output_install_file = os.path.join(output_dir, game_name + ".install")
     cached_install_dir = environment.GetInstallRomDir(game_category, game_subcategory, game_name)
     cached_install_file = os.path.join(cached_install_dir, game_name + ".install")
@@ -53,7 +55,7 @@ def TransformComputerPrograms(
         # Extract file
         success = archive.ExtractArchive(
             archive_file = prepackaged_archive,
-            extract_dir = os.path.join(output_dir, gameinfo.DeriveRegularNameFromGameName(game_name)),
+            extract_dir = output_extract_dir,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not success:
@@ -89,7 +91,7 @@ def TransformComputerPrograms(
         # Unpack install image
         success = install.UnpackInstallImage(
             input_image = cached_install_file,
-            output_dir = os.path.join(output_dir, gameinfo.DeriveRegularNameFromGameName(game_name)),
+            output_dir = output_extract_dir,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not success:
@@ -97,14 +99,14 @@ def TransformComputerPrograms(
 
     # Touch index file
     success = system.TouchFile(
-        src = os.path.join(output_dir, config.raw_files_index),
+        src = output_extract_index_file,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
         return (False, "Unable to create raw index")
 
     # Return output
-    return (True, os.path.join(output_dir, config.raw_files_index))
+    return (True, output_extract_index_file)
 
 ###########################################################
 
