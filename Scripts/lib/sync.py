@@ -325,10 +325,34 @@ def CheckFiles(
         ]
 
     # Run check command
-    code = command.RunBlockingCommand(
+    command.RunBlockingCommand(
         cmd = check_cmd,
         options = command.CommandOptions(
             blocking_processes = [rclone_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
-    return code == 0
+
+    # Analyze combined output
+    if os.path.exists(diff_combined_path):
+        count_unchanged = 0
+        count_changed = 0
+        count_only_dest = 0
+        count_only_src = 0
+        count_error = 0
+        with open(diff_combined_path, "r", encoding="utf8") as f:
+            for line in f.readlines():
+                if line.startswith("="):
+                    count_unchanged += 1
+                elif line.startswith("-"):
+                    count_only_dest += 1
+                elif line.startswith("+"):
+                    count_only_src += 1
+                elif line.startswith("*"):
+                    count_changed += 1
+                elif line.startswith("!"):
+                    count_error += 1
+        system.LogInfo("Number of unchanged files: %d" % count_unchanged)
+        system.LogInfo("Number of changed files: %d" % count_changed)
+        system.LogInfo("Number of files only on %s%s: %d" % (remote_type, remote_path, count_only_dest))
+        system.LogInfo("Number of files only on %s: %d" % (local_path, count_only_src))
+        system.LogInfo("Number of error files: %d" % count_error)
