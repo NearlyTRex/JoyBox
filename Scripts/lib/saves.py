@@ -196,10 +196,12 @@ def UnpackSave(save_category, save_subcategory, save_name, verbose = False, exit
     latest_save_archive = archived_save_files[-1]
 
     # Unpack save archive
-    archive.ExtractArchive(
+    success = archive.ExtractArchive(
         archive_file = latest_save_archive,
         extract_dir = output_save_dir,
         verbose = verbose)
+    if not success:
+        return False
 
     # Check result
     return not system.IsDirectoryEmpty(output_save_dir)
