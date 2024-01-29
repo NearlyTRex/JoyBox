@@ -18,10 +18,10 @@ import setup
 parser = argparse.ArgumentParser(description="Backup tool.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("-t", "--type",
     choices=[
-        "storage",
-        "sync"
+        "Storage",
+        "Sync"
     ],
-    default="storage", help="Backup type"
+    default="Storage", help="Backup type"
 )
 parser.add_argument("-u", "--storage_supercategory",
     choices=config.game_supercategories,
@@ -54,7 +54,7 @@ def main():
 
     # Get input path
     input_path = ""
-    if args.type == "storage":
+    if args.type == "Storage":
         input_path = os.path.join(environment.GetGamingStorageRootDir(), args.storage_supercategory)
         if args.storage_category:
             input_path = os.path.join(input_path, args.storage_category)
@@ -62,7 +62,7 @@ def main():
                 input_path = os.path.join(input_path, args.storage_subcategory)
                 if args.storage_offset:
                     input_path = os.path.join(input_path, args.storage_offset)
-    elif args.type == "sync":
+    elif args.type == "Sync":
         input_path = environment.GetSyncRootDir()
 
     # Check input path
@@ -71,7 +71,7 @@ def main():
         sys.exit(1)
 
     # Backup storage files
-    if args.type == "storage":
+    if args.type == "Storage":
         for src_file in system.BuildFileList(input_path):
             dest_file = system.RebaseFilePath(src_file, environment.GetGamingStorageRootDir(), output_base_path)
             system.SmartCopy(
@@ -84,7 +84,7 @@ def main():
                 exit_on_failure = args.exit_on_failure)
 
     # Backup sync files
-    elif args.type == "sync":
+    elif args.type == "Sync":
         for sync_base_obj in system.GetDirectoryContents(input_path):
             sync_base_dir = os.path.join(input_path, sync_base_obj)
             if os.path.isdir(sync_base_dir):
