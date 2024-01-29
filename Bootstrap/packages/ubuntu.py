@@ -239,6 +239,7 @@ packages = [
 
     # Net
     "bridge-utils",
+    "net-tools",
 
     # OtherOSFS
     "cifs-utils",
@@ -263,6 +264,7 @@ packages = [
     "dos2unix",
 
     # Utils
+    "clamav",
     "img2pdf",
     "openssl",
     "p7zip-full",
