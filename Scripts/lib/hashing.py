@@ -8,39 +8,7 @@ import environment
 import system
 import archive
 
-# Check if files are identical
-def AreFilesIdentical(first, second, case_sensitive_paths = True):
-    first_exists = system.DoesPathExist(first, case_sensitive_paths = case_sensitive_paths)
-    second_exists = system.DoesPathExist(second, case_sensitive_paths = case_sensitive_paths)
-    if first_exists and second_exists:
-        first_crc32 = CalculateFileCRC32(first)
-        second_crc32 = CalculateFileCRC32(second)
-        return first_crc32 == second_crc32
-    return False
-
-# Find duplicate files in the search directory
-def FindDuplicateFiles(filename, directory):
-    found_files = []
-    test_checksum = CalculateFileCRC32(filename)
-    for obj in system.GetDirectoryContents(directory):
-        obj_path = os.path.join(directory, obj)
-        if os.path.isfile(obj_path):
-            obj_checksum = CalculateFileCRC32(obj_path)
-            if test_checksum == obj_checksum:
-                found_files.append(obj_path)
-    return found_files
-
-# Find duplicate archives in the search directory
-def FindDuplicateArchives(filename, directory):
-    found_files = []
-    test_checksums = archive.GetArchiveChecksums(filename)
-    for obj in system.GetDirectoryContents(directory):
-        obj_path = os.path.join(directory, obj)
-        if os.path.isfile(obj_path):
-            obj_checksums = archive.GetArchiveChecksums(obj_path)
-            if [i for i in test_checksums if i not in obj_checksums] == []:
-                found_files.append(obj_path)
-    return found_files
+###########################################################
 
 # Calculate string crc32
 def CalculateStringCRC32(string):
@@ -66,6 +34,8 @@ def CalculateStringSHA256(string):
 def CalculateStringXXH3(string):
     import xxhash
     return xxhash.xxh3_64(string).hexdigest()
+
+###########################################################
 
 # Calculate file crc32
 def CalculateFileCRC32(filename, chunksize = config.hash_chunk_size, verbose = False, exit_on_failure = False):
@@ -202,6 +172,44 @@ def CalculateFileXXH3(filename, chunksize = config.hash_chunk_size, verbose = Fa
             system.LogError(e)
             sys.exit(1)
         return ""
+
+###########################################################
+
+# Check if files are identical
+def AreFilesIdentical(first, second, case_sensitive_paths = True, verbose = False, exit_on_failure = False):
+    first_exists = system.DoesPathExist(first, case_sensitive_paths = case_sensitive_paths)
+    second_exists = system.DoesPathExist(second, case_sensitive_paths = case_sensitive_paths)
+    if first_exists and second_exists:
+        first_crc32 = CalculateFileCRC32(first, verbose = verbose, exit_on_failure = exit_on_failure)
+        second_crc32 = CalculateFileCRC32(second, verbose = verbose, exit_on_failure = exit_on_failure)
+        return first_crc32 == second_crc32
+    return False
+
+# Find duplicate files in the search directory
+def FindDuplicateFiles(filename, directory, verbose = False, exit_on_failure = False):
+    found_files = []
+    test_checksum = CalculateFileCRC32(filename, verbose = verbose, exit_on_failure = exit_on_failure)
+    for obj in system.GetDirectoryContents(directory):
+        obj_path = os.path.join(directory, obj)
+        if os.path.isfile(obj_path):
+            obj_checksum = CalculateFileCRC32(obj_path, verbose = verbose, exit_on_failure = exit_on_failure)
+            if test_checksum == obj_checksum:
+                found_files.append(obj_path)
+    return found_files
+
+# Find duplicate archives in the search directory
+def FindDuplicateArchives(filename, directory, verbose = False, exit_on_failure = False):
+    found_files = []
+    test_checksums = archive.GetArchiveChecksums(filename)
+    for obj in system.GetDirectoryContents(directory):
+        obj_path = os.path.join(directory, obj)
+        if os.path.isfile(obj_path):
+            obj_checksums = archive.GetArchiveChecksums(obj_path)
+            if [i for i in test_checksums if i not in obj_checksums] == []:
+                found_files.append(obj_path)
+    return found_files
+
+###########################################################
 
 # Calculate hash
 def CalculateHash(filename, base_path, verbose = False, exit_on_failure = False):
@@ -352,6 +360,8 @@ def HashFiles(input_path, base_path, output_file, verbose = False, exit_on_failu
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
+###########################################################
+
 # Hash category files
 def HashCategoryFiles(input_path, file_supercategory, file_category, file_subcategory, verbose = False, exit_on_failure = False):
 
@@ -390,3 +400,5 @@ def HashCategoryFiles(input_path, file_supercategory, file_category, file_subcat
 
     # Sort hash file
     return SortHashFile(hash_file, verbose = verbose, exit_on_failure = exit_on_failure)
+
+###########################################################
