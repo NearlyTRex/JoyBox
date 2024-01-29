@@ -468,8 +468,14 @@ def CopyFileOrDirectory(
     try:
         if skip_existing and DoesPathExist(dest, case_sensitive_paths):
             return True
-        if skip_identical and hashing.AreFilesIdentical(src, dest, case_sensitive_paths):
-            return True
+        if skip_identical:
+            if hashing.AreFilesIdentical(
+                first = src,
+                second = dest,
+                case_sensitive_paths = case_sensitive_paths,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure):
+                return True
         if verbose:
             Log("Copying %s to %s" % (src, dest))
         if not pretend_run:
@@ -498,8 +504,14 @@ def MoveFileOrDirectory(
     try:
         if skip_existing and DoesPathExist(dest, case_sensitive_paths):
             return True
-        if skip_identical and hashing.AreFilesIdentical(src, dest, case_sensitive_paths):
-            return True
+        if skip_identical:
+            if hashing.AreFilesIdentical(
+                first = src,
+                second = dest,
+                case_sensitive_paths = case_sensitive_paths,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure):
+                return True
         if verbose:
             Log("Moving %s to %s" % (src, dest))
         if not pretend_run:
@@ -527,8 +539,14 @@ def TransferFile(
     try:
         if skip_existing and DoesPathExist(dest, case_sensitive_paths):
             return True
-        if skip_identical and hashing.AreFilesIdentical(src, dest, case_sensitive_paths):
-            return True
+        if skip_identical:
+            if hashing.AreFilesIdentical(
+                first = src,
+                second = dest,
+                case_sensitive_paths = case_sensitive_paths,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure):
+                return True
         if verbose:
             Log("Transferring %s to %s" % (src, dest))
         if not pretend_run:
