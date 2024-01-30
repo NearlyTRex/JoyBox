@@ -104,3 +104,23 @@ sync_type_gdrive = "gdrive"
 # Archive types
 archive_type_zip = "zip"
 archive_type_7z = "7z"
+
+# Preset types
+preset_type_backup_microsoft = "Backup_Microsoft"
+preset_type_backup_nintendogen = "Backup_NintendoGen"
+preset_type_backup_nintendoswitch = "Backup_NintendoSwitch"
+preset_type_backup_othergen = "Backup_OtherGen"
+preset_type_backup_sonygen = "Backup_SonyGen"
+preset_type_backup_sonyps3 = "Backup_SonyPS3"
+preset_type_backup_sonyps4 = "Backup_SonyPS4"
+preset_type_backup_sonypsn = "Backup_SonyPSN"
+preset_types = [
+    preset_type_backup_microsoft,
+    preset_type_backup_nintendogen,
+    preset_type_backup_nintendoswitch,
+    preset_type_backup_othergen,
+    preset_type_backup_sonygen,
+    preset_type_backup_sonyps3,
+    preset_type_backup_sonyps4,
+    preset_type_backup_sonypsn
+]
