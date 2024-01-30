@@ -8,6 +8,7 @@ import argparse
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
+import config
 import command
 import environment
 import system
@@ -15,19 +16,12 @@ import setup
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Run tool presets.")
-parser.add_argument("-t", "--tool",
+parser.add_argument("-t", "--preset_tool",
     choices=[
         "backup_tool"
     ], help="Tool to use"
 )
-parser.add_argument("-p", "--preset",
-    choices=[
-        "Backup_NintendoGen",
-        "Backup_NintendoSwitch",
-        "Backup_SonyGen",
-        "Backup_SonyPSN"
-    ], help="Tool preset to use"
-)
+parser.add_argument("-p", "--preset_type", choices=config.preset_types, help="Preset type")
 parser.add_argument("-o", "--output_path", type=str, default=".", help="Output path")
 parser.add_argument("-e", "--skip_existing", action="store_true", help="Skip existing files")
 parser.add_argument("-i", "--skip_identical", action="store_true", help="Skip identical files")
@@ -47,108 +41,61 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Scripts
-    backup_tool_file_bin = os.path.join(environment.GetScriptsBinDir(), "backup_tool" + environment.GetScriptsCommandExtension())
-
-    # Options
-    backup_tool_options = {}
+    # Get preset options
+    preset_options = config.presets_options[args.preset_type]
 
     # Backup tool
-    if args.tool == "backup_tool":
+    if args.preset_tool == "backup_tool":
 
-        # Backup_NintendoGen
-        if args.preset == "Backup_NintendoGen":
-            backup_tool_options = {
-                "supercategory": "Roms",
-                "category": "Nintendo",
-                "subcategories": [
-                    "Nintendo 3DS",
-                    "Nintendo 3DS Apps",
-                    "Nintendo 3DS eShop",
-                    "Nintendo 64",
-                    "Nintendo DS",
-                    "Nintendo DSi",
-                    "Nintendo Famicom",
-                    "Nintendo Game Boy",
-                    "Nintendo Game Boy Advance",
-                    "Nintendo Game Boy Advance e-Reader",
-                    "Nintendo Game Boy Color",
-                    "Nintendo Gamecube",
-                    "Nintendo NES",
-                    "Nintendo SNES",
-                    "Nintendo Super Famicom",
-                    "Nintendo Super Game Boy",
-                    "Nintendo Super Game Boy Color",
-                    "Nintendo Virtual Boy",
-                    "Nintendo Wii",
-                    "Nintendo Wii U",
-                    "Nintendo Wii U eShop"
+        # Check preset options
+        has_supercategory = "supercategory" in preset_options
+        has_category = "category" in preset_options
+        has_subcategories = "subcategories" in preset_options
+
+        # Create base command
+        base_cmd = [
+            os.path.join(environment.GetScriptsBinDir(), args.preset_tool + environment.GetScriptsCommandExtension()),
+            "-t", "Storage",
+            "-o", output_path
+        ]
+        if args.skip_existing:
+            base_cmd += ["--skip_existing"]
+        if args.skip_identical:
+            base_cmd += ["--skip_identical"]
+        if args.verbose:
+            base_cmd += ["--verbose"]
+        if args.exit_on_failure:
+            base_cmd += ["--exit_on_failure"]
+
+        # Create preset commands
+        preset_cmds = []
+        if has_supercategory and has_category and has_subcategories:
+            for subcategory in preset_options["subcategories"]:
+                preset_cmds += [
+                    base_cmd + [
+                        "-u", preset_options["supercategory"],
+                        "-c", preset_options["category"],
+                        "-s", subcategory
+                    ]
                 ]
-            }
-
-        # Backup_NintendoSwitch
-        elif args.preset == "Backup_NintendoSwitch":
-            backup_tool_options = {
-                "supercategory": "Roms",
-                "category": "Nintendo",
-                "subcategories": [
-                    "Nintendo Switch",
-                    "Nintendo Switch eShop"
+        elif has_supercategory and has_category:
+            preset_cmds += [
+                base_cmd + [
+                    "-u", preset_options["supercategory"],
+                    "-c", preset_options["category"]
                 ]
-            }
-
-        # Backup_SonyGen
-        elif args.preset == "Backup_SonyGen":
-            backup_tool_options = {
-                "supercategory": "Roms",
-                "category": "Sony",
-                "subcategories": [
-                    "Sony PlayStation",
-                    "Sony PlayStation 2",
-                    "Sony PlayStation Portable",
-                    "Sony PlayStation Portable Video",
-                    "Sony PlayStation Vita"
-                ]
-            }
-
-        # Backup_SonyPSN
-        elif args.preset == "Backup_SonyPSN":
-            backup_tool_options = {
-                "supercategory": "Roms",
-                "category": "Sony",
-                "subcategories": [
-                    "Sony PlayStation Network - PlayStation 3",
-                    "Sony PlayStation Network - PlayStation 4",
-                    "Sony PlayStation Network - PlayStation Portable",
-                    "Sony PlayStation Network - PlayStation Portable Minis",
-                    "Sony PlayStation Network - PlayStation Vita"
-                ]
-            }
-
-        # Run each preset
-        for subcategory in backup_tool_options["subcategories"]:
-
-            # Get backup tool command
-            backup_tool_cmd = [
-                backup_tool_file_bin,
-                "-t", "Storage",
-                "-u", backup_tool_options["supercategory"],
-                "-c", backup_tool_options["category"],
-                "-s", subcategory,
-                "-o", output_path
             ]
-            if args.skip_existing:
-                backup_tool_cmd += ["--skip_existing"]
-            if args.skip_identical:
-                backup_tool_cmd += ["--skip_identical"]
-            if args.verbose:
-                backup_tool_cmd += ["--verbose"]
-            if args.exit_on_failure:
-                backup_tool_cmd += ["--exit_on_failure"]
+        elif has_supercategory:
+            preset_cmds += [
+                base_cmd + [
+                    "-u", preset_options["supercategory"]
+                ]
+            ]
 
-            # Run backup tool
+        # Run commands
+        for preset_cmd in preset_cmds:
             command.RunCheckedCommand(
-                cmd = backup_tool_cmd,
+                cmd = preset_cmd,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
 
