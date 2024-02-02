@@ -153,10 +153,11 @@ def VerifyDiscCHD(chd_file, verbose = False, exit_on_failure = False):
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-    # Check verification output
-    if "Overall SHA1 verification successful!" in verify_output.decode():
-        return True
-    return False
+    # Check verification
+    verify_text = verify_output
+    if isinstance(verify_output, bytes):
+        verify_text = verify_output.decode()
+    return "Overall SHA1 verification successful!" in verify_text
 
 # Mount disc chd
 def MountDiscCHD(chd_file, mount_dir, disc_type = None, verbose = False, exit_on_failure = False):
