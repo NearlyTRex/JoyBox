@@ -131,13 +131,13 @@ class Metadata:
     def verify_roms(self):
         for game_platform in self.get_sorted_platforms():
             for game_name in self.get_sorted_names(game_platform):
-                print("Checking %s - %s ..." % (game_platform, game_name))
+                system.Log("Checking %s - %s ..." % (game_platform, game_name))
                 game_entry = self.get_game(game_platform, game_name)
                 file_path_relative = game_entry[config.metadata_key_file]
                 file_path_real = os.path.join(environment.GetJsonRomsMetadataRootDir(), file_path_relative)
                 if not os.path.exists(file_path_real):
-                    print("File not found:\n%s" % file_path_relative)
-                    print("Verification of game %s in platform %s failed" % (game_name, game_platform))
+                    system.LogError("File not found:\n%s" % file_path_relative)
+                    system.LogError("Verification of game %s in platform %s failed" % (game_name, game_platform))
                     sys.exit(1)
 
     # Sync assets
@@ -199,7 +199,7 @@ class Metadata:
             rom_video = "%s/%s%s" % (config.asset_type_video, rom_name, config.asset_type_extensions[config.asset_type_video])
 
             # Create new entry
-            print("Found game: '%s' - '%s'" % (rom_platform, rom_name))
+            system.Log("Found game: '%s' - '%s'" % (rom_platform, rom_name))
             game_entry = {}
             game_entry[config.metadata_key_platform] = rom_platform
             game_entry[config.metadata_key_game] = rom_name
@@ -222,128 +222,151 @@ class Metadata:
             self.scan_rom_base_dir(rom_path, rom_category, rom_subcategory)
 
     # Import from pegasus file
-    def import_from_pegasus_file(self, pegasus_file):
-        with open(pegasus_file, "r", encoding="utf8") as file:
-            data = file.read()
+    def import_from_pegasus_file(
+        self,
+        pegasus_file,
+        verbose = False,
+        exit_on_failure = False):
+        if os.path.exists(pegasus_file):
+            with open(pegasus_file, "r", encoding="utf8") as file:
+                data = file.read()
 
-            # Read header
-            collection_platform = ""
-            for line in data.split("\n"):
-                if line.startswith("collection:"):
-                    collection_platform = line.replace("collection:", "").strip()
-                    break
+                # Read header
+                collection_platform = ""
+                for line in data.split("\n"):
+                    if line.startswith("collection:"):
+                        collection_platform = line.replace("collection:", "").strip()
+                        break
 
-            # Read game entries
-            for token in data.split("\n\n"):
+                # Read game entries
+                for token in data.split("\n\n"):
 
-                # Create new entry
-                game_entry = {}
-                game_entry[config.metadata_key_platform] = collection_platform
-                in_description_section = False
+                    # Create new entry
+                    game_entry = {}
+                    game_entry[config.metadata_key_platform] = collection_platform
+                    in_description_section = False
 
-                # Parse entry tokens
-                for line in token.split("\n"):
+                    # Parse entry tokens
+                    for line in token.split("\n"):
 
-                    # Game
-                    if line.startswith("game:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_game] = line.replace("game:", "").strip()
+                        # Game
+                        if line.startswith("game:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_game] = line.replace("game:", "").strip()
 
-                    # File
-                    elif line.startswith("file:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_file] = line.replace("file:", "").strip()
+                        # File
+                        elif line.startswith("file:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_file] = line.replace("file:", "").strip()
 
-                    # Developer
-                    elif line.startswith("developer:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_developer] = line.replace("developer:", "").strip()
+                        # Developer
+                        elif line.startswith("developer:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_developer] = line.replace("developer:", "").strip()
 
-                    # Publisher
-                    elif line.startswith("publisher:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_publisher] = line.replace("publisher:", "").strip()
+                        # Publisher
+                        elif line.startswith("publisher:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_publisher] = line.replace("publisher:", "").strip()
 
-                    # Genre
-                    elif line.startswith("genre:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_genre] = line.replace("genre:", "").strip()
+                        # Genre
+                        elif line.startswith("genre:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_genre] = line.replace("genre:", "").strip()
 
-                    # Tag
-                    elif line.startswith("tag:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_tag] = line.replace("tag:", "").strip()
+                        # Tag
+                        elif line.startswith("tag:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_tag] = line.replace("tag:", "").strip()
 
-                    # Description
-                    elif line.startswith("description:"):
-                        in_description_section = True
-                        game_entry[config.metadata_key_description] = []
-                    elif line.startswith("  ") and in_description_section:
-                        game_entry[config.metadata_key_description].append(line.strip())
+                        # Description
+                        elif line.startswith("description:"):
+                            in_description_section = True
+                            game_entry[config.metadata_key_description] = []
+                        elif line.startswith("  ") and in_description_section:
+                            game_entry[config.metadata_key_description].append(line.strip())
 
-                    # Release
-                    elif line.startswith("release:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_release] = line.replace("release:", "").strip()
+                        # Release
+                        elif line.startswith("release:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_release] = line.replace("release:", "").strip()
 
-                    # Players
-                    elif line.startswith("players:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_players] = line.replace("players:", "").strip()
+                        # Players
+                        elif line.startswith("players:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_players] = line.replace("players:", "").strip()
 
-                    # Boxfront
-                    elif line.startswith("assets.boxfront:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_boxfront] = line.replace("assets.boxfront:", "").strip()
+                        # Boxfront
+                        elif line.startswith("assets.boxfront:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_boxfront] = line.replace("assets.boxfront:", "").strip()
 
-                    # Boxback
-                    elif line.startswith("assets.boxback:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_boxback] = line.replace("assets.boxback:", "").strip()
+                        # Boxback
+                        elif line.startswith("assets.boxback:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_boxback] = line.replace("assets.boxback:", "").strip()
 
-                    # Background
-                    elif line.startswith("assets.background:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_background] = line.replace("assets.background:", "").strip()
+                        # Background
+                        elif line.startswith("assets.background:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_background] = line.replace("assets.background:", "").strip()
 
-                    # Screenshot
-                    elif line.startswith("assets.screenshot:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_screenshot] = line.replace("assets.screenshot:", "").strip()
+                        # Screenshot
+                        elif line.startswith("assets.screenshot:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_screenshot] = line.replace("assets.screenshot:", "").strip()
 
-                    # Video
-                    elif line.startswith("assets.video:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_video] = line.replace("assets.video:", "").strip()
+                        # Video
+                        elif line.startswith("assets.video:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_video] = line.replace("assets.video:", "").strip()
 
-                    # Co-op
-                    elif line.startswith("x-co-op:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_coop] = line.replace("x-co-op:", "").strip()
+                        # Co-op
+                        elif line.startswith("x-co-op:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_coop] = line.replace("x-co-op:", "").strip()
 
-                    # Playable
-                    elif line.startswith("x-playable:"):
-                        in_description_section = False
-                        game_entry[config.metadata_key_playable] = line.replace("x-playable:", "").strip()
+                        # Playable
+                        elif line.startswith("x-playable:"):
+                            in_description_section = False
+                            game_entry[config.metadata_key_playable] = line.replace("x-playable:", "").strip()
 
-                # Check minimum keys
-                has_minimum_keys = True
-                for key in config.metadata_keys_minimum:
-                    if not key in game_entry:
-                        has_minimum_keys = False
+                    # Check minimum keys
+                    has_minimum_keys = True
+                    for key in config.metadata_keys_minimum:
+                        if not key in game_entry:
+                            has_minimum_keys = False
 
-                # Add new entry
-                if has_minimum_keys:
-                    self.add_game(game_entry)
+                    # Add new entry
+                    if has_minimum_keys:
+                        self.add_game(game_entry)
 
     # Import from metadata file
-    def import_from_metadata_file(self, metadata_file, metadata_format = config.metadata_format_type_pegasus):
+    def import_from_metadata_file(
+        self,
+        metadata_file,
+        metadata_format = config.metadata_format_type_pegasus,
+        verbose = False,
+        exit_on_failure = False):
         if metadata_format == config.metadata_format_type_pegasus:
-            self.import_from_pegasus_file(metadata_file)
+            self.import_from_pegasus_file(
+                pegasus_file = metadata_file,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Export to pegasus file
-    def export_to_pegasus_file(self, pegasus_file, append_existing = False):
+    def export_to_pegasus_file(
+        self,
+        pegasus_file,
+        append_existing = False,
+        verbose = False,
+        exit_on_failure = False):
         file_mode = "a" if append_existing else "w"
+        if not os.path.exists(pegasus_file):
+            system.TouchFile(
+                src = pegasus_file,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
         with open(pegasus_file, file_mode, encoding="utf8", newline="\n") as file:
             for game_platform in self.get_sorted_platforms():
                 game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
@@ -426,9 +449,19 @@ class Metadata:
                     file.write("\n\n")
 
     # Export to metadata file
-    def export_to_metadata_file(self, metadata_file, metadata_format = config.metadata_format_type_pegasus, append_existing = False):
+    def export_to_metadata_file(
+        self,
+        metadata_file,
+        metadata_format = config.metadata_format_type_pegasus,
+        append_existing = False,
+        verbose = False,
+        exit_on_failure = False):
         if metadata_format == config.metadata_format_type_pegasus:
-            self.export_to_pegasus_file(metadata_file, append_existing)
+            self.export_to_pegasus_file(
+                pegasus_file = metadata_file,
+                append_existing = append_existing,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
 # Collect metadata
 def CollectMetadata(
