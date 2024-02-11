@@ -34,6 +34,7 @@ presets_options[types.preset_type_backup_nintendogen] = {
         categories.game_subcategory_nintendo_gamecube,
         categories.game_subcategory_nintendo_nes,
         categories.game_subcategory_nintendo_snes,
+        categories.game_subcategory_nintendo_snes_msu1,
         categories.game_subcategory_nintendo_super_famicom,
         categories.game_subcategory_nintendo_super_game_boy,
         categories.game_subcategory_nintendo_super_game_boy_color,

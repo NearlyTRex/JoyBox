@@ -94,6 +94,7 @@ class Ares(emulatorbase.EmulatorBase):
             config.game_subcategory_nintendo_famicom,
             config.game_subcategory_nintendo_nes,
             config.game_subcategory_nintendo_snes,
+            config.game_subcategory_nintendo_snes_msu1,
             config.game_subcategory_nintendo_super_famicom,
 
             # Other
@@ -140,6 +141,7 @@ class Ares(emulatorbase.EmulatorBase):
                     config.game_subcategory_nintendo_famicom: "Famicom",
                     config.game_subcategory_nintendo_nes: "Famicom",
                     config.game_subcategory_nintendo_snes: "Super Famicom",
+                    config.game_subcategory_nintendo_snes_msu1: "Super Famicom",
                     config.game_subcategory_nintendo_super_famicom: "Super Famicom",
 
                     # Other

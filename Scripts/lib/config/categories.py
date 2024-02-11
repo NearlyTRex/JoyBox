@@ -93,6 +93,7 @@ game_subcategory_nintendo_game_boy_color = "Nintendo Game Boy Color"
 game_subcategory_nintendo_gamecube = "Nintendo Gamecube"
 game_subcategory_nintendo_nes = "Nintendo NES"
 game_subcategory_nintendo_snes = "Nintendo SNES"
+game_subcategory_nintendo_snes_msu1 = "Nintendo SNES MSU-1"
 game_subcategory_nintendo_super_famicom = "Nintendo Super Famicom"
 game_subcategory_nintendo_super_game_boy = "Nintendo Super Game Boy"
 game_subcategory_nintendo_super_game_boy_color = "Nintendo Super Game Boy Color"
@@ -117,6 +118,7 @@ game_subcategories_nintendo = [
     game_subcategory_nintendo_gamecube,
     game_subcategory_nintendo_nes,
     game_subcategory_nintendo_snes,
+    game_subcategory_nintendo_snes_msu1,
     game_subcategory_nintendo_super_famicom,
     game_subcategory_nintendo_super_game_boy,
     game_subcategory_nintendo_super_game_boy_color,

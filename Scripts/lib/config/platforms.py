@@ -589,6 +589,19 @@ nintendo_snes[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_snes] = nintendo_snes
 
 ###########################################################
+# Nintendo SNES MSU-1
+###########################################################
+nintendo_snes_msu1 = {}
+nintendo_snes_msu1[keys.platform_key_supercategory] = categories.game_supercategory_roms
+nintendo_snes_msu1[keys.platform_key_category] = categories.game_category_nintendo
+nintendo_snes_msu1[keys.platform_key_subcategory] = categories.game_subcategory_nintendo_snes_msu1
+nintendo_snes_msu1[keys.platform_key_addons] = []
+nintendo_snes_msu1[keys.platform_key_launcher] = [types.launch_type_file]
+nintendo_snes_msu1[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
+nintendo_snes_msu1[keys.platform_key_fillonce_json] = []
+platforms[categories.game_subcategory_nintendo_snes_msu1] = nintendo_snes_msu1
+
+###########################################################
 # Nintendo Super Famicom
 ###########################################################
 nintendo_super_famicom = {}
