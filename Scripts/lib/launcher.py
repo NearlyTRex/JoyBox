@@ -40,9 +40,6 @@ def LaunchGame(game_info, capture_type = None, fullscreen = False, verbose = Fal
     game_launcher_save_dir = game_launcher.GetSaveDir(game_platform)
     game_launcher_setup_dir = game_launcher.GetSetupDir()
 
-    # Make sure save directory exists
-    system.MakeDirectory(game_save_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-
     # Unpack save if possible
     if saves.CanSaveBeUnpacked(game_category, game_subcategory, game_name):
         saves.UnpackSave(game_category, game_subcategory, game_name, verbose = verbose, exit_on_failure = exit_on_failure)
