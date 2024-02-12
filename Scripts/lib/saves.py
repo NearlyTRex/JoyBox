@@ -10,6 +10,7 @@ import environment
 import programs
 import archive
 import hashing
+import sync
 
 # Backup saves
 def BackupSaves(output_path, verbose = False, exit_on_failure = False):
@@ -115,6 +116,7 @@ def PackSave(save_category, save_subcategory, save_name, verbose = False, exit_o
     # Get save archive info
     tmp_save_archive_file = os.path.join(tmp_dir_result, save_name + ".zip")
     out_save_archive_file = os.path.join(output_save_dir, save_name + "_" + str(environment.GetCurrentTimestamp()) + ".zip")
+    remote_save_archive_file = system.RebaseFilePath(out_save_archive_file, environment.GetSyncRootDir(), "")
 
     # Get excludes
     input_excludes = []
@@ -145,6 +147,15 @@ def PackSave(save_category, save_subcategory, save_name, verbose = False, exit_o
     success = system.MoveFileOrDirectory(
         src = tmp_save_archive_file,
         dest = out_save_archive_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Upload save archive
+    success = sync.UploadFilesToRemote(
+        local_path = out_save_archive_file,
+        remote_path = system.GetFilenameDirectory(remote_save_archive_file),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
