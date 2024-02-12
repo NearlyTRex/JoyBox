@@ -58,7 +58,7 @@ def main():
     # Init sync
     if args.action == "init":
         if args.type == config.sync_type_gdrive:
-            sync.SetupGoogleDriveRemote(
+            sync.SetupRemote(
                 remote_type = args.type,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)

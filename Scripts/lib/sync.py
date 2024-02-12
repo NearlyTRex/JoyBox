@@ -10,8 +10,11 @@ import programs
 import system
 import environment
 
-# Setup Google Drive remote
-def SetupGoogleDriveRemote(remote_type, verbose = False, exit_on_failure = False):
+# Setup remote
+def SetupRemote(
+    remote_type = config.sync_type_gdrive,
+    verbose = False,
+    exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -61,7 +64,14 @@ def SetupGoogleDriveRemote(remote_type, verbose = False, exit_on_failure = False
     return code == 0
 
 # Download files from remote
-def DownloadFilesFromRemote(local_path, remote_type, remote_path, interactive = False, verbose = False, pretend_run = False, exit_on_failure = False):
+def DownloadFilesFromRemote(
+    local_path,
+    remote_type = config.sync_type_gdrive,
+    remote_path = "/",
+    interactive = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -103,7 +113,14 @@ def DownloadFilesFromRemote(local_path, remote_type, remote_path, interactive = 
     return code == 0
 
 # Upload files to remote
-def UploadFilesToRemote(local_path, remote_type, remote_path, interactive = False, verbose = False, pretend_run = False, exit_on_failure = False):
+def UploadFilesToRemote(
+    local_path,
+    remote_type = config.sync_type_gdrive,
+    remote_path = "/",
+    interactive = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -145,7 +162,14 @@ def UploadFilesToRemote(local_path, remote_type, remote_path, interactive = Fals
     return code == 0
 
 # Sync files from remote
-def SyncFilesFromRemote(local_path, remote_type, remote_path, interactive = False, verbose = False, pretend_run = False, exit_on_failure = False):
+def SyncFilesFromRemote(
+    local_path,
+    remote_type = config.sync_type_gdrive,
+    remote_path = "/",
+    interactive = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -187,7 +211,14 @@ def SyncFilesFromRemote(local_path, remote_type, remote_path, interactive = Fals
     return code == 0
 
 # Sync files to remote
-def SyncFilesToRemote(local_path, remote_type, remote_path, interactive = False, verbose = False, pretend_run = False, exit_on_failure = False):
+def SyncFilesToRemote(
+    local_path,
+    remote_type = config.sync_type_gdrive,
+    remote_path = "/",
+    interactive = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -229,7 +260,15 @@ def SyncFilesToRemote(local_path, remote_type, remote_path, interactive = False,
     return code == 0
 
 # Sync files both ways
-def SyncFilesBothWays(local_path, remote_type, remote_path, resync = False, interactive = False, verbose = False, pretend_run = False, exit_on_failure = False):
+def SyncFilesBothWays(
+    local_path,
+    remote_type = config.sync_type_gdrive,
+    remote_path = "/",
+    resync = False,
+    interactive = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     rclone_tool = None
@@ -276,8 +315,8 @@ def SyncFilesBothWays(local_path, remote_type, remote_path, resync = False, inte
 # Check files
 def CheckFiles(
     local_path,
-    remote_type,
-    remote_path,
+    remote_type = config.sync_type_gdrive,
+    remote_path = "/",
     diff_combined_path = None,
     diff_intersected_path = None,
     diff_missing_src_path = None,
