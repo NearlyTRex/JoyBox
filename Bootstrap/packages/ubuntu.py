@@ -282,6 +282,7 @@ packages = [
 
     # X11
     "qdirstat",
+    "thunar",
     "xorg-dev"
 ]
 
