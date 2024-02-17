@@ -108,7 +108,7 @@ else:
 if environment.IsWindowsPlatform():
     ini_defaults["Tools.Sandboxie"] = {}
     ini_defaults["Tools.Sandboxie"]["sandboxie_exe"] = "Start.exe"
-    ini_defaults["Tools.Sandboxie"]["sandboxie_ini_exe"] = "SbiIni.exe"
+    ini_defaults["Tools.Sandboxie"]["sandboxie_ini_exe"] = "SbieIni.exe"
     ini_defaults["Tools.Sandboxie"]["sandboxie_rpcss_exe"] = "SandboxieRpcSs.exe"
     ini_defaults["Tools.Sandboxie"]["sandboxie_dcomlaunch_exe"] = "SandboxieDcomLaunch.exe"
     ini_defaults["Tools.Sandboxie"]["sandboxie_install_dir"] = "%ProgramFiles%\\Sandboxie-Plus"
