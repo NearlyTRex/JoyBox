@@ -8,7 +8,6 @@ import config
 import command
 import programs
 import system
-import environment
 import hashing
 
 ######################################################
