@@ -40,6 +40,7 @@ from . import wad2bin
 from . import wine
 from . import xcitrimmer
 from . import xorriso
+from . import ytdlp
 
 # Tool instances
 instances = [
@@ -83,7 +84,8 @@ instances = [
     wad2bin.Wad2Bin(),
     wine.Wine(),
     xcitrimmer.XCITrimmer(),
-    xorriso.XorrISO()
+    xorriso.XorrISO(),
+    ytdlp.YtDlp()
 ]
 
 # Get tools
