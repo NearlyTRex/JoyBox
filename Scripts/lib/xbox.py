@@ -4,34 +4,38 @@ import os.path
 import sys
 
 # Local imports
-import config
 import command
 import programs
 import system
-import environment
 
 # Extract Xbox ISO
 def ExtractXboxISO(iso_file, extract_dir, delete_original = False, verbose = False, exit_on_failure = False):
 
+    # Get tool
+    extract_tool = None
+    if programs.IsToolInstalled("ExtractXIso"):
+        extract_tool = programs.GetToolProgram("ExtractXIso")
+    if not extract_tool:
+        system.LogError("ExtractXIso was not found")
+        return False
+
     # Get extract command
     extract_cmd = [
-        programs.GetToolProgram("ExtractXIso"),
+        extract_tool,
         "-x",
         "-d", extract_dir,
         iso_file
     ]
 
     # Run extract command
-    try:
-        command.RunExceptionCommand(
-            cmd = extract_cmd,
-            options = command.CommandOptions(
-                allow_processing = environment.IsWinePlatform()),
-            verbose = verbose)
-    except:
-        if exit_on_failure:
-            print("Unable to extract xbox iso '%s' to '%s'" % (iso_file, extract_dir))
-            sys.exit(1)
+    code = command.RunBlockingCommand(
+        cmd = extract_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [extract_tool]),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        system.LogError("Unable to extract xbox iso '%s' to '%s'" % (iso_file, extract_dir))
         return False
 
     # Clean up
@@ -44,9 +48,17 @@ def ExtractXboxISO(iso_file, extract_dir, delete_original = False, verbose = Fal
 # Rewrite Xbox ISO
 def RewriteXboxISO(iso_file, delete_original = False, verbose = False, exit_on_failure = False):
 
+    # Get tool
+    extract_tool = None
+    if programs.IsToolInstalled("ExtractXIso"):
+        extract_tool = programs.GetToolProgram("ExtractXIso")
+    if not extract_tool:
+        system.LogError("ExtractXIso was not found")
+        return False
+
     # Get rewrite command
     rewrite_cmd = [
-        programs.GetToolProgram("ExtractXIso"),
+        extract_tool,
         "-r",
         "-d", system.GetFilenameDirectory(iso_file)
     ]
@@ -55,17 +67,14 @@ def RewriteXboxISO(iso_file, delete_original = False, verbose = False, exit_on_f
     rewrite_cmd += [system.GetFilenameFile(iso_file)]
 
     # Run rewrite command
-    try:
-        command.RunExceptionCommand(
-            cmd = rewrite_cmd,
-            options = command.CommandOptions(
-                cwd = system.GetFilenameDirectory(iso_file),
-                allow_processing = environment.IsWinePlatform()),
-            verbose = verbose)
-    except:
-        if exit_on_failure:
-            print("Unable to rewrite xbox iso '%s'" % iso_file)
-            sys.exit(1)
+    code = command.RunBlockingCommand(
+        cmd = rewrite_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [extract_tool]),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        system.LogError("Unable to rewrite xbox iso '%s'" % iso_file)
         return False
 
     # Must have worked
