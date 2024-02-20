@@ -147,9 +147,9 @@ def main():
                         for game_entry in metadata_obj.get_sorted_entries(game_platform):
 
                                 # Get entry info
-                                game_entry_name = game_entry[config.metadata_key_game]
-                                game_entry_players = game_entry[config.metadata_key_players]
-                                game_entry_coop = game_entry[config.metadata_key_coop]
+                                game_entry_name = game_entry.get_game()
+                                game_entry_players = game_entry.get_players()
+                                game_entry_coop = game_entry.get_coop()
                                 game_entry_urlname = urllib.parse.quote(game_entry_name)
                                 game_entry_info = (
                                     game_entry_id,
