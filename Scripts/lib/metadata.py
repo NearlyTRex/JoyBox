@@ -16,7 +16,156 @@ import platforms
 import environment
 import gameinfo
 
-# General metadata class
+# Metadata entry class
+class MetadataEntry:
+
+    # Constructor
+    def __init__(self):
+        self.game_entry = {}
+
+    # Has minimum keys
+    def has_minimum_keys(self):
+        for key in config.metadata_keys_minimum:
+            if not key in self.game_entry.keys():
+                return False
+        return True
+
+    # Determine if key is set
+    def is_key_set(self, key):
+        return key in self.game_entry.keys()
+
+    # Merge data
+    def merge(self, other):
+        import mergedeep
+        return mergedeep.merge(other.game_entry, self.game_entry)
+
+    # Game
+    def get_game(self):
+        return self.game_entry[config.metadata_key_game]
+    def set_game(self, value):
+        self.game_entry[config.metadata_key_game] = value
+
+    # Platform
+    def get_platform(self):
+        return self.game_entry[config.metadata_key_platform]
+    def set_platform(self, value):
+        self.game_entry[config.metadata_key_platform] = value
+
+    # Supercategory
+    def get_supercategory(self):
+        return self.game_entry[config.metadata_key_supercategory]
+    def set_supercategory(self, value):
+        self.game_entry[config.metadata_key_supercategory] = value
+
+    # Category
+    def get_category(self):
+        return self.game_entry[config.metadata_key_category]
+    def set_category(self, value):
+        self.game_entry[config.metadata_key_category] = value
+
+    # Subcategory
+    def get_subcategory(self):
+        return self.game_entry[config.metadata_key_subcategory]
+    def set_subcategory(self, value):
+        self.game_entry[config.metadata_key_subcategory] = value
+
+    # File
+    def get_file(self):
+        return self.game_entry[config.metadata_key_file]
+    def set_file(self, value):
+        self.game_entry[config.metadata_key_file] = value
+
+    # Description
+    def get_description(self):
+        return self.game_entry[config.metadata_key_description]
+    def set_description(self, value):
+        self.game_entry[config.metadata_key_description] = value
+
+    # Genre
+    def get_genre(self):
+        return self.game_entry[config.metadata_key_genre]
+    def set_genre(self, value):
+        self.game_entry[config.metadata_key_genre] = value
+
+    # Tag
+    def get_tag(self):
+        return self.game_entry[config.metadata_key_tag]
+    def set_tag(self, value):
+        self.game_entry[config.metadata_key_tag] = value
+
+    # Coop
+    def get_coop(self):
+        return self.game_entry[config.metadata_key_coop]
+    def set_coop(self, value):
+        self.game_entry[config.metadata_key_coop] = value
+
+    # Playable
+    def get_playable(self):
+        return self.game_entry[config.metadata_key_playable]
+    def set_playable(self, value):
+        self.game_entry[config.metadata_key_playable] = value
+
+    # Developer
+    def get_developer(self):
+        return self.game_entry[config.metadata_key_developer]
+    def set_developer(self, value):
+        self.game_entry[config.metadata_key_developer] = value
+
+    # Publisher
+    def get_publisher(self):
+        return self.game_entry[config.metadata_key_publisher]
+    def set_publisher(self, value):
+        self.game_entry[config.metadata_key_publisher] = value
+
+    # Players
+    def get_players(self):
+        return self.game_entry[config.metadata_key_players]
+    def set_players(self, value):
+        self.game_entry[config.metadata_key_players] = value
+
+    # Release
+    def get_release(self):
+        return self.game_entry[config.metadata_key_release]
+    def set_release(self, value):
+        self.game_entry[config.metadata_key_release] = value
+
+    # Background
+    def get_background(self):
+        return self.game_entry[config.metadata_key_background]
+    def set_background(self, value):
+        self.game_entry[config.metadata_key_background] = value
+
+    # BoxBack
+    def get_boxback(self):
+        return self.game_entry[config.metadata_key_boxback]
+    def set_boxback(self, value):
+        self.game_entry[config.metadata_key_boxback] = value
+
+    # BoxFront
+    def get_boxfront(self):
+        return self.game_entry[config.metadata_key_boxfront]
+    def set_boxfront(self, value):
+        self.game_entry[config.metadata_key_boxfront] = value
+
+    # Label
+    def get_label(self):
+        return self.game_entry[config.metadata_key_label]
+    def set_label(self, value):
+        self.game_entry[config.metadata_key_label] = value
+
+    # Screenshot
+    def get_screenshot(self):
+        return self.game_entry[config.metadata_key_screenshot]
+    def set_screenshot(self, value):
+        self.game_entry[config.metadata_key_screenshot] = value
+
+    # Video
+    def get_video(self):
+        return self.game_entry[config.metadata_key_video]
+    def set_video(self, value):
+        self.game_entry[config.metadata_key_video] = value
+
+# Metadata database class
 class Metadata:
 
     # Constructor
@@ -27,28 +176,26 @@ class Metadata:
     def add_game(self, game_entry):
 
         # Check minimum keys
-        for key in config.metadata_keys_minimum:
-            if not key in game_entry:
-                return
+        if not game_entry.has_minimum_keys():
+            return
 
         # Get game info
-        game_platform = game_entry[config.metadata_key_platform]
-        game_name = game_entry[config.metadata_key_game]
+        game_platform = game_entry.get_platform()
+        game_name = game_entry.get_game()
 
         # Inject categories
         game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
-        game_entry[config.metadata_key_supercategory] = game_supercategory
-        game_entry[config.metadata_key_category] = game_category
-        game_entry[config.metadata_key_subcategory] = game_subcategory
+        game_entry.set_supercategory(game_supercategory)
+        game_entry.set_category(game_category)
+        game_entry.set_subcategory(game_subcategory)
 
         # Add platform if not already there
         if not game_platform in self.game_database.keys():
             self.game_database[game_platform] = {}
 
         # Add entry
-        import mergedeep
         if game_name in self.game_database[game_platform]:
-            self.game_database[game_platform][game_name] = mergedeep.merge(game_entry, self.game_database[game_platform][game_name])
+            self.game_database[game_platform][game_name].merge(game_entry)
         else:
             self.game_database[game_platform][game_name] = game_entry
 
@@ -133,7 +280,7 @@ class Metadata:
             for game_name in self.get_sorted_names(game_platform):
                 system.Log("Checking %s - %s ..." % (game_platform, game_name))
                 game_entry = self.get_game(game_platform, game_name)
-                file_path_relative = game_entry[config.metadata_key_file]
+                file_path_relative = game_entry.get_file()
                 file_path_real = os.path.join(environment.GetJsonRomsMetadataRootDir(), file_path_relative)
                 if not os.path.exists(file_path_real):
                     system.LogError("File not found:\n%s" % file_path_relative)
@@ -192,25 +339,25 @@ class Metadata:
                 new_base_path = "")
 
             # Get asset files
-            rom_boxfront = "%s/%s%s" % (config.asset_type_boxfront, rom_name, config.asset_type_extensions[config.asset_type_boxfront])
-            rom_boxback = "%s/%s%s" % (config.asset_type_boxback, rom_name, config.asset_type_extensions[config.asset_type_boxback])
-            rom_background = "%s/%s%s" % (config.asset_type_background, rom_name, config.asset_type_extensions[config.asset_type_background])
-            rom_screenshot = "%s/%s%s" % (config.asset_type_screenshot, rom_name, config.asset_type_extensions[config.asset_type_screenshot])
-            rom_video = "%s/%s%s" % (config.asset_type_video, rom_name, config.asset_type_extensions[config.asset_type_video])
+            rom_boxfront = gameinfo.DeriveGameAssetPathFromName(rom_name, config.asset_type_boxfront)
+            rom_boxback = gameinfo.DeriveGameAssetPathFromName(rom_name, config.asset_type_boxback)
+            rom_background = gameinfo.DeriveGameAssetPathFromName(rom_name, config.asset_type_background)
+            rom_screenshot = gameinfo.DeriveGameAssetPathFromName(rom_name, config.asset_type_screenshot)
+            rom_video = gameinfo.DeriveGameAssetPathFromName(rom_name, config.asset_type_video)
 
             # Create new entry
             system.Log("Found game: '%s' - '%s'" % (rom_platform, rom_name))
-            game_entry = {}
-            game_entry[config.metadata_key_platform] = rom_platform
-            game_entry[config.metadata_key_game] = rom_name
-            game_entry[config.metadata_key_file] = rom_file
-            game_entry[config.metadata_key_boxfront] = rom_boxfront
-            game_entry[config.metadata_key_boxback] = rom_boxback
-            game_entry[config.metadata_key_background] = rom_background
-            game_entry[config.metadata_key_screenshot] = rom_screenshot
-            game_entry[config.metadata_key_players] = "1"
-            game_entry[config.metadata_key_coop] = "No"
-            game_entry[config.metadata_key_playable] = "Yes"
+            game_entry = MetadataEntry()
+            game_entry.set_platform(rom_platform)
+            game_entry.set_game(rom_name)
+            game_entry.set_file(rom_file)
+            game_entry.set_boxfront(rom_boxfront)
+            game_entry.set_boxback(rom_boxback)
+            game_entry.set_background(rom_background)
+            game_entry.set_screenshot(rom_screenshot)
+            game_entry.set_players("1")
+            game_entry.set_coop("No")
+            game_entry.set_playable("Yes")
             self.add_game(game_entry)
 
     # Scan roms
@@ -242,8 +389,8 @@ class Metadata:
                 for token in data.split("\n\n"):
 
                     # Create new entry
-                    game_entry = {}
-                    game_entry[config.metadata_key_platform] = collection_platform
+                    game_entry = MetadataEntry()
+                    game_entry.set_platform(collection_platform)
                     in_description_section = False
 
                     # Parse entry tokens
@@ -252,93 +399,89 @@ class Metadata:
                         # Game
                         if line.startswith("game:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_game] = line.replace("game:", "").strip()
+                            game_entry.set_game(line.replace("game:", "").strip())
 
                         # File
                         elif line.startswith("file:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_file] = line.replace("file:", "").strip()
+                            game_entry.set_file(line.replace("file:", "").strip())
 
                         # Developer
                         elif line.startswith("developer:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_developer] = line.replace("developer:", "").strip()
+                            game_entry.set_developer(line.replace("developer:", "").strip())
 
                         # Publisher
                         elif line.startswith("publisher:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_publisher] = line.replace("publisher:", "").strip()
+                            game_entry.set_publisher(line.replace("publisher:", "").strip())
 
                         # Genre
                         elif line.startswith("genre:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_genre] = line.replace("genre:", "").strip()
+                            game_entry.set_genre(line.replace("genre:", "").strip())
 
                         # Tag
                         elif line.startswith("tag:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_tag] = line.replace("tag:", "").strip()
+                            game_entry.set_tag(line.replace("tag:", "").strip())
 
                         # Description
                         elif line.startswith("description:"):
                             in_description_section = True
-                            game_entry[config.metadata_key_description] = []
+                            game_entry.set_description([])
                         elif line.startswith("  ") and in_description_section:
-                            game_entry[config.metadata_key_description].append(line.strip())
+                            description_lines = game_entry.get_description()
+                            description_lines.append(line.strip())
+                            game_entry.set_description(description_lines)
 
                         # Release
                         elif line.startswith("release:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_release] = line.replace("release:", "").strip()
+                            game_entry.set_release(line.replace("release:", "").strip())
 
                         # Players
                         elif line.startswith("players:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_players] = line.replace("players:", "").strip()
+                            game_entry.set_players(line.replace("players:", "").strip())
 
                         # Boxfront
                         elif line.startswith("assets.boxfront:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_boxfront] = line.replace("assets.boxfront:", "").strip()
+                            game_entry.set_boxfront(line.replace("assets.boxfront:", "").strip())
 
                         # Boxback
                         elif line.startswith("assets.boxback:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_boxback] = line.replace("assets.boxback:", "").strip()
+                            game_entry.set_boxback(line.replace("assets.boxback:", "").strip())
 
                         # Background
                         elif line.startswith("assets.background:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_background] = line.replace("assets.background:", "").strip()
+                            game_entry.set_background(line.replace("assets.background:", "").strip())
 
                         # Screenshot
                         elif line.startswith("assets.screenshot:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_screenshot] = line.replace("assets.screenshot:", "").strip()
+                            game_entry.set_screenshot(line.replace("assets.screenshot:", "").strip())
 
                         # Video
                         elif line.startswith("assets.video:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_video] = line.replace("assets.video:", "").strip()
+                            game_entry.set_video(line.replace("assets.video:", "").strip())
 
                         # Co-op
                         elif line.startswith("x-co-op:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_coop] = line.replace("x-co-op:", "").strip()
+                            game_entry.set_coop(line.replace("x-co-op:", "").strip())
 
                         # Playable
                         elif line.startswith("x-playable:"):
                             in_description_section = False
-                            game_entry[config.metadata_key_playable] = line.replace("x-playable:", "").strip()
-
-                    # Check minimum keys
-                    has_minimum_keys = True
-                    for key in config.metadata_keys_minimum:
-                        if not key in game_entry:
-                            has_minimum_keys = False
+                            game_entry.set_playable(line.replace("x-playable:", "").strip())
 
                     # Add new entry
-                    if has_minimum_keys:
+                    if game_entry.has_minimum_keys():
                         self.add_game(game_entry)
 
     # Import from metadata file
@@ -380,70 +523,70 @@ class Metadata:
                 for game_entry in self.get_sorted_entries(game_platform):
 
                     # Game
-                    if config.metadata_key_game in game_entry:
-                        file.write("game: " + game_entry[config.metadata_key_game] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_game):
+                        file.write("game: " + game_entry.get_game() + "\n")
 
                     # File
-                    if config.metadata_key_file in game_entry:
-                        file.write("file: " + game_entry[config.metadata_key_file] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_file):
+                        file.write("file: " + game_entry.get_file() + "\n")
 
                     # Developer
-                    if config.metadata_key_developer in game_entry:
-                        file.write("developer: " + game_entry[config.metadata_key_developer] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_developer):
+                        file.write("developer: " + game_entry.get_developer() + "\n")
 
                     # Publisher
-                    if config.metadata_key_publisher in game_entry:
-                        file.write("publisher: " + game_entry[config.metadata_key_publisher] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_publisher):
+                        file.write("publisher: " + game_entry.get_publisher() + "\n")
 
                     # Genre
-                    if config.metadata_key_genre in game_entry:
-                        file.write("genre: " + game_entry[config.metadata_key_genre] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_genre):
+                        file.write("genre: " + game_entry.get_genre() + "\n")
 
                     # Tag
-                    if config.metadata_key_tag in game_entry:
-                        file.write("tag: " + game_entry[config.metadata_key_tag] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_tag):
+                        file.write("tag: " + game_entry.get_tag() + "\n")
 
                     # Description
-                    if config.metadata_key_description in game_entry:
+                    if game_entry.is_key_set(config.metadata_key_description):
                         file.write("description:\n")
-                        for desc_line in game_entry[config.metadata_key_description]:
+                        for desc_line in game_entry.get_description():
                             file.write("  " + desc_line + "\n")
 
                     # Release
-                    if config.metadata_key_release in game_entry:
-                        file.write("release: " + game_entry[config.metadata_key_release] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_release):
+                        file.write("release: " + game_entry.get_release() + "\n")
 
                     # Players
-                    if config.metadata_key_players in game_entry:
-                        file.write("players: " + game_entry[config.metadata_key_players] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_players):
+                        file.write("players: " + game_entry.get_players() + "\n")
 
                     # Boxfront
-                    if config.metadata_key_boxfront in game_entry:
-                        file.write("assets.boxfront: " + game_entry[config.metadata_key_boxfront] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_boxfront):
+                        file.write("assets.boxfront: " + game_entry.get_boxfront() + "\n")
 
                     # Boxback
-                    if config.metadata_key_boxback in game_entry:
-                        file.write("assets.boxback: " + game_entry[config.metadata_key_boxback] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_boxback):
+                        file.write("assets.boxback: " + game_entry.get_boxback() + "\n")
 
                     # Background
-                    if config.metadata_key_background in game_entry:
-                        file.write("assets.background: " + game_entry[config.metadata_key_background] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_background):
+                        file.write("assets.background: " + game_entry.get_background() + "\n")
 
                     # Screenshot
-                    if config.metadata_key_screenshot in game_entry:
-                        file.write("assets.screenshot: " + game_entry[config.metadata_key_screenshot] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_screenshot):
+                        file.write("assets.screenshot: " + game_entry.get_screenshot() + "\n")
 
                     # Video
-                    if config.metadata_key_video in game_entry:
-                        file.write("assets.video: " + game_entry[config.metadata_key_video] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_video):
+                        file.write("assets.video: " + game_entry.get_video() + "\n")
 
                     # Co-op
-                    if config.metadata_key_coop in game_entry:
-                        file.write("x-co-op: " + game_entry[config.metadata_key_coop] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_coop):
+                        file.write("x-co-op: " + game_entry.get_coop() + "\n")
 
                     # Playable
-                    if config.metadata_key_playable in game_entry:
-                        file.write("x-playable: " + game_entry[config.metadata_key_playable] + "\n")
+                    if game_entry.is_key_set(config.metadata_key_playable):
+                        file.write("x-playable: " + game_entry.get_playable() + "\n")
 
                     # Divider
                     file.write("\n\n")
@@ -556,7 +699,7 @@ def CollectMetadata(
                                 should_set_data = True
                             if metadata_key == config.metadata_key_coop:
                                 should_set_data = True
-                            elif not metadata_key in game_entry.keys():
+                            elif not game_entry.is_key_set(metadata_key):
                                 should_set_data = True
 
                             # Set new data
@@ -578,7 +721,7 @@ def CollectMetadataFromTGDB(web_driver, game_platform, game_name, select_automat
     keywords_name = urllib.parse.quote_plus(natural_name.strip())
 
     # Metadata result
-    metadata_result = {}
+    metadata_result = MetadataEntry()
 
     # Go to the search page and pull the results
     try:
@@ -634,7 +777,7 @@ def CollectMetadataFromTGDB(web_driver, game_platform, game_name, select_automat
 
     # Convert description to metadata format
     if raw_game_description:
-        metadata_result[config.metadata_key_description] = CleanRawGameDescription(raw_game_description)
+        metadata_result.set_description(CleanRawGameDescription(raw_game_description))
 
     # Look for game details
     for section_game_details in webpage.GetElement(web_driver, class_name = "card-body", all_elements = True):
@@ -645,27 +788,27 @@ def CollectMetadataFromTGDB(web_driver, game_platform, game_name, select_automat
 
             # Genre
             if "Genre(s):" in element_text:
-                metadata_result[config.metadata_key_genre] = element_text.replace("Genre(s):", "").replace(" | ", ";").strip()
+                metadata_result.set_genre(element_text.replace("Genre(s):", "").replace(" | ", ";").strip())
 
             # Co-op
             if "Co-op:" in element_text:
-                metadata_result[config.metadata_key_coop] = element_text.replace("Co-op:", "").strip()
+                metadata_result.set_coop(element_text.replace("Co-op:", "").strip())
 
             # Developer
             if "Developer(s):" in element_text:
-                metadata_result[config.metadata_key_developer] = element_text.replace("Developer(s):", "").strip()
+                metadata_result.set_developer(element_text.replace("Developer(s):", "").strip())
 
             # Publisher
             if "Publishers(s):" in element_text:
-                metadata_result[config.metadata_key_publisher] = element_text.replace("Publishers(s):", "").strip()
+                metadata_result.set_publisher(element_text.replace("Publishers(s):", "").strip())
 
             # Players
             if "Players:" in element_text:
-                metadata_result[config.metadata_key_players] = element_text.replace("Players:", "").strip()
+                metadata_result.set_players(element_text.replace("Players:", "").strip())
 
             # Release
             if "ReleaseDate:" in element_text:
-                metadata_result[config.metadata_key_release] = element_text.replace("ReleaseDate:", "").strip()
+                metadata_result.set_release(element_text.replace("ReleaseDate:", "").strip())
 
     # Return metadata
     time.sleep(5)
@@ -679,7 +822,7 @@ def CollectMetadataFromGameFAQS(web_driver, game_platform, game_name, select_aut
     keywords_name = urllib.parse.quote_plus(natural_name.strip())
 
     # Metadata result
-    metadata_result = {}
+    metadata_result = MetadataEntry()
 
     # Go to the search page and pull the results
     try:
@@ -706,7 +849,7 @@ def CollectMetadataFromGameFAQS(web_driver, game_platform, game_name, select_aut
 
     # Convert description to metadata format
     if raw_game_description:
-        metadata_result[config.metadata_key_description] = CleanRawGameDescription(raw_game_description)
+        metadata_result.set_description(CleanRawGameDescription(raw_game_description))
 
     # Look for game details
     for section_game_details in webpage.GetElement(web_driver, class_name = "content", all_elements = True):
@@ -716,20 +859,20 @@ def CollectMetadataFromGameFAQS(web_driver, game_platform, game_name, select_aut
 
         # Genre
         if element_text.startswith("Genre:"):
-            metadata_result[config.metadata_key_genre] = element_text.replace("Genre:", "").replace(" » ", ";").strip()
+            metadata_result.set_genre(element_text.replace("Genre:", "").replace(" » ", ";").strip())
 
         # Developer
         elif element_text.startswith("Developer:"):
-            metadata_result[config.metadata_key_developer] = element_text.replace("Developer:", "").strip()
+            metadata_result.set_developer(element_text.replace("Developer:", "").strip())
 
         # Publisher
         elif element_text.startswith("Publisher:"):
-            metadata_result[config.metadata_key_publisher] = element_text.replace("Publisher:", "").strip()
+            metadata_result.set_publisher(element_text.replace("Publisher:", "").strip())
 
         # Developer/Publisher
         elif element_text.startswith("Developer/Publisher:"):
-            metadata_result[config.metadata_key_developer] = element_text.replace("Developer/Publisher:", "").strip()
-            metadata_result[config.metadata_key_publisher] = element_text.replace("Developer/Publisher:", "").strip()
+            metadata_result.set_developer(element_text.replace("Developer/Publisher:", "").strip())
+            metadata_result.set_publisher(element_text.replace("Developer/Publisher:", "").strip())
 
         # Release/First Released
         elif element_text.startswith("Release:") or element_text.startswith("First Released:"):
@@ -740,7 +883,7 @@ def CollectMetadataFromGameFAQS(web_driver, game_platform, game_name, select_aut
             elif element_text.startswith("First Released:"):
                 release_text = element_text.replace("First Released:", "").strip()
             release_time = dateutil.parser.parse(release_text)
-            metadata_result[config.metadata_key_release] = release_time.strftime("%Y-%m-%d")
+            metadata_result.set_release(release_time.strftime("%Y-%m-%d"))
 
     # Return metadata
     return metadata_result
@@ -753,7 +896,7 @@ def CollectMetadataFromItchio(web_driver, game_platform, game_name, select_autom
     keywords_name = urllib.parse.quote_plus(natural_name.strip())
 
     # Metadata result
-    metadata_result = {}
+    metadata_result = MetadataEntry()
 
     # Check if cookie exists first
     if os.path.exists(config.itchio_cookie_filename):
@@ -819,7 +962,7 @@ def CollectMetadataFromItchio(web_driver, game_platform, game_name, select_autom
 
     # Convert description to metadata format
     if raw_game_description:
-        metadata_result[config.metadata_key_description] = CleanRawGameDescription(raw_game_description)
+        metadata_result.set_description(CleanRawGameDescription(raw_game_description))
 
     # Grab the information text
     raw_game_information = webpage.GetElementText(section_game_information)
@@ -845,25 +988,25 @@ def CollectMetadataFromItchio(web_driver, game_platform, game_name, select_autom
             if game_detail_line.startswith("Release date"):
                 release_text = game_detail_line.replace("Release date", "").strip()
                 release_time = datetime.datetime.strptime(release_text, "%b %d, %Y")
-                metadata_result[config.metadata_key_release] = release_time.strftime("%Y-%m-%d")
+                metadata_result.set_release(release_time.strftime("%Y-%m-%d"))
             if game_detail_line.startswith("Published"):
                 release_text = game_detail_line.replace("Published", "").strip()
                 release_time = datetime.datetime.strptime(release_text, "%b %d, %Y")
-                metadata_result[config.metadata_key_release] = release_time.strftime("%Y-%m-%d")
+                metadata_result.set_release(release_time.strftime("%Y-%m-%d"))
 
             # Developer/publisher
             elif game_detail_line.startswith("Authors"):
                 author_text = game_detail_line.replace("Authors", "").strip()
-                metadata_result[config.metadata_key_developer] = author_text
-                metadata_result[config.metadata_key_publisher] = author_text
+                metadata_result.set_developer(author_text)
+                metadata_result.set_publisher(author_text)
             elif game_detail_line.startswith("Author"):
                 author_text = game_detail_line.replace("Author", "").strip()
-                metadata_result[config.metadata_key_developer] = author_text
-                metadata_result[config.metadata_key_publisher] = author_text
+                metadata_result.set_developer(author_text)
+                metadata_result.set_publisher(author_text)
 
             # Genre
             elif game_detail_line.startswith("Genre"):
-                metadata_result[config.metadata_key_genre] = game_detail_line.replace("Genre", "").strip().replace(", ", ";")
+                metadata_result.set_genre(game_detail_line.replace("Genre", "").strip().replace(", ", ";"))
 
     # Return metadata
     return metadata_result
