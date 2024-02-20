@@ -34,136 +34,144 @@ class MetadataEntry:
     def is_key_set(self, key):
         return key in self.game_entry.keys()
 
+    # Get value
+    def get_value(self, key):
+        return self.game_entry[key]
+
+    # Set value
+    def set_value(self, key, value):
+        self.game_entry[key] = value
+
     # Merge data
     def merge(self, other):
         import mergedeep
         return mergedeep.merge(other.game_entry, self.game_entry)
 
-    # Game
+    # Game name
     def get_game(self):
-        return self.game_entry[config.metadata_key_game]
+        return self.get_value(config.metadata_key_game)
     def set_game(self, value):
-        self.game_entry[config.metadata_key_game] = value
+        self.set_value(config.metadata_key_game, value)
 
-    # Platform
+    # Game platform
     def get_platform(self):
-        return self.game_entry[config.metadata_key_platform]
+        return self.get_value(config.metadata_key_platform)
     def set_platform(self, value):
-        self.game_entry[config.metadata_key_platform] = value
+        self.set_value(config.metadata_key_platform, value)
 
-    # Supercategory
+    # Game supercategory
     def get_supercategory(self):
-        return self.game_entry[config.metadata_key_supercategory]
+        return self.get_value(config.metadata_key_supercategory)
     def set_supercategory(self, value):
-        self.game_entry[config.metadata_key_supercategory] = value
+        self.set_value(config.metadata_key_supercategory, value)
 
-    # Category
+    # Game category
     def get_category(self):
-        return self.game_entry[config.metadata_key_category]
+        return self.get_value(config.metadata_key_category)
     def set_category(self, value):
-        self.game_entry[config.metadata_key_category] = value
+        self.set_value(config.metadata_key_category, value)
 
-    # Subcategory
+    # Game subcategory
     def get_subcategory(self):
-        return self.game_entry[config.metadata_key_subcategory]
+        return self.get_value(config.metadata_key_subcategory)
     def set_subcategory(self, value):
-        self.game_entry[config.metadata_key_subcategory] = value
+        self.set_value(config.metadata_key_subcategory, value)
 
-    # File
+    # Game file
     def get_file(self):
-        return self.game_entry[config.metadata_key_file]
+        return self.get_value(config.metadata_key_file)
     def set_file(self, value):
-        self.game_entry[config.metadata_key_file] = value
+        self.set_value(config.metadata_key_file, value)
 
-    # Description
+    # Game description
     def get_description(self):
-        return self.game_entry[config.metadata_key_description]
+        return self.get_value(config.metadata_key_description)
     def set_description(self, value):
-        self.game_entry[config.metadata_key_description] = value
+        self.set_value(config.metadata_key_description, value)
 
-    # Genre
+    # Game genre
     def get_genre(self):
-        return self.game_entry[config.metadata_key_genre]
+        return self.get_value(config.metadata_key_genre)
     def set_genre(self, value):
-        self.game_entry[config.metadata_key_genre] = value
+        self.set_value(config.metadata_key_genre, value)
 
-    # Tag
+    # Game tag
     def get_tag(self):
-        return self.game_entry[config.metadata_key_tag]
+        return self.get_value(config.metadata_key_tag)
     def set_tag(self, value):
-        self.game_entry[config.metadata_key_tag] = value
+        self.set_value(config.metadata_key_tag, value)
 
-    # Coop
+    # Game coop
     def get_coop(self):
-        return self.game_entry[config.metadata_key_coop]
+        return self.get_value(config.metadata_key_coop)
     def set_coop(self, value):
-        self.game_entry[config.metadata_key_coop] = value
+        self.set_value(config.metadata_key_coop, value)
 
-    # Playable
+    # Game playable
     def get_playable(self):
-        return self.game_entry[config.metadata_key_playable]
+        return self.get_value(config.metadata_key_playable)
     def set_playable(self, value):
-        self.game_entry[config.metadata_key_playable] = value
+        self.set_value(config.metadata_key_playable, value)
 
-    # Developer
+    # Game developer
     def get_developer(self):
-        return self.game_entry[config.metadata_key_developer]
+        return self.get_value(config.metadata_key_developer)
     def set_developer(self, value):
-        self.game_entry[config.metadata_key_developer] = value
+        self.set_value(config.metadata_key_developer, value)
 
-    # Publisher
+    # Game publisher
     def get_publisher(self):
-        return self.game_entry[config.metadata_key_publisher]
+        return self.get_value(config.metadata_key_publisher)
     def set_publisher(self, value):
-        self.game_entry[config.metadata_key_publisher] = value
+        self.set_value(config.metadata_key_publisher, value)
 
-    # Players
+    # Game players
     def get_players(self):
-        return self.game_entry[config.metadata_key_players]
+        return self.get_value(config.metadata_key_players)
     def set_players(self, value):
-        self.game_entry[config.metadata_key_players] = value
+        self.set_value(config.metadata_key_players, value)
 
-    # Release
+    # Game release
     def get_release(self):
-        return self.game_entry[config.metadata_key_release]
+        return self.get_value(config.metadata_key_release)
     def set_release(self, value):
-        self.game_entry[config.metadata_key_release] = value
+        self.set_value(config.metadata_key_release, value)
 
-    # Background
+    # Game background
     def get_background(self):
-        return self.game_entry[config.metadata_key_background]
+        return self.get_value(config.metadata_key_background)
     def set_background(self, value):
-        self.game_entry[config.metadata_key_background] = value
+        self.set_value(config.metadata_key_background, value)
 
-    # BoxBack
+    # Game box back
     def get_boxback(self):
-        return self.game_entry[config.metadata_key_boxback]
+        return self.get_value(config.metadata_key_boxback)
     def set_boxback(self, value):
-        self.game_entry[config.metadata_key_boxback] = value
+        self.set_value(config.metadata_key_boxback, value)
 
-    # BoxFront
+    # Game box front
     def get_boxfront(self):
-        return self.game_entry[config.metadata_key_boxfront]
+        return self.get_value(config.metadata_key_boxfront)
     def set_boxfront(self, value):
-        self.game_entry[config.metadata_key_boxfront] = value
+        self.set_value(config.metadata_key_boxfront, value)
 
-    # Label
+    # Game abel
     def get_label(self):
-        return self.game_entry[config.metadata_key_label]
+        return self.get_value(config.metadata_key_label)
     def set_label(self, value):
-        self.game_entry[config.metadata_key_label] = value
+        self.set_value(config.metadata_key_label, value)
 
-    # Screenshot
+    # Game screenshot
     def get_screenshot(self):
-        return self.game_entry[config.metadata_key_screenshot]
+        return self.get_value(config.metadata_key_screenshot)
     def set_screenshot(self, value):
-        self.game_entry[config.metadata_key_screenshot] = value
+        self.set_value(config.metadata_key_screenshot, value)
 
-    # Video
+    # Game video
     def get_video(self):
-        return self.game_entry[config.metadata_key_video]
+        return self.get_value(config.metadata_key_video)
     def set_video(self, value):
-        self.game_entry[config.metadata_key_video] = value
+        self.set_value(config.metadata_key_video, value)
 
 # Metadata database class
 class Metadata:
@@ -255,9 +263,9 @@ class Metadata:
     def is_entry_missing_data(self, game_platform, game_name, keys_to_check):
         game_entry = self.get_game(game_platform, game_name)
         for key_to_check in keys_to_check:
-            if not key_to_check in game_entry.keys():
+            if not game_entry.is_key_set(key_to_check):
                 return True
-            if key_to_check in game_entry.keys() and game_entry[key_to_check] == "":
+            if game_entry.is_key_set(key_to_check) and game_entry.get_value(key_to_check) == "":
                 return True
         return False
 
@@ -690,7 +698,7 @@ def CollectMetadata(
                         for metadata_key in config.metadata_keys_replaceable:
 
                             # Ignore keys not in result
-                            if not metadata_key in metadata_result.keys():
+                            if not metadata_result.is_key_set(metadata_key):
                                 continue
 
                             # Check if we should set the new data
@@ -704,7 +712,7 @@ def CollectMetadata(
 
                             # Set new data
                             if should_set_data:
-                                game_entry[metadata_key] = metadata_result[metadata_key]
+                                game_entry.set_value(metadata_key, metadata_result.get_value(metadata_key))
 
                     # Write metadata back to file
                     metadata_obj.set_game(game_platform, game_name, game_entry)
