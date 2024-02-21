@@ -11,7 +11,7 @@ import system
 import environment
 
 # Get search results
-def GetSearchResults(search_terms, num_results = 10, verbose = False, exit_on_failure = False):
+def GetSearchResults(search_terms, num_results = 10, sort_by_duration = False, verbose = False, exit_on_failure = False):
 
     # Get tool
     youtube_tool = None
@@ -51,6 +51,12 @@ def GetSearchResults(search_terms, num_results = 10, verbose = False, exit_on_fa
             search_results.append(json.loads(line))
         except Exception as e:
             pass
+
+    # Sort search results by duration
+    if sort_by_duration:
+        search_results = sorted(search_results, key=lambda d: d["duration"])
+
+    # Return search results
     return search_results
 
 # Download video
