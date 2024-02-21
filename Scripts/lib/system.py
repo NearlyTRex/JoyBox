@@ -96,6 +96,15 @@ def AssertPathExists(var_value, var_name):
 
 ###########################################################
 
+# Prompt for value
+def PromptForValue(description, default_value):
+    value = input(">>> %s [default: %s]: " % (description, default_value))
+    if len(value) == 0:
+        return default_value
+    return value
+
+###########################################################
+
 # Get enclosed substrings from a delimiter
 def FindEnclosedSubstrings(string, delimiter = "\""):
     pattern = "([%s])(?:\\?.)*?\1" % delimiter
