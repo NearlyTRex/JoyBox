@@ -48,7 +48,12 @@ def GetSearchResults(search_terms, num_results = 10, sort_by_duration = False, v
     search_results = []
     for line in search_output.split("\n"):
         try:
-            search_results.append(json.loads(line))
+            search_result = json.loads(line)
+            if "duration" not in search_result:
+                continue
+            if search_result["duration"] == None:
+                continue
+            search_results.append(search_result)
         except Exception as e:
             pass
 
