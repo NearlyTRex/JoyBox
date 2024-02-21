@@ -15,6 +15,7 @@ import webpage
 import platforms
 import environment
 import gameinfo
+import youtube
 
 # Metadata entry class
 class MetadataEntry:
@@ -283,11 +284,16 @@ class Metadata:
         self.game_database = mergedeep.merge(self.game_database, other.game_database)
 
     # Verify roms
-    def verify_roms(self):
+    def verify_roms(self, verbose = False, exit_on_failure = False):
         for game_platform in self.get_sorted_platforms():
             for game_name in self.get_sorted_names(game_platform):
-                system.Log("Checking %s - %s ..." % (game_platform, game_name))
+                if verbose:
+                    system.Log("Checking %s - %s ..." % (game_platform, game_name))
+
+                # Get game entry
                 game_entry = self.get_game(game_platform, game_name)
+
+                # Check file paths
                 file_path_relative = game_entry.get_file()
                 file_path_real = os.path.join(environment.GetJsonRomsMetadataRootDir(), file_path_relative)
                 if not os.path.exists(file_path_real):
@@ -299,11 +305,20 @@ class Metadata:
     def sync_assets(self):
         for game_platform in self.get_sorted_platforms():
             for game_name in self.get_sorted_names(game_platform):
+                if verbose:
+                    system.Log("Checking %s - %s ..." % (game_platform, game_name))
+
+                # Get game entry
                 game_entry = self.get_game(game_platform, game_name)
-                game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
+                game_category = game_entry.get_category()
+                game_subcategory = game_entry.get_subcategory()
+
+                # Check all asset types
                 for asset_type in config.asset_types_all:
-                    game_asset_string = "%s/%s%s" % (asset_type, game_name, config.asset_type_extensions[asset_type])
+                    game_asset_string = gameinfo.DeriveGameAssetPathFromName(game_name, asset_type)
                     game_asset_file = environment.GetSyncedGameAssetFile(game_category, game_subcategory, game_name, asset_type)
+
+                    # Get metadata key associated with the asset type
                     game_metadata_key = None
                     if asset_type == config.asset_type_background:
                         game_metadata_key = config.metadata_key_background
@@ -317,9 +332,13 @@ class Metadata:
                         game_metadata_key = config.metadata_key_screenshot
                     elif asset_type == config.asset_type_video:
                         game_metadata_key = config.metadata_key_video
+
+                    # If one of the minimum asset types, make sure it's there
                     if asset_type in config.asset_types_min:
                         game_entry[game_metadata_key] = game_asset_string
                         continue
+
+                    # Otherwise, only set if the file is present
                     if os.path.isfile(game_asset_file):
                         game_entry[game_metadata_key] = game_asset_string
                     else:
@@ -327,8 +346,49 @@ class Metadata:
                             del game_entry[game_metadata_key]
                 self.set_game(game_platform, game_name, game_entry)
 
+    # Download missing videos
+    def download_missing_videos(self, search_terms = "", num_results = 10, verbose = False, exit_on_failure = False):
+        for metadata_entry in self.get_all_sorted_entries():
+            if not metadata_entry.is_key_set(config.metadata_key_video):
+
+                # Get game details
+                game_name = metadata_entry.get_game()
+                game_regular_name = gameinfo.DeriveRegularNameFromGameName(game_name)
+                game_platform = metadata_entry.get_platform()
+                game_category = metadata_entry.get_category()
+                game_subcategory = metadata_entry.get_subcategory()
+
+                # Get expected video file
+                expected_video_file = environment.GetSyncedGameAssetFile(game_category, game_subcategory, game_name, config.asset_type_video)
+                if os.path.exists(expected_video_file):
+                    continue
+
+                # Get search results
+                search_results = youtube.GetSearchResults(
+                    search_terms = search_terms + "+" + game_regular_name,
+                    num_results = num_results,
+                    sort_by_duration = True,
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+                if len(search_results) == 0:
+                    continue
+
+                # Show search results to the user
+                system.Log("Here are the search results for \"%s\"" % game_name)
+                for index in range(0, len(search_results)):
+                    search_result = search_results[index]
+                    system.Log("%d)  %s [%s] [%s]" % (index, search_result["title"], search_result["duration_string"], search_result["url"]))
+                selected_search_result = search_results[system.PromptForIntegerValue("Which do you want to use?", 0)]
+
+                # Download selected result
+                youtube.DownloadVideo(
+                    video_url = selected_search_result["url"],
+                    output_file = expected_video_file,
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+
     # Scan rom base directory
-    def scan_rom_base_dir(self, rom_base_dir, rom_category, rom_subcategory):
+    def scan_rom_base_dir(self, rom_base_dir, rom_category, rom_subcategory, verbose = False, exit_on_failure = False):
         for obj in system.GetDirectoryContents(rom_base_dir):
             rom_dir = os.path.join(rom_base_dir, obj)
 
@@ -354,7 +414,8 @@ class Metadata:
             rom_video = gameinfo.DeriveGameAssetPathFromName(rom_name, config.asset_type_video)
 
             # Create new entry
-            system.Log("Found game: '%s' - '%s'" % (rom_platform, rom_name))
+            if verbose:
+                system.Log("Found game: '%s' - '%s'" % (rom_platform, rom_name))
             game_entry = MetadataEntry()
             game_entry.set_platform(rom_platform)
             game_entry.set_game(rom_name)
@@ -369,12 +430,22 @@ class Metadata:
             self.add_game(game_entry)
 
     # Scan roms
-    def scan_roms(self, rom_path, rom_category, rom_subcategory):
+    def scan_roms(self, rom_path, rom_category, rom_subcategory, verbose = False, exit_on_failure = False):
         if rom_category == config.game_category_computer:
             for obj in system.GetDirectoryContents(rom_path):
-                self.scan_rom_base_dir(os.path.join(rom_path, obj), rom_category, rom_subcategory)
+                self.scan_rom_base_dir(
+                    rom_base_dir = os.path.join(rom_path, obj),
+                    rom_category = rom_category,
+                    rom_subcategory = rom_subcategory,
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
         else:
-            self.scan_rom_base_dir(rom_path, rom_category, rom_subcategory)
+            self.scan_rom_base_dir(
+                rom_base_dir = rom_path,
+                rom_category = rom_category,
+                rom_subcategory = rom_subcategory,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Import from pegasus file
     def import_from_pegasus_file(
