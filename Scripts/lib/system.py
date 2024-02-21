@@ -103,6 +103,14 @@ def PromptForValue(description, default_value):
         return default_value
     return value
 
+# Prompt for integer value
+def PromptForIntegerValue(description, default_value):
+    value = PromptForValue(description, default_value)
+    try:
+        return int(value)
+    except:
+        return default_value
+
 ###########################################################
 
 # Get enclosed substrings from a delimiter
