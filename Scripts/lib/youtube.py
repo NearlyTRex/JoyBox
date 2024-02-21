@@ -25,7 +25,15 @@ def GetSearchResults(search_terms, num_results = 10, verbose = False, exit_on_fa
     search_cmd = [
         youtube_tool,
         "ytsearch%d:\"%s\"" % (num_results, search_terms),
-        "-j"
+        "--dump-json",
+        "--default-search", "ytsearch",
+        "--no-playlist",
+        "--no-check-certificate",
+        "--geo-bypass",
+        "--flat-playlist",
+        "--skip-download",
+        "--quiet",
+        "--ignore-errors"
     ]
 
     # Run search command
@@ -37,10 +45,13 @@ def GetSearchResults(search_terms, num_results = 10, verbose = False, exit_on_fa
         exit_on_failure = exit_on_failure)
 
     # Parse search results
-    try:
-        return json.loads(search_output)
-    except Exception as e:
-        return {}
+    search_results = []
+    for line in search_output.split("\n"):
+        try:
+            search_results.append(json.loads(line))
+        except Exception as e:
+            pass
+    return search_results
 
 # Download video
 def DownloadVideo(video_url, output_file, verbose = False, exit_on_failure = False):
