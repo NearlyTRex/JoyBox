@@ -65,7 +65,7 @@ def GetSearchResults(search_terms, num_results = 10, sort_by_duration = False, v
     return search_results
 
 # Download video
-def DownloadVideo(video_url, output_file, verbose = False, exit_on_failure = False):
+def DownloadVideo(video_url, output_file = None, verbose = False, exit_on_failure = False):
 
     # Get tool
     youtube_tool = None
@@ -78,11 +78,14 @@ def DownloadVideo(video_url, output_file, verbose = False, exit_on_failure = Fal
     # Get download command
     download_cmd = [
         youtube_tool,
-        "-o", output_file,
         "-S", "res,ext:mp4:m4a",
         "--recode", "mp4",
         video_url
     ]
+    if system.IsPathValid(output_file):
+        download_cmd += [
+            "-o", output_file,
+        ]
 
     # Run download command
     code = command.RunBlockingCommand(
@@ -91,8 +94,4 @@ def DownloadVideo(video_url, output_file, verbose = False, exit_on_failure = Fal
             blocking_processes = [youtube_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
-    if code != 0:
-        return False
-
-    # Check result
-    return os.path.exists(output_file)
+    return (code == 0)
