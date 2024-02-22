@@ -43,6 +43,10 @@ class MetadataEntry:
     def set_value(self, key, value):
         self.game_entry[key] = value
 
+    # Delete value
+    def delete_value(self, key):
+        del self.game_entry[key]
+
     # Merge data
     def merge(self, other):
         import mergedeep
@@ -302,7 +306,7 @@ class Metadata:
                     sys.exit(1)
 
     # Sync assets
-    def sync_assets(self):
+    def sync_assets(self, verbose = False, exit_on_failure = False):
         for game_platform in self.get_sorted_platforms():
             for game_name in self.get_sorted_names(game_platform):
                 if verbose:
@@ -335,15 +339,15 @@ class Metadata:
 
                     # If one of the minimum asset types, make sure it's there
                     if asset_type in config.asset_types_min:
-                        game_entry[game_metadata_key] = game_asset_string
+                        game_entry.set_value(game_metadata_key, game_asset_string)
                         continue
 
                     # Otherwise, only set if the file is present
                     if os.path.isfile(game_asset_file):
-                        game_entry[game_metadata_key] = game_asset_string
+                        game_entry.set_value(game_metadata_key, game_asset_string)
                     else:
-                        if game_metadata_key in game_entry:
-                            del game_entry[game_metadata_key]
+                        if game_entry.is_key_set(game_metadata_key):
+                            game_entry.delete_value(game_metadata_key)
                 self.set_game(game_platform, game_name, game_entry)
 
     # Download missing videos
@@ -377,7 +381,7 @@ class Metadata:
                 system.Log("Here are the search results for \"%s\"" % game_name)
                 for index in range(0, len(search_results)):
                     search_result = search_results[index]
-                    system.Log("%d)  %s [%s] [%s]" % (index, search_result["title"], search_result["duration_string"], search_result["url"]))
+                    system.Log("%d) \"%s\" (%s) [%s] - %s" % (index, search_result["title"], search_result["channel"], search_result["duration_string"], search_result["url"]))
                 selected_search_result = search_results[system.PromptForIntegerValue("Which do you want to use?", 0)]
 
                 # Download selected result
