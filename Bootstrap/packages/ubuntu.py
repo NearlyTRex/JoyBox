@@ -253,6 +253,7 @@ packages = [
 
     # OtherOSFS
     "cifs-utils",
+    "winetricks",
 
     # Perl
     "perl-base",
