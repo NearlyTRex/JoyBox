@@ -32,6 +32,8 @@ from . import rclone
 from . import sandboxie
 from . import sevenzip
 from . import sigtop
+from . import steamarchiver
+from . import steamless
 from . import sunshine
 from . import tar
 from . import threedsromtool
@@ -77,6 +79,8 @@ instances = [
     sandboxie.Sandboxie(),
     sevenzip.SevenZip(),
     sigtop.Sigtop(),
+    steamarchiver.SteamArchiver(),
+    steamless.Steamless(),
     sunshine.Sunshine(),
     tar.Tar(),
     threedsromtool.ThreeDSRomTool(),
