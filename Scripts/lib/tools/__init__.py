@@ -33,6 +33,7 @@ from . import sandboxie
 from . import sevenzip
 from . import sigtop
 from . import steamarchiver
+from . import steamdepotdownloader
 from . import steamless
 from . import sunshine
 from . import tar
@@ -80,6 +81,7 @@ instances = [
     sevenzip.SevenZip(),
     sigtop.Sigtop(),
     steamarchiver.SteamArchiver(),
+    steamdepotdownloader.SteamDepotDownloader(),
     steamless.Steamless(),
     sunshine.Sunshine(),
     tar.Tar(),
