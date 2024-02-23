@@ -8,8 +8,7 @@ import argparse
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
-import programs
-import command
+import gog
 import setup
 
 # Parse arguments
@@ -42,27 +41,12 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Get tool
-    gog_tool = None
-    if programs.IsToolInstalled("LGOGDownloader"):
-        gog_tool = programs.GetToolProgram("LGOGDownloader")
-    if not gog_tool:
-        system.LogError("LGOGDownloader was not found")
-        sys.exit(1)
-
-    # Get download command
-    download_cmd = [
-        gog_tool,
-        "--download",
-        "--platform=%s" % args.platform,
-        "--include=%s" % args.include,
-        "--directory=%s" % os.path.realpath(args.output_dir),
-        "--game=%s" % args.game_pattern
-    ]
-
-    # Run download command
-    command.RunCheckedCommand(
-        cmd = download_cmd,
+    # Download game
+    gog.DownloadGame(
+        game = args.game_pattern,
+        output_dir = args.output_dir,
+        platform = args.platform,
+        include = args.include,
         verbose = args.verbose,
         exit_on_failure = args.exit_on_failure)
 
