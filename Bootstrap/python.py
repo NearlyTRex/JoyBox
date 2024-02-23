@@ -11,7 +11,6 @@ import environment
 ###########################################################
 packages = [
     "aenum",
-    "aiohttp[speedups]",
     "bs4",
     "colorama",
     "cryptography",
@@ -36,7 +35,6 @@ packages = [
     "schedule",
     "screeninfo",
     "selenium",
-    "steam[client]",
     "termcolor",
     "tqdm",
     "vdf",
