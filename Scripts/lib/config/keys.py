@@ -117,6 +117,8 @@ json_key_sync_data = "data"
 json_key_registry = "registry"
 json_key_registry_keep_setup = "keep_setup"
 json_key_registry_setup_keys = "setup_keys"
+json_key_appid = "appid"
+json_key_branchid = "branchid"
 json_key_winver = "winver"
 json_key_is_32_bit = "is_32_bit"
 json_key_is_dos = "is_dos"
@@ -134,6 +136,8 @@ json_keys_str_keys = [
     # Computer
     json_key_installer_type,
     json_key_disc_type,
+    json_key_appid,
+    json_key_branchid,
     json_key_winver
 ]
 
