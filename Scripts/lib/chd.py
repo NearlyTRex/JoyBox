@@ -1,6 +1,5 @@
 # Imports
-import os
-import os.path
+import os, os.path
 import sys
 
 # Local imports
