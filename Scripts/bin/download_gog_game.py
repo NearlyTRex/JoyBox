@@ -35,6 +35,12 @@ parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
+# Check that output_dir exists first
+output_dir = os.path.realpath(args.output_dir)
+if not os.path.exists(output_dir):
+    system.LogError("Path '%s' does not exist" % args.output_dir)
+    sys.exit(-1)
+
 # Main
 def main():
 
@@ -44,7 +50,7 @@ def main():
     # Download game
     gog.DownloadGame(
         game = args.game_pattern,
-        output_dir = args.output_dir,
+        output_dir = output_dir,
         platform = args.platform,
         include = args.include,
         verbose = args.verbose,

@@ -32,10 +32,16 @@ parser.add_argument("-a", "--arch",
     default="64",
     help="Download architecture"
 )
-parser.add_argument("-o", "--output_dir", type=str, default=".", help="Output directory for downloads")
+parser.add_argument("-o", "--output_dir", type=str, default=".", help="Output directory")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
+
+# Check that output_dir exists first
+output_dir = os.path.realpath(args.output_dir)
+if not os.path.exists(output_dir):
+    system.LogError("Path '%s' does not exist" % args.output_dir)
+    sys.exit(-1)
 
 # Main
 def main():
@@ -47,7 +53,7 @@ def main():
     steam.DownloadGame(
         appid = args.appid,
         branchid = args.branchid,
-        output_dir = args.output_dir,
+        output_dir = output_dir,
         platform = args.platform,
         arch = args.arch,
         login = args.login,
