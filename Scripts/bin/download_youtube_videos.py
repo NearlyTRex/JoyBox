@@ -11,6 +11,7 @@ sys.path.append(lib_folder)
 import config
 import system
 import metadata
+import youtube
 import setup
 
 # Parse arguments
@@ -25,6 +26,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Download videos
+    youtube.DownloadVideo(args.youtube_url)
 
 # Start
 main()
