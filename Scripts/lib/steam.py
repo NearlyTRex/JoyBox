@@ -10,7 +10,7 @@ import network
 import system
 
 # Download game
-def DownloadGame(appid, branchid, output_dir, platform, arch, login, verbose = False, exit_on_failure = False):
+def DownloadGame(appid, branchid, output_dir, output_name, platform, arch, login, verbose = False, exit_on_failure = False):
 
     # Get tool
     steam_tool = None
@@ -49,14 +49,9 @@ def DownloadGame(appid, branchid, output_dir, platform, arch, login, verbose = F
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-    # Get archive name
-    archive_name = "%s.7z" % appid
-    if branchid:
-        archive_name = "%s-%s.7z" % (appid, branchid)
-
     # Archive downloaded files
     success = archive.CreateArchiveFromFolder(
-        archive_file = os.path.join(output_dir, archive_name),
+        archive_file = os.path.join(output_dir, "%s.7z" % output_name),
         source_dir = tmp_dir_result,
         excludes = [".DepotDownloader"],
         volume_size = "4092m",
@@ -70,7 +65,7 @@ def DownloadGame(appid, branchid, output_dir, platform, arch, login, verbose = F
 
     # Write game info
     success = system.WriteJsonFile(
-        src = os.path.join(output_dir, "%s.json" % appid),
+        src = os.path.join(output_dir, "%s.json" % output_name),
         json_data = GetGameInfo(appid),
         sort_keys = True,
         verbose = verbose,

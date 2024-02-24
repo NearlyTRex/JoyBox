@@ -33,6 +33,7 @@ parser.add_argument("-a", "--arch",
     help="Download architecture"
 )
 parser.add_argument("-o", "--output_dir", type=str, default=".", help="Output directory")
+parser.add_argument("-n", "--output_name", type=str, default="game", help="Output name")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
@@ -54,6 +55,7 @@ def main():
         appid = args.appid,
         branchid = args.branchid,
         output_dir = output_dir,
+        output_name = args.output_name,
         platform = args.platform,
         arch = args.arch,
         login = args.login,
