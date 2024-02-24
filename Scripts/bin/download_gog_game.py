@@ -13,7 +13,7 @@ import setup
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Download GOG game.")
-parser.add_argument("game_pattern", help="Game to download (regex pattern)")
+parser.add_argument("game", help="Game to download (regex pattern)")
 parser.add_argument("-i", "--include",
     choices=[
         "installers",
@@ -49,7 +49,7 @@ def main():
 
     # Download game
     gog.DownloadGame(
-        game = args.game_pattern,
+        game = args.game,
         output_dir = output_dir,
         platform = args.platform,
         include = args.include,
