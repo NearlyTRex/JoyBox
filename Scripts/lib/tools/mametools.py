@@ -65,7 +65,7 @@ class MameTools(toolbase.ToolBase):
                 output_name = "MameChdman",
                 output_dir = programs.GetProgramInstallDir("MameChdman", "linux"),
                 build_cmd = [
-                    "make", "SUBTARGET=pacem", "SOURCES=src/mame/pacman/pacman.cpp", "REGENIE=1", "TOOLS=1", "-j5",
+                    "make", "TOOLS=1", "EMULATOR=0", "-j5"
                 ],
                 internal_copies = [
                     {"from": "Source/chdman", "to": "AppImage/usr/bin/chdman"},
