@@ -75,11 +75,12 @@ def AreSymlinksSupported():
 
 # Import python module
 def ImportPythonModule(module_path, module_name):
-    import importlib
+    import importlib.util
     spec = importlib.util.spec_from_file_location(module_name, module_path)
     module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
+    sys.modules[module_name] = module
     spec.loader.exec_module(module)
+    return sys.modules[module_name]
 
 ###########################################################
 # Root access
