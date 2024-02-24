@@ -63,16 +63,6 @@ def DownloadGame(appid, branchid, output_dir, output_name, platform, arch, login
     # Delete temporary directory
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
 
-    # Write game info
-    success = system.WriteJsonFile(
-        src = os.path.join(output_dir, "%s.json" % output_name),
-        json_data = GetGameInfo(appid),
-        sort_keys = True,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
-
     # Check result
     return os.path.exists(output_dir)
 
