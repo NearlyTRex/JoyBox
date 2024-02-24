@@ -3,6 +3,7 @@ import os, os.path
 import sys
 
 # Local imports
+import config
 import command
 import archive
 import programs
@@ -67,7 +68,7 @@ def DownloadGame(appid, branchid, output_dir, output_name, platform, arch, login
     return os.path.exists(output_dir)
 
 # Get game info
-def GetGameInfo(appid, verbose = False, exit_on_failure = False):
+def GetGameInfo(appid, branchid, verbose = False, exit_on_failure = False):
 
     # Get steam url
     steam_url = "https://api.steamcmd.net/v1/info/%s" % appid
@@ -84,9 +85,15 @@ def GetGameInfo(appid, verbose = False, exit_on_failure = False):
 
     # Parse game info
     game_info = {}
-    game_info["appid"] = appid
     if "data" in steam_json:
         if appid in steam_json["data"]:
-            if "_change_number" in steam_json["data"][appid]:
-                game_info["changeid"] = str(steam_json["data"][appid]["_change_number"])
+            appdata = steam_json["data"][appid]
+
+            # Appid
+            if "appid" in appdata:
+                game_info[config.json_key_steam_appid] = str(appdata["appid"])
+
+            # Change number
+            if "_change_number" in appdata and branchid is None:
+                game_info[config.json_key_steam_changeid] = str(appdata["_change_number"])
     return game_info
