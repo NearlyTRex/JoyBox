@@ -6,6 +6,7 @@ import sys
 import command
 import archive
 import programs
+import network
 import system
 
 # Download game
@@ -67,5 +68,40 @@ def DownloadGame(appid, branchid, output_dir, platform, arch, login, verbose = F
     # Delete temporary directory
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
 
+    # Write game info
+    success = system.WriteJsonFile(
+        src = os.path.join(output_dir, "%s.json" % appid),
+        json_data = GetGameInfo(appid),
+        sort_keys = True,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
     # Check result
     return os.path.exists(output_dir)
+
+# Get game info
+def GetGameInfo(appid, verbose = False, exit_on_failure = False):
+
+    # Get steam url
+    steam_url = "https://api.steamcmd.net/v1/info/%s" % appid
+
+    # Get steam json
+    steam_json = network.GetRemoteJson(
+        url = steam_url,
+        headers = {"Accept": "application/json"},
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not steam_json:
+        system.LogError("Unable to find steam release information from '%s'" % steam_url)
+        return False
+
+    # Parse game info
+    game_info = {}
+    game_info["appid"] = appid
+    if "data" in steam_json:
+        if appid in steam_json["data"]:
+            if "_change_number" in steam_json["data"][appid]:
+                game_info["change_number"] = str(steam_json["data"][appid]["_change_number"])
+    return game_info
