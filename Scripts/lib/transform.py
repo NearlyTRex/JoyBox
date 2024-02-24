@@ -45,9 +45,11 @@ def TransformComputerPrograms(
     system.MakeDirectory(cached_install_dir, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Get pre-packaged archive
-    prepackaged_archive = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".7z.001")
+    prepackaged_archive = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".7z")
     if not os.path.exists(prepackaged_archive):
-        prepackaged_archive = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".exe")
+        prepackaged_archive = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".7z.001")
+        if not os.path.exists(prepackaged_archive):
+            prepackaged_archive = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".exe")
 
     # Pre-packaged archive
     if os.path.isfile(prepackaged_archive):
