@@ -88,5 +88,5 @@ def GetGameInfo(appid, verbose = False, exit_on_failure = False):
     if "data" in steam_json:
         if appid in steam_json["data"]:
             if "_change_number" in steam_json["data"][appid]:
-                game_info["change_number"] = str(steam_json["data"][appid]["_change_number"])
+                game_info["changeid"] = str(steam_json["data"][appid]["_change_number"])
     return game_info
