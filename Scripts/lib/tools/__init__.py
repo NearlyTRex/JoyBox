@@ -27,6 +27,7 @@ from . import psngetpkginfo
 from . import psvstrip
 from . import psvtools
 from . import pylnk
+from . import pysimplegui
 from . import python
 from . import rclone
 from . import sandboxie
@@ -75,6 +76,7 @@ instances = [
     psvstrip.PSVStrip(),
     psvtools.PSVTools(),
     pylnk.PyLnk(),
+    pysimplegui.PySimpleGUI(),
     python.Python(),
     rclone.RClone(),
     sandboxie.Sandboxie(),
