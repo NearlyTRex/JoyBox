@@ -8,6 +8,7 @@ import config
 import environment
 import system
 import display
+import programs
 
 # Display popup
 def DisplayPopup(
@@ -34,12 +35,16 @@ def DisplayPopup(
     keep_on_top = None,
     modal = True):
 
+    # Import PySimpleGUI
+    psg = environment.ImportPythonModule(
+        module_path = programs.GetToolProgram("PySimpleGUI"),
+        module_name = "psg")
+
     # Check parameters
     system.AssertIsNonEmptyString(title_text, "title_text")
     system.AssertIsNonEmptyString(message_text, "message_text")
 
     # Set theme
-    import PySimpleGUI as psg
     psg.theme(theme)
 
     # Get correct popup function
@@ -211,6 +216,11 @@ def DisplayLoadingWindow(
     run_func = None,
     **run_func_args):
 
+    # Import PySimpleGUI
+    psg = environment.ImportPythonModule(
+        module_path = programs.GetToolProgram("PySimpleGUI"),
+        module_name = "psg")
+
     # Check parameters
     system.AssertIsNonEmptyString(title_text, "title_text")
     system.AssertIsNonEmptyString(message_text, "message_text")
@@ -222,7 +232,6 @@ def DisplayLoadingWindow(
         window_size = display.GetCurrentScreenResolution()
 
     # Set theme
-    import PySimpleGUI as psg
     psg.theme(theme)
 
     # Layout window
@@ -333,6 +342,11 @@ def DisplayChoicesWindow(
     window_size = (None, None),
     run_func = None):
 
+    # Import PySimpleGUI
+    psg = environment.ImportPythonModule(
+        module_path = programs.GetToolProgram("PySimpleGUI"),
+        module_name = "psg")
+
     # Check parameters
     system.AssertIsNonEmptyString(title_text, "title_text")
     system.AssertIsNonEmptyString(message_text, "message_text")
@@ -348,7 +362,6 @@ def DisplayChoicesWindow(
             run_func(choice)
 
     # Set theme
-    import PySimpleGUI as psg
     psg.theme(theme)
 
     # Layout window
