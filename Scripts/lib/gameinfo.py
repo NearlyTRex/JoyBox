@@ -51,10 +51,10 @@ class GameInfo:
         metadata_file = environment.GetMetadataFile(json_category, json_subcategory)
         metadata_obj = metadata.Metadata()
         metadata_obj.import_from_metadata_file(metadata_file)
-        metadata_dict = metadata_obj.get_game(json_platform, json_base_name)
+        metadata_entry = metadata_obj.get_game(json_platform, json_base_name)
 
         # Set metadata
-        self.set_value(config.json_key_metadata, metadata_dict)
+        self.set_value(config.json_key_metadata, metadata_entry)
 
         ##############################
         # Fill default info
@@ -171,8 +171,8 @@ class GameInfo:
 
     # Get metadata value
     def get_metadata_value(self, key):
-        if key in self.json_data[config.json_key_metadata]:
-            return self.json_data[config.json_key_metadata][key]
+        if self.json_data[config.json_key_metadata].is_key_set(key):
+            return self.json_data[config.json_key_metadata].get_value(key)
         return None
 
     # Upcast string to list
