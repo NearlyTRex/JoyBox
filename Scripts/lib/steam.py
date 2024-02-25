@@ -34,11 +34,11 @@ def DownloadGame(appid, branchid, output_dir, output_name, platform, arch, login
         "-osarch", arch,
         "-dir", tmp_dir_result
     ]
-    if branchid:
+    if isinstance(branchid, str) and len(branchid):
         download_cmd += [
             "-beta", branchid
         ]
-    if login:
+    if isinstance(login, str) and len(login):
         download_cmd += [
             "-username", login,
             "-remember-password"
