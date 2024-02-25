@@ -79,6 +79,9 @@ class GameInfo:
         self.set_default_subvalue(config.json_key_sync, config.json_key_sync_data, [])
         self.set_default_subvalue(config.json_key_registry, config.json_key_registry_keep_setup, False)
         self.set_default_subvalue(config.json_key_registry, config.json_key_registry_setup_keys, [])
+        self.set_default_subvalue(config.json_key_steam, config.json_key_steam_appid, "")
+        self.set_default_subvalue(config.json_key_steam, config.json_key_steam_branchid, "")
+        self.set_default_subvalue(config.json_key_steam, config.json_key_steam_changeid, "")
 
         ##############################
         # Fill path info
@@ -378,6 +381,18 @@ class GameInfo:
     # Get setup registry keys
     def get_setup_registry_keys(self):
         return self.get_subvalue(config.json_key_registry, config.json_key_registry_setup_keys)
+
+    # Get steam appid
+    def get_steam_appid(self):
+        return self.get_subvalue(config.json_key_steam, config.json_key_steam_appid)
+
+    # Get steam branchid
+    def get_steam_branchid(self):
+        return self.get_subvalue(config.json_key_steam, config.json_key_steam_branchid)
+
+    # Get steam changeid
+    def get_steam_changeid(self):
+        return self.get_subvalue(config.json_key_steam, config.json_key_steam_changeid)
 
     # Get windows version
     def get_winver(self):
