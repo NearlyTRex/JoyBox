@@ -121,6 +121,8 @@ json_key_steam = "steam"
 json_key_steam_appid = "appid"
 json_key_steam_branchid = "branchid"
 json_key_steam_changeid = "changeid"
+json_key_steam_name = "name"
+json_key_steam_controller_support = "controller_support"
 json_key_winver = "winver"
 json_key_is_32_bit = "is_32_bit"
 json_key_is_dos = "is_dos"
@@ -141,6 +143,8 @@ json_keys_str_keys = [
     json_key_steam_appid,
     json_key_steam_branchid,
     json_key_steam_changeid,
+    json_key_steam_name,
+    json_key_steam_controller_support,
     json_key_winver
 ]
 

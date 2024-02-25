@@ -68,7 +68,7 @@ def DownloadGame(appid, branchid, output_dir, output_name, platform, arch, login
     return os.path.exists(output_dir)
 
 # Get game info
-def GetGameInfo(appid, branchid, verbose = False, exit_on_failure = False):
+def GetGameInfo(appid, verbose = False, exit_on_failure = False):
 
     # Get steam url
     steam_url = "https://api.steamcmd.net/v1/info/%s" % appid
@@ -89,11 +89,17 @@ def GetGameInfo(appid, branchid, verbose = False, exit_on_failure = False):
         if appid in steam_json["data"]:
             appdata = steam_json["data"][appid]
 
-            # Appid
+            # Base info
             if "appid" in appdata:
                 game_info[config.json_key_steam_appid] = str(appdata["appid"])
-
-            # Change number
-            if "_change_number" in appdata and branchid is None:
+            if "_change_number" in appdata:
                 game_info[config.json_key_steam_changeid] = str(appdata["_change_number"])
+
+            # Common info
+            if "common" in appdata:
+                appcommon = appdata["common"]
+                if "name" in appcommon:
+                    game_info[config.json_key_steam_name] = str(appcommon["name"])
+                if "controller_support" in appcommon:
+                    game_info[config.json_key_steam_controller_support] = str(appcommon["controller_support"])
     return game_info
