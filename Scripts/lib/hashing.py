@@ -353,6 +353,14 @@ def HashFiles(input_path, base_path, output_file, verbose = False, exit_on_failu
             if not success:
                 return False
 
+    # Remove keys regarding files that do not exist
+    for hash_key in sorted(hash_contents.keys()):
+        hashed_file_base = environment.GetGamingStorageRootDir()
+        hashed_file_offset = hash_contents[hash_key]["filename"]
+        hashed_file = os.path.join(hashed_file_base, hashed_file_offset)
+        if not os.path.exists(hashed_file):
+            del hash_contents[hash_key]
+
     # Write hash file
     return WriteHashFile(
         filename = output_file,
@@ -375,7 +383,7 @@ def HashCategoryFiles(input_path, file_supercategory, file_category, file_subcat
         return False
 
     # Get hash file
-    hash_file = os.path.join(environment.GetMainMetadataHashesDir(), file_supercategory, file_category, file_subcategory + ".txt")
+    hash_file = environment.GetHashesMetadataFile(file_supercategory, file_category, file_subcategory)
 
     # Make directories/files
     system.MakeDirectory(
