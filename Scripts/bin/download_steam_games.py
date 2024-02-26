@@ -74,6 +74,7 @@ def main():
         # Get latest steam info
         latest_steam_info = steam.GetGameInfo(
             appid = game_info.get_steam_appid(),
+            branchid = game_info.get_steam_branchid(),
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
 
