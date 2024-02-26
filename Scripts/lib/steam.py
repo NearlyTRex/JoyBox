@@ -68,7 +68,7 @@ def DownloadGame(appid, branchid, output_dir, output_name, platform, arch, login
     return os.path.exists(output_dir)
 
 # Get game info
-def GetGameInfo(appid, verbose = False, exit_on_failure = False):
+def GetGameInfo(appid, branchid, verbose = False, exit_on_failure = False):
 
     # Get steam url
     steam_url = "https://api.steamcmd.net/v1/info/%s" % appid
@@ -85,6 +85,8 @@ def GetGameInfo(appid, verbose = False, exit_on_failure = False):
 
     # Parse game info
     game_info = {}
+    if isinstance(branchid, str) and len(branchid):
+        game_info[config.json_key_steam_branchid] = branchid
     if "data" in steam_json:
         if appid in steam_json["data"]:
             appdata = steam_json["data"][appid]
