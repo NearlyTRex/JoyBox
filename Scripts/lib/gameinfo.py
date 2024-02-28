@@ -81,7 +81,8 @@ class GameInfo:
         self.set_default_subvalue(config.json_key_registry, config.json_key_registry_setup_keys, [])
         self.set_default_subvalue(config.json_key_steam, config.json_key_steam_appid, "")
         self.set_default_subvalue(config.json_key_steam, config.json_key_steam_branchid, "")
-        self.set_default_subvalue(config.json_key_steam, config.json_key_steam_changeid, "")
+        self.set_default_subvalue(config.json_key_steam, config.json_key_steam_buildid, "")
+        self.set_default_subvalue(config.json_key_steam, config.json_key_steam_builddate, "")
 
         ##############################
         # Fill path info
@@ -390,9 +391,13 @@ class GameInfo:
     def get_steam_branchid(self):
         return self.get_subvalue(config.json_key_steam, config.json_key_steam_branchid)
 
-    # Get steam changeid
-    def get_steam_changeid(self):
-        return self.get_subvalue(config.json_key_steam, config.json_key_steam_changeid)
+    # Get steam buildid
+    def get_steam_buildid(self):
+        return self.get_subvalue(config.json_key_steam, config.json_key_steam_buildid)
+
+    # Get steam builddate
+    def get_steam_builddate(self):
+        return self.get_subvalue(config.json_key_steam, config.json_key_steam_builddate)
 
     # Get windows version
     def get_winver(self):
