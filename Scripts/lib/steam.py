@@ -111,7 +111,7 @@ def DownloadGameByJsonFile(json_file, output_dir, platform, arch, login, force_d
         return False
 
     # Download game
-    success = steam.DownloadGameByID(
+    success = DownloadGameByID(
         appid = game_info.get_steam_appid(),
         branchid = game_info.get_steam_branchid(),
         output_dir = os.path.join(output_dir, game_info.get_name()),
