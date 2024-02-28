@@ -155,7 +155,7 @@ if environment.IsWindowsPlatform():
     ini_defaults["Tools.7Zip"]["7z_exe"] = "7z.exe"
     ini_defaults["Tools.7Zip"]["7z_install_dir"] = "%ProgramFiles%\\7-Zip-Zstandard"
 else:
-    ini_defaults["Tools.7Zip"]["7z_exe"] = "7z"
+    ini_defaults["Tools.7Zip"]["7z_exe"] = "7zz"
     ini_defaults["Tools.7Zip"]["7z_install_dir"] = "/usr/bin"
 
 # Tools.Firefox

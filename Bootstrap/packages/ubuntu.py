@@ -275,10 +275,11 @@ packages = [
     "dos2unix",
 
     # Utils
+    "7zip",
+    "7zip-rar",
     "clamav",
     "img2pdf",
     "openssl",
-    "p7zip-full",
     "qt6-l10n-tools",
     "zip",
 
