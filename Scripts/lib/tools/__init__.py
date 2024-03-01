@@ -34,7 +34,7 @@ from . import rclone
 from . import sandboxie
 from . import sevenzip
 from . import sigtop
-from . import steamarchiver
+from . import steamcmd
 from . import steamdepotdownloader
 from . import steamless
 from . import sunshine
@@ -84,7 +84,7 @@ instances = [
     sandboxie.Sandboxie(),
     sevenzip.SevenZip(),
     sigtop.Sigtop(),
-    steamarchiver.SteamArchiver(),
+    steamcmd.SteamCMD(),
     steamdepotdownloader.SteamDepotDownloader(),
     steamless.Steamless(),
     sunshine.Sunshine(),
