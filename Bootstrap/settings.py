@@ -104,6 +104,15 @@ else:
     ini_defaults["Tools.Perl"]["perl_exe"] = "perl"
     ini_defaults["Tools.Perl"]["perl_install_dir"] = "/usr/bin"
 
+# Tools.Steam
+ini_defaults["Tools.Steam"] = {}
+if environment.IsWindowsPlatform():
+    ini_defaults["Tools.Steam"]["steamcmd_exe"] = "steamcmd.exe"
+    ini_defaults["Tools.Steam"]["steamcmd_install_dir"] = "C:\\SteamCMD"
+else:
+    ini_defaults["Tools.Steam"]["steamcmd_exe"] = "steamcmd"
+    ini_defaults["Tools.Steam"]["steamcmd_install_dir"] = "/usr/games"
+
 # Tools.Sandboxie/Wine
 if environment.IsWindowsPlatform():
     ini_defaults["Tools.Sandboxie"] = {}
