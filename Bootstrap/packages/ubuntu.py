@@ -128,6 +128,10 @@ packages = [
     "qttools5-dev-tools",
     "xa65",
 
+    # Games
+    "steam",
+    "steamcmd",
+
     # Gnome
     "brasero",
     "ghex",

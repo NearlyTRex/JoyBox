@@ -24,6 +24,10 @@ packages = [
     "CodecGuide.K-LiteCodecPack.Mega",
     "Nvidia.GeForceExperience",
 
+    # Games
+    "Valve.Steam",
+    "Valve.SteamCMD",
+
     # Graphics
     "GIMP.GIMP",
     "VideoLAN.VLC",
