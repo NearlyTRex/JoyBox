@@ -19,7 +19,7 @@ def DownloadGameByName(
     platform,
     include = "",
     exclude = "",
-    clean_output_first = False,
+    clean_output = False,
     verbose = False,
     exit_on_failure = False):
 
@@ -69,8 +69,8 @@ def DownloadGameByName(
         system.LogError("Files were not downloaded successfully")
         return False
 
-    # Clean output first
-    if clean_output_first:
+    # Clean output
+    if clean_output:
         system.RemoveDirectoryContents(
             dir = output_dir,
             verbose = verbose,
@@ -148,7 +148,7 @@ def DownloadGameByJsonFile(
         output_dir = output_dir,
         platform = platform,
         include = "i,e",
-        clean_output_first = True,
+        clean_output = True,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
