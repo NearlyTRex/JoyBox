@@ -230,6 +230,7 @@ def GetGameInfo(appid, branchid, verbose = False, exit_on_failure = False):
 
     # Build game info
     game_info = {}
+    game_info[config.json_key_steam_appid] = appid
     if isinstance(branchid, str) and len(branchid):
         game_info[config.json_key_steam_branchid] = branchid
     else:
