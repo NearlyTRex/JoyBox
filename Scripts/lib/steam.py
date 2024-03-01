@@ -26,10 +26,10 @@ def DownloadGameByID(
     exit_on_failure = False):
 
     # Get tool
-    steam_tool = None
+    steamdepot_tool = None
     if programs.IsToolInstalled("SteamDepotDownloader"):
-        steam_tool = programs.GetToolProgram("SteamDepotDownloader")
-    if not steam_tool:
+        steamdepot_tool = programs.GetToolProgram("SteamDepotDownloader")
+    if not steamdepot_tool:
         system.LogError("SteamDepotDownloader was not found")
         sys.exit(1)
 
@@ -46,7 +46,7 @@ def DownloadGameByID(
 
     # Get download command
     download_cmd = [
-        steam_tool,
+        steamdepot_tool,
         "-app", appid,
         "-os", platform,
         "-osarch", arch,
@@ -66,7 +66,7 @@ def DownloadGameByID(
     command.RunBlockingCommand(
         cmd = download_cmd,
         options = command.CommandOptions(
-            blocking_processes = [steam_tool]),
+            blocking_processes = [steamdepot_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
@@ -184,50 +184,72 @@ def DownloadGameByJsonFile(
 # Get game info
 def GetGameInfo(appid, branchid, verbose = False, exit_on_failure = False):
 
-    # Get steam url
-    steam_url = "https://api.steamcmd.net/v1/info/%s" % appid
-
-    # Get steam json
-    steam_json = network.GetRemoteJson(
-        url = steam_url,
-        headers = {"Accept": "application/json"},
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-    if not steam_json:
-        system.LogError("Unable to find steam release information from '%s'" % steam_url)
+    # Get tool
+    steamcmd_tool = None
+    if programs.IsToolInstalled("SteamCMD"):
+        steamcmd_tool = programs.GetToolProgram("SteamCMD")
+    if not steamcmd_tool:
+        system.LogError("SteamCMD was not found")
         return False
 
-    # Parse game info
+    # Get info command
+    info_cmd = [
+        steamcmd_tool,
+        "+login", "anonymous",
+        "+app_info_print", appid,
+        "+quit"
+    ]
+
+    # Run info command
+    info_output = command.RunOutputCommand(
+        cmd = info_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [steamcmd_tool]),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if len(info_output) == 0:
+        system.LogError("Unable to find steam information for '%s'" % appid)
+        return False
+
+    # Get steam json
+    steam_json = {}
+    try:
+        import vdf
+        vdf_text = ""
+        is_vdf_line = False
+        for line in info_output.split("\n"):
+            if is_vdf_line:
+                vdf_text += line + "\n"
+            else:
+                if line.startswith("AppID : %s" % appid):
+                    is_vdf_line = True
+        steam_json = vdf.loads(vdf_text)
+    except:
+        system.LogError("Unable to parse steam information for '%s'" % appid)
+        return False
+
+    # Build game info
     game_info = {}
     if isinstance(branchid, str) and len(branchid):
         game_info[config.json_key_steam_branchid] = branchid
     else:
         game_info[config.json_key_steam_branchid] = "public"
-    if "data" in steam_json:
-        if appid in steam_json["data"]:
-            appdata = steam_json["data"][appid]
-
-            # Base info
-            if "appid" in appdata:
-                game_info[config.json_key_steam_appid] = str(appdata["appid"])
-
-            # Common info
-            if "common" in appdata:
-                appcommon = appdata["common"]
-                if "name" in appcommon:
-                    game_info[config.json_key_steam_name] = str(appcommon["name"])
-                if "controller_support" in appcommon:
-                    game_info[config.json_key_steam_controller_support] = str(appcommon["controller_support"])
-
-            # Depots info
-            if "depots" in appdata:
-                appdepots = appdata["depots"]
-                if "branches" in appdepots:
-                    appbranches = appdepots["branches"]
-                    if isinstance(branchid, str) and len(branchid) and branchid in appbranches:
-                        appbranch = appbranches[branchid]
-                        if "buildid" in appbranch:
-                            game_info[config.json_key_steam_buildid] = str(appbranch["buildid"])
-                        if "timeupdated" in appbranch:
-                            game_info[config.json_key_steam_builddate] = str(appbranch["timeupdated"])
+    if appid in steam_json:
+        appdata = steam_json[appid]
+        if "common" in appdata:
+            appcommon = appdata["common"]
+            if "name" in appcommon:
+                game_info[config.json_key_steam_name] = str(appcommon["name"])
+            if "controller_support" in appcommon:
+                game_info[config.json_key_steam_controller_support] = str(appcommon["controller_support"])
+        if "depots" in appdata:
+            appdepots = appdata["depots"]
+            if "branches" in appdepots:
+                appbranches = appdepots["branches"]
+                if isinstance(branchid, str) and len(branchid) and branchid in appbranches:
+                    appbranch = appbranches[branchid]
+                    if "buildid" in appbranch:
+                        game_info[config.json_key_steam_buildid] = str(appbranch["buildid"])
+                    if "timeupdated" in appbranch:
+                        game_info[config.json_key_steam_builddate] = str(appbranch["timeupdated"])
     return game_info
