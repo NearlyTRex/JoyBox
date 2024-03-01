@@ -34,6 +34,7 @@ parser.add_argument("-r", "--arch",
 )
 parser.add_argument("-l", "--login", type=str, help="Steam login username")
 parser.add_argument("-f", "--force_download", action="store_true", help="Always download")
+parser.add_argument("-o", "--output_dir", type=str, help="Output directory")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
@@ -57,6 +58,7 @@ def main():
             platform = args.platform,
             arch = args.arch,
             login = args.login,
+            output_dir = args.output_dir,
             force_download = args.force_download,
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)

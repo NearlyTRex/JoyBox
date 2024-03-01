@@ -21,7 +21,7 @@ def DownloadGameByID(
     platform,
     arch,
     login,
-    clean_output_first = False,
+    clean_output = False,
     verbose = False,
     exit_on_failure = False):
 
@@ -87,8 +87,8 @@ def DownloadGameByID(
         system.RemoveDirectory(tmp_dir_result, verbose = verbose)
         return False
 
-    # Clean output first
-    if clean_output_first:
+    # Clean output
+    if clean_output:
         system.RemoveDirectoryContents(
             dir = output_dir,
             verbose = verbose,
@@ -117,6 +117,7 @@ def DownloadGameByJsonFile(
     platform,
     arch,
     login,
+    output_dir = None,
     force_download = False,
     verbose = False,
     exit_on_failure = False):
@@ -138,30 +139,38 @@ def DownloadGameByJsonFile(
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
+    # Get build ids
+    old_buildid = game_info.get_steam_buildid()
+    new_buildid = latest_steam_info[config.json_key_steam_buildid]
+
     # Check if game should be downloaded
     should_download = False
     if force_download:
         should_download = True
-    elif game_info.get_steam_buildid() == "":
+    elif len(old_buildid) == 0:
         should_download = True
     else:
-        old_buildid = game_info.get_steam_buildid()
-        new_buildid = latest_steam_info[config.json_key_steam_buildid]
         if new_buildid.isnumeric() and old_buildid.isnumeric():
             should_download = int(new_buildid) > int(old_buildid)
     if not should_download:
         return False
 
+    # Get output dir
+    if output_dir:
+        output_dir = os.path.realpath(output_dir)
+    else:
+        output_dir = environment.GetRomDir(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+
     # Download game
     success = DownloadGameByID(
         appid = game_info.get_steam_appid(),
         branchid = game_info.get_steam_branchid(),
-        output_dir = environment.GetRomDir(game_info.get_category(), game_info.get_subcategory(), game_info.get_name()),
+        output_dir = output_dir,
         output_name = game_info.get_name(),
         platform = platform,
         arch = arch,
         login = login,
-        clean_output_first = True,
+        clean_output = True,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
