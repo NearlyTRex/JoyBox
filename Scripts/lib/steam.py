@@ -10,9 +10,20 @@ import programs
 import network
 import gameinfo
 import system
+import environment
 
 # Download game by id
-def DownloadGameByID(appid, branchid, output_dir, output_name, platform, arch, login, verbose = False, exit_on_failure = False):
+def DownloadGameByID(
+    appid,
+    branchid,
+    output_dir,
+    output_name,
+    platform,
+    arch,
+    login,
+    clean_output_first = False,
+    verbose = False,
+    exit_on_failure = False):
 
     # Get tool
     steam_tool = None
@@ -27,13 +38,19 @@ def DownloadGameByID(appid, branchid, output_dir, output_name, platform, arch, l
     if not tmp_dir_success:
         return False
 
+    # Make temporary dirs
+    tmp_dir_download = os.path.join(tmp_dir_result, "download")
+    tmp_dir_archive = os.path.join(tmp_dir_result, "archive")
+    system.MakeDirectory(tmp_dir_download, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(tmp_dir_archive, verbose = verbose, exit_on_failure = exit_on_failure)
+
     # Get download command
     download_cmd = [
         steam_tool,
         "-app", appid,
         "-os", platform,
         "-osarch", arch,
-        "-dir", tmp_dir_result
+        "-dir", tmp_dir_download
     ]
     if isinstance(branchid, str) and len(branchid) and branchid != "public":
         download_cmd += [
@@ -54,16 +71,34 @@ def DownloadGameByID(appid, branchid, output_dir, output_name, platform, arch, l
         exit_on_failure = exit_on_failure)
 
     # Check that files downloaded
-    if system.IsDirectoryEmpty(tmp_dir_result):
+    if system.IsDirectoryEmpty(tmp_dir_download):
         system.LogError("Files were not downloaded successfully")
         return False
 
     # Archive downloaded files
     success = archive.CreateArchiveFromFolder(
-        archive_file = os.path.join(output_dir, "%s.7z" % output_name),
-        source_dir = tmp_dir_result,
+        archive_file = os.path.join(tmp_dir_archive, "%s.7z" % output_name),
+        source_dir = tmp_dir_download,
         excludes = [".DepotDownloader"],
         volume_size = "4092m",
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        return False
+
+    # Clean output first
+    if clean_output_first:
+        system.RemoveDirectoryContents(
+            dir = output_dir,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
+    # Move archived files
+    success = system.MoveContents(
+        src = tmp_dir_archive,
+        dest = output_dir,
+        show_progress = True,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
@@ -77,7 +112,14 @@ def DownloadGameByID(appid, branchid, output_dir, output_name, platform, arch, l
     return os.path.exists(output_dir)
 
 # Download game by json file
-def DownloadGameByJsonFile(json_file, output_dir, platform, arch, login, force_download = False, verbose = False, exit_on_failure = False):
+def DownloadGameByJsonFile(
+    json_file,
+    platform,
+    arch,
+    login,
+    force_download = False,
+    verbose = False,
+    exit_on_failure = False):
 
     # Get game info
     game_info = gameinfo.GameInfo(
@@ -114,11 +156,12 @@ def DownloadGameByJsonFile(json_file, output_dir, platform, arch, login, force_d
     success = DownloadGameByID(
         appid = game_info.get_steam_appid(),
         branchid = game_info.get_steam_branchid(),
-        output_dir = os.path.join(output_dir, game_info.get_name()),
+        output_dir = environment.GetRomDir(game_info.get_category(), game_info.get_subcategory(), game_info.get_name()),
         output_name = game_info.get_name(),
         platform = platform,
         arch = arch,
         login = login,
+        clean_output_first = True,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:

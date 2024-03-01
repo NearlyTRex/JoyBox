@@ -15,8 +15,7 @@ import setup
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Download Steam games.")
-parser.add_argument("-i", "--input_dir", type=str, default=".", help="Input directory")
-parser.add_argument("-o", "--output_dir", type=str, default=".", help="Output directory")
+parser.add_argument("input_path", type=str, default=".", help="Input path")
 parser.add_argument("-p", "--platform",
     choices=[
         "windows",
@@ -39,16 +38,10 @@ parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
-# Get input dir
-input_dir = os.path.realpath(args.input_dir)
-if not os.path.exists(input_dir):
-    system.LogError("Path '%s' does not exist" % args.input_dir)
-    sys.exit(-1)
-
-# Get output dir
-output_dir = os.path.realpath(args.output_dir)
-if not os.path.exists(output_dir):
-    system.LogError("Path '%s' does not exist" % args.output_dir)
+# Get input path
+input_path = os.path.realpath(args.input_path)
+if not os.path.exists(input_path):
+    system.LogError("Path '%s' does not exist" % args.input_path)
     sys.exit(-1)
 
 # Main
@@ -58,10 +51,9 @@ def main():
     setup.CheckRequirements()
 
     # Download games
-    for json_file in system.BuildFileListByExtensions(input_dir, extensions = [".json"]):
+    for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
         steam.DownloadGameByJsonFile(
             json_file = json_file,
-            output_dir = output_dir,
             platform = args.platform,
             arch = args.arch,
             login = args.login,
