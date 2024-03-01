@@ -370,7 +370,7 @@ def GetRomDirOffset(rom_category, rom_subcategory, rom_name):
 
 # Get rom dir
 def GetRomDir(rom_category, rom_subcategory, rom_name):
-    return os.path.join(GetRomRootDir(), GetRomDirOffset(rom_category, rom_subcategory, rom_name_path))
+    return os.path.join(GetRomRootDir(), GetRomDirOffset(rom_category, rom_subcategory, rom_name))
 
 # Get dlc root dir
 def GetDLCRootDir():
