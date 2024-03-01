@@ -362,11 +362,15 @@ def GetGamingStorageRootDir():
 def GetRomRootDir():
     return os.path.join(GetGamingStorageRootDir(), config.game_supercategory_roms)
 
-# Get rom dir
-def GetRomDir(rom_category, rom_subcategory, rom_name):
+# Get rom dir offset
+def GetRomDirOffset(rom_category, rom_subcategory, rom_name):
     rom_platform = gameinfo.DeriveGamePlatformFromCategories(rom_category, rom_subcategory)
     rom_name_path = gameinfo.DeriveGameNamePathFromName(rom_name, rom_platform)
-    return os.path.join(GetRomRootDir(), rom_category, rom_subcategory, rom_name_path)
+    return os.path.join(rom_category, rom_subcategory, rom_name_path)
+
+# Get rom dir
+def GetRomDir(rom_category, rom_subcategory, rom_name):
+    return os.path.join(GetRomRootDir(), GetRomDirOffset(rom_category, rom_subcategory, rom_name_path))
 
 # Get dlc root dir
 def GetDLCRootDir():
