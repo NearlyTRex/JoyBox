@@ -83,6 +83,10 @@ class GameInfo:
         self.set_default_subvalue(config.json_key_steam, config.json_key_steam_branchid, "")
         self.set_default_subvalue(config.json_key_steam, config.json_key_steam_buildid, "")
         self.set_default_subvalue(config.json_key_steam, config.json_key_steam_builddate, "")
+        self.set_default_subvalue(config.json_key_gog, config.json_key_gog_appid, "")
+        self.set_default_subvalue(config.json_key_gog, config.json_key_gog_appname, "")
+        self.set_default_subvalue(config.json_key_gog, config.json_key_gog_name, "")
+        self.set_default_subvalue(config.json_key_gog, config.json_key_gog_buildid, "")
 
         ##############################
         # Fill path info
@@ -359,6 +363,8 @@ class GameInfo:
     def get_sandboxie_setup(self):
         return self.get_subvalue(config.json_key_sandbox, config.json_key_sandbox_sandboxie)
 
+    ##############################
+
     # Get preinstall steps
     def get_preinstall_steps(self):
         return self.get_subvalue(config.json_key_steps, config.json_key_steps_preinstall)
@@ -366,6 +372,8 @@ class GameInfo:
     # Get postinstall steps
     def get_postinstall_steps(self):
         return self.get_subvalue(config.json_key_steps, config.json_key_steps_postinstall)
+
+    ##############################
 
     # Get sync search
     def get_sync_search(self):
@@ -375,6 +383,8 @@ class GameInfo:
     def get_sync_data(self):
         return self.get_subvalue(config.json_key_sync, config.json_key_sync_data)
 
+    ##############################
+
     # Get whether to keep setup registry
     def get_keep_setup_registry(self):
         return self.get_subvalue(config.json_key_registry, config.json_key_registry_keep_setup)
@@ -382,6 +392,8 @@ class GameInfo:
     # Get setup registry keys
     def get_setup_registry_keys(self):
         return self.get_subvalue(config.json_key_registry, config.json_key_registry_setup_keys)
+
+    ##############################
 
     # Get steam appid
     def get_steam_appid(self):
@@ -398,6 +410,26 @@ class GameInfo:
     # Get steam builddate
     def get_steam_builddate(self):
         return self.get_subvalue(config.json_key_steam, config.json_key_steam_builddate)
+
+    ##############################
+
+    # Get gog appid
+    def get_gog_appid(self):
+        return self.get_subvalue(config.json_key_gog, config.json_key_gog_appid)
+
+    # Get gog appname
+    def get_gog_appname(self):
+        return self.get_subvalue(config.json_key_gog, config.json_key_gog_appname)
+
+    # Get gog name
+    def get_gog_name(self):
+        return self.get_subvalue(config.json_key_gog, config.json_key_gog_name)
+
+    # Get gog buildid
+    def get_gog_buildid(self):
+        return self.get_subvalue(config.json_key_gog, config.json_key_gog_buildid)
+
+    ##############################
 
     # Get windows version
     def get_winver(self):
