@@ -157,7 +157,8 @@ def DownloadGameByJsonFile(
 
     # Get output dir
     if output_dir:
-        output_dir = os.path.realpath(output_dir)
+        output_offset = environment.GetRomDirOffset(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+        output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
     else:
         output_dir = environment.GetRomDir(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
 
