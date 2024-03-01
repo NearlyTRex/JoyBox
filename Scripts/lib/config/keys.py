@@ -124,6 +124,11 @@ json_key_steam_buildid = "buildid"
 json_key_steam_builddate = "builddate"
 json_key_steam_name = "name"
 json_key_steam_controller_support = "controller_support"
+json_key_gog = "gog"
+json_key_gog_appid = "appid"
+json_key_gog_appname = "appname"
+json_key_gog_name = "name"
+json_key_gog_buildid = "buildid"
 json_key_winver = "winver"
 json_key_is_32_bit = "is_32_bit"
 json_key_is_dos = "is_dos"
@@ -147,6 +152,10 @@ json_keys_str_keys = [
     json_key_steam_builddate,
     json_key_steam_name,
     json_key_steam_controller_support,
+    json_key_gog_appid,
+    json_key_gog_appname,
+    json_key_gog_name,
+    json_key_gog_buildid,
     json_key_winver
 ]
 
@@ -185,7 +194,8 @@ json_keys_dict_keys = [
     json_key_steps,
     json_key_sync,
     json_key_registry,
-    json_key_steam
+    json_key_steam,
+    json_key_gog
 ]
 
 # Json bool keys
