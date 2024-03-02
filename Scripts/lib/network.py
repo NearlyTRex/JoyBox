@@ -15,6 +15,7 @@ import programs
 import installer
 import webpage
 import registry
+import hashing
 
 ###########################################################
 # Info
@@ -50,12 +51,12 @@ def GetRemoteJson(url, headers, verbose = False, exit_on_failure = False):
         return None
 
 # Post remote json
-def PostRemoteJson(url, headers, json = None, verbose = False, exit_on_failure = False):
+def PostRemoteJson(url, headers, data = None, verbose = False, exit_on_failure = False):
     try:
         if verbose:
             system.Log("Processing POST request to '%s'" % url)
         import requests
-        post = requests.post(url, headers=headers, json=json)
+        post = requests.post(url, headers=headers, json=data)
         if post.status_code == 200:
             return post.json()
         return None
@@ -351,12 +352,47 @@ def DownloadGithubRepository(
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
+# Update github repository
+def UpdateGithubRepository(
+    github_user,
+    github_repo,
+    github_branch,
+    github_token = None,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Get update url
+    update_url = "https://api.github.com/repos/%s/%s/merge-upstream" % (github_user, github_repo)
+
+    # Post update json
+    update_response = PostRemoteJson(
+        url = update_url,
+        headers = {
+            "Accept": "application/vnd.github+json",
+            "Authorization": "Bearer %s" % github_token,
+            "X-GitHub-Api-Version": "2022-11-28"
+        },
+        data = {
+            "branch": github_branch
+        },
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not update_response:
+        return False
+
+    # Print response
+    if "message" in update_response:
+        system.LogSuccess(update_response["message"])
+
+    # Should be successful
+    return True
+
 # Archive github repository
 def ArchiveGithubRepository(
     github_user,
     github_repo,
     github_token = None,
-    output_file = "",
+    output_dir = "",
     recursive = True,
     clean_first = False,
     verbose = False,
@@ -367,12 +403,20 @@ def ArchiveGithubRepository(
     if not tmp_dir_success:
         return False
 
+    # Make temporary dirs
+    tmp_dir_download = os.path.join(tmp_dir_result, "download")
+    tmp_dir_archive = os.path.join(tmp_dir_result, "archive")
+    tmp_file_archive = os.path.join(tmp_dir_archive, "tmp.zip")
+    out_file_archive = os.path.join(output_dir, github_repo + "_" + str(environment.GetCurrentTimestamp()) + ".zip")
+    system.MakeDirectory(tmp_dir_download, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(tmp_dir_archive, verbose = verbose, exit_on_failure = exit_on_failure)
+
     # Download repository
     success = DownloadGithubRepository(
         github_user = github_user,
         github_repo = github_repo,
         github_token = github_token,
-        output_dir = tmp_dir_result,
+        output_dir = tmp_dir_download,
         recursive = recursive,
         clean_first = clean_first,
         verbose = verbose,
@@ -383,7 +427,7 @@ def ArchiveGithubRepository(
     # Remove git folder
     if clean_first:
         success = system.RemoveDirectory(
-            dir = os.path.join(tmp_dir_result, ".git"),
+            dir = os.path.join(tmp_dir_download, ".git"),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not success:
@@ -391,8 +435,27 @@ def ArchiveGithubRepository(
 
     # Archive repository
     success = archive.CreateArchiveFromFolder(
-        archive_file = output_file,
-        source_dir = tmp_dir_result,
+        archive_file = tmp_file_archive,
+        source_dir = tmp_dir_download,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Check if already archived
+    found_files = hashing.FindDuplicateArchives(
+        filename = tmp_file_archive,
+        directory = output_dir)
+    if len(found_files) > 0:
+        if verbose:
+            system.Log("Repository '%s' - '%s' is already archived, skipping ..." % (github_user, github_repo))
+        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        return True
+
+    # Move archive
+    success = system.SmartMove(
+        src = tmp_file_archive,
+        dest = out_file_archive,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
@@ -402,4 +465,4 @@ def ArchiveGithubRepository(
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
 
     # Check result
-    return os.path.exists(output_file)
+    return os.path.exists(out_file_archive)
