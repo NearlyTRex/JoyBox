@@ -34,7 +34,7 @@ parser.add_argument("-r", "--arch",
 )
 parser.add_argument("-l", "--login", type=str, help="Steam login username")
 parser.add_argument("-f", "--force_download", action="store_true", help="Always download")
-parser.add_argument("-o", "--output_dir", type=str, help="Output directory")
+parser.add_argument("-o", "--output_dir", type=str, default=".", help="Output directory")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
@@ -53,7 +53,7 @@ def main():
 
     # Download games
     for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
-        steam.DownloadGameByJsonFile(
+        success = steam.DownloadGameByJsonFile(
             json_file = json_file,
             platform = args.platform,
             arch = args.arch,
@@ -62,6 +62,8 @@ def main():
             force_download = args.force_download,
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
+        if not success:
+            break
 
 # Start
 main()
