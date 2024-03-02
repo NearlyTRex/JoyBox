@@ -382,7 +382,11 @@ def UpdateGithubRepository(
 
     # Print response
     if "message" in update_response:
-        system.LogSuccess(update_response["message"])
+        update_message = update_response["message"]
+        if "success" in update_message.lower():
+            system.LogSuccess("Repository '%s' - '%s' was successfully updated from upstream" % (github_user, github_repo))
+        if "branch is not behind" in update_message.lower():
+            system.LogInfo("Repository '%s' - '%s' was already up to date with upstream" % (github_user, github_repo))
 
     # Should be successful
     return True
