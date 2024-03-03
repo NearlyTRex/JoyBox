@@ -98,6 +98,7 @@ def DownloadGameByJsonFile(
     json_file,
     platform,
     output_dir = None,
+    skip_downloaded = False,
     force_download = False,
     verbose = False,
     exit_on_failure = False):
@@ -111,6 +112,15 @@ def DownloadGameByJsonFile(
     # Ignore non-gog games
     if game_info.get_gog_appid() == "":
         return False
+
+    # Get output dir
+    if output_dir:
+        output_offset = environment.GetRomDirOffset(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+        output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
+    else:
+        output_dir = environment.GetRomDir(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+    if skip_downloaded and system.DoesDirectoryContainFiles(output_dir):
+        return True
 
     # Get latest gog info
     latest_gog_info = GetGameInfo(
@@ -136,12 +146,7 @@ def DownloadGameByJsonFile(
     if not should_download:
         return False
 
-    # Get output dir
-    if output_dir:
-        output_offset = environment.GetRomDirOffset(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
-        output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
-    else:
-        output_dir = environment.GetRomDir(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+
 
     # Download game
     success = DownloadGameByName(

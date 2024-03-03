@@ -24,6 +24,7 @@ parser.add_argument("-p", "--platform",
     default="windows",
     help="Download platform"
 )
+parser.add_argument("-s", "--skip_downloaded", action="store_true", help="Skip already downloaded")
 parser.add_argument("-f", "--force_download", action="store_true", help="Always download")
 parser.add_argument("-o", "--output_dir", type=str, default=".", help="Output directory")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
@@ -48,6 +49,7 @@ def main():
             json_file = json_file,
             platform = args.platform,
             output_dir = args.output_dir,
+            skip_downloaded = args.skip_downloaded,
             force_download = args.force_download,
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)

@@ -118,6 +118,7 @@ def DownloadGameByJsonFile(
     arch,
     login,
     output_dir = None,
+    skip_downloaded = False,
     force_download = False,
     verbose = False,
     exit_on_failure = False):
@@ -131,6 +132,15 @@ def DownloadGameByJsonFile(
     # Ignore non-steam games
     if game_info.get_steam_appid() == "":
         return False
+
+    # Get output dir
+    if output_dir:
+        output_offset = environment.GetRomDirOffset(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+        output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
+    else:
+        output_dir = environment.GetRomDir(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+    if skip_downloaded and system.DoesDirectoryContainFiles(output_dir):
+        return True
 
     # Get latest steam info
     latest_steam_info = GetGameInfo(
@@ -155,12 +165,7 @@ def DownloadGameByJsonFile(
     if not should_download:
         return False
 
-    # Get output dir
-    if output_dir:
-        output_offset = environment.GetRomDirOffset(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
-        output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
-    else:
-        output_dir = environment.GetRomDir(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+
 
     # Download game
     success = DownloadGameByID(
