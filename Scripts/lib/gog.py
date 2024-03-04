@@ -40,7 +40,7 @@ def DownloadGameByName(
     download_cmd = [
         gog_tool,
         "--download",
-        "--game=%s" % appname,
+        "--game=^%s$" % appname,
         "--platform=%s" % platform,
         "--directory=%s" % tmp_dir_result,
         "--check-free-space",
@@ -145,8 +145,6 @@ def DownloadGameByJsonFile(
         should_download = new_buildid != old_buildid
     if not should_download:
         return False
-
-
 
     # Download game
     success = DownloadGameByName(
