@@ -36,7 +36,7 @@ class XCITrimmer(toolbase.ToolBase):
                 github_user = "NearlyTRex",
                 github_repo = "XCITrimmer",
                 output_dir = programs.GetLibraryInstallDir("XCITrimmer"),
-                clean_first = True,
+                clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup XCITrimmer")

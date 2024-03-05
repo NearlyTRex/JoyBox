@@ -90,7 +90,7 @@ class Pegasus(toolbase.ToolBase):
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
                 output_dir = os.path.join(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "windows"), "PegasusThemeGrid"),
-                clean_first = True,
+                clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Pegasus theme")
@@ -120,7 +120,7 @@ class Pegasus(toolbase.ToolBase):
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
                 output_dir = os.path.join(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "linux"), "PegasusThemeGrid"),
-                clean_first = True,
+                clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Pegasus theme")

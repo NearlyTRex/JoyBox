@@ -36,7 +36,7 @@ class PySimpleGUI(toolbase.ToolBase):
                 github_user = "NearlyTRex",
                 github_repo = "PySimpleGUI",
                 output_dir = programs.GetLibraryInstallDir("PySimpleGUI"),
-                clean_first = True,
+                clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PySimpleGUI")

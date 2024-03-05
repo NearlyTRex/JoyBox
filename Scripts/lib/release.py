@@ -455,7 +455,7 @@ def BuildAppImageFromSource(
         success = network.DownloadGitUrl(
             url = release_url,
             output_dir = source_dir,
-            clean_first = True,
+            clean = True,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not success:

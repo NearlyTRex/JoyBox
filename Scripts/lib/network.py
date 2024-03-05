@@ -128,12 +128,12 @@ def DownloadGitUrl(
     url,
     output_dir,
     recursive = True,
-    clean_first = False,
+    clean = False,
     verbose = False,
     exit_on_failure = False):
 
     # Clear output dir
-    if clean_first:
+    if clean:
         system.ChmodFileOrDirectory(
             src = output_dir,
             perms = 777,
@@ -303,6 +303,8 @@ def GetGithubRepository(
 def GetGithubRepositories(
     github_user,
     github_token = None,
+    include_repos = [],
+    exclude_repos = [],
     exclude_forks = False,
     exclude_private = False,
     verbose = False,
@@ -322,6 +324,10 @@ def GetGithubRepositories(
                 continue
             if exclude_private and repo.private:
                 continue
+            if len(include_repos) > 0 and repo.name not in include_repos:
+                continue
+            if len(exclude_repos) > 0 and repo.name in exclude_repos:
+                continue
             repositories.append(repo)
         return repositories
     except Exception as e:
@@ -338,7 +344,7 @@ def DownloadGithubRepository(
     github_token = None,
     output_dir = "",
     recursive = True,
-    clean_first = False,
+    clean = False,
     verbose = False,
     exit_on_failure = False):
     github_url = "https://github.com/%s/%s.git" % (github_user, github_repo)
@@ -348,7 +354,7 @@ def DownloadGithubRepository(
         url = github_url,
         output_dir = output_dir,
         recursive = recursive,
-        clean_first = clean_first,
+        clean = clean,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
@@ -398,7 +404,7 @@ def ArchiveGithubRepository(
     github_token = None,
     output_dir = "",
     recursive = True,
-    clean_first = False,
+    clean = False,
     verbose = False,
     exit_on_failure = False):
 
@@ -422,14 +428,14 @@ def ArchiveGithubRepository(
         github_token = github_token,
         output_dir = tmp_dir_download,
         recursive = recursive,
-        clean_first = clean_first,
+        clean = clean,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
 
     # Remove git folder
-    if clean_first:
+    if clean:
         success = system.RemoveDirectory(
             dir = os.path.join(tmp_dir_download, ".git"),
             verbose = verbose,

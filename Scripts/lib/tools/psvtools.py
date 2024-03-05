@@ -36,7 +36,7 @@ class PSVTools(toolbase.ToolBase):
                 github_user = "NearlyTRex",
                 github_repo = "PSVTools",
                 output_dir = programs.GetLibraryInstallDir("PSVTools"),
-                clean_first = True,
+                clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PSVTools")

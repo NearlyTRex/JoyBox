@@ -32,7 +32,7 @@ class AppIcons(toolbase.ToolBase):
                 github_user = "NearlyTRex",
                 github_repo = "BostonIcons",
                 output_dir = programs.GetLibraryInstallDir("AppIcons"),
-                clean_first = True,
+                clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not download AppIcons")

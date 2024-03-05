@@ -44,7 +44,7 @@ class XorrISO(toolbase.ToolBase):
                 github_user = "PeyTy",
                 github_repo = "xorriso-exe-for-windows",
                 output_dir = programs.GetProgramInstallDir("XorrISO", "windows"),
-                clean_first = True,
+                clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup XorrISO")

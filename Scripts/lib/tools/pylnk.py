@@ -36,7 +36,7 @@ class PyLnk(toolbase.ToolBase):
                 github_user = "NearlyTRex",
                 github_repo = "PyLnk",
                 output_dir = programs.GetLibraryInstallDir("PyLnk"),
-                clean_first = True,
+                clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PyLnk")
