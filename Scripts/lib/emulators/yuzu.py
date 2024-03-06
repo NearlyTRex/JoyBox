@@ -119,34 +119,24 @@ class Yuzu(emulatorbase.EmulatorBase):
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):
 
-        # Download windows program
+        # Setup windows program
         if programs.ShouldProgramBeInstalled("Yuzu", "windows"):
-            success = release.DownloadGithubRelease(
-                github_user = "yuzu-emu",
-                github_repo = "yuzu-mainline",
-                starts_with = "yuzu-windows-msvc",
-                ends_with = ".7z",
-                search_file = "yuzu.exe",
+            success = release.SetupGeneralRelease(
+                archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Yuzu"), "windows", "yuzu-windows-msvc-20240304-537296095.zip"),
                 install_name = "Yuzu",
                 install_dir = programs.GetProgramInstallDir("Yuzu", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Yuzu", "windows"),
-                get_latest = True,
+                search_file = "yuzu.exe",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Yuzu")
 
-        # Download linux program
+        # Setup linux program
         if programs.ShouldProgramBeInstalled("Yuzu", "linux"):
-            success = release.DownloadGithubRelease(
-                github_user = "yuzu-emu",
-                github_repo = "yuzu-mainline",
-                starts_with = "yuzu-mainline",
-                ends_with = ".AppImage",
-                search_file = "Yuzu.AppImage",
+            success = release.SetupGeneralRelease(
+                archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Yuzu"), "linux", "yuzu-mainline-20240304-537296095.AppImage"),
                 install_name = "Yuzu",
                 install_dir = programs.GetProgramInstallDir("Yuzu", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Yuzu", "linux"),
-                get_latest = True,
+                search_file = "Yuzu.AppImage",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Yuzu")
