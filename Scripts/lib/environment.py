@@ -219,8 +219,8 @@ def GetSyncedGamingEmulatorsRootDir():
     return os.path.join(GetSyncedGamingRootDir(), "Emulators")
 
 # Get synced game emulator binaries dir
-def GetSyncedGameEmulatorBinariesDir(emu_name):
-    return os.path.join(GetSyncedGamingEmulatorsRootDir(), emu_name, "Binaries")
+def GetSyncedGameEmulatorBinariesDir(emu_name, emu_platform):
+    return os.path.join(GetSyncedGamingEmulatorsRootDir(), emu_name, "Binaries", emu_platform)
 
 # Get synced game emulator setup dir
 def GetSyncedGameEmulatorSetupDir(emu_name):
