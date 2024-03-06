@@ -27,9 +27,11 @@ parser.add_argument("-a", "--action",
 parser.add_argument("-u", "--github_username", type=str, help="Github username")
 parser.add_argument("-t", "--github_access_token", type=str, help="Github access token")
 parser.add_argument("-d", "--archive_base_dir", type=str, default=environment.GetSyncedDevelopmentArchiveDir(), help="Archive base directory")
+parser.add_argument("-i", "--include_repos", type=str, default="", help="Only include these repos (comma delimited)")
+parser.add_argument("-e", "--exclude_repos", type=str, default="", help="Use all repos except these (comma delimited)")
 parser.add_argument("-f", "--force", action="store_true", help="Force action")
 parser.add_argument("-r", "--recursive", action="store_true", help="Use recursion")
-parser.add_argument("-c", "--clean_first", action="store_true", help="Use cleaning first")
+parser.add_argument("-c", "--clean", action="store_true", help="Use cleaning first")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
@@ -58,37 +60,51 @@ def main():
     if not github_access_token:
         github_access_token = ini.GetIniValue("UserData.GitHub", "github_access_token")
 
+    # Get include/exclude lists
+    include_repos = []
+    exclude_repos = []
+    if len(args.include_repos):
+        include_repos = args.include_repos.split(",")
+    if len(args.exclude_repos):
+        exclude_repos = args.exclude_repos.split(",")
+
     # Get github repositories
     github_repositories = network.GetGithubRepositories(
         github_user = github_username,
         github_token = github_access_token,
+        include_repos = include_repos,
+        exclude_repos = exclude_repos,
         verbose = args.verbose,
         exit_on_failure = args.exit_on_failure)
 
     # Archive repositories
     if args.action == "archive":
         for github_repository in github_repositories:
-            network.ArchiveGithubRepository(
+            success = network.ArchiveGithubRepository(
                 github_user = github_username,
                 github_repo = github_repository.name,
                 github_token = github_access_token,
                 output_dir = os.path.join(archive_base_dir, github_username, github_repository.name),
                 recursive = args.recursive,
-                clean_first = args.clean_first,
+                clean = args.clean,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
+            if not success:
+                break
 
     # Update repositories
     elif args.action == "update":
         for github_repository in github_repositories:
             if github_repository.fork:
-                network.UpdateGithubRepository(
+                success = network.UpdateGithubRepository(
                     github_user = github_username,
                     github_repo = github_repository.name,
                     github_branch = github_repository.default_branch,
                     github_token = github_access_token,
                     verbose = args.verbose,
                     exit_on_failure = args.exit_on_failure)
+                if not success:
+                    break
 
 # Start
 main()
