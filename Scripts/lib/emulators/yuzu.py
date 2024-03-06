@@ -122,7 +122,7 @@ class Yuzu(emulatorbase.EmulatorBase):
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Yuzu", "windows"):
             success = release.SetupGeneralRelease(
-                archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Yuzu"), "windows", "yuzu-windows-msvc-20240304-537296095.zip"),
+                archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Yuzu", "windows"), "yuzu-windows-msvc-20240304-537296095.zip"),
                 install_name = "Yuzu",
                 install_dir = programs.GetProgramInstallDir("Yuzu", "windows"),
                 search_file = "yuzu.exe",
@@ -133,7 +133,7 @@ class Yuzu(emulatorbase.EmulatorBase):
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Yuzu", "linux"):
             success = release.SetupGeneralRelease(
-                archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Yuzu"), "linux", "yuzu-mainline-20240304-537296095.AppImage"),
+                archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Yuzu", "linux"), "yuzu-mainline-20240304-537296095.AppImage"),
                 install_name = "Yuzu",
                 install_dir = programs.GetProgramInstallDir("Yuzu", "linux"),
                 search_file = "Yuzu.AppImage",

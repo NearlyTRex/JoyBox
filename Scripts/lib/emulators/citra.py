@@ -92,34 +92,24 @@ class Citra(emulatorbase.EmulatorBase):
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):
 
-        # Download windows program
+        # Setup windows program
         if programs.ShouldProgramBeInstalled("Citra", "windows"):
-            success = release.DownloadGithubRelease(
-                github_user = "citra-emu",
-                github_repo = "citra-nightly",
-                starts_with = "citra-windows-msvc",
-                ends_with = ".7z",
-                search_file = "citra-qt.exe",
+            success = release.SetupGeneralRelease(
+                archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Citra", "windows"), "citra-windows-msvc-20240303-0ff3440.zip"),
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Citra", "windows"),
-                get_latest = True,
+                search_file = "citra-qt.exe",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Citra")
 
-        # Download linux program
+        # Setup linux program
         if programs.ShouldProgramBeInstalled("Citra", "linux"):
-            success = release.DownloadGithubRelease(
-                github_user = "citra-emu",
-                github_repo = "citra-nightly",
-                starts_with = "citra-linux-appimage",
-                ends_with = ".tar.gz",
-                search_file = "citra-qt.AppImage",
+            success = release.SetupGeneralRelease(
+                archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Citra", "linux"), "citra-linux-appimage-20240303-0ff3440.tar.gz"),
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Citra", "linux"),
-                get_latest = True,
+                search_file = "citra-qt.AppImage",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Citra")
