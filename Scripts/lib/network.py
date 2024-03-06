@@ -432,6 +432,8 @@ def ArchiveGithubRepository(
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
+        system.LogError("Unable to download repository '%s' - '%s'" % (github_user, github_repo))
+        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
         return False
 
     # Remove git folder
@@ -444,12 +446,24 @@ def ArchiveGithubRepository(
             return False
 
     # Archive repository
-    success = archive.CreateArchiveFromFolder(
+    archive.CreateArchiveFromFolder(
         archive_file = tmp_file_archive,
         source_dir = tmp_dir_download,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if not os.path.exists(tmp_file_archive):
+        system.LogError("Unable to archive repository '%s' - '%s'" % (github_user, github_repo))
+        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        return False
+
+    # Test archive
+    success = archive.TestArchive(
+        archive_file = tmp_file_archive,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
     if not success:
+        system.LogError("Validation failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
+        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
         return False
 
     # Check if already archived
@@ -469,6 +483,7 @@ def ArchiveGithubRepository(
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
+        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
         return False
 
     # Delete temporary directory
