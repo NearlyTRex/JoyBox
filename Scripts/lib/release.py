@@ -15,9 +15,9 @@ import webpage
 import registry
 import network
 
-# Download general release
-def DownloadGeneralRelease(
-    archive_url,
+# Setup general release
+def SetupGeneralRelease(
+    archive_file,
     install_name,
     install_dir,
     search_file = None,
@@ -41,18 +41,12 @@ def DownloadGeneralRelease(
         return False
 
     # Get archive info
-    archive_basename = system.GetFilenameBasename(archive_url)
-    archive_extension = system.GetFilenameExtension(archive_url)
-    archive_filename = system.GetFilenameFile(archive_url)
-    archive_file = os.path.join(tmp_dir_result, archive_filename)
+    archive_basename = system.GetFilenameBasename(archive_file)
+    archive_extension = system.GetFilenameExtension(archive_file)
+    archive_filename = system.GetFilenameFile(archive_file)
 
     # Set directory where release files will be found
     search_dir = tmp_dir_result
-
-    # Download release
-    if not network.DownloadUrl(url=archive_url, output_dir=tmp_dir_result, output_file=archive_file):
-        system.LogError("Unable to download release from '%s'" % archive_url)
-        return False
 
     # Create install dir if necessary
     success = system.MakeDirectory(install_dir, verbose = verbose, exit_on_failure = exit_on_failure)
@@ -258,6 +252,63 @@ def DownloadGeneralRelease(
 
     # Check result
     return system.DoesDirectoryContainFiles(install_dir)
+
+# Download general release
+def DownloadGeneralRelease(
+    archive_url,
+    install_name,
+    install_dir,
+    search_file = None,
+    backups_dir = None,
+    prefix_dir = None,
+    prefix_name = None,
+    install_files = [],
+    registry_files = [],
+    chmod_files = [],
+    rename_files = [],
+    installer_type = None,
+    is_installer = False,
+    is_archive = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    if not tmp_dir_success:
+        system.LogError("Unable to create temporary directory")
+        return False
+
+    # Get archive info
+    archive_basename = system.GetFilenameBasename(archive_url)
+    archive_extension = system.GetFilenameExtension(archive_url)
+    archive_filename = system.GetFilenameFile(archive_url)
+    archive_file = os.path.join(tmp_dir_result, archive_filename)
+
+    # Download release
+    if not network.DownloadUrl(url=archive_url, output_dir=tmp_dir_result, output_file=archive_file):
+        system.LogError("Unable to download release from '%s'" % archive_url)
+        return False
+
+    # Setup release
+    success = SetupGeneralRelease(
+        archive_file = archive_file,
+        install_name = install_name,
+        install_dir = install_dir,
+        search_file = search_file,
+        backups_dir = backups_dir,
+        prefix_dir = prefix_dir,
+        prefix_name = prefix_name,
+        install_files = install_files,
+        registry_files = registry_files,
+        chmod_files = chmod_files,
+        rename_files = rename_files,
+        installer_type = installer_type,
+        is_installer = is_installer,
+        is_archive = is_archive,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    return success
 
 # Download github release
 def DownloadGithubRelease(
