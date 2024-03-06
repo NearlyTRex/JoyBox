@@ -44,6 +44,18 @@ def main():
     # Get preset options
     preset_options = config.presets_options[args.preset_type]
 
+    # Create base command
+    base_cmd = [
+        os.path.join(environment.GetScriptsBinDir(), args.preset_tool + environment.GetScriptsCommandExtension())
+    ]
+    if args.verbose:
+        base_cmd += ["--verbose"]
+    if args.exit_on_failure:
+        base_cmd += ["--exit_on_failure"]
+
+    # Create preset commands
+    preset_cmds = []
+
     # Backup tool
     if args.preset_tool == "backup_tool":
 
@@ -52,9 +64,8 @@ def main():
         has_category = "category" in preset_options
         has_subcategories = "subcategories" in preset_options
 
-        # Create base command
-        base_cmd = [
-            os.path.join(environment.GetScriptsBinDir(), args.preset_tool + environment.GetScriptsCommandExtension()),
+        # Update base command
+        base_cmd += [
             "-t", "Storage",
             "-o", output_path
         ]
@@ -62,13 +73,8 @@ def main():
             base_cmd += ["--skip_existing"]
         if args.skip_identical:
             base_cmd += ["--skip_identical"]
-        if args.verbose:
-            base_cmd += ["--verbose"]
-        if args.exit_on_failure:
-            base_cmd += ["--exit_on_failure"]
 
-        # Create preset commands
-        preset_cmds = []
+        # Add to preset commands
         if has_supercategory and has_category and has_subcategories:
             for subcategory in preset_options["subcategories"]:
                 preset_cmds += [
@@ -92,12 +98,12 @@ def main():
                 ]
             ]
 
-        # Run commands
-        for preset_cmd in preset_cmds:
-            command.RunCheckedCommand(
-                cmd = preset_cmd,
-                verbose = args.verbose,
-                exit_on_failure = args.exit_on_failure)
+    # Run commands
+    for preset_cmd in preset_cmds:
+        command.RunCheckedCommand(
+            cmd = preset_cmd,
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
 
 # Start
 main()
