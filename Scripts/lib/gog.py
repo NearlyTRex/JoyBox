@@ -36,6 +36,11 @@ def DownloadGameByName(
     if not tmp_dir_success:
         return False
 
+    # Get temporary paths
+    tmp_dir_extra = os.path.join(tmp_dir_result, "extra")
+    tmp_dir_dlc = os.path.join(tmp_dir_result, "dlc")
+    tmp_dir_dlc_extra = os.path.join(tmp_dir_dlc, "extra")
+
     # Get download command
     download_cmd = [
         gog_tool,
@@ -68,6 +73,19 @@ def DownloadGameByName(
     if (code != 0):
         system.LogError("Files were not downloaded successfully")
         return False
+
+    # Move dlc extra into main extra
+    if system.DoesDirectoryContainFiles(tmp_dir_dlc_extra):
+        system.MoveContents(
+            src = tmp_dir_dlc_extra,
+            dest = tmp_dir_extra,
+            skip_existing = True,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        system.RemoveDirectory(
+            dir = tmp_dir_dlc_extra,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     # Clean output
     if clean_output:
