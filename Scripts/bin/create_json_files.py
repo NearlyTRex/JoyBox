@@ -88,11 +88,10 @@ def main():
                 computer_installers = []
                 for file in system.GetDirectoryContents(base_rom_path):
                     if file.endswith(".exe"):
-                        computer_installers = [os.path.join(config.token_setup_main_root, file)]
-                        break
+                        computer_installers += [os.path.join(config.token_setup_main_root, file)]
                 for file in system.GetDirectoryContents(base_rom_path):
                     if file.endswith(".msi"):
-                        computer_installers = [os.path.join(config.token_setup_main_root, file)]
+                        computer_installers += [os.path.join(config.token_setup_main_root, file)]
                         break
 
                 # Find computer update installers
