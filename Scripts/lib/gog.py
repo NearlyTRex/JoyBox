@@ -219,5 +219,8 @@ def GetGameInfo(appid, platform, verbose = False, exit_on_failure = False):
             appinstallers = appdownloads["installers"]
             for appinstaller in appinstallers:
                 if appinstaller["os"] == platform:
-                    game_info[config.json_key_gog_buildid] = appinstaller["version"]
+                    if appinstaller["version"]:
+                        game_info[config.json_key_gog_buildid] = appinstaller["version"]
+                    else:
+                        game_info[config.json_key_gog_buildid] = "original_release"
     return game_info
