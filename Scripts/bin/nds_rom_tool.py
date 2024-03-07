@@ -46,7 +46,7 @@ def main():
         # Decrypt NDS file
         if args.decrypt:
             nintendo.DecryptNDSRom(
-                nds_rom_file = current_file,
+                nds_file = current_file,
                 generate_hash = args.generate_hash,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
@@ -54,7 +54,7 @@ def main():
         # Encrypt NDS file
         elif args.encrypt:
             nintendo.EncryptNDSRom(
-                nds_rom_file = current_file,
+                nds_file = current_file,
                 generate_hash = args.generate_hash,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
