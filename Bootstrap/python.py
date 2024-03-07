@@ -29,7 +29,6 @@ packages = [
     "pycryptodome",
     "pycryptodomex",
     "PyGithub",
-    "PySimpleGUI",
     "python-dateutil",
     "requests",
     "schedule",
