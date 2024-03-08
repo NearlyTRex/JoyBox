@@ -14,18 +14,26 @@ import system
 import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Download GOG games.")
+parser = argparse.ArgumentParser(description="GOG tool.")
 parser.add_argument("input_path", type=str, default=".", help="Input path")
+parser.add_argument("-a", "--action",
+    choices=[
+        "download",
+        "check"
+    ],
+    default="download",
+    help="Program action"
+)
 parser.add_argument("-p", "--platform",
     choices=[
         "windows",
         "linux"
     ],
     default="windows",
-    help="Download platform"
+    help="Relevant platform"
 )
-parser.add_argument("-s", "--skip_downloaded", action="store_true", help="Skip already downloaded")
-parser.add_argument("-f", "--force_download", action="store_true", help="Always download")
+parser.add_argument("-s", "--skip_existing", action="store_true", help="Skip existing entries")
+parser.add_argument("-f", "--force", action="store_true", help="Always run action")
 parser.add_argument("-o", "--output_dir", type=str, default=".", help="Output directory")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
@@ -44,17 +52,18 @@ def main():
     setup.CheckRequirements()
 
     # Download games
-    for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
-        success = gog.DownloadGameByJsonFile(
-            json_file = json_file,
-            platform = args.platform,
-            output_dir = args.output_dir,
-            skip_downloaded = args.skip_downloaded,
-            force_download = args.force_download,
-            verbose = args.verbose,
-            exit_on_failure = args.exit_on_failure)
-        if not success:
-            break
+    if args.action == "download":
+        for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
+            success = gog.DownloadGameByJsonFile(
+                json_file = json_file,
+                platform = args.platform,
+                output_dir = args.output_dir,
+                skip_existing = args.skip_existing,
+                force = args.force,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            if not success:
+                break
 
 # Start
 main()

@@ -118,8 +118,8 @@ def DownloadGameByJsonFile(
     arch,
     login,
     output_dir = None,
-    skip_downloaded = False,
-    force_download = False,
+    skip_existing = False,
+    force = False,
     verbose = False,
     exit_on_failure = False):
 
@@ -139,7 +139,7 @@ def DownloadGameByJsonFile(
         output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
     else:
         output_dir = environment.GetRomDir(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
-    if skip_downloaded and system.DoesDirectoryContainFiles(output_dir):
+    if skip_existing and system.DoesDirectoryContainFiles(output_dir):
         return True
 
     # Get latest steam info
@@ -155,7 +155,7 @@ def DownloadGameByJsonFile(
 
     # Check if game should be downloaded
     should_download = False
-    if force_download:
+    if force:
         should_download = True
     elif len(old_buildid) == 0:
         should_download = True
@@ -164,8 +164,6 @@ def DownloadGameByJsonFile(
             should_download = int(new_buildid) > int(old_buildid)
     if not should_download:
         return False
-
-
 
     # Download game
     success = DownloadGameByID(
