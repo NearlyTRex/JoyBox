@@ -10,6 +10,7 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import command
 import programs
+import asset
 import setup
 
 # Parse arguments
@@ -19,6 +20,12 @@ parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
+# Get input path
+input_path = os.path.realpath(args.input_path)
+if not os.path.exists(input_path):
+    system.LogError("Path '%s' does not exist" % args.input_path)
+    sys.exit(-1)
+
 # Main
 def main():
 
@@ -26,14 +33,8 @@ def main():
     setup.CheckRequirements()
 
     # Clean exif data
-    command.RunCheckedCommand(
-        cmd = [
-            programs.GetToolProgram("ExifTool"),
-            "-overwrite_original",
-            "-All=",
-            "-r",
-            os.path.realpath(args.input_path)
-        ],
+    asset.CleanExifData(
+        asset_file = input_path,
         verbose = args.verbose,
         exit_on_failure = args.exit_on_failure)
 
