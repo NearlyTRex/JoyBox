@@ -50,7 +50,7 @@ def main():
                     for asset_type in config.asset_types_all:
 
                         # Get game info
-                        game_name = game_entry[config.metadata_key_game]
+                        game_name = game_entry.get_game()
                         game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
 
                         # Get asset file
