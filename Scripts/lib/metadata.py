@@ -16,6 +16,7 @@ import platforms
 import environment
 import gameinfo
 import youtube
+import asset
 
 # Metadata entry class
 class MetadataEntry:
@@ -382,14 +383,38 @@ class Metadata:
                 for index in range(0, len(search_results)):
                     search_result = search_results[index]
                     system.Log("%d) \"%s\" (%s) [%s] - %s" % (index, search_result["title"], search_result["channel"], search_result["duration_string"], search_result["url"]))
-                selected_search_result = search_results[system.PromptForIntegerValue("Which do you want to use?", 0)]
+
+                # Ask them which one they want to use
+                value = system.PromptForValue("Which do you want to use? [Leave empty to skip, type quit to stop]")
+                if not value:
+                    continue
+                if value.lower() == "quit":
+                    break
+
+                # Get selected search result
+                selected_search_result = None
+                try:
+                    selected_search_result = search_results[int(value)]
+                except:
+                    continue
+                if not selected_search_result:
+                    continue
 
                 # Download selected result
-                youtube.DownloadVideo(
+                success = youtube.DownloadVideo(
                     video_url = selected_search_result["url"],
                     output_file = expected_video_file,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
+                if not success:
+                    continue
+
+                # Clean exif data
+                if os.path.exists(expected_video_file):
+                    asset.CleanExifData(
+                        asset_file = expected_video_file,
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
 
     # Scan rom base directory
     def scan_rom_base_dir(self, rom_base_dir, rom_category, rom_subcategory, verbose = False, exit_on_failure = False):
