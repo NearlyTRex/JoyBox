@@ -131,7 +131,7 @@ def DownloadGameByJsonFile(
 
     # Ignore non-steam games
     if game_info.get_steam_appid() == "":
-        return False
+        return True
 
     # Get output dir
     if output_dir:
@@ -163,7 +163,7 @@ def DownloadGameByJsonFile(
         if new_buildid.isnumeric() and old_buildid.isnumeric():
             should_download = int(new_buildid) > int(old_buildid)
     if not should_download:
-        return False
+        return True
 
     # Download game
     success = DownloadGameByID(
@@ -193,6 +193,39 @@ def DownloadGameByJsonFile(
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     return success
+
+# Check game by json file
+def CheckGameByJsonFile(
+    json_file,
+    platform,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Get game info
+    game_info = gameinfo.GameInfo(
+        json_file = json_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+    # Ignore non-steam games
+    if game_info.get_steam_appid() == "":
+        return True
+
+    # Get latest steam info
+    latest_steam_info = GetGameInfo(
+        appid = game_info.get_steam_appid(),
+        branchid = game_info.get_steam_branchid(),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+    # Get build ids
+    old_buildid = game_info.get_steam_buildid()
+    new_buildid = latest_steam_info[config.json_key_steam_buildid]
+
+    # Check if game is out of date
+    if new_buildid != old_buildid:
+        system.LogWarning("Game '%s' is out of date! Local = '%s', remote = '%s'" % (game_info.get_name(), old_buildid, new_buildid))
+    return True
 
 # Get game info
 def GetGameInfo(appid, branchid, verbose = False, exit_on_failure = False):

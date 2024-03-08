@@ -65,5 +65,16 @@ def main():
             if not success:
                 break
 
+    # Check games
+    elif args.action == "check":
+        for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
+            success = gog.CheckGameByJsonFile(
+                json_file = json_file,
+                platform = args.platform,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            if not success:
+                break
+
 # Start
 main()
