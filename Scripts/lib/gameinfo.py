@@ -77,8 +77,8 @@ class GameInfo:
         self.set_default_subvalue(config.json_key_steps, config.json_key_steps_postinstall, [])
         self.set_default_subvalue(config.json_key_sync, config.json_key_sync_search, "")
         self.set_default_subvalue(config.json_key_sync, config.json_key_sync_data, [])
-        self.set_default_subvalue(config.json_key_registry, config.json_key_registry_keep_setup, False)
         self.set_default_subvalue(config.json_key_registry, config.json_key_registry_setup_keys, [])
+        self.set_default_subvalue(config.json_key_registry, config.json_key_registry_game_keys, [])
         self.set_default_subvalue(config.json_key_steam, config.json_key_steam_appid, "")
         self.set_default_subvalue(config.json_key_steam, config.json_key_steam_branchid, "")
         self.set_default_subvalue(config.json_key_steam, config.json_key_steam_buildid, "")
@@ -385,13 +385,13 @@ class GameInfo:
 
     ##############################
 
-    # Get whether to keep setup registry
-    def get_keep_setup_registry(self):
-        return self.get_subvalue(config.json_key_registry, config.json_key_registry_keep_setup)
-
     # Get setup registry keys
     def get_setup_registry_keys(self):
         return self.get_subvalue(config.json_key_registry, config.json_key_registry_setup_keys)
+
+    # Get game registry keys
+    def get_game_registry_keys(self):
+        return self.get_subvalue(config.json_key_registry, config.json_key_registry_game_keys)
 
     ##############################
 
