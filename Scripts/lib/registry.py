@@ -47,7 +47,7 @@ def ReadRegistryFile(
 
         # Create entry
         registry_key = ""
-        registry_value = ""
+        registry_values = []
 
         # Read entry
         line_num = 0
@@ -55,12 +55,11 @@ def ReadRegistryFile(
             if line_num == 0:
                 registry_key = line.strip("[]")
             else:
-                registry_value += line
+                registry_values.append(line)
             line_num += 1
 
         # Clean entry
         registry_key = registry_key.strip()
-        registry_value = registry_value.strip()
         if len(registry_key) == 0:
             continue
 
@@ -76,7 +75,7 @@ def ReadRegistryFile(
         # Create entry
         registry_entry = {}
         registry_entry["key"] = registry_key
-        registry_entry["value"] = registry_value
+        registry_entry["value"] = "\n".join(registry_values)
 
         # Add entry
         if len(keep_keys):
