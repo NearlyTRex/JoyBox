@@ -873,6 +873,15 @@ class Computer(emulatorbase.EmulatorBase):
         # Check launch command
         if len(launch_info_cmd):
 
+            # Restore game registry
+            sandbox.RestoreRegistry(
+                prefix_dir = launch_save_dir,
+                prefix_name = config.prefix_type_game,
+                is_wine_prefix = should_run_via_wine,
+                is_sandboxie_prefix = should_run_via_sandboxie,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
             # Restore user data
             for sync_obj in sync_objs:
                 system.SyncData(
