@@ -385,14 +385,14 @@ def LowercaseAllPaths(dir, verbose = False, pretend_run = False, exit_on_failure
 ###########################################################
 
 # Touch file
-def TouchFile(src, contents = "", contents_mode = "w", verbose = False, pretend_run = False, exit_on_failure = False):
+def TouchFile(src, contents = "", contents_mode = "w", encoding="utf-8", verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
             Log("Touching file %s" % src)
         if not pretend_run:
             os.makedirs(GetFilenameDirectory(src), exist_ok = True)
             if len(contents):
-                with open(src, contents_mode) as f:
+                with open(src, contents_mode, encoding) as f:
                     f.write(contents)
             else:
                 open(src, "a").close()
