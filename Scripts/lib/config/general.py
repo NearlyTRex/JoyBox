@@ -120,7 +120,7 @@ computer_user_folders_builtin = [
     "Temp",
     "Videos"
 ]
-computer_user_folders = computer_user_folders_builtin + [computer_game_data_folder]
+computer_user_folders = computer_user_folders_builtin + [computer_registry_folder, computer_game_data_folder]
 
 # Drives
 drive_prefix_cwd = "b"
