@@ -11,96 +11,118 @@ import programs
 import sandbox
 
 # Read registry file
-def ReadRegistryFile(registry_file, ignore_keys = [], keep_keys = []):
+def ReadRegistryFile(
+    registry_file,
+    ignore_keys = [],
+    keep_keys = [],
+    verbose = False,
+    exit_on_failure = False):
 
-    # Check params
-    system.AssertPathExists(registry_file, "registry_file")
+    # Get registry text
+    registry_text = ""
+    try:
+        if verbose:
+            system.Log("Reading registry file '%s'" % registry_file)
+        with open(registry_file, "r", encoding="utf-16") as file:
+            registry_text = file.read()
+    except Exception as e:
+        if exit_on_failure:
+            LogError("Unable to read registry file '%s'" % registry_file)
+            LogError(e)
+            sys.exit(1)
+        return {}
 
     # Create registry container
     registry = {}
     registry["header"] = ""
     registry["entries"] = []
 
-    # Open registry file
-    with open(registry_file, "r", encoding="utf-16") as file:
-        data = file.read()
+    # Parse registry text
+    for token in registry_text.split("\n\n"):
 
-        # Read registry entries
-        for token in data.split("\n\n"):
+        # Read header
+        if token.startswith("Windows Registry Editor"):
+            registry["header"] = token.strip()
+            continue
 
-            # Read header
-            if token.startswith("Windows Registry Editor"):
-                registry["header"] = token.strip()
-                continue
+        # Create entry
+        registry_key = ""
+        registry_value = ""
 
-            # Create entry
-            registry_key = ""
-            registry_value = ""
-
-            # Read entry
-            line_num = 0
-            for line in token.split("\n"):
-                if line_num == 0:
-                    registry_key = line.strip("[]")
-                else:
-                    registry_value += line
-                line_num += 1
-
-            # Clean entry
-            registry_key = registry_key.strip()
-            registry_value = registry_value.strip()
-            if len(registry_key) == 0:
-                continue
-
-            # Check if entry should be ignored
-            should_ignore = False
-            for ignore_key in ignore_keys:
-                if registry_key.startswith(ignore_key):
-                    should_ignore = True
-                    break
-            if should_ignore:
-                continue
-
-            # Create entry
-            registry_entry = {}
-            registry_entry["key"] = registry_key
-            registry_entry["value"] = registry_value
-
-            # Add entry
-            if len(keep_keys):
-                should_keep = False
-                for keep_key in keep_keys:
-                    if registry_key.startswith(keep_key):
-                        should_keep = True
-                        break
-                if should_keep:
-                    registry["entries"].append(registry_entry)
+        # Read entry
+        line_num = 0
+        for line in token.split("\n"):
+            if line_num == 0:
+                registry_key = line.strip("[]")
             else:
+                registry_value += line
+            line_num += 1
+
+        # Clean entry
+        registry_key = registry_key.strip()
+        registry_value = registry_value.strip()
+        if len(registry_key) == 0:
+            continue
+
+        # Check if entry should be ignored
+        should_ignore = False
+        for ignore_key in ignore_keys:
+            if registry_key.startswith(ignore_key):
+                should_ignore = True
+                break
+        if should_ignore:
+            continue
+
+        # Create entry
+        registry_entry = {}
+        registry_entry["key"] = registry_key
+        registry_entry["value"] = registry_value
+
+        # Add entry
+        if len(keep_keys):
+            should_keep = False
+            for keep_key in keep_keys:
+                if registry_key.startswith(keep_key):
+                    should_keep = True
+                    break
+            if should_keep:
                 registry["entries"].append(registry_entry)
+        else:
+            registry["entries"].append(registry_entry)
 
     # Return results
     return registry
 
 # Write registry file
-def WriteRegistryFile(registry_file, registry_data):
+def WriteRegistryFile(
+    registry_file,
+    registry_data,
+    verbose = False,
+    exit_on_failure = False):
 
-    # Check params
-    system.AssertIsValidPath(registry_file, "registry_file")
+    # Create registry text
+    registry_text = ""
+    registry_text += "%s\n" % registry_data["header"]
+    registry_text += "\n"
+    for entry in registry_data["entries"]:
+        registry_text += "[%s]\n" % entry["key"]
+        if len(entry["value"]):
+            registry_text += "%s\n" % entry["value"]
+        registry_text += "\n"
 
-    # Open registry file
-    with open(registry_file, "w", encoding="utf-16") as file:
-
-        # Write header
-        file.write("%s\n" % registry_data["header"])
-        file.write("\n")
-
-        # Write entries
-        for entry in registry_data["entries"]:
-            file.write("[%s]\n" % entry["key"])
-            if len(entry["value"]):
-                file.write("%s\n" % entry["value"])
-            file.write("\n")
-        return True
+    # Write registry file
+    try:
+        if verbose:
+            system.Log("Writing registry file '%s'" % registry_file)
+        with open(registry_file, "w", encoding="utf-16") as file:
+            file.write(registry_text)
+            return True
+    except Exception as e:
+        if exit_on_failure:
+            LogError("Unable to write registry file '%s'" % registry_file)
+            LogError(e)
+            sys.exit(1)
+        return False
     return False
 
 # Export registry file
@@ -127,7 +149,7 @@ def ExportRegistryFile(
     ]
 
     # Run registry command
-    command.RunBlockingCommand(
+    code = command.RunBlockingCommand(
         cmd = registry_cmd,
         options = command.CommandOptions(
             prefix_dir = prefix_dir,
@@ -139,6 +161,8 @@ def ExportRegistryFile(
             blocking_processes = ["reg"]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    if code != 0:
+        return False
 
     # Check result
     return os.path.exists(registry_file)
@@ -189,6 +213,9 @@ def BackupUserRegistry(
     verbose = False,
     exit_on_failure = False):
 
+    # Check params
+    system.AssertIsValidPath(registry_file, "registry_file")
+
     # Create temporary directory
     tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
     if not tmp_dir_success:
@@ -213,9 +240,13 @@ def BackupUserRegistry(
     registry_data = ReadRegistryFile(
         registry_file = temp_reg_file,
         ignore_keys = ignore_keys,
-        keep_keys = keep_keys)
+        keep_keys = keep_keys,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
     # Write new pruned registry file
     return WriteRegistryFile(
         registry_file = registry_file,
-        registry_data = registry_data)
+        registry_data = registry_data,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
