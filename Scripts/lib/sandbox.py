@@ -11,6 +11,7 @@ import system
 import environment
 import command
 import programs
+import registry
 import gui
 from tools import dxvk
 from tools import vkd3d
@@ -263,6 +264,62 @@ def InstallDlls(
             is_32_bit = is_32_bit,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+
+###########################################################
+
+# Backup registry
+def BackupRegistry(
+    prefix_dir,
+    prefix_name,
+    registry_keys = [],
+    is_wine_prefix = False,
+    is_sandboxie_prefix = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Ignore empty keys
+    if len(registry_keys) == 0:
+        return True
+
+    # Get user profile
+    user_profile_dir = GetUserProfilePath(
+        prefix_dir = prefix_dir,
+        is_wine_prefix = is_wine_prefix,
+        is_sandboxie_prefix = is_sandboxie_prefix)
+    if not user_profile_dir:
+        return False
+
+    # Get registry file
+    registry_file = ""
+    if prefix_name == config.prefix_type_setup:
+        registry_file = os.path.join(user_profile_dir, config.computer_registry_folder, config.registry_filename_setup)
+    elif prefix_name == config.prefix_type_game:
+        registry_file = os.path.join(user_profile_dir, config.computer_registry_folder, config.registry_filename_game)
+
+    # Get registry export keys
+    registry_export_keys = []
+    if prefix_name == config.prefix_type_setup:
+        registry_export_keys = config.registry_export_keys_setup
+    elif prefix_name == config.prefix_type_game:
+        registry_export_keys = config.registry_export_keys_game
+
+    # Get registry ignore keys
+    registry_ignore_keys = []
+    if prefix_name == config.prefix_type_setup:
+        registry_ignore_keys = config.ignored_registry_keys_setup
+    elif prefix_name == config.prefix_type_game:
+        registry_ignore_keys = config.ignored_registry_keys_game
+
+    # Backup registry
+    return registry.BackupUserRegistry(
+        registry_file = registry_file,
+        prefix_dir = prefix_dir,
+        prefix_name = prefix_name,
+        export_keys = registry_export_keys,
+        ignore_keys = registry_ignore_keys,
+        keep_keys = registry_keys,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 ###########################################################
 
