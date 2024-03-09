@@ -13,7 +13,6 @@ import archive
 import programs
 import chd
 import install
-import registry
 import gameinfo
 from emulators import computer
 
@@ -336,8 +335,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
     game_installer_dos_exe_list = game_info.get_installer_dos_exe()
     game_wine_setup = game_info.get_wine_setup()
     game_sandboxie_setup = game_info.get_sandboxie_setup()
-    game_keep_setup_registry = game_info.get_keep_setup_registry()
-    game_setup_registry_keys = game_info.get_setup_registry_keys()
+    game_registry_setup_keys = game_info.get_setup_registry_keys()
     game_steps_preinstall = game_info.get_preinstall_steps()
     game_steps_postinstall = game_info.get_postinstall_steps()
     game_winver = game_info.get_winver()
@@ -529,23 +527,17 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-    # Backup registry
-    if game_keep_setup_registry:
-        prefix_registry_dir = os.path.join(prefix_c_drive_real, config.computer_registry_folder)
-        prefix_registry_path = os.path.join(prefix_registry_dir, config.registry_filename_setup)
-        system.MakeDirectory(
-            dir = prefix_registry_dir,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        registry.BackupUserRegistry(
-            registry_file = prefix_registry_path,
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            export_keys = config.registry_export_keys_setup,
-            ignore_keys = config.ignored_registry_keys_setup,
-            keep_keys = game_setup_registry_keys,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+    # Backup setup registry
+    success = sandbox.BackupRegistry(
+        prefix_dir = prefix_dir,
+        prefix_name = prefix_name,
+        registry_keys = game_registry_setup_keys,
+        is_wine_prefix = should_run_via_wine,
+        is_sandboxie_prefix = should_run_via_sandboxie,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Create install image
     success = install.PackInstallImage(

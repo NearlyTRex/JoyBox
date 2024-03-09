@@ -659,6 +659,8 @@ class Computer(emulatorbase.EmulatorBase):
         launch_info_sandboxie_setup = game_info.get_sandboxie_setup()
         launch_info_sync_search = system.NormalizeFilePath(game_info.get_sync_search())
         launch_info_sync_data = game_info.get_sync_data()
+        launch_info_registry_setup_keys = game_info.get_setup_registry_keys()
+        launch_info_registry_game_keys = game_info.get_game_registry_keys()
         launch_info_winver = game_info.get_winver()
         launch_info_is_32_bit = game_info.is_32_bit()
         launch_info_is_dos = game_info.is_dos()
@@ -726,7 +728,7 @@ class Computer(emulatorbase.EmulatorBase):
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
 
-        # Get user profile temp directory
+        # Get user profile
         user_profile_dir = sandbox.GetUserProfilePath(
             prefix_dir = launch_save_dir,
             is_wine_prefix = should_run_via_wine,
@@ -913,6 +915,16 @@ class Computer(emulatorbase.EmulatorBase):
                     data_dest = sync_obj["stored"],
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
+
+            # Backup game registry
+            sandbox.BackupRegistry(
+                prefix_dir = launch_save_dir,
+                prefix_name = config.prefix_type_game,
+                registry_keys = launch_info_registry_game_keys,
+                is_wine_prefix = should_run_via_wine,
+                is_sandboxie_prefix = should_run_via_sandboxie,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
             # Restore default screen resolution
             display.RestoreDefaultScreenResolution(
