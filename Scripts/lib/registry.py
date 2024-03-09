@@ -136,7 +136,7 @@ def ExportRegistryFile(
             is_sandboxie_prefix = environment.IsSandboxiePlatform(),
             force_prefix = True,
             shell = True,
-            blocking_processes = [registry_tool]),
+            blocking_processes = ["reg"]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
@@ -169,7 +169,7 @@ def ImportRegistryFile(
             is_wine_prefix = environment.IsWinePlatform(),
             is_sandboxie_prefix = environment.IsSandboxiePlatform(),
             force_prefix = True,
-            blocking_processes = [registry_tool]),
+            blocking_processes = ["reg"]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if code != 0:
