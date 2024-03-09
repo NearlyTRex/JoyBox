@@ -267,6 +267,41 @@ def InstallDlls(
 
 ###########################################################
 
+# Restore registry
+def RestoreRegistry(
+    prefix_dir,
+    prefix_name,
+    is_wine_prefix = False,
+    is_sandboxie_prefix = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Get user profile
+    user_profile_dir = GetUserProfilePath(
+        prefix_dir = prefix_dir,
+        is_wine_prefix = is_wine_prefix,
+        is_sandboxie_prefix = is_sandboxie_prefix)
+    if not user_profile_dir:
+        return False
+
+    # Get registry dir
+    registry_dir = os.path.join(user_profile_dir, config.computer_registry_folder)
+
+    # Get registry file
+    registry_file = ""
+    if prefix_name == config.prefix_type_setup:
+        registry_file = os.path.join(registry_dir, config.registry_filename_setup)
+    elif prefix_name == config.prefix_type_game:
+        registry_file = os.path.join(registry_dir, config.registry_filename_game)
+
+    # Import registry file
+    return registry.ImportRegistryFile(
+        registry_file = registry_file,
+        prefix_dir = prefix_dir,
+        prefix_name = prefix_name,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
 # Backup registry
 def BackupRegistry(
     prefix_dir,
@@ -289,12 +324,15 @@ def BackupRegistry(
     if not user_profile_dir:
         return False
 
+    # Get registry dir
+    registry_dir = os.path.join(user_profile_dir, config.computer_registry_folder)
+
     # Get registry file
     registry_file = ""
     if prefix_name == config.prefix_type_setup:
-        registry_file = os.path.join(user_profile_dir, config.computer_registry_folder, config.registry_filename_setup)
+        registry_file = os.path.join(registry_dir, config.registry_filename_setup)
     elif prefix_name == config.prefix_type_game:
-        registry_file = os.path.join(user_profile_dir, config.computer_registry_folder, config.registry_filename_game)
+        registry_file = os.path.join(registry_dir, config.registry_filename_game)
 
     # Get registry export keys
     registry_export_keys = []
