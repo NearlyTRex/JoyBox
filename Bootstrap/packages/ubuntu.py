@@ -135,6 +135,7 @@ packages = [
     # Gnome
     "brasero",
     "ghex",
+    "gnome-terminal",
 
     # Graphics
     "gimp",
