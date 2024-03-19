@@ -293,6 +293,8 @@ def RestoreRegistry(
         registry_file = os.path.join(registry_dir, config.registry_filename_setup)
     elif prefix_name == config.prefix_type_game:
         registry_file = os.path.join(registry_dir, config.registry_filename_game)
+    if not os.path.exists(registry_file):
+        return True
 
     # Import registry file
     return registry.ImportRegistryFile(
