@@ -139,6 +139,7 @@ packages = [
 
     # Graphics
     "gimp",
+    "handbrake",
     "imagemagick",
     "imagemagick-6.q16",
     "vlc",
@@ -272,7 +273,9 @@ packages = [
     "winehq-devel",
 
     # Sound
+    "audacity",
     "jackd",
+    "pulseaudio-utils",
     "qmmp",
 
     # Text
@@ -292,6 +295,9 @@ packages = [
     "git",
     "gitg",
 
+    # Video
+    "shotcut",
+
     # Web
     "curl",
     "firefox",
@@ -300,6 +306,7 @@ packages = [
     # X11
     "qdirstat",
     "thunar",
+    "wmctrl",
     "xorg-dev"
 ]
 
