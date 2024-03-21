@@ -39,10 +39,9 @@ class Jdupes(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Jdupes", "windows"):
-            success = release.DownloadGithubRelease(
-                github_user = "jbruchon",
-                github_repo = "jdupes",
-                starts_with = "jdupes",
+            success = release.DownloadWebpageRelease(
+                webpage_url = "https://codeberg.org/jbruchon/jdupes/releases",
+                starts_with = "https://codeberg.org/jbruchon/jdupes/releases/download/",
                 ends_with = "win64.zip",
                 search_file = "jdupes.exe",
                 install_name = "Jdupes",
@@ -53,10 +52,9 @@ class Jdupes(toolbase.ToolBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Jdupes", "linux"):
-            success = release.DownloadGithubRelease(
-                github_user = "jbruchon",
-                github_repo = "jdupes",
-                starts_with = "jdupes",
+            success = release.DownloadWebpageRelease(
+                webpage_url = "https://codeberg.org/jbruchon/jdupes/releases",
+                starts_with = "https://codeberg.org/jbruchon/jdupes/releases/download/",
                 ends_with = "linux-x86_64.pkg.tar.xz",
                 search_file = "jdupes",
                 install_name = "Jdupes",
