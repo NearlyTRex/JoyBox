@@ -11,48 +11,6 @@ import environment
 ###########################################################
 preliminaries = []
 
-# Codium
-if not os.path.isfile("/usr/bin/codium"):
-    preliminaries += [
-        "wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | gpg --dearmor  | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg",
-        "echo 'deb [ signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg ] https://download.vscodium.com/debs vscodium main' | sudo tee /etc/apt/sources.list.d/vscodium.list"
-    ]
-
-# Discord
-if not os.path.isfile("/usr/bin/discord"):
-    preliminaries += [
-        "wget -O discord.deb \"https://discordapp.com/api/download?platform=linux&format=deb\"",
-        "sudo dpkg -i discord.deb",
-        "rm -f ./discord.deb"
-    ]
-
-# Signal
-if not os.path.isfile("/usr/bin/signal-desktop"):
-    preliminaries += [
-        "wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg",
-        "cat signal-desktop-keyring.gpg | sudo tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null",
-        "echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main' | sudo tee /etc/apt/sources.list.d/signal-xenial.list",
-        "rm -f ./signal-desktop-keyring.gpg"
-    ]
-
-# SmartGit
-if not os.path.isfile(os.path.expanduser("~/SysTools/SmartGit/smartgit/bin/smartgit.sh")):
-    preliminaries += [
-        "mkdir -p ~/SysTools/SmartGit",
-        "wget -O smartgit-linux.tar.gz \"https://www.syntevo.com/downloads/smartgit/archive/smartgit-linux-22_1_8.tar.gz\"",
-        "tar -xvf smartgit-linux.tar.gz -C ~/SysTools/SmartGit",
-        "rm -f ./smartgit-linux.tar.gz"
-    ]
-
-# Telegram
-if not os.path.isfile(os.path.expanduser("~/SysTools/Telegram/Telegram")):
-    preliminaries += [
-        "mkdir -p ~/SysTools",
-        "wget -O tsetup.tar.xz \"https://telegram.org/dl/desktop/linux\"",
-        "tar -xvf tsetup.tar.xz -C ~/SysTools",
-        "rm -f ./tsetup.tar.xz"
-    ]
-
 # Wine
 if not os.path.isfile("/usr/bin/wine"):
     preliminaries += [
@@ -77,21 +35,10 @@ if not os.path.isfile("/usr/bin/wine"):
             "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources"
         ]
 
-# XDM
-if not os.path.isfile("/opt/xdman/xdman.jar"):
-    preliminaries += [
-        "mkdir -p xdm-setup",
-        "wget -O xdm-setup.tar.xz \"https://github.com/subhra74/xdm/releases/download/7.2.11/xdm-setup-7.2.11.tar.xz\"",
-        "tar -xvf xdm-setup.tar.xz -C xdm-setup",
-        "sudo sh xdm-setup/install.sh",
-        "rm -f ./xdm-setup.tar.xz",
-        "rm -Rf ./xdm-setup"
-    ]
-
 ###########################################################
-# Packages
+# Apt packages
 ###########################################################
-packages = [
+apt_packages = [
 
     # Admin
     "apt-file",
@@ -259,7 +206,6 @@ packages = [
 
     # OtherOSFS
     "cifs-utils",
-    "winetricks",
 
     # Perl
     "perl-base",
@@ -271,6 +217,7 @@ packages = [
 
     # Sandbox
     "winehq-devel",
+    "winetricks",
 
     # Sound
     "audacity",
@@ -279,7 +226,6 @@ packages = [
     "qmmp",
 
     # Text
-    "codium",
     "dos2unix",
 
     # Utils
@@ -301,13 +247,32 @@ packages = [
     # Web
     "curl",
     "firefox",
-    "signal-desktop",
 
     # X11
     "qdirstat",
     "thunar",
     "wmctrl",
     "xorg-dev"
+]
+
+###########################################################
+# Snap packages
+###########################################################
+snap_packages = [
+
+    # Net
+    "xdman --beta",
+
+    # Text
+    "codium --classic",
+
+    # VCS
+    "gitkraken --classic",
+
+    # Web
+    "discord",
+    "signal-desktop",
+    "telegram-desktop"
 ]
 
 ###########################################################
@@ -322,11 +287,21 @@ def Setup(ini_values = {}):
     apt_install_dir = os.path.expandvars(ini_values["Tools.Apt"]["apt_install_dir"])
     apt_tool = os.path.join(apt_install_dir, apt_exe)
 
+    # Get snap tools
+    snap_exe = ini_values["Tools.Snap"]["snap_exe"]
+    snap_install_dir = os.path.expandvars(ini_values["Tools.Snap"]["snap_install_dir"])
+    snap_tool = os.path.join(snap_install_dir, snap_exe)
+
     # Run preliminaries
     for preliminary in preliminaries:
         subprocess.check_call(preliminary, shell=True)
 
-    # Install packages
+    # Install apt packages
     subprocess.check_call(["sudo", apt_tool, "update"])
-    for package in packages:
+    for package in apt_packages:
         subprocess.check_call(["sudo", apt_tool, "-y", "install", "--install-recommends", package])
+
+    # Install snap packages
+    subprocess.check_call(["sudo", snap_tool, "refresh"])
+    for package in snap_packages:
+        subprocess.check_call(["sudo", snap_tool, "install"] + package.split(" "))
