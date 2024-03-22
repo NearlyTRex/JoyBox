@@ -135,8 +135,7 @@ class Mame(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Mame", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Mame", "windows"),
                 installer_type = config.installer_type_7zip,
-                is_installer = False,
-                is_archive = True,
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

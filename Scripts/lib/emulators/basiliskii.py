@@ -121,6 +121,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 install_name = "BasiliskII",
                 install_dir = programs.GetProgramInstallDir("BasiliskII", "windows"),
                 backups_dir = programs.GetProgramBackupDir("BasiliskII", "windows"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BasiliskII")
@@ -136,6 +137,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 install_name = "BasiliskII",
                 install_dir = programs.GetProgramInstallDir("BasiliskII", "linux"),
                 backups_dir = programs.GetProgramBackupDir("BasiliskII", "linux"),
+                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

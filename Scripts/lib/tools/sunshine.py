@@ -51,6 +51,7 @@ class Sunshine(toolbase.ToolBase):
                 install_name = "Sunshine",
                 install_dir = programs.GetProgramInstallDir("Sunshine", "windows"),
                 install_files = ["sunshine.exe", "assets", "scripts", "tools"],
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Sunshine")
@@ -65,6 +66,7 @@ class Sunshine(toolbase.ToolBase):
                 search_file = "Sunshine.AppImage",
                 install_name = "Sunshine",
                 install_dir = programs.GetProgramInstallDir("Sunshine", "linux"),
+                release_type = config.release_type_program,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Sunshine")

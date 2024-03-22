@@ -81,6 +81,7 @@ class Mednafen(emulatorbase.EmulatorBase):
                 install_name = "Mednafen",
                 install_dir = programs.GetProgramInstallDir("Mednafen", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Mednafen", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

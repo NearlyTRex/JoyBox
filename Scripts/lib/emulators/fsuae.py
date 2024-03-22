@@ -84,6 +84,7 @@ class FSUAE(emulatorbase.EmulatorBase):
                 install_name = "FS-UAE",
                 install_dir = programs.GetProgramInstallDir("FS-UAE", "windows"),
                 backups_dir = programs.GetProgramBackupDir("FS-UAE", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

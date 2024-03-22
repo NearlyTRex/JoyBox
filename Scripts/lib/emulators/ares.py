@@ -190,6 +190,7 @@ class Ares(emulatorbase.EmulatorBase):
                 install_name = "Ares",
                 install_dir = programs.GetProgramInstallDir("Ares", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Ares", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

@@ -39,26 +39,30 @@ class Jdupes(toolbase.ToolBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Jdupes", "windows"):
-            success = release.DownloadWebpageRelease(
-                webpage_url = "https://codeberg.org/jbruchon/jdupes/releases",
-                starts_with = "https://codeberg.org/jbruchon/jdupes/releases/download/",
+            success = release.DownloadGithubRelease(
+                github_user = "NearlyTRex",
+                github_repo = "JDupes",
+                starts_with = "jdupes",
                 ends_with = "win64.zip",
                 search_file = "jdupes.exe",
                 install_name = "Jdupes",
                 install_dir = programs.GetProgramInstallDir("Jdupes", "windows"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Jdupes")
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Jdupes", "linux"):
-            success = release.DownloadWebpageRelease(
-                webpage_url = "https://codeberg.org/jbruchon/jdupes/releases",
-                starts_with = "https://codeberg.org/jbruchon/jdupes/releases/download/",
+            success = release.DownloadGithubRelease(
+                github_user = "NearlyTRex",
+                github_repo = "JDupes",
+                starts_with = "jdupes",
                 ends_with = "linux-x86_64.pkg.tar.xz",
                 search_file = "jdupes",
                 install_name = "Jdupes",
                 install_dir = programs.GetProgramInstallDir("Jdupes", "linux"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Jdupes")

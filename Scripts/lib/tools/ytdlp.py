@@ -49,6 +49,7 @@ class YtDlp(toolbase.ToolBase):
                 install_name = "YtDlp",
                 install_dir = programs.GetProgramInstallDir("YtDlp", "windows"),
                 install_files = ["yt-dlp.exe"],
+                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -65,6 +66,7 @@ class YtDlp(toolbase.ToolBase):
                 install_name = "YtDlp",
                 install_dir = programs.GetProgramInstallDir("YtDlp", "linux"),
                 install_files = ["yt-dlp_linux"],
+                release_type = config.release_type_program,
                 chmod_files = [
                     {
                         "file": "yt-dlp_linux",

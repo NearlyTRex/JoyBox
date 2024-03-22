@@ -55,6 +55,7 @@ class RClone(toolbase.ToolBase):
                 search_file = "rclone.exe",
                 install_name = "RClone",
                 install_dir = programs.GetProgramInstallDir("RClone", "windows"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RClone")
@@ -66,6 +67,7 @@ class RClone(toolbase.ToolBase):
                 search_file = "rclone",
                 install_name = "RClone",
                 install_dir = programs.GetProgramInstallDir("RClone", "linux"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RClone")

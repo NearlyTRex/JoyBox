@@ -48,6 +48,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 install_name = "3DSRomTool",
                 install_dir = programs.GetProgramInstallDir("3DSRomTool", "windows"),
                 install_files = ["rom_tool.exe"],
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup 3DSRomTool")

@@ -48,6 +48,7 @@ class CDecrypt(toolbase.ToolBase):
                 install_name = "CDecrypt",
                 install_dir = programs.GetProgramInstallDir("CDecrypt", "windows"),
                 install_files = ["cdecrypt.exe"],
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup CDecrypt")

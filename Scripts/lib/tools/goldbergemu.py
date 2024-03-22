@@ -55,6 +55,7 @@ class GoldbergEmu(toolbase.ToolBase):
                 archive_url = "https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/4247811310/artifacts/download",
                 install_name = "GoldbergEmu",
                 install_dir = programs.GetLibraryInstallDir("GoldbergEmu"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup GoldbergEmu")

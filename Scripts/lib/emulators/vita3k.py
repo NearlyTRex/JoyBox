@@ -90,6 +90,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                 install_name = "Vita3K",
                 install_dir = programs.GetProgramInstallDir("Vita3K", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Vita3K", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -106,6 +107,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                 install_name = "Vita3K",
                 install_dir = programs.GetProgramInstallDir("Vita3K", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Vita3K", "linux"),
+                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

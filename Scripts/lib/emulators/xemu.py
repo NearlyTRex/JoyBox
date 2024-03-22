@@ -92,6 +92,7 @@ class Xemu(emulatorbase.EmulatorBase):
                 install_name = "Xemu",
                 install_dir = programs.GetProgramInstallDir("Xemu", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Xemu", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

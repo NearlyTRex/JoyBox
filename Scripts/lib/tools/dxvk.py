@@ -65,6 +65,7 @@ class DXVK(toolbase.ToolBase):
                 search_file = "x64/d3d9.dll",
                 install_name = "DXVK",
                 install_dir = programs.GetLibraryInstallDir("DXVK"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DXVK")

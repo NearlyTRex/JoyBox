@@ -125,6 +125,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                 archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Yuzu", "windows"), "yuzu-windows-msvc-20240304-537296095.zip"),
                 install_name = "Yuzu",
                 install_dir = programs.GetProgramInstallDir("Yuzu", "windows"),
+                release_type = config.release_type_archive,
                 search_file = "yuzu.exe",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -136,6 +137,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                 archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Yuzu", "linux"), "yuzu-mainline-20240304-537296095.AppImage"),
                 install_name = "Yuzu",
                 install_dir = programs.GetProgramInstallDir("Yuzu", "linux"),
+                release_type = config.release_type_program,
                 search_file = "Yuzu.AppImage",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
