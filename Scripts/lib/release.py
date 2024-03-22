@@ -29,8 +29,7 @@ def SetupGeneralRelease(
     chmod_files = [],
     rename_files = [],
     installer_type = None,
-    is_installer = False,
-    is_archive = False,
+    release_type = None,
     verbose = False,
     exit_on_failure = False):
 
@@ -41,12 +40,10 @@ def SetupGeneralRelease(
         return False
 
     # Get archive info
+    archive_dir = system.GetFilenameDirectory(archive_file)
     archive_basename = system.GetFilenameBasename(archive_file)
     archive_extension = system.GetFilenameExtension(archive_file)
     archive_filename = system.GetFilenameFile(archive_file)
-
-    # Set directory where release files will be found
-    search_dir = tmp_dir_result
 
     # Create install dir if necessary
     success = system.MakeDirectory(install_dir, verbose = verbose, exit_on_failure = exit_on_failure)
@@ -54,100 +51,117 @@ def SetupGeneralRelease(
         system.LogError("Unable to create install directory %s" % install_dir)
         return False
 
-    # Handle app images
-    if archive_extension.lower() == ".appimage":
+    # Set initial search dir
+    search_dir = tmp_dir_result
 
-        # Get new appimage file
-        appimage_file = os.path.join(tmp_dir_result, install_name + ".AppImage")
+    ####################################
+    # Standalone program
+    ####################################
+    if release_type == config.release_type_program:
 
-        # Copy app image
-        success = system.SmartCopy(
-            src = archive_file,
-            dest = appimage_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            system.LogError("Unable to copy app image")
-            return False
+        # AppImage format
+        if archive_extension.lower() == ".appimage":
 
-        # Mark app images as executable
-        success = system.MarkAsExecutable(
-            src = appimage_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            system.LogError("Unable to mark app image as executable")
-            return False
+            # Get new appimage file
+            appimage_file = os.path.join(tmp_dir_result, install_name + ".AppImage")
 
-        # Set install files
-        install_files = [system.GetFilenameFile(appimage_file)]
+            # Copy app image
+            success = system.SmartCopy(
+                src = archive_file,
+                dest = appimage_file,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                system.LogError("Unable to copy app image")
+                return False
 
+            # Mark app images as executable
+            success = system.MarkAsExecutable(
+                src = appimage_file,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                system.LogError("Unable to mark app image as executable")
+                return False
+
+            # Set install files
+            install_files = [system.GetFilenameFile(appimage_file)]
+
+        # Other formats
+        else:
+
+            # Set search dir to match that of the archive
+            search_dir = archive_dir
+
+    ####################################
     # Executable installer
-    elif archive_extension == ".exe" and is_installer and not is_archive:
+    ####################################
+    elif release_type == config.release_type_installer:
 
-        # Check if installer should be run via wine/sandboxie
-        should_run_via_wine = environment.IsWinePlatform()
-        should_run_via_sandboxie = environment.IsSandboxiePlatform()
+        # Exe installer
+        if archive_extension == ".exe":
 
-        # Get real and virtual install paths
-        real_install_path = os.path.join(tmp_dir_result, "install")
-        virtual_install_path = sandbox.TranslateRealPathToVirtualPath(
-            path = real_install_path,
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            is_wine_prefix = should_run_via_wine,
-            is_sandboxie_prefix = should_run_via_sandboxie)
+            # Check if installer should be run via wine/sandboxie
+            should_run_via_wine = environment.IsWinePlatform()
+            should_run_via_sandboxie = environment.IsSandboxiePlatform()
 
-        # Create real install path
-        system.MakeDirectory(real_install_path, verbose = verbose, exit_on_failure = exit_on_failure)
+            # Get real and virtual install paths
+            real_install_path = os.path.join(tmp_dir_result, "install")
+            virtual_install_path = sandbox.TranslateRealPathToVirtualPath(
+                path = real_install_path,
+                prefix_dir = prefix_dir,
+                prefix_name = prefix_name,
+                is_wine_prefix = should_run_via_wine,
+                is_sandboxie_prefix = should_run_via_sandboxie)
 
-        # Get installer setup command
-        installer_setup_cmd = installer.GetInstallerSetupCommand(
-            installer_file = archive_file,
-            installer_type = installer_type,
-            install_dir = virtual_install_path,
-            silent_install = False)
-        if not installer_setup_cmd:
-            system.LogError("Unable to get installer setup command")
-            return False
+            # Create real install path
+            system.MakeDirectory(real_install_path, verbose = verbose, exit_on_failure = exit_on_failure)
 
-        # Create prefix
-        sandbox.CreateBasicPrefix(
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            is_wine_prefix = should_run_via_wine,
-            is_sandboxie_prefix = should_run_via_sandboxie,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            # Get installer setup command
+            installer_setup_cmd = installer.GetInstallerSetupCommand(
+                installer_file = archive_file,
+                installer_type = installer_type,
+                install_dir = virtual_install_path,
+                silent_install = False)
+            if not installer_setup_cmd:
+                system.LogError("Unable to get installer setup command")
+                return False
 
-        # Run installer
-        code = command.RunBlockingCommand(
-            cmd = installer_setup_cmd,
-            options = command.CommandOptions(
-                cwd = real_install_path,
+            # Create prefix
+            sandbox.CreateBasicPrefix(
                 prefix_dir = prefix_dir,
                 prefix_name = prefix_name,
                 is_wine_prefix = should_run_via_wine,
                 is_sandboxie_prefix = should_run_via_sandboxie,
-                force_prefix = True,
-                blocking_processes = [archive_file]),
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if code != 0:
-            system.LogError("Error occurred running the setup installer")
-            return False
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
-        # Set search directory to best location for installed files
-        search_dir = prefix_dir
-        if installer_type != config.installer_type_unknown:
-            search_dir = real_install_path
+            # Run installer
+            code = command.RunBlockingCommand(
+                cmd = installer_setup_cmd,
+                options = command.CommandOptions(
+                    cwd = real_install_path,
+                    prefix_dir = prefix_dir,
+                    prefix_name = prefix_name,
+                    is_wine_prefix = should_run_via_wine,
+                    is_sandboxie_prefix = should_run_via_sandboxie,
+                    force_prefix = True,
+                    blocking_processes = [archive_file]),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if code != 0:
+                system.LogError("Error occurred running the setup installer")
+                return False
 
-    # Plain executable (should be just downloaded as a standalone file)
-    elif archive_extension == ".exe" and not is_installer and not is_archive:
-        pass
+            # Set search directory to best location for installed files
+            search_dir = prefix_dir
+            if installer_type != config.installer_type_unknown:
+                search_dir = real_install_path
 
-    # Otherwise handle regular archives
-    else:
+    ####################################
+    # Archive
+    ####################################
+    elif release_type == config.release_type_archive:
 
         # Extract archive
         success = archive.ExtractArchive(
@@ -158,6 +172,13 @@ def SetupGeneralRelease(
         if not success:
             system.LogError("Unable to extract downloaded release archive %s" % archive_file)
             return False
+
+    ####################################
+    # Unknown
+    ####################################
+    else:
+        system.LogError("Unknown release type, please specify it")
+        return False
 
     # Further refine search dir if we are looking for a particular file
     if isinstance(search_file, str) and len(search_file):
@@ -267,8 +288,7 @@ def DownloadGeneralRelease(
     chmod_files = [],
     rename_files = [],
     installer_type = None,
-    is_installer = False,
-    is_archive = False,
+    release_type = None,
     verbose = False,
     exit_on_failure = False):
 
@@ -303,8 +323,7 @@ def DownloadGeneralRelease(
         chmod_files = chmod_files,
         rename_files = rename_files,
         installer_type = installer_type,
-        is_installer = is_installer,
-        is_archive = is_archive,
+        release_type = release_type,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
@@ -325,8 +344,7 @@ def DownloadGithubRelease(
     install_files = [],
     chmod_files = [],
     installer_type = None,
-    is_installer = False,
-    is_archive = False,
+    release_type = None,
     get_latest = False,
     verbose = False,
     exit_on_failure = False):
@@ -385,8 +403,7 @@ def DownloadGithubRelease(
         install_files = install_files,
         chmod_files = chmod_files,
         installer_type = installer_type,
-        is_installer = is_installer,
-        is_archive = is_archive,
+        release_type = release_type,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
@@ -404,8 +421,7 @@ def DownloadWebpageRelease(
     install_files = [],
     chmod_files = [],
     installer_type = None,
-    is_installer = False,
-    is_archive = False,
+    release_type = None,
     get_latest = False,
     verbose = False,
     exit_on_failure = False):
@@ -433,8 +449,7 @@ def DownloadWebpageRelease(
         install_files = install_files,
         chmod_files = chmod_files,
         installer_type = installer_type,
-        is_installer = is_installer,
-        is_archive = is_archive,
+        release_type = release_type,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
