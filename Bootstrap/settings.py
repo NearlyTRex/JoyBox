@@ -81,6 +81,9 @@ else:
     ini_defaults["Tools.Apt"] = {}
     ini_defaults["Tools.Apt"]["apt_exe"] = "apt"
     ini_defaults["Tools.Apt"]["apt_install_dir"] = "/usr/bin"
+    ini_defaults["Tools.Snap"] = {}
+    ini_defaults["Tools.Snap"]["snap_exe"] = "snap"
+    ini_defaults["Tools.Snap"]["snap_install_dir"] = "/usr/bin"
 
 # Tools.Python
 ini_defaults["Tools.Python"] = {}
