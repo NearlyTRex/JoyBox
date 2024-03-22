@@ -86,8 +86,8 @@ def Setup(ini_values = {}):
 
     # Run preliminaries
     for preliminary in preliminaries:
-        subprocess.run(preliminary, shell=True)
+        subprocess.check_call(preliminary, shell=True)
 
     # Install packages
     for package in packages:
-        subprocess.run([winget_tool, "install", "-e", "--id", package])
+        subprocess.check_call([winget_tool, "install", "-e", "--id", package])
