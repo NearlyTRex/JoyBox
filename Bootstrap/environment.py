@@ -30,3 +30,21 @@ def GetLinuxDistroName():
 # Get linux distro version
 def GetLinuxDistroVersion():
     return GetLinuxDistroValue("VERSION")
+
+# Get linux distro id
+def GetLinuxDistroId():
+    return GetLinuxDistroValue("ID")
+
+# Get linux distro id like
+def GetLinuxDistroIdLike():
+    return GetLinuxDistroValue("ID_LIKE")
+
+# Check for ubuntu distro
+def IsUbuntuDistro():
+    if "ubuntu" in GetLinuxDistroName().lower():
+        return True
+    elif "ubuntu" in GetLinuxDistroId():
+        return True
+    elif "ubuntu" in GetLinuxDistroIdLike():
+        return True
+    return False
