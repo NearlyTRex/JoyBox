@@ -246,6 +246,7 @@ apt_packages = [
     "firefox",
 
     # X11
+    "blueman",
     "qdirstat",
     "thunar",
     "wmctrl",
