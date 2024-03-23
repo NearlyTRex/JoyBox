@@ -84,6 +84,9 @@ else:
     ini_defaults["Tools.Snap"] = {}
     ini_defaults["Tools.Snap"]["snap_exe"] = "snap"
     ini_defaults["Tools.Snap"]["snap_install_dir"] = "/usr/bin"
+    ini_defaults["Tools.Flatpak"] = {}
+    ini_defaults["Tools.Flatpak"]["flatpak_exe"] = "flatpak"
+    ini_defaults["Tools.Flatpak"]["flatpak_install_dir"] = "/usr/bin"
 
 # Tools.Python
 ini_defaults["Tools.Python"] = {}

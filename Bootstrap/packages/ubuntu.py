@@ -42,6 +42,7 @@ apt_packages = [
 
     # Admin
     "apt-file",
+    "flatpak",
     "libudev-dev",
     "libvirt-clients",
     "libvirt-daemon-system",
@@ -73,6 +74,7 @@ apt_packages = [
     "qt6-tools-dev-tools",
     "qtbase5-dev-tools",
     "qttools5-dev-tools",
+    "snapd",
     "xa65",
 
     # Games
@@ -82,7 +84,6 @@ apt_packages = [
     # Gnome
     "brasero",
     "ghex",
-    "gnome-terminal",
 
     # Graphics
     "gimp",
@@ -90,10 +91,6 @@ apt_packages = [
     "imagemagick",
     "imagemagick-6.q16",
     "vlc",
-
-    # KDE
-    "dolphin",
-    "dolphin-plugins",
 
     # Libdevel
     "glslang-dev",
@@ -203,6 +200,7 @@ apt_packages = [
     # Net
     "bridge-utils",
     "net-tools",
+    "uget",
 
     # OtherOSFS
     "cifs-utils",
@@ -230,7 +228,6 @@ apt_packages = [
 
     # Utils
     "7zip",
-    "7zip-rar",
     "clamav",
     "img2pdf",
     "openssl",
@@ -259,20 +256,23 @@ apt_packages = [
 # Snap packages
 ###########################################################
 snap_packages = [
+]
 
-    # Net
-    "xdman --beta",
+###########################################################
+# Flatpak packages
+###########################################################
+flatpak_packages = [
 
     # Text
-    "codium --classic",
+    ["flathub", "com.vscodium.codium"],
 
     # VCS
-    "gitkraken --classic",
+    ["flathub", "com.axosoft.GitKraken"],
 
     # Web
-    "discord",
-    "signal-desktop",
-    "telegram-desktop"
+    ["flathub", "com.discordapp.Discord"],
+    ["flathub", "org.signal.Signal"],
+    ["flathub", "org.telegram.desktop"]
 ]
 
 ###########################################################
@@ -282,15 +282,20 @@ snap_packages = [
 # Setup
 def Setup(ini_values = {}):
 
-    # Get apt tools
+    # Get apt tool
     apt_exe = ini_values["Tools.Apt"]["apt_exe"]
     apt_install_dir = os.path.expandvars(ini_values["Tools.Apt"]["apt_install_dir"])
     apt_tool = os.path.join(apt_install_dir, apt_exe)
 
-    # Get snap tools
+    # Get snap tool
     snap_exe = ini_values["Tools.Snap"]["snap_exe"]
     snap_install_dir = os.path.expandvars(ini_values["Tools.Snap"]["snap_install_dir"])
     snap_tool = os.path.join(snap_install_dir, snap_exe)
+
+    # Get flatpak tool
+    flatpak_exe = ini_values["Tools.Flatpak"]["flatpak_exe"]
+    flatpak_install_dir = os.path.expandvars(ini_values["Tools.Flatpak"]["flatpak_install_dir"])
+    flatpak_tool = os.path.join(flatpak_install_dir, flatpak_exe)
 
     # Run preliminaries
     for preliminary in preliminaries:
@@ -302,6 +307,13 @@ def Setup(ini_values = {}):
         subprocess.check_call(["sudo", apt_tool, "-y", "install", "--install-recommends", package])
 
     # Install snap packages
-    subprocess.check_call(["sudo", snap_tool, "refresh"])
-    for package in snap_packages:
-        subprocess.check_call(["sudo", snap_tool, "install"] + package.split(" "))
+    if os.path.isfile(snap_tool):
+        subprocess.check_call(["sudo", snap_tool, "refresh"])
+        for package in snap_packages:
+            subprocess.check_call(["sudo", snap_tool, "install"] + package)
+    
+    # Install flatpak packages
+    if os.path.isfile(flatpak_tool):
+        subprocess.check_call([flatpak_tool, "update", "-y"])
+        for package in flatpak_packages:
+            subprocess.check_call([flatpak_tool, "install", "-y"] + package)
