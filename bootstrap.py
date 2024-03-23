@@ -28,12 +28,10 @@ packages.Setup(ini_values)
 python.Setup(ini_values)
 python.RunScript(setup_tools_file, ini_values)
 
+# Add to path
+should_add_path = system.PromptForValue("Would you like to add %s to your PATH? (y/N)" % scripts_bin_dir, "N")
+if should_add_path.lower() == "y":
+    environment.AddToPath(scripts_bin_dir)
+
 # Inform user
-print("Bootstrap complete!")
-print("")
-print("Add %s to your PATH to run scripts:" % scripts_bin_dir)
-if environment.IsWindowsPlatform():
-    print(">>> setx PATH \"%%PATH%%;%s\"" % scripts_bin_dir)
-elif environment.IsLinuxPlatform():
-    print(">>> export PATH=\"%s:$PATH\"" % scripts_bin_dir)
-print("")
+system.Log("Bootstrap complete!")

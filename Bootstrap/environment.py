@@ -1,6 +1,11 @@
 # Imports
 import os
 import sys
+import subprocess
+
+###########################################################
+# Info
+###########################################################
 
 # Check for windows
 def IsWindowsPlatform():
@@ -9,6 +14,29 @@ def IsWindowsPlatform():
 # Check for linux
 def IsLinuxPlatform():
     return sys.platform.startswith("linux")
+
+###########################################################
+# Path
+###########################################################
+
+# Add to windows path
+def AddToWindowsPath(path):
+    subprocess.check_call("setx PATH \"%%PATH%%;%s\"" % path, shell = True)
+
+# Add to linux path
+def AddToLinuxPath(path):
+    subprocess.check_call("echo 'export PATH=\"%s:$PATH\"' >> ~/.bashrc" % path, shell = True)
+
+# Add to path
+def AddToPath(path):
+    if IsWindowsPlatform():
+        AddToWindowsPath(path)
+    elif IsLinuxPlatform():
+        AddToLinuxPath(path)
+
+###########################################################
+# Distro
+###########################################################
 
 # Get linux distro value
 def GetLinuxDistroValue(field):
