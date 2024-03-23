@@ -81,8 +81,8 @@ class ViceC64(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("VICE-C64", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ViceC64.git",
-                output_name = "VICE-C64",
-                output_dir = programs.GetProgramInstallDir("VICE-C64", "linux"),
+                install_name = "VICE-C64",
+                install_dir = programs.GetProgramInstallDir("VICE-C64", "linux"),
                 build_cmd = [
                     "cd", "vice",
                     "&&",

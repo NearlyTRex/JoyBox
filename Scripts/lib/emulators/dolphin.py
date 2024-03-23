@@ -107,8 +107,8 @@ class Dolphin(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("Dolphin", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Dolphin.git",
-                output_name = "Dolphin",
-                output_dir = programs.GetProgramInstallDir("Dolphin", "linux"),
+                install_name = "Dolphin",
+                install_dir = programs.GetProgramInstallDir("Dolphin", "linux"),
                 build_cmd = [
                     "cmake", "..", "-DLINUX_LOCAL_DEV=true", "-DCMAKE_BUILD_TYPE=Release",
                     "&&",

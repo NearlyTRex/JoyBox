@@ -105,8 +105,8 @@ class MelonDS(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("melonDS", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/melonDS.git",
-                output_name = "melonDS",
-                output_dir = programs.GetProgramInstallDir("melonDS", "linux"),
+                install_name = "melonDS",
+                install_dir = programs.GetProgramInstallDir("melonDS", "linux"),
                 build_cmd = [
                     "cmake", "..", "-DCMAKE_BUILD_TYPE=Release",
                     "&&",

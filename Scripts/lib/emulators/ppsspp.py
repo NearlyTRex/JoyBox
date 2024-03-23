@@ -81,8 +81,8 @@ class PPSSPP(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("PPSSPP", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/PPSSPP.git",
-                output_name = "PPSSPP",
-                output_dir = programs.GetProgramInstallDir("PPSSPP", "linux"),
+                install_name = "PPSSPP",
+                install_dir = programs.GetProgramInstallDir("PPSSPP", "linux"),
                 build_cmd = [
                     "cmake", "..", "-DLINUX_LOCAL_DEV=true", "-DCMAKE_BUILD_TYPE=Release",
                     "&&",

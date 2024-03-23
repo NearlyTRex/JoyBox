@@ -200,8 +200,8 @@ class Ares(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("Ares", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Ares.git",
-                output_name = "Ares",
-                output_dir = programs.GetProgramInstallDir("Ares", "linux"),
+                install_name = "Ares",
+                install_dir = programs.GetProgramInstallDir("Ares", "linux"),
                 build_cmd = [
                     "make", "-j4", "build=release"
                 ],

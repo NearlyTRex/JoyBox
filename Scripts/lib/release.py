@@ -459,8 +459,8 @@ def BuildAppImageFromSource(
     webpage_url = "",
     starts_with = "",
     ends_with = "",
-    output_name = "",
-    output_dir = "",
+    install_name = "",
+    install_dir = "",
     build_cmd = "",
     build_dir = "",
     internal_copies = [],
@@ -477,8 +477,8 @@ def BuildAppImageFromSource(
     # Check params
     system.AssertIsString(release_url, "release_url")
     system.AssertIsString(webpage_url, "webpage_url")
-    system.AssertIsString(output_name, "output_name")
-    system.AssertIsString(output_dir, "output_dir")
+    system.AssertIsString(install_name, "install_name")
+    system.AssertIsString(install_dir, "install_dir")
     system.AssertIsList(build_cmd, "build_cmd")
     system.AssertIsString(build_dir, "build_dir")
 
@@ -509,7 +509,7 @@ def BuildAppImageFromSource(
         source_build_dir = os.path.abspath(os.path.join(source_dir, build_dir))
 
     # Make folders
-    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(install_dir, verbose = verbose, exit_on_failure = exit_on_failure)
     system.MakeDirectory(source_dir, verbose = verbose, exit_on_failure = exit_on_failure)
     system.MakeDirectory(appimage_dir, verbose = verbose, exit_on_failure = exit_on_failure)
     system.MakeDirectory(download_dir, verbose = verbose, exit_on_failure = exit_on_failure)
@@ -599,7 +599,7 @@ def BuildAppImageFromSource(
         if obj.endswith(".AppImage"):
             system.CopyFileOrDirectory(
                 src = os.path.join(tmp_dir_result, obj),
-                dest = os.path.join(output_dir, output_name + ".AppImage"),
+                dest = os.path.join(install_dir, install_name + ".AppImage"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             break
@@ -607,7 +607,7 @@ def BuildAppImageFromSource(
     # Copy other objects
     for obj in external_copies:
         src_obj = os.path.join(tmp_dir_result, obj["from"])
-        dest_obj = os.path.join(output_dir, obj["to"])
+        dest_obj = os.path.join(install_dir, obj["to"])
         system.MakeDirectory(os.path.dirname(dest_obj), verbose = verbose, exit_on_failure = exit_on_failure)
         system.CopyFileOrDirectory(
             src = src_obj,
@@ -619,4 +619,4 @@ def BuildAppImageFromSource(
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
 
     # Check result
-    return os.path.exists(os.path.join(output_dir, output_name + ".AppImage"))
+    return os.path.exists(os.path.join(install_dir, install_name + ".AppImage"))

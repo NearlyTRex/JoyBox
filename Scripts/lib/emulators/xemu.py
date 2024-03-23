@@ -102,8 +102,8 @@ class Xemu(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("Xemu", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Xemu.git",
-                output_name = "Xemu",
-                output_dir = programs.GetProgramInstallDir("Xemu", "linux"),
+                install_name = "Xemu",
+                install_dir = programs.GetProgramInstallDir("Xemu", "linux"),
                 build_cmd = [
                     "./build.sh"
                 ],

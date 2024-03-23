@@ -53,8 +53,8 @@ class XorrISO(toolbase.ToolBase):
         if programs.ShouldProgramBeInstalled("XorrISO", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://www.gnu.org/software/xorriso/xorriso-1.5.6.pl02.tar.gz",
-                output_name = "XorrISO",
-                output_dir = programs.GetProgramInstallDir("XorrISO", "linux"),
+                install_name = "XorrISO",
+                install_dir = programs.GetProgramInstallDir("XorrISO", "linux"),
                 build_cmd = [
                     "cd", "xorriso-1.5.6",
                     "./bootstrap",
