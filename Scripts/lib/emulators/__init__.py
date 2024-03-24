@@ -1,11 +1,17 @@
 # Imports
+from . import a7800
 from . import ares
 from . import atari800
 from . import basiliskii
+from . import bgb
 from . import bigpemu
+from . import blastem
+from . import bsnes
 from . import cemu
 from . import citra
 from . import computer
+from . import cxbxreloaded
+from . import demul
 from . import dolphin
 from . import duckstation
 from . import eka2l1
@@ -27,13 +33,19 @@ from . import yuzu
 
 # Emulator instances
 instances = [
+    a7800.A7800(),
     ares.Ares(),
     atari800.Atari800(),
     basiliskii.BasiliskII(),
+    bgb.BGB(),
     bigpemu.BigPEmu(),
+    blastem.BlastEm(),
+    bsnes.BSnes(),
     cemu.Cemu(),
     citra.Citra(),
     computer.Computer(),
+    cxbxreloaded.CxBxReloaded(),
+    demul.Demul(),
     dolphin.Dolphin(),
     duckstation.DuckStation(),
     eka2l1.EKA2L1(),
