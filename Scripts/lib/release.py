@@ -185,7 +185,7 @@ def SetupGeneralRelease(
         for file in system.BuildFileList(search_dir):
             current_dir = system.GetFilenameDirectory(file)
             current_basefile = system.GetFilenameFile(file)
-            if current_basefile.endswith(search_file):
+            if file.endswith(search_file):
                 search_dir = current_dir
                 break
 
