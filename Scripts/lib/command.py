@@ -53,6 +53,15 @@ def CreateCommandList(cmd):
 
 ###########################################################
 
+# Clean command output
+def CleanCommandOutput(output):
+    try:
+        return output.decode("utf-8", "ignore")
+    except:
+        return output
+
+###########################################################
+
 # Get starter command
 def GetStarterCommand(cmd):
     cmd_list = CreateCommandList(cmd)
@@ -449,9 +458,7 @@ def RunOutputCommand(
                     options = options,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
-            if isinstance(output, bytes):
-                output = output.decode("utf-8")
-            return output.strip()
+            return CleanCommandOutput(output.strip())
         return ""
     except subprocess.CalledProcessError as e:
         if verbose:
@@ -592,7 +599,7 @@ def RunBlockingCommand(
                 creationflags = options.creationflags,
                 stdout = subprocess.PIPE)
             while True:
-                output = process.stdout.readline().rstrip().decode("utf-8")
+                output = CleanCommandOutput(process.stdout.readline().rstrip())
                 if output == "" and process.poll() is not None:
                     break
                 if output:
