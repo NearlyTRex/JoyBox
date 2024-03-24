@@ -137,7 +137,12 @@ def SplitByEnclosedSubstrings(string, delimiter = "\""):
 
 # Log message
 def Log(message):
-    print(message)
+    try:
+        print(message)
+    except UnicodeEncodeError:
+        print(message.encode("utf-8", "ignore").decode("utf-8"))
+    except:
+        pass
 
 # Log colored
 def LogColored(message, color = None, on_color = None, attrs = None):
