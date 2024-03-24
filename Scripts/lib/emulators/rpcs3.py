@@ -141,6 +141,7 @@ class RPCS3(emulatorbase.EmulatorBase):
         exit_on_failure = False):
 
         # Get game info
+        game_platform = game_info.get_platform()
         game_save_dir = game_info.get_save_dir()
         game_cache_dir = game_info.get_local_cache_dir()
 
@@ -150,7 +151,7 @@ class RPCS3(emulatorbase.EmulatorBase):
             verbose = verbose)
 
         # Copy exdata files
-        if launch_platform == config.game_subcategory_sony_playstation_network_ps3:
+        if game_platform == config.game_subcategory_sony_playstation_network_ps3:
             for exdata_file in system.BuildFileListByExtensions(game_cache_dir, extensions = [".rap", ".edat"]):
                 system.SmartCopy(
                     src = exdata_file,
