@@ -21,6 +21,7 @@ from . import kegafusion
 from . import mame
 from . import mednafen
 from . import melonds
+from . import mesen
 from . import mgba
 from . import nestopia
 from . import pcem
@@ -63,6 +64,7 @@ instances = [
     fsuae.FSUAE(),
     kegafusion.KegaFusion(),
     mame.Mame(),
+    mesen.Mesen(),
     mednafen.Mednafen(),
     melonds.MelonDS(),
     mgba.MGBA(),
