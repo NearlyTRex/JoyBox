@@ -33,8 +33,10 @@ from . import ryujinx
 from . import sameboy
 from . import sheepshaver
 from . import snes9x
+from . import stella
 from . import vicec64
 from . import vita3k
+from . import winuae
 from . import xemu
 from . import xenia
 from . import yuzu
@@ -75,8 +77,10 @@ instances = [
     sameboy.SameBoy(),
     sheepshaver.SheepShaver(),
     snes9x.Snes9x(),
+    stella.Stella(),
     vicec64.ViceC64(),
     vita3k.Vita3K(),
+    winuae.WinUAE(),
     xemu.Xemu(),
     xenia.Xenia(),
     yuzu.Yuzu()
