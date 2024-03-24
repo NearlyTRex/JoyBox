@@ -17,14 +17,19 @@ from . import duckstation
 from . import eka2l1
 from . import flycast
 from . import fsuae
+from . import kegafusion
 from . import mame
 from . import mednafen
 from . import melonds
 from . import mgba
+from . import nestopia
+from . import pcem
 from . import pcsx2
+from . import phoenix
 from . import ppsspp
 from . import retroarch
 from . import rpcs3
+from . import ryujinx
 from . import vicec64
 from . import vita3k
 from . import xemu
@@ -51,14 +56,19 @@ instances = [
     eka2l1.EKA2L1(),
     flycast.Flycast(),
     fsuae.FSUAE(),
+    kegafusion.KegaFusion(),
     mame.Mame(),
     mednafen.Mednafen(),
     melonds.MelonDS(),
     mgba.MGBA(),
+    nestopia.Nestopia(),
+    pcem.PCEm(),
     pcsx2.PCSX2(),
+    phoenix.Phoenix(),
     ppsspp.PPSSPP(),
     retroarch.RetroArch(),
     rpcs3.RPCS3(),
+    ryujinx.Ryujinx(),
     vicec64.ViceC64(),
     vita3k.Vita3K(),
     xemu.Xemu(),
