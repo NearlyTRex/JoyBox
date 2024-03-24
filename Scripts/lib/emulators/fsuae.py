@@ -84,6 +84,7 @@ class FSUAE(emulatorbase.EmulatorBase):
                 install_name = "FS-UAE",
                 install_dir = programs.GetProgramInstallDir("FS-UAE", "windows"),
                 backups_dir = programs.GetProgramBackupDir("FS-UAE", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -93,8 +94,8 @@ class FSUAE(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("FS-UAE", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/FrodeSolheim/fs-uae/releases/download/v3.1.66/fs-uae-3.1.66.tar.xz",
-                output_name = "FS-UAE",
-                output_dir = programs.GetProgramInstallDir("FS-UAE", "linux"),
+                install_name = "FS-UAE",
+                install_dir = programs.GetProgramInstallDir("FS-UAE", "linux"),
                 build_cmd = [
                     "cd", "fs-uae-3.1.66",
                     "&&",

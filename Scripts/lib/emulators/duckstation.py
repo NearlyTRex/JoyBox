@@ -143,6 +143,7 @@ class DuckStation(emulatorbase.EmulatorBase):
                 install_name = "DuckStation",
                 install_dir = programs.GetProgramInstallDir("DuckStation", "windows"),
                 backups_dir = programs.GetProgramBackupDir("DuckStation", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -159,6 +160,7 @@ class DuckStation(emulatorbase.EmulatorBase):
                 install_name = "DuckStation",
                 install_dir = programs.GetProgramInstallDir("DuckStation", "linux"),
                 backups_dir = programs.GetProgramBackupDir("DuckStation", "linux"),
+                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

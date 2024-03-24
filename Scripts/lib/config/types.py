@@ -98,6 +98,11 @@ installer_type_7zip = "7zip"
 installer_type_winrar = "winrar"
 installer_type_unknown = "unknown"
 
+# Release types
+release_type_program = "program"
+release_type_installer = "installer"
+release_type_archive = "archive"
+
 # Sync types
 sync_type_gdrive = "gdrive"
 

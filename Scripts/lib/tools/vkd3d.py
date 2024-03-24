@@ -62,6 +62,7 @@ class VKD3D(toolbase.ToolBase):
                 search_file = "x64/d3d12.dll",
                 install_name = "VKD3D-Proton",
                 install_dir = programs.GetLibraryInstallDir("VKD3D"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup VKD3D")

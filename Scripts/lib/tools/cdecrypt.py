@@ -48,6 +48,7 @@ class CDecrypt(toolbase.ToolBase):
                 install_name = "CDecrypt",
                 install_dir = programs.GetProgramInstallDir("CDecrypt", "windows"),
                 install_files = ["cdecrypt.exe"],
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup CDecrypt")
@@ -56,8 +57,8 @@ class CDecrypt(toolbase.ToolBase):
         if programs.ShouldProgramBeInstalled("CDecrypt", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/CDecrypt.git",
-                output_name = "CDecrypt",
-                output_dir = programs.GetProgramInstallDir("CDecrypt", "linux"),
+                install_name = "CDecrypt",
+                install_dir = programs.GetProgramInstallDir("CDecrypt", "linux"),
                 build_cmd = [
                     "make", "-j", "4"
                 ],

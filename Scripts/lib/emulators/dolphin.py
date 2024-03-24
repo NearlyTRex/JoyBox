@@ -97,6 +97,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                 install_name = "Dolphin",
                 install_dir = programs.GetProgramInstallDir("Dolphin", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Dolphin", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -106,8 +107,8 @@ class Dolphin(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("Dolphin", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Dolphin.git",
-                output_name = "Dolphin",
-                output_dir = programs.GetProgramInstallDir("Dolphin", "linux"),
+                install_name = "Dolphin",
+                install_dir = programs.GetProgramInstallDir("Dolphin", "linux"),
                 build_cmd = [
                     "cmake", "..", "-DLINUX_LOCAL_DEV=true", "-DCMAKE_BUILD_TYPE=Release",
                     "&&",

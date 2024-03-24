@@ -135,8 +135,7 @@ class Mame(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Mame", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Mame", "windows"),
                 installer_type = config.installer_type_7zip,
-                is_installer = False,
-                is_archive = True,
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -146,8 +145,8 @@ class Mame(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("Mame", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Mame.git",
-                output_name = "Mame",
-                output_dir = programs.GetProgramInstallDir("Mame", "linux"),
+                install_name = "Mame",
+                install_dir = programs.GetProgramInstallDir("Mame", "linux"),
                 build_cmd = [
                     "make", "-j", "8"
                 ],

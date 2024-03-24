@@ -80,6 +80,7 @@ class RPCS3(emulatorbase.EmulatorBase):
                 install_name = "RPCS3",
                 install_dir = programs.GetProgramInstallDir("RPCS3", "windows"),
                 backups_dir = programs.GetProgramBackupDir("RPCS3", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -96,6 +97,7 @@ class RPCS3(emulatorbase.EmulatorBase):
                 install_name = "RPCS3",
                 install_dir = programs.GetProgramInstallDir("RPCS3", "linux"),
                 backups_dir = programs.GetProgramBackupDir("RPCS3", "linux"),
+                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

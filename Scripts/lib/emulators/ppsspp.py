@@ -72,6 +72,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 install_name = "PPSSPP",
                 install_dir = programs.GetProgramInstallDir("PPSSPP", "windows"),
                 backups_dir = programs.GetProgramBackupDir("PPSSPP", "windows"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PPSSPP")
@@ -80,8 +81,8 @@ class PPSSPP(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("PPSSPP", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/PPSSPP.git",
-                output_name = "PPSSPP",
-                output_dir = programs.GetProgramInstallDir("PPSSPP", "linux"),
+                install_name = "PPSSPP",
+                install_dir = programs.GetProgramInstallDir("PPSSPP", "linux"),
                 build_cmd = [
                     "cmake", "..", "-DLINUX_LOCAL_DEV=true", "-DCMAKE_BUILD_TYPE=Release",
                     "&&",

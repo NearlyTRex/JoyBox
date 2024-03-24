@@ -526,6 +526,7 @@ class Computer(emulatorbase.EmulatorBase):
                 install_name = "DosBoxX",
                 install_dir = programs.GetProgramInstallDir("DosBoxX", "windows"),
                 backups_dir = programs.GetProgramBackupDir("DosBoxX", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -539,6 +540,7 @@ class Computer(emulatorbase.EmulatorBase):
                 install_name = "ScummVM",
                 install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
                 backups_dir = programs.GetProgramBackupDir("ScummVM", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -548,8 +550,8 @@ class Computer(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/DosboxX.git",
-                output_name = "DosBoxX",
-                output_dir = programs.GetProgramInstallDir("DosBoxX", "linux"),
+                install_name = "DosBoxX",
+                install_dir = programs.GetProgramInstallDir("DosBoxX", "linux"),
                 build_cmd = [
                     "./build-sdl2"
                 ],
@@ -588,8 +590,8 @@ class Computer(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ScummVM.git",
-                output_name = "ScummVM",
-                output_dir = programs.GetProgramInstallDir("ScummVM", "linux"),
+                install_name = "ScummVM",
+                install_dir = programs.GetProgramInstallDir("ScummVM", "linux"),
                 build_cmd = [
                     "./configure",
                     "&&",

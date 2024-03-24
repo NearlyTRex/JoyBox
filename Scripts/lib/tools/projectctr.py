@@ -62,6 +62,7 @@ class ProjectCTR(toolbase.ToolBase):
                 install_name = "CtrMakeRom",
                 install_dir = programs.GetProgramInstallDir("CtrMakeRom", "windows"),
                 install_files = ["makerom.exe"],
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup CtrMakeRom")
@@ -75,6 +76,7 @@ class ProjectCTR(toolbase.ToolBase):
                 install_name = "CtrTool",
                 install_dir = programs.GetProgramInstallDir("CtrTool", "windows"),
                 install_files = ["ctrtool.exe"],
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup CtrTool")
@@ -90,6 +92,7 @@ class ProjectCTR(toolbase.ToolBase):
                 install_name = "CtrMakeRom",
                 install_dir = programs.GetProgramInstallDir("CtrMakeRom", "linux"),
                 install_files = ["makerom"],
+                release_type = config.release_type_archive,
                 chmod_files = [
                     {
                         "file": "makerom",
@@ -109,6 +112,7 @@ class ProjectCTR(toolbase.ToolBase):
                 install_name = "CtrTool",
                 install_dir = programs.GetProgramInstallDir("CtrTool", "linux"),
                 install_files = ["ctrtool"],
+                release_type = config.release_type_archive,
                 chmod_files = [
                     {
                         "file": "ctrtool",

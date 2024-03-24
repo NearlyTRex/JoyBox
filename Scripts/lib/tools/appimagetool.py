@@ -55,6 +55,7 @@ class AppImageTool(toolbase.ToolBase):
                 search_file = "AppImageTool.AppImage",
                 install_name = "AppImageTool",
                 install_dir = programs.GetProgramInstallDir("AppImageTool", "linux"),
+                release_type = config.release_type_program,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup AppImageTool")

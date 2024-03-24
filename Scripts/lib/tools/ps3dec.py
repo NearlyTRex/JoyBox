@@ -48,6 +48,7 @@ class PS3Dec(toolbase.ToolBase):
                 install_name = "PS3Dec",
                 install_dir = programs.GetProgramInstallDir("PS3Dec", "windows"),
                 install_files = ["PS3Dec.exe"],
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PS3Dec")
@@ -56,8 +57,8 @@ class PS3Dec(toolbase.ToolBase):
         if programs.ShouldProgramBeInstalled("PS3Dec", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/PS3Dec.git",
-                output_name = "PS3Dec",
-                output_dir = programs.GetProgramInstallDir("PS3Dec", "linux"),
+                install_name = "PS3Dec",
+                install_dir = programs.GetProgramInstallDir("PS3Dec", "linux"),
                 build_cmd = [
                     "cmake", "-G", "Ninja", "..",
                     "&&",

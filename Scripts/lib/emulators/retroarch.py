@@ -111,6 +111,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 install_name = "RetroArch",
                 install_dir = programs.GetProgramInstallDir("RetroArch", "windows"),
                 backups_dir = programs.GetProgramBackupDir("RetroArch", "windows"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch")
@@ -120,6 +121,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 install_name = "RetroArch",
                 install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "windows"),
                 backups_dir = programs.GetProgramBackupDir("RetroArch", "windows"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch cores")
@@ -132,6 +134,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 install_name = "RetroArch",
                 install_dir = programs.GetProgramInstallDir("RetroArch", "linux"),
                 backups_dir = programs.GetProgramBackupDir("RetroArch", "linux"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch")
@@ -141,6 +144,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 install_name = "RetroArch",
                 install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "linux"),
                 backups_dir = programs.GetProgramBackupDir("RetroArch", "linux"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch cores")

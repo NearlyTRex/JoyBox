@@ -77,6 +77,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 install_name = "EKA2L1",
                 install_dir = programs.GetProgramInstallDir("EKA2L1", "windows"),
                 backups_dir = programs.GetProgramBackupDir("EKA2L1", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -93,6 +94,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 install_name = "EKA2L1",
                 install_dir = programs.GetProgramInstallDir("EKA2L1", "linux"),
                 backups_dir = programs.GetProgramBackupDir("EKA2L1", "linux"),
+                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

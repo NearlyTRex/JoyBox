@@ -43,8 +43,8 @@ class LGOGDownloader(toolbase.ToolBase):
         if programs.ShouldProgramBeInstalled("LGOGDownloader", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/LGOGDownloader.git",
-                output_name = "LGOGDownloader",
-                output_dir = programs.GetProgramInstallDir("LGOGDownloader", "linux"),
+                install_name = "LGOGDownloader",
+                install_dir = programs.GetProgramInstallDir("LGOGDownloader", "linux"),
                 build_cmd = [
                     "cmake", "..",
                     "&&",

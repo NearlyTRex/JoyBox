@@ -48,6 +48,7 @@ class ExtractXIso(toolbase.ToolBase):
                 install_name = "ExtractXIso",
                 install_dir = programs.GetProgramInstallDir("ExtractXIso", "windows"),
                 install_files = ["extract-xiso.exe"],
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ExtractXIso")
@@ -56,8 +57,8 @@ class ExtractXIso(toolbase.ToolBase):
         if programs.ShouldProgramBeInstalled("ExtractXIso", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ExtractXIso.git",
-                output_name = "ExtractXIso",
-                output_dir = programs.GetProgramInstallDir("ExtractXIso", "linux"),
+                install_name = "ExtractXIso",
+                install_dir = programs.GetProgramInstallDir("ExtractXIso", "linux"),
                 build_cmd = [
                     "cmake", "..",
                     "&&",

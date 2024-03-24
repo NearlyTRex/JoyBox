@@ -94,6 +94,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 install_name = "mGBA",
                 install_dir = programs.GetProgramInstallDir("mGBA", "windows"),
                 backups_dir = programs.GetProgramBackupDir("mGBA", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -110,6 +111,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 install_name = "mGBA",
                 install_dir = programs.GetProgramInstallDir("mGBA", "linux"),
                 backups_dir = programs.GetProgramBackupDir("mGBA", "linux"),
+                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

@@ -98,6 +98,7 @@ class Citra(emulatorbase.EmulatorBase):
                 archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Citra", "windows"), "citra-windows-msvc-20240303-0ff3440.zip"),
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "windows"),
+                release_type = config.release_type_archive,
                 search_file = "citra-qt.exe",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -109,6 +110,7 @@ class Citra(emulatorbase.EmulatorBase):
                 archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Citra", "linux"), "citra-linux-appimage-20240303-0ff3440.tar.gz"),
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "linux"),
+                release_type = config.release_type_archive,
                 search_file = "citra-qt.AppImage",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

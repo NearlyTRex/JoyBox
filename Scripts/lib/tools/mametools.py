@@ -51,8 +51,7 @@ class MameTools(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("MameChdman", "windows"),
                 install_files = ["chdman.exe"],
                 installer_type = config.installer_type_7zip,
-                is_installer = False,
-                is_archive = True,
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -62,8 +61,8 @@ class MameTools(toolbase.ToolBase):
         if programs.ShouldProgramBeInstalled("MameChdman", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Mame.git",
-                output_name = "MameChdman",
-                output_dir = programs.GetProgramInstallDir("MameChdman", "linux"),
+                install_name = "MameChdman",
+                install_dir = programs.GetProgramInstallDir("MameChdman", "linux"),
                 build_cmd = [
                     "make", "TOOLS=1", "EMULATOR=0", "-j5"
                 ],

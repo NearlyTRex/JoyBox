@@ -64,11 +64,11 @@ def Setup(ini_values = {}):
         python_venv_pip_tool = os.path.join(python_venv_dir, "Scripts", python_pip_exe)
 
     # Create python virtual environment
-    subprocess.run([python_tool, "-m", "venv", python_venv_dir])
+    subprocess.check_call([python_tool, "-m", "venv", python_venv_dir])
 
     # Install python packages
     for package in packages:
-        subprocess.run([python_venv_pip_tool, "install", "--upgrade", package])
+        subprocess.check_call([python_venv_pip_tool, "install", "--upgrade", package])
 
 # Run script
 def RunScript(script_path, ini_values = {}):
@@ -81,4 +81,4 @@ def RunScript(script_path, ini_values = {}):
         python_venv_python_tool = os.path.join(python_venv_dir, "Scripts", python_exe)
 
     # Run python script
-    subprocess.run([python_venv_python_tool, script_path])
+    subprocess.check_call([python_venv_python_tool, script_path])

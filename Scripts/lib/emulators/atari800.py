@@ -71,6 +71,7 @@ class Atari800(emulatorbase.EmulatorBase):
                 install_name = "Atari800",
                 install_dir = programs.GetProgramInstallDir("Atari800", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Atari800", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -80,8 +81,8 @@ class Atari800(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("Atari800", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Atari800.git",
-                output_name = "Atari800",
-                output_dir = programs.GetProgramInstallDir("Atari800", "linux"),
+                install_name = "Atari800",
+                install_dir = programs.GetProgramInstallDir("Atari800", "linux"),
                 build_cmd = [
                     "./autogen.sh",
                     "&&",

@@ -81,6 +81,7 @@ class Mednafen(emulatorbase.EmulatorBase):
                 install_name = "Mednafen",
                 install_dir = programs.GetProgramInstallDir("Mednafen", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Mednafen", "windows"),
+                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -92,8 +93,8 @@ class Mednafen(emulatorbase.EmulatorBase):
                 webpage_url = "https://mednafen.github.io/",
                 starts_with = "https://mednafen.github.io/releases/files/mednafen",
                 ends_with = "UNSTABLE.tar.xz",
-                output_name = "Mednafen",
-                output_dir = programs.GetProgramInstallDir("Mednafen", "linux"),
+                install_name = "Mednafen",
+                install_dir = programs.GetProgramInstallDir("Mednafen", "linux"),
                 build_cmd = [
                     "cd", "mednafen",
                     "&&",

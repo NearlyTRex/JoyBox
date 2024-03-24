@@ -98,6 +98,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 install_name = "Cemu",
                 install_dir = programs.GetProgramInstallDir("Cemu", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Cemu", "windows"),
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Cemu")
@@ -113,6 +114,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 install_name = "Cemu",
                 install_dir = programs.GetProgramInstallDir("Cemu", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Cemu", "linux"),
+                release_type = config.release_type_program,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Cemu")

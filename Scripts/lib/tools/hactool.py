@@ -48,6 +48,7 @@ class HacTool(toolbase.ToolBase):
                 install_name = "HacTool",
                 install_dir = programs.GetProgramInstallDir("HacTool", "windows"),
                 install_files = ["hactool.exe"],
+                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup HacTool")
@@ -56,8 +57,8 @@ class HacTool(toolbase.ToolBase):
         if programs.ShouldProgramBeInstalled("HacTool", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/HacTool.git",
-                output_name = "HacTool",
-                output_dir = programs.GetProgramInstallDir("HacTool", "linux"),
+                install_name = "HacTool",
+                install_dir = programs.GetProgramInstallDir("HacTool", "linux"),
                 build_cmd = [
                     "cp", "config.mk.template", "config.mk",
                     "&&",
