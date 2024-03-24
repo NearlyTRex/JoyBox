@@ -461,6 +461,7 @@ def BuildAppImageFromSource(
     ends_with = "",
     install_name = "",
     install_dir = "",
+    backups_dir = "",
     build_cmd = "",
     build_dir = "",
     internal_copies = [],
@@ -552,13 +553,16 @@ def BuildAppImageFromSource(
     # Make build folder
     system.MakeDirectory(source_build_dir, verbose = verbose, exit_on_failure = exit_on_failure)
 
-    # Build repository
-    command.RunCheckedCommand(
+    # Build release
+    code = command.RunBlockingCommand(
         cmd = build_cmd,
         options = command.CommandOptions(
             cwd = source_build_dir,
             shell = True),
         verbose = verbose)
+    if code != 0:
+        system.LogError("Unable to build release")
+        return False
 
     # Copy objects
     for obj in internal_copies:
@@ -588,30 +592,44 @@ def BuildAppImageFromSource(
             exit_on_failure = exit_on_failure)
 
     # Build appimage
-    command.RunCheckedCommand(
+    code = command.RunBlockingCommand(
         cmd = [programs.GetToolProgram("AppImageTool"), appimage_dir],
         options = command.CommandOptions(
             cwd = tmp_dir_result),
         verbose = verbose)
+    if code != 0:
+        system.LogError("Unable to create AppImage from built release")
+        return False
+
+    # Get output appimages
+    appimage_files = system.BuildFileListByExtensions(tmp_dir_result, extensions = [".AppImage"])
+    if len(appimage_files) == 0:
+        system.LogError("No AppImages could be found")
+        return False
 
     # Copy appimage
-    for obj in system.GetDirectoryContents(tmp_dir_result):
-        if obj.endswith(".AppImage"):
-            system.CopyFileOrDirectory(
-                src = os.path.join(tmp_dir_result, obj),
-                dest = os.path.join(install_dir, install_name + ".AppImage"),
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-            break
+    system.SmartCopy(
+        src = appimage_files[0],
+        dest = os.path.join(install_dir, install_name + ".AppImage"),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
     # Copy other objects
     for obj in external_copies:
         src_obj = os.path.join(tmp_dir_result, obj["from"])
         dest_obj = os.path.join(install_dir, obj["to"])
-        system.MakeDirectory(os.path.dirname(dest_obj), verbose = verbose, exit_on_failure = exit_on_failure)
-        system.CopyFileOrDirectory(
+        system.SmartCopy(
             src = src_obj,
             dest = dest_obj,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
+    # Backup archive
+    if system.IsPathValid(backups_dir):
+        system.SmartCopy(
+            src = appimage_files[0],
+            dest = os.path.join(backups_dir, install_name + ".AppImage"),
+            skip_identical = True,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 

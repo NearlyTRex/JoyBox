@@ -1160,7 +1160,7 @@ def BuildFileListByExtensions(root, extensions = [], new_relative_path = "", use
     for file in BuildFileList(root, new_relative_path, use_relative_paths, ignore_symlinks, follow_symlink_dirs):
         base, ext = GetFilenameSplit(file)
         if isinstance(extensions, list) and len(extensions) > 0:
-            if ext.lower() in extensions or ext.upper() in extensions:
+            if ext in extensions or ext.lower() in extensions or ext.upper() in extensions:
                 files.append(file)
         else:
             files.append(file)
