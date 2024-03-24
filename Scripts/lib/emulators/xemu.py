@@ -104,6 +104,7 @@ class Xemu(emulatorbase.EmulatorBase):
                 release_url = "https://github.com/NearlyTRex/Xemu.git",
                 install_name = "Xemu",
                 install_dir = programs.GetProgramInstallDir("Xemu", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Xemu", "linux"),
                 build_cmd = [
                     "./build.sh"
                 ],

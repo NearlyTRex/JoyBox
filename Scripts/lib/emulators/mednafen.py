@@ -95,6 +95,7 @@ class Mednafen(emulatorbase.EmulatorBase):
                 ends_with = "UNSTABLE.tar.xz",
                 install_name = "Mednafen",
                 install_dir = programs.GetProgramInstallDir("Mednafen", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Mednafen", "linux"),
                 build_cmd = [
                     "cd", "mednafen",
                     "&&",

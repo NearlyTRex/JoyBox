@@ -109,6 +109,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                 release_url = "https://github.com/NearlyTRex/Dolphin.git",
                 install_name = "Dolphin",
                 install_dir = programs.GetProgramInstallDir("Dolphin", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Dolphin", "linux"),
                 build_cmd = [
                     "cmake", "..", "-DLINUX_LOCAL_DEV=true", "-DCMAKE_BUILD_TYPE=Release",
                     "&&",

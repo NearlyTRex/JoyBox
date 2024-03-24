@@ -82,6 +82,7 @@ class Flycast(emulatorbase.EmulatorBase):
                 release_url = "https://github.com/NearlyTRex/Flycast.git",
                 install_name = "Flycast",
                 install_dir = programs.GetProgramInstallDir("Flycast", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Flycast", "linux"),
                 build_cmd = [
                     "cmake", "..", "-DCMAKE_BUILD_TYPE=Release",
                     "&&",

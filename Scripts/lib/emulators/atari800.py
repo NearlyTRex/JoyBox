@@ -83,6 +83,7 @@ class Atari800(emulatorbase.EmulatorBase):
                 release_url = "https://github.com/NearlyTRex/Atari800.git",
                 install_name = "Atari800",
                 install_dir = programs.GetProgramInstallDir("Atari800", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Atari800", "linux"),
                 build_cmd = [
                     "./autogen.sh",
                     "&&",

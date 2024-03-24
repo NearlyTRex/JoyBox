@@ -83,6 +83,7 @@ class ViceC64(emulatorbase.EmulatorBase):
                 release_url = "https://github.com/NearlyTRex/ViceC64.git",
                 install_name = "VICE-C64",
                 install_dir = programs.GetProgramInstallDir("VICE-C64", "linux"),
+                backups_dir = programs.GetProgramBackupDir("VICE-C64", "linux"),
                 build_cmd = [
                     "cd", "vice",
                     "&&",

@@ -83,6 +83,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 release_url = "https://github.com/NearlyTRex/PPSSPP.git",
                 install_name = "PPSSPP",
                 install_dir = programs.GetProgramInstallDir("PPSSPP", "linux"),
+                backups_dir = programs.GetProgramBackupDir("PPSSPP", "linux"),
                 build_cmd = [
                     "cmake", "..", "-DLINUX_LOCAL_DEV=true", "-DCMAKE_BUILD_TYPE=Release",
                     "&&",

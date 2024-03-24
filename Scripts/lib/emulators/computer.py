@@ -552,6 +552,7 @@ class Computer(emulatorbase.EmulatorBase):
                 release_url = "https://github.com/NearlyTRex/DosboxX.git",
                 install_name = "DosBoxX",
                 install_dir = programs.GetProgramInstallDir("DosBoxX", "linux"),
+                backups_dir = programs.GetProgramBackupDir("DosBoxX", "linux"),
                 build_cmd = [
                     "./build-sdl2"
                 ],
@@ -592,6 +593,7 @@ class Computer(emulatorbase.EmulatorBase):
                 release_url = "https://github.com/NearlyTRex/ScummVM.git",
                 install_name = "ScummVM",
                 install_dir = programs.GetProgramInstallDir("ScummVM", "linux"),
+                backups_dir = programs.GetProgramBackupDir("ScummVM", "linux"),
                 build_cmd = [
                     "./configure",
                     "&&",

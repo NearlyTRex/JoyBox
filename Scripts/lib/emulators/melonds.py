@@ -107,6 +107,7 @@ class MelonDS(emulatorbase.EmulatorBase):
                 release_url = "https://github.com/NearlyTRex/melonDS.git",
                 install_name = "melonDS",
                 install_dir = programs.GetProgramInstallDir("melonDS", "linux"),
+                backups_dir = programs.GetProgramBackupDir("melonDS", "linux"),
                 build_cmd = [
                     "cmake", "..", "-DCMAKE_BUILD_TYPE=Release",
                     "&&",

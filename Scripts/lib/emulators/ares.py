@@ -202,6 +202,7 @@ class Ares(emulatorbase.EmulatorBase):
                 release_url = "https://github.com/NearlyTRex/Ares.git",
                 install_name = "Ares",
                 install_dir = programs.GetProgramInstallDir("Ares", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Ares", "linux"),
                 build_cmd = [
                     "make", "-j4", "build=release"
                 ],

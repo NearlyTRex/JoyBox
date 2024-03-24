@@ -96,6 +96,7 @@ class FSUAE(emulatorbase.EmulatorBase):
                 release_url = "https://github.com/FrodeSolheim/fs-uae/releases/download/v3.1.66/fs-uae-3.1.66.tar.xz",
                 install_name = "FS-UAE",
                 install_dir = programs.GetProgramInstallDir("FS-UAE", "linux"),
+                backups_dir = programs.GetProgramBackupDir("FS-UAE", "linux"),
                 build_cmd = [
                     "cd", "fs-uae-3.1.66",
                     "&&",

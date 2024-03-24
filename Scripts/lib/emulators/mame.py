@@ -147,6 +147,7 @@ class Mame(emulatorbase.EmulatorBase):
                 release_url = "https://github.com/NearlyTRex/Mame.git",
                 install_name = "Mame",
                 install_dir = programs.GetProgramInstallDir("Mame", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Mame", "linux"),
                 build_cmd = [
                     "make", "-j", "8"
                 ],
