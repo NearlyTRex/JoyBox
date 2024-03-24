@@ -116,7 +116,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
         # Download windows program
         if programs.ShouldProgramBeInstalled("BasiliskII", "windows"):
             success = release.DownloadGeneralRelease(
-                archive_url = "https://surfdrive.surf.nl/files/index.php/s/C7E6HIZKWuHHR1P/download",
+                archive_url = "https://surfdrive.surf.nl/files/index.php/s/IVkakW3BztSohqH/download",
                 search_file = "BasiliskII.exe",
                 install_name = "BasiliskII",
                 install_dir = programs.GetProgramInstallDir("BasiliskII", "windows"),

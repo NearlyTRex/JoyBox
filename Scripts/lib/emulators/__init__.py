@@ -30,6 +30,9 @@ from . import ppsspp
 from . import retroarch
 from . import rpcs3
 from . import ryujinx
+from . import sameboy
+from . import sheepshaver
+from . import snes9x
 from . import vicec64
 from . import vita3k
 from . import xemu
@@ -69,6 +72,9 @@ instances = [
     retroarch.RetroArch(),
     rpcs3.RPCS3(),
     ryujinx.Ryujinx(),
+    sameboy.SameBoy(),
+    sheepshaver.SheepShaver(),
+    snes9x.Snes9x(),
     vicec64.ViceC64(),
     vita3k.Vita3K(),
     xemu.Xemu(),
