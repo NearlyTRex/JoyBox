@@ -534,6 +534,7 @@ class Computer(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
             success = release.DownloadWebpageRelease(
                 webpage_url = "https://www.scummvm.org/downloads",
+                webpage_base_url = "https://www.scummvm.org",
                 starts_with = "https://downloads.scummvm.org/frs/scummvm/",
                 ends_with = "win32-x86_64.zip",
                 search_file = "scummvm.exe",

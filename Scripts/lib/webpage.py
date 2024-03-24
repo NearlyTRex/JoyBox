@@ -4,6 +4,7 @@ import sys
 import pickle
 import json
 import re
+import urllib.parse
 
 # Local imports
 import config
@@ -152,7 +153,7 @@ def LoadCookie(driver, path):
         driver.add_cookie(cookie)
 
 # Get all matching urls
-def GetMatchingUrls(url, params = {}, starts_with = "", ends_with = "", verbose = False):
+def GetMatchingUrls(url, base_url, params = {}, starts_with = "", ends_with = "", verbose = False):
 
     # Get page text
     page_text = ""
@@ -182,18 +183,22 @@ def GetMatchingUrls(url, params = {}, starts_with = "", ends_with = "", verbose 
         if not link_href:
             continue
         if not link_href.startswith("http"):
-            link_href = os.path.dirname(url) + "/" + link_href
+            if base_url.endswith("/"):
+                link_href = urllib.parse.urljoin(base_url, link_href)
+            else:
+                link_href = urllib.parse.urljoin(base_url + "/", link_href)
         match = re.search("^%s.*%s$" % (starts_with, ends_with), link_href)
         if match:
             matching_urls.append(link_href)
     return matching_urls
 
 # Get matching url
-def GetMatchingUrl(url, params = {}, starts_with = "", ends_with = "", get_latest = False, verbose = False):
+def GetMatchingUrl(url, base_url, params = {}, starts_with = "", ends_with = "", get_latest = False, verbose = False):
 
     # Find potential matching archive urls
     potential_urls = GetMatchingUrls(
         url = url,
+        base_url = base_url,
         params = params,
         starts_with = starts_with,
         ends_with = ends_with,

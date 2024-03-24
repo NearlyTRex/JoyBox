@@ -305,7 +305,13 @@ def DownloadGeneralRelease(
     archive_file = os.path.join(tmp_dir_result, archive_filename)
 
     # Download release
-    if not network.DownloadUrl(url=archive_url, output_dir=tmp_dir_result, output_file=archive_file):
+    success = network.DownloadUrl(
+        url = archive_url,
+        output_dir = tmp_dir_result,
+        output_file = archive_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
         system.LogError("Unable to download release from '%s'" % archive_url)
         return False
 
@@ -410,6 +416,7 @@ def DownloadGithubRelease(
 # Download webpage release
 def DownloadWebpageRelease(
     webpage_url,
+    webpage_base_url,
     starts_with,
     ends_with,
     install_name,
@@ -429,6 +436,7 @@ def DownloadWebpageRelease(
     # Get archive url
     archive_url = webpage.GetMatchingUrl(
         url = webpage_url,
+        base_url = webpage_base_url,
         starts_with = starts_with,
         ends_with = ends_with,
         get_latest = get_latest,
@@ -457,6 +465,7 @@ def DownloadWebpageRelease(
 def BuildAppImageFromSource(
     release_url = "",
     webpage_url = "",
+    webpage_base_url = "",
     starts_with = "",
     ends_with = "",
     install_name = "",
@@ -487,6 +496,7 @@ def BuildAppImageFromSource(
     if len(webpage_url):
         release_url = webpage.GetMatchingUrl(
             url = webpage_url,
+            base_url = webpage_base_url,
             starts_with = starts_with,
             ends_with = ends_with,
             get_latest = True,
@@ -536,7 +546,11 @@ def BuildAppImageFromSource(
         archive_file = os.path.join(download_dir, archive_basename + archive_extension)
 
         # Download source archive
-        success = network.DownloadUrl(url = release_url, output_file = archive_file)
+        success = network.DownloadUrl(
+            url = release_url,
+            output_file = archive_file,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
         if not success:
             system.LogError("Unable to download release from '%s'" % release_url)
             return False

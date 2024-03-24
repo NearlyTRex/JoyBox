@@ -74,7 +74,8 @@ class Mednafen(emulatorbase.EmulatorBase):
         # Download program
         if programs.ShouldProgramBeInstalled("Mednafen", "windows"):
             success = release.DownloadWebpageRelease(
-                webpage_url = "https://mednafen.github.io/",
+                webpage_url = "https://mednafen.github.io",
+                webpage_base_url = "https://mednafen.github.io",
                 starts_with = "https://mednafen.github.io/releases/files/mednafen",
                 ends_with = "UNSTABLE-win64.zip",
                 search_file = "mednafen.exe",
@@ -90,7 +91,8 @@ class Mednafen(emulatorbase.EmulatorBase):
         # Build program
         if programs.ShouldProgramBeInstalled("Mednafen", "linux"):
             success = release.BuildAppImageFromSource(
-                webpage_url = "https://mednafen.github.io/",
+                webpage_url = "https://mednafen.github.io",
+                webpage_base_url = "https://mednafen.github.io",
                 starts_with = "https://mednafen.github.io/releases/files/mednafen",
                 ends_with = "UNSTABLE.tar.xz",
                 install_name = "Mednafen",

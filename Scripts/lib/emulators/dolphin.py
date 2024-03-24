@@ -90,7 +90,8 @@ class Dolphin(emulatorbase.EmulatorBase):
         # Download windows program
         if programs.ShouldProgramBeInstalled("Dolphin", "windows"):
             success = release.DownloadWebpageRelease(
-                webpage_url = "https://dolphin-emu.org/download/",
+                webpage_url = "https://dolphin-emu.org/download",
+                webpage_base_url = "https://dolphin-emu.org",
                 starts_with = "https://dl.dolphin-emu.org/builds",
                 ends_with = "x64.7z",
                 search_file = "Dolphin.exe",
