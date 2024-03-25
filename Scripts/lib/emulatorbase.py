@@ -94,6 +94,14 @@ class EmulatorBase:
     def Setup(self, verbose = False, exit_on_failure = False):
         pass
 
+    # Setup offline
+    def SetupOffline(self, verbose = False, exit_on_failure = False):
+        pass
+
+    # Configure
+    def Configure(self, verbose = False, exit_on_failure = False):
+        pass
+
     # Launch
     def Launch(
         self,
