@@ -102,6 +102,11 @@ def SetupGeneralRelease(
     archive_basename = system.GetFilenameBasename(archive_file)
     archive_extension = system.GetFilenameExtension(archive_file)
     archive_filename = system.GetFilenameFile(archive_file)
+    archive_is_zip = archive.IsZipArchive(archive_file)
+    archive_is_7z = archive.Is7zArchive(archive_file)
+    archive_is_tarball = archive.IsTarballArchive(archive_file)
+    archive_is_exe = archive.IsExeArchive(archive_file)
+    archive_is_appimage = archive.IsAppImageArchive(archive_file)
 
     # Create install dir if necessary
     success = system.MakeDirectory(install_dir, verbose = verbose, exit_on_failure = exit_on_failure)
@@ -114,9 +119,9 @@ def SetupGeneralRelease(
 
     # Guess the release type if none specified
     if not release_type:
-        if archive.IsArchive(archive_file):
+        if archive_is_zip or archive_is_7z or archive_is_tarball:
             release_type = config.release_type_archive
-        elif archive_extension in config.release_program_extensions:
+        elif archive_is_exe or archive_is_appimage:
             release_type = config.release_type_program
 
     ####################################
