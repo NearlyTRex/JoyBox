@@ -20,6 +20,7 @@ packages = [
     "fuzzywuzzy",
     "GitPython",
     "lxml",
+    "magic",
     "mergedeep",
     "packaging",
     "pathlib",
