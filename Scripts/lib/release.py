@@ -258,12 +258,9 @@ def SetupGeneralRelease(
 
     # Backup archive
     if system.IsPathValid(backups_dir):
-        backup_file = os.path.join(backups_dir, archive_filename)
-        if archive_extension == "":
-            backup_file = os.path.join(backups_dir, archive_basename + ".zip")
         system.SmartCopy(
             src = archive_file,
-            dest = backup_file,
+            dest = os.path.join(backups_dir, system.GetFilenameFile(archive_file)),
             skip_identical = True,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -642,7 +639,7 @@ def BuildAppImageFromSource(
     if system.IsPathValid(backups_dir):
         system.SmartCopy(
             src = appimage_files[0],
-            dest = os.path.join(backups_dir, install_name + ".AppImage"),
+            dest = os.path.join(backups_dir, system.GetFilenameFile(appimage_files[0])),
             skip_identical = True,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
