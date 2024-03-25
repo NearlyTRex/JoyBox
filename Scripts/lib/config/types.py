@@ -110,6 +110,14 @@ sync_type_gdrive = "gdrive"
 archive_type_zip = "zip"
 archive_type_7z = "7z"
 
+# Mime types
+mime_types_zip = ["application/zip"]
+mime_types_7z = ["application/x-7z-compressed"]
+mime_types_rar = ["application/x-rar-compressed"]
+mime_types_tarball = ["application/x-gzip", "application/gzip"]
+mime_types_exe = ["application/x-dosexec"]
+mime_types_appimage = ["application/x-executable"]
+
 # Preset types
 preset_type_backup_microsoft = "Backup_Microsoft"
 preset_type_backup_nintendogen = "Backup_NintendoGen"

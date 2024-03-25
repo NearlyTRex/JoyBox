@@ -90,13 +90,16 @@ computer_archive_extensions_tarball = [
     ".tar.Z", ".tZ,", ".taZ",                       # compress
     ".tar.zst", ".tzst"                             # zstd
 ]
+computer_archive_extensions_exe = [".exe"]
+computer_archive_extensions_appimage = [".AppImage"]
 computer_archive_extensions = []
 computer_archive_extensions += computer_archive_extensions_zip
 computer_archive_extensions += computer_archive_extensions_7z
 computer_archive_extensions += computer_archive_extensions_rar
 computer_archive_extensions += computer_archive_extensions_tarball
+computer_archive_extensions += computer_archive_extensions_exe
+computer_archive_extensions += computer_archive_extensions_appimage
 wiiu_encrypted_extensions = [".app", ".h3", ".tik", ".tmd", ".cert"]
-release_program_extensions = [".exe", ".AppImage"]
 
 # Folders
 general_numeric_folder = "#-0"
