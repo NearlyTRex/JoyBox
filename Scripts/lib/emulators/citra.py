@@ -94,11 +94,10 @@ class Citra(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Citra", "windows"):
-            success = release.SetupGeneralRelease(
-                archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Citra", "windows"), "citra-windows-msvc-20240303-0ff3440.zip"),
+            success = release.SetupStoredRelease(
+                archive_dir = environment.GetSyncedGameEmulatorBinariesDir("Citra", "windows"),
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "windows"),
-                release_type = config.release_type_archive,
                 search_file = "citra-qt.exe",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -106,11 +105,10 @@ class Citra(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Citra", "linux"):
-            success = release.SetupGeneralRelease(
-                archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Citra", "linux"), "citra-linux-appimage-20240303-0ff3440.tar.gz"),
+            success = release.SetupStoredRelease(
+                archive_dir = environment.GetSyncedGameEmulatorBinariesDir("Citra", "linux"),
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "linux"),
-                release_type = config.release_type_archive,
                 search_file = "citra-qt.AppImage",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

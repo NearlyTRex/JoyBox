@@ -121,11 +121,11 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Yuzu", "windows"):
-            success = release.SetupGeneralRelease(
-                archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Yuzu", "windows"), "yuzu-windows-msvc-20240304-537296095.zip"),
+            success = release.SetupStoredRelease(
+                archive_dir = environment.GetSyncedGameEmulatorBinariesDir("Yuzu", "windows"),
                 install_name = "Yuzu",
                 install_dir = programs.GetProgramInstallDir("Yuzu", "windows"),
-                release_type = config.release_type_archive,
+                preferred_archive = "Windows-Yuzu-EA-4176",
                 search_file = "yuzu.exe",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -133,12 +133,11 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Yuzu", "linux"):
-            success = release.SetupGeneralRelease(
-                archive_file = os.path.join(environment.GetSyncedGameEmulatorBinariesDir("Yuzu", "linux"), "yuzu-mainline-20240304-537296095.AppImage"),
+            success = release.SetupStoredRelease(
+                archive_dir = environment.GetSyncedGameEmulatorBinariesDir("Yuzu", "linux"),
                 install_name = "Yuzu",
                 install_dir = programs.GetProgramInstallDir("Yuzu", "linux"),
-                release_type = config.release_type_program,
-                search_file = "Yuzu.AppImage",
+                preferred_archive = "Linux-Yuzu-EA-4176",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Yuzu")
