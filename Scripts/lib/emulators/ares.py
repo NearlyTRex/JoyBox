@@ -218,6 +218,33 @@ class Ares(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ares")
 
+    # Setup offline
+    def SetupOffline(self, verbose = False, exit_on_failure = False):
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Ares", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Ares", "windows"),
+                install_name = "Ares",
+                install_dir = programs.GetProgramInstallDir("Ares", "windows"),
+                search_file = "ares.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Ares")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Ares", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Ares", "linux"),
+                install_name = "Ares",
+                install_dir = programs.GetProgramInstallDir("Ares", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Ares")
+
+    # Configure
+    def Configure(self, verbose = False, exit_on_failure = False):
+
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(

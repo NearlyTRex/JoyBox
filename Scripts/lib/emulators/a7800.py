@@ -60,3 +60,17 @@ class A7800(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup A7800")
+
+    # Setup offline
+    def SetupOffline(self, verbose = False, exit_on_failure = False):
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("A7800", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("A7800", "windows"),
+                install_name = "A7800",
+                install_dir = programs.GetProgramInstallDir("A7800", "windows"),
+                search_file = "a7800.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup A7800")

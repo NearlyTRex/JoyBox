@@ -77,7 +77,7 @@ class Atari800(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Atari800")
 
-        # Download linux program
+        # Build linux program
         if programs.ShouldProgramBeInstalled("Atari800", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Atari800.git",
@@ -103,6 +103,13 @@ class Atari800(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Atari800")
+
+    # Setup offline
+    def SetupOffline(self, verbose = False, exit_on_failure = False):
+        pass
+
+    # Configure
+    def Configure(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

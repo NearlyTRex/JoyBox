@@ -122,7 +122,7 @@ class Yuzu(emulatorbase.EmulatorBase):
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Yuzu", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = environment.GetSyncedGameEmulatorBinariesDir("Yuzu", "windows"),
+                archive_dir = programs.GetProgramBackupDir("Yuzu", "windows"),
                 install_name = "Yuzu",
                 install_dir = programs.GetProgramInstallDir("Yuzu", "windows"),
                 preferred_archive = "Windows-Yuzu-EA-4176",
@@ -134,13 +134,20 @@ class Yuzu(emulatorbase.EmulatorBase):
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Yuzu", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = environment.GetSyncedGameEmulatorBinariesDir("Yuzu", "linux"),
+                archive_dir = programs.GetProgramBackupDir("Yuzu", "linux"),
                 install_name = "Yuzu",
                 install_dir = programs.GetProgramInstallDir("Yuzu", "linux"),
                 preferred_archive = "Linux-Yuzu-EA-4176",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Yuzu")
+
+    # Setup offline
+    def SetupOffline(self, verbose = False, exit_on_failure = False):
+        self.Setup(verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Configure
+    def Configure(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

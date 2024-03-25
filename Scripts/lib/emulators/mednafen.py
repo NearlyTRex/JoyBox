@@ -71,7 +71,7 @@ class Mednafen(emulatorbase.EmulatorBase):
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):
 
-        # Download program
+        # Download windows program
         if programs.ShouldProgramBeInstalled("Mednafen", "windows"):
             success = release.DownloadWebpageRelease(
                 webpage_url = "https://mednafen.github.io",
@@ -88,7 +88,7 @@ class Mednafen(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Mednafen")
 
-        # Build program
+        # Build linux program
         if programs.ShouldProgramBeInstalled("Mednafen", "linux"):
             success = release.BuildAppImageFromSource(
                 webpage_url = "https://mednafen.github.io",
@@ -116,6 +116,13 @@ class Mednafen(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Mednafen")
+
+    # Setup offline
+    def SetupOffline(self, verbose = False, exit_on_failure = False):
+        pass
+
+    # Configure
+    def Configure(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

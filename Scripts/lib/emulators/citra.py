@@ -95,7 +95,7 @@ class Citra(emulatorbase.EmulatorBase):
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Citra", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = environment.GetSyncedGameEmulatorBinariesDir("Citra", "windows"),
+                archive_dir = programs.GetProgramBackupDir("Citra", "windows"),
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "windows"),
                 search_file = "citra-qt.exe",
@@ -106,13 +106,20 @@ class Citra(emulatorbase.EmulatorBase):
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Citra", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = environment.GetSyncedGameEmulatorBinariesDir("Citra", "linux"),
+                archive_dir = programs.GetProgramBackupDir("Citra", "linux"),
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "linux"),
                 search_file = "citra-qt.AppImage",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Citra")
+
+    # Setup offline
+    def SetupOffline(self, verbose = False, exit_on_failure = False):
+        self.Setup(verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Configure
+    def Configure(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():

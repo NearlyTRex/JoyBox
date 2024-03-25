@@ -172,6 +172,13 @@ class PCSX2(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PCSX2")
 
+    # Setup offline
+    def SetupOffline(self, verbose = False, exit_on_failure = False):
+        pass
+
+    # Configure
+    def Configure(self, verbose = False, exit_on_failure = False):
+
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(

@@ -84,7 +84,7 @@ class MelonDS(emulatorbase.EmulatorBase):
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):
 
-        # Download program
+        # Download windows program
         if programs.ShouldProgramBeInstalled("melonDS", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "melonDS-emu",
@@ -101,7 +101,7 @@ class MelonDS(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup melonDS")
 
-        # Build program
+        # Build linux program
         if programs.ShouldProgramBeInstalled("melonDS", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/melonDS.git",
@@ -125,6 +125,13 @@ class MelonDS(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup melonDS")
+
+    # Setup offline
+    def SetupOffline(self, verbose = False, exit_on_failure = False):
+        pass
+
+    # Configure
+    def Configure(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
