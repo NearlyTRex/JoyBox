@@ -77,7 +77,6 @@ class Xenia(emulatorbase.EmulatorBase):
                 install_name = "Xenia",
                 install_dir = programs.GetProgramInstallDir("Xenia", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Xenia", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -85,7 +84,17 @@ class Xenia(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Xenia", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Xenia", "windows"),
+                install_name = "Xenia",
+                install_dir = programs.GetProgramInstallDir("Xenia", "windows"),
+                search_file = "xenia.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Xenia")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

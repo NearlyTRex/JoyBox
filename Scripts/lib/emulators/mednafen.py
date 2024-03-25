@@ -82,7 +82,6 @@ class Mednafen(emulatorbase.EmulatorBase):
                 install_name = "Mednafen",
                 install_dir = programs.GetProgramInstallDir("Mednafen", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Mednafen", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -119,7 +118,27 @@ class Mednafen(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Mednafen", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Mednafen", "windows"),
+                install_name = "Mednafen",
+                install_dir = programs.GetProgramInstallDir("Mednafen", "windows"),
+                search_file = "mednafen.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Mednafen")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Mednafen", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Mednafen", "linux"),
+                install_name = "Mednafen",
+                install_dir = programs.GetProgramInstallDir("Mednafen", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Mednafen")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

@@ -90,7 +90,6 @@ class Vita3K(emulatorbase.EmulatorBase):
                 install_name = "Vita3K",
                 install_dir = programs.GetProgramInstallDir("Vita3K", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Vita3K", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -103,11 +102,9 @@ class Vita3K(emulatorbase.EmulatorBase):
                 github_repo = "Vita3K",
                 starts_with = "Vita3K-x86_64",
                 ends_with = ".AppImage",
-                search_file = "Vita3K-x86_64.AppImage",
                 install_name = "Vita3K",
                 install_dir = programs.GetProgramInstallDir("Vita3K", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Vita3K", "linux"),
-                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -115,7 +112,27 @@ class Vita3K(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Vita3K", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Vita3K", "windows"),
+                install_name = "Vita3K",
+                install_dir = programs.GetProgramInstallDir("Vita3K", "windows"),
+                search_file = "Vita3K.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Vita3K")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Vita3K", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Vita3K", "linux"),
+                install_name = "Vita3K",
+                install_dir = programs.GetProgramInstallDir("Vita3K", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Vita3K")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

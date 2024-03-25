@@ -179,7 +179,27 @@ class Mame(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Mame", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Mame", "windows"),
+                install_name = "Mame",
+                install_dir = programs.GetProgramInstallDir("Mame", "windows"),
+                search_file = "mame.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Mame")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Mame", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Mame", "linux"),
+                install_name = "Mame",
+                install_dir = programs.GetProgramInstallDir("Mame", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Mame")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

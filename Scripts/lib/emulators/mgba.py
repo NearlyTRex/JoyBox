@@ -94,7 +94,6 @@ class MGBA(emulatorbase.EmulatorBase):
                 install_name = "mGBA",
                 install_dir = programs.GetProgramInstallDir("mGBA", "windows"),
                 backups_dir = programs.GetProgramBackupDir("mGBA", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -107,11 +106,9 @@ class MGBA(emulatorbase.EmulatorBase):
                 github_repo = "mgba",
                 starts_with = "mGBA",
                 ends_with = ".appimage",
-                search_file = "mGBA.AppImage",
                 install_name = "mGBA",
                 install_dir = programs.GetProgramInstallDir("mGBA", "linux"),
                 backups_dir = programs.GetProgramBackupDir("mGBA", "linux"),
-                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -119,7 +116,27 @@ class MGBA(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("mGBA", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("mGBA", "windows"),
+                install_name = "mGBA",
+                install_dir = programs.GetProgramInstallDir("mGBA", "windows"),
+                search_file = "mGBA.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup mGBA")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("mGBA", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("mGBA", "linux"),
+                install_name = "mGBA",
+                install_dir = programs.GetProgramInstallDir("mGBA", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup mGBA")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

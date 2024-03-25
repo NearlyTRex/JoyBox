@@ -53,11 +53,20 @@ class Phoenix(emulatorbase.EmulatorBase):
                 install_name = "Phoenix",
                 install_dir = programs.GetProgramInstallDir("Phoenix", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Phoenix", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Phoenix")
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Phoenix", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Phoenix", "windows"),
+                install_name = "Phoenix",
+                install_dir = programs.GetProgramInstallDir("Phoenix", "windows"),
+                search_file = "PhoenixEmuProject.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Phoenix")

@@ -121,7 +121,6 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 install_name = "BasiliskII",
                 install_dir = programs.GetProgramInstallDir("BasiliskII", "windows"),
                 backups_dir = programs.GetProgramBackupDir("BasiliskII", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BasiliskII")
@@ -133,11 +132,9 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 github_repo = "macemu-appimage-builder",
                 starts_with = "BasiliskII-x86_64",
                 ends_with = ".AppImage",
-                search_file = "BasiliskII-x86_64.AppImage",
                 install_name = "BasiliskII",
                 install_dir = programs.GetProgramInstallDir("BasiliskII", "linux"),
                 backups_dir = programs.GetProgramBackupDir("BasiliskII", "linux"),
-                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -145,7 +142,27 @@ class BasiliskII(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("BasiliskII", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("BasiliskII", "windows"),
+                install_name = "BasiliskII",
+                install_dir = programs.GetProgramInstallDir("BasiliskII", "windows"),
+                search_file = "BasiliskII.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup BasiliskII")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("BasiliskII", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("BasiliskII", "linux"),
+                install_name = "BasiliskII",
+                install_dir = programs.GetProgramInstallDir("BasiliskII", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup BasiliskII")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

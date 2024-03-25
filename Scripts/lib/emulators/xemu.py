@@ -92,7 +92,6 @@ class Xemu(emulatorbase.EmulatorBase):
                 install_name = "Xemu",
                 install_dir = programs.GetProgramInstallDir("Xemu", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Xemu", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -122,7 +121,27 @@ class Xemu(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Xemu", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Xemu", "windows"),
+                install_name = "Xemu",
+                install_dir = programs.GetProgramInstallDir("Xemu", "windows"),
+                search_file = "xemu.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Xemu")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Xemu", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Xemu", "linux"),
+                install_name = "Xemu",
+                install_dir = programs.GetProgramInstallDir("Xemu", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Xemu")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

@@ -56,11 +56,20 @@ class Nestopia(emulatorbase.EmulatorBase):
                 install_name = "Nestopia",
                 install_dir = programs.GetProgramInstallDir("Nestopia", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Nestopia", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Nestopia")
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Nestopia", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Nestopia", "windows"),
+                install_name = "Nestopia",
+                install_dir = programs.GetProgramInstallDir("Nestopia", "windows"),
+                search_file = "nestopia.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Nestopia")

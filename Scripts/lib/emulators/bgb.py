@@ -53,11 +53,20 @@ class BGB(emulatorbase.EmulatorBase):
                 install_name = "BGB",
                 install_dir = programs.GetProgramInstallDir("BGB", "windows"),
                 backups_dir = programs.GetProgramBackupDir("BGB", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BGB")
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("BGB", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("BGB", "windows"),
+                install_name = "BGB",
+                install_dir = programs.GetProgramInstallDir("BGB", "windows"),
+                search_file = "bgb.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup BGB")

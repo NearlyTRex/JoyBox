@@ -53,7 +53,6 @@ class SheepShaver(emulatorbase.EmulatorBase):
                 install_name = "SheepShaver",
                 install_dir = programs.GetProgramInstallDir("SheepShaver", "windows"),
                 backups_dir = programs.GetProgramBackupDir("SheepShaver", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup SheepShaver")
@@ -65,11 +64,9 @@ class SheepShaver(emulatorbase.EmulatorBase):
                 github_repo = "macemu-appimage-builder",
                 starts_with = "SheepShaver-x86_64",
                 ends_with = ".AppImage",
-                search_file = "SheepShaver-x86_64.AppImage",
                 install_name = "SheepShaver",
                 install_dir = programs.GetProgramInstallDir("SheepShaver", "linux"),
                 backups_dir = programs.GetProgramBackupDir("SheepShaver", "linux"),
-                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -77,4 +74,24 @@ class SheepShaver(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("SheepShaver", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("SheepShaver", "windows"),
+                install_name = "SheepShaver",
+                install_dir = programs.GetProgramInstallDir("SheepShaver", "windows"),
+                search_file = "SheepShaver.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup SheepShaver")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("SheepShaver", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("SheepShaver", "linux"),
+                install_name = "SheepShaver",
+                install_dir = programs.GetProgramInstallDir("SheepShaver", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup SheepShaver")

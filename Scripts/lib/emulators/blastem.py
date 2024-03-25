@@ -56,11 +56,20 @@ class BlastEm(emulatorbase.EmulatorBase):
                 install_name = "BlastEm",
                 install_dir = programs.GetProgramInstallDir("BlastEm", "windows"),
                 backups_dir = programs.GetProgramBackupDir("BlastEm", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BlastEm")
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("BlastEm", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("BlastEm", "windows"),
+                install_name = "BlastEm",
+                install_dir = programs.GetProgramInstallDir("BlastEm", "windows"),
+                search_file = "blastem.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup BlastEm")

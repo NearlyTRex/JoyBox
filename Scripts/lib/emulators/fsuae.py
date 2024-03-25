@@ -84,7 +84,6 @@ class FSUAE(emulatorbase.EmulatorBase):
                 install_name = "FS-UAE",
                 install_dir = programs.GetProgramInstallDir("FS-UAE", "windows"),
                 backups_dir = programs.GetProgramBackupDir("FS-UAE", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -121,7 +120,27 @@ class FSUAE(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("FS-UAE", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("FS-UAE", "windows"),
+                install_name = "FS-UAE",
+                install_dir = programs.GetProgramInstallDir("FS-UAE", "windows"),
+                search_file = "Plugin.ini",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup FS-UAE")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("FS-UAE", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("FS-UAE", "linux"),
+                install_name = "FS-UAE",
+                install_dir = programs.GetProgramInstallDir("FS-UAE", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup FS-UAE")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

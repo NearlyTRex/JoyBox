@@ -70,7 +70,6 @@ class Flycast(emulatorbase.EmulatorBase):
                 install_name = "Flycast",
                 install_dir = programs.GetProgramInstallDir("Flycast", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Flycast", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -103,7 +102,27 @@ class Flycast(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Flycast", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Flycast", "windows"),
+                install_name = "Flycast",
+                install_dir = programs.GetProgramInstallDir("Flycast", "windows"),
+                search_file = "flycast.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Flycast")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Flycast", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Flycast", "linux"),
+                install_name = "Flycast",
+                install_dir = programs.GetProgramInstallDir("Flycast", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Flycast")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

@@ -71,7 +71,6 @@ class Atari800(emulatorbase.EmulatorBase):
                 install_name = "Atari800",
                 install_dir = programs.GetProgramInstallDir("Atari800", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Atari800", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -106,7 +105,27 @@ class Atari800(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Atari800", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Atari800", "windows"),
+                install_name = "Atari800",
+                install_dir = programs.GetProgramInstallDir("Atari800", "windows"),
+                search_file = "atari800.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Atari800")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Atari800", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Atari800", "linux"),
+                install_name = "Atari800",
+                install_dir = programs.GetProgramInstallDir("Atari800", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Atari800")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

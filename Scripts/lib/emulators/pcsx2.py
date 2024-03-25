@@ -151,7 +151,6 @@ class PCSX2(emulatorbase.EmulatorBase):
                 install_name = "PCSX2",
                 install_dir = programs.GetProgramInstallDir("PCSX2", "windows"),
                 backups_dir = programs.GetProgramBackupDir("PCSX2", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PCSX2")
@@ -163,18 +162,36 @@ class PCSX2(emulatorbase.EmulatorBase):
                 github_repo = "pcsx2",
                 starts_with = "pcsx2",
                 ends_with = ".AppImage",
-                search_file = "PCSX2.AppImage",
                 install_name = "PCSX2",
                 install_dir = programs.GetProgramInstallDir("PCSX2", "linux"),
                 backups_dir = programs.GetProgramBackupDir("PCSX2", "linux"),
-                release_type = config.release_type_program,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PCSX2")
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("PCSX2", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("PCSX2", "windows"),
+                install_name = "PCSX2",
+                install_dir = programs.GetProgramInstallDir("PCSX2", "windows"),
+                search_file = "pcsx2-qt.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PCSX2")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("PCSX2", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("PCSX2", "linux"),
+                install_name = "PCSX2",
+                install_dir = programs.GetProgramInstallDir("PCSX2", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PCSX2")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

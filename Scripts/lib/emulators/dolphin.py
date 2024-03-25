@@ -98,7 +98,6 @@ class Dolphin(emulatorbase.EmulatorBase):
                 install_name = "Dolphin",
                 install_dir = programs.GetProgramInstallDir("Dolphin", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Dolphin", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -133,7 +132,27 @@ class Dolphin(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Dolphin", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Dolphin", "windows"),
+                install_name = "Dolphin",
+                install_dir = programs.GetProgramInstallDir("Dolphin", "windows"),
+                search_file = "Dolphin.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Dolphin")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Dolphin", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Dolphin", "linux"),
+                install_name = "Dolphin",
+                install_dir = programs.GetProgramInstallDir("Dolphin", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Dolphin")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

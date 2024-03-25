@@ -143,7 +143,6 @@ class DuckStation(emulatorbase.EmulatorBase):
                 install_name = "DuckStation",
                 install_dir = programs.GetProgramInstallDir("DuckStation", "windows"),
                 backups_dir = programs.GetProgramBackupDir("DuckStation", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -156,11 +155,9 @@ class DuckStation(emulatorbase.EmulatorBase):
                 github_repo = "duckstation",
                 starts_with = "DuckStation",
                 ends_with = ".AppImage",
-                search_file = "DuckStation.AppImage",
                 install_name = "DuckStation",
                 install_dir = programs.GetProgramInstallDir("DuckStation", "linux"),
                 backups_dir = programs.GetProgramBackupDir("DuckStation", "linux"),
-                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -168,7 +165,27 @@ class DuckStation(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("DuckStation", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("DuckStation", "windows"),
+                install_name = "DuckStation",
+                install_dir = programs.GetProgramInstallDir("DuckStation", "windows"),
+                search_file = "duckstation-qt-x64-ReleaseLTCG.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup DuckStation")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("DuckStation", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("DuckStation", "linux"),
+                install_name = "DuckStation",
+                install_dir = programs.GetProgramInstallDir("DuckStation", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup DuckStation")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

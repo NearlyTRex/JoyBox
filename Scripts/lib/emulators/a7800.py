@@ -56,7 +56,6 @@ class A7800(emulatorbase.EmulatorBase):
                 install_name = "A7800",
                 install_dir = programs.GetProgramInstallDir("A7800", "windows"),
                 backups_dir = programs.GetProgramBackupDir("A7800", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup A7800")

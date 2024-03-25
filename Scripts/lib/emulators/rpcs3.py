@@ -80,7 +80,6 @@ class RPCS3(emulatorbase.EmulatorBase):
                 install_name = "RPCS3",
                 install_dir = programs.GetProgramInstallDir("RPCS3", "windows"),
                 backups_dir = programs.GetProgramBackupDir("RPCS3", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -93,11 +92,9 @@ class RPCS3(emulatorbase.EmulatorBase):
                 github_repo = "rpcs3-binaries-linux",
                 starts_with = "rpcs3",
                 ends_with = ".AppImage",
-                search_file = "RPCS3.AppImage",
                 install_name = "RPCS3",
                 install_dir = programs.GetProgramInstallDir("RPCS3", "linux"),
                 backups_dir = programs.GetProgramBackupDir("RPCS3", "linux"),
-                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -105,7 +102,27 @@ class RPCS3(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("RPCS3", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("RPCS3", "windows"),
+                install_name = "RPCS3",
+                install_dir = programs.GetProgramInstallDir("RPCS3", "windows"),
+                search_file = "rpcs3.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup RPCS3")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("RPCS3", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("RPCS3", "linux"),
+                install_name = "RPCS3",
+                install_dir = programs.GetProgramInstallDir("RPCS3", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup RPCS3")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

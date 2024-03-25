@@ -53,11 +53,20 @@ class KegaFusion(emulatorbase.EmulatorBase):
                 install_name = "KegaFusion",
                 install_dir = programs.GetProgramInstallDir("KegaFusion", "windows"),
                 backups_dir = programs.GetProgramBackupDir("KegaFusion", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup KegaFusion")
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("KegaFusion", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("KegaFusion", "windows"),
+                install_name = "KegaFusion",
+                install_dir = programs.GetProgramInstallDir("KegaFusion", "windows"),
+                search_file = "Fusion.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup KegaFusion")

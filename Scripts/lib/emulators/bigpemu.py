@@ -70,14 +70,23 @@ class BigPEmu(emulatorbase.EmulatorBase):
                 install_name = "BigPEmu",
                 install_dir = programs.GetProgramInstallDir("BigPEmu", "windows"),
                 backups_dir = programs.GetProgramBackupDir("BigPEmu", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BigPEmu")
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("BigPEmu", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("BigPEmu", "windows"),
+                install_name = "BigPEmu",
+                install_dir = programs.GetProgramInstallDir("BigPEmu", "windows"),
+                search_file = "BigPEmu.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup BigPEmu")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

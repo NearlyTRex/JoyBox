@@ -526,7 +526,6 @@ class Computer(emulatorbase.EmulatorBase):
                 install_name = "DosBoxX",
                 install_dir = programs.GetProgramInstallDir("DosBoxX", "windows"),
                 backups_dir = programs.GetProgramBackupDir("DosBoxX", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -541,7 +540,6 @@ class Computer(emulatorbase.EmulatorBase):
                 install_name = "ScummVM",
                 install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
                 backups_dir = programs.GetProgramBackupDir("ScummVM", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -631,7 +629,44 @@ class Computer(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("DosBoxX", "windows"),
+                install_name = "DosBoxX",
+                install_dir = programs.GetProgramInstallDir("DosBoxX", "windows"),
+                search_file = "dosbox-x.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup DosBoxX")
+        if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("ScummVM", "windows"),
+                install_name = "ScummVM",
+                install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
+                search_file = "scummvm.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup ScummVM")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("DosBoxX", "linux"),
+                install_name = "DosBoxX",
+                install_dir = programs.GetProgramInstallDir("DosBoxX", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup DosBoxX")
+        if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("ScummVM", "linux"),
+                install_name = "ScummVM",
+                install_dir = programs.GetProgramInstallDir("ScummVM", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup ScummVM")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

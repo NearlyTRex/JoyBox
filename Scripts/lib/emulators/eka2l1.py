@@ -77,7 +77,6 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 install_name = "EKA2L1",
                 install_dir = programs.GetProgramInstallDir("EKA2L1", "windows"),
                 backups_dir = programs.GetProgramBackupDir("EKA2L1", "windows"),
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -90,11 +89,9 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 github_repo = "EKA2L1",
                 starts_with = "ubuntu-latest",
                 ends_with = ".AppImage",
-                search_file = "ubuntu-latest.AppImage",
                 install_name = "EKA2L1",
                 install_dir = programs.GetProgramInstallDir("EKA2L1", "linux"),
                 backups_dir = programs.GetProgramBackupDir("EKA2L1", "linux"),
-                release_type = config.release_type_program,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -102,7 +99,27 @@ class EKA2L1(emulatorbase.EmulatorBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("EKA2L1", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("EKA2L1", "windows"),
+                install_name = "EKA2L1",
+                install_dir = programs.GetProgramInstallDir("EKA2L1", "windows"),
+                search_file = "eka2l1_qt.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup EKA2L1")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("EKA2L1", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("EKA2L1", "linux"),
+                install_name = "EKA2L1",
+                install_dir = programs.GetProgramInstallDir("EKA2L1", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup EKA2L1")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

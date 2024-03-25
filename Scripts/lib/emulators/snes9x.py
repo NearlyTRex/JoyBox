@@ -56,7 +56,6 @@ class Snes9x(emulatorbase.EmulatorBase):
                 install_name = "Snes9x",
                 install_dir = programs.GetProgramInstallDir("Snes9x", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Snes9x", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Snes9x")
@@ -71,11 +70,30 @@ class Snes9x(emulatorbase.EmulatorBase):
                 install_name = "Snes9x",
                 install_dir = programs.GetProgramInstallDir("Snes9x", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Snes9x", "linux"),
-                release_type = config.release_type_program,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Snes9x")
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Snes9x", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Snes9x", "windows"),
+                install_name = "Snes9x",
+                install_dir = programs.GetProgramInstallDir("Snes9x", "windows"),
+                search_file = "snes9x-x64.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Snes9x")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Snes9x", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Snes9x", "linux"),
+                install_name = "Snes9x",
+                install_dir = programs.GetProgramInstallDir("Snes9x", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Snes9x")

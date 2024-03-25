@@ -56,11 +56,20 @@ class Demul(emulatorbase.EmulatorBase):
                 install_name = "Demul",
                 install_dir = programs.GetProgramInstallDir("Demul", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Demul", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Demul")
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Demul", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Demul", "windows"),
+                install_name = "Demul",
+                install_dir = programs.GetProgramInstallDir("Demul", "windows"),
+                search_file = "demul.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Demul")

@@ -56,11 +56,20 @@ class Stella(emulatorbase.EmulatorBase):
                 install_name = "Stella",
                 install_dir = programs.GetProgramInstallDir("Stella", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Stella", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Stella")
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Stella", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Stella", "windows"),
+                install_name = "Stella",
+                install_dir = programs.GetProgramInstallDir("Stella", "windows"),
+                search_file = "64-bit/Stella.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Stella")
