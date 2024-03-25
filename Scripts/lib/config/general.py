@@ -96,6 +96,7 @@ computer_archive_extensions += computer_archive_extensions_7z
 computer_archive_extensions += computer_archive_extensions_rar
 computer_archive_extensions += computer_archive_extensions_tarball
 wiiu_encrypted_extensions = [".app", ".h3", ".tik", ".tmd", ".cert"]
+release_program_extensions = [".exe", ".AppImage"]
 
 # Folders
 general_numeric_folder = "#-0"

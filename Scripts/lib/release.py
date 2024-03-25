@@ -15,6 +15,64 @@ import webpage
 import registry
 import network
 
+# Setup stored release
+def SetupStoredRelease(
+    archive_dir,
+    install_name,
+    install_dir,
+    preferred_archive = None,
+    use_first_found = True,
+    use_last_found = False,
+    search_file = None,
+    prefix_dir = None,
+    prefix_name = None,
+    install_files = [],
+    registry_files = [],
+    chmod_files = [],
+    rename_files = [],
+    installer_type = None,
+    release_type = None,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Get list of potential archives
+    potential_archives = system.BuildFileList(archive_dir)
+    if len(potential_archives) == 0:
+        system.LogError("No available archives found in '%s'" % archive_dir)
+        return False
+
+    # Select archive file
+    selected_archive = ""
+    if isinstance(preferred_archive, str) and len(preferred_archive) > 0:
+        for archive_path in potential_archives:
+            if preferred_archive in system.GetFilenameFile(archive_path):
+                selected_archive = archive_path
+                break
+    elif use_first_found:
+        selected_archive = potential_archives[0]
+    elif use_last_found:
+        selected_archive = potential_archives[-1]
+    if not os.path.exists(selected_archive):
+        system.LogError("No archive could be selected")
+        return False
+
+    # Setup selected archive
+    return SetupGeneralRelease(
+        archive_file = selected_archive,
+        install_name = install_name,
+        install_dir = install_dir,
+        search_file = search_file,
+        prefix_dir = prefix_dir,
+        prefix_name = prefix_name,
+        install_files = install_files,
+        registry_files = registry_files,
+        chmod_files = chmod_files,
+        rename_files = rename_files,
+        installer_type = installer_type,
+        release_type = release_type,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
 # Setup general release
 def SetupGeneralRelease(
     archive_file,
@@ -53,6 +111,13 @@ def SetupGeneralRelease(
 
     # Set initial search dir
     search_dir = tmp_dir_result
+
+    # Guess the release type if none specified
+    if not release_type:
+        if archive.IsArchive(archive_file):
+            release_type = config.release_type_archive
+        elif archive_extension in config.release_program_extensions:
+            release_type = config.release_type_program
 
     ####################################
     # Standalone program
@@ -486,6 +551,7 @@ def BuildAppImageFromSource(
     system.AssertIsString(webpage_url, "webpage_url")
     system.AssertIsString(install_name, "install_name")
     system.AssertIsString(install_dir, "install_dir")
+    system.AssertIsString(backups_dir, "backups_dir")
     system.AssertIsList(build_cmd, "build_cmd")
     system.AssertIsString(build_dir, "build_dir")
 
