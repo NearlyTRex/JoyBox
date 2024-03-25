@@ -12,33 +12,65 @@ import system
 import environment
 import sandbox
 
+# Determine if file is a known archive
+def IsKnownArchive(archive_file, extensions = [], mime_types = []):
+    for ext in extensions:
+        if archive_file.lower().endswith(ext.lower()):
+            return True
+    actual_mime_type = GetFileMimeType(path)
+    for potential_mime_type in mime_types:
+        if potential_mime_type.lower() in actual_mime_type.lower():
+            return True
+    return False
+
 # Determine if file is an archive
 def IsArchive(archive_file):
-    for ext in config.computer_archive_extensions:
-        if archive_file.endswith(ext):
-            return True
+    if IsZipArchive(archive_file):
+        return True
+    elif Is7zArchive(archive_file):
+        return True
+    elif IsTarballArchive(archive_file):
+        return True
+    elif IsExeArchive(archive_file):
+        return True
+    elif IsAppImageArchive(archive_file):
+        return True
     return False
 
 # Determine if file is a zip archive
 def IsZipArchive(archive_file):
-    for ext in config.computer_archive_extensions_zip:
-        if archive_file.endswith(ext):
-            return True
-    return False
+    return IsKnownArchive(
+        archive_file = archive_file,
+        extensions = config.computer_archive_extensions_zip,
+        mime_types = config.mime_types_zip)
 
 # Determine if file is a 7z archive
 def Is7zArchive(archive_file):
-    for ext in config.computer_archive_extensions_7z:
-        if archive_file.endswith(ext):
-            return True
-    return False
+    return IsKnownArchive(
+        archive_file = archive_file,
+        extensions = config.computer_archive_extensions_7z,
+        mime_types = config.mime_types_7z)
 
 # Determine if file is a tarball archive
 def IsTarballArchive(archive_file):
-    for ext in config.computer_archive_extensions_tarball:
-        if archive_file.endswith(ext):
-            return True
-    return False
+    return IsKnownArchive(
+        archive_file = archive_file,
+        extensions = config.computer_archive_extensions_tarball,
+        mime_types = config.mime_types_tarball)
+
+# Determine if file is an exe archive
+def IsExeArchive(archive_file):
+    return IsKnownArchive(
+        archive_file = archive_file,
+        extensions = config.computer_archive_extensions_exe,
+        mime_types = config.mime_types_exe)
+
+# Determine if file is an appimage archive
+def IsAppImageArchive(archive_file):
+    return IsKnownArchive(
+        archive_file = archive_file,
+        extensions = config.computer_archive_extensions_appimage,
+        mime_types = config.mime_types_appimage)
 
 # Check archive checksums
 def GetArchiveChecksums(archive_file):
