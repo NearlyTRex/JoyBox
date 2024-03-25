@@ -1396,6 +1396,15 @@ def GetFilenameFile(path):
 def GetFileSize(path):
     return os.path.getsize(path)
 
+# Get file mime type
+def GetFileMimeType(path):
+    try:
+        import magic
+        return magic.from_file(path, mime=True)
+    except:
+        pass
+    return ""
+
 # Get filename info
 def GetFilenameInfo(path):
     info = {}
@@ -1411,6 +1420,7 @@ def GetFilenameInfo(path):
     info["file_drive_offset"] = GetFilenameDriveOffset(path)
     info["file"] = GetFilenameFile(path)
     info["size"] = GetFileSize(path)
+    info["mime"] = GetFileMimeType(path)
     return info
 
 ###########################################################
