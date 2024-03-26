@@ -54,7 +54,9 @@ def GetProgramInstallDir(program_name, program_platform = None):
 
 # Get program backup dir
 def GetProgramBackupDir(program_name, program_platform = None):
-    if IsProgramNameEmulator(program_name, program_platform):
+    if IsProgramNameTool(program_name, program_platform):
+        return environment.GetSyncedProgramToolDir(program_name, program_platform)
+    elif IsProgramNameEmulator(program_name, program_platform):
         return environment.GetSyncedGameEmulatorBinariesDir(program_name, program_platform)
     return None
 
