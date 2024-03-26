@@ -36,24 +36,25 @@ def CheckRequirements():
         sys.exit(1)
 
 # Setup tools
-def SetupTools(verbose = False, exit_on_failure = False):
+def SetupTools(offline = False, verbose = False, exit_on_failure = False):
     for tool in programs.GetTools():
         system.LogInfo("Installing tool %s ..." % tool.GetName())
-        tool.Setup(
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+        tool.Setup(verbose = verbose, exit_on_failure = exit_on_failure)
 
 # Setup emulators
-def SetupEmulators(verbose = False, exit_on_failure = False):
+def SetupEmulators(offline = False, configure = False, verbose = False, exit_on_failure = False):
     for emulator in programs.GetEmulators():
         system.LogInfo("Installing emulator %s ..." % emulator.GetName())
-        emulator.Setup(
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+        if offline:
+            emulator.SetupOffline(verbose = verbose, exit_on_failure = exit_on_failure)
+        else:
+            emulator.Setup(verbose = verbose, exit_on_failure = exit_on_failure)
+        if configure:
+            emulator.Configure(verbose = verbose, exit_on_failure = exit_on_failure)
 
 # Setup assets
 def SetupAssets(verbose = False, exit_on_failure = False):
-    
+
     # Create asset symlinks
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
