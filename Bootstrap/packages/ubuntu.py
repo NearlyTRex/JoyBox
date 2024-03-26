@@ -41,40 +41,51 @@ if not os.path.isfile("/usr/bin/wine"):
 apt_packages = [
 
     # Admin
+    "7zip",
     "apt-file",
-    "flatpak",
-    "libudev-dev",
-    "libvirt-clients",
-    "libvirt-daemon-system",
-    "virt-manager",
-    "xdg-desktop-portal",
+    "blueman",
+    "clamav",
+    "jackd",
+    "pulseaudio-utils",
+    "qdirstat",
+    "thunar",
+    "zip",
 
     # Devel
     "autoconf",
     "automake",
+    "awscli",
     "bison",
     "build-essential",
     "clang",
     "cmake",
+    "dos2unix",
     "flex",
     "g++",
     "gcc",
     "gettext",
+    "git",
+    "gitg",
+    "glslang-tools",
     "golang",
     "help2man",
     "libtool-bin",
     "lld",
     "make",
+    "maven",
     "nasm",
     "ninja-build",
+    "perl-base",
     "pkg-config",
+    "python3-tk",
+    "python3-venv",
     "qmake6",
     "qt5-qmake",
     "qt6-base-dev-tools",
+    "qt6-l10n-tools",
     "qt6-tools-dev-tools",
     "qtbase5-dev-tools",
     "qttools5-dev-tools",
-    "snapd",
     "xa65",
 
     # Games
@@ -84,20 +95,22 @@ apt_packages = [
     # Gnome
     "brasero",
     "ghex",
+    "gnome-screenshot",
 
     # Graphics
     "gimp",
     "handbrake",
-    "imagemagick",
     "imagemagick-6.q16",
-    "vlc",
+    "imagemagick",
+    "img2pdf",
 
-    # Libdevel
+    # Libs
+    "extra-cmake-modules",
     "glslang-dev",
-    "glslang-tools",
     "libarchive-dev",
     "libasound2-dev",
     "libavcodec-dev",
+    "libavcodec-extra",
     "libavdevice-dev",
     "libavformat-dev",
     "libavutil-dev",
@@ -110,6 +123,7 @@ apt_packages = [
     "libboost-regex-dev",
     "libboost-system-dev",
     "libbz2-dev",
+    "libcanberra-gtk-module",
     "libcurl4-openssl-dev",
     "libepoxy-dev",
     "libevdev-dev",
@@ -118,6 +132,7 @@ apt_packages = [
     "libfontconfig-dev",
     "libfreetype-dev",
     "libfreetype6-dev",
+    "libgl-dev",
     "libgl1-mesa-dev",
     "libglew-dev",
     "libglib2.0-dev",
@@ -133,13 +148,16 @@ apt_packages = [
     "libmpeg2-4-dev",
     "libncurses-dev",
     "libopenal-dev",
+    "libpangocairo-1.0-0",
     "libpcap-dev",
     "libpipewire-0.3-dev",
     "libpixman-1-dev",
     "libpng-dev",
     "libpugixml-dev",
     "libpulse-dev",
+    "libpython3-dev",
     "libqt5gamepad5-dev",
+    "libqt5multimedia5-plugins",
     "libqt5opengl5-dev",
     "libqt5svg5-dev",
     "libqt6opengl6-dev",
@@ -158,7 +176,10 @@ apt_packages = [
     "libsystemd-dev",
     "libtheora-dev",
     "libtinyxml2-dev",
+    "libudev-dev",
     "libusb-1.0-0-dev",
+    "libvirt-clients",
+    "libvirt-daemon-system",
     "libvorbis-dev",
     "libx11-dev",
     "libxext-dev",
@@ -167,6 +188,8 @@ apt_packages = [
     "libxrandr-dev",
     "libxtst-dev",
     "libzstd-dev",
+    "qml-module-qtgraphicaleffects",
+    "qml-module-qtmultimedia",
     "qt6-base-dev",
     "qt6-base-private-dev",
     "qt6-multimedia-dev",
@@ -179,78 +202,42 @@ apt_packages = [
     "qtwebengine5-dev",
     "zlib1g-dev",
 
-    # Libs
-    "extra-cmake-modules",
-    "libavcodec-extra",
-    "libcanberra-gtk-module",
-    "libgl-dev",
-    "libpangocairo-1.0-0",
-    "libqt5multimedia5-plugins",
-    "qml-module-qtgraphicaleffects",
-    "qml-module-qtmultimedia",
-
-    # Misc
-    "ca-certificates",
-    "keyutils",
-    "ovmf",
-    "qemu-kvm",
-    "qemu-utils",
-    "virtualbox",
-
     # Net
     "bridge-utils",
-    "net-tools",
-    "uget",
-
-    # OtherOSFS
+    "ca-certificates",
     "cifs-utils",
-
-    # Perl
-    "perl-base",
-
-    # Python
-    "libpython3-dev",
-    "python3-tk",
-    "python3-venv",
-
-    # Sandbox
-    "winehq-devel",
-    "winetricks",
+    "curl",
+    "keyutils",
+    "net-tools",
+    "openssl",
 
     # Sound
     "audacity",
-    "jackd",
-    "pulseaudio-utils",
     "qmmp",
-
-    # Text
-    "dos2unix",
-
-    # Utils
-    "7zip",
-    "clamav",
-    "img2pdf",
-    "openssl",
-    "qt6-l10n-tools",
-    "zip",
-
-    # VCS
-    "git",
-    "gitg",
 
     # Video
     "shotcut",
+    "vlc",
+
+    # Virtualization
+    "flatpak",
+    "ovmf",
+    "qemu-kvm",
+    "qemu-utils",
+    "snapd",
+    "vagrant",
+    "virt-manager",
+    "virtualbox",
+    "winehq-devel",
+    "winetricks",
+    "xdg-desktop-portal",
 
     # Web
-    "curl",
     "firefox",
+    "uget",
 
     # X11
-    "blueman",
-    "qdirstat",
-    "thunar",
-    "wmctrl",
-    "xorg-dev"
+    "wmctrl"
 ]
 
 ###########################################################
@@ -264,11 +251,12 @@ snap_packages = [
 ###########################################################
 flatpak_packages = [
 
+    # Devel
+    ["flathub", "com.axosoft.GitKraken"],
+    ["flathub", "com.jetbrains.IntelliJ-IDEA-Community"],
+
     # Text
     ["flathub", "com.vscodium.codium"],
-
-    # VCS
-    ["flathub", "com.axosoft.GitKraken"],
 
     # Web
     ["flathub", "com.discordapp.Discord"],
@@ -312,7 +300,7 @@ def Setup(ini_values = {}):
         subprocess.check_call(["sudo", snap_tool, "refresh"])
         for package in snap_packages:
             subprocess.check_call(["sudo", snap_tool, "install"] + package)
-    
+
     # Install flatpak packages
     if os.path.isfile(flatpak_tool):
         subprocess.check_call([flatpak_tool, "update", "-y"])
