@@ -17,7 +17,7 @@ def IsKnownArchive(archive_file, extensions = [], mime_types = []):
     for ext in extensions:
         if archive_file.lower().endswith(ext.lower()):
             return True
-    actual_mime_type = GetFileMimeType(path)
+    actual_mime_type = system.GetFileMimeType(archive_file)
     for potential_mime_type in mime_types:
         if potential_mime_type.lower() in actual_mime_type.lower():
             return True
