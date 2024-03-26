@@ -193,8 +193,8 @@ def GetSyncRootDir():
 def GetSyncedDevelopmentRootDir():
     return os.path.join(GetSyncRootDir(), "Development")
 
-# Get synced development archive dir
-def GetSyncedDevelopmentArchiveDir():
+# Get synced development archives root dir
+def GetSyncedDevelopmentArchivesRootDir():
     return os.path.join(GetSyncedDevelopmentRootDir(), "Archive")
 
 # Get synced gaming root dir
@@ -247,6 +247,14 @@ def GetSyncedPhotosRootDir():
 # Get synced programs root dir
 def GetSyncedProgramsRootDir():
     return os.path.join(GetSyncRootDir(), "Programs")
+
+# Get synced programs tools root dir
+def GetSyncedProgramsToolsRootDir():
+    return os.path.join(GetSyncedProgramsRootDir(), "Tools")
+
+# Get synced program tool dir
+def GetSyncedProgramToolDir(tool_name, tool_platform):
+    return os.path.join(GetSyncedProgramsToolsRootDir(), tool_name, tool_platform)
 
 ###########################################################
 # Metadata
