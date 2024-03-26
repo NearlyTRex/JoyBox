@@ -16,3 +16,7 @@ class ToolBase:
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):
         pass
+
+    # Setup offline
+    def SetupOffline(self, verbose = False, exit_on_failure = False):
+        pass
