@@ -253,8 +253,11 @@ def GetSyncedProgramsToolsRootDir():
     return os.path.join(GetSyncedProgramsRootDir(), "Tools")
 
 # Get synced program tool dir
-def GetSyncedProgramToolDir(tool_name, tool_platform):
-    return os.path.join(GetSyncedProgramsToolsRootDir(), tool_name, tool_platform)
+def GetSyncedProgramToolDir(tool_name, tool_platform = None):
+    if tool_platform:
+        return os.path.join(GetSyncedProgramsToolsRootDir(), tool_name, tool_platform)
+    else:
+        return os.path.join(GetSyncedProgramsToolsRootDir(), tool_name)
 
 ###########################################################
 # Metadata
@@ -335,6 +338,10 @@ def GetScriptsRootDir():
 # Get scripts bin dir
 def GetScriptsBinDir():
     return os.path.join(GetScriptsRootDir(), "bin")
+
+# Get scripts icons dir
+def GetScriptsIconsDir():
+    return os.path.join(GetScriptsRootDir(), "icons")
 
 # Get scripts lib dir
 def GetScriptsLibDir():

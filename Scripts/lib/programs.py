@@ -64,6 +64,10 @@ def GetProgramBackupDir(program_name, program_platform = None):
 def GetLibraryInstallDir(library_name):
     return os.path.join(environment.GetToolsRootDir(), library_name)
 
+# Get library backup dir
+def GetLibraryBackupDir(library_name):
+    return environment.GetSyncedProgramToolDir(library_name)
+
 # Determine if program should be installed
 def ShouldProgramBeInstalled(program_name, program_platform = None):
 
