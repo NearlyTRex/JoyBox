@@ -20,3 +20,7 @@ class ToolBase:
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
         pass
+
+    # Configure
+    def Configure(self, verbose = False, exit_on_failure = False):
+        pass

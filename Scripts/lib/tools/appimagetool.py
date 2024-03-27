@@ -69,6 +69,9 @@ class AppImageTool(toolbase.ToolBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not copy AppImageTool icons")
 
+    # Configure
+    def Configure(self, verbose = False, exit_on_failure = False):
+
         # Create config files
         if environment.IsLinuxPlatform():
             for config_filename, config_contents in config_files.items():
