@@ -55,10 +55,18 @@ class AppImageTool(toolbase.ToolBase):
                 search_file = "AppImageTool.AppImage",
                 install_name = "AppImageTool",
                 install_dir = programs.GetProgramInstallDir("AppImageTool", "linux"),
+                backups_dir = programs.GetProgramBackupDir("AppImageTool", "linux"),
                 release_type = config.release_type_program,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup AppImageTool")
+
+    # Setup offline
+    def SetupOffline(self, verbose = False, exit_on_failure = False):
+        pass
+
+    # Configure
+    def Configure(self, verbose = False, exit_on_failure = False):
 
         # Copy icon
         if environment.IsLinuxPlatform():
@@ -68,13 +76,6 @@ class AppImageTool(toolbase.ToolBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not copy AppImageTool icons")
-
-    # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
-
-    # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
 
         # Create config files
         if environment.IsLinuxPlatform():

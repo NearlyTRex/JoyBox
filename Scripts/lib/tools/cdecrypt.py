@@ -47,6 +47,7 @@ class CDecrypt(toolbase.ToolBase):
                 search_file = "cdecrypt.exe",
                 install_name = "CDecrypt",
                 install_dir = programs.GetProgramInstallDir("CDecrypt", "windows"),
+                backups_dir = programs.GetProgramBackupDir("CDecrypt", "windows"),
                 install_files = ["cdecrypt.exe"],
                 release_type = config.release_type_archive,
                 verbose = verbose,
@@ -59,6 +60,7 @@ class CDecrypt(toolbase.ToolBase):
                 release_url = "https://github.com/NearlyTRex/CDecrypt.git",
                 install_name = "CDecrypt",
                 install_dir = programs.GetProgramInstallDir("CDecrypt", "linux"),
+                backups_dir = programs.GetProgramBackupDir("CDecrypt", "linux"),
                 build_cmd = [
                     "make", "-j", "4"
                 ],
