@@ -63,11 +63,15 @@ class AppImageTool(toolbase.ToolBase):
         # Copy icon
         if environment.IsLinuxPlatform():
             success = system.CopyFileOrDirectory(
-                src = os.path.join(programs.GetLibraryInstallDir("AppIcons"), "128", "mimes", "application-x-executable-script.svg"),
+                src = os.path.join(environment.GetScriptsIconsDir(), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
                 dest = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not copy AppImageTool icons")
+
+    # Setup offline
+    def SetupOffline(self, verbose = False, exit_on_failure = False):
+        pass
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

@@ -16,50 +16,50 @@ config_files["Ludusavi/windows/ludusavi.portable"] = ""
 config_files["Ludusavi/windows/config.yaml"] = """
 ---
 runtime:
-  threads: ~
+    threads: ~
 manifest:
-  url: "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml"
+    url: "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml"
 language: en-US
 theme: light
 roots: []
 redirects: []
 backup:
-  path: .\\ludusavi-backup
+    path: .\\ludusavi-backup
 restore:
-  path: .\\ludusavi-backup
+    path: .\\ludusavi-backup
 scan:
-  showDeselectedGames: true
-  showUnchangedGames: true
-  showUnscannedGames: true
+    showDeselectedGames: true
+    showUnchangedGames: true
+    showUnscannedGames: true
 cloud:
-  remote: ~
-  path: ludusavi-backup
-  synchronize: true
+    remote: ~
+    path: ludusavi-backup
+    synchronize: true
 customGames: []
 """
 config_files["Ludusavi/linux/ludusavi.portable"] = ""
 config_files["Ludusavi/linux/config.yaml"] = """
 ---
 runtime:
-  threads: ~
+    threads: ~
 manifest:
-  url: "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml"
+    url: "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml"
 language: en-US
 theme: light
 roots: []
 redirects: []
 backup:
-  path: ./ludusavi-backup
+    path: ./ludusavi-backup
 restore:
-  path: ./ludusavi-backup
+    path: ./ludusavi-backup
 scan:
-  showDeselectedGames: true
-  showUnchangedGames: true
-  showUnscannedGames: true
+    showDeselectedGames: true
+    showUnchangedGames: true
+    showUnscannedGames: true
 cloud:
-  remote: ~
-  path: ludusavi-backup
-  synchronize: true
+    remote: ~
+    path: ludusavi-backup
+    synchronize: true
 customGames: []
 """
 
@@ -125,6 +125,10 @@ class Ludusavi(toolbase.ToolBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ludusavi")
+
+    # Setup offline
+    def SetupOffline(self, verbose = False, exit_on_failure = False):
+        pass
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):
