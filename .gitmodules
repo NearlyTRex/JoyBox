@@ -1,0 +1,3 @@
+[submodule "Scripts/icons/BostonIcons"]
+	path = Scripts/icons/BostonIcons
+	url = https://github.com/NearlyTRex/BostonIcons.git
