@@ -1,5 +1,4 @@
 # Imports
-from . import appicons
 from . import appimagetool
 from . import balenaetcher
 from . import cdecrypt
@@ -49,7 +48,6 @@ from . import ytdlp
 
 # Tool instances
 instances = [
-    appicons.AppIcons(),
     appimagetool.AppImageTool(),
     balenaetcher.BalenaEtcher(),
     cdecrypt.CDecrypt(),
