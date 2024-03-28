@@ -13,19 +13,23 @@ import toolbase
 # Config files
 config_files = {}
 
+# Get libs
+def GetLibs(key):
+    lib_files = []
+    lib_root = programs.GetLibraryInstallDir("VKD3D", "lib")
+    for potential_file in system.BuildFileList(lib_root):
+        for lib_file in programs.GetToolConfigValue("VKD3D", key):
+            if potential_file.endswith(lib_file):
+                lib_files.append(potential_file)
+    return lib_files
+
 # Get 32-bit libs
 def GetLibs32():
-    lib_files = []
-    for lib_file in programs.GetToolConfigValue("VKD3D", "lib32"):
-        lib_files.append(os.path.join(programs.GetLibraryInstallDir("VKD3D"), lib_file))
-    return lib_files
+    return GetLibs("lib32")
 
 # Get 64-bit libs
 def GetLibs64():
-    lib_files = []
-    for lib_file in programs.GetToolConfigValue("VKD3D", "lib64"):
-        lib_files.append(os.path.join(programs.GetLibraryInstallDir("VKD3D"), lib_file))
-    return lib_files
+    return GetLibs("lib64")
 
 # VKD3D tool
 class VKD3D(toolbase.ToolBase):
@@ -39,12 +43,12 @@ class VKD3D(toolbase.ToolBase):
         return {
             "VKD3D": {
                 "lib32": [
-                    "windows/vkd3d-proton-2.12/x86/d3d12.dll",
-                    "windows/vkd3d-proton-2.12/x86/d3d12core.dll"
+                    "x86/d3d12.dll",
+                    "x86/d3d12core.dll"
                 ],
                 "lib64": [
-                    "windows/vkd3d-proton-2.12/x64/d3d12.dll",
-                    "windows/vkd3d-proton-2.12/x64/d3d12core.dll"
+                    "x64/d3d12.dll",
+                    "x64/d3d12core.dll"
                 ]
             }
         }
@@ -52,16 +56,16 @@ class VKD3D(toolbase.ToolBase):
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):
 
-        # Download windows library
+        # Download library
         if programs.ShouldLibraryBeInstalled("VKD3D"):
             success = release.DownloadGithubRelease(
                 github_user = "HansKristian-Work",
                 github_repo = "vkd3d-proton",
-                starts_with = "vkd3d-proton-2.12",
+                starts_with = "vkd3d-proton",
                 ends_with = ".tar.zst",
                 install_name = "VKD3D-Proton",
-                install_dir = programs.GetLibraryInstallDir("VKD3D", "windows"),
-                backups_dir = programs.GetLibraryBackupDir("VKD3D", "windows"),
+                install_dir = programs.GetLibraryInstallDir("VKD3D", "lib"),
+                backups_dir = programs.GetLibraryBackupDir("VKD3D", "lib"),
                 release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -70,12 +74,12 @@ class VKD3D(toolbase.ToolBase):
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
 
-        # Setup windows library
+        # Setup library
         if programs.ShouldLibraryBeInstalled("VKD3D"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("VKD3D", "windows"),
+                archive_dir = programs.GetLibraryBackupDir("VKD3D", "lib"),
                 install_name = "VKD3D",
-                install_dir = programs.GetLibraryInstallDir("VKD3D", "windows"),
+                install_dir = programs.GetLibraryInstallDir("VKD3D", "lib"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup VKD3D")

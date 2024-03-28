@@ -23,7 +23,7 @@ class PyLnk(toolbase.ToolBase):
     def GetConfig(self):
         return {
             "PyLnk": {
-                "program": "PyLnk/pylnk3.py"
+                "program": "PyLnk/lib/pylnk3.py"
             }
         }
 
@@ -35,7 +35,16 @@ class PyLnk(toolbase.ToolBase):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PyLnk",
-                output_dir = programs.GetLibraryInstallDir("PyLnk"),
+                output_dir = programs.GetLibraryInstallDir("PyLnk", "lib"),
+                clean = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PyLnk")
+            success = network.ArchiveGithubRepository(
+                github_user = "NearlyTRex",
+                github_repo = "PyLnk",
+                output_dir = programs.GetLibraryBackupDir("PyLnk", "lib"),
+                recursive = True,
                 clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

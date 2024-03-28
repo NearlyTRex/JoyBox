@@ -12,19 +12,23 @@ import toolbase
 # Config files
 config_files = {}
 
+# Get libs
+def GetLibs(key):
+    lib_files = []
+    lib_root = programs.GetLibraryInstallDir("GoldbergEmu", "lib")
+    for potential_file in system.BuildFileList(lib_root):
+        for lib_file in programs.GetToolConfigValue("GoldbergEmu", key):
+            if potential_file.endswith(lib_file):
+                lib_files.append(potential_file)
+    return lib_files
+
 # Get 32-bit libs
 def GetLibs32():
-    lib_files = []
-    for lib_file in programs.GetToolConfigValue("GoldbergEmu", "lib32"):
-        lib_files.append(os.path.join(programs.GetLibraryInstallDir("GoldbergEmu"), lib_file))
-    return lib_files
+    return GetLibs("lib32")
 
 # Get 64-bit libs
 def GetLibs64():
-    lib_files = []
-    for lib_file in programs.GetToolConfigValue("GoldbergEmu", "lib64"):
-        lib_files.append(os.path.join(programs.GetLibraryInstallDir("GoldbergEmu"), lib_file))
-    return lib_files
+    return GetLibs("lib64")
 
 # GoldbergEmu tool
 class GoldbergEmu(toolbase.ToolBase):
@@ -38,10 +42,10 @@ class GoldbergEmu(toolbase.ToolBase):
         return {
             "GoldbergEmu": {
                 "lib32": [
-                    "windows/steam_api.dll"
+                    "steam_api.dll"
                 ],
                 "lib64": [
-                    "windows/steam_api64.dll"
+                    "steam_api64.dll"
                 ]
             }
         }
@@ -49,13 +53,13 @@ class GoldbergEmu(toolbase.ToolBase):
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):
 
-        # Download windows library
+        # Download library
         if programs.ShouldLibraryBeInstalled("GoldbergEmu"):
             success = release.DownloadGeneralRelease(
                 archive_url = "https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/4247811310/artifacts/download",
                 install_name = "GoldbergEmu",
-                install_dir = programs.GetLibraryInstallDir("GoldbergEmu", "windows"),
-                backups_dir = programs.GetLibraryBackupDir("GoldbergEmu", "windows"),
+                install_dir = programs.GetLibraryInstallDir("GoldbergEmu", "lib"),
+                backups_dir = programs.GetLibraryBackupDir("GoldbergEmu", "lib"),
                 release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -64,12 +68,12 @@ class GoldbergEmu(toolbase.ToolBase):
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
 
-        # Setup windows library
+        # Setup library
         if programs.ShouldLibraryBeInstalled("GoldbergEmu"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("GoldbergEmu", "windows"),
+                archive_dir = programs.GetLibraryBackupDir("GoldbergEmu", "lib"),
                 install_name = "GoldbergEmu",
-                install_dir = programs.GetLibraryInstallDir("GoldbergEmu", "windows"),
+                install_dir = programs.GetLibraryInstallDir("GoldbergEmu", "lib"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup GoldbergEmu")

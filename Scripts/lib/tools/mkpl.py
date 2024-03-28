@@ -23,7 +23,7 @@ class Mkpl(toolbase.ToolBase):
     def GetConfig(self):
         return {
             "Mkpl": {
-                "program": "Mkpl/mkpl.py"
+                "program": "Mkpl/lib/mkpl.py"
             }
         }
 
@@ -35,7 +35,16 @@ class Mkpl(toolbase.ToolBase):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "Mkpl",
-                output_dir = programs.GetLibraryInstallDir("Mkpl"),
+                output_dir = programs.GetLibraryInstallDir("Mkpl", "lib"),
+                clean = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Mkpl")
+            success = network.ArchiveGithubRepository(
+                github_user = "NearlyTRex",
+                github_repo = "Mkpl",
+                output_dir = programs.GetLibraryBackupDir("Mkpl", "lib"),
+                recursive = True,
                 clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

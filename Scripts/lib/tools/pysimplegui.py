@@ -23,7 +23,7 @@ class PySimpleGUI(toolbase.ToolBase):
     def GetConfig(self):
         return {
             "PySimpleGUI": {
-                "program": "PySimpleGUI/PySimpleGUI.py"
+                "program": "PySimpleGUI/lib/PySimpleGUI.py"
             }
         }
 
@@ -35,7 +35,16 @@ class PySimpleGUI(toolbase.ToolBase):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PySimpleGUI",
-                output_dir = programs.GetLibraryInstallDir("PySimpleGUI"),
+                output_dir = programs.GetLibraryInstallDir("PySimpleGUI", "lib"),
+                clean = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PySimpleGUI")
+            success = network.ArchiveGithubRepository(
+                github_user = "NearlyTRex",
+                github_repo = "PySimpleGUI",
+                output_dir = programs.GetLibraryBackupDir("PySimpleGUI", "lib"),
+                recursive = True,
                 clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

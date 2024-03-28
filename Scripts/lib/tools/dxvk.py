@@ -12,19 +12,23 @@ import toolbase
 # Config files
 config_files = {}
 
+# Get libs
+def GetLibs(key):
+    lib_files = []
+    lib_root = programs.GetLibraryInstallDir("DXVK", "lib")
+    for potential_file in system.BuildFileList(lib_root):
+        for lib_file in programs.GetToolConfigValue("DXVK", key):
+            if potential_file.endswith(lib_file):
+                lib_files.append(potential_file)
+    return lib_files
+
 # Get 32-bit libs
 def GetLibs32():
-    lib_files = []
-    for lib_file in programs.GetToolConfigValue("DXVK", "lib32"):
-        lib_files.append(os.path.join(programs.GetLibraryInstallDir("DXVK"), lib_file))
-    return lib_files
+    return GetLibs("lib32")
 
 # Get 64-bit libs
 def GetLibs64():
-    lib_files = []
-    for lib_file in programs.GetToolConfigValue("DXVK", "lib64"):
-        lib_files.append(os.path.join(programs.GetLibraryInstallDir("DXVK"), lib_file))
-    return lib_files
+    return GetLibs("lib64")
 
 # DXVK tool
 class DXVK(toolbase.ToolBase):
@@ -38,16 +42,16 @@ class DXVK(toolbase.ToolBase):
         return {
             "DXVK": {
                 "lib32": [
-                    "windows/dxvk-2.2/x32/d3d10core.dll",
-                    "windows/dxvk-2.2/x32/d3d11.dll",
-                    "windows/dxvk-2.2/x32/d3d9.dll",
-                    "windows/dxvk-2.2/x32/dxgi.dll"
+                    "x32/d3d10core.dll",
+                    "x32/d3d11.dll",
+                    "x32/d3d9.dll",
+                    "x32/dxgi.dll"
                 ],
                 "lib64": [
-                    "windows/dxvk-2.2/x64/d3d10core.dll",
-                    "windows/dxvk-2.2/x64/d3d11.dll",
-                    "windows/dxvk-2.2/x64/d3d9.dll",
-                    "windows/dxvk-2.2/x64/dxgi.dll"
+                    "x64/d3d10core.dll",
+                    "x64/d3d11.dll",
+                    "x64/d3d9.dll",
+                    "x64/dxgi.dll"
                 ]
             }
         }
@@ -55,7 +59,7 @@ class DXVK(toolbase.ToolBase):
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):
 
-        # Download windows library
+        # Download library
         if programs.ShouldLibraryBeInstalled("DXVK"):
             success = release.DownloadGithubRelease(
                 github_user = "doitsujin",
@@ -63,8 +67,8 @@ class DXVK(toolbase.ToolBase):
                 starts_with = "dxvk-2.2",
                 ends_with = ".tar.gz",
                 install_name = "DXVK",
-                install_dir = programs.GetLibraryInstallDir("DXVK", "windows"),
-                backups_dir = programs.GetLibraryBackupDir("DXVK", "windows"),
+                install_dir = programs.GetLibraryInstallDir("DXVK", "lib"),
+                backups_dir = programs.GetLibraryBackupDir("DXVK", "lib"),
                 release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -73,12 +77,12 @@ class DXVK(toolbase.ToolBase):
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
 
-        # Setup windows library
+        # Setup library
         if programs.ShouldLibraryBeInstalled("DXVK"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("DXVK", "windows"),
+                archive_dir = programs.GetLibraryBackupDir("DXVK", "lib"),
                 install_name = "DXVK",
-                install_dir = programs.GetLibraryInstallDir("DXVK", "windows"),
+                install_dir = programs.GetLibraryInstallDir("DXVK", "lib"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DXVK")

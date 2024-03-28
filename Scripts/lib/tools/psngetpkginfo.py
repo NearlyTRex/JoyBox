@@ -23,7 +23,7 @@ class PSNGetPkgInfo(toolbase.ToolBase):
     def GetConfig(self):
         return {
             "PSNGetPkgInfo": {
-                "program": "PSNGetPkgInfo/PSN_get_pkg_info.py"
+                "program": "PSNGetPkgInfo/lib/PSN_get_pkg_info.py"
             }
         }
 
@@ -35,7 +35,16 @@ class PSNGetPkgInfo(toolbase.ToolBase):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PSNGetPkgInfo",
-                output_dir = programs.GetLibraryInstallDir("PSNGetPkgInfo"),
+                output_dir = programs.GetLibraryInstallDir("PSNGetPkgInfo", "lib"),
+                clean = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PSNGetPkgInfo")
+            success = network.ArchiveGithubRepository(
+                github_user = "NearlyTRex",
+                github_repo = "PSNGetPkgInfo",
+                output_dir = programs.GetLibraryBackupDir("PSNGetPkgInfo", "lib"),
+                recursive = True,
                 clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

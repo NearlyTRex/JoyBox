@@ -23,7 +23,7 @@ class ExifTool(toolbase.ToolBase):
     def GetConfig(self):
         return {
             "ExifTool": {
-                "program": "ExifTool/exiftool"
+                "program": "ExifTool/lib/exiftool"
             }
         }
 
@@ -35,7 +35,16 @@ class ExifTool(toolbase.ToolBase):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "ExifTool",
-                output_dir = programs.GetLibraryInstallDir("ExifTool"),
+                output_dir = programs.GetLibraryInstallDir("ExifTool", "lib"),
+                clean = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup ExifTool")
+            success = network.ArchiveGithubRepository(
+                github_user = "NearlyTRex",
+                github_repo = "ExifTool",
+                output_dir = programs.GetLibraryBackupDir("ExifTool", "lib"),
+                recursive = True,
                 clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

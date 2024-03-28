@@ -23,7 +23,7 @@ class XCITrimmer(toolbase.ToolBase):
     def GetConfig(self):
         return {
             "XCITrimmer": {
-                "program": "XCITrimmer/XCI_Trimmer.py"
+                "program": "XCITrimmer/lib/XCI_Trimmer.py"
             }
         }
 
@@ -35,7 +35,16 @@ class XCITrimmer(toolbase.ToolBase):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "XCITrimmer",
-                output_dir = programs.GetLibraryInstallDir("XCITrimmer"),
+                output_dir = programs.GetLibraryInstallDir("XCITrimmer", "lib"),
+                clean = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup XCITrimmer")
+            success = network.ArchiveGithubRepository(
+                github_user = "NearlyTRex",
+                github_repo = "XCITrimmer",
+                output_dir = programs.GetLibraryBackupDir("XCITrimmer", "lib"),
+                recursive = True,
                 clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

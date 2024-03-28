@@ -23,7 +23,7 @@ class PSVTools(toolbase.ToolBase):
     def GetConfig(self):
         return {
             "PSVTools": {
-                "program": "PSVTools/main.py"
+                "program": "PSVTools/lib/main.py"
             }
         }
 
@@ -35,7 +35,16 @@ class PSVTools(toolbase.ToolBase):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PSVTools",
-                output_dir = programs.GetLibraryInstallDir("PSVTools"),
+                output_dir = programs.GetLibraryInstallDir("PSVTools", "lib"),
+                clean = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PSVTools")
+            success = network.ArchiveGithubRepository(
+                github_user = "NearlyTRex",
+                github_repo = "PSVTools",
+                output_dir = programs.GetLibraryBackupDir("PSVTools", "lib"),
+                recursive = True,
                 clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
