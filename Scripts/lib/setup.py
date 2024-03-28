@@ -39,7 +39,11 @@ def CheckRequirements():
 def SetupTools(offline = False, verbose = False, exit_on_failure = False):
     for tool in programs.GetTools():
         system.LogInfo("Installing tool %s ..." % tool.GetName())
-        tool.Setup(verbose = verbose, exit_on_failure = exit_on_failure)
+        if offline:
+            tool.SetupOffline(verbose = verbose, exit_on_failure = exit_on_failure)
+        else:
+            tool.Setup(verbose = verbose, exit_on_failure = exit_on_failure)
+        tool.Configure(verbose = verbose, exit_on_failure = exit_on_failure)
 
 # Setup emulators
 def SetupEmulators(offline = False, configure = False, verbose = False, exit_on_failure = False):
