@@ -12,6 +12,7 @@ import setup
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Setup tools.")
+parser.add_argument("-e", "--offline", action="store_true", help="Enable offline mode")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
@@ -24,6 +25,7 @@ def main():
 
     # Setup tools
     setup.SetupTools(
+        offline = args.offline,
         verbose = args.verbose,
         exit_on_failure = args.exit_on_failure)
 
