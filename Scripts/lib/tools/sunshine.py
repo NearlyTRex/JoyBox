@@ -50,6 +50,7 @@ class Sunshine(toolbase.ToolBase):
                 search_file = "sunshine.exe",
                 install_name = "Sunshine",
                 install_dir = programs.GetProgramInstallDir("Sunshine", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Sunshine", "windows"),
                 install_files = ["sunshine.exe", "assets", "scripts", "tools"],
                 release_type = config.release_type_archive,
                 verbose = verbose,
@@ -66,6 +67,7 @@ class Sunshine(toolbase.ToolBase):
                 search_file = "Sunshine.AppImage",
                 install_name = "Sunshine",
                 install_dir = programs.GetProgramInstallDir("Sunshine", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Sunshine", "linux"),
                 release_type = config.release_type_program,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -73,7 +75,27 @@ class Sunshine(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Sunshine", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Sunshine", "windows"),
+                install_name = "Sunshine",
+                install_dir = programs.GetProgramInstallDir("Sunshine", "windows"),
+                search_file = "sunshine.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Sunshine")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Sunshine", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Sunshine", "linux"),
+                install_name = "Sunshine",
+                install_dir = programs.GetProgramInstallDir("Sunshine", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Sunshine")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

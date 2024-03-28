@@ -47,6 +47,7 @@ class NDecrypt(toolbase.ToolBase):
                 search_file = "NDecrypt.exe",
                 install_name = "NDecrypt",
                 install_dir = programs.GetProgramInstallDir("NDecrypt", "windows"),
+                backups_dir = programs.GetProgramBackupDir("NDecrypt", "windows"),
                 install_files = ["NDecrypt.exe"],
                 release_type = config.release_type_archive,
                 verbose = verbose,
@@ -63,6 +64,7 @@ class NDecrypt(toolbase.ToolBase):
                 search_file = "NDecrypt",
                 install_name = "NDecrypt",
                 install_dir = programs.GetProgramInstallDir("NDecrypt", "linux"),
+                backups_dir = programs.GetProgramBackupDir("NDecrypt", "linux"),
                 install_files = ["NDecrypt"],
                 release_type = config.release_type_archive,
                 chmod_files = [
@@ -77,4 +79,24 @@ class NDecrypt(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("NDecrypt", "windows"),
+                install_name = "NDecrypt",
+                install_dir = programs.GetProgramInstallDir("NDecrypt", "windows"),
+                search_file = "NDecrypt.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup NDecrypt")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("NDecrypt", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("NDecrypt", "linux"),
+                install_name = "NDecrypt",
+                install_dir = programs.GetProgramInstallDir("NDecrypt", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup NDecrypt")

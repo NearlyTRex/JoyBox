@@ -62,7 +62,6 @@ class DXVK(toolbase.ToolBase):
                 github_repo = "dxvk",
                 starts_with = "dxvk-2.2",
                 ends_with = ".tar.gz",
-                search_file = "x64/d3d9.dll",
                 install_name = "DXVK",
                 install_dir = programs.GetLibraryInstallDir("DXVK"),
                 backups_dir = programs.GetLibraryBackupDir("DXVK"),
@@ -73,4 +72,13 @@ class DXVK(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup library
+        if programs.ShouldLibraryBeInstalled("DXVK"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetLibraryBackupDir("DXVK"),
+                install_name = "DXVK",
+                install_dir = programs.GetLibraryInstallDir("DXVK"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup DXVK")

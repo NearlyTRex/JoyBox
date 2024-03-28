@@ -61,11 +61,14 @@ class ProjectCTR(toolbase.ToolBase):
                 search_file = "makerom.exe",
                 install_name = "CtrMakeRom",
                 install_dir = programs.GetProgramInstallDir("CtrMakeRom", "windows"),
+                backups_dir = programs.GetProgramBackupDir("CtrMakeRom", "windows"),
                 install_files = ["makerom.exe"],
                 release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup CtrMakeRom")
+
+        # Download windows program
         if programs.ShouldProgramBeInstalled("CtrTool", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "3DSGuy",
@@ -75,6 +78,7 @@ class ProjectCTR(toolbase.ToolBase):
                 search_file = "ctrtool.exe",
                 install_name = "CtrTool",
                 install_dir = programs.GetProgramInstallDir("CtrTool", "windows"),
+                backups_dir = programs.GetProgramBackupDir("CtrTool", "windows"),
                 install_files = ["ctrtool.exe"],
                 release_type = config.release_type_archive,
                 verbose = verbose,
@@ -91,6 +95,7 @@ class ProjectCTR(toolbase.ToolBase):
                 search_file = "makerom",
                 install_name = "CtrMakeRom",
                 install_dir = programs.GetProgramInstallDir("CtrMakeRom", "linux"),
+                backups_dir = programs.GetProgramBackupDir("CtrMakeRom", "linux"),
                 install_files = ["makerom"],
                 release_type = config.release_type_archive,
                 chmod_files = [
@@ -102,6 +107,8 @@ class ProjectCTR(toolbase.ToolBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup CtrMakeRom")
+
+        # Download linux program
         if programs.ShouldProgramBeInstalled("CtrTool", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "3DSGuy",
@@ -111,6 +118,7 @@ class ProjectCTR(toolbase.ToolBase):
                 search_file = "ctrtool",
                 install_name = "CtrTool",
                 install_dir = programs.GetProgramInstallDir("CtrTool", "linux"),
+                backups_dir = programs.GetProgramBackupDir("CtrTool", "linux"),
                 install_files = ["ctrtool"],
                 release_type = config.release_type_archive,
                 chmod_files = [
@@ -125,4 +133,45 @@ class ProjectCTR(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("CtrMakeRom", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("CtrMakeRom", "windows"),
+                install_name = "CtrMakeRom",
+                install_dir = programs.GetProgramInstallDir("CtrMakeRom", "windows"),
+                search_file = "makerom.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup CtrMakeRom")
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("CtrTool", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("CtrTool", "windows"),
+                install_name = "CtrTool",
+                install_dir = programs.GetProgramInstallDir("CtrTool", "windows"),
+                search_file = "ctrtool.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup CtrTool")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("CtrMakeRom", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("CtrMakeRom", "linux"),
+                install_name = "CtrMakeRom",
+                install_dir = programs.GetProgramInstallDir("CtrMakeRom", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup CtrMakeRom")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("CtrTool", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("CtrTool", "linux"),
+                install_name = "CtrTool",
+                install_dir = programs.GetProgramInstallDir("CtrTool", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup CtrTool")

@@ -49,6 +49,7 @@ class MameTools(toolbase.ToolBase):
                 search_file = "chdman.exe",
                 install_name = "MameChdman",
                 install_dir = programs.GetProgramInstallDir("MameChdman", "windows"),
+                backups_dir = programs.GetProgramBackupDir("MameChdman", "windows"),
                 install_files = ["chdman.exe"],
                 installer_type = config.installer_type_7zip,
                 release_type = config.release_type_archive,
@@ -63,6 +64,7 @@ class MameTools(toolbase.ToolBase):
                 release_url = "https://github.com/NearlyTRex/Mame.git",
                 install_name = "MameChdman",
                 install_dir = programs.GetProgramInstallDir("MameChdman", "linux"),
+                backups_dir = programs.GetProgramBackupDir("MameChdman", "linux"),
                 build_cmd = [
                     "make", "TOOLS=1", "EMULATOR=0", "-j5"
                 ],
@@ -80,4 +82,24 @@ class MameTools(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("MameChdman", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("MameChdman", "windows"),
+                install_name = "MameChdman",
+                install_dir = programs.GetProgramInstallDir("MameChdman", "windows"),
+                search_file = "chdman.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup MameChdman")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("MameChdman", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("MameChdman", "linux"),
+                install_name = "MameChdman",
+                install_dir = programs.GetProgramInstallDir("MameChdman", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup MameChdman")

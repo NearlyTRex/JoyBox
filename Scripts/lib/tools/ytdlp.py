@@ -48,6 +48,7 @@ class YtDlp(toolbase.ToolBase):
                 search_file = "yt-dlp.exe",
                 install_name = "YtDlp",
                 install_dir = programs.GetProgramInstallDir("YtDlp", "windows"),
+                backups_dir = programs.GetProgramBackupDir("YtDlp", "windows"),
                 install_files = ["yt-dlp.exe"],
                 release_type = config.release_type_program,
                 get_latest = True,
@@ -65,6 +66,7 @@ class YtDlp(toolbase.ToolBase):
                 search_file = "yt-dlp_linux",
                 install_name = "YtDlp",
                 install_dir = programs.GetProgramInstallDir("YtDlp", "linux"),
+                backups_dir = programs.GetProgramBackupDir("YtDlp", "linux"),
                 install_files = ["yt-dlp_linux"],
                 release_type = config.release_type_program,
                 chmod_files = [
@@ -80,4 +82,24 @@ class YtDlp(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("YtDlp", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("YtDlp", "windows"),
+                install_name = "YtDlp",
+                install_dir = programs.GetProgramInstallDir("YtDlp", "windows"),
+                search_file = "yt-dlp.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup YtDlp")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("YtDlp", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("YtDlp", "linux"),
+                install_name = "YtDlp",
+                install_dir = programs.GetProgramInstallDir("YtDlp", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup YtDlp")

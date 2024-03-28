@@ -78,4 +78,24 @@ class CDecrypt(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("CDecrypt", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("CDecrypt", "windows"),
+                install_name = "CDecrypt",
+                install_dir = programs.GetProgramInstallDir("CDecrypt", "windows"),
+                search_file = "cdecrypt.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup CDecrypt")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("CDecrypt", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("CDecrypt", "linux"),
+                install_name = "CDecrypt",
+                install_dir = programs.GetProgramInstallDir("CDecrypt", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup CDecrypt")

@@ -55,6 +55,7 @@ class XorrISO(toolbase.ToolBase):
                 release_url = "https://www.gnu.org/software/xorriso/xorriso-1.5.6.pl02.tar.gz",
                 install_name = "XorrISO",
                 install_dir = programs.GetProgramInstallDir("XorrISO", "linux"),
+                backups_dir = programs.GetProgramBackupDir("XorrISO", "linux"),
                 build_cmd = [
                     "cd", "xorriso-1.5.6",
                     "./bootstrap",
@@ -77,4 +78,13 @@ class XorrISO(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("XorrISO", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("XorrISO", "linux"),
+                install_name = "XorrISO",
+                install_dir = programs.GetProgramInstallDir("XorrISO", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup XorrISO")

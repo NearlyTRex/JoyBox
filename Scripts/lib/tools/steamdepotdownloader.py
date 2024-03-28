@@ -47,6 +47,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 search_file = "DepotDownloader.exe",
                 install_name = "SteamDepotDownloader",
                 install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "windows"),
+                backups_dir = programs.GetProgramBackupDir("SteamDepotDownloader", "windows"),
                 install_files = ["DepotDownloader.exe"],
                 release_type = config.release_type_archive,
                 verbose = verbose,
@@ -63,6 +64,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 search_file = "DepotDownloader",
                 install_name = "SteamDepotDownloader",
                 install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "linux"),
+                backups_dir = programs.GetProgramBackupDir("SteamDepotDownloader", "linux"),
                 install_files = ["DepotDownloader"],
                 release_type = config.release_type_archive,
                 chmod_files = [
@@ -78,4 +80,24 @@ class SteamDepotDownloader(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("SteamDepotDownloader", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("SteamDepotDownloader", "windows"),
+                install_name = "SteamDepotDownloader",
+                install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "windows"),
+                search_file = "DepotDownloader.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup SteamDepotDownloader")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("SteamDepotDownloader", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("SteamDepotDownloader", "linux"),
+                install_name = "SteamDepotDownloader",
+                install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup SteamDepotDownloader")

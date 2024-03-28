@@ -47,6 +47,7 @@ class Jdupes(toolbase.ToolBase):
                 search_file = "jdupes.exe",
                 install_name = "Jdupes",
                 install_dir = programs.GetProgramInstallDir("Jdupes", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Jdupes", "windows"),
                 release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -62,6 +63,7 @@ class Jdupes(toolbase.ToolBase):
                 search_file = "jdupes",
                 install_name = "Jdupes",
                 install_dir = programs.GetProgramInstallDir("Jdupes", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Jdupes", "linux"),
                 release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -69,4 +71,24 @@ class Jdupes(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Jdupes", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Jdupes", "windows"),
+                install_name = "Jdupes",
+                install_dir = programs.GetProgramInstallDir("Jdupes", "windows"),
+                search_file = "jdupes.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Jdupes")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Jdupes", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Jdupes", "linux"),
+                install_name = "Jdupes",
+                install_dir = programs.GetProgramInstallDir("Jdupes", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Jdupes")

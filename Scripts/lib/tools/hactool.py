@@ -47,6 +47,7 @@ class HacTool(toolbase.ToolBase):
                 search_file = "hactool.exe",
                 install_name = "HacTool",
                 install_dir = programs.GetProgramInstallDir("HacTool", "windows"),
+                backups_dir = programs.GetProgramBackupDir("HacTool", "windows"),
                 install_files = ["hactool.exe"],
                 release_type = config.release_type_archive,
                 verbose = verbose,
@@ -59,6 +60,7 @@ class HacTool(toolbase.ToolBase):
                 release_url = "https://github.com/NearlyTRex/HacTool.git",
                 install_name = "HacTool",
                 install_dir = programs.GetProgramInstallDir("HacTool", "linux"),
+                backups_dir = programs.GetProgramBackupDir("HacTool", "linux"),
                 build_cmd = [
                     "cp", "config.mk.template", "config.mk",
                     "&&",
@@ -78,4 +80,24 @@ class HacTool(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("HacTool", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("HacTool", "windows"),
+                install_name = "HacTool",
+                install_dir = programs.GetProgramInstallDir("HacTool", "windows"),
+                search_file = "hactool.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup HacTool")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("HacTool", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("HacTool", "linux"),
+                install_name = "HacTool",
+                install_dir = programs.GetProgramInstallDir("HacTool", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup HacTool")

@@ -47,6 +47,7 @@ class PSVStrip(toolbase.ToolBase):
                 search_file = "psvstrip.exe",
                 install_name = "PSVStrip",
                 install_dir = programs.GetProgramInstallDir("PSVStrip", "windows"),
+                backups_dir = programs.GetProgramBackupDir("PSVStrip", "windows"),
                 install_files = ["psvstrip.exe"],
                 release_type = config.release_type_archive,
                 verbose = verbose,
@@ -55,4 +56,14 @@ class PSVStrip(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("PSVStrip", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("PSVStrip", "windows"),
+                install_name = "PSVStrip",
+                install_dir = programs.GetProgramInstallDir("PSVStrip", "windows"),
+                search_file = "psvstrip.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PSVStrip")

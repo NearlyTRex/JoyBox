@@ -63,7 +63,16 @@ class AppImageTool(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("AppImageTool", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("AppImageTool", "linux"),
+                install_name = "AppImageTool",
+                install_dir = programs.GetProgramInstallDir("AppImageTool", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup AppImageTool")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

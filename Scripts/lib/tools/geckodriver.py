@@ -47,6 +47,7 @@ class GeckoDriver(toolbase.ToolBase):
                 search_file = "geckodriver.exe",
                 install_name = "GeckoDriver",
                 install_dir = programs.GetProgramInstallDir("GeckoDriver", "windows"),
+                backups_dir = programs.GetProgramBackupDir("GeckoDriver", "windows"),
                 release_type = config.release_type_archive,
                 install_files = ["geckodriver.exe"],
                 verbose = verbose,
@@ -63,6 +64,7 @@ class GeckoDriver(toolbase.ToolBase):
                 search_file = "geckodriver",
                 install_name = "GeckoDriver",
                 install_dir = programs.GetProgramInstallDir("GeckoDriver", "linux"),
+                backups_dir = programs.GetProgramBackupDir("GeckoDriver", "linux"),
                 install_files = ["geckodriver"],
                 release_type = config.release_type_archive,
                 verbose = verbose,
@@ -71,4 +73,24 @@ class GeckoDriver(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("GeckoDriver", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("GeckoDriver", "windows"),
+                install_name = "GeckoDriver",
+                install_dir = programs.GetProgramInstallDir("GeckoDriver", "windows"),
+                search_file = "geckodriver.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup GeckoDriver")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("GeckoDriver", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("GeckoDriver", "linux"),
+                install_name = "GeckoDriver",
+                install_dir = programs.GetProgramInstallDir("GeckoDriver", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup GeckoDriver")

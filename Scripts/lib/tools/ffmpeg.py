@@ -47,6 +47,7 @@ class FFMpeg(toolbase.ToolBase):
                 search_file = "ffmpeg.exe",
                 install_name = "FFMpeg",
                 install_dir = programs.GetProgramInstallDir("FFMpeg", "windows"),
+                backups_dir = programs.GetProgramBackupDir("FFMpeg", "windows"),
                 install_files = ["ffmpeg.exe"],
                 release_type = config.release_type_archive,
                 verbose = verbose,
@@ -63,6 +64,7 @@ class FFMpeg(toolbase.ToolBase):
                 search_file = "ffmpeg",
                 install_name = "FFMpeg",
                 install_dir = programs.GetProgramInstallDir("FFMpeg", "linux"),
+                backups_dir = programs.GetProgramBackupDir("FFMpeg", "linux"),
                 install_files = ["ffmpeg"],
                 release_type = config.release_type_archive,
                 verbose = verbose,
@@ -71,4 +73,24 @@ class FFMpeg(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("FFMpeg", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("FFMpeg", "windows"),
+                install_name = "FFMpeg",
+                install_dir = programs.GetProgramInstallDir("FFMpeg", "windows"),
+                search_file = "ffmpeg.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup FFMpeg")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("FFMpeg", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("FFMpeg", "linux"),
+                install_name = "FFMpeg",
+                install_dir = programs.GetProgramInstallDir("FFMpeg", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup FFMpeg")

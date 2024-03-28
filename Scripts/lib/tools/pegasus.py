@@ -81,6 +81,7 @@ class Pegasus(toolbase.ToolBase):
                 search_file = "pegasus-fe.exe",
                 install_name = "Pegasus",
                 install_dir = programs.GetProgramInstallDir("Pegasus", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Pegasus", "windows"),
                 install_files = ["pegasus-fe.exe"],
                 release_type = config.release_type_archive,
                 get_latest = True,
@@ -106,6 +107,7 @@ class Pegasus(toolbase.ToolBase):
                 search_file = "pegasus-fe",
                 install_name = "Pegasus",
                 install_dir = programs.GetProgramInstallDir("Pegasus", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Pegasus", "linux"),
                 install_files = ["pegasus-fe"],
                 release_type = config.release_type_archive,
                 chmod_files = [
@@ -129,7 +131,27 @@ class Pegasus(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Pegasus", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Pegasus", "windows"),
+                install_name = "Pegasus",
+                install_dir = programs.GetProgramInstallDir("Pegasus", "windows"),
+                search_file = "pegasus-fe.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Pegasus")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Pegasus", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Pegasus", "linux"),
+                install_name = "Pegasus",
+                install_dir = programs.GetProgramInstallDir("Pegasus", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Pegasus")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

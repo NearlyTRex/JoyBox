@@ -71,4 +71,24 @@ class BalenaEtcher(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("BalenaEtcher", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("BalenaEtcher", "windows"),
+                install_name = "BalenaEtcher",
+                install_dir = programs.GetProgramInstallDir("BalenaEtcher", "windows"),
+                search_file = "balenaEtcher.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup BalenaEtcher")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("BalenaEtcher", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("BalenaEtcher", "linux"),
+                install_name = "BalenaEtcher",
+                install_dir = programs.GetProgramInstallDir("BalenaEtcher", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup BalenaEtcher")

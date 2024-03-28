@@ -45,6 +45,7 @@ class LGOGDownloader(toolbase.ToolBase):
                 release_url = "https://github.com/NearlyTRex/LGOGDownloader.git",
                 install_name = "LGOGDownloader",
                 install_dir = programs.GetProgramInstallDir("LGOGDownloader", "linux"),
+                backups_dir = programs.GetProgramBackupDir("LGOGDownloader", "linux"),
                 build_cmd = [
                     "cmake", "..",
                     "&&",
@@ -65,7 +66,16 @@ class LGOGDownloader(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("LGOGDownloader", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("LGOGDownloader", "linux"),
+                install_name = "LGOGDownloader",
+                install_dir = programs.GetProgramInstallDir("LGOGDownloader", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup LGOGDownloader")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):

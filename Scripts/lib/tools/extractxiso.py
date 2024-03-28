@@ -47,6 +47,7 @@ class ExtractXIso(toolbase.ToolBase):
                 search_file = "extract-xiso.exe",
                 install_name = "ExtractXIso",
                 install_dir = programs.GetProgramInstallDir("ExtractXIso", "windows"),
+                backups_dir = programs.GetProgramBackupDir("ExtractXIso", "windows"),
                 install_files = ["extract-xiso.exe"],
                 release_type = config.release_type_archive,
                 verbose = verbose,
@@ -59,6 +60,7 @@ class ExtractXIso(toolbase.ToolBase):
                 release_url = "https://github.com/NearlyTRex/ExtractXIso.git",
                 install_name = "ExtractXIso",
                 install_dir = programs.GetProgramInstallDir("ExtractXIso", "linux"),
+                backups_dir = programs.GetProgramBackupDir("ExtractXIso", "linux"),
                 build_cmd = [
                     "cmake", "..",
                     "&&",
@@ -79,4 +81,24 @@ class ExtractXIso(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("ExtractXIso", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("ExtractXIso", "windows"),
+                install_name = "ExtractXIso",
+                install_dir = programs.GetProgramInstallDir("ExtractXIso", "windows"),
+                search_file = "extract-xiso.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup ExtractXIso")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("ExtractXIso", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("ExtractXIso", "linux"),
+                install_name = "ExtractXIso",
+                install_dir = programs.GetProgramInstallDir("ExtractXIso", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup ExtractXIso")

@@ -44,6 +44,7 @@ class NirCmd(toolbase.ToolBase):
                 search_file = "nircmdc.exe",
                 install_name = "NirCmd",
                 install_dir = programs.GetProgramInstallDir("NirCmd", "windows"),
+                backups_dir = programs.GetProgramBackupDir("NirCmd", "windows"),
                 release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -51,4 +52,14 @@ class NirCmd(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("NirCmd", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("NirCmd", "windows"),
+                install_name = "NirCmd",
+                install_dir = programs.GetProgramInstallDir("NirCmd", "windows"),
+                search_file = "nircmdc.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup NirCmd")

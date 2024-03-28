@@ -47,6 +47,7 @@ class Wad2Bin(toolbase.ToolBase):
                 search_file = "wad2bin.exe",
                 install_name = "Wad2Bin",
                 install_dir = programs.GetProgramInstallDir("Wad2Bin", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Wad2Bin", "windows"),
                 install_files = ["wad2bin.exe"],
                 release_type = config.release_type_program,
                 verbose = verbose,
@@ -55,4 +56,14 @@ class Wad2Bin(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Wad2Bin", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Wad2Bin", "windows"),
+                install_name = "Wad2Bin",
+                install_dir = programs.GetProgramInstallDir("Wad2Bin", "windows"),
+                search_file = "wad2bin.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Wad2Bin")

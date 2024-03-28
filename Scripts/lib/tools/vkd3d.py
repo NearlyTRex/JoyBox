@@ -59,32 +59,23 @@ class VKD3D(toolbase.ToolBase):
                 github_repo = "vkd3d-proton",
                 starts_with = "vkd3d-proton",
                 ends_with = ".tar.zst",
-                search_file = "x64/d3d12.dll",
                 install_name = "VKD3D-Proton",
                 install_dir = programs.GetLibraryInstallDir("VKD3D"),
+                backups_dir = programs.GetLibraryBackupDir("VKD3D"),
                 release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup VKD3D")
 
-        # Find first dll file
-        dll_files = system.BuildFileListByExtensions(programs.GetLibraryInstallDir("VKD3D"), extensions = [".dll"])
-        dll_file = None
-        if len(dll_files):
-            dll_file = dll_files.pop()
-
-        # Rename path
-        if dll_file:
-            dll_dir_old = system.GetDirectoryParent(system.GetFilenameDirectory(dll_file))
-            dll_dir_new = os.path.join(programs.GetLibraryInstallDir("VKD3D"), "vkd3d-proton")
-            success = system.MoveFileOrDirectory(
-                src = dll_dir_old,
-                dest = dll_dir_new,
-                skip_existing = True,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup VKD3D path")
-
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup library
+        if programs.ShouldLibraryBeInstalled("VKD3D"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetLibraryBackupDir("VKD3D"),
+                install_name = "VKD3D",
+                install_dir = programs.GetLibraryInstallDir("VKD3D"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup VKD3D")

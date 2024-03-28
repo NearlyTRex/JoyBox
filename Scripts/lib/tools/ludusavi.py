@@ -98,6 +98,7 @@ class Ludusavi(toolbase.ToolBase):
                 search_file = "ludusavi.exe",
                 install_name = "Ludusavi",
                 install_dir = programs.GetProgramInstallDir("Ludusavi", "windows"),
+                backups_dir = programs.GetProgramBackupDir("Ludusavi", "windows"),
                 install_files = ["ludusavi.exe"],
                 release_type = config.release_type_archive,
                 verbose = verbose,
@@ -114,6 +115,7 @@ class Ludusavi(toolbase.ToolBase):
                 search_file = "ludusavi",
                 install_name = "Ludusavi",
                 install_dir = programs.GetProgramInstallDir("Ludusavi", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Ludusavi", "linux"),
                 install_files = ["ludusavi"],
                 release_type = config.release_type_archive,
                 chmod_files = [
@@ -128,7 +130,27 @@ class Ludusavi(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("Ludusavi", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Ludusavi", "windows"),
+                install_name = "Ludusavi",
+                install_dir = programs.GetProgramInstallDir("Ludusavi", "windows"),
+                search_file = "ludusavi.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Ludusavi")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Ludusavi", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Ludusavi", "linux"),
+                install_name = "Ludusavi",
+                install_dir = programs.GetProgramInstallDir("Ludusavi", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Ludusavi")
 
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):
