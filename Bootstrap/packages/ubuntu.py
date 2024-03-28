@@ -222,6 +222,9 @@ apt_packages = [
     "audacity",
     "qmmp",
 
+    # Utils
+    "jstest-gtk",
+
     # Video
     "shotcut",
     "vlc",
@@ -266,6 +269,7 @@ flatpak_packages = [
     ["flathub", "com.vscodium.codium"],
 
     # Web
+    ["flathub", "com.brave.Browser"],
     ["flathub", "com.discordapp.Discord"],
     ["flathub", "org.signal.Signal"],
     ["flathub", "org.telegram.desktop"]
