@@ -38,16 +38,16 @@ class DXVK(toolbase.ToolBase):
         return {
             "DXVK": {
                 "lib32": [
-                    "x32/d3d10core.dll",
-                    "x32/d3d11.dll",
-                    "x32/d3d9.dll",
-                    "x32/dxgi.dll"
+                    "windows/dxvk-2.2/x32/d3d10core.dll",
+                    "windows/dxvk-2.2/x32/d3d11.dll",
+                    "windows/dxvk-2.2/x32/d3d9.dll",
+                    "windows/dxvk-2.2/x32/dxgi.dll"
                 ],
                 "lib64": [
-                    "x64/d3d10core.dll",
-                    "x64/d3d11.dll",
-                    "x64/d3d9.dll",
-                    "x64/dxgi.dll"
+                    "windows/dxvk-2.2/x64/d3d10core.dll",
+                    "windows/dxvk-2.2/x64/d3d11.dll",
+                    "windows/dxvk-2.2/x64/d3d9.dll",
+                    "windows/dxvk-2.2/x64/dxgi.dll"
                 ]
             }
         }
@@ -55,7 +55,7 @@ class DXVK(toolbase.ToolBase):
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):
 
-        # Download library
+        # Download windows library
         if programs.ShouldLibraryBeInstalled("DXVK"):
             success = release.DownloadGithubRelease(
                 github_user = "doitsujin",
@@ -63,8 +63,8 @@ class DXVK(toolbase.ToolBase):
                 starts_with = "dxvk-2.2",
                 ends_with = ".tar.gz",
                 install_name = "DXVK",
-                install_dir = programs.GetLibraryInstallDir("DXVK"),
-                backups_dir = programs.GetLibraryBackupDir("DXVK"),
+                install_dir = programs.GetLibraryInstallDir("DXVK", "windows"),
+                backups_dir = programs.GetLibraryBackupDir("DXVK", "windows"),
                 release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -73,12 +73,12 @@ class DXVK(toolbase.ToolBase):
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
 
-        # Setup library
+        # Setup windows library
         if programs.ShouldLibraryBeInstalled("DXVK"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("DXVK"),
+                archive_dir = programs.GetLibraryBackupDir("DXVK", "windows"),
                 install_name = "DXVK",
-                install_dir = programs.GetLibraryInstallDir("DXVK"),
+                install_dir = programs.GetLibraryInstallDir("DXVK", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DXVK")

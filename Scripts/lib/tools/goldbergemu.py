@@ -38,10 +38,10 @@ class GoldbergEmu(toolbase.ToolBase):
         return {
             "GoldbergEmu": {
                 "lib32": [
-                    "steam_api.dll"
+                    "windows/steam_api.dll"
                 ],
                 "lib64": [
-                    "steam_api64.dll"
+                    "windows/steam_api64.dll"
                 ]
             }
         }
@@ -49,13 +49,13 @@ class GoldbergEmu(toolbase.ToolBase):
     # Setup
     def Setup(self, verbose = False, exit_on_failure = False):
 
-        # Download library
+        # Download windows library
         if programs.ShouldLibraryBeInstalled("GoldbergEmu"):
             success = release.DownloadGeneralRelease(
                 archive_url = "https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/4247811310/artifacts/download",
                 install_name = "GoldbergEmu",
-                install_dir = programs.GetLibraryInstallDir("GoldbergEmu"),
-                backups_dir = programs.GetLibraryBackupDir("GoldbergEmu"),
+                install_dir = programs.GetLibraryInstallDir("GoldbergEmu", "windows"),
+                backups_dir = programs.GetLibraryBackupDir("GoldbergEmu", "windows"),
                 release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -63,4 +63,13 @@ class GoldbergEmu(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup windows library
+        if programs.ShouldLibraryBeInstalled("GoldbergEmu"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetLibraryBackupDir("GoldbergEmu", "windows"),
+                install_name = "GoldbergEmu",
+                install_dir = programs.GetLibraryInstallDir("GoldbergEmu", "windows"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup GoldbergEmu")
