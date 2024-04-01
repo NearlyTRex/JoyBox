@@ -70,6 +70,7 @@ apt_packages = [
     "flex",
     "g++",
     "gcc",
+    "gdb",
     "gettext",
     "git",
     "gitg",
@@ -82,10 +83,12 @@ apt_packages = [
     "maven",
     "nasm",
     "ninja-build",
+    "npm",
     "perl-base",
     "pkg-config",
     "python3-tk",
     "python3-venv",
+    "qbs",
     "qmake6",
     "qt5-qmake",
     "qt6-base-dev-tools",
@@ -93,6 +96,7 @@ apt_packages = [
     "qt6-tools-dev-tools",
     "qtbase5-dev-tools",
     "qttools5-dev-tools",
+    "ruby-full",
     "xa65",
 
     # Games
@@ -264,6 +268,7 @@ flatpak_packages = [
     # Devel
     ["flathub", "com.axosoft.GitKraken"],
     ["flathub", "com.jetbrains.IntelliJ-IDEA-Community"],
+    ["flathub", "org.mapeditor.Tiled"],
 
     # Text
     ["flathub", "com.vscodium.codium"],
