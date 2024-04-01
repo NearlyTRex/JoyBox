@@ -49,7 +49,6 @@ class PS3Dec(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("PS3Dec", "windows"),
                 backups_dir = programs.GetProgramBackupDir("PS3Dec", "windows"),
                 install_files = ["PS3Dec.exe"],
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PS3Dec")

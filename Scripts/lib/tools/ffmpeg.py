@@ -49,7 +49,6 @@ class FFMpeg(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("FFMpeg", "windows"),
                 backups_dir = programs.GetProgramBackupDir("FFMpeg", "windows"),
                 install_files = ["ffmpeg.exe"],
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup FFMpeg")
@@ -66,7 +65,6 @@ class FFMpeg(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("FFMpeg", "linux"),
                 backups_dir = programs.GetProgramBackupDir("FFMpeg", "linux"),
                 install_files = ["ffmpeg"],
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup FFMpeg")

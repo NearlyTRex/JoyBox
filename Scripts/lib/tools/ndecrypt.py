@@ -49,7 +49,6 @@ class NDecrypt(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("NDecrypt", "windows"),
                 backups_dir = programs.GetProgramBackupDir("NDecrypt", "windows"),
                 install_files = ["NDecrypt.exe"],
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup NDecrypt")
@@ -66,7 +65,6 @@ class NDecrypt(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("NDecrypt", "linux"),
                 backups_dir = programs.GetProgramBackupDir("NDecrypt", "linux"),
                 install_files = ["NDecrypt"],
-                release_type = config.release_type_archive,
                 chmod_files = [
                     {
                         "file": "NDecrypt",

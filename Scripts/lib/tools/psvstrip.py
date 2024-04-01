@@ -49,7 +49,6 @@ class PSVStrip(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("PSVStrip", "windows"),
                 backups_dir = programs.GetProgramBackupDir("PSVStrip", "windows"),
                 install_files = ["psvstrip.exe"],
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PSVStrip")

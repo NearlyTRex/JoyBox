@@ -100,7 +100,6 @@ class Ludusavi(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Ludusavi", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Ludusavi", "windows"),
                 install_files = ["ludusavi.exe"],
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ludusavi")
@@ -117,7 +116,6 @@ class Ludusavi(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Ludusavi", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Ludusavi", "linux"),
                 install_files = ["ludusavi"],
-                release_type = config.release_type_archive,
                 chmod_files = [
                     {
                         "file": "ludusavi",

@@ -45,7 +45,6 @@ class NirCmd(toolbase.ToolBase):
                 install_name = "NirCmd",
                 install_dir = programs.GetProgramInstallDir("NirCmd", "windows"),
                 backups_dir = programs.GetProgramBackupDir("NirCmd", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup NirCmd")

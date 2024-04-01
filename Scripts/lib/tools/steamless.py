@@ -48,7 +48,6 @@ class Steamless(toolbase.ToolBase):
                 install_name = "Steamless",
                 install_dir = programs.GetProgramInstallDir("Steamless", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Steamless", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Steamless")

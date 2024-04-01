@@ -49,7 +49,6 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "windows"),
                 backups_dir = programs.GetProgramBackupDir("SteamDepotDownloader", "windows"),
                 install_files = ["DepotDownloader.exe"],
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup SteamDepotDownloader")
@@ -66,7 +65,6 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "linux"),
                 backups_dir = programs.GetProgramBackupDir("SteamDepotDownloader", "linux"),
                 install_files = ["DepotDownloader"],
-                release_type = config.release_type_archive,
                 chmod_files = [
                     {
                         "file": "DepotDownloader",

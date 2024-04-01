@@ -49,7 +49,6 @@ class Sigtop(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Sigtop", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Sigtop", "windows"),
                 install_files = ["sigtop.exe"],
-                release_type = config.release_type_program,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Sigtop")

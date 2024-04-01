@@ -48,7 +48,6 @@ class GeckoDriver(toolbase.ToolBase):
                 install_name = "GeckoDriver",
                 install_dir = programs.GetProgramInstallDir("GeckoDriver", "windows"),
                 backups_dir = programs.GetProgramBackupDir("GeckoDriver", "windows"),
-                release_type = config.release_type_archive,
                 install_files = ["geckodriver.exe"],
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -66,7 +65,6 @@ class GeckoDriver(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("GeckoDriver", "linux"),
                 backups_dir = programs.GetProgramBackupDir("GeckoDriver", "linux"),
                 install_files = ["geckodriver"],
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup GeckoDriver")

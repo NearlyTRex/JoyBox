@@ -49,7 +49,6 @@ class Wad2Bin(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Wad2Bin", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Wad2Bin", "windows"),
                 install_files = ["wad2bin.exe"],
-                release_type = config.release_type_program,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Wad2Bin")

@@ -60,7 +60,6 @@ class GoldbergEmu(toolbase.ToolBase):
                 install_name = "GoldbergEmu",
                 install_dir = programs.GetLibraryInstallDir("GoldbergEmu", "lib"),
                 backups_dir = programs.GetLibraryBackupDir("GoldbergEmu", "lib"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup GoldbergEmu")

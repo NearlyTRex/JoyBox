@@ -48,7 +48,6 @@ class Jdupes(toolbase.ToolBase):
                 install_name = "Jdupes",
                 install_dir = programs.GetProgramInstallDir("Jdupes", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Jdupes", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Jdupes")
@@ -64,7 +63,6 @@ class Jdupes(toolbase.ToolBase):
                 install_name = "Jdupes",
                 install_dir = programs.GetProgramInstallDir("Jdupes", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Jdupes", "linux"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Jdupes")

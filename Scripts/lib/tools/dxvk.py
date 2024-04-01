@@ -69,7 +69,6 @@ class DXVK(toolbase.ToolBase):
                 install_name = "DXVK",
                 install_dir = programs.GetLibraryInstallDir("DXVK", "lib"),
                 backups_dir = programs.GetLibraryBackupDir("DXVK", "lib"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DXVK")

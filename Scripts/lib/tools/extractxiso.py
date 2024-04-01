@@ -49,7 +49,6 @@ class ExtractXIso(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("ExtractXIso", "windows"),
                 backups_dir = programs.GetProgramBackupDir("ExtractXIso", "windows"),
                 install_files = ["extract-xiso.exe"],
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ExtractXIso")

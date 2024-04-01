@@ -83,7 +83,6 @@ class Pegasus(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Pegasus", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Pegasus", "windows"),
                 install_files = ["pegasus-fe.exe"],
-                release_type = config.release_type_archive,
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -109,7 +108,6 @@ class Pegasus(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Pegasus", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Pegasus", "linux"),
                 install_files = ["pegasus-fe"],
-                release_type = config.release_type_archive,
                 chmod_files = [
                     {
                         "file": "pegasus-fe",

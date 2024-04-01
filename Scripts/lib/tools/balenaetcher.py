@@ -49,7 +49,6 @@ class BalenaEtcher(toolbase.ToolBase):
                 install_name = "BalenaEtcher",
                 install_dir = programs.GetProgramInstallDir("BalenaEtcher", "windows"),
                 backups_dir = programs.GetProgramBackupDir("BalenaEtcher", "windows"),
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BalenaEtcher")
@@ -64,7 +63,6 @@ class BalenaEtcher(toolbase.ToolBase):
                 install_name = "BalenaEtcher",
                 install_dir = programs.GetProgramInstallDir("BalenaEtcher", "linux"),
                 backups_dir = programs.GetProgramBackupDir("BalenaEtcher", "linux"),
-                release_type = config.release_type_program,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BalenaEtcher")

@@ -49,7 +49,6 @@ class HacTool(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("HacTool", "windows"),
                 backups_dir = programs.GetProgramBackupDir("HacTool", "windows"),
                 install_files = ["hactool.exe"],
-                release_type = config.release_type_archive,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup HacTool")
