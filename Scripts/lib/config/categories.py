@@ -103,6 +103,7 @@ game_subcategory_nintendo_virtual_boy = "Nintendo Virtual Boy"
 game_subcategory_nintendo_wii = "Nintendo Wii"
 game_subcategory_nintendo_wii_u = "Nintendo Wii U"
 game_subcategory_nintendo_wii_u_eshop = "Nintendo Wii U eShop"
+game_subcategory_nintendo_wiiware = "Nintendo WiiWare"
 game_subcategories_nintendo = [
     game_subcategory_nintendo_3ds,
     game_subcategory_nintendo_3ds_apps,
@@ -127,7 +128,8 @@ game_subcategories_nintendo = [
     game_subcategory_nintendo_virtual_boy,
     game_subcategory_nintendo_wii,
     game_subcategory_nintendo_wii_u,
-    game_subcategory_nintendo_wii_u_eshop
+    game_subcategory_nintendo_wii_u_eshop,
+    game_subcategory_nintendo_wiiware
 ]
 
 # Subcategories - Other

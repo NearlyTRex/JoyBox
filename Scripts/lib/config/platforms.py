@@ -718,6 +718,20 @@ nintendo_wii_u_eshop[keys.platform_key_autofill_json] = [keys.json_key_files, ke
 nintendo_wii_u_eshop[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nintendo_wii_u_eshop] = nintendo_wii_u_eshop
 
+
+###########################################################
+# Nintendo WiiWare
+###########################################################
+nintendo_wiiware = {}
+nintendo_wiiware[keys.platform_key_supercategory] = categories.game_supercategory_roms
+nintendo_wiiware[keys.platform_key_category] = categories.game_category_nintendo
+nintendo_wiiware[keys.platform_key_subcategory] = categories.game_subcategory_nintendo_wiiware
+nintendo_wiiware[keys.platform_key_addons] = [types.addon_type_dlc]
+nintendo_wiiware[keys.platform_key_launcher] = [types.launch_type_file]
+nintendo_wiiware[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
+nintendo_wiiware[keys.platform_key_fillonce_json] = []
+platforms[categories.game_subcategory_nintendo_wiiware] = nintendo_wiiware
+
 ######################################################################################
 
 ###########################################################
