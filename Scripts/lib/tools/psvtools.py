@@ -52,4 +52,13 @@ class PSVTools(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup library
+        if programs.ShouldLibraryBeInstalled("PSVTools"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetLibraryBackupDir("PSVTools", "lib"),
+                install_name = "PSVTools",
+                install_dir = programs.GetLibraryInstallDir("PSVTools", "lib"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PSVTools")

@@ -52,4 +52,13 @@ class XCITrimmer(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup library
+        if programs.ShouldLibraryBeInstalled("XCITrimmer"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetLibraryBackupDir("XCITrimmer", "lib"),
+                install_name = "XCITrimmer",
+                install_dir = programs.GetLibraryInstallDir("XCITrimmer", "lib"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup XCITrimmer")

@@ -52,4 +52,13 @@ class PyLnk(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup library
+        if programs.ShouldLibraryBeInstalled("PyLnk"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetLibraryBackupDir("PyLnk", "lib"),
+                install_name = "PyLnk",
+                install_dir = programs.GetLibraryInstallDir("PyLnk", "lib"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PyLnk")

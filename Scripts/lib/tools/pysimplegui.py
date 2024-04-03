@@ -52,5 +52,14 @@ class PySimpleGUI(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
-        pass
+
+        # Setup library
+        if programs.ShouldLibraryBeInstalled("PySimpleGUI"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetLibraryBackupDir("PySimpleGUI", "lib"),
+                install_name = "PySimpleGUI",
+                install_dir = programs.GetLibraryInstallDir("PySimpleGUI", "lib"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup PySimpleGUI")
 

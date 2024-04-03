@@ -41,9 +41,19 @@ class XorrISO(toolbase.ToolBase):
         # Download windows program
         if programs.ShouldProgramBeInstalled("XorrISO", "windows"):
             success = network.DownloadGithubRepository(
-                github_user = "PeyTy",
-                github_repo = "xorriso-exe-for-windows",
+                github_user = "NearlyTRex",
+                github_repo = "XorrISOWindows",
                 output_dir = programs.GetProgramInstallDir("XorrISO", "windows"),
+                recursive = True,
+                clean = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup XorrISO")
+            success = network.ArchiveGithubRepository(
+                github_user = "NearlyTRex",
+                github_repo = "XorrISOWindows",
+                output_dir = programs.GetProgramBackupDir("XorrISO", "windows"),
+                recursive = True,
                 clean = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -52,12 +62,12 @@ class XorrISO(toolbase.ToolBase):
         # Build linux program
         if programs.ShouldProgramBeInstalled("XorrISO", "linux"):
             success = release.BuildAppImageFromSource(
-                release_url = "https://www.gnu.org/software/xorriso/xorriso-1.5.6.pl02.tar.gz",
+                release_url = "https://ftp.gnu.org/gnu/xorriso/xorriso-1.5.2.tar.gz",
                 install_name = "XorrISO",
                 install_dir = programs.GetProgramInstallDir("XorrISO", "linux"),
                 backups_dir = programs.GetProgramBackupDir("XorrISO", "linux"),
                 build_cmd = [
-                    "cd", "xorriso-1.5.6",
+                    "cd", "xorriso-1.5.2",
                     "./bootstrap",
                     "&&",
                     "./configure",
@@ -65,7 +75,7 @@ class XorrISO(toolbase.ToolBase):
                     "make", "-j", "4"
                 ],
                 internal_copies = [
-                    {"from": "Source/xorriso-1.5.6/xorriso/xorriso", "to": "AppImage/usr/bin/xorriso"},
+                    {"from": "Source/xorriso-1.5.2/xorriso/xorriso", "to": "AppImage/usr/bin/xorriso"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],
@@ -78,6 +88,16 @@ class XorrISO(toolbase.ToolBase):
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
+
+        # Setup windows program
+        if programs.ShouldProgramBeInstalled("XorrISO", "windows"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("XorrISO", "windows"),
+                install_name = "XorrISO",
+                install_dir = programs.GetProgramInstallDir("XorrISO", "windows"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup XorrISO")
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("XorrISO", "linux"):
