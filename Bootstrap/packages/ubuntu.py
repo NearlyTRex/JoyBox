@@ -110,10 +110,12 @@ apt_packages = [
 
     # Graphics
     "gimp",
+    "ffmpeg",
     "handbrake",
     "imagemagick-6.q16",
     "imagemagick",
     "img2pdf",
+    "jpegoptim",
 
     # Libs
     "extra-cmake-modules",
@@ -220,6 +222,7 @@ apt_packages = [
     "curl",
     "keyutils",
     "net-tools",
+    "openssh-server",
     "openssl",
 
     # Sound
