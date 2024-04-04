@@ -61,7 +61,7 @@ instances = [
     git.Git(),
     goldbergemu.GoldbergEmu(),
     hactool.HacTool(),
-    jdupes.Jdupes(),
+    jdupes.JDupes(),
     mkpl.Mkpl(),
     lgogdownloader.LGOGDownloader(),
     ludusavi.Ludusavi(),

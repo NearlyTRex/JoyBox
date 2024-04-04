@@ -12,20 +12,20 @@ import toolbase
 # Config files
 config_files = {}
 
-# Jdupes tool
-class Jdupes(toolbase.ToolBase):
+# JDupes tool
+class JDupes(toolbase.ToolBase):
 
     # Get name
     def GetName(self):
-        return "Jdupes"
+        return "JDupes"
 
     # Get config
     def GetConfig(self):
         return {
-            "Jdupes": {
+            "JDupes": {
                 "program": {
-                    "windows": "Jdupes/windows/jdupes.exe",
-                    "linux": "Jdupes/linux/jdupes"
+                    "windows": "JDupes/windows/jdupes.exe",
+                    "linux": "JDupes/linux/jdupes"
                 },
                 "run_sandboxed": {
                     "windows": False,
@@ -38,55 +38,55 @@ class Jdupes(toolbase.ToolBase):
     def Setup(self, verbose = False, exit_on_failure = False):
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Jdupes", "windows"):
+        if programs.ShouldProgramBeInstalled("JDupes", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "NearlyTRex",
                 github_repo = "JDupes",
                 starts_with = "jdupes",
                 ends_with = "win64.zip",
                 search_file = "jdupes.exe",
-                install_name = "Jdupes",
-                install_dir = programs.GetProgramInstallDir("Jdupes", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Jdupes", "windows"),
+                install_name = "JDupes",
+                install_dir = programs.GetProgramInstallDir("JDupes", "windows"),
+                backups_dir = programs.GetProgramBackupDir("JDupes", "windows"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Jdupes")
+            system.AssertCondition(success, "Could not setup JDupes")
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("Jdupes", "linux"):
+        if programs.ShouldProgramBeInstalled("JDupes", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "NearlyTRex",
                 github_repo = "JDupes",
                 starts_with = "jdupes",
                 ends_with = "linux-x86_64.pkg.tar.xz",
                 search_file = "jdupes",
-                install_name = "Jdupes",
-                install_dir = programs.GetProgramInstallDir("Jdupes", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Jdupes", "linux"),
+                install_name = "JDupes",
+                install_dir = programs.GetProgramInstallDir("JDupes", "linux"),
+                backups_dir = programs.GetProgramBackupDir("JDupes", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Jdupes")
+            system.AssertCondition(success, "Could not setup JDupes")
 
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Jdupes", "windows"):
+        if programs.ShouldProgramBeInstalled("JDupes", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Jdupes", "windows"),
-                install_name = "Jdupes",
-                install_dir = programs.GetProgramInstallDir("Jdupes", "windows"),
+                archive_dir = programs.GetProgramBackupDir("JDupes", "windows"),
+                install_name = "JDupes",
+                install_dir = programs.GetProgramInstallDir("JDupes", "windows"),
                 search_file = "jdupes.exe",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Jdupes")
+            system.AssertCondition(success, "Could not setup JDupes")
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Jdupes", "linux"):
+        if programs.ShouldProgramBeInstalled("JDupes", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Jdupes", "linux"),
-                install_name = "Jdupes",
-                install_dir = programs.GetProgramInstallDir("Jdupes", "linux"),
+                archive_dir = programs.GetProgramBackupDir("JDupes", "linux"),
+                install_name = "JDupes",
+                install_dir = programs.GetProgramInstallDir("JDupes", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Jdupes")
+            system.AssertCondition(success, "Could not setup JDupes")
