@@ -65,10 +65,6 @@ class Python(toolbase.ToolBase):
             }
         }
 
-    # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
-        pass
-
     # Configure
     def Configure(self, verbose = False, exit_on_failure = False):
 
