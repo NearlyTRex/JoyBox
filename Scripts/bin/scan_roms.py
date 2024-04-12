@@ -42,18 +42,19 @@ def main():
             metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
 
             # Build metadata
-            system.Log("Building metadata [Category: '%s', Subcategory: '%s'] ..." % (game_category, game_subcategory))
-            build_game_list_cmd = [
-                build_metadata_file_bin,
-                "-c", game_category,
-                "-s", game_subcategory,
-                "-o", metadata_file,
-                local_rom_path
-            ]
-            command.RunCheckedCommand(
-                cmd = build_game_list_cmd,
-                verbose = args.verbose,
-                exit_on_failure = args.exit_on_failure)
+            if os.path.isdir(local_rom_path):
+                system.Log("Building metadata [Category: '%s', Subcategory: '%s'] ..." % (game_category, game_subcategory))
+                build_game_list_cmd = [
+                    build_metadata_file_bin,
+                    "-c", game_category,
+                    "-s", game_subcategory,
+                    "-o", metadata_file,
+                    local_rom_path
+                ]
+                command.RunCheckedCommand(
+                    cmd = build_game_list_cmd,
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
 
     # Sort metadata files
     system.Log("Sorting metadata files ...")
