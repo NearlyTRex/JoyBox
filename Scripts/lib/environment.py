@@ -395,6 +395,10 @@ def GetDLCRootDir():
 def GetUpdateRootDir():
     return os.path.join(GetGamingStorageRootDir(), config.game_supercategory_updates)
 
+# Get tags root dir
+def GetTagsRootDir():
+    return os.path.join(GetGamingStorageRootDir(), config.game_supercategory_tags)
+
 # Get supercategory root dir
 def GetSupercategoryRootDir(supercategory):
     if supercategory == config.game_supercategory_roms:
@@ -403,6 +407,8 @@ def GetSupercategoryRootDir(supercategory):
         return GetDLCRootDir()
     elif supercategory == config.game_supercategory_updates:
         return GetUpdateRootDir()
+    elif supercategory == config.game_supercategory_tags:
+        return GetTagsRootDir()
 
 ###########################################################
 # Cache

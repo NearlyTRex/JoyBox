@@ -6,6 +6,7 @@ import sys
 game_supercategory_roms = "Roms"
 game_supercategory_dlc = "DLC"
 game_supercategory_updates = "Updates"
+game_supercategory_tags = "Tags"
 game_supercategory_saves = "Saves"
 game_supercategory_setup = "Setup"
 game_supercategory_installs = "Installs"
@@ -13,6 +14,7 @@ game_supercategories = [
     game_supercategory_roms,
     game_supercategory_dlc,
     game_supercategory_updates,
+    game_supercategory_tags,
     game_supercategory_saves,
     game_supercategory_setup,
     game_supercategory_installs
@@ -83,6 +85,7 @@ game_subcategory_nintendo_3ds = "Nintendo 3DS"
 game_subcategory_nintendo_3ds_apps = "Nintendo 3DS Apps"
 game_subcategory_nintendo_3ds_eshop = "Nintendo 3DS eShop"
 game_subcategory_nintendo_64 = "Nintendo 64"
+game_subcategory_nintendo_amiibo = "Nintendo Amiibo"
 game_subcategory_nintendo_ds = "Nintendo DS"
 game_subcategory_nintendo_dsi = "Nintendo DSi"
 game_subcategory_nintendo_famicom = "Nintendo Famicom"
@@ -109,6 +112,7 @@ game_subcategories_nintendo = [
     game_subcategory_nintendo_3ds_apps,
     game_subcategory_nintendo_3ds_eshop,
     game_subcategory_nintendo_64,
+    game_subcategory_nintendo_amiibo,
     game_subcategory_nintendo_ds,
     game_subcategory_nintendo_dsi,
     game_subcategory_nintendo_famicom,
