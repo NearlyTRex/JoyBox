@@ -234,7 +234,6 @@ apt_packages = [
     "ovmf",
     "qemu-kvm",
     "qemu-utils",
-    "snapd",
     "virt-manager",
     "virtualbox",
     "winehq-devel",
@@ -247,12 +246,6 @@ apt_packages = [
 
     # X11
     "wmctrl"
-]
-
-###########################################################
-# Snap packages
-###########################################################
-snap_packages = [
 ]
 
 ###########################################################
@@ -287,11 +280,6 @@ def Setup(ini_values = {}):
     apt_install_dir = os.path.expandvars(ini_values["Tools.Apt"]["apt_install_dir"])
     apt_tool = os.path.join(apt_install_dir, apt_exe)
 
-    # Get snap tool
-    snap_exe = ini_values["Tools.Snap"]["snap_exe"]
-    snap_install_dir = os.path.expandvars(ini_values["Tools.Snap"]["snap_install_dir"])
-    snap_tool = os.path.join(snap_install_dir, snap_exe)
-
     # Get flatpak tool
     flatpak_exe = ini_values["Tools.Flatpak"]["flatpak_exe"]
     flatpak_install_dir = os.path.expandvars(ini_values["Tools.Flatpak"]["flatpak_install_dir"])
@@ -305,12 +293,6 @@ def Setup(ini_values = {}):
     subprocess.check_call(["sudo", apt_tool, "update"])
     for package in apt_packages:
         subprocess.check_call(["sudo", apt_tool, "-y", "install", "--install-recommends", package])
-
-    # Install snap packages
-    if os.path.isfile(snap_tool):
-        subprocess.check_call(["sudo", snap_tool, "refresh"])
-        for package in snap_packages:
-            subprocess.check_call(["sudo", snap_tool, "install"] + package)
 
     # Install flatpak packages
     if os.path.isfile(flatpak_tool):
