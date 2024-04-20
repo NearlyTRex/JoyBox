@@ -121,6 +121,14 @@ def FindEnclosedSubstrings(string, delimiter = "\""):
     pattern = "([%s])(?:\\?.)*?\1" % delimiter
     return re.findall(pattern, string)
 
+# Get string similarity ratio
+def GetStringSimilarityRatio(string1, string2):
+    try:
+        from thefuzz import fuzz
+        return fuzz.ratio(string1, string2)
+    except:
+        return 0
+
 # Split by enclosed substrings
 def SplitByEnclosedSubstrings(string, delimiter = "\""):
     string_list = []
