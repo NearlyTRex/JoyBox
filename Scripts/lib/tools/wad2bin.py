@@ -24,12 +24,12 @@ class Wad2Bin(toolbase.ToolBase):
         return {
             "Wad2Bin": {
                 "program": {
-                    "windows": "Wad2Bin/windows/wad2bin.exe",
-                    "linux": "Wad2Bin/windows/wad2bin.exe"
+                    "windows": "Wad2Bin/windows/wad2bin-windows-x64.exe",
+                    "linux": "Wad2Bin/linux/wad2bin"
                 },
                 "run_sandboxed": {
                     "windows": False,
-                    "linux": True
+                    "linux": False
                 }
             }
         }
@@ -42,13 +42,27 @@ class Wad2Bin(toolbase.ToolBase):
             success = release.DownloadGithubRelease(
                 github_user = "DarkMatterCore",
                 github_repo = "wad2bin",
-                starts_with = "wad2bin",
+                starts_with = "wad2bin-windows-x64",
                 ends_with = ".exe",
-                search_file = "wad2bin.exe",
+                search_file = "wad2bin-windows-x64.exe",
                 install_name = "Wad2Bin",
                 install_dir = programs.GetProgramInstallDir("Wad2Bin", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Wad2Bin", "windows"),
-                install_files = ["wad2bin.exe"],
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Wad2Bin")
+
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("Wad2Bin", "linux"):
+            success = release.DownloadGithubRelease(
+                github_user = "DarkMatterCore",
+                github_repo = "wad2bin",
+                starts_with = "wad2bin-linux-x86_64",
+                ends_with = ".tar.gz",
+                search_file = "wad2bin",
+                install_name = "Wad2Bin",
+                install_dir = programs.GetProgramInstallDir("Wad2Bin", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Wad2Bin", "linux"),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Wad2Bin")
@@ -62,7 +76,18 @@ class Wad2Bin(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("Wad2Bin", "windows"),
                 install_name = "Wad2Bin",
                 install_dir = programs.GetProgramInstallDir("Wad2Bin", "windows"),
-                search_file = "wad2bin.exe",
+                search_file = "wad2bin-windows-x64.exe",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Wad2Bin")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Wad2Bin", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Wad2Bin", "linux"),
+                install_name = "Wad2Bin",
+                install_dir = programs.GetProgramInstallDir("Wad2Bin", "linux"),
+                search_file = "wad2bin",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Wad2Bin")

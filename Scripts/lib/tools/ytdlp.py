@@ -67,6 +67,7 @@ class YtDlp(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("YtDlp", "linux"),
                 backups_dir = programs.GetProgramBackupDir("YtDlp", "linux"),
                 install_files = ["yt-dlp_linux"],
+                release_type = config.release_type_program,
                 chmod_files = [
                     {
                         "file": "yt-dlp_linux",

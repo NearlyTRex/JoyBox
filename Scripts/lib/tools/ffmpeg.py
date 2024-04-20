@@ -89,6 +89,7 @@ class FFMpeg(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("FFMpeg", "linux"),
                 install_name = "FFMpeg",
                 install_dir = programs.GetProgramInstallDir("FFMpeg", "linux"),
+                search_file = "ffmpeg",
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup FFMpeg")
