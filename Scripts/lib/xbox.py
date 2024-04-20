@@ -64,7 +64,7 @@ def RewriteXboxISO(iso_file, delete_original = False, verbose = False, exit_on_f
     ]
     if delete_original:
         rewrite_cmd += ["-D"]
-    rewrite_cmd += [system.GetFilenameFile(iso_file)]
+    rewrite_cmd += [iso_file]
 
     # Run rewrite command
     code = command.RunBlockingCommand(
