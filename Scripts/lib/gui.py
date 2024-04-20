@@ -286,11 +286,14 @@ def DisplayLoadingWindow(
     window.bind("<Escape>", "KEYPRESS_ESCAPE")
     window["progress"].Widget.config(mode = "indeterminate")
     if system.IsPathValid(image_file) and os.path.exists(image_file):
-        from PIL import Image, ImageTk
-        window_width, window_height = window.size
-        image_obj = Image.open(image_file)
-        image_obj.thumbnail((window_width, window_height / 2))
-        window["image"].update(data = ImageTk.PhotoImage(image_obj))
+        try:
+            from PIL import Image, ImageTk
+            window_width, window_height = window.size
+            image_obj = Image.open(image_file)
+            image_obj.thumbnail((window_width, window_height / 2))
+            window["image"].update(data = ImageTk.PhotoImage(image_obj))
+        except:
+            pass
 
     # Task that will keep the window open until it is done
     def doTask():
