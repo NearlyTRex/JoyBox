@@ -10,16 +10,6 @@ import environment
 # Helpers
 ###########################################################
 
-# Check for ubuntu distro
-def IsUbuntuDistro():
-    if "ubuntu" in environment.GetLinuxDistroName().lower():
-        return True
-    elif "ubuntu" in environment.GetLinuxDistroId():
-        return True
-    elif "ubuntu" in environment.GetLinuxDistroIdLike():
-        return True
-    return False
-
 # Check for ubuntu mantic distro
 def IsUbuntuMantic():
     if "mantic" in environment.GetLinuxDistroValue("UBUNTU_CODENAME"):

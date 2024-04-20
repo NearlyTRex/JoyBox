@@ -66,3 +66,13 @@ def GetLinuxDistroId():
 # Get linux distro id like
 def GetLinuxDistroIdLike():
     return GetLinuxDistroValue("ID_LIKE")
+
+# Check for ubuntu distro
+def IsUbuntuDistro():
+    if "ubuntu" in environment.GetLinuxDistroName().lower():
+        return True
+    elif "ubuntu" in environment.GetLinuxDistroId():
+        return True
+    elif "ubuntu" in environment.GetLinuxDistroIdLike():
+        return True
+    return False
