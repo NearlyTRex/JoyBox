@@ -332,6 +332,6 @@ def Setup(ini_values = {}):
 
     # Install flatpak packages
     if os.path.isfile(flatpak_tool):
-        subprocess.check_call([flatpak_tool, "update", "-y"])
+        subprocess.check_call([flatpak_tool, "update", "--user", "-y"])
         for package in flatpak_packages:
-            subprocess.check_call([flatpak_tool, "install", "-y"] + package)
+            subprocess.check_call([flatpak_tool, "install", "--user", "-y"] + package)
