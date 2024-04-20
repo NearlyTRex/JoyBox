@@ -67,6 +67,10 @@ def GetLinuxDistroId():
 def GetLinuxDistroIdLike():
     return GetLinuxDistroValue("ID_LIKE")
 
+# Get ubuntu codename
+def GetUbuntuCodename():
+    return GetLinuxDistroValue("UBUNTU_CODENAME")
+
 # Check for ubuntu distro
 def IsUbuntuDistro():
     if "ubuntu" in GetLinuxDistroName().lower():
@@ -74,5 +78,37 @@ def IsUbuntuDistro():
     elif "ubuntu" in GetLinuxDistroId():
         return True
     elif "ubuntu" in GetLinuxDistroIdLike():
+        return True
+    return False
+
+# Check for ubuntu mantic distro
+def IsUbuntuMantic():
+    if "mantic" in GetUbuntuCodename():
+        return True
+    if "23.10" in environment.GetLinuxDistroVersion():
+        return True
+    return False
+
+# Check for ubuntu lunar distro
+def IsUbuntuLunar():
+    if "lunar" in GetUbuntuCodename():
+        return True
+    if "23.04" in environment.GetLinuxDistroVersion():
+        return True
+    return False
+
+# Check for ubuntu jammy distro
+def IsUbuntuJammy():
+    if "jammy" in GetUbuntuCodename():
+        return True
+    if "22.04" in environment.GetLinuxDistroVersion():
+        return True
+    return False
+
+# Check for ubuntu focal distro
+def IsUbuntuFocal():
+    if "focal" in GetUbuntuCodename():
+        return True
+    if "20.04" in environment.GetLinuxDistroVersion():
         return True
     return False
