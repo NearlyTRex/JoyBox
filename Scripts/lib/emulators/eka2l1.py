@@ -71,7 +71,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
             success = release.DownloadGithubRelease(
                 github_user = "EKA2L1",
                 github_repo = "EKA2L1",
-                starts_with = "windows-latest",
+                starts_with = "EKA2L1-Windows-x86_64",
                 ends_with = ".zip",
                 search_file = "eka2l1_qt.exe",
                 install_name = "EKA2L1",
@@ -87,7 +87,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
             success = release.DownloadGithubRelease(
                 github_user = "EKA2L1",
                 github_repo = "EKA2L1",
-                starts_with = "ubuntu-latest",
+                starts_with = "EKA2L1-Linux-x86_64",
                 ends_with = ".AppImage",
                 install_name = "EKA2L1",
                 install_dir = programs.GetProgramInstallDir("EKA2L1", "linux"),
