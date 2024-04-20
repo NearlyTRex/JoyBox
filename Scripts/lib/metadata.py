@@ -860,10 +860,9 @@ def CollectMetadataFromTGDB(web_driver, game_platform, game_name, select_automat
                         break
 
                 # Get comparison score
-                from fuzzywuzzy import fuzz
                 score_entry = {}
                 score_entry["node"] = game_card
-                score_entry["ratio"] = fuzz.ratio(natural_name, potential_title)
+                score_entry["ratio"] = system.GetStringSimilarityRatio(natural_name, potential_title)
                 scores_list.append(score_entry)
 
         # Click on the highest score node
