@@ -313,13 +313,16 @@ def SetupGeneralRelease(
     # Rename files
     if isinstance(rename_files, list) and len(rename_files):
         for filename in system.BuildFileList(install_dir):
+            filename_dir = system.GetFilenameDirectory(filename)
+            filename_file = system.GetFilenameFile(filename)
             for rename_entry in rename_files:
                 rename_from = rename_entry["from"]
                 rename_to = rename_entry["to"]
-                if filename.endswith(rename_from):
+                rename_ratio = rename_entry["ratio"]
+                if system.GetStringSimilarityRatio(rename_from, filename_file) > rename_ratio:
                     success = system.SmartMove(
                         src = filename,
-                        dest = filename.replace(rename_from, rename_to),
+                        dest = os.path.join(filename_dir, rename_to),
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
                     if not success:
