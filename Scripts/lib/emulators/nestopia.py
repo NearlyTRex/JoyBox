@@ -47,15 +47,16 @@ class Nestopia(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Nestopia", "windows"):
-            success = release.DownloadWebpageRelease(
-                webpage_url = "http://0ldsk00l.ca/nestopia",
-                webpage_base_url = "http://0ldsk00l.ca/nestopia",
-                starts_with = "http://sourceforge.net/projects/nestopiaue/files/",
-                ends_with = "win32.zip/download",
+            success = release.DownloadGithubRelease(
+                github_user = "0ldsk00l",
+                github_repo = "nestopia",
+                starts_with = "nestopia",
+                ends_with = "win32.zip",
                 search_file = "nestopia.exe",
                 install_name = "Nestopia",
                 install_dir = programs.GetProgramInstallDir("Nestopia", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Nestopia", "windows"),
+                get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Nestopia")
