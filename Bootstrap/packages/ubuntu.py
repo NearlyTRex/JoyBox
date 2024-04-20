@@ -25,19 +25,19 @@ if not os.path.isfile("/usr/bin/wine"):
         "sudo mkdir -pm755 /etc/apt/keyrings",
         "sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key"
     ]
-    if "23.10" in environment.GetLinuxDistroVersion():
+    if environment.IsUbuntuMantic():
         preliminaries += [
             "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/mantic/winehq-mantic.sources"
         ]
-    elif "23.04" in environment.GetLinuxDistroVersion():
+    elif environment.IsUbuntuLunar():
         preliminaries += [
             "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/lunar/winehq-lunar.sources"
         ]
-    elif "22.04" in environment.GetLinuxDistroVersion():
+    elif environment.IsUbuntuJammy():
         preliminaries += [
             "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources"
         ]
-    elif "20.04" in environment.GetLinuxDistroVersion():
+    elif environment.IsUbuntuFocal():
         preliminaries += [
             "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources"
         ]
