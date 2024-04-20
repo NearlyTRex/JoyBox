@@ -85,7 +85,7 @@ def IsUbuntuDistro():
 def IsUbuntuMantic():
     if "mantic" in GetUbuntuCodename():
         return True
-    if "23.10" in environment.GetLinuxDistroVersion():
+    if "23.10" in GetLinuxDistroVersion():
         return True
     return False
 
@@ -93,7 +93,7 @@ def IsUbuntuMantic():
 def IsUbuntuLunar():
     if "lunar" in GetUbuntuCodename():
         return True
-    if "23.04" in environment.GetLinuxDistroVersion():
+    if "23.04" in GetLinuxDistroVersion():
         return True
     return False
 
@@ -101,7 +101,7 @@ def IsUbuntuLunar():
 def IsUbuntuJammy():
     if "jammy" in GetUbuntuCodename():
         return True
-    if "22.04" in environment.GetLinuxDistroVersion():
+    if "22.04" in GetLinuxDistroVersion():
         return True
     return False
 
@@ -109,6 +109,6 @@ def IsUbuntuJammy():
 def IsUbuntuFocal():
     if "focal" in GetUbuntuCodename():
         return True
-    if "20.04" in environment.GetLinuxDistroVersion():
+    if "20.04" in GetLinuxDistroVersion():
         return True
     return False
