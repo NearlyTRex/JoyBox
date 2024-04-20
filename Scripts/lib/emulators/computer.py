@@ -540,6 +540,9 @@ class Computer(emulatorbase.EmulatorBase):
                 install_name = "ScummVM",
                 install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
                 backups_dir = programs.GetProgramBackupDir("ScummVM", "windows"),
+                rename_files = [
+                    {"from": "scummvm-*.exe", "to": "scummvm.exe", "ratio": 75}
+                ],
                 get_latest = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
