@@ -536,7 +536,7 @@ class Computer(emulatorbase.EmulatorBase):
                 webpage_base_url = "https://www.scummvm.org",
                 starts_with = "https://downloads.scummvm.org/frs/scummvm/",
                 ends_with = "win32-x86_64.zip",
-                search_file = "scummvm.exe",
+                search_file = "SDL2.dll",
                 install_name = "ScummVM",
                 install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
                 backups_dir = programs.GetProgramBackupDir("ScummVM", "windows"),
