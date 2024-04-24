@@ -18,6 +18,8 @@ packages = [
 
     # Devel
     "MHNexus.HxD",
+    "Microsoft.DotNet.SDK.8",
+    "Microsoft.NuGet",
     "Microsoft.VisualStudio.2022.Community",
 
     # Drivers
@@ -31,6 +33,9 @@ packages = [
     # Graphics
     "GIMP.GIMP",
     "VideoLAN.VLC",
+
+    # Libs
+    "Microsoft.EdgeWebView2Runtime",
 
     # Net
     "subhra74.XtremeDownloadManager",
