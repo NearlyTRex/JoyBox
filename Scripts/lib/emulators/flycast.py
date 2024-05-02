@@ -77,8 +77,9 @@ class Flycast(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("Flycast", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.BuildReleaseFromSource(
                 release_url = "https://github.com/NearlyTRex/Flycast.git",
+                output_file = "App-x86_64.AppImage",
                 install_name = "Flycast",
                 install_dir = programs.GetProgramInstallDir("Flycast", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Flycast", "linux"),

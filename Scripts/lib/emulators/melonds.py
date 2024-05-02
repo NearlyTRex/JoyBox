@@ -102,8 +102,9 @@ class MelonDS(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("melonDS", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.BuildReleaseFromSource(
                 release_url = "https://github.com/NearlyTRex/melonDS.git",
+                output_file = "App-x86_64.AppImage",
                 install_name = "melonDS",
                 install_dir = programs.GetProgramInstallDir("melonDS", "linux"),
                 backups_dir = programs.GetProgramBackupDir("melonDS", "linux"),

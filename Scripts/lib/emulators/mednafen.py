@@ -89,11 +89,12 @@ class Mednafen(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("Mednafen", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.BuildReleaseFromSource(
                 webpage_url = "https://mednafen.github.io",
                 webpage_base_url = "https://mednafen.github.io",
                 starts_with = "https://mednafen.github.io/releases/files/mednafen",
                 ends_with = "UNSTABLE.tar.xz",
+                output_file = "App-x86_64.AppImage",
                 install_name = "Mednafen",
                 install_dir = programs.GetProgramInstallDir("Mednafen", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Mednafen", "linux"),
