@@ -297,6 +297,9 @@ flatpak_packages = [
     # Text
     ["flathub", "com.vscodium.codium"],
 
+    # Utils
+    ["flathub", "org.cryptomator.Cryptomator"]
+
     # Web
     ["flathub", "com.brave.Browser"],
     ["flathub", "com.discordapp.Discord"],

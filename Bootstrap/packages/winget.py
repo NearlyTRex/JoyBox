@@ -58,6 +58,7 @@ packages = [
 
     # Utils
     "chrisant996.Clink",
+    "Cryptomator.Cryptomator",
     "Cygwin.Cygwin",
     "GeekUninstaller.GeekUninstaller",
     "LIGHTNINGUK.ImgBurn",
