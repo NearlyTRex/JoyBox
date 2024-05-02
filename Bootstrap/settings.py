@@ -164,6 +164,15 @@ else:
     ini_defaults["Tools.Git"]["git_exe"] = "git"
     ini_defaults["Tools.Git"]["git_install_dir"] = "/usr/bin"
 
+# Tools.Gpg
+ini_defaults["Tools.Gpg"] = {}
+if environment.IsWindowsPlatform():
+    ini_defaults["Tools.Gpg"]["gpg_exe"] = "gpg.exe"
+    ini_defaults["Tools.Gpg"]["gpg_install_dir"] = "%ProgramFiles(x86)%\\gnupg\\bin"
+else:
+    ini_defaults["Tools.Gpg"]["gpg_exe"] = "gpg"
+    ini_defaults["Tools.Gpg"]["gpg_install_dir"] = "/usr/bin"
+
 # Tools.7Zip
 ini_defaults["Tools.7Zip"] = {}
 if environment.IsWindowsPlatform():
