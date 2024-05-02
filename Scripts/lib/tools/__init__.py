@@ -11,6 +11,7 @@ from . import firefox
 from . import geckodriver
 from . import git
 from . import goldbergemu
+from . import gpg
 from . import hactool
 from . import jdupes
 from . import mkpl
@@ -60,6 +61,7 @@ instances = [
     geckodriver.GeckoDriver(),
     git.Git(),
     goldbergemu.GoldbergEmu(),
+    gpg.Gpg(),
     hactool.HacTool(),
     jdupes.JDupes(),
     mkpl.Mkpl(),

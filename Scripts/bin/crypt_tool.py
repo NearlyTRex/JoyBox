@@ -8,14 +8,17 @@ import argparse
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
-import programs
-import command
+import system
+import cryption
 import setup
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Encrypt/decrypt files.")
 parser.add_argument("path", help="Input path")
+parser.add_argument("-e", "--encrypt", action="store_true", help="Encrypt files")
+parser.add_argument("-d", "--decrypt", action="store_true", help="Decrypt files")
 parser.add_argument("-p", "--passphrase", type=str, required=True, help="Passphrase for encryption")
+parser.add_argument("-k", "--keep_originals", action="store_true", help="Keep original files")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
@@ -34,6 +37,28 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Encrypt file
+    if args.encrypt:
+        for file in system.BuildFileList(root_path):
+            cryption.EncryptFile(
+                source_file = file,
+                output_file = cryption.GetEncryptedFilename(file),
+                passphrase = args.passphrase,
+                delete_original = not args.keep_originals,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+
+    # Decrypt file
+    elif args.decrypt:
+        for file in system.BuildFileList(root_path):
+            cryption.DecryptFile(
+                source_file = file,
+                output_file = cryption.GetDecryptedFilename(file),
+                passphrase = args.passphrase,
+                delete_original = not args.keep_originals,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
 
 # Start
 main()
