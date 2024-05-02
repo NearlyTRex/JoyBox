@@ -55,8 +55,9 @@ class CDecrypt(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("CDecrypt", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.BuildReleaseFromSource(
                 release_url = "https://github.com/NearlyTRex/CDecrypt.git",
+                output_file = "App-x86_64.AppImage",
                 install_name = "CDecrypt",
                 install_dir = programs.GetProgramInstallDir("CDecrypt", "linux"),
                 backups_dir = programs.GetProgramBackupDir("CDecrypt", "linux"),

@@ -55,8 +55,9 @@ class ThreeDSRomTool(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("3DSRomTool", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.BuildReleaseFromSource(
                 release_url = "https://github.com/NearlyTRex/3DSRomTool.git",
+                output_file = "App-x86_64.AppImage",
                 install_name = "3DSRomTool",
                 install_dir = programs.GetProgramInstallDir("3DSRomTool", "linux"),
                 backups_dir = programs.GetProgramBackupDir("3DSRomTool", "linux"),

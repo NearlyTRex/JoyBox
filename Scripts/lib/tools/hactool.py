@@ -55,8 +55,9 @@ class HacTool(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("HacTool", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.BuildReleaseFromSource(
                 release_url = "https://github.com/NearlyTRex/HacTool.git",
+                output_file = "App-x86_64.AppImage",
                 install_name = "HacTool",
                 install_dir = programs.GetProgramInstallDir("HacTool", "linux"),
                 backups_dir = programs.GetProgramBackupDir("HacTool", "linux"),

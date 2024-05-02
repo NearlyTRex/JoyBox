@@ -55,8 +55,9 @@ class ExtractXIso(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("ExtractXIso", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.BuildReleaseFromSource(
                 release_url = "https://github.com/NearlyTRex/ExtractXIso.git",
+                output_file = "App-x86_64.AppImage",
                 install_name = "ExtractXIso",
                 install_dir = programs.GetProgramInstallDir("ExtractXIso", "linux"),
                 backups_dir = programs.GetProgramBackupDir("ExtractXIso", "linux"),

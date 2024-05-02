@@ -535,13 +535,14 @@ def DownloadWebpageRelease(
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-# Build appimage from source
-def BuildAppImageFromSource(
+# Build release from source
+def BuildReleaseFromSource(
     release_url = "",
     webpage_url = "",
     webpage_base_url = "",
     starts_with = "",
     ends_with = "",
+    output_file = "",
     install_name = "",
     install_dir = "",
     backups_dir = "",
@@ -553,19 +554,8 @@ def BuildAppImageFromSource(
     verbose = False,
     exit_on_failure = False):
 
-    # Only works on linux systems
-    if not environment.IsLinuxPlatform():
-        system.LogError("Building app images only works on linux")
-        return False
-
-    # Check params
-    system.AssertIsString(release_url, "release_url")
-    system.AssertIsString(webpage_url, "webpage_url")
-    system.AssertIsString(install_name, "install_name")
-    system.AssertIsString(install_dir, "install_dir")
-    system.AssertIsString(backups_dir, "backups_dir")
-    system.AssertIsList(build_cmd, "build_cmd")
-    system.AssertIsString(build_dir, "build_dir")
+    # Check if building appimage
+    is_building_appimage = output_file.endswith(".AppImage")
 
     # Find release url if necessary
     if len(webpage_url):
@@ -653,53 +643,64 @@ def BuildAppImageFromSource(
         system.LogError("Unable to build release")
         return False
 
-    # Copy objects
-    for obj in internal_copies:
-        src_obj = os.path.join(tmp_dir_result, obj["from"])
-        dest_obj = os.path.join(tmp_dir_result, obj["to"])
-        if obj["from"].startswith("AppImageTool"):
-            src_obj = os.path.join(environment.GetToolsRootDir(), obj["from"])
-        system.MakeDirectory(
-            dir = os.path.dirname(dest_obj),
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        system.SmartCopy(
-            src = src_obj,
-            dest = dest_obj,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+    # Copy appimage objects
+    if is_building_appimage:
+        for obj in internal_copies:
+            src_obj = os.path.join(tmp_dir_result, obj["from"])
+            dest_obj = os.path.join(tmp_dir_result, obj["to"])
+            if obj["from"].startswith("AppImageTool"):
+                src_obj = os.path.join(environment.GetToolsRootDir(), obj["from"])
+            system.MakeDirectory(
+                dir = os.path.dirname(dest_obj),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.SmartCopy(
+                src = src_obj,
+                dest = dest_obj,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
-    # Symlink objects
-    for obj in internal_symlinks:
-        src_obj = obj["from"]
-        dest_obj = obj["to"]
-        system.CreateSymlink(
-            src = src_obj,
-            dest = dest_obj,
-            cwd = appimage_dir,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+    # Symlink appimage objects
+    if is_building_appimage:
+        for obj in internal_symlinks:
+            src_obj = obj["from"]
+            dest_obj = obj["to"]
+            system.CreateSymlink(
+                src = src_obj,
+                dest = dest_obj,
+                cwd = appimage_dir,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
     # Build appimage
-    code = command.RunBlockingCommand(
-        cmd = [programs.GetToolProgram("AppImageTool"), appimage_dir],
-        options = command.CommandOptions(
-            cwd = tmp_dir_result),
-        verbose = verbose)
-    if code != 0:
-        system.LogError("Unable to create AppImage from built release")
+    if is_building_appimage:
+        code = command.RunBlockingCommand(
+            cmd = [programs.GetToolProgram("AppImageTool"), appimage_dir],
+            options = command.CommandOptions(
+                cwd = tmp_dir_result),
+            verbose = verbose)
+        if code != 0:
+            system.LogError("Unable to create AppImage from built release")
+            return False
+
+    # Find built release file
+    built_file = None
+    for path in system.BuildFileList(tmp_dir_result):
+        if path.endswith(output_file):
+            built_file = path
+    if not built_file:
+        system.LogError("No built files could be found")
         return False
 
-    # Get output appimages
-    appimage_files = system.BuildFileListByExtensions(tmp_dir_result, extensions = [".AppImage"])
-    if len(appimage_files) == 0:
-        system.LogError("No AppImages could be found")
-        return False
+    # Get final file
+    final_file = output_file
+    if is_building_appimage:
+        final_file = install_name + ".AppImage"
 
-    # Copy appimage
+    # Copy release file
     system.SmartCopy(
-        src = appimage_files[0],
-        dest = os.path.join(install_dir, install_name + ".AppImage"),
+        src = built_file,
+        dest = os.path.join(install_dir, final_file),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
@@ -713,11 +714,11 @@ def BuildAppImageFromSource(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-    # Backup archive
+    # Backup release file
     if system.IsPathValid(backups_dir):
         system.SmartCopy(
-            src = appimage_files[0],
-            dest = os.path.join(backups_dir, system.GetFilenameFile(appimage_files[0])),
+            src = built_file,
+            dest = os.path.join(backups_dir, final_file),
             skip_identical = True,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -726,4 +727,4 @@ def BuildAppImageFromSource(
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
 
     # Check result
-    return os.path.exists(os.path.join(install_dir, install_name + ".AppImage"))
+    return os.path.exists(os.path.join(install_dir, final_file))

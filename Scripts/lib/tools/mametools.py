@@ -60,8 +60,9 @@ class MameTools(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("MameChdman", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.BuildReleaseFromSource(
                 release_url = "https://github.com/NearlyTRex/Mame.git",
+                output_file = "App-x86_64.AppImage",
                 install_name = "MameChdman",
                 install_dir = programs.GetProgramInstallDir("MameChdman", "linux"),
                 backups_dir = programs.GetProgramBackupDir("MameChdman", "linux"),
