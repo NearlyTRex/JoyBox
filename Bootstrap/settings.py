@@ -31,6 +31,10 @@ else:
     ini_defaults["UserData.Dirs"]["metadata_dir"] = "$HOME/Repositories/GameMetadata"
     ini_defaults["UserData.Dirs"]["scripts_dir"] = "$HOME/Repositories/JoyBox/Scripts"
 
+# UserData.Protection
+ini_defaults["UserData.Protection"] = {}
+ini_defaults["UserData.Protection"]["sync_passphrase"] = ""
+
 # UserData.NAS
 ini_defaults["UserData.NAS"] = {}
 ini_defaults["UserData.NAS"]["nas_base_location"] = ""

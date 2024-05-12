@@ -11,13 +11,15 @@ sys.path.append(lib_folder)
 import system
 import cryption
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Encrypt/decrypt files.")
 parser.add_argument("path", help="Input path")
 parser.add_argument("-e", "--encrypt", action="store_true", help="Encrypt files")
 parser.add_argument("-d", "--decrypt", action="store_true", help="Decrypt files")
-parser.add_argument("-p", "--passphrase", type=str, required=True, help="Passphrase for encryption")
+parser.add_argument("-p", "--passphrase", type=str, help="Passphrase for encryption")
+parser.add_argument("--passphrase_protection_field", type=str, default="sync_passphrase", help="Passphrase protection field")
 parser.add_argument("-k", "--keep_originals", action="store_true", help="Keep original files")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
@@ -38,13 +40,18 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get passphrase
+    passphrase = args.passphrase
+    if len(passphrase) == 0:
+        passphrase = ini.GetIniValue("UserData.Protection", args.passphrase_protection_field)
+
     # Encrypt file
     if args.encrypt:
         for file in system.BuildFileList(root_path):
             cryption.EncryptFile(
                 source_file = file,
                 output_file = cryption.GetEncryptedFilename(file),
-                passphrase = args.passphrase,
+                passphrase = passphrase,
                 delete_original = not args.keep_originals,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
@@ -55,7 +62,7 @@ def main():
             cryption.DecryptFile(
                 source_file = file,
                 output_file = cryption.GetDecryptedFilename(file),
-                passphrase = args.passphrase,
+                passphrase = passphrase,
                 delete_original = not args.keep_originals,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
