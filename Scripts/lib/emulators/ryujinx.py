@@ -12,6 +12,8 @@ import emulatorbase
 
 # Config files
 config_files = {}
+config_files["Ryujinx/windows/portable/Config.json"] = ""
+config_files["Ryujinx/linux/portable/Config.json"] = ""
 
 # System files
 system_files = {}
@@ -33,11 +35,11 @@ class Ryujinx(emulatorbase.EmulatorBase):
             "Ryujinx": {
                 "program": {
                     "windows": "Ryujinx/windows/Ryujinx.exe",
-                    "linux": "Ryujinx/windows/Ryujinx.exe"
+                    "linux": "Ryujinx/linux/Ryujinx"
                 },
                 "run_sandboxed": {
                     "windows": False,
-                    "linux": True
+                    "linux": False
                 }
             }
         }
@@ -60,6 +62,21 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ryujinx")
 
+        # Download linux program
+        if programs.ShouldProgramBeInstalled("Ryujinx", "linux"):
+            success = release.DownloadGithubRelease(
+                github_user = "Ryujinx",
+                github_repo = "release-channel-master",
+                starts_with = "ryujinx",
+                ends_with = "linux_x64.tar.gz",
+                search_file = "Ryujinx.sh",
+                install_name = "Ryujinx",
+                install_dir = programs.GetProgramInstallDir("Ryujinx", "linux"),
+                backups_dir = programs.GetProgramBackupDir("Ryujinx", "linux"),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Ryujinx")
+
     # Setup offline
     def SetupOffline(self, verbose = False, exit_on_failure = False):
 
@@ -73,3 +90,26 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ryujinx")
+
+        # Setup linux program
+        if programs.ShouldProgramBeInstalled("Ryujinx", "linux"):
+            success = release.SetupStoredRelease(
+                archive_dir = programs.GetProgramBackupDir("Ryujinx", "linux"),
+                install_name = "Ryujinx",
+                install_dir = programs.GetProgramInstallDir("Ryujinx", "linux"),
+                search_file = "Ryujinx.sh",
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Ryujinx")
+
+    # Configure
+    def Configure(self, verbose = False, exit_on_failure = False):
+
+        # Create config files
+        for config_filename, config_contents in config_files.items():
+            success = system.TouchFile(
+                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                contents = config_contents.strip(),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            system.AssertCondition(success, "Could not setup Ryujinx config files")
