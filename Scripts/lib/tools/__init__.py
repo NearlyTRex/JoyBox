@@ -18,6 +18,7 @@ from . import mkpl
 from . import lgogdownloader
 from . import ludusavi
 from . import mametools
+from . import moonlight
 from . import ndecrypt
 from . import nircmd
 from . import pegasus
@@ -68,6 +69,7 @@ instances = [
     lgogdownloader.LGOGDownloader(),
     ludusavi.Ludusavi(),
     mametools.MameTools(),
+    moonlight.Moonlight(),
     ndecrypt.NDecrypt(),
     nircmd.NirCmd(),
     pegasus.Pegasus(),
