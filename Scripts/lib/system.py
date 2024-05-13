@@ -278,7 +278,10 @@ def ReplaceStringsInFile(src, replacements = [], verbose = False, pretend_run = 
             with open(src, "r", encoding="utf-8") as f:
                 src_contents = f.read()
             for entry in replacements:
-                src_contents = src_contents.replace(entry["from"], entry["to"])
+                entry_from = entry["from"]
+                entry_to = entry["to"]
+                if entry_from and entry_to:
+                    src_contents = src_contents.replace(entry_from, entry_to)
             with open(src, "w", encoding="utf-8") as f:
                 f.write(src_contents)
         return True
