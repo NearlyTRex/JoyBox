@@ -260,6 +260,7 @@ apt_packages = [
 
     # Utils
     "jstest-gtk",
+    "meld",
 
     # Video
     "shotcut",

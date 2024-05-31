@@ -32,6 +32,7 @@ packages = [
     "python-Levenshtein",
     "python-magic",
     "requests",
+    "rummage",
     "schedule",
     "screeninfo",
     "selenium",
