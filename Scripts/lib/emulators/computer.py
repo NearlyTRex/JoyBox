@@ -387,7 +387,7 @@ def GetSelectedLaunchInfo(
         return GetLaunchInfo(game_exe_list[0])
 
     # Create launch command
-    launch_cmd = []
+    launch_cmd = None
     launch_cwd = ""
     launch_args = []
 
@@ -821,8 +821,6 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Get launch info
         launch_info_cmd = []
-        launch_info_cwd = ""
-        launch_info_args = []
         launch_info_options = None
 
         # Dos launcher
@@ -847,7 +845,6 @@ class Computer(emulatorbase.EmulatorBase):
                     prefix_dir = launch_save_dir,
                     prefix_name = config.prefix_type_game,
                     prefix_winver = launch_info_winver,
-                    prefix_cwd = launch_info_cwd,
                     is_wine_prefix = should_run_via_wine,
                     is_sandboxie_prefix = should_run_via_sandboxie)
 
@@ -873,7 +870,6 @@ class Computer(emulatorbase.EmulatorBase):
                     prefix_dir = launch_save_dir,
                     prefix_name = config.prefix_type_game,
                     prefix_winver = launch_info_winver,
-                    prefix_cwd = launch_info_cwd,
                     is_wine_prefix = should_run_via_wine,
                     is_sandboxie_prefix = should_run_via_sandboxie)
 
@@ -888,39 +884,38 @@ class Computer(emulatorbase.EmulatorBase):
                 prefix_dir = launch_save_dir,
                 prefix_name = config.prefix_type_game,
                 prefix_winver = launch_info_winver,
-                prefix_cwd = launch_info_cwd,
                 is_wine_prefix = should_run_via_wine,
                 is_sandboxie_prefix = should_run_via_sandboxie)
 
         # Regular launcher
         else:
-            launch_info_cmd_str, launch_info_cwd, launch_info_args = GetSelectedLaunchInfo(
+            selected_cmd, selected_cwd, selected_args = GetSelectedLaunchInfo(
                 game_info = game_info,
                 base_dir = prefix_c_drive,
                 default_cwd = launch_general_save_dir,
                 key_exe_list = config.json_key_main_game_exe,
                 key_exe_cwd_dict = config.json_key_main_game_exe_cwd,
                 key_exe_args_dict = config.json_key_main_game_exe_args)
-            launch_info_cmd = [launch_info_cmd_str] + launch_info_args
-            launch_program = command.GetStarterCommand(launch_info_cmd_str)
-            blocking_processes = sandbox.GetBlockingProcesses(
-                initial_processes = [launch_program],
-                is_wine_prefix = should_run_via_wine,
-                is_sandboxie_prefix = should_run_via_sandboxie)
-            launch_info_options = command.CommandOptions(
-                cwd = os.path.expanduser("~"),
-                force_prefix = True,
-                prefix_dir = launch_save_dir,
-                prefix_name = config.prefix_type_game,
-                prefix_winver = launch_info_winver,
-                prefix_cwd = launch_info_cwd,
-                is_wine_prefix = should_run_via_wine,
-                is_sandboxie_prefix = should_run_via_sandboxie,
-                wine_setup = launch_info_wine_setup,
-                sandboxie_setup = launch_info_sandboxie_setup,
-                is_32_bit = launch_info_is_32_bit,
-                lnk_base_path = launch_cache_dir,
-                blocking_processes = blocking_processes)
+            if selected_cmd:
+                launch_info_cmd = [selected_cmd] + selected_args
+                blocking_processes = sandbox.GetBlockingProcesses(
+                    initial_processes = [command.GetStarterCommand(selected_cmd)],
+                    is_wine_prefix = should_run_via_wine,
+                    is_sandboxie_prefix = should_run_via_sandboxie)
+                launch_info_options = command.CommandOptions(
+                    cwd = os.path.expanduser("~"),
+                    force_prefix = True,
+                    prefix_dir = launch_save_dir,
+                    prefix_name = config.prefix_type_game,
+                    prefix_winver = launch_info_winver,
+                    prefix_cwd = selected_cwd,
+                    is_wine_prefix = should_run_via_wine,
+                    is_sandboxie_prefix = should_run_via_sandboxie,
+                    wine_setup = launch_info_wine_setup,
+                    sandboxie_setup = launch_info_sandboxie_setup,
+                    is_32_bit = launch_info_is_32_bit,
+                    lnk_base_path = launch_cache_dir,
+                    blocking_processes = blocking_processes)
 
         # Check launch command
         if len(launch_info_cmd):
