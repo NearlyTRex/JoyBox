@@ -13,6 +13,7 @@ import command
 import programs
 import registry
 import gui
+import ini
 from tools import dxvk
 from tools import vkd3d
 
@@ -754,6 +755,26 @@ def SetupPrefixCommand(
         ]
         if options.prefix_name == config.prefix_type_tool:
             new_cmd += ["/hide_window"]
+
+    # Modify for wine
+    if new_options.is_wine_prefix:
+
+        # Get wine setup
+        wine_setup_desktop = ""
+        wine_setup_use_virtual_desktop = False
+        if config.json_key_sandbox_wine_desktop in new_options.wine_setup:
+            wine_setup_desktop = new_options.wine_setup[config.json_key_sandbox_wine_desktop]
+        if config.json_key_sandbox_wine_use_virtual_desktop in new_options.wine_setup:
+            wine_setup_use_virtual_desktop = new_options.wine_setup[config.json_key_sandbox_wine_use_virtual_desktop]
+
+        # Set desktop options
+        if wine_setup_use_virtual_desktop:
+            if len(wine_setup_desktop):
+                new_cmd += ["explorer", "/desktop=" + wine_setup_desktop]
+            else:
+                desktop_width = ini.GetIniValue("UserData.Resolution", "screen_resolution_w")
+                desktop_height = ini.GetIniValue("UserData.Resolution", "screen_resolution_h")
+                new_cmd += ["explorer", "/desktop=%sx%s" % (desktop_width, desktop_height)]
 
     # Adjust command based on executable type
     if orig_cmd_starter.endswith(".lnk"):
