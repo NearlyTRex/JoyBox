@@ -141,6 +141,14 @@ def SplitByEnclosedSubstrings(string, delimiter = "\""):
             string_list += string_segment.strip().split()
     return string_list
 
+# Merge dictionaries
+def MergeDictionaries(dict1, dict2):
+    try:
+        import mergedeep
+        return mergedeep.merge(dict1, dict2)
+    except:
+        return dict1
+
 ###########################################################
 
 # Log message

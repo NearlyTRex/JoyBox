@@ -24,14 +24,13 @@ parser.add_argument("-s", "--metadata_source",
     ],
     default=config.metadata_source_type_gamefaqs
 )
-parser.add_argument("--only_check_description", action="store_true", help="Only check descriptions")
-parser.add_argument("--only_check_genre", action="store_true", help="Only check genres")
-parser.add_argument("--only_check_developer", action="store_true", help="Only check developers")
-parser.add_argument("--only_check_publisher", action="store_true", help="Only check publishers")
-parser.add_argument("--only_check_release", action="store_true", help="Only check releases")
+parser.add_argument("--keys_to_check", type=str, help="Check against specific keys (comma delimited)")
 parser.add_argument("--force_download", action="store_true", help="Force download")
+parser.add_argument("--allow_replacing", action="store_true", help="Allow replacing")
 parser.add_argument("-a", "--select_automatically", action="store_true", help="Select game automatically")
 parser.add_argument("-i", "--ignore_unowned", action="store_true", help="Ignore unowned games")
+parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
 # Check metadata dir
@@ -49,14 +48,13 @@ def main():
     metadata.CollectMetadata(
         metadata_dir = args.metadata_dir,
         metadata_source = args.metadata_source,
-        only_check_description = args.only_check_description,
-        only_check_genre = args.only_check_genre,
-        only_check_developer = args.only_check_developer,
-        only_check_publisher = args.only_check_publisher,
-        only_check_release = args.only_check_release,
+        keys_to_check = args.keys_to_check.split(","),
         force_download = args.force_download,
+        allow_replacing = args.allow_replacing,
         select_automatically = args.select_automatically,
-        ignore_unowned = args.ignore_unowned)
+        ignore_unowned = args.ignore_unowned,
+        verbose = args.verbose,
+        exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

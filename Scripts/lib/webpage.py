@@ -89,11 +89,11 @@ def WaitForPageElement(driver, class_name = None, id_name = None, tag_name = Non
         by_type, by_value = ParseByRequest(class_name, id_name, tag_name, link_text)
         if all_elements:
             return WebDriverWait(driver, wait_time).until(
-                ExpectedConditions.presence_of_elements_located((by_type, by_value))
+                ExpectedConditions.presence_of_all_elements_located((by_type, by_value))
             )
         else:
             return WebDriverWait(driver, wait_time).until(
-                ExpectedConditions.presence_of_element_located((by_type, by_value))
+                ExpectedConditions.presence_of_all_elements_located((by_type, by_value))
             )
     except Exception as e:
         if verbose:

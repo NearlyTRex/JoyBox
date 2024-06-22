@@ -29,7 +29,6 @@ metadata_key_subcategory = "subcategory"
 metadata_key_file = "file"
 metadata_key_description = "description"
 metadata_key_genre = "genre"
-metadata_key_tag = "tag"
 metadata_key_coop = "coop"
 metadata_key_playable = "playable"
 metadata_key_developer = "developer"
@@ -42,31 +41,34 @@ metadata_key_boxfront = "boxfront"
 metadata_key_label = "label"
 metadata_key_screenshot = "screenshot"
 metadata_key_video = "video"
+metadata_key_json = "json"
 metadata_keys_minimum = [
-    metadata_key_platform,
     metadata_key_game,
-    metadata_key_file,
-    metadata_key_players
+    metadata_key_platform,
+    metadata_key_file
 ]
-metadata_keys_missing = [
+metadata_keys_all = [
+    metadata_key_game,
+    metadata_key_platform,
+    metadata_key_supercategory,
+    metadata_key_category,
+    metadata_key_subcategory,
+    metadata_key_file,
     metadata_key_description,
-    metadata_key_developer,
-    metadata_key_publisher,
     metadata_key_genre,
-    metadata_key_players,
     metadata_key_coop,
     metadata_key_playable,
-    metadata_key_release
-]
-metadata_keys_replaceable = [
-    metadata_key_description,
-    metadata_key_genre,
-    metadata_key_tag,
     metadata_key_developer,
     metadata_key_publisher,
     metadata_key_players,
-    metadata_key_coop,
-    metadata_key_release
+    metadata_key_release,
+    metadata_key_background,
+    metadata_key_boxback,
+    metadata_key_boxfront,
+    metadata_key_label,
+    metadata_key_screenshot,
+    metadata_key_video,
+    metadata_key_json
 ]
 
 # General json keys
@@ -126,11 +128,19 @@ json_key_steam_buildid = "buildid"
 json_key_steam_builddate = "builddate"
 json_key_steam_name = "name"
 json_key_steam_controller_support = "controller_support"
+json_key_steam_paths = "paths"
+json_key_steam_keys = "keys"
 json_key_gog = "gog"
 json_key_gog_appid = "appid"
 json_key_gog_appname = "appname"
 json_key_gog_name = "name"
 json_key_gog_buildid = "buildid"
+json_key_gog_paths = "paths"
+json_key_gog_keys = "keys"
+json_key_epic = "epic"
+json_key_epic_appid = "appid"
+json_key_epic_paths = "paths"
+json_key_epic_keys = "keys"
 json_key_winver = "winver"
 json_key_is_32_bit = "is_32_bit"
 json_key_is_dos = "is_dos"

@@ -50,8 +50,7 @@ class MetadataEntry:
 
     # Merge data
     def merge(self, other):
-        import mergedeep
-        return mergedeep.merge(other.game_entry, self.game_entry)
+        return system.MergeDictionaries(other.game_entry, self.game_entry)
 
     # Game name
     def get_game(self):
@@ -100,12 +99,6 @@ class MetadataEntry:
         return self.get_value(config.metadata_key_genre)
     def set_genre(self, value):
         self.set_value(config.metadata_key_genre, value)
-
-    # Game tag
-    def get_tag(self):
-        return self.get_value(config.metadata_key_tag)
-    def set_tag(self, value):
-        self.set_value(config.metadata_key_tag, value)
 
     # Game coop
     def get_coop(self):
@@ -161,7 +154,7 @@ class MetadataEntry:
     def set_boxfront(self, value):
         self.set_value(config.metadata_key_boxfront, value)
 
-    # Game abel
+    # Game label
     def get_label(self):
         return self.get_value(config.metadata_key_label)
     def set_label(self, value):
@@ -285,8 +278,7 @@ class Metadata:
 
     # Merge with other metadata
     def merge_contents(self, other):
-        import mergedeep
-        self.game_database = mergedeep.merge(self.game_database, other.game_database)
+        self.game_database = system.MergeDictionaries(self.game_database, other.game_database)
 
     # Verify roms
     def verify_roms(self, verbose = False, exit_on_failure = False):
@@ -650,10 +642,6 @@ class Metadata:
                     if game_entry.is_key_set(config.metadata_key_genre):
                         file.write("genre: " + game_entry.get_genre() + "\n")
 
-                    # Tag
-                    if game_entry.is_key_set(config.metadata_key_tag):
-                        file.write("tag: " + game_entry.get_tag() + "\n")
-
                     # Description
                     if game_entry.is_key_set(config.metadata_key_description):
                         file.write("description:\n")
@@ -718,17 +706,13 @@ class Metadata:
 def CollectMetadata(
     metadata_dir,
     metadata_source,
-    only_check_description = False,
-    only_check_genre = False,
-    only_check_developer = False,
-    only_check_publisher = False,
-    only_check_release = False,
+    keys_to_check = [],
     force_download = False,
+    allow_replacing = False,
     select_automatically = False,
-    ignore_unowned = False):
-
-    # Create web driver
-    web_driver = webpage.CreateWebDriver()
+    ignore_unowned = False,
+    verbose = False,
+    exit_on_failure = False):
 
     # Find missing metadata
     metadata_dir = os.path.realpath(metadata_dir)
@@ -737,27 +721,12 @@ def CollectMetadata(
             metadata_obj = Metadata()
             metadata_obj.import_from_metadata_file(file)
 
-            # Check for missing metadata keys
+            # Get keys to check
             metadata_keys_to_check = []
-            is_missing_metadata = False
-            if force_download:
-                is_missing_metadata = True
+            if isinstance(keys_to_check, list) and len(keys_to_check) > 0:
+                metadata_keys_to_check = keys_to_check
             else:
-                if only_check_description:
-                    metadata_keys_to_check = [config.metadata_key_description]
-                elif only_check_genre:
-                    metadata_keys_to_check = [config.metadata_key_genre]
-                elif only_check_developer:
-                    metadata_keys_to_check = [config.metadata_key_developer]
-                elif only_check_publisher:
-                    metadata_keys_to_check = [config.metadata_key_publisher]
-                elif only_check_release:
-                    metadata_keys_to_check = [config.metadata_key_release]
-                else:
-                    metadata_keys_to_check = config.metadata_keys_missing
-                is_missing_metadata = metadata_obj.is_missing_data(metadata_keys_to_check)
-            if not is_missing_metadata:
-                continue
+                metadata_keys_to_check = config.metadata_keys_all
 
             # Iterate through each game entry to fill in any missing data
             for game_platform in metadata_obj.get_sorted_platforms():
@@ -767,7 +736,12 @@ def CollectMetadata(
                             continue
 
                     # Get entry
+                    if verbose:
+                        system.Log("Collecting metadata for %s - %s ..." % (game_platform, game_name))
                     game_entry = metadata_obj.get_game(game_platform, game_name)
+
+                    # Create web driver
+                    web_driver = webpage.CreateWebDriver()
 
                     # Collect metadata
                     metadata_result = None
@@ -777,52 +751,60 @@ def CollectMetadata(
                             game_platform = game_platform,
                             game_name = game_name,
                             select_automatically = select_automatically,
-                            ignore_unowned = ignore_unowned)
+                            ignore_unowned = ignore_unowned,
+                            verbose = verbose,
+                            exit_on_failure = exit_on_failure)
                     elif metadata_source == config.metadata_source_type_gamefaqs:
                         metadata_result = CollectMetadataFromGameFAQS(
                             web_driver = web_driver,
                             game_platform = game_platform,
                             game_name = game_name,
                             select_automatically = select_automatically,
-                            ignore_unowned = ignore_unowned)
+                            ignore_unowned = ignore_unowned,
+                            verbose = verbose,
+                            exit_on_failure = exit_on_failure)
                     elif metadata_source == config.metadata_source_type_itchio:
                         metadata_result = CollectMetadataFromItchio(
                             web_driver = web_driver,
                             game_platform = game_platform,
                             game_name = game_name,
                             select_automatically = select_automatically,
-                            ignore_unowned = ignore_unowned)
+                            ignore_unowned = ignore_unowned,
+                            verbose = verbose,
+                            exit_on_failure = exit_on_failure)
 
-                    # Set metadata that was not already present in the file
+                    # Cleanup web driver
+                    webpage.DestroyWebDriver(web_driver)
+
+                    # Merge in metadata result
                     if metadata_result:
-                        for metadata_key in config.metadata_keys_replaceable:
 
-                            # Ignore keys not in result
+                        # Update keys
+                        for metadata_key in metadata_keys_to_check:
                             if not metadata_result.is_key_set(metadata_key):
                                 continue
-
-                            # Check if we should set the new data
-                            should_set_data = False
-                            if metadata_key == config.metadata_key_players:
-                                should_set_data = True
-                            if metadata_key == config.metadata_key_coop:
-                                should_set_data = True
-                            elif not game_entry.is_key_set(metadata_key):
-                                should_set_data = True
-
-                            # Set new data
-                            if should_set_data:
-                                game_entry.set_value(metadata_key, metadata_result.get_value(metadata_key))
+                            if game_entry.is_key_set(metadata_key) and not allow_replacing:
+                                continue
+                            game_entry.set_value(metadata_key, metadata_result.get_value(metadata_key))
 
                     # Write metadata back to file
                     metadata_obj.set_game(game_platform, game_name, game_entry)
                     metadata_obj.export_to_metadata_file(file)
 
-    # Cleanup web driver
-    webpage.DestroyWebDriver(web_driver)
+                    # Wait
+                    if verbose:
+                        system.Log("Waiting to get next entry ...")
+                    time.sleep(5)
 
 # Collect metadata from TheGamesDB
-def CollectMetadataFromTGDB(web_driver, game_platform, game_name, select_automatically = False, ignore_unowned = False):
+def CollectMetadataFromTGDB(
+    web_driver,
+    game_platform,
+    game_name,
+    select_automatically = False,
+    ignore_unowned = False,
+    verbose = False,
+    exit_on_failure = False):
 
     # Get keywords name
     natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
@@ -841,7 +823,7 @@ def CollectMetadataFromTGDB(web_driver, game_platform, game_name, select_automat
     if select_automatically:
 
         # Find the root container element
-        section_search_result = webpage.WaitForPageElement(web_driver, class_name = "container-fluid", wait_time = 5)
+        section_search_result = webpage.WaitForPageElement(web_driver, class_name = "container-fluid", wait_time = 5, verbose = verbose)
         if not section_search_result:
             return None
 
@@ -875,7 +857,7 @@ def CollectMetadataFromTGDB(web_driver, game_platform, game_name, select_automat
             return None
 
     # Look for game description
-    section_game_description = webpage.WaitForPageElement(web_driver, class_name = "game-overview")
+    section_game_description = webpage.WaitForPageElement(web_driver, class_name = "game-overview", verbose = verbose)
     if not section_game_description:
         return None
 
@@ -918,11 +900,17 @@ def CollectMetadataFromTGDB(web_driver, game_platform, game_name, select_automat
                 metadata_result.set_release(element_text.replace("ReleaseDate:", "").strip())
 
     # Return metadata
-    time.sleep(5)
     return metadata_result
 
 # Collect metadata from GameFAQs
-def CollectMetadataFromGameFAQS(web_driver, game_platform, game_name, select_automatically = False, ignore_unowned = False):
+def CollectMetadataFromGameFAQS(
+    web_driver,
+    game_platform,
+    game_name,
+    select_automatically = False,
+    ignore_unowned = False,
+    verbose = False,
+    exit_on_failure = False):
 
     # Get keywords name
     natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
@@ -938,7 +926,7 @@ def CollectMetadataFromGameFAQS(web_driver, game_platform, game_name, select_aut
         return None
 
     # Look for game description
-    section_game_description = webpage.WaitForPageElement(web_driver, class_name = "game_desc")
+    section_game_description = webpage.WaitForPageElement(web_driver, class_name = "game_desc", verbose = verbose)
     if not section_game_description:
         return None
 
@@ -996,7 +984,14 @@ def CollectMetadataFromGameFAQS(web_driver, game_platform, game_name, select_aut
     return metadata_result
 
 # Collect metadata from Itch.io
-def CollectMetadataFromItchio(web_driver, game_platform, game_name, select_automatically = False, ignore_unowned = False):
+def CollectMetadataFromItchio(
+    web_driver,
+    game_platform,
+    game_name,
+    select_automatically = False,
+    ignore_unowned = False,
+    verbose = False,
+    exit_on_failure = False):
 
     # Get keywords name
     natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
@@ -1027,7 +1022,7 @@ def CollectMetadataFromItchio(web_driver, game_platform, game_name, select_autom
             return None
 
         # Look for my feed
-        section_my_feed = webpage.WaitForPageElement(web_driver, link_text = "My feed")
+        section_my_feed = webpage.WaitForPageElement(web_driver, link_text = "My feed", verbose = verbose)
         if not section_my_feed:
             return None
 
@@ -1042,7 +1037,7 @@ def CollectMetadataFromItchio(web_driver, game_platform, game_name, select_autom
 
     # Select an entry automatically
     if select_automatically:
-        section_search_result = webpage.WaitForPageElement(web_driver, class_name = "game_cell")
+        section_search_result = webpage.WaitForPageElement(web_driver, class_name = "game_cell", verbose = verbose)
         if section_search_result:
             webpage.ClickElement(section_search_result)
         while webpage.GetCurrentPageUrl(web_driver).startswith("https://itch.io/search?q="):
@@ -1050,17 +1045,17 @@ def CollectMetadataFromItchio(web_driver, game_platform, game_name, select_autom
 
     # Ignore unowned games
     if ignore_unowned:
-        section_game_purchased = webpage.WaitForPageElement(web_driver, class_name = "purchase_banner_inner", wait_time = 3)
+        section_game_purchased = webpage.WaitForPageElement(web_driver, class_name = "purchase_banner_inner", wait_time = 3, verbose = verbose)
         if not section_game_purchased:
             return None
 
     # Look for game description
-    section_game_description = webpage.WaitForPageElement(web_driver, class_name = "formatted_description")
+    section_game_description = webpage.WaitForPageElement(web_driver, class_name = "formatted_description", verbose = verbose)
     if not section_game_description:
         return None
 
     # Look for game information
-    section_game_information = webpage.WaitForPageElement(web_driver, class_name = "more_information_toggle")
+    section_game_information = webpage.WaitForPageElement(web_driver, class_name = "more_information_toggle", verbose = verbose)
     if not section_game_information:
         return None
 
