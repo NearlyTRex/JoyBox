@@ -117,6 +117,7 @@ def DownloadGameByJsonFile(
     platform,
     arch,
     login,
+    manifest = None,
     output_dir = None,
     skip_existing = False,
     force = False,
@@ -146,6 +147,7 @@ def DownloadGameByJsonFile(
     latest_steam_info = GetGameInfo(
         appid = game_info.get_steam_appid(),
         branchid = game_info.get_steam_branchid(),
+        manifest = manifest,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
@@ -162,23 +164,22 @@ def DownloadGameByJsonFile(
     else:
         if new_buildid.isnumeric() and old_buildid.isnumeric():
             should_download = int(new_buildid) > int(old_buildid)
-    if not should_download:
-        return True
 
     # Download game
-    success = DownloadGameByID(
-        appid = game_info.get_steam_appid(),
-        branchid = game_info.get_steam_branchid(),
-        output_dir = output_dir,
-        output_name = game_info.get_name(),
-        platform = platform,
-        arch = arch,
-        login = login,
-        clean_output = True,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
+    if should_download:
+        success = DownloadGameByID(
+            appid = game_info.get_steam_appid(),
+            branchid = game_info.get_steam_branchid(),
+            output_dir = output_dir,
+            output_name = game_info.get_name(),
+            platform = platform,
+            arch = arch,
+            login = login,
+            clean_output = True,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Update json file
     json_data = system.ReadJsonFile(
@@ -228,7 +229,7 @@ def CheckGameByJsonFile(
     return True
 
 # Get game info
-def GetGameInfo(appid, branchid, verbose = False, exit_on_failure = False):
+def GetGameInfo(appid, branchid, manifest = None, verbose = False, exit_on_failure = False):
 
     # Get tool
     steamcmd_tool = None
@@ -299,4 +300,31 @@ def GetGameInfo(appid, branchid, verbose = False, exit_on_failure = False):
                         game_info[config.json_key_steam_buildid] = str(appbranch["buildid"])
                     if "timeupdated" in appbranch:
                         game_info[config.json_key_steam_builddate] = str(appbranch["timeupdated"])
+
+    # Augment by manifest
+    if manifest:
+        for manifest_name, manifest_data in manifest.items():
+            if "steam" not in manifest_data:
+                continue
+            if "id" in manifest_data["steam"] and str(manifest_data["steam"]["id"]) != appid:
+                continue
+            paths = []
+            keys = []
+            if "files" in manifest_data:
+                for path_location, path_info in manifest_data["files"].items():
+                    for when_info in path_info["when"]:
+                        when_os = when_info["os"] if "os" in when_info else ""
+                        when_store = when_info["store"] if "store" in when_info else ""
+                        if when_os == "windows":
+                            if when_store == "steam" or when_store == "":
+                                paths.append(path_location)
+            if "registry" in manifest_data:
+                for key in manifest_data["registry"]:
+                    keys.append(key)
+            if len(paths):
+                game_info[config.json_key_steam_paths] = paths
+            if len(keys):
+                game_info[config.json_key_steam_keys] = keys
+
+    # Return game info
     return game_info

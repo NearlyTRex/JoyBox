@@ -12,6 +12,7 @@ import config
 import steam
 import system
 import setup
+from tools import ludusavimanifest
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Download Steam games.")
@@ -44,6 +45,7 @@ parser.add_argument("-l", "--login", type=str, help="Steam login username")
 parser.add_argument("-s", "--skip_existing", action="store_true", help="Skip existing entries")
 parser.add_argument("-f", "--force", action="store_true", help="Always run action")
 parser.add_argument("-o", "--output_dir", type=str, default=".", help="Output directory")
+parser.add_argument("-m", "--load_manifest", action="store_true", help="Load manifest")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
@@ -60,6 +62,14 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Load manifest
+    manifest = None
+    if args.load_manifest:
+        manifest = system.ReadYamlFile(
+            src = ludusavimanifest.GetManifest(),
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
+
     # Download games
     if args.action == "download":
         for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
@@ -68,6 +78,7 @@ def main():
                 platform = args.platform,
                 arch = args.arch,
                 login = args.login,
+                manifest = manifest,
                 output_dir = args.output_dir,
                 skip_existing = args.skip_existing,
                 force = args.force,
