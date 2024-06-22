@@ -26,9 +26,8 @@ def BackupSaves(output_path, verbose = False, exit_on_failure = False):
     # Get backup command
     backup_command = [
         save_tool,
+        "--try-manifest-update",
         "backup",
-        "--try-update",
-        "--merge",
         "--path", os.path.realpath(output_path)
     ]
 
@@ -61,6 +60,7 @@ def RestoreSaves(input_path, verbose = False, exit_on_failure = False):
     # Get restore command
     restore_command = [
         save_tool,
+        "--try-manifest-update",
         "restore",
         "--path", os.path.realpath(input_path)
     ]
