@@ -17,6 +17,7 @@ from . import jdupes
 from . import mkpl
 from . import lgogdownloader
 from . import ludusavi
+from . import ludusavimanifest
 from . import mametools
 from . import moonlight
 from . import ndecrypt
@@ -68,6 +69,7 @@ instances = [
     mkpl.Mkpl(),
     lgogdownloader.LGOGDownloader(),
     ludusavi.Ludusavi(),
+    ludusavimanifest.LudusaviManifest(),
     mametools.MameTools(),
     moonlight.Moonlight(),
     ndecrypt.NDecrypt(),
