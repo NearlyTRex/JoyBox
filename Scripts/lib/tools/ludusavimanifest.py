@@ -12,6 +12,10 @@ import toolbase
 # Config files
 config_files = {}
 
+# Get manifest
+def GetManifest():
+    return programs.GetToolPathConfigValue("LudusaviManifest", "manifest")
+
 # LudusaviManifest tool
 class LudusaviManifest(toolbase.ToolBase):
 
@@ -23,7 +27,7 @@ class LudusaviManifest(toolbase.ToolBase):
     def GetConfig(self):
         return {
             "LudusaviManifest": {
-                "program": "LudusaviManifest/lib/data/manifest.yaml"
+                "manifest": "LudusaviManifest/lib/data/manifest.yaml"
             }
         }
 
