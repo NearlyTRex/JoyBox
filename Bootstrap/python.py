@@ -31,6 +31,7 @@ packages = [
     "python-dateutil",
     "python-Levenshtein",
     "python-magic",
+    "ruamel.yaml",
     "requests",
     "rummage",
     "schedule",
