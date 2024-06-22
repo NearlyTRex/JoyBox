@@ -1149,6 +1149,30 @@ def CleanJsonFile(src, sort_keys = False, remove_empty_values = False, verbose =
 
 ###########################################################
 
+# Read yaml file
+def ReadYamlFile(src, verbose = False, exit_on_failure = False):
+    try:
+        import yaml
+        if not src.endswith(".yaml"):
+            return {}
+        if verbose:
+            Log("Reading %s" % src)
+        yaml_data = {}
+        with open(src, "r") as input_file:
+            file_contents = input_file.read()
+            file_contents = file_contents.replace(u'\x81', '')
+            file_contents = file_contents.replace(u'\x82', '')
+            yaml_data = yaml.safe_load(file_contents)
+        return yaml_data
+    except Exception as e:
+        if exit_on_failure:
+            LogError("Unable to read %s" % src)
+            LogError(e)
+            sys.exit(1)
+        return {}
+
+###########################################################
+
 # Build file list
 def BuildFileList(root, new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
     files = []
