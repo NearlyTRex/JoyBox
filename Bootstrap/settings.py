@@ -33,7 +33,9 @@ else:
 
 # UserData.Protection
 ini_defaults["UserData.Protection"] = {}
+ini_defaults["UserData.Protection"]["general_passphrase"] = ""
 ini_defaults["UserData.Protection"]["sync_passphrase"] = ""
+ini_defaults["UserData.Protection"]["storage_passphrase"] = ""
 
 # UserData.NAS
 ini_defaults["UserData.NAS"] = {}

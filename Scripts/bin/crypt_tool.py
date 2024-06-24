@@ -19,7 +19,7 @@ parser.add_argument("path", help="Input path")
 parser.add_argument("-e", "--encrypt", action="store_true", help="Encrypt files")
 parser.add_argument("-d", "--decrypt", action="store_true", help="Decrypt files")
 parser.add_argument("-p", "--passphrase", type=str, help="Passphrase for encryption")
-parser.add_argument("--passphrase_protection_field", type=str, default="sync_passphrase", help="Passphrase protection field")
+parser.add_argument("--passphrase_protection_field", type=str, default="general_passphrase", help="Passphrase protection field")
 parser.add_argument("-k", "--keep_originals", action="store_true", help="Keep original files")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
@@ -42,8 +42,11 @@ def main():
 
     # Get passphrase
     passphrase = args.passphrase
-    if len(passphrase) == 0:
+    if not passphrase or len(passphrase) == 0:
         passphrase = ini.GetIniValue("UserData.Protection", args.passphrase_protection_field)
+        if len(passphrase) == 0:
+            system.LogError("No passphrase set")
+            sys.exit(-1)
 
     # Encrypt file
     if args.encrypt:
