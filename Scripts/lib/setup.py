@@ -66,7 +66,7 @@ def SetupAssets(verbose = False, exit_on_failure = False):
             for asset_type in config.asset_types_all:
 
                 # Get directories
-                source_dir = environment.GetSyncedGameAssetDir(game_category, game_subcategory, asset_type)
+                source_dir = environment.GetLockerGameAssetDir(game_category, game_subcategory, asset_type)
                 dest_dir = environment.GetPegasusMetadataAssetDir(game_category, game_subcategory, asset_type)
 
                 # Remove existing symlink

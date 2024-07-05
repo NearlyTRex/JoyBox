@@ -313,7 +313,7 @@ class Metadata:
                 # Check all asset types
                 for asset_type in config.asset_types_all:
                     game_asset_string = gameinfo.DeriveGameAssetPathFromName(game_name, asset_type)
-                    game_asset_file = environment.GetSyncedGameAssetFile(game_category, game_subcategory, game_name, asset_type)
+                    game_asset_file = environment.GetLockerGameAssetFile(game_category, game_subcategory, game_name, asset_type)
 
                     # Get metadata key associated with the asset type
                     game_metadata_key = None
@@ -356,7 +356,7 @@ class Metadata:
                 game_subcategory = metadata_entry.get_subcategory()
 
                 # Get expected video file
-                expected_video_file = environment.GetSyncedGameAssetFile(game_category, game_subcategory, game_name, config.asset_type_video)
+                expected_video_file = environment.GetLockerGameAssetFile(game_category, game_subcategory, game_name, config.asset_type_video)
                 if os.path.exists(expected_video_file):
                     continue
 

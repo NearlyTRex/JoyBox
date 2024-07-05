@@ -28,7 +28,7 @@ def main():
     setup.CheckRequirements()
 
     # Get search info
-    assets_dir = environment.GetSyncedGamingAssetsRootDir()
+    assets_dir = environment.GetLockerGamingAssetsRootDir()
     metadata_dir = environment.GetPegasusMetadataRootDir()
 
     # Find all possible assets
@@ -54,7 +54,7 @@ def main():
                         game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
 
                         # Get asset file
-                        asset_file = environment.GetSyncedGameAssetFile(game_category, game_subcategory, game_name, asset_type)
+                        asset_file = environment.GetLockerGameAssetFile(game_category, game_subcategory, game_name, asset_type)
 
                         # Check if asset exists
                         if os.path.exists(asset_file):

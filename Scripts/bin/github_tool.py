@@ -26,7 +26,7 @@ parser.add_argument("-a", "--action",
 )
 parser.add_argument("-u", "--github_username", type=str, help="Github username")
 parser.add_argument("-t", "--github_access_token", type=str, help="Github access token")
-parser.add_argument("-d", "--archive_base_dir", type=str, default=environment.GetSyncedDevelopmentArchivesRootDir(), help="Archive base directory")
+parser.add_argument("-d", "--archive_base_dir", type=str, default=environment.GetLockerDevelopmentArchivesRootDir(), help="Archive base directory")
 parser.add_argument("-i", "--include_repos", type=str, default="", help="Only include these repos (comma delimited)")
 parser.add_argument("-e", "--exclude_repos", type=str, default="", help="Use all repos except these (comma delimited)")
 parser.add_argument("-f", "--force", action="store_true", help="Force action")

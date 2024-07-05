@@ -66,7 +66,7 @@ def main():
 
         # Update base command
         base_cmd += [
-            "-t", "Storage",
+            "-t", config.share_type_vault,
             "-o", output_path
         ]
         if args.skip_existing:

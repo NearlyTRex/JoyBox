@@ -182,82 +182,82 @@ def GetEmulatorsRootDir():
     return ini.GetIniPathValue("UserData.Dirs", "emulators_dir")
 
 ###########################################################
-# Sync
+# Locker
 ###########################################################
 
-# Get sync root dir
-def GetSyncRootDir():
-    return ini.GetIniPathValue("UserData.Dirs", "sync_dir")
+# Get locker root dir
+def GetLockerRootDir():
+    return ini.GetIniPathValue("UserData.Dirs", "locker_dir")
 
-# Get synced development root dir
-def GetSyncedDevelopmentRootDir():
-    return os.path.join(GetSyncRootDir(), "Development")
+# Get locker development root dir
+def GetLockerDevelopmentRootDir():
+    return os.path.join(GetLockerRootDir(), "Development")
 
-# Get synced development archives root dir
-def GetSyncedDevelopmentArchivesRootDir():
-    return os.path.join(GetSyncedDevelopmentRootDir(), "Archive")
+# Get locker development archives root dir
+def GetLockerDevelopmentArchivesRootDir():
+    return os.path.join(GetLockerDevelopmentRootDir(), "Archive")
 
-# Get synced gaming root dir
-def GetSyncedGamingRootDir():
-    return os.path.join(GetSyncRootDir(), "Gaming")
+# Get locker gaming root dir
+def GetLockerGamingRootDir():
+    return os.path.join(GetLockerRootDir(), "Gaming")
 
-# Get synced gaming assets root dir
-def GetSyncedGamingAssetsRootDir():
-    return os.path.join(GetSyncedGamingRootDir(), "Assets")
+# Get locker gaming assets root dir
+def GetLockerGamingAssetsRootDir():
+    return os.path.join(GetLockerGamingRootDir(), "Assets")
 
-# Get synced game asset dir
-def GetSyncedGameAssetDir(game_category, game_subcategory, asset_type):
-    return os.path.join(GetSyncedGamingAssetsRootDir(), game_category, game_subcategory, asset_type)
+# Get locker game asset dir
+def GetLockerGameAssetDir(game_category, game_subcategory, asset_type):
+    return os.path.join(GetLockerGamingAssetsRootDir(), game_category, game_subcategory, asset_type)
 
-# Get synced game asset file
-def GetSyncedGameAssetFile(game_category, game_subcategory, game_name, asset_type):
+# Get locker game asset file
+def GetLockerGameAssetFile(game_category, game_subcategory, game_name, asset_type):
     asset_file = "%s%s" % (game_name, config.asset_type_extensions[asset_type])
-    return os.path.join(GetSyncedGamingAssetsRootDir(), game_category, game_subcategory, asset_type, asset_file)
+    return os.path.join(GetLockerGamingAssetsRootDir(), game_category, game_subcategory, asset_type, asset_file)
 
-# Get synced gaming emulators root dir
-def GetSyncedGamingEmulatorsRootDir():
-    return os.path.join(GetSyncedGamingRootDir(), "Emulators")
+# Get locker gaming emulators root dir
+def GetLockerGamingEmulatorsRootDir():
+    return os.path.join(GetLockerGamingRootDir(), "Emulators")
 
-# Get synced game emulator binaries dir
-def GetSyncedGameEmulatorBinariesDir(emu_name, emu_platform):
-    return os.path.join(GetSyncedGamingEmulatorsRootDir(), emu_name, "Binaries", emu_platform)
+# Get locker game emulator binaries dir
+def GetLockerGameEmulatorBinariesDir(emu_name, emu_platform):
+    return os.path.join(GetLockerGamingEmulatorsRootDir(), emu_name, "Binaries", emu_platform)
 
-# Get synced game emulator setup dir
-def GetSyncedGameEmulatorSetupDir(emu_name):
-    return os.path.join(GetSyncedGamingEmulatorsRootDir(), emu_name, "Setup")
+# Get locker game emulator setup dir
+def GetLockerGameEmulatorSetupDir(emu_name):
+    return os.path.join(GetLockerGamingEmulatorsRootDir(), emu_name, "Setup")
 
-# Get synced gaming saves root dir
-def GetSyncedGamingSavesRootDir():
-    return os.path.join(GetSyncedGamingRootDir(), "Saves")
+# Get locker gaming saves root dir
+def GetLockerGamingSavesRootDir():
+    return os.path.join(GetLockerGamingRootDir(), "Saves")
 
-# Get synced game save dir
-def GetSyncedGameSaveDir(game_category, game_subcategory, game_name):
+# Get locker game save dir
+def GetLockerGameSaveDir(game_category, game_subcategory, game_name):
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
     game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
-    return os.path.join(GetSyncedGamingSavesRootDir(), game_category, game_subcategory, game_name_path)
+    return os.path.join(GetLockerGamingSavesRootDir(), game_category, game_subcategory, game_name_path)
 
-# Get synced music root dir
-def GetSyncedMusicRootDir():
-    return os.path.join(GetSyncRootDir(), "Music")
+# Get locker music root dir
+def GetLockerMusicRootDir():
+    return os.path.join(GetLockerRootDir(), "Music")
 
-# Get synced photos root dir
-def GetSyncedPhotosRootDir():
-    return os.path.join(GetSyncRootDir(), "Photos")
+# Get locker photos root dir
+def GetLockerPhotosRootDir():
+    return os.path.join(GetLockerRootDir(), "Photos")
 
-# Get synced programs root dir
-def GetSyncedProgramsRootDir():
-    return os.path.join(GetSyncRootDir(), "Programs")
+# Get locker programs root dir
+def GetLockerProgramsRootDir():
+    return os.path.join(GetLockerRootDir(), "Programs")
 
-# Get synced programs tools root dir
-def GetSyncedProgramsToolsRootDir():
-    return os.path.join(GetSyncedProgramsRootDir(), "Tools")
+# Get locker programs tools root dir
+def GetLockerProgramsToolsRootDir():
+    return os.path.join(GetLockerProgramsRootDir(), "Tools")
 
-# Get synced program tool dir
-def GetSyncedProgramToolDir(tool_name, tool_platform = None):
+# Get locker program tool dir
+def GetLockerProgramToolDir(tool_name, tool_platform = None):
     if tool_platform:
-        return os.path.join(GetSyncedProgramsToolsRootDir(), tool_name, tool_platform)
+        return os.path.join(GetLockerProgramsToolsRootDir(), tool_name, tool_platform)
     else:
-        return os.path.join(GetSyncedProgramsToolsRootDir(), tool_name)
+        return os.path.join(GetLockerProgramsToolsRootDir(), tool_name)
 
 ###########################################################
 # Metadata
@@ -362,20 +362,20 @@ def GetScriptsExecutableExtension():
         return ""
 
 ###########################################################
-# Storage
+# Vault
 ###########################################################
 
-# Get storage root dir
-def GetStorageRootDir():
-    return ini.GetIniPathValue("UserData.Dirs", "storage_dir")
+# Get vault root dir
+def GetVaultRootDir():
+    return ini.GetIniPathValue("UserData.Dirs", "vault_dir")
 
-# Get gaming storage root dir
-def GetGamingStorageRootDir():
-    return os.path.join(GetStorageRootDir(), "Gaming")
+# Get gaming vault root dir
+def GetGamingVaultRootDir():
+    return os.path.join(GetVaultRootDir(), "Gaming")
 
 # Get rom root dir
 def GetRomRootDir():
-    return os.path.join(GetGamingStorageRootDir(), config.game_supercategory_roms)
+    return os.path.join(GetGamingVaultRootDir(), config.game_supercategory_roms)
 
 # Get rom dir offset
 def GetRomDirOffset(rom_category, rom_subcategory, rom_name):
@@ -389,15 +389,15 @@ def GetRomDir(rom_category, rom_subcategory, rom_name):
 
 # Get dlc root dir
 def GetDLCRootDir():
-    return os.path.join(GetGamingStorageRootDir(), config.game_supercategory_dlc)
+    return os.path.join(GetGamingVaultRootDir(), config.game_supercategory_dlc)
 
 # Get update root dir
 def GetUpdateRootDir():
-    return os.path.join(GetGamingStorageRootDir(), config.game_supercategory_updates)
+    return os.path.join(GetGamingVaultRootDir(), config.game_supercategory_updates)
 
 # Get tags root dir
 def GetTagsRootDir():
-    return os.path.join(GetGamingStorageRootDir(), config.game_supercategory_tags)
+    return os.path.join(GetGamingVaultRootDir(), config.game_supercategory_tags)
 
 # Get supercategory root dir
 def GetSupercategoryRootDir(supercategory):

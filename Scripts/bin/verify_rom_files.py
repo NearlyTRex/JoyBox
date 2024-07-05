@@ -104,7 +104,7 @@ def main():
                 for hash_reference_file in hash_file_data.keys():
 
                     # Check if file exists
-                    stored_file = os.path.join(environment.GetGamingStorageRootDir(), hash_reference_file)
+                    stored_file = os.path.join(environment.GetGamingVaultRootDir(), hash_reference_file)
                     if not os.path.exists(stored_file):
                         system.LogError("File '%s' referenced in hash file not found" % stored_file)
                         sys.exit(1)

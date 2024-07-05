@@ -10,9 +10,10 @@ import programs
 import system
 import environment
 
-# Setup remote
-def SetupRemote(
-    remote_type = config.sync_type_gdrive,
+# Setup autoconnect remote
+def SetupAutoconnectRemote(
+    remote_name,
+    remote_type,
     verbose = False,
     exit_on_failure = False):
 
@@ -28,8 +29,8 @@ def SetupRemote(
     create_cmd = [
         rclone_tool,
         "config",
-        "create", remote_type,
-        "drive",
+        "create", remote_name,
+        remote_type,
         "config_is_local=false"
     ]
     if verbose:
@@ -63,11 +64,115 @@ def SetupRemote(
         exit_on_failure = exit_on_failure)
     return code == 0
 
+# Setup manual remote
+def SetupManualRemote(
+    remote_name,
+    remote_type,
+    remote_config = None,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
+        return False
+
+    # Get create command
+    create_cmd = [
+        rclone_tool,
+        "config",
+        "create", remote_name,
+        remote_type
+    ]
+    if isinstance(remote_config, dict):
+        for config_key, config_value in remote_config.items():
+            create_cmd += ["%s=%s" % (config_key, config_value)]
+    if verbose:
+        create_cmd += ["--verbose"]
+
+    # Run create command
+    code = command.RunBlockingCommand(
+        cmd = create_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [rclone_tool]),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
+# Setup encrypted remote
+def SetupEncryptedRemote(
+    remote_name,
+    remote_name_encrypted,
+    remote_path,
+    remote_encryption_key,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
+        return False
+
+    # Get create command
+    create_cmd = [
+        rclone_tool,
+        "config",
+        "create", remote_name_encrypted,
+        "crypt",
+        "remote=%s:%s" % (remote_name, remote_path),
+        "password=%s" % remote_encryption_key
+    ]
+
+    # Run create command
+    code = command.RunBlockingCommand(
+        cmd = create_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [rclone_tool]),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
+# Setup remote
+def SetupRemote(
+    remote_name,
+    remote_type,
+    remote_account_id,
+    remote_api_key,
+    verbose = False,
+    exit_on_failure = False):
+
+    # B2 requires manual setting
+    if remote_type == config.sync_type_b2:
+        return SetupManualRemote(
+            remote_type = remote_type,
+            remote_name = remote_name,
+            remote_config = {
+                "account": remote_account_id,
+                "key": remote_api_key
+            },
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
+    # Others should use autoconnect
+    else:
+        return SetupAutoconnectRemote(
+            remote_type = remote_type,
+            remote_name = remote_name,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
 # Download files from remote
 def DownloadFilesFromRemote(
+    remote_name,
+    remote_type,
+    remote_path,
     local_path,
-    remote_type = config.sync_type_gdrive,
-    remote_path = "/",
     interactive = False,
     verbose = False,
     pretend_run = False,
@@ -85,7 +190,7 @@ def DownloadFilesFromRemote(
     copy_cmd = [
         rclone_tool,
         "copy",
-        "%s:%s" % (remote_type, remote_path),
+        "%s:%s" % (remote_name, remote_path),
         local_path,
         "--create-empty-src-dirs"
     ]
@@ -114,9 +219,10 @@ def DownloadFilesFromRemote(
 
 # Upload files to remote
 def UploadFilesToRemote(
+    remote_name,
+    remote_type,
+    remote_path,
     local_path,
-    remote_type = config.sync_type_gdrive,
-    remote_path = "/",
     interactive = False,
     verbose = False,
     pretend_run = False,
@@ -135,7 +241,7 @@ def UploadFilesToRemote(
         rclone_tool,
         "copy",
         local_path,
-        "%s:%s" % (remote_type, remote_path),
+        "%s:%s" % (remote_name, remote_path),
         "--create-empty-src-dirs"
     ]
     if remote_type == config.sync_type_gdrive:
@@ -163,9 +269,10 @@ def UploadFilesToRemote(
 
 # Sync files from remote
 def SyncFilesFromRemote(
+    remote_name,
+    remote_type,
+    remote_path,
     local_path,
-    remote_type = config.sync_type_gdrive,
-    remote_path = "/",
     interactive = False,
     verbose = False,
     pretend_run = False,
@@ -183,7 +290,7 @@ def SyncFilesFromRemote(
     sync_cmd = [
         rclone_tool,
         "sync",
-        "%s:%s" % (remote_type, remote_path),
+        "%s:%s" % (remote_name, remote_path),
         local_path,
         "--create-empty-src-dirs"
     ]
@@ -212,9 +319,10 @@ def SyncFilesFromRemote(
 
 # Sync files to remote
 def SyncFilesToRemote(
+    remote_name,
+    remote_type,
+    remote_path,
     local_path,
-    remote_type = config.sync_type_gdrive,
-    remote_path = "/",
     interactive = False,
     verbose = False,
     pretend_run = False,
@@ -233,7 +341,7 @@ def SyncFilesToRemote(
         rclone_tool,
         "sync",
         local_path,
-        "%s:%s" % (remote_type, remote_path),
+        "%s:%s" % (remote_name, remote_path),
         "--create-empty-src-dirs"
     ]
     if remote_type == config.sync_type_gdrive:
@@ -261,9 +369,10 @@ def SyncFilesToRemote(
 
 # Sync files both ways
 def SyncFilesBothWays(
+    remote_name,
+    remote_type,
+    remote_path,
     local_path,
-    remote_type = config.sync_type_gdrive,
-    remote_path = "/",
     resync = False,
     interactive = False,
     verbose = False,
@@ -283,7 +392,7 @@ def SyncFilesBothWays(
         rclone_tool,
         "bisync",
         local_path,
-        "%s:%s" % (remote_type, remote_path),
+        "%s:%s" % (remote_name, remote_path),
         "--check-access",
         "--create-empty-src-dirs"
     ]
@@ -314,9 +423,10 @@ def SyncFilesBothWays(
 
 # Check files
 def CheckFiles(
+    remote_name,
+    remote_type,
+    remote_path,
     local_path,
-    remote_type = config.sync_type_gdrive,
-    remote_path = "/",
     diff_combined_path = None,
     diff_intersected_path = None,
     diff_missing_src_path = None,
@@ -339,7 +449,7 @@ def CheckFiles(
         rclone_tool,
         "check",
         local_path,
-        "%s:%s" % (remote_type, remote_path)
+        "%s:%s" % (remote_name, remote_path)
     ]
     if remote_type == config.sync_type_gdrive:
         check_cmd += [
@@ -395,3 +505,69 @@ def CheckFiles(
         system.LogInfo("Number of files only on %s%s: %d" % (remote_type, remote_path, count_only_dest))
         system.LogInfo("Number of files only on %s: %d" % (local_path, count_only_src))
         system.LogInfo("Number of error files: %d" % count_error)
+
+# Mount files
+def MountFiles(
+    remote_name,
+    remote_type,
+    remote_path,
+    local_path,
+    no_cache = False,
+    no_checksum = False,
+    no_modtime = False,
+    no_seek = False,
+    read_only = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Create mount point
+    if environment.IsUnixPlatform():
+        system.MakeDirectory(local_path, verbose = verbose, exit_on_failure = exit_on_failure)
+        if not system.DoesPathExist(local_path) or not system.IsDirectoryEmpty(local_path):
+            system.LogError("Mount point needs to exist and be empty")
+            return False
+
+    # Get tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
+        return False
+
+    # Get mount command
+    mount_cmd = [
+        rclone_tool,
+        "mount"
+    ]
+    if no_cache:
+        mount_cmd += [
+            "--vfs-cache-mode", "off"
+        ]
+    else:
+        mount_cmd += [
+            "--vfs-cache-mode", "full"
+        ]
+    mount_cmd += [
+        "%s:%s" % (remote_name, remote_path),
+        local_path
+    ]
+    if environment.IsUnixPlatform():
+        mount_cmd += ["--daemon"]
+    if no_checksum:
+        mount_cmd += ["--no-checksum"]
+    if no_modtime:
+        mount_cmd += ["--no-modtime"]
+    if no_seek:
+        mount_cmd += ["--no-seek"]
+    if read_only:
+        mount_cmd += ["--read-only"]
+    if verbose:
+        mount_cmd += ["--verbose"]
+
+    # Run mount command
+    code = command.RunBlockingCommand(
+        cmd = mount_cmd,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    return code == 0

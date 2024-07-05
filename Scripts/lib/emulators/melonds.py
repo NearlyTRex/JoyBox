@@ -165,7 +165,7 @@ class MelonDS(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                filename = os.path.join(environment.GetSyncedGameEmulatorSetupDir("melonDS"), filename),
+                filename = os.path.join(environment.GetLockerGameEmulatorSetupDir("melonDS"), filename),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
@@ -175,7 +175,7 @@ class MelonDS(emulatorbase.EmulatorBase):
         for filename in system_files.keys():
             for platform in ["windows", "linux"]:
                 success = system.SmartCopy(
-                    src = os.path.join(environment.GetSyncedGameEmulatorSetupDir("melonDS"), filename),
+                    src = os.path.join(environment.GetLockerGameEmulatorSetupDir("melonDS"), filename),
                     dest = os.path.join(programs.GetEmulatorPathConfigValue("melonDS", "setup_dir", platform), filename),
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)

@@ -55,9 +55,9 @@ def GetProgramInstallDir(program_name, program_platform = None):
 # Get program backup dir
 def GetProgramBackupDir(program_name, program_platform = None):
     if IsProgramNameTool(program_name, program_platform):
-        return environment.GetSyncedProgramToolDir(program_name, program_platform)
+        return environment.GetLockerProgramToolDir(program_name, program_platform)
     elif IsProgramNameEmulator(program_name, program_platform):
-        return environment.GetSyncedGameEmulatorBinariesDir(program_name, program_platform)
+        return environment.GetLockerGameEmulatorBinariesDir(program_name, program_platform)
     return None
 
 # Get library install dir
@@ -70,9 +70,9 @@ def GetLibraryInstallDir(library_name, library_platform = None):
 # Get library backup dir
 def GetLibraryBackupDir(library_name, library_platform = None):
     if library_platform:
-        return os.path.join(environment.GetSyncedProgramToolDir(library_name), library_platform)
+        return os.path.join(environment.GetLockerProgramToolDir(library_name), library_platform)
     else:
-        return environment.GetSyncedProgramToolDir(library_name)
+        return environment.GetLockerProgramToolDir(library_name)
 
 # Determine if program should be installed
 def ShouldProgramBeInstalled(program_name, program_platform = None):

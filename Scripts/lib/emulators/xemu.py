@@ -159,7 +159,7 @@ class Xemu(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                filename = os.path.join(environment.GetSyncedGameEmulatorSetupDir("Xemu"), filename),
+                filename = os.path.join(environment.GetLockerGameEmulatorSetupDir("Xemu"), filename),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
@@ -169,7 +169,7 @@ class Xemu(emulatorbase.EmulatorBase):
         for filename in system_files.keys():
             for platform in ["windows", "linux"]:
                 success = system.SmartCopy(
-                    src = os.path.join(environment.GetSyncedGameEmulatorSetupDir("Xemu"), filename),
+                    src = os.path.join(environment.GetLockerGameEmulatorSetupDir("Xemu"), filename),
                     dest = os.path.join(programs.GetEmulatorPathConfigValue("Xemu", "setup_dir", platform), filename),
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)

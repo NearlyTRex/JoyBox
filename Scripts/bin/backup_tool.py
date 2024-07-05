@@ -18,19 +18,19 @@ import setup
 parser = argparse.ArgumentParser(description="Backup tool.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("-t", "--type",
     choices=[
-        "Storage",
-        "Sync"
+        config.share_type_vault,
+        config.share_type_locker
     ],
-    default="Storage", help="Backup type"
+    default=config.share_type_vault, help="Backup type"
 )
-parser.add_argument("-u", "--storage_supercategory",
+parser.add_argument("-u", "--supercategory",
     choices=config.game_supercategories,
     default=config.game_supercategory_roms,
-    help="Storage supercategory"
+    help="Supercategory"
 )
-parser.add_argument("-c", "--storage_category", type=str, help="Storage category")
-parser.add_argument("-s", "--storage_subcategory", type=str, help="Storage subcategory")
-parser.add_argument("-n", "--storage_offset", type=str, help="Storage offset")
+parser.add_argument("-c", "--category", type=str, help="Category")
+parser.add_argument("-s", "--subcategory", type=str, help="Subcategory")
+parser.add_argument("-n", "--offset", type=str, help="Offset")
 parser.add_argument("-o", "--output_base_path", type=str, default=".", help="Output base path")
 parser.add_argument("-e", "--skip_existing", action="store_true", help="Skip existing files")
 parser.add_argument("-i", "--skip_identical", action="store_true", help="Skip identical files")
@@ -54,16 +54,16 @@ def main():
 
     # Get input path
     input_path = ""
-    if args.type == "Storage":
-        input_path = os.path.join(environment.GetGamingStorageRootDir(), args.storage_supercategory)
-        if args.storage_category:
-            input_path = os.path.join(input_path, args.storage_category)
-            if args.storage_subcategory:
-                input_path = os.path.join(input_path, args.storage_subcategory)
-                if args.storage_offset:
-                    input_path = os.path.join(input_path, args.storage_offset)
-    elif args.type == "Sync":
-        input_path = environment.GetSyncRootDir()
+    if args.type == config.config.share_type_vault:
+        input_path = os.path.join(environment.GetGamingVaultRootDir(), args.supercategory)
+        if args.category:
+            input_path = os.path.join(input_path, args.category)
+            if args.subcategory:
+                input_path = os.path.join(input_path, args.subcategory)
+                if args.offset:
+                    input_path = os.path.join(input_path, args.offset)
+    elif args.type == config.share_type_locker:
+        input_path = environment.GetLockerRootDir()
 
     # Check input path
     if not os.path.exists(input_path):
@@ -71,9 +71,9 @@ def main():
         sys.exit(1)
 
     # Backup storage files
-    if args.type == "Storage":
+    if args.type == config.config.share_type_vault:
         for src_file in system.BuildFileList(input_path):
-            dest_file = system.RebaseFilePath(src_file, environment.GetGamingStorageRootDir(), output_base_path)
+            dest_file = system.RebaseFilePath(src_file, environment.GetGamingVaultRootDir(), output_base_path)
             system.SmartCopy(
                 src = src_file,
                 dest = dest_file,
@@ -83,25 +83,25 @@ def main():
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
 
-    # Backup sync files
-    elif args.type == "Sync":
-        for sync_base_obj in system.GetDirectoryContents(input_path):
-            sync_base_dir = os.path.join(input_path, sync_base_obj)
-            if os.path.isdir(sync_base_dir):
-                for sync_sub_obj in system.GetDirectoryContents(sync_base_dir):
-                    sync_sub_dir = os.path.join(sync_base_dir, sync_sub_obj)
-                    sync_sub_file = os.path.join(output_base_path, sync_base_obj, sync_sub_obj + ".7z")
-                    if not os.path.isdir(sync_sub_dir):
+    # Backup locker files
+    elif args.type == config.share_type_locker:
+        for locker_base_obj in system.GetDirectoryContents(input_path):
+            locker_base_dir = os.path.join(input_path, locker_base_obj)
+            if os.path.isdir(locker_base_dir):
+                for locker_sub_obj in system.GetDirectoryContents(locker_base_dir):
+                    locker_sub_dir = os.path.join(locker_base_dir, locker_sub_obj)
+                    locker_sub_file = os.path.join(output_base_path, locker_base_obj, locker_sub_obj + ".7z")
+                    if not os.path.isdir(locker_sub_dir):
                         continue
-                    if system.DoesPathExist(sync_sub_file, case_sensitive_paths = False, partial_paths = True):
+                    if system.DoesPathExist(locker_sub_file, case_sensitive_paths = False, partial_paths = True):
                         continue
                     system.MakeDirectory(
-                        dir = system.GetFilenameDirectory(sync_sub_file),
+                        dir = system.GetFilenameDirectory(locker_sub_file),
                         verbose = args.verbose,
                         exit_on_failure = args.exit_on_failure)
                     archive.CreateArchiveFromFolder(
-                        archive_file = sync_sub_file,
-                        source_dir = sync_sub_dir,
+                        archive_file = locker_sub_file,
+                        source_dir = locker_sub_dir,
                         volume_size = "4092m",
                         verbose = args.verbose,
                         exit_on_failure = args.exit_on_failure)

@@ -2,6 +2,12 @@
 import os
 import sys
 
+# Shares
+share_type_base = "IffyScorpion"
+share_type_vault = "Vault"
+share_type_locker = "Locker"
+share_type_cache = "Cache"
+
 # Metadata formats
 metadata_format_type_pegasus = "pegasus"
 metadata_format_types = [
@@ -104,7 +110,8 @@ release_type_installer = "installer"
 release_type_archive = "archive"
 
 # Sync types
-sync_type_gdrive = "gdrive"
+sync_type_gdrive = "drive"
+sync_type_b2 = "b2"
 
 # Archive types
 archive_type_zip = "zip"

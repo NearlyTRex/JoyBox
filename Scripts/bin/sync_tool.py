@@ -13,14 +13,17 @@ import environment
 import system
 import sync
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Sync tool.")
-parser.add_argument("-t", "--type",
+parser.add_argument("-m", "--mode",
     choices=[
-        config.sync_type_gdrive
+        config.share_type_vault,
+        config.share_type_locker,
+        config.share_type_cache
     ],
-    default=config.sync_type_gdrive, help="Sync type"
+    default=config.share_type_vault, help="Sync mode"
 )
 parser.add_argument("-a", "--action",
     choices=[
@@ -30,12 +33,11 @@ parser.add_argument("-a", "--action",
         "pull",
         "push",
         "merge",
-        "diff"
+        "diff",
+        "mount"
     ],
     default="init", help="Sync action"
 )
-parser.add_argument("-l", "--local_path", type=str, default=environment.GetSyncRootDir(), help="Local path")
-parser.add_argument("-r", "--remote_path", type=str, default="/", help="Remote path")
 parser.add_argument("--diff_combined_path", type=str, default="diff_combined.txt", help="Diff path (combined)")
 parser.add_argument("--diff_intersected_path", type=str, default="diff_intersected.txt", help="Diff path (intersection)")
 parser.add_argument("--diff_missing_src_path", type=str, default="diff_missing_src.txt", help="Diff path (missing src)")
@@ -55,20 +57,63 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Sync options
+    remote_type = ""
+    remote_name = ""
+    remote_name_encrypted = ""
+    remote_path = ""
+    account_id = ""
+    api_key = ""
+    encryption_key = ""
+    local_path = ""
+    flags = ""
+
+    # Override sync options
+    if args.mode == config.share_type_vault:
+        remote_type = ini.GetIniValue("UserData.Share", "vault_remote_type")
+        remote_name = ini.GetIniValue("UserData.Share", "vault_remote_name")
+        remote_name_encrypted = ini.GetIniValue("UserData.Share", "vault_remote_name_encrypted")
+        remote_path = ini.GetIniValue("UserData.Share", "vault_remote_path")
+        account_id = ini.GetIniValue("UserData.Share", "vault_account_id")
+        api_key = ini.GetIniValue("UserData.Share", "vault_api_key")
+        encryption_key = ini.GetIniValue("UserData.Share", "vault_encryption_key")
+        local_path = ini.GetIniPathValue("UserData.Share", "vault_local_path")
+        flags = ini.GetIniValue("UserData.Share", "vault_flags").split(",")
+    elif args.mode == config.share_type_locker:
+        remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
+        remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
+        remote_name_encrypted = ini.GetIniValue("UserData.Share", "locker_remote_name_encrypted")
+        remote_path = ini.GetIniValue("UserData.Share", "locker_remote_path")
+        account_id = ini.GetIniValue("UserData.Share", "locker_account_id")
+        api_key = ini.GetIniValue("UserData.Share", "locker_api_key")
+        encryption_key = ini.GetIniValue("UserData.Share", "locker_encryption_key")
+        local_path = ini.GetIniPathValue("UserData.Share", "locker_local_path")
+        flags = ini.GetIniValue("UserData.Share", "locker_flags").split(",")
+
     # Init sync
     if args.action == "init":
-        if args.type == config.sync_type_gdrive:
-            sync.SetupRemote(
-                remote_type = args.type,
-                verbose = args.verbose,
-                exit_on_failure = args.exit_on_failure)
+        sync.SetupRemote(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_account_id = account_id,
+            remote_api_key = api_key,
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
+        sync.SetupEncryptedRemote(
+            remote_name = remote_name,
+            remote_name_encrypted = remote_name_encrypted,
+            remote_path = remote_path,
+            remote_encryption_key = encryption_key,
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
 
     # Download files
     elif args.action == "download":
         sync.DownloadFilesFromRemote(
-            local_path = args.local_path,
-            remote_type = args.type,
-            remote_path = args.remote_path,
+            remote_name = remote_name_encrypted,
+            remote_type = remote_type,
+            remote_path = remote_path,
+            local_path = local_path,
             interactive = args.interactive,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -77,9 +122,10 @@ def main():
     # Upload files
     elif args.action == "upload":
         sync.UploadFilesToRemote(
-            local_path = args.local_path,
-            remote_type = args.type,
-            remote_path = args.remote_path,
+            remote_name = remote_name_encrypted,
+            remote_type = remote_type,
+            remote_path = remote_path,
+            local_path = local_path,
             interactive = args.interactive,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -88,9 +134,10 @@ def main():
     # Pull files
     elif args.action == "pull":
         sync.SyncFilesFromRemote(
-            local_path = args.local_path,
-            remote_type = args.type,
-            remote_path = args.remote_path,
+            remote_name = remote_name_encrypted,
+            remote_type = remote_type,
+            remote_path = remote_path,
+            local_path = local_path,
             interactive = args.interactive,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -99,9 +146,10 @@ def main():
     # Push files
     elif args.action == "push":
         sync.SyncFilesToRemote(
-            local_path = args.local_path,
-            remote_type = args.type,
-            remote_path = args.remote_path,
+            remote_name = remote_name_encrypted,
+            remote_type = remote_type,
+            remote_path = remote_path,
+            local_path = local_path,
             interactive = args.interactive,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -110,9 +158,10 @@ def main():
     # Merge files
     elif args.action == "merge":
         sync.SyncFilesBothWays(
-            local_path = args.local_path,
-            remote_type = args.type,
-            remote_path = args.remote_path,
+            remote_name = remote_name_encrypted,
+            remote_type = remote_type,
+            remote_path = remote_path,
+            local_path = local_path,
             resync = args.resync,
             interactive = args.interactive,
             verbose = args.verbose,
@@ -122,15 +171,31 @@ def main():
     # Diff files
     elif args.action == "diff":
         sync.CheckFiles(
-            local_path = args.local_path,
-            remote_type = args.type,
-            remote_path = args.remote_path,
+            remote_name = remote_name_encrypted,
+            remote_type = remote_type,
+            remote_path = remote_path,
+            local_path = local_path,
             diff_combined_path = args.diff_combined_path,
             diff_intersected_path = args.diff_intersected_path,
             diff_missing_src_path = args.diff_missing_src_path,
             diff_missing_dest_path = args.diff_missing_dest_path,
             diff_error_path = args.diff_error_path,
             quick = args.quick,
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
+
+    # Mount files
+    elif args.action == "mount":
+        sync.MountFiles(
+            remote_name = remote_name_encrypted,
+            remote_type = remote_type,
+            remote_path = remote_path,
+            local_path = local_path,
+            no_cache = "no_cache" in flags,
+            no_checksum = "no_checksum" in flags,
+            no_modtime = "no_modtime" in flags,
+            no_seek = "no_seek" in flags,
+            read_only = "read_only" in flags,
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
 
