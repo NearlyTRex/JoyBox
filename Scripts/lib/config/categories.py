@@ -3,6 +3,8 @@ import os
 import sys
 
 # Supercategories
+game_supercategory_assets = "Assets"
+game_supercategory_emulators = "Emulators"
 game_supercategory_roms = "Roms"
 game_supercategory_dlc = "DLC"
 game_supercategory_updates = "Updates"
@@ -11,6 +13,8 @@ game_supercategory_saves = "Saves"
 game_supercategory_setup = "Setup"
 game_supercategory_installs = "Installs"
 game_supercategories = [
+    game_supercategory_assets,
+    game_supercategory_emulators,
     game_supercategory_roms,
     game_supercategory_dlc,
     game_supercategory_updates,

@@ -93,15 +93,15 @@ class GameInfo:
         ##############################
 
         # Get paths
-        save_dir = environment.GetCachedSaveDir(json_category, json_subcategory, json_base_name)
+        save_dir = environment.GetCacheGamingSaveDir(json_category, json_subcategory, json_base_name)
         if json_category == config.game_category_computer:
             if environment.IsWindowsPlatform():
-                save_dir = environment.GetCachedSaveDir(json_category, json_subcategory, json_base_name, config.save_type_sandboxie)
+                save_dir = environment.GetCacheGamingSaveDir(json_category, json_subcategory, json_base_name, config.save_type_sandboxie)
             else:
-                save_dir = environment.GetCachedSaveDir(json_category, json_subcategory, json_base_name, config.save_type_wine)
-        general_save_dir = environment.GetCachedSaveDir(json_category, json_subcategory, json_base_name, config.save_type_general)
-        local_cache_dir = environment.GetCachedRomDir(json_category, json_subcategory, json_base_name)
-        remote_cache_dir = environment.GetInstallRomDir(json_category, json_subcategory, json_base_name)
+                save_dir = environment.GetCacheGamingSaveDir(json_category, json_subcategory, json_base_name, config.save_type_wine)
+        general_save_dir = environment.GetCacheGamingSaveDir(json_category, json_subcategory, json_base_name, config.save_type_general)
+        local_cache_dir = environment.GetCacheGamingRomDir(json_category, json_subcategory, json_base_name)
+        remote_cache_dir = environment.GetCacheGamingInstallDir(json_category, json_subcategory, json_base_name)
 
         # Set paths
         self.set_value(config.json_key_save_dir, save_dir)
@@ -564,8 +564,7 @@ def DeriveGameCategoriesFromFile(game_file):
     # Get possible root dirs
     root_dirs = [
         system.NormalizeFilePath(environment.GetLockerGamingRootDir()),
-        system.NormalizeFilePath(environment.GetGamingLocalCacheRootDir()),
-        system.NormalizeFilePath(environment.GetGamingRemoteCacheRootDir()),
+        system.NormalizeFilePath(environment.GetCacheGamingRootDir()),
         system.NormalizeFilePath(environment.GetJsonMetadataRootDir())
     ]
 

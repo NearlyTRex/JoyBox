@@ -347,7 +347,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
     game_rom_dir = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
 
     # Get setup directory
-    game_setup_dir = environment.GetCachedSetupDir(game_category, game_subcategory, game_name)
+    game_setup_dir = environment.GetCacheGamingSetupDir(game_category, game_subcategory, game_name)
     system.MakeDirectory(game_setup_dir, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Get game disc files

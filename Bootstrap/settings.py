@@ -17,8 +17,7 @@ if environment.IsWindowsPlatform():
     ini_defaults["UserData.Dirs"]["emulators_dir"] = "%USERPROFILE%\\Emulators"
     ini_defaults["UserData.Dirs"]["local_locker_dir"] = "%USERPROFILE%\\Locker"
     ini_defaults["UserData.Dirs"]["remote_locker_dir"] = "%USERPROFILE%\\LockerRemote"
-    ini_defaults["UserData.Dirs"]["local_cache_dir"] = "%USERPROFILE%\\Cache"
-    ini_defaults["UserData.Dirs"]["remote_cache_dir"] = "%USERPROFILE%\\CacheRemote"
+    ini_defaults["UserData.Dirs"]["cache_dir"] = "%USERPROFILE%\\Cache"
     ini_defaults["UserData.Dirs"]["metadata_dir"] = "C:\\Repositories\\GameMetadata"
     ini_defaults["UserData.Dirs"]["scripts_dir"] = "C:\\Repositories\\JoyBox\\Scripts"
 else:
@@ -26,8 +25,7 @@ else:
     ini_defaults["UserData.Dirs"]["emulators_dir"] = "$HOME/Emulators"
     ini_defaults["UserData.Dirs"]["local_locker_dir"] = "$HOME/Locker"
     ini_defaults["UserData.Dirs"]["remote_locker_dir"] = "$HOME/LockerRemote"
-    ini_defaults["UserData.Dirs"]["local_cache_dir"] = "$HOME/Cache"
-    ini_defaults["UserData.Dirs"]["remote_cache_dir"] = "$HOME/CacheRemote"
+    ini_defaults["UserData.Dirs"]["cache_dir"] = "$HOME/Cache"
     ini_defaults["UserData.Dirs"]["metadata_dir"] = "$HOME/Repositories/GameMetadata"
     ini_defaults["UserData.Dirs"]["scripts_dir"] = "$HOME/Repositories/JoyBox/Scripts"
 

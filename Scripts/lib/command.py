@@ -119,7 +119,7 @@ def IsCommandTypeFound(cmd, cmd_exts = [], search_start = 0, search_len = -1):
 # Check if cached game command
 def IsCachedGameCommand(cmd):
     starter_cmd = os.path.normpath(GetStarterCommand(cmd)).lower()
-    cached_dir = os.path.normpath(environment.GetGamingLocalCacheRootDir()).lower()
+    cached_dir = os.path.normpath(environment.GetCacheGamingRootDir()).lower()
     return starter_cmd.startswith(cached_dir)
 
 # Check if local script command

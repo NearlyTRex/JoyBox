@@ -948,7 +948,7 @@ class Computer(emulatorbase.EmulatorBase):
             # Move sandboxed data back
             if should_run_via_sandboxie:
                 temp_cache_dir = os.path.join(user_profile_dir, "Cache")
-                real_cache_dir = environment.GetLocalCacheRootDir()
+                real_cache_dir = environment.GetCacheRootDir()
                 if system.DoesDirectoryContainFiles(temp_cache_dir):
                     system.MoveContents(
                         src = temp_cache_dir,
