@@ -61,7 +61,7 @@ def main():
     if args.source_files == "input":
         source_file_root = input_path
     elif args.source_files == "stored":
-        source_file_root = environment.GetSupercategoryRootDir(args.file_supercategory)
+        source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.file_supercategory)
 
     # Manually specify all parameters
     if args.generation_mode == "custom":

@@ -133,7 +133,7 @@ class Citra(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                filename = os.path.join(environment.GetLockerGameEmulatorSetupDir("Citra"), filename),
+                filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Citra"), filename),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
@@ -142,9 +142,9 @@ class Citra(emulatorbase.EmulatorBase):
         # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["nand", "sysdata"]:
-                if os.path.exists(os.path.join(environment.GetLockerGameEmulatorSetupDir("Citra"), obj + ".zip")):
+                if os.path.exists(os.path.join(environment.GetLockerGamingEmulatorSetupDir("Citra"), obj + ".zip")):
                     success = archive.ExtractArchive(
-                        archive_file = os.path.join(environment.GetLockerGameEmulatorSetupDir("Citra"), obj + ".zip"),
+                        archive_file = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Citra"), obj + ".zip"),
                         extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("Citra", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = verbose,

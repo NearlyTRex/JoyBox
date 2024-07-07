@@ -4,7 +4,6 @@ import sys
 
 # Shares
 share_type_base = "IffyScorpion"
-share_type_vault = "Vault"
 share_type_locker = "Locker"
 share_type_cache = "Cache"
 

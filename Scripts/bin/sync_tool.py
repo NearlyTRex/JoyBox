@@ -17,14 +17,6 @@ import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Sync tool.")
-parser.add_argument("-m", "--mode",
-    choices=[
-        config.share_type_vault,
-        config.share_type_locker,
-        config.share_type_cache
-    ],
-    default=config.share_type_vault, help="Sync mode"
-)
 parser.add_argument("-a", "--action",
     choices=[
         "init",
@@ -58,50 +50,22 @@ def main():
     setup.CheckRequirements()
 
     # Sync options
-    remote_type = ""
-    remote_name = ""
-    remote_name_encrypted = ""
-    remote_path = ""
-    account_id = ""
-    api_key = ""
-    encryption_key = ""
-    local_path = ""
-    flags = ""
-
-    # Override sync options
-    if args.mode == config.share_type_vault:
-        remote_type = ini.GetIniValue("UserData.Share", "vault_remote_type")
-        remote_name = ini.GetIniValue("UserData.Share", "vault_remote_name")
-        remote_name_encrypted = ini.GetIniValue("UserData.Share", "vault_remote_name_encrypted")
-        remote_path = ini.GetIniValue("UserData.Share", "vault_remote_path")
-        account_id = ini.GetIniValue("UserData.Share", "vault_account_id")
-        api_key = ini.GetIniValue("UserData.Share", "vault_api_key")
-        encryption_key = ini.GetIniValue("UserData.Share", "vault_encryption_key")
-        local_path = ini.GetIniPathValue("UserData.Share", "vault_local_path")
-        flags = ini.GetIniValue("UserData.Share", "vault_flags").split(",")
-    elif args.mode == config.share_type_locker:
-        remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
-        remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
-        remote_name_encrypted = ini.GetIniValue("UserData.Share", "locker_remote_name_encrypted")
-        remote_path = ini.GetIniValue("UserData.Share", "locker_remote_path")
-        account_id = ini.GetIniValue("UserData.Share", "locker_account_id")
-        api_key = ini.GetIniValue("UserData.Share", "locker_api_key")
-        encryption_key = ini.GetIniValue("UserData.Share", "locker_encryption_key")
-        local_path = ini.GetIniPathValue("UserData.Share", "locker_local_path")
-        flags = ini.GetIniValue("UserData.Share", "locker_flags").split(",")
+    remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
+    remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
+    remote_path = ini.GetIniValue("UserData.Share", "locker_remote_path")
+    encryption_key = ini.GetIniValue("UserData.Share", "locker_encryption_key")
+    local_path = ini.GetIniPathValue("UserData.Share", "locker_local_path")
+    mount_flags = ini.GetIniValue("UserData.Share", "locker_mount_flags").split(",")
 
     # Init sync
     if args.action == "init":
         sync.SetupRemote(
             remote_name = remote_name,
             remote_type = remote_type,
-            remote_account_id = account_id,
-            remote_api_key = api_key,
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
         sync.SetupEncryptedRemote(
             remote_name = remote_name,
-            remote_name_encrypted = remote_name_encrypted,
             remote_path = remote_path,
             remote_encryption_key = encryption_key,
             verbose = args.verbose,
@@ -110,7 +74,7 @@ def main():
     # Download files
     elif args.action == "download":
         sync.DownloadFilesFromRemote(
-            remote_name = remote_name_encrypted,
+            remote_name = sync.GetEncryptedRemoteName(remote_name),
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
@@ -122,7 +86,7 @@ def main():
     # Upload files
     elif args.action == "upload":
         sync.UploadFilesToRemote(
-            remote_name = remote_name_encrypted,
+            remote_name = sync.GetEncryptedRemoteName(remote_name),
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
@@ -134,7 +98,7 @@ def main():
     # Pull files
     elif args.action == "pull":
         sync.SyncFilesFromRemote(
-            remote_name = remote_name_encrypted,
+            remote_name = sync.GetEncryptedRemoteName(remote_name),
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
@@ -146,7 +110,7 @@ def main():
     # Push files
     elif args.action == "push":
         sync.SyncFilesToRemote(
-            remote_name = remote_name_encrypted,
+            remote_name = sync.GetEncryptedRemoteName(remote_name),
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
@@ -158,7 +122,7 @@ def main():
     # Merge files
     elif args.action == "merge":
         sync.SyncFilesBothWays(
-            remote_name = remote_name_encrypted,
+            remote_name = sync.GetEncryptedRemoteName(remote_name),
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
@@ -171,7 +135,7 @@ def main():
     # Diff files
     elif args.action == "diff":
         sync.CheckFiles(
-            remote_name = remote_name_encrypted,
+            remote_name = sync.GetEncryptedRemoteName(remote_name),
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
@@ -187,15 +151,15 @@ def main():
     # Mount files
     elif args.action == "mount":
         sync.MountFiles(
-            remote_name = remote_name_encrypted,
+            remote_name = sync.GetEncryptedRemoteName(remote_name),
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
-            no_cache = "no_cache" in flags,
-            no_checksum = "no_checksum" in flags,
-            no_modtime = "no_modtime" in flags,
-            no_seek = "no_seek" in flags,
-            read_only = "read_only" in flags,
+            no_cache = "no_cache" in mount_flags,
+            no_checksum = "no_checksum" in mount_flags,
+            no_modtime = "no_modtime" in mount_flags,
+            no_seek = "no_seek" in mount_flags,
+            read_only = "read_only" in mount_flags,
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
 

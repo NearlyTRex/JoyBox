@@ -31,8 +31,8 @@ def main():
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
             game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-            for game_name in gameinfo.FindAllGameNames(environment.GetRomRootDir(), game_category, game_subcategory):
-                base_rom_path = environment.GetRomDir(game_category, game_subcategory, game_name)
+            for game_name in gameinfo.FindAllGameNames(environment.GetLockerGamingRomsRootDir(), game_category, game_subcategory):
+                base_rom_path = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
 
                 # Get json file path
                 json_file_path = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name)

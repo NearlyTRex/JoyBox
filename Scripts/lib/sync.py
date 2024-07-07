@@ -10,6 +10,33 @@ import programs
 import system
 import environment
 
+# Get unencrypted remote name
+def GetUnencryptedRemoteName(remote_name):
+    if remote_name.endswith("Enc"):
+        return remote_name[:-len("Enc")]
+    return remote_name
+
+# Get encrypted remote name
+def GetEncryptedRemoteName(remote_name):
+    if remote_name.endswith("Enc"):
+        return remote_name
+    return "%sEnc" % (remote_name)
+
+# Get remote path
+def GetRemotePath(remote_name, remote_type, remote_path):
+    if remote_type == config.sync_type_b2:
+        return "%s:%s%s" % (remote_name, GetUnencryptedRemoteName(remote_name), remote_path)
+    else:
+        return "%s:%s" % (remote_name, remote_path)
+
+# Get common remote flags
+def GetCommonRemoteFlags(remote_name, remote_type):
+    if remote_type == config.sync_type_gdrive:
+        return ["--drive-acknowledge-abuse"]
+    elif remote_type == config.sync_type_b2:
+        return ["--fast-list"]
+    return []
+
 # Setup autoconnect remote
 def SetupAutoconnectRemote(
     remote_name,
@@ -50,7 +77,7 @@ def SetupAutoconnectRemote(
     authorize_cmd = [
         rclone_tool,
         "config",
-        "reconnect", "%s:" % remote_type
+        "reconnect", "%s:" % remote_name
     ]
     if verbose:
         authorize_cmd += ["--verbose"]
@@ -105,7 +132,6 @@ def SetupManualRemote(
 # Setup encrypted remote
 def SetupEncryptedRemote(
     remote_name,
-    remote_name_encrypted,
     remote_path,
     remote_encryption_key,
     verbose = False,
@@ -123,9 +149,9 @@ def SetupEncryptedRemote(
     create_cmd = [
         rclone_tool,
         "config",
-        "create", remote_name_encrypted,
+        "create", GetEncryptedRemoteName(remote_name),
         "crypt",
-        "remote=%s:%s" % (remote_name, remote_path),
+        "remote=%s:" % remote_name,
         "password=%s" % remote_encryption_key
     ]
 
@@ -142,8 +168,6 @@ def SetupEncryptedRemote(
 def SetupRemote(
     remote_name,
     remote_type,
-    remote_account_id,
-    remote_api_key,
     verbose = False,
     exit_on_failure = False):
 
@@ -152,10 +176,6 @@ def SetupRemote(
         return SetupManualRemote(
             remote_type = remote_type,
             remote_name = remote_name,
-            remote_config = {
-                "account": remote_account_id,
-                "key": remote_api_key
-            },
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
@@ -190,14 +210,11 @@ def DownloadFilesFromRemote(
     copy_cmd = [
         rclone_tool,
         "copy",
-        "%s:%s" % (remote_name, remote_path),
+        GetRemotePath(remote_name, remote_type, remote_path),
         local_path,
         "--create-empty-src-dirs"
     ]
-    if remote_type == config.sync_type_gdrive:
-        copy_cmd += [
-            "--drive-acknowledge-abuse"
-        ]
+    copy_cmd += GetCommonRemoteFlags(remote_name, remote_type)
     if pretend_run:
         copy_cmd += ["--dry-run"]
     if interactive:
@@ -241,13 +258,10 @@ def UploadFilesToRemote(
         rclone_tool,
         "copy",
         local_path,
-        "%s:%s" % (remote_name, remote_path),
+        GetRemotePath(remote_name, remote_type, remote_path),
         "--create-empty-src-dirs"
     ]
-    if remote_type == config.sync_type_gdrive:
-        copy_cmd += [
-            "--drive-acknowledge-abuse"
-        ]
+    copy_cmd += GetCommonRemoteFlags(remote_name, remote_type)
     if pretend_run:
         copy_cmd += ["--dry-run"]
     if interactive:
@@ -290,14 +304,11 @@ def SyncFilesFromRemote(
     sync_cmd = [
         rclone_tool,
         "sync",
-        "%s:%s" % (remote_name, remote_path),
+        GetRemotePath(remote_name, remote_type, remote_path),
         local_path,
         "--create-empty-src-dirs"
     ]
-    if remote_type == config.sync_type_gdrive:
-        sync_cmd += [
-            "--drive-acknowledge-abuse"
-        ]
+    sync_cmd += GetCommonRemoteFlags(remote_name, remote_type)
     if pretend_run:
         sync_cmd += ["--dry-run"]
     if interactive:
@@ -341,13 +352,10 @@ def SyncFilesToRemote(
         rclone_tool,
         "sync",
         local_path,
-        "%s:%s" % (remote_name, remote_path),
+        GetRemotePath(remote_name, remote_type, remote_path),
         "--create-empty-src-dirs"
     ]
-    if remote_type == config.sync_type_gdrive:
-        sync_cmd += [
-            "--drive-acknowledge-abuse"
-        ]
+    sync_cmd += GetCommonRemoteFlags(remote_name, remote_type)
     if pretend_run:
         sync_cmd += ["--dry-run"]
     if interactive:
@@ -392,14 +400,11 @@ def SyncFilesBothWays(
         rclone_tool,
         "bisync",
         local_path,
-        "%s:%s" % (remote_name, remote_path),
+        GetRemotePath(remote_name, remote_type, remote_path),
         "--check-access",
         "--create-empty-src-dirs"
     ]
-    if remote_type == config.sync_type_gdrive:
-        bisync_cmd += [
-            "--drive-acknowledge-abuse"
-        ]
+    bisync_cmd += GetCommonRemoteFlags(remote_name, remote_type)
     if resync:
         bisync_cmd += ["--resync"]
     if pretend_run:
@@ -449,12 +454,9 @@ def CheckFiles(
         rclone_tool,
         "check",
         local_path,
-        "%s:%s" % (remote_name, remote_path)
+        GetRemotePath(remote_name, remote_type, remote_path)
     ]
-    if remote_type == config.sync_type_gdrive:
-        check_cmd += [
-            "--drive-acknowledge-abuse"
-        ]
+    check_cmd += GetCommonRemoteFlags(remote_name, remote_type)
     if system.IsPathValid(diff_combined_path):
         check_cmd += ["--combined", diff_combined_path]
     if system.IsPathValid(diff_intersected_path):
@@ -549,7 +551,7 @@ def MountFiles(
             "--vfs-cache-mode", "full"
         ]
     mount_cmd += [
-        "%s:%s" % (remote_name, remote_path),
+        GetRemotePath(remote_name, remote_type, remote_path),
         local_path
     ]
     if environment.IsUnixPlatform():

@@ -119,7 +119,7 @@ class GameInfo:
         json_transform_file = self.get_value(config.json_key_transform_file)
 
         # Get source dir
-        source_dir = environment.GetRomDir(json_category, json_subcategory, json_base_name)
+        source_dir = environment.GetLockerGamingRomDir(json_category, json_subcategory, json_base_name)
 
         # Get source file
         # In order of preference:
@@ -225,7 +225,7 @@ class GameInfo:
 
     # Get background asset
     def get_background_asset(self):
-        return environment.GetLockerGameAssetFile(
+        return environment.GetLockerGamingAssetFile(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
@@ -233,7 +233,7 @@ class GameInfo:
 
     # Get boxback asset
     def get_boxback_asset(self):
-        return environment.GetLockerGameAssetFile(
+        return environment.GetLockerGamingAssetFile(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
@@ -241,7 +241,7 @@ class GameInfo:
 
     # Get boxfront asset
     def get_boxfront_asset(self):
-        return environment.GetLockerGameAssetFile(
+        return environment.GetLockerGamingAssetFile(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
@@ -249,7 +249,7 @@ class GameInfo:
 
     # Get label asset
     def get_label_asset(self):
-        return environment.GetLockerGameAssetFile(
+        return environment.GetLockerGamingAssetFile(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
@@ -257,7 +257,7 @@ class GameInfo:
 
     # Get screenshot asset
     def get_screenshot_asset(self):
-        return environment.GetLockerGameAssetFile(
+        return environment.GetLockerGamingAssetFile(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
@@ -265,7 +265,7 @@ class GameInfo:
 
     # Get video asset
     def get_video_asset(self):
-        return environment.GetLockerGameAssetFile(
+        return environment.GetLockerGamingAssetFile(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
@@ -563,7 +563,7 @@ def DeriveGameCategoriesFromFile(game_file):
 
     # Get possible root dirs
     root_dirs = [
-        system.NormalizeFilePath(environment.GetGamingVaultRootDir()),
+        system.NormalizeFilePath(environment.GetLockerGamingRootDir()),
         system.NormalizeFilePath(environment.GetGamingLocalCacheRootDir()),
         system.NormalizeFilePath(environment.GetGamingRemoteCacheRootDir()),
         system.NormalizeFilePath(environment.GetJsonMetadataRootDir())

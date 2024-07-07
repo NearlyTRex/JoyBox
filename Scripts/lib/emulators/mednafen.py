@@ -156,7 +156,7 @@ class Mednafen(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                filename = os.path.join(environment.GetLockerGameEmulatorSetupDir("Mednafen"), filename),
+                filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Mednafen"), filename),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
@@ -166,7 +166,7 @@ class Mednafen(emulatorbase.EmulatorBase):
         for filename in system_files.keys():
             for platform in ["windows", "linux"]:
                 success = system.SmartCopy(
-                    src = os.path.join(environment.GetLockerGameEmulatorSetupDir("Mednafen"), filename),
+                    src = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Mednafen"), filename),
                     dest = os.path.join(programs.GetEmulatorPathConfigValue("Mednafen", "setup_dir", platform), filename),
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)

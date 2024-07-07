@@ -15,48 +15,35 @@ ini_defaults["UserData.Dirs"] = {}
 if environment.IsWindowsPlatform():
     ini_defaults["UserData.Dirs"]["tools_dir"] = "%USERPROFILE%\\Tools"
     ini_defaults["UserData.Dirs"]["emulators_dir"] = "%USERPROFILE%\\Emulators"
-    ini_defaults["UserData.Dirs"]["locker_dir"] = "%USERPROFILE%\\Locker"
+    ini_defaults["UserData.Dirs"]["local_locker_dir"] = "%USERPROFILE%\\Locker"
+    ini_defaults["UserData.Dirs"]["remote_locker_dir"] = "%USERPROFILE%\\LockerRemote"
     ini_defaults["UserData.Dirs"]["local_cache_dir"] = "%USERPROFILE%\\Cache"
-    ini_defaults["UserData.Dirs"]["remote_cache_dir"] = "Y:\\"
-    ini_defaults["UserData.Dirs"]["vault_dir"] = "X:\\"
+    ini_defaults["UserData.Dirs"]["remote_cache_dir"] = "%USERPROFILE%\\CacheRemote"
     ini_defaults["UserData.Dirs"]["metadata_dir"] = "C:\\Repositories\\GameMetadata"
     ini_defaults["UserData.Dirs"]["scripts_dir"] = "C:\\Repositories\\JoyBox\\Scripts"
 else:
     ini_defaults["UserData.Dirs"]["tools_dir"] = "$HOME/Tools"
     ini_defaults["UserData.Dirs"]["emulators_dir"] = "$HOME/Emulators"
-    ini_defaults["UserData.Dirs"]["locker_dir"] = "$HOME/Locker"
+    ini_defaults["UserData.Dirs"]["local_locker_dir"] = "$HOME/Locker"
+    ini_defaults["UserData.Dirs"]["remote_locker_dir"] = "$HOME/LockerRemote"
     ini_defaults["UserData.Dirs"]["local_cache_dir"] = "$HOME/Cache"
-    ini_defaults["UserData.Dirs"]["remote_cache_dir"] = "/mnt/Cache"
-    ini_defaults["UserData.Dirs"]["vault_dir"] = "/mnt/Vault"
+    ini_defaults["UserData.Dirs"]["remote_cache_dir"] = "$HOME/CacheRemote"
     ini_defaults["UserData.Dirs"]["metadata_dir"] = "$HOME/Repositories/GameMetadata"
     ini_defaults["UserData.Dirs"]["scripts_dir"] = "$HOME/Repositories/JoyBox/Scripts"
 
 # UserData.Protection
 ini_defaults["UserData.Protection"] = {}
 ini_defaults["UserData.Protection"]["general_passphrase"] = ""
-ini_defaults["UserData.Protection"]["vault_passphrase"] = ""
 ini_defaults["UserData.Protection"]["locker_passphrase"] = ""
 
 # UserData.Share
 ini_defaults["UserData.Share"] = {}
-ini_defaults["UserData.Share"]["vault_remote_type"] = ""
-ini_defaults["UserData.Share"]["vault_remote_name"] = ""
-ini_defaults["UserData.Share"]["vault_remote_name_encrypted"] = ""
-ini_defaults["UserData.Share"]["vault_remote_path"] = ""
-ini_defaults["UserData.Share"]["vault_local_path"] = ""
-ini_defaults["UserData.Share"]["vault_account_id"] = ""
-ini_defaults["UserData.Share"]["vault_api_key"] = ""
-ini_defaults["UserData.Share"]["vault_encryption_key"] = ""
-ini_defaults["UserData.Share"]["vault_flags"] = ""
 ini_defaults["UserData.Share"]["locker_remote_type"] = ""
 ini_defaults["UserData.Share"]["locker_remote_name"] = ""
-ini_defaults["UserData.Share"]["locker_remote_name_encrypted"] = ""
 ini_defaults["UserData.Share"]["locker_remote_path"] = ""
 ini_defaults["UserData.Share"]["locker_local_path"] = ""
-ini_defaults["UserData.Share"]["locker_account_id"] = ""
-ini_defaults["UserData.Share"]["locker_api_key"] = ""
 ini_defaults["UserData.Share"]["locker_encryption_key"] = ""
-ini_defaults["UserData.Share"]["locker_flags"] = ""
+ini_defaults["UserData.Share"]["locker_mount_flags"] = ""
 
 # UserData.Resolution
 ini_defaults["UserData.Resolution"] = {}

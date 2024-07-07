@@ -149,7 +149,7 @@ class Vita3K(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                filename = os.path.join(environment.GetLockerGameEmulatorSetupDir("Vita3K"), filename),
+                filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Vita3K"), filename),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
@@ -158,9 +158,9 @@ class Vita3K(emulatorbase.EmulatorBase):
         # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["os0", "sa0", "vs0"]:
-                if os.path.exists(os.path.join(environment.GetLockerGameEmulatorSetupDir("Vita3K"), obj + ".zip")):
+                if os.path.exists(os.path.join(environment.GetLockerGamingEmulatorSetupDir("Vita3K"), obj + ".zip")):
                     success = archive.ExtractArchive(
-                        archive_file = os.path.join(environment.GetLockerGameEmulatorSetupDir("Vita3K"), obj + ".zip"),
+                        archive_file = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Vita3K"), obj + ".zip"),
                         extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("Vita3K", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = verbose,

@@ -355,7 +355,7 @@ def HashFiles(input_path, base_path, output_file, verbose = False, exit_on_failu
 
     # Remove keys regarding files that do not exist
     for hash_key in sorted(hash_contents.keys()):
-        hashed_file_base = environment.GetGamingVaultRootDir()
+        hashed_file_base = environment.GetLockerGamingRootDir()
         hashed_file_offset = hash_contents[hash_key]["filename"]
         hashed_file = os.path.join(hashed_file_base, hashed_file_offset)
         if not os.path.exists(hashed_file):

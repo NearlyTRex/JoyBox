@@ -30,7 +30,7 @@ args, unknown = parser.parse_known_args()
 
 # Paths
 hashes_base_dir = os.path.join(environment.GetHashesMetadataRootDir(), args.file_supercategory)
-files_root_dir = environment.GetSupercategoryRootDir(args.file_supercategory)
+files_root_dir = environment.GetLockerGamingSupercategoryRootDir(args.file_supercategory)
 
 # Main
 def main():

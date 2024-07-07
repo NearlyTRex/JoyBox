@@ -57,7 +57,7 @@ def GetProgramBackupDir(program_name, program_platform = None):
     if IsProgramNameTool(program_name, program_platform):
         return environment.GetLockerProgramToolDir(program_name, program_platform)
     elif IsProgramNameEmulator(program_name, program_platform):
-        return environment.GetLockerGameEmulatorBinariesDir(program_name, program_platform)
+        return environment.GetLockerGamingEmulatorBinariesDir(program_name, program_platform)
     return None
 
 # Get library install dir

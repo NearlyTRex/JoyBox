@@ -136,7 +136,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                filename = os.path.join(environment.GetLockerGameEmulatorSetupDir("EKA2L1"), filename),
+                filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("EKA2L1"), filename),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
@@ -145,9 +145,9 @@ class EKA2L1(emulatorbase.EmulatorBase):
         # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["data"]:
-                if os.path.exists(os.path.join(environment.GetLockerGameEmulatorSetupDir("EKA2L1"), obj + ".zip")):
+                if os.path.exists(os.path.join(environment.GetLockerGamingEmulatorSetupDir("EKA2L1"), obj + ".zip")):
                     success = archive.ExtractArchive(
-                        archive_file = os.path.join(environment.GetLockerGameEmulatorSetupDir("EKA2L1"), obj + ".zip"),
+                        archive_file = os.path.join(environment.GetLockerGamingEmulatorSetupDir("EKA2L1"), obj + ".zip"),
                         extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("EKA2L1", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = verbose,

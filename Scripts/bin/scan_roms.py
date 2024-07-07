@@ -38,7 +38,7 @@ def main():
             game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
             # Metadata info
-            local_rom_path = os.path.join(environment.GetRomRootDir(), game_category, game_subcategory)
+            local_rom_path = os.path.join(environment.GetLockerGamingRomsRootDir(), game_category, game_subcategory)
             metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
 
             # Build metadata

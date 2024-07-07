@@ -208,7 +208,7 @@ class PCSX2(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                filename = os.path.join(environment.GetLockerGameEmulatorSetupDir("PCSX2"), filename),
+                filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("PCSX2"), filename),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
@@ -218,7 +218,7 @@ class PCSX2(emulatorbase.EmulatorBase):
         for filename in system_files.keys():
             for platform in ["windows", "linux"]:
                 success = system.SmartCopy(
-                    src = os.path.join(environment.GetLockerGameEmulatorSetupDir("PCSX2"), filename),
+                    src = os.path.join(environment.GetLockerGamingEmulatorSetupDir("PCSX2"), filename),
                     dest = os.path.join(programs.GetEmulatorPathConfigValue("PCSX2", "setup_dir", platform), filename),
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)

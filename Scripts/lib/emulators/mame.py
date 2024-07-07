@@ -217,7 +217,7 @@ class Mame(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                filename = os.path.join(environment.GetLockerGameEmulatorSetupDir("Mame"), filename),
+                filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Mame"), filename),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
@@ -227,7 +227,7 @@ class Mame(emulatorbase.EmulatorBase):
         for filename in system_files.keys():
             for platform in ["windows", "linux"]:
                 success = system.SmartCopy(
-                    src = os.path.join(environment.GetLockerGameEmulatorSetupDir("Mame"), filename),
+                    src = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Mame"), filename),
                     dest = os.path.join(programs.GetEmulatorPathConfigValue("Mame", "setup_dir", platform), filename),
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)

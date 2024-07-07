@@ -28,9 +28,9 @@ def InstallAddons(
     source_dlc_dirs = []
     source_update_dirs = []
     for filename in game_info.get_value(config.json_key_dlc):
-        source_dlc_dirs += [os.path.join(environment.GetDLCRootDir(), filename)]
+        source_dlc_dirs += [os.path.join(environment.GetLockerGamingDLCRootDir(), filename)]
     for filename in game_info.get_value(config.json_key_update):
-        source_update_dirs += [os.path.join(environment.GetUpdateRootDir(), filename)]
+        source_update_dirs += [os.path.join(environment.GetLockerGamingUpdateRootDir(), filename)]
 
     # Install add-ons
     for emulator in programs.GetEmulators():
