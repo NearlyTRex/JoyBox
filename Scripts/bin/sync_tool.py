@@ -26,6 +26,7 @@ parser.add_argument("-a", "--action",
         "push",
         "merge",
         "diff",
+        "list",
         "mount"
     ],
     default="init", help="Sync action"
@@ -145,6 +146,17 @@ def main():
             diff_missing_dest_path = args.diff_missing_dest_path,
             diff_error_path = args.diff_error_path,
             quick = args.quick,
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
+
+    # List files
+    elif args.action == "list":
+        sync.ListFiles(
+            remote_name = sync.GetEncryptedRemoteName(remote_name),
+            remote_type = remote_type,
+            remote_path = remote_path,
+            recursive = True,
+            only_directories = False,
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
 

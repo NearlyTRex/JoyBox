@@ -508,6 +508,49 @@ def CheckFiles(
         system.LogInfo("Number of files only on %s: %d" % (local_path, count_only_src))
         system.LogInfo("Number of error files: %d" % count_error)
 
+# List files
+def ListFiles(
+    remote_name,
+    remote_type,
+    remote_path,
+    recursive = False,
+    only_directories = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
+        return False
+
+    # Get list command
+    list_cmd = [rclone_tool]
+    if only_directories:
+        if recursive:
+            list_cmd += ["lsd", "-R"]
+        else:
+            list_cmd += ["lsd"]
+    else:
+        if recursive:
+            list_cmd += ["ls"]
+        else:
+            list_cmd += ["ls", "--max-depth", 1]
+    list_cmd += [
+        GetRemotePath(remote_name, remote_type, remote_path)
+    ]
+
+    # Run list command
+    code = command.RunBlockingCommand(
+        cmd = list_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [rclone_tool]),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
 # Mount files
 def MountFiles(
     remote_name,
