@@ -16,21 +16,25 @@ import setup
 
 # Setup argument parser
 parser = argparse.ArgumentParser(description="Backup tool.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("-t", "--type",
+parser.add_argument("-b", "--backup_type",
     choices=[
-        config.share_type_vault,
-        config.share_type_locker
+        config.backup_type_copy,
+        config.backup_type_archive
     ],
-    default=config.share_type_vault, help="Backup type"
+    default=config.backup_type_copy, help="Backup type"
 )
-parser.add_argument("-u", "--supercategory",
-    choices=config.game_supercategories,
-    default=config.game_supercategory_roms,
-    help="Supercategory"
+parser.add_argument("-l", "--source_type",
+    choices=[
+        config.source_type_local,
+        config.source_type_remote
+    ],
+    default=config.source_type_local, help="Source type"
 )
-parser.add_argument("-c", "--category", type=str, help="Category")
-parser.add_argument("-s", "--subcategory", type=str, help="Subcategory")
-parser.add_argument("-n", "--offset", type=str, help="Offset")
+parser.add_argument("-u", "--gaming_supercategory", type=str, help="Gaming supercategory")
+parser.add_argument("-c", "--gaming_category", type=str, help="Gaming category")
+parser.add_argument("-s", "--gaming_subcategory", type=str, help="Gaming subcategory")
+parser.add_argument("-n", "--gaming_offset", type=str, help="Gaming offset")
+parser.add_argument("-d", "--exclude_paths", type=str, default="", help="Excluded paths (comma separated list)")
 parser.add_argument("-o", "--output_base_path", type=str, default=".", help="Output base path")
 parser.add_argument("-e", "--skip_existing", action="store_true", help="Skip existing files")
 parser.add_argument("-i", "--skip_identical", action="store_true", help="Skip identical files")
@@ -53,55 +57,55 @@ def main():
     setup.CheckRequirements()
 
     # Get input path
-    input_path = ""
-    if args.type == config.config.share_type_vault:
-        input_path = os.path.join(environment.GetGamingVaultRootDir(), args.supercategory)
+    input_path = environment.GetLockerRootDir(args.source_type)
+    if args.supercategory:
+        input_path = os.path.join(input_path, config.locker_type_gaming, args.supercategory)
         if args.category:
             input_path = os.path.join(input_path, args.category)
             if args.subcategory:
                 input_path = os.path.join(input_path, args.subcategory)
                 if args.offset:
                     input_path = os.path.join(input_path, args.offset)
-    elif args.type == config.share_type_locker:
-        input_path = environment.GetLockerRootDir()
+
+    # Get exclude paths
+    exclude_paths = args.exclude_paths.split(",")
 
     # Check input path
     if not os.path.exists(input_path):
         system.LogError("Input path '%s' does not exist" % input_path)
         sys.exit(1)
 
-    # Backup storage files
-    if args.type == config.config.share_type_vault:
-        for src_file in system.BuildFileList(input_path):
-            dest_file = system.RebaseFilePath(src_file, environment.GetGamingVaultRootDir(), output_base_path)
+    # Copy files
+    if args.backup_type == config.backup_type_copy:
+        for src_file in system.BuildFileList(input_path, excludes = exclude_paths, use_relative_paths = True):
             system.SmartCopy(
-                src = src_file,
-                dest = dest_file,
+                src = os.path.join(input_path, src_file),
+                dest = os.path.join(output_base_path, src_file),
                 show_progress = True,
                 skip_existing = args.skip_existing,
                 skip_identical = args.skip_identical,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
 
-    # Backup locker files
-    elif args.type == config.share_type_locker:
-        for locker_base_obj in system.GetDirectoryContents(input_path):
-            locker_base_dir = os.path.join(input_path, locker_base_obj)
-            if os.path.isdir(locker_base_dir):
-                for locker_sub_obj in system.GetDirectoryContents(locker_base_dir):
-                    locker_sub_dir = os.path.join(locker_base_dir, locker_sub_obj)
-                    locker_sub_file = os.path.join(output_base_path, locker_base_obj, locker_sub_obj + ".7z")
-                    if not os.path.isdir(locker_sub_dir):
+    # Archive files
+    elif args.backup_type == config.backup_type_archive:
+        for base_obj in system.GetDirectoryContents(input_path, excludes = exclude_paths):
+            base_dir = os.path.join(input_path, base_obj)
+            if os.path.isdir(base_dir):
+                for sub_obj in system.GetDirectoryContents(base_dir):
+                    sub_dir = os.path.join(base_dir, sub_obj)
+                    sub_file = os.path.join(output_base_path, base_obj, sub_obj + ".7z")
+                    if not os.path.isdir(sub_dir):
                         continue
-                    if system.DoesPathExist(locker_sub_file, case_sensitive_paths = False, partial_paths = True):
+                    if system.DoesPathExist(sub_file, case_sensitive_paths = False, partial_paths = True):
                         continue
                     system.MakeDirectory(
-                        dir = system.GetFilenameDirectory(locker_sub_file),
+                        dir = system.GetFilenameDirectory(sub_file),
                         verbose = args.verbose,
                         exit_on_failure = args.exit_on_failure)
                     archive.CreateArchiveFromFolder(
-                        archive_file = locker_sub_file,
-                        source_dir = locker_sub_dir,
+                        archive_file = sub_file,
+                        source_dir = sub_dir,
                         volume_size = "4092m",
                         verbose = args.verbose,
                         exit_on_failure = args.exit_on_failure)
