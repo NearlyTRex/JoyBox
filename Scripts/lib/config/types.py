@@ -2,18 +2,32 @@
 import os
 import sys
 
-# Shares
-share_type_base = "IffyScorpion"
-share_type_locker = "Locker"
-share_type_cache = "Cache"
+# Locker types
+locker_type_artwork = "Artwork"
+locker_type_books = "Books"
+locker_type_development = "Development"
+locker_type_documents = "Documents"
+locker_type_gaming = "Gaming"
+locker_type_movies = "Movies"
+locker_type_music = "Music"
+locker_type_photos = "Photos"
+locker_type_programs = "Programs"
 
-# Metadata formats
+# Backup types
+backup_type_copy = "Copy"
+backup_type_archive = "Archive"
+
+# Source types
+source_type_local = "Local"
+source_type_remote = "Remote"
+
+# Metadata format types
 metadata_format_type_pegasus = "pegasus"
 metadata_format_types = [
     metadata_format_type_pegasus
 ]
 
-# Metadata sources
+# Metadata source types
 metadata_source_type_thegamesdb = "thegamesdb"
 metadata_source_type_gamefaqs = "gamefaqs"
 metadata_source_type_itchio = "itchio"
@@ -27,12 +41,12 @@ launch_type_none = "no_launcher"
 launch_type_file = "launch_file"
 launch_type_name = "launch_name"
 
-# Units
+# Unit types
 unit_type_seconds = "seconds"
 unit_type_minutes = "minutes"
 unit_type_hours = "hours"
 
-# Prefixes
+# Prefix types
 prefix_type_default = "Default"
 prefix_type_tool = "Tool"
 prefix_type_emulator = "Emulator"

@@ -193,95 +193,103 @@ def GetLocalLockerRootDir():
 def GetRemoteLockerRootDir():
     return ini.GetIniPathValue("UserData.Dirs", "remote_locker_dir")
 
+# Get locker root dir
+def GetLockerRootDir(source_type = None):
+    if source_type == config.source_type_remote:
+        return GetRemoteLockerRootDir()
+    else:
+        return GetLocalLockerRootDir()
+
 # Get locker development root dir
-def GetLockerDevelopmentRootDir():
-    return os.path.join(GetLocalLockerRootDir(), "Development")
+def GetLockerDevelopmentRootDir(source_type = None):
+    return os.path.join(GetLockerRootDir(source_type), config.locker_type_development)
 
 # Get locker gaming root dir
-def GetLockerGamingRootDir():
-    return os.path.join(GetLocalLockerRootDir(), "Gaming")
+def GetLockerGamingRootDir(source_type = None):
+    return os.path.join(GetLockerRootDir(source_type), config.locker_type_gaming)
 
 # Get locker music root dir
-def GetLockerMusicRootDir():
-    return os.path.join(GetLocalLockerRootDir(), "Music")
+def GetLockerMusicRootDir(source_type = None):
+    return os.path.join(GetLockerRootDir(source_type), config.locker_type_music)
 
 # Get locker photos root dir
-def GetLockerPhotosRootDir():
-    return os.path.join(GetLocalLockerRootDir(), "Photos")
+def GetLockerPhotosRootDir(source_type = None):
+    return os.path.join(GetLockerRootDir(source_type), config.locker_type_photos)
 
 # Get locker programs root dir
-def GetLockerProgramsRootDir():
-    return os.path.join(GetLocalLockerRootDir(), "Programs")
+def GetLockerProgramsRootDir(source_type = None):
+    return os.path.join(GetLockerRootDir(source_type), config.locker_type_programs)
 
 # Get locker programs tools root dir
-def GetLockerProgramsToolsRootDir():
-    return os.path.join(GetLockerProgramsRootDir(), "Tools")
+def GetLockerProgramsToolsRootDir(source_type = None):
+    return os.path.join(GetLockerProgramsRootDir(source_type), "Tools")
 
 # Get locker gaming assets root dir
-def GetLockerGamingAssetsRootDir():
-    return os.path.join(GetLockerGamingRootDir(), config.game_supercategory_assets)
+def GetLockerGamingAssetsRootDir(source_type = None):
+    return os.path.join(GetLockerGamingRootDir(source_type), config.game_supercategory_assets)
 
 # Get locker gaming emulators root dir
-def GetLockerGamingEmulatorsRootDir():
-    return os.path.join(GetLockerGamingRootDir(), config.game_supercategory_emulators)
+def GetLockerGamingEmulatorsRootDir(source_type = None):
+    return os.path.join(GetLockerGamingRootDir(source_type), config.game_supercategory_emulators)
 
 # Get locker gaming roms root dir
-def GetLockerGamingRomsRootDir():
-    return os.path.join(GetLockerGamingRootDir(), config.game_supercategory_roms)
+def GetLockerGamingRomsRootDir(source_type = None):
+    return os.path.join(GetLockerGamingRootDir(source_type), config.game_supercategory_roms)
 
 # Get locker gaming dlc root dir
-def GetLockerGamingDLCRootDir():
-    return os.path.join(GetLockerGamingRootDir(), config.game_supercategory_dlc)
+def GetLockerGamingDLCRootDir(source_type = None):
+    return os.path.join(GetLockerGamingRootDir(source_type), config.game_supercategory_dlc)
 
 # Get locker gaming update root dir
-def GetLockerGamingUpdateRootDir():
-    return os.path.join(GetLockerGamingRootDir(), config.game_supercategory_updates)
+def GetLockerGamingUpdateRootDir(source_type = None):
+    return os.path.join(GetLockerGamingRootDir(source_type), config.game_supercategory_updates)
 
 # Get locker gaming tags root dir
-def GetLockerGamingTagsRootDir():
-    return os.path.join(GetLockerGamingRootDir(), config.game_supercategory_tags)
+def GetLockerGamingTagsRootDir(source_type = None):
+    return os.path.join(GetLockerGamingRootDir(source_type), config.game_supercategory_tags)
 
 # Get locker gaming saves root dir
-def GetLockerGamingSavesRootDir():
-    return os.path.join(GetLockerGamingRootDir(), config.game_supercategory_saves)
+def GetLockerGamingSavesRootDir(source_type = None):
+    return os.path.join(GetLockerGamingRootDir(source_type), config.game_supercategory_saves)
 
 # Get locker gaming supercategory root dir
-def GetLockerGamingSupercategoryRootDir(supercategory):
+def GetLockerGamingSupercategoryRootDir(supercategory, source_type = None):
     if supercategory == config.game_supercategory_assets:
-        return GetLockerGamingAssetsRootDir()
+        return GetLockerGamingAssetsRootDir(source_type)
     elif supercategory == config.game_supercategory_emulators:
-        return GetLockerGamingEmulatorsRootDir()
+        return GetLockerGamingEmulatorsRootDir(source_type)
     elif supercategory == config.game_supercategory_roms:
-        return GetLockerGamingRomsRootDir()
+        return GetLockerGamingRomsRootDir(source_type)
     elif supercategory == config.game_supercategory_dlc:
-        return GetLockerGamingDLCRootDir()
+        return GetLockerGamingDLCRootDir(source_type)
     elif supercategory == config.game_supercategory_updates:
-        return GetLockerGamingUpdateRootDir()
+        return GetLockerGamingUpdateRootDir(source_type)
     elif supercategory == config.game_supercategory_tags:
-        return GetLockerGamingTagsRootDir()
+        return GetLockerGamingTagsRootDir(source_type)
     elif supercategory == config.game_supercategory_saves:
-        return GetLockerGamingSavesRootDir()
+        return GetLockerGamingSavesRootDir(source_type)
+    return None
 
 # Get locker development archives root dir
-def GetLockerDevelopmentArchivesRootDir():
-    return os.path.join(GetLockerDevelopmentRootDir(), "Archive")
+def GetLockerDevelopmentArchivesRootDir(source_type = None):
+    return os.path.join(GetLockerDevelopmentRootDir(source_type), "Archive")
 
 # Get locker gaming asset dir
-def GetLockerGamingAssetDir(game_category, game_subcategory, asset_type):
-    return os.path.join(GetLockerGamingAssetsRootDir(), game_category, game_subcategory, asset_type)
+def GetLockerGamingAssetDir(game_category, game_subcategory, asset_type, source_type = None):
+    return os.path.join(GetLockerGamingAssetsRootDir(source_type), game_category, game_subcategory, asset_type)
 
 # Get locker gaming asset file
-def GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type):
+def GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type, source_type = None):
     asset_file = "%s%s" % (game_name, config.asset_type_extensions[asset_type])
-    return os.path.join(GetLockerGamingAssetsRootDir(), game_category, game_subcategory, asset_type, asset_file)
+    return os.path.join(GetLockerGamingAssetsRootDir(source_type), game_category, game_subcategory, asset_type, asset_file)
 
 # Get locker gaming emulator binaries dir
-def GetLockerGamingEmulatorBinariesDir(emu_name, emu_platform):
-    return os.path.join(GetLockerGamingEmulatorsRootDir(), emu_name, "Binaries", emu_platform)
+def GetLockerGamingEmulatorBinariesDir(emu_name, emu_platform, source_type = None):
+    return os.path.join(GetLockerGamingEmulatorsRootDir(source_type), emu_name, "Binaries", emu_platform)
 
 # Get locker gaming emulator setup dir
-def GetLockerGamingEmulatorSetupDir(emu_name):
-    return os.path.join(GetLockerGamingEmulatorsRootDir(), emu_name, "Setup")
+def GetLockerGamingEmulatorSetupDir(emu_name, source_type = None):
+    return os.path.join(GetLockerGamingEmulatorsRootDir(source_type), emu_name, "Setup")
 
 # Get locker gaming rom dir offset
 def GetLockerGamingRomDirOffset(rom_category, rom_subcategory, rom_name):
@@ -290,21 +298,21 @@ def GetLockerGamingRomDirOffset(rom_category, rom_subcategory, rom_name):
     return os.path.join(rom_category, rom_subcategory, rom_name_path)
 
 # Get locker gaming rom dir
-def GetLockerGamingRomDir(rom_category, rom_subcategory, rom_name):
-    return os.path.join(GetLockerGamingRomsRootDir(), GetLockerGamingRomDirOffset(rom_category, rom_subcategory, rom_name))
+def GetLockerGamingRomDir(rom_category, rom_subcategory, rom_name, source_type = None):
+    return os.path.join(GetLockerGamingRomsRootDir(source_type), GetLockerGamingRomDirOffset(rom_category, rom_subcategory, rom_name))
 
 # Get locker gaming save dir
-def GetLockerGamingSaveDir(game_category, game_subcategory, game_name):
+def GetLockerGamingSaveDir(game_category, game_subcategory, game_name, source_type = None):
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
     game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
-    return os.path.join(GetLockerGamingSavesRootDir(), game_category, game_subcategory, game_name_path)
+    return os.path.join(GetLockerGamingSavesRootDir(source_type), game_category, game_subcategory, game_name_path)
 
 # Get locker program tool dir
-def GetLockerProgramToolDir(tool_name, tool_platform = None):
+def GetLockerProgramToolDir(tool_name, tool_platform = None, source_type = None):
     if tool_platform:
-        return os.path.join(GetLockerProgramsToolsRootDir(), tool_name, tool_platform)
+        return os.path.join(GetLockerProgramsToolsRootDir(source_type), tool_name, tool_platform)
     else:
-        return os.path.join(GetLockerProgramsToolsRootDir(), tool_name)
+        return os.path.join(GetLockerProgramsToolsRootDir(source_type), tool_name)
 
 ###########################################################
 # Metadata
@@ -418,7 +426,7 @@ def GetCacheRootDir():
 
 # Get cache gaming root dir
 def GetCacheGamingRootDir():
-    return os.path.join(GetCacheRootDir(), "Gaming")
+    return os.path.join(GetCacheRootDir(), config.locker_type_gaming)
 
 # Get cache gaming roms root dir
 def GetCacheGamingRomsRootDir():
