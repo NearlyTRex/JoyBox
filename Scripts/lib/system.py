@@ -1173,8 +1173,17 @@ def ReadYamlFile(src, verbose = False, exit_on_failure = False):
 
 ###########################################################
 
+# Prune paths
+def PrunePaths(paths = [], excludes = []):
+    new_paths = set()
+    for path in paths:
+        for exclude in excludes:
+            if not path.startswith(exclude):
+                new_paths.add(path)
+    return sorted(new_paths)
+
 # Build file list
-def BuildFileList(root, new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
+def BuildFileList(root, excludes = [], new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
     files = []
     if not IsPathValid(root):
         return files
@@ -1200,12 +1209,12 @@ def BuildFileList(root, new_relative_path = "", use_relative_paths = False, igno
                 files.append(location.replace(absolute_root + os.sep, new_relative_path))
             else:
                 files.append(location)
-    return sorted(files)
+    return PrunePaths(files, excludes)
 
 # Build file list by extensions
-def BuildFileListByExtensions(root, extensions = [], new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
+def BuildFileListByExtensions(root, excludes = [], extensions = [], new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
     files = []
-    for file in BuildFileList(root, new_relative_path, use_relative_paths, ignore_symlinks, follow_symlink_dirs):
+    for file in BuildFileList(root, excludes, new_relative_path, use_relative_paths, ignore_symlinks, follow_symlink_dirs):
         base, ext = GetFilenameSplit(file)
         if isinstance(extensions, list) and len(extensions) > 0:
             if ext in extensions or ext.lower() in extensions or ext.upper() in extensions:
@@ -1215,7 +1224,7 @@ def BuildFileListByExtensions(root, extensions = [], new_relative_path = "", use
     return sorted(files)
 
 # Build directory list
-def BuildDirectoryList(root, new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
+def BuildDirectoryList(root, excludes = [], new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
     directories = []
     if not IsPathValid(root):
         return directories
@@ -1231,20 +1240,20 @@ def BuildDirectoryList(root, new_relative_path = "", use_relative_paths = False,
                 directories.append(location.replace(absolute_root + os.sep, new_relative_path))
             else:
                 directories.append(location)
-    return sorted(directories)
+    return PrunePaths(directories, excludes)
 
 # Build empty directory list
-def BuildEmptyDirectoryList(root, new_relative_path = "", use_relative_paths = False):
+def BuildEmptyDirectoryList(root, excludes = [], new_relative_path = "", use_relative_paths = False):
     directories = []
-    for potential_dir in BuildDirectoryList(root, new_relative_path, use_relative_paths):
+    for potential_dir in BuildDirectoryList(root, excludes, new_relative_path, use_relative_paths):
         if IsDirectoryEmpty(potential_dir):
             directories.append(potential_dir)
     return directories
 
 # Build symlink directory list
-def BuildSymlinkDirectoryList(root, new_relative_path = "", use_relative_paths = False):
+def BuildSymlinkDirectoryList(root, excludes = [], new_relative_path = "", use_relative_paths = False):
     directories = []
-    for potential_dir in BuildDirectoryList(root, new_relative_path, use_relative_paths):
+    for potential_dir in BuildDirectoryList(root, excludes, new_relative_path, use_relative_paths):
         if os.path.islink(potential_dir):
             directories.append(potential_dir)
     return directories
@@ -1322,11 +1331,11 @@ def GetDirectorySize(path):
     return sum(p.stat().st_size for p in pathlib.Path(path).rglob('*'))
 
 # Get directory contents
-def GetDirectoryContents(path):
+def GetDirectoryContents(path, excludes = []):
     contents = []
     if DoesPathExist(path):
         contents = os.listdir(path)
-    return sorted(contents)
+    return PrunePaths(contents, excludes)
 
 # Get directory anchor
 def GetDirectoryAnchor(path):
