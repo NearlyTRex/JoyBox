@@ -1177,9 +1177,12 @@ def ReadYamlFile(src, verbose = False, exit_on_failure = False):
 def PrunePaths(paths = [], excludes = []):
     new_paths = set()
     for path in paths:
+        should_add = True
         for exclude in excludes:
-            if not path.startswith(exclude):
-                new_paths.add(path)
+            if path.startswith(exclude):
+                should_add = False
+        if should_add:
+            new_paths.add(path)
     return sorted(new_paths)
 
 # Build file list
