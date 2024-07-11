@@ -290,6 +290,10 @@ def GetGameInfo(appid, branchid, manifest = None, verbose = False, exit_on_failu
                 game_info[config.json_key_steam_name] = str(appcommon["name"])
             if "controller_support" in appcommon:
                 game_info[config.json_key_steam_controller_support] = str(appcommon["controller_support"])
+        if "config" in appdata:
+            appconfig = appdata["config"]
+            if "installdir" in appconfig:
+                game_info[config.json_key_steam_installdir] = str(appconfig["installdir"])
         if "depots" in appdata:
             appdepots = appdata["depots"]
             if "branches" in appdepots:
@@ -317,7 +321,17 @@ def GetGameInfo(appid, branchid, manifest = None, verbose = False, exit_on_failu
                         when_store = when_info["store"] if "store" in when_info else ""
                         if when_os == "windows":
                             if when_store == "steam" or when_store == "":
-                                paths.append(path_location)
+                                new_location = path_location
+                                new_location = new_location.replace("<winPublic>", "USERPUBLIC")
+                                new_location = new_location.replace("<winDir>", "USERPROFILE/AppData/Local/VirtualStore")
+                                new_location = new_location.replace("<winAppData>", "USERPROFILE/AppData/Roaming")
+                                new_location = new_location.replace("<winLocalAppData>", "USERPROFILE/AppData/Local")
+                                new_location = new_location.replace("<winDocuments>", "USERPROFILE/Documents")
+                                new_location = new_location.replace("<home>", "USERPROFILE")
+                                new_location = new_location.replace("<root>", "STEAMROOT")
+                                new_location = new_location.replace("<base>", "STEAMROOT/steamapps/common/%s" % game_info[config.json_key_steam_installdir])
+                                new_location = new_location.replace("<storeUserId>", "STEAMUSERID")
+                                paths.append(new_location)
             if "registry" in manifest_data:
                 for key in manifest_data["registry"]:
                     keys.append(key)
