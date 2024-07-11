@@ -70,6 +70,10 @@ ini_defaults["UserData.GitHub"]["github_access_token"] = ""
 ini_defaults["UserData.Steam"] = {}
 ini_defaults["UserData.Steam"]["steam_username"] = "SemiDiabolicalParka"
 ini_defaults["UserData.Steam"]["steam_userid"] = "76561198286525102"
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.Steam"]["steam_install_dir"] = "C:\\Program Files (x86)\\Steam"
+else:
+    ini_defaults["UserData.Steam"]["steam_install_dir"] = "$HOME/.steam/steam"
 
 # UserData.Switch
 ini_defaults["UserData.Switch"] = {}
