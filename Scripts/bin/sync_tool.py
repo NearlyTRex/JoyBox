@@ -54,8 +54,8 @@ def main():
     remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
     remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
     remote_path = ini.GetIniValue("UserData.Share", "locker_remote_path")
-    encryption_key = ini.GetIniValue("UserData.Share", "locker_encryption_key")
     local_path = ini.GetIniPathValue("UserData.Share", "locker_local_path")
+    mount_path = ini.GetIniPathValue("UserData.Share", "locker_mount_path")
     mount_flags = ini.GetIniValue("UserData.Share", "locker_mount_flags").split(",")
 
     # Init sync
@@ -65,17 +65,11 @@ def main():
             remote_type = remote_type,
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
-        sync.SetupEncryptedRemote(
-            remote_name = remote_name,
-            remote_path = remote_path,
-            remote_encryption_key = encryption_key,
-            verbose = args.verbose,
-            exit_on_failure = args.exit_on_failure)
 
     # Download files
     elif args.action == "download":
         sync.DownloadFilesFromRemote(
-            remote_name = sync.GetEncryptedRemoteName(remote_name),
+            remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
@@ -87,7 +81,7 @@ def main():
     # Upload files
     elif args.action == "upload":
         sync.UploadFilesToRemote(
-            remote_name = sync.GetEncryptedRemoteName(remote_name),
+            remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
@@ -99,7 +93,7 @@ def main():
     # Pull files
     elif args.action == "pull":
         sync.SyncFilesFromRemote(
-            remote_name = sync.GetEncryptedRemoteName(remote_name),
+            remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
@@ -111,7 +105,7 @@ def main():
     # Push files
     elif args.action == "push":
         sync.SyncFilesToRemote(
-            remote_name = sync.GetEncryptedRemoteName(remote_name),
+            remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
@@ -123,7 +117,7 @@ def main():
     # Merge files
     elif args.action == "merge":
         sync.SyncFilesBothWays(
-            remote_name = sync.GetEncryptedRemoteName(remote_name),
+            remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
@@ -136,7 +130,7 @@ def main():
     # Diff files
     elif args.action == "diff":
         sync.CheckFiles(
-            remote_name = sync.GetEncryptedRemoteName(remote_name),
+            remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
@@ -152,7 +146,7 @@ def main():
     # List files
     elif args.action == "list":
         sync.ListFiles(
-            remote_name = sync.GetEncryptedRemoteName(remote_name),
+            remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
             recursive = True,
@@ -163,10 +157,10 @@ def main():
     # Mount files
     elif args.action == "mount":
         sync.MountFiles(
-            remote_name = sync.GetEncryptedRemoteName(remote_name),
+            remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
-            local_path = local_path,
+            mount_path = mount_path,
             no_cache = "no_cache" in mount_flags,
             no_checksum = "no_checksum" in mount_flags,
             no_modtime = "no_modtime" in mount_flags,

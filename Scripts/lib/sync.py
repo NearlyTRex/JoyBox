@@ -556,7 +556,7 @@ def MountFiles(
     remote_name,
     remote_type,
     remote_path,
-    local_path,
+    mount_path,
     no_cache = False,
     no_checksum = False,
     no_modtime = False,
@@ -567,9 +567,9 @@ def MountFiles(
 
     # Create mount point
     if environment.IsUnixPlatform():
-        system.MakeDirectory(local_path, verbose = verbose, exit_on_failure = exit_on_failure)
-        if not system.DoesPathExist(local_path) or not system.IsDirectoryEmpty(local_path):
-            system.LogError("Mount point needs to exist and be empty")
+        system.MakeDirectory(mount_path, verbose = verbose, exit_on_failure = exit_on_failure)
+        if not system.DoesPathExist(mount_path) or not system.IsDirectoryEmpty(mount_path):
+            system.LogError("Mount point %s needs to exist and be empty" % mount_path)
             return False
 
     # Get tool
@@ -595,7 +595,7 @@ def MountFiles(
         ]
     mount_cmd += [
         GetRemotePath(remote_name, remote_type, remote_path),
-        local_path
+        mount_path
     ]
     if environment.IsUnixPlatform():
         mount_cmd += ["--daemon"]
