@@ -22,8 +22,8 @@ def GetEncryptedRemoteName(remote_name):
         return remote_name
     return "%sEnc" % (remote_name)
 
-# Get remote path
-def GetRemotePath(remote_name, remote_type, remote_path):
+# Get remote connection path
+def GetRemoteConnectionPath(remote_name, remote_type, remote_path):
     if remote_type == config.sync_type_b2:
         return "%s:%s%s" % (remote_name, GetUnencryptedRemoteName(remote_name), remote_path)
     else:
@@ -210,7 +210,7 @@ def DownloadFilesFromRemote(
     copy_cmd = [
         rclone_tool,
         "copy",
-        GetRemotePath(remote_name, remote_type, remote_path),
+        GetRemoteConnectionPath(remote_name, remote_type, remote_path),
         local_path,
         "--create-empty-src-dirs"
     ]
@@ -258,7 +258,7 @@ def UploadFilesToRemote(
         rclone_tool,
         "copy",
         local_path,
-        GetRemotePath(remote_name, remote_type, remote_path),
+        GetRemoteConnectionPath(remote_name, remote_type, remote_path),
         "--create-empty-src-dirs"
     ]
     copy_cmd += GetCommonRemoteFlags(remote_name, remote_type)
@@ -304,7 +304,7 @@ def SyncFilesFromRemote(
     sync_cmd = [
         rclone_tool,
         "sync",
-        GetRemotePath(remote_name, remote_type, remote_path),
+        GetRemoteConnectionPath(remote_name, remote_type, remote_path),
         local_path,
         "--create-empty-src-dirs"
     ]
@@ -352,7 +352,7 @@ def SyncFilesToRemote(
         rclone_tool,
         "sync",
         local_path,
-        GetRemotePath(remote_name, remote_type, remote_path),
+        GetRemoteConnectionPath(remote_name, remote_type, remote_path),
         "--create-empty-src-dirs"
     ]
     sync_cmd += GetCommonRemoteFlags(remote_name, remote_type)
@@ -400,7 +400,7 @@ def SyncFilesBothWays(
         rclone_tool,
         "bisync",
         local_path,
-        GetRemotePath(remote_name, remote_type, remote_path),
+        GetRemoteConnectionPath(remote_name, remote_type, remote_path),
         "--check-access",
         "--create-empty-src-dirs"
     ]
@@ -454,7 +454,7 @@ def CheckFiles(
         rclone_tool,
         "check",
         local_path,
-        GetRemotePath(remote_name, remote_type, remote_path)
+        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
     ]
     check_cmd += GetCommonRemoteFlags(remote_name, remote_type)
     if system.IsPathValid(diff_combined_path):
@@ -539,7 +539,7 @@ def ListFiles(
         else:
             list_cmd += ["ls", "--max-depth", 1]
     list_cmd += [
-        GetRemotePath(remote_name, remote_type, remote_path)
+        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
     ]
 
     # Run list command
@@ -594,7 +594,7 @@ def MountFiles(
             "--vfs-cache-mode", "full"
         ]
     mount_cmd += [
-        GetRemotePath(remote_name, remote_type, remote_path),
+        GetRemoteConnectionPath(remote_name, remote_type, remote_path),
         mount_path
     ]
     if environment.IsUnixPlatform():
