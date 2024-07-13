@@ -152,7 +152,7 @@ def PackSave(save_category, save_subcategory, save_name, verbose = False, exit_o
         return False
 
     # Upload save archive
-    success = locker.UploadFile(
+    success = locker.UploadPath(
         path = out_save_archive_file,
         verbose = verbose,
         exit_on_failure = exit_on_failure)

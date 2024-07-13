@@ -14,8 +14,8 @@ import ini
 def ConvertToRelativePath(path):
     return system.RebaseFilePath(path, environment.GetLockerRootDir(), "")
 
-# Download file
-def DownloadFile(
+# Download path
+def DownloadPath(
     path,
     verbose = False,
     pretend_run = False,
@@ -42,8 +42,8 @@ def DownloadFile(
         exit_on_failure = exit_on_failure)
     return success
 
-# Upload file
-def UploadFile(
+# Upload path
+def UploadPath(
     path,
     verbose = False,
     pretend_run = False,
