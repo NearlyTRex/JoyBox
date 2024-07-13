@@ -21,7 +21,7 @@ def GetDecryptedFilename(source_file):
     return source_file[:-len(".gpg")]
 
 # Encrypt file
-def EncryptFile(source_file, output_file, passphrase, delete_original = False, verbose = False, exit_on_failure = False):
+def EncryptFile(source_file, output_file, passphrase, delete_original = False, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Ignore already encrypted
     if os.path.exists(output_file):
@@ -52,6 +52,7 @@ def EncryptFile(source_file, output_file, passphrase, delete_original = False, v
         options = command.CommandOptions(
             blocking_processes = [gpg_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         system.LogError("Unable to encrypt file '%s'" % source_file)
@@ -65,7 +66,7 @@ def EncryptFile(source_file, output_file, passphrase, delete_original = False, v
     return os.path.exists(output_file)
 
 # Decrypt file
-def DecryptFile(source_file, output_file, passphrase, delete_original = False, verbose = False, exit_on_failure = False):
+def DecryptFile(source_file, output_file, passphrase, delete_original = False, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Ignore already decrypted
     if os.path.exists(output_file):
@@ -96,6 +97,7 @@ def DecryptFile(source_file, output_file, passphrase, delete_original = False, v
         options = command.CommandOptions(
             blocking_processes = [gpg_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         system.LogError("Unable to decrypt file '%s'" % source_file)

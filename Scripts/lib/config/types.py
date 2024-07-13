@@ -13,6 +13,9 @@ locker_type_music = "Music"
 locker_type_photos = "Photos"
 locker_type_programs = "Programs"
 
+# Passphrase types
+passphrase_type_general = "General"
+
 # Backup types
 backup_type_copy = "Copy"
 backup_type_archive = "Archive"

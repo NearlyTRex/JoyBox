@@ -8,6 +8,7 @@ import argparse
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
+import config
 import system
 import cryption
 import setup
@@ -18,9 +19,14 @@ parser = argparse.ArgumentParser(description="Encrypt/decrypt files.")
 parser.add_argument("path", help="Input path")
 parser.add_argument("-e", "--encrypt", action="store_true", help="Encrypt files")
 parser.add_argument("-d", "--decrypt", action="store_true", help="Decrypt files")
-parser.add_argument("-p", "--passphrase", type=str, help="Passphrase for encryption")
-parser.add_argument("--passphrase_protection_field", type=str, default="general_passphrase", help="Passphrase protection field")
+parser.add_argument("-t", "--passphrase_type",
+    choices=[
+        config.passphrase_type_general
+    ],
+    default=config.passphrase_type_general, help="Passphrase type"
+)
 parser.add_argument("-k", "--keep_originals", action="store_true", help="Keep original files")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
@@ -41,12 +47,12 @@ def main():
     setup.CheckRequirements()
 
     # Get passphrase
-    passphrase = args.passphrase
-    if not passphrase or len(passphrase) == 0:
-        passphrase = ini.GetIniValue("UserData.Protection", args.passphrase_protection_field)
-        if len(passphrase) == 0:
-            system.LogError("No passphrase set")
-            sys.exit(-1)
+    passphrase = None
+    if args.passphrase_type == config.passphrase_type_general:
+        passphrase = ini.GetIniValue("UserData.Protection", "general_passphrase")
+    if not passphrase:
+        system.LogError("No passphrase set")
+        sys.exit(-1)
 
     # Encrypt file
     if args.encrypt:
@@ -57,6 +63,7 @@ def main():
                 passphrase = passphrase,
                 delete_original = not args.keep_originals,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
     # Decrypt file
@@ -68,6 +75,7 @@ def main():
                 passphrase = passphrase,
                 delete_original = not args.keep_originals,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
 # Start
