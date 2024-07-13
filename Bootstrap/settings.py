@@ -32,7 +32,6 @@ else:
 # UserData.Protection
 ini_defaults["UserData.Protection"] = {}
 ini_defaults["UserData.Protection"]["general_passphrase"] = ""
-ini_defaults["UserData.Protection"]["locker_passphrase"] = ""
 
 # UserData.Share
 ini_defaults["UserData.Share"] = {}
@@ -40,7 +39,7 @@ ini_defaults["UserData.Share"]["locker_remote_type"] = ""
 ini_defaults["UserData.Share"]["locker_remote_name"] = ""
 ini_defaults["UserData.Share"]["locker_remote_path"] = ""
 ini_defaults["UserData.Share"]["locker_local_path"] = ""
-ini_defaults["UserData.Share"]["locker_encryption_key"] = ""
+ini_defaults["UserData.Share"]["locker_mount_path"] = ""
 ini_defaults["UserData.Share"]["locker_mount_flags"] = ""
 
 # UserData.Resolution
