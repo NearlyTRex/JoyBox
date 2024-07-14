@@ -44,11 +44,16 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get keys
+    keys_to_check = []
+    if args.keys_to_check:
+        keys_to_check = args.keys_to_check.split(",")
+
     # Collect metadata
     metadata.CollectMetadata(
         metadata_dir = args.metadata_dir,
         metadata_source = args.metadata_source,
-        keys_to_check = args.keys_to_check.split(","),
+        keys_to_check = keys_to_check,
         force_download = args.force_download,
         allow_replacing = args.allow_replacing,
         select_automatically = args.select_automatically,
