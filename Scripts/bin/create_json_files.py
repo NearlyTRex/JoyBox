@@ -31,7 +31,7 @@ def main():
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
             game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-            for game_name in gameinfo.FindAllGameNames(environment.GetLockerGamingRomsRootDir(), game_category, game_subcategory):
+            for game_name in gameinfo.FindAllGameNames(environment.GetLockerGamingRomsRootDir(config.source_type_remote), game_category, game_subcategory):
                 base_rom_path = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
 
                 # Get json file path
@@ -121,6 +121,21 @@ def main():
                 # Computer
                 if game_category == config.game_category_computer:
                     SetJsonValue(config.json_key_installer_exe, computer_installers)
+                    if game_subcategory == config.game_subcategory_amazon_games:
+                        SetJsonValue(config.json_key_amazon, {
+                            config.json_key_amazon_appid: "",
+                            config.json_key_amazon_name: ""
+                        })
+                    elif game_subcategory == config.game_subcategory_gog:
+                        SetJsonValue(config.json_key_gog, {
+                            config.json_key_gog_appid: "",
+                            config.json_key_gog_appname: ""
+                        })
+                    elif game_subcategory == config.game_subcategory_steam:
+                        SetJsonValue(config.json_key_steam, {
+                            config.json_key_steam_appid: "",
+                            config.json_key_steam_branchid: "public"
+                        })
 
                 # Other platforms
                 else:
