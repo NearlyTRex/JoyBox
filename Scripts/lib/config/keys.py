@@ -47,6 +47,15 @@ metadata_keys_minimum = [
     metadata_key_platform,
     metadata_key_file
 ]
+metadata_keys_downloadable = [
+    metadata_key_description,
+    metadata_key_genre,
+    metadata_key_coop,
+    metadata_key_developer,
+    metadata_key_publisher,
+    metadata_key_players,
+    metadata_key_release
+]
 metadata_keys_all = [
     metadata_key_game,
     metadata_key_platform,
@@ -121,6 +130,20 @@ json_key_sync_data = "data"
 json_key_registry = "registry"
 json_key_registry_setup_keys = "setup_keys"
 json_key_registry_game_keys = "game_keys"
+json_key_amazon = "amazon"
+json_key_amazon_appid = "appid"
+json_key_amazon_name = "appname"
+json_key_epic = "epic"
+json_key_epic_appid = "appid"
+json_key_epic_paths = "paths"
+json_key_epic_keys = "keys"
+json_key_gog = "gog"
+json_key_gog_appid = "appid"
+json_key_gog_appname = "appname"
+json_key_gog_name = "name"
+json_key_gog_buildid = "buildid"
+json_key_gog_paths = "paths"
+json_key_gog_keys = "keys"
 json_key_steam = "steam"
 json_key_steam_appid = "appid"
 json_key_steam_branchid = "branchid"
@@ -131,17 +154,6 @@ json_key_steam_controller_support = "controller_support"
 json_key_steam_installdir = "installdir"
 json_key_steam_paths = "paths"
 json_key_steam_keys = "keys"
-json_key_gog = "gog"
-json_key_gog_appid = "appid"
-json_key_gog_appname = "appname"
-json_key_gog_name = "name"
-json_key_gog_buildid = "buildid"
-json_key_gog_paths = "paths"
-json_key_gog_keys = "keys"
-json_key_epic = "epic"
-json_key_epic_appid = "appid"
-json_key_epic_paths = "paths"
-json_key_epic_keys = "keys"
 json_key_winver = "winver"
 json_key_is_32_bit = "is_32_bit"
 json_key_is_dos = "is_dos"

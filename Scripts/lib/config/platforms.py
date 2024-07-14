@@ -86,7 +86,9 @@ computer_amazon_games[keys.platform_key_autofill_json] = [
     keys.json_key_installer_exe,
     keys.json_key_transform_file
 ]
-computer_amazon_games[keys.platform_key_fillonce_json] = []
+computer_amazon_games[keys.platform_key_fillonce_json] = [
+    keys.json_key_amazon
+]
 platforms[platform_computer_amazon_games] = computer_amazon_games
 
 ###########################################################
@@ -127,7 +129,9 @@ computer_epic_games[keys.platform_key_autofill_json] = [
     keys.json_key_installer_exe,
     keys.json_key_transform_file
 ]
-computer_epic_games[keys.platform_key_fillonce_json] = []
+computer_epic_games[keys.platform_key_fillonce_json] = [
+    keys.json_key_epic
+]
 platforms[platform_computer_epic_games] = computer_epic_games
 
 ###########################################################
@@ -148,7 +152,9 @@ computer_gog[keys.platform_key_autofill_json] = [
     keys.json_key_installer_exe,
     keys.json_key_transform_file
 ]
-computer_gog[keys.platform_key_fillonce_json] = []
+computer_gog[keys.platform_key_fillonce_json] = [
+    keys.json_key_gog
+]
 platforms[platform_computer_gog] = computer_gog
 
 ###########################################################
@@ -274,7 +280,9 @@ computer_steam[keys.platform_key_autofill_json] = [
     keys.json_key_installer_exe,
     keys.json_key_transform_file
 ]
-computer_steam[keys.platform_key_fillonce_json] = []
+computer_steam[keys.platform_key_fillonce_json] = [
+    keys.json_key_steam
+]
 platforms[platform_computer_steam] = computer_steam
 
 ###########################################################
