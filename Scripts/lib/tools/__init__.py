@@ -21,6 +21,7 @@ from . import ludusavimanifest
 from . import mametools
 from . import moonlight
 from . import ndecrypt
+from . import nile
 from . import nircmd
 from . import pegasus
 from . import perl
@@ -74,6 +75,7 @@ instances = [
     moonlight.Moonlight(),
     ndecrypt.NDecrypt(),
     nircmd.NirCmd(),
+    nile.Nile(),
     pegasus.Pegasus(),
     perl.Perl(),
     projectctr.ProjectCTR(),
