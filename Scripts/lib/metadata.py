@@ -726,7 +726,7 @@ def CollectMetadata(
             if isinstance(keys_to_check, list) and len(keys_to_check) > 0:
                 metadata_keys_to_check = keys_to_check
             else:
-                metadata_keys_to_check = config.metadata_keys_all
+                metadata_keys_to_check = config.metadata_keys_downloadable
 
             # Iterate through each game entry to fill in any missing data
             for game_platform in metadata_obj.get_sorted_platforms():
@@ -926,12 +926,14 @@ def CollectMetadataFromGameFAQS(
         return None
 
     # Look for game description
-    section_game_description = webpage.WaitForPageElement(web_driver, class_name = "game_desc", verbose = verbose)
-    if not section_game_description:
+    section_game_descriptions = webpage.WaitForPageElement(web_driver, class_name = "game_desc", verbose = verbose)
+    if not section_game_descriptions:
         return None
 
     # Grab the description text
-    raw_game_description = webpage.GetElementText(section_game_description)
+    raw_game_description = ""
+    for section_game_description in section_game_descriptions:
+        raw_game_description = webpage.GetElementText(section_game_description)
 
     # Click the "more" button if it's present
     if "more »" in raw_game_description:
@@ -940,7 +942,8 @@ def CollectMetadataFromGameFAQS(
             webpage.ClickElement(element_game_description_more)
 
     # Re-grab the description text
-    raw_game_description = webpage.GetElementText(section_game_description)
+    for section_game_description in section_game_descriptions:
+        raw_game_description = webpage.GetElementText(section_game_description)
 
     # Convert description to metadata format
     if raw_game_description:
