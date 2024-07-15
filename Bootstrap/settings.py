@@ -32,6 +32,7 @@ else:
 # UserData.Protection
 ini_defaults["UserData.Protection"] = {}
 ini_defaults["UserData.Protection"]["general_passphrase"] = ""
+ini_defaults["UserData.Protection"]["locker_passphrase"] = ""
 
 # UserData.Share
 ini_defaults["UserData.Share"] = {}

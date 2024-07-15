@@ -21,7 +21,8 @@ parser.add_argument("-e", "--encrypt", action="store_true", help="Encrypt files"
 parser.add_argument("-d", "--decrypt", action="store_true", help="Decrypt files")
 parser.add_argument("-t", "--passphrase_type",
     choices=[
-        config.passphrase_type_general
+        config.passphrase_type_general,
+        config.passphrase_type_locker
     ],
     default=config.passphrase_type_general, help="Passphrase type"
 )
@@ -50,6 +51,8 @@ def main():
     passphrase = None
     if args.passphrase_type == config.passphrase_type_general:
         passphrase = ini.GetIniValue("UserData.Protection", "general_passphrase")
+    elif args.passphrase_type == config.passphrase_type_locker:
+        passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
     if not passphrase:
         system.LogError("No passphrase set")
         sys.exit(-1)

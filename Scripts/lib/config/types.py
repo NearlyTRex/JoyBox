@@ -15,6 +15,7 @@ locker_type_programs = "Programs"
 
 # Passphrase types
 passphrase_type_general = "General"
+passphrase_type_locker = "Locker"
 
 # Backup types
 backup_type_copy = "Copy"
