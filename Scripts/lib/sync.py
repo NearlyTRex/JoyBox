@@ -187,6 +187,50 @@ def SetupRemote(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
+# Check if path exists
+def DoesPathExist(
+    remote_name,
+    remote_type,
+    remote_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
+        return False
+
+    # Get list command
+    list_cmd = [
+        rclone_tool,
+        "lsf",
+        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+    ]
+
+    # Run list command
+    list_output = command.RunOutputCommand(
+        cmd = list_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [rclone_tool]),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+    # Check existence
+    list_text = list_output
+    if isinstance(list_output, bytes):
+        list_text = list_output.decode()
+    if "ERROR" in list_text:
+        return False
+    elif "error listing" in list_text:
+        return False
+    elif "directory not found" in list_text:
+        return False
+    return True
+
 # Download files from remote
 def DownloadFilesFromRemote(
     remote_name,
