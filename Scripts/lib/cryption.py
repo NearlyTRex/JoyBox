@@ -21,7 +21,14 @@ def GetDecryptedFilename(source_file):
     return source_file[:-len(".gpg")]
 
 # Encrypt file
-def EncryptFile(source_file, output_file, passphrase, delete_original = False, verbose = False, pretend_run = False, exit_on_failure = False):
+def EncryptFile(
+    source_file,
+    output_file,
+    passphrase,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Ignore already encrypted
     if os.path.exists(output_file):
@@ -66,7 +73,14 @@ def EncryptFile(source_file, output_file, passphrase, delete_original = False, v
     return os.path.exists(output_file)
 
 # Decrypt file
-def DecryptFile(source_file, output_file, passphrase, delete_original = False, verbose = False, pretend_run = False, exit_on_failure = False):
+def DecryptFile(
+    source_file,
+    output_file,
+    passphrase,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Ignore already decrypted
     if os.path.exists(output_file):

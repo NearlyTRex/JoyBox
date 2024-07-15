@@ -8,6 +8,7 @@ import config
 import sync
 import system
 import environment
+import cryption
 import ini
 
 # Convert to relative path
@@ -24,9 +25,9 @@ def DownloadPath(
     # Check path
     if os.path.isabs(path):
         system.LogError("Path '%s' is not a relative path" % path)
-        return False
+        return (False, "")
 
-    # Get sync options
+    # Get options
     remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
     remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
     local_path = ini.GetIniPathValue("UserData.Share", "locker_local_path")
@@ -40,7 +41,48 @@ def DownloadPath(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return success
+    if not success:
+        return (False, "")
+
+    # Return result
+    return (True, os.path.join(local_path, path))
+
+# Download and decrypt path
+def DownloadAndDecryptPath(
+    path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get options
+    locker_passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
+
+    # Download path
+    success, result = DownloadPath(
+        path = path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return (False, "")
+
+    # Decrypt path
+    for file in system.BuildFileList(result):
+        success = cryption.DecryptFile(
+            source_file = file,
+            output_file = cryption.GetDecryptedFilename(file),
+            passphrase = locker_passphrase,
+            delete_original = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return (False, "")
+
+    # Return result
+    if os.path.isfile(result):
+        return (True, cryption.GetDecryptedFilename(result))
+    return (True, result)
 
 # Upload path
 def UploadPath(
@@ -54,7 +96,7 @@ def UploadPath(
         system.LogError("Path '%s' does not exist" % path)
         return False
 
-    # Get sync options
+    # Get options
     remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
     remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
 
