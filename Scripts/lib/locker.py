@@ -17,27 +17,33 @@ def ConvertToRelativePath(path):
 
 # Download path
 def DownloadPath(
-    path,
+    src,
+    dest = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Check path
-    if os.path.isabs(path):
-        system.LogError("Path '%s' is not a relative path" % path)
-        return (False, "")
+    if os.path.isabs(src):
+        src = ConvertToRelativePath(src)
 
     # Get options
-    remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
-    remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
-    local_path = ini.GetIniPathValue("UserData.Share", "locker_local_path")
+    locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
+    locker_remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
+    locker_local_path = ini.GetIniPathValue("UserData.Share", "locker_local_path")
+
+    # Get paths
+    remote_path = src
+    local_path = dest
+    if not local_path:
+        local_path = os.path.join(locker_local_path, src)
 
     # Download files
     success = sync.DownloadFilesFromRemote(
-        remote_name = remote_name,
-        remote_type = remote_type,
-        remote_path = path,
-        local_path = os.path.join(local_path, path),
+        remote_name = locker_remote_name,
+        remote_type = locker_remote_type,
+        remote_path = remote_path,
+        local_path = local_path,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -45,11 +51,12 @@ def DownloadPath(
         return (False, "")
 
     # Return result
-    return (True, os.path.join(local_path, path))
+    return (True, local_path)
 
 # Download and decrypt path
 def DownloadAndDecryptPath(
-    path,
+    src,
+    dest = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -59,7 +66,8 @@ def DownloadAndDecryptPath(
 
     # Download path
     success, result = DownloadPath(
-        path = path,
+        src = src,
+        dest = dest,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -86,26 +94,33 @@ def DownloadAndDecryptPath(
 
 # Upload path
 def UploadPath(
-    path,
+    src,
+    dest = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Check path
-    if not system.DoesPathExist():
-        system.LogError("Path '%s' does not exist" % path)
+    if not system.DoesPathExist(src):
+        system.LogError("Path '%s' does not exist" % src)
         return False
 
     # Get options
-    remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
-    remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
+    locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
+    locker_remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
+
+    # Get paths
+    local_path = src
+    remote_path = dest
+    if not remote_path:
+        remote_path = system.GetFilenameDirectory(ConvertToRelativePath(src))
 
     # Upload files
     success = sync.UploadFilesToRemote(
-        remote_name = remote_name,
-        remote_type = remote_type,
-        remote_path = system.GetFilenameDirectory(ConvertToRelativePath(path)),
-        local_path = path,
+        remote_name = locker_remote_name,
+        remote_type = locker_remote_type,
+        remote_path = remote_path,
+        local_path = local_path,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
