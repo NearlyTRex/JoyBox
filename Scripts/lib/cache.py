@@ -9,6 +9,7 @@ import system
 import transform
 import platforms
 import gameinfo
+import locker
 import gui
 
 # Check if game file is in cache already
@@ -101,10 +102,9 @@ def InstallGameToCache(game_info, keep_setup_files = False, verbose = False, exi
 def AddGameToCache(game_info, source_file, verbose = False, exit_on_failure = False):
 
     # Copy game files
-    system.CopyContents(
+    locker.DownloadAndDecryptPath(
         src = system.GetFilenameDirectory(source_file),
         dest = game_info.get_local_cache_dir(),
-        show_progress = True,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
