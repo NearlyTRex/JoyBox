@@ -66,8 +66,6 @@ def SetupAutoconnectRemote(
     # Run create command
     code = command.RunBlockingCommand(
         cmd = create_cmd,
-        options = command.CommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if code != 0:
@@ -85,8 +83,6 @@ def SetupAutoconnectRemote(
     # Run authorize command
     code = command.RunBlockingCommand(
         cmd = authorize_cmd,
-        options = command.CommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     return code == 0
@@ -123,8 +119,6 @@ def SetupManualRemote(
     # Run create command
     code = command.RunBlockingCommand(
         cmd = create_cmd,
-        options = command.CommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     return code == 0
@@ -158,8 +152,6 @@ def SetupEncryptedRemote(
     # Run create command
     code = command.RunBlockingCommand(
         cmd = create_cmd,
-        options = command.CommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     return code == 0
@@ -272,8 +264,6 @@ def DownloadFilesFromRemote(
     # Run copy command
     code = command.RunBlockingCommand(
         cmd = copy_cmd,
-        options = command.CommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     return code == 0
@@ -319,8 +309,6 @@ def UploadFilesToRemote(
     # Run copy command
     code = command.RunBlockingCommand(
         cmd = copy_cmd,
-        options = command.CommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     return code == 0
@@ -366,8 +354,6 @@ def SyncFilesFromRemote(
     # Run sync command
     code = command.RunBlockingCommand(
         cmd = sync_cmd,
-        options = command.CommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     return code == 0
@@ -413,8 +399,6 @@ def SyncFilesToRemote(
     # Run sync command
     code = command.RunBlockingCommand(
         cmd = sync_cmd,
-        options = command.CommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     return code == 0
@@ -464,8 +448,6 @@ def SyncFilesBothWays(
     # Run bisync command
     code = command.RunBlockingCommand(
         cmd = bisync_cmd,
-        options = command.CommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     return code == 0
@@ -522,8 +504,6 @@ def CheckFiles(
     # Run check command
     command.RunBlockingCommand(
         cmd = check_cmd,
-        options = command.CommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
@@ -589,8 +569,6 @@ def ListFiles(
     # Run list command
     code = command.RunBlockingCommand(
         cmd = list_cmd,
-        options = command.CommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     return code == 0
