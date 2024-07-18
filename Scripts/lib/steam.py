@@ -171,7 +171,7 @@ def DownloadGameByJsonFile(
             appid = game_info.get_steam_appid(),
             branchid = game_info.get_steam_branchid(),
             output_dir = output_dir,
-            output_name = game_info.get_name(),
+            output_name = "%s (%s)" % (game_info.get_name(), new_buildid),
             platform = platform,
             arch = arch,
             login = login,
