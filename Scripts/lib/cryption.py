@@ -48,6 +48,7 @@ def EncryptFile(
         "--symmetric",
         "--cipher-algo", "AES256",
         "--passphrase", passphrase,
+        "--compress-algo", "none",
         "--quiet",
         "--batch",
         source_file
@@ -99,6 +100,7 @@ def DecryptFile(
         gpg_tool,
         "--output", output_file,
         "--passphrase", passphrase,
+        "--compress-algo", "none",
         "--quiet",
         "--batch",
         "--decrypt",
