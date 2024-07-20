@@ -977,6 +977,32 @@ mattel_intellivision[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_mattel_intellivision] = mattel_intellivision
 
 ###########################################################
+# NEC PC-Engine
+###########################################################
+nec_pcengine = {}
+nec_pcengine[keys.platform_key_supercategory] = categories.game_supercategory_roms
+nec_pcengine[keys.platform_key_category] = categories.game_category_other
+nec_pcengine[keys.platform_key_subcategory] = categories.game_subcategory_nec_pcengine
+nec_pcengine[keys.platform_key_addons] = []
+nec_pcengine[keys.platform_key_launcher] = [types.launch_type_file]
+nec_pcengine[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
+nec_pcengine[keys.platform_key_fillonce_json] = []
+platforms[categories.game_subcategory_nec_pcengine] = nec_pcengine
+
+###########################################################
+# NEC PC-Engine CD
+###########################################################
+nec_pcengine_cd = {}
+nec_pcengine_cd[keys.platform_key_supercategory] = categories.game_supercategory_roms
+nec_pcengine_cd[keys.platform_key_category] = categories.game_category_other
+nec_pcengine_cd[keys.platform_key_subcategory] = categories.game_subcategory_nec_pcengine_cd
+nec_pcengine_cd[keys.platform_key_addons] = []
+nec_pcengine_cd[keys.platform_key_launcher] = [types.launch_type_file]
+nec_pcengine_cd[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
+nec_pcengine_cd[keys.platform_key_fillonce_json] = []
+platforms[categories.game_subcategory_nec_pcengine_cd] = nec_pcengine_cd
+
+###########################################################
 # NEC SuperGrafx
 ###########################################################
 nec_supergrafx = {}
@@ -990,30 +1016,30 @@ nec_supergrafx[keys.platform_key_fillonce_json] = []
 platforms[categories.game_subcategory_nec_supergrafx] = nec_supergrafx
 
 ###########################################################
-# NEC TurboGrafx CD & PC-Engine CD
+# NEC TurboGrafx-16
 ###########################################################
-nec_turbografx_pcengine_cd = {}
-nec_turbografx_pcengine_cd[keys.platform_key_supercategory] = categories.game_supercategory_roms
-nec_turbografx_pcengine_cd[keys.platform_key_category] = categories.game_category_other
-nec_turbografx_pcengine_cd[keys.platform_key_subcategory] = categories.game_subcategory_nec_turbografx_pcengine_cd
-nec_turbografx_pcengine_cd[keys.platform_key_addons] = []
-nec_turbografx_pcengine_cd[keys.platform_key_launcher] = [types.launch_type_file]
-nec_turbografx_pcengine_cd[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nec_turbografx_pcengine_cd[keys.platform_key_fillonce_json] = []
-platforms[categories.game_subcategory_nec_turbografx_pcengine_cd] = nec_turbografx_pcengine_cd
+nec_turbografx_16 = {}
+nec_turbografx_16[keys.platform_key_supercategory] = categories.game_supercategory_roms
+nec_turbografx_16[keys.platform_key_category] = categories.game_category_other
+nec_turbografx_16[keys.platform_key_subcategory] = categories.game_subcategory_nec_turbografx_16
+nec_turbografx_16[keys.platform_key_addons] = []
+nec_turbografx_16[keys.platform_key_launcher] = [types.launch_type_file]
+nec_turbografx_16[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
+nec_turbografx_16[keys.platform_key_fillonce_json] = []
+platforms[categories.game_subcategory_nec_turbografx_16] = nec_turbografx_16
 
 ###########################################################
-# NEC TurboGrafx-16 & PC-Engine
+# NEC TurboGrafx CD
 ###########################################################
-nec_turbografx_pcengine = {}
-nec_turbografx_pcengine[keys.platform_key_supercategory] = categories.game_supercategory_roms
-nec_turbografx_pcengine[keys.platform_key_category] = categories.game_category_other
-nec_turbografx_pcengine[keys.platform_key_subcategory] = categories.game_subcategory_nec_turbografx_pcengine
-nec_turbografx_pcengine[keys.platform_key_addons] = []
-nec_turbografx_pcengine[keys.platform_key_launcher] = [types.launch_type_file]
-nec_turbografx_pcengine[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nec_turbografx_pcengine[keys.platform_key_fillonce_json] = []
-platforms[categories.game_subcategory_nec_turbografx_pcengine] = nec_turbografx_pcengine
+nec_turbografx_cd = {}
+nec_turbografx_cd[keys.platform_key_supercategory] = categories.game_supercategory_roms
+nec_turbografx_cd[keys.platform_key_category] = categories.game_category_other
+nec_turbografx_cd[keys.platform_key_subcategory] = categories.game_subcategory_nec_turbografx_cd
+nec_turbografx_cd[keys.platform_key_addons] = []
+nec_turbografx_cd[keys.platform_key_launcher] = [types.launch_type_file]
+nec_turbografx_cd[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
+nec_turbografx_cd[keys.platform_key_fillonce_json] = []
+platforms[categories.game_subcategory_nec_turbografx_cd] = nec_turbografx_cd
 
 ###########################################################
 # Nokia N-Gage
