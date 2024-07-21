@@ -395,21 +395,19 @@ class GameInfo:
 
     ##############################
 
-    # Get steam appid
-    def get_steam_appid(self):
-        return self.get_subvalue(config.json_key_steam, config.json_key_steam_appid)
+    # Get amazon appid
+    def get_amazon_appid(self):
+        return self.get_subvalue(config.json_key_amazon, config.json_key_amazon_appid)
 
-    # Get steam branchid
-    def get_steam_branchid(self):
-        return self.get_subvalue(config.json_key_steam, config.json_key_steam_branchid)
+    # Get amazon buildid
+    def get_amazon_buildid(self):
+        return self.get_subvalue(config.json_key_amazon, config.json_key_amazon_buildid)
 
-    # Get steam buildid
-    def get_steam_buildid(self):
-        return self.get_subvalue(config.json_key_steam, config.json_key_steam_buildid)
+    ##############################
 
-    # Get steam builddate
-    def get_steam_builddate(self):
-        return self.get_subvalue(config.json_key_steam, config.json_key_steam_builddate)
+    # Get epic appid
+    def get_epic_appid(self):
+        return self.get_subvalue(config.json_key_epic, config.json_key_epic_appid)
 
     ##############################
 
@@ -421,13 +419,23 @@ class GameInfo:
     def get_gog_appname(self):
         return self.get_subvalue(config.json_key_gog, config.json_key_gog_appname)
 
-    # Get gog name
-    def get_gog_name(self):
-        return self.get_subvalue(config.json_key_gog, config.json_key_gog_name)
-
     # Get gog buildid
     def get_gog_buildid(self):
         return self.get_subvalue(config.json_key_gog, config.json_key_gog_buildid)
+
+    ##############################
+
+    # Get steam appid
+    def get_steam_appid(self):
+        return self.get_subvalue(config.json_key_steam, config.json_key_steam_appid)
+
+    # Get steam branchid
+    def get_steam_branchid(self):
+        return self.get_subvalue(config.json_key_steam, config.json_key_steam_branchid)
+
+    # Get steam buildid
+    def get_steam_buildid(self):
+        return self.get_subvalue(config.json_key_steam, config.json_key_steam_buildid)
 
     ##############################
 
