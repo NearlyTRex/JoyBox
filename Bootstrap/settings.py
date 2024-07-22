@@ -63,13 +63,16 @@ ini_defaults["UserData.Capture"]["overwrite_videos"] = "False"
 
 # UserData.GitHub
 ini_defaults["UserData.GitHub"] = {}
-ini_defaults["UserData.GitHub"]["github_username"] = "NearlyTRex"
+ini_defaults["UserData.GitHub"]["github_username"] = ""
 ini_defaults["UserData.GitHub"]["github_access_token"] = ""
 
 # UserData.Steam
 ini_defaults["UserData.Steam"] = {}
-ini_defaults["UserData.Steam"]["steam_username"] = "SemiDiabolicalParka"
-ini_defaults["UserData.Steam"]["steam_userid"] = "76561198286525102"
+ini_defaults["UserData.Steam"]["steam_accountname"] = ""
+ini_defaults["UserData.Steam"]["steam_username"] = ""
+ini_defaults["UserData.Steam"]["steam_userid"] = ""
+ini_defaults["UserData.Steam"]["steam_platform"] = "windows"
+ini_defaults["UserData.Steam"]["steam_arch"] = "64"
 if environment.IsWindowsPlatform():
     ini_defaults["UserData.Steam"]["steam_install_dir"] = "C:\\Program Files (x86)\\Steam"
 else:

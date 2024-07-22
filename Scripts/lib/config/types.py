@@ -161,3 +161,25 @@ preset_types = [
     preset_type_backup_sonyps4,
     preset_type_backup_sonypsn
 ]
+
+# Store types
+store_type_amazon = "Amazon"
+store_type_gog = "GOG"
+store_type_epic = "Epic"
+store_type_steam = "Steam"
+store_types = [
+    store_type_amazon,
+    store_type_gog,
+    store_type_epic,
+    store_type_steam
+]
+
+# Store action types
+store_action_type_login = "Login"
+store_action_type_download = "Download"
+store_action_type_check = "Check"
+store_action_types = [
+    store_action_type_login,
+    store_action_type_download,
+    store_action_type_check
+]
