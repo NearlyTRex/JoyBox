@@ -60,7 +60,9 @@ def main():
 
     # Load manifest
     if args.load_manifest:
-        store_obj.LoadManifest()
+        store_obj.LoadManifest(
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
 
     # Login
     if args.store_action == config.store_action_type_login:
