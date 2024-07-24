@@ -13,6 +13,7 @@ import stores
 import system
 import setup
 import ini
+from stores import gog
 from stores import steam
 
 # Parse arguments
@@ -52,7 +53,9 @@ def main():
 
     # Get store
     store_obj = None
-    if args.store_type == config.store_type_steam:
+    if args.store_type == config.store_type_gog:
+        store_obj = gog.GOG()
+    elif args.store_type == config.store_type_steam:
         store_obj = steam.Steam()
     else:
         system.LogError("Invalid store")

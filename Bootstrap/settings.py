@@ -66,6 +66,13 @@ ini_defaults["UserData.GitHub"] = {}
 ini_defaults["UserData.GitHub"]["github_username"] = ""
 ini_defaults["UserData.GitHub"]["github_access_token"] = ""
 
+# UserData.GOG
+ini_defaults["UserData.GOG"] = {}
+ini_defaults["UserData.GOG"]["gog_username"] = ""
+ini_defaults["UserData.GOG"]["gog_platform"] = "windows"
+ini_defaults["UserData.GOG"]["gog_includes"] = "i,e"
+ini_defaults["UserData.GOG"]["gog_excludes"] = ""
+
 # UserData.Steam
 ini_defaults["UserData.Steam"] = {}
 ini_defaults["UserData.Steam"]["steam_accountname"] = ""

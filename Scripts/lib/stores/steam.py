@@ -37,12 +37,12 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
         pass
 
-    # Install
-    def Install(
+    # Fetch
+    def Fetch(
         self,
-        app_id,
+        identifier,
         output_dir,
-        output_name,
+        output_name = None,
         branch = None,
         clean_output = False,
         verbose = False,
@@ -62,46 +62,46 @@ class Steam(storebase.StoreBase):
             return False
 
         # Make temporary dirs
-        tmp_dir_install = os.path.join(tmp_dir_result, "install")
+        tmp_dir_fetch = os.path.join(tmp_dir_result, "fetch")
         tmp_dir_archive = os.path.join(tmp_dir_result, "archive")
-        system.MakeDirectory(tmp_dir_install, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.MakeDirectory(tmp_dir_fetch, verbose = verbose, exit_on_failure = exit_on_failure)
         system.MakeDirectory(tmp_dir_archive, verbose = verbose, exit_on_failure = exit_on_failure)
 
-        # Get install command
-        install_cmd = [
+        # Get fetch command
+        fetch_cmd = [
             steamdepot_tool,
-            "-app", app_id,
+            "-app", identifier,
             "-os", self.platform,
             "-osarch", self.arch,
-            "-dir", tmp_dir_install
+            "-dir", tmp_dir_fetch
         ]
         if isinstance(branch, str) and len(branch) and branch != "public":
-            install_cmd += [
+            fetch_cmd += [
                 "-beta", branch
             ]
         if isinstance(self.accountname, str) and len(self.accountname):
-            install_cmd += [
+            fetch_cmd += [
                 "-username", self.accountname,
                 "-remember-password"
             ]
 
-        # Run install command
+        # Run fetch command
         command.RunBlockingCommand(
-            cmd = install_cmd,
+            cmd = fetch_cmd,
             options = command.CommandOptions(
                 blocking_processes = [steamdepot_tool]),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-        # Check that files installed
-        if system.IsDirectoryEmpty(tmp_dir_install):
-            system.LogError("Files were not installed successfully")
+        # Check that files fetched
+        if system.IsDirectoryEmpty(tmp_dir_fetch):
+            system.LogError("Files were not fetched successfully")
             return False
 
-        # Archive installed files
+        # Archive fetched files
         success = archive.CreateArchiveFromFolder(
             archive_file = os.path.join(tmp_dir_archive, "%s.7z" % output_name),
-            source_dir = tmp_dir_install,
+            source_dir = tmp_dir_fetch,
             excludes = [".DepotDownloader"],
             volume_size = "4092m",
             verbose = verbose,
@@ -165,7 +165,7 @@ class Steam(storebase.StoreBase):
 
         # Get latest steam info
         latest_steam_info = self.GetInfo(
-            app_id = game_info.get_steam_appid(),
+            identifier = game_info.get_steam_appid(),
             branch = game_info.get_steam_branchid(),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -174,20 +174,20 @@ class Steam(storebase.StoreBase):
         old_buildid = game_info.get_steam_buildid()
         new_buildid = latest_steam_info[config.json_key_steam_buildid]
 
-        # Check if game should be installed
-        should_install = False
+        # Check if game should be fetched
+        should_fetch = False
         if force:
-            should_install = True
+            should_fetch = True
         elif len(old_buildid) == 0:
-            should_install = True
+            should_fetch = True
         else:
             if new_buildid.isnumeric() and old_buildid.isnumeric():
-                should_install = int(new_buildid) > int(old_buildid)
+                should_fetch = int(new_buildid) > int(old_buildid)
 
-        # Install game
-        if should_install:
-            success = self.Install(
-                app_id = game_info.get_steam_appid(),
+        # Fetch game
+        if should_fetch:
+            success = self.Fetch(
+                identifier = game_info.get_steam_appid(),
                 branch = game_info.get_steam_branchid(),
                 output_dir = output_dir,
                 output_name = "%s (%s)" % (game_info.get_name(), new_buildid),
@@ -214,7 +214,7 @@ class Steam(storebase.StoreBase):
     # Get info
     def GetInfo(
         self,
-        app_id,
+        identifier,
         branch = None,
         verbose = False,
         exit_on_failure = False):
@@ -231,7 +231,7 @@ class Steam(storebase.StoreBase):
         info_cmd = [
             steamcmd_tool,
             "+login", "anonymous",
-            "+app_info_print", app_id,
+            "+app_info_print", identifier,
             "+quit"
         ]
 
@@ -243,7 +243,7 @@ class Steam(storebase.StoreBase):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if len(info_output) == 0:
-            system.LogError("Unable to find steam information for '%s'" % app_id)
+            system.LogError("Unable to find steam information for '%s'" % identifier)
             return False
 
         # Get steam json
@@ -256,22 +256,22 @@ class Steam(storebase.StoreBase):
                 if is_vdf_line:
                     vdf_text += line + "\n"
                 else:
-                    if line.startswith("AppID : %s" % app_id):
+                    if line.startswith("AppID : %s" % identifier):
                         is_vdf_line = True
             steam_json = vdf.loads(vdf_text)
         except:
-            system.LogError("Unable to parse steam information for '%s'" % app_id)
+            system.LogError("Unable to parse steam information for '%s'" % identifier)
             return False
 
         # Build game info
         game_info = {}
-        game_info[config.json_key_steam_appid] = app_id
+        game_info[config.json_key_steam_appid] = identifier
         if isinstance(branch, str) and len(branch):
             game_info[config.json_key_steam_branchid] = branch
         else:
             game_info[config.json_key_steam_branchid] = "public"
-        if app_id in steam_json:
-            appdata = steam_json[app_id]
+        if identifier in steam_json:
+            appdata = steam_json[identifier]
             if "common" in appdata:
                 appcommon = appdata["common"]
                 if "name" in appcommon:
@@ -298,7 +298,7 @@ class Steam(storebase.StoreBase):
             for manifest_name, manifest_data in self.manifest.items():
                 if "steam" not in manifest_data:
                     continue
-                if "id" in manifest_data["steam"] and str(manifest_data["steam"]["id"]) != app_id:
+                if "id" in manifest_data["steam"] and str(manifest_data["steam"]["id"]) != identifier:
                     continue
                 paths = []
                 keys = []
@@ -350,7 +350,7 @@ class Steam(storebase.StoreBase):
 
         # Get latest steam info
         latest_steam_info = self.GetInfo(
-            app_id = game_info.get_steam_appid(),
+            identifier = game_info.get_steam_appid(),
             branch = game_info.get_steam_branchid(),
             verbose = verbose,
             exit_on_failure = exit_on_failure)

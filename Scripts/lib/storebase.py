@@ -31,12 +31,12 @@ class StoreBase:
         exit_on_failure = False):
         pass
 
-    # Install
-    def Install(
+    # Fetch
+    def Fetch(
         self,
-        app_id,
+        identifier,
         output_dir,
-        output_name,
+        output_name = None,
         branch = None,
         clean_output = False,
         verbose = False,
@@ -57,7 +57,7 @@ class StoreBase:
     # Get info
     def GetInfo(
         self,
-        app_id,
+        identifier,
         branch = None,
         verbose = False,
         exit_on_failure = False):
