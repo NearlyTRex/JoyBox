@@ -33,7 +33,29 @@ class GOG(storebase.StoreBase):
         self,
         verbose = False,
         exit_on_failure = False):
-        pass
+
+        # Get tool
+        gog_tool = None
+        if programs.IsToolInstalled("LGOGDownloader"):
+            gog_tool = programs.GetToolProgram("LGOGDownloader")
+        if not gog_tool:
+            system.LogError("LGOGDownloader was not found")
+            sys.exit(1)
+
+        # Get login command
+        login_cmd = [
+            gog_tool,
+            "--login"
+        ]
+
+        # Run login command
+        code = command.RunBlockingCommand(
+            cmd = login_cmd,
+            options = command.CommandOptions(
+                blocking_processes = [gog_tool]),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        return (code == 0)
 
     # Fetch
     def Fetch(

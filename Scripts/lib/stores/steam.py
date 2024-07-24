@@ -35,7 +35,31 @@ class Steam(storebase.StoreBase):
         self,
         verbose = False,
         exit_on_failure = False):
-        pass
+
+        # Get tool
+        steam_tool = None
+        if programs.IsToolInstalled("SteamCMD"):
+            steam_tool = programs.GetToolProgram("SteamCMD")
+        if not steam_tool:
+            system.LogError("SteamCMD was not found")
+            sys.exit(1)
+
+        # Get login command
+        login_cmd = [
+            steam_tool,
+            "+login",
+            self.accountname,
+            "+quit"
+        ]
+
+        # Run login command
+        code = command.RunBlockingCommand(
+            cmd = login_cmd,
+            options = command.CommandOptions(
+                blocking_processes = [steam_tool]),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        return (code == 0)
 
     # Fetch
     def Fetch(

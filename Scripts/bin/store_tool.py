@@ -69,7 +69,9 @@ def main():
 
     # Login
     if args.store_action == config.store_action_type_login:
-        store_obj.Login()
+        store_obj.Login(
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
 
     # Download
     elif args.store_action == config.store_action_type_download:
