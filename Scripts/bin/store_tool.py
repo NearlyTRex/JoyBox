@@ -9,10 +9,9 @@ import argparse
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
-import stores
 import system
 import setup
-import ini
+from stores import amazon
 from stores import gog
 from stores import steam
 
@@ -53,7 +52,9 @@ def main():
 
     # Get store
     store_obj = None
-    if args.store_type == config.store_type_gog:
+    if args.store_type == config.store_type_amazon:
+        store_obj = amazon.Amazon()
+    elif args.store_type == config.store_type_gog:
         store_obj = gog.GOG()
     elif args.store_type == config.store_type_steam:
         store_obj = steam.Steam()
