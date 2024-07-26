@@ -11,11 +11,11 @@ import programs
 import gameinfo
 import system
 import environment
-import ini
+import hashing
 import storebase
 
-# GOG store
-class GOG(storebase.StoreBase):
+# Amazon store
+class Amazon(storebase.StoreBase):
 
     # Constructor
     def __init__(self):
@@ -51,6 +51,7 @@ class GOG(storebase.StoreBase):
         login_cmd = [
             python_tool,
             nile_script,
+            "--quiet",
             "auth",
             "--login"
         ]
@@ -58,6 +59,23 @@ class GOG(storebase.StoreBase):
         # Run login command
         code = command.RunBlockingCommand(
             cmd = login_cmd,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if (code != 0):
+            return False
+
+        # Get refresh command
+        refresh_cmd = [
+            python_tool,
+            nile_script,
+            "--quiet",
+            "auth",
+            "--refresh"
+        ]
+
+        # Run refresh command
+        code = command.RunBlockingCommand(
+            cmd = refresh_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         return (code == 0)
@@ -104,7 +122,7 @@ class GOG(storebase.StoreBase):
         fetch_cmd = [
             python_tool,
             nile_script,
-            "install",
+            "verify",
             "--path", tmp_dir_fetch,
             identifier
         ]
@@ -201,7 +219,7 @@ class GOG(storebase.StoreBase):
         should_fetch = False
         if force:
             should_fetch = True
-        elif len(old_buildid) == 0:
+        elif isinstance(old_buildid, str) and len(old_buildid) == 0:
             should_fetch = True
         else:
             should_fetch = new_buildid != old_buildid
@@ -211,7 +229,7 @@ class GOG(storebase.StoreBase):
             success = self.Fetch(
                 identifier = game_info.get_amazon_appid(),
                 output_dir = output_dir,
-                output_name = "%s (%s)" % (game_info.get_name(), new_buildid),
+                output_name = "%s (%s)" % (game_info.get_name(), hashing.CalculateStringCRC32(new_buildid)),
                 clean_output = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -260,6 +278,7 @@ class GOG(storebase.StoreBase):
         info_cmd = [
             python_tool,
             nile_script,
+            "--quiet",
             "details",
             identifier
         ]
@@ -284,6 +303,7 @@ class GOG(storebase.StoreBase):
         # Build game info
         game_info = {}
         game_info[config.json_key_amazon_appid] = identifier
+        game_info[config.json_key_amazon_buildid] = ""
         if "version" in amazon_json:
             game_info[config.json_key_amazon_buildid] = str(amazon_json["version"])
         if "product" in amazon_json:
