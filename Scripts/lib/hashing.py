@@ -13,7 +13,7 @@ import archive
 # Calculate string crc32
 def CalculateStringCRC32(string):
     import zlib
-    return "%x" % zlib.crc32(chunk, checksum)
+    return "%x" % zlib.crc32(string.encode("utf8"))
 
 # Calculate string md5
 def CalculateStringMD5(string):
