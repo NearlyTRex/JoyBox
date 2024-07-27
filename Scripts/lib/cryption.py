@@ -7,31 +7,70 @@ import config
 import command
 import programs
 import system
+import hashing
 
-# Get encrypted filename
-def GetEncryptedFilename(source_file):
-    if source_file.endswith(".gpg"):
-        return source_file
-    return source_file + ".gpg"
+# Get embedded filename
+def GetEmbeddedFilename(
+    source_file,
+    passphrase,
+    verbose = False,
+    exit_on_failure = False):
 
-# Get decrypted filename
-def GetDecryptedFilename(source_file):
-    if not source_file.endswith(".gpg"):
-        return source_file
-    return source_file[:-len(".gpg")]
+    # Get tool
+    gpg_tool = None
+    if programs.IsToolInstalled("Gpg"):
+        gpg_tool = programs.GetToolProgram("Gpg")
+    if not gpg_tool:
+        system.LogError("Gpg was not found")
+        return None
+
+    # Get info command
+    info_cmd = [
+        gpg_tool,
+        "--list-packets",
+        "--passphrase", passphrase,
+        "--quiet",
+        "--batch",
+        source_file
+    ]
+
+    # Run info command
+    info_output = command.RunOutputCommand(
+        cmd = info_cmd,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+    # Get embedded name
+    if isinstance(info_output, bytes):
+        info_output = info_output.decode()
+    for possible_name in system.FindQuotedSubstrings(info_output):
+        return possible_name
+    return None
 
 # Encrypt file
 def EncryptFile(
     source_file,
-    output_file,
     passphrase,
+    output_file = None,
     delete_original = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Ignore already encrypted
-    if os.path.exists(output_file):
+    # Check source file
+    if not system.IsPathValid(source_file):
+        return False
+    if source_file.endswith(".gpg"):
+        return True
+
+    # Check output file
+    if not output_file:
+        output_dir = system.GetFilenameDirectory(source_file)
+        output_name = hashing.CalculateStringMD5(system.GetFilenameFile(source_file)) + ".gpg"
+        output_file = os.path.join(output_dir, output_name)
+    if not system.IsPathValid(output_file):
+        return False
+    if system.DoesPathExist(output_file):
         return True
 
     # Get tool
@@ -51,6 +90,7 @@ def EncryptFile(
         "--compress-algo", "none",
         "--quiet",
         "--batch",
+        "--output", output_file,
         source_file
     ]
 
@@ -76,15 +116,32 @@ def EncryptFile(
 # Decrypt file
 def DecryptFile(
     source_file,
-    output_file,
     passphrase,
+    output_file = None,
     delete_original = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Ignore already decrypted
-    if os.path.exists(output_file):
+    # Check source file
+    if not system.IsPathValid(source_file):
+        return False
+    if not source_file.endswith(".gpg"):
+        return True
+
+    # Check output file
+    if not output_file:
+        output_dir = system.GetFilenameDirectory(source_file)
+        output_name = GetEmbeddedFilename(
+            source_file = source_file,
+            passphrase = passphrase,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if output_name:
+            output_file = os.path.join(output_dir, output_name)
+    if not system.IsPathValid(output_file):
+        return False
+    if system.DoesPathExist(output_file):
         return True
 
     # Get tool

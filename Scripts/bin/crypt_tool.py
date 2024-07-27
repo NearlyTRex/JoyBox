@@ -62,7 +62,6 @@ def main():
         for file in system.BuildFileList(root_path):
             cryption.EncryptFile(
                 source_file = file,
-                output_file = cryption.GetEncryptedFilename(file),
                 passphrase = passphrase,
                 delete_original = not args.keep_originals,
                 verbose = args.verbose,
@@ -74,7 +73,6 @@ def main():
         for file in system.BuildFileList(root_path):
             cryption.DecryptFile(
                 source_file = file,
-                output_file = cryption.GetDecryptedFilename(file),
                 passphrase = passphrase,
                 delete_original = not args.keep_originals,
                 verbose = args.verbose,
