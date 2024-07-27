@@ -116,7 +116,12 @@ def PromptForIntegerValue(description, default_value):
 
 ###########################################################
 
-# Get enclosed substrings from a delimiter
+# Get quoted substrings
+def FindQuotedSubstrings(string, delimiter = "\""):
+    pattern = "%s(.*?)%s" % delimiter
+    return re.findall(pattern, string)
+
+# Get enclosed substrings
 def FindEnclosedSubstrings(string, delimiter = "\""):
     pattern = "([%s])(?:\\?.)*?\1" % delimiter
     return re.findall(pattern, string)
