@@ -200,7 +200,7 @@ class Steam(storebase.StoreBase):
 
         # Check if game should be fetched
         should_fetch = False
-        if force:
+        if force or old_buildid is None or new_buildid is None:
             should_fetch = True
         elif len(old_buildid) == 0:
             should_fetch = True

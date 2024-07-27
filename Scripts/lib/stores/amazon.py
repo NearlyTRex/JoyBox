@@ -217,9 +217,9 @@ class Amazon(storebase.StoreBase):
 
         # Check if game should be fetched
         should_fetch = False
-        if force:
+        if force or old_buildid is None or new_buildid is None:
             should_fetch = True
-        elif isinstance(old_buildid, str) and len(old_buildid) == 0:
+        elif len(old_buildid) == 0:
             should_fetch = True
         else:
             should_fetch = new_buildid != old_buildid
