@@ -47,6 +47,40 @@ def GetEmbeddedFilename(
         return possible_name
     return None
 
+# Get real file path
+def GetRealFilePath(
+    source_file,
+    passphrase,
+    verbose = False,
+    exit_on_failure = False):
+    real_dir = system.GetFilenameDirectory(source_file)
+    real_name = GetEmbeddedFilename(
+        source_file = source_file,
+        passphrase = passphrase,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if real_name:
+        return os.path.join(real_dir, real_name)
+    return None
+
+# Get real file paths
+def GetRealFilePaths(
+    source_files,
+    passphrase,
+    verbose = False,
+    exit_on_failure = False):
+    real_paths = []
+    if isinstance(source_files, list):
+        for source_file in source_files:
+            real_path = GetRealFilePath(
+                source_file = source_file,
+                passphrase = passphrase,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if real_path:
+                real_paths.append(real_path)
+    return real_paths
+
 # Encrypt file
 def EncryptFile(
     source_file,
@@ -131,14 +165,11 @@ def DecryptFile(
 
     # Check output file
     if not output_file:
-        output_dir = system.GetFilenameDirectory(source_file)
-        output_name = GetEmbeddedFilename(
+        output_file = GetRealFilePath(
             source_file = source_file,
             passphrase = passphrase,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        if output_name:
-            output_file = os.path.join(output_dir, output_name)
     if not system.IsPathValid(output_file):
         return False
     if system.DoesPathExist(output_file):
