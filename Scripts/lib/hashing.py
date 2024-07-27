@@ -13,21 +13,29 @@ import archive
 # Calculate string crc32
 def CalculateStringCRC32(string):
     import zlib
-    return "%x" % zlib.crc32(string.encode("utf8"))
+    if isinstance(string, str):
+        string = string.encode("utf8")
+    return "%x" % zlib.crc32(string)
 
 # Calculate string md5
 def CalculateStringMD5(string):
     import hashlib
+    if isinstance(string, str):
+        string = string.encode("utf8")
     return hashlib.md5(string).hexdigest()
 
 # Calculate string sha1
 def CalculateStringSHA1(string):
     import hashlib
+    if isinstance(string, str):
+        string = string.encode("utf8")
     return hashlib.sha1(string).hexdigest()
 
 # Calculate string sha256
 def CalculateStringSHA256(string):
     import hashlib
+    if isinstance(string, str):
+        string = string.encode("utf8")
     return hashlib.sha256(string).hexdigest()
 
 # Calculate string XXH3
