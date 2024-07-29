@@ -76,6 +76,7 @@ drive_root_windows = "C:\\"
 drive_root_posix = "/"
 
 # Extensions
+encrypted_file_extension = ".enc"
 computer_program_extensions = [".exe", ".lnk", ".bat"]
 computer_archive_extensions_zip = [".zip", ".install"]
 computer_archive_extensions_7z = [".7z"]

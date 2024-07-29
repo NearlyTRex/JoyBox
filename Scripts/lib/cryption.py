@@ -9,6 +9,16 @@ import programs
 import system
 import hashing
 
+# Determine if file is encrypted
+def IsFileEncrypted(source_file):
+    return source_file.endswith(config.encrypted_file_extension)
+
+# Get encrypted filename
+def GetEncryptedFilename(source_file):
+    output_dir = system.GetFilenameDirectory(source_file)
+    output_name = hashing.CalculateStringMD5(system.GetFilenameFile(source_file)) + config.encrypted_file_extension
+    return os.path.join(output_dir, output_name)
+
 # Get embedded filename
 def GetEmbeddedFilename(
     source_file,
@@ -94,14 +104,12 @@ def EncryptFile(
     # Check source file
     if not system.IsPathValid(source_file):
         return False
-    if source_file.endswith(".gpg"):
+    if IsFileEncrypted(source_file):
         return True
 
     # Check output file
     if not output_file:
-        output_dir = system.GetFilenameDirectory(source_file)
-        output_name = hashing.CalculateStringMD5(system.GetFilenameFile(source_file)) + ".gpg"
-        output_file = os.path.join(output_dir, output_name)
+        output_file = GetEncryptedFilename(source_file)
     if not system.IsPathValid(output_file):
         return False
     if system.DoesPathExist(output_file):
@@ -160,7 +168,7 @@ def DecryptFile(
     # Check source file
     if not system.IsPathValid(source_file):
         return False
-    if not source_file.endswith(".gpg"):
+    if not IsFileEncrypted(source_file):
         return True
 
     # Check output file
