@@ -7,6 +7,7 @@ import config
 import environment
 import system
 import archive
+import cryption
 
 ###########################################################
 
@@ -219,17 +220,6 @@ def FindDuplicateArchives(filename, directory, verbose = False, exit_on_failure 
 
 ###########################################################
 
-# Calculate hash
-def CalculateHash(filename, base_path, verbose = False, exit_on_failure = False):
-    fullpath = os.path.join(base_path, filename)
-    system.Log("Hashing file %s ..." % fullpath)
-    hash_data = {}
-    hash_data["filename"] = filename
-    hash_data["hash"] = CalculateFileXXH3(fullpath, verbose = verbose, exit_on_failure = exit_on_failure)
-    hash_data["size"] = os.path.getsize(fullpath)
-    hash_data["mtime"] = int(os.path.getmtime(fullpath))
-    return hash_data
-
 # Read hash file
 def ReadHashFile(filename, verbose = False, exit_on_failure = False):
     try:
@@ -327,8 +317,40 @@ def DoesFileNeedToBeHashed(input_file, base_path, hash_contents = {}):
         return True
     return False
 
+###########################################################
+
+# Calculate hash
+def CalculateHash(filename, base_path, passphrase = None, verbose = False, exit_on_failure = False):
+
+    # Get full path of file
+    fullpath = os.path.join(base_path, filename)
+    system.Log("Hashing file %s ..." % fullpath)
+
+    # Create hash data
+    hash_data = {}
+    if cryption.IsFileEncrypted(fullpath):
+        file_info = cryption.GetEmbeddedFileInfo(
+            source_file = fullpath,
+            passphrase = passphrase,
+            hasher = CalculateFileXXH3,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if file_info:
+            hash_data["filename"] = os.path.join(system.GetFilenameDirectory(filename), file_info["filename"])
+            hash_data["hash"] = file_info["hash"]
+            hash_data["size"] = file_info["size"]
+            hash_data["mtime"] = file_info["mtime"]
+    else:
+        hash_data["filename"] = filename
+        hash_data["hash"] = CalculateFileXXH3(fullpath, verbose = verbose, exit_on_failure = exit_on_failure)
+        hash_data["size"] = os.path.getsize(fullpath)
+        hash_data["mtime"] = int(os.path.getmtime(fullpath))
+
+    # Return hash data
+    return hash_data
+
 # Hash files
-def HashFiles(input_path, base_path, output_file, verbose = False, exit_on_failure = False):
+def HashFiles(input_path, base_path, output_file, passphrase = None, verbose = False, exit_on_failure = False):
 
     # Get hash contents
     hash_contents = {}
@@ -349,6 +371,7 @@ def HashFiles(input_path, base_path, output_file, verbose = False, exit_on_failu
             hash_data = CalculateHash(
                 filename = relative_file,
                 base_path = relative_base,
+                passphrase = passphrase,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             hash_contents[hash_data["filename"]] = hash_data
@@ -379,7 +402,7 @@ def HashFiles(input_path, base_path, output_file, verbose = False, exit_on_failu
 ###########################################################
 
 # Hash category files
-def HashCategoryFiles(input_path, file_supercategory, file_category, file_subcategory, verbose = False, exit_on_failure = False):
+def HashCategoryFiles(input_path, file_supercategory, file_category, file_subcategory, passphrase = None, verbose = False, exit_on_failure = False):
 
     # Check required types
     system.AssertIsString(file_supercategory, "file_supercategory")
@@ -408,6 +431,7 @@ def HashCategoryFiles(input_path, file_supercategory, file_category, file_subcat
         input_path = input_path,
         base_path = os.path.join(file_supercategory, file_category, file_subcategory),
         output_file = hash_file,
+        passphrase = passphrase,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:

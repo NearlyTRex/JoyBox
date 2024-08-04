@@ -13,6 +13,7 @@ import system
 import environment
 import hashing
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Generate file hashes.")
@@ -37,6 +38,10 @@ parser.add_argument("-m", "--generation_mode",
         "standard"
     ],
     default="standard", help="Generation mode"
+)
+parser.add_argument("-t", "--passphrase_type",
+    choices=config.passphrase_types,
+    default=config.passphrase_type_none, help="Passphrase type"
 )
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
@@ -63,6 +68,13 @@ def main():
     elif args.source_files == "stored":
         source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.file_supercategory)
 
+    # Get passphrase
+    passphrase = None
+    if args.passphrase_type == config.passphrase_type_general:
+        passphrase = ini.GetIniValue("UserData.Protection", "general_passphrase")
+    elif args.passphrase_type == config.passphrase_type_locker:
+        passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
+
     # Manually specify all parameters
     if args.generation_mode == "custom":
         if not args.file_category:
@@ -76,6 +88,7 @@ def main():
             file_supercategory = args.file_supercategory,
             file_category = args.file_category,
             file_subcategory = args.file_subcategory,
+            passphrase = passphrase,
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
 
@@ -89,6 +102,7 @@ def main():
                 file_supercategory = args.file_supercategory,
                 file_category = args.file_category,
                 file_subcategory = args.file_subcategory,
+                passphrase = passphrase,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
 
@@ -100,6 +114,7 @@ def main():
                     file_supercategory = args.file_supercategory,
                     file_category = args.file_category,
                     file_subcategory = file_subcategory,
+                    passphrase = passphrase,
                     verbose = args.verbose,
                     exit_on_failure = args.exit_on_failure)
 
@@ -112,6 +127,7 @@ def main():
                         file_supercategory = args.file_supercategory,
                         file_category = file_category,
                         file_subcategory = file_subcategory,
+                        passphrase = passphrase,
                         verbose = args.verbose,
                         exit_on_failure = args.exit_on_failure)
 

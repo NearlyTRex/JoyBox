@@ -13,8 +13,8 @@ import hashing
 def IsFileEncrypted(source_file):
     return source_file.endswith(config.encrypted_file_extension)
 
-# Get encrypted filename
-def GetEncryptedFilename(source_file):
+# Generate encrypted filename
+def GenerateEncryptedFilename(source_file):
     output_dir = system.GetFilenameDirectory(source_file)
     output_name = hashing.CalculateStringMD5(system.GetFilenameFile(source_file)) + config.encrypted_file_extension
     return os.path.join(output_dir, output_name)
@@ -56,6 +56,61 @@ def GetEmbeddedFilename(
     for possible_name in system.FindQuotedSubstrings(info_output):
         return possible_name
     return None
+
+# Get embedded file info
+def GetEmbeddedFileInfo(
+    source_file,
+    passphrase,
+    hasher,
+    chunksize = config.hash_chunk_size,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Get embedded filename
+    embedded_filename = GetEmbeddedFilename(
+        source_file = source_file,
+        passphrase = passphrase,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not embedded_filename:
+        return None
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    if not tmp_dir_success:
+        return None
+
+    # Get temporary file
+    tmp_file = os.path.join(tmp_dir_result, embedded_filename)
+
+    # Decrypt file
+    success = DecryptFile(
+        source_file = source_file,
+        passphrase = passphrase,
+        output_file = tmp_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        return None
+
+    # Get file info
+    file_info = {}
+    file_info["filename"] = embedded_filename
+    if callable(hasher):
+        file_info["hash"] = hasher(
+            filename = tmp_file,
+            chunksize = chunksize,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+    file_info["size"] = os.path.getsize(tmp_file)
+    file_info["mtime"] = int(os.path.getmtime(tmp_file))
+
+    # Clean up
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+
+    # Return file info
+    return file_info
 
 # Get real file path
 def GetRealFilePath(
@@ -109,7 +164,7 @@ def EncryptFile(
 
     # Check output file
     if not output_file:
-        output_file = GetEncryptedFilename(source_file)
+        output_file = GenerateEncryptedFilename(source_file)
     if not system.IsPathValid(output_file):
         return False
     if system.DoesPathExist(output_file):
