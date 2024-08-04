@@ -462,16 +462,15 @@ class GameInfo:
 ###########################################################
 
 # Find best suited game file
-def FindBestGameFile(game_directory):
+def FindBestGameFile(game_files):
     game_file_entries = []
-    for obj in system.GetDirectoryContents(game_directory):
-        obj_path = os.path.join(game_directory, obj)
-        if os.path.isfile(obj_path):
+    if isinstance(game_files, list):
+        for file in game_files:
             game_file_entry = {}
-            game_file_entry["file"] = os.path.abspath(obj_path)
+            game_file_entry["file"] = os.path.abspath(file)
             game_file_entry["weight"] = config.gametype_weight_else
             for key in config.gametype_weights.keys():
-                if obj.endswith(key):
+                if file.endswith(key):
                     game_file_entry["weight"] = config.gametype_weights[key]
                     break
             game_file_entries.append(game_file_entry)
