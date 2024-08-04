@@ -1318,6 +1318,17 @@ def NormalizeFilePath(path, force_posix = False, force_windows = False, separato
     normalized_path = normalized_path.replace("\\", separator)
     return normalized_path
 
+# Split file path
+def SplitFilePath(path, splitter):
+    split_paths = []
+    for idx, part in enumerate(path.split(splitter)):
+        norm_part = NormalizeFilePath(part)
+        if idx == 0:
+            split_paths.append(norm_part)
+        else:
+            split_paths.append(GetFilenameDriveOffset(norm_part))
+    return split_paths
+
 # Rebase file path
 def RebaseFilePath(path, old_base_path, new_base_path):
     norm_path = NormalizeFilePath(path)
