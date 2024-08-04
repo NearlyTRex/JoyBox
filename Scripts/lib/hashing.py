@@ -350,7 +350,7 @@ def CalculateHash(filename, base_path, passphrase = None, verbose = False, exit_
     return hash_data
 
 # Hash files
-def HashFiles(input_path, base_path, output_file, passphrase = None, verbose = False, exit_on_failure = False):
+def HashFiles(input_path, base_path, output_file, passphrase = None, delete_nonexistent_files = False, verbose = False, exit_on_failure = False):
 
     # Get hash contents
     hash_contents = {}
@@ -362,9 +362,14 @@ def HashFiles(input_path, base_path, output_file, passphrase = None, verbose = F
         if os.path.realpath(file) == os.path.realpath(output_file):
             continue
 
+        # Split by base path
+        file_parts = system.SplitFilePath(file, base_path)
+        if len(file_parts) != 2:
+            continue
+
         # Check if file needs to be hashed
-        relative_file = system.RebaseFilePath(file, input_path, base_path)
-        relative_base = file.replace(relative_file, "")
+        relative_base = file_parts[0]
+        relative_file = os.path.join(base_path, file_parts[1])
         if DoesFileNeedToBeHashed(relative_file, relative_base, hash_contents):
 
             # Calculate hash
@@ -385,12 +390,13 @@ def HashFiles(input_path, base_path, output_file, passphrase = None, verbose = F
                 return False
 
     # Remove keys regarding files that do not exist
-    for hash_key in sorted(hash_contents.keys()):
-        hashed_file_base = environment.GetLockerGamingRootDir()
-        hashed_file_offset = hash_contents[hash_key]["filename"]
-        hashed_file = os.path.join(hashed_file_base, hashed_file_offset)
-        if not os.path.exists(hashed_file):
-            del hash_contents[hash_key]
+    if delete_nonexistent_files:
+        for hash_key in sorted(hash_contents.keys()):
+            hashed_file_base = environment.GetLockerGamingRootDir()
+            hashed_file_offset = hash_contents[hash_key]["filename"]
+            hashed_file = os.path.join(hashed_file_base, hashed_file_offset)
+            if not os.path.exists(hashed_file):
+                del hash_contents[hash_key]
 
     # Write hash file
     return WriteHashFile(
