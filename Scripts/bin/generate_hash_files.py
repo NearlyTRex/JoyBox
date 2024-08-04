@@ -42,19 +42,19 @@ parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
-# Check input path
-input_path = ""
-if args.input_path:
-    input_path = os.path.realpath(args.input_path)
-    if not os.path.exists(input_path):
-        system.LogError("Path '%s' does not exist" % args.input_path)
-        sys.exit(-1)
-
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get input path
+    input_path = ""
+    if args.input_path:
+        input_path = os.path.realpath(args.input_path)
+        if not os.path.exists(input_path):
+            system.LogError("Path '%s' does not exist" % args.input_path)
+            sys.exit(-1)
 
     # Get source file root
     source_file_root = ""

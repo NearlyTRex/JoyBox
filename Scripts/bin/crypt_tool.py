@@ -20,11 +20,9 @@ parser.add_argument("path", help="Input path")
 parser.add_argument("-e", "--encrypt", action="store_true", help="Encrypt files")
 parser.add_argument("-d", "--decrypt", action="store_true", help="Decrypt files")
 parser.add_argument("-t", "--passphrase_type",
-    choices=[
-        config.passphrase_type_general,
-        config.passphrase_type_locker
-    ],
-    default=config.passphrase_type_general, help="Passphrase type"
+    choices=config.passphrase_types,
+    default=config.passphrase_type_general,
+    help="Passphrase type"
 )
 parser.add_argument("-k", "--keep_originals", action="store_true", help="Keep original files")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")

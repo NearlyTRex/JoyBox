@@ -16,14 +16,26 @@ locker_type_programs = "Programs"
 # Passphrase types
 passphrase_type_general = "General"
 passphrase_type_locker = "Locker"
+passphrase_types = [
+    passphrase_type_general,
+    passphrase_type_locker
+]
 
 # Backup types
 backup_type_copy = "Copy"
 backup_type_archive = "Archive"
+backup_types = [
+    backup_type_copy,
+    backup_type_archive
+]
 
 # Source types
 source_type_local = "Local"
 source_type_remote = "Remote"
+source_types = [
+    source_type_local,
+    source_type_remote
+]
 
 # Metadata format types
 metadata_format_type_pegasus = "pegasus"
@@ -35,6 +47,11 @@ metadata_format_types = [
 metadata_source_type_thegamesdb = "thegamesdb"
 metadata_source_type_gamefaqs = "gamefaqs"
 metadata_source_type_itchio = "itchio"
+metadata_source_types = [
+    metadata_source_type_thegamesdb,
+    metadata_source_type_gamefaqs,
+    metadata_source_type_itchio
+]
 
 # Addon types
 addon_type_dlc = "dlc"

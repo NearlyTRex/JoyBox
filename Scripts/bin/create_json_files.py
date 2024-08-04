@@ -10,13 +10,45 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import config
 import environment
-import gameinfo
-import platforms
 import system
+import collection
 import setup
+import ini
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Create or update json files.")
+parser.add_argument("-i", "--input_path", type=str, help="Input path")
+parser.add_argument("-u", "--file_supercategory",
+    choices=config.game_supercategories,
+    default=config.game_supercategory_roms,
+    help="File supercategory"
+)
+parser.add_argument("-c", "--file_category", type=str, help="File category")
+parser.add_argument("-s", "--file_subcategory", type=str, help="File subcategory")
+parser.add_argument("-n", "--file_title", type=str, help="File title")
+parser.add_argument("-e", "--source_type",
+    choices=config.source_types,
+    default=config.source_type_remote,
+    help="Source types"
+)
+parser.add_argument("-f", "--source_files",
+    choices=[
+        "input",
+        "stored"
+    ],
+    default="stored", help="Source files"
+)
+parser.add_argument("-m", "--generation_mode",
+    choices=[
+        "custom",
+        "standard"
+    ],
+    default="standard", help="Generation mode"
+)
+parser.add_argument("-t", "--passphrase_type",
+    choices=config.passphrase_types,
+    default=config.passphrase_type_general, help="Passphrase type"
+)
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
@@ -27,139 +59,74 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Create json files
-    for game_category in config.game_categories:
-        for game_subcategory in config.game_subcategories[game_category]:
-            game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-            for game_name in gameinfo.FindAllGameNames(environment.GetLockerGamingRomsRootDir(config.source_type_remote), game_category, game_subcategory):
-                base_rom_path = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
+    # Get input path
+    input_path = ""
+    if args.input_path:
+        input_path = os.path.realpath(args.input_path)
+        if not os.path.exists(input_path):
+            system.LogError("Path '%s' does not exist" % args.input_path)
+            sys.exit(-1)
 
-                # Get json file path
-                json_file_path = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name)
+    # Get source file root
+    source_file_root = ""
+    if args.source_files == "input":
+        source_file_root = input_path
+    elif args.source_files == "stored":
+        source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.file_supercategory, args.source_type)
 
-                # Build json data
-                json_file_data = {}
+    # Get passphrase
+    passphrase = None
+    if args.passphrase_type == config.passphrase_type_general:
+        passphrase = ini.GetIniValue("UserData.Protection", "general_passphrase")
+    elif args.passphrase_type == config.passphrase_type_locker:
+        passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
 
-                # Already existing json file
-                if os.path.exists(json_file_path):
-                    json_file_data = system.ReadJsonFile(
-                        src = json_file_path,
+    # Manually specify all parameters
+    if args.generation_mode == "custom":
+        collection.CreateGameJsonFile(
+            file_category = args.file_category,
+            file_subcategory = args.file_subcategory,
+            file_title = args.file_title,
+            file_root = source_file_root,
+            passphrase = passphrase,
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
+
+    # Automatic according to standard layout
+    elif args.generation_mode == "standard":
+
+        # Specific category/subcategory
+        if args.file_category and args.file_subcategory:
+            collection.CreateGameJsonFiles(
+                file_category = args.file_category,
+                file_subcategory = args.file_subcategory,
+                file_root = os.path.join(source_file_root, args.file_category, args.file_subcategory),
+                passphrase = passphrase,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+
+        # Specific category/all subcategories in that category
+        elif args.file_category:
+            for file_subcategory in config.game_subcategories[args.file_category]:
+                collection.CreateGameJsonFiles(
+                    file_category = args.file_category,
+                    file_subcategory = file_subcategory,
+                    file_root = os.path.join(source_file_root, args.file_category, file_subcategory),
+                    passphrase = passphrase,
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
+
+        # All categories/subcategories
+        else:
+            for file_category in config.game_categories:
+                for file_subcategory in config.game_subcategories[game_category]:
+                    collection.CreateGameJsonFiles(
+                        file_category = args.file_category,
+                        file_subcategory = file_subcategory,
+                        file_root = os.path.join(source_file_root, args.file_category, file_subcategory),
+                        passphrase = passphrase,
                         verbose = args.verbose,
                         exit_on_failure = args.exit_on_failure)
-
-                # Set json value
-                def SetJsonValue(json_key, json_value):
-                    if platforms.IsAutoFillJsonKey(game_platform, json_key):
-                        json_file_data[json_key] = json_value
-                    elif platforms.IsFillOnceJsonKey(game_platform, json_key):
-                        if json_key not in json_file_data:
-                            json_file_data[json_key] = json_value
-
-                # Get all files
-                all_files = system.BuildFileList(
-                    root = base_rom_path,
-                    use_relative_paths = True)
-
-                # Get all dlc
-                all_dlc = system.BuildFileList(
-                    root = os.path.join(base_rom_path, config.json_key_dlc),
-                    use_relative_paths = True)
-
-                # Get all updates
-                all_updates = system.BuildFileList(
-                    root = os.path.join(base_rom_path, config.json_key_update),
-                    use_relative_paths = True)
-
-                # Get all extras
-                all_extras = system.BuildFileList(
-                    root = os.path.join(base_rom_path, config.json_key_extra),
-                    use_relative_paths = True)
-
-                # Get all dependencies
-                all_dependencies = system.BuildFileList(
-                    root = os.path.join(base_rom_path, config.json_key_dependencies),
-                    use_relative_paths = True)
-
-                # Get best game file
-                best_game_file = gameinfo.FindBestGameFile(base_rom_path)
-                best_game_file = system.GetFilenameFile(best_game_file)
-
-                # Find computer installers
-                computer_installers = []
-                for file in system.GetDirectoryContents(base_rom_path):
-                    if file.endswith(".exe"):
-                        computer_installers += [os.path.join(config.token_setup_main_root, file)]
-                for file in system.GetDirectoryContents(base_rom_path):
-                    if file.endswith(".msi"):
-                        computer_installers += [os.path.join(config.token_setup_main_root, file)]
-                        break
-
-                # Find computer update installers
-                computer_update_installers = system.BuildFileListByExtensions(
-                    root = os.path.join(base_rom_path, "update"),
-                    extensions = config.computer_program_extensions,
-                    new_relative_path = os.path.join(config.token_setup_main_root, "update"),
-                    use_relative_paths = True)
-                computer_installers += computer_update_installers
-
-                # Find computer dlc installers
-                computer_dlc_installers = system.BuildFileListByExtensions(
-                    root = os.path.join(base_rom_path, "dlc"),
-                    extensions = config.computer_program_extensions,
-                    new_relative_path = os.path.join(config.token_setup_main_root, "dlc"),
-                    use_relative_paths = True)
-                computer_installers += computer_dlc_installers
-
-                # Common platforms
-                SetJsonValue(config.json_key_files, all_files)
-                SetJsonValue(config.json_key_dlc, all_dlc)
-                SetJsonValue(config.json_key_update, all_updates)
-                SetJsonValue(config.json_key_extra, all_extras)
-                SetJsonValue(config.json_key_dependencies, all_dependencies)
-                SetJsonValue(config.json_key_transform_file, best_game_file)
-
-                # Computer
-                if game_category == config.game_category_computer:
-                    SetJsonValue(config.json_key_installer_exe, computer_installers)
-                    if game_subcategory == config.game_subcategory_amazon_games:
-                        SetJsonValue(config.json_key_amazon, {
-                            config.json_key_amazon_appid: "",
-                            config.json_key_amazon_name: ""
-                        })
-                    elif game_subcategory == config.game_subcategory_gog:
-                        SetJsonValue(config.json_key_gog, {
-                            config.json_key_gog_appid: "",
-                            config.json_key_gog_appname: ""
-                        })
-                    elif game_subcategory == config.game_subcategory_steam:
-                        SetJsonValue(config.json_key_steam, {
-                            config.json_key_steam_appid: "",
-                            config.json_key_steam_branchid: "public"
-                        })
-
-                # Other platforms
-                else:
-                    SetJsonValue(config.json_key_launch_name, "REPLACEME")
-                    SetJsonValue(config.json_key_launch_file, best_game_file)
-
-                # Write json file
-                system.MakeDirectory(
-                    dir = system.GetFilenameDirectory(json_file_path),
-                    verbose = args.verbose,
-                    exit_on_failure = args.exit_on_failure)
-                system.WriteJsonFile(
-                    src = json_file_path,
-                    json_data = json_file_data,
-                    verbose = args.verbose,
-                    exit_on_failure = args.exit_on_failure)
-
-                # Clean json file
-                system.CleanJsonFile(
-                    src = json_file_path,
-                    sort_keys = True,
-                    remove_empty_values = True,
-                    verbose = args.verbose,
-                    exit_on_failure = args.exit_on_failure)
 
 # Start
 main()
