@@ -1268,6 +1268,25 @@ def BuildSymlinkDirectoryList(root, excludes = [], new_relative_path = "", use_r
 
 ###########################################################
 
+# Convert to top level paths
+def ConvertToTopLevelPaths(path_list, path_root = None, only_files = False, only_dirs = False):
+    top_level_paths = set()
+    for path in path_list:
+        path_offset = GetFilenameDriveOffset(path)
+        path_front = GetFilenameFront(path_offset)
+        should_save_path = False
+        if IsPathValid(path_root):
+            path_full = os.path.join(path_root, path_front)
+            if only_files and os.path.isfile(path_full):
+                should_save_path = True
+            elif only_dirs and os.path.isdir(path_full):
+                should_save_path = True
+        else:
+            should_save_path = True
+        if should_save_path:
+            top_level_paths.add(path_front)
+    return sorted(top_level_paths)
+
 # Convert file list to relative paths
 def ConvertFileListToRelativePaths(file_list, base_dir):
     replacement = NormalizeFilePath(base_dir, separator = config.os_pathsep)
@@ -1278,14 +1297,14 @@ def ConvertFileListToRelativePaths(file_list, base_dir):
         normalized_filename = NormalizeFilePath(filename, separator = config.os_pathsep)
         normalized_filename = normalized_filename.replace(replacement, "")
         relative_file_list.append(normalized_filename)
-    return relative_file_list
+    return sorted(relative_file_list)
 
 # Convert file list to absolute paths
 def ConvertFileListToAbsolutePaths(file_list, base_dir):
     absolute_file_list = []
     for filename in file_list:
         absolute_file_list.append(os.path.join(base_dir, filename))
-    return absolute_file_list
+    return sorted(absolute_file_list)
 
 # Normalize file path
 def NormalizeFilePath(path, force_posix = False, force_windows = False, separator = os.sep):
@@ -1447,6 +1466,10 @@ def GetFilenameDriveOffset(path):
     if len(anchor) == 0:
         return path
     return path[len(anchor):]
+
+# Get filename front slice
+def GetFilenameFrontSlice(path):
+    return RebaseFilePath(path, GetFilenameFront(path) + config.os_pathsep, "")
 
 # Get filename file
 def GetFilenameFile(path):
