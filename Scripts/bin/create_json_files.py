@@ -47,7 +47,7 @@ parser.add_argument("-m", "--generation_mode",
 )
 parser.add_argument("-t", "--passphrase_type",
     choices=config.passphrase_types,
-    default=config.passphrase_type_general, help="Passphrase type"
+    default=config.passphrase_type_none, help="Passphrase type"
 )
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")

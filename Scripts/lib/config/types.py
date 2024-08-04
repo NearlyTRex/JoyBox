@@ -14,9 +14,11 @@ locker_type_photos = "Photos"
 locker_type_programs = "Programs"
 
 # Passphrase types
+passphrase_type_none = "None"
 passphrase_type_general = "General"
 passphrase_type_locker = "Locker"
 passphrase_types = [
+    passphrase_type_none,
     passphrase_type_general,
     passphrase_type_locker
 ]
