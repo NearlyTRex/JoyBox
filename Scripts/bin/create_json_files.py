@@ -83,6 +83,15 @@ def main():
 
     # Manually specify all parameters
     if args.generation_mode == "custom":
+        if not args.file_category:
+            system.LogError("File category is required for custom mode")
+            sys.exit(-1)
+        if not args.file_subcategory:
+            system.LogError("File subcategory is required for custom mode")
+            sys.exit(-1)
+        if not args.file_title:
+            system.LogError("File title is required for custom mode")
+            sys.exit(-1)
         collection.CreateGameJsonFile(
             file_category = args.file_category,
             file_subcategory = args.file_subcategory,
