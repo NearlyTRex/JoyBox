@@ -104,7 +104,7 @@ def GetEmbeddedFileInfo(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
     file_info["size"] = os.path.getsize(tmp_file)
-    file_info["mtime"] = int(os.path.getmtime(tmp_file))
+    file_info["mtime"] = int(os.path.getmtime(source_file))
 
     # Clean up
     system.RemoveDirectory(tmp_dir_result, verbose = verbose)
