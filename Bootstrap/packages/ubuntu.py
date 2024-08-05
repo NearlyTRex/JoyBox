@@ -259,6 +259,8 @@ apt_packages = [
     "qmmp",
 
     # Utils
+    "gsmartcontrol",
+    "hardinfo",
     "jstest-gtk",
     "meld",
 
