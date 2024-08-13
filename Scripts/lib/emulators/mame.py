@@ -20,31 +20,31 @@ config_file_general = """
 #
 # CORE SEARCH PATH OPTIONS
 #
-homepath                  $EMULATOR_SETUP_ROOT
-rompath                   $EMULATOR_SETUP_ROOT/roms
-hashpath                  $EMULATOR_SETUP_ROOT/hash
-samplepath                $EMULATOR_SETUP_ROOT/samples
-artpath                   $EMULATOR_SETUP_ROOT/artwork
-ctrlrpath                 $EMULATOR_SETUP_ROOT/ctrlr
-inipath                   $EMULATOR_SETUP_ROOT;$EMULATOR_SETUP_ROOT/ini
-fontpath                  $EMULATOR_SETUP_ROOT
-cheatpath                 $EMULATOR_SETUP_ROOT/cheat
-crosshairpath             $EMULATOR_SETUP_ROOT/crosshair
-pluginspath               $EMULATOR_SETUP_ROOT/plugins
-languagepath              $EMULATOR_SETUP_ROOT/language
-swpath                    $EMULATOR_SETUP_ROOT/software
+homepath                  EMULATOR_SETUP_ROOT
+rompath                   EMULATOR_SETUP_ROOT/roms
+hashpath                  EMULATOR_SETUP_ROOT/hash
+samplepath                EMULATOR_SETUP_ROOT/samples
+artpath                   EMULATOR_SETUP_ROOT/artwork
+ctrlrpath                 EMULATOR_SETUP_ROOT/ctrlr
+inipath                   EMULATOR_SETUP_ROOT;EMULATOR_SETUP_ROOT/ini
+fontpath                  EMULATOR_SETUP_ROOT
+cheatpath                 EMULATOR_SETUP_ROOT/cheat
+crosshairpath             EMULATOR_SETUP_ROOT/crosshair
+pluginspath               EMULATOR_SETUP_ROOT/plugins
+languagepath              EMULATOR_SETUP_ROOT/language
+swpath                    EMULATOR_SETUP_ROOT/software
 
 #
 # CORE OUTPUT DIRECTORY OPTIONS
 #
-cfg_directory             $EMULATOR_SETUP_ROOT/cfg
-nvram_directory           $EMULATOR_SETUP_ROOT/nvram
-input_directory           $EMULATOR_SETUP_ROOT/inp
-state_directory           $EMULATOR_SETUP_ROOT/sta
-snapshot_directory        $EMULATOR_SETUP_ROOT/snap
-diff_directory            $EMULATOR_SETUP_ROOT/diff
-comment_directory         $EMULATOR_SETUP_ROOT/comments
-share_directory           $EMULATOR_SETUP_ROOT/share
+cfg_directory             EMULATOR_SETUP_ROOT/cfg
+nvram_directory           EMULATOR_SETUP_ROOT/nvram
+input_directory           EMULATOR_SETUP_ROOT/inp
+state_directory           EMULATOR_SETUP_ROOT/sta
+snapshot_directory        EMULATOR_SETUP_ROOT/snap
+diff_directory            EMULATOR_SETUP_ROOT/diff
+comment_directory         EMULATOR_SETUP_ROOT/comments
+share_directory           EMULATOR_SETUP_ROOT/share
 """
 config_files["Mame/windows/mame.ini"] = config_file_general
 config_files["Mame/linux/Mame.AppImage.home/.mame/mame.ini"] = config_file_general

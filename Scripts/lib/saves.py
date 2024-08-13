@@ -91,17 +91,13 @@ def CanSaveBeUnpacked(save_category, save_subcategory, save_name):
     return True
 
 # Pack individual save
-def PackSave(save_category, save_subcategory, save_name, verbose = False, exit_on_failure = False):
+def PackSave(save_category, save_subcategory, save_name, save_dir = None, verbose = False, exit_on_failure = False):
 
-    # Get save type
-    save_type = None
-    if save_category == config.game_category_computer:
-        save_type = config.save_type_general
-
-    # Get input save dirs
-    input_save_dir = environment.GetCacheGamingSaveDir(save_category, save_subcategory, save_name)
-    input_save_type_dir = environment.GetCacheGamingSaveDir(save_category, save_subcategory, save_name, save_type)
-    if system.IsDirectoryEmpty(input_save_type_dir) or not system.DoesDirectoryContainFiles(input_save_type_dir):
+    # Get input save dir
+    input_save_dir = save_dir
+    if not input_save_dir:
+        input_save_dir = environment.GetCacheGamingSaveDir(save_category, save_subcategory, save_name)
+    if system.IsDirectoryEmpty(input_save_dir) or not system.DoesDirectoryContainFiles(input_save_dir):
         return False
 
     # Get output save dir
@@ -185,11 +181,13 @@ def PackSaves(verbose = False, exit_on_failure = False):
     return True
 
 # Unpack individual save
-def UnpackSave(save_category, save_subcategory, save_name, verbose = False, exit_on_failure = False):
+def UnpackSave(save_category, save_subcategory, save_name, save_dir = None, verbose = False, exit_on_failure = False):
 
     # Get input save dir
-    input_save_dir = environment.GetLockerGamingSaveDir(save_category, save_subcategory, save_name)
-    if system.IsDirectoryEmpty(input_save_dir):
+    input_save_dir = save_dir
+    if not input_save_dir:
+        input_save_dir = environment.GetLockerGamingSaveDir(save_category, save_subcategory, save_name)
+    if system.IsDirectoryEmpty(input_save_dir) or not system.DoesDirectoryContainFiles(input_save_dir):
         return False
 
     # Get output save dir

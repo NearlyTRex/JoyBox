@@ -18,7 +18,7 @@ config_files = {}
 config_files["Xenia/windows/portable.txt"] = ""
 config_files["Xenia/windows/xenia.config.toml"] = """
 [Storage]
-content_root = "$GAME_SAVE_DIR"
+content_root = "GAME_SAVE_DIR"
 """
 
 # System files

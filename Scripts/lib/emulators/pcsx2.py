@@ -21,17 +21,17 @@ config_file_general = """
 SettingsVersion = 1
 
 [Folders]
-Bios = $EMULATOR_SETUP_ROOT/bios
-Snapshots = $EMULATOR_SETUP_ROOT/snaps
-SaveStates = $EMULATOR_SETUP_ROOT/sstates
-MemoryCards = $GAME_SAVE_DIR
-Logs = $EMULATOR_SETUP_ROOT/logs
-Cheats = $EMULATOR_SETUP_ROOT/cheats
-CheatsWS = $EMULATOR_SETUP_ROOT/cheats_ws
-CheatsNI = $EMULATOR_SETUP_ROOT/cheats_ni
-Cache = $EMULATOR_SETUP_ROOT/cache
-Textures = $EMULATOR_SETUP_ROOT/textures
-InputProfiles = $EMULATOR_SETUP_ROOT/inputprofiles
+Bios = EMULATOR_SETUP_ROOT/bios
+Snapshots = EMULATOR_SETUP_ROOT/snaps
+SaveStates = EMULATOR_SETUP_ROOT/sstates
+MemoryCards = GAME_SAVE_DIR
+Logs = EMULATOR_SETUP_ROOT/logs
+Cheats = EMULATOR_SETUP_ROOT/cheats
+CheatsWS = EMULATOR_SETUP_ROOT/cheats_ws
+CheatsNI = EMULATOR_SETUP_ROOT/cheats_ni
+Cache = EMULATOR_SETUP_ROOT/cache
+Textures = EMULATOR_SETUP_ROOT/textures
+InputProfiles = EMULATOR_SETUP_ROOT/inputprofiles
 
 [Filenames]
 BIOS = ps2-0170a-20030325.bin

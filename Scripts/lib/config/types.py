@@ -24,19 +24,33 @@ passphrase_types = [
 ]
 
 # Backup types
-backup_type_copy = "Copy"
-backup_type_archive = "Archive"
+backup_type_copy = "copy"
+backup_type_archive = "archive"
 backup_types = [
     backup_type_copy,
     backup_type_archive
 ]
 
 # Source types
-source_type_local = "Local"
-source_type_remote = "Remote"
+source_type_local = "local"
+source_type_remote = "remote"
 source_types = [
     source_type_local,
     source_type_remote
+]
+
+# Steam id formats
+steam_id_format_64 = "steamid64"
+steam_id_format_3l = "steamid3l"
+steam_id_format_3s = "steamid3s"
+steam_id_format_cl = "steamidcl"
+steam_id_format_cs = "steamidcs"
+steam_id_formats = [
+    steam_id_format_64,
+    steam_id_format_3l,
+    steam_id_format_3s,
+    steam_id_format_cl,
+    steam_id_format_cs
 ]
 
 # Metadata format types
@@ -194,11 +208,15 @@ store_types = [
 ]
 
 # Store action types
-store_action_type_login = "Login"
-store_action_type_download = "Download"
-store_action_type_check = "Check"
+store_action_type_login = "login"
+store_action_type_download = "download"
+store_action_type_check = "check"
+store_action_type_export = "export"
+store_action_type_import = "import"
 store_action_types = [
     store_action_type_login,
     store_action_type_download,
-    store_action_type_check
+    store_action_type_check,
+    store_action_type_export,
+    store_action_type_import
 ]

@@ -10,6 +10,7 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import config
 import system
+import gameinfo
 import setup
 from stores import amazon
 from stores import gog
@@ -77,8 +78,12 @@ def main():
     # Download
     elif args.store_action == config.store_action_type_download:
         for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
-            success = store_obj.Download(
+            game_info = gameinfo.GameInfo(
                 json_file = json_file,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            success = store_obj.Download(
+                game_info = game_info,
                 output_dir = args.output_dir,
                 skip_existing = args.skip_existing,
                 force = args.force,
@@ -90,13 +95,32 @@ def main():
     # Check
     elif args.store_action == config.store_action_type_check:
         for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
-            local_version, remote_version = store_obj.GetVersions(
+            game_info = gameinfo.GameInfo(
                 json_file = json_file,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            local_version, remote_version = store_obj.GetVersions(
+                game_info = game_info,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
             if local_version and remote_version:
                 if local_version != remote_version:
                     system.LogWarning("Game '%s' is out of date! Local = '%s', remote = '%s'" % (json_file, local_version, remote_version))
+
+    # Export
+    elif args.store_action == config.store_action_type_export:
+        for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
+            game_info = gameinfo.GameInfo(
+                json_file = json_file,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            success = store_obj.ExportSave(
+                game_info = game_info,
+                output_dir = args.output_dir,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            if not success:
+                break
 
 # Start
 main()

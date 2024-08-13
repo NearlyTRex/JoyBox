@@ -16,11 +16,11 @@ config_files = {}
 # Wrapper scripts
 wrapper_script_windows = """
 @echo off
-$PYTHON_BIN "%~dp0%~n0.py" %*
+PYTHON_BIN "%~dp0%~n0.py" %*
 """
 wrapper_script_unix = """
 #!/bin/bash
-exec $PYTHON_BIN "$0.py" "$@"
+exec PYTHON_BIN "$0.py" "$@"
 """
 
 # Python tool

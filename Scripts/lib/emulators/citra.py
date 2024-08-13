@@ -19,11 +19,11 @@ import emulatorbase
 config_files = {}
 config_file_general = """
 [Data%20Storage]
-nand_directory=$EMULATOR_SETUP_ROOT/nand/
-sdmc_directory=$EMULATOR_SETUP_ROOT/sdmc/
+nand_directory=EMULATOR_SETUP_ROOT/nand/
+sdmc_directory=EMULATOR_SETUP_ROOT/sdmc/
 
 [UI]
-Paths\screenshotPath=$EMULATOR_SETUP_ROOT/screenshots/
+Paths\screenshotPath=EMULATOR_SETUP_ROOT/screenshots/
 """
 config_files["Citra/windows/user/config/qt-config.ini"] = config_file_general
 config_files["Citra/linux/citra-qt.AppImage.home/.config/citra-emu/qt-config.ini"] = config_file_general

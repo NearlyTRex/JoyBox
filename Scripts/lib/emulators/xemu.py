@@ -24,10 +24,10 @@ show_welcome = false
 port1 = '030003f05e0400008e02000014010000'
 
 [sys.files]
-bootrom_path = '$EMULATOR_SETUP_ROOT/bios/mcpx_1.0.bin'
-flashrom_path = '$EMULATOR_SETUP_ROOT/bios/complex_4627.bin'
-eeprom_path = "$GAME_SAVE_DIR/eeprom.bin"
-hdd_path = "$GAME_SAVE_DIR/xbox_hdd.qcow2"
+bootrom_path = 'EMULATOR_SETUP_ROOT/bios/mcpx_1.0.bin'
+flashrom_path = 'EMULATOR_SETUP_ROOT/bios/complex_4627.bin'
+eeprom_path = "GAME_SAVE_DIR/eeprom.bin"
+hdd_path = "GAME_SAVE_DIR/xbox_hdd.qcow2"
 """
 config_files["Xemu/windows/xemu.toml"] = config_file_general
 config_files["Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/xemu.toml"] = config_file_general

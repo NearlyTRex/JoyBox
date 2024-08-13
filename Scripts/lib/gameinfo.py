@@ -25,13 +25,8 @@ class GameInfo:
         # Read json data
         self.json_data = system.ReadJsonFile(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
 
-        ##############################
-        # Upcast keys
-        ##############################
-
-        # Upcast list keys if they are strings
-        for key in config.json_keys_list_keys:
-            self.upcast_str_to_list(key)
+        # Save source file
+        self.json_file = json_file
 
         ##############################
         # Fill basic info
@@ -61,32 +56,14 @@ class GameInfo:
         ##############################
 
         # Fill json keys defaults
-        for key in config.json_keys_list_keys:
-            self.set_default_value(key, [])
-        for key in config.json_keys_dict_keys:
-            self.set_default_value(key, {})
-        for key in config.json_keys_bool_keys:
-            self.set_default_value(key, False)
-        for key in config.json_keys_str_keys:
-            self.set_default_value(key, None)
-
-        # Fill sub-value defaults
-        self.set_default_subvalue(config.json_key_sandbox, config.json_key_sandbox_sandboxie, {})
-        self.set_default_subvalue(config.json_key_sandbox, config.json_key_sandbox_wine, {})
-        self.set_default_subvalue(config.json_key_steps, config.json_key_steps_preinstall, [])
-        self.set_default_subvalue(config.json_key_steps, config.json_key_steps_postinstall, [])
-        self.set_default_subvalue(config.json_key_sync, config.json_key_sync_search, "")
-        self.set_default_subvalue(config.json_key_sync, config.json_key_sync_data, [])
-        self.set_default_subvalue(config.json_key_registry, config.json_key_registry_setup_keys, [])
-        self.set_default_subvalue(config.json_key_registry, config.json_key_registry_game_keys, [])
-        self.set_default_subvalue(config.json_key_steam, config.json_key_steam_appid, "")
-        self.set_default_subvalue(config.json_key_steam, config.json_key_steam_branchid, "")
-        self.set_default_subvalue(config.json_key_steam, config.json_key_steam_buildid, "")
-        self.set_default_subvalue(config.json_key_steam, config.json_key_steam_builddate, "")
-        self.set_default_subvalue(config.json_key_gog, config.json_key_gog_appid, "")
-        self.set_default_subvalue(config.json_key_gog, config.json_key_gog_appname, "")
-        self.set_default_subvalue(config.json_key_gog, config.json_key_gog_name, "")
-        self.set_default_subvalue(config.json_key_gog, config.json_key_gog_buildid, "")
+        for entry in config.json_key_defaults:
+            entry_key = entry["key"]
+            entry_default = entry["default"]
+            if isinstance(entry_key, str):
+                self.set_default_value(entry_key, entry_default)
+            elif isinstance(entry_key, tuple) or isinstance(entry_key, list):
+                if len(entry_key) == 2:
+                    self.set_default_subvalue(entry_key[0], entry_key[1], entry_default)
 
         ##############################
         # Fill path info
@@ -137,6 +114,10 @@ class GameInfo:
         # Set source info
         self.set_value(config.json_key_source_file, source_file)
         self.set_value(config.json_key_source_dir, source_dir)
+
+    # Get json file
+    def get_json_file(self):
+        return self.json_file
 
     ##############################
 
@@ -395,47 +376,45 @@ class GameInfo:
 
     ##############################
 
-    # Get amazon appid
-    def get_amazon_appid(self):
-        return self.get_subvalue(config.json_key_amazon, config.json_key_amazon_appid)
+    # Get store appid
+    def get_store_appid(self, store_key):
+        return self.get_subvalue(store_key, config.json_key_store_appid)
 
-    # Get amazon buildid
-    def get_amazon_buildid(self):
-        return self.get_subvalue(config.json_key_amazon, config.json_key_amazon_buildid)
+    # Get store appname
+    def get_store_appname(self, store_key):
+        return self.get_subvalue(store_key, config.json_key_store_appname)
 
-    ##############################
+    # Get store branchid
+    def get_store_branchid(self, store_key):
+        return self.get_subvalue(store_key, config.json_key_store_branchid)
 
-    # Get epic appid
-    def get_epic_appid(self):
-        return self.get_subvalue(config.json_key_epic, config.json_key_epic_appid)
+    # Get store builddate
+    def get_store_builddate(self, store_key):
+        return self.get_subvalue(store_key, config.json_key_store_builddate)
 
-    ##############################
+    # Get store buildid
+    def get_store_buildid(self, store_key):
+        return self.get_subvalue(store_key, config.json_key_store_buildid)
 
-    # Get gog appid
-    def get_gog_appid(self):
-        return self.get_subvalue(config.json_key_gog, config.json_key_gog_appid)
+    # Get store name
+    def get_store_name(self, store_key):
+        return self.get_subvalue(store_key, config.json_key_store_name)
 
-    # Get gog appname
-    def get_gog_appname(self):
-        return self.get_subvalue(config.json_key_gog, config.json_key_gog_appname)
+    # Get store controller support
+    def get_store_controller_support(self, store_key):
+        return self.get_subvalue(store_key, config.json_key_store_controller_support)
 
-    # Get gog buildid
-    def get_gog_buildid(self):
-        return self.get_subvalue(config.json_key_gog, config.json_key_gog_buildid)
+    # Get store installdir
+    def get_store_installdir(self, store_key):
+        return self.get_subvalue(store_key, config.json_key_store_installdir)
 
-    ##############################
+    # Get store paths
+    def get_store_paths(self, store_key):
+        return self.get_subvalue(store_key, config.json_key_store_paths)
 
-    # Get steam appid
-    def get_steam_appid(self):
-        return self.get_subvalue(config.json_key_steam, config.json_key_steam_appid)
-
-    # Get steam branchid
-    def get_steam_branchid(self):
-        return self.get_subvalue(config.json_key_steam, config.json_key_steam_branchid)
-
-    # Get steam buildid
-    def get_steam_buildid(self):
-        return self.get_subvalue(config.json_key_steam, config.json_key_steam_buildid)
+    # Get store keys
+    def get_store_keys(self, store_key):
+        return self.get_subvalue(store_key, config.json_key_store_keys)
 
     ##############################
 

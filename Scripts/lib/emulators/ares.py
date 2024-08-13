@@ -18,23 +18,23 @@ config_files = {}
 config_file_general = """
 Paths
   Home
-  Saves: $EMULATOR_SETUP_ROOT/Saves/
-  Screenshots: $EMULATOR_SETUP_ROOT/Screenshots/
+  Saves: EMULATOR_SETUP_ROOT/Saves/
+  Screenshots: EMULATOR_SETUP_ROOT/Screenshots/
 ColecoVision
   Path
   Firmware
-    BIOS.World: $EMULATOR_SETUP_ROOT/Bios/colecovision.rom
+    BIOS.World: EMULATOR_SETUP_ROOT/Bios/colecovision.rom
 PCEngineCD
   Path
   Firmware
-    BIOS.US: $EMULATOR_SETUP_ROOT/Bios/syscard3u.pce
-    BIOS.Japan: $EMULATOR_SETUP_ROOT/Bios/syscard3j.pce
+    BIOS.US: EMULATOR_SETUP_ROOT/Bios/syscard3u.pce
+    BIOS.Japan: EMULATOR_SETUP_ROOT/Bios/syscard3j.pce
 MegaCD
   Path
   Firmware
-    BIOS.US: $EMULATOR_SETUP_ROOT/Bios/bios_CD_U.bin
-    BIOS.Japan: $EMULATOR_SETUP_ROOT/Bios/bios_CD_J.bin
-    BIOS.Europe: $EMULATOR_SETUP_ROOT/Bios/bios_CD_E.bin
+    BIOS.US: EMULATOR_SETUP_ROOT/Bios/bios_CD_U.bin
+    BIOS.Japan: EMULATOR_SETUP_ROOT/Bios/bios_CD_J.bin
+    BIOS.Europe: EMULATOR_SETUP_ROOT/Bios/bios_CD_E.bin
 Hotkey
   ToggleFullscreen: 0x1/0/0;;
 VirtualPad1

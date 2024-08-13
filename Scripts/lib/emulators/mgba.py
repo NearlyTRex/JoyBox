@@ -18,11 +18,11 @@ import emulatorbase
 config_files = {}
 config_file_general = """
 [ports.qt]
-gb.bios=$EMULATOR_SETUP_ROOT/bios/gb_bios.bin
-gbc.bios=$EMULATOR_SETUP_ROOT/bios/gbc_bios.bin
-gba.bios=$EMULATOR_SETUP_ROOT/bios/gba_bios.bin
-sgb.bios=$EMULATOR_SETUP_ROOT/bios/sgb_bios.bin
-savegamePath=$GAME_SAVE_DIR
+gb.bios=EMULATOR_SETUP_ROOT/bios/gb_bios.bin
+gbc.bios=EMULATOR_SETUP_ROOT/bios/gbc_bios.bin
+gba.bios=EMULATOR_SETUP_ROOT/bios/gba_bios.bin
+sgb.bios=EMULATOR_SETUP_ROOT/bios/sgb_bios.bin
+savegamePath=GAME_SAVE_DIR
 """
 config_files["mGBA/windows/portable.ini"] = ""
 config_files["mGBA/windows/config.ini"] = config_file_general

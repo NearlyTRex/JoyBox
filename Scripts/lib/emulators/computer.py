@@ -23,11 +23,11 @@ import emulatorbase
 config_files = {}
 config_file_general_dos = """
 [dosbox]
-working directory default = $EMULATOR_SETUP_ROOT
+working directory default = EMULATOR_SETUP_ROOT
 """
 config_file_general_win31 = """
 [dosbox]
-working directory default = $EMULATOR_SETUP_ROOT
+working directory default = EMULATOR_SETUP_ROOT
 memsize = 256
 machine = svga_s3trio64
 

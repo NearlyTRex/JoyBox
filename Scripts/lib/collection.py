@@ -115,18 +115,18 @@ def CreateGameJsonFile(
         SetJsonValue(config.json_key_installer_exe, computer_installers)
         if file_subcategory == config.game_subcategory_amazon_games:
             SetJsonValue(config.json_key_amazon, {
-                config.json_key_amazon_appid: "",
-                config.json_key_amazon_name: ""
+                config.json_key_store_appid: "",
+                config.json_key_store_name: ""
             })
         elif file_subcategory == config.game_subcategory_gog:
             SetJsonValue(config.json_key_gog, {
-                config.json_key_gog_appid: "",
-                config.json_key_gog_appname: ""
+                config.json_key_store_appid: "",
+                config.json_key_store_appname: ""
             })
         elif file_subcategory == config.game_subcategory_steam:
             SetJsonValue(config.json_key_steam, {
-                config.json_key_steam_appid: "",
-                config.json_key_steam_branchid: "public"
+                config.json_key_store_appid: "",
+                config.json_key_store_branchid: "public"
             })
 
     # Set other platform keys

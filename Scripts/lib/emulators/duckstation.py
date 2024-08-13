@@ -20,25 +20,25 @@ config_file_general = """
 SettingsVersion = 3
 
 [BIOS]
-SearchDirectory = $EMULATOR_SETUP_ROOT/bios
+SearchDirectory = EMULATOR_SETUP_ROOT/bios
 
 [MemoryCards]
 Card1Type = PerGameTitle
 Card2Type = None
 UsePlaylistTitle = true
-Directory = $GAME_SAVE_DIR
+Directory = GAME_SAVE_DIR
 
 [Folders]
-Cache = $EMULATOR_SETUP_ROOT/cache
-Cheats = $EMULATOR_SETUP_ROOT/cheats
-Covers = $EMULATOR_SETUP_ROOT/covers
-Dumps = $EMULATOR_SETUP_ROOT/dump
-GameSettings = $EMULATOR_SETUP_ROOT/gamesettings
-InputProfiles = $EMULATOR_SETUP_ROOT/inputprofiles
-SaveStates = $EMULATOR_SETUP_ROOT/savestates
-Screenshots = $EMULATOR_SETUP_ROOT/screenshots
-Shaders = $EMULATOR_SETUP_ROOT/shaders
-Textures = $EMULATOR_SETUP_ROOT/textures
+Cache = EMULATOR_SETUP_ROOT/cache
+Cheats = EMULATOR_SETUP_ROOT/cheats
+Covers = EMULATOR_SETUP_ROOT/covers
+Dumps = EMULATOR_SETUP_ROOT/dump
+GameSettings = EMULATOR_SETUP_ROOT/gamesettings
+InputProfiles = EMULATOR_SETUP_ROOT/inputprofiles
+SaveStates = EMULATOR_SETUP_ROOT/savestates
+Screenshots = EMULATOR_SETUP_ROOT/screenshots
+Shaders = EMULATOR_SETUP_ROOT/shaders
+Textures = EMULATOR_SETUP_ROOT/textures
 
 [ControllerPorts]
 ControllerSettingsMigrated = true

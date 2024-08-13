@@ -19,7 +19,7 @@ import emulatorbase
 config_files = {}
 config_file_general = """
 ---
-pref-path: $EMULATOR_SETUP_ROOT
+pref-path: EMULATOR_SETUP_ROOT
 ...
 """
 config_files["Vita3K/windows/config.yml"] = config_file_general

@@ -25,7 +25,7 @@ seriala /dev/ttyS0
 serialb /dev/ttyS1
 udptunnel false
 udpport 6066
-rom $EMULATOR_SETUP_ROOT/quadra.rom
+rom EMULATOR_SETUP_ROOT/quadra.rom
 bootdrive 0
 bootdriver 0
 ramsize 67108864

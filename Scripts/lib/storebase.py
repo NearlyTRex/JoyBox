@@ -29,7 +29,7 @@ class StoreBase:
         self,
         verbose = False,
         exit_on_failure = False):
-        pass
+        return False
 
     # Fetch
     def Fetch(
@@ -41,18 +41,18 @@ class StoreBase:
         clean_output = False,
         verbose = False,
         exit_on_failure = False):
-        pass
+        return False
 
     # Download
     def Download(
         self,
-        json_file,
+        game_info,
         output_dir = None,
         skip_existing = False,
         force = False,
         verbose = False,
         exit_on_failure = False):
-        pass
+        return False
 
     # Get info
     def GetInfo(
@@ -61,12 +61,30 @@ class StoreBase:
         branch = None,
         verbose = False,
         exit_on_failure = False):
-        pass
+        return {}
 
     # Get versions
     def GetVersions(
         self,
-        json_file,
+        game_info,
         verbose = False,
         exit_on_failure = False):
-        pass
+        return (None, None)
+
+    # Export save
+    def ExportSave(
+        self,
+        game_info,
+        output_dir,
+        verbose = False,
+        exit_on_failure = False):
+        return False
+
+    # Import save
+    def ImportSave(
+        self,
+        game_info,
+        input_dir,
+        verbose = False,
+        exit_on_failure = False):
+        return False
