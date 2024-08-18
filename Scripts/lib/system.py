@@ -1237,6 +1237,8 @@ def BuildDirectoryList(root, excludes = [], new_relative_path = "", use_relative
     if not IsPathValid(root):
         return directories
     absolute_root = os.path.abspath(root)
+    if os.path.isdir(absolute_root):
+        directories.append(absolute_root)
     for root, dirnames, filenames in os.walk(root, followlinks = follow_symlink_dirs):
         for dirname in dirnames:
             location = os.path.abspath(os.path.join(root, dirname))
@@ -1401,8 +1403,30 @@ def IsDirectoryEmpty(path):
     return len(GetDirectoryContents(path)) == 0
 
 # Check if directory contains files
-def DoesDirectoryContainFiles(path):
-    return len(BuildFileList(path)) > 0
+def DoesDirectoryContainFiles(path, recursive = True):
+    if recursive:
+        return len(BuildFileList(path)) > 0
+    else:
+        files = []
+        for obj in GetDirectoryContents(path):
+            obj_path = os.path.join(path, obj)
+            if os.path.isfile(obj_path):
+                files.append(obj)
+        return len(files)
+
+# Check if directory contains files by extensions
+def DoesDirectoryContainFilesByExtensions(path, extensions = [], recursive = True):
+    if recursive:
+        return len(BuildFileListByExtensions(path, extensions = extensions)) > 0
+    else:
+        files = []
+        for obj in GetDirectoryContents(path):
+            obj_path = os.path.join(path, obj)
+            if os.path.isfile(obj_path):
+                for file_type in extensions:
+                    if obj_path.endswith(file_type):
+                        files.append(obj)
+        return len(files)
 
 # Get directory info
 def GetDirectoryInfo(path):
