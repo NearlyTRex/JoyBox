@@ -220,3 +220,11 @@ store_action_types = [
     store_action_type_export,
     store_action_type_import
 ]
+
+# Playlist types
+playlist_type_tree = "tree"
+playlist_type_local = "local"
+playlist_types = [
+    playlist_type_tree,
+    playlist_type_local
+]

@@ -44,45 +44,68 @@ def WritePlaylist(output_file, playlist_contents = [], verbose = False, exit_on_
         return False
 
 # Generate playlist file
-def GeneratePlaylist(source_dir, source_format, output_file, verbose = False, exit_on_failure = False):
+def GeneratePlaylist(source_dir, output_file, extensions = [], recursive = False, only_keep_ends = False, verbose = False, exit_on_failure = False):
 
-    # Get tool
-    python_tool = None
-    if programs.IsToolInstalled("PythonVenvPython"):
-        python_tool = programs.GetToolProgram("PythonVenvPython")
-    if not python_tool:
-        system.LogError("PythonVenvPython was not found")
-        return False
+    # Generate playlist contents
+    playlist_contents = []
+    if recursive:
+        for file in system.BuildFileListByExtensions(
+            root = source_dir,
+            extensions = extensions):
+            if only_keep_ends:
+                playlist_contents.append(system.GetFilenameFile(file))
+            else:
+                playlist_contents.append(file)
+    else:
+        for obj in system.GetDirectoryContents(source_dir):
+            obj_path = os.path.join(source_dir, obj)
+            if os.path.isfile(obj_path):
+                for extension in extensions:
+                    if obj_path.endswith(extension):
+                        if only_keep_ends:
+                            playlist_contents.append(obj)
+                        else:
+                            playlist_contents.append(obj_path)
 
-    # Get script
-    playlist_script = None
-    if programs.IsToolInstalled("Mkpl"):
-        playlist_script = programs.GetToolProgram("Mkpl")
-    if not playlist_script:
-        system.LogError("Mkpl was not found")
-        return False
-
-    # Get create command
-    create_cmd = [
-        python_tool,
-        playlist_script,
-        output_file,
-        "-r",
-        "-d", source_dir,
-        "-i", source_format
-    ]
-
-    # Run create command
-    command.RunCheckedCommand(
-        cmd = create_cmd,
+    # Write playlist
+    return WritePlaylist(
+        output_file = output_file,
+        playlist_contents = playlist_contents,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-    # Sort playlist
-    system.SortFileContents(
-        src = output_file,
+# Generate tree playlist file
+def GenerateTreePlaylist(source_dir, output_file, extensions = [], verbose = False, exit_on_failure = False):
+    return GeneratePlaylist(
+        source_dir = source_dir,
+        output_file = output_file,
+        extensions = extensions,
+        recursive = True,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-    # Check result
-    return os.path.exists(output_file)
+# Generate local playlists
+def GenerateLocalPlaylists(source_dir, extensions = [], verbose = False, exit_on_failure = False):
+
+    # Check each directory for the requested files
+    for input_dir in system.BuildDirectoryList(source_dir):
+        print(input_dir)
+        if system.DoesDirectoryContainFilesByExtensions(
+            path = input_dir,
+            extensions = extensions,
+            recursive = False):
+
+            # Generate local playlist
+            success = GeneratePlaylist(
+                source_dir = input_dir,
+                output_file = os.path.join(input_dir, system.GetDirectoryName(input_dir) + ".m3u"),
+                extensions = extensions,
+                recursive = False,
+                only_keep_ends = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+    # Must be successful
+    return True
