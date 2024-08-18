@@ -159,7 +159,7 @@ class GOG(storebase.StoreBase):
     # Download
     def Download(
         self,
-        json_file,
+        game_info,
         output_dir = None,
         skip_existing = False,
         force = False,
@@ -167,33 +167,36 @@ class GOG(storebase.StoreBase):
         exit_on_failure = False):
 
         # Get game info
-        game_info = gameinfo.GameInfo(
-            json_file = json_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+        game_appid = game_info.get_store_appid(config.json_key_gog)
+        game_appname = game_info.get_store_appname(config.json_key_gog)
+        game_buildid = game_info.get_store_buildid(config.json_key_gog)
+        game_category = game_info.get_category()
+        game_subcategory = game_info.get_subcategory()
+        game_name = game_info.get_name()
+        game_json_file = game_info.get_json_file()
 
-        # Ignore non-gog games
-        if game_info.get_gog_appid() == "":
+        # Ignore invalid games
+        if game_appid == "":
             return True
 
         # Get output dir
         if output_dir:
-            output_offset = environment.GetLockerGamingRomDirOffset(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+            output_offset = environment.GetLockerGamingRomDirOffset(game_category, game_subcategory, game_name)
             output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
         else:
-            output_dir = environment.GetLockerGamingRomDir(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+            output_dir = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
         if skip_existing and system.DoesDirectoryContainFiles(output_dir):
             return True
 
         # Get latest gog info
         latest_gog_info = self.GetInfo(
-            identifier = game_info.get_gog_appid(),
+            identifier = game_appid,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
         # Get build ids
-        old_buildid = game_info.get_gog_buildid()
-        new_buildid = latest_gog_info[config.json_key_gog_buildid]
+        old_buildid = game_buildid
+        new_buildid = latest_gog_info[config.json_key_store_buildid]
 
         # Check if game should be fetched
         should_fetch = False
@@ -209,7 +212,7 @@ class GOG(storebase.StoreBase):
         # Fetch game
         if should_fetch:
             success = self.Fetch(
-                identifier = game_info.get_gog_appname(),
+                identifier = game_appname,
                 output_dir = output_dir,
                 clean_output = True,
                 verbose = verbose,
@@ -219,12 +222,12 @@ class GOG(storebase.StoreBase):
 
         # Update json file
         json_data = system.ReadJsonFile(
-            src = json_file,
+            src = game_json_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         json_data[config.json_key_gog] = latest_gog_info
         success = system.WriteJsonFile(
-            src = json_file,
+            src = game_json_file,
             json_data = json_data,
             sort_keys = True,
             verbose = verbose,
@@ -254,11 +257,11 @@ class GOG(storebase.StoreBase):
 
         # Build game info
         game_info = {}
-        game_info[config.json_key_gog_appid] = identifier
+        game_info[config.json_key_store_appid] = identifier
         if "slug" in gog_json:
-            game_info[config.json_key_gog_appname] = gog_json["slug"]
+            game_info[config.json_key_store_appname] = gog_json["slug"]
         if "title" in gog_json:
-            game_info[config.json_key_gog_name] = gog_json["title"].strip()
+            game_info[config.json_key_store_name] = gog_json["title"].strip()
         if "downloads" in gog_json:
             appdownloads = gog_json["downloads"]
             if "installers" in appdownloads:
@@ -266,35 +269,33 @@ class GOG(storebase.StoreBase):
                 for appinstaller in appinstallers:
                     if appinstaller["os"] == self.platform:
                         if appinstaller["version"]:
-                            game_info[config.json_key_gog_buildid] = appinstaller["version"]
+                            game_info[config.json_key_store_buildid] = appinstaller["version"]
                         else:
-                            game_info[config.json_key_gog_buildid] = "original_release"
+                            game_info[config.json_key_store_buildid] = "original_release"
         return game_info
 
     # Get versions
     def GetVersions(
         self,
-        json_file,
+        game_info,
         verbose = False,
         exit_on_failure = False):
 
         # Get game info
-        game_info = gameinfo.GameInfo(
-            json_file = json_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+        game_appid = game_info.get_store_appid(config.json_key_steam)
+        game_buildid = game_info.get_store_buildid(config.json_key_steam)
 
-        # Ignore non-gog games
-        if game_info.get_gog_appid() == "":
+        # Ignore invalid games
+        if game_appid == "":
             return (None, None)
 
         # Get latest gog info
         latest_gog_info = self.GetInfo(
-            identifier = game_info.get_gog_appid(),
+            identifier = game_appid,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
         # Return versions
-        local_buildid = game_info.get_gog_buildid()
-        remote_buildid = latest_gog_info[config.json_key_gog_buildid]
+        local_buildid = game_buildid
+        remote_buildid = latest_gog_info[config.json_key_store_buildid]
         return (local_buildid, remote_buildid)

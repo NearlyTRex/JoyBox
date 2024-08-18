@@ -179,7 +179,7 @@ class Amazon(storebase.StoreBase):
     # Download
     def Download(
         self,
-        json_file,
+        game_info,
         output_dir = None,
         skip_existing = False,
         force = False,
@@ -187,33 +187,35 @@ class Amazon(storebase.StoreBase):
         exit_on_failure = False):
 
         # Get game info
-        game_info = gameinfo.GameInfo(
-            json_file = json_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+        game_appid = game_info.get_store_appid(config.json_key_amazon)
+        game_buildid = game_info.get_store_buildid(config.json_key_amazon)
+        game_category = game_info.get_category()
+        game_subcategory = game_info.get_subcategory()
+        game_name = game_info.get_name()
+        game_json_file = game_info.get_json_file()
 
-        # Ignore non-amazon games
-        if game_info.get_amazon_appid() == "":
+        # Ignore invalid games
+        if game_appid == "":
             return True
 
         # Get output dir
         if output_dir:
-            output_offset = environment.GetLockerGamingRomDirOffset(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+            output_offset = environment.GetLockerGamingRomDirOffset(game_category, game_subcategory, game_name)
             output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
         else:
-            output_dir = environment.GetLockerGamingRomDir(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+            output_dir = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
         if skip_existing and system.DoesDirectoryContainFiles(output_dir):
             return True
 
         # Get latest amazon info
         latest_amazon_info = self.GetInfo(
-            identifier = game_info.get_amazon_appid(),
+            identifier = game_appid,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
         # Get build ids
-        old_buildid = game_info.get_amazon_buildid()
-        new_buildid = latest_amazon_info[config.json_key_amazon_buildid]
+        old_buildid = game_buildid
+        new_buildid = latest_amazon_info[config.json_key_store_buildid]
 
         # Check if game should be fetched
         should_fetch = False
@@ -227,9 +229,9 @@ class Amazon(storebase.StoreBase):
         # Fetch game
         if should_fetch:
             success = self.Fetch(
-                identifier = game_info.get_amazon_appid(),
+                identifier = game_appid,
                 output_dir = output_dir,
-                output_name = "%s (%s)" % (game_info.get_name(), hashing.CalculateStringCRC32(new_buildid)),
+                output_name = "%s (%s)" % (game_name, hashing.CalculateStringCRC32(new_buildid)),
                 clean_output = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -238,12 +240,12 @@ class Amazon(storebase.StoreBase):
 
         # Update json file
         json_data = system.ReadJsonFile(
-            src = json_file,
+            src = game_json_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         json_data[config.json_key_amazon] = latest_amazon_info
         success = system.WriteJsonFile(
-            src = json_file,
+            src = game_json_file,
             json_data = json_data,
             sort_keys = True,
             verbose = verbose,
@@ -302,14 +304,14 @@ class Amazon(storebase.StoreBase):
 
         # Build game info
         game_info = {}
-        game_info[config.json_key_amazon_appid] = identifier
-        game_info[config.json_key_amazon_buildid] = ""
+        game_info[config.json_key_store_appid] = identifier
+        game_info[config.json_key_store_buildid] = ""
         if "version" in amazon_json:
-            game_info[config.json_key_amazon_buildid] = str(amazon_json["version"])
+            game_info[config.json_key_store_buildid] = str(amazon_json["version"])
         if "product" in amazon_json:
             appdata = amazon_json["product"]
             if "title" in appdata:
-                game_info[config.json_key_amazon_name] = str(appdata["title"])
+                game_info[config.json_key_store_name] = str(appdata["title"])
 
         # Return game info
         return game_info
@@ -317,27 +319,25 @@ class Amazon(storebase.StoreBase):
     # Get versions
     def GetVersions(
         self,
-        json_file,
+        game_info,
         verbose = False,
         exit_on_failure = False):
 
         # Get game info
-        game_info = gameinfo.GameInfo(
-            json_file = json_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+        game_appid = game_info.get_store_appid(config.json_key_steam)
+        game_buildid = game_info.get_store_buildid(config.json_key_steam)
 
-        # Ignore non-amazon games
-        if game_info.get_amazon_appid() == "":
+        # Ignore invalid games
+        if game_appid == "":
             return (None, None)
 
         # Get latest amazon info
         latest_amazon_info = self.GetInfo(
-            appid = game_info.get_amazon_appid(),
+            appid = game_appid,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
         # Get build ids
-        local_buildid = game_info.get_amazon_buildid()
-        remote_buildid = latest_amazon_info[config.json_key_amazon_buildid]
+        local_buildid = game_buildid
+        remote_buildid = latest_amazon_info[config.json_key_store_buildid]
         return (local_buildid, remote_buildid)

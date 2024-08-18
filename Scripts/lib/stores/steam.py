@@ -19,16 +19,59 @@ class Steam(storebase.StoreBase):
     # Constructor
     def __init__(self):
         super().__init__()
+        self.platform = ini.GetIniPathValue("UserData.Steam", "steam_platform")
+        self.arch = ini.GetIniPathValue("UserData.Steam", "steam_arch")
         self.accountname = ini.GetIniValue("UserData.Steam", "steam_accountname")
         self.username = ini.GetIniValue("UserData.Steam", "steam_username")
         self.userid = ini.GetIniValue("UserData.Steam", "steam_userid")
-        self.platform = ini.GetIniPathValue("UserData.Steam", "steam_platform")
-        self.arch = ini.GetIniPathValue("UserData.Steam", "steam_arch")
         self.install_dir = ini.GetIniPathValue("UserData.Steam", "steam_install_dir")
+        if not system.IsPathValid(self.install_dir) or not system.DoesPathExist(self.install_dir):
+            raise RuntimeError("Ini file does not have a valid steam install dir")
 
     # Get name
     def GetName(self):
         return "Steam"
+
+    # Get platform
+    def GetPlatform(self):
+        return self.platform
+
+    # Get architecture
+    def GetArchitecture(self):
+        return self.arch
+
+    # Get account name
+    def GetAccountName(self):
+        return self.accountname
+
+    # Get user name
+    def GetUserName(self):
+        return self.username
+
+    # Get user id
+    def GetUserId(self, format_type):
+        steamid = self.userid
+        steamid64ident = 76561197960265728
+        steamidacct = int(self.userid) - steamid64ident
+        if format_type == config.steam_id_format_3l:
+            steamid = "[U:1:" + str(steamidacct) + "]"
+        elif format_type == config.steam_id_format_3s:
+            steamid = str(steamidacct)
+        elif format_type == config.steam_id_format_cl:
+            steamid = "STEAM_0:"
+            if steamidacct % 2 == 0:
+                steamid += "0:"
+            else:
+                steamid += "1:"
+            steamid += str(steamidacct // 2)
+            return steamid
+        elif format_type == config.steam_id_format_cs:
+            steamid = str(steamidacct // 2)
+        return steamid
+
+    # Get install dir
+    def GetInstallDir(self):
+        return self.install_dir
 
     # Login
     def Login(
@@ -48,7 +91,7 @@ class Steam(storebase.StoreBase):
         login_cmd = [
             steam_tool,
             "+login",
-            self.accountname,
+            self.GetAccountName(),
             "+quit"
         ]
 
@@ -95,17 +138,17 @@ class Steam(storebase.StoreBase):
         fetch_cmd = [
             steamdepot_tool,
             "-app", identifier,
-            "-os", self.platform,
-            "-osarch", self.arch,
+            "-os", self.GetPlatform(),
+            "-osarch", self.GetArchitecture(),
             "-dir", tmp_dir_fetch
         ]
         if isinstance(branch, str) and len(branch) and branch != "public":
             fetch_cmd += [
                 "-beta", branch
             ]
-        if isinstance(self.accountname, str) and len(self.accountname):
+        if isinstance(self.GetAccountName(), str) and len(self.GetAccountName()):
             fetch_cmd += [
-                "-username", self.accountname,
+                "-username", self.GetAccountName(),
                 "-remember-password"
             ]
 
@@ -161,7 +204,7 @@ class Steam(storebase.StoreBase):
     # Download
     def Download(
         self,
-        json_file,
+        game_info,
         output_dir = None,
         skip_existing = False,
         force = False,
@@ -169,34 +212,37 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Get game info
-        game_info = gameinfo.GameInfo(
-            json_file = json_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+        game_appid = game_info.get_store_appid(config.json_key_steam)
+        game_branchid = game_info.get_store_branchid(config.json_key_steam)
+        game_buildid = game_info.get_store_buildid(config.json_key_steam)
+        game_category = game_info.get_category()
+        game_subcategory = game_info.get_subcategory()
+        game_name = game_info.get_name()
+        game_json_file = game_info.get_json_file()
 
-        # Ignore non-steam games
-        if game_info.get_steam_appid() == "":
+        # Ignore invalid games
+        if game_appid == "":
             return True
 
         # Get output dir
         if output_dir:
-            output_offset = environment.GetLockerGamingRomDirOffset(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+            output_offset = environment.GetLockerGamingRomDirOffset(game_category, game_subcategory, game_name)
             output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
         else:
-            output_dir = environment.GetLockerGamingRomDir(game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+            output_dir = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
         if skip_existing and system.DoesDirectoryContainFiles(output_dir):
             return True
 
         # Get latest steam info
         latest_steam_info = self.GetInfo(
-            identifier = game_info.get_steam_appid(),
-            branch = game_info.get_steam_branchid(),
+            identifier = game_appid,
+            branch = game_branchid,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
         # Get build ids
-        old_buildid = game_info.get_steam_buildid()
-        new_buildid = latest_steam_info[config.json_key_steam_buildid]
+        old_buildid = game_buildid
+        new_buildid = latest_steam_info[config.json_key_store_buildid]
 
         # Check if game should be fetched
         should_fetch = False
@@ -211,10 +257,10 @@ class Steam(storebase.StoreBase):
         # Fetch game
         if should_fetch:
             success = self.Fetch(
-                identifier = game_info.get_steam_appid(),
-                branch = game_info.get_steam_branchid(),
+                identifier = game_appid,
+                branch = game_branchid,
                 output_dir = output_dir,
-                output_name = "%s (%s)" % (game_info.get_name(), new_buildid),
+                output_name = "%s (%s)" % (game_name, new_buildid),
                 clean_output = True,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -223,12 +269,12 @@ class Steam(storebase.StoreBase):
 
         # Update json file
         json_data = system.ReadJsonFile(
-            src = json_file,
+            src = game_json_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         json_data[config.json_key_steam] = latest_steam_info
         success = system.WriteJsonFile(
-            src = json_file,
+            src = game_json_file,
             json_data = json_data,
             sort_keys = True,
             verbose = verbose,
@@ -289,23 +335,23 @@ class Steam(storebase.StoreBase):
 
         # Build game info
         game_info = {}
-        game_info[config.json_key_steam_appid] = identifier
+        game_info[config.json_key_store_appid] = identifier
         if isinstance(branch, str) and len(branch):
-            game_info[config.json_key_steam_branchid] = branch
+            game_info[config.json_key_store_branchid] = branch
         else:
-            game_info[config.json_key_steam_branchid] = "public"
+            game_info[config.json_key_store_branchid] = "public"
         if identifier in steam_json:
             appdata = steam_json[identifier]
             if "common" in appdata:
                 appcommon = appdata["common"]
                 if "name" in appcommon:
-                    game_info[config.json_key_steam_name] = str(appcommon["name"])
+                    game_info[config.json_key_store_name] = str(appcommon["name"])
                 if "controller_support" in appcommon:
-                    game_info[config.json_key_steam_controller_support] = str(appcommon["controller_support"])
+                    game_info[config.json_key_store_controller_support] = str(appcommon["controller_support"])
             if "config" in appdata:
                 appconfig = appdata["config"]
                 if "installdir" in appconfig:
-                    game_info[config.json_key_steam_installdir] = str(appconfig["installdir"])
+                    game_info[config.json_key_store_installdir] = str(appconfig["installdir"])
             if "depots" in appdata:
                 appdepots = appdata["depots"]
                 if "branches" in appdepots:
@@ -313,9 +359,9 @@ class Steam(storebase.StoreBase):
                     if isinstance(branch, str) and len(branch) and branch in appbranches:
                         appbranch = appbranches[branch]
                         if "buildid" in appbranch:
-                            game_info[config.json_key_steam_buildid] = str(appbranch["buildid"])
+                            game_info[config.json_key_store_buildid] = str(appbranch["buildid"])
                         if "timeupdated" in appbranch:
-                            game_info[config.json_key_steam_builddate] = str(appbranch["timeupdated"])
+                            game_info[config.json_key_store_builddate] = str(appbranch["timeupdated"])
 
         # Augment by manifest
         if self.manifest:
@@ -334,23 +380,23 @@ class Steam(storebase.StoreBase):
                             if when_os == "windows":
                                 if when_store == "steam" or when_store == "":
                                     new_location = path_location
-                                    new_location = new_location.replace("<winPublic>", "USERPUBLIC")
-                                    new_location = new_location.replace("<winDir>", "USERPROFILE/AppData/Local/VirtualStore")
-                                    new_location = new_location.replace("<winAppData>", "USERPROFILE/AppData/Roaming")
-                                    new_location = new_location.replace("<winLocalAppData>", "USERPROFILE/AppData/Local")
-                                    new_location = new_location.replace("<winDocuments>", "USERPROFILE/Documents")
-                                    new_location = new_location.replace("<home>", "USERPROFILE")
-                                    new_location = new_location.replace("<root>", "STEAMROOT")
-                                    new_location = new_location.replace("<base>", "STEAMROOT/steamapps/common/%s" % game_info[config.json_key_steam_installdir])
-                                    new_location = new_location.replace("<storeUserId>", "STEAMUSERID")
+                                    new_location = new_location.replace("<winPublic>", config.token_user_public_dir)
+                                    new_location = new_location.replace("<winDir>", "%s/AppData/Local/VirtualStore" % config.token_user_profile_dir)
+                                    new_location = new_location.replace("<winAppData>", "%s/AppData/Roaming" % config.token_user_profile_dir)
+                                    new_location = new_location.replace("<winLocalAppData>", "%s/AppData/Local" % config.token_user_profile_dir)
+                                    new_location = new_location.replace("<winDocuments>", "%s/Documents" % config.token_user_profile_dir)
+                                    new_location = new_location.replace("<home>", config.token_user_profile_dir)
+                                    new_location = new_location.replace("<root>", config.token_store_install_dir)
+                                    new_location = new_location.replace("<base>", "%s/steamapps/common/%s" % (config.token_store_install_dir, game_info[config.json_key_store_installdir]))
+                                    new_location = new_location.replace("<storeUserId>", config.token_store_user_id)
                                     paths.append(new_location)
                 if "registry" in manifest_data:
                     for key in manifest_data["registry"]:
                         keys.append(key)
                 if len(paths):
-                    game_info[config.json_key_steam_paths] = paths
+                    game_info[config.json_key_store_paths] = paths
                 if len(keys):
-                    game_info[config.json_key_steam_keys] = keys
+                    game_info[config.json_key_store_keys] = keys
 
         # Return game info
         return game_info
@@ -358,28 +404,139 @@ class Steam(storebase.StoreBase):
     # Get versions
     def GetVersions(
         self,
-        json_file,
+        game_info,
         verbose = False,
         exit_on_failure = False):
 
         # Get game info
-        game_info = gameinfo.GameInfo(
-            json_file = json_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+        game_appid = game_info.get_store_appid(config.json_key_steam)
+        game_branchid = game_info.get_store_branchid(config.json_key_steam)
+        game_buildid = game_info.get_store_buildid(config.json_key_steam)
 
-        # Ignore non-steam games
-        if game_info.get_steam_appid() == "":
+        # Ignore invalid games
+        if game_appid == "":
             return (None, None)
 
         # Get latest steam info
         latest_steam_info = self.GetInfo(
-            identifier = game_info.get_steam_appid(),
-            branch = game_info.get_steam_branchid(),
+            identifier = game_appid,
+            branch = game_branchid,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
         # Return versions
-        local_buildid = game_info.get_steam_buildid()
-        remote_buildid = latest_steam_info[config.json_key_steam_buildid]
+        local_buildid = game_buildid
+        remote_buildid = latest_steam_info[config.json_key_store_buildid]
         return (local_buildid, remote_buildid)
+
+    # Get save paths
+    def GetSavePaths(
+        self,
+        game_info,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Get game info
+        game_appid = game_info.get_store_appid(config.json_key_steam)
+        game_paths = game_info.get_store_paths(config.json_key_steam)
+
+        # Get user info
+        user_id64 = self.GetUserId(config.steam_id_format_64)
+        user_id3 = self.GetUserId(config.steam_id_format_3s)
+        user_idc = self.GetUserId(config.steam_id_format_cs)
+
+        # Ignore invalid games
+        if game_appid == "":
+            return []
+
+        # Build translation map
+        translation_map = {}
+        translation_map[config.token_user_public_dir] = []
+        translation_map[config.token_user_public_dir].append("C:\\Users\\Public")
+        translation_map[config.token_user_public_dir].append(os.path.join(self.install_dir, "steamapps", "compatdata", game_appid, "pfx", "drive_c", "users", "Public"))
+        translation_map[config.token_user_profile_dir] = []
+        if "USERPROFILE" in os.environ:
+            translation_map[config.token_user_profile_dir].append(os.environ["USERPROFILE"])
+        translation_map[config.token_user_profile_dir].append(os.path.join(self.install_dir, "steamapps", "compatdata", game_appid, "pfx", "drive_c", "users", "steamuser"))
+        translation_map[config.token_store_install_dir] = []
+        translation_map[config.token_store_install_dir].append(self.install_dir)
+
+        # Translate save paths
+        translated_paths = []
+        for path in game_paths:
+            for base_key in translation_map.keys():
+                for key_replacement in translation_map[base_key]:
+
+                    # Get potential full paths
+                    fullpath = path.replace(base_key, key_replacement)
+                    fullpath_id64 = fullpath.replace(config.token_store_user_id, self.GetUserId(config.steam_id_format_64))
+                    fullpath_id3s = fullpath.replace(config.token_store_user_id, self.GetUserId(config.steam_id_format_3s))
+                    fullpath_idcs = fullpath.replace(config.token_store_user_id, self.GetUserId(config.steam_id_format_cs))
+
+                    # Create translation entry
+                    entry = {}
+
+                    # Set full path
+                    if os.path.exists(fullpath):
+                        entry["full"] = fullpath
+                    elif os.path.exists(fullpath_id64):
+                        entry["full"] = fullpath_id64
+                    elif os.path.exists(fullpath_id3s):
+                        entry["full"] = fullpath_id3s
+                    elif os.path.exists(fullpath_idcs):
+                        entry["full"] = fullpath_idcs
+
+                    # Set relative path
+                    if base_key == config.token_user_profile_dir:
+                        entry["relative"] = path.replace(base_key + config.os_pathsep, "")
+                    elif base_key == config.token_user_public_dir:
+                        entry["relative"] = path.replace(base_key, config.computer_public_folder)
+                    elif base_key == config.token_store_install_dir:
+                        entry["relative"] = path.replace(base_key, config.computer_store_folder)
+
+                    # Add entry
+                    if "full" in entry and "relative" in entry:
+                        translated_paths.append(entry)
+        return translated_paths
+
+    # Export save
+    def ExportSave(
+        self,
+        game_info,
+        output_dir,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Create temporary directory
+        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+        if not tmp_dir_success:
+            return False
+
+        # Copy save files
+        for save_path_entry in self.GetSavePaths(
+            game_info = game_info,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure):
+            save_src = save_path_entry["full"]
+            save_dest = os.path.join(tmp_dir_result, save_path_entry["relative"])
+            if os.path.exists(save_src):
+                system.CopyContents(
+                    src = save_src,
+                    dest = save_dest,
+                    show_progress = True,
+                    skip_existing = True,
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+
+        # Delete temporary directory
+        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        return True
+
+    # Import save
+    def ImportSave(
+        self,
+        game_info,
+        input_dir,
+        verbose = False,
+        exit_on_failure = False):
+        pass
