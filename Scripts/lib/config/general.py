@@ -27,6 +27,7 @@ token_hdd_main_root = "HDD_MAIN_ROOT"
 token_dos_main_root = "DOS_MAIN_ROOT"
 token_scumm_main_root = "SCUMM_MAIN_ROOT"
 token_disc_main_root = "DISC_MAIN_ROOT"
+token_disc_update_root = "DISC_UPDATE_ROOT"
 token_disc_zero_root = "DISC_ZERO_ROOT"
 token_disc_one_root = "DISC_ONE_ROOT"
 token_disc_two_root = "DISC_TWO_ROOT"
@@ -47,6 +48,8 @@ token_store_user_id = "STORE_USER_ID"
 token_command_split = "@=^=@"
 token_glob = "*"
 tokens_disc = [
+    token_disc_main_root,
+    token_disc_update_root,
     token_disc_zero_root,
     token_disc_one_root,
     token_disc_two_root,
@@ -54,8 +57,7 @@ tokens_disc = [
     token_disc_four_root,
     token_disc_five_root,
     token_disc_six_root,
-    token_disc_seven_root,
-    token_disc_main_root
+    token_disc_seven_root
 ]
 token_disc_names = {
     token_disc_zero_root: "Disc 0",
@@ -65,7 +67,8 @@ token_disc_names = {
     token_disc_four_root: "Disc 4",
     token_disc_five_root: "Disc 5",
     token_disc_six_root: "Disc 6",
-    token_disc_seven_root: "Disc 7"
+    token_disc_seven_root: "Disc 7",
+    token_disc_update_root: "Update"
 }
 
 # Separators
