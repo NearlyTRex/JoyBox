@@ -14,7 +14,7 @@ import setup
 # Parse arguments
 parser = argparse.ArgumentParser(description="Create folders from certain file types.")
 parser.add_argument("path", help="Input path")
-parser.add_argument("-t", "--file_types", type=str, default=".iso,.chd,.rvz,.zip,.7z,.rar,.pkg", help="List of file types (comma delimited)")
+parser.add_argument("-f", "--file_types", type=str, default=".iso,.chd,.rvz,.zip,.7z,.rar,.pkg", help="List of file types (comma delimited)")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
