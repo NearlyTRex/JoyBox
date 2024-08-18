@@ -21,6 +21,7 @@ packages = [
     "json5",
     "lxml",
     "mergedeep",
+    "mutagen",
     "packaging",
     "pathlib",
     "Pillow",
