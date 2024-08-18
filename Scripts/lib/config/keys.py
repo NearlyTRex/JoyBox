@@ -132,6 +132,7 @@ json_key_sync_data = "data"
 json_key_registry = "registry"
 json_key_registry_setup_keys = "setup_keys"
 json_key_registry_game_keys = "game_keys"
+json_key_serials = "serials"
 json_key_amazon = "amazon"
 json_key_epic = "epic"
 json_key_gog = "gog"
@@ -196,6 +197,7 @@ json_key_defaults.append({"key": (json_key_sync, json_key_sync_data), "default":
 json_key_defaults.append({"key": json_key_registry, "default": {}})
 json_key_defaults.append({"key": (json_key_registry, json_key_registry_setup_keys), "default": []})
 json_key_defaults.append({"key": (json_key_registry, json_key_registry_game_keys), "default": []})
+json_key_defaults.append({"key": json_key_serials, "default": {}})
 json_key_defaults.append({"key": json_key_amazon, "default": {}})
 json_key_defaults.append({"key": json_key_epic, "default": {}})
 json_key_defaults.append({"key": json_key_gog, "default": {}})
