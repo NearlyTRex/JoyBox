@@ -86,7 +86,7 @@ def GeneratePlaylist(
     # Write playlist
     return WritePlaylist(
         output_file = output_file,
-        playlist_contents = sorted(playlist_contents, key=lambda item: (len(item), item)),
+        playlist_contents = sorted(playlist_contents, key=lambda item: (item, len(item))),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
