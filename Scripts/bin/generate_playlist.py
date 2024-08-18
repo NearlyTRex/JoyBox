@@ -23,6 +23,8 @@ parser.add_argument("-t", "--playlist_type",
     default=config.playlist_type_tree,
     help="Playlist type"
 )
+parser.add_argument("--allow_empty_lists", action="store_true", help="Allow empty lists")
+parser.add_argument("--allow_single_lists", action="store_true", help="Allow single entry lists")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
@@ -48,6 +50,8 @@ def main():
             source_dir = input_path,
             output_file = args.output_file,
             extensions = args.file_types.split(","),
+            allow_empty_lists = args.allow_empty_lists,
+            allow_single_lists = args.allow_single_lists,
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
 
@@ -56,6 +60,8 @@ def main():
         playlist.GenerateLocalPlaylists(
             source_dir = input_path,
             extensions = args.file_types.split(","),
+            allow_empty_lists = args.allow_empty_lists,
+            allow_single_lists = args.allow_single_lists,
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
 
