@@ -154,6 +154,30 @@ def MergeDictionaries(dict1, dict2):
     except:
         return dict1
 
+# Sort strings
+def SortStrings(strings):
+    return sorted(strings, key=lambda item: (item, len(item)))
+
+# Sort strings with length
+def SortStringsWithLength(strings):
+    return sorted(strings, key=lambda item: (len(item), item))
+
+# Clean rich text string
+def CleanRichTextString(string):
+    new_string = string.strip()
+    new_string = new_string.replace("“", "\"")
+    new_string = new_string.replace("”", "\"")
+    new_string = new_string.replace("’", "'")
+    new_string = new_string.replace("ʻ", "'")
+    new_string = new_string.replace("‘", "'")
+    new_string = new_string.replace("…", "...")
+    new_string = new_string.replace("•", "*")
+    new_string = new_string.replace("—", "-")
+    new_string = new_string.replace("–", "-")
+    new_string = new_string.replace("\\x7e", "~")
+    new_string = new_string.encode("ascii", "ignore").decode()
+    return new_string
+
 ###########################################################
 
 # Log message
@@ -1188,7 +1212,7 @@ def PrunePaths(paths = [], excludes = []):
                 should_add = False
         if should_add:
             new_paths.add(path)
-    return sorted(new_paths)
+    return SortStrings(new_paths)
 
 # Build file list
 def BuildFileList(root, excludes = [], new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
@@ -1229,7 +1253,7 @@ def BuildFileListByExtensions(root, excludes = [], extensions = [], new_relative
                 files.append(file)
         else:
             files.append(file)
-    return sorted(files)
+    return SortStrings(files)
 
 # Build directory list
 def BuildDirectoryList(root, excludes = [], new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
@@ -1287,7 +1311,7 @@ def ConvertToTopLevelPaths(path_list, path_root = None, only_files = False, only
             should_save_path = True
         if should_save_path:
             top_level_paths.add(path_front)
-    return sorted(top_level_paths)
+    return SortStrings(top_level_paths)
 
 # Convert file list to relative paths
 def ConvertFileListToRelativePaths(file_list, base_dir):
@@ -1299,14 +1323,14 @@ def ConvertFileListToRelativePaths(file_list, base_dir):
         normalized_filename = NormalizeFilePath(filename, separator = config.os_pathsep)
         normalized_filename = normalized_filename.replace(replacement, "")
         relative_file_list.append(normalized_filename)
-    return sorted(relative_file_list)
+    return SortStrings(relative_file_list)
 
 # Convert file list to absolute paths
 def ConvertFileListToAbsolutePaths(file_list, base_dir):
     absolute_file_list = []
     for filename in file_list:
         absolute_file_list.append(os.path.join(base_dir, filename))
-    return sorted(absolute_file_list)
+    return SortStrings(absolute_file_list)
 
 # Normalize file path
 def NormalizeFilePath(path, force_posix = False, force_windows = False, separator = os.sep):
