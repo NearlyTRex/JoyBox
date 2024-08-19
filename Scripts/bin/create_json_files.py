@@ -109,7 +109,7 @@ def main():
             collection.CreateGameJsonFiles(
                 file_category = args.file_category,
                 file_subcategory = args.file_subcategory,
-                file_root = os.path.join(source_file_root, args.file_category, args.file_subcategory),
+                file_root = source_file_root,
                 passphrase = passphrase,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
@@ -120,7 +120,7 @@ def main():
                 collection.CreateGameJsonFiles(
                     file_category = args.file_category,
                     file_subcategory = file_subcategory,
-                    file_root = os.path.join(source_file_root, args.file_category, file_subcategory),
+                    file_root = source_file_root,
                     passphrase = passphrase,
                     verbose = args.verbose,
                     exit_on_failure = args.exit_on_failure)
@@ -128,11 +128,11 @@ def main():
         # All categories/subcategories
         else:
             for file_category in config.game_categories:
-                for file_subcategory in config.game_subcategories[game_category]:
+                for file_subcategory in config.game_subcategories[file_category]:
                     collection.CreateGameJsonFiles(
-                        file_category = args.file_category,
+                        file_category = file_category,
                         file_subcategory = file_subcategory,
-                        file_root = os.path.join(source_file_root, args.file_category, file_subcategory),
+                        file_root = source_file_root,
                         passphrase = passphrase,
                         verbose = args.verbose,
                         exit_on_failure = args.exit_on_failure)
