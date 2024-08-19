@@ -81,9 +81,9 @@ def CreateGameJsonFile(
             all_main.append(rebased_file)
 
     # Build exe lists
-    exe_main = [f for f in all_main if f.endswith(".exe")]
-    exe_dlc = [f for f in all_dlc if f.endswith(".exe")]
-    exe_updates = [f for f in all_updates if f.endswith(".exe")]
+    exe_main = [f for f in all_main if f.endswith(".exe") or f.endswith(".msi")]
+    exe_dlc = [f for f in all_dlc if f.endswith(".exe") or f.endswith(".msi")]
+    exe_updates = [f for f in all_updates if f.endswith(".exe") or f.endswith(".msi")]
 
     # Get top level paths
     top_level_paths = system.ConvertToTopLevelPaths(rebased_files)
@@ -169,7 +169,7 @@ def CreateGameJsonFiles(
     verbose = False,
     exit_on_failure = False):
     for file_title in gameinfo.FindAllGameNames(file_root, file_category, file_subcategory):
-        success = collection.CreateGameJsonFile(
+        success = CreateGameJsonFile(
             file_category = file_category,
             file_subcategory = file_subcategory,
             file_title = file_title,
