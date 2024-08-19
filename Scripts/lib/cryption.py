@@ -53,6 +53,7 @@ def GetEmbeddedFilename(
     # Get embedded name
     if isinstance(info_output, bytes):
         info_output = info_output.decode()
+    info_output = system.CleanRichTextString(info_output)
     for possible_name in system.FindQuotedSubstrings(info_output):
         return possible_name
     return None
@@ -118,6 +119,8 @@ def GetRealFilePath(
     passphrase,
     verbose = False,
     exit_on_failure = False):
+    if not IsFileEncrypted(source_file):
+        return source_file
     real_dir = system.GetFilenameDirectory(source_file)
     real_name = GetEmbeddedFilename(
         source_file = source_file,

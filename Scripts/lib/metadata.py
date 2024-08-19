@@ -1119,17 +1119,8 @@ def CollectMetadataFromItchio(
 # Clean raw game description
 def CleanRawGameDescription(raw_description):
 
-    # Replace special characters
-    new_description = raw_description.strip()
-    new_description = new_description.replace("“", "\"")
-    new_description = new_description.replace("”", "\"")
-    new_description = new_description.replace("’", "'")
-    new_description = new_description.replace("ʻ", "'")
-    new_description = new_description.replace("‘", "'")
-    new_description = new_description.replace("…", "...")
-    new_description = new_description.replace("•", "*")
-    new_description = new_description.replace("—", "-")
-    new_description = new_description.replace("–", "-")
+    # Clean rich text
+    new_description = system.CleanRichTextString(raw_description)
 
     # Replace leftover html
     new_description = new_description.replace("<span>", " ")
@@ -1139,10 +1130,6 @@ def CleanRawGameDescription(raw_description):
     new_description = new_description.replace("&quot;", " ")
     new_description = new_description.replace("&amp;", " ")
     new_description = new_description.replace("amp;", " ")
-
-    # Replace non-ascii characters
-    cleared_description = new_description.encode("ascii", "ignore")
-    new_description = cleared_description.decode()
 
     # Final cleanup
     new_description = new_description.replace("()", "")
