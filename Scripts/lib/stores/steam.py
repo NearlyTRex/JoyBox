@@ -309,7 +309,9 @@ class Steam(storebase.StoreBase):
             src = game_json_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        json_data[config.json_key_steam] = latest_steam_info
+        json_data[config.json_key_steam] = system.MergeDictionaries(
+            dict1 = json_data[config.json_key_steam],
+            dict2 = latest_steam_info)
         success = system.WriteJsonFile(
             src = game_json_file,
             json_data = json_data,
@@ -409,8 +411,8 @@ class Steam(storebase.StoreBase):
                     continue
                 if "id" in manifest_data["steam"] and str(manifest_data["steam"]["id"]) != identifier:
                     continue
-                paths = []
-                keys = []
+                paths = set()
+                keys = set()
                 if "files" in manifest_data:
                     for path_location, path_info in manifest_data["files"].items():
                         if "when" in path_info:
@@ -441,24 +443,32 @@ class Steam(storebase.StoreBase):
                                     new_location = new_location.replace("<base>", "%s/steamapps/common/%s" %
                                         (config.token_store_install_dir, game_info[config.json_key_store_installdir]))
                                 new_location = new_location.replace("<storeUserId>", config.token_store_user_id)
-
-                                # Determine if path should be saved
-                                should_save_path = True
-                                for path in paths:
-                                    if path.startswith(new_location):
-                                        should_save_path = False
-                                if not should_save_path:
-                                    continue
+                                if "/**/" in new_location:
+                                    for new_location_part in new_location.split("/**/"):
+                                        new_location = new_location_part
+                                        break
+                                if "*" in system.GetFilenameFile(new_location):
+                                    new_location = system.GetFilenameDirectory(new_location)
 
                                 # Save path
-                                paths.append(new_location)
+                                paths.add(new_location)
                 if "registry" in manifest_data:
                     for key in manifest_data["registry"]:
-                        keys.append(key)
+                        keys.add(key)
                 if len(paths):
-                    game_info[config.json_key_store_paths] = paths
+                    for possible_child in system.SortStrings(paths):
+                        possible_parent = system.GetDirectoryParent(possible_child)
+                        possible_grandparent = system.GetDirectoryParent(possible_parent)
+                        possible_greatgrandparent = system.GetDirectoryParent(possible_grandparent)
+                        if possible_parent in paths:
+                            paths.remove(possible_child)
+                        if possible_grandparent in paths:
+                            paths.remove(possible_child)
+                        if possible_greatgrandparent in paths:
+                            paths.remove(possible_child)
+                    game_info[config.json_key_store_paths] = system.SortStrings(paths)
                 if len(keys):
-                    game_info[config.json_key_store_keys] = keys
+                    game_info[config.json_key_store_keys] = system.SortStrings(keys)
 
         # Return game info
         return game_info
