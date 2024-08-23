@@ -53,9 +53,8 @@ def GetEmbeddedFilename(
     # Get embedded name
     if isinstance(info_output, bytes):
         info_output = info_output.decode()
-    info_output = system.CleanRichTextString(info_output)
     for possible_name in system.FindQuotedSubstrings(info_output):
-        return possible_name
+        return system.CleanRichTextString(possible_name)
     return None
 
 # Get embedded file info
