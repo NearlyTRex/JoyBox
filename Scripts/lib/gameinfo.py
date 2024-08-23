@@ -123,40 +123,55 @@ class GameInfo:
 
     # Check if key exists
     def has_key(self, key):
-        return key in self.json_data
+        try:
+            return key in self.json_data
+        except:
+            return False
 
     # Check if subkey exists
     def has_subkey(self, key, subkey):
-        if key in self.json_data:
+        try:
             return subkey in self.json_data[key]
-        return False
+        except:
+            return False
 
     # Get value
     def get_value(self, key):
-        if key in self.json_data:
+        try:
             return self.json_data[key]
-        return None
+        except:
+            return None
 
     # Get sub-value
     def get_subvalue(self, key, subkey):
-        if key in self.json_data:
-            if subkey in self.json_data[key]:
-                return self.json_data[key][subkey]
-        return None
+        try:
+            return self.json_data[key][subkey]
+        except:
+            return None
 
     # Set value
     def set_value(self, key, value):
-        self.json_data[key] = value
+        try:
+            self.json_data[key] = value
+        except:
+            return
+
+    # Set sub-value
+    def set_subvalue(self, key, subkey, value):
+        try:
+            self.json_data[key][subkey] = value
+        except:
+            return
 
     # Set default value
     def set_default_value(self, key, value):
-        if key not in self.json_data:
-            self.json_data[key] = value
+        if not self.has_key(key):
+            self.set_value(key, value)
 
     # Set default sub-value
     def set_default_subvalue(self, key, subkey, value):
-        if key in self.json_data and subkey not in self.json_data[key]:
-            self.json_data[key][subkey] = value
+        if self.has_key(key) and not self.has_subkey(key, subkey):
+            self.set_subvalue(key, subkey, value)
 
     # Get metadata value
     def get_metadata_value(self, key):
