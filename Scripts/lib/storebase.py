@@ -17,6 +17,10 @@ class StoreBase:
     def GetName(self):
         return ""
 
+    # Is valid identifier
+    def IsValidIdentifier(self, identifier):
+        return isinstance(identifier, str) and len(identifier)
+
     # Load manifest
     def LoadManifest(self, verbose = False, exit_on_failure = False):
         self.manifest = system.ReadYamlFile(
@@ -50,6 +54,14 @@ class StoreBase:
         output_dir = None,
         skip_existing = False,
         force = False,
+        verbose = False,
+        exit_on_failure = False):
+        return False
+
+    # Update
+    def Update(
+        self,
+        game_info,
         verbose = False,
         exit_on_failure = False):
         return False

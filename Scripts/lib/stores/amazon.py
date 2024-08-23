@@ -195,7 +195,7 @@ class Amazon(storebase.StoreBase):
         game_json_file = game_info.get_json_file()
 
         # Ignore invalid games
-        if game_appid == "":
+        if not self.IsValidIdentifier(game_appid):
             return True
 
         # Get output dir
@@ -328,7 +328,7 @@ class Amazon(storebase.StoreBase):
         game_buildid = game_info.get_store_buildid(config.json_key_steam)
 
         # Ignore invalid games
-        if game_appid == "":
+        if not self.IsValidIdentifier(game_appid):
             return (None, None)
 
         # Get latest amazon info

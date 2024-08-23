@@ -210,12 +210,14 @@ store_types = [
 # Store action types
 store_action_type_login = "login"
 store_action_type_download = "download"
+store_action_type_update = "update"
 store_action_type_check = "check"
 store_action_type_export = "export"
 store_action_type_import = "import"
 store_action_types = [
     store_action_type_login,
     store_action_type_download,
+    store_action_type_update,
     store_action_type_check,
     store_action_type_export,
     store_action_type_import

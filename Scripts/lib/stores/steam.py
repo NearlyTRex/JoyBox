@@ -221,7 +221,7 @@ class Steam(storebase.StoreBase):
         game_json_file = game_info.get_json_file()
 
         # Ignore invalid games
-        if game_appid == "":
+        if not self.IsValidIdentifier(game_appid):
             return True
 
         # Get output dir
@@ -281,6 +281,43 @@ class Steam(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         return success
 
+    # Update
+    def Update(
+        self,
+        game_info,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Get game info
+        game_appid = game_info.get_store_appid(config.json_key_steam)
+        game_branchid = game_info.get_store_branchid(config.json_key_steam)
+        game_json_file = game_info.get_json_file()
+
+        # Ignore invalid games
+        if not self.IsValidIdentifier(game_appid):
+            return True
+
+        # Get latest steam info
+        latest_steam_info = self.GetInfo(
+            identifier = game_appid,
+            branch = game_branchid,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
+        # Update json file
+        json_data = system.ReadJsonFile(
+            src = game_json_file,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        json_data[config.json_key_steam] = latest_steam_info
+        success = system.WriteJsonFile(
+            src = game_json_file,
+            json_data = json_data,
+            sort_keys = True,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        return success
+
     # Get info
     def GetInfo(
         self,
@@ -295,7 +332,7 @@ class Steam(storebase.StoreBase):
             steamcmd_tool = programs.GetToolProgram("SteamCMD")
         if not steamcmd_tool:
             system.LogError("SteamCMD was not found")
-            return False
+            return None
 
         # Get info command
         info_cmd = [
@@ -314,7 +351,7 @@ class Steam(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         if len(info_output) == 0:
             system.LogError("Unable to find steam information for '%s'" % identifier)
-            return False
+            return None
 
         # Get steam json
         steam_json = {}
@@ -331,7 +368,7 @@ class Steam(storebase.StoreBase):
             steam_json = vdf.loads(vdf_text)
         except:
             system.LogError("Unable to parse steam information for '%s'" % identifier)
-            return False
+            return None
 
         # Build game info
         game_info = {}
@@ -360,6 +397,8 @@ class Steam(storebase.StoreBase):
                         appbranch = appbranches[branch]
                         if "buildid" in appbranch:
                             game_info[config.json_key_store_buildid] = str(appbranch["buildid"])
+                        else:
+                            game_info[config.json_key_store_buildid] = "unknown"
                         if "timeupdated" in appbranch:
                             game_info[config.json_key_store_builddate] = str(appbranch["timeupdated"])
 
@@ -374,22 +413,45 @@ class Steam(storebase.StoreBase):
                 keys = []
                 if "files" in manifest_data:
                     for path_location, path_info in manifest_data["files"].items():
-                        for when_info in path_info["when"]:
-                            when_os = when_info["os"] if "os" in when_info else ""
-                            when_store = when_info["store"] if "store" in when_info else ""
-                            if when_os == "windows":
-                                if when_store == "steam" or when_store == "":
-                                    new_location = path_location
-                                    new_location = new_location.replace("<winPublic>", config.token_user_public_dir)
-                                    new_location = new_location.replace("<winDir>", "%s/AppData/Local/VirtualStore" % config.token_user_profile_dir)
-                                    new_location = new_location.replace("<winAppData>", "%s/AppData/Roaming" % config.token_user_profile_dir)
-                                    new_location = new_location.replace("<winLocalAppData>", "%s/AppData/Local" % config.token_user_profile_dir)
-                                    new_location = new_location.replace("<winDocuments>", "%s/Documents" % config.token_user_profile_dir)
-                                    new_location = new_location.replace("<home>", config.token_user_profile_dir)
-                                    new_location = new_location.replace("<root>", config.token_store_install_dir)
-                                    new_location = new_location.replace("<base>", "%s/steamapps/common/%s" % (config.token_store_install_dir, game_info[config.json_key_store_installdir]))
-                                    new_location = new_location.replace("<storeUserId>", config.token_store_user_id)
-                                    paths.append(new_location)
+                        if "when" in path_info:
+                            for when_info in path_info["when"]:
+
+                                # Determine if path is relevant
+                                when_os = when_info["os"] if "os" in when_info else ""
+                                when_store = when_info["store"] if "store" in when_info else ""
+                                is_steam_path = False
+                                if (when_os == "windows" or when_os == "dos") and (when_store == "steam" or when_store == ""):
+                                    is_steam_path = True
+                                elif when_store == "steam" and when_os == "":
+                                    is_steam_path = True
+                                if not is_steam_path:
+                                    continue
+
+                                # Replace tokens to get new path
+                                new_location = path_location
+                                new_location = new_location.replace("<winPublic>", config.token_user_public_dir)
+                                new_location = new_location.replace("<winDir>", "%s/AppData/Local/VirtualStore" % config.token_user_profile_dir)
+                                new_location = new_location.replace("<winAppData>", "%s/AppData/Roaming" % config.token_user_profile_dir)
+                                new_location = new_location.replace("<winLocalAppData>", "%s/AppData/Local" % config.token_user_profile_dir)
+                                new_location = new_location.replace("<winProgramData>", "%s/AppData/Local/VirtualStore" % config.token_user_profile_dir)
+                                new_location = new_location.replace("<winDocuments>", "%s/Documents" % config.token_user_profile_dir)
+                                new_location = new_location.replace("<home>", config.token_user_profile_dir)
+                                new_location = new_location.replace("<root>", config.token_store_install_dir)
+                                if config.json_key_store_installdir in game_info:
+                                    new_location = new_location.replace("<base>", "%s/steamapps/common/%s" %
+                                        (config.token_store_install_dir, game_info[config.json_key_store_installdir]))
+                                new_location = new_location.replace("<storeUserId>", config.token_store_user_id)
+
+                                # Determine if path should be saved
+                                should_save_path = True
+                                for path in paths:
+                                    if path.startswith(new_location):
+                                        should_save_path = False
+                                if not should_save_path:
+                                    continue
+
+                                # Save path
+                                paths.append(new_location)
                 if "registry" in manifest_data:
                     for key in manifest_data["registry"]:
                         keys.append(key)
@@ -414,7 +476,7 @@ class Steam(storebase.StoreBase):
         game_buildid = game_info.get_store_buildid(config.json_key_steam)
 
         # Ignore invalid games
-        if game_appid == "":
+        if not self.IsValidIdentifier(game_appid):
             return (None, None)
 
         # Get latest steam info
@@ -446,7 +508,7 @@ class Steam(storebase.StoreBase):
         user_idc = self.GetUserId(config.steam_id_format_cs)
 
         # Ignore invalid games
-        if game_appid == "":
+        if not self.IsValidIdentifier(game_appid):
             return []
 
         # Build translation map

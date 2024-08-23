@@ -80,13 +80,27 @@ def main():
         for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
             game_info = gameinfo.GameInfo(
                 json_file = json_file,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
             success = store_obj.Download(
                 game_info = game_info,
                 output_dir = args.output_dir,
                 skip_existing = args.skip_existing,
                 force = args.force,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            if not success:
+                break
+
+    # Update
+    elif args.store_action == config.store_action_type_update:
+        for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
+            game_info = gameinfo.GameInfo(
+                json_file = json_file,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            success = store_obj.Update(
+                game_info = game_info,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
             if not success:
