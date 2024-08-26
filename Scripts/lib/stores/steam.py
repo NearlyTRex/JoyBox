@@ -11,6 +11,7 @@ import gameinfo
 import system
 import environment
 import ini
+import saves
 import storebase
 
 # Steam store
@@ -19,11 +20,25 @@ class Steam(storebase.StoreBase):
     # Constructor
     def __init__(self):
         super().__init__()
+
+        # Get platform / architecture
         self.platform = ini.GetIniPathValue("UserData.Steam", "steam_platform")
         self.arch = ini.GetIniPathValue("UserData.Steam", "steam_arch")
+        if not self.platform or not self.arch:
+            raise RuntimeError("Ini file does not have a valid steam platform/arch")
+
+        # Get account name
         self.accountname = ini.GetIniValue("UserData.Steam", "steam_accountname")
+        if not self.accountname:
+            raise RuntimeError("Ini file does not have a valid steam account")
+
+        # Get user details
         self.username = ini.GetIniValue("UserData.Steam", "steam_username")
         self.userid = ini.GetIniValue("UserData.Steam", "steam_userid")
+        if not self.username or not self.userid:
+            raise RuntimeError("Ini file does not have a valid steam user details")
+
+        # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.Steam", "steam_install_dir")
         if not system.IsPathValid(self.install_dir) or not system.DoesPathExist(self.install_dir):
             raise RuntimeError("Ini file does not have a valid steam install dir")
@@ -272,7 +287,9 @@ class Steam(storebase.StoreBase):
             src = game_json_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        json_data[config.json_key_steam] = latest_steam_info
+        json_data[config.json_key_steam] = system.MergeDictionaries(
+            dict1 = json_data[config.json_key_steam],
+            dict2 = latest_steam_info)
         success = system.WriteJsonFile(
             src = game_json_file,
             json_data = json_data,
@@ -539,32 +556,67 @@ class Steam(storebase.StoreBase):
             for base_key in translation_map.keys():
                 for key_replacement in translation_map[base_key]:
 
+                    # Get potential user ids
+                    userid_64 = self.GetUserId(config.steam_id_format_64)
+                    userid_3s = self.GetUserId(config.steam_id_format_3s)
+                    userid_cs = self.GetUserId(config.steam_id_format_cs)
+
                     # Get potential full paths
                     fullpath = path.replace(base_key, key_replacement)
-                    fullpath_id64 = fullpath.replace(config.token_store_user_id, self.GetUserId(config.steam_id_format_64))
-                    fullpath_id3s = fullpath.replace(config.token_store_user_id, self.GetUserId(config.steam_id_format_3s))
-                    fullpath_idcs = fullpath.replace(config.token_store_user_id, self.GetUserId(config.steam_id_format_cs))
+                    fullpath_id64 = fullpath.replace(config.token_store_user_id, userid_64)
+                    fullpath_id3s = fullpath.replace(config.token_store_user_id, userid_3s)
+                    fullpath_idcs = fullpath.replace(config.token_store_user_id, userid_cs)
+
+                    # Get potential relative paths
+                    relativepath = path
+                    relativepath_id64 = relativepath.replace(config.token_store_user_id, userid_64)
+                    relativepath_id3s = relativepath.replace(config.token_store_user_id, userid_3s)
+                    relativepath_idcs = relativepath.replace(config.token_store_user_id, userid_cs)
+
+                    # Get potential new base paths
+                    new_base_general = config.save_type_general
+                    new_base_public = os.path.join(config.save_type_general, config.computer_public_folder)
+                    new_base_store = os.path.join(config.save_type_general, config.computer_store_folder)
+
+                    # Determine which paths exist
+                    real_userid = None
+                    real_fullpath = None
+                    real_relativepath = None
+                    if os.path.exists(fullpath):
+                        real_userid = userid_64
+                        real_fullpath = fullpath
+                        real_relativepath = relativepath
+                    elif os.path.exists(fullpath_id64):
+                        real_userid = userid_64
+                        real_fullpath = fullpath_id64
+                        real_relativepath = relativepath_id64
+                    elif os.path.exists(fullpath_id3s):
+                        real_userid = userid_3s
+                        real_fullpath = fullpath_id3s
+                        real_relativepath = relativepath_id3s
+                    elif os.path.exists(fullpath_idcs):
+                        real_userid = userid_cs
+                        real_fullpath = fullpath_idcs
+                        real_relativepath = relativepath_idcs
+                    if not real_userid or not real_fullpath or not real_relativepath:
+                        continue
 
                     # Create translation entry
                     entry = {}
 
                     # Set full path
-                    if os.path.exists(fullpath):
-                        entry["full"] = fullpath
-                    elif os.path.exists(fullpath_id64):
-                        entry["full"] = fullpath_id64
-                    elif os.path.exists(fullpath_id3s):
-                        entry["full"] = fullpath_id3s
-                    elif os.path.exists(fullpath_idcs):
-                        entry["full"] = fullpath_idcs
+                    entry["full"] = real_fullpath
 
                     # Set relative path
                     if base_key == config.token_user_profile_dir:
-                        entry["relative"] = path.replace(base_key + config.os_pathsep, "")
+                        relative_path = real_relativepath.replace(base_key, new_base_general)
+                        entry["relative"] = [relative_path]
                     elif base_key == config.token_user_public_dir:
-                        entry["relative"] = path.replace(base_key, config.computer_public_folder)
+                        relative_path = real_relativepath.replace(base_key, new_base_public)
+                        entry["relative"] = [relative_path]
                     elif base_key == config.token_store_install_dir:
-                        entry["relative"] = path.replace(base_key, config.computer_store_folder)
+                        relative_path = real_relativepath.replace(base_key, new_base_store)
+                        entry["relative"] = [relative_path]
 
                     # Add entry
                     if "full" in entry and "relative" in entry:
@@ -579,6 +631,11 @@ class Steam(storebase.StoreBase):
         verbose = False,
         exit_on_failure = False):
 
+        # Get game info
+        game_category = game_info.get_category()
+        game_subcategory = game_info.get_subcategory()
+        game_name = game_info.get_name()
+
         # Create temporary directory
         tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
         if not tmp_dir_success:
@@ -589,16 +646,27 @@ class Steam(storebase.StoreBase):
             game_info = game_info,
             verbose = verbose,
             exit_on_failure = exit_on_failure):
-            save_src = save_path_entry["full"]
-            save_dest = os.path.join(tmp_dir_result, save_path_entry["relative"])
-            if os.path.exists(save_src):
-                system.CopyContents(
-                    src = save_src,
-                    dest = save_dest,
-                    show_progress = True,
-                    skip_existing = True,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
+            path_full = save_path_entry["full"]
+            for path_relative in save_path_entry["relative"]:
+                if os.path.exists(path_full):
+                    system.CopyContents(
+                        src = path_full,
+                        dest = os.path.join(tmp_dir_result, path_relative),
+                        show_progress = True,
+                        skip_existing = True,
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
+
+        # Pack save
+        success = saves.PackSave(
+            save_category = game_category,
+            save_subcategory = game_subcategory,
+            save_name = game_name,
+            save_dir = tmp_dir_result,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
         # Delete temporary directory
         system.RemoveDirectory(tmp_dir_result, verbose = verbose)
