@@ -3,11 +3,6 @@ import os, os.path
 import sys
 import configparser
 
-# Local imports
-import config
-import system
-import environment
-
 # Ini file location
 ini_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", ".."))
 ini_file = os.path.join(ini_folder, "JoyBox.ini")
@@ -21,52 +16,64 @@ def IsIniPresent():
 
 # Get ini sections
 def GetIniSections():
-    ini_parser.read(ini_file)
-    return ini_parser.sections()
+    try:
+        ini_parser.read(ini_file)
+        return ini_parser.sections()
+    except:
+        raise RuntimeError("Unable to read ini sections [file=%s]" % ini_file)
 
 # Determine if ini has section
 def HasIniSection(section):
-    ini_parser.read(ini_file)
-    return section in ini_parser
+    try:
+        ini_parser.read(ini_file)
+        return section in ini_parser
+    except:
+        raise RuntimeError("Unable to check ini section [file=%s][section=%s]" % (ini_file, section))
 
 # Determine if ini has field
 def HasIniField(section, field):
-    ini_parser.read(ini_file)
-    return (section in ini_parser) and (field in ini_parser[section])
+    try:
+        ini_parser.read(ini_file)
+        return (section in ini_parser) and (field in ini_parser[section])
+    except:
+        raise RuntimeError("Unable to check ini field [file=%s][section=%s][field=%s]" % (ini_file, section, field))
 
 # Get ini value
 def GetIniValue(section, field):
-    ini_parser.read(ini_file)
-    system.AssertCondition(
-        condition = HasIniField(section, field),
-        description = "No ini value found at [%s][%s]" % (section, field))
-    return ini_parser[section][field]
+    try:
+        ini_parser.read(ini_file)
+        return ini_parser[section][field]
+    except:
+        raise RuntimeError("Unable to get ini value [file=%s][section=%s][field=%s]" % (ini_file, section, field))
 
 # Get ini integer value
 def GetIniIntegerValue(section, field):
-    value = GetIniValue(section, field)
-    system.AssertIsCastableToInt(
-        var_value = value,
-        var_name = "Ini[%s][%s]" % (section, field))
-    return int(value)
+    try:
+        value = GetIniValue(section, field)
+        return int(value)
+    except:
+        raise RuntimeError("Unable to get ini integer value [file=%s][section=%s][field=%s]" % (ini_file, section, field))
 
 # Get ini bool value
 def GetIniBoolValue(section, field):
-    value = GetIniValue(section, field)
-    system.AssertIsCastableToBool(
-        var_value = value,
-        var_name = "Ini[%s][%s]" % (section, field))
-    return value == "True"
+    try:
+        value = GetIniValue(section, field)
+        return value == "True"
+    except:
+        raise RuntimeError("Unable to get ini boolean value [file=%s][section=%s][field=%s]" % (ini_file, section, field))
 
 # Get ini path value
 def GetIniPathValue(section, field):
-    value = GetIniValue(section, field)
-    system.AssertIsValidPath(
-        var_value = value,
-        var_name = "Ini[%s][%s]" % (section, field))
-    return os.path.expandvars(value)
+    try:
+        value = GetIniValue(section, field)
+        return os.path.expandvars(value)
+    except:
+        raise RuntimeError("Unable to get ini path value [file=%s][section=%s][field=%s]" % (ini_file, section, field))
 
 # Get ini list value
 def GetIniListValue(section, field, delimiter = ","):
-    value = GetIniValue(section, field)
-    return value.split(delimiter)
+    try:
+        value = GetIniValue(section, field)
+        return value.split(delimiter)
+    except:
+        raise RuntimeError("Unable to get ini list value [file=%s][section=%s][field=%s][delimiter=%s]" % (ini_file, section, field, delimiter))
