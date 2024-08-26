@@ -30,6 +30,59 @@ def GetLibs32():
 def GetLibs64():
     return GetLibs("lib64")
 
+# Generate base path
+def GenerateBasePath(prefix_dir):
+    return os.path.join(prefix_dir, "AppData", "Roaming", "Goldberg SteamEmu Saves")
+
+# Generate username file path
+def GenerateUserNameFile(prefix_dir):
+    return os.path.join(GenerateBasePath(prefix_dir), "settings", "account_name.txt")
+
+# Generate userid file path
+def GenerateUserIDFile(prefix_dir):
+    return os.path.join(GenerateBasePath(prefix_dir), "settings", "user_steam_id.txt")
+
+# Convert from native path
+def ConvertFromNativePath(path, user_id):
+    src_path = os.path.join(config.computer_store_folder, "userdata", user_id)
+    dest_path = os.path.join(config.computer_appdata_folder, "Roaming", "Goldberg SteamEmu Saves")
+    return path.replace(src_path, dest_path)
+
+# Convert to native path
+def ConvertToNativePath(path, user_id):
+    src_path = os.path.join(config.computer_appdata_folder, "Roaming", "Goldberg SteamEmu Saves")
+    dest_path = os.path.join(config.computer_store_folder, "userdata", user_id)
+    return path.replace(src_path, dest_path)
+
+# Setup user files
+def SetupUserFiles(
+    prefix_dir,
+    user_name,
+    user_id,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Create username file
+    success = system.TouchFile(
+        src = GenerateUserNameFile(prefix_dir),
+        contents = "%s\n" % user_name,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Create userid file
+    success = system.TouchFile(
+        src = GenerateUserIDFile(prefix_dir),
+        contents = "%s\n" % user_id,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Must have succeeded
+    return True
+
 # GoldbergEmu tool
 class GoldbergEmu(toolbase.ToolBase):
 

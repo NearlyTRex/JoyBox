@@ -756,30 +756,6 @@ class Computer(emulatorbase.EmulatorBase):
             image_file = launch_artwork,
             run_func = CreateGamePrefix)
 
-        # Create user files
-        if launch_category == config.game_category_computer:
-
-            # Steam
-            if launch_subcategory == config.game_subcategory_steam:
-
-                # Create steam username file
-                steam_username = ini.GetIniValue("UserData.Steam", "steam_username")
-                if steam_username:
-                    system.TouchFile(
-                        src = sandbox.GetGoldbergSteamEmuUserNameFile(launch_general_save_dir),
-                        contents = "%s\n" % steam_username,
-                        verbose = verbose,
-                        exit_on_failure = exit_on_failure)
-
-                # Create steam userid file
-                steam_userid = ini.GetIniValue("UserData.Steam", "steam_userid")
-                if steam_userid:
-                    system.TouchFile(
-                        src = sandbox.GetGoldbergSteamEmuUserIDFile(launch_general_save_dir),
-                        contents = "%s\n" % steam_userid,
-                        verbose = verbose,
-                        exit_on_failure = exit_on_failure)
-
         # Get user profile
         user_profile_dir = sandbox.GetUserProfilePath(
             prefix_dir = launch_save_dir,

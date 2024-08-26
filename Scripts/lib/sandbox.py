@@ -183,20 +183,6 @@ def GetPublicProfilePath(prefix_dir, is_wine_prefix = False, is_sandboxie_prefix
 
 ###########################################################
 
-# Get Goldberg SteamEmu base path
-def GetGoldbergSteamEmuBasePath(prefix_dir):
-    return os.path.join(prefix_dir, "AppData", "Roaming", "Goldberg SteamEmu Saves")
-
-# Get Goldberg SteamEmu username file
-def GetGoldbergSteamEmuUserNameFile(prefix_dir):
-    return os.path.join(GetGoldbergSteamEmuBasePath(prefix_dir), "settings", "account_name.txt")
-
-# Get Goldberg SteamEmu userid file
-def GetGoldbergSteamEmuUserIDFile(prefix_dir):
-    return os.path.join(GetGoldbergSteamEmuBasePath(prefix_dir), "settings", "user_steam_id.txt")
-
-###########################################################
-
 # Install wine dlls
 def InstallWineDlls(
     prefix_dir,
