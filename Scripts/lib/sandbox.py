@@ -272,7 +272,7 @@ def RestoreRegistry(
         return False
 
     # Get registry dir
-    registry_dir = os.path.join(user_profile_dir, config.computer_registry_folder)
+    registry_dir = os.path.join(user_profile_dir, config.computer_folder_registry)
 
     # Get registry file
     registry_file = ""
@@ -314,7 +314,7 @@ def BackupRegistry(
         return False
 
     # Get registry dir
-    registry_dir = os.path.join(user_profile_dir, config.computer_registry_folder)
+    registry_dir = os.path.join(user_profile_dir, config.computer_folder_registry)
 
     # Get registry file
     registry_file = ""
@@ -606,14 +606,14 @@ def GetPrefixSyncObjs(
     if general_prefix_dir and user_data_sync_basedir:
         for sync_obj in user_data_sync_objs:
             sync_entry = {}
-            sync_entry["stored"] = os.path.join(general_prefix_dir, config.computer_game_data_folder, sync_obj)
+            sync_entry["stored"] = os.path.join(general_prefix_dir, config.computer_folder_gamedata, sync_obj)
             sync_entry["live"] = os.path.join(user_data_sync_basedir, sync_obj)
             sync_objs.append(sync_entry)
 
     # Add user profile mapping
     if general_prefix_dir and user_profile_dir:
         if is_sandboxie_prefix:
-            for sync_dir in config.computer_user_folders_builtin:
+            for sync_dir in config.computer_user_folders:
                 sync_entry = {}
                 sync_entry["stored"] = os.path.join(general_prefix_dir, sync_dir)
                 sync_entry["live"] = os.path.join(user_profile_dir, sync_dir)

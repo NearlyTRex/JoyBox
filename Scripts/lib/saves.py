@@ -11,6 +11,7 @@ import programs
 import archive
 import hashing
 import locker
+import archive
 
 # Backup saves
 def BackupSaves(output_path, verbose = False, exit_on_failure = False):
@@ -233,6 +234,117 @@ def UnpackSaves(verbose = False, exit_on_failure = False):
                         return False
     return True
 
+# Normalize save dir
+def NormalizeSaveDir(save_category, save_subcategory, save_name, save_dir, verbose = False, exit_on_failure = False):
+
+    # Computer
+    if save_category == config.game_category_computer:
+
+        # Create user folders
+        for user_folder in config.computer_user_folders:
+            user_path = os.path.join(save_dir, config.save_type_general, user_folder)
+            if not os.path.exists(user_path):
+                success = system.MakeDirectory(
+                    dir = user_path,
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+                if not success:
+                    return False
+
+        # Steam
+        if save_subcategory == config.game_subcategory_steam:
+
+            # Convert goldberg format to native
+            from stores import steam
+            from tools import goldbergemu
+            success = goldbergemu.ConvertToNativeSave(
+                save_dir = save_dir,
+                user_id = steam.Steam().GetUserId(config.steam_id_format_3s),
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+    # Must be successful
+    return True
+
+# Normalize save archive
+def NormalizeSaveArchive(save_category, save_subcategory, save_name, save_archive, verbose = False, exit_on_failure = False):
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    if not tmp_dir_success:
+        return False
+
+    # Make temporary dirs
+    tmp_dir_extract = os.path.join(tmp_dir_result, "extract")
+    tmp_dir_archive = os.path.join(tmp_dir_result, "archive")
+    system.MakeDirectory(tmp_dir_extract, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(tmp_dir_archive, verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Extract archive
+    success = archive.ExtractArchive(
+        archive_file = save_archive,
+        extract_dir = tmp_dir_extract,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Normalize save dir
+    success = NormalizeSaveDir(
+        save_category = save_category,
+        save_subcategory = save_subcategory,
+        save_name = save_name,
+        save_dir = tmp_dir_extract,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Create archive
+    success = archive.CreateArchiveFromFolder(
+        archive_file = os.path.join(tmp_dir_archive, system.GetFilenameFile(save_archive)),
+        source_dir = tmp_dir_extract,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Replace archive
+    success = system.TransferFile(
+        src = os.path.join(tmp_dir_archive, system.GetFilenameFile(save_archive)),
+        dest = save_archive,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Delete temporary directory
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+
+    # Check result
+    return os.path.exists(save_archive)
+
+# Normalize all saves
+def NormalizeSaves(verbose = False, exit_on_failure = False):
+    for save_category in config.game_categories:
+        for save_subcategory in config.game_subcategories[save_category]:
+            save_base_dir = os.path.join(environment.GetLockerGamingSavesRootDir(), save_category, save_subcategory)
+            for save_name in system.GetDirectoryContents(save_base_dir):
+                save_archive_dir = os.path.join(save_base_dir, save_name)
+                for save_archive in system.BuildFileListByExtensions(root_path, extensions = config.computer_archive_extensions):
+                    success = NormalizeSaveArchive(
+                        save_category = save_category,
+                        save_subcategory = save_subcategory,
+                        save_name = save_name,
+                        save_archive = save_archive,
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
+    return True
+
 # Clean empty saves
 def CleanEmptySaves(verbose = False, exit_on_failure = False):
     system.RemoveEmptyDirectories(
@@ -243,4 +355,3 @@ def CleanEmptySaves(verbose = False, exit_on_failure = False):
         dir = environment.GetLockerGamingSavesRootDir(),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
-

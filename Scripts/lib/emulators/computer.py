@@ -105,10 +105,10 @@ def ResolveJsonPath(
         replace_to = hdd_base_dir
     elif path.startswith(config.token_dos_main_root):
         replace_from = config.token_dos_main_root
-        replace_to = os.path.join(hdd_base_dir, config.computer_dos_folder)
+        replace_to = os.path.join(hdd_base_dir, config.computer_folder_dos)
     elif path.startswith(config.token_scumm_main_root):
         replace_from = config.token_scumm_main_root
-        replace_to = os.path.join(hdd_base_dir, config.computer_scumm_folder)
+        replace_to = os.path.join(hdd_base_dir, config.computer_folder_scumm)
     for disc_token in config.tokens_disc:
         if disc_token in path and disc_token in disc_token_map:
             mapped_value = disc_token_map[disc_token]
@@ -158,8 +158,8 @@ def GetDosLaunchCommand(
         is_sandboxie_prefix = is_sandboxie_prefix)
 
     # Get dos drives
-    dos_c_drive = os.path.join(prefix_c_drive, config.computer_dos_folder, "C")
-    dos_d_drive = os.path.join(prefix_c_drive, config.computer_dos_folder, "D")
+    dos_c_drive = os.path.join(prefix_c_drive, config.computer_folder_dos, "C")
+    dos_d_drive = os.path.join(prefix_c_drive, config.computer_folder_dos, "D")
 
     # Search for disc images
     disc_images = system.BuildFileListByExtensions(dos_d_drive, [".chd"])
@@ -222,8 +222,8 @@ def GetWin31LaunchCommand(
         is_sandboxie_prefix = is_sandboxie_prefix)
 
     # Get dos drives
-    dos_c_drive = os.path.join(prefix_c_drive, config.computer_dos_folder, "C")
-    dos_d_drive = os.path.join(prefix_c_drive, config.computer_dos_folder, "D")
+    dos_c_drive = os.path.join(prefix_c_drive, config.computer_folder_dos, "C")
+    dos_d_drive = os.path.join(prefix_c_drive, config.computer_folder_dos, "D")
 
     # Search for disc images
     disc_images = system.BuildFileListByExtensions(dos_d_drive, [".chd"])
@@ -294,11 +294,11 @@ def GetScummLaunchCommand(
     # Create launch command
     launch_cmd = [programs.GetEmulatorProgram("ScummVM")]
     launch_cmd += [
-        "--path=%s" % os.path.join(prefix_c_drive, config.computer_scumm_folder)
+        "--path=%s" % os.path.join(prefix_c_drive, config.computer_folder_scumm)
     ]
     launch_cmd += ["--auto-detect"]
     launch_cmd += [
-        "--savepath=%s" % os.path.join(prefix_user_profile, config.computer_game_data_folder)
+        "--savepath=%s" % os.path.join(prefix_user_profile, config.computer_folder_gamedata)
     ]
     if fullscreen:
         launch_cmd += ["--fullscreen"]
@@ -764,8 +764,8 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Build list of dirs to clear
         dirs_to_clear = []
-        dirs_to_clear += [os.path.join(user_profile_dir, config.computer_temp_folder)]
-        dirs_to_clear += [os.path.join(user_profile_dir, config.computer_appdata_folder, "Local", "CrashDumps")]
+        dirs_to_clear += [os.path.join(user_profile_dir, config.computer_folder_temp)]
+        dirs_to_clear += [os.path.join(user_profile_dir, config.computer_folder_appdata, "Local", "CrashDumps")]
 
         # Find sync base directory
         sync_basedir = None
@@ -792,8 +792,8 @@ class Computer(emulatorbase.EmulatorBase):
             is_sandboxie_prefix = should_run_via_sandboxie)
 
         # Get dos drives
-        dos_c_drive = os.path.join(prefix_c_drive, config.computer_dos_folder, "C")
-        dos_d_drive = os.path.join(prefix_c_drive, config.computer_dos_folder, "D")
+        dos_c_drive = os.path.join(prefix_c_drive, config.computer_folder_dos, "C")
+        dos_d_drive = os.path.join(prefix_c_drive, config.computer_folder_dos, "D")
 
         # Get launch info
         launch_info_cmd = []

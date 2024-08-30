@@ -507,7 +507,7 @@ def DeriveGameLetterFromName(game_name):
     if len(game_name):
         letter = game_name[0].upper()
     if letter.isnumeric():
-        letter = config.general_numeric_folder
+        letter = config.general_folder_numeric
     return letter
 
 # Derive game name path from name

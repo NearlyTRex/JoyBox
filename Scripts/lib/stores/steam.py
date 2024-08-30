@@ -575,8 +575,8 @@ class Steam(storebase.StoreBase):
 
                     # Get potential new base paths
                     new_base_general = config.save_type_general
-                    new_base_public = os.path.join(config.save_type_general, config.computer_public_folder)
-                    new_base_store = os.path.join(config.save_type_general, config.computer_store_folder)
+                    new_base_public = os.path.join(config.save_type_general, config.computer_folder_public)
+                    new_base_store = os.path.join(config.save_type_general, config.computer_folder_store, config.store_type_steam)
 
                     # Determine which paths exist
                     real_userid = None

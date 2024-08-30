@@ -110,31 +110,45 @@ computer_archive_extensions += computer_archive_extensions_appimage
 wiiu_encrypted_extensions = [".app", ".h3", ".tik", ".tmd", ".cert"]
 
 # Folders
-general_numeric_folder = "#-0"
-computer_dos_folder = "MS-DOS"
-computer_scumm_folder = "Scumm"
-computer_registry_folder = "Registry"
-computer_game_data_folder = "GameData"
-computer_public_folder = "Public"
-computer_store_folder = "Store"
-computer_appdata_folder = "AppData"
-computer_temp_folder = "Temp"
-computer_user_folders_builtin = [
-    "AppData",
-    "Contacts",
-    "Desktop",
-    "Documents",
-    "Downloads",
-    "Favorites",
-    "Links",
-    "Music",
-    "Pictures",
-    "Saved Games",
-    "Searches",
-    "Temp",
-    "Videos"
+general_folder_numeric = "#-0"
+computer_folder_dos = "MS-DOS"
+computer_folder_scumm = "Scumm"
+computer_folder_appdata = "AppData"
+computer_folder_contacts = "Contacts"
+computer_folder_desktop = "Desktop"
+computer_folder_documents = "Documents"
+computer_folder_downloads = "Downloads"
+computer_folder_favorites = "Favorites"
+computer_folder_gamedata = "GameData"
+computer_folder_links = "Links"
+computer_folder_music = "Music"
+computer_folder_pictures = "Pictures"
+computer_folder_public = "Public"
+computer_folder_registry = "Registry"
+computer_folder_savedgames = "Saved Games"
+computer_folder_searches = "Searches"
+computer_folder_store = "Store"
+computer_folder_temp = "Temp"
+computer_folder_videos = "Videos"
+computer_user_folders = [
+    computer_folder_appdata,
+    computer_folder_contacts,
+    computer_folder_desktop,
+    computer_folder_documents,
+    computer_folder_downloads,
+    computer_folder_favorites,
+    computer_folder_gamedata,
+    computer_folder_links,
+    computer_folder_music,
+    computer_folder_pictures,
+    computer_folder_public,
+    computer_folder_registry,
+    computer_folder_savedgames,
+    computer_folder_searches,
+    computer_folder_store,
+    computer_folder_temp,
+    computer_folder_videos
 ]
-computer_user_folders = computer_user_folders_builtin + [computer_registry_folder, computer_game_data_folder]
 
 # Drives
 drive_prefix_cwd = "b"

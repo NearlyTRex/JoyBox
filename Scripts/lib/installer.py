@@ -151,8 +151,8 @@ def SetupDosPrograms(
     system.AssertPathExists(dos_emulator, "dos_emulator")
 
     # Get dos drives
-    dos_c_drive = os.path.join(prefix_c_drive_real, config.computer_dos_folder, "C")
-    dos_d_drive = os.path.join(prefix_c_drive_real, config.computer_dos_folder, "D")
+    dos_c_drive = os.path.join(prefix_c_drive_real, config.computer_folder_dos, "C")
+    dos_d_drive = os.path.join(prefix_c_drive_real, config.computer_folder_dos, "D")
     system.MakeDirectory(dos_c_drive, verbose = verbose, exit_on_failure = exit_on_failure)
     system.MakeDirectory(dos_d_drive, verbose = verbose, exit_on_failure = exit_on_failure)
 
@@ -210,8 +210,8 @@ def SetupWin31Programs(
     system.AssertPathExists(prefix_c_drive_real, "prefix_c_drive_real")
 
     # Get dos drives
-    dos_c_drive = os.path.join(prefix_c_drive_real, config.computer_dos_folder, "C")
-    dos_d_drive = os.path.join(prefix_c_drive_real, config.computer_dos_folder, "D")
+    dos_c_drive = os.path.join(prefix_c_drive_real, config.computer_folder_dos, "C")
+    dos_d_drive = os.path.join(prefix_c_drive_real, config.computer_folder_dos, "D")
     system.MakeDirectory(dos_c_drive, verbose = verbose, exit_on_failure = exit_on_failure)
     system.MakeDirectory(dos_d_drive, verbose = verbose, exit_on_failure = exit_on_failure)
 
@@ -243,7 +243,7 @@ def SetupScummPrograms(
     system.AssertPathExists(scumm_emulator, "scumm_emulator")
 
     # Get scumm dir
-    scumm_dir = os.path.join(prefix_c_drive_real, config.computer_scumm_folder)
+    scumm_dir = os.path.join(prefix_c_drive_real, config.computer_folder_scumm)
     system.MakeDirectory(scumm_dir, verbose = verbose, exit_on_failure = exit_on_failure)
 
 # Run setup steps
