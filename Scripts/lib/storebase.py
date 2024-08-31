@@ -83,6 +83,14 @@ class StoreBase:
         exit_on_failure = False):
         return (None, None)
 
+    # Get save paths
+    def GetSavePaths(
+        self,
+        game_info,
+        verbose = False,
+        exit_on_failure = False):
+        return []
+
     # Export save
     def ExportSave(
         self,

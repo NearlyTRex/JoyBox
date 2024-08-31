@@ -392,10 +392,19 @@ class Steam(storebase.StoreBase):
         # Build game info
         game_info = {}
         game_info[config.json_key_store_appid] = identifier
+        game_info[config.json_key_store_paths] = []
+        game_info[config.json_key_store_keys] = []
         if isinstance(branch, str) and len(branch):
             game_info[config.json_key_store_branchid] = branch
         else:
             game_info[config.json_key_store_branchid] = "public"
+
+        # Add standard steam paths
+        game_info[config.json_key_store_paths] += [
+            os.path.join(config.token_store_install_dir, "userdata", config.token_store_user_id, identifier)
+        ]
+
+        # Augment by json
         if identifier in steam_json:
             appdata = steam_json[identifier]
             if "common" in appdata:
@@ -424,12 +433,18 @@ class Steam(storebase.StoreBase):
         # Augment by manifest
         if self.manifest:
             for manifest_name, manifest_data in self.manifest.items():
+
+                # Skip games that are not present
                 if "steam" not in manifest_data:
                     continue
                 if "id" in manifest_data["steam"] and str(manifest_data["steam"]["id"]) != identifier:
                     continue
-                paths = set()
-                keys = set()
+
+                # Get existing paths and keys
+                game_paths = set(game_info[config.json_key_store_paths])
+                game_keys = set(game_info[config.json_key_store_keys])
+
+                # Examine manifest file data
                 if "files" in manifest_data:
                     for path_location, path_info in manifest_data["files"].items():
                         if "when" in path_info:
@@ -469,24 +484,30 @@ class Steam(storebase.StoreBase):
                                     new_location = system.GetFilenameDirectory(new_location)
 
                                 # Save path
-                                paths.add(new_location)
+                                game_paths.add(new_location)
+
+                # Examine manifest registry data
                 if "registry" in manifest_data:
                     for key in manifest_data["registry"]:
-                        keys.add(key)
-                if len(paths):
-                    for possible_child in system.SortStrings(paths):
+                        game_keys.add(key)
+
+                # Clean and save paths
+                if len(game_paths):
+                    for possible_child in system.SortStrings(game_paths):
                         possible_parent = system.GetDirectoryParent(possible_child)
                         possible_grandparent = system.GetDirectoryParent(possible_parent)
                         possible_greatgrandparent = system.GetDirectoryParent(possible_grandparent)
-                        if possible_parent in paths:
-                            paths.remove(possible_child)
-                        if possible_grandparent in paths:
-                            paths.remove(possible_child)
-                        if possible_greatgrandparent in paths:
-                            paths.remove(possible_child)
-                    game_info[config.json_key_store_paths] = system.SortStrings(paths)
-                if len(keys):
-                    game_info[config.json_key_store_keys] = system.SortStrings(keys)
+                        if possible_parent in game_paths:
+                            game_paths.remove(possible_child)
+                        if possible_grandparent in game_paths:
+                            game_paths.remove(possible_child)
+                        if possible_greatgrandparent in game_paths:
+                            game_paths.remove(possible_child)
+                    game_info[config.json_key_store_paths] = system.SortStrings(game_paths)
+
+                # Save keys
+                if len(game_keys):
+                    game_info[config.json_key_store_keys] = system.SortStrings(game_keys)
 
         # Return game info
         return game_info
