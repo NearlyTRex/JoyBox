@@ -451,6 +451,7 @@ class Steam(storebase.StoreBase):
                                 new_location = new_location.replace("<winPublic>", config.token_user_public_dir)
                                 new_location = new_location.replace("<winDir>", "%s/AppData/Local/VirtualStore" % config.token_user_profile_dir)
                                 new_location = new_location.replace("<winAppData>", "%s/AppData/Roaming" % config.token_user_profile_dir)
+                                new_location = new_location.replace("<winAppDataLocalLow>", "%s/AppData/LocalLow" % config.token_user_profile_dir)
                                 new_location = new_location.replace("<winLocalAppData>", "%s/AppData/Local" % config.token_user_profile_dir)
                                 new_location = new_location.replace("<winProgramData>", "%s/AppData/Local/VirtualStore" % config.token_user_profile_dir)
                                 new_location = new_location.replace("<winDocuments>", "%s/Documents" % config.token_user_profile_dir)
@@ -627,7 +628,6 @@ class Steam(storebase.StoreBase):
     def ExportSave(
         self,
         game_info,
-        output_dir,
         verbose = False,
         exit_on_failure = False):
 
@@ -642,6 +642,7 @@ class Steam(storebase.StoreBase):
             return False
 
         # Copy save files
+        at_least_one_copy = False
         for save_path_entry in self.GetSavePaths(
             game_info = game_info,
             verbose = verbose,
@@ -649,13 +650,17 @@ class Steam(storebase.StoreBase):
             path_full = save_path_entry["full"]
             for path_relative in save_path_entry["relative"]:
                 if os.path.exists(path_full):
-                    system.CopyContents(
+                    success = system.CopyContents(
                         src = path_full,
                         dest = os.path.join(tmp_dir_result, path_relative),
                         show_progress = True,
                         skip_existing = True,
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
+                    if success:
+                        at_least_one_copy = True
+        if not at_least_one_copy:
+            return True
 
         # Pack save
         success = saves.PackSave(
@@ -676,7 +681,6 @@ class Steam(storebase.StoreBase):
     def ImportSave(
         self,
         game_info,
-        input_dir,
         verbose = False,
         exit_on_failure = False):
         pass

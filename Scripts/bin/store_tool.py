@@ -130,7 +130,6 @@ def main():
                 exit_on_failure = args.exit_on_failure)
             success = store_obj.ExportSave(
                 game_info = game_info,
-                output_dir = args.output_dir,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
             if not success:

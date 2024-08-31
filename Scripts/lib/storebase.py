@@ -87,7 +87,6 @@ class StoreBase:
     def ExportSave(
         self,
         game_info,
-        output_dir,
         verbose = False,
         exit_on_failure = False):
         return False
@@ -96,7 +95,6 @@ class StoreBase:
     def ImportSave(
         self,
         game_info,
-        input_dir,
         verbose = False,
         exit_on_failure = False):
         return False
