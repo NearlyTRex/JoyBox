@@ -8,9 +8,7 @@ import config
 import command
 import archive
 import programs
-import gameinfo
 import system
-import environment
 import hashing
 import storebase
 
@@ -24,6 +22,12 @@ class Amazon(storebase.StoreBase):
     # Get name
     def GetName(self):
         return "Amazon"
+
+    # Get key
+    def GetKey(self):
+        return config.json_key_amazon
+
+    ############################################################
 
     # Login
     def Login(
@@ -80,8 +84,126 @@ class Amazon(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         return (code == 0)
 
-    # Fetch
-    def Fetch(
+    ############################################################
+
+    # Get info
+    def GetLatestInfo(
+        self,
+        identifier,
+        branch = None,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Get tool
+        python_tool = None
+        if programs.IsToolInstalled("PythonVenvPython"):
+            python_tool = programs.GetToolProgram("PythonVenvPython")
+        if not python_tool:
+            system.LogError("PythonVenvPython was not found")
+            return False
+
+        # Get script
+        nile_script = None
+        if programs.IsToolInstalled("Nile"):
+            nile_script = programs.GetToolProgram("Nile")
+        if not nile_script:
+            system.LogError("Nile was not found")
+            return False
+
+        # Get info command
+        info_cmd = [
+            python_tool,
+            nile_script,
+            "--quiet",
+            "details",
+            identifier
+        ]
+
+        # Run info command
+        info_output = command.RunOutputCommand(
+            cmd = info_cmd,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if len(info_output) == 0:
+            system.LogError("Unable to find amazon information for '%s'" % identifier)
+            return False
+
+        # Get amazon json
+        amazon_json = {}
+        try:
+            amazon_json = json.loads(info_output)
+        except:
+            system.LogError("Unable to parse amazon information for '%s'" % identifier)
+            return False
+
+        # Build game info
+        game_info = {}
+        game_info[config.json_key_store_appid] = identifier
+        game_info[config.json_key_store_buildid] = ""
+        if "version" in amazon_json:
+            game_info[config.json_key_store_buildid] = str(amazon_json["version"])
+        if "product" in amazon_json:
+            appdata = amazon_json["product"]
+            if "title" in appdata:
+                game_info[config.json_key_store_name] = str(appdata["title"])
+
+        # Return game info
+        return game_info
+
+    ############################################################
+
+    # Get download identifier
+    def GetDownloadIdentifier(self, game_info):
+
+        # Return identifier
+        return game_info.get_store_appid(self.GetKey())
+
+    # Get download output name
+    def GetDownloadOutputName(self, game_info):
+
+        # Get versions
+        local_version, remote_version = self.GetVersions(
+            game_info = game_info,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
+        # Return identifier
+        return "%s (%s)" % (game_info.get_name(), hashing.CalculateStringCRC32(remote_version))
+
+    ############################################################
+
+    # Get game save paths
+    def GetGameSavePaths(
+        self,
+        game_info,
+        verbose = False,
+        exit_on_failure = False):
+        return []
+
+    ############################################################
+
+    # Install by identifier
+    def InstallByIdentifier(
+        self,
+        identifier,
+        verbose = False,
+        exit_on_failure = False):
+        return False
+
+    ############################################################
+
+    # Launch by identifier
+    def LaunchByIdentifier(
+        self,
+        identifier,
+        verbose = False,
+        exit_on_failure = False):
+        return False
+
+    ############################################################
+
+    # Download by identifier
+    def DownloadByIdentifier(
         self,
         identifier,
         output_dir,
@@ -176,168 +298,4 @@ class Amazon(storebase.StoreBase):
         # Check result
         return os.path.exists(output_dir)
 
-    # Download
-    def Download(
-        self,
-        game_info,
-        output_dir = None,
-        skip_existing = False,
-        force = False,
-        verbose = False,
-        exit_on_failure = False):
-
-        # Get game info
-        game_appid = game_info.get_store_appid(config.json_key_amazon)
-        game_buildid = game_info.get_store_buildid(config.json_key_amazon)
-        game_category = game_info.get_category()
-        game_subcategory = game_info.get_subcategory()
-        game_name = game_info.get_name()
-        game_json_file = game_info.get_json_file()
-
-        # Ignore invalid games
-        if not self.IsValidIdentifier(game_appid):
-            return True
-
-        # Get output dir
-        if output_dir:
-            output_offset = environment.GetLockerGamingRomDirOffset(game_category, game_subcategory, game_name)
-            output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
-        else:
-            output_dir = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
-        if skip_existing and system.DoesDirectoryContainFiles(output_dir):
-            return True
-
-        # Get latest amazon info
-        latest_amazon_info = self.GetInfo(
-            identifier = game_appid,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-        # Get build ids
-        old_buildid = game_buildid
-        new_buildid = latest_amazon_info[config.json_key_store_buildid]
-
-        # Check if game should be fetched
-        should_fetch = False
-        if force or old_buildid is None or new_buildid is None:
-            should_fetch = True
-        elif len(old_buildid) == 0:
-            should_fetch = True
-        else:
-            should_fetch = new_buildid != old_buildid
-
-        # Fetch game
-        if should_fetch:
-            success = self.Fetch(
-                identifier = game_appid,
-                output_dir = output_dir,
-                output_name = "%s (%s)" % (game_name, hashing.CalculateStringCRC32(new_buildid)),
-                clean_output = True,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-
-        # Update json file
-        json_data = system.ReadJsonFile(
-            src = game_json_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        json_data[config.json_key_amazon] = latest_amazon_info
-        success = system.WriteJsonFile(
-            src = game_json_file,
-            json_data = json_data,
-            sort_keys = True,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        return success
-
-    # Get info
-    def GetInfo(
-        self,
-        identifier,
-        branch = None,
-        verbose = False,
-        exit_on_failure = False):
-
-        # Get tool
-        python_tool = None
-        if programs.IsToolInstalled("PythonVenvPython"):
-            python_tool = programs.GetToolProgram("PythonVenvPython")
-        if not python_tool:
-            system.LogError("PythonVenvPython was not found")
-            return False
-
-        # Get script
-        nile_script = None
-        if programs.IsToolInstalled("Nile"):
-            nile_script = programs.GetToolProgram("Nile")
-        if not nile_script:
-            system.LogError("Nile was not found")
-            return False
-
-        # Get info command
-        info_cmd = [
-            python_tool,
-            nile_script,
-            "--quiet",
-            "details",
-            identifier
-        ]
-
-        # Run info command
-        info_output = command.RunOutputCommand(
-            cmd = info_cmd,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if len(info_output) == 0:
-            system.LogError("Unable to find amazon information for '%s'" % identifier)
-            return False
-
-        # Get amazon json
-        amazon_json = {}
-        try:
-            amazon_json = json.loads(info_output)
-        except:
-            system.LogError("Unable to parse amazon information for '%s'" % identifier)
-            return False
-
-        # Build game info
-        game_info = {}
-        game_info[config.json_key_store_appid] = identifier
-        game_info[config.json_key_store_buildid] = ""
-        if "version" in amazon_json:
-            game_info[config.json_key_store_buildid] = str(amazon_json["version"])
-        if "product" in amazon_json:
-            appdata = amazon_json["product"]
-            if "title" in appdata:
-                game_info[config.json_key_store_name] = str(appdata["title"])
-
-        # Return game info
-        return game_info
-
-    # Get versions
-    def GetVersions(
-        self,
-        game_info,
-        verbose = False,
-        exit_on_failure = False):
-
-        # Get game info
-        game_appid = game_info.get_store_appid(config.json_key_steam)
-        game_buildid = game_info.get_store_buildid(config.json_key_steam)
-
-        # Ignore invalid games
-        if not self.IsValidIdentifier(game_appid):
-            return (None, None)
-
-        # Get latest amazon info
-        latest_amazon_info = self.GetInfo(
-            appid = game_appid,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-        # Get build ids
-        local_buildid = game_buildid
-        remote_buildid = latest_amazon_info[config.json_key_store_buildid]
-        return (local_buildid, remote_buildid)
+    ############################################################

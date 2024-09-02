@@ -6,9 +6,7 @@ import sys
 import config
 import command
 import programs
-import gameinfo
 import system
-import environment
 import network
 import ini
 import storebase
@@ -19,14 +17,32 @@ class GOG(storebase.StoreBase):
     # Constructor
     def __init__(self):
         super().__init__()
+
+        # Get username
         self.username = ini.GetIniValue("UserData.GOG", "gog_username")
+        if not self.username:
+            raise RuntimeError("Ini file does not have a valid gog username")
+
+        # Get platform
         self.platform = ini.GetIniValue("UserData.GOG", "gog_platform")
+        if not self.platform:
+            raise RuntimeError("Ini file does not have a valid gog platform")
+
+        # Get includes
         self.includes = ini.GetIniValue("UserData.GOG", "gog_includes")
+
+        # Get excludes
         self.excludes = ini.GetIniValue("UserData.GOG", "gog_excludes")
 
     # Get name
     def GetName(self):
         return "GOG"
+
+    # Get key
+    def GetKey(self):
+        return config.json_key_gog
+
+    ############################################################
 
     # Login
     def Login(
@@ -57,8 +73,102 @@ class GOG(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         return (code == 0)
 
-    # Fetch
-    def Fetch(
+    ############################################################
+
+    # Get info
+    def GetLatestInfo(
+        self,
+        identifier,
+        branch = None,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Get gog url
+        gog_url = "https://api.gog.com/products/%s?expand=downloads" % identifier
+
+        # Get gog json
+        gog_json = network.GetRemoteJson(
+            url = gog_url,
+            headers = {"Accept": "application/json"},
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not gog_json:
+            system.LogError("Unable to find gog release information from '%s'" % gog_url)
+            return False
+
+        # Build game info
+        game_info = {}
+        game_info[config.json_key_store_appid] = identifier
+        if "slug" in gog_json:
+            game_info[config.json_key_store_appname] = gog_json["slug"]
+        if "title" in gog_json:
+            game_info[config.json_key_store_name] = gog_json["title"].strip()
+        if "downloads" in gog_json:
+            appdownloads = gog_json["downloads"]
+            if "installers" in appdownloads:
+                appinstallers = appdownloads["installers"]
+                for appinstaller in appinstallers:
+                    if appinstaller["os"] == self.platform:
+                        if appinstaller["version"]:
+                            game_info[config.json_key_store_buildid] = appinstaller["version"]
+                        else:
+                            game_info[config.json_key_store_buildid] = "original_release"
+        return game_info
+
+    ############################################################
+
+    # Get download identifier
+    def GetDownloadIdentifier(self, game_info):
+
+        # Return identifier
+        return game_info.get_store_appname(self.GetKey())
+
+    # Get download output name
+    def GetDownloadOutputName(self, game_info):
+
+        # Get versions
+        local_version, remote_version = self.GetVersions(
+            game_info = game_info,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
+        # Return identifier
+        return "%s (%s)" % (game_info.get_name(), remote_version)
+
+    ############################################################
+
+    # Get game save paths
+    def GetGameSavePaths(
+        self,
+        game_info,
+        verbose = False,
+        exit_on_failure = False):
+        return []
+
+    ############################################################
+
+    # Install by identifier
+    def InstallByIdentifier(
+        self,
+        identifier,
+        verbose = False,
+        exit_on_failure = False):
+        return False
+
+    ############################################################
+
+    # Launch by identifier
+    def LaunchByIdentifier(
+        self,
+        identifier,
+        verbose = False,
+        exit_on_failure = False):
+        return False
+
+    ############################################################
+
+    # Download by identifier
+    def DownloadByIdentifier(
         self,
         identifier,
         output_dir,
@@ -156,146 +266,4 @@ class GOG(storebase.StoreBase):
         # Check result
         return os.path.exists(output_dir)
 
-    # Download
-    def Download(
-        self,
-        game_info,
-        output_dir = None,
-        skip_existing = False,
-        force = False,
-        verbose = False,
-        exit_on_failure = False):
-
-        # Get game info
-        game_appid = game_info.get_store_appid(config.json_key_gog)
-        game_appname = game_info.get_store_appname(config.json_key_gog)
-        game_buildid = game_info.get_store_buildid(config.json_key_gog)
-        game_category = game_info.get_category()
-        game_subcategory = game_info.get_subcategory()
-        game_name = game_info.get_name()
-        game_json_file = game_info.get_json_file()
-
-        # Ignore invalid games
-        if not self.IsValidIdentifier(game_appid):
-            return True
-
-        # Get output dir
-        if output_dir:
-            output_offset = environment.GetLockerGamingRomDirOffset(game_category, game_subcategory, game_name)
-            output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
-        else:
-            output_dir = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
-        if skip_existing and system.DoesDirectoryContainFiles(output_dir):
-            return True
-
-        # Get latest gog info
-        latest_gog_info = self.GetInfo(
-            identifier = game_appid,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-        # Get build ids
-        old_buildid = game_buildid
-        new_buildid = latest_gog_info[config.json_key_store_buildid]
-
-        # Check if game should be fetched
-        should_fetch = False
-        if force or old_buildid is None or new_buildid is None:
-            should_fetch = True
-        elif len(old_buildid) == 0:
-            should_fetch = True
-        elif len(old_buildid) > 0 and len(new_buildid) == 0:
-            should_fetch = True
-        else:
-            should_fetch = new_buildid != old_buildid
-
-        # Fetch game
-        if should_fetch:
-            success = self.Fetch(
-                identifier = game_appname,
-                output_dir = output_dir,
-                clean_output = True,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-
-        # Update json file
-        json_data = system.ReadJsonFile(
-            src = game_json_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        json_data[config.json_key_gog] = latest_gog_info
-        success = system.WriteJsonFile(
-            src = game_json_file,
-            json_data = json_data,
-            sort_keys = True,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        return success
-
-    # Get info
-    def GetInfo(
-        self,
-        identifier,
-        branch = None,
-        verbose = False,
-        exit_on_failure = False):
-
-        # Get gog url
-        gog_url = "https://api.gog.com/products/%s?expand=downloads" % identifier
-
-        # Get gog json
-        gog_json = network.GetRemoteJson(
-            url = gog_url,
-            headers = {"Accept": "application/json"},
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not gog_json:
-            system.LogError("Unable to find gog release information from '%s'" % gog_url)
-            return False
-
-        # Build game info
-        game_info = {}
-        game_info[config.json_key_store_appid] = identifier
-        if "slug" in gog_json:
-            game_info[config.json_key_store_appname] = gog_json["slug"]
-        if "title" in gog_json:
-            game_info[config.json_key_store_name] = gog_json["title"].strip()
-        if "downloads" in gog_json:
-            appdownloads = gog_json["downloads"]
-            if "installers" in appdownloads:
-                appinstallers = appdownloads["installers"]
-                for appinstaller in appinstallers:
-                    if appinstaller["os"] == self.platform:
-                        if appinstaller["version"]:
-                            game_info[config.json_key_store_buildid] = appinstaller["version"]
-                        else:
-                            game_info[config.json_key_store_buildid] = "original_release"
-        return game_info
-
-    # Get versions
-    def GetVersions(
-        self,
-        game_info,
-        verbose = False,
-        exit_on_failure = False):
-
-        # Get game info
-        game_appid = game_info.get_store_appid(config.json_key_steam)
-        game_buildid = game_info.get_store_buildid(config.json_key_steam)
-
-        # Ignore invalid games
-        if not self.IsValidIdentifier(game_appid):
-            return (None, None)
-
-        # Get latest gog info
-        latest_gog_info = self.GetInfo(
-            identifier = game_appid,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-        # Return versions
-        local_buildid = game_buildid
-        remote_buildid = latest_gog_info[config.json_key_store_buildid]
-        return (local_buildid, remote_buildid)
+    ############################################################

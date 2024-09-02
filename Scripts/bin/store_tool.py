@@ -75,6 +75,33 @@ def main():
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
 
+    # Install
+    elif args.store_action == config.store_action_type_install:
+        for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
+            game_info = gameinfo.GameInfo(
+                json_file = json_file,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            success = store_obj.InstallByGameInfo(
+                game_info = game_info,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            if not success:
+                break
+
+    # Launch
+    elif args.store_action == config.store_action_type_launch:
+        for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
+            game_info = gameinfo.GameInfo(
+                json_file = json_file,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            store_obj.LaunchByGameInfo(
+                game_info = game_info,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            break
+
     # Download
     elif args.store_action == config.store_action_type_download:
         for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
@@ -82,7 +109,7 @@ def main():
                 json_file = json_file,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
-            success = store_obj.Download(
+            success = store_obj.DownloadByGameInfo(
                 game_info = game_info,
                 output_dir = args.output_dir,
                 skip_existing = args.skip_existing,
@@ -99,7 +126,7 @@ def main():
                 json_file = json_file,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
-            success = store_obj.Update(
+            success = store_obj.UpdateJson(
                 game_info = game_info,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)

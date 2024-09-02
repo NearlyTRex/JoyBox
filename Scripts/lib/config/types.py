@@ -209,6 +209,8 @@ store_types = [
 
 # Store action types
 store_action_type_login = "login"
+store_action_type_install = "install"
+store_action_type_launch = "launch"
 store_action_type_download = "download"
 store_action_type_update = "update"
 store_action_type_check = "check"
