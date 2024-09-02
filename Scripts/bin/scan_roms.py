@@ -17,6 +17,11 @@ import setup
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Scan roms.")
+parser.add_argument("-e", "--source_type",
+    choices=config.source_types,
+    default=config.source_type_remote,
+    help="Source types"
+)
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
@@ -38,7 +43,7 @@ def main():
             game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
             # Metadata info
-            remote_rom_path = os.path.join(environment.GetLockerGamingRomsRootDir(config.source_type_remote), game_category, game_subcategory)
+            remote_rom_path = os.path.join(environment.GetLockerGamingRomsRootDir(args.source_type), game_category, game_subcategory)
             metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
 
             # Build metadata
