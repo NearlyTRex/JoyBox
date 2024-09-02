@@ -1214,6 +1214,17 @@ def PrunePaths(paths = [], excludes = []):
             new_paths.add(path)
     return SortStrings(new_paths)
 
+# Prune parent paths
+def PruneParentPaths(paths = [], num_generations = 3):
+    new_paths = set(paths)
+    for path in paths:
+        path_elder = path
+        for generation in range(num_generations):
+            path_elder = GetDirectoryParent(path_elder)
+            if path_elder in new_paths:
+                new_paths.remove(path)
+    return SortStrings(new_paths)
+
 # Build file list
 def BuildFileList(root, excludes = [], new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
     files = []
