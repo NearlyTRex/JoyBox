@@ -265,7 +265,7 @@ class StoreBase:
             identifier = self.GetDownloadIdentifier(game_info),
             branch = game_branchid,
             output_dir = output_dir,
-            output_name = "%s (%s)" % (game_name, remote_version),
+            output_name = self.GetDownloadOutputName(game_info),
             clean_output = True,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
