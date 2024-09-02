@@ -147,10 +147,19 @@ def SplitByEnclosedSubstrings(string, delimiter = "\""):
     return string_list
 
 # Merge dictionaries
-def MergeDictionaries(dict1, dict2):
+def MergeDictionaries(dict1, dict2, merge_type = None):
     try:
         import mergedeep
-        return mergedeep.merge(dict1, dict2)
+        if merge_type == config.merge_type_replace:
+            return mergedeep.merge(dict1, dict2, mergedeep.Strategy.REPLACE)
+        elif merge_type == config.merge_type_additive:
+            return mergedeep.merge(dict1, dict2, mergedeep.Strategy.ADDITIVE)
+        elif merge_type == config.merge_type_safereplace:
+            return mergedeep.merge(dict1, dict2, mergedeep.Strategy.TYPESAFE_REPLACE)
+        elif merge_type == config.merge_type_safeadditive:
+            return mergedeep.merge(dict1, dict2, mergedeep.Strategy.TYPESAFE_ADDITIVE)
+        else:
+            return mergedeep.merge(dict1, dict2)
     except:
         return dict1
 

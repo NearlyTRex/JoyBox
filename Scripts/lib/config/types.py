@@ -232,3 +232,15 @@ playlist_types = [
     playlist_type_tree,
     playlist_type_local
 ]
+
+# Merge types
+merge_type_replace = "replace"
+merge_type_additive = "additive"
+merge_type_safereplace = "safereplace"
+merge_type_safeadditive = "safeadditive"
+merge_types = [
+    merge_type_replace,
+    merge_type_additive,
+    merge_type_safereplace,
+    merge_type_safeadditive
+]
