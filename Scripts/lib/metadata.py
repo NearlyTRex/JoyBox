@@ -50,7 +50,10 @@ class MetadataEntry:
 
     # Merge data
     def merge(self, other):
-        return system.MergeDictionaries(other.game_entry, self.game_entry)
+        return system.MergeDictionaries(
+            dict1 = other.game_entry,
+            dict2 = self.game_entry,
+            merge_type = config.merge_type_safeadditive)
 
     # Game name
     def get_game(self):
@@ -278,7 +281,10 @@ class Metadata:
 
     # Merge with other metadata
     def merge_contents(self, other):
-        self.game_database = system.MergeDictionaries(self.game_database, other.game_database)
+        self.game_database = system.MergeDictionaries(
+            dict1 = self.game_database,
+            dict2 = other.game_database,
+            merge_type = config.merge_type_safeadditive)
 
     # Verify roms
     def verify_roms(self, verbose = False, exit_on_failure = False):
