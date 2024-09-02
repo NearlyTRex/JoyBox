@@ -33,7 +33,7 @@ class Python(toolbase.ToolBase):
     # Get config
     def GetConfig(self):
 
-        # Get git info
+        # Get python info
         python_exe = ini.GetIniValue("Tools.Python", "python_exe")
         python_pip_exe = ini.GetIniValue("Tools.Python", "python_pip_exe")
         python_install_dir = ini.GetIniPathValue("Tools.Python", "python_install_dir")

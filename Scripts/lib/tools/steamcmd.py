@@ -19,7 +19,7 @@ class SteamCMD(toolbase.ToolBase):
     # Get config
     def GetConfig(self):
 
-        # Get git info
+        # Get steamcmd info
         steamcmd_exe = ini.GetIniValue("Tools.Steam", "steamcmd_exe")
         steamcmd_install_dir = ini.GetIniPathValue("Tools.Steam", "steamcmd_install_dir")
 

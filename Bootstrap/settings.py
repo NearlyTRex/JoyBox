@@ -131,9 +131,13 @@ else:
 # Tools.Steam
 ini_defaults["Tools.Steam"] = {}
 if environment.IsWindowsPlatform():
+    ini_defaults["Tools.Steam"]["steam_exe"] = "steam.exe"
+    ini_defaults["Tools.Steam"]["steam_install_dir"] = "C:\\Program Files (x86)\\Steam"
     ini_defaults["Tools.Steam"]["steamcmd_exe"] = "steamcmd.exe"
     ini_defaults["Tools.Steam"]["steamcmd_install_dir"] = "C:\\SteamCMD"
 else:
+    ini_defaults["Tools.Steam"]["steam_exe"] = "steam"
+    ini_defaults["Tools.Steam"]["steam_install_dir"] = "/usr/games"
     ini_defaults["Tools.Steam"]["steamcmd_exe"] = "steamcmd"
     ini_defaults["Tools.Steam"]["steamcmd_install_dir"] = "/usr/games"
 

@@ -19,7 +19,7 @@ class Perl(toolbase.ToolBase):
     # Get config
     def GetConfig(self):
 
-        # Get git info
+        # Get perl info
         perl_exe = ini.GetIniValue("Tools.Perl", "perl_exe")
         perl_install_dir = ini.GetIniPathValue("Tools.Perl", "perl_install_dir")
 

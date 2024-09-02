@@ -19,7 +19,7 @@ class SevenZip(toolbase.ToolBase):
     # Get config
     def GetConfig(self):
 
-        # Get git info
+        # Get sevenzip info
         sevenzip_exe = ini.GetIniValue("Tools.7Zip", "7z_exe")
         sevenzip_install_dir = ini.GetIniPathValue("Tools.7Zip", "7z_install_dir")
 
