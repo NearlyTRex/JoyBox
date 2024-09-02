@@ -118,6 +118,11 @@ def CreateGameJsonFile(
                 config.json_key_store_appid: "",
                 config.json_key_store_name: ""
             })
+        elif file_subcategory == config.game_subcategory_epic_games:
+            SetJsonValue(config.json_key_epic, {
+                config.json_key_store_appid: "",
+                config.json_key_store_appname: ""
+            })
         elif file_subcategory == config.game_subcategory_gog:
             SetJsonValue(config.json_key_gog, {
                 config.json_key_store_appid: "",
