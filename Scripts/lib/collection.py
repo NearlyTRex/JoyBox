@@ -9,6 +9,7 @@ import gameinfo
 import platforms
 import system
 import cryption
+import jsondata
 
 # Create game json file
 def CreateGameJsonFile(
@@ -40,14 +41,6 @@ def CreateGameJsonFile(
             src = json_file_path,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-
-    # Set json value
-    def SetJsonValue(json_key, json_value):
-        if platforms.IsAutoFillJsonKey(file_platform, json_key):
-            json_file_data[json_key] = json_value
-        elif platforms.IsFillOnceJsonKey(file_platform, json_key):
-            if json_key not in json_file_data:
-                json_file_data[json_key] = json_value
 
     # Get all files
     all_files = system.BuildFileList(base_path)
@@ -102,42 +95,45 @@ def CreateGameJsonFile(
     computer_installers += system.ConvertFileListToAbsolutePaths(exe_updates, computer_root_updates)
     computer_installers += system.ConvertFileListToAbsolutePaths(exe_dlc, computer_root_dlc)
 
+    # Create json data object
+    json_obj = jsondata.JsonData(json_file_data, file_platform)
+
     # Set common keys
-    SetJsonValue(config.json_key_files, rebased_files)
-    SetJsonValue(config.json_key_dlc, all_dlc)
-    SetJsonValue(config.json_key_update, all_updates)
-    SetJsonValue(config.json_key_extra, all_extras)
-    SetJsonValue(config.json_key_dependencies, all_dependencies)
-    SetJsonValue(config.json_key_transform_file, best_game_file)
+    json_obj.SetJsonValue(config.json_key_files, rebased_files)
+    json_obj.SetJsonValue(config.json_key_dlc, all_dlc)
+    json_obj.SetJsonValue(config.json_key_update, all_updates)
+    json_obj.SetJsonValue(config.json_key_extra, all_extras)
+    json_obj.SetJsonValue(config.json_key_dependencies, all_dependencies)
+    json_obj.SetJsonValue(config.json_key_transform_file, best_game_file)
 
     # Set computer keys
     if file_category == config.game_category_computer:
-        SetJsonValue(config.json_key_installer_exe, computer_installers)
+        json_obj.SetJsonValue(config.json_key_installer_exe, computer_installers)
         if file_subcategory == config.game_subcategory_amazon_games:
-            SetJsonValue(config.json_key_amazon, {
+            json_obj.SetJsonValue(config.json_key_amazon, {
                 config.json_key_store_appid: "",
                 config.json_key_store_name: ""
             })
         elif file_subcategory == config.game_subcategory_epic_games:
-            SetJsonValue(config.json_key_epic, {
+            json_obj.SetJsonValue(config.json_key_epic, {
                 config.json_key_store_appid: "",
                 config.json_key_store_appname: ""
             })
         elif file_subcategory == config.game_subcategory_gog:
-            SetJsonValue(config.json_key_gog, {
+            json_obj.SetJsonValue(config.json_key_gog, {
                 config.json_key_store_appid: "",
                 config.json_key_store_appname: ""
             })
         elif file_subcategory == config.game_subcategory_steam:
-            SetJsonValue(config.json_key_steam, {
+            json_obj.SetJsonValue(config.json_key_steam, {
                 config.json_key_store_appid: "",
                 config.json_key_store_branchid: "public"
             })
 
     # Set other platform keys
     else:
-        SetJsonValue(config.json_key_launch_name, "REPLACEME")
-        SetJsonValue(config.json_key_launch_file, best_game_file)
+        json_obj.SetJsonValue(config.json_key_launch_name, "REPLACEME")
+        json_obj.SetJsonValue(config.json_key_launch_file, best_game_file)
 
     # Create json directory
     success = system.MakeDirectory(
@@ -150,7 +146,7 @@ def CreateGameJsonFile(
     # Write json file
     success = system.WriteJsonFile(
         src = json_file_path,
-        json_data = json_file_data,
+        json_data = json_obj.GetJsonData(),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
