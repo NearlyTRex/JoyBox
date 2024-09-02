@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import jsondata
 from tools import ludusavimanifest
 
 # Base store
@@ -281,6 +282,7 @@ class StoreBase:
         exit_on_failure = False):
 
         # Get game info
+        game_platform = game_info.get_platform()
         game_appid = game_info.get_store_appid(self.GetKey())
         game_branchid = game_info.get_store_branchid(self.GetKey())
         game_json_file = game_info.get_json_file()
@@ -302,15 +304,16 @@ class StoreBase:
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-        # Update store info
-        current_info = json_data[self.GetKey()]
-        current_info = system.MergeDictionaries(
-            dict1 = current_info,
-            dict2 = latest_info)
-        if config.json_key_store_paths in current_info:
-            game_paths = current_info[config.json_key_store_paths]
-            current_info[config.json_key_store_paths] = system.PruneParentPaths(game_paths)
-        json_data[self.GetKey()] = current_info
+        # Create json data object
+        json_obj = jsondata.JsonData(json_data[self.GetKey()], game_platform)
+
+        # Set store info
+        for json_subdata_key in config.json_keys_store_subdata:
+            if json_subdata_key in latest_info:
+                json_obj.SetJsonValue(json_subdata_key, latest_info[json_subdata_key])
+
+        # Save store info
+        json_data[self.GetKey()] = json_obj.GetJsonData()
 
         # Write json file
         success = system.WriteJsonFile(

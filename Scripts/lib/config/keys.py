@@ -158,6 +158,18 @@ json_keys_store = [
     json_key_gog,
     json_key_steam
 ]
+json_keys_store_subdata = [
+    json_key_store_appid,
+    json_key_store_appname,
+    json_key_store_branchid,
+    json_key_store_builddate,
+    json_key_store_buildid,
+    json_key_store_name,
+    json_key_store_controller_support,
+    json_key_store_installdir,
+    json_key_store_paths,
+    json_key_store_keys
+]
 
 # Json key defaults
 json_key_defaults = []
