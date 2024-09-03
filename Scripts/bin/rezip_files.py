@@ -20,13 +20,12 @@ parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable
 args, unknown = parser.parse_known_args()
 if not args.input_path:
     parser.print_help()
-    sys.exit(-1)
+    system.QuitProgram()
 
 # Check that path exists first
 input_path = os.path.realpath(args.input_path)
 if not os.path.exists(input_path):
-    system.LogError("Path '%s' does not exist" % args.input_path)
-    sys.exit(-1)
+    system.LogErrorAndQuit("Path '%s' does not exist" % args.input_path)
 
 # Main
 def main():
@@ -50,8 +49,7 @@ def main():
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError("Unable to unzip file %s" % current_file)
-            sys.exit(-1)
+            system.LogErrorAndQuit("Unable to unzip file %s" % current_file)
 
         # Deterministically zip file
         system.Log("Deterministically rezipping ...")
@@ -62,8 +60,7 @@ def main():
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError("Unable to rezip file %s" % current_file)
-            sys.exit(-1)
+            system.LogErrorAndQuit("Unable to rezip file %s" % current_file)
 
 # Start
 main()

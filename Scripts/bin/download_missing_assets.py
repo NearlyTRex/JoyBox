@@ -30,8 +30,7 @@ args, unknown = parser.parse_known_args()
 # Check metadata dir
 metadata_dir = os.path.realpath(args.metadata_dir)
 if not os.path.exists(metadata_dir):
-    system.LogError("Could not find metadata path '%s'" % args.metadata_dir)
-    sys.exit(1)
+    system.LogErrorAndQuit("Could not find metadata path '%s'" % args.metadata_dir)
 
 # Main
 def main():

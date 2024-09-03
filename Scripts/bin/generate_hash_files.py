@@ -58,8 +58,7 @@ def main():
     if args.input_path:
         input_path = os.path.realpath(args.input_path)
         if not os.path.exists(input_path):
-            system.LogError("Path '%s' does not exist" % args.input_path)
-            sys.exit(-1)
+            system.LogErrorAndQuit("Path '%s' does not exist" % args.input_path)
 
     # Get source file root
     source_file_root = ""
@@ -78,11 +77,9 @@ def main():
     # Manually specify all parameters
     if args.generation_mode == "custom":
         if not args.file_category:
-            system.LogError("File category is required for custom mode")
-            sys.exit(-1)
+            system.LogErrorAndQuit("File category is required for custom mode")
         if not args.file_subcategory:
-            system.LogError("File subcategory is required for custom mode")
-            sys.exit(-1)
+            system.LogErrorAndQuit("File subcategory is required for custom mode")
         hashing.HashCategoryFiles(
             input_path = source_file_root,
             file_supercategory = args.file_supercategory,

@@ -46,8 +46,7 @@ def GetRemoteJson(url, headers, verbose = False, exit_on_failure = False):
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to process GET request to '%s'" % url)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return None
 
 # Post remote json
@@ -63,8 +62,7 @@ def PostRemoteJson(url, headers, data = None, verbose = False, exit_on_failure =
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to process POST request to '%s'" % url)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return None
 
 ###########################################################
@@ -295,8 +293,7 @@ def GetGithubRepository(
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to get github repository '%s/%s'" % (github_user, github_repo))
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return None
 
 # Get github repositories
@@ -333,8 +330,7 @@ def GetGithubRepositories(
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to get github repositories for '%s'" % github_user)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return []
 
 # Download github repository

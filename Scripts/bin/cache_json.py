@@ -24,7 +24,7 @@ parser.add_argument("--force_cache_refresh", action="store_true", help="Force re
 args, unknown = parser.parse_known_args()
 if not args.path:
     parser.print_help()
-    sys.exit(-1)
+    system.QuitProgram()
 
 # Main
 def main():

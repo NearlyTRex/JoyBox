@@ -16,24 +16,21 @@ def CheckRequirements():
     if sys.version_info < config.minimum_python_version:
         system.LogError("Minimum required python version is %s.%s.%s" % config.minimum_python_version)
         system.LogError("Please upgrade your python version")
-        sys.exit(1)
+        system.QuitProgram()
 
     # Check operating system
     is_windows = environment.IsWindowsPlatform()
     is_linux = environment.IsLinuxPlatform()
     if is_windows == False and is_linux == False:
-        system.LogError("Only windows and linux are supported right now")
-        sys.exit(1)
+        system.LogErrorAndQuit("Only windows and linux are supported right now")
 
     # Check symlink support
     if not environment.AreSymlinksSupported():
-        system.LogError("Symlinks are required, please enable them for your system")
-        sys.exit(1)
+        system.LogErrorAndQuit("Symlinks are required, please enable them for your system")
 
     # Check ini file
     if not ini.IsIniPresent():
-        system.LogError("Ini file not found, please run setup first")
-        sys.exit(1)
+        system.LogErrorAndQuit("Ini file not found, please run setup first")
 
 # Setup tools
 def SetupTools(offline = False, verbose = False, exit_on_failure = False):

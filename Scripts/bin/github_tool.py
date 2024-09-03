@@ -41,8 +41,7 @@ archive_base_dir = ""
 if args.action == "archive":
     archive_base_dir = os.path.realpath(args.archive_base_dir)
     if not os.path.exists(archive_base_dir):
-        system.LogError("Archive base dir '%s' does not exist" % args.archive_base_dir)
-        sys.exit(-1)
+        system.LogErrorAndQuit("Archive base dir '%s' does not exist" % args.archive_base_dir)
 
 # Main
 def main():

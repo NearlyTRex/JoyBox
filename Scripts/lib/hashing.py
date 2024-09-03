@@ -70,8 +70,7 @@ def CalculateFileCRC32(filename, chunksize = config.hash_chunk_size, verbose = F
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate crc32 for %s" % filename)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return ""
 
 # Calculate file md5
@@ -97,8 +96,7 @@ def CalculateFileMD5(filename, chunksize = config.hash_chunk_size, verbose = Fal
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate md5 for %s" % filename)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return ""
 
 # Calculate file sha1
@@ -124,8 +122,7 @@ def CalculateFileSHA1(filename, chunksize = config.hash_chunk_size, verbose = Fa
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate sha1 for %s" % filename)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return ""
 
 # Calculate file sha256
@@ -151,8 +148,7 @@ def CalculateFileSHA256(filename, chunksize = config.hash_chunk_size, verbose = 
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate sha256 for %s" % filename)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return ""
 
 # Calculate file xxh3
@@ -178,8 +174,7 @@ def CalculateFileXXH3(filename, chunksize = config.hash_chunk_size, verbose = Fa
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate xxh3 for %s" % filename)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return ""
 
 ###########################################################
@@ -244,8 +239,7 @@ def ReadHashFile(filename, verbose = False, exit_on_failure = False):
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to read hash file %s" % filename)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return {}
 
 # Write hash file
@@ -266,8 +260,7 @@ def WriteHashFile(filename, hash_contents, verbose = False, exit_on_failure = Fa
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to write hash file %s" % filename)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return False
 
 # Append hash file
@@ -286,8 +279,7 @@ def AppendHashFile(filename, hash_data, verbose = False, exit_on_failure = False
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to append hash file %s" % filename)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return False
 
 # Sort hash file

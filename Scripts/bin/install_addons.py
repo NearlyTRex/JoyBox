@@ -21,7 +21,7 @@ parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable
 args, unknown = parser.parse_known_args()
 if not args.path:
     parser.print_help()
-    sys.exit(-1)
+    system.QuitProgram()
 
 # Main
 def main():

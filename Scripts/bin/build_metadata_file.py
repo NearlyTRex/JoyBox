@@ -26,8 +26,7 @@ args, unknown = parser.parse_known_args()
 # Check rom path
 rom_root_path = os.path.realpath(args.rom_path)
 if not os.path.exists(rom_root_path):
-    system.LogError("Could not find rom root path '%s'" % rom_root_path)
-    sys.exit(1)
+    system.LogErrorAndQuit("Could not find rom root path '%s'" % rom_root_path)
 
 # Paths
 output_file = os.path.realpath(args.output_file)

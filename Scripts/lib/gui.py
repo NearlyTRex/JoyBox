@@ -169,7 +169,7 @@ def DisplayWarningPopup(title_text, message_text):
         message_type = config.message_type_yes_no,
         keep_on_top = True)
     if response == "No":
-        sys.exit(1)
+        system.QuitProgram()
 
 # Display error popup
 def DisplayErrorPopup(title_text, message_text):
@@ -178,7 +178,7 @@ def DisplayErrorPopup(title_text, message_text):
         message_text = message_text,
         message_type = config.message_type_error,
         keep_on_top = True)
-    sys.exit(1)
+    system.QuitProgram()
 
 # Display text input popup
 def DisplayTextInputPopup(title_text, message_text):

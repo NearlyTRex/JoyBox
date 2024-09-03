@@ -301,8 +301,7 @@ class Metadata:
                 file_path_real = os.path.join(environment.GetJsonRomsMetadataRootDir(), file_path_relative)
                 if not os.path.exists(file_path_real):
                     system.LogError("File not found:\n%s" % file_path_relative)
-                    system.LogError("Verification of game %s in platform %s failed" % (game_name, game_platform))
-                    sys.exit(1)
+                    system.LogErrorAndQuit("Verification of game %s in platform %s failed" % (game_name, game_platform))
 
     # Sync assets
     def sync_assets(self, verbose = False, exit_on_failure = False):

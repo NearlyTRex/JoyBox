@@ -40,8 +40,7 @@ def BackupSaves(output_path, verbose = False, exit_on_failure = False):
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to backup saves to output path '%s'" % output_path)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return False
 
     # Check result
@@ -74,8 +73,7 @@ def RestoreSaves(input_path, verbose = False, exit_on_failure = False):
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to restore saves from input path '%s'" % input_path)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return False
 
     # Should be successful by this point

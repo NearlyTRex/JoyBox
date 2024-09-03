@@ -23,8 +23,7 @@ args, unknown = parser.parse_known_args()
 # Get input path
 input_path = os.path.realpath(args.input_path)
 if not os.path.exists(input_path):
-    system.LogError("Path '%s' does not exist" % args.input_path)
-    sys.exit(-1)
+    system.LogErrorAndQuit("Path '%s' does not exist" % args.input_path)
 
 # Main
 def main():

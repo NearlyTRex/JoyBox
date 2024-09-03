@@ -31,13 +31,12 @@ parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable
 args, unknown = parser.parse_known_args()
 if not args.path:
     parser.print_help()
-    sys.exit(-1)
+    system.QuitProgram()
 
 # Check that path exists first
 root_path = os.path.realpath(args.path)
 if not os.path.exists(root_path):
-    system.LogError("Path '%s' does not exist" % args.path)
-    sys.exit(-1)
+    system.LogErrorAndQuit("Path '%s' does not exist" % args.path)
 
 # Main
 def main():
@@ -52,8 +51,7 @@ def main():
     elif args.passphrase_type == config.passphrase_type_locker:
         passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
     if not passphrase:
-        system.LogError("No passphrase set")
-        sys.exit(-1)
+        system.LogErrorAndQuit("No passphrase set")
 
     # Encrypt file
     if args.encrypt:

@@ -47,8 +47,7 @@ args, unknownargs = parser.parse_known_args()
 # Get output base path
 output_base_path = os.path.realpath(args.output_base_path)
 if not os.path.exists(output_base_path):
-    system.LogError("Output base path '%s' does not exist" % args.output_base_path)
-    sys.exit(-1)
+    system.LogErrorAndQuit("Output base path '%s' does not exist" % args.output_base_path)
 
 # Main
 def main():
@@ -72,8 +71,7 @@ def main():
 
     # Check input path
     if not os.path.exists(input_path):
-        system.LogError("Input path '%s' does not exist" % input_path)
-        sys.exit(1)
+        system.LogErrorAndQuit("Input path '%s' does not exist" % input_path)
 
     # Copy files
     if args.backup_type == config.backup_type_copy:

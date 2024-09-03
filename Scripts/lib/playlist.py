@@ -24,8 +24,7 @@ def ReadPlaylist(input_file, verbose = False, exit_on_failure = False):
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to read playlist file %s" % input_file)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return []
 
 # Write playlist file
@@ -40,8 +39,7 @@ def WritePlaylist(output_file, playlist_contents = [], verbose = False, exit_on_
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to write playlist file %s" % output_file)
-            system.LogError(e)
-            sys.exit(1)
+            system.LogErrorAndQuit(e)
         return False
 
 # Generate playlist file

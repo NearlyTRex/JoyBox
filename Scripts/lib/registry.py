@@ -27,9 +27,8 @@ def ReadRegistryFile(
             registry_text = file.read()
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to read registry file '%s'" % registry_file)
-            LogError(e)
-            sys.exit(1)
+            system.LogError("Unable to read registry file '%s'" % registry_file)
+            system.LogErrorAndQuit(e)
         return {}
 
     # Create registry container
@@ -118,9 +117,8 @@ def WriteRegistryFile(
             return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to write registry file '%s'" % registry_file)
-            LogError(e)
-            sys.exit(1)
+            system.LogError("Unable to write registry file '%s'" % registry_file)
+            system.LogErrorAndQuit(e)
         return False
     return False
 

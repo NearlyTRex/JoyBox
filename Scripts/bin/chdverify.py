@@ -20,13 +20,12 @@ parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable
 args, unknown = parser.parse_known_args()
 if not args.path:
     parser.print_help()
-    sys.exit(-1)
+    system.QuitProgram()
 
 # Check that path exists first
 input_path = os.path.realpath(args.path)
 if not os.path.exists(input_path):
-    system.LogError("Path '%s' does not exist" % args.path)
-    sys.exit(-1)
+    system.LogErrorAndQuit("Path '%s' does not exist" % args.path)
 
 # Main
 def main():
@@ -43,8 +42,7 @@ def main():
         if verification_success:
             system.LogSuccess("Verified!")
         else:
-            system.LogError("Verification failed!")
-            sys.exit(1)
+            system.LogErrorAndQuit("Verification failed!")
 
 # Start
 main()

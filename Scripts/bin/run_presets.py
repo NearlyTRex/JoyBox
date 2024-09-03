@@ -32,8 +32,7 @@ args, unknown = parser.parse_known_args()
 # Get output path
 output_path = os.path.realpath(args.output_path)
 if not os.path.exists(output_path):
-    system.LogError("Output path '%s' does not exist" % args.output_path)
-    sys.exit(-1)
+    system.LogErrorAndQuit("Output path '%s' does not exist" % args.output_path)
 
 # Main
 def main():

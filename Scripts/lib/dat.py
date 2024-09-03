@@ -51,8 +51,7 @@ class Dat:
         except Exception as e:
             if exit_on_failure:
                 system.LogError("Unable import cache dat file '%s'" % dat_file)
-                system.LogError(e)
-                sys.exit(1)
+                system.LogErrorAndQuit(e)
             return False
 
     # Export cache dat file
@@ -75,8 +74,7 @@ class Dat:
         except Exception as e:
             if exit_on_failure:
                 system.LogError("Unable to export cache dat file '%s'" % dat_file)
-                system.LogError(e)
-                sys.exit(1)
+                system.LogErrorAndQuit(e)
             return False
 
     # Import clrmamepro dat file
@@ -107,8 +105,7 @@ class Dat:
         except Exception as e:
             if exit_on_failure:
                 system.LogError("Unable to import clrmamepro dat file '%s'" % dat_file)
-                system.LogError(e)
-                sys.exit(1)
+                system.LogErrorAndQuit(e)
             return False
 
     # Import clrmamepro dat files

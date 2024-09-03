@@ -20,13 +20,12 @@ parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable
 args, unknown = parser.parse_known_args()
 if not args.path:
     parser.print_help()
-    sys.exit(-1)
+    system.QuitProgram()
 
 # Check that path exists first
 root_path = os.path.realpath(args.path)
 if not os.path.exists(root_path):
-    system.LogError("Path '%s' does not exist" % args.path)
-    sys.exit(-1)
+    system.LogErrorAndQuit("Path '%s' does not exist" % args.path)
 
 # Main
 def main():
@@ -39,8 +38,7 @@ def main():
     if programs.IsToolInstalled("JDupes"):
         dupes_tool = programs.GetToolProgram("JDupes")
     if not dupes_tool:
-        system.LogError("JDupes was not found")
-        sys.exit(1)
+        system.LogErrorAndQuit("JDupes was not found")
 
     # Get list command
     list_cmd = [

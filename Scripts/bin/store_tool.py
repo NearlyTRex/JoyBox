@@ -42,8 +42,7 @@ input_path = None
 if system.IsPathValid(args.input_path):
     input_path = os.path.realpath(args.input_path)
     if not os.path.exists(input_path):
-        system.LogError("Path '%s' does not exist" % args.input_path)
-        sys.exit(-1)
+        system.LogErrorAndQuit("Path '%s' does not exist" % args.input_path)
 
 # Main
 def main():
@@ -60,8 +59,7 @@ def main():
     elif args.store_type == config.store_type_steam:
         store_obj = steam.Steam()
     else:
-        system.LogError("Invalid store")
-        sys.exit(-1)
+        system.LogErrorAndQuit("Invalid store")
 
     # Load manifest
     if args.load_manifest:
@@ -87,7 +85,7 @@ def main():
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
             if not success:
-                break
+                system.LogErrorAndQuit("Install of '%s' failed!" % game_info.get_name())
 
     # Launch
     elif args.store_action == config.store_action_type_launch:
@@ -117,7 +115,7 @@ def main():
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
             if not success:
-                break
+                system.LogErrorAndQuit("Install of '%s' failed!" % game_info.get_name())
 
     # Update
     elif args.store_action == config.store_action_type_update:
@@ -131,7 +129,7 @@ def main():
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
             if not success:
-                break
+                system.LogErrorAndQuit("Update of '%s' failed!" % game_info.get_name())
 
     # Check
     elif args.store_action == config.store_action_type_check:
@@ -160,7 +158,7 @@ def main():
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
             if not success:
-                break
+                system.LogErrorAndQuit("Export of '%s' failed!" % game_info.get_name())
 
 # Start
 main()

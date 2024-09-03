@@ -30,13 +30,12 @@ parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable
 args, unknown = parser.parse_known_args()
 if not args.input_path:
     parser.print_help()
-    sys.exit(-1)
+    system.QuitProgram()
 
 # Check input path
 input_path = os.path.realpath(args.input_path)
 if not os.path.exists(input_path):
-    system.LogError("Path '%s' does not exist" % args.input_path)
-    sys.exit(-1)
+    system.LogErrorAndQuit("Path '%s' does not exist" % args.input_path)
 
 # Main
 def main():

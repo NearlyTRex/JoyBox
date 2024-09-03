@@ -55,8 +55,7 @@ class GOG(storebase.StoreBase):
         if programs.IsToolInstalled("LGOGDownloader"):
             gog_tool = programs.GetToolProgram("LGOGDownloader")
         if not gog_tool:
-            system.LogError("LGOGDownloader was not found")
-            sys.exit(1)
+            system.LogErrorAndQuit("LGOGDownloader was not found")
 
         # Get login command
         login_cmd = [
@@ -183,8 +182,7 @@ class GOG(storebase.StoreBase):
         if programs.IsToolInstalled("LGOGDownloader"):
             gog_tool = programs.GetToolProgram("LGOGDownloader")
         if not gog_tool:
-            system.LogError("LGOGDownloader was not found")
-            sys.exit(1)
+            system.LogErrorAndQuit("LGOGDownloader was not found")
 
         # Create temporary directory
         tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)

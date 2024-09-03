@@ -37,8 +37,7 @@ def main():
         game_name = system.GetFilenameBasename(json_file)
         game_rom_dir = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
         if not os.path.exists(game_rom_dir):
-            system.LogError("Extraneous json file '%s' found" % json_file)
-            sys.exit(1)
+            system.LogErrorAndQuit("Extraneous json file '%s' found" % json_file)
 
     # Verify metadata files
     for game_category in config.game_categories:
@@ -85,8 +84,7 @@ def main():
                 for file_to_check in files_to_check:
                     stored_file = os.path.join(environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name), file_to_check)
                     if not os.path.exists(stored_file):
-                        system.LogError("File '%s' referenced in json file not found" % file_to_check)
-                        sys.exit(1)
+                        system.LogErrorAndQuit("File '%s' referenced in json file not found" % file_to_check)
 
     # Verify hash files
     for game_supercategory in config.game_supercategories:
@@ -106,8 +104,7 @@ def main():
                     # Check if file exists
                     stored_file = os.path.join(environment.GetLockerGamingRootDir(), hash_reference_file)
                     if not os.path.exists(stored_file):
-                        system.LogError("File '%s' referenced in hash file not found" % stored_file)
-                        sys.exit(1)
+                        system.LogErrorAndQuit("File '%s' referenced in hash file not found" % stored_file)
 
 # Start
 main()

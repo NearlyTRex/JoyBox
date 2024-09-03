@@ -463,16 +463,16 @@ def RunOutputCommand(
     except subprocess.CalledProcessError as e:
         if verbose:
             system.LogError(e)
-        if exit_on_failure:
-            sys.exit(1)
+        elif exit_on_failure:
+            system.LogErrorAndQuit(e)
         if options.include_stderr:
             return e.output
         return ""
     except Exception as e:
         if verbose:
             system.LogError(e)
-        if exit_on_failure:
-            sys.exit(1)
+        elif exit_on_failure:
+            system.LogErrorAndQuit(e)
         return ""
 
 # Run returncode command
@@ -527,14 +527,14 @@ def RunReturncodeCommand(
     except subprocess.CalledProcessError as e:
         if verbose:
             system.LogError(e)
-        if exit_on_failure:
-            sys.exit(1)
+        elif exit_on_failure:
+            system.LogErrorAndQuit(e)
         return e.returncode
     except Exception as e:
         if verbose:
             system.LogError(e)
-        if exit_on_failure:
-            sys.exit(1)
+        elif exit_on_failure:
+            system.LogErrorAndQuit(e)
         return 1
 
 # Run checked command
@@ -551,7 +551,7 @@ def RunCheckedCommand(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
-        sys.exit(code)
+        system.QuitProgram(code)
 
 # Run exception command
 def RunExceptionCommand(
@@ -618,14 +618,14 @@ def RunBlockingCommand(
     except subprocess.CalledProcessError as e:
         if verbose:
             system.LogError(e)
-        if exit_on_failure:
-            sys.exit(1)
+        elif exit_on_failure:
+            system.LogErrorAndQuit(e)
         return e.returncode
     except Exception as e:
         if verbose:
             system.LogError(e)
-        if exit_on_failure:
-            sys.exit(1)
+        elif exit_on_failure:
+            system.LogErrorAndQuit(e)
         return 1
 
 # Run game command
