@@ -21,6 +21,12 @@ import programs
 
 ###########################################################
 
+# Quit program
+def QuitProgram(exit_code = -1):
+    sys.exit(exit_code)
+
+###########################################################
+
 # Assert that condition is true
 def AssertCondition(condition, description):
     assert condition, "Condition failed: %s" % description
@@ -232,6 +238,11 @@ def LogWarning(message):
 def LogError(message):
     LogColoredWithHeader(str(message), "ERROR", "red")
 
+# Log error
+def LogErrorAndQuit(message):
+    LogError(message)
+    QuitProgram()
+
 # Log success
 def LogSuccess(message):
     LogColoredWithHeader(str(message), "SUCCESS", "green")
@@ -335,7 +346,7 @@ def ReplaceStringsInFile(src, replacements = [], verbose = False, pretend_run = 
         if exit_on_failure:
             LogError("Unable to replace strings in file %s" % src)
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 # Append line to file
@@ -363,7 +374,7 @@ def AppendLineToFile(src, line, verbose = False, pretend_run = False, exit_on_fa
         if exit_on_failure:
             LogError("Unable to add line '%s' to file %s" % (line, src))
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 # Sort file contents
@@ -387,7 +398,7 @@ def SortFileContents(src, verbose = False, pretend_run = False, exit_on_failure 
         if exit_on_failure:
             LogError("Unable to sort contents of file %s" % src)
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 ###########################################################
@@ -442,7 +453,7 @@ def LowercaseAllPaths(dir, verbose = False, pretend_run = False, exit_on_failure
         if exit_on_failure:
             LogError("Unable to lowercase directory %s" % dir)
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
 
 ###########################################################
 
@@ -467,7 +478,7 @@ def TouchFile(src, contents = "", contents_mode = "w", encoding = None, verbose 
         if exit_on_failure:
             LogError("Unable to touch file %s" % src)
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 # Chmod file or directory
@@ -492,7 +503,7 @@ def ChmodFileOrDirectory(src, perms, dperms = None, verbose = False, pretend_run
         if exit_on_failure:
             LogError("Unable to change permissions of %s to %s" % (src, str(perms)))
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 # Mark as executable
@@ -508,7 +519,7 @@ def MarkAsExecutable(src, verbose = False, pretend_run = False, exit_on_failure 
         if exit_on_failure:
             LogError("Unable to mark %s as executable" % src)
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 # Create temporary directory
@@ -538,7 +549,7 @@ def CreateSymlink(src, dest, cwd = None, verbose = False, pretend_run = False, e
         if exit_on_failure:
             LogError("Unable to create symlink from %s to %s" % (src, dest))
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 # Copy file or directory
@@ -574,7 +585,7 @@ def CopyFileOrDirectory(
         if exit_on_failure:
             LogError("Unable to copy %s to %s" % (src, dest))
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 # Move file or directory
@@ -607,7 +618,7 @@ def MoveFileOrDirectory(
         if exit_on_failure:
             LogError("Unable to move %s to %s" % (src, dest))
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 # Transfer file
@@ -662,7 +673,7 @@ def TransferFile(
         if exit_on_failure:
             LogError("Unable to transfer %s to %s" % (src, dest))
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 # Make directory
@@ -679,7 +690,7 @@ def MakeDirectory(dir, verbose = False, pretend_run = False, exit_on_failure = F
             if exit_on_failure:
                 LogError("Unable to make directory %s" % dir)
                 LogError(e)
-                sys.exit(1)
+                QuitProgram()
             return False
         return True
 
@@ -696,7 +707,7 @@ def RemoveFile(file, verbose = False, pretend_run = False, exit_on_failure = Fal
         if exit_on_failure:
             LogError("Unable to remove file %s" % file)
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 # Remove symlink
@@ -712,7 +723,7 @@ def RemoveSymlink(symlink, verbose = False, pretend_run = False, exit_on_failure
         if exit_on_failure:
             LogError("Unable to remove symlink %s" % symlink)
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 # Remove directory
@@ -728,7 +739,7 @@ def RemoveDirectory(dir, verbose = False, pretend_run = False, exit_on_failure =
         if exit_on_failure:
             LogError("Unable to remove directory %s" % dir)
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 # Remove directory contents
@@ -755,7 +766,7 @@ def RemoveDirectoryContents(dir, verbose = False, pretend_run = False, exit_on_f
         if exit_on_failure:
             LogError("Unable to remove contents of directory %s" % dir)
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 ###########################################################
@@ -774,7 +785,7 @@ def CopyContents(
     if not DoesPathExist(src, case_sensitive_paths):
         if exit_on_failure:
             LogError("Source %s does not exist, cannot copy" % src)
-            sys.exit(1)
+            QuitProgram()
     file_list = BuildFileList(src, use_relative_paths = True)
     for file in file_list:
         input_file = os.path.join(src, file)
@@ -815,7 +826,7 @@ def MoveContents(
     if not DoesPathExist(src, case_sensitive_paths):
         if exit_on_failure:
             LogError("Source %s does not exist, cannot move" % src)
-            sys.exit(1)
+            QuitProgram()
     file_list = BuildFileList(src, use_relative_paths = True)
     for file in file_list:
         input_file = os.path.join(src, file)
@@ -1032,7 +1043,7 @@ def SyncContents(src, dest, verbose = False, pretend_run = False, exit_on_failur
     if not DoesPathExist(src):
         if exit_on_failure:
             LogError("Source %s does not exist, cannot sync" % src)
-            sys.exit(1)
+            QuitProgram()
     success = MakeDirectory(
         dir = dest,
         verbose = verbose,
@@ -1125,7 +1136,7 @@ def ReadJsonFile(src, verbose = False, exit_on_failure = False):
         if exit_on_failure:
             LogError("Unable to read %s" % src)
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return {}
 
 # Write json file
@@ -1144,7 +1155,7 @@ def WriteJsonFile(src, json_data, sort_keys = False, verbose = False, pretend_ru
         if exit_on_failure:
             LogError("Unable to write %s" % src)
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 # Clean json file
@@ -1182,7 +1193,7 @@ def CleanJsonFile(src, sort_keys = False, remove_empty_values = False, verbose =
         if exit_on_failure:
             LogError("Unable to clean %s" % src)
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return False
 
 ###########################################################
@@ -1206,7 +1217,7 @@ def ReadYamlFile(src, verbose = False, exit_on_failure = False):
         if exit_on_failure:
             LogError("Unable to read %s" % src)
             LogError(e)
-            sys.exit(1)
+            QuitProgram()
         return {}
 
 ###########################################################
