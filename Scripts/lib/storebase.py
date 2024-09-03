@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import saves
 import jsondata
 from tools import ludusavimanifest
 
@@ -351,8 +352,8 @@ class StoreBase:
             exit_on_failure = exit_on_failure):
             path_full = save_path_entry["full"]
             for path_relative in save_path_entry["relative"]:
-                if os.path.exists(path_full):
-                    success = system.CopyContents(
+                if system.DoesDirectoryContainFiles(path_full):
+                    success = system.SmartCopy(
                         src = path_full,
                         dest = os.path.join(tmp_dir_result, path_relative),
                         show_progress = True,
@@ -362,6 +363,7 @@ class StoreBase:
                     if success:
                         at_least_one_copy = True
         if not at_least_one_copy:
+            system.RemoveDirectory(tmp_dir_result, verbose = verbose)
             return True
 
         # Pack save
