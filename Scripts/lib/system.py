@@ -283,6 +283,10 @@ def IsPathValid(path):
     else:
         return True
 
+# Check if path is file or directory
+def IsPathFileOrDirectory(path):
+    return os.path.isfile(path) or os.path.isdir(path)
+
 # Check if path exists
 def DoesPathExist(path, case_sensitive_paths = True, partial_paths = False):
     if case_sensitive_paths:
