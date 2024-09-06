@@ -216,3 +216,15 @@ ignored_registry_keys_game = [
     "HKEY_CURRENT_USER\\Software\\Microsoft",
     "HKEY_CURRENT_USER\\Software\\Wine"
 ]
+
+# AppData
+appdata_variants = {
+    "/AppData/Local/": [
+        "/Application Data/",
+        "/Local Settings/Application Data/"
+    ],
+    "/AppData/Roaming/": [
+        "/Application Data/",
+        "/Local Settings/Application Data/"
+    ]
+}

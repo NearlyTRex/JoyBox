@@ -358,6 +358,7 @@ class StoreBase:
                         dest = os.path.join(tmp_dir_result, path_relative),
                         show_progress = True,
                         skip_existing = True,
+                        ignore_symlinks = True,
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
                     if success:

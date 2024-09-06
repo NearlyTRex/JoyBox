@@ -304,11 +304,20 @@ class Steam(storebase.StoreBase):
         game_appid = game_info.get_store_appid(self.GetKey())
         game_paths = game_info.get_store_paths(self.GetKey())
 
+        # Check if path should be added
+        def ShouldAddPath(path, base, variant):
+            parts = system.SplitFilePath(path, base)
+            if len(parts) != 2:
+                return False
+            return system.IsPathFileOrDirectory(os.path.join(parts[0], variant))
+
         # Add alternate paths
         for path in sorted(game_paths):
-            if "/AppData/Local/" in path:
-                game_paths.append(path.replace("/AppData/Local/", "/Application Data/"))
-                game_paths.append(path.replace("/AppData/Local/", "/Local Settings/Application Data/"))
+            for appdata_base in config.appdata_variants.keys():
+                if appdata_base in path:
+                    for appdata_variant in config.appdata_variants[appdata_base]:
+                        if ShouldAddPath(path, appdata_base, appdata_variant):
+                            game_paths.append(path.replace(appdata_base, appdata_variant))
 
         # Get user info
         user_id64 = self.GetUserId(config.steam_id_format_64)
