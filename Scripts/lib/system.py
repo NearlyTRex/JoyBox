@@ -285,7 +285,7 @@ def IsPathValid(path):
 
 # Check if path is file or directory
 def IsPathFileOrDirectory(path):
-    return os.path.isfile(path) or os.path.isdir(path)
+    return os.path.isfile(path) or os.path.isdir(path) and not os.path.islink(path)
 
 # Check if path exists
 def DoesPathExist(path, case_sensitive_paths = True, partial_paths = False):
@@ -783,6 +783,8 @@ def CopyContents(
     skip_existing = False,
     skip_identical = False,
     case_sensitive_paths = True,
+    ignore_symlinks = False,
+    follow_symlink_dirs = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -790,7 +792,11 @@ def CopyContents(
         if exit_on_failure:
             LogError("Source %s does not exist, cannot copy" % src)
             QuitProgram()
-    file_list = BuildFileList(src, use_relative_paths = True)
+    file_list = BuildFileList(
+        root = src,
+        use_relative_paths = True,
+        ignore_symlinks = ignore_symlinks,
+        follow_symlink_dirs = follow_symlink_dirs)
     for file in file_list:
         input_file = os.path.join(src, file)
         output_file = os.path.join(dest, file)
@@ -824,6 +830,8 @@ def MoveContents(
     skip_existing = False,
     skip_identical = False,
     case_sensitive_paths = True,
+    ignore_symlinks = False,
+    follow_symlink_dirs = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -831,7 +839,11 @@ def MoveContents(
         if exit_on_failure:
             LogError("Source %s does not exist, cannot move" % src)
             QuitProgram()
-    file_list = BuildFileList(src, use_relative_paths = True)
+    file_list = BuildFileList(
+        root = src,
+        use_relative_paths = True,
+        ignore_symlinks = ignore_symlinks,
+        follow_symlink_dirs = follow_symlink_dirs)
     for file in file_list:
         input_file = os.path.join(src, file)
         output_file = os.path.join(dest, file)
@@ -941,6 +953,8 @@ def SmartCopy(
     skip_existing = False,
     skip_identical = False,
     case_sensitive_paths = True,
+    ignore_symlinks = False,
+    follow_symlink_dirs = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -971,6 +985,8 @@ def SmartCopy(
                 skip_existing = skip_existing,
                 skip_identical = skip_identical,
                 case_sensitive_paths = case_sensitive_paths,
+                ignore_symlinks = ignore_symlinks,
+                follow_symlink_dirs = follow_symlink_dirs,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -995,6 +1011,8 @@ def SmartMove(
     skip_existing = False,
     skip_identical = False,
     case_sensitive_paths = True,
+    ignore_symlinks = False,
+    follow_symlink_dirs = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -1025,6 +1043,8 @@ def SmartMove(
                 skip_existing = skip_existing,
                 skip_identical = skip_identical,
                 case_sensitive_paths = case_sensitive_paths,
+                ignore_symlinks = ignore_symlinks,
+                follow_symlink_dirs = follow_symlink_dirs,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -1043,7 +1063,14 @@ def SmartMove(
     return True
 
 # Sync contents
-def SyncContents(src, dest, verbose = False, pretend_run = False, exit_on_failure = False):
+def SyncContents(
+    src,
+    dest,
+    ignore_symlinks = False,
+    follow_symlink_dirs = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     if not DoesPathExist(src):
         if exit_on_failure:
             LogError("Source %s does not exist, cannot sync" % src)
@@ -1065,6 +1092,8 @@ def SyncContents(src, dest, verbose = False, pretend_run = False, exit_on_failur
     return CopyContents(
         src = src,
         dest = dest,
+        ignore_symlinks = ignore_symlinks,
+        follow_symlink_dirs = follow_symlink_dirs,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1486,6 +1515,10 @@ def DoesDirectoryContainFilesByExtensions(path, extensions = [], recursive = Tru
                     if obj_path.endswith(file_type):
                         files.append(obj)
         return len(files)
+
+# Check if directory contains symlink dirs
+def DoesDirectoryContainSymlinkDirs(path):
+    return len(BuildSymlinkDirectoryList(path)) > 0
 
 # Get directory info
 def GetDirectoryInfo(path):
