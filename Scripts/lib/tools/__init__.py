@@ -15,6 +15,7 @@ from . import gpg
 from . import hactool
 from . import jdupes
 from . import mkpl
+from . import legendary
 from . import lgogdownloader
 from . import ludusavi
 from . import ludusavimanifest
@@ -69,6 +70,7 @@ instances = [
     hactool.HacTool(),
     jdupes.JDupes(),
     mkpl.Mkpl(),
+    legendary.Legendary(),
     lgogdownloader.LGOGDownloader(),
     ludusavi.Ludusavi(),
     ludusavimanifest.LudusaviManifest(),
