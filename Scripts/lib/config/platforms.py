@@ -84,7 +84,12 @@ computer_amazon_games[keys.platform_key_autofill_json] = [
     keys.json_key_extra,
     keys.json_key_dependencies,
     keys.json_key_installer_exe,
-    keys.json_key_transform_file
+    keys.json_key_transform_file,
+    keys.json_key_store_builddate,
+    keys.json_key_store_buildid,
+    keys.json_key_store_name,
+    keys.json_key_store_controller_support,
+    keys.json_key_store_installdir
 ]
 computer_amazon_games[keys.platform_key_fillonce_json] = [
     keys.json_key_amazon,
@@ -129,7 +134,12 @@ computer_epic_games[keys.platform_key_autofill_json] = [
     keys.json_key_extra,
     keys.json_key_dependencies,
     keys.json_key_installer_exe,
-    keys.json_key_transform_file
+    keys.json_key_transform_file,
+    keys.json_key_store_builddate,
+    keys.json_key_store_buildid,
+    keys.json_key_store_name,
+    keys.json_key_store_controller_support,
+    keys.json_key_store_installdir
 ]
 computer_epic_games[keys.platform_key_fillonce_json] = [
     keys.json_key_epic,
@@ -154,7 +164,12 @@ computer_gog[keys.platform_key_autofill_json] = [
     keys.json_key_extra,
     keys.json_key_dependencies,
     keys.json_key_installer_exe,
-    keys.json_key_transform_file
+    keys.json_key_transform_file,
+    keys.json_key_store_builddate,
+    keys.json_key_store_buildid,
+    keys.json_key_store_name,
+    keys.json_key_store_controller_support,
+    keys.json_key_store_installdir
 ]
 computer_gog[keys.platform_key_fillonce_json] = [
     keys.json_key_gog,
@@ -284,7 +299,12 @@ computer_steam[keys.platform_key_autofill_json] = [
     keys.json_key_extra,
     keys.json_key_dependencies,
     keys.json_key_installer_exe,
-    keys.json_key_transform_file
+    keys.json_key_transform_file,
+    keys.json_key_store_builddate,
+    keys.json_key_store_buildid,
+    keys.json_key_store_name,
+    keys.json_key_store_controller_support,
+    keys.json_key_store_installdir
 ]
 computer_steam[keys.platform_key_fillonce_json] = [
     keys.json_key_steam,
