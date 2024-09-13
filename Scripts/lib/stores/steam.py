@@ -273,23 +273,9 @@ class Steam(storebase.StoreBase):
 
     ############################################################
 
-    # Get download identifier
-    def GetDownloadIdentifier(self, game_info):
-
-        # Return identifier
+    # Get identifier
+    def GetIdentifier(self, game_info, identifier_type):
         return game_info.get_store_appid(self.GetKey())
-
-    # Get download output name
-    def GetDownloadOutputName(self, game_info):
-
-        # Get versions
-        local_version, remote_version = self.GetVersions(
-            game_info = game_info,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-        # Return identifier
-        return "%s (%s)" % (game_info.get_name(), remote_version)
 
     ############################################################
 

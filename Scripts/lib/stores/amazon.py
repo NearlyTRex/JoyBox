@@ -152,23 +152,9 @@ class Amazon(storebase.StoreBase):
 
     ############################################################
 
-    # Get download identifier
-    def GetDownloadIdentifier(self, game_info):
-
-        # Return identifier
+    # Get identifier
+    def GetIdentifier(self, game_info, identifier_type):
         return game_info.get_store_appid(self.GetKey())
-
-    # Get download output name
-    def GetDownloadOutputName(self, game_info):
-
-        # Get versions
-        local_version, remote_version = self.GetVersions(
-            game_info = game_info,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-        # Return identifier
-        return "%s (%s)" % (game_info.get_name(), hashing.CalculateStringCRC32(remote_version))
 
     ############################################################
 
@@ -258,12 +244,12 @@ class Amazon(storebase.StoreBase):
             system.LogError("Encountered error fetching")
             return False
 
-        # Check that files fetched
+        # Check that files downloaded
         if system.IsDirectoryEmpty(tmp_dir_fetch):
-            system.LogError("Files were not fetched successfully")
+            system.LogError("Files were not downloaded successfully")
             return False
 
-        # Archive fetched files
+        # Archive downloaded files
         success = archive.CreateArchiveFromFolder(
             archive_file = os.path.join(tmp_dir_archive, "%s.7z" % output_name),
             source_dir = tmp_dir_fetch,

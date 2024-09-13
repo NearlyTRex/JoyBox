@@ -88,13 +88,25 @@ class StoreBase:
 
     ############################################################
 
-    # Get download identifier
-    def GetDownloadIdentifier(self, game_info):
+    # Get identifier
+    def GetIdentifier(self, game_info, identifier_type):
         return ""
 
-    # Get download output name
-    def GetDownloadOutputName(self, game_info):
-        return ""
+    # Get info identifier
+    def GetInfoIdentifier(self, game_info):
+        return self.GetIdentifier(game_info, config.store_identifier_type_info)
+
+    # Get install identifier
+    def GetInstallIdentifier(self, game_info):
+        return self.GetIdentifier(game_info, config.store_identifier_type_install)
+
+    # Get launch identifier
+    def GetLaunchIdentifier(self, game_info):
+        return self.GetIdentifier(game_info, config.store_identifier_type_launch)
+
+    # Get download identifier
+    def GetDownloadIdentifier(self, game_info):
+        return self.GetIdentifier(game_info, config.store_identifier_type_download)
 
     ############################################################
 
@@ -115,24 +127,15 @@ class StoreBase:
         verbose = False,
         exit_on_failure = False):
 
-        # Get game info
-        game_appid = game_info.get_store_appid(self.GetKey())
-        game_branchid = game_info.get_store_branchid(self.GetKey())
-        game_buildid = game_info.get_store_buildid(self.GetKey())
-
-        # Ignore invalid identifier
-        if not self.IsValidIdentifier(game_appid):
-            return (None, None)
-
         # Get latest info
         latest_info = self.GetLatestInfo(
-            identifier = game_appid,
-            branch = game_branchid,
+            identifier = self.GetInfoIdentifier(game_info),
+            branch = game_info.get_store_branchid(self.GetKey()),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
         # Return versions
-        local_version = game_buildid
+        local_version = game_info.get_store_buildid(self.GetKey())
         remote_version = latest_info[config.json_key_store_buildid]
         return (local_version, remote_version)
 
@@ -153,16 +156,9 @@ class StoreBase:
         verbose = False,
         exit_on_failure = False):
 
-        # Get game info
-        game_appid = game_info.get_store_appid(self.GetKey())
-
-        # Ignore invalid identifier
-        if not self.IsValidIdentifier(game_appid):
-            return True
-
         # Install game
         return self.InstallByIdentifier(
-            identifier = game_appid,
+            identifier = self.GetInstallIdentifier(game_info),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
@@ -183,16 +179,9 @@ class StoreBase:
         verbose = False,
         exit_on_failure = False):
 
-        # Get game info
-        game_appid = game_info.get_store_appid(self.GetKey())
-
-        # Ignore invalid identifier
-        if not self.IsValidIdentifier(game_appid):
-            return True
-
         # Launch game
         return self.LaunchByIdentifier(
-            identifier = game_appid,
+            identifier = self.GetLaunchIdentifier(game_info),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
@@ -220,23 +209,18 @@ class StoreBase:
         verbose = False,
         exit_on_failure = False):
 
-        # Get game info
-        game_appid = game_info.get_store_appid(self.GetKey())
-        game_branchid = game_info.get_store_branchid(self.GetKey())
-        game_category = game_info.get_category()
-        game_subcategory = game_info.get_subcategory()
-        game_name = game_info.get_name()
-
-        # Ignore invalid identifier
-        if not self.IsValidIdentifier(game_appid):
-            return True
-
         # Get output dir
         if output_dir:
-            output_offset = environment.GetLockerGamingRomDirOffset(game_category, game_subcategory, game_name)
+            output_offset = environment.GetLockerGamingRomDirOffset(
+                rom_category = game_info.get_category(),
+                rom_subcategory = game_info.get_subcategory(),
+                rom_name = game_info.get_name())
             output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
         else:
-            output_dir = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
+            output_dir = environment.GetLockerGamingRomDir(
+                rom_category = game_info.get_category(),
+                rom_subcategory = game_info.get_subcategory(),
+                rom_name = game_info.get_name())
         if skip_existing and system.DoesDirectoryContainFiles(output_dir):
             return True
 
@@ -246,7 +230,7 @@ class StoreBase:
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-        # Check if game should be fetched
+        # Check if game should be downloaded
         should_download = False
         if force or local_version is None or remote_version is None:
             should_download = True
@@ -265,9 +249,9 @@ class StoreBase:
         # Download game
         success = self.DownloadByIdentifier(
             identifier = self.GetDownloadIdentifier(game_info),
-            branch = game_branchid,
+            branch = game_info.get_store_branchid(self.GetKey()),
             output_dir = output_dir,
-            output_name = self.GetDownloadOutputName(game_info),
+            output_name = "%s (%s)" % (game_info.get_name(), remote_version),
             clean_output = True,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -282,31 +266,21 @@ class StoreBase:
         verbose = False,
         exit_on_failure = False):
 
-        # Get game info
-        game_platform = game_info.get_platform()
-        game_appid = game_info.get_store_appid(self.GetKey())
-        game_branchid = game_info.get_store_branchid(self.GetKey())
-        game_json_file = game_info.get_json_file()
-
-        # Ignore invalid identifier
-        if not self.IsValidIdentifier(game_appid):
-            return True
-
         # Get latest info
         latest_info = self.GetLatestInfo(
-            identifier = game_appid,
-            branch = game_branchid,
+            identifier = self.GetInfoIdentifier(game_info),
+            branch = game_info.get_store_branchid(self.GetKey()),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
         # Read json file
         json_data = system.ReadJsonFile(
-            src = game_json_file,
+            src = game_info.get_json_file(),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
         # Create json data object
-        json_obj = jsondata.JsonData(json_data[self.GetKey()], game_platform)
+        json_obj = jsondata.JsonData(json_data[self.GetKey()], game_info.get_platform())
 
         # Set store info
         for json_subdata_key in config.json_keys_store_subdata:
@@ -318,7 +292,7 @@ class StoreBase:
 
         # Write json file
         success = system.WriteJsonFile(
-            src = game_json_file,
+            src = game_info.get_json_file(),
             json_data = json_data,
             sort_keys = True,
             verbose = verbose,
@@ -333,11 +307,6 @@ class StoreBase:
         game_info,
         verbose = False,
         exit_on_failure = False):
-
-        # Get game info
-        game_category = game_info.get_category()
-        game_subcategory = game_info.get_subcategory()
-        game_name = game_info.get_name()
 
         # Create temporary directory
         tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
@@ -369,9 +338,9 @@ class StoreBase:
 
         # Pack save
         success = saves.PackSave(
-            save_category = game_category,
-            save_subcategory = game_subcategory,
-            save_name = game_name,
+            save_category = game_info.get_category(),
+            save_subcategory = game_info.get_subcategory(),
+            save_name = game_info.get_name(),
             save_dir = tmp_dir_result,
             verbose = verbose,
             exit_on_failure = exit_on_failure)

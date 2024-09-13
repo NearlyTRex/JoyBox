@@ -116,23 +116,9 @@ class GOG(storebase.StoreBase):
 
     ############################################################
 
-    # Get download identifier
-    def GetDownloadIdentifier(self, game_info):
-
-        # Return identifier
+    # Get identifier
+    def GetIdentifier(self, game_info, identifier_type):
         return game_info.get_store_appname(self.GetKey())
-
-    # Get download output name
-    def GetDownloadOutputName(self, game_info):
-
-        # Get versions
-        local_version, remote_version = self.GetVersions(
-            game_info = game_info,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-        # Return identifier
-        return "%s (%s)" % (game_info.get_name(), remote_version)
 
     ############################################################
 
@@ -247,7 +233,7 @@ class GOG(storebase.StoreBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 
-        # Move fetched files
+        # Move downloaded files
         success = system.MoveContents(
             src = tmp_dir_result,
             dest = output_dir,

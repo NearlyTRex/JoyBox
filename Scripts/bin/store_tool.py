@@ -13,6 +13,7 @@ import system
 import gameinfo
 import setup
 from stores import amazon
+from stores import epic
 from stores import gog
 from stores import steam
 
@@ -54,6 +55,8 @@ def main():
     store_obj = None
     if args.store_type == config.store_type_amazon:
         store_obj = amazon.Amazon()
+    elif args.store_type == config.store_type_epic:
+        store_obj = epic.Epic()
     elif args.store_type == config.store_type_gog:
         store_obj = gog.GOG()
     elif args.store_type == config.store_type_steam:
