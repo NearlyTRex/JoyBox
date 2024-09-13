@@ -22,10 +22,14 @@ class Firefox(toolbase.ToolBase):
         # Get firefox info
         firefox_exe = ini.GetIniValue("Tools.Firefox", "firefox_exe")
         firefox_install_dir = ini.GetIniPathValue("Tools.Firefox", "firefox_install_dir")
+        firefox_download_dir = ini.GetIniPathValue("Tools.Firefox", "firefox_download_dir")
+        firefox_profile_dir = ini.GetIniPathValue("Tools.Firefox", "firefox_profile_dir")
 
         # Return config
         return {
             "Firefox": {
-                "program": os.path.join(firefox_install_dir, firefox_exe)
+                "program": os.path.join(firefox_install_dir, firefox_exe),
+                "download_dir": firefox_download_dir,
+                "profile_dir": firefox_profile_dir
             }
         }

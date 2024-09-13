@@ -14,9 +14,10 @@ import environment
 import system
 
 # Create web driver
-def CreateWebDriver(download_dir = None, make_headless = False, verbose = False):
+def CreateWebDriver(download_dir = None, profile_dir = None, make_headless = False, verbose = False):
     from selenium.webdriver.firefox.service import Service as FirefoxService
     from selenium.webdriver.firefox.options import Options as FirefoxOptions
+    from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
     from selenium.webdriver import Firefox
     webdriver_tool = None
     if programs.IsToolInstalled("GeckoDriver"):
@@ -27,9 +28,11 @@ def CreateWebDriver(download_dir = None, make_headless = False, verbose = False)
     try:
         service = FirefoxService(webdriver_tool, log_path=os.path.devnull)
         options = FirefoxOptions()
-        if download_dir and os.path.isdir(download_dir):
+        if system.IsPathValid(download_dir) and system.DoesPathExist(download_dir):
             options.set_preference("browser.download.folderList", 2)
             options.set_preference("browser.download.dir", download_dir)
+        if system.IsPathValid(profile_dir) and system.DoesPathExist(profile_dir):
+            options.profile = FirefoxProfile(profile_directory = profile_dir)
         if make_headless:
             options.headless = True
         options.binary_location = programs.GetToolProgram("Firefox")
