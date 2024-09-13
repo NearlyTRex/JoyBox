@@ -225,6 +225,18 @@ store_action_types = [
     store_action_type_import
 ]
 
+# Store identifier types
+store_identifier_type_info = "info"
+store_identifier_type_install = "install"
+store_identifier_type_launch = "launch"
+store_identifier_type_download = "download"
+store_identifier_types = [
+    store_identifier_type_info,
+    store_identifier_type_install,
+    store_identifier_type_launch,
+    store_identifier_type_download
+]
+
 # Playlist types
 playlist_type_tree = "tree"
 playlist_type_local = "local"
