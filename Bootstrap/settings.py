@@ -66,6 +66,14 @@ ini_defaults["UserData.GitHub"] = {}
 ini_defaults["UserData.GitHub"]["github_username"] = ""
 ini_defaults["UserData.GitHub"]["github_access_token"] = ""
 
+# UserData.Epic
+ini_defaults["UserData.Epic"] = {}
+ini_defaults["UserData.Epic"]["epic_username"] = ""
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.Epic"]["epic_install_dir"] = "C:\\Program Files\\Epic Games"
+else:
+    ini_defaults["UserData.Epic"]["epic_install_dir"] = "$HOME/.wine/drive_c/Program Files/Epic Games"
+
 # UserData.GOG
 ini_defaults["UserData.GOG"] = {}
 ini_defaults["UserData.GOG"]["gog_username"] = ""
@@ -212,3 +220,5 @@ if environment.IsWindowsPlatform():
 else:
     ini_defaults["Tools.Firefox"]["firefox_exe"] = "firefox"
     ini_defaults["Tools.Firefox"]["firefox_install_dir"] = "/usr/bin"
+ini_defaults["Tools.Firefox"]["firefox_download_dir"] = ""
+ini_defaults["Tools.Firefox"]["firefox_profile_dir"] = ""
