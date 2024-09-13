@@ -139,6 +139,7 @@ json_key_gog = "gog"
 json_key_steam = "steam"
 json_key_store_appid = "appid"
 json_key_store_appname = "appname"
+json_key_store_appurl = "appurl"
 json_key_store_branchid = "branchid"
 json_key_store_builddate = "builddate"
 json_key_store_buildid = "buildid"
@@ -161,6 +162,7 @@ json_keys_store = [
 json_keys_store_subdata = [
     json_key_store_appid,
     json_key_store_appname,
+    json_key_store_appurl,
     json_key_store_branchid,
     json_key_store_builddate,
     json_key_store_buildid,
@@ -217,6 +219,7 @@ json_key_defaults.append({"key": json_key_steam, "default": {}})
 for json_key in json_keys_store:
     json_key_defaults.append({"key": (json_key, json_key_store_appid), "default": ""})
     json_key_defaults.append({"key": (json_key, json_key_store_appname), "default": ""})
+    json_key_defaults.append({"key": (json_key, json_key_store_appurl), "default": ""})
     json_key_defaults.append({"key": (json_key, json_key_store_branchid), "default": ""})
     json_key_defaults.append({"key": (json_key, json_key_store_builddate), "default": ""})
     json_key_defaults.append({"key": (json_key, json_key_store_buildid), "default": ""})
