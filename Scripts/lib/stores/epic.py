@@ -128,15 +128,19 @@ class Epic(storebase.StoreBase):
         game_info = {}
         game_info[config.json_key_store_appname] = identifier
         for line in info_output.split("\n"):
-            tokens = line.split(": ")
-            if len(tokens) != 2:
-                continue
-            key = tokens[0]
-            value = tokens[1]
-            if key.endswith("Title"):
-                game_info[config.json_key_store_name] = value
-            elif key.endswith("Latest version"):
-                game_info[config.json_key_store_buildid] = value
+            if line.startswith("- Title:"):
+                game_info[config.json_key_store_name] = line.replace("- Title:", "").strip()
+            elif line.startswith("- Latest version:"):
+                game_info[config.json_key_store_buildid] = line.replace("- Latest version:", "").strip()
+            elif line.startswith("- Cloud save folder (Windows):"):
+                line_path = line.replace("- Cloud save folder (Windows):", "").strip()
+                if "(None)" not in line_path:
+                    base_path = None
+                    if config.json_key_store_installdir in game_info:
+                        base_path = game_info[config.json_key_store_installdir]
+                    game_info[config.json_key_store_paths] = [
+                        storebase.TranslateStorePath(line_path, base_path)
+                    ]
 
         # Return game info
         return game_info

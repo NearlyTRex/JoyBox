@@ -249,13 +249,10 @@ class Steam(storebase.StoreBase):
                                 # Get base path
                                 base_path = None
                                 if config.json_key_store_installdir in game_info:
-                                    base_path = "%s/steamapps/common/%s" % (
-                                        config.token_store_install_dir,
-                                        game_info[config.json_key_store_installdir]
-                                    )
+                                    base_path = "steamapps/common/%s" % game_info[config.json_key_store_installdir]
 
                                 # Save path
-                                game_paths.add(self.TranslateManifestPath(path_location, base_path))
+                                game_paths.add(storebase.TranslateStorePath(path_location, base_path))
 
                 # Examine manifest registry data
                 if "registry" in manifest_data:

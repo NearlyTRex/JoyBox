@@ -9,6 +9,47 @@ import saves
 import jsondata
 from tools import ludusavimanifest
 
+# Translate store path
+def TranslateStorePath(path, base_path = None):
+
+    # Replace tokens
+    new_path = path
+    new_path = new_path.replace("{EpicID}", "<storeUserId>")
+    new_path = new_path.replace("{EpicId}", "<storeUserId>")
+    new_path = new_path.replace("{UserDir}", "<home>")
+    new_path = new_path.replace("{InstallDir}", "<base>")
+    new_path = new_path.replace("{UserSavedGames}", "<home>/Saved Games")
+    new_path = new_path.replace("{AppData}/../Roaming", "<winAppData>")
+    new_path = new_path.replace("{AppData}/../Roaming".lower(), "<winAppData>")
+    new_path = new_path.replace("{AppData}/../LocalLow", "<winAppDataLocalLow>")
+    new_path = new_path.replace("{AppData}/../LocalLow".lower(), "<winAppDataLocalLow>")
+    new_path = new_path.replace("{AppData}", "<winLocalAppData>")
+    new_path = new_path.replace("<storeUserId>", config.token_store_user_id)
+    new_path = new_path.replace("<winPublic>", config.token_user_public_dir)
+    new_path = new_path.replace("<winDir>", "%s/AppData/Local/VirtualStore" % config.token_user_profile_dir)
+    new_path = new_path.replace("<winAppData>", "%s/AppData/Roaming" % config.token_user_profile_dir)
+    new_path = new_path.replace("<winAppDataLocalLow>", "%s/AppData/LocalLow" % config.token_user_profile_dir)
+    new_path = new_path.replace("<winLocalAppData>", "%s/AppData/Local" % config.token_user_profile_dir)
+    new_path = new_path.replace("<winProgramData>", "%s/AppData/Local/VirtualStore" % config.token_user_profile_dir)
+    new_path = new_path.replace("<winDocuments>", "%s/Documents" % config.token_user_profile_dir)
+    new_path = new_path.replace("<home>", config.token_user_profile_dir)
+    new_path = new_path.replace("<root>", config.token_store_install_dir)
+    if system.IsPathValid(base_path):
+        new_path = new_path.replace("<base>", "%s/%s" % (config.token_store_install_dir, base_path))
+    else:
+        new_path = new_path.replace("<base>", config.token_store_install_dir)
+
+    # Replace wildcards
+    if "/**/" in new_path:
+        for new_path_part in new_path.split("/**/"):
+            new_path = new_path_part
+            break
+    if "*" in system.GetFilenameFile(new_path):
+        new_path = system.GetFilenameDirectory(new_path)
+
+    # Return path
+    return system.NormalizeFilePath(new_path)
+
 # Base store
 class StoreBase:
 
@@ -36,35 +77,6 @@ class StoreBase:
             src = ludusavimanifest.GetManifest(),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-
-    # Translate manifest path
-    def TranslateManifestPath(self, path, base_path = None):
-
-        # Replace tokens
-        new_path = path
-        new_path = new_path.replace("<storeUserId>", config.token_store_user_id)
-        new_path = new_path.replace("<winPublic>", config.token_user_public_dir)
-        new_path = new_path.replace("<winDir>", "%s/AppData/Local/VirtualStore" % config.token_user_profile_dir)
-        new_path = new_path.replace("<winAppData>", "%s/AppData/Roaming" % config.token_user_profile_dir)
-        new_path = new_path.replace("<winAppDataLocalLow>", "%s/AppData/LocalLow" % config.token_user_profile_dir)
-        new_path = new_path.replace("<winLocalAppData>", "%s/AppData/Local" % config.token_user_profile_dir)
-        new_path = new_path.replace("<winProgramData>", "%s/AppData/Local/VirtualStore" % config.token_user_profile_dir)
-        new_path = new_path.replace("<winDocuments>", "%s/Documents" % config.token_user_profile_dir)
-        new_path = new_path.replace("<home>", config.token_user_profile_dir)
-        new_path = new_path.replace("<root>", config.token_store_install_dir)
-        if system.IsPathValid(base_path):
-            new_path = new_path.replace("<base>", base_path)
-
-        # Replace wildcards
-        if "/**/" in new_path:
-            for new_path_part in new_path.split("/**/"):
-                new_path = new_path_part
-                break
-        if "*" in system.GetFilenameFile(new_path):
-            new_path = system.GetFilenameDirectory(new_path)
-
-        # Return path
-        return new_path
 
     ############################################################
 

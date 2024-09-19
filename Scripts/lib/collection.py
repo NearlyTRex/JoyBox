@@ -116,13 +116,16 @@ def CreateGameJsonFile(
             })
         elif file_subcategory == config.game_subcategory_epic_games:
             json_obj.SetJsonValue(config.json_key_epic, {
-                config.json_key_store_appid: "",
                 config.json_key_store_appname: ""
             })
         elif file_subcategory == config.game_subcategory_gog:
             json_obj.SetJsonValue(config.json_key_gog, {
                 config.json_key_store_appid: "",
                 config.json_key_store_appname: ""
+            })
+        elif file_subcategory == config.game_subcategory_itchio:
+            json_obj.SetJsonValue(config.json_key_itchio, {
+                config.json_key_store_appurl: ""
             })
         elif file_subcategory == config.game_subcategory_steam:
             json_obj.SetJsonValue(config.json_key_steam, {

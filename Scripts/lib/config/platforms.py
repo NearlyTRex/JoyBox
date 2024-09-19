@@ -93,6 +93,10 @@ computer_amazon_games[keys.platform_key_autofill_json] = [
 ]
 computer_amazon_games[keys.platform_key_fillonce_json] = [
     keys.json_key_amazon,
+    keys.json_key_store_appid,
+    keys.json_key_store_appname,
+    keys.json_key_store_appurl,
+    keys.json_key_store_branchid,
     keys.json_key_store_paths,
     keys.json_key_store_keys
 ]
@@ -143,6 +147,10 @@ computer_epic_games[keys.platform_key_autofill_json] = [
 ]
 computer_epic_games[keys.platform_key_fillonce_json] = [
     keys.json_key_epic,
+    keys.json_key_store_appid,
+    keys.json_key_store_appname,
+    keys.json_key_store_appurl,
+    keys.json_key_store_branchid,
     keys.json_key_store_paths,
     keys.json_key_store_keys
 ]
@@ -173,6 +181,10 @@ computer_gog[keys.platform_key_autofill_json] = [
 ]
 computer_gog[keys.platform_key_fillonce_json] = [
     keys.json_key_gog,
+    keys.json_key_store_appid,
+    keys.json_key_store_appname,
+    keys.json_key_store_appurl,
+    keys.json_key_store_branchid,
     keys.json_key_store_paths,
     keys.json_key_store_keys
 ]
@@ -215,9 +227,22 @@ computer_itchio[keys.platform_key_autofill_json] = [
     keys.json_key_extra,
     keys.json_key_dependencies,
     keys.json_key_installer_exe,
-    keys.json_key_transform_file
+    keys.json_key_transform_file,
+    keys.json_key_store_builddate,
+    keys.json_key_store_buildid,
+    keys.json_key_store_name,
+    keys.json_key_store_controller_support,
+    keys.json_key_store_installdir
 ]
-computer_itchio[keys.platform_key_fillonce_json] = []
+computer_itchio[keys.platform_key_fillonce_json] = [
+    keys.json_key_itchio,
+    keys.json_key_store_appid,
+    keys.json_key_store_appname,
+    keys.json_key_store_appurl,
+    keys.json_key_store_branchid,
+    keys.json_key_store_paths,
+    keys.json_key_store_keys
+]
 platforms[platform_computer_itchio] = computer_itchio
 
 ###########################################################
@@ -308,6 +333,10 @@ computer_steam[keys.platform_key_autofill_json] = [
 ]
 computer_steam[keys.platform_key_fillonce_json] = [
     keys.json_key_steam,
+    keys.json_key_store_appid,
+    keys.json_key_store_appname,
+    keys.json_key_store_appurl,
+    keys.json_key_store_branchid,
     keys.json_key_store_paths,
     keys.json_key_store_keys
 ]

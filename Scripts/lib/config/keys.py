@@ -136,6 +136,7 @@ json_key_serials = "serials"
 json_key_amazon = "amazon"
 json_key_epic = "epic"
 json_key_gog = "gog"
+json_key_itchio = "itchio"
 json_key_steam = "steam"
 json_key_store_appid = "appid"
 json_key_store_appname = "appname"
@@ -157,6 +158,7 @@ json_keys_store = [
     json_key_amazon,
     json_key_epic,
     json_key_gog,
+    json_key_itchio,
     json_key_steam
 ]
 json_keys_store_subdata = [
