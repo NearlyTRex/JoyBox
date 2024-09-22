@@ -31,11 +31,32 @@ def GetRemoteConnectionPath(remote_name, remote_type, remote_path):
 
 # Get common remote flags
 def GetCommonRemoteFlags(remote_name, remote_type):
+    flags = [
+        "--fast-list",
+        "--track-renames",
+        "--tpslimit", "10",
+        "--transfers", "1",
+        "--order-by", "size,ascending",
+    ]
     if remote_type == config.sync_type_gdrive:
-        return ["--drive-acknowledge-abuse"]
-    elif remote_type == config.sync_type_b2:
-        return ["--fast-list"]
-    return []
+        flags += [
+            "--drive-acknowledge-abuse",
+            "--drive-stop-on-upload-limit",
+            "--drive-stop-on-download-limit",
+            "--drive-chunk-size", "256M"
+        ]
+    return flags
+
+# Get exclude flags
+def GetExcludeFlags(excludes):
+    flags = []
+    if isinstance(excludes, list):
+        for exclude in excludes:
+            if len(exclude) > 0:
+                flags += ["--exclude", exclude]
+    elif isinstance(excludes, str) and len(excludes) > 0:
+        flags += ["--exclude", excludes]
+    return flags
 
 # Setup autoconnect remote
 def SetupAutoconnectRemote(
@@ -229,6 +250,7 @@ def DownloadFilesFromRemote(
     remote_type,
     remote_path,
     local_path,
+    excludes = None,
     interactive = False,
     verbose = False,
     pretend_run = False,
@@ -251,6 +273,7 @@ def DownloadFilesFromRemote(
         "--create-empty-src-dirs"
     ]
     copy_cmd += GetCommonRemoteFlags(remote_name, remote_type)
+    copy_cmd += GetExcludeFlags(excludes)
     if pretend_run:
         copy_cmd += ["--dry-run"]
     if interactive:
@@ -274,6 +297,7 @@ def UploadFilesToRemote(
     remote_type,
     remote_path,
     local_path,
+    excludes = None,
     interactive = False,
     verbose = False,
     pretend_run = False,
@@ -296,6 +320,7 @@ def UploadFilesToRemote(
         "--create-empty-src-dirs"
     ]
     copy_cmd += GetCommonRemoteFlags(remote_name, remote_type)
+    copy_cmd += GetExcludeFlags(excludes)
     if pretend_run:
         copy_cmd += ["--dry-run"]
     if interactive:
@@ -319,6 +344,7 @@ def SyncFilesFromRemote(
     remote_type,
     remote_path,
     local_path,
+    excludes = None,
     interactive = False,
     verbose = False,
     pretend_run = False,
@@ -341,6 +367,7 @@ def SyncFilesFromRemote(
         "--create-empty-src-dirs"
     ]
     sync_cmd += GetCommonRemoteFlags(remote_name, remote_type)
+    sync_cmd += GetExcludeFlags(excludes)
     if pretend_run:
         sync_cmd += ["--dry-run"]
     if interactive:
@@ -364,6 +391,7 @@ def SyncFilesToRemote(
     remote_type,
     remote_path,
     local_path,
+    excludes = None,
     interactive = False,
     verbose = False,
     pretend_run = False,
@@ -386,6 +414,7 @@ def SyncFilesToRemote(
         "--create-empty-src-dirs"
     ]
     sync_cmd += GetCommonRemoteFlags(remote_name, remote_type)
+    sync_cmd += GetExcludeFlags(excludes)
     if pretend_run:
         sync_cmd += ["--dry-run"]
     if interactive:
@@ -409,6 +438,7 @@ def SyncFilesBothWays(
     remote_type,
     remote_path,
     local_path,
+    excludes = None,
     resync = False,
     interactive = False,
     verbose = False,
@@ -433,6 +463,7 @@ def SyncFilesBothWays(
         "--create-empty-src-dirs"
     ]
     bisync_cmd += GetCommonRemoteFlags(remote_name, remote_type)
+    bisync_cmd += GetExcludeFlags(excludes)
     if resync:
         bisync_cmd += ["--resync"]
     if pretend_run:
@@ -458,6 +489,7 @@ def CheckFiles(
     remote_type,
     remote_path,
     local_path,
+    excludes = None,
     diff_combined_path = None,
     diff_intersected_path = None,
     diff_missing_src_path = None,
@@ -483,6 +515,7 @@ def CheckFiles(
         GetRemoteConnectionPath(remote_name, remote_type, remote_path)
     ]
     check_cmd += GetCommonRemoteFlags(remote_name, remote_type)
+    check_cmd += GetExcludeFlags(excludes)
     if system.IsPathValid(diff_combined_path):
         check_cmd += ["--combined", diff_combined_path]
     if system.IsPathValid(diff_intersected_path):

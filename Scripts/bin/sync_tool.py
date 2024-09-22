@@ -31,6 +31,7 @@ parser.add_argument("-a", "--action",
     ],
     default="init", help="Sync action"
 )
+parser.add_argument("--excludes", type=str, default="", help="Excludes (comma delimited)")
 parser.add_argument("--diff_combined_path", type=str, default="diff_combined.txt", help="Diff path (combined)")
 parser.add_argument("--diff_intersected_path", type=str, default="diff_intersected.txt", help="Diff path (intersection)")
 parser.add_argument("--diff_missing_src_path", type=str, default="diff_missing_src.txt", help="Diff path (missing src)")
@@ -73,6 +74,7 @@ def main():
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
+            excludes = args.excludes.split(","),
             interactive = args.interactive,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -85,6 +87,7 @@ def main():
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
+            excludes = args.excludes.split(","),
             interactive = args.interactive,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -97,6 +100,7 @@ def main():
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
+            excludes = args.excludes.split(","),
             interactive = args.interactive,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -109,6 +113,7 @@ def main():
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
+            excludes = args.excludes.split(","),
             interactive = args.interactive,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -121,6 +126,7 @@ def main():
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
+            excludes = args.excludes.split(","),
             resync = args.resync,
             interactive = args.interactive,
             verbose = args.verbose,
@@ -134,6 +140,7 @@ def main():
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
+            excludes = args.excludes.split(","),
             diff_combined_path = args.diff_combined_path,
             diff_intersected_path = args.diff_intersected_path,
             diff_missing_src_path = args.diff_missing_src_path,
