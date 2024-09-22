@@ -1078,10 +1078,11 @@ def CollectMetadataFromItchio(
     raw_game_information = webpage.GetElementText(section_game_information)
 
     # Click the "More information" button if it's present
-    if "More information" in raw_game_information:
-        element_game_info_more = webpage.GetElement(web_driver, link_text = "More information")
-        if element_game_info_more:
-            webpage.ClickElement(element_game_info_more)
+    if raw_game_information:
+        if "More information" in raw_game_information:
+            element_game_info_more = webpage.GetElement(web_driver, link_text = "More information")
+            if element_game_info_more:
+                webpage.ClickElement(element_game_info_more)
 
     # Wait for more information to load
     time.sleep(3)
