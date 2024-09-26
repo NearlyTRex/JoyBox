@@ -376,6 +376,10 @@ def GetJsonMetadataRootDir():
 def GetJsonRomsMetadataRootDir():
     return os.path.join(GetJsonMetadataRootDir(), config.game_supercategory_roms)
 
+# Get json rom metadata dir
+def GetJsonRomMetadataDir(game_category, game_subcategory):
+    return os.path.join(GetJsonRomsMetadataRootDir(), game_category, game_subcategory)
+
 # Get json rom metadata file
 def GetJsonRomMetadataFile(game_category, game_subcategory, game_name):
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)

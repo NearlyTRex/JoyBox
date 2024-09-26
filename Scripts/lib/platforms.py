@@ -16,18 +16,20 @@ def GetPlatforms():
 
 # Check if platform is valid
 def IsPlatformValid(platform_name):
-    return platform_name in config.platforms
+    if platform_name:
+        return platform_name in config.platforms
+    return False
 
 # Get platform section
 def GetPlatformSection(platform_name):
-    if platform_name in config.platforms:
+    if platform_name and platform_name in config.platforms:
         return config.platforms[platform_name]
     return None
 
 # Get platform value
 def GetPlatformValue(platform_name, platform_value):
-    if platform_name in config.platforms:
-        if platform_value in config.platforms[platform_name]:
+    if platform_name and platform_name in config.platforms:
+        if platform_value and platform_value in config.platforms[platform_name]:
             return config.platforms[platform_name][platform_value]
     return None
 
@@ -35,11 +37,15 @@ def GetPlatformValue(platform_name, platform_value):
 
 # Check if transform platform
 def IsTransformPlatform(platform_name):
-    return platform_name in config.transform_platforms
+    if platform_name:
+        return platform_name in config.transform_platforms
+    return False
 
 # Check if letter platform
 def IsLetterPlatform(platform_name):
-    return platform_name in config.letter_platforms
+    if platform_name:
+        return platform_name in config.letter_platforms
+    return False
 
 ###########################################################
 

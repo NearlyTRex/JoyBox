@@ -492,14 +492,27 @@ def FindAllGameNames(base_dir, game_category, game_subcategory):
 # Derive regular name from game name
 def DeriveRegularNameFromGameName(game_name):
     regular_name = game_name
-    if ", The " in regular_name:
-        regular_name = regular_name.replace(", The ", " ")
-        regular_name = "The " + regular_name
-    if ", A " in regular_name:
-        regular_name = regular_name.replace(", A ", " ")
-        regular_name = "A " + regular_name
+    for flippable_word in config.flippable_words:
+        segment_before = f", {flippable_word} "
+        segment_after = f"{flippable_word} "
+        if segment_before in regular_name:
+            regular_name = regular_name.replace(segment_before, " ")
+            regular_name = segment_after + regular_name
     regular_name = re.sub(r"\((.*?)\)", "", regular_name).strip()
     return regular_name
+
+# Derive game name from regular name
+def DeriveGameNameFromRegularName(regular_name, region = "USA"):
+    game_name = regular_name
+    game_name = game_name.replace(":", " -")
+    game_name = system.ReplaceInvalidPathCharacters(game_name)
+    for flippable_word in config.flippable_words:
+        segment_before = f"{flippable_word} "
+        segment_after = f", {flippable_word} "
+        if game_name.startswith(segment_before):
+            game_name = game_name.replace(segment_before, "")
+            game_name = game_name + segment_after
+    return f"{game_name} ({region})"
 
 # Derive game letter from name
 def DeriveGameLetterFromName(game_name):
