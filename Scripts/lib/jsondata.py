@@ -15,6 +15,16 @@ class JsonData:
 
     # Set json value
     def SetJsonValue(self, json_key, json_value):
+        self.json_data[json_key] = json_value
+
+    # Get json value
+    def GetJsonValue(self, json_key, default_value = None):
+        if json_key in self.json_data:
+            return self.json_data[json_key]
+        return default_value
+
+    # Fill json value
+    def FillJsonValue(self, json_key, json_value):
         if platforms.IsAutoFillJsonKey(self.json_platform, json_key):
             self.json_data[json_key] = json_value
         elif platforms.IsFillOnceJsonKey(self.json_platform, json_key):

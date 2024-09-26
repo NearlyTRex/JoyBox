@@ -8,6 +8,7 @@ import environment
 import gameinfo
 import platforms
 import system
+import metadata
 import cryption
 import jsondata
 
@@ -17,6 +18,7 @@ def CreateGameJsonFile(
     file_subcategory,
     file_title,
     file_root = None,
+    initial_data = None,
     passphrase = None,
     verbose = False,
     exit_on_failure = False):
@@ -34,6 +36,8 @@ def CreateGameJsonFile(
 
     # Build json data
     json_file_data = {}
+    if isinstance(initial_data, dict):
+        json_file_data = initial_data
 
     # Already existing json file
     if os.path.exists(json_file_path):
@@ -99,46 +103,46 @@ def CreateGameJsonFile(
     json_obj = jsondata.JsonData(json_file_data, file_platform)
 
     # Set common keys
-    json_obj.SetJsonValue(config.json_key_files, rebased_files)
-    json_obj.SetJsonValue(config.json_key_dlc, all_dlc)
-    json_obj.SetJsonValue(config.json_key_update, all_updates)
-    json_obj.SetJsonValue(config.json_key_extra, all_extras)
-    json_obj.SetJsonValue(config.json_key_dependencies, all_dependencies)
-    json_obj.SetJsonValue(config.json_key_transform_file, best_game_file)
+    json_obj.FillJsonValue(config.json_key_files, rebased_files)
+    json_obj.FillJsonValue(config.json_key_dlc, all_dlc)
+    json_obj.FillJsonValue(config.json_key_update, all_updates)
+    json_obj.FillJsonValue(config.json_key_extra, all_extras)
+    json_obj.FillJsonValue(config.json_key_dependencies, all_dependencies)
+    json_obj.FillJsonValue(config.json_key_transform_file, best_game_file)
 
     # Set computer keys
     if file_category == config.game_category_computer:
-        json_obj.SetJsonValue(config.json_key_installer_exe, computer_installers)
+        json_obj.FillJsonValue(config.json_key_installer_exe, computer_installers)
         if file_subcategory == config.game_subcategory_amazon_games:
-            json_obj.SetJsonValue(config.json_key_amazon, {
+            json_obj.FillJsonValue(config.json_key_amazon, {
                 config.json_key_store_appid: "",
                 config.json_key_store_name: ""
             })
         elif file_subcategory == config.game_subcategory_epic_games:
-            json_obj.SetJsonValue(config.json_key_epic, {
+            json_obj.FillJsonValue(config.json_key_epic, {
                 config.json_key_store_appname: ""
             })
         elif file_subcategory == config.game_subcategory_gog:
-            json_obj.SetJsonValue(config.json_key_gog, {
+            json_obj.FillJsonValue(config.json_key_gog, {
                 config.json_key_store_appid: "",
                 config.json_key_store_appname: ""
             })
         elif file_subcategory == config.game_subcategory_itchio:
-            json_obj.SetJsonValue(config.json_key_itchio, {
+            json_obj.FillJsonValue(config.json_key_itchio, {
                 config.json_key_store_appid: "",
                 config.json_key_store_appurl: "",
                 config.json_key_store_name: ""
             })
         elif file_subcategory == config.game_subcategory_steam:
-            json_obj.SetJsonValue(config.json_key_steam, {
+            json_obj.FillJsonValue(config.json_key_steam, {
                 config.json_key_store_appid: "",
                 config.json_key_store_branchid: "public"
             })
 
     # Set other platform keys
     else:
-        json_obj.SetJsonValue(config.json_key_launch_name, "REPLACEME")
-        json_obj.SetJsonValue(config.json_key_launch_file, best_game_file)
+        json_obj.FillJsonValue(config.json_key_launch_name, "REPLACEME")
+        json_obj.FillJsonValue(config.json_key_launch_file, best_game_file)
 
     # Create json directory
     success = system.MakeDirectory(
@@ -184,4 +188,57 @@ def CreateGameJsonFiles(
             exit_on_failure = exit_on_failure)
         if not success:
             return False
+    return True
+
+# Add metadata entry
+def AddMetadataEntry(
+    file_category,
+    file_subcategory,
+    file_name,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Find metadata file
+    metadata_file = environment.GetMetadataFile(file_category, file_subcategory)
+    if not metadata_file:
+        return False
+
+    # Load metadata file
+    metadata_obj = metadata.Metadata()
+    metadata_obj.import_from_metadata_file(
+        metadata_file = metadata_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+    # Derive game data
+    file_platform = gameinfo.DeriveGamePlatformFromCategories(file_category, file_subcategory)
+    file_json_file = environment.GetJsonRomMetadataFile(file_category, file_subcategory, file_name)
+    file_boxfront = gameinfo.DeriveGameAssetPathFromName(file_name, config.asset_type_boxfront)
+    file_boxback = gameinfo.DeriveGameAssetPathFromName(file_name, config.asset_type_boxback)
+    file_background = gameinfo.DeriveGameAssetPathFromName(file_name, config.asset_type_background)
+    file_screenshot = gameinfo.DeriveGameAssetPathFromName(file_name, config.asset_type_screenshot)
+    file_video = gameinfo.DeriveGameAssetPathFromName(file_name, config.asset_type_video)
+
+    # Create new entry
+    new_entry = metadata.MetadataEntry()
+    new_entry.set_game(file_name)
+    new_entry.set_platform(file_platform)
+    new_entry.set_file(file_json_file)
+    new_entry.set_boxfront(file_boxfront)
+    new_entry.set_boxback(file_boxback)
+    new_entry.set_background(file_background)
+    new_entry.set_screenshot(file_screenshot)
+    new_entry.set_players("1")
+    new_entry.set_coop("No")
+    new_entry.set_playable("Yes")
+
+    # Add new entry
+    metadata_obj.add_game(new_entry)
+
+    # Write metadata file
+    metadata_obj.export_to_metadata_file(
+        metadata_file = metadata_file,
+        append_existing = False,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
     return True
