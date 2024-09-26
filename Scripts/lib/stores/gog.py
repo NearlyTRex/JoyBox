@@ -38,6 +38,18 @@ class GOG(storebase.StoreBase):
     def GetName(self):
         return "GOG"
 
+    # Get platform
+    def GetPlatform(self):
+        return config.platform_computer_gog
+
+    # Get category
+    def GetCategory(self):
+        return config.game_category_computer
+
+    # Get subcategory
+    def GetSubcategory(self):
+        return config.game_subcategory_gog
+
     # Get key
     def GetKey(self):
         return config.json_key_gog
@@ -71,6 +83,15 @@ class GOG(storebase.StoreBase):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         return (code == 0)
+
+    ############################################################
+
+    # Get purchases
+    def GetPurchases(
+        self,
+        verbose = False,
+        exit_on_failure = False):
+        return []
 
     ############################################################
 

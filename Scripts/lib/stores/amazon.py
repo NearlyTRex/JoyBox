@@ -11,6 +11,7 @@ import programs
 import system
 import hashing
 import storebase
+import jsondata
 
 # Amazon store
 class Amazon(storebase.StoreBase):
@@ -22,6 +23,18 @@ class Amazon(storebase.StoreBase):
     # Get name
     def GetName(self):
         return "Amazon"
+
+    # Get platform
+    def GetPlatform(self):
+        return config.platform_computer_amazon_games
+
+    # Get category
+    def GetCategory(self):
+        return config.game_category_computer
+
+    # Get subcategory
+    def GetSubcategory(self):
+        return config.game_subcategory_amazon_games
 
     # Get key
     def GetKey(self):
@@ -83,6 +96,101 @@ class Amazon(storebase.StoreBase):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         return (code == 0)
+
+    ############################################################
+
+    # Get purchases
+    def GetPurchases(
+        self,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Get tool
+        python_tool = None
+        if programs.IsToolInstalled("PythonVenvPython"):
+            python_tool = programs.GetToolProgram("PythonVenvPython")
+        if not python_tool:
+            system.LogError("PythonVenvPython was not found")
+            return False
+
+        # Get script
+        nile_script = None
+        if programs.IsToolInstalled("Nile"):
+            nile_script = programs.GetToolProgram("Nile")
+        if not nile_script:
+            system.LogError("Nile was not found")
+            return False
+
+        # Get refresh command
+        refresh_cmd = [
+            python_tool,
+            nile_script,
+            "--quiet",
+            "auth",
+            "--refresh"
+        ]
+
+        # Run refresh command
+        code = command.RunBlockingCommand(
+            cmd = refresh_cmd,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if (code != 0):
+            return False
+
+        # Get sync command
+        sync_cmd = [
+            python_tool,
+            nile_script,
+            "--quiet",
+            "library",
+            "sync"
+        ]
+
+        # Run sync command
+        code = command.RunBlockingCommand(
+            cmd = sync_cmd,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if (code != 0):
+            return False
+
+        # Get list command
+        list_cmd = [
+            python_tool,
+            nile_script,
+            "library",
+            "list"
+        ]
+
+        # Run list command
+        list_output = command.RunOutputCommand(
+            cmd = list_cmd,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if len(list_output) == 0:
+            system.LogError("Unable to find amazon purchases")
+            return False
+
+        # Parse output
+        purchases = []
+        for line in list_output.split("\n"):
+            line = system.RemoveAnsiEscapeSequences(line)
+            line = line.replace("(INSTALLED) ", "")
+            tokens = line.split(" GENRES: ")
+            if len(tokens) != 2:
+                continue
+            line = tokens[0]
+            tokens = line.split(" ID: ")
+            if len(tokens) != 2:
+                continue
+            purchase = jsondata.JsonData(
+                json_data = {},
+                json_platform = self.GetPlatform())
+            purchase.SetJsonValue(config.json_key_store_name, tokens[0].strip())
+            purchase.SetJsonValue(config.json_key_store_appid, tokens[1].strip())
+            purchases.append(purchase)
+        return purchases
 
     ############################################################
 
