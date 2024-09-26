@@ -193,6 +193,11 @@ def CleanRichTextString(string):
     new_string = new_string.encode("ascii", "ignore").decode()
     return new_string
 
+# Remove ansi escape sequences
+def RemoveAnsiEscapeSequences(string):
+    pattern = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    return pattern.sub("", string)
+
 ###########################################################
 
 # Log message
@@ -250,6 +255,24 @@ def LogSuccess(message):
 # Log percent complete
 def LogPercentComplete(percent_complete):
     print(">>> Percent complete: %s%% " % percent_complete, end='\r', flush=True)
+
+###########################################################
+
+# Display table
+def DisplayTable(table_data):
+    try:
+        import texttable
+        table = texttable.Texttable()
+        table.set_max_width(0)
+        for index, entry in enumerate(table_data):
+            if index == 0:
+                table.header(entry.keys())
+            table.add_row(entry.values())
+        Log(table.draw())
+        return True
+    except Exception as e:
+        LogError(e)
+        return False
 
 ###########################################################
 
@@ -311,6 +334,31 @@ def IsDriveLetterValid(drive_letter):
     if not drive_letter or not isinstance(drive_letter, str) or len(drive_letter) == 0:
         return False
     return drive_letter.isalpha()
+
+# Replace invalid path characters
+def ReplaceInvalidPathCharacters(path):
+
+    # Printable characters
+    new_path = path
+    new_path = new_path.replace("<", "")
+    new_path = new_path.replace(">", "")
+    new_path = new_path.replace(":", "")
+    new_path = new_path.replace("\"", "")
+    new_path = new_path.replace("/", "")
+    new_path = new_path.replace("\\", "")
+    new_path = new_path.replace("|", "")
+    new_path = new_path.replace("?", "")
+    new_path = new_path.replace("*", "")
+
+    # Non-printable characters
+    for i in range(0, 32):
+        new_path = new_path.replace(chr(i), "")
+
+    # Trailing space or dot
+    new_path = new_path.rstrip(" .")
+
+    # Return new path
+    return new_path
 
 ###########################################################
 
