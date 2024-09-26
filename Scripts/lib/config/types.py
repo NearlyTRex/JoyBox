@@ -39,6 +39,23 @@ source_types = [
     source_type_remote
 ]
 
+# Source file types
+source_file_type_input = "input"
+source_file_type_stored = "stored"
+source_file_types = [
+    source_file_type_input,
+    source_file_type_stored
+]
+
+# Json generation types
+json_generation_type_custom = "custom"
+json_generation_type_standard = "standard"
+json_generation_type_store = "store"
+json_generation_types = [
+    json_generation_type_custom,
+    json_generation_type_standard
+]
+
 # Steam id formats
 steam_id_format_64 = "steamid64"
 steam_id_format_3l = "steamid3l"
@@ -209,20 +226,26 @@ store_types = [
 
 # Store action types
 store_action_type_login = "login"
-store_action_type_install = "install"
-store_action_type_launch = "launch"
-store_action_type_download = "download"
-store_action_type_update = "update"
-store_action_type_check = "check"
-store_action_type_export = "export"
-store_action_type_import = "import"
+store_action_type_display_purchases = "display_purchases"
+store_action_type_import_purchases = "import_purchases"
+store_action_type_install_game = "install_game"
+store_action_type_launch_game = "launch_game"
+store_action_type_download_game = "download_game"
+store_action_type_update_json = "update_json"
+store_action_type_check_versions = "check_versions"
+store_action_type_export_saves = "export_saves"
+store_action_type_import_saves = "import_saves"
 store_action_types = [
     store_action_type_login,
-    store_action_type_download,
-    store_action_type_update,
-    store_action_type_check,
-    store_action_type_export,
-    store_action_type_import
+    store_action_type_display_purchases,
+    store_action_type_import_purchases,
+    store_action_type_install_game,
+    store_action_type_launch_game,
+    store_action_type_download_game,
+    store_action_type_update_json,
+    store_action_type_check_versions,
+    store_action_type_export_saves,
+    store_action_type_import_saves
 ]
 
 # Store identifier types

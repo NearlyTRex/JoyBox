@@ -161,6 +161,11 @@ json_keys_store = [
     json_key_itchio,
     json_key_steam
 ]
+json_keys_store_appdata = [
+    json_key_store_appid,
+    json_key_store_appname,
+    json_key_store_appurl
+]
 json_keys_store_subdata = [
     json_key_store_appid,
     json_key_store_appname,

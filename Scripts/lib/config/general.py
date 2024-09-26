@@ -228,3 +228,10 @@ appdata_variants = {
         "/Local Settings/Application Data/"
     ]
 }
+
+# Flippable words
+flippable_words = [
+    "The",
+    "A",
+    "An"
+]
