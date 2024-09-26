@@ -5,8 +5,11 @@ import sys
 # Local imports
 import config
 import system
+import environment
 import saves
+import gameinfo
 import jsondata
+import collection
 from tools import ludusavimanifest
 
 # Translate store path
@@ -61,6 +64,18 @@ class StoreBase:
     def GetName(self):
         return ""
 
+    # Get platform
+    def GetPlatform(self):
+        return ""
+
+    # Get category
+    def GetCategory(self):
+        return ""
+
+    # Get subcategory
+    def GetSubcategory(self):
+        return ""
+
     # Get key
     def GetKey(self):
         return ""
@@ -86,6 +101,93 @@ class StoreBase:
         verbose = False,
         exit_on_failure = False):
         return False
+
+    ############################################################
+
+    # Get purchases
+    def GetPurchases(
+        self,
+        verbose = False,
+        exit_on_failure = False):
+        return []
+
+    # Display purchases
+    def DisplayPurchases(
+        self,
+        verbose = False,
+        exit_on_failure = False):
+        return False
+
+    # Import purchases
+    def ImportPurchases(
+        self,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Get all purchases
+        purchases = self.GetPurchases(
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
+        # Import each purchase
+        for purchase in purchases:
+            purchase_identifiers = [
+                purchase.GetJsonValue(config.json_key_store_appid),
+                purchase.GetJsonValue(config.json_key_store_appname),
+                purchase.GetJsonValue(config.json_key_store_appurl)
+            ]
+            purchase_name = purchase.GetJsonValue(config.json_key_store_name)
+
+            # Check if json file already exists
+            found_file = self.FindJsonByIdentifiers(
+                identifiers = purchase_identifiers,
+                verbose = False,
+                exit_on_failure = exit_on_failure)
+            if found_file:
+                continue
+
+            # Determine if this should be imported
+            should_import = system.PromptForValue(f"Found new potential entry '{purchase_name}'. Import this?", default_value = "n")
+            if "n" in should_import.lower():
+                continue
+
+            # Prompt for entry name
+            default_name = gameinfo.DeriveGameNameFromRegularName(purchase_name)
+            entry_name = system.PromptForValue("Choose entry name", default_value = default_name)
+
+            # Create store data
+            store_data = {}
+            for json_key in config.json_keys_store_subdata:
+                if purchase.GetJsonValue(json_key):
+                    store_data[json_key] = purchase.GetJsonValue(json_key)
+
+            # Create initial json data
+            initial_data = {}
+            initial_data[self.GetKey()] = store_data
+
+            # Create json file
+            success = collection.CreateGameJsonFile(
+                file_category = self.GetCategory(),
+                file_subcategory = self.GetSubcategory(),
+                file_title = entry_name,
+                initial_data = initial_data,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+            # Add metadata entry
+            success = collection.AddMetadataEntry(
+                file_category = self.GetCategory(),
+                file_subcategory = self.GetSubcategory(),
+                file_name = entry_name,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+        # Should be successful
+        return True
 
     ############################################################
 
@@ -271,6 +373,32 @@ class StoreBase:
 
     ############################################################
 
+    # Find json by identifiers
+    def FindJsonByIdentifiers(
+        self,
+        identifiers,
+        verbose = False,
+        exit_on_failure = False):
+        json_files = system.BuildFileListByExtensions(
+            root = environment.GetJsonRomMetadataDir(self.GetCategory(), self.GetSubcategory()),
+            extensions = [".json"])
+        for json_file in json_files:
+            json_data = system.ReadJsonFile(
+                src = json_file,
+                exit_on_failure = exit_on_failure)
+            if self.GetKey() not in json_data:
+                continue
+            json_store_data = json_data[self.GetKey()]
+            for appdata_key in config.json_keys_store_appdata:
+                if appdata_key not in json_store_data:
+                    continue
+                for identifier in identifiers:
+                    if identifier and identifier == json_store_data[appdata_key]:
+                        return json_file
+        return None
+
+    ############################################################
+
     # Update json
     def UpdateJson(
         self,
@@ -284,12 +412,16 @@ class StoreBase:
             branch = game_info.get_store_branchid(self.GetKey()),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if not latest_info:
+            return False
 
         # Read json file
         json_data = system.ReadJsonFile(
             src = game_info.get_json_file(),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if not json_data:
+            return False
 
         # Create json data object
         json_obj = jsondata.JsonData(json_data[self.GetKey()], game_info.get_platform())
@@ -297,7 +429,7 @@ class StoreBase:
         # Set store info
         for json_subdata_key in config.json_keys_store_subdata:
             if json_subdata_key in latest_info:
-                json_obj.SetJsonValue(json_subdata_key, latest_info[json_subdata_key])
+                json_obj.FillJsonValue(json_subdata_key, latest_info[json_subdata_key])
 
         # Save store info
         json_data[self.GetKey()] = json_obj.GetJsonData()

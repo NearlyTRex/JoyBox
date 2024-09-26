@@ -27,7 +27,7 @@ parser.add_argument("-t", "--store_type",
 )
 parser.add_argument("-a", "--store_action",
     choices=config.store_action_types,
-    default=config.store_action_type_download,
+    default=config.store_action_type_login,
     help="Store action"
 )
 parser.add_argument("-s", "--skip_existing", action="store_true", help="Skip existing entries")
@@ -76,8 +76,20 @@ def main():
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
 
-    # Install
-    elif args.store_action == config.store_action_type_install:
+    # Display purchases
+    elif args.store_action == config.store_action_type_display_purchases:
+        store_obj.DisplayPurchases(
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
+
+    # Import purchases
+    elif args.store_action == config.store_action_type_import_purchases:
+        store_obj.ImportPurchases(
+            verbose = args.verbose,
+            exit_on_failure = args.exit_on_failure)
+
+    # Install game
+    elif args.store_action == config.store_action_type_install_game:
         for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
             game_info = gameinfo.GameInfo(
                 json_file = json_file,
@@ -90,8 +102,8 @@ def main():
             if not success:
                 system.LogErrorAndQuit("Install of '%s' failed!" % game_info.get_name())
 
-    # Launch
-    elif args.store_action == config.store_action_type_launch:
+    # Launch game
+    elif args.store_action == config.store_action_type_launch_game:
         for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
             game_info = gameinfo.GameInfo(
                 json_file = json_file,
@@ -103,8 +115,8 @@ def main():
                 exit_on_failure = args.exit_on_failure)
             break
 
-    # Download
-    elif args.store_action == config.store_action_type_download:
+    # Download game
+    elif args.store_action == config.store_action_type_download_game:
         for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
             game_info = gameinfo.GameInfo(
                 json_file = json_file,
@@ -120,8 +132,8 @@ def main():
             if not success:
                 system.LogErrorAndQuit("Install of '%s' failed!" % game_info.get_name())
 
-    # Update
-    elif args.store_action == config.store_action_type_update:
+    # Update json
+    elif args.store_action == config.store_action_type_update_json:
         for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
             game_info = gameinfo.GameInfo(
                 json_file = json_file,
@@ -134,8 +146,8 @@ def main():
             if not success:
                 system.LogErrorAndQuit("Update of '%s' failed!" % game_info.get_name())
 
-    # Check
-    elif args.store_action == config.store_action_type_check:
+    # Check versions
+    elif args.store_action == config.store_action_type_check_versions:
         for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
             game_info = gameinfo.GameInfo(
                 json_file = json_file,
@@ -149,8 +161,8 @@ def main():
                 if local_version != remote_version:
                     system.LogWarning("Game '%s' is out of date! Local = '%s', remote = '%s'" % (json_file, local_version, remote_version))
 
-    # Export
-    elif args.store_action == config.store_action_type_export:
+    # Export saves
+    elif args.store_action == config.store_action_type_export_saves:
         for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
             game_info = gameinfo.GameInfo(
                 json_file = json_file,
@@ -162,6 +174,20 @@ def main():
                 exit_on_failure = args.exit_on_failure)
             if not success:
                 system.LogErrorAndQuit("Export of '%s' failed!" % game_info.get_name())
+
+    # Import saves
+    elif args.store_action == config.store_action_type_import_saves:
+        for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
+            game_info = gameinfo.GameInfo(
+                json_file = json_file,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            success = store_obj.ImportSave(
+                game_info = game_info,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            if not success:
+                system.LogErrorAndQuit("Import of '%s' failed!" % game_info.get_name())
 
 # Start
 main()
