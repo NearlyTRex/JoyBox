@@ -10,8 +10,8 @@ import archive
 import programs
 import system
 import hashing
-import storebase
 import jsondata
+import storebase
 
 # Amazon store
 class Amazon(storebase.StoreBase):
@@ -39,6 +39,10 @@ class Amazon(storebase.StoreBase):
     # Get key
     def GetKey(self):
         return config.json_key_amazon
+
+    # Get identifier
+    def GetIdentifier(self, game_info, identifier_type):
+        return game_info.get_store_appid(self.GetKey())
 
     ############################################################
 
@@ -175,6 +179,8 @@ class Amazon(storebase.StoreBase):
         # Parse output
         purchases = []
         for line in list_output.split("\n"):
+
+            # Gather info
             line = system.RemoveAnsiEscapeSequences(line)
             line = line.replace("(INSTALLED) ", "")
             tokens = line.split(" GENRES: ")
@@ -184,11 +190,15 @@ class Amazon(storebase.StoreBase):
             tokens = line.split(" ID: ")
             if len(tokens) != 2:
                 continue
+            line_title = tokens[0].strip()
+            line_appid = tokens[1].strip()
+
+            # Create purchase
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.GetPlatform())
-            purchase.SetJsonValue(config.json_key_store_name, tokens[0].strip())
-            purchase.SetJsonValue(config.json_key_store_appid, tokens[1].strip())
+            purchase.SetJsonValue(config.json_key_store_name, line_title)
+            purchase.SetJsonValue(config.json_key_store_appid, line_appid)
             purchases.append(purchase)
         return purchases
 
@@ -257,12 +267,6 @@ class Amazon(storebase.StoreBase):
 
         # Return game info
         return game_info
-
-    ############################################################
-
-    # Get identifier
-    def GetIdentifier(self, game_info, identifier_type):
-        return game_info.get_store_appid(self.GetKey())
 
     ############################################################
 

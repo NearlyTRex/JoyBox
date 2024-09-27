@@ -9,6 +9,7 @@ import archive
 import programs
 import system
 import ini
+import jsondata
 import storebase
 
 # Epic store
@@ -47,6 +48,10 @@ class Epic(storebase.StoreBase):
     # Get key
     def GetKey(self):
         return config.json_key_epic
+
+    # Get identifier
+    def GetIdentifier(self, game_info, identifier_type):
+        return game_info.get_store_appname(self.GetKey())
 
     # Get user name
     def GetUserName(self):
@@ -101,7 +106,68 @@ class Epic(storebase.StoreBase):
         self,
         verbose = False,
         exit_on_failure = False):
-        return []
+
+        # Get tool
+        python_tool = None
+        if programs.IsToolInstalled("PythonVenvPython"):
+            python_tool = programs.GetToolProgram("PythonVenvPython")
+        if not python_tool:
+            system.LogError("PythonVenvPython was not found")
+            return False
+
+        # Get script
+        legendary_script = None
+        if programs.IsToolInstalled("Legendary"):
+            legendary_script = programs.GetToolProgram("Legendary")
+        if not legendary_script:
+            system.LogError("Legendary was not found")
+            return False
+
+        # Get list command
+        list_cmd = [
+            python_tool,
+            legendary_script,
+            "list"
+        ]
+
+        # Run list command
+        list_output = command.RunOutputCommand(
+            cmd = list_cmd,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if len(list_output) == 0:
+            system.LogError("Unable to find epic purchases")
+            return False
+
+        # Parse output
+        purchases = []
+        for line in list_output.split("\n"):
+
+            # Gather info
+            line = system.RemoveAnsiEscapeSequences(line)
+            if not line.startswith(" * "):
+                continue
+            tokens = line.split(" | Version: ")
+            if len(tokens) != 2:
+                continue
+            line = tokens[0]
+            line_version = tokens[1].rstrip(")")
+            tokens = line.split(" (App name: ")
+            if len(tokens) != 2:
+                continue
+            line = tokens[0]
+            line_appname = tokens[1]
+            line_title = tokens[0].lstrip(" *")
+
+            # Create purchase
+            purchase = jsondata.JsonData(
+                json_data = {},
+                json_platform = self.GetPlatform())
+            purchase.SetJsonValue(config.json_key_store_name, line_title)
+            purchase.SetJsonValue(config.json_key_store_appname, line_appname)
+            purchase.SetJsonValue(config.json_key_store_buildid, line_version)
+            purchases.append(purchase)
+        return purchases
 
     ############################################################
 
@@ -165,12 +231,6 @@ class Epic(storebase.StoreBase):
 
         # Return game info
         return game_info
-
-    ############################################################
-
-    # Get identifier
-    def GetIdentifier(self, game_info, identifier_type):
-        return game_info.get_store_appname(self.GetKey())
 
     ############################################################
 

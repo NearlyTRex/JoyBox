@@ -80,6 +80,26 @@ class StoreBase:
     def GetKey(self):
         return ""
 
+    # Get identifier
+    def GetIdentifier(self, game_info, identifier_type):
+        return ""
+
+    # Get info identifier
+    def GetInfoIdentifier(self, game_info):
+        return self.GetIdentifier(game_info, config.store_identifier_type_info)
+
+    # Get install identifier
+    def GetInstallIdentifier(self, game_info):
+        return self.GetIdentifier(game_info, config.store_identifier_type_install)
+
+    # Get launch identifier
+    def GetLaunchIdentifier(self, game_info):
+        return self.GetIdentifier(game_info, config.store_identifier_type_launch)
+
+    # Get download identifier
+    def GetDownloadIdentifier(self, game_info):
+        return self.GetIdentifier(game_info, config.store_identifier_type_download)
+
     # Is valid identifier
     def IsValidIdentifier(self, identifier):
         return isinstance(identifier, str) and len(identifier)
@@ -199,28 +219,6 @@ class StoreBase:
         verbose = False,
         exit_on_failure = False):
         return {}
-
-    ############################################################
-
-    # Get identifier
-    def GetIdentifier(self, game_info, identifier_type):
-        return ""
-
-    # Get info identifier
-    def GetInfoIdentifier(self, game_info):
-        return self.GetIdentifier(game_info, config.store_identifier_type_info)
-
-    # Get install identifier
-    def GetInstallIdentifier(self, game_info):
-        return self.GetIdentifier(game_info, config.store_identifier_type_install)
-
-    # Get launch identifier
-    def GetLaunchIdentifier(self, game_info):
-        return self.GetIdentifier(game_info, config.store_identifier_type_launch)
-
-    # Get download identifier
-    def GetDownloadIdentifier(self, game_info):
-        return self.GetIdentifier(game_info, config.store_identifier_type_download)
 
     ############################################################
 
