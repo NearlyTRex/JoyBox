@@ -217,6 +217,7 @@ apt_packages = [
     "libswscale-dev",
     "libsystemd-dev",
     "libtheora-dev",
+    "libtidy-dev",
     "libtinyxml2-dev",
     "libudev-dev",
     "libusb-1.0-0-dev",
