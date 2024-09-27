@@ -508,7 +508,7 @@ def DeriveGameNameFromRegularName(regular_name, region = "USA"):
     game_name = system.ReplaceInvalidPathCharacters(game_name)
     for flippable_word in config.flippable_words:
         segment_before = f"{flippable_word} "
-        segment_after = f", {flippable_word} "
+        segment_after = f", {flippable_word}"
         if game_name.startswith(segment_before):
             game_name = game_name.replace(segment_before, "")
             game_name = game_name + segment_after
