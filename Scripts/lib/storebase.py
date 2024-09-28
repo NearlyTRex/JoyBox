@@ -148,6 +148,8 @@ class StoreBase:
         purchases = self.GetPurchases(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if not purchases:
+            return False
 
         # Import each purchase
         for purchase in purchases:
