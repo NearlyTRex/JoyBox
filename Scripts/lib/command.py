@@ -196,6 +196,8 @@ class CommandOptions:
         output_paths = [],
         blocking_processes = [],
         creationflags = 0,
+        stdout = None,
+        stderr = None,
         include_stderr = False):
 
         # Core
@@ -229,6 +231,8 @@ class CommandOptions:
         self.output_paths = output_paths
         self.blocking_processes = blocking_processes
         self.creationflags = creationflags
+        self.stdout = stdout
+        self.stderr = stderr
         self.include_stderr = include_stderr
 
 ###########################################################
@@ -497,25 +501,26 @@ def RunReturncodeCommand(
                 PrintCommand(cmd)
             if options.shell:
                 cmd = CreateCommandString(cmd)
-            code = 0
-            if verbose:
-                code = subprocess.call(
-                    cmd,
-                    shell = options.shell,
-                    cwd = options.cwd,
-                    env = options.env,
-                    creationflags = options.creationflags)
-            else:
-                code = subprocess.call(
-                    cmd,
-                    shell = options.shell,
-                    cwd = options.cwd,
-                    env = options.env,
-                    creationflags = options.creationflags,
-                    stdout = open(os.devnull, "w"),
-                    stderr = subprocess.STDOUT)
+            stdout = options.stdout
+            stderr = options.stderr
+            if system.IsPathValid(options.stdout):
+                stdout = open(options.stdout, "w")
+            if system.IsPathValid(options.stderr):
+                stderr = open(options.stderr, "w")
+            code = subprocess.call(
+                cmd,
+                shell = options.shell,
+                cwd = options.cwd,
+                env = options.env,
+                creationflags = options.creationflags,
+                stdout = stdout,
+                stderr = stderr)
             if isinstance(options.blocking_processes, list) and len(options.blocking_processes) > 0:
                 environment.WaitForNamedProcesses(options.blocking_processes)
+            if system.IsPathValid(options.stdout):
+                stdout.close()
+            if system.IsPathValid(options.stderr):
+                stderr.close()
             if options.allow_processing:
                 PostprocessCommand(
                     cmd = cmd,
