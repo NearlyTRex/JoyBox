@@ -113,7 +113,7 @@ class Epic(storebase.StoreBase):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
             system.LogError("PythonVenvPython was not found")
-            return False
+            return None
 
         # Get script
         legendary_script = None
@@ -121,7 +121,7 @@ class Epic(storebase.StoreBase):
             legendary_script = programs.GetToolProgram("Legendary")
         if not legendary_script:
             system.LogError("Legendary was not found")
-            return False
+            return None
 
         # Get list command
         list_cmd = [
@@ -137,7 +137,7 @@ class Epic(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         if len(list_output) == 0:
             system.LogError("Unable to find epic purchases")
-            return False
+            return None
 
         # Parse output
         purchases = []
@@ -157,15 +157,15 @@ class Epic(storebase.StoreBase):
                 continue
             line = tokens[0]
             line_appname = tokens[1]
-            line_title = tokens[0].lstrip(" *")
+            line_name = tokens[0].lstrip(" *")
 
             # Create purchase
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.GetPlatform())
-            purchase.SetJsonValue(config.json_key_store_name, line_title)
             purchase.SetJsonValue(config.json_key_store_appname, line_appname)
             purchase.SetJsonValue(config.json_key_store_buildid, line_version)
+            purchase.SetJsonValue(config.json_key_store_name, line_title)
             purchases.append(purchase)
         return purchases
 

@@ -1,6 +1,7 @@
 # Imports
 import os, os.path
 import sys
+import json
 
 # Local imports
 import config
@@ -9,6 +10,7 @@ import programs
 import system
 import network
 import ini
+import jsondata
 import storebase
 
 # GOG store
@@ -54,6 +56,10 @@ class GOG(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_gog
 
+    # Get identifier
+    def GetIdentifier(self, game_info, identifier_type):
+        return game_info.get_store_appname(self.GetKey())
+
     ############################################################
 
     # Login
@@ -67,7 +73,8 @@ class GOG(storebase.StoreBase):
         if programs.IsToolInstalled("LGOGDownloader"):
             gog_tool = programs.GetToolProgram("LGOGDownloader")
         if not gog_tool:
-            system.LogErrorAndQuit("LGOGDownloader was not found")
+            system.LogError("LGOGDownloader was not found")
+            return None
 
         # Get login command
         login_cmd = [
@@ -91,7 +98,68 @@ class GOG(storebase.StoreBase):
         self,
         verbose = False,
         exit_on_failure = False):
-        return []
+
+        # Get tool
+        gog_tool = None
+        if programs.IsToolInstalled("LGOGDownloader"):
+            gog_tool = programs.GetToolProgram("LGOGDownloader")
+        if not gog_tool:
+            system.LogError("LGOGDownloader was not found")
+            return None
+
+        # Create temporary directory
+        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+        if not tmp_dir_success:
+            return None
+
+        # Get temporary paths
+        tmp_file_manifest = os.path.join(tmp_dir_result, "manifest.json")
+
+        # Get list command
+        list_cmd = [
+            gog_tool,
+            "--list", "j"
+        ]
+
+        # Run list command
+        code = command.RunReturncodeCommand(
+            cmd = list_cmd,
+            options = command.CommandOptions(
+                stdout = tmp_file_manifest),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            system.LogError("Unable to find gog purchases")
+            return False
+
+        # Get gog json
+        gog_json = {}
+        try:
+            if os.path.exists(tmp_file_manifest):
+                with open(tmp_file_manifest, "r") as manifest_file:
+                    gog_json = json.load(manifest_file)
+        except:
+            system.LogError("Unable to parse gog game list")
+            return None
+
+        # Parse output
+        purchases = []
+        for entry in gog_json:
+
+            # Gather info
+            line_appname = entry["gamename"]
+            line_appid = entry["product_id"]
+            line_title = entry["title"]
+
+            # Create purchase
+            purchase = jsondata.JsonData(
+                json_data = {},
+                json_platform = self.GetPlatform())
+            purchase.SetJsonValue(config.json_key_store_appname, line_appname)
+            purchase.SetJsonValue(config.json_key_store_appid, line_appid)
+            purchase.SetJsonValue(config.json_key_store_name, line_title)
+            purchases.append(purchase)
+        return purchases
 
     ############################################################
 
@@ -134,12 +202,6 @@ class GOG(storebase.StoreBase):
                         else:
                             game_info[config.json_key_store_buildid] = "original_release"
         return game_info
-
-    ############################################################
-
-    # Get identifier
-    def GetIdentifier(self, game_info, identifier_type):
-        return game_info.get_store_appname(self.GetKey())
 
     ############################################################
 
@@ -189,7 +251,8 @@ class GOG(storebase.StoreBase):
         if programs.IsToolInstalled("LGOGDownloader"):
             gog_tool = programs.GetToolProgram("LGOGDownloader")
         if not gog_tool:
-            system.LogErrorAndQuit("LGOGDownloader was not found")
+            system.LogError("LGOGDownloader was not found")
+            return None
 
         # Create temporary directory
         tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)

@@ -60,6 +60,10 @@ class Steam(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_steam
 
+    # Get identifier
+    def GetIdentifier(self, game_info, identifier_type):
+        return game_info.get_store_appid(self.GetKey())
+
     # Get platform
     def GetPlatform(self):
         return self.platform
@@ -288,12 +292,6 @@ class Steam(storebase.StoreBase):
 
         # Return game info
         return game_info
-
-    ############################################################
-
-    # Get identifier
-    def GetIdentifier(self, game_info, identifier_type):
-        return game_info.get_store_appid(self.GetKey())
 
     ############################################################
 

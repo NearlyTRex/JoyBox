@@ -115,7 +115,7 @@ class Amazon(storebase.StoreBase):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
             system.LogError("PythonVenvPython was not found")
-            return False
+            return None
 
         # Get script
         nile_script = None
@@ -123,7 +123,7 @@ class Amazon(storebase.StoreBase):
             nile_script = programs.GetToolProgram("Nile")
         if not nile_script:
             system.LogError("Nile was not found")
-            return False
+            return None
 
         # Get refresh command
         refresh_cmd = [
@@ -140,7 +140,7 @@ class Amazon(storebase.StoreBase):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if (code != 0):
-            return False
+            return None
 
         # Get sync command
         sync_cmd = [
@@ -157,7 +157,7 @@ class Amazon(storebase.StoreBase):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if (code != 0):
-            return False
+            return None
 
         # Get list command
         list_cmd = [
@@ -174,7 +174,7 @@ class Amazon(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         if len(list_output) == 0:
             system.LogError("Unable to find amazon purchases")
-            return False
+            return None
 
         # Parse output
         purchases = []
@@ -197,8 +197,8 @@ class Amazon(storebase.StoreBase):
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.GetPlatform())
-            purchase.SetJsonValue(config.json_key_store_name, line_title)
             purchase.SetJsonValue(config.json_key_store_appid, line_appid)
+            purchase.SetJsonValue(config.json_key_store_name, line_title)
             purchases.append(purchase)
         return purchases
 
