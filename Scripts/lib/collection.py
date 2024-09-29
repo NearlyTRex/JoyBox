@@ -219,6 +219,12 @@ def AddMetadataEntry(
     file_screenshot = gameinfo.DeriveGameAssetPathFromName(file_name, config.asset_type_screenshot)
     file_video = gameinfo.DeriveGameAssetPathFromName(file_name, config.asset_type_video)
 
+    # Adjust json file path
+    file_json_file = system.RebaseFilePath(
+        path = file_json_file,
+        old_base_path = environment.GetJsonRomsMetadataRootDir(),
+        new_base_path = "")
+
     # Create new entry
     new_entry = metadata.MetadataEntry()
     new_entry.set_game(file_name)
