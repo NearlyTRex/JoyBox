@@ -8,7 +8,9 @@ import command
 import archive
 import programs
 import system
+import network
 import ini
+import jsondata
 import storebase
 
 # Steam store
@@ -34,6 +36,11 @@ class Steam(storebase.StoreBase):
         self.userid = ini.GetIniValue("UserData.Steam", "steam_userid")
         if not self.username or not self.userid:
             raise RuntimeError("Ini file does not have a valid steam user details")
+
+        # Get web api key
+        self.web_api_key = ini.GetIniValue("UserData.Steam", "steam_web_api_key")
+        if not self.web_api_key:
+            raise RuntimeError("Ini file does not have a valid steam web api key")
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.Steam", "steam_install_dir")
@@ -101,6 +108,10 @@ class Steam(storebase.StoreBase):
             steamid = str(steamidacct // 2)
         return steamid
 
+    # Get web api key
+    def GetWebApiKey(self):
+        return self.web_api_key
+
     # Get install dir
     def GetInstallDir(self):
         return self.install_dir
@@ -143,7 +154,43 @@ class Steam(storebase.StoreBase):
         self,
         verbose = False,
         exit_on_failure = False):
-        return []
+
+        # Get steam url
+        steam_url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/"
+        steam_url += "?key=%s" % self.GetWebApiKey()
+        steam_url += "&steamid=%s" % self.GetUserId(config.steam_id_format_64)
+        steam_url += "&include_appinfo=true"
+        steam_url += "&include_played_free_games=true"
+        steam_url += "&format=json"
+
+        # Get steam json
+        steam_json = network.GetRemoteJson(
+            url = steam_url,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not steam_json:
+            system.LogError("Unable to find steam release information from '%s'" % steam_url)
+            return None
+
+        # Parse json
+        purchases = []
+        if "response" in steam_json:
+            if "games" in steam_json["response"]:
+                for entry in steam_json["response"]["games"]:
+
+                    # Gather info
+                    line_appid = entry["appid"]
+                    line_title = entry["name"]
+
+                    # Create purchase
+                    purchase = jsondata.JsonData(
+                        json_data = {},
+                        json_platform = self.GetPlatform())
+                    purchase.SetJsonValue(config.json_key_store_appid, line_appid)
+                    purchase.SetJsonValue(config.json_key_store_name, line_title)
+                    purchase.SetJsonValue(config.json_key_store_branchid, config.steam_branch_format_public)
+                    purchases.append(purchase)
+        return purchases
 
     ############################################################
 
