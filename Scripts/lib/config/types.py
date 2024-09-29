@@ -222,11 +222,13 @@ preset_types = [
 store_type_amazon = "Amazon"
 store_type_gog = "GOG"
 store_type_epic = "Epic"
+store_type_itchio = "Itchio"
 store_type_steam = "Steam"
 store_types = [
     store_type_amazon,
     store_type_gog,
     store_type_epic,
+    store_type_itchio,
     store_type_steam
 ]
 

@@ -11,11 +11,8 @@ sys.path.append(lib_folder)
 import config
 import system
 import gameinfo
+import stores
 import setup
-from stores import amazon
-from stores import epic
-from stores import gog
-from stores import steam
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Manage store games.")
@@ -52,16 +49,8 @@ def main():
     setup.CheckRequirements()
 
     # Get store
-    store_obj = None
-    if args.store_type == config.store_type_amazon:
-        store_obj = amazon.Amazon()
-    elif args.store_type == config.store_type_epic:
-        store_obj = epic.Epic()
-    elif args.store_type == config.store_type_gog:
-        store_obj = gog.GOG()
-    elif args.store_type == config.store_type_steam:
-        store_obj = steam.Steam()
-    else:
+    store_obj = stores.GetStoreByType(args.store_type)
+    if not store_obj:
         system.LogErrorAndQuit("Invalid store")
 
     # Load manifest
