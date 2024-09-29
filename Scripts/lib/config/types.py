@@ -70,6 +70,12 @@ steam_id_formats = [
     steam_id_format_cs
 ]
 
+# Steam branch formats
+steam_branch_format_public = "public"
+steam_branch_formats = [
+    steam_branch_format_public
+]
+
 # Metadata format types
 metadata_format_type_pegasus = "pegasus"
 metadata_format_types = [

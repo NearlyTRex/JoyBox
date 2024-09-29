@@ -136,7 +136,7 @@ def CreateGameJsonFile(
         elif file_subcategory == config.game_subcategory_steam:
             json_obj.FillJsonValue(config.json_key_steam, {
                 config.json_key_store_appid: "",
-                config.json_key_store_branchid: "public"
+                config.json_key_store_branchid: config.steam_branch_format_public
             })
 
     # Set other platform keys
