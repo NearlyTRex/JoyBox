@@ -179,7 +179,7 @@ class Steam(storebase.StoreBase):
                 for entry in steam_json["response"]["games"]:
 
                     # Gather info
-                    line_appid = entry["appid"]
+                    line_appid = str(entry["appid"])
                     line_title = entry["name"]
 
                     # Create purchase
