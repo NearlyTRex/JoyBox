@@ -142,7 +142,7 @@ class GOG(storebase.StoreBase):
             system.LogError("Unable to parse gog game list")
             return None
 
-        # Parse output
+        # Parse json
         purchases = []
         for entry in gog_json:
 
@@ -177,7 +177,6 @@ class GOG(storebase.StoreBase):
         # Get gog json
         gog_json = network.GetRemoteJson(
             url = gog_url,
-            headers = {"Accept": "application/json"},
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not gog_json:

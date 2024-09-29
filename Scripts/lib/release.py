@@ -434,7 +434,6 @@ def DownloadGithubRelease(
     # Get release json list
     release_json_list = network.GetRemoteJson(
         url = github_url,
-        headers = {"Accept": "application/json"},
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not release_json_list:
