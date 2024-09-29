@@ -46,6 +46,7 @@ packages = [
     "tqdm",
     "vdf",
     "wheel",
+    "xmltodict",
     "xxhash"
 ]
 if environment.IsWindowsPlatform():
