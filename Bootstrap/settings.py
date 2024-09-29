@@ -86,6 +86,7 @@ ini_defaults["UserData.Steam"] = {}
 ini_defaults["UserData.Steam"]["steam_accountname"] = ""
 ini_defaults["UserData.Steam"]["steam_username"] = ""
 ini_defaults["UserData.Steam"]["steam_userid"] = ""
+ini_defaults["UserData.Steam"]["steam_web_api_key"] = ""
 ini_defaults["UserData.Steam"]["steam_platform"] = "windows"
 ini_defaults["UserData.Steam"]["steam_arch"] = "64"
 if environment.IsWindowsPlatform():
