@@ -34,11 +34,13 @@ def IsUrlReachable(url):
         return False
 
 # Get remote json
-def GetRemoteJson(url, headers, verbose = False, exit_on_failure = False):
+def GetRemoteJson(url, headers = None, verbose = False, exit_on_failure = False):
     try:
         if verbose:
             system.Log("Processing GET request to '%s'" % url)
         import requests
+        if not headers:
+            headers = {"Accept": "application/json"}
         get = requests.get(url, headers=headers)
         if get.status_code == 200:
             return get.json()
@@ -50,11 +52,13 @@ def GetRemoteJson(url, headers, verbose = False, exit_on_failure = False):
         return None
 
 # Post remote json
-def PostRemoteJson(url, headers, data = None, verbose = False, exit_on_failure = False):
+def PostRemoteJson(url, headers = None, data = None, verbose = False, exit_on_failure = False):
     try:
         if verbose:
             system.Log("Processing POST request to '%s'" % url)
         import requests
+        if not headers:
+            headers = {"Accept": "application/json"}
         post = requests.post(url, headers=headers, json=data)
         if post.status_code == 200:
             return post.json()
@@ -62,6 +66,25 @@ def PostRemoteJson(url, headers, data = None, verbose = False, exit_on_failure =
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to process POST request to '%s'" % url)
+            system.LogErrorAndQuit(e)
+        return None
+
+# Get remote xml
+def GetRemoteXml(url, headers = None, verbose = False, exit_on_failure = False):
+    try:
+        if verbose:
+            system.Log("Processing GET request to '%s'" % url)
+        import requests
+        import xmltodict
+        if not headers:
+            headers = {"Accept": "text/xml"}
+        get = requests.get(url, headers=headers)
+        if get.status_code == 200:
+            return xmltodict.parse(get.text)
+        return None
+    except Exception as e:
+        if exit_on_failure:
+            system.LogError("Unable to process GET request to '%s'" % url)
             system.LogErrorAndQuit(e)
         return None
 
