@@ -126,12 +126,21 @@ def GetElementText(element):
     return None
 
 # Click element
-def ClickElement(element):
+def ClickElement(element, verbose = False):
     try:
         if element:
             element.click()
-    except:
-        pass
+    except Exception as e:
+        if verbose:
+            system.LogError(e)
+
+# Scroll to end of page
+def ScrollToEndOfPage(driver, verbose = False):
+    try:
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+    except Exception as e:
+        if verbose:
+            system.LogError(e)
 
 # Get page source
 def GetPageSource(driver, url, verbose = False):
@@ -170,7 +179,9 @@ def LogIntoWebsite(
     # Load the login page
     try:
         driver.get(login_url)
-    except:
+    except Exception as e:
+        if verbose:
+            system.LogError(e)
         return False
 
     # Load cookie if it exists
