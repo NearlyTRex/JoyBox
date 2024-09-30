@@ -13,6 +13,7 @@ from . import git
 from . import goldbergemu
 from . import gpg
 from . import hactool
+from . import itchdl
 from . import jdupes
 from . import mkpl
 from . import legendary
@@ -68,6 +69,7 @@ instances = [
     goldbergemu.GoldbergEmu(),
     gpg.Gpg(),
     hactool.HacTool(),
+    itchdl.ItchDL(),
     jdupes.JDupes(),
     mkpl.Mkpl(),
     legendary.Legendary(),

@@ -39,6 +39,3 @@ gametype_weights[".zip"] = gametype_counter; gametype_counter += 1          # Zi
 
 # Other game types
 gametype_weight_else = 100
-
-# Cookie file
-itchio_cookie_filename = "itchio.cookie.txt"

@@ -1001,41 +1001,19 @@ def CollectMetadataFromItchio(
     verbose = False,
     exit_on_failure = False):
 
+    # Log into itchio
+    success = webpage.LogIntoWebsite(
+        driver = web_driver,
+        login_url = config.itchio_login_url,
+        cookiefile = os.path.join(environment.GetCookieDirectory(), config.itchio_login_cookie_filename),
+        link_text = config.itchio_login_link_text,
+        verbose = verbose)
+    if not success:
+        return None
+
     # Get keywords name
     natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
     keywords_name = urllib.parse.quote_plus(natural_name.strip())
-
-    # Metadata result
-    metadata_result = MetadataEntry()
-
-    # Check if cookie exists first
-    if os.path.exists(config.itchio_cookie_filename):
-
-        # Load the main page
-        try:
-            web_driver.get("https://itch.io")
-        except:
-            return None
-
-        # Load cookie
-        webpage.LoadCookie(web_driver, config.itchio_cookie_filename)
-
-    # Otherwise, create one
-    else:
-
-        # Log into itch.io first
-        try:
-            web_driver.get("https://itch.io/login")
-        except:
-            return None
-
-        # Look for my feed
-        section_my_feed = webpage.WaitForPageElement(web_driver, link_text = "My feed", verbose = verbose)
-        if not section_my_feed:
-            return None
-
-        # Save cookie
-        webpage.SaveCookie(web_driver, config.itchio_cookie_filename)
 
     # Go to the search page and pull the results
     try:
@@ -1069,6 +1047,9 @@ def CollectMetadataFromItchio(
 
     # Grab the description text
     raw_game_description = webpage.GetElementText(section_game_description)
+
+    # Create metadata result
+    metadata_result = MetadataEntry()
 
     # Convert description to metadata format
     if raw_game_description:

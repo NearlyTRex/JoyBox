@@ -9,8 +9,10 @@ import command
 import archive
 import programs
 import system
+import environment
 import hashing
 import jsondata
+import webpage
 import storebase
 
 # Itchio store
@@ -51,6 +53,33 @@ class Itchio(storebase.StoreBase):
         self,
         verbose = False,
         exit_on_failure = False):
+
+        # Create web driver
+        try:
+            web_driver = webpage.CreateWebDriver(verbose = verbose)
+        except Exception as e:
+            if verbose:
+                system.LogError(e)
+        if not web_driver:
+            return False
+
+        # Log into itchio
+        success = webpage.LogIntoWebsite(
+            driver = web_driver,
+            login_url = config.itchio_login_url,
+            cookiefile = os.path.join(environment.GetCookieDirectory(), config.itchio_login_cookie_filename),
+            link_text = config.itchio_login_link_text,
+            verbose = verbose)
+        if not success:
+            return False
+
+        # Destroy web driver
+        try:
+            webpage.DestroyWebDriver(web_driver, verbose = verbose)
+            return True
+        except Exception as e:
+            if verbose:
+                system.LogError(e)
         return False
 
     ############################################################
