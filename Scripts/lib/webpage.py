@@ -155,16 +155,57 @@ def LoadCookie(driver, path):
     for cookie in cookies:
         driver.add_cookie(cookie)
 
+# Log into website
+def LogIntoWebsite(
+    driver,
+    login_url,
+    cookiefile,
+    class_name = None,
+    id_name = None,
+    tag_name = None,
+    link_text = None,
+    wait_time = 1000,
+    verbose = False):
+
+    # Load the login page
+    try:
+        driver.get(login_url)
+    except:
+        return False
+
+    # Load cookie if it exists
+    if os.path.exists(cookiefile):
+
+        # Load cookie
+        LoadCookie(driver, cookiefile)
+        return True
+
+    # Look for element
+    login_check = WaitForPageElement(
+        driver = driver,
+        class_name = class_name,
+        id_name = id_name,
+        tag_name = tag_name,
+        link_text = link_text,
+        wait_time = wait_time,
+        verbose = verbose)
+    if not login_check:
+        return False
+
+    # Save cookie
+    SaveCookie(driver, cookiefile)
+    return True
+
 # Get all matching urls
 def GetMatchingUrls(url, base_url, params = {}, starts_with = "", ends_with = "", verbose = False):
 
     # Get page text
     page_text = ""
     try:
-        web_driver = CreateWebDriver(make_headless = True, verbose = verbose)
-        if web_driver:
-            page_text = GetPageSource(web_driver, url, verbose = verbose)
-            DestroyWebDriver(web_driver, verbose = verbose)
+        driver = CreateWebDriver(make_headless = True, verbose = verbose)
+        if driver:
+            page_text = GetPageSource(driver, url, verbose = verbose)
+            DestroyWebDriver(driver, verbose = verbose)
     except Exception as e:
         if verbose:
             system.LogError(e)

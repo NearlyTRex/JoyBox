@@ -55,6 +55,14 @@ def GetCurrentPlatform():
 def GetCurrentTimestamp():
     return int(time.time())
 
+# Get home directory
+def GetHomeDirectory():
+    return os.path.expanduser("~")
+
+# Get cookie directory
+def GetCookieDirectory():
+    return GetHomeDirectory()
+
 # Determine if symlinks are supported
 def AreSymlinksSupported():
     if IsUnixPlatform():
