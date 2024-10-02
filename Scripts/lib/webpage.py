@@ -85,19 +85,14 @@ def ParseByRequest(class_name = None, id_name = None, tag_name = None, link_text
     return (by_type, by_value)
 
 # Wait for page element by class
-def WaitForPageElement(driver, class_name = None, id_name = None, tag_name = None, link_text = None, all_elements = False, wait_time = 1000, verbose = False):
+def WaitForPageElement(driver, class_name = None, id_name = None, tag_name = None, link_text = None, wait_time = 1000, verbose = False):
     from selenium.webdriver.support.ui import WebDriverWait
     from selenium.webdriver.support import expected_conditions as ExpectedConditions
     try:
         by_type, by_value = ParseByRequest(class_name, id_name, tag_name, link_text)
-        if all_elements:
-            return WebDriverWait(driver, wait_time).until(
-                ExpectedConditions.presence_of_all_elements_located((by_type, by_value))
-            )
-        else:
-            return WebDriverWait(driver, wait_time).until(
-                ExpectedConditions.presence_of_all_elements_located((by_type, by_value))
-            )
+        return WebDriverWait(driver, wait_time).until(
+            ExpectedConditions.presence_of_all_elements_located((by_type, by_value))
+        )
     except Exception as e:
         if verbose:
             system.LogError(e)
@@ -125,6 +120,15 @@ def GetElementText(element):
         pass
     return None
 
+# Get element attribute
+def GetElementAttribute(element, attribute_name):
+    try:
+        if element:
+            return element.get_attribute(attribute_name)
+    except:
+        pass
+    return None
+
 # Click element
 def ClickElement(element, verbose = False):
     try:
@@ -143,14 +147,23 @@ def ScrollToEndOfPage(driver, verbose = False):
             system.LogError(e)
 
 # Get page source
-def GetPageSource(driver, url, verbose = False):
+def GetPageSource(driver, url = None, verbose = False):
     try:
-        driver.get(url)
+        if url:
+            driver.get(url)
         return str(driver.page_source)
     except Exception as e:
         if verbose:
             system.LogError(e)
     return None
+
+# Parse page source
+def ParsePageSource(html_contents):
+    try:
+        from BeautifulSoup import BeautifulSoup
+    except ImportError:
+        from bs4 import BeautifulSoup
+    return BeautifulSoup(html_contents, features="lxml")
 
 # Save cookie
 def SaveCookie(driver, path):
