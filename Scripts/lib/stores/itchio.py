@@ -114,11 +114,11 @@ class Itchio(storebase.StoreBase):
             return None
 
         # Scroll to end of page until everything is loaded
-        webpage.ScrollToEndOfPage(web_driver)
-        element_grid_loader = webpage.WaitForPageElement(web_driver, class_name = "grid_loader", verbose = verbose)
-        while element_grid_loader:
+        while True:
             webpage.ScrollToEndOfPage(web_driver)
-            element_grid_loader = webpage.WaitForPageElement(web_driver, class_name = "grid_loader", verbose = verbose)
+            grid_loader = webpage.GetElement(web_driver, class_name = "grid_loader", tag_name = "div")
+            if grid_loader is None:
+               break
 
         # Parse game cells
         purchases = []
@@ -127,6 +127,8 @@ class Itchio(storebase.StoreBase):
             for game_cell in game_cells:
                 game_title = webpage.GetElement(game_cell, class_name = "title", tag_name = "a")
                 game_cover = webpage.GetElement(game_cell, class_name = "lazy_loaded", tag_name = "img")
+                if not game_title or not game_cover:
+                    continue
 
                 # Gather info
                 line_appid = webpage.GetElementAttribute(game_cell, "data-game_id")
