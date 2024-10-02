@@ -2,6 +2,7 @@
 import os, os.path
 import sys
 import re
+import string
 
 # Local imports
 import config
@@ -503,7 +504,7 @@ def DeriveRegularNameFromGameName(game_name):
 
 # Derive game name from regular name
 def DeriveGameNameFromRegularName(regular_name, region = "USA"):
-    game_name = regular_name
+    game_name = string.capwords(regular_name)
     game_name = game_name.replace(":", " -")
     game_name = system.ReplaceInvalidPathCharacters(game_name)
     for flippable_word in config.flippable_words:
