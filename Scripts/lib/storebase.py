@@ -153,12 +153,15 @@ class StoreBase:
 
         # Import each purchase
         for purchase in purchases:
-            purchase_identifiers = [
-                purchase.GetJsonValue(config.json_key_store_appid),
-                purchase.GetJsonValue(config.json_key_store_appname),
-                purchase.GetJsonValue(config.json_key_store_appurl)
-            ]
+            purchase_appid = purchase.GetJsonValue(config.json_key_store_appid)
+            purchase_appname = purchase.GetJsonValue(config.json_key_store_appname)
+            purchase_appurl = purchase.GetJsonValue(config.json_key_store_appurl)
             purchase_name = purchase.GetJsonValue(config.json_key_store_name)
+            purchase_identifiers = [
+                purchase_appid,
+                purchase_appname,
+                purchase_appurl
+            ]
 
             # Check if json file already exists
             found_file = self.FindJsonByIdentifiers(
@@ -169,7 +172,16 @@ class StoreBase:
                 continue
 
             # Determine if this should be imported
-            should_import = system.PromptForValue(f"Found new potential entry '{purchase_name}'. Import this?", default_value = "n")
+            system.Log("Found new potential entry:")
+            if purchase_appid:
+                system.Log(" - Appid:\t" + purchase_appid)
+            if purchase_appname:
+                system.Log(" - Appname:\t" + purchase_appname)
+            if purchase_appurl:
+                system.Log(" - Appurl:\t" + purchase_appurl)
+            if purchase_name:
+                system.Log(" - Name:\t" + purchase_name)
+            should_import = system.PromptForValue("Import this?", default_value = "n")
             if "n" in should_import.lower():
                 continue
 
