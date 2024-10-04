@@ -151,6 +151,13 @@ class StoreBase:
         if not purchases:
             return False
 
+        # Get all ignores
+        ignores = collection.GetGameJsonIgnoreEntries(
+            game_category = self.GetCategory(),
+            game_subcategory = self.GetSubcategory(),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
         # Import each purchase
         for purchase in purchases:
             purchase_appid = purchase.GetJsonValue(config.json_key_store_appid)
@@ -163,12 +170,24 @@ class StoreBase:
                 purchase_appurl
             ]
 
+            # Get primary identifier
+            primary_identifier = None
+            for purchase_identifier in purchase_identifiers:
+                if purchase_identifier:
+                    primary_identifier = purchase_identifier
+            if not primary_identifier:
+                continue
+
             # Check if json file already exists
             found_file = self.FindJsonByIdentifiers(
                 identifiers = purchase_identifiers,
                 verbose = False,
                 exit_on_failure = exit_on_failure)
             if found_file:
+                continue
+
+            # Check if this should be ignored
+            if primary_identifier in ignores.keys():
                 continue
 
             # Determine if this should be imported
@@ -181,8 +200,19 @@ class StoreBase:
                 system.Log(" - Appurl:\t" + purchase_appurl)
             if purchase_name:
                 system.Log(" - Name:\t" + purchase_name)
-            should_import = system.PromptForValue("Import this?", default_value = "n")
-            if "n" in should_import.lower():
+            should_import = system.PromptForValue("Import this? (n to skip, i to ignore)", default_value = "n")
+            if should_import.lower() == "n":
+                continue
+
+            # Add to ignore
+            if should_import.lower() == "i":
+                collection.AddGameJsonIgnoreEntry(
+                    game_category = self.GetCategory(),
+                    game_subcategory = self.GetSubcategory(),
+                    game_identifier = primary_identifier,
+                    game_name = purchase_name,
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
                 continue
 
             # Prompt for entry name
@@ -201,9 +231,9 @@ class StoreBase:
 
             # Create json file
             success = collection.CreateGameJsonFile(
-                file_category = self.GetCategory(),
-                file_subcategory = self.GetSubcategory(),
-                file_title = entry_name,
+                game_category = self.GetCategory(),
+                game_subcategory = self.GetSubcategory(),
+                game_title = entry_name,
                 initial_data = initial_data,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
@@ -212,9 +242,9 @@ class StoreBase:
 
             # Add metadata entry
             success = collection.AddMetadataEntry(
-                file_category = self.GetCategory(),
-                file_subcategory = self.GetSubcategory(),
-                file_name = entry_name,
+                game_category = self.GetCategory(),
+                game_subcategory = self.GetSubcategory(),
+                game_name = entry_name,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             if not success:

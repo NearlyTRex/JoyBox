@@ -89,10 +89,10 @@ def main():
         if not args.file_title:
             system.LogErrorAndQuit("File title is required for custom mode")
         collection.CreateGameJsonFile(
-            file_category = args.file_category,
-            file_subcategory = args.file_subcategory,
-            file_title = args.file_title,
-            file_root = source_file_root,
+            game_category = args.file_category,
+            game_subcategory = args.file_subcategory,
+            game_title = args.file_title,
+            game_root = source_file_root,
             passphrase = passphrase,
             verbose = args.verbose,
             exit_on_failure = args.exit_on_failure)
@@ -103,9 +103,9 @@ def main():
         # Specific category/subcategory
         if args.file_category and args.file_subcategory:
             collection.CreateGameJsonFiles(
-                file_category = args.file_category,
-                file_subcategory = args.file_subcategory,
-                file_root = source_file_root,
+                game_category = args.file_category,
+                game_subcategory = args.file_subcategory,
+                game_root = source_file_root,
                 passphrase = passphrase,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
@@ -114,9 +114,9 @@ def main():
         elif args.file_category:
             for file_subcategory in config.game_subcategories[args.file_category]:
                 collection.CreateGameJsonFiles(
-                    file_category = args.file_category,
-                    file_subcategory = file_subcategory,
-                    file_root = source_file_root,
+                    game_category = args.file_category,
+                    game_subcategory = file_subcategory,
+                    game_root = source_file_root,
                     passphrase = passphrase,
                     verbose = args.verbose,
                     exit_on_failure = args.exit_on_failure)
@@ -126,9 +126,9 @@ def main():
             for file_category in config.game_categories:
                 for file_subcategory in config.game_subcategories[file_category]:
                     collection.CreateGameJsonFiles(
-                        file_category = file_category,
-                        file_subcategory = file_subcategory,
-                        file_root = source_file_root,
+                        game_category = file_category,
+                        game_subcategory = file_subcategory,
+                        game_root = source_file_root,
                         passphrase = passphrase,
                         verbose = args.verbose,
                         exit_on_failure = args.exit_on_failure)

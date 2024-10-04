@@ -394,6 +394,10 @@ def GetJsonRomMetadataFile(game_category, game_subcategory, game_name):
     game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
     return os.path.join(GetJsonRomsMetadataRootDir(), game_category, game_subcategory, game_name_path, game_name + ".json")
 
+# Get json rom metadata ignore file
+def GetJsonRomMetadataIgnoreFile(game_category, game_subcategory):
+    return os.path.join(GetJsonRomMetadataDir(game_category, game_subcategory), "ignores.json")
+
 ###########################################################
 # Scripts
 ###########################################################

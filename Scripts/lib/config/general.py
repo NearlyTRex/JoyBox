@@ -236,6 +236,21 @@ flippable_words = [
     "An"
 ]
 
+# Filler words
+filler_words = [
+    "a",
+    "at",
+    "for",
+    "from",
+    "in",
+    "into",
+    "of",
+    "on",
+    "onto",
+    "the",
+    "to"
+]
+
 # Itchio
 itchio_login_url = "https://itch.io/login"
 itchio_login_link_text = "My feed"
