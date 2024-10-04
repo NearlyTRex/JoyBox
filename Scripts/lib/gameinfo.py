@@ -504,8 +504,9 @@ def DeriveRegularNameFromGameName(game_name):
 
 # Derive game name from regular name
 def DeriveGameNameFromRegularName(regular_name, region = "USA"):
-    game_name = string.capwords(regular_name)
-    game_name = game_name.replace(":", " -")
+    game_name = regular_name.replace(":", " -").replace("&", "and")
+    game_name = system.CleanRichTextString(game_name)
+    game_name = system.CapitalizeTitle(game_name)
     game_name = system.ReplaceInvalidPathCharacters(game_name)
     for flippable_word in config.flippable_words:
         segment_before = f"{flippable_word} "
