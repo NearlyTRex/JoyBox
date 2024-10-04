@@ -157,7 +157,7 @@ class Epic(storebase.StoreBase):
                 continue
             line = tokens[0]
             line_appname = tokens[1]
-            line_name = tokens[0].lstrip(" *")
+            line_title = tokens[0].lstrip(" *")
 
             # Create purchase
             purchase = jsondata.JsonData(
