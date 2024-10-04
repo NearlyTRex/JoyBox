@@ -177,6 +177,23 @@ def SortStrings(strings):
 def SortStringsWithLength(strings):
     return sorted(strings, key=lambda item: (len(item), item))
 
+# Capitalize title
+def CapitalizeTitle(string):
+    if len(string) == 0:
+        return ""
+    elif len(string) == 1:
+        return string.upper()
+    else:
+        words = []
+        for index, word in enumerate(string.split(" ")):
+            for filler_word in config.filler_words:
+                if index != 0 and word.lower() == filler_word.lower():
+                    words.append(word)
+                    break
+            else:
+                words.append(word[0].upper() + word[1:])
+        return " ".join(words)
+
 # Clean rich text string
 def CleanRichTextString(string):
     new_string = string.strip()
