@@ -191,7 +191,10 @@ def CapitalizeTitle(string):
                     words.append(word)
                     break
             else:
-                words.append(word[0].upper() + word[1:])
+                if len(word) == 1:
+                    words.append(word[0].upper())
+                elif len(word) >= 2:
+                    words.append(word[0].upper() + word[1:])
         return " ".join(words)
 
 # Clean rich text string
@@ -204,8 +207,14 @@ def CleanRichTextString(string):
     new_string = new_string.replace("‘", "'")
     new_string = new_string.replace("…", "...")
     new_string = new_string.replace("•", "*")
+    new_string = new_string.replace("·", "-")
     new_string = new_string.replace("—", "-")
     new_string = new_string.replace("–", "-")
+    new_string = new_string.replace("á", "a")
+    new_string = new_string.replace("Æ", "Ae")
+    new_string = new_string.replace("é", "e")
+    new_string = new_string.replace("ó", "o")
+    new_string = new_string.replace("ǔ", "u")
     new_string = new_string.replace("\\x7e", "~")
     new_string = new_string.encode("ascii", "ignore").decode()
     return new_string
