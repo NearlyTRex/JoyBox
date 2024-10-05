@@ -239,16 +239,21 @@ flippable_words = [
 # Filler words
 filler_words = [
     "a",
+    "and",
     "at",
+    "as",
+    "by",
     "for",
     "from",
     "in",
     "into",
+    "is",
     "of",
     "on",
     "onto",
     "the",
-    "to"
+    "to",
+    "with"
 ]
 
 # Itchio
