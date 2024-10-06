@@ -218,7 +218,7 @@ class Amazon(storebase.StoreBase):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
             system.LogError("PythonVenvPython was not found")
-            return False
+            return None
 
         # Get script
         nile_script = None
@@ -226,7 +226,7 @@ class Amazon(storebase.StoreBase):
             nile_script = programs.GetToolProgram("Nile")
         if not nile_script:
             system.LogError("Nile was not found")
-            return False
+            return None
 
         # Get info command
         info_cmd = [
@@ -244,15 +244,17 @@ class Amazon(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         if len(info_output) == 0:
             system.LogError("Unable to find amazon information for '%s'" % identifier)
-            return False
+            return None
 
         # Get amazon json
         amazon_json = {}
         try:
             amazon_json = json.loads(info_output)
-        except:
+        except Exception as e:
+            system.LogError(e)
             system.LogError("Unable to parse amazon information for '%s'" % identifier)
-            return False
+            system.LogError("Received output:\n%s" % info_output)
+            return None
 
         # Build game info
         game_info = {}

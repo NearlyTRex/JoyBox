@@ -138,7 +138,8 @@ class GOG(storebase.StoreBase):
             if os.path.exists(tmp_file_manifest):
                 with open(tmp_file_manifest, "r") as manifest_file:
                     gog_json = json.load(manifest_file)
-        except:
+        except Exception as e:
+            system.LogError(e)
             system.LogError("Unable to parse gog game list")
             return None
 

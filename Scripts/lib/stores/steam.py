@@ -242,8 +242,10 @@ class Steam(storebase.StoreBase):
                     if line.startswith("AppID : %s" % identifier):
                         is_vdf_line = True
             steam_json = vdf.loads(vdf_text)
-        except:
+        except Exception as e:
+            system.LogError(e)
             system.LogError("Unable to parse steam information for '%s'" % identifier)
+            system.LogError("Received output:\n%s" % info_output)
             return None
 
         # Build game info
