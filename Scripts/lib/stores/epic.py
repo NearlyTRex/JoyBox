@@ -181,7 +181,7 @@ class Epic(storebase.StoreBase):
 
         # Check identifier
         if not identifier:
-            return False
+            return None
 
         # Get tool
         python_tool = None
@@ -189,7 +189,7 @@ class Epic(storebase.StoreBase):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
             system.LogError("PythonVenvPython was not found")
-            return False
+            return None
 
         # Get script
         legendary_script = None
@@ -197,7 +197,7 @@ class Epic(storebase.StoreBase):
             legendary_script = programs.GetToolProgram("Legendary")
         if not legendary_script:
             system.LogError("Legendary was not found")
-            return False
+            return None
 
         # Get info command
         info_cmd = [

@@ -162,6 +162,8 @@ class Steam(storebase.StoreBase):
         steam_url += "&include_appinfo=true"
         steam_url += "&include_played_free_games=true"
         steam_url += "&format=json"
+        if not network.IsUrlReachable(steam_url):
+            return None
 
         # Get steam json
         steam_json = network.GetRemoteJson(
@@ -204,7 +206,7 @@ class Steam(storebase.StoreBase):
 
         # Check identifier
         if not identifier:
-            return False
+            return None
 
         # Get tool
         steamcmd_tool = None

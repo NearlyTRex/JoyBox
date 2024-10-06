@@ -454,8 +454,6 @@ class StoreBase:
             branch = game_info.get_store_branchid(self.GetKey()),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        if not latest_info:
-            return False
 
         # Read json file
         json_data = system.ReadJsonFile(
@@ -470,7 +468,7 @@ class StoreBase:
 
         # Set store info
         for json_subdata_key in config.json_keys_store_subdata:
-            if json_subdata_key in latest_info:
+            if isinstance(latest_info, dict) and json_subdata_key in latest_info.keys():
                 json_obj.FillJsonValue(json_subdata_key, latest_info[json_subdata_key])
 
         # Save store info

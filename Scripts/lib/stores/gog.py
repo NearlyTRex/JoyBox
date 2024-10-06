@@ -58,6 +58,8 @@ class GOG(storebase.StoreBase):
 
     # Get identifier
     def GetIdentifier(self, game_info, identifier_type):
+        if identifier_type == config.store_identifier_type_info:
+            return game_info.get_store_appid(self.GetKey())
         return game_info.get_store_appname(self.GetKey())
 
     ############################################################
@@ -174,10 +176,12 @@ class GOG(storebase.StoreBase):
 
         # Check identifier
         if not identifier:
-            return False
+            return None
 
         # Get gog url
         gog_url = "https://api.gog.com/products/%s?expand=downloads" % identifier
+        if not network.IsUrlReachable(gog_url):
+            return None
 
         # Get gog json
         gog_json = network.GetRemoteJson(
@@ -186,11 +190,15 @@ class GOG(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         if not gog_json:
             system.LogError("Unable to find gog release information from '%s'" % gog_url)
-            return False
+            return None
 
         # Build game info
         game_info = {}
         game_info[config.json_key_store_appid] = identifier
+        game_info[config.json_key_store_paths] = []
+        game_info[config.json_key_store_keys] = []
+
+        # Augment by json
         if "slug" in gog_json:
             game_info[config.json_key_store_appname] = gog_json["slug"]
         if "title" in gog_json:
@@ -205,6 +213,53 @@ class GOG(storebase.StoreBase):
                             game_info[config.json_key_store_buildid] = appinstaller["version"]
                         else:
                             game_info[config.json_key_store_buildid] = "original_release"
+
+        # Augment by manifest
+        if self.manifest:
+            for manifest_name, manifest_data in self.manifest.items():
+
+                # Skip games that are not present
+                if "gog" not in manifest_data:
+                    continue
+                if "id" in manifest_data["gog"] and str(manifest_data["gog"]["id"]) != identifier:
+                    continue
+
+                # Get existing paths and keys
+                game_paths = set(game_info[config.json_key_store_paths])
+                game_keys = set(game_info[config.json_key_store_keys])
+
+                # Examine manifest file data
+                if "files" in manifest_data:
+                    for path_location, path_info in manifest_data["files"].items():
+                        if "when" in path_info:
+                            for when_info in path_info["when"]:
+
+                                # Determine if path is relevant
+                                when_os = when_info["os"] if "os" in when_info else ""
+                                when_store = when_info["store"] if "store" in when_info else ""
+                                is_gog_path = False
+                                if (when_os == "windows" or when_os == "dos") and (when_store == "gog" or when_store == ""):
+                                    is_gog_path = True
+                                elif when_store == "gog" and when_os == "":
+                                    is_gog_path = True
+                                if not is_gog_path:
+                                    continue
+
+                                # Save path
+                                game_paths.add(storebase.TranslateStorePath(path_location))
+
+                # Examine manifest registry data
+                if "registry" in manifest_data:
+                    for key in manifest_data["registry"]:
+                        game_keys.add(key)
+
+                # Clean and save paths
+                game_info[config.json_key_store_paths] = system.SortStrings(game_paths)
+
+                # Save keys
+                game_info[config.json_key_store_keys] = system.SortStrings(game_keys)
+
+        # Return game info
         return game_info
 
     ############################################################

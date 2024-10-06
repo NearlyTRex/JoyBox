@@ -50,7 +50,7 @@ class GameInfo:
         metadata_entry = metadata_obj.get_game(json_platform, json_base_name)
 
         # Set metadata
-        self.set_value(config.json_key_metadata, metadata_entry)
+        self.set_metadata(metadata_entry)
 
         ##############################
         # Fill default info
@@ -174,11 +174,31 @@ class GameInfo:
         if self.has_key(key) and not self.has_subkey(key, subkey):
             self.set_subvalue(key, subkey, value)
 
+    ##############################
+
+    # Check if metadata exists
+    def has_metadata(self):
+        if self.has_key(config.json_key_metadata):
+            return isinstance(self.get_value(config.json_key_metadata), metadata.MetadataEntry)
+        return False
+
+    # Get metadata
+    def get_metadata(self):
+        if self.has_metadata():
+            return self.get_value(config.json_key_metadata)
+        return None
+
+    # Set metadata
+    def set_metadata(self, metadata):
+        self.set_value(config.json_key_metadata, metadata)
+
     # Get metadata value
     def get_metadata_value(self, key):
-        if self.has_subkey(config.json_key_metadata, key):
-            return self.get_subvalue(config.json_key_metadata, subkey)
+        if self.has_metadata():
+            return self.get_metadata().get_value(key)
         return None
+
+    ##############################
 
     # Upcast string to list
     def upcast_str_to_list(self, key):
@@ -192,8 +212,10 @@ class GameInfo:
 
     # Check if valid
     def is_valid(self):
-        has_name = self.has_key(config.metadata_key_game)
-        return has_name
+        has_metadata = self.has_metadata()
+        return has_metadata
+
+    ##############################
 
     # Get name
     def get_name(self):

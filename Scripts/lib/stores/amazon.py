@@ -214,7 +214,7 @@ class Amazon(storebase.StoreBase):
 
         # Check identifier
         if not identifier:
-            return False
+            return None
 
         # Get tool
         python_tool = None
@@ -264,6 +264,8 @@ class Amazon(storebase.StoreBase):
         game_info = {}
         game_info[config.json_key_store_appid] = identifier
         game_info[config.json_key_store_buildid] = ""
+
+        # Augment by json
         if "version" in amazon_json:
             game_info[config.json_key_store_buildid] = str(amazon_json["version"])
         if "product" in amazon_json:
