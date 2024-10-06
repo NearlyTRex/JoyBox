@@ -179,6 +179,10 @@ class Epic(storebase.StoreBase):
         verbose = False,
         exit_on_failure = False):
 
+        # Check identifier
+        if not identifier:
+            return False
+
         # Get tool
         python_tool = None
         if programs.IsToolInstalled("PythonVenvPython"):

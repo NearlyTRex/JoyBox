@@ -176,8 +176,8 @@ class GameInfo:
 
     # Get metadata value
     def get_metadata_value(self, key):
-        if self.json_data[config.json_key_metadata].is_key_set(key):
-            return self.json_data[config.json_key_metadata].get_value(key)
+        if self.has_subkey(config.json_key_metadata, key):
+            return self.get_subvalue(config.json_key_metadata, subkey)
         return None
 
     # Upcast string to list
@@ -189,6 +189,11 @@ class GameInfo:
                 self.json_data[key] = []
 
     ##############################
+
+    # Check if valid
+    def is_valid(self):
+        has_name = self.has_key(config.metadata_key_game)
+        return has_name
 
     # Get name
     def get_name(self):

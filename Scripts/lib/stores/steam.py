@@ -202,6 +202,10 @@ class Steam(storebase.StoreBase):
         verbose = False,
         exit_on_failure = False):
 
+        # Check identifier
+        if not identifier:
+            return False
+
         # Get tool
         steamcmd_tool = None
         if programs.IsToolInstalled("SteamCMD"):

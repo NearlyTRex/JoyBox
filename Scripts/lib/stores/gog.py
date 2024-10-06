@@ -172,6 +172,10 @@ class GOG(storebase.StoreBase):
         verbose = False,
         exit_on_failure = False):
 
+        # Check identifier
+        if not identifier:
+            return False
+
         # Get gog url
         gog_url = "https://api.gog.com/products/%s?expand=downloads" % identifier
 

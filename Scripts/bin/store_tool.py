@@ -89,12 +89,13 @@ def main():
                 json_file = json_file,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
-            success = store_obj.InstallByGameInfo(
-                game_info = game_info,
-                verbose = args.verbose,
-                exit_on_failure = args.exit_on_failure)
-            if not success:
-                system.LogErrorAndQuit("Install of '%s' failed!" % game_info.get_name())
+            if game_info and game_info.is_valid():
+                success = store_obj.InstallByGameInfo(
+                    game_info = game_info,
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
+                if not success:
+                    system.LogErrorAndQuit("Install of '%s' failed!" % json_file)
 
     # Launch game
     elif args.store_action == config.store_action_type_launch_game:
@@ -103,10 +104,11 @@ def main():
                 json_file = json_file,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
-            store_obj.LaunchByGameInfo(
-                game_info = game_info,
-                verbose = args.verbose,
-                exit_on_failure = args.exit_on_failure)
+            if game_info and game_info.is_valid():
+                store_obj.LaunchByGameInfo(
+                    game_info = game_info,
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
             break
 
     # Download game
@@ -116,15 +118,16 @@ def main():
                 json_file = json_file,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
-            success = store_obj.DownloadByGameInfo(
-                game_info = game_info,
-                output_dir = args.output_dir,
-                skip_existing = args.skip_existing,
-                force = args.force,
-                verbose = args.verbose,
-                exit_on_failure = args.exit_on_failure)
-            if not success:
-                system.LogErrorAndQuit("Install of '%s' failed!" % game_info.get_name())
+            if game_info and game_info.is_valid():
+                success = store_obj.DownloadByGameInfo(
+                    game_info = game_info,
+                    output_dir = args.output_dir,
+                    skip_existing = args.skip_existing,
+                    force = args.force,
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
+                if not success:
+                    system.LogErrorAndQuit("Install of '%s' failed!" % json_file)
 
     # Update json
     elif args.store_action == config.store_action_type_update_json:
@@ -133,12 +136,13 @@ def main():
                 json_file = json_file,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
-            success = store_obj.UpdateJson(
-                game_info = game_info,
-                verbose = args.verbose,
-                exit_on_failure = args.exit_on_failure)
-            if not success:
-                system.LogErrorAndQuit("Update of '%s' failed!" % game_info.get_name())
+            if game_info and game_info.is_valid():
+                success = store_obj.UpdateJson(
+                    game_info = game_info,
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
+                if not success:
+                    system.LogErrorAndQuit("Update of '%s' failed!" % json_file)
 
     # Check versions
     elif args.store_action == config.store_action_type_check_versions:
@@ -147,13 +151,14 @@ def main():
                 json_file = json_file,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            local_version, remote_version = store_obj.GetVersions(
-                game_info = game_info,
-                verbose = args.verbose,
-                exit_on_failure = args.exit_on_failure)
-            if local_version and remote_version:
-                if local_version != remote_version:
-                    system.LogWarning("Game '%s' is out of date! Local = '%s', remote = '%s'" % (json_file, local_version, remote_version))
+            if game_info and game_info.is_valid():
+                local_version, remote_version = store_obj.GetVersions(
+                    game_info = game_info,
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
+                if local_version and remote_version:
+                    if local_version != remote_version:
+                        system.LogWarning("Game '%s' is out of date! Local = '%s', remote = '%s'" % (json_file, local_version, remote_version))
 
     # Export saves
     elif args.store_action == config.store_action_type_export_saves:
@@ -162,12 +167,13 @@ def main():
                 json_file = json_file,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
-            success = store_obj.ExportSave(
-                game_info = game_info,
-                verbose = args.verbose,
-                exit_on_failure = args.exit_on_failure)
-            if not success:
-                system.LogErrorAndQuit("Export of '%s' failed!" % game_info.get_name())
+            if game_info and game_info.is_valid():
+                success = store_obj.ExportSave(
+                    game_info = game_info,
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
+                if not success:
+                    system.LogErrorAndQuit("Export of '%s' failed!" % json_file)
 
     # Import saves
     elif args.store_action == config.store_action_type_import_saves:
@@ -176,12 +182,13 @@ def main():
                 json_file = json_file,
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
-            success = store_obj.ImportSave(
-                game_info = game_info,
-                verbose = args.verbose,
-                exit_on_failure = args.exit_on_failure)
-            if not success:
-                system.LogErrorAndQuit("Import of '%s' failed!" % game_info.get_name())
+            if game_info and game_info.is_valid():
+                success = store_obj.ImportSave(
+                    game_info = game_info,
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
+                if not success:
+                    system.LogErrorAndQuit("Import of '%s' failed!" % json_file)
 
 # Start
 main()

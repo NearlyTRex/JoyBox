@@ -95,10 +95,14 @@ def GetFillOnceJsonKeys(platform_name):
 
 # Check if autofill key
 def IsAutoFillJsonKey(platform_name, json_key):
-    return json_key in GetAutoFillJsonKeys(platform_name)
+    if GetAutoFillJsonKeys(platform_name):
+        return json_key in GetAutoFillJsonKeys(platform_name)
+    return False
 
 # Check if fillonce key
 def IsFillOnceJsonKey(platform_name, json_key):
-    return json_key in GetFillOnceJsonKeys(platform_name)
+    if GetFillOnceJsonKeys(platform_name):
+        return json_key in GetFillOnceJsonKeys(platform_name)
+    return False
 
 ###########################################################
