@@ -199,23 +199,24 @@ class Metadata:
         game_entry.set_category(game_category)
         game_entry.set_subcategory(game_subcategory)
 
-        # Add platform if not already there
+        # Add entry
+        self.set_game(game_platform, game_name, game_entry)
+
+    # Get game entry
+    def get_game(self, game_platform, game_name):
+        if game_platform in self.game_database:
+            if game_name in self.game_database[game_platform]:
+                return self.game_database[game_platform][game_name]
+        return None
+
+    # Set game entry
+    def set_game(self, game_platform, game_name, game_entry):
         if not game_platform in self.game_database.keys():
             self.game_database[game_platform] = {}
-
-        # Add entry
         if game_name in self.game_database[game_platform]:
             self.game_database[game_platform][game_name].merge(game_entry)
         else:
             self.game_database[game_platform][game_name] = game_entry
-
-    # Get game entry
-    def get_game(self, game_platform, game_name):
-        return self.game_database[game_platform][game_name]
-
-    # Set game entry
-    def set_game(self, game_platform, game_name, game_entry):
-        self.game_database[game_platform][game_name] = game_entry
 
     # Get sorted platforms
     def get_sorted_platforms(self):
