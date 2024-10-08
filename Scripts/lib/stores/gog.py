@@ -214,51 +214,6 @@ class GOG(storebase.StoreBase):
                         else:
                             game_info[config.json_key_store_buildid] = "original_release"
 
-        # Augment by manifest
-        if self.manifest:
-            for manifest_name, manifest_data in self.manifest.items():
-
-                # Skip games that are not present
-                if "gog" not in manifest_data:
-                    continue
-                if "id" in manifest_data["gog"] and str(manifest_data["gog"]["id"]) != identifier:
-                    continue
-
-                # Get existing paths and keys
-                game_paths = set(game_info[config.json_key_store_paths])
-                game_keys = set(game_info[config.json_key_store_keys])
-
-                # Examine manifest file data
-                if "files" in manifest_data:
-                    for path_location, path_info in manifest_data["files"].items():
-                        if "when" in path_info:
-                            for when_info in path_info["when"]:
-
-                                # Determine if path is relevant
-                                when_os = when_info["os"] if "os" in when_info else ""
-                                when_store = when_info["store"] if "store" in when_info else ""
-                                is_gog_path = False
-                                if (when_os == "windows" or when_os == "dos") and (when_store == "gog" or when_store == ""):
-                                    is_gog_path = True
-                                elif when_store == "gog" and when_os == "":
-                                    is_gog_path = True
-                                if not is_gog_path:
-                                    continue
-
-                                # Save path
-                                game_paths.add(storebase.TranslateStorePath(path_location))
-
-                # Examine manifest registry data
-                if "registry" in manifest_data:
-                    for key in manifest_data["registry"]:
-                        game_keys.add(key)
-
-                # Clean and save paths
-                game_info[config.json_key_store_paths] = system.SortStrings(game_paths)
-
-                # Save keys
-                game_info[config.json_key_store_keys] = system.SortStrings(game_keys)
-
         # Return game info
         return game_info
 
