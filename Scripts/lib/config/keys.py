@@ -10,6 +10,7 @@ platform_key_addons = "addons"
 platform_key_launcher = "launcher"
 platform_key_autofill_json = "autofill_json"
 platform_key_fillonce_json = "fillonce_json"
+platform_key_merge_json = "merge_json"
 
 # Dat keys
 dat_key_game = "game"

@@ -3,7 +3,9 @@ import os, os.path
 import sys
 
 # Local imports
+import config
 import platforms
+import system
 
 # General json data class
 class JsonData:
@@ -30,6 +32,11 @@ class JsonData:
         elif platforms.IsFillOnceJsonKey(self.json_platform, json_key):
             if json_key not in self.json_data:
                 self.json_data[json_key] = json_value
+        elif platforms.IsMergeJsonKey(self.json_platform, json_key):
+            self.json_data[json_key] = system.MergeDictionaries(
+                dict1 = self.json_data[json_key],
+                dict2 = json_value,
+                merge_type = config.merge_type_safeadditive)
 
     # Get json data
     def GetJsonData(self):

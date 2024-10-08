@@ -93,6 +93,10 @@ def GetAutoFillJsonKeys(platform_name):
 def GetFillOnceJsonKeys(platform_name):
     return GetPlatformValue(platform_name, config.platform_key_fillonce_json)
 
+# Get merge json keys
+def GetMergeJsonKeys(platform_name):
+    return GetPlatformValue(platform_name, config.platform_key_merge_json)
+
 # Check if autofill key
 def IsAutoFillJsonKey(platform_name, json_key):
     if GetAutoFillJsonKeys(platform_name):
@@ -103,6 +107,12 @@ def IsAutoFillJsonKey(platform_name, json_key):
 def IsFillOnceJsonKey(platform_name, json_key):
     if GetFillOnceJsonKeys(platform_name):
         return json_key in GetFillOnceJsonKeys(platform_name)
+    return False
+
+# Check if merge key
+def IsMergeJsonKey(platform_name, json_key):
+    if GetMergeJsonKeys(platform_name):
+        return json_key in GetMergeJsonKeys(platform_name)
     return False
 
 ###########################################################
