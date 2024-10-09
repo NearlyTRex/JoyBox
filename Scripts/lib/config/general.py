@@ -41,6 +41,7 @@ token_game_file = "GAME_FILE"
 token_game_dir = "GAME_DIR"
 token_game_save_dir = "GAME_SAVE_DIR"
 token_python_bin = "PYTHON_BIN"
+token_user_registry_dir = "USER_REGISTRY_DIR"
 token_user_profile_dir = "USER_PROFILE_DIR"
 token_user_public_dir = "USER_PUBLIC_DIR"
 token_store_install_dir = "STORE_INSTALL_DIR"
@@ -199,6 +200,7 @@ ignored_paths_install = [
 # Registry
 registry_filename_setup = "setup.reg"
 registry_filename_game = "game.reg"
+registry_filename_user = "user.reg"
 registry_export_keys_setup = [
     "HKCU\\Software",
     "HKLM\\Software"

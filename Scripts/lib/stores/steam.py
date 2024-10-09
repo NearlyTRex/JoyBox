@@ -387,6 +387,8 @@ class Steam(storebase.StoreBase):
 
         # Build translation map
         translation_map = {}
+        translation_map[config.token_user_registry_dir] = []
+        translation_map[config.token_user_registry_dir].append(os.path.join(self.install_dir, "steamapps", "compatdata", game_appid, "pfx"))
         translation_map[config.token_user_public_dir] = []
         translation_map[config.token_user_public_dir].append("C:\\Users\\Public")
         translation_map[config.token_user_public_dir].append(os.path.join(self.install_dir, "steamapps", "compatdata", game_appid, "pfx", "drive_c", "users", "Public"))
@@ -423,6 +425,7 @@ class Steam(storebase.StoreBase):
                     # Get potential new base paths
                     new_base_general = config.save_type_general
                     new_base_public = os.path.join(config.save_type_general, config.computer_folder_public)
+                    new_base_registry = os.path.join(config.save_type_general, config.computer_folder_registry)
                     new_base_store = os.path.join(config.save_type_general, config.computer_folder_store, config.store_type_steam)
 
                     # Determine which paths exist
@@ -460,6 +463,9 @@ class Steam(storebase.StoreBase):
                         entry["relative"] = [relative_path]
                     elif base_key == config.token_user_public_dir:
                         relative_path = real_relativepath.replace(base_key, new_base_public)
+                        entry["relative"] = [relative_path]
+                    elif base_key == config.token_user_registry_dir:
+                        relative_path = real_relativepath.replace(base_key, new_base_registry)
                         entry["relative"] = [relative_path]
                     elif base_key == config.token_store_install_dir:
                         relative_path = real_relativepath.replace(base_key, new_base_store)
