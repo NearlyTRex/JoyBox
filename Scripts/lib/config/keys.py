@@ -29,6 +29,7 @@ metadata_key_category = "category"
 metadata_key_subcategory = "subcategory"
 metadata_key_file = "file"
 metadata_key_description = "description"
+metadata_key_url = "url"
 metadata_key_genre = "genre"
 metadata_key_coop = "coop"
 metadata_key_playable = "playable"
@@ -65,6 +66,7 @@ metadata_keys_all = [
     metadata_key_subcategory,
     metadata_key_file,
     metadata_key_description,
+    metadata_key_url,
     metadata_key_genre,
     metadata_key_coop,
     metadata_key_playable,

@@ -97,6 +97,12 @@ class MetadataEntry:
     def set_description(self, value):
         self.set_value(config.metadata_key_description, value)
 
+    # Game url
+    def get_url(self):
+        return self.get_value(config.metadata_key_url)
+    def set_url(self, value):
+        self.set_value(config.metadata_key_url, value)
+
     # Game genre
     def get_genre(self):
         return self.get_value(config.metadata_key_genre)
@@ -576,6 +582,11 @@ class Metadata:
                             in_description_section = False
                             game_entry.set_video(line.replace("assets.video:", "").strip())
 
+                        # Url
+                        elif line.startswith("x-url:"):
+                            in_description_section = False
+                            game_entry.set_url(line.replace("x-url:", "").strip())
+
                         # Co-op
                         elif line.startswith("x-co-op:"):
                             in_description_section = False
@@ -681,6 +692,10 @@ class Metadata:
                     # Video
                     if game_entry.is_key_set(config.metadata_key_video):
                         file.write("assets.video: " + game_entry.get_video() + "\n")
+
+                    # Url
+                    if game_entry.is_key_set(config.metadata_key_url):
+                        file.write("x-url: " + game_entry.get_url() + "\n")
 
                     # Co-op
                     if game_entry.is_key_set(config.metadata_key_coop):
