@@ -201,6 +201,7 @@ class GOG(storebase.StoreBase):
         # Augment by json
         if "slug" in gog_json:
             game_info[config.json_key_store_appname] = gog_json["slug"]
+            game_info[config.json_key_store_appurl] = "https://www.gog.com/en/game/%s" % gog_json["slug"]
         if "title" in gog_json:
             game_info[config.json_key_store_name] = gog_json["title"].strip()
         if "downloads" in gog_json:
@@ -213,6 +214,12 @@ class GOG(storebase.StoreBase):
                             game_info[config.json_key_store_buildid] = appinstaller["version"]
                         else:
                             game_info[config.json_key_store_buildid] = "original_release"
+        if "links" in gog_json:
+            applinks = gog_json["links"]
+            if "product_card" in applinks:
+                appurl = applinks["product_card"]
+                if appurl and network.IsUrlReachable(appurl):
+                    game_info[config.json_key_store_appurl] = applinks["product_card"]
 
         # Return game info
         return game_info

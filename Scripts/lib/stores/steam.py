@@ -257,6 +257,7 @@ class Steam(storebase.StoreBase):
         # Build game info
         game_info = {}
         game_info[config.json_key_store_appid] = identifier
+        game_info[config.json_key_store_appurl] = "https://store.steampowered.com/app/%s" % identifier
         game_info[config.json_key_store_paths] = []
         game_info[config.json_key_store_keys] = []
         if isinstance(branch, str) and len(branch):
