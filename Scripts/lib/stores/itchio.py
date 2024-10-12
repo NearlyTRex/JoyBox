@@ -26,6 +26,10 @@ class Itchio(storebase.StoreBase):
     def GetName(self):
         return "Itchio"
 
+    # Get type
+    def GetType(self):
+        return config.store_type_itchio
+
     # Get platform
     def GetPlatform(self):
         return config.platform_computer_itchio

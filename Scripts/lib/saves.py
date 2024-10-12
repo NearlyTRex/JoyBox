@@ -11,7 +11,6 @@ import programs
 import archive
 import hashing
 import locker
-import archive
 
 # Backup saves
 def BackupSaves(output_path, verbose = False, exit_on_failure = False):
@@ -248,20 +247,6 @@ def NormalizeSaveDir(save_category, save_subcategory, save_name, save_dir, verbo
                     exit_on_failure = exit_on_failure)
                 if not success:
                     return False
-
-        # Steam
-        if save_subcategory == config.game_subcategory_steam:
-
-            # Convert goldberg format to native
-            from stores import steam
-            from tools import goldbergemu
-            success = goldbergemu.ConvertToNativeSave(
-                save_dir = save_dir,
-                user_id = steam.Steam().GetUserId(config.steam_id_format_3s),
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
 
     # Must be successful
     return True

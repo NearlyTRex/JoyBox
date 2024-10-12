@@ -33,6 +33,10 @@ class Epic(storebase.StoreBase):
     def GetName(self):
         return "Epic"
 
+    # Get type
+    def GetType(self):
+        return config.store_type_epic
+
     # Get platform
     def GetPlatform(self):
         return config.platform_computer_epic_games

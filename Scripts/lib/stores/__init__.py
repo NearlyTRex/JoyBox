@@ -1,41 +1,34 @@
 # Imports
-import config
-from . import amazon
-from . import epic
-from . import gog
-from . import itchio
-from . import steam
+from .amazon import Amazon
+from .epic import Epic
+from .gog import GOG
+from .itchio import Itchio
+from .steam import Steam
 
-# Stores instances
-instances = [
-    amazon.Amazon(),
-    epic.Epic(),
-    gog.GOG(),
-    itchio.Itchio(),
-    steam.Steam()
-]
-
-# Get stores
-def GetStores():
+# Get store map
+def GetStoreMap():
+    instances = {}
+    instances["Amazon"] = Amazon()
+    instances["Epic"] = Epic()
+    instances["GOG"] = GOG()
+    instances["Itchio"] = Itchio()
+    instances["Steam"] = Steam()
     return instances
+
+# Get store list
+def GetStoreList():
+    return GetStoreMap().values()
 
 # Get store by name
 def GetStoreByName(store_name):
-    for store_instance in instances:
-        if store_instance.GetName() == store_name:
-            return store_instance
+    for instance in GetStoreMap().values():
+        if instance.GetName() == store_name:
+            return instance
     return None
 
 # Get store by type
 def GetStoreByType(store_type):
-    if store_type == config.store_type_amazon:
-        return amazon.Amazon()
-    elif store_type == config.store_type_epic:
-        return epic.Epic()
-    elif store_type == config.store_type_gog:
-        return gog.GOG()
-    elif store_type == config.store_type_itchio:
-        return itchio.Itchio()
-    elif store_type == config.store_type_steam:
-        return steam.Steam()
+    for instance in GetStoreMap().values():
+        if instance.GetType() == store_type:
+            return instance
     return None

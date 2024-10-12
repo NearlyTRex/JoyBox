@@ -14,7 +14,7 @@ import programs
 import chd
 import install
 import gameinfo
-from emulators import computer
+import emulators
 
 # Inno Setup parameters
 inno_setup_silent_params = ["/SP-"]
@@ -172,7 +172,7 @@ def SetupDosPrograms(
         program_dir = system.GetFilenameDirectory(dos_program)
         program_file = system.GetFilenameFile(dos_program)
         program_offset = system.GetFilenameDriveOffset(program_dir)
-        program_setup_cmd = computer.GetDosLaunchCommand(
+        program_setup_cmd = tools.GetComputerDosLaunchCommand(
             prefix_dir = prefix_dir,
             is_wine_prefix = is_wine_prefix,
             is_sandboxie_prefix = is_sandboxie_prefix,
@@ -277,7 +277,7 @@ def RunSetupSteps(
         # Resolve paths
         for path_key, path_value in paths.items():
             if len(path_value):
-                paths[path_key] = computer.ResolveJsonPath(
+                paths[path_key] = tools.ResolveComputerJsonPath(
                     path = path_value,
                     setup_base_dir = setup_base_dir,
                     hdd_base_dir = hdd_base_dir,
@@ -389,12 +389,12 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         return False
 
     # Build disc token map
-    game_disc_token_map = computer.BuildDiscTokenMap(
+    game_disc_token_map = tools.BuildComputerDiscTokenMap(
         disc_files = game_disc_files,
         use_drive_letters = game_is_dos or game_is_win31)
 
     # Resolve installer paths
-    game_installer_exe_list = computer.ResolveJsonPaths(
+    game_installer_exe_list = tools.ResolveComputerJsonPaths(
         paths = game_installer_exe_list,
         setup_base_dir = game_setup_dir,
         hdd_base_dir = prefix_c_drive_real,
@@ -402,7 +402,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         disc_token_map = game_disc_token_map)
 
     # Resolve dos installer paths
-    game_installer_dos_exe_list = computer.ResolveJsonPaths(
+    game_installer_dos_exe_list = tools.ResolveComputerJsonPaths(
         paths = game_installer_dos_exe_list,
         setup_base_dir = game_setup_dir,
         hdd_base_dir = prefix_c_drive_real,
@@ -444,7 +444,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         setup_base_dir = game_setup_dir,
         hdd_base_dir = prefix_c_drive_real,
         disc_base_dir = game_setup_dir,
-        disc_token_map = computer.BuildDiscTokenMap(game_disc_files),
+        disc_token_map = tools.BuildComputerDiscTokenMap(game_disc_files),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
@@ -506,7 +506,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         setup_base_dir = game_setup_dir,
         hdd_base_dir = prefix_c_drive_real,
         disc_base_dir = game_setup_dir,
-        disc_token_map = computer.BuildDiscTokenMap(game_disc_files),
+        disc_token_map = tools.BuildComputerDiscTokenMap(game_disc_files),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 

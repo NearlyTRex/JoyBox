@@ -14,8 +14,7 @@ import programs
 import registry
 import gui
 import ini
-from tools import dxvk
-from tools import vkd3d
+import tools
 
 ###########################################################
 
@@ -885,16 +884,16 @@ def CreateWinePrefix(
     if wine_setup_use_dxvk:
         InstallWineDlls(
             prefix_dir = prefix_dir,
-            dlls_32 = dxvk.GetLibs32(),
-            dlls_64 = dxvk.GetLibs64(),
+            dlls_32 = tools.GetDXVKLibs32(),
+            dlls_64 = tools.GetDXVKLibs64(),
             is_32_bit = is_32_bit)
 
     # Copy vkd3d libraries
     if wine_setup_use_vkd3d:
         InstallWineDlls(
             prefix_dir = prefix_dir,
-            dlls_32 = vkd3d.GetLibs32(),
-            dlls_64 = vkd3d.GetLibs64(),
+            dlls_32 = tools.GetVKD3DLibs32(),
+            dlls_64 = tools.GetVKD3DLibs64(),
             is_32_bit = is_32_bit)
 
     # Creation successful

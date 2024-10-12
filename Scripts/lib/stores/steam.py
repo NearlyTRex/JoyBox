@@ -51,6 +51,10 @@ class Steam(storebase.StoreBase):
     def GetName(self):
         return "Steam"
 
+    # Get type
+    def GetType(self):
+        return config.store_type_steam
+
     # Get platform
     def GetPlatform(self):
         return config.platform_computer_steam

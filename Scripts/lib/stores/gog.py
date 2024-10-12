@@ -40,6 +40,10 @@ class GOG(storebase.StoreBase):
     def GetName(self):
         return "GOG"
 
+    # Get type
+    def GetType(self):
+        return config.store_type_gog
+
     # Get platform
     def GetPlatform(self):
         return config.platform_computer_gog

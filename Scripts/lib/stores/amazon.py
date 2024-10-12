@@ -24,6 +24,10 @@ class Amazon(storebase.StoreBase):
     def GetName(self):
         return "Amazon"
 
+    # Get type
+    def GetType(self):
+        return config.store_type_amazon
+
     # Get platform
     def GetPlatform(self):
         return config.platform_computer_amazon_games

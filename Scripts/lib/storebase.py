@@ -10,7 +10,7 @@ import saves
 import gameinfo
 import jsondata
 import collection
-from tools import ludusavimanifest
+import tools
 
 # Translate store path
 def TranslateStorePath(path, base_path = None):
@@ -64,6 +64,10 @@ class StoreBase:
     def GetName(self):
         return ""
 
+    # Get type
+    def GetType(self):
+        return None
+
     # Get platform
     def GetPlatform(self):
         return ""
@@ -109,7 +113,7 @@ class StoreBase:
     # Load manifest
     def LoadManifest(self, verbose = False, exit_on_failure = False):
         self.manifest = system.ReadYamlFile(
-            src = ludusavimanifest.GetManifest(),
+            src = tools.GetManifest(),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 

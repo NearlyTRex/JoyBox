@@ -113,23 +113,23 @@ def IsProgramInstalled(program_name, program_platform = None):
 
 # Get tools
 def GetTools():
-    return tools.GetTools()
+    return tools.GetToolList()
 
 # Get emulators
 def GetEmulators():
-    return emulators.GetEmulators()
+    return emulators.GetEmulatorList()
 
 # Get tool config
 def GetToolConfig():
     merged_config = {}
-    for tool in tools.GetTools():
+    for tool in tools.GetToolList():
         merged_config.update(tool.GetConfig())
     return merged_config
 
 # Get emulator config
 def GetEmulatorConfig():
     merged_config = {}
-    for emulator in emulators.GetEmulators():
+    for emulator in emulators.GetEmulatorList():
         merged_config.update(emulator.GetConfig())
     return merged_config
 
