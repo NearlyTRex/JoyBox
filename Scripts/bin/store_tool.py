@@ -144,6 +144,21 @@ def main():
                 if not success:
                     system.LogErrorAndQuit("Update of '%s' failed!" % json_file)
 
+    # Update metadata
+    elif args.store_action == config.store_action_type_update_metadata:
+        for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
+            game_info = gameinfo.GameInfo(
+                json_file = json_file,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            if game_info and game_info.is_valid():
+                success = store_obj.UpdateMetadata(
+                    game_info = game_info,
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
+                if not success:
+                    system.LogErrorAndQuit("Update of '%s' failed!" % json_file)
+
     # Check versions
     elif args.store_action == config.store_action_type_check_versions:
         for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):

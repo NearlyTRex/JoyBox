@@ -122,7 +122,7 @@ def GetToolList():
 
 # Get tool by name
 def GetToolByName(tool_name):
-    for instance in GetToolMap().values():
+    for instance in GetToolList():
         if instance.GetName() == tool_name:
             return instance
     return None

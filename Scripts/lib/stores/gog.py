@@ -64,6 +64,8 @@ class GOG(storebase.StoreBase):
     def GetIdentifier(self, game_info, identifier_type):
         if identifier_type == config.store_identifier_type_info:
             return game_info.get_store_appid(self.GetKey())
+        elif identifier_type == config.store_identifier_type_metadata:
+            return game_info.get_store_appurl(self.GetKey())
         return game_info.get_store_appname(self.GetKey())
 
     ############################################################
@@ -162,16 +164,16 @@ class GOG(storebase.StoreBase):
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.GetPlatform())
-            purchase.SetJsonValue(config.json_key_store_appname, line_appname)
-            purchase.SetJsonValue(config.json_key_store_appid, line_appid)
-            purchase.SetJsonValue(config.json_key_store_name, line_title)
+            purchase.set_value(config.json_key_store_appname, line_appname)
+            purchase.set_value(config.json_key_store_appid, line_appid)
+            purchase.set_value(config.json_key_store_name, line_title)
             purchases.append(purchase)
         return purchases
 
     ############################################################
 
-    # Get info
-    def GetLatestInfo(
+    # Get latest jsondata
+    def GetLatestJsondata(
         self,
         identifier,
         branch = None,
@@ -226,7 +228,7 @@ class GOG(storebase.StoreBase):
                     game_info[config.json_key_store_appurl] = applinks["product_card"]
 
         # Return game info
-        return game_info
+        return jsondata.JsonData(game_info, self.GetPlatform())
 
     ############################################################
 

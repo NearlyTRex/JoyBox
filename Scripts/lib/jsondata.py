@@ -11,33 +11,94 @@ import system
 class JsonData:
 
     # Constructor
-    def __init__(self, json_data, json_platform):
+    def __init__(self, json_data = {}, json_platform = None):
         self.json_data = json_data
         self.json_platform = json_platform
 
-    # Set json value
-    def SetJsonValue(self, json_key, json_value):
-        self.json_data[json_key] = json_value
-
-    # Get json value
-    def GetJsonValue(self, json_key, default_value = None):
-        if json_key in self.json_data:
-            return self.json_data[json_key]
-        return default_value
-
-    # Fill json value
-    def FillJsonValue(self, json_key, json_value):
-        if platforms.IsAutoFillJsonKey(self.json_platform, json_key):
-            self.json_data[json_key] = json_value
-        elif platforms.IsFillOnceJsonKey(self.json_platform, json_key):
-            if json_key not in self.json_data:
-                self.json_data[json_key] = json_value
-        elif platforms.IsMergeJsonKey(self.json_platform, json_key):
-            self.json_data[json_key] = system.MergeDictionaries(
-                dict1 = self.json_data[json_key],
-                dict2 = json_value,
-                merge_type = config.merge_type_safeadditive)
-
-    # Get json data
-    def GetJsonData(self):
+    # Get data
+    def get_data(self):
         return self.json_data
+
+    # Get platform
+    def get_platform(self):
+        return self.json_platform
+
+    # Set data
+    def set_data(self, json_data):
+        self.json_data = json_data
+
+    # Set platform
+    def set_platform(self, json_platform):
+        self.json_platform = json_platform
+
+    # Get keys
+    def get_keys(self):
+        return self.json_data.keys()
+
+    # Check if key is present
+    def has_key(self, key):
+        try:
+            return key in self.json_data
+        except:
+            return False
+
+    # Check if subkey is present
+    def has_subkey(self, key, subkey):
+        try:
+            return subkey in self.json_data[key]
+        except:
+            return False
+
+    # Get value
+    def get_value(self, key, default_value = None):
+        try:
+            return self.json_data[key]
+        except:
+            return default_value
+
+    # Get subvalue
+    def get_subvalue(self, key, subkey, default_value = None):
+        try:
+            return self.json_data[key][subkey]
+        except:
+            return default_value
+
+    # Set value
+    def set_value(self, key, value):
+        try:
+            self.json_data[key] = value
+        except:
+            return
+
+    # Set subvalue
+    def set_subvalue(self, key, subkey, value):
+        try:
+            self.json_data[key][subkey] = value
+        except:
+            return
+
+    # Fill value
+    def fill_value(self, key, value):
+        if platforms.IsAutoFillJsonKey(self.json_platform, key):
+            self.set_value(key, value)
+        elif platforms.IsFillOnceJsonKey(self.json_platform, key):
+            if not self.has_key(key):
+                self.set_value(key, value)
+        elif platforms.IsMergeJsonKey(self.json_platform, key):
+            self.set_value(key, system.MergeDictionaries(
+                dict1 = self.get_value(key),
+                dict2 = value,
+                merge_type = config.merge_type_safeadditive))
+
+    # Fill subvalue
+    def fill_subvalue(self, key, subkey, value):
+        if platforms.IsAutoFillJsonKey(self.json_platform, subkey):
+            self.set_subvalue(key, subkey, value)
+        elif platforms.IsFillOnceJsonKey(self.json_platform, subkey):
+            if not self.has_subkey(subkey):
+                self.set_subvalue(key, subkey, value)
+        elif platforms.IsMergeJsonKey(self.json_platform, subkey):
+            self.set_subvalue(key, subkey, system.MergeDictionaries(
+                dict1 = self.get_subvalue(key, subkey),
+                dict2 = value,
+                merge_type = config.merge_type_safeadditive))

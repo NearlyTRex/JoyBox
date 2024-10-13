@@ -21,14 +21,14 @@ def GetStoreList():
 
 # Get store by name
 def GetStoreByName(store_name):
-    for instance in GetStoreMap().values():
+    for instance in GetStoreList():
         if instance.GetName() == store_name:
             return instance
     return None
 
 # Get store by type
 def GetStoreByType(store_type):
-    for instance in GetStoreMap().values():
+    for instance in GetStoreList():
         if instance.GetType() == store_type:
             return instance
     return None

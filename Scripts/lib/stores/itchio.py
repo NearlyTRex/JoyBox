@@ -14,6 +14,7 @@ import hashing
 import jsondata
 import webpage
 import storebase
+import metadataentry
 
 # Itchio store
 class Itchio(storebase.StoreBase):
@@ -58,37 +59,21 @@ class Itchio(storebase.StoreBase):
         verbose = False,
         exit_on_failure = False):
 
-        # Create web driver
-        try:
-            web_driver = webpage.CreateWebDriver(verbose = verbose)
-        except Exception as e:
-            if verbose:
-                system.LogError(e)
+        # Connect to web
+        web_driver = self.WebConnect(
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not web_driver:
             return False
 
-        # Log into itchio
-        success = webpage.LogIntoWebsite(
-            driver = web_driver,
-            login_url = config.itchio_login_url,
-            cookiefile = os.path.join(environment.GetCookieDirectory(), config.itchio_login_cookie_filename),
-            link_text = config.itchio_login_link_text,
-            verbose = verbose)
-        if not success:
-            return False
+        # Disconnect from web
+        success = self.WebDisconnect(
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        return success
 
-        # Destroy web driver
-        try:
-            webpage.DestroyWebDriver(web_driver, verbose = verbose)
-            return True
-        except Exception as e:
-            if verbose:
-                system.LogError(e)
-            return False
-
-    ############################################################
-
-    # Get purchases
-    def GetPurchases(
+    # Web connect
+    def WebConnect(
         self,
         verbose = False,
         exit_on_failure = False):
@@ -109,7 +94,40 @@ class Itchio(storebase.StoreBase):
             link_text = config.itchio_login_link_text,
             verbose = verbose)
         if not success:
+            return None
+
+        # Return web driver
+        return web_driver
+
+    # Web disconnect
+    def WebDisconnect(
+        self,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Destroy web driver
+        try:
+            webpage.DestroyWebDriver(web_driver, verbose = verbose)
+            return True
+        except Exception as e:
+            if verbose:
+                system.LogError(e)
             return False
+
+    ############################################################
+
+    # Get purchases
+    def GetPurchases(
+        self,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Connect to web
+        web_driver = self.WebConnect(
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not web_driver:
+            return None
 
         # Go to the purchases page
         try:
@@ -145,17 +163,16 @@ class Itchio(storebase.StoreBase):
                 purchase = jsondata.JsonData(
                     json_data = {},
                     json_platform = self.GetPlatform())
-                purchase.SetJsonValue(config.json_key_store_appid, line_appid)
-                purchase.SetJsonValue(config.json_key_store_appurl, line_appurl)
-                purchase.SetJsonValue(config.json_key_store_name, line_title)
+                purchase.set_value(config.json_key_store_appid, line_appid)
+                purchase.set_value(config.json_key_store_appurl, line_appurl)
+                purchase.set_value(config.json_key_store_name, line_title)
                 purchases.append(purchase)
 
-        # Destroy web driver
-        try:
-            webpage.DestroyWebDriver(web_driver, verbose = verbose)
-        except Exception as e:
-            if verbose:
-                system.LogError(e)
+        # Disconnect from web
+        success = self.WebDisconnect(
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
             return None
 
         # Return purchases
@@ -163,14 +180,111 @@ class Itchio(storebase.StoreBase):
 
     ############################################################
 
-    # Get info
-    def GetLatestInfo(
+    # Get latest jsondata
+    def GetLatestJsondata(
         self,
         identifier,
         branch = None,
         verbose = False,
         exit_on_failure = False):
-        return False
+        return None
+
+    ############################################################
+
+    # Get latest metadata
+    def GetLatestMetadata(
+        self,
+        identifier,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Connect to web
+        web_driver = self.WebConnect(
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not web_driver:
+            return None
+
+        # Go to the search page and pull the results
+        try:
+            web_driver.get(identifier)
+        except:
+            return None
+
+        # Look for game description
+        section_game_description = webpage.WaitForPageElement(web_driver, class_name = "formatted_description", verbose = verbose)
+        if not section_game_description:
+            return None
+
+        # Look for game information
+        section_game_information = webpage.WaitForPageElement(web_driver, class_name = "more_information_toggle", verbose = verbose)
+        if not section_game_information:
+            return None
+
+        # Grab the description text
+        raw_game_description = webpage.GetElementText(section_game_description)
+
+        # Create metadata entry
+        metadata_entry = metadataentry.MetadataEntry()
+
+        # Convert description to metadata format
+        if raw_game_description:
+            metadata_entry.set_description(CleanRawGameDescription(raw_game_description))
+
+        # Grab the information text
+        raw_game_information = webpage.GetElementText(section_game_information)
+
+        # Click the "More information" button if it's present
+        if raw_game_information:
+            if "More information" in raw_game_information:
+                element_game_info_more = webpage.GetElement(web_driver, link_text = "More information")
+                if element_game_info_more:
+                    webpage.ClickElement(element_game_info_more)
+
+        # Wait for more information to load
+        time.sleep(3)
+
+        # Look for game details
+        section_game_details = webpage.GetElement(web_driver, class_name = "game_info_panel_widget")
+        if section_game_details:
+
+            # Grab the information text
+            raw_game_details = webpage.GetElementText(section_game_details)
+            for game_detail_line in raw_game_details.split("\n"):
+
+                # Release
+                if game_detail_line.startswith("Release date"):
+                    release_text = game_detail_line.replace("Release date", "").strip()
+                    release_time = datetime.datetime.strptime(release_text, "%b %d, %Y")
+                    metadata_entry.set_release(release_time.strftime("%Y-%m-%d"))
+                if game_detail_line.startswith("Published"):
+                    release_text = game_detail_line.replace("Published", "").strip()
+                    release_time = datetime.datetime.strptime(release_text, "%b %d, %Y")
+                    metadata_entry.set_release(release_time.strftime("%Y-%m-%d"))
+
+                # Developer/publisher
+                elif game_detail_line.startswith("Authors"):
+                    author_text = game_detail_line.replace("Authors", "").strip()
+                    metadata_entry.set_developer(author_text)
+                    metadata_entry.set_publisher(author_text)
+                elif game_detail_line.startswith("Author"):
+                    author_text = game_detail_line.replace("Author", "").strip()
+                    metadata_entry.set_developer(author_text)
+                    metadata_entry.set_publisher(author_text)
+
+                # Genre
+                elif game_detail_line.startswith("Genre"):
+                    metadata_entry.set_genre(game_detail_line.replace("Genre", "").strip().replace(", ", ";"))
+
+        # Disconnect from web
+        success = self.WebDisconnect(
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return None
+
+        # Return metadata entry
+        return metadata_entry
 
     ############################################################
 

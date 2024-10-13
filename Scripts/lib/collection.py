@@ -100,49 +100,51 @@ def CreateGameJsonFile(
     computer_installers += system.ConvertFileListToAbsolutePaths(exe_dlc, computer_root_dlc)
 
     # Create json data object
-    json_obj = jsondata.JsonData(json_file_data, game_platform)
+    json_obj = jsondata.JsonData(
+        json_data = json_file_data,
+        json_platform = game_platform)
 
     # Set common keys
-    json_obj.FillJsonValue(config.json_key_files, rebased_files)
-    json_obj.FillJsonValue(config.json_key_dlc, all_dlc)
-    json_obj.FillJsonValue(config.json_key_update, all_updates)
-    json_obj.FillJsonValue(config.json_key_extra, all_extras)
-    json_obj.FillJsonValue(config.json_key_dependencies, all_dependencies)
-    json_obj.FillJsonValue(config.json_key_transform_file, best_game_file)
+    json_obj.fill_value(config.json_key_files, rebased_files)
+    json_obj.fill_value(config.json_key_dlc, all_dlc)
+    json_obj.fill_value(config.json_key_update, all_updates)
+    json_obj.fill_value(config.json_key_extra, all_extras)
+    json_obj.fill_value(config.json_key_dependencies, all_dependencies)
+    json_obj.fill_value(config.json_key_transform_file, best_game_file)
 
     # Set computer keys
     if game_category == config.game_category_computer:
-        json_obj.FillJsonValue(config.json_key_installer_exe, computer_installers)
+        json_obj.fill_value(config.json_key_installer_exe, computer_installers)
         if game_subcategory == config.game_subcategory_amazon_games:
-            json_obj.FillJsonValue(config.json_key_amazon, {
+            json_obj.fill_value(config.json_key_amazon, {
                 config.json_key_store_appid: "",
                 config.json_key_store_name: ""
             })
         elif game_subcategory == config.game_subcategory_epic_games:
-            json_obj.FillJsonValue(config.json_key_epic, {
+            json_obj.fill_value(config.json_key_epic, {
                 config.json_key_store_appname: ""
             })
         elif game_subcategory == config.game_subcategory_gog:
-            json_obj.FillJsonValue(config.json_key_gog, {
+            json_obj.fill_value(config.json_key_gog, {
                 config.json_key_store_appid: "",
                 config.json_key_store_appname: ""
             })
         elif game_subcategory == config.game_subcategory_itchio:
-            json_obj.FillJsonValue(config.json_key_itchio, {
+            json_obj.fill_value(config.json_key_itchio, {
                 config.json_key_store_appid: "",
                 config.json_key_store_appurl: "",
                 config.json_key_store_name: ""
             })
         elif game_subcategory == config.game_subcategory_steam:
-            json_obj.FillJsonValue(config.json_key_steam, {
+            json_obj.fill_value(config.json_key_steam, {
                 config.json_key_store_appid: "",
                 config.json_key_store_branchid: config.steam_branch_format_public
             })
 
     # Set other platform keys
     else:
-        json_obj.FillJsonValue(config.json_key_launch_name, "REPLACEME")
-        json_obj.FillJsonValue(config.json_key_launch_file, best_game_file)
+        json_obj.fill_value(config.json_key_launch_name, "REPLACEME")
+        json_obj.fill_value(config.json_key_launch_file, best_game_file)
 
     # Create json directory
     success = system.MakeDirectory(
@@ -155,7 +157,7 @@ def CreateGameJsonFile(
     # Write json file
     success = system.WriteJsonFile(
         src = json_file_path,
-        json_data = json_obj.GetJsonData(),
+        json_data = json_obj.get(),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
@@ -245,15 +247,17 @@ def AddGameJsonIgnoreEntry(
         exit_on_failure = exit_on_failure)
 
     # Create json data object
-    json_obj = jsondata.JsonData(json_file_data, game_platform)
+    json_obj = jsondata.JsonData(
+        json_data = json_file_data,
+        json_platform = game_platform)
 
     # Add entry
-    json_obj.SetJsonValue(game_identifier, game_name)
+    json_obj.set_value(game_identifier, game_name)
 
     # Write json file
     system.WriteJsonFile(
         src = json_file_path,
-        json_data = json_obj.GetJsonData(),
+        json_data = json_obj.get(),
         sort_keys = True,
         verbose = verbose,
         exit_on_failure = exit_on_failure)

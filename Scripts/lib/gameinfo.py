@@ -10,6 +10,7 @@ import system
 import environment
 import metadata
 import platforms
+import jsondata
 
 ###########################################################
 
@@ -18,6 +19,22 @@ class GameInfo:
 
     # Constructor
     def __init__(self, json_file, verbose = False, exit_on_failure = False):
+
+        # Json info
+        self.json_data = {}
+        self.json_file = None
+
+        # Metadata info
+        self.metadata_file = None
+
+        # Game info
+        self.game_supercategory = None
+        self.game_category = None
+        self.game_subcategory = None
+        self.game_name = None
+        self.game_platform = None
+
+        # Parse json file
         self.parse_json_file(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Parse game json
@@ -26,7 +43,7 @@ class GameInfo:
         # Read json data
         self.json_data = system.ReadJsonFile(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
 
-        # Save source file
+        # Save json file
         self.json_file = json_file
 
         ##############################
@@ -34,20 +51,22 @@ class GameInfo:
         ##############################
 
         # Get basic info based on json location
-        json_directory = system.GetFilenameDirectory(json_file)
-        json_base_name = system.GetFilenameBasename(json_file)
-        json_supercategory, json_category, json_subcategory = DeriveGameCategoriesFromFile(json_file)
-        json_platform = DeriveGamePlatformFromCategories(json_category, json_subcategory)
-        system.AssertIsNotNone(json_supercategory, "json_supercategory")
-        system.AssertIsNotNone(json_category, "json_category")
-        system.AssertIsNotNone(json_subcategory, "json_subcategory")
-        system.AssertIsNotNone(json_platform, "json_platform")
+        self.game_name = system.GetFilenameBasename(json_file)
+        self.game_supercategory, self.game_category, self.game_subcategory = DeriveGameCategoriesFromFile(json_file)
+        self.game_platform = DeriveGamePlatformFromCategories(self.game_category, self.game_subcategory)
+        system.AssertIsNotNone(self.game_supercategory, "game_supercategory")
+        system.AssertIsNotNone(self.game_category, "game_category")
+        system.AssertIsNotNone(self.game_subcategory, "game_subcategory")
+        system.AssertIsNotNone(self.game_platform, "game_platform")
+        system.AssertIsNotNone(self.game_name, "game_name")
+
+        # Save metadata file
+        self.metadata_file = environment.GetMetadataFile(self.game_category, self.game_subcategory)
 
         # Get metadata
-        metadata_file = environment.GetMetadataFile(json_category, json_subcategory)
         metadata_obj = metadata.Metadata()
-        metadata_obj.import_from_metadata_file(metadata_file)
-        metadata_entry = metadata_obj.get_game(json_platform, json_base_name)
+        metadata_obj.import_from_metadata_file(self.metadata_file)
+        metadata_entry = metadata_obj.get_game(self.game_platform, self.game_name)
 
         # Set metadata
         self.set_metadata(metadata_entry)
@@ -71,15 +90,15 @@ class GameInfo:
         ##############################
 
         # Get paths
-        save_dir = environment.GetCacheGamingSaveDir(json_category, json_subcategory, json_base_name)
-        if json_category == config.game_category_computer:
+        save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name)
+        if self.game_category == config.game_category_computer:
             if environment.IsWindowsPlatform():
-                save_dir = environment.GetCacheGamingSaveDir(json_category, json_subcategory, json_base_name, config.save_type_sandboxie)
+                save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.save_type_sandboxie)
             else:
-                save_dir = environment.GetCacheGamingSaveDir(json_category, json_subcategory, json_base_name, config.save_type_wine)
-        general_save_dir = environment.GetCacheGamingSaveDir(json_category, json_subcategory, json_base_name, config.save_type_general)
-        local_cache_dir = environment.GetCacheGamingRomDir(json_category, json_subcategory, json_base_name)
-        remote_cache_dir = environment.GetCacheGamingInstallDir(json_category, json_subcategory, json_base_name)
+                save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.save_type_wine)
+        general_save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.save_type_general)
+        local_cache_dir = environment.GetCacheGamingRomDir(self.game_category, self.game_subcategory, self.game_name)
+        remote_cache_dir = environment.GetCacheGamingInstallDir(self.game_category, self.game_subcategory, self.game_name)
 
         # Set paths
         self.set_value(config.json_key_save_dir, save_dir)
@@ -97,7 +116,7 @@ class GameInfo:
         json_transform_file = self.get_value(config.json_key_transform_file)
 
         # Get source dir
-        source_dir = environment.GetLockerGamingRomDir(json_category, json_subcategory, json_base_name)
+        source_dir = environment.GetLockerGamingRomDir(self.game_category, self.game_subcategory, self.game_name)
 
         # Get source file
         # In order of preference:
@@ -120,6 +139,39 @@ class GameInfo:
     def get_json_file(self):
         return self.json_file
 
+    # Get json data
+    def get_json_data(self):
+        return self.json_data
+
+    # Read raw json data
+    def read_raw_json_data(self, verbose = False, exit_on_failure = False):
+        return system.ReadJsonFile(
+            src = self.get_json_file(),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
+    # Write raw json data
+    def write_raw_json_data(self, json_data, verbose = False, exit_on_failure = False):
+        return system.WriteJsonFile(
+            src = self.get_json_file(),
+            json_data = json_data,
+            sort_keys = True,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
+    # Read wrapped json data
+    def read_wrapped_json_data(self, verbose = False, exit_on_failure = False):
+        return jsondata.JsonData(
+            json_data = self.read_raw_json_data(verbose = verbose, exit_on_failure = exit_on_failure),
+            json_platform = self.get_platform())
+
+    # Write wrapped json data
+    def write_wrapped_json_data(self, json_wrapper, verbose = False, exit_on_failure = False):
+        return self.write_raw_json_data(
+            json_data = json_wrapper.get(),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
     ##############################
 
     # Check if key exists
@@ -137,44 +189,52 @@ class GameInfo:
             return False
 
     # Get value
-    def get_value(self, key):
+    def get_value(self, key, default_value = None):
         try:
             return self.json_data[key]
         except:
-            return None
+            return default_value
 
     # Get sub-value
-    def get_subvalue(self, key, subkey):
+    def get_subvalue(self, key, subkey, default_value = None):
         try:
             return self.json_data[key][subkey]
         except:
-            return None
+            return default_value
 
     # Set value
     def set_value(self, key, value):
         try:
             self.json_data[key] = value
+            return True
         except:
-            return
+            return False
 
     # Set sub-value
     def set_subvalue(self, key, subkey, value):
         try:
             self.json_data[key][subkey] = value
+            return True
         except:
-            return
+            return False
 
     # Set default value
     def set_default_value(self, key, value):
         if not self.has_key(key):
-            self.set_value(key, value)
+            return self.set_value(key, value)
+        return False
 
     # Set default sub-value
     def set_default_subvalue(self, key, subkey, value):
         if self.has_key(key) and not self.has_subkey(key, subkey):
-            self.set_subvalue(key, subkey, value)
+            return self.set_subvalue(key, subkey, value)
+        return False
 
     ##############################
+
+    # Get metadata file
+    def get_metadata_file(self):
+        return self.metadata_file
 
     # Check if metadata exists
     def has_metadata(self):
@@ -190,13 +250,27 @@ class GameInfo:
 
     # Set metadata
     def set_metadata(self, metadata):
-        self.set_value(config.json_key_metadata, metadata)
+        return self.set_value(config.json_key_metadata, metadata)
 
     # Get metadata value
     def get_metadata_value(self, key):
         if self.has_metadata():
             return self.get_metadata().get_value(key)
         return None
+
+    # Set metadata value
+    def set_metadata_value(self, key, value):
+        if self.has_metadata():
+            return self.get_metadata().set_value(key, value)
+        return False
+
+    # Write metadata
+    def write_metadata(self):
+        if self.has_metadata():
+            metadata_obj = metadata.Metadata()
+            metadata_obj.import_from_metadata_file(self.metadata_file)
+            metadata_obj.set_game(self.get_platform(), self.get_name(), self.get_metadata())
+            metadata_obj.export_to_metadata_file(self.metadata_file)
 
     ##############################
 

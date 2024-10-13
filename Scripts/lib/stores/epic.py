@@ -55,6 +55,8 @@ class Epic(storebase.StoreBase):
 
     # Get identifier
     def GetIdentifier(self, game_info, identifier_type):
+        if identifier_type == config.store_identifier_type_metadata:
+            return game_info.get_store_appurl(self.GetKey())
         return game_info.get_store_appname(self.GetKey())
 
     # Get user name
@@ -167,16 +169,16 @@ class Epic(storebase.StoreBase):
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.GetPlatform())
-            purchase.SetJsonValue(config.json_key_store_appname, line_appname)
-            purchase.SetJsonValue(config.json_key_store_buildid, line_version)
-            purchase.SetJsonValue(config.json_key_store_name, line_title)
+            purchase.set_value(config.json_key_store_appname, line_appname)
+            purchase.set_value(config.json_key_store_buildid, line_version)
+            purchase.set_value(config.json_key_store_name, line_title)
             purchases.append(purchase)
         return purchases
 
     ############################################################
 
-    # Get info
-    def GetLatestInfo(
+    # Get latest jsondata
+    def GetLatestJsondata(
         self,
         identifier,
         branch = None,
@@ -238,7 +240,7 @@ class Epic(storebase.StoreBase):
                     ]
 
         # Return game info
-        return game_info
+        return jsondata.JsonData(game_info, self.GetPlatform())
 
     ############################################################
 

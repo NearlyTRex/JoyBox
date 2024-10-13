@@ -104,6 +104,10 @@ class StoreBase:
     def GetDownloadIdentifier(self, game_info):
         return self.GetIdentifier(game_info, config.store_identifier_type_download)
 
+    # Get metadata identifier
+    def GetMetadataIdentifier(self, game_info):
+        return self.GetIdentifier(game_info, config.store_identifier_type_metadata)
+
     # Is valid identifier
     def IsValidIdentifier(self, identifier):
         return isinstance(identifier, str) and len(identifier)
@@ -121,6 +125,20 @@ class StoreBase:
 
     # Login
     def Login(
+        self,
+        verbose = False,
+        exit_on_failure = False):
+        return False
+
+    # Web connect
+    def WebConnect(
+        self,
+        verbose = False,
+        exit_on_failure = False):
+        return None
+
+    # Web disconnect
+    def WebDisconnect(
         self,
         verbose = False,
         exit_on_failure = False):
@@ -164,10 +182,10 @@ class StoreBase:
 
         # Import each purchase
         for purchase in purchases:
-            purchase_appid = purchase.GetJsonValue(config.json_key_store_appid)
-            purchase_appname = purchase.GetJsonValue(config.json_key_store_appname)
-            purchase_appurl = purchase.GetJsonValue(config.json_key_store_appurl)
-            purchase_name = purchase.GetJsonValue(config.json_key_store_name)
+            purchase_appid = purchase.get_value(config.json_key_store_appid)
+            purchase_appname = purchase.get_value(config.json_key_store_appname)
+            purchase_appurl = purchase.get_value(config.json_key_store_appurl)
+            purchase_name = purchase.get_value(config.json_key_store_name)
             purchase_identifiers = [
                 purchase_appid,
                 purchase_appname,
@@ -226,8 +244,8 @@ class StoreBase:
             # Create store data
             store_data = {}
             for json_key in config.json_keys_store_subdata:
-                if purchase.GetJsonValue(json_key):
-                    store_data[json_key] = purchase.GetJsonValue(json_key)
+                if purchase.get_value(json_key):
+                    store_data[json_key] = purchase.get_value(json_key)
 
             # Create initial json data
             initial_data = {}
@@ -259,14 +277,24 @@ class StoreBase:
 
     ############################################################
 
-    # Get latest info
-    def GetLatestInfo(
+    # Get latest jsondata
+    def GetLatestJsondata(
         self,
         identifier,
         branch = None,
         verbose = False,
         exit_on_failure = False):
-        return {}
+        return None
+
+    ############################################################
+
+    # Get latest metadata
+    def GetLatestMetadata(
+        self,
+        identifier,
+        verbose = False,
+        exit_on_failure = False):
+        return None
 
     ############################################################
 
@@ -287,16 +315,18 @@ class StoreBase:
         verbose = False,
         exit_on_failure = False):
 
-        # Get latest info
-        latest_info = self.GetLatestInfo(
+        # Get latest jsondata
+        latest_jsondata = self.GetLatestJsondata(
             identifier = self.GetInfoIdentifier(game_info),
             branch = game_info.get_store_branchid(self.GetKey()),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
+        if not latest_jsondata:
+            return (None, None)
 
         # Return versions
         local_version = game_info.get_store_buildid(self.GetKey())
-        remote_version = latest_info[config.json_key_store_buildid]
+        remote_version = latest_jsondata.get_key(config.json_key_store_buildid)
         return (local_version, remote_version)
 
     ############################################################
@@ -452,40 +482,61 @@ class StoreBase:
         verbose = False,
         exit_on_failure = False):
 
-        # Get latest info
-        latest_info = self.GetLatestInfo(
+        # Get current jsondata
+        current_jsondata = game_info.read_wrapped_json_data(
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not current_jsondata:
+            return False
+
+        # Get latest jsondata
+        latest_jsondata = self.GetLatestJsondata(
             identifier = self.GetInfoIdentifier(game_info),
             branch = game_info.get_store_branchid(self.GetKey()),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-
-        # Read json file
-        json_data = system.ReadJsonFile(
-            src = game_info.get_json_file(),
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not json_data:
+        if not latest_jsondata:
             return False
 
-        # Create json data object
-        json_obj = jsondata.JsonData(json_data[self.GetKey()], game_info.get_platform())
+        # Update current data
+        for store_key in config.json_keys_store_subdata:
+            if latest_jsondata.has_key(store_key):
+                current_jsondata.set_subvalue(self.GetKey(), store_key, latest_jsondata.get_value(store_key))
 
-        # Set store info
-        for json_subdata_key in config.json_keys_store_subdata:
-            if isinstance(latest_info, dict) and json_subdata_key in latest_info.keys():
-                json_obj.FillJsonValue(json_subdata_key, latest_info[json_subdata_key])
-
-        # Save store info
-        json_data[self.GetKey()] = json_obj.GetJsonData()
-
-        # Write json file
-        success = system.WriteJsonFile(
-            src = game_info.get_json_file(),
-            json_data = json_data,
-            sort_keys = True,
+        # Write back changes
+        success = game_info.write_wrapped_json_data(
+            json_wrapper = current_jsondata,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         return success
+
+    # Update metadata
+    def UpdateMetadata(
+        self,
+        game_info,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Get current metadata
+        current_metadata = self.game_info.get_metadata()
+        if not current_metadata:
+            return False
+
+        # Get latest metadata
+        latest_metadata = self.GetLatestMetadata(
+            identifier = self.GetMetadataIdentifier(game_info),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not latest_metadata:
+            return False
+
+        # Update current data
+        current_metadata.merge(latest_metadata)
+
+        # Write back changes
+        self.game_info.set_metadata(current_metadata)
+        self.game_info.write_metadata()
+        return True
 
     ############################################################
 

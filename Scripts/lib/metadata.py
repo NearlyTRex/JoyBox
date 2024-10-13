@@ -1,9 +1,7 @@
 # Imports
 import os, os.path
 import sys
-import re
 import urllib.parse
-import datetime
 import time
 import textwrap
 import random
@@ -11,175 +9,13 @@ import random
 # Local imports
 import config
 import system
-import webpage
-import platforms
 import environment
+import platforms
 import gameinfo
+import webpage
 import youtube
 import asset
-
-# Metadata entry class
-class MetadataEntry:
-
-    # Constructor
-    def __init__(self):
-        self.game_entry = {}
-
-    # Has minimum keys
-    def has_minimum_keys(self):
-        for key in config.metadata_keys_minimum:
-            if not key in self.game_entry.keys():
-                return False
-        return True
-
-    # Determine if key is set
-    def is_key_set(self, key):
-        return key in self.game_entry.keys()
-
-    # Get value
-    def get_value(self, key):
-        return self.game_entry[key]
-
-    # Set value
-    def set_value(self, key, value):
-        self.game_entry[key] = value
-
-    # Delete value
-    def delete_value(self, key):
-        del self.game_entry[key]
-
-    # Merge data
-    def merge(self, other):
-        return system.MergeDictionaries(
-            dict1 = other.game_entry,
-            dict2 = self.game_entry,
-            merge_type = config.merge_type_safeadditive)
-
-    # Game name
-    def get_game(self):
-        return self.get_value(config.metadata_key_game)
-    def set_game(self, value):
-        self.set_value(config.metadata_key_game, value)
-
-    # Game platform
-    def get_platform(self):
-        return self.get_value(config.metadata_key_platform)
-    def set_platform(self, value):
-        self.set_value(config.metadata_key_platform, value)
-
-    # Game supercategory
-    def get_supercategory(self):
-        return self.get_value(config.metadata_key_supercategory)
-    def set_supercategory(self, value):
-        self.set_value(config.metadata_key_supercategory, value)
-
-    # Game category
-    def get_category(self):
-        return self.get_value(config.metadata_key_category)
-    def set_category(self, value):
-        self.set_value(config.metadata_key_category, value)
-
-    # Game subcategory
-    def get_subcategory(self):
-        return self.get_value(config.metadata_key_subcategory)
-    def set_subcategory(self, value):
-        self.set_value(config.metadata_key_subcategory, value)
-
-    # Game file
-    def get_file(self):
-        return self.get_value(config.metadata_key_file)
-    def set_file(self, value):
-        self.set_value(config.metadata_key_file, value)
-
-    # Game description
-    def get_description(self):
-        return self.get_value(config.metadata_key_description)
-    def set_description(self, value):
-        self.set_value(config.metadata_key_description, value)
-
-    # Game url
-    def get_url(self):
-        return self.get_value(config.metadata_key_url)
-    def set_url(self, value):
-        self.set_value(config.metadata_key_url, value)
-
-    # Game genre
-    def get_genre(self):
-        return self.get_value(config.metadata_key_genre)
-    def set_genre(self, value):
-        self.set_value(config.metadata_key_genre, value)
-
-    # Game coop
-    def get_coop(self):
-        return self.get_value(config.metadata_key_coop)
-    def set_coop(self, value):
-        self.set_value(config.metadata_key_coop, value)
-
-    # Game playable
-    def get_playable(self):
-        return self.get_value(config.metadata_key_playable)
-    def set_playable(self, value):
-        self.set_value(config.metadata_key_playable, value)
-
-    # Game developer
-    def get_developer(self):
-        return self.get_value(config.metadata_key_developer)
-    def set_developer(self, value):
-        self.set_value(config.metadata_key_developer, value)
-
-    # Game publisher
-    def get_publisher(self):
-        return self.get_value(config.metadata_key_publisher)
-    def set_publisher(self, value):
-        self.set_value(config.metadata_key_publisher, value)
-
-    # Game players
-    def get_players(self):
-        return self.get_value(config.metadata_key_players)
-    def set_players(self, value):
-        self.set_value(config.metadata_key_players, value)
-
-    # Game release
-    def get_release(self):
-        return self.get_value(config.metadata_key_release)
-    def set_release(self, value):
-        self.set_value(config.metadata_key_release, value)
-
-    # Game background
-    def get_background(self):
-        return self.get_value(config.metadata_key_background)
-    def set_background(self, value):
-        self.set_value(config.metadata_key_background, value)
-
-    # Game box back
-    def get_boxback(self):
-        return self.get_value(config.metadata_key_boxback)
-    def set_boxback(self, value):
-        self.set_value(config.metadata_key_boxback, value)
-
-    # Game box front
-    def get_boxfront(self):
-        return self.get_value(config.metadata_key_boxfront)
-    def set_boxfront(self, value):
-        self.set_value(config.metadata_key_boxfront, value)
-
-    # Game label
-    def get_label(self):
-        return self.get_value(config.metadata_key_label)
-    def set_label(self, value):
-        self.set_value(config.metadata_key_label, value)
-
-    # Game screenshot
-    def get_screenshot(self):
-        return self.get_value(config.metadata_key_screenshot)
-    def set_screenshot(self, value):
-        self.set_value(config.metadata_key_screenshot, value)
-
-    # Game video
-    def get_video(self):
-        return self.get_value(config.metadata_key_video)
-    def set_video(self, value):
-        self.set_value(config.metadata_key_video, value)
+import metadataentry
 
 # Metadata database class
 class Metadata:
@@ -449,7 +285,7 @@ class Metadata:
             # Create new entry
             if verbose:
                 system.Log("Found game: '%s' - '%s'" % (rom_platform, rom_name))
-            game_entry = MetadataEntry()
+            game_entry = metadataentry.MetadataEntry()
             game_entry.set_platform(rom_platform)
             game_entry.set_game(rom_name)
             game_entry.set_file(rom_file)
@@ -501,7 +337,7 @@ class Metadata:
                 for token in data.split("\n\n"):
 
                     # Create new entry
-                    game_entry = MetadataEntry()
+                    game_entry = metadataentry.MetadataEntry()
                     game_entry.set_platform(collection_platform)
                     in_description_section = False
 
@@ -784,15 +620,6 @@ def CollectMetadata(
                             ignore_unowned = ignore_unowned,
                             verbose = verbose,
                             exit_on_failure = exit_on_failure)
-                    elif metadata_source == config.metadata_source_type_itchio:
-                        metadata_result = CollectMetadataFromItchio(
-                            web_driver = web_driver,
-                            game_platform = game_platform,
-                            game_name = game_name,
-                            select_automatically = select_automatically,
-                            ignore_unowned = ignore_unowned,
-                            verbose = verbose,
-                            exit_on_failure = exit_on_failure)
 
                     # Cleanup web driver
                     webpage.DestroyWebDriver(web_driver)
@@ -832,7 +659,7 @@ def CollectMetadataFromTGDB(
     keywords_name = urllib.parse.quote_plus(natural_name.strip())
 
     # Metadata result
-    metadata_result = MetadataEntry()
+    metadata_result = metadataentry.MetadataEntry()
 
     # Go to the search page and pull the results
     try:
@@ -938,7 +765,7 @@ def CollectMetadataFromGameFAQS(
     keywords_name = urllib.parse.quote_plus(natural_name.strip())
 
     # Metadata result
-    metadata_result = MetadataEntry()
+    metadata_result = metadataentry.MetadataEntry()
 
     # Go to the search page and pull the results
     try:
@@ -1003,118 +830,6 @@ def CollectMetadataFromGameFAQS(
                 release_text = element_text.replace("First Released:", "").strip()
             release_time = dateutil.parser.parse(release_text)
             metadata_result.set_release(release_time.strftime("%Y-%m-%d"))
-
-    # Return metadata
-    return metadata_result
-
-# Collect metadata from Itch.io
-def CollectMetadataFromItchio(
-    web_driver,
-    game_platform,
-    game_name,
-    select_automatically = False,
-    ignore_unowned = False,
-    verbose = False,
-    exit_on_failure = False):
-
-    # Log into itchio
-    success = webpage.LogIntoWebsite(
-        driver = web_driver,
-        login_url = config.itchio_login_url,
-        cookiefile = os.path.join(environment.GetCookieDirectory(), config.itchio_login_cookie_filename),
-        link_text = config.itchio_login_link_text,
-        verbose = verbose)
-    if not success:
-        return None
-
-    # Get keywords name
-    natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
-    keywords_name = urllib.parse.quote_plus(natural_name.strip())
-
-    # Go to the search page and pull the results
-    try:
-        web_driver.get("https://itch.io/search?q=" + keywords_name)
-    except:
-        return None
-
-    # Select an entry automatically
-    if select_automatically:
-        section_search_result = webpage.WaitForPageElement(web_driver, class_name = "game_cell", verbose = verbose)
-        if section_search_result:
-            webpage.ClickElement(section_search_result)
-        while webpage.GetCurrentPageUrl(web_driver).startswith("https://itch.io/search?q="):
-            time.sleep(1)
-
-    # Ignore unowned games
-    if ignore_unowned:
-        section_game_purchased = webpage.WaitForPageElement(web_driver, class_name = "purchase_banner_inner", wait_time = 3, verbose = verbose)
-        if not section_game_purchased:
-            return None
-
-    # Look for game description
-    section_game_description = webpage.WaitForPageElement(web_driver, class_name = "formatted_description", verbose = verbose)
-    if not section_game_description:
-        return None
-
-    # Look for game information
-    section_game_information = webpage.WaitForPageElement(web_driver, class_name = "more_information_toggle", verbose = verbose)
-    if not section_game_information:
-        return None
-
-    # Grab the description text
-    raw_game_description = webpage.GetElementText(section_game_description)
-
-    # Create metadata result
-    metadata_result = MetadataEntry()
-
-    # Convert description to metadata format
-    if raw_game_description:
-        metadata_result.set_description(CleanRawGameDescription(raw_game_description))
-
-    # Grab the information text
-    raw_game_information = webpage.GetElementText(section_game_information)
-
-    # Click the "More information" button if it's present
-    if raw_game_information:
-        if "More information" in raw_game_information:
-            element_game_info_more = webpage.GetElement(web_driver, link_text = "More information")
-            if element_game_info_more:
-                webpage.ClickElement(element_game_info_more)
-
-    # Wait for more information to load
-    time.sleep(3)
-
-    # Look for game details
-    section_game_details = webpage.GetElement(web_driver, class_name = "game_info_panel_widget")
-    if section_game_details:
-
-        # Grab the information text
-        raw_game_details = webpage.GetElementText(section_game_details)
-        for game_detail_line in raw_game_details.split("\n"):
-
-            # Release
-            if game_detail_line.startswith("Release date"):
-                release_text = game_detail_line.replace("Release date", "").strip()
-                release_time = datetime.datetime.strptime(release_text, "%b %d, %Y")
-                metadata_result.set_release(release_time.strftime("%Y-%m-%d"))
-            if game_detail_line.startswith("Published"):
-                release_text = game_detail_line.replace("Published", "").strip()
-                release_time = datetime.datetime.strptime(release_text, "%b %d, %Y")
-                metadata_result.set_release(release_time.strftime("%Y-%m-%d"))
-
-            # Developer/publisher
-            elif game_detail_line.startswith("Authors"):
-                author_text = game_detail_line.replace("Authors", "").strip()
-                metadata_result.set_developer(author_text)
-                metadata_result.set_publisher(author_text)
-            elif game_detail_line.startswith("Author"):
-                author_text = game_detail_line.replace("Author", "").strip()
-                metadata_result.set_developer(author_text)
-                metadata_result.set_publisher(author_text)
-
-            # Genre
-            elif game_detail_line.startswith("Genre"):
-                metadata_result.set_genre(game_detail_line.replace("Genre", "").strip().replace(", ", ";"))
 
     # Return metadata
     return metadata_result

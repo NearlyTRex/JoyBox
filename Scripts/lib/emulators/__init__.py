@@ -99,7 +99,7 @@ def GetEmulatorList():
 
 # Get emulator by name
 def GetEmulatorByName(tool_name):
-    for instance in GetEmulatorMap().values():
+    for instance in GetEmulatorList():
         if instance.GetName() == tool_name:
             return instance
     return None
