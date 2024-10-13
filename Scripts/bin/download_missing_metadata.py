@@ -17,11 +17,7 @@ import setup
 parser = argparse.ArgumentParser(description="Download missing metadata.")
 parser.add_argument("metadata_dir", help="Metadata dir")
 parser.add_argument("-s", "--metadata_source",
-    choices=[
-        config.metadata_source_type_thegamesdb,
-        config.metadata_source_type_gamefaqs,
-        config.metadata_source_type_itchio
-    ],
+    choices=config.metadata_source_types,
     default=config.metadata_source_type_gamefaqs
 )
 parser.add_argument("--keys_to_check", type=str, help="Check against specific keys (comma delimited)")
