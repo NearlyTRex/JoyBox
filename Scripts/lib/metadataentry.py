@@ -40,7 +40,7 @@ class MetadataEntry:
 
     # Merge data
     def merge(self, other):
-        return system.MergeDictionaries(
+        self.game_entry = system.MergeDictionaries(
             dict1 = other.game_entry,
             dict2 = self.game_entry,
             merge_type = config.merge_type_safeadditive)
@@ -173,3 +173,12 @@ class MetadataEntry:
         return self.get_value(config.metadata_key_video)
     def set_video(self, value):
         self.set_value(config.metadata_key_video, value)
+
+    # Check if missing data
+    def is_missing_data(self, keys_to_check):
+        for key_to_check in keys_to_check:
+            if not self.is_key_set(key_to_check):
+                return True
+            if self.is_key_set(key_to_check) and self.get_value(key_to_check) == "":
+                return True
+        return False

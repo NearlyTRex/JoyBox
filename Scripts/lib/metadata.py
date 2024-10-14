@@ -105,13 +105,7 @@ class Metadata:
 
     # Check if entry is missing data
     def is_entry_missing_data(self, game_platform, game_name, keys_to_check):
-        game_entry = self.get_game(game_platform, game_name)
-        for key_to_check in keys_to_check:
-            if not game_entry.is_key_set(key_to_check):
-                return True
-            if game_entry.is_key_set(key_to_check) and game_entry.get_value(key_to_check) == "":
-                return True
-        return False
+        return self.get_game(game_platform, game_name).is_missing_data(keys_to_check)
 
     # Check if missing data
     def is_missing_data(self, keys_to_check):
