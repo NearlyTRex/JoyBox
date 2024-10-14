@@ -85,7 +85,10 @@ class MetadataEntry:
     def get_description(self):
         return self.get_value(config.metadata_key_description)
     def set_description(self, value):
-        self.set_value(config.metadata_key_description, value)
+        if isinstance(value, list):
+            self.set_value(config.metadata_key_description, value)
+        elif isinstance(value, str):
+            self.set_value(config.metadata_key_description, system.WrapTextToLines(system.CleanWebText(value)))
 
     # Game url
     def get_url(self):

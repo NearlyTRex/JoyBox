@@ -518,7 +518,7 @@ class StoreBase:
         exit_on_failure = False):
 
         # Get current metadata
-        current_metadata = self.game_info.get_metadata()
+        current_metadata = game_info.get_metadata()
         if not current_metadata:
             return False
 
@@ -534,8 +534,8 @@ class StoreBase:
         current_metadata.merge(latest_metadata)
 
         # Write back changes
-        self.game_info.set_metadata(current_metadata)
-        self.game_info.write_metadata()
+        game_info.set_metadata(current_metadata)
+        game_info.write_metadata()
         return True
 
     ############################################################

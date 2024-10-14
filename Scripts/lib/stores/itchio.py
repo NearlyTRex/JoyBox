@@ -2,6 +2,8 @@
 import os, os.path
 import sys
 import json
+import time
+import datetime
 
 # Local imports
 import config
@@ -68,6 +70,7 @@ class Itchio(storebase.StoreBase):
 
         # Disconnect from web
         success = self.WebDisconnect(
+            web_driver = web_driver,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         return success
@@ -102,6 +105,7 @@ class Itchio(storebase.StoreBase):
     # Web disconnect
     def WebDisconnect(
         self,
+        web_driver,
         verbose = False,
         exit_on_failure = False):
 
@@ -170,6 +174,7 @@ class Itchio(storebase.StoreBase):
 
         # Disconnect from web
         success = self.WebDisconnect(
+            web_driver = web_driver,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not success:
@@ -229,7 +234,7 @@ class Itchio(storebase.StoreBase):
 
         # Convert description to metadata format
         if raw_game_description:
-            metadata_entry.set_description(CleanRawGameDescription(raw_game_description))
+            metadata_entry.set_description(raw_game_description)
 
         # Grab the information text
         raw_game_information = webpage.GetElementText(section_game_information)
@@ -278,6 +283,7 @@ class Itchio(storebase.StoreBase):
 
         # Disconnect from web
         success = self.WebDisconnect(
+            web_driver = web_driver,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not success:

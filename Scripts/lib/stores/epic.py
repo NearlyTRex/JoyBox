@@ -150,7 +150,7 @@ class Epic(storebase.StoreBase):
         for line in list_output.split("\n"):
 
             # Gather info
-            line = system.RemoveAnsiEscapeSequences(line)
+            line = system.RemoveStringEscapeSequences(line)
             if not line.startswith(" * "):
                 continue
             tokens = line.split(" | Version: ")

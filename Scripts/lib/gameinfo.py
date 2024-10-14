@@ -9,6 +9,7 @@ import config
 import system
 import environment
 import metadata
+import metadataentry
 import platforms
 import jsondata
 
@@ -239,7 +240,7 @@ class GameInfo:
     # Check if metadata exists
     def has_metadata(self):
         if self.has_key(config.json_key_metadata):
-            return isinstance(self.get_value(config.json_key_metadata), metadata.MetadataEntry)
+            return isinstance(self.get_value(config.json_key_metadata), metadataentry.MetadataEntry)
         return False
 
     # Get metadata
@@ -501,6 +502,10 @@ class GameInfo:
     def get_store_appname(self, store_key):
         return self.get_subvalue(store_key, config.json_key_store_appname)
 
+    # Get store appurl
+    def get_store_appurl(self, store_key):
+        return self.get_subvalue(store_key, config.json_key_store_appurl)
+
     # Get store branchid
     def get_store_branchid(self, store_key):
         return self.get_subvalue(store_key, config.json_key_store_branchid)
@@ -606,8 +611,8 @@ def DeriveRegularNameFromGameName(game_name):
 # Derive game name from regular name
 def DeriveGameNameFromRegularName(regular_name, region = "USA"):
     game_name = regular_name.replace(":", " -").replace("&", "and")
-    game_name = system.CleanRichTextString(game_name)
-    game_name = system.CapitalizeTitle(game_name)
+    game_name = system.CleanRichText(game_name)
+    game_name = system.CapitalizeText(game_name)
     game_name = system.ReplaceInvalidPathCharacters(game_name)
     for flippable_word in config.flippable_words:
         segment_before = f"{flippable_word} "

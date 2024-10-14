@@ -187,7 +187,7 @@ class Amazon(storebase.StoreBase):
         for line in list_output.split("\n"):
 
             # Gather info
-            line = system.RemoveAnsiEscapeSequences(line)
+            line = system.RemoveStringEscapeSequences(line)
             line = line.replace("(INSTALLED) ", "")
             tokens = line.split(" GENRES: ")
             if len(tokens) != 2:

@@ -3,7 +3,6 @@ import os, os.path
 import sys
 import urllib.parse
 import time
-import textwrap
 import random
 
 # Local imports
@@ -714,7 +713,7 @@ def CollectMetadataFromTGDB(
 
     # Convert description to metadata format
     if raw_game_description:
-        metadata_result.set_description(CleanRawGameDescription(raw_game_description))
+        metadata_result.set_description(raw_game_description)
 
     # Look for game details
     for section_game_details in webpage.GetElement(web_driver, class_name = "card-body", all_elements = True):
@@ -795,7 +794,7 @@ def CollectMetadataFromGameFAQS(
 
     # Convert description to metadata format
     if raw_game_description:
-        metadata_result.set_description(CleanRawGameDescription(raw_game_description))
+        metadata_result.set_description(raw_game_description)
 
     # Look for game details
     for section_game_details in webpage.GetElement(web_driver, class_name = "content", all_elements = True):
@@ -834,37 +833,4 @@ def CollectMetadataFromGameFAQS(
     # Return metadata
     return metadata_result
 
-# Clean raw game description
-def CleanRawGameDescription(raw_description):
 
-    # Clean rich text
-    new_description = system.CleanRichTextString(raw_description)
-
-    # Replace leftover html
-    new_description = new_description.replace("<span>", " ")
-    new_description = new_description.replace("</span>", " ")
-    new_description = new_description.replace("&lt;", " ")
-    new_description = new_description.replace("&gt;", " ")
-    new_description = new_description.replace("&quot;", " ")
-    new_description = new_description.replace("&amp;", " ")
-    new_description = new_description.replace("amp;", " ")
-
-    # Final cleanup
-    new_description = new_description.replace("()", "")
-
-    # Create metadata lines
-    metadata_lines = []
-    original_lines = new_description.split("\n")
-    for i in range(0, len(original_lines)):
-        original_line = original_lines[i].strip()
-        for wrapped_line in textwrap.wrap(original_line, width=80):
-            metadata_lines.append(wrapped_line)
-        if i < len(original_lines) - 1:
-            metadata_lines.append(".")
-
-    # Remove duplicate adjacent lines
-    result = []
-    for metadata_line in metadata_lines:
-        if len(result) == 0 or metadata_line != result[-1]:
-            result.append(metadata_line)
-    return result
