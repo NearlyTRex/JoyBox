@@ -84,8 +84,8 @@ def ParseByRequest(class_name = None, id_name = None, tag_name = None, link_text
         by_value = link_text
     return (by_type, by_value)
 
-# Wait for page element by class
-def WaitForPageElement(driver, class_name = None, id_name = None, tag_name = None, link_text = None, wait_time = 1000, verbose = False):
+# Wait for page elements by class
+def WaitForPageElements(driver, class_name = None, id_name = None, tag_name = None, link_text = None, wait_time = 1000, verbose = False):
     from selenium.webdriver.support.ui import WebDriverWait
     from selenium.webdriver.support import expected_conditions as ExpectedConditions
     try:
@@ -96,6 +96,20 @@ def WaitForPageElement(driver, class_name = None, id_name = None, tag_name = Non
     except Exception as e:
         if verbose:
             system.LogError(e)
+    return None
+
+# Wait for page element by class
+def WaitForPageElement(driver, class_name = None, id_name = None, tag_name = None, link_text = None, wait_time = 1000, verbose = False):
+    elements = WaitForPageElements(
+        driver = driver,
+        class_name = class_name,
+        id_name = id_name,
+        tag_name = tag_name,
+        link_text = link_text,
+        wait_time = wait_time,
+        verbose = verbose)
+    if len(elements) > 0:
+        return elements[0]
     return None
 
 # Get element
