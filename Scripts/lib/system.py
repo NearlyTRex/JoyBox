@@ -7,6 +7,7 @@ import errno
 import stat
 import shutil
 import tempfile
+import textwrap
 import pathlib
 import posixpath
 import ntpath
@@ -152,6 +153,89 @@ def SplitByEnclosedSubstrings(string, delimiter = "\""):
             string_list += string_segment.strip().split()
     return string_list
 
+# Sort strings
+def SortStrings(strings):
+    return sorted(strings, key=lambda item: (item, len(item)))
+
+# Sort strings with length
+def SortStringsWithLength(strings):
+    return sorted(strings, key=lambda item: (len(item), item))
+
+# Remove string escape sequences
+def RemoveStringEscapeSequences(string):
+    pattern = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    return pattern.sub("", string)
+
+###########################################################
+
+# Capitalize text
+def CapitalizeText(text):
+    if len(text) == 0:
+        return ""
+    elif len(text) == 1:
+        return text.upper()
+    else:
+        words = []
+        for index, word in enumerate(text.split(" ")):
+            for filler_word in config.filler_words:
+                if index != 0 and word.lower() == filler_word.lower():
+                    words.append(word)
+                    break
+            else:
+                if len(word) == 1:
+                    words.append(word[0].upper())
+                elif len(word) >= 2:
+                    words.append(word[0].upper() + word[1:])
+        return " ".join(words)
+
+# Wrap text to lines
+def WrapTextToLines(text, width = 80, spacer = "."):
+    wrapped_lines = []
+    text_lines = text.split("\n")
+    for index, line in enumerate(text_lines):
+        for wrapped_line in textwrap.wrap(line.strip(), width=width):
+            wrapped_lines.append(wrapped_line)
+        if index < len(text_lines) - 1 and len(spacer):
+            wrapped_lines.append(spacer)
+    return wrapped_lines
+
+# Clean rich text
+def CleanRichText(text):
+    new_text = text.strip()
+    new_text = new_text.replace("“", "\"")
+    new_text = new_text.replace("”", "\"")
+    new_text = new_text.replace("’", "'")
+    new_text = new_text.replace("ʻ", "'")
+    new_text = new_text.replace("‘", "'")
+    new_text = new_text.replace("…", "...")
+    new_text = new_text.replace("•", "*")
+    new_text = new_text.replace("·", "-")
+    new_text = new_text.replace("—", "-")
+    new_text = new_text.replace("–", "-")
+    new_text = new_text.replace("á", "a")
+    new_text = new_text.replace("Æ", "Ae")
+    new_text = new_text.replace("é", "e")
+    new_text = new_text.replace("ó", "o")
+    new_text = new_text.replace("ǔ", "u")
+    new_text = new_text.replace("\\x7e", "~")
+    new_text = new_text.encode("ascii", "ignore").decode()
+    return new_text
+
+# Clean web text
+def CleanWebText(text):
+    new_text = CleanRichText(text)
+    new_text = new_text.replace("<span>", " ")
+    new_text = new_text.replace("</span>", " ")
+    new_text = new_text.replace("&lt;", " ")
+    new_text = new_text.replace("&gt;", " ")
+    new_text = new_text.replace("&quot;", " ")
+    new_text = new_text.replace("&amp;", " ")
+    new_text = new_text.replace("amp;", " ")
+    new_text = new_text.replace("()", "")
+    return new_text
+
+###########################################################
+
 # Merge dictionaries
 def MergeDictionaries(dict1, dict2, merge_type = None):
     try:
@@ -168,61 +252,6 @@ def MergeDictionaries(dict1, dict2, merge_type = None):
             return mergedeep.merge(dict1, dict2)
     except:
         return dict1
-
-# Sort strings
-def SortStrings(strings):
-    return sorted(strings, key=lambda item: (item, len(item)))
-
-# Sort strings with length
-def SortStringsWithLength(strings):
-    return sorted(strings, key=lambda item: (len(item), item))
-
-# Capitalize title
-def CapitalizeTitle(string):
-    if len(string) == 0:
-        return ""
-    elif len(string) == 1:
-        return string.upper()
-    else:
-        words = []
-        for index, word in enumerate(string.split(" ")):
-            for filler_word in config.filler_words:
-                if index != 0 and word.lower() == filler_word.lower():
-                    words.append(word)
-                    break
-            else:
-                if len(word) == 1:
-                    words.append(word[0].upper())
-                elif len(word) >= 2:
-                    words.append(word[0].upper() + word[1:])
-        return " ".join(words)
-
-# Clean rich text string
-def CleanRichTextString(string):
-    new_string = string.strip()
-    new_string = new_string.replace("“", "\"")
-    new_string = new_string.replace("”", "\"")
-    new_string = new_string.replace("’", "'")
-    new_string = new_string.replace("ʻ", "'")
-    new_string = new_string.replace("‘", "'")
-    new_string = new_string.replace("…", "...")
-    new_string = new_string.replace("•", "*")
-    new_string = new_string.replace("·", "-")
-    new_string = new_string.replace("—", "-")
-    new_string = new_string.replace("–", "-")
-    new_string = new_string.replace("á", "a")
-    new_string = new_string.replace("Æ", "Ae")
-    new_string = new_string.replace("é", "e")
-    new_string = new_string.replace("ó", "o")
-    new_string = new_string.replace("ǔ", "u")
-    new_string = new_string.replace("\\x7e", "~")
-    new_string = new_string.encode("ascii", "ignore").decode()
-    return new_string
-
-# Remove ansi escape sequences
-def RemoveAnsiEscapeSequences(string):
-    pattern = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-    return pattern.sub("", string)
 
 ###########################################################
 
