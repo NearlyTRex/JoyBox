@@ -241,13 +241,13 @@ def MergeDictionaries(dict1, dict2, merge_type = None):
     try:
         import mergedeep
         if merge_type == config.merge_type_replace:
-            return mergedeep.merge(dict1, dict2, mergedeep.Strategy.REPLACE)
+            return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.REPLACE)
         elif merge_type == config.merge_type_additive:
-            return mergedeep.merge(dict1, dict2, mergedeep.Strategy.ADDITIVE)
+            return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.ADDITIVE)
         elif merge_type == config.merge_type_safereplace:
-            return mergedeep.merge(dict1, dict2, mergedeep.Strategy.TYPESAFE_REPLACE)
+            return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_REPLACE)
         elif merge_type == config.merge_type_safeadditive:
-            return mergedeep.merge(dict1, dict2, mergedeep.Strategy.TYPESAFE_ADDITIVE)
+            return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_ADDITIVE)
         else:
             return mergedeep.merge(dict1, dict2)
     except:
