@@ -253,6 +253,14 @@ def MergeDictionaries(dict1, dict2, merge_type = None):
     except:
         return dict1
 
+# Deduplicate adjacent lines
+def DeduplicateAdjacentLines(lines):
+    new_lines = []
+    for line in lines:
+        if len(new_lines) == 0 or line != new_lines[-1]:
+            new_lines.append(line)
+    return new_lines
+
 ###########################################################
 
 # Log message
