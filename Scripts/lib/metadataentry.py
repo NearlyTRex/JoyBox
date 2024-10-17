@@ -39,11 +39,13 @@ class MetadataEntry:
         del self.game_entry[key]
 
     # Merge data
-    def merge(self, other):
+    def merge(self, other, merge_type = None):
+        if not merge_type:
+            merge_type = config.merge_type_replace
         self.game_entry = system.MergeDictionaries(
             dict1 = other.game_entry,
             dict2 = self.game_entry,
-            merge_type = config.merge_type_safeadditive)
+            merge_type = merge_type)
 
     # Game name
     def get_game(self):
@@ -88,7 +90,10 @@ class MetadataEntry:
         if isinstance(value, list):
             self.set_value(config.metadata_key_description, value)
         elif isinstance(value, str):
-            self.set_value(config.metadata_key_description, system.WrapTextToLines(system.CleanWebText(value)))
+            text = system.CleanWebText(value)
+            lines = system.WrapTextToLines(text)
+            lines = system.DeduplicateAdjacentLines(lines)
+            self.set_value(config.metadata_key_description, lines)
 
     # Game url
     def get_url(self):

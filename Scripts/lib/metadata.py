@@ -116,11 +116,13 @@ class Metadata:
         return False
 
     # Merge with other metadata
-    def merge_contents(self, other):
+    def merge_contents(self, other, merge_type = None):
+        if not merge_type:
+            merge_type = config.merge_type_replace
         self.game_database = system.MergeDictionaries(
             dict1 = self.game_database,
             dict2 = other.game_database,
-            merge_type = config.merge_type_safeadditive)
+            merge_type = merge_type)
 
     # Verify roms
     def verify_roms(self, verbose = False, exit_on_failure = False):
