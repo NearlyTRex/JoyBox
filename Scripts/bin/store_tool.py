@@ -30,6 +30,7 @@ parser.add_argument("-a", "--store_action",
 )
 parser.add_argument("-s", "--skip_existing", action="store_true", help="Skip existing entries")
 parser.add_argument("-f", "--force", action="store_true", help="Always run action")
+parser.add_argument("-k", "--keys", type=str, help="Keys to use (comma delimited)")
 parser.add_argument("-o", "--output_dir", type=str, default=".", help="Output directory")
 parser.add_argument("-m", "--load_manifest", action="store_true", help="Load manifest")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
@@ -154,6 +155,8 @@ def main():
             if game_info and game_info.is_valid():
                 success = store_obj.UpdateMetadata(
                     game_info = game_info,
+                    keys = args.keys.split(",") if args.keys else [],
+                    force = args.force,
                     verbose = args.verbose,
                     exit_on_failure = args.exit_on_failure)
                 if not success:

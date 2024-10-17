@@ -514,6 +514,8 @@ class StoreBase:
     def UpdateMetadata(
         self,
         game_info,
+        keys = [],
+        force = False,
         verbose = False,
         exit_on_failure = False):
 
@@ -521,6 +523,18 @@ class StoreBase:
         current_metadata = game_info.get_metadata()
         if not current_metadata:
             return False
+
+        # Determine if update is needed
+        should_update = False
+        if force:
+            should_update = True
+        else:
+            if isinstance(keys, list) and len(keys) > 0:
+                should_update = current_metadata.is_missing_data(keys)
+            else:
+                should_update = current_metadata.is_missing_data(config.metadata_keys_downloadable)
+        if not should_update:
+            return True
 
         # Get latest metadata
         latest_metadata = self.GetLatestMetadata(
