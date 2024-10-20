@@ -13,6 +13,9 @@ import posixpath
 import ntpath
 import glob
 import json
+import time
+import datetime
+import urllib.parse
 
 # Local imports
 import config
@@ -25,6 +28,10 @@ import programs
 # Quit program
 def QuitProgram(exit_code = -1):
     sys.exit(exit_code)
+
+# Sleep program
+def SleepProgram(seconds):
+    time.sleep(seconds)
 
 ###########################################################
 
@@ -166,6 +173,30 @@ def RemoveStringEscapeSequences(string):
     pattern = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
     return pattern.sub("", string)
 
+# Remove string tag sequences
+def RemoveStringTagSequences(string):
+    pattern = re.compile(r'</?[^>]+>')
+    return pattern.sub("", string)
+
+# Parse date string
+def ParseDateString(string, format_code):
+    return datetime.datetime.strptime(string, format_code)
+
+# Convert date string
+def ConvertDateString(string, old_format_code, new_format_code):
+    return ParseDateString(string, old_format_code).strftime(new_format_code)
+
+# Encode url string
+def EncodeUrlString(string, use_plus = False):
+    if use_plus:
+        return urllib.parse.quote_plus(string)
+    else:
+        return urllib.parse.quote(string)
+
+# Join strings as url
+def JoinStringsAsUrl(string_base_url, string_url, allow_fragments = True):
+    urllib.parse.urljoin(string_base_url, string_url, allow_fragments = allow_fragments)
+
 ###########################################################
 
 # Capitalize text
@@ -233,6 +264,14 @@ def CleanWebText(text):
     new_text = new_text.replace("amp;", " ")
     new_text = new_text.replace("()", "")
     return new_text
+
+# Extract web text
+def ExtractWebText(text):
+    try:
+        import html_text
+        return html_text.extract_text(text)
+    except:
+        return None
 
 ###########################################################
 

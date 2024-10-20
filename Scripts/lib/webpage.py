@@ -4,7 +4,6 @@ import sys
 import pickle
 import json
 import re
-import urllib.parse
 
 # Local imports
 import config
@@ -12,6 +11,26 @@ import command
 import programs
 import environment
 import system
+
+###########################################################
+
+# Parse page source
+def ParsePageSource(contents, features = "lxml"):
+    try:
+        import bs4
+        return bs4.BeautifulSoup(contents, features=features)
+    except:
+        return None
+
+# Parse html page source
+def ParseHtmlPageSource(html_contents):
+    return ParsePageSource(contents, features = "html.parser")
+
+# Parse xml page source
+def ParseXmlPageSource(xml_contents):
+    return ParsePageSource(contents, features = "xml")
+
+###########################################################
 
 # Create web driver
 def CreateWebDriver(download_dir = None, profile_dir = None, make_headless = False, verbose = False):
@@ -66,30 +85,69 @@ def IsUrlLoaded(driver, url):
     return False
 
 # Parse by request
-def ParseByRequest(class_name = None, id_name = None, tag_name = None, link_text = None):
+def ParseByRequest(
+    id = None,
+    name = None,
+    xpath = None,
+    link_text = None,
+    partial_link_text = None,
+    tag_name = None,
+    class_name = None,
+    css_selector = None):
     from selenium.webdriver.common.by import By
     by_type = None
     by_value = None
-    if class_name:
-        by_type = By.CLASS_NAME
-        by_value = class_name
-    elif id_name:
+    if id:
         by_type = By.ID
-        by_value = id_name
-    elif tag_name:
-        by_type = By.TAG_NAME
-        by_value = tag_name
+        by_value = id
+    elif name:
+        by_type = By.NAME
+        by_value = name
+    elif xpath:
+        by_type = By.XPATH
+        by_value = xpath
     elif link_text:
         by_type = By.LINK_TEXT
         by_value = link_text
+    elif partial_link_text:
+        by_type = By.PARTIAL_LINK_TEXT
+        by_value = partial_link_text
+    elif tag_name:
+        by_type = By.TAG_NAME
+        by_value = tag_name
+    elif class_name:
+        by_type = By.CLASS_NAME
+        by_value = class_name
+    elif css_selector:
+        by_type = By.CSS_SELECTOR
+        by_value = css_selector
     return (by_type, by_value)
 
 # Wait for page elements by class
-def WaitForPageElements(driver, class_name = None, id_name = None, tag_name = None, link_text = None, wait_time = 1000, verbose = False):
+def WaitForPageElements(
+    driver,
+    id = None,
+    name = None,
+    xpath = None,
+    link_text = None,
+    partial_link_text = None,
+    tag_name = None,
+    class_name = None,
+    css_selector = None,
+    wait_time = 1000,
+    verbose = False):
     from selenium.webdriver.support.ui import WebDriverWait
     from selenium.webdriver.support import expected_conditions as ExpectedConditions
     try:
-        by_type, by_value = ParseByRequest(class_name, id_name, tag_name, link_text)
+        by_type, by_value = ParseByRequest(
+            id = id,
+            name = name,
+            xpath = xpath,
+            link_text = link_text,
+            partial_link_text = partial_link_text,
+            tag_name = tag_name,
+            class_name = class_name,
+            css_selector = css_selector)
         return WebDriverWait(driver, wait_time).until(
             ExpectedConditions.presence_of_all_elements_located((by_type, by_value))
         )
@@ -99,23 +157,57 @@ def WaitForPageElements(driver, class_name = None, id_name = None, tag_name = No
     return None
 
 # Wait for page element by class
-def WaitForPageElement(driver, class_name = None, id_name = None, tag_name = None, link_text = None, wait_time = 1000, verbose = False):
+def WaitForPageElement(
+    driver,
+    id = None,
+    name = None,
+    xpath = None,
+    link_text = None,
+    partial_link_text = None,
+    tag_name = None,
+    class_name = None,
+    css_selector = None,
+    wait_time = 1000,
+    verbose = False):
     elements = WaitForPageElements(
         driver = driver,
-        class_name = class_name,
-        id_name = id_name,
-        tag_name = tag_name,
+        id = id,
+        name = name,
+        xpath = xpath,
         link_text = link_text,
+        partial_link_text = partial_link_text,
+        tag_name = tag_name,
+        class_name = class_name,
+        css_selector = css_selector,
         wait_time = wait_time,
         verbose = verbose)
-    if len(elements) > 0:
+    if isinstance(elements, list) and len(elements) > 0:
         return elements[0]
     return None
 
 # Get element
-def GetElement(parent, class_name = None, id_name = None, tag_name = None, link_text = None, all_elements = False, verbose = False):
+def GetElement(
+    parent,
+    id = None,
+    name = None,
+    xpath = None,
+    link_text = None,
+    partial_link_text = None,
+    tag_name = None,
+    class_name = None,
+    css_selector = None,
+    all_elements = False,
+    verbose = False):
     try:
-        by_type, by_value = ParseByRequest(class_name, id_name, tag_name, link_text)
+        by_type, by_value = ParseByRequest(
+            id = id,
+            name = name,
+            xpath = xpath,
+            link_text = link_text,
+            partial_link_text = partial_link_text,
+            tag_name = tag_name,
+            class_name = class_name,
+            css_selector = css_selector)
         if all_elements:
             return parent.find_elements(by_type, by_value)
         else:
@@ -142,6 +234,10 @@ def GetElementAttribute(element, attribute_name):
     except:
         pass
     return None
+
+# Get element children text
+def GetElementChildrenText(element):
+    return system.ExtractWebText(GetElementAttribute(element, "innerHTML"))
 
 # Click element
 def ClickElement(element, verbose = False):
@@ -171,14 +267,6 @@ def GetPageSource(driver, url = None, verbose = False):
             system.LogError(e)
     return None
 
-# Parse page source
-def ParsePageSource(html_contents):
-    try:
-        from BeautifulSoup import BeautifulSoup
-    except ImportError:
-        from bs4 import BeautifulSoup
-    return BeautifulSoup(html_contents, features="lxml")
-
 # Save cookie
 def SaveCookie(driver, path):
     with open(path, 'w') as filehandler:
@@ -191,15 +279,21 @@ def LoadCookie(driver, path):
     for cookie in cookies:
         driver.add_cookie(cookie)
 
+###########################################################
+
 # Log into website
 def LogIntoWebsite(
     driver,
     login_url,
     cookiefile,
-    class_name = None,
-    id_name = None,
-    tag_name = None,
+    id = None,
+    name = None,
+    xpath = None,
     link_text = None,
+    partial_link_text = None,
+    tag_name = None,
+    class_name = None,
+    css_selector = None,
     wait_time = 1000,
     verbose = False):
 
@@ -221,10 +315,14 @@ def LogIntoWebsite(
     # Look for element
     login_check = WaitForPageElement(
         driver = driver,
-        class_name = class_name,
-        id_name = id_name,
-        tag_name = tag_name,
+        id = id,
+        name = name,
+        xpath = xpath,
         link_text = link_text,
+        partial_link_text = partial_link_text,
+        tag_name = tag_name,
+        class_name = class_name,
+        css_selector = css_selector,
         wait_time = wait_time,
         verbose = verbose)
     if not login_check:
@@ -254,24 +352,22 @@ def GetMatchingUrls(url, base_url, params = {}, starts_with = "", ends_with = ""
         reqs = requests.get(url, params=params)
         page_text = reqs.text
 
-    # Parse page text
-    import bs4
-    parser = bs4.BeautifulSoup(page_text, "html.parser")
-
     # Find all matching urls
     matching_urls = []
-    for link in parser.find_all("a"):
-        link_href = link.get("href")
-        if not link_href:
-            continue
-        if not link_href.startswith("http"):
-            if base_url.endswith("/"):
-                link_href = urllib.parse.urljoin(base_url, link_href)
-            else:
-                link_href = urllib.parse.urljoin(base_url + "/", link_href)
-        match = re.search("^%s.*%s$" % (starts_with, ends_with), link_href)
-        if match:
-            matching_urls.append(link_href)
+    parser = ParseHtmlPageSource(page_text)
+    if parser:
+        for link in parser.find_all("a"):
+            link_href = link.get("href")
+            if not link_href:
+                continue
+            if not link_href.startswith("http"):
+                if base_url.endswith("/"):
+                    link_href = system.JoinStringsAsUrl(base_url, link_href)
+                else:
+                    link_href = system.JoinStringsAsUrl(base_url + "/", link_href)
+            match = re.search("^%s.*%s$" % (starts_with, ends_with), link_href)
+            if match:
+                matching_urls.append(link_href)
     return matching_urls
 
 # Get matching url
@@ -304,3 +400,5 @@ def GetMatchingUrl(url, base_url, params = {}, starts_with = "", ends_with = "",
     else:
         matching_url = potential_urls[0]
     return matching_url
+
+###########################################################
