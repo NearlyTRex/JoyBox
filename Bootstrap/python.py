@@ -18,6 +18,7 @@ packages = [
     "ecdsa",
     "fastxor",
     "GitPython",
+    "html-text",
     "json5",
     "lxml",
     "mergedeep",
