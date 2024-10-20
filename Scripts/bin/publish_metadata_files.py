@@ -4,7 +4,6 @@
 import os, os.path
 import sys
 import argparse
-import urllib.parse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
@@ -150,7 +149,7 @@ def main():
                                 game_entry_name = game_entry.get_game()
                                 game_entry_players = game_entry.get_players()
                                 game_entry_coop = game_entry.get_coop()
-                                game_entry_urlname = urllib.parse.quote(game_entry_name)
+                                game_entry_urlname = system.EncodeUrlString(game_entry_name)
                                 game_entry_info = (
                                     game_entry_id,
                                     game_platform,

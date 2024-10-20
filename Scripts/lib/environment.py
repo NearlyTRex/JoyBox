@@ -1,7 +1,6 @@
 # Imports
 import os, os.path
 import sys
-import time
 import signal
 import ntpath
 
@@ -169,7 +168,7 @@ def WaitForNamedProcesses(process_names = []):
             while True:
                 if not proc.is_running():
                     break
-                time.sleep(1)
+                system.SleepProgram(1)
     except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
         system.LogError(e)
 

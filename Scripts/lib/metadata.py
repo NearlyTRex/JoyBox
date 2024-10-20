@@ -1,8 +1,6 @@
 # Imports
 import os, os.path
 import sys
-import urllib.parse
-import time
 import random
 
 # Local imports
@@ -637,7 +635,7 @@ def CollectMetadata(
                     # Wait
                     if verbose:
                         system.Log("Waiting to get next entry ...")
-                    time.sleep(5)
+                    system.SleepProgram(5)
 
 # Collect metadata from TheGamesDB
 def CollectMetadataFromTGDB(
@@ -651,7 +649,7 @@ def CollectMetadataFromTGDB(
 
     # Get keywords name
     natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
-    keywords_name = urllib.parse.quote_plus(natural_name.strip())
+    keywords_name = system.EncodeUrlString(natural_name.strip(), use_plus = True)
 
     # Metadata result
     metadata_result = metadataentry.MetadataEntry()
@@ -757,7 +755,7 @@ def CollectMetadataFromGameFAQS(
 
     # Get keywords name
     natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
-    keywords_name = urllib.parse.quote_plus(natural_name.strip())
+    keywords_name = system.EncodeUrlString(natural_name.strip(), use_plus = True)
 
     # Metadata result
     metadata_result = metadataentry.MetadataEntry()

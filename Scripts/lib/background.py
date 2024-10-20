@@ -1,7 +1,6 @@
 # Imports
 import os, os.path
 import sys
-import time
 import threading
 
 # Local imports
@@ -42,7 +41,7 @@ class BackgroundJob:
                 while not self.should_stop.is_set():
                     self.job_scheduler.run_pending()
                     if isinstance(self.sleep_interval, int) and self.sleep_interval > 0:
-                        time.sleep(self.sleep_interval)
+                        system.SleepProgram(self.sleep_interval)
 
         # Create scheduler
         import schedule

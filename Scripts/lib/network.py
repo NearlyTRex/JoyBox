@@ -2,7 +2,6 @@
 import os, os.path
 import sys
 import getpass
-import time
 
 # Local imports
 import config

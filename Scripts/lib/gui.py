@@ -1,7 +1,6 @@
 # Imports
 import os, os.path
 import sys
-import time
 
 # Local imports
 import config

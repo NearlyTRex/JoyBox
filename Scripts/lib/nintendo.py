@@ -9,6 +9,7 @@ import command
 import programs
 import system
 import hashing
+import webpage
 
 ######################################################
 # Nintendo DS
@@ -491,13 +492,13 @@ def InstallWiiUNusPackage(nus_package_dir, nand_dir, verbose = False, exit_on_fa
         return False
 
     # Get title id
-    import bs4
     app_titleid = ""
     with open(app_xml_file, "r") as f:
         data = f.read()
-        soup = bs4.BeautifulSoup(data, "xml")
-        for tag in soup.find_all("title_id"):
-            app_titleid = tag.text
+        soup = webpage.ParseXmlPageSource(data)
+        if soup:
+            for tag in soup.find_all("title_id"):
+                app_titleid = tag.text
     if len(app_titleid) != 16:
         return False
 
