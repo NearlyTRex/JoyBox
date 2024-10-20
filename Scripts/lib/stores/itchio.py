@@ -2,8 +2,6 @@
 import os, os.path
 import sys
 import json
-import time
-import datetime
 
 # Local imports
 import config
@@ -216,55 +214,44 @@ class Itchio(storebase.StoreBase):
         except:
             return None
 
-        # Look for game description
-        section_game_description = webpage.WaitForPageElement(web_driver, class_name = "formatted_description", verbose = verbose)
-        if not section_game_description:
-            return None
-
-        # Look for game information
-        section_game_information = webpage.WaitForPageElement(web_driver, class_name = "more_information_toggle", verbose = verbose)
-        if not section_game_information:
-            return None
-
-        # Grab the description text
-        raw_game_description = webpage.GetElementText(section_game_description)
-
         # Create metadata entry
         metadata_entry = metadataentry.MetadataEntry()
 
-        # Convert description to metadata format
-        if raw_game_description:
-            metadata_entry.set_description(raw_game_description)
+        # Load more information if necessary
+        element_more_information = webpage.WaitForPageElement(
+            driver = web_driver,
+            xpath = "//div[@class='toggle_row']//a[contains(text(), 'More information')]",
+            verbose = verbose)
+        if element_more_information:
+            webpage.ClickElement(element_more_information)
+            system.SleepProgram(3)
 
-        # Grab the information text
-        raw_game_information = webpage.GetElementText(section_game_information)
-
-        # Click the "More information" button if it's present
-        if raw_game_information:
-            if "More information" in raw_game_information:
-                element_game_info_more = webpage.GetElement(web_driver, link_text = "More information")
-                if element_game_info_more:
-                    webpage.ClickElement(element_game_info_more)
-
-        # Wait for more information to load
-        time.sleep(3)
+        # Look for game description
+        element_game_description = webpage.WaitForPageElement(
+            driver = web_driver,
+            class_name = "formatted_description",
+            verbose = verbose)
+        if element_game_description:
+            raw_game_description = webpage.GetElementText(element_game_description)
+            if raw_game_description:
+                metadata_entry.set_description(raw_game_description)
 
         # Look for game details
-        section_game_details = webpage.GetElement(web_driver, class_name = "game_info_panel_widget")
-        if section_game_details:
+        element_game_details = webpage.GetElement(web_driver, class_name = "game_info_panel_widget")
+        if element_game_details:
 
             # Grab the information text
-            raw_game_details = webpage.GetElementText(section_game_details)
+            raw_game_details = webpage.GetElementText(element_game_details)
             for game_detail_line in raw_game_details.split("\n"):
 
                 # Release
                 if game_detail_line.startswith("Release date"):
                     release_text = game_detail_line.replace("Release date", "").strip()
-                    release_time = datetime.datetime.strptime(release_text, "%b %d, %Y")
+                    release_time = system.ParseDateString(release_text, "%b %d, %Y")
                     metadata_entry.set_release(release_time.strftime("%Y-%m-%d"))
                 if game_detail_line.startswith("Published"):
                     release_text = game_detail_line.replace("Published", "").strip()
-                    release_time = datetime.datetime.strptime(release_text, "%b %d, %Y")
+                    release_time = system.ParseDateString(release_text, "%b %d, %Y")
                     metadata_entry.set_release(release_time.strftime("%Y-%m-%d"))
 
                 # Developer/publisher

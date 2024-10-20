@@ -10,7 +10,9 @@ import programs
 import system
 import ini
 import jsondata
+import webpage
 import storebase
+import metadataentry
 
 # Epic store
 class Epic(storebase.StoreBase):
@@ -104,6 +106,36 @@ class Epic(storebase.StoreBase):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         return (code == 0)
+
+    # Web connect
+    def WebConnect(
+        self,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Create web driver
+        try:
+            return webpage.CreateWebDriver(verbose = verbose)
+        except Exception as e:
+            if verbose:
+                system.LogError(e)
+            return None
+
+    # Web disconnect
+    def WebDisconnect(
+        self,
+        web_driver,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Destroy web driver
+        try:
+            webpage.DestroyWebDriver(web_driver, verbose = verbose)
+            return True
+        except Exception as e:
+            if verbose:
+                system.LogError(e)
+            return False
 
     ############################################################
 
@@ -241,6 +273,80 @@ class Epic(storebase.StoreBase):
 
         # Return game info
         return jsondata.JsonData(game_info, self.GetPlatform())
+
+    ############################################################
+
+    # Get latest metadata
+    def GetLatestMetadata(
+        self,
+        identifier,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Connect to web
+        web_driver = self.WebConnect(
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not web_driver:
+            return None
+
+        # Go to the search page and pull the results
+        try:
+            web_driver.get(identifier)
+        except:
+            return None
+
+        # Create metadata entry
+        metadata_entry = metadataentry.MetadataEntry()
+
+        # Look for game description
+        element_game_description = webpage.WaitForPageElement(web_driver, id = "about-long-description", verbose = verbose)
+        if element_game_description:
+            raw_game_description = webpage.GetElementChildrenText(element_game_description)
+            if raw_game_description:
+                metadata_entry.set_description(raw_game_description)
+
+        # Look for game genres
+        elements_potential_genres = webpage.GetElement(web_driver, class_name = "css-8f0505", all_elements = True)
+        if elements_potential_genres:
+            for element_potential_genre in elements_potential_genres:
+                potential_text = system.ExtractWebText(webpage.GetElementAttribute(element_potential_genre, "innerHTML"))
+                if "Genres" in potential_text:
+                    element_game_genres = webpage.GetElement(element_potential_genre, class_name = "css-cyjj8t", all_elements = True)
+                    if element_game_genres:
+                        game_genres = []
+                        for element_game_genre in element_game_genres:
+                            game_genre_text = webpage.GetElementChildrenText(element_game_genre)
+                            if game_genre_text:
+                                game_genres.append(game_genre_text)
+                        metadata_entry.set_genre(";".join(game_genres))
+
+        # Look for game details
+        elements_details = webpage.GetElement(web_driver, class_name = "css-s97i32", all_elements = True)
+        if elements_details:
+            for elements_detail in elements_details:
+                element_detail_text = webpage.GetElementChildrenText(elements_detail)
+                if element_detail_text.startswith("Developer"):
+                    developer_text = element_detail_text.replace("Developer", "").strip()
+                    metadata_entry.set_developer(developer_text)
+                elif element_detail_text.startswith("Publisher"):
+                    published_text = element_detail_text.replace("Publisher", "").strip()
+                    metadata_entry.set_publisher(published_text)
+                elif element_detail_text.startswith("Release Date"):
+                    release_text = element_detail_text.replace("Release Date", "").strip()
+                    release_text = system.ConvertDateString(release_text, "%m/%d/%y", "%Y-%m-%d")
+                    metadata_entry.set_release(release_text)
+
+        # Disconnect from web
+        success = self.WebDisconnect(
+            web_driver = web_driver,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return None
+
+        # Return metadata entry
+        return metadata_entry
 
     ############################################################
 
