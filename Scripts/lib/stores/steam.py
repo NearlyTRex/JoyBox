@@ -11,7 +11,9 @@ import system
 import network
 import ini
 import jsondata
+import webpage
 import storebase
+import metadataentry
 
 # Steam store
 class Steam(storebase.StoreBase):
@@ -409,6 +411,46 @@ class Steam(storebase.StoreBase):
 
         # Create metadata entry
         metadata_entry = metadataentry.MetadataEntry()
+
+        # Look for game description
+        element_game_description = webpage.WaitForPageElement(web_driver, id = "aboutThisGame", verbose = verbose)
+        if element_game_description:
+            raw_game_description = webpage.GetElementChildrenText(element_game_description)
+            if raw_game_description:
+                description_text = raw_game_description
+                description_text = system.TrimSubstringFromStart(description_text, "About This Game")
+                description_text = system.TrimSubstringFromStart(description_text, "About This Software")
+                description_text = system.TrimSubstringFromStart(description_text, "About This Demo")
+                metadata_entry.set_description(description_text)
+
+        # Look for game details
+        element_game_details = webpage.GetElement(web_driver, id = "genresAndManufacturer")
+        if element_game_details:
+
+            # Grab the information text
+            raw_game_details = webpage.GetElementText(element_game_details)
+            for game_detail_line in raw_game_details.split("\n"):
+
+                # Release
+                if system.DoesStringStartWithSubstring(game_detail_line, "Release Date:"):
+                    release_text = system.TrimSubstringFromStart(game_detail_line, "Release Date:").strip()
+                    release_text = system.ConvertDateString(release_text, "%b %d, %Y", "%Y-%m-%d")
+                    metadata_entry.set_release(release_text)
+
+                # Developer
+                elif system.DoesStringStartWithSubstring(game_detail_line, "Developer:"):
+                    developer_text = system.TrimSubstringFromStart(game_detail_line, "Developer:").strip()
+                    metadata_entry.set_developer(developer_text)
+
+                # Publisher
+                elif system.DoesStringStartWithSubstring(game_detail_line, "Publisher:"):
+                    publisher_text = system.TrimSubstringFromStart(game_detail_line, "Publisher:").strip()
+                    metadata_entry.set_publisher(publisher_text)
+
+                # Genre
+                elif system.DoesStringStartWithSubstring(game_detail_line, "Genre:"):
+                    genre_text = system.TrimSubstringFromStart(game_detail_line, "Genre:").strip().replace(", ", ";")
+                    metadata_entry.set_genre(genre_text)
 
         # Disconnect from web
         success = self.WebDisconnect(

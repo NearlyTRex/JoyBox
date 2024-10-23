@@ -11,7 +11,9 @@ import system
 import network
 import ini
 import jsondata
+import webpage
 import storebase
+import metadataentry
 
 # GOG store
 class GOG(storebase.StoreBase):
@@ -284,6 +286,39 @@ class GOG(storebase.StoreBase):
 
         # Create metadata entry
         metadata_entry = metadataentry.MetadataEntry()
+
+        # Look for game description
+        element_game_description = webpage.WaitForPageElement(web_driver, class_name = "description", verbose = verbose)
+        if element_game_description:
+            raw_game_description = webpage.GetElementChildrenText(element_game_description)
+            if raw_game_description:
+                metadata_entry.set_description(raw_game_description)
+
+        # Look for game details
+        elements_details = webpage.GetElement(web_driver, class_name = "details__row", all_elements = True)
+        if elements_details:
+            for elements_detail in elements_details:
+                element_detail_text = webpage.GetElementChildrenText(elements_detail).strip()
+
+                # Developer/Publisher
+                if system.DoesStringStartWithSubstring(element_detail_text, "Company:"):
+                    company_text = system.TrimSubstringFromStart(element_detail_text, "Company:").strip()
+                    for index, company_part in enumerate(company_text.split("/")):
+                        if index == 0:
+                            metadata_entry.set_developer(company_part.strip())
+                        elif index == 1:
+                            metadata_entry.set_publisher(company_part.strip())
+
+                # Release
+                elif system.DoesStringStartWithSubstring(element_detail_text, "Release date:"):
+                    release_text = system.TrimSubstringFromStart(element_detail_text, "Release date:").strip()
+                    release_text = system.ConvertDateString(release_text, "%B %d, %Y", "%Y-%m-%d")
+                    metadata_entry.set_release(release_text)
+
+                # Genre
+                elif system.DoesStringStartWithSubstring(element_detail_text, "Genre:"):
+                    genre_text = system.TrimSubstringFromStart(element_detail_text, "Genre:").strip().replace(" - ", ";")
+                    metadata_entry.set_genre(genre_text)
 
         # Disconnect from web
         success = self.WebDisconnect(

@@ -310,7 +310,7 @@ class Epic(storebase.StoreBase):
         elements_potential_genres = webpage.GetElement(web_driver, class_name = "css-8f0505", all_elements = True)
         if elements_potential_genres:
             for element_potential_genre in elements_potential_genres:
-                potential_text = system.ExtractWebText(webpage.GetElementAttribute(element_potential_genre, "innerHTML"))
+                potential_text = webpage.GetElementChildrenText(element_potential_genre, "innerHTML")
                 if "Genres" in potential_text:
                     element_game_genres = webpage.GetElement(element_potential_genre, class_name = "css-cyjj8t", all_elements = True)
                     if element_game_genres:
@@ -326,14 +326,20 @@ class Epic(storebase.StoreBase):
         if elements_details:
             for elements_detail in elements_details:
                 element_detail_text = webpage.GetElementChildrenText(elements_detail)
-                if element_detail_text.startswith("Developer"):
-                    developer_text = element_detail_text.replace("Developer", "").strip()
+
+                # Developer
+                if system.DoesStringStartWithSubstring(element_detail_text, "Developer"):
+                    developer_text = system.TrimSubstringFromStart(element_detail_text, "Developer").strip()
                     metadata_entry.set_developer(developer_text)
-                elif element_detail_text.startswith("Publisher"):
-                    published_text = element_detail_text.replace("Publisher", "").strip()
+
+                # Publisher
+                elif system.DoesStringStartWithSubstring(element_detail_text, "Publisher"):
+                    published_text = system.TrimSubstringFromStart(element_detail_text, "Publisher").strip()
                     metadata_entry.set_publisher(published_text)
-                elif element_detail_text.startswith("Release Date"):
-                    release_text = element_detail_text.replace("Release Date", "").strip()
+
+                # Release
+                elif system.DoesStringStartWithSubstring(element_detail_text, "Release Date"):
+                    release_text = system.TrimSubstringFromStart(element_detail_text, "Release Date").strip()
                     release_text = system.ConvertDateString(release_text, "%m/%d/%y", "%Y-%m-%d")
                     metadata_entry.set_release(release_text)
 

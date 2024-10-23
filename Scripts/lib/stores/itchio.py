@@ -239,34 +239,33 @@ class Itchio(storebase.StoreBase):
         # Look for game details
         element_game_details = webpage.GetElement(web_driver, class_name = "game_info_panel_widget")
         if element_game_details:
-
-            # Grab the information text
             raw_game_details = webpage.GetElementText(element_game_details)
             for game_detail_line in raw_game_details.split("\n"):
 
                 # Release
-                if game_detail_line.startswith("Release date"):
-                    release_text = game_detail_line.replace("Release date", "").strip()
-                    release_time = system.ParseDateString(release_text, "%b %d, %Y")
-                    metadata_entry.set_release(release_time.strftime("%Y-%m-%d"))
-                if game_detail_line.startswith("Published"):
-                    release_text = game_detail_line.replace("Published", "").strip()
-                    release_time = system.ParseDateString(release_text, "%b %d, %Y")
-                    metadata_entry.set_release(release_time.strftime("%Y-%m-%d"))
+                if system.DoesStringStartWithSubstring(game_detail_line, "Release date"):
+                    release_text = system.TrimSubstringFromStart(game_detail_line, "Release date").strip()
+                    release_text = system.ConvertDateString(release_text, "%b %d, %Y", "%Y-%m-%d")
+                    metadata_entry.set_release(release_text)
+                if system.DoesStringStartWithSubstring(game_detail_line, "Published"):
+                    release_text = system.TrimSubstringFromStart(game_detail_line, "Published").strip()
+                    release_text = system.ConvertDateString(release_text, "%b %d, %Y", "%Y-%m-%d")
+                    metadata_entry.set_release(release_text)
 
                 # Developer/publisher
-                elif game_detail_line.startswith("Authors"):
-                    author_text = game_detail_line.replace("Authors", "").strip()
+                elif system.DoesStringStartWithSubstring(game_detail_line, "Authors"):
+                    author_text = system.TrimSubstringFromStart(game_detail_line, "Authors").strip()
                     metadata_entry.set_developer(author_text)
                     metadata_entry.set_publisher(author_text)
-                elif game_detail_line.startswith("Author"):
-                    author_text = game_detail_line.replace("Author", "").strip()
+                elif system.DoesStringStartWithSubstring(game_detail_line, "Author"):
+                    author_text = system.TrimSubstringFromStart(game_detail_line, "Author").strip()
                     metadata_entry.set_developer(author_text)
                     metadata_entry.set_publisher(author_text)
 
                 # Genre
-                elif game_detail_line.startswith("Genre"):
-                    metadata_entry.set_genre(game_detail_line.replace("Genre", "").strip().replace(", ", ";"))
+                elif system.DoesStringStartWithSubstring(game_detail_line, "Genre"):
+                    genre_text = system.TrimSubstringFromStart(game_detail_line, "Genre").strip().replace(", ", ";")
+                    metadata_entry.set_genre(genre_text)
 
         # Disconnect from web
         success = self.WebDisconnect(

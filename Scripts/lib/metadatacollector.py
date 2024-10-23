@@ -1,0 +1,298 @@
+# Imports
+import os, os.path
+import sys
+
+# Local imports
+import config
+import system
+import environment
+import platforms
+import gameinfo
+import webpage
+import metadata
+import metadataentry
+
+# Collect metadata
+def CollectMetadata(
+    metadata_dir,
+    metadata_source,
+    keys_to_check = [],
+    force_download = False,
+    allow_replacing = False,
+    select_automatically = False,
+    ignore_unowned = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Find missing metadata
+    metadata_dir = os.path.realpath(metadata_dir)
+    for file in system.BuildFileList(metadata_dir):
+        if environment.IsMetadataFile(file):
+            metadata_obj = metadata.Metadata()
+            metadata_obj.import_from_metadata_file(file)
+
+            # Get keys to check
+            metadata_keys_to_check = []
+            if isinstance(keys_to_check, list) and len(keys_to_check) > 0:
+                metadata_keys_to_check = keys_to_check
+            else:
+                metadata_keys_to_check = config.metadata_keys_downloadable
+
+            # Iterate through each game entry to fill in any missing data
+            for game_platform in metadata_obj.get_sorted_platforms():
+                for game_name in metadata_obj.get_sorted_names(game_platform):
+                    if not force_download:
+                        if not metadata_obj.is_entry_missing_data(game_platform, game_name, metadata_keys_to_check):
+                            continue
+
+                    # Get entry
+                    if verbose:
+                        system.Log("Collecting metadata for %s - %s ..." % (game_platform, game_name))
+                    game_entry = metadata_obj.get_game(game_platform, game_name)
+
+                    # Create web driver
+                    web_driver = webpage.CreateWebDriver()
+
+                    # Collect metadata
+                    metadata_result = None
+                    if metadata_source == config.metadata_source_type_thegamesdb:
+                        metadata_result = CollectMetadataFromTGDB(
+                            web_driver = web_driver,
+                            game_platform = game_platform,
+                            game_name = game_name,
+                            select_automatically = select_automatically,
+                            ignore_unowned = ignore_unowned,
+                            verbose = verbose,
+                            exit_on_failure = exit_on_failure)
+                    elif metadata_source == config.metadata_source_type_gamefaqs:
+                        metadata_result = CollectMetadataFromGameFAQS(
+                            web_driver = web_driver,
+                            game_platform = game_platform,
+                            game_name = game_name,
+                            select_automatically = select_automatically,
+                            ignore_unowned = ignore_unowned,
+                            verbose = verbose,
+                            exit_on_failure = exit_on_failure)
+
+                    # Cleanup web driver
+                    webpage.DestroyWebDriver(web_driver)
+
+                    # Merge in metadata result
+                    if metadata_result:
+
+                        # Update keys
+                        for metadata_key in metadata_keys_to_check:
+                            if not metadata_result.is_key_set(metadata_key):
+                                continue
+                            if game_entry.is_key_set(metadata_key) and not allow_replacing:
+                                continue
+                            game_entry.set_value(metadata_key, metadata_result.get_value(metadata_key))
+
+                    # Write metadata back to file
+                    metadata_obj.set_game(game_platform, game_name, game_entry)
+                    metadata_obj.export_to_metadata_file(file)
+
+                    # Wait
+                    if verbose:
+                        system.Log("Waiting to get next entry ...")
+                    system.SleepProgram(5)
+
+# Collect metadata from TheGamesDB
+def CollectMetadataFromTGDB(
+    web_driver,
+    game_platform,
+    game_name,
+    select_automatically = False,
+    ignore_unowned = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Get keywords name
+    natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
+    keywords_name = system.EncodeUrlString(natural_name.strip(), use_plus = True)
+
+    # Metadata result
+    metadata_result = metadataentry.MetadataEntry()
+
+    # Go to the search page and pull the results
+    try:
+        web_driver.get("https://thegamesdb.net/search.php?name=" + keywords_name)
+    except:
+        return None
+
+    # Select an entry automatically
+    if select_automatically:
+
+        # Find the root container element
+        section_search_result = webpage.WaitForPageElement(web_driver, class_name = "container-fluid", wait_time = 5, verbose = verbose)
+        if not section_search_result:
+            return None
+
+        # Score each potential title compared to the original title
+        scores_list = []
+        game_cards = webpage.GetElement(section_search_result, class_name = "card-footer", all_elements = True)
+        if game_cards:
+            for game_card in game_cards:
+                game_card_text = webpage.GetElementText(game_card)
+
+                # Get potential title
+                potential_title = ""
+                if game_card_text:
+                    for game_card_text_token in game_card_text.split("\n"):
+                        potential_title = game_card_text_token
+                        break
+
+                # Get comparison score
+                score_entry = {}
+                score_entry["node"] = game_card
+                score_entry["ratio"] = system.GetStringSimilarityRatio(natural_name, potential_title)
+                scores_list.append(score_entry)
+
+        # Click on the highest score node
+        for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
+            webpage.ClickElement(score_entry["node"])
+            break
+
+        # Check if the url has changed
+        if webpage.IsUrlLoaded(web_driver, "https://thegamesdb.net/search.php?name="):
+            return None
+
+    # Look for game description
+    section_game_description = webpage.WaitForPageElement(web_driver, class_name = "game-overview", verbose = verbose)
+    if not section_game_description:
+        return None
+
+    # Grab the description text
+    raw_game_description = webpage.GetElementText(section_game_description)
+
+    # Convert description to metadata format
+    if raw_game_description:
+        metadata_result.set_description(raw_game_description)
+
+    # Look for game details
+    for section_game_details in webpage.GetElement(web_driver, class_name = "card-body", all_elements = True):
+        for element_paragraph in webpage.GetElement(section_game_details, tag_name = "p", all_elements = True):
+            element_text = webpage.GetElementText(element_paragraph)
+            if not element_text:
+                continue
+
+            # Genre
+            if system.DoesStringStartWithSubstring(element_text, "Genre(s):"):
+                genre_text = system.TrimSubstringFromStart(element_text, "Genre(s):").replace(" | ", ";").strip()
+                metadata_result.set_genre(genre_text)
+
+            # Co-op
+            if system.DoesStringStartWithSubstring(element_text, "Co-op:"):
+                coop_text = system.TrimSubstringFromStart(element_text, "Co-op:").strip()
+                metadata_result.set_coop(coop_text)
+
+            # Developer
+            if system.DoesStringStartWithSubstring(element_text, "Developer(s):"):
+                developer_text = system.TrimSubstringFromStart(element_text, "Developer(s):").strip()
+                metadata_result.set_developer(developer_text)
+
+            # Publisher
+            if system.DoesStringStartWithSubstring(element_text, "Publishers(s):"):
+                publisher_text = system.TrimSubstringFromStart(element_text, "Publishers(s):").strip()
+                metadata_result.set_publisher(publisher_text)
+
+            # Players
+            if system.DoesStringStartWithSubstring(element_text, "Players:"):
+                players_text = system.TrimSubstringFromStart(element_text, "Players:").strip()
+                metadata_result.set_players(players_text)
+
+            # Release
+            if system.DoesStringStartWithSubstring(element_text, "ReleaseDate:"):
+                release_text = system.TrimSubstringFromStart(element_text, "ReleaseDate:").strip()
+                metadata_result.set_release(release_text)
+
+    # Return metadata
+    return metadata_result
+
+# Collect metadata from GameFAQs
+def CollectMetadataFromGameFAQS(
+    web_driver,
+    game_platform,
+    game_name,
+    select_automatically = False,
+    ignore_unowned = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Get keywords name
+    natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
+    keywords_name = system.EncodeUrlString(natural_name.strip(), use_plus = True)
+
+    # Metadata result
+    metadata_result = metadataentry.MetadataEntry()
+
+    # Go to the search page and pull the results
+    try:
+        web_driver.get("https://gamefaqs.gamespot.com/search_advanced?game=" + keywords_name)
+    except:
+        return None
+
+    # Look for game description
+    section_game_descriptions = webpage.WaitForPageElement(web_driver, class_name = "game_desc", verbose = verbose)
+    if not section_game_descriptions:
+        return None
+
+    # Grab the description text
+    raw_game_description = ""
+    for section_game_description in section_game_descriptions:
+        raw_game_description = webpage.GetElementText(section_game_description)
+
+    # Click the "more" button if it's present
+    if "more »" in raw_game_description:
+        element_game_description_more = webpage.GetElement(web_driver, link_text = "more »")
+        if element_game_description_more:
+            webpage.ClickElement(element_game_description_more)
+
+    # Re-grab the description text
+    for section_game_description in section_game_descriptions:
+        raw_game_description = webpage.GetElementText(section_game_description)
+
+    # Convert description to metadata format
+    if raw_game_description:
+        metadata_result.set_description(raw_game_description)
+
+    # Look for game details
+    for section_game_details in webpage.GetElement(web_driver, class_name = "content", all_elements = True):
+        element_text = webpage.GetElementText(section_game_details)
+        if not element_text:
+            continue
+
+        # Genre
+        if system.DoesStringStartWithSubstring(element_text, "Genre:"):
+            genre_text = system.TrimSubstringFromStart(element_text, "Genre:").replace(" » ", ";").strip()
+            metadata_result.set_genre(genre_text)
+
+        # Developer
+        elif system.DoesStringStartWithSubstring(element_text, "Developer:"):
+            developer_text = system.TrimSubstringFromStart(element_text, "Developer:").strip()
+            metadata_result.set_developer(developer_text)
+
+        # Publisher
+        elif system.DoesStringStartWithSubstring(element_text, "Publisher:"):
+            publisher_text = system.TrimSubstringFromStart(element_text, "Publisher:").strip()
+            metadata_result.set_publisher(publisher_text)
+
+        # Developer/Publisher
+        elif system.DoesStringStartWithSubstring(element_text, "Developer/Publisher:"):
+            devpub_text = system.TrimSubstringFromStart(element_text, "Developer/Publisher:").strip()
+            metadata_result.set_developer(devpub_text)
+            metadata_result.set_publisher(devpub_text)
+
+        # Release/First Released
+        elif system.DoesStringStartWithSubstring(element_text, "Release:") or
+             system.DoesStringStartWithSubstring(element_text, "First Released:"):
+            release_text = ""
+            if system.DoesStringStartWithSubstring(element_text, "Release:"):
+                release_text = system.TrimSubstringFromStart(element_text, "Release:").strip()
+            elif system.DoesStringStartWithSubstring(element_text, "First Released:"):
+                release_text = system.TrimSubstringFromStart(element_text, "First Released:").strip()
+            release_text = system.ConvertUnknownDateString(release_text, "%Y-%m-%d")
+            metadata_result.set_release(release_text)
+
+    # Return metadata
+    return metadata_result
