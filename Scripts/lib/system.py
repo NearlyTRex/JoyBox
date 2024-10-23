@@ -168,6 +168,30 @@ def SortStrings(strings):
 def SortStringsWithLength(strings):
     return sorted(strings, key=lambda item: (len(item), item))
 
+# Check if string starts with substring
+def DoesStringStartWithSubstring(string, substring, case_sensitive = False):
+    if case_sensitive:
+        return string.startswith(substring)
+    return string.lower().startswith(substring.lower())
+
+# Check if string ends with substring
+def DoesStringEndWithSubstring(string, substring, case_sensitive = False):
+    if case_sensitive:
+        return string.endswith(substring)
+    return string.lower().endswith(substring.lower())
+
+# Trim substring from start
+def TrimSubstringFromStart(string, substring, case_sensitive = False):
+    if DoesStringStartWithSubstring(string, substring, case_sensitive):
+        return string[len(substring):]
+    return string
+
+# Trim substring from end
+def TrimSubstringFromEnd(string, substring, case_sensitive = False):
+    if DoesStringEndWithSubstring(string, substring, case_sensitive):
+        return string[:-len(substring)]
+    return string
+
 # Remove string escape sequences
 def RemoveStringEscapeSequences(string):
     pattern = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
@@ -178,13 +202,35 @@ def RemoveStringTagSequences(string):
     pattern = re.compile(r'</?[^>]+>')
     return pattern.sub("", string)
 
-# Parse date string
-def ParseDateString(string, format_code):
+# Get datetime from string
+def GetDatetimeFromString(string, format_code):
     return datetime.datetime.strptime(string, format_code)
 
-# Convert date string
+# Get datetime from unknown string
+def GetDatetimeFromUnknownString(string):
+    try:
+        import dateutil.parser
+        return dateutil.parser.parse(string)
+    except:
+        return None
+
+# Convert datetime to string
+def GetStringFromDatetime(date_time, format_code):
+    return date_time.strftime(format_code)
+
+# Convert datetime to string
 def ConvertDateString(string, old_format_code, new_format_code):
-    return ParseDateString(string, old_format_code).strftime(new_format_code)
+    date_time = GetDatetimeFromString(string, old_format_code)
+    if date_time:
+        return GetStringFromDatetime(date_time, new_format_code)
+    return None
+
+# Convert unknown date string
+def ConvertUnknownDateString(string, new_format_code):
+    date_time = GetDatetimeFromUnknownString(string)
+    if date_time:
+        return GetStringFromDatetime(date_time, new_format_code)
+    return None
 
 # Encode url string
 def EncodeUrlString(string, use_plus = False):
