@@ -11,6 +11,7 @@ sys.path.append(lib_folder)
 import config
 import system
 import metadata
+import metadatacollector
 import setup
 
 # Parse arguments
@@ -45,7 +46,7 @@ def main():
         keys_to_check = args.keys_to_check.split(",")
 
     # Collect metadata
-    metadata.CollectMetadata(
+    metadatacollector.CollectMetadata(
         metadata_dir = args.metadata_dir,
         metadata_source = args.metadata_source,
         keys_to_check = keys_to_check,
