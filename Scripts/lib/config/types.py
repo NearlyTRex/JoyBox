@@ -85,9 +85,11 @@ metadata_format_types = [
 # Metadata source types
 metadata_source_type_thegamesdb = "thegamesdb"
 metadata_source_type_gamefaqs = "gamefaqs"
+metadata_source_type_store = "store"
 metadata_source_types = [
     metadata_source_type_thegamesdb,
-    metadata_source_type_gamefaqs
+    metadata_source_type_gamefaqs,
+    metadata_source_type_store
 ]
 
 # Addon types

@@ -12,8 +12,106 @@ import webpage
 import metadata
 import metadataentry
 
-# Collect metadata
-def CollectMetadata(
+############################################################
+
+# Collect metadata from file
+def CollectMetadataFromFile(
+    metadata_file,
+    metadata_source,
+    keys_to_check = [],
+    force_download = False,
+    allow_replacing = False,
+    select_automatically = False,
+    ignore_unowned = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Skip invalid metadata files
+    if not environment.IsMetadataFile(metadata_file):
+        return False
+
+    # Open metadata file
+    metadata_obj = metadata.Metadata()
+    metadata_obj.import_from_metadata_file(metadata_file)
+
+    # Get keys to check
+    metadata_keys_to_check = []
+    if isinstance(keys_to_check, list) and len(keys_to_check) > 0:
+        metadata_keys_to_check = keys_to_check
+    else:
+        metadata_keys_to_check = config.metadata_keys_downloadable
+
+    # Iterate through each game entry to fill in any missing data
+    for game_platform in metadata_obj.get_sorted_platforms():
+        for game_name in metadata_obj.get_sorted_names(game_platform):
+            if not force_download:
+                if not metadata_obj.is_entry_missing_data(game_platform, game_name, metadata_keys_to_check):
+                    continue
+
+            # Get entry
+            if verbose:
+                system.Log("Collecting metadata for %s - %s ..." % (game_platform, game_name))
+            game_entry = metadata_obj.get_game(game_platform, game_name)
+
+            # Create web driver
+            web_driver = webpage.CreateWebDriver()
+
+            # Collect metadata
+            metadata_result = None
+            if metadata_source == config.metadata_source_type_thegamesdb:
+                metadata_result = CollectMetadataFromTGDB(
+                    web_driver = web_driver,
+                    game_platform = game_platform,
+                    game_name = game_name,
+                    select_automatically = select_automatically,
+                    ignore_unowned = ignore_unowned,
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+            elif metadata_source == config.metadata_source_type_gamefaqs:
+                metadata_result = CollectMetadataFromGameFAQS(
+                    web_driver = web_driver,
+                    game_platform = game_platform,
+                    game_name = game_name,
+                    select_automatically = select_automatically,
+                    ignore_unowned = ignore_unowned,
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+            elif metadata_source == config.metadata_source_type_store:
+                store_obj = stores.GetStoreByPlatform(game_platform)
+                if store_obj:
+                    metadata_result = store_obj.GetLatestMetadata(
+                        identifier = game_entry.get_url(),
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
+
+            # Cleanup web driver
+            webpage.DestroyWebDriver(web_driver)
+
+            # Merge in metadata result
+            if metadata_result:
+
+                # Update keys
+                for metadata_key in metadata_keys_to_check:
+                    if not metadata_result.is_key_set(metadata_key):
+                        continue
+                    if game_entry.is_key_set(metadata_key) and not allow_replacing:
+                        continue
+                    game_entry.set_value(metadata_key, metadata_result.get_value(metadata_key))
+
+            # Write metadata back to file
+            metadata_obj.set_game(game_platform, game_name, game_entry)
+            metadata_obj.export_to_metadata_file(metadata_file)
+
+            # Wait
+            if verbose:
+                system.Log("Waiting to get next entry ...")
+            system.SleepProgram(5)
+
+    # Should be successful
+    return True
+
+# Collect metadata from directory
+def CollectMetadataFromDirectory(
     metadata_dir,
     metadata_source,
     keys_to_check = [],
@@ -24,78 +122,60 @@ def CollectMetadata(
     verbose = False,
     exit_on_failure = False):
 
-    # Find missing metadata
-    metadata_dir = os.path.realpath(metadata_dir)
-    for file in system.BuildFileList(metadata_dir):
-        if environment.IsMetadataFile(file):
-            metadata_obj = metadata.Metadata()
-            metadata_obj.import_from_metadata_file(file)
+    # Collect missing metadata
+    for file in system.BuildFileList(os.path.realpath(metadata_dir)):
+        success = CollectMetadataFromFile(
+            metadata_file = file,
+            metadata_source = metadata_source,
+            keys_to_check = keys_to_check,
+            force_download = force_download,
+            allow_replacing = allow_replacing,
+            select_automatically = select_automatically,
+            ignore_unowned = ignore_unowned,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+    return True
 
-            # Get keys to check
-            metadata_keys_to_check = []
-            if isinstance(keys_to_check, list) and len(keys_to_check) > 0:
-                metadata_keys_to_check = keys_to_check
-            else:
-                metadata_keys_to_check = config.metadata_keys_downloadable
+# Collect metadata from categories
+def CollectMetadataFromCategories(
+    metadata_category,
+    metadata_subcategory,
+    keys_to_check = [],
+    force_download = False,
+    allow_replacing = False,
+    select_automatically = False,
+    ignore_unowned = False,
+    verbose = False,
+    exit_on_failure = False):
 
-            # Iterate through each game entry to fill in any missing data
-            for game_platform in metadata_obj.get_sorted_platforms():
-                for game_name in metadata_obj.get_sorted_names(game_platform):
-                    if not force_download:
-                        if not metadata_obj.is_entry_missing_data(game_platform, game_name, metadata_keys_to_check):
-                            continue
+    # Get metadata platform
+    metadata_platform = gameinfo.DeriveGamePlatformFromCategories(metadata_category, metadata_subcategory)
 
-                    # Get entry
-                    if verbose:
-                        system.Log("Collecting metadata for %s - %s ..." % (game_platform, game_name))
-                    game_entry = metadata_obj.get_game(game_platform, game_name)
+    # Get metadata source
+    metadata_source = config.metadata_source_type_thegamesdb
+    if stores.GetStoreByPlatform(metadata_platform):
+        metadata_source = config.metadata_source_type_store
 
-                    # Create web driver
-                    web_driver = webpage.CreateWebDriver()
+    # Get metadata file
+    metadata_file = environment.GetMetadataFile(metadata_category, metadata_subcategory)
+    if not metadata_file:
+        return False
 
-                    # Collect metadata
-                    metadata_result = None
-                    if metadata_source == config.metadata_source_type_thegamesdb:
-                        metadata_result = CollectMetadataFromTGDB(
-                            web_driver = web_driver,
-                            game_platform = game_platform,
-                            game_name = game_name,
-                            select_automatically = select_automatically,
-                            ignore_unowned = ignore_unowned,
-                            verbose = verbose,
-                            exit_on_failure = exit_on_failure)
-                    elif metadata_source == config.metadata_source_type_gamefaqs:
-                        metadata_result = CollectMetadataFromGameFAQS(
-                            web_driver = web_driver,
-                            game_platform = game_platform,
-                            game_name = game_name,
-                            select_automatically = select_automatically,
-                            ignore_unowned = ignore_unowned,
-                            verbose = verbose,
-                            exit_on_failure = exit_on_failure)
+    # Collect missing metadata
+    return CollectMetadataFromFile(
+        metadata_file = metadata_file,
+        metadata_source = metadata_source,
+        keys_to_check = keys_to_check,
+        force_download = force_download,
+        allow_replacing = allow_replacing,
+        select_automatically = select_automatically,
+        ignore_unowned = ignore_unowned,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
-                    # Cleanup web driver
-                    webpage.DestroyWebDriver(web_driver)
-
-                    # Merge in metadata result
-                    if metadata_result:
-
-                        # Update keys
-                        for metadata_key in metadata_keys_to_check:
-                            if not metadata_result.is_key_set(metadata_key):
-                                continue
-                            if game_entry.is_key_set(metadata_key) and not allow_replacing:
-                                continue
-                            game_entry.set_value(metadata_key, metadata_result.get_value(metadata_key))
-
-                    # Write metadata back to file
-                    metadata_obj.set_game(game_platform, game_name, game_entry)
-                    metadata_obj.export_to_metadata_file(file)
-
-                    # Wait
-                    if verbose:
-                        system.Log("Waiting to get next entry ...")
-                    system.SleepProgram(5)
+############################################################
 
 # Collect metadata from TheGamesDB
 def CollectMetadataFromTGDB(
@@ -209,6 +289,8 @@ def CollectMetadataFromTGDB(
     # Return metadata
     return metadata_result
 
+############################################################
+
 # Collect metadata from GameFAQs
 def CollectMetadataFromGameFAQS(
     web_driver,
@@ -296,3 +378,5 @@ def CollectMetadataFromGameFAQS(
 
     # Return metadata
     return metadata_result
+
+############################################################
