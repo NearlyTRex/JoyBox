@@ -46,7 +46,7 @@ def main():
         keys_to_check = args.keys_to_check.split(",")
 
     # Collect metadata
-    metadatacollector.CollectMetadata(
+    metadatacollector.CollectMetadataFromDirectory(
         metadata_dir = args.metadata_dir,
         metadata_source = args.metadata_source,
         keys_to_check = keys_to_check,
