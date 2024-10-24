@@ -32,3 +32,10 @@ def GetStoreByType(store_type):
         if instance.GetType() == store_type:
             return instance
     return None
+
+# Get store by platform
+def GetStoreByPlatform(store_platform):
+    for instance in GetStoreList():
+        if instance.GetPlatform() == store_platform:
+            return instance
+    return None
