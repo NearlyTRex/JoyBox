@@ -1,6 +1,7 @@
 # Imports
 import os, os.path
 import sys
+import json
 
 # Local imports
 import config
@@ -165,7 +166,8 @@ class Epic(storebase.StoreBase):
         list_cmd = [
             python_tool,
             legendary_script,
-            "list"
+            "list",
+            "--json"
         ]
 
         # Run list command
@@ -177,33 +179,34 @@ class Epic(storebase.StoreBase):
             system.LogError("Unable to find epic purchases")
             return None
 
+        # Get epic json
+        epic_json = []
+        try:
+            epic_json = json.loads(list_output)
+        except Exception as e:
+            system.LogError(e)
+            system.LogError("Unable to parse epic game list")
+            system.LogError("Received output:\n%s" % info_output)
+            return None
+
         # Parse output
         purchases = []
-        for line in list_output.split("\n"):
-
-            # Gather info
-            line = system.RemoveStringEscapeSequences(line)
-            if not line.startswith(" * "):
-                continue
-            tokens = line.split(" | Version: ")
-            if len(tokens) != 2:
-                continue
-            line = tokens[0]
-            line_version = tokens[1].rstrip(")")
-            tokens = line.split(" (App name: ")
-            if len(tokens) != 2:
-                continue
-            line = tokens[0]
-            line_appname = tokens[1]
-            line_title = tokens[0].lstrip(" *")
+        for entry in epic_json:
 
             # Create purchase
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.GetPlatform())
-            purchase.set_value(config.json_key_store_appname, line_appname)
-            purchase.set_value(config.json_key_store_buildid, line_version)
-            purchase.set_value(config.json_key_store_name, line_title)
+            if "app_name" in entry:
+                purchase.set_value(config.json_key_store_appname, entry["app_name"])
+            if "app_title" in entry:
+                purchase.set_value(config.json_key_store_name, entry["app_title"])
+            if "asset_infos" in entry:
+                appassets = entry["asset_infos"]
+                if "Windows" in appassets:
+                    appassetswindows = appassets["Windows"]
+                    if "build_version" in appassetswindows:
+                        purchase.set_value(config.json_key_store_buildid, appassetswindows["build_version"])
             purchases.append(purchase)
         return purchases
 
@@ -241,7 +244,8 @@ class Epic(storebase.StoreBase):
         info_cmd = [
             python_tool,
             legendary_script,
-            "info", identifier
+            "info", identifier,
+            "--json"
         ]
 
         # Run info command
@@ -253,23 +257,34 @@ class Epic(storebase.StoreBase):
             system.LogError("Unable to find epic information for '%s'" % identifier)
             return None
 
+        # Get epic json
+        epic_json = {}
+        try:
+            epic_json = json.loads(info_output)
+        except Exception as e:
+            system.LogError(e)
+            system.LogError("Unable to parse epic game info")
+            system.LogError("Received output:\n%s" % info_output)
+            return None
+
         # Build game info
         game_info = {}
         game_info[config.json_key_store_appname] = identifier
-        for line in info_output.split("\n"):
-            if line.startswith("- Title:"):
-                game_info[config.json_key_store_name] = line.replace("- Title:", "").strip()
-            elif line.startswith("- Latest version:"):
-                game_info[config.json_key_store_buildid] = line.replace("- Latest version:", "").strip()
-            elif line.startswith("- Cloud save folder (Windows):"):
-                line_path = line.replace("- Cloud save folder (Windows):", "").strip()
-                if "(None)" not in line_path:
-                    base_path = None
-                    if config.json_key_store_installdir in game_info:
-                        base_path = game_info[config.json_key_store_installdir]
-                    game_info[config.json_key_store_paths] = [
-                        storebase.TranslateStorePath(line_path, base_path)
-                    ]
+
+        # Augment by json
+        if "game" in epic_json:
+            appgame = epic_json["game"]
+            if "title" in appgame:
+                game_info[config.json_key_store_name] = appgame["title"].strip()
+            if "version" in appgame:
+                game_info[config.json_key_store_buildid] = appgame["version"].strip()
+            if "cloud_save_folder" in appgame:
+                base_path = None
+                if config.json_key_store_installdir in game_info:
+                    base_path = game_info[config.json_key_store_installdir]
+                game_info[config.json_key_store_paths] = [
+                    storebase.TranslateStorePath(appgame["cloud_save_folder"].strip(), base_path)
+                ]
 
         # Return game info
         return jsondata.JsonData(game_info, self.GetPlatform())
