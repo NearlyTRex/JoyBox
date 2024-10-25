@@ -169,7 +169,7 @@ class GameInfo:
     # Write wrapped json data
     def write_wrapped_json_data(self, json_wrapper, verbose = False, exit_on_failure = False):
         return self.write_raw_json_data(
-            json_data = json_wrapper.get(),
+            json_data = json_wrapper.get_data(),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 

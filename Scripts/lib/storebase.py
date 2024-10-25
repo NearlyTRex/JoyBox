@@ -11,6 +11,7 @@ import gameinfo
 import jsondata
 import collection
 import tools
+import metadataentry
 
 # Translate store path
 def TranslateStorePath(path, base_path = None):
@@ -262,11 +263,20 @@ class StoreBase:
             if not success:
                 return False
 
+            # Get latest metadata
+            initial_metadata = None
+            if purchase_appurl:
+                initial_metadata = self.GetLatestMetadata(
+                    identifier = purchase_appurl,
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+
             # Add metadata entry
             success = collection.AddMetadataEntry(
                 game_category = self.GetCategory(),
                 game_subcategory = self.GetSubcategory(),
                 game_name = entry_name,
+                initial_data = initial_metadata,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             if not success:

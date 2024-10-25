@@ -8,9 +8,12 @@ import environment
 import gameinfo
 import platforms
 import system
-import metadata
 import cryption
 import jsondata
+import metadata
+import metadataentry
+
+############################################################
 
 # Create game json file
 def CreateGameJsonFile(
@@ -157,7 +160,7 @@ def CreateGameJsonFile(
     # Write json file
     success = system.WriteJsonFile(
         src = json_file_path,
-        json_data = json_obj.get(),
+        json_data = json_obj.get_data(),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
@@ -191,6 +194,8 @@ def CreateGameJsonFiles(
         if not success:
             return False
     return True
+
+############################################################
 
 # Get game json ignore entries
 def GetGameJsonIgnoreEntries(
@@ -257,7 +262,7 @@ def AddGameJsonIgnoreEntry(
     # Write json file
     system.WriteJsonFile(
         src = json_file_path,
-        json_data = json_obj.get(),
+        json_data = json_obj.get_data(),
         sort_keys = True,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
@@ -271,11 +276,14 @@ def AddGameJsonIgnoreEntry(
         exit_on_failure = exit_on_failure)
     return success
 
+############################################################
+
 # Add metadata entry
 def AddMetadataEntry(
     game_category,
     game_subcategory,
     game_name,
+    initial_data = None,
     verbose = False,
     exit_on_failure = False):
 
@@ -307,7 +315,9 @@ def AddMetadataEntry(
         new_base_path = "")
 
     # Create new entry
-    new_entry = metadata.MetadataEntry()
+    new_entry = metadataentry.MetadataEntry()
+    if isinstance(initial_data, metadataentry.MetadataEntry):
+        new_entry = initial_data
     new_entry.set_game(game_name)
     new_entry.set_platform(game_platform)
     new_entry.set_file(game_json_file)
@@ -329,3 +339,5 @@ def AddMetadataEntry(
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     return True
+
+############################################################
