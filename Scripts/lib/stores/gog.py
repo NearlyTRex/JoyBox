@@ -198,6 +198,7 @@ class GOG(storebase.StoreBase):
                 json_platform = self.GetPlatform())
             purchase.set_value(config.json_key_store_appname, line_appname)
             purchase.set_value(config.json_key_store_appid, line_appid)
+            purchase.set_value(config.json_key_store_appurl, "https://www.gog.com/en/game/%s" % line_appname)
             purchase.set_value(config.json_key_store_name, line_title)
             purchases.append(purchase)
         return purchases
@@ -238,8 +239,9 @@ class GOG(storebase.StoreBase):
 
         # Augment by json
         if "slug" in gog_json:
-            game_info[config.json_key_store_appname] = gog_json["slug"]
-            game_info[config.json_key_store_appurl] = "https://www.gog.com/en/game/%s" % gog_json["slug"]
+            appslug = gog_json["slug"]
+            game_info[config.json_key_store_appname] = appslug
+            game_info[config.json_key_store_appurl] = "https://www.gog.com/en/game/%s" % appslug
         if "title" in gog_json:
             game_info[config.json_key_store_name] = gog_json["title"].strip()
         if "downloads" in gog_json:

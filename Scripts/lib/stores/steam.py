@@ -227,6 +227,7 @@ class Steam(storebase.StoreBase):
                         json_data = {},
                         json_platform = self.GetPlatform())
                     purchase.set_value(config.json_key_store_appid, line_appid)
+                    purchase.set_value(config.json_key_store_appurl, "https://store.steampowered.com/app/%s" % line_appid)
                     purchase.set_value(config.json_key_store_name, line_title)
                     purchase.set_value(config.json_key_store_branchid, config.steam_branch_format_public)
                     purchases.append(purchase)
