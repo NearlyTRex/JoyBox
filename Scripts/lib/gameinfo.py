@@ -203,6 +203,20 @@ class GameInfo:
         except:
             return default_value
 
+    # Get wrapped value
+    def get_wrapped_value(self, key, default_value = None):
+        try:
+            return jsondata.JsonData(self.json_data[key])
+        except:
+            return default_value
+
+    # Get wrapped sub-value
+    def get_wrapped_subvalue(self, key, subkey, default_value = None):
+        try:
+            return jsondata.JsonData(self.json_data[key][subkey])
+        except:
+            return default_value
+
     # Set value
     def set_value(self, key, value):
         try:
