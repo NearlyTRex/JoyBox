@@ -74,10 +74,10 @@ class Steam(storebase.StoreBase):
         return config.json_key_steam
 
     # Get identifier
-    def GetIdentifier(self, game_info, identifier_type):
+    def GetIdentifier(self, json_wrapper, identifier_type):
         if identifier_type == config.store_identifier_type_metadata:
-            return game_info.get_store_appurl(self.GetKey())
-        return game_info.get_store_appid(self.GetKey())
+            return json_wrapper.get_value(config.json_key_store_appurl)
+        return json_wrapper.get_value(config.json_key_store_appid)
 
     # Get platform
     def GetPlatform(self):

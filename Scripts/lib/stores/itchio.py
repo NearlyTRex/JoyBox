@@ -48,8 +48,8 @@ class Itchio(storebase.StoreBase):
         return config.json_key_itchio
 
     # Get identifier
-    def GetIdentifier(self, game_info, identifier_type):
-        return game_info.get_store_appurl(self.GetKey())
+    def GetIdentifier(self, json_wrapper, identifier_type):
+        return json_wrapper.get_value(config.json_key_store_appurl)
 
     ############################################################
 

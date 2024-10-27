@@ -86,28 +86,28 @@ class StoreBase:
         return ""
 
     # Get identifier
-    def GetIdentifier(self, game_info, identifier_type):
+    def GetIdentifier(self, json_wrapper, identifier_type):
         return ""
 
     # Get info identifier
-    def GetInfoIdentifier(self, game_info):
-        return self.GetIdentifier(game_info, config.store_identifier_type_info)
+    def GetInfoIdentifier(self, json_wrapper):
+        return self.GetIdentifier(json_wrapper, config.store_identifier_type_info)
 
     # Get install identifier
-    def GetInstallIdentifier(self, game_info):
-        return self.GetIdentifier(game_info, config.store_identifier_type_install)
+    def GetInstallIdentifier(self, json_wrapper):
+        return self.GetIdentifier(json_wrapper, config.store_identifier_type_install)
 
     # Get launch identifier
-    def GetLaunchIdentifier(self, game_info):
-        return self.GetIdentifier(game_info, config.store_identifier_type_launch)
+    def GetLaunchIdentifier(self, json_wrapper):
+        return self.GetIdentifier(json_wrapper, config.store_identifier_type_launch)
 
     # Get download identifier
-    def GetDownloadIdentifier(self, game_info):
-        return self.GetIdentifier(game_info, config.store_identifier_type_download)
+    def GetDownloadIdentifier(self, json_wrapper):
+        return self.GetIdentifier(json_wrapper, config.store_identifier_type_download)
 
     # Get metadata identifier
-    def GetMetadataIdentifier(self, game_info):
-        return self.GetIdentifier(game_info, config.store_identifier_type_metadata)
+    def GetMetadataIdentifier(self, json_wrapper):
+        return self.GetIdentifier(json_wrapper, config.store_identifier_type_metadata)
 
     # Is valid identifier
     def IsValidIdentifier(self, identifier):
@@ -193,12 +193,9 @@ class StoreBase:
                 purchase_appurl
             ]
 
-            # Get primary identifier
-            primary_identifier = None
-            for purchase_identifier in purchase_identifiers:
-                if purchase_identifier:
-                    primary_identifier = purchase_identifier
-            if not primary_identifier:
+            # Get info identifier
+            info_identifier = self.GetInfoIdentifier(purchase)
+            if not info_identifier:
                 continue
 
             # Check if json file already exists
@@ -210,7 +207,7 @@ class StoreBase:
                 continue
 
             # Check if this should be ignored
-            if primary_identifier in ignores.keys():
+            if info_identifier in ignores.keys():
                 continue
 
             # Determine if this should be imported
@@ -232,7 +229,7 @@ class StoreBase:
                 collection.AddGameJsonIgnoreEntry(
                     game_category = self.GetCategory(),
                     game_subcategory = self.GetSubcategory(),
-                    game_identifier = primary_identifier,
+                    game_identifier = info_identifier,
                     game_name = purchase_name,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
@@ -242,15 +239,9 @@ class StoreBase:
             default_name = gameinfo.DeriveGameNameFromRegularName(purchase_name)
             entry_name = system.PromptForValue("Choose entry name", default_value = default_name)
 
-            # Create store data
-            store_data = {}
-            for json_key in config.json_keys_store_subdata:
-                if purchase.get_value(json_key):
-                    store_data[json_key] = purchase.get_value(json_key)
-
             # Create initial json data
             initial_data = {}
-            initial_data[self.GetKey()] = store_data
+            initial_data[self.GetKey()] = purchase.get_data()
 
             # Create json file
             success = collection.CreateGameJsonFile(
@@ -327,7 +318,7 @@ class StoreBase:
 
         # Get latest jsondata
         latest_jsondata = self.GetLatestJsondata(
-            identifier = self.GetInfoIdentifier(game_info),
+            identifier = self.GetInfoIdentifier(game_info.get_wrapped_value(self.GetKey())),
             branch = game_info.get_store_branchid(self.GetKey()),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -358,7 +349,7 @@ class StoreBase:
 
         # Install game
         return self.InstallByIdentifier(
-            identifier = self.GetInstallIdentifier(game_info),
+            identifier = self.GetInstallIdentifier(game_info.get_wrapped_value(self.GetKey())),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
@@ -381,7 +372,7 @@ class StoreBase:
 
         # Launch game
         return self.LaunchByIdentifier(
-            identifier = self.GetLaunchIdentifier(game_info),
+            identifier = self.GetLaunchIdentifier(game_info.get_wrapped_value(self.GetKey())),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
@@ -448,7 +439,7 @@ class StoreBase:
 
         # Download game
         success = self.DownloadByIdentifier(
-            identifier = self.GetDownloadIdentifier(game_info),
+            identifier = self.GetDownloadIdentifier(game_info.get_wrapped_value(self.GetKey())),
             branch = game_info.get_store_branchid(self.GetKey()),
             output_dir = output_dir,
             output_name = "%s (%s)" % (game_info.get_name(), remote_version),
@@ -501,7 +492,7 @@ class StoreBase:
 
         # Get latest jsondata
         latest_jsondata = self.GetLatestJsondata(
-            identifier = self.GetInfoIdentifier(game_info),
+            identifier = self.GetInfoIdentifier(game_info.get_wrapped_value(self.GetKey())),
             branch = game_info.get_store_branchid(self.GetKey()),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -548,7 +539,7 @@ class StoreBase:
 
         # Get latest metadata
         latest_metadata = self.GetLatestMetadata(
-            identifier = self.GetMetadataIdentifier(game_info),
+            identifier = self.GetMetadataIdentifier(game_info.get_wrapped_value(self.GetKey())),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not latest_metadata:
