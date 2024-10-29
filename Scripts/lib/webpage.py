@@ -24,16 +24,20 @@ def ParsePageSource(contents, features = "lxml"):
 
 # Parse html page source
 def ParseHtmlPageSource(html_contents):
-    return ParsePageSource(contents, features = "html.parser")
+    return ParsePageSource(html_contents, features = "html.parser")
 
 # Parse xml page source
 def ParseXmlPageSource(xml_contents):
-    return ParsePageSource(contents, features = "xml")
+    return ParsePageSource(xml_contents, features = "xml")
 
 ###########################################################
 
 # Create web driver
-def CreateWebDriver(download_dir = None, profile_dir = None, make_headless = False, verbose = False):
+def CreateWebDriver(
+    download_dir = None,
+    profile_dir = None,
+    make_headless = False,
+    verbose = False):
     from selenium.webdriver.firefox.service import Service as FirefoxService
     from selenium.webdriver.firefox.options import Options as FirefoxOptions
     from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
@@ -66,9 +70,21 @@ def DestroyWebDriver(driver, verbose = False):
     try:
         if driver:
             driver.quit()
+        return True
     except Exception as e:
         if verbose:
             system.LogError(e)
+    return False
+
+# Load url
+def LoadUrl(driver, url):
+    try:
+        driver.get(url)
+        return True
+    except Exception as e:
+        if verbose:
+            system.LogError(e)
+    return False
 
 # Get current page url
 def GetCurrentPageUrl(driver):
@@ -268,16 +284,32 @@ def GetPageSource(driver, url = None, verbose = False):
     return None
 
 # Save cookie
-def SaveCookie(driver, path):
-    with open(path, 'w') as filehandler:
-        json.dump(driver.get_cookies(), filehandler)
+def SaveCookie(driver, path, verbose = False):
+    if not system.IsPathValid(path):
+        return False
+    try:
+        with open(path, "w") as filehandler:
+            json.dump(driver.get_cookies(), filehandler)
+        return True
+    except Exception as e:
+        if verbose:
+            system.LogError(e)
+    return False
 
 # Load cookie
-def LoadCookie(driver, path):
-    with open(path, 'r') as cookiesfile:
-        cookies = json.load(cookiesfile)
-    for cookie in cookies:
-        driver.add_cookie(cookie)
+def LoadCookie(driver, path, verbose = False):
+    if not system.DoesPathExist(path):
+        return False
+    try:
+        with open(path, "r") as cookiesfile:
+            cookies = json.load(cookiesfile)
+        for cookie in cookies:
+            driver.add_cookie(cookie)
+        return True
+    except Exception as e:
+        if verbose:
+            system.LogError(e)
+    return False
 
 ###########################################################
 
@@ -305,13 +337,6 @@ def LogIntoWebsite(
             system.LogError(e)
         return False
 
-    # Load cookie if it exists
-    if os.path.exists(cookiefile):
-
-        # Load cookie
-        LoadCookie(driver, cookiefile)
-        return True
-
     # Look for element
     login_check = WaitForPageElement(
         driver = driver,
@@ -337,14 +362,10 @@ def GetMatchingUrls(url, base_url, params = {}, starts_with = "", ends_with = ""
 
     # Get page text
     page_text = ""
-    try:
-        driver = CreateWebDriver(make_headless = True, verbose = verbose)
-        if driver:
-            page_text = GetPageSource(driver, url, verbose = verbose)
-            DestroyWebDriver(driver, verbose = verbose)
-    except Exception as e:
-        if verbose:
-            system.LogError(e)
+    driver = CreateWebDriver(make_headless = True, verbose = verbose)
+    if driver:
+        page_text = GetPageSource(driver, url, verbose = verbose)
+        DestroyWebDriver(driver, verbose = verbose)
 
     # Fallback for getting page text
     if not page_text or len(page_text) == 0:
@@ -356,6 +377,7 @@ def GetMatchingUrls(url, base_url, params = {}, starts_with = "", ends_with = ""
     matching_urls = []
     parser = ParseHtmlPageSource(page_text)
     if parser:
+        potential_urls = []
         for link in parser.find_all("a"):
             link_href = link.get("href")
             if not link_href:
@@ -365,9 +387,14 @@ def GetMatchingUrls(url, base_url, params = {}, starts_with = "", ends_with = ""
                     link_href = system.JoinStringsAsUrl(base_url, link_href)
                 else:
                     link_href = system.JoinStringsAsUrl(base_url + "/", link_href)
-            match = re.search("^%s.*%s$" % (starts_with, ends_with), link_href)
+            if link_href:
+                potential_urls.append(link_href)
+        for link in parser.find_all(string=re.compile("^http")):
+            potential_urls.append(link)
+        for potential_url in potential_urls:
+            match = re.search("^%s.*%s$" % (starts_with, ends_with), potential_url)
             if match:
-                matching_urls.append(link_href)
+                matching_urls.append(potential_url)
     return matching_urls
 
 # Get matching url
