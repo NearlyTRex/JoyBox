@@ -66,55 +66,22 @@ class Itchio(storebase.StoreBase):
         if not web_driver:
             return False
 
+        # Log into website
+        success = webpage.LogIntoWebsite(
+            driver = web_driver,
+            login_url = "https://itch.io/login",
+            cookiefile = self.GetCookieFile(),
+            link_text = "My feed",
+            verbose = verbose)
+        if not success:
+            return None
+
         # Disconnect from web
         success = self.WebDisconnect(
             web_driver = web_driver,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         return success
-
-    # Web connect
-    def WebConnect(
-        self,
-        verbose = False,
-        exit_on_failure = False):
-
-        # Create web driver
-        try:
-            web_driver = webpage.CreateWebDriver(verbose = verbose)
-        except Exception as e:
-            if verbose:
-                system.LogError(e)
-            return None
-
-        # Log into itchio
-        success = webpage.LogIntoWebsite(
-            driver = web_driver,
-            login_url = config.itchio_login_url,
-            cookiefile = os.path.join(environment.GetCookieDirectory(), config.itchio_login_cookie_filename),
-            link_text = config.itchio_login_link_text,
-            verbose = verbose)
-        if not success:
-            return None
-
-        # Return web driver
-        return web_driver
-
-    # Web disconnect
-    def WebDisconnect(
-        self,
-        web_driver,
-        verbose = False,
-        exit_on_failure = False):
-
-        # Destroy web driver
-        try:
-            webpage.DestroyWebDriver(web_driver, verbose = verbose)
-            return True
-        except Exception as e:
-            if verbose:
-                system.LogError(e)
-            return False
 
     ############################################################
 
@@ -131,10 +98,14 @@ class Itchio(storebase.StoreBase):
         if not web_driver:
             return None
 
-        # Go to the purchases page
-        try:
-            web_driver.get("https://itch.io/my-purchases")
-        except:
+        # Load url
+        success = webpage.LoadUrl(web_driver, "https://itch.io/my-purchases")
+        if not success:
+            return None
+
+        # Load cookie
+        success = webpage.LoadCookie(web_driver, self.GetCookieFile())
+        if not success:
             return None
 
         # Scroll to end of page until everything is loaded
@@ -201,6 +172,10 @@ class Itchio(storebase.StoreBase):
         verbose = False,
         exit_on_failure = False):
 
+        # Check identifier
+        if not isinstance(identifier, str):
+            return None
+
         # Connect to web
         web_driver = self.WebConnect(
             verbose = verbose,
@@ -208,10 +183,14 @@ class Itchio(storebase.StoreBase):
         if not web_driver:
             return None
 
-        # Go to the search page and pull the results
-        try:
-            web_driver.get(identifier)
-        except:
+        # Load url
+        success = webpage.LoadUrl(web_driver, identifier)
+        if not success:
+            return None
+
+        # Load cookie
+        success = webpage.LoadCookie(web_driver, self.GetCookieFile())
+        if not success:
             return None
 
         # Create metadata entry

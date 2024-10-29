@@ -106,37 +106,32 @@ class Epic(storebase.StoreBase):
             cmd = login_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        return (code == 0)
+        if code != 0:
+            return False
 
-    # Web connect
-    def WebConnect(
-        self,
-        verbose = False,
-        exit_on_failure = False):
+        # Connect to web
+        web_driver = self.WebConnect(
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not web_driver:
+            return False
 
-        # Create web driver
-        try:
-            return webpage.CreateWebDriver(verbose = verbose)
-        except Exception as e:
-            if verbose:
-                system.LogError(e)
+        # Log into website
+        success = webpage.LogIntoWebsite(
+            driver = web_driver,
+            login_url = "https://www.epicgames.com/id/login",
+            cookiefile = self.GetCookieFile(),
+            class_name = "dropdown--account",
+            verbose = verbose)
+        if not success:
             return None
 
-    # Web disconnect
-    def WebDisconnect(
-        self,
-        web_driver,
-        verbose = False,
-        exit_on_failure = False):
-
-        # Destroy web driver
-        try:
-            webpage.DestroyWebDriver(web_driver, verbose = verbose)
-            return True
-        except Exception as e:
-            if verbose:
-                system.LogError(e)
-            return False
+        # Disconnect from web
+        success = self.WebDisconnect(
+            web_driver = web_driver,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        return success
 
     ############################################################
 
@@ -298,6 +293,10 @@ class Epic(storebase.StoreBase):
         verbose = False,
         exit_on_failure = False):
 
+        # Check identifier
+        if not isinstance(identifier, str):
+            return None
+
         # Connect to web
         web_driver = self.WebConnect(
             verbose = verbose,
@@ -305,10 +304,14 @@ class Epic(storebase.StoreBase):
         if not web_driver:
             return None
 
-        # Go to the search page and pull the results
-        try:
-            web_driver.get(identifier)
-        except:
+        # Load url
+        success = webpage.LoadUrl(web_driver, identifier)
+        if not success:
+            return None
+
+        # Load cookie
+        success = webpage.LoadCookie(web_driver, self.GetCookieFile())
+        if not success:
             return None
 
         # Create metadata entry
@@ -368,6 +371,68 @@ class Epic(storebase.StoreBase):
 
         # Return metadata entry
         return metadata_entry
+
+    ############################################################
+
+    # Get latest url
+    def GetLatestUrl(
+        self,
+        identifier,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Check identifier
+        if not isinstance(identifier, str):
+            return None
+
+        # Connect to web
+        web_driver = self.WebConnect(
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not web_driver:
+            return None
+
+        # Get keywords name
+        keywords_name = system.EncodeUrlString(identifier.strip(), use_plus = True)
+
+        # Load url
+        success = webpage.LoadUrl(web_driver, "https://store.epicgames.com/en-US/browse?sortBy=releaseDate&sortDir=DESC&q=" + keywords_name)
+        if not success:
+            return None
+
+        # Load cookie
+        success = webpage.LoadCookie(web_driver, self.GetCookieFile(), verbose = verbose)
+        if not success:
+            return None
+
+        # Look for game description
+        element_game_description = webpage.WaitForPageElement(web_driver, id = "about-long-description", verbose = verbose)
+        if not element_game_description:
+            return None
+
+        # Look for game genres
+        element_game_genres = webpage.WaitForPageElement(web_driver, class_name = "css-8f0505", verbose = verbose)
+        if not element_game_genres:
+            return None
+
+        # Look for game details
+        element_game_details = webpage.WaitForPageElement(web_driver, class_name = "css-s97i32", verbose = verbose)
+        if not element_game_details:
+            return None
+
+        # Get appurl
+        appurl = webpage.GetCurrentPageUrl(web_driver)
+
+        # Disconnect from web
+        success = self.WebDisconnect(
+            web_driver = web_driver,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return None
+
+        # Return appurl
+        return appurl
 
     ############################################################
 

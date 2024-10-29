@@ -257,8 +257,3 @@ filler_words = [
     "to",
     "with"
 ]
-
-# Itchio
-itchio_login_url = "https://itch.io/login"
-itchio_login_link_text = "My feed"
-itchio_login_cookie_filename = "itchio.cookie.txt"

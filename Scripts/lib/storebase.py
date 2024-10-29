@@ -11,6 +11,7 @@ import gameinfo
 import jsondata
 import collection
 import tools
+import webpage
 import metadataentry
 
 # Translate store path
@@ -134,16 +135,30 @@ class StoreBase:
     # Web connect
     def WebConnect(
         self,
+        headless = False,
         verbose = False,
         exit_on_failure = False):
-        return None
+
+        # Create web driver
+        return webpage.CreateWebDriver(
+            make_headless = headless,
+            verbose = verbose)
 
     # Web disconnect
     def WebDisconnect(
         self,
+        web_driver,
         verbose = False,
         exit_on_failure = False):
-        return False
+
+        # Destroy web driver
+        return webpage.DestroyWebDriver(web_driver, verbose = verbose)
+
+    # Get cookie file
+    def GetCookieFile(self):
+        cookie_file = self.GetName().lower() + ".cookie.txt"
+        cookie_dir = environment.GetCookieDirectory()
+        return os.path.join(cookie_dir, cookie_file)
 
     ############################################################
 
@@ -239,6 +254,15 @@ class StoreBase:
             default_name = gameinfo.DeriveGameNameFromRegularName(purchase_name)
             entry_name = system.PromptForValue("Choose entry name", default_value = default_name)
 
+            # Get appurl if necessary
+            if not purchase_appurl and purchase_name:
+                purchase_appurl = self.GetLatestUrl(
+                    identifier = purchase_name,
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+                if purchase_appurl:
+                    purchase.set_value(config.json_key_store_appurl, purchase_appurl)
+
             # Create initial json data
             initial_data = {}
             initial_data[self.GetKey()] = purchase.get_data()
@@ -291,6 +315,16 @@ class StoreBase:
 
     # Get latest metadata
     def GetLatestMetadata(
+        self,
+        identifier,
+        verbose = False,
+        exit_on_failure = False):
+        return None
+
+    ############################################################
+
+    # Get latest url
+    def GetLatestUrl(
         self,
         identifier,
         verbose = False,

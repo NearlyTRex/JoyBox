@@ -155,36 +155,6 @@ class Steam(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         return (code == 0)
 
-    # Web connect
-    def WebConnect(
-        self,
-        verbose = False,
-        exit_on_failure = False):
-
-        # Create web driver
-        try:
-            return webpage.CreateWebDriver(verbose = verbose)
-        except Exception as e:
-            if verbose:
-                system.LogError(e)
-            return None
-
-    # Web disconnect
-    def WebDisconnect(
-        self,
-        web_driver,
-        verbose = False,
-        exit_on_failure = False):
-
-        # Destroy web driver
-        try:
-            webpage.DestroyWebDriver(web_driver, verbose = verbose)
-            return True
-        except Exception as e:
-            if verbose:
-                system.LogError(e)
-            return False
-
     ############################################################
 
     # Get purchases
@@ -244,7 +214,7 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not identifier:
+        if not isinstance(identifier, str):
             return None
 
         # Get tool
@@ -397,6 +367,10 @@ class Steam(storebase.StoreBase):
         verbose = False,
         exit_on_failure = False):
 
+        # Check identifier
+        if not isinstance(identifier, str):
+            return None
+
         # Connect to web
         web_driver = self.WebConnect(
             verbose = verbose,
@@ -404,10 +378,9 @@ class Steam(storebase.StoreBase):
         if not web_driver:
             return None
 
-        # Go to the search page and pull the results
-        try:
-            web_driver.get(identifier)
-        except:
+        # Load url
+        success = webpage.LoadUrl(web_driver, identifier)
+        if not success:
             return None
 
         # Create metadata entry

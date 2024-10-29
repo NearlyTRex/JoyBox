@@ -53,14 +53,10 @@ def CollectMetadataFromFile(
                 system.Log("Collecting metadata for %s - %s ..." % (game_platform, game_name))
             game_entry = metadata_obj.get_game(game_platform, game_name)
 
-            # Create web driver
-            web_driver = webpage.CreateWebDriver()
-
             # Collect metadata
             metadata_result = None
             if metadata_source == config.metadata_source_type_thegamesdb:
                 metadata_result = CollectMetadataFromTGDB(
-                    web_driver = web_driver,
                     game_platform = game_platform,
                     game_name = game_name,
                     select_automatically = select_automatically,
@@ -69,7 +65,6 @@ def CollectMetadataFromFile(
                     exit_on_failure = exit_on_failure)
             elif metadata_source == config.metadata_source_type_gamefaqs:
                 metadata_result = CollectMetadataFromGameFAQS(
-                    web_driver = web_driver,
                     game_platform = game_platform,
                     game_name = game_name,
                     select_automatically = select_automatically,
@@ -83,9 +78,6 @@ def CollectMetadataFromFile(
                         identifier = game_entry.get_url(),
                         verbose = verbose,
                         exit_on_failure = exit_on_failure)
-
-            # Cleanup web driver
-            webpage.DestroyWebDriver(web_driver)
 
             # Merge in metadata result
             if metadata_result:
@@ -179,13 +171,15 @@ def CollectMetadataFromCategories(
 
 # Collect metadata from TheGamesDB
 def CollectMetadataFromTGDB(
-    web_driver,
     game_platform,
     game_name,
     select_automatically = False,
     ignore_unowned = False,
     verbose = False,
     exit_on_failure = False):
+
+    # Create web driver
+    web_driver = webpage.CreateWebDriver()
 
     # Get keywords name
     natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
@@ -194,10 +188,9 @@ def CollectMetadataFromTGDB(
     # Metadata result
     metadata_result = metadataentry.MetadataEntry()
 
-    # Go to the search page and pull the results
-    try:
-        web_driver.get("https://thegamesdb.net/search.php?name=" + keywords_name)
-    except:
+    # Load url
+    success = webpage.LoadUrl(web_driver, "https://thegamesdb.net/search.php?name=" + keywords_name)
+    if not success:
         return None
 
     # Select an entry automatically
@@ -286,6 +279,9 @@ def CollectMetadataFromTGDB(
                 release_text = system.TrimSubstringFromStart(element_text, "ReleaseDate:").strip()
                 metadata_result.set_release(release_text)
 
+    # Cleanup web driver
+    webpage.DestroyWebDriver(web_driver)
+
     # Return metadata
     return metadata_result
 
@@ -301,6 +297,9 @@ def CollectMetadataFromGameFAQS(
     verbose = False,
     exit_on_failure = False):
 
+    # Create web driver
+    web_driver = webpage.CreateWebDriver()
+
     # Get keywords name
     natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
     keywords_name = system.EncodeUrlString(natural_name.strip(), use_plus = True)
@@ -308,10 +307,9 @@ def CollectMetadataFromGameFAQS(
     # Metadata result
     metadata_result = metadataentry.MetadataEntry()
 
-    # Go to the search page and pull the results
-    try:
-        web_driver.get("https://gamefaqs.gamespot.com/search_advanced?game=" + keywords_name)
-    except:
+    # Load url
+    success = webpage.LoadUrl(web_driver, "https://gamefaqs.gamespot.com/search_advanced?game=" + keywords_name)
+    if not success:
         return None
 
     # Look for game description
@@ -375,6 +373,9 @@ def CollectMetadataFromGameFAQS(
                 release_text = system.TrimSubstringFromStart(element_text, "First Released:").strip()
             release_text = system.ConvertUnknownDateString(release_text, "%Y-%m-%d")
             metadata_result.set_release(release_text)
+
+    # Cleanup web driver
+    webpage.DestroyWebDriver(web_driver)
 
     # Return metadata
     return metadata_result
