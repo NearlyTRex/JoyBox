@@ -2,6 +2,7 @@
 from .appimagetool import AppImageTool
 from .balenaetcher import BalenaEtcher
 from .cdecrypt import CDecrypt
+from .chromedriver import ChromeDriver
 from .curl import Curl
 from .dxvk import DXVK
 from .dxvk import GetLibs32 as GetDXVKLibs32
@@ -64,6 +65,7 @@ def GetToolMap():
     instances["AppImageTool"] = AppImageTool()
     instances["BalenaEtcher"] = BalenaEtcher()
     instances["CDecrypt"] = CDecrypt()
+    instances["ChromeDriver"] = ChromeDriver()
     instances["Curl"] = Curl()
     instances["DXVK"] = DXVK()
     instances["ExifTool"] = ExifTool()
