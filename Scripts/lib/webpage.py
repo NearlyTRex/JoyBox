@@ -32,8 +32,34 @@ def ParseXmlPageSource(xml_contents):
 
 ###########################################################
 
-# Create web driver
-def CreateWebDriver(
+# Create chrome web driver
+def CreateChromeWebDriver(
+    download_dir = None,
+    profile_dir = None,
+    make_headless = False,
+    verbose = False):
+    from selenium.webdriver.chrome.service import Service as ChromeService
+    from selenium.webdriver.chrome.options import Options as ChromeOptions
+    from selenium.webdriver import Chrome
+    webdriver_tool = None
+    if programs.IsToolInstalled("ChromeDriver"):
+        webdriver_tool = programs.GetToolProgram("ChromeDriver")
+    if not webdriver_tool:
+        system.LogError("ChromeDriver was not found")
+        return None
+    try:
+        service = ChromeService(webdriver_tool, log_path=os.path.devnull)
+        options = ChromeOptions()
+        if make_headless:
+            options.add_argument("--headless")
+        return Chrome(service=service, options=options)
+    except Exception as e:
+        if verbose:
+            system.LogError(e)
+    return None
+
+# Create firefox web driver
+def CreateFirefoxWebDriver(
     download_dir = None,
     profile_dir = None,
     make_headless = False,
@@ -57,12 +83,33 @@ def CreateWebDriver(
         if system.IsPathValid(profile_dir) and system.DoesPathExist(profile_dir):
             options.profile = FirefoxProfile(profile_directory = profile_dir)
         if make_headless:
-            options.headless = True
+            options.add_argument("--headless")
         options.binary_location = programs.GetToolProgram("Firefox")
         return Firefox(service=service, options=options)
     except Exception as e:
         if verbose:
             system.LogError(e)
+    return None
+
+# Create web driver
+def CreateWebDriver(
+    driver_type = None,
+    download_dir = None,
+    profile_dir = None,
+    make_headless = False,
+    verbose = False):
+    if driver_type == config.web_driver_type_chrome:
+        return CreateChromeWebDriver(
+            download_dir = download_dir,
+            profile_dir = profile_dir,
+            make_headless = make_headless,
+            verbose = verbose)
+    elif driver_type == config.web_driver_type_firefox:
+        return CreateFirefoxWebDriver(
+            download_dir = download_dir,
+            profile_dir = profile_dir,
+            make_headless = make_headless,
+            verbose = verbose)
     return None
 
 # Destroy web driver

@@ -293,3 +293,11 @@ merge_types = [
     merge_type_safereplace,
     merge_type_safeadditive
 ]
+
+# Web driver types
+web_driver_type_firefox = "firefox"
+web_driver_type_chrome = "chrome"
+web_driver_types = [
+    web_driver_type_firefox,
+    web_driver_type_chrome
+]
