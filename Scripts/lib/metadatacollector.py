@@ -289,7 +289,6 @@ def CollectMetadataFromTGDB(
 
 # Collect metadata from GameFAQs
 def CollectMetadataFromGameFAQS(
-    web_driver,
     game_platform,
     game_name,
     select_automatically = False,
@@ -313,14 +312,12 @@ def CollectMetadataFromGameFAQS(
         return None
 
     # Look for game description
-    section_game_descriptions = webpage.WaitForPageElement(web_driver, class_name = "game_desc", verbose = verbose)
-    if not section_game_descriptions:
+    element_game_description = webpage.WaitForPageElement(web_driver, class_name = "game_desc", verbose = verbose)
+    if not element_game_description:
         return None
 
     # Grab the description text
-    raw_game_description = ""
-    for section_game_description in section_game_descriptions:
-        raw_game_description = webpage.GetElementText(section_game_description)
+    raw_game_description = webpage.GetElementText(element_game_description)
 
     # Click the "more" button if it's present
     if "more »" in raw_game_description:
@@ -329,11 +326,10 @@ def CollectMetadataFromGameFAQS(
             webpage.ClickElement(element_game_description_more)
 
     # Re-grab the description text
-    for section_game_description in section_game_descriptions:
-        raw_game_description = webpage.GetElementText(section_game_description)
+    raw_game_description = webpage.GetElementText(element_game_description)
 
     # Convert description to metadata format
-    if raw_game_description:
+    if isinstance(raw_game_description, str):
         metadata_result.set_description(raw_game_description)
 
     # Look for game details
@@ -364,8 +360,7 @@ def CollectMetadataFromGameFAQS(
             metadata_result.set_publisher(devpub_text)
 
         # Release/First Released
-        elif system.DoesStringStartWithSubstring(element_text, "Release:") or
-             system.DoesStringStartWithSubstring(element_text, "First Released:"):
+        elif system.DoesStringStartWithSubstring(element_text, "Release:") or system.DoesStringStartWithSubstring(element_text, "First Released:"):
             release_text = ""
             if system.DoesStringStartWithSubstring(element_text, "Release:"):
                 release_text = system.TrimSubstringFromStart(element_text, "Release:").strip()
