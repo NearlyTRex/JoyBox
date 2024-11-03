@@ -195,6 +195,7 @@ class Itchio(storebase.StoreBase):
 
         # Create metadata entry
         metadata_entry = metadataentry.MetadataEntry()
+        metadata_entry.set_url(identifier)
 
         # Load more information if necessary
         element_more_information = webpage.WaitForPageElement(

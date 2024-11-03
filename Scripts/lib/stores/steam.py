@@ -385,6 +385,7 @@ class Steam(storebase.StoreBase):
 
         # Create metadata entry
         metadata_entry = metadataentry.MetadataEntry()
+        metadata_entry.set_url(identifier)
 
         # Look for game description
         element_game_description = webpage.WaitForPageElement(web_driver, id = "aboutThisGame", verbose = verbose)
