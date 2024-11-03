@@ -397,7 +397,7 @@ class Epic(storebase.StoreBase):
         keywords_name = system.EncodeUrlString(identifier.strip(), use_plus = True)
 
         # Load url
-        success = webpage.LoadUrl(web_driver, "https://store.epicgames.com/en-US/browse?sortBy=releaseDate&sortDir=DESC&q=" + keywords_name)
+        success = webpage.LoadUrl(web_driver, "https://store.epicgames.com/en-US/browse?sortBy=relevancy&sortDir=DESC&q=" + keywords_name)
         if not success:
             return None
 
@@ -411,8 +411,8 @@ class Epic(storebase.StoreBase):
         game_cells = webpage.GetElement(element_search_result, class_name = "css-2mlzob", all_elements = True)
         if game_cells:
             for game_card in game_cells:
-                game_title_element = webpage.GetElement(game_card, class_name = "css-rgqwpc", verbose = verbose)
-                game_card_text = webpage.GetElementText(game_title_element)
+                game_title_element = webpage.GetElement(game_card, class_name = "css-lgj0h8", verbose = verbose)
+                game_card_text = webpage.GetElementChildrenText(game_title_element)
 
                 # Add comparison score
                 score_entry = {}
