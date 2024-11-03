@@ -316,6 +316,7 @@ class Epic(storebase.StoreBase):
 
         # Create metadata entry
         metadata_entry = metadataentry.MetadataEntry()
+        metadata_entry.set_url(identifier)
 
         # Look for game description
         element_game_description = webpage.WaitForPageElement(web_driver, id = "about-long-description", verbose = verbose)
@@ -328,7 +329,7 @@ class Epic(storebase.StoreBase):
         elements_potential_genres = webpage.GetElement(web_driver, class_name = "css-8f0505", all_elements = True)
         if elements_potential_genres:
             for element_potential_genre in elements_potential_genres:
-                potential_text = webpage.GetElementChildrenText(element_potential_genre, "innerHTML")
+                potential_text = webpage.GetElementChildrenText(element_potential_genre)
                 if "Genres" in potential_text:
                     element_game_genres = webpage.GetElement(element_potential_genre, class_name = "css-cyjj8t", all_elements = True)
                     if element_game_genres:
@@ -400,28 +401,32 @@ class Epic(storebase.StoreBase):
         if not success:
             return None
 
-        # Load cookie
-        success = webpage.LoadCookie(web_driver, self.GetCookieFile(), verbose = verbose)
-        if not success:
+        # Find the root container element
+        element_search_result = webpage.WaitForPageElement(web_driver, class_name = "css-1ufzxyu", wait_time = 5, verbose = verbose)
+        if not element_search_result:
             return None
 
-        # Look for game description
-        element_game_description = webpage.WaitForPageElement(web_driver, id = "about-long-description", verbose = verbose)
-        if not element_game_description:
-            return None
+        # Score each potential title compared to the original title
+        scores_list = []
+        game_cells = webpage.GetElement(element_search_result, class_name = "css-2mlzob", all_elements = True)
+        if game_cells:
+            for game_card in game_cells:
+                game_title_element = webpage.GetElement(game_card, class_name = "css-rgqwpc", verbose = verbose)
+                game_card_text = webpage.GetElementText(game_title_element)
 
-        # Look for game genres
-        element_game_genres = webpage.WaitForPageElement(web_driver, class_name = "css-8f0505", verbose = verbose)
-        if not element_game_genres:
-            return None
+                # Add comparison score
+                score_entry = {}
+                score_entry["element"] = game_card
+                score_entry["ratio"] = system.GetStringSimilarityRatio(identifier, game_card_text)
+                scores_list.append(score_entry)
 
-        # Look for game details
-        element_game_details = webpage.WaitForPageElement(web_driver, class_name = "css-s97i32", verbose = verbose)
-        if not element_game_details:
-            return None
-
-        # Get appurl
-        appurl = webpage.GetCurrentPageUrl(web_driver)
+        # Get the best url match
+        appurl = None
+        for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
+            game_card = score_entry["element"]
+            game_link_element = webpage.GetElement(game_card, class_name = "css-g3jcms", verbose = verbose)
+            appurl = webpage.GetElementAttribute(game_link_element, "href")
+            break
 
         # Disconnect from web
         success = self.WebDisconnect(
