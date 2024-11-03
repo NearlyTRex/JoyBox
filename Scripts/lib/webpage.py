@@ -52,7 +52,8 @@ def CreateChromeWebDriver(
         options = ChromeOptions()
         if make_headless:
             options.add_argument("--headless")
-        return Chrome(service=service, options=options)
+        web_driver = Chrome(service=service, options=options)
+        return web_driver
     except Exception as e:
         if verbose:
             system.LogError(e)
@@ -85,7 +86,8 @@ def CreateFirefoxWebDriver(
         if make_headless:
             options.add_argument("--headless")
         options.binary_location = programs.GetToolProgram("Firefox")
-        return Firefox(service=service, options=options)
+        web_driver = Firefox(service=service, options=options)
+        return web_driver
     except Exception as e:
         if verbose:
             system.LogError(e)
@@ -98,6 +100,8 @@ def CreateWebDriver(
     profile_dir = None,
     make_headless = False,
     verbose = False):
+    if not driver_type:
+        driver_type = config.web_driver_type_firefox
     if driver_type == config.web_driver_type_chrome:
         return CreateChromeWebDriver(
             download_dir = download_dir,
