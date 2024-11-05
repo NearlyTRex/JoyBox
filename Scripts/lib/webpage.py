@@ -128,7 +128,7 @@ def DestroyWebDriver(driver, verbose = False):
     return False
 
 # Load url
-def LoadUrl(driver, url):
+def LoadUrl(driver, url, verbose = False):
     try:
         driver.get(url)
         return True
