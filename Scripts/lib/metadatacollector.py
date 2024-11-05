@@ -22,7 +22,6 @@ def CollectMetadataFromFile(
     force_download = False,
     allow_replacing = False,
     select_automatically = False,
-    ignore_unowned = False,
     verbose = False,
     exit_on_failure = False):
 
@@ -60,7 +59,6 @@ def CollectMetadataFromFile(
                     game_platform = game_platform,
                     game_name = game_name,
                     select_automatically = select_automatically,
-                    ignore_unowned = ignore_unowned,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
             elif metadata_source == config.metadata_source_type_gamefaqs:
@@ -68,7 +66,6 @@ def CollectMetadataFromFile(
                     game_platform = game_platform,
                     game_name = game_name,
                     select_automatically = select_automatically,
-                    ignore_unowned = ignore_unowned,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
             elif metadata_source == config.metadata_source_type_store:
@@ -110,7 +107,6 @@ def CollectMetadataFromDirectory(
     force_download = False,
     allow_replacing = False,
     select_automatically = False,
-    ignore_unowned = False,
     verbose = False,
     exit_on_failure = False):
 
@@ -123,7 +119,6 @@ def CollectMetadataFromDirectory(
             force_download = force_download,
             allow_replacing = allow_replacing,
             select_automatically = select_automatically,
-            ignore_unowned = ignore_unowned,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not success:
@@ -138,7 +133,6 @@ def CollectMetadataFromCategories(
     force_download = False,
     allow_replacing = False,
     select_automatically = False,
-    ignore_unowned = False,
     verbose = False,
     exit_on_failure = False):
 
@@ -163,7 +157,6 @@ def CollectMetadataFromCategories(
         force_download = force_download,
         allow_replacing = allow_replacing,
         select_automatically = select_automatically,
-        ignore_unowned = ignore_unowned,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
@@ -174,7 +167,6 @@ def CollectMetadataFromTGDB(
     game_platform,
     game_name,
     select_automatically = False,
-    ignore_unowned = False,
     verbose = False,
     exit_on_failure = False):
 
@@ -292,7 +284,6 @@ def CollectMetadataFromGameFAQS(
     game_platform,
     game_name,
     select_automatically = False,
-    ignore_unowned = False,
     verbose = False,
     exit_on_failure = False):
 
@@ -373,6 +364,47 @@ def CollectMetadataFromGameFAQS(
     webpage.DestroyWebDriver(web_driver)
 
     # Return metadata
+    return metadata_result
+
+############################################################
+
+# Collect metadata from all
+def CollectMetadataFromAll(
+    game_platform,
+    game_name,
+    keys_to_check,
+    select_automatically = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Metadata result
+    metadata_result = metadataentry.MetadataEntry()
+
+    # Try from TheGamesDB
+    metadata_result_thegamesdb = CollectMetadataFromTGDB(
+        game_platform = game_platform,
+        game_name = game_name,
+        select_automatically = select_automatically,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if isinstance(metadata_result_thegamesdb, metadataentry.MetadataEntry):
+        metadata_result.merge(metadata_result_thegamesdb)
+
+    # Check if done
+    if not metadata_result.is_missing_data(keys_to_check):
+        return metadata_result
+
+    # Try from GameFAQs
+    metadata_result_gamefaqs = CollectMetadataFromGameFAQS(
+        game_platform = game_platform,
+        game_name = game_name,
+        select_automatically = select_automatically,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if isinstance(metadata_result_gamefaqs, metadataentry.MetadataEntry):
+        metadata_result.merge(metadata_result_gamefaqs)
+
+    # Return result
     return metadata_result
 
 ############################################################

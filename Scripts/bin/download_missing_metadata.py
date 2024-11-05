@@ -25,7 +25,6 @@ parser.add_argument("--keys_to_check", type=str, help="Check against specific ke
 parser.add_argument("--force_download", action="store_true", help="Force download")
 parser.add_argument("--allow_replacing", action="store_true", help="Allow replacing")
 parser.add_argument("-a", "--select_automatically", action="store_true", help="Select game automatically")
-parser.add_argument("-i", "--ignore_unowned", action="store_true", help="Ignore unowned games")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
@@ -53,7 +52,6 @@ def main():
         force_download = args.force_download,
         allow_replacing = args.allow_replacing,
         select_automatically = args.select_automatically,
-        ignore_unowned = args.ignore_unowned,
         verbose = args.verbose,
         exit_on_failure = args.exit_on_failure)
 
