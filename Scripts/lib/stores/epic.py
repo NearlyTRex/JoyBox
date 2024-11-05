@@ -216,7 +216,7 @@ class Epic(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not identifier:
+        if not self.IsValidIdentifier(identifier):
             return None
 
         # Get tool
@@ -294,7 +294,7 @@ class Epic(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not isinstance(identifier, str):
+        if not self.IsValidIdentifier(identifier):
             return None
 
         # Connect to web
@@ -383,7 +383,7 @@ class Epic(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not isinstance(identifier, str):
+        if not self.IsValidIdentifier(identifier):
             return None
 
         # Connect to web

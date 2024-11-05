@@ -173,7 +173,7 @@ class Itchio(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not isinstance(identifier, str):
+        if not self.IsValidIdentifier(identifier):
             return None
 
         # Connect to web
