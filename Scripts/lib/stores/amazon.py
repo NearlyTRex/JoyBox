@@ -11,7 +11,10 @@ import programs
 import system
 import hashing
 import jsondata
+import webpage
 import storebase
+import metadataentry
+import metadatacollector
 
 # Amazon store
 class Amazon(storebase.StoreBase):
@@ -47,7 +50,7 @@ class Amazon(storebase.StoreBase):
     # Get identifier
     def GetIdentifier(self, json_wrapper, identifier_type):
         if identifier_type == config.store_identifier_type_metadata:
-            return json_wrapper.get_value(config.json_key_store_appurl)
+            return json_wrapper.get_value(config.json_key_store_name)
         return json_wrapper.get_value(config.json_key_store_appid)
 
     ############################################################
@@ -219,7 +222,7 @@ class Amazon(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not isinstance(identifier, str):
+        if not self.IsValidIdentifier(identifier):
             return None
 
         # Get tool
@@ -291,31 +294,17 @@ class Amazon(storebase.StoreBase):
         verbose = False,
         exit_on_failure = False):
 
-        # Connect to web
-        web_driver = self.WebConnect(
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return None
+
+        # Collect metadata entry
+        return metadatacollector.CollectMetadataFromAll(
+            game_platform = self.GetPlatform(),
+            game_name = identifier,
+            keys_to_check = config.metadata_keys_downloadable,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        if not web_driver:
-            return None
-
-        # Load url
-        success = webpage.LoadUrl(web_driver, identifier)
-        if not success:
-            return None
-
-        # Create metadata entry
-        metadata_entry = metadataentry.MetadataEntry()
-
-        # Disconnect from web
-        success = self.WebDisconnect(
-            web_driver = web_driver,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return None
-
-        # Return metadata entry
-        return metadata_entry
 
     ############################################################
 
