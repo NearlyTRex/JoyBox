@@ -191,6 +191,9 @@ class Steam(storebase.StoreBase):
                     # Gather info
                     line_appid = str(entry["appid"])
                     line_title = entry["name"]
+                    line_paths = [
+                        os.path.join(config.token_store_install_dir, "userdata", config.token_store_user_id, line_appid)
+                    ]
 
                     # Create purchase
                     purchase = jsondata.JsonData(
@@ -200,6 +203,7 @@ class Steam(storebase.StoreBase):
                     purchase.set_value(config.json_key_store_appurl, "https://store.steampowered.com/app/%s" % line_appid)
                     purchase.set_value(config.json_key_store_name, line_title)
                     purchase.set_value(config.json_key_store_branchid, config.steam_branch_format_public)
+                    purchase.set_value(config.json_key_store_paths, line_paths)
                     purchases.append(purchase)
         return purchases
 
