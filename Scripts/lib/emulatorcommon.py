@@ -38,10 +38,14 @@ def SimpleLaunch(
     selected_launch_file = ""
 
     # Single choice
-    if isinstance(game_launch_file, list) and len(game_launch_file) == 1:
+    if isinstance(game_launch_file, str) and len(game_launch_file) > 0:
+        selected_launch_file = game_launch_file
+
+    # Single list choice
+    elif isinstance(game_launch_file, list) and len(game_launch_file) == 1:
         selected_launch_file = game_launch_file[0]
 
-    # More than one potential choice
+    # More than one potential list choice
     elif isinstance(game_launch_file, list) and len(game_launch_file) > 1:
 
         # Handle game selection
@@ -59,6 +63,7 @@ def SimpleLaunch(
 
     # Nothing to run
     if len(selected_launch_file) == 0 and not game_launch_name:
+        system.LogWarning("Nothing to run")
         return
 
     # Replace game tokens
