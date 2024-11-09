@@ -3,6 +3,7 @@ import os, os.path
 import sys
 import signal
 import ntpath
+import time
 
 # Local imports
 import config
