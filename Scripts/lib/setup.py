@@ -65,6 +65,21 @@ def SetupAssets(verbose = False, exit_on_failure = False):
                 # Get directories
                 source_dir = environment.GetLockerGamingAssetDir(game_category, game_subcategory, asset_type)
                 dest_dir = environment.GetPegasusMetadataAssetDir(game_category, game_subcategory, asset_type)
+                dest_parent_dir = system.GetDirectoryParent(dest_dir)
+
+                # Create source dir if it doesn't exist
+                if not system.DoesPathExist(source_dir):
+                    system.MakeDirectory(
+                        dir = source_dir,
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
+
+                # Create dest parent dir if it doesn't exist
+                if not system.DoesPathExist(dest_parent_dir):
+                    system.MakeDirectory(
+                        dir = dest_parent_dir,
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
 
                 # Remove existing symlink
                 system.RemoveSymlink(
@@ -76,6 +91,6 @@ def SetupAssets(verbose = False, exit_on_failure = False):
                 system.CreateSymlink(
                     src = source_dir,
                     dest = dest_dir,
-                    cwd = system.GetDirectoryParent(dest_dir),
+                    cwd = dest_parent_dir,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
