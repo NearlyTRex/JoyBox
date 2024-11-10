@@ -323,20 +323,60 @@ def ExtractWebText(text):
 
 # Merge dictionaries
 def MergeDictionaries(dict1, dict2, merge_type = None):
-    try:
-        import mergedeep
-        if merge_type == config.merge_type_replace:
-            return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.REPLACE)
-        elif merge_type == config.merge_type_additive:
-            return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.ADDITIVE)
-        elif merge_type == config.merge_type_safereplace:
-            return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_REPLACE)
-        elif merge_type == config.merge_type_safeadditive:
-            return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_ADDITIVE)
-        else:
-            return mergedeep.merge(dict1, dict2)
-    except:
+    if isinstance(dict1, dict) and isinstance(dict2, dict):
+        try:
+            import mergedeep
+            if merge_type == config.merge_type_replace:
+                return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.REPLACE)
+            elif merge_type == config.merge_type_additive:
+                return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.ADDITIVE)
+            elif merge_type == config.merge_type_safereplace:
+                return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_REPLACE)
+            elif merge_type == config.merge_type_safeadditive:
+                return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_ADDITIVE)
+            else:
+                return mergedeep.merge(dict1, dict2)
+        except:
+            return dict1
+    elif isinstance(dict1, dict) and not isinstance(dict2, dict):
         return dict1
+    elif not isinstance(dict1, dict) and isinstance(dict2, dict):
+        return dict2
+    else:
+        return None
+
+# Merge lists
+def MergeLists(list1, list2, merge_type = None):
+    if isinstance(list1, list) and isinstance(list2, list):
+        return sorted(set(list1 + list2))
+    elif isinstance(list1, list) and not isinstance(list2, list):
+        return list1
+    elif not isinstance(list1, list) and isinstance(list2, list):
+        return list2
+    else:
+        return None
+
+# Merge data
+def MergeData(data1, data2, merge_type = None):
+    if isinstance(data1, dict) or isinstance(data2, dict):
+        return MergeDictionaries(
+            dict1 = data1,
+            dict2 = data2,
+            merge_type = merge_type)
+    elif isinstance(data1, list) or isinstance(data2, list):
+        return MergeLists(
+            list1 = data1,
+            list2 = data2,
+            merge_type = merge_type)
+    else:
+        if data1 and data2:
+            return [data1, data2]
+        elif data1 and not data2:
+            return data1
+        elif not data1 and data2:
+            return data2
+        else:
+            return None
 
 # Deduplicate adjacent lines
 def DeduplicateAdjacentLines(lines):
