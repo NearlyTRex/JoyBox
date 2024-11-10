@@ -534,7 +534,7 @@ class StoreBase:
         # Update current data
         for store_key in config.json_keys_store_subdata:
             if latest_jsondata.has_key(store_key):
-                current_jsondata.set_subvalue(self.GetKey(), store_key, latest_jsondata.get_value(store_key))
+                current_jsondata.fill_subvalue(self.GetKey(), store_key, latest_jsondata.get_value(store_key))
 
         # Write back changes
         success = game_info.write_wrapped_json_data(

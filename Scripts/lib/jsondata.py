@@ -85,9 +85,9 @@ class JsonData:
             if not self.has_key(key):
                 self.set_value(key, value)
         elif platforms.IsMergeJsonKey(self.json_platform, key):
-            self.set_value(key, system.MergeDictionaries(
-                dict1 = self.get_value(key),
-                dict2 = value,
+            self.set_value(key, system.MergeData(
+                data1 = self.get_value(key),
+                data2 = value,
                 merge_type = config.merge_type_safeadditive))
 
     # Fill subvalue
@@ -95,10 +95,10 @@ class JsonData:
         if platforms.IsAutoFillJsonKey(self.json_platform, subkey):
             self.set_subvalue(key, subkey, value)
         elif platforms.IsFillOnceJsonKey(self.json_platform, subkey):
-            if not self.has_subkey(subkey):
+            if not self.has_subkey(key, subkey):
                 self.set_subvalue(key, subkey, value)
         elif platforms.IsMergeJsonKey(self.json_platform, subkey):
-            self.set_subvalue(key, subkey, system.MergeDictionaries(
-                dict1 = self.get_subvalue(key, subkey),
-                dict2 = value,
+            self.set_subvalue(key, subkey, system.MergeData(
+                data1 = self.get_subvalue(key, subkey),
+                data2 = value,
                 merge_type = config.merge_type_safeadditive))
