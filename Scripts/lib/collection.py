@@ -9,6 +9,9 @@ import gameinfo
 import platforms
 import system
 import cryption
+import network
+import asset
+import locker
 import jsondata
 import metadata
 import metadataentry
@@ -338,6 +341,74 @@ def AddMetadataEntry(
         append_existing = False,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    return True
+
+############################################################
+
+# Download metadata asset
+def DownloadMetadataAsset(
+    asset_url,
+    asset_type,
+    game_category,
+    game_subcategory,
+    game_name,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Get output asset
+    output_asset_dir = environment.GetLockerGamingAssetDir(game_category, game_subcategory, asset_type)
+    output_asset_file = environment.GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type)
+    if system.DoesPathExist(output_asset_file):
+        return True
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    if not tmp_dir_success:
+        return False
+
+    # Get temp asset
+    tmp_asset_file = os.path.join(tmp_dir_result, system.GetFilenameFile(asset_url))
+    system.MakeDirectory(output_asset_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+
+    # Download asset
+    success = network.DownloadUrl(
+        url = asset_url,
+        output_dir = tmp_dir_result,
+        output_file = tmp_asset_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Clean asset
+    success = asset.CleanExifData(
+        asset_file = tmp_asset_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Move asset
+    success = system.MoveFileOrDirectory(
+        src = tmp_asset_file,
+        dest = output_asset_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Upload asset
+    success = locker.UploadPath(
+        src = output_asset_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Delete temporary directory
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+
+    # Should be successful
     return True
 
 ############################################################
