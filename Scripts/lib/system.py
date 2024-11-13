@@ -498,6 +498,15 @@ def IsPathValid(path):
 def IsPathFileOrDirectory(path):
     return os.path.isfile(path) or os.path.isdir(path) and not os.path.islink(path)
 
+# Check if path is the parent of another
+def IsParentPath(parent_path, child_path):
+    try:
+        parent = pathlib.Path(parent_path).resolve()
+        child = pathlib.Path(child_path).resolve()
+        return child.is_relative_to(parent)
+    except ValueError:
+        return False
+
 # Check if path exists
 def DoesPathExist(path, case_sensitive_paths = True, partial_paths = False):
     if case_sensitive_paths:
@@ -1492,7 +1501,7 @@ def ReadYamlFile(src, verbose = False, exit_on_failure = False):
 ###########################################################
 
 # Prune paths
-def PrunePaths(paths = [], excludes = []):
+def PrunePaths(paths, excludes = []):
     new_paths = set()
     for path in paths:
         should_add = True
@@ -1503,15 +1512,12 @@ def PrunePaths(paths = [], excludes = []):
             new_paths.add(path)
     return SortStrings(new_paths)
 
-# Prune parent paths
-def PruneParentPaths(paths = [], num_generations = 3):
-    new_paths = set(paths)
-    for path in paths:
-        path_elder = path
-        for generation in range(num_generations):
-            path_elder = GetDirectoryParent(path_elder)
-            if path_elder in new_paths:
-                new_paths.remove(path)
+# Prune child paths
+def PruneChildPaths(paths):
+    new_paths = set()
+    for path in SortStrings(paths):
+        if not any(IsParentPath(added_path, path) for added_path in new_paths):
+            new_paths.add(path)
     return SortStrings(new_paths)
 
 # Build file list
