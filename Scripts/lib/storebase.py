@@ -106,6 +106,10 @@ class StoreBase:
     def GetDownloadIdentifier(self, json_wrapper):
         return self.GetIdentifier(json_wrapper, config.store_identifier_type_download)
 
+    # Get asset identifier
+    def GetAssetIdentifier(self, json_wrapper):
+        return self.GetIdentifier(json_wrapper, config.store_identifier_type_asset)
+
     # Get metadata identifier
     def GetMetadataIdentifier(self, json_wrapper):
         return self.GetIdentifier(json_wrapper, config.store_identifier_type_metadata)
@@ -482,6 +486,38 @@ class StoreBase:
 
     ############################################################
 
+    # Download asset by identifier
+    def DownloadAssetByIdentifier(
+        self,
+        identifier,
+        asset_type,
+        output_name,
+        skip_existing = False,
+        verbose = False,
+        exit_on_failure = False):
+        return False
+
+    # Download asset by game info
+    def DownloadAssetByGameInfo(
+        self,
+        game_info,
+        asset_type,
+        skip_existing = False,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Download asset
+        success = self.DownloadAssetByIdentifier(
+            identifier = self.GetAssetIdentifier(game_info.get_wrapped_value(self.GetKey())),
+            asset_type = asset_type,
+            output_name = game_info.get_name(),
+            skip_existing = skip_existing,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        return success
+
+    ############################################################
+
     # Find json by identifiers
     def FindJsonByIdentifiers(
         self,
@@ -535,6 +571,10 @@ class StoreBase:
         for store_key in config.json_keys_store_subdata:
             if latest_jsondata.has_key(store_key):
                 current_jsondata.fill_subvalue(self.GetKey(), store_key, latest_jsondata.get_value(store_key))
+                if store_key == config.json_key_store_paths:
+                    paths = current_jsondata.get_subvalue(self.GetKey(), store_key, [])
+                    paths = system.PruneChildPaths(paths)
+                    current_jsondata.set_subvalue(self.GetKey(), store_key, paths)
 
         # Write back changes
         success = game_info.write_wrapped_json_data(

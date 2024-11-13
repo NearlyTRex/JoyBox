@@ -28,6 +28,10 @@ parser.add_argument("-a", "--store_action",
     default=config.store_action_type_login,
     help="Store action"
 )
+parser.add_argument("-e", "--asset_type",
+    choices=config.asset_types_all,
+    help="Asset type"
+)
 parser.add_argument("-s", "--skip_existing", action="store_true", help="Skip existing entries")
 parser.add_argument("-f", "--force", action="store_true", help="Always run action")
 parser.add_argument("-k", "--keys", type=str, help="Keys to use (comma delimited)")
@@ -128,7 +132,24 @@ def main():
                     verbose = args.verbose,
                     exit_on_failure = args.exit_on_failure)
                 if not success:
-                    system.LogErrorAndQuit("Install of '%s' failed!" % json_file)
+                    system.LogErrorAndQuit("Download of '%s' failed!" % json_file)
+
+    # Download asset
+    elif args.store_action == config.store_action_type_download_asset:
+        for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
+            game_info = gameinfo.GameInfo(
+                json_file = json_file,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            if game_info and game_info.is_valid():
+                success = store_obj.DownloadAssetByGameInfo(
+                    game_info = game_info,
+                    asset_type = args.asset_type,
+                    skip_existing = args.skip_existing,
+                    verbose = args.verbose,
+                    exit_on_failure = args.exit_on_failure)
+                if not success:
+                    system.LogErrorAndQuit("Download of asset for '%s' failed!" % json_file)
 
     # Update json
     elif args.store_action == config.store_action_type_update_json:

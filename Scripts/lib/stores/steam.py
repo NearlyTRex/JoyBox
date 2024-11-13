@@ -11,6 +11,7 @@ import system
 import network
 import ini
 import jsondata
+import collection
 import webpage
 import storebase
 import metadataentry
@@ -650,6 +651,10 @@ class Steam(storebase.StoreBase):
         verbose = False,
         exit_on_failure = False):
 
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return False
+
         # Get tool
         steamdepot_tool = None
         if programs.IsToolInstalled("SteamDepotDownloader"):
@@ -734,5 +739,40 @@ class Steam(storebase.StoreBase):
 
         # Check result
         return os.path.exists(output_dir)
+
+    ############################################################
+
+    # Download asset by identifier
+    def DownloadAssetByIdentifier(
+        self,
+        identifier,
+        asset_type,
+        output_name,
+        skip_existing = False,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return False
+
+        # Get asset url
+        asset_url = None
+        if asset_type == config.asset_type_boxfront:
+            asset_url = "https://cdn.cloudflare.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % identifier
+        if not network.IsUrlReachable(asset_url):
+            return False
+
+        # Download asset
+        success = collection.DownloadMetadataAsset(
+            asset_url = asset_url,
+            asset_type = asset_type,
+            game_category = self.GetCategory(),
+            game_subcategory = self.GetSubcategory(),
+            game_name = output_name,
+            skip_existing = skip_existing,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        return success
 
     ############################################################

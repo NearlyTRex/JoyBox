@@ -239,7 +239,7 @@ store_action_type_import_purchases = "import_purchases"
 store_action_type_install_game = "install_game"
 store_action_type_launch_game = "launch_game"
 store_action_type_download_game = "download_game"
-store_action_type_download_covers = "download_covers"
+store_action_type_download_asset = "download_asset"
 store_action_type_update_json = "update_json"
 store_action_type_update_metadata = "update_metadata"
 store_action_type_check_versions = "check_versions"
@@ -252,7 +252,7 @@ store_action_types = [
     store_action_type_install_game,
     store_action_type_launch_game,
     store_action_type_download_game,
-    store_action_type_download_covers,
+    store_action_type_download_asset,
     store_action_type_update_json,
     store_action_type_update_metadata,
     store_action_type_check_versions,
@@ -265,12 +265,14 @@ store_identifier_type_info = "info"
 store_identifier_type_install = "install"
 store_identifier_type_launch = "launch"
 store_identifier_type_download = "download"
+store_identifier_type_asset = "asset"
 store_identifier_type_metadata = "metadata"
 store_identifier_types = [
     store_identifier_type_info,
     store_identifier_type_install,
     store_identifier_type_launch,
     store_identifier_type_download,
+    store_identifier_type_asset,
     store_identifier_type_metadata
 ]
 
