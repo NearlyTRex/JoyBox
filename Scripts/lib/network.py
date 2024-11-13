@@ -25,11 +25,8 @@ def IsUrlReachable(url):
     try:
         import requests
         get = requests.get(url)
-        if get.status_code == 200:
-            return True
-        else:
-            return False
-    except Exception as e:
+        return (get.status_code == 200)
+    except:
         return False
 
 # Get remote json
