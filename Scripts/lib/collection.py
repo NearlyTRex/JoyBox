@@ -352,13 +352,14 @@ def DownloadMetadataAsset(
     game_category,
     game_subcategory,
     game_name,
+    skip_existing = False,
     verbose = False,
     exit_on_failure = False):
 
     # Get output asset
     output_asset_dir = environment.GetLockerGamingAssetDir(game_category, game_subcategory, asset_type)
     output_asset_file = environment.GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type)
-    if system.DoesPathExist(output_asset_file):
+    if skip_existing and system.DoesPathExist(output_asset_file):
         return True
 
     # Create temporary directory
