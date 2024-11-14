@@ -189,13 +189,13 @@ def CollectMetadataFromTGDB(
     if select_automatically:
 
         # Find the root container element
-        section_search_result = webpage.WaitForPageElement(web_driver, class_name = "container-fluid", wait_time = 5, verbose = verbose)
-        if not section_search_result:
+        element_search_result = webpage.WaitForPageElement(web_driver, class_name = "container-fluid", wait_time = 5, verbose = verbose)
+        if not element_search_result:
             return None
 
         # Score each potential title compared to the original title
         scores_list = []
-        game_cards = webpage.GetElement(section_search_result, class_name = "card-footer", all_elements = True)
+        game_cards = webpage.GetElement(element_search_result, class_name = "card-footer", all_elements = True)
         if game_cards:
             for game_card in game_cards:
                 game_card_text = webpage.GetElementText(game_card)
@@ -223,20 +223,20 @@ def CollectMetadataFromTGDB(
             return None
 
     # Look for game description
-    section_game_description = webpage.WaitForPageElement(web_driver, class_name = "game-overview", verbose = verbose)
-    if not section_game_description:
+    element_game_description = webpage.WaitForPageElement(web_driver, class_name = "game-overview", verbose = verbose)
+    if not element_game_description:
         return None
 
     # Grab the description text
-    raw_game_description = webpage.GetElementText(section_game_description)
+    raw_game_description = webpage.GetElementText(element_game_description)
 
     # Convert description to metadata format
     if raw_game_description:
         metadata_result.set_description(raw_game_description)
 
     # Look for game details
-    for section_game_details in webpage.GetElement(web_driver, class_name = "card-body", all_elements = True):
-        for element_paragraph in webpage.GetElement(section_game_details, tag_name = "p", all_elements = True):
+    for element_game_details in webpage.GetElement(web_driver, class_name = "card-body", all_elements = True):
+        for element_paragraph in webpage.GetElement(element_game_details, tag_name = "p", all_elements = True):
             element_text = webpage.GetElementText(element_paragraph)
             if not element_text:
                 continue
@@ -324,8 +324,8 @@ def CollectMetadataFromGameFAQS(
         metadata_result.set_description(raw_game_description)
 
     # Look for game details
-    for section_game_details in webpage.GetElement(web_driver, class_name = "content", all_elements = True):
-        element_text = webpage.GetElementText(section_game_details)
+    for element_game_details in webpage.GetElement(web_driver, class_name = "content", all_elements = True):
+        element_text = webpage.GetElementText(element_game_details)
         if not element_text:
             continue
 
@@ -406,5 +406,51 @@ def CollectMetadataFromAll(
 
     # Return result
     return metadata_result
+
+############################################################
+
+# Collect metadata asset from SteamGridDB
+def CollectMetadataAssetFromSteamGridDB(
+    game_platform,
+    game_name,
+    select_automatically = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Create web driver
+    web_driver = webpage.CreateWebDriver()
+
+    # Get keywords name
+    natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
+    keywords_name = system.EncodeUrlString(natural_name.strip(), use_plus = True)
+
+    # Metadata asset
+    metadata_asset = ""
+
+    # Load url
+    success = webpage.LoadUrl(web_driver, "https://www.steamgriddb.com/search/grids/600x900/all/all?term=" + keywords_name)
+    if not success:
+        return None
+
+    # Look for asset page
+    element_asset_page = webpage.WaitForPageElement(web_driver, class_name = "container-asset-page", verbose = verbose)
+    if not element_asset_page:
+        return None
+
+    # Look for asset download
+    element_asset_download = webpage.WaitForPageElement(web_driver, class_name = "asset-download", verbose = verbose)
+    if not element_asset_download:
+        return None
+
+    # Get asset link
+    element_asset_link = webpage.GetElement(element_asset_download, class_name = "btn", verbose = verbose)
+    if element_asset_link:
+        metadata_asset = webpage.GetElementAttribute(element_asset_link, "href")
+
+    # Cleanup web driver
+    webpage.DestroyWebDriver(web_driver)
+
+    # Return metadata
+    return metadata_asset
 
 ############################################################
