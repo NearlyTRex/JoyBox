@@ -425,8 +425,9 @@ class Epic(storebase.StoreBase):
         for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
             game_card = score_entry["element"]
             game_link_element = webpage.GetElement(game_card, class_name = "css-g3jcms", verbose = verbose)
-            appurl = webpage.GetElementAttribute(game_link_element, "href")
-            break
+            if game_link_element:
+                appurl = webpage.GetElementAttribute(game_link_element, "href")
+                break
 
         # Disconnect from web
         success = self.WebDisconnect(

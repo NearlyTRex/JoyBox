@@ -15,6 +15,7 @@ import collection
 import webpage
 import storebase
 import metadataentry
+import metadatacollector
 
 # Steam store
 class Steam(storebase.StoreBase):
@@ -761,7 +762,13 @@ class Steam(storebase.StoreBase):
         if asset_type == config.asset_type_boxfront:
             asset_url = "https://cdn.cloudflare.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % identifier
         if not network.IsUrlReachable(asset_url):
-            return False
+            asset_url = metadatacollector.CollectMetadataAssetFromSteamGridDB(
+                game_platform = self.GetPlatform(),
+                game_name = output_name,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not network.IsUrlReachable(asset_url):
+                return False
 
         # Download asset
         success = collection.DownloadMetadataAsset(
