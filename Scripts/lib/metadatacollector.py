@@ -428,7 +428,7 @@ def CollectMetadataAssetFromSteamGridDB(
     metadata_asset = ""
 
     # Load url
-    success = webpage.LoadUrl(web_driver, "https://www.steamgriddb.com/search/grids/600x900/all/all?term=" + keywords_name)
+    success = webpage.LoadUrl(web_driver, "https://www.steamgriddb.com/search/grids/all/all/all?term=" + keywords_name)
     if not success:
         return None
 

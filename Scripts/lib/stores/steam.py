@@ -749,13 +749,27 @@ class Steam(storebase.StoreBase):
         identifier,
         asset_type,
         output_name,
-        skip_existing = False,
+        force = False,
         verbose = False,
         exit_on_failure = False):
 
         # Check identifier
         if not self.IsValidIdentifier(identifier):
             return False
+
+        # Check if asset exists
+        asset_exists = collection.DoesMetadataAssetExist(
+            game_category = self.GetCategory(),
+            game_subcategory = self.GetSubcategory(),
+            game_name = output_name,
+            asset_type = asset_type)
+
+        # Check if asset should be downloaded
+        should_download = False
+        if force or not asset_exists:
+            should_download = True
+        if not should_download:
+            return True
 
         # Get asset url
         asset_url = None
@@ -767,17 +781,16 @@ class Steam(storebase.StoreBase):
                 game_name = output_name,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            if not network.IsUrlReachable(asset_url):
-                return False
+        if not network.IsUrlReachable(asset_url):
+            return False
 
         # Download asset
         success = collection.DownloadMetadataAsset(
-            asset_url = asset_url,
-            asset_type = asset_type,
             game_category = self.GetCategory(),
             game_subcategory = self.GetSubcategory(),
             game_name = output_name,
-            skip_existing = skip_existing,
+            asset_url = asset_url,
+            asset_type = asset_type,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         return success

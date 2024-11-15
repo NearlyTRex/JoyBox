@@ -345,13 +345,28 @@ def AddMetadataEntry(
 
 ############################################################
 
-# Download metadata asset
-def DownloadMetadataAsset(
-    asset_url,
-    asset_type,
+# Check if metadata asset exists
+def DoesMetadataAssetExist(
     game_category,
     game_subcategory,
     game_name,
+    asset_type):
+
+    # Check if exists
+    output_asset_file = environment.GetLockerGamingAssetFile(
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        asset_type = asset_type)
+    return system.DoesPathExist(output_asset_file)
+
+# Download metadata asset
+def DownloadMetadataAsset(
+    game_category,
+    game_subcategory,
+    game_name,
+    asset_url,
+    asset_type,
     skip_existing = False,
     verbose = False,
     exit_on_failure = False):

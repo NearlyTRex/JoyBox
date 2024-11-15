@@ -145,7 +145,7 @@ def main():
                 success = store_obj.DownloadAssetByGameInfo(
                     game_info = game_info,
                     asset_type = args.asset_type,
-                    skip_existing = args.skip_existing,
+                    force = args.force,
                     verbose = args.verbose,
                     exit_on_failure = args.exit_on_failure)
                 if not success:

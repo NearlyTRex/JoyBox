@@ -492,7 +492,7 @@ class StoreBase:
         identifier,
         asset_type,
         output_name,
-        skip_existing = False,
+        force = False,
         verbose = False,
         exit_on_failure = False):
         return False
@@ -502,7 +502,7 @@ class StoreBase:
         self,
         game_info,
         asset_type,
-        skip_existing = False,
+        force = False,
         verbose = False,
         exit_on_failure = False):
 
@@ -511,7 +511,7 @@ class StoreBase:
             identifier = self.GetAssetIdentifier(game_info.get_wrapped_value(self.GetKey())),
             asset_type = asset_type,
             output_name = game_info.get_name(),
-            skip_existing = skip_existing,
+            force = force,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         return success
