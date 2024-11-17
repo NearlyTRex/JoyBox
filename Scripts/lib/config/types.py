@@ -148,6 +148,16 @@ asset_types_min = [
     asset_type_boxfront,
     asset_type_screenshot
 ]
+asset_types_image = [
+    asset_type_background,
+    asset_type_boxback,
+    asset_type_boxfront,
+    asset_type_label,
+    asset_type_screenshot
+]
+asset_types_movie = [
+    asset_type_video
+]
 asset_type_extensions = {
     asset_type_background: ".jpg",
     asset_type_boxback: ".jpg",
@@ -302,4 +312,12 @@ web_driver_type_chrome = "chrome"
 web_driver_types = [
     web_driver_type_firefox,
     web_driver_type_chrome
+]
+
+# Image types
+image_type_jpeg = "JPEG"
+image_type_png = "PNG"
+image_types = [
+    image_type_jpeg,
+    image_type_png
 ]

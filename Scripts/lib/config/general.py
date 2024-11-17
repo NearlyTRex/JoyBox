@@ -84,7 +84,8 @@ drive_root_windows = "C:\\"
 drive_root_posix = "/"
 
 # Extensions
-encrypted_file_extension = ".enc"
+encrypted_extension_general = ".enc"
+encrypted_extensions_wiiu = [".app", ".h3", ".tik", ".tmd", ".cert"]
 computer_program_extensions = [".exe", ".lnk", ".bat"]
 computer_archive_extensions_zip = [".zip", ".install"]
 computer_archive_extensions_7z = [".7z"]
@@ -108,7 +109,8 @@ computer_archive_extensions += computer_archive_extensions_rar
 computer_archive_extensions += computer_archive_extensions_tarball
 computer_archive_extensions += computer_archive_extensions_exe
 computer_archive_extensions += computer_archive_extensions_appimage
-wiiu_encrypted_extensions = [".app", ".h3", ".tik", ".tmd", ".cert"]
+image_extensions_jpeg = [".jpg", ".jpeg"]
+image_extensions_png = [".png"]
 
 # Folders
 general_folder_numeric = "#-0"

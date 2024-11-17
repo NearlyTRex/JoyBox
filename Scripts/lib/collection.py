@@ -369,11 +369,13 @@ def DownloadMetadataAsset(
     asset_type,
     skip_existing = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get output asset
     output_asset_dir = environment.GetLockerGamingAssetDir(game_category, game_subcategory, asset_type)
     output_asset_file = environment.GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type)
+    output_asset_ext = system.GetFilenameExtension(output_asset_file)
     if skip_existing and system.DoesPathExist(output_asset_file):
         return True
 
@@ -383,30 +385,44 @@ def DownloadMetadataAsset(
         return False
 
     # Get temp asset
-    tmp_asset_file = os.path.join(tmp_dir_result, system.GetFilenameFile(asset_url))
+    tmp_asset_file_original = os.path.join(tmp_dir_result, system.GetFilenameFile(asset_url))
+    tmp_asset_file_converted = tmp_asset_file_original + output_asset_ext
     system.MakeDirectory(output_asset_dir, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Download asset
     success = network.DownloadUrl(
         url = asset_url,
         output_dir = tmp_dir_result,
-        output_file = tmp_asset_file,
+        output_file = tmp_asset_file_original,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
 
-    # Clean asset
-    success = asset.CleanExifData(
-        asset_file = tmp_asset_file,
+    # Convert asset
+    success = asset.ConvertAsset(
+        asset_src = tmp_asset_file_original,
+        asset_dest = tmp_asset_file_converted,
+        asset_type = asset_type,
         verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Clean asset
+    success = asset.CleanAsset(
+        asset_file = tmp_asset_file_converted,
+        asset_type = asset_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
 
     # Move asset
     success = system.MoveFileOrDirectory(
-        src = tmp_asset_file,
+        src = tmp_asset_file_converted,
         dest = output_asset_file,
         verbose = verbose,
         exit_on_failure = exit_on_failure)

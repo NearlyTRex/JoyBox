@@ -11,12 +11,12 @@ import hashing
 
 # Determine if file is encrypted
 def IsFileEncrypted(source_file):
-    return source_file.endswith(config.encrypted_file_extension)
+    return source_file.endswith(config.encrypted_extension_general)
 
 # Generate encrypted filename
 def GenerateEncryptedFilename(source_file):
     output_dir = system.GetFilenameDirectory(source_file)
-    output_name = hashing.CalculateStringMD5(system.GetFilenameFile(source_file)) + config.encrypted_file_extension
+    output_name = hashing.CalculateStringMD5(system.GetFilenameFile(source_file)) + config.encrypted_extension_general
     return os.path.join(output_dir, output_name)
 
 # Get embedded filename

@@ -4,7 +4,6 @@ import re
 import stat
 import sys
 import errno
-import stat
 import shutil
 import tempfile
 import textwrap
