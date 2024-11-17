@@ -448,6 +448,25 @@ class Steam(storebase.StoreBase):
 
     ############################################################
 
+    # Get latest asset url
+    def GetLatestAssetUrl(
+        self,
+        identifier,
+        asset_type,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return None
+
+        # BoxFront
+        if asset_type == config.asset_type_boxfront:
+            return "https://cdn.cloudflare.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % identifier
+        return None
+
+    ############################################################
+
     # Get game save paths
     def GetGameSavePaths(
         self,
@@ -740,59 +759,5 @@ class Steam(storebase.StoreBase):
 
         # Check result
         return os.path.exists(output_dir)
-
-    ############################################################
-
-    # Download asset by identifier
-    def DownloadAssetByIdentifier(
-        self,
-        identifier,
-        asset_type,
-        output_name,
-        force = False,
-        verbose = False,
-        exit_on_failure = False):
-
-        # Check identifier
-        if not self.IsValidIdentifier(identifier):
-            return False
-
-        # Check if asset exists
-        asset_exists = collection.DoesMetadataAssetExist(
-            game_category = self.GetCategory(),
-            game_subcategory = self.GetSubcategory(),
-            game_name = output_name,
-            asset_type = asset_type)
-
-        # Check if asset should be downloaded
-        should_download = False
-        if force or not asset_exists:
-            should_download = True
-        if not should_download:
-            return True
-
-        # Get asset url
-        asset_url = None
-        if asset_type == config.asset_type_boxfront:
-            asset_url = "https://cdn.cloudflare.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % identifier
-        if not network.IsUrlReachable(asset_url):
-            asset_url = metadatacollector.CollectMetadataAssetFromSteamGridDB(
-                game_platform = self.GetPlatform(),
-                game_name = output_name,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-        if not network.IsUrlReachable(asset_url):
-            return False
-
-        # Download asset
-        success = collection.DownloadMetadataAsset(
-            game_category = self.GetCategory(),
-            game_subcategory = self.GetSubcategory(),
-            game_name = output_name,
-            asset_url = asset_url,
-            asset_type = asset_type,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        return success
 
     ############################################################

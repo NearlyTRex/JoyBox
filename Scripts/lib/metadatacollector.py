@@ -413,6 +413,7 @@ def CollectMetadataFromAll(
 def CollectMetadataAssetFromSteamGridDB(
     game_platform,
     game_name,
+    asset_type,
     select_automatically = False,
     verbose = False,
     exit_on_failure = False):
@@ -425,7 +426,7 @@ def CollectMetadataAssetFromSteamGridDB(
     keywords_name = system.EncodeUrlString(natural_name.strip(), use_plus = True)
 
     # Metadata asset
-    metadata_asset = ""
+    metadata_asset = None
 
     # Load url
     success = webpage.LoadUrl(web_driver, "https://www.steamgriddb.com/search/grids/all/all/all?term=" + keywords_name)
@@ -452,5 +453,30 @@ def CollectMetadataAssetFromSteamGridDB(
 
     # Return metadata
     return metadata_asset
+
+############################################################
+
+# Collect metadata asset from all
+def CollectMetadataAssetFromAll(
+    game_platform,
+    game_name,
+    asset_type,
+    select_automatically = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Try from SteamGridDB
+    metadata_asset = CollectMetadataAssetFromSteamGridDB(
+        game_platform = game_platform,
+        game_name = game_name,
+        asset_type = asset_type,
+        select_automatically = select_automatically,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if isinstance(metadata_asset, str):
+        return metadata_asset
+
+    # No result
+    return None
 
 ############################################################

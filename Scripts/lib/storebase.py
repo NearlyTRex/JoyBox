@@ -9,10 +9,12 @@ import environment
 import saves
 import gameinfo
 import jsondata
+import network
 import collection
 import tools
 import webpage
 import metadataentry
+import metadatacollector
 
 # Translate store path
 def TranslateStorePath(path, base_path = None):
@@ -335,6 +337,17 @@ class StoreBase:
 
     ############################################################
 
+    # Get latest asset url
+    def GetLatestAssetUrl(
+        self,
+        identifier,
+        asset_type,
+        verbose = False,
+        exit_on_failure = False):
+        return None
+
+    ############################################################
+
     # Get save paths
     def GetSavePaths(
         self,
@@ -486,38 +499,6 @@ class StoreBase:
 
     ############################################################
 
-    # Download asset by identifier
-    def DownloadAssetByIdentifier(
-        self,
-        identifier,
-        asset_type,
-        output_name,
-        force = False,
-        verbose = False,
-        exit_on_failure = False):
-        return False
-
-    # Download asset by game info
-    def DownloadAssetByGameInfo(
-        self,
-        game_info,
-        asset_type,
-        force = False,
-        verbose = False,
-        exit_on_failure = False):
-
-        # Download asset
-        success = self.DownloadAssetByIdentifier(
-            identifier = self.GetAssetIdentifier(game_info.get_wrapped_value(self.GetKey())),
-            asset_type = asset_type,
-            output_name = game_info.get_name(),
-            force = force,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        return success
-
-    ############################################################
-
     # Find json by identifiers
     def FindJsonByIdentifiers(
         self,
@@ -624,6 +605,58 @@ class StoreBase:
         game_info.set_metadata(current_metadata)
         game_info.write_metadata()
         return True
+
+    ############################################################
+
+    # Download asset
+    def DownloadAsset(
+        self,
+        game_info,
+        asset_type,
+        force = False,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Check if asset exists
+        asset_exists = collection.DoesMetadataAssetExist(
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name(),
+            asset_type = asset_type)
+
+        # Check if asset should be downloaded
+        should_download = False
+        if force or not asset_exists:
+            should_download = True
+        if not should_download:
+            return True
+
+        # Get latest asset url
+        asset_url = self.GetLatestAssetUrl(
+            identifier = self.GetAssetIdentifier(game_info.get_wrapped_value(self.GetKey())),
+            asset_type = asset_type,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not network.IsUrlReachable(asset_url):
+            asset_url = metadatacollector.CollectMetadataAssetFromAll(
+                game_platform = game_info.get_platform(),
+                game_name = game_info.get_name(),
+                asset_type = asset_type,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+        if not network.IsUrlReachable(asset_url):
+            return False
+
+        # Download asset
+        success = collection.DownloadMetadataAsset(
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name(),
+            asset_url = asset_url,
+            asset_type = asset_type,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        return success
 
     ############################################################
 

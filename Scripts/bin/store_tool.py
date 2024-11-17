@@ -142,7 +142,7 @@ def main():
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
             if game_info and game_info.is_valid():
-                success = store_obj.DownloadAssetByGameInfo(
+                success = store_obj.DownloadAsset(
                     game_info = game_info,
                     asset_type = args.asset_type,
                     force = args.force,
