@@ -83,5 +83,11 @@ def ConvertAsset(
         if not success:
             return False
 
-    # Should be successful
-    return True
+    # Transfer file by default
+    return system.TransferFile(
+        src = asset_src,
+        dest = asset_dest,
+        skip_existing = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)

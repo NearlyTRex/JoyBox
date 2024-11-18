@@ -424,27 +424,42 @@ def GetMatchingUrls(url, base_url, params = {}, starts_with = "", ends_with = ""
         reqs = requests.get(url, params=params)
         page_text = reqs.text
 
-    # Find all matching urls
+    # Parse the HTML page
     matching_urls = []
     parser = ParseHtmlPageSource(page_text)
     if parser:
+
+        # List to store potential URLs
         potential_urls = []
-        for link in parser.find_all("a"):
-            link_href = link.get("href")
-            if not link_href:
-                continue
-            if not link_href.startswith("http"):
-                if base_url.endswith("/"):
-                    link_href = system.JoinStringsAsUrl(base_url, link_href)
-                else:
-                    link_href = system.JoinStringsAsUrl(base_url + "/", link_href)
-            if link_href:
-                potential_urls.append(link_href)
-        for link in parser.find_all(string=re.compile("^http")):
-            potential_urls.append(link)
+
+        # Look through tags to find links
+        for tag in parser.find_all("a", href=True):
+            value = tag.get("href")
+            if value:
+                if not value.startswith("http"):
+                    if base_url.endswith("/"):
+                        value = system.JoinStringsAsUrl(base_url, value)
+                    else:
+                        value = system.JoinStringsAsUrl(base_url + "/", value)
+                if value:
+                    potential_urls.append(value)
+                    potential_urls.append(system.StripStringQueryParams(value))
+
+        # Look through tag attributes to find links
+        for tag in parser.find_all(True):
+            for attr, value in tag.attrs.items():
+                if isinstance(value, str) and re.match(r'https?://', value):
+                    potential_urls.append(value)
+                    potential_urls.append(system.StripStringQueryParams(value))
+
+        # Look through text nodes to find links
+        for value in parser.find_all(string=re.compile("^http")):
+            potential_urls.append(value)
+            potential_urls.append(system.StripStringQueryParams(value))
+
+        # Filter URLs that match the starts_with and ends_with patterns
         for potential_url in potential_urls:
-            match = re.search("^%s.*%s$" % (starts_with, ends_with), potential_url)
-            if match:
+            if re.match("^%s.*%s$" % (starts_with, ends_with), potential_url):
                 matching_urls.append(potential_url)
     return matching_urls
 

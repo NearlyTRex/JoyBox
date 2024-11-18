@@ -418,6 +418,10 @@ def CollectMetadataAssetFromSteamGridDB(
     verbose = False,
     exit_on_failure = False):
 
+    # Ignore non-image assets
+    if asset_type not in config.asset_types_image:
+        return None
+
     # Create web driver
     web_driver = webpage.CreateWebDriver()
 

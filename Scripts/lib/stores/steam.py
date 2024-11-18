@@ -203,7 +203,7 @@ class Steam(storebase.StoreBase):
                         json_data = {},
                         json_platform = self.GetPlatform())
                     purchase.set_value(config.json_key_store_appid, line_appid)
-                    purchase.set_value(config.json_key_store_appurl, "https://store.steampowered.com/app/%s" % line_appid)
+                    purchase.set_value(config.json_key_store_appurl, self.GetLatestUrl(line_appid))
                     purchase.set_value(config.json_key_store_name, line_title)
                     purchase.set_value(config.json_key_store_branchid, config.steam_branch_format_public)
                     purchase.set_value(config.json_key_store_keys, line_keys)
@@ -274,7 +274,7 @@ class Steam(storebase.StoreBase):
         # Build game info
         game_info = {}
         game_info[config.json_key_store_appid] = identifier
-        game_info[config.json_key_store_appurl] = "https://store.steampowered.com/app/%s" % identifier
+        game_info[config.json_key_store_appurl] = self.GetLatestUrl(identifier)
         game_info[config.json_key_store_paths] = []
         game_info[config.json_key_store_keys] = []
         if isinstance(branch, str) and len(branch):
@@ -448,6 +448,23 @@ class Steam(storebase.StoreBase):
 
     ############################################################
 
+    # Get latest url
+    def GetLatestUrl(
+        self,
+        identifier,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return None
+
+        # Return latest url
+        latest_url = "https://store.steampowered.com/app/%s" % identifier
+        return latest_url
+
+    ############################################################
+
     # Get latest asset url
     def GetLatestAssetUrl(
         self,
@@ -460,10 +477,24 @@ class Steam(storebase.StoreBase):
         if not self.IsValidIdentifier(identifier):
             return None
 
+        # Latest asset url
+        latest_asset_url = None
+
         # BoxFront
         if asset_type == config.asset_type_boxfront:
-            return "https://cdn.cloudflare.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % identifier
-        return None
+            latest_asset_url = "https://cdn.cloudflare.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % identifier
+
+        # Video
+        elif asset_type == config.asset_type_video:
+            latest_asset_url = webpage.GetMatchingUrl(
+                url = self.GetLatestUrl(identifier),
+                base_url = "https://video.fastly.steamstatic.com/store_trailers",
+                starts_with = "https://video.fastly.steamstatic.com/store_trailers",
+                ends_with = ".mp4",
+                verbose = verbose)
+
+        # Return latest asset url
+        return latest_asset_url
 
     ############################################################
 

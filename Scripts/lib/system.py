@@ -239,8 +239,12 @@ def EncodeUrlString(string, use_plus = False):
         return urllib.parse.quote(string)
 
 # Join strings as url
-def JoinStringsAsUrl(string_base_url, string_url, allow_fragments = True):
-    urllib.parse.urljoin(string_base_url, string_url, allow_fragments = allow_fragments)
+def JoinStringsAsUrl(string1, string2, allow_fragments = True):
+    return urllib.parse.urljoin(string1, string2, allow_fragments = allow_fragments)
+
+# Strip string query params
+def StripStringQueryParams(string):
+    return urllib.parse.urlunparse(urllib.parse.urlparse(string)._replace(query=''))
 
 ###########################################################
 
