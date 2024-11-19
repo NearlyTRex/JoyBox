@@ -56,6 +56,8 @@ def PostRemoteJson(url, headers = None, data = None, verbose = False, exit_on_fa
         if not headers:
             headers = {"Accept": "application/json"}
         post = requests.post(url, headers=headers, json=data)
+        if verbose:
+            system.LogInfo("Got response: " + post.text)
         if post.status_code == 200:
             return post.json()
         return None

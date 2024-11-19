@@ -89,7 +89,7 @@ def main():
                 verbose = args.verbose,
                 exit_on_failure = args.exit_on_failure)
             if not success:
-                break
+                system.LogWarning("Unable to archive repository %s" % github_repository.name)
 
     # Update repositories
     elif args.action == "update":
@@ -103,7 +103,7 @@ def main():
                     verbose = args.verbose,
                     exit_on_failure = args.exit_on_failure)
                 if not success:
-                    break
+                    system.LogWarning("Unable to update repository %s" % github_repository.name)
 
 # Start
 main()
