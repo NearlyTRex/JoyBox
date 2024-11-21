@@ -552,7 +552,7 @@ class Computer(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
             success = release.BuildReleaseFromSource(
                 release_url = "https://github.com/NearlyTRex/DosboxX.git",
-                output_file = "App-x86_64.AppImage",
+                output_file = "DOSBox-X-x86_64.AppImage",
                 install_name = "DosBoxX",
                 install_dir = programs.GetProgramInstallDir("DosBoxX", "linux"),
                 backups_dir = programs.GetProgramBackupDir("DosBoxX", "linux"),
@@ -594,7 +594,7 @@ class Computer(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
             success = release.BuildReleaseFromSource(
                 release_url = "https://github.com/NearlyTRex/ScummVM.git",
-                output_file = "App-x86_64.AppImage",
+                output_file = "ScummVM-x86_64.AppImage",
                 install_name = "ScummVM",
                 install_dir = programs.GetProgramInstallDir("ScummVM", "linux"),
                 backups_dir = programs.GetProgramBackupDir("ScummVM", "linux"),

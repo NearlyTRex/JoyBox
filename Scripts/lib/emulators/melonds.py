@@ -90,7 +90,7 @@ class MelonDS(emulatorbase.EmulatorBase):
                 github_user = "melonDS-emu",
                 github_repo = "melonDS",
                 starts_with = "melonDS",
-                ends_with = "win_x64.zip",
+                ends_with = "windows-x86_64.zip",
                 search_file = "melonDS.exe",
                 install_name = "melonDS",
                 install_dir = programs.GetProgramInstallDir("melonDS", "windows"),
@@ -104,7 +104,7 @@ class MelonDS(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("melonDS", "linux"):
             success = release.BuildReleaseFromSource(
                 release_url = "https://github.com/NearlyTRex/melonDS.git",
-                output_file = "App-x86_64.AppImage",
+                output_file = "melonDS-x86_64.AppImage",
                 install_name = "melonDS",
                 install_dir = programs.GetProgramInstallDir("melonDS", "linux"),
                 backups_dir = programs.GetProgramBackupDir("melonDS", "linux"),

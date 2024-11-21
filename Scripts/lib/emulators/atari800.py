@@ -80,7 +80,7 @@ class Atari800(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("Atari800", "linux"):
             success = release.BuildReleaseFromSource(
                 release_url = "https://github.com/NearlyTRex/Atari800.git",
-                output_file = "App-x86_64.AppImage",
+                output_file = "Atari800-x86_64.AppImage",
                 install_name = "Atari800",
                 install_dir = programs.GetProgramInstallDir("Atari800", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Atari800", "linux"),

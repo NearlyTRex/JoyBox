@@ -107,7 +107,7 @@ class Dolphin(emulatorbase.EmulatorBase):
         if programs.ShouldProgramBeInstalled("Dolphin", "linux"):
             success = release.BuildReleaseFromSource(
                 release_url = "https://github.com/NearlyTRex/Dolphin.git",
-                output_file = "App-x86_64.AppImage",
+                output_file = "Dolphin_Emulator-x86_64.AppImage",
                 install_name = "Dolphin",
                 install_dir = programs.GetProgramInstallDir("Dolphin", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Dolphin", "linux"),
