@@ -167,6 +167,7 @@ apt_packages = [
     "libbz2-dev",
     "libcanberra-gtk-module",
     "libcurl4-openssl-dev",
+    "libenet-dev",
     "libepoxy-dev",
     "libevdev-dev",
     "libfdk-aac-dev",
