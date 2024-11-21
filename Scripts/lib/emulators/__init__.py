@@ -34,7 +34,7 @@ from .phoenix import Phoenix
 from .ppsspp import PPSSPP
 from .retroarch import RetroArch
 from .rpcs3 import RPCS3
-from .ryujinx import Ryujinx
+# from .ryujinx import Ryujinx
 from .sameboy import SameBoy
 from .sheepshaver import SheepShaver
 from .snes9x import Snes9x
@@ -80,7 +80,7 @@ def GetEmulatorMap():
     instances["PPSSPP"] = PPSSPP()
     instances["RetroArch"] = RetroArch()
     instances["RPCS3"] = RPCS3()
-    instances["Ryujinx"] = Ryujinx()
+    # instances["Ryujinx"] = Ryujinx()
     instances["SameBoy"] = SameBoy()
     instances["SheepShaver"] = SheepShaver()
     instances["Snes9x"] = Snes9x()
