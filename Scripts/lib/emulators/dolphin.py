@@ -19,7 +19,69 @@ import emulatorbase
 config_files = {}
 config_files["Dolphin/windows/portable.txt"] = ""
 config_files["Dolphin/windows/User/Config/Dolphin.ini"] = ""
-config_files["Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/Dolphin.ini"] = ""
+config_files["Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/Dolphin.ini"] = """
+[Analytics]
+ID = db8045cccc2ce4e3eebf2a60a1ee1424
+PermissionAsked = True
+[NetPlay]
+TraversalChoice = direct
+"""
+config_files["Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/GCPadNew.ini"] = """
+[GCPad1]
+Device = SDL/0/X360 Controller
+Buttons/A = `Button E`
+Buttons/B = `Button S`
+Buttons/X = `Button N`
+Buttons/Y = `Button W`
+Buttons/Z = Back
+Buttons/Start = Start
+Main Stick/Up = `Left Y+`
+Main Stick/Down = `Left Y-`
+Main Stick/Left = `Left X-`
+Main Stick/Right = `Left X+`
+Main Stick/Modifier = `Shift`
+Main Stick/Calibration = 100.00 141.42 100.00 141.42 100.00 141.42 100.00 141.42
+C-Stick/Up = `Right Y+`
+C-Stick/Down = `Right Y-`
+C-Stick/Left = `Right X-`
+C-Stick/Right = `Right X+`
+C-Stick/Modifier = `Ctrl`
+C-Stick/Calibration = 100.00 141.42 100.00 141.42 100.00 141.42 100.00 141.42
+Triggers/L = `Trigger L`
+Triggers/R = `Trigger R`
+D-Pad/Up = `Pad N`
+D-Pad/Down = `Pad S`
+D-Pad/Left = `Pad W`
+D-Pad/Right = `Pad E`
+Triggers/L-Analog = `Shoulder L`
+Triggers/R-Analog = `Shoulder R`
+[GCPad2]
+Device = XInput2/0/Virtual core pointer
+[GCPad3]
+Device = XInput2/0/Virtual core pointer
+[GCPad4]
+Device = XInput2/0/Virtual core pointer
+"""
+config_files["Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/GBA.ini"] = """
+[GBA1]
+Device = SDL/0/X360 Controller
+Buttons/B = `Button S`
+Buttons/A = `Button E`
+Buttons/L = `Shoulder L`
+Buttons/R = `Shoulder R`
+Buttons/SELECT = Back
+Buttons/START = Start
+D-Pad/Up = `Pad N`
+D-Pad/Down = `Pad S`
+D-Pad/Left = `Pad W`
+D-Pad/Right = `Pad E`
+[GBA2]
+Device = XInput2/0/Virtual core pointer
+[GBA3]
+Device = XInput2/0/Virtual core pointer
+[GBA4]
+Device = XInput2/0/Virtual core pointer
+"""
 
 # System files
 system_files = {}
