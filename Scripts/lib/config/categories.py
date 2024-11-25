@@ -45,6 +45,7 @@ game_subcategory_epic_games = "Epic Games"
 game_subcategory_gog = "GOG"
 game_subcategory_humble_bundle = "Humble Bundle"
 game_subcategory_itchio = "Itchio"
+game_subcategory_legacy_games = "Legacy Games"
 game_subcategory_puppet_combo = "Puppet Combo"
 game_subcategory_red_candle = "Red Candle"
 game_subcategory_square_enix = "Square Enix"
@@ -57,6 +58,7 @@ game_subcategories_computer = [
     game_subcategory_gog,
     game_subcategory_humble_bundle,
     game_subcategory_itchio,
+    game_subcategory_legacy_games,
     game_subcategory_puppet_combo,
     game_subcategory_red_candle,
     game_subcategory_square_enix,

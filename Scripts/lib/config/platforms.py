@@ -17,11 +17,26 @@ platform_computer_epic_games = categories.game_category_computer + " - " + categ
 platform_computer_gog = categories.game_category_computer + " - " + categories.game_subcategory_gog
 platform_computer_humble_bundle = categories.game_category_computer + " - " + categories.game_subcategory_humble_bundle
 platform_computer_itchio = categories.game_category_computer + " - " + categories.game_subcategory_itchio
+platform_computer_legacy_games = categories.game_category_computer + " - " + game_subcategory_legacy_games
 platform_computer_puppet_combo = categories.game_category_computer + " - " + categories.game_subcategory_puppet_combo
 platform_computer_red_candle = categories.game_category_computer + " - " + categories.game_subcategory_red_candle
 platform_computer_square_enix = categories.game_category_computer + " - " + categories.game_subcategory_square_enix
 platform_computer_steam = categories.game_category_computer + " - " + categories.game_subcategory_steam
 platform_computer_zoom = categories.game_category_computer + " - " + categories.game_subcategory_zoom
+platforms_computer = [
+    platform_computer_amazon_games,
+    platform_computer_disc,
+    platform_computer_epic_games,
+    platform_computer_gog,
+    platform_computer_humble_bundle,
+    platform_computer_itchio,
+    platform_computer_legacy_games,
+    platform_computer_puppet_combo,
+    platform_computer_red_candle,
+    platform_computer_square_enix,
+    platform_computer_steam,
+    platform_computer_zoom
+]
 
 # Transform platforms
 transform_platforms = [
@@ -33,6 +48,7 @@ transform_platforms = [
     platform_computer_gog,
     platform_computer_humble_bundle,
     platform_computer_itchio,
+    platform_computer_legacy_games,
     platform_computer_puppet_combo,
     platform_computer_red_candle,
     platform_computer_square_enix,
@@ -59,6 +75,7 @@ letter_platforms = [
     platform_computer_gog,
     platform_computer_humble_bundle,
     platform_computer_itchio,
+    platform_computer_legacy_games,
     platform_computer_puppet_combo,
     platform_computer_red_candle,
     platform_computer_square_enix,
@@ -251,6 +268,42 @@ computer_itchio[keys.platform_key_fillonce_json] = [
 ]
 computer_itchio[keys.platform_key_merge_json] = []
 platforms[platform_computer_itchio] = computer_itchio
+
+###########################################################
+# Computer - Legacy Games
+###########################################################
+computer_legacy_games = {}
+computer_legacy_games[keys.platform_key_supercategory] = categories.game_supercategory_roms
+computer_legacy_games[keys.platform_key_category] = categories.game_category_computer
+computer_legacy_games[keys.platform_key_subcategory] = categories.game_subcategory_legacy_games
+computer_legacy_games[keys.platform_key_addons] = []
+computer_legacy_games[keys.platform_key_launcher] = [types.launch_type_file]
+computer_legacy_games[keys.platform_key_autofill_json] = [
+    keys.json_key_files,
+    keys.json_key_dlc,
+    keys.json_key_update,
+    keys.json_key_extra,
+    keys.json_key_dependencies,
+    keys.json_key_installer_exe,
+    keys.json_key_transform_file,
+    keys.json_key_store_builddate,
+    keys.json_key_store_buildid,
+    keys.json_key_store_name,
+    keys.json_key_store_controller_support,
+    keys.json_key_store_installdir
+]
+computer_legacy_games[keys.platform_key_fillonce_json] = [
+    keys.json_key_legacy,
+    keys.json_key_store_appid,
+    keys.json_key_store_appname,
+    keys.json_key_store_appurl,
+    keys.json_key_store_branchid
+]
+computer_legacy_games[keys.platform_key_merge_json] = [
+    keys.json_key_store_paths,
+    keys.json_key_store_keys
+]
+platforms[platform_computer_legacy_games] = computer_legacy_games
 
 ###########################################################
 # Computer - Puppet Combo

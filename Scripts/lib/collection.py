@@ -141,6 +141,11 @@ def CreateGameJsonFile(
                 config.json_key_store_appurl: "",
                 config.json_key_store_name: ""
             })
+        elif game_subcategory == config.game_subcategory_legacy_games:
+            json_obj.fill_value(config.json_key_legacy, {
+                config.json_key_store_appid: "",
+                config.json_key_store_name: ""
+            })
         elif game_subcategory == config.game_subcategory_steam:
             json_obj.fill_value(config.json_key_steam, {
                 config.json_key_store_appid: "",
