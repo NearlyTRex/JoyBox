@@ -170,8 +170,8 @@ class Metadata:
                     elif asset_type == config.asset_type_video:
                         game_metadata_key = config.metadata_key_video
 
-                    # If one of the minimum asset types, make sure it's there
-                    if asset_type in config.asset_types_min:
+                    # Image asset types should always be there
+                    if asset_type in config.asset_types_image:
                         game_entry.set_value(game_metadata_key, game_asset_string)
                         continue
 

@@ -269,37 +269,49 @@ class StoreBase:
                 if purchase_appurl:
                     purchase.set_value(config.json_key_store_appurl, purchase_appurl)
 
-            # Create initial json data
-            initial_data = {}
-            initial_data[self.GetKey()] = purchase.get_data()
-
             # Create json file
             success = collection.CreateGameJsonFile(
                 game_category = self.GetCategory(),
                 game_subcategory = self.GetSubcategory(),
-                game_title = entry_name,
-                initial_data = initial_data,
+                game_name = entry_name,
+                initial_data = {self.GetKey(): purchase.get_data()},
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             if not success:
+                system.LogError("Unable to create json file for game '%s'" % entry_name)
                 return False
-
-            # Get latest metadata entry
-            initial_metadata_entry = self.GetLatestMetadata(
-                identifier = self.GetMetadataIdentifier(purchase),
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
 
             # Add metadata entry
             success = collection.AddMetadataEntry(
                 game_category = self.GetCategory(),
                 game_subcategory = self.GetSubcategory(),
                 game_name = entry_name,
-                initial_data = initial_metadata_entry,
+                initial_data = self.GetLatestMetadata(
+                    identifier = self.GetMetadataIdentifier(purchase),
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure),
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             if not success:
+                system.LogError("Unable to add metadata entry for game '%s'" % entry_name)
                 return False
+
+            # Download assets
+            for asset_type in config.asset_types_min:
+                success = collection.DownloadMetadataAsset(
+                    game_category = self.GetCategory(),
+                    game_subcategory = self.GetSubcategory(),
+                    game_name = entry_name,
+                    asset_url = self.GetLatestAssetUrl(
+                        identifier = self.GetAssetIdentifier(purchase),
+                        asset_type = asset_type,
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure),
+                    asset_type = asset_type,
+                    verbose = verbose,
+                    exit_on_failure = exit_on_failure)
+                if not success:
+                    system.LogWarning("Unable to download asset %s for game '%s'" % (asset_type, entry_name))
 
         # Should be successful
         return True
@@ -637,15 +649,6 @@ class StoreBase:
             asset_type = asset_type,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        if not network.IsUrlReachable(asset_url):
-            asset_url = metadatacollector.CollectMetadataAssetFromAll(
-                game_platform = game_info.get_platform(),
-                game_name = game_info.get_name(),
-                asset_type = asset_type,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-        if not network.IsUrlReachable(asset_url):
-            return False
 
         # Download asset
         success = collection.DownloadMetadataAsset(

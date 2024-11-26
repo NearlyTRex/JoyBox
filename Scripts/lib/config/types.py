@@ -143,10 +143,8 @@ asset_types_all = [
     asset_type_video
 ]
 asset_types_min = [
-    asset_type_background,
-    asset_type_boxback,
     asset_type_boxfront,
-    asset_type_screenshot
+    asset_type_video
 ]
 asset_types_image = [
     asset_type_background,

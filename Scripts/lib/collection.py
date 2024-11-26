@@ -15,6 +15,7 @@ import locker
 import jsondata
 import metadata
 import metadataentry
+import metadatacollector
 
 ############################################################
 
@@ -22,7 +23,7 @@ import metadataentry
 def CreateGameJsonFile(
     game_category,
     game_subcategory,
-    game_title,
+    game_name,
     game_root = None,
     initial_data = None,
     passphrase = None,
@@ -33,12 +34,12 @@ def CreateGameJsonFile(
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
     # Get base path
-    base_path = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_title)
+    base_path = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
     if system.IsPathValid(game_root):
         base_path = os.path.realpath(game_root)
 
     # Get json file path
-    json_file_path = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_title)
+    json_file_path = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name)
 
     # Build json data
     json_file_data = {}
@@ -191,11 +192,11 @@ def CreateGameJsonFiles(
     passphrase = None,
     verbose = False,
     exit_on_failure = False):
-    for game_title in gameinfo.FindAllGameNames(game_root, game_category, game_subcategory):
+    for game_name in gameinfo.FindAllGameNames(game_root, game_category, game_subcategory):
         success = CreateGameJsonFile(
             game_category = game_category,
             game_subcategory = game_subcategory,
-            game_title = game_title,
+            game_name = game_name,
             passphrase = passphrase,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -377,6 +378,9 @@ def DownloadMetadataAsset(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Get platform
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+
     # Get output asset
     output_asset_dir = environment.GetLockerGamingAssetDir(game_category, game_subcategory, asset_type)
     output_asset_file = environment.GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type)
@@ -387,6 +391,17 @@ def DownloadMetadataAsset(
     # Create temporary directory
     tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
     if not tmp_dir_success:
+        return False
+
+    # Check asset url
+    if not network.IsUrlReachable(asset_url):
+        asset_url = metadatacollector.CollectMetadataAssetFromAll(
+            game_platform = game_platform,
+            game_name = game_name,
+            asset_type = asset_type,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+    if not network.IsUrlReachable(asset_url):
         return False
 
     # Get temp asset
