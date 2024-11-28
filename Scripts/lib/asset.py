@@ -7,7 +7,9 @@ import config
 import system
 import command
 import programs
+import network
 import image
+import youtube
 
 # Clean exif data
 def CleanExifData(
@@ -42,6 +44,36 @@ def CleanExifData(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return (code == 0)
+
+# Download asset
+def DownloadAsset(
+    asset_url,
+    asset_file,
+    asset_type,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Video
+    if asset_type == config.asset_type_video:
+
+        # YouTube
+        if asset_url.startswith("https://www.youtube.com"):
+            success = youtube.DownloadVideo(
+                video_url = asset_url,
+                output_file = asset_file,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+    # Download file by default
+    success = network.DownloadUrl(
+        url = asset_url,
+        output_file = asset_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    return success
 
 # Clean asset
 def CleanAsset(
@@ -84,10 +116,11 @@ def ConvertAsset(
             return False
 
     # Transfer file by default
-    return system.TransferFile(
+    success = system.TransferFile(
         src = asset_src,
         dest = asset_dest,
         skip_existing = True,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    return success
