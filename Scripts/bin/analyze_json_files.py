@@ -38,7 +38,7 @@ def main():
     json_files_no_files = []
     json_files_unplayable = []
 
-    # Clean json files
+    # Analyze json files
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
             game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)

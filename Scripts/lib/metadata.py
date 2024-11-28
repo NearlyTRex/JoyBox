@@ -9,8 +9,6 @@ import system
 import environment
 import platforms
 import gameinfo
-import youtube
-import asset
 import metadataentry
 
 # Metadata database class
@@ -137,116 +135,6 @@ class Metadata:
                 if not os.path.exists(file_path_real):
                     system.LogError("File not found:\n%s" % file_path_relative)
                     system.LogErrorAndQuit("Verification of game %s in platform %s failed" % (game_name, game_platform))
-
-    # Sync assets
-    def sync_assets(self, verbose = False, exit_on_failure = False):
-        for game_platform in self.get_sorted_platforms():
-            for game_name in self.get_sorted_names(game_platform):
-                if verbose:
-                    system.Log("Checking %s - %s ..." % (game_platform, game_name))
-
-                # Get game entry
-                game_entry = self.get_game(game_platform, game_name)
-                game_category = game_entry.get_category()
-                game_subcategory = game_entry.get_subcategory()
-
-                # Check all asset types
-                for asset_type in config.asset_types_all:
-                    game_asset_string = gameinfo.DeriveGameAssetPathFromName(game_name, asset_type)
-                    game_asset_file = environment.GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type)
-
-                    # Get metadata key associated with the asset type
-                    game_metadata_key = None
-                    if asset_type == config.asset_type_background:
-                        game_metadata_key = config.metadata_key_background
-                    elif asset_type == config.asset_type_boxback:
-                        game_metadata_key = config.metadata_key_boxback
-                    elif asset_type == config.asset_type_boxfront:
-                        game_metadata_key = config.metadata_key_boxfront
-                    elif asset_type == config.asset_type_label:
-                        game_metadata_key = config.metadata_key_label
-                    elif asset_type == config.asset_type_screenshot:
-                        game_metadata_key = config.metadata_key_screenshot
-                    elif asset_type == config.asset_type_video:
-                        game_metadata_key = config.metadata_key_video
-
-                    # Image asset types should always be there
-                    if asset_type in config.asset_types_image:
-                        game_entry.set_value(game_metadata_key, game_asset_string)
-                        continue
-
-                    # Otherwise, only set if the file is present
-                    if os.path.isfile(game_asset_file):
-                        game_entry.set_value(game_metadata_key, game_asset_string)
-                    else:
-                        if game_entry.is_key_set(game_metadata_key):
-                            game_entry.delete_value(game_metadata_key)
-                self.set_game(game_platform, game_name, game_entry)
-
-    # Download missing videos
-    def download_missing_videos(self, search_terms = "", num_results = 10, verbose = False, exit_on_failure = False):
-        for metadata_entry in self.get_all_sorted_entries():
-            if not metadata_entry.is_key_set(config.metadata_key_video):
-
-                # Get game details
-                game_name = metadata_entry.get_game()
-                game_regular_name = gameinfo.DeriveRegularNameFromGameName(game_name)
-                game_platform = metadata_entry.get_platform()
-                game_category = metadata_entry.get_category()
-                game_subcategory = metadata_entry.get_subcategory()
-
-                # Get expected video file
-                expected_video_file = environment.GetLockerGamingAssetFile(game_category, game_subcategory, game_name, config.asset_type_video)
-                if os.path.exists(expected_video_file):
-                    continue
-
-                # Get search results
-                search_results = youtube.GetSearchResults(
-                    search_terms = search_terms + "+" + game_regular_name,
-                    num_results = num_results,
-                    sort_by_duration = True,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
-                if len(search_results) == 0:
-                    continue
-
-                # Show search results to the user
-                system.Log("Here are the search results for \"%s\"" % game_name)
-                for index in range(0, len(search_results)):
-                    search_result = search_results[index]
-                    system.Log("%d) \"%s\" (%s) [%s] - %s" % (index, search_result["title"], search_result["channel"], search_result["duration_string"], search_result["url"]))
-
-                # Ask them which one they want to use
-                value = system.PromptForValue("Which do you want to use? [Leave empty to skip, type quit to stop]")
-                if not value:
-                    continue
-                if value.lower() == "quit":
-                    break
-
-                # Get selected search result
-                selected_search_result = None
-                try:
-                    selected_search_result = search_results[int(value)]
-                except:
-                    continue
-                if not selected_search_result:
-                    continue
-
-                # Download selected result
-                success = youtube.DownloadVideo(
-                    video_url = selected_search_result["url"],
-                    output_file = expected_video_file,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
-                if not success:
-                    continue
-
-                # Clean exif data
-                if os.path.exists(expected_video_file):
-                    asset.CleanExifData(
-                        asset_file = expected_video_file,
-                        verbose = verbose,
-                        exit_on_failure = exit_on_failure)
 
     # Scan rom base directory
     def scan_rom_base_dir(self, rom_base_dir, rom_category, rom_subcategory, verbose = False, exit_on_failure = False):
