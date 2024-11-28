@@ -645,6 +645,12 @@ def DeriveGameLetterFromName(game_name):
         letter = config.general_folder_numeric
     return letter
 
+# Derive game search terms from name
+def DeriveGameSearchTermsFromName(game_name, game_platform, search_terms = []):
+    natural_name = DeriveRegularNameFromGameName(game_name)
+    search_phrase = f"{game_platform} {natural_name} {' '.join(search_terms)}"
+    return system.EncodeUrlString(search_phrase, use_plus = True)
+
 # Derive game name path from name
 def DeriveGameNamePathFromName(game_name, game_platform):
     if platforms.IsLetterPlatform(game_platform):
