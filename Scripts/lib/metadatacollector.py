@@ -9,6 +9,7 @@ import environment
 import platforms
 import gameinfo
 import webpage
+import youtube
 import metadata
 import metadataentry
 
@@ -173,20 +174,22 @@ def CollectMetadataFromTGDB(
     # Create web driver
     web_driver = webpage.CreateWebDriver()
 
-    # Get keywords name
-    natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
-    keywords_name = system.EncodeUrlString(natural_name.strip(), use_plus = True)
+    # Get search terms
+    search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
 
     # Metadata result
     metadata_result = metadataentry.MetadataEntry()
 
     # Load url
-    success = webpage.LoadUrl(web_driver, "https://thegamesdb.net/search.php?name=" + keywords_name)
+    success = webpage.LoadUrl(web_driver, "https://thegamesdb.net/search.php?name=" + search_terms)
     if not success:
         return None
 
     # Select an entry automatically
     if select_automatically:
+
+        # Get natural name
+        natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
 
         # Find the root container element
         element_search_result = webpage.WaitForPageElement(web_driver, class_name = "container-fluid", wait_time = 5, verbose = verbose)
@@ -290,15 +293,14 @@ def CollectMetadataFromGameFAQS(
     # Create web driver
     web_driver = webpage.CreateWebDriver()
 
-    # Get keywords name
-    natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
-    keywords_name = system.EncodeUrlString(natural_name.strip(), use_plus = True)
+    # Get search terms
+    search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
 
     # Metadata result
     metadata_result = metadataentry.MetadataEntry()
 
     # Load url
-    success = webpage.LoadUrl(web_driver, "https://gamefaqs.gamespot.com/search_advanced?game=" + keywords_name)
+    success = webpage.LoadUrl(web_driver, "https://gamefaqs.gamespot.com/search_advanced?game=" + search_terms)
     if not success:
         return None
 
@@ -418,22 +420,21 @@ def CollectMetadataAssetFromSteamGridDB(
     verbose = False,
     exit_on_failure = False):
 
-    # Ignore non-image assets
-    if asset_type not in config.asset_types_image:
+    # Only allow BoxFront
+    if asset_type != config.asset_type_boxfront:
         return None
 
     # Create web driver
     web_driver = webpage.CreateWebDriver()
 
-    # Get keywords name
-    natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
-    keywords_name = system.EncodeUrlString(natural_name.strip(), use_plus = True)
+    # Get search terms
+    search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
 
     # Metadata asset
     metadata_asset = None
 
     # Load url
-    success = webpage.LoadUrl(web_driver, "https://www.steamgriddb.com/search/grids/all/all/all?term=" + keywords_name)
+    success = webpage.LoadUrl(web_driver, "https://www.steamgriddb.com/search/grids/all/all/all?term=" + search_terms)
     if not success:
         return None
 
@@ -458,6 +459,59 @@ def CollectMetadataAssetFromSteamGridDB(
     # Return metadata
     return metadata_asset
 
+# Collect metadata asset from YouTube
+def CollectMetadataAssetFromYouTube(
+    game_platform,
+    game_name,
+    asset_type,
+    select_automatically = False,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Only allow Video
+    if asset_type != config.asset_type_video:
+        return None
+
+    # Metadata asset
+    metadata_asset = None
+
+    # Get search results
+    search_results = youtube.GetSearchResults(
+        search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform, search_terms = ["trailer"]),
+        num_results = 20,
+        sort_by_duration = True,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if len(search_results) == 0:
+        return None
+
+    # Show search results to the user
+    system.Log(f"Here are the search results for \"{game_name}\"")
+    for index in range(0, len(search_results)):
+        search_result = search_results[index]
+        search_title = search_result["title"]
+        search_channel = search_result["channel"]
+        search_duration = search_result["duration_string"]
+        search_url = search_result["url"]
+        system.Log(f"{index}) \"{search_title}\" ({search_channel}) [{search_duration}] - {search_url}")
+
+    # Ask them which one they want to use
+    value = system.PromptForValue("Which do you want to use? [Enter an index or type a url to use that]")
+    if not value:
+        return None
+
+    # Get asset link
+    if value.startswith("https://www.youtube.com"):
+        metadata_asset = value
+    elif value.isdigit():
+        try:
+            metadata_asset = search_results[int(value)]["url"]
+        except:
+            pass
+
+    # Return metadata
+    return metadata_asset
+
 ############################################################
 
 # Collect metadata asset from all
@@ -471,6 +525,17 @@ def CollectMetadataAssetFromAll(
 
     # Try from SteamGridDB
     metadata_asset = CollectMetadataAssetFromSteamGridDB(
+        game_platform = game_platform,
+        game_name = game_name,
+        asset_type = asset_type,
+        select_automatically = select_automatically,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if isinstance(metadata_asset, str):
+        return metadata_asset
+
+    # Try from YouTube
+    metadata_asset = CollectMetadataAssetFromYouTube(
         game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,

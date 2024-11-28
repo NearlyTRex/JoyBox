@@ -311,11 +311,6 @@ def AddMetadataEntry(
     # Derive game data
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
     game_json_file = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name)
-    game_boxfront = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_boxfront)
-    game_boxback = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_boxback)
-    game_background = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_background)
-    game_screenshot = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_screenshot)
-    game_video = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_video)
 
     # Adjust json file path
     game_json_file = system.RebaseFilePath(
@@ -330,16 +325,84 @@ def AddMetadataEntry(
     new_entry.set_game(game_name)
     new_entry.set_platform(game_platform)
     new_entry.set_file(game_json_file)
-    new_entry.set_boxfront(game_boxfront)
-    new_entry.set_boxback(game_boxback)
-    new_entry.set_background(game_background)
-    new_entry.set_screenshot(game_screenshot)
     new_entry.set_players("1")
     new_entry.set_coop("No")
     new_entry.set_playable("Yes")
 
     # Add new entry
     metadata_obj.add_game(new_entry)
+
+    # Write metadata file
+    metadata_obj.export_to_metadata_file(
+        metadata_file = metadata_file,
+        append_existing = False,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    return True
+
+# Update metadata entry
+def UpdateMetadataEntry(
+    game_category,
+    game_subcategory,
+    game_name,
+    new_data = None,
+    verbose = False,
+    exit_on_failure = False):
+
+    # Find metadata file
+    metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
+    if not metadata_file:
+        return False
+
+    # Load metadata file
+    metadata_obj = metadata.Metadata()
+    metadata_obj.import_from_metadata_file(
+        metadata_file = metadata_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+    # Derive game data
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+
+    # Get current entry
+    current_entry = metadata_obj.get_game(game_platform, game_name)
+    if isinstance(new_data, metadataentry.MetadataEntry):
+        current_entry.merge(new_data)
+
+    # Check all asset types
+    for asset_type in config.asset_types_all:
+        game_asset_string = gameinfo.DeriveGameAssetPathFromName(game_name, asset_type)
+        game_asset_file = environment.GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type)
+
+        # Get metadata key associated with the asset type
+        game_metadata_key = None
+        if asset_type == config.asset_type_background:
+            game_metadata_key = config.metadata_key_background
+        elif asset_type == config.asset_type_boxback:
+            game_metadata_key = config.metadata_key_boxback
+        elif asset_type == config.asset_type_boxfront:
+            game_metadata_key = config.metadata_key_boxfront
+        elif asset_type == config.asset_type_label:
+            game_metadata_key = config.metadata_key_label
+        elif asset_type == config.asset_type_screenshot:
+            game_metadata_key = config.metadata_key_screenshot
+        elif asset_type == config.asset_type_video:
+            game_metadata_key = config.metadata_key_video
+
+        # Image asset types should always be there
+        if asset_type in config.asset_types_image:
+            current_entry.set_value(game_metadata_key, game_asset_string)
+            continue
+
+        # Otherwise, only set if the file is present
+        if os.path.isfile(game_asset_file):
+            current_entry.set_value(game_metadata_key, game_asset_string)
+        else:
+            if current_entry.is_key_set(game_metadata_key):
+                current_entry.delete_value(game_metadata_key)
+
+    # Update entry
+    metadata_obj.set_game(game_platform, game_name, current_entry)
 
     # Write metadata file
     metadata_obj.export_to_metadata_file(
@@ -410,10 +473,10 @@ def DownloadMetadataAsset(
     system.MakeDirectory(output_asset_dir, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Download asset
-    success = network.DownloadUrl(
-        url = asset_url,
-        output_dir = tmp_dir_result,
-        output_file = tmp_asset_file_original,
+    success = asset.DownloadAsset(
+        asset_url = asset_url,
+        asset_file = tmp_asset_file_original,
+        asset_type = asset_type,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not success:

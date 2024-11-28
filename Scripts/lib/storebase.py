@@ -313,6 +313,16 @@ class StoreBase:
                 if not success:
                     system.LogWarning("Unable to download asset %s for game '%s'" % (asset_type, entry_name))
 
+            # Update metadata entry
+            success = collection.UpdateMetadataEntry(
+                game_category = self.GetCategory(),
+                game_subcategory = self.GetSubcategory(),
+                game_name = entry_name,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                system.LogWarning("Unable to update metadata entry for game '%s'" % entry_name)
+
         # Should be successful
         return True
 
