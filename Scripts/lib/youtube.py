@@ -40,6 +40,7 @@ def GetSearchResults(search_terms, num_results = 10, sort_by_duration = False, v
     search_output = command.RunOutputCommand(
         cmd = search_cmd,
         options = command.CommandOptions(
+            shell = True,
             blocking_processes = [youtube_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)
