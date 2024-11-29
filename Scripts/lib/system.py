@@ -1707,7 +1707,8 @@ def GetDirectorySize(path):
 def GetDirectoryContents(path, excludes = []):
     contents = []
     if DoesPathExist(path):
-        contents = os.listdir(path)
+        if os.path.isdir(path):
+            contents = os.listdir(path)
     return PrunePaths(contents, excludes)
 
 # Get directory anchor
