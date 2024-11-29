@@ -76,6 +76,7 @@ class Epic(storebase.StoreBase):
     def Login(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get tool
@@ -139,6 +140,7 @@ class Epic(storebase.StoreBase):
     def GetPurchases(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get tool
@@ -213,6 +215,7 @@ class Epic(storebase.StoreBase):
         identifier,
         branch = None,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check identifier
@@ -291,6 +294,7 @@ class Epic(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check identifier
@@ -380,6 +384,7 @@ class Epic(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check identifier
@@ -447,6 +452,7 @@ class Epic(storebase.StoreBase):
         self,
         game_info,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return []
 
@@ -457,6 +463,7 @@ class Epic(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 
@@ -467,6 +474,7 @@ class Epic(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 
@@ -481,6 +489,7 @@ class Epic(storebase.StoreBase):
         branch = None,
         clean_output = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 

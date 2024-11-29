@@ -59,6 +59,7 @@ class Amazon(storebase.StoreBase):
     def Login(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get tool
@@ -90,6 +91,7 @@ class Amazon(storebase.StoreBase):
         code = command.RunBlockingCommand(
             cmd = login_cmd,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if (code != 0):
             return False
@@ -107,6 +109,7 @@ class Amazon(storebase.StoreBase):
         code = command.RunBlockingCommand(
             cmd = refresh_cmd,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return (code == 0)
 
@@ -116,6 +119,7 @@ class Amazon(storebase.StoreBase):
     def GetPurchases(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get tool
@@ -147,6 +151,7 @@ class Amazon(storebase.StoreBase):
         code = command.RunBlockingCommand(
             cmd = refresh_cmd,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if (code != 0):
             return None
@@ -164,6 +169,7 @@ class Amazon(storebase.StoreBase):
         code = command.RunBlockingCommand(
             cmd = sync_cmd,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if (code != 0):
             return None
@@ -180,6 +186,7 @@ class Amazon(storebase.StoreBase):
         list_output = command.RunOutputCommand(
             cmd = list_cmd,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if len(list_output) == 0:
             system.LogError("Unable to find amazon purchases")
@@ -219,6 +226,7 @@ class Amazon(storebase.StoreBase):
         identifier,
         branch = None,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check identifier
@@ -254,6 +262,7 @@ class Amazon(storebase.StoreBase):
         info_output = command.RunOutputCommand(
             cmd = info_cmd,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if len(info_output) == 0:
             system.LogError("Unable to find amazon information for '%s'" % identifier)
@@ -292,6 +301,7 @@ class Amazon(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check identifier
@@ -304,6 +314,7 @@ class Amazon(storebase.StoreBase):
             game_name = identifier,
             keys_to_check = config.metadata_keys_downloadable,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     ############################################################
@@ -313,6 +324,7 @@ class Amazon(storebase.StoreBase):
         self,
         game_info,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return []
 
@@ -323,6 +335,7 @@ class Amazon(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 
@@ -333,6 +346,7 @@ class Amazon(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 
@@ -347,6 +361,7 @@ class Amazon(storebase.StoreBase):
         branch = None,
         clean_output = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get tool
@@ -366,15 +381,25 @@ class Amazon(storebase.StoreBase):
             return False
 
         # Create temporary directory
-        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+            verbose = verbose,
+            pretend_run = pretend_run)
         if not tmp_dir_success:
             return False
 
         # Make temporary dirs
         tmp_dir_fetch = os.path.join(tmp_dir_result, "fetch")
         tmp_dir_archive = os.path.join(tmp_dir_result, "archive")
-        system.MakeDirectory(tmp_dir_fetch, verbose = verbose, exit_on_failure = exit_on_failure)
-        system.MakeDirectory(tmp_dir_archive, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.MakeDirectory(
+            dir = tmp_dir_fetch,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        system.MakeDirectory(
+            dir = tmp_dir_archive,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
         # Get fetch command
         fetch_cmd = [
@@ -389,6 +414,7 @@ class Amazon(storebase.StoreBase):
         code = command.RunBlockingCommand(
             cmd = fetch_cmd,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if code != 0:
             system.LogError("Encountered error fetching")
@@ -405,9 +431,14 @@ class Amazon(storebase.StoreBase):
             source_dir = tmp_dir_fetch,
             volume_size = "4092m",
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+            system.RemoveDirectory(
+                dir = tmp_dir_result,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
             return False
 
         # Clean output
@@ -415,6 +446,7 @@ class Amazon(storebase.StoreBase):
             system.RemoveDirectoryContents(
                 dir = output_dir,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
         # Move archived files
@@ -423,13 +455,22 @@ class Amazon(storebase.StoreBase):
             dest = output_dir,
             show_progress = True,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+            system.RemoveDirectory(
+                dir = tmp_dir_result,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
             return False
 
         # Delete temporary directory
-        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
         # Check result
         return os.path.exists(output_dir)

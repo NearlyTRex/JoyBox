@@ -57,6 +57,7 @@ class Itchio(storebase.StoreBase):
     def Login(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Connect to web
@@ -89,6 +90,7 @@ class Itchio(storebase.StoreBase):
     def GetPurchases(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Connect to web
@@ -160,6 +162,7 @@ class Itchio(storebase.StoreBase):
         identifier,
         branch = None,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return None
 
@@ -170,6 +173,7 @@ class Itchio(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check identifier
@@ -265,6 +269,7 @@ class Itchio(storebase.StoreBase):
         self,
         game_info,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return []
 
@@ -275,6 +280,7 @@ class Itchio(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 
@@ -285,6 +291,7 @@ class Itchio(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 
@@ -299,6 +306,7 @@ class Itchio(storebase.StoreBase):
         branch = None,
         clean_output = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 

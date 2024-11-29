@@ -189,6 +189,7 @@ def InstallWineDlls(
     dlls_64 = [],
     is_32_bit = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
     wine_c_drive = GetWineRealDrivePath(prefix_dir, "c")
     wine_system32_dir = os.path.join(wine_c_drive, "windows", "system32")
@@ -199,6 +200,7 @@ def InstallWineDlls(
                 src = lib32,
                 dest = wine_system32_dir,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
     else:
         for lib64 in dlls_64:
@@ -206,12 +208,14 @@ def InstallWineDlls(
                 src = lib64,
                 dest = os.path.join(wine_c_drive, "windows", "system32"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         for lib32 in dlls_32:
             system.CopyFileOrDirectory(
                 src = lib32,
                 dest = wine_syswow64_dir,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
 # Install sandboxie dlls
@@ -221,6 +225,7 @@ def InstallSandboxieDlls(
     dlls_64 = [],
     is_32_bit = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
     pass
 
@@ -233,6 +238,7 @@ def InstallDlls(
     is_wine_prefix = False,
     is_sandboxie_prefix = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
     if is_wine_prefix:
         InstallWineDlls(
@@ -241,6 +247,7 @@ def InstallDlls(
             dlls_64 = dlls_64,
             is_32_bit = is_32_bit,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     elif is_sandboxie_prefix:
         InstallSandboxieDlls(
@@ -249,6 +256,7 @@ def InstallDlls(
             dlls_64 = dlls_64,
             is_32_bit = is_32_bit,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
 ###########################################################
@@ -260,6 +268,7 @@ def RestoreRegistry(
     is_wine_prefix = False,
     is_sandboxie_prefix = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get user profile
@@ -288,6 +297,7 @@ def RestoreRegistry(
         prefix_dir = prefix_dir,
         prefix_name = prefix_name,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Backup registry
@@ -298,6 +308,7 @@ def BackupRegistry(
     is_wine_prefix = False,
     is_sandboxie_prefix = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Ignore empty keys
@@ -345,6 +356,7 @@ def BackupRegistry(
         ignore_keys = registry_ignore_keys,
         keep_keys = registry_keys,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 ###########################################################
@@ -377,6 +389,7 @@ def MountDirectoryToAvailableDrive(
     is_wine_prefix = False,
     is_sandboxie_prefix = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -396,6 +409,7 @@ def MountDirectoryToAvailableDrive(
         src = source_dir,
         dest = drive_path,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Unmount all mounted drives
@@ -404,6 +418,7 @@ def UnmountAllMountedDrives(
     is_wine_prefix = False,
     is_sandboxie_prefix = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -423,6 +438,7 @@ def UnmountAllMountedDrives(
         system.RemoveSymlink(
             symlink = drive_path,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
 ###########################################################
@@ -628,6 +644,7 @@ def SetupPrefixEnvironment(
     cmd,
     options = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check options
@@ -691,11 +708,13 @@ def SetupPrefixEnvironment(
                 system.RemoveSymlink(
                     symlink = cwd_drive,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 system.CreateSymlink(
                     src = new_options.cwd,
                     dest = cwd_drive,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
 
     # Modify for sandboxie
@@ -710,6 +729,7 @@ def SetupPrefixCommand(
     cmd,
     options = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check options
@@ -797,7 +817,7 @@ def SetupPrefixCommand(
 ###########################################################
 
 # Cleanup wine
-def CleanupWine(cmd, options, verbose = False, exit_on_failure = False):
+def CleanupWine(cmd, options, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get wine server tool
     wine_server_tool = programs.GetToolProgram("WineServer")
@@ -808,13 +828,14 @@ def CleanupWine(cmd, options, verbose = False, exit_on_failure = False):
         options = command.CommandOptions(
             shell = True),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Kill wine itself
     environment.KillActiveNamedProcesses([wine_server_tool])
 
 # Cleanup sandboxie
-def CleanupSandboxie(cmd, options, verbose = False, exit_on_failure = False):
+def CleanupSandboxie(cmd, options, verbose = False, pretend_run = False, exit_on_failure = False):
     pass
 
 ###########################################################
@@ -827,10 +848,15 @@ def CreateWinePrefix(
     wine_setup = {},
     is_32_bit = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Make directory
-    system.MakeDirectory(prefix_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = prefix_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Get wine boot tool
     wine_boot_tool = programs.GetToolProgram("WineBoot")
@@ -873,11 +899,13 @@ def CreateWinePrefix(
             cmd = cmd,
             options = options,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         command.RunBlockingCommand(
             cmd = cmd,
             options = options,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Copy dxvk libraries
@@ -907,12 +935,25 @@ def CreateSandboxiePrefix(
     sandboxie_setup = {},
     is_32_bit = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Make directories
-    system.MakeDirectory(prefix_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-    system.MakeDirectory(GetSandboxieRealDrivePath(prefix_dir, "C"), verbose = verbose, exit_on_failure = exit_on_failure)
-    system.MakeDirectory(GetSandboxieUserProfilePath(prefix_dir), verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = prefix_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = GetSandboxieRealDrivePath(prefix_dir, "C"),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = GetSandboxieUserProfilePath(prefix_dir),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Get sandboxie ini tool
     sandboxie_ini_tool = programs.GetToolProgram("SandboxieIni")
@@ -930,11 +971,14 @@ def CreateSandboxiePrefix(
             cmd = cmd,
             options = options,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         command.RunBlockingCommand(
             cmd = cmd,
             options = options,
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Initialize prefix
     SetSandboxieBoxParam(prefix_name, "Enabled", "y")
@@ -964,6 +1008,7 @@ def CreateBasicPrefix(
     sandboxie_setup = {},
     is_32_bit = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check prefix
@@ -972,7 +1017,11 @@ def CreateBasicPrefix(
 
     # Clean prefix
     if clean_existing:
-        system.RemoveObject(prefix_dir, verbose = verbose, exit_on_failure = False)
+        system.RemoveObject(
+            obj = prefix_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Setup wine prefix
     if is_wine_prefix:
@@ -985,12 +1034,14 @@ def CreateBasicPrefix(
             wine_setup = wine_setup,
             is_32_bit = is_32_bit,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Replace symlinked directories
         system.ReplaceSymlinkedDirectories(
             dir = GetWineUserProfilePath(prefix_dir),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Setup sandboxie prefix
@@ -1004,6 +1055,7 @@ def CreateBasicPrefix(
             sandboxie_setup = sandboxie_setup,
             is_32_bit = is_32_bit,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Check result
@@ -1023,6 +1075,7 @@ def CreateLinkedPrefix(
     sandboxie_setup = {},
     is_32_bit = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check prefix
@@ -1035,13 +1088,18 @@ def CreateLinkedPrefix(
 
     # Create prefix
     if clean_existing:
-        system.RemoveObject(prefix_dir, verbose = verbose, exit_on_failure = False)
+        system.RemoveObject(
+            obj = prefix_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
 
     # Create general prefix subfolders
     for folder in config.computer_user_folders:
         system.MakeDirectory(
             dir = os.path.join(general_prefix_dir, folder),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Get prefix c drive
@@ -1062,17 +1120,20 @@ def CreateLinkedPrefix(
             wine_setup = wine_setup,
             is_32_bit = is_32_bit,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Link prefix
         system.RemoveObject(
             obj = GetWineUserProfilePath(prefix_dir),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         system.CreateSymlink(
             src = general_prefix_dir,
             dest = GetWineUserProfilePath(prefix_dir),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Setup sandboxie prefix
@@ -1086,6 +1147,7 @@ def CreateLinkedPrefix(
             sandboxie_setup = sandboxie_setup,
             is_32_bit = is_32_bit,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Link other paths
@@ -1097,12 +1159,14 @@ def CreateLinkedPrefix(
         system.RemoveObject(
             obj = path_to,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         system.CreateSymlink(
             src = path_from,
             dest = path_to,
             cwd = prefix_c_drive,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Check result
@@ -1217,6 +1281,7 @@ def TransferFromSandbox(
     is_wine_prefix = False,
     is_sandboxie_prefix = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -1243,13 +1308,33 @@ def TransferFromSandbox(
     # Transfer from sandbox
     if keep_in_sandbox:
         if os.path.isdir(real_path):
-            system.CopyContents(real_path, path, verbose = verbose, exit_on_failure = exit_on_failure)
+            system.CopyContents(
+                src = real_path,
+                dest = path,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
         else:
-            system.CopyFileOrDirectory(real_path, path, verbose = verbose, exit_on_failure = exit_on_failure)
+            system.CopyFileOrDirectory(
+                src = real_path,
+                dest = path,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
     else:
         if os.path.isdir(real_path):
-            system.MoveContents(real_path, path, verbose = verbose, exit_on_failure = exit_on_failure)
+            system.MoveContents(
+                src = real_path,
+                dest = path,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
         else:
-            system.MoveFileOrDirectory(real_path, path, verbose = verbose, exit_on_failure = exit_on_failure)
+            system.MoveFileOrDirectory(
+                src = real_path,
+                dest = path,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
 
 ###########################################################

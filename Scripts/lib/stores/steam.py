@@ -132,6 +132,7 @@ class Steam(storebase.StoreBase):
     def Login(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get tool
@@ -154,6 +155,7 @@ class Steam(storebase.StoreBase):
             options = command.CommandOptions(
                 blocking_processes = [steam_tool]),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return (code == 0)
 
@@ -163,6 +165,7 @@ class Steam(storebase.StoreBase):
     def GetPurchases(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get steam url
@@ -179,6 +182,7 @@ class Steam(storebase.StoreBase):
         steam_json = network.GetRemoteJson(
             url = steam_url,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not steam_json:
             system.LogError("Unable to find steam release information from '%s'" % steam_url)
@@ -219,6 +223,7 @@ class Steam(storebase.StoreBase):
         identifier,
         branch = None,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check identifier
@@ -247,6 +252,7 @@ class Steam(storebase.StoreBase):
             options = command.CommandOptions(
                 blocking_processes = [steamcmd_tool]),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if len(info_output) == 0:
             system.LogError("Unable to find steam information for '%s'" % identifier)
@@ -373,6 +379,7 @@ class Steam(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check identifier
@@ -382,6 +389,7 @@ class Steam(storebase.StoreBase):
         # Connect to web
         web_driver = self.WebConnect(
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not web_driver:
             return None
@@ -439,6 +447,7 @@ class Steam(storebase.StoreBase):
         success = self.WebDisconnect(
             web_driver = web_driver,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return None
@@ -453,6 +462,7 @@ class Steam(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check identifier
@@ -471,6 +481,7 @@ class Steam(storebase.StoreBase):
         identifier,
         asset_type,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check identifier
@@ -491,7 +502,9 @@ class Steam(storebase.StoreBase):
                 base_url = "https://video.fastly.steamstatic.com/store_trailers",
                 starts_with = "https://video.fastly.steamstatic.com/store_trailers",
                 ends_with = ".mp4",
-                verbose = verbose)
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
 
         # Return latest asset url
         return latest_asset_url
@@ -503,6 +516,7 @@ class Steam(storebase.StoreBase):
         self,
         game_info,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get game info
@@ -631,6 +645,7 @@ class Steam(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get tool
@@ -655,6 +670,7 @@ class Steam(storebase.StoreBase):
             options = command.CommandOptions(
                 blocking_processes = [steam_tool]),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return (code == 0)
 
@@ -665,6 +681,7 @@ class Steam(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get tool
@@ -686,6 +703,7 @@ class Steam(storebase.StoreBase):
             options = command.CommandOptions(
                 blocking_processes = [steam_tool]),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return (code == 0)
 
@@ -700,6 +718,7 @@ class Steam(storebase.StoreBase):
         branch = None,
         clean_output = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check identifier
@@ -721,8 +740,16 @@ class Steam(storebase.StoreBase):
         # Make temporary dirs
         tmp_dir_dowload = os.path.join(tmp_dir_result, "download")
         tmp_dir_archive = os.path.join(tmp_dir_result, "archive")
-        system.MakeDirectory(tmp_dir_download, verbose = verbose, exit_on_failure = exit_on_failure)
-        system.MakeDirectory(tmp_dir_archive, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.MakeDirectory(
+            dir = tmp_dir_download,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        system.MakeDirectory(
+            dir = tmp_dir_archive,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
         # Get download command
         download_cmd = [
@@ -748,6 +775,7 @@ class Steam(storebase.StoreBase):
             options = command.CommandOptions(
                 blocking_processes = [steamdepot_tool]),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Check that files downloaded
@@ -762,9 +790,14 @@ class Steam(storebase.StoreBase):
             excludes = [".DepotDownloader"],
             volume_size = "4092m",
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+            system.RemoveDirectory(
+                dir = tmp_dir_result,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
             return False
 
         # Clean output
@@ -772,6 +805,7 @@ class Steam(storebase.StoreBase):
             system.RemoveDirectoryContents(
                 dir = output_dir,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
         # Move archived files
@@ -780,13 +814,22 @@ class Steam(storebase.StoreBase):
             dest = output_dir,
             show_progress = True,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+            system.RemoveDirectory(
+                dir = tmp_dir_result,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
             return False
 
         # Delete temporary directory
-        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
         # Check result
         return os.path.exists(output_dir)

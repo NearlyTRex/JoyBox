@@ -68,7 +68,11 @@ def CreateISO(
 
     # Clean up
     if delete_original:
-        system.RemoveDirectory(source_dir)
+        system.RemoveDirectory(
+            dir = source_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(iso_file)
@@ -120,7 +124,11 @@ def ExtractISO(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(iso_file)
+        system.RemoveFile(
+            src = iso_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(extract_dir)

@@ -127,6 +127,7 @@ class StoreBase:
         self.manifest = system.ReadYamlFile(
             src = tools.GetManifest(),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     ############################################################
@@ -135,6 +136,7 @@ class StoreBase:
     def Login(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 
@@ -143,22 +145,30 @@ class StoreBase:
         self,
         headless = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Create web driver
         return webpage.CreateWebDriver(
             make_headless = headless,
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Web disconnect
     def WebDisconnect(
         self,
         web_driver,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Destroy web driver
-        return webpage.DestroyWebDriver(web_driver, verbose = verbose)
+        return webpage.DestroyWebDriver(
+            driver = web_driver,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Get cookie file
     def GetCookieFile(self):
@@ -172,6 +182,7 @@ class StoreBase:
     def GetPurchases(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return []
 
@@ -179,6 +190,7 @@ class StoreBase:
     def DisplayPurchases(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 
@@ -186,11 +198,13 @@ class StoreBase:
     def ImportPurchases(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get all purchases
         purchases = self.GetPurchases(
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not purchases:
             return False
@@ -200,6 +214,7 @@ class StoreBase:
             game_category = self.GetCategory(),
             game_subcategory = self.GetSubcategory(),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Import each purchase
@@ -222,7 +237,8 @@ class StoreBase:
             # Check if json file already exists
             found_file = self.FindJsonByIdentifiers(
                 identifiers = purchase_identifiers,
-                verbose = False,
+                verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if found_file:
                 continue
@@ -253,6 +269,7 @@ class StoreBase:
                     game_identifier = info_identifier,
                     game_name = purchase_name,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 continue
 
@@ -265,6 +282,7 @@ class StoreBase:
                 purchase_appurl = self.GetLatestUrl(
                     identifier = purchase_name,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if purchase_appurl:
                     purchase.set_value(config.json_key_store_appurl, purchase_appurl)
@@ -276,6 +294,7 @@ class StoreBase:
                 game_name = entry_name,
                 initial_data = {self.GetKey(): purchase.get_data()},
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 system.LogError("Unable to create json file for game '%s'" % entry_name)
@@ -289,8 +308,10 @@ class StoreBase:
                 initial_data = self.GetLatestMetadata(
                     identifier = self.GetMetadataIdentifier(purchase),
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 system.LogError("Unable to add metadata entry for game '%s'" % entry_name)
@@ -306,9 +327,11 @@ class StoreBase:
                         identifier = self.GetAssetIdentifier(purchase),
                         asset_type = asset_type,
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure),
                     asset_type = asset_type,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if not success:
                     system.LogWarning("Unable to download asset %s for game '%s'" % (asset_type, entry_name))
@@ -319,6 +342,7 @@ class StoreBase:
                 game_subcategory = self.GetSubcategory(),
                 game_name = entry_name,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 system.LogWarning("Unable to update metadata entry for game '%s'" % entry_name)
@@ -334,6 +358,7 @@ class StoreBase:
         identifier,
         branch = None,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return None
 
@@ -344,6 +369,7 @@ class StoreBase:
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return None
 
@@ -354,6 +380,7 @@ class StoreBase:
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return None
 
@@ -365,6 +392,7 @@ class StoreBase:
         identifier,
         asset_type,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return None
 
@@ -375,6 +403,7 @@ class StoreBase:
         self,
         game_info,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return []
 
@@ -385,6 +414,7 @@ class StoreBase:
         self,
         game_info,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get latest jsondata
@@ -392,6 +422,7 @@ class StoreBase:
             identifier = self.GetInfoIdentifier(game_info.get_wrapped_value(self.GetKey())),
             branch = game_info.get_store_branchid(self.GetKey()),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not latest_jsondata:
             return (None, None)
@@ -408,6 +439,7 @@ class StoreBase:
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 
@@ -416,12 +448,14 @@ class StoreBase:
         self,
         game_info,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Install game
         return self.InstallByIdentifier(
             identifier = self.GetInstallIdentifier(game_info.get_wrapped_value(self.GetKey())),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     ############################################################
@@ -431,6 +465,7 @@ class StoreBase:
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 
@@ -439,12 +474,14 @@ class StoreBase:
         self,
         game_info,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Launch game
         return self.LaunchByIdentifier(
             identifier = self.GetLaunchIdentifier(game_info.get_wrapped_value(self.GetKey())),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     ############################################################
@@ -458,6 +495,7 @@ class StoreBase:
         branch = None,
         clean_output = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 
@@ -469,6 +507,7 @@ class StoreBase:
         skip_existing = False,
         force = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get output dir
@@ -490,6 +529,7 @@ class StoreBase:
         local_version, remote_version = self.GetVersions(
             game_info = game_info,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Check if game should be downloaded
@@ -516,6 +556,7 @@ class StoreBase:
             output_name = "%s (%s)" % (game_info.get_name(), remote_version),
             clean_output = True,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return success
 
@@ -526,6 +567,7 @@ class StoreBase:
         self,
         identifiers,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         json_files = system.BuildFileListByExtensions(
             root = environment.GetJsonRomMetadataDir(self.GetCategory(), self.GetSubcategory()),
@@ -552,11 +594,13 @@ class StoreBase:
         self,
         game_info,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get current jsondata
         current_jsondata = game_info.read_wrapped_json_data(
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not current_jsondata:
             return False
@@ -566,6 +610,7 @@ class StoreBase:
             identifier = self.GetInfoIdentifier(game_info.get_wrapped_value(self.GetKey())),
             branch = game_info.get_store_branchid(self.GetKey()),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not latest_jsondata:
             return False
@@ -583,6 +628,7 @@ class StoreBase:
         success = game_info.write_wrapped_json_data(
             json_wrapper = current_jsondata,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return success
 
@@ -593,6 +639,7 @@ class StoreBase:
         keys = [],
         force = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get current metadata
@@ -616,6 +663,7 @@ class StoreBase:
         latest_metadata = self.GetLatestMetadata(
             identifier = self.GetMetadataIdentifier(game_info.get_wrapped_value(self.GetKey())),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not latest_metadata:
             return False
@@ -637,6 +685,7 @@ class StoreBase:
         asset_type,
         force = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check if asset exists
@@ -658,6 +707,7 @@ class StoreBase:
             identifier = self.GetAssetIdentifier(game_info.get_wrapped_value(self.GetKey())),
             asset_type = asset_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Download asset
@@ -668,6 +718,7 @@ class StoreBase:
             asset_url = asset_url,
             asset_type = asset_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return success
 
@@ -678,6 +729,7 @@ class StoreBase:
         self,
         game_info,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Create temporary directory
@@ -690,6 +742,7 @@ class StoreBase:
         for save_path_entry in self.GetGameSavePaths(
             game_info = game_info,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure):
             path_full = save_path_entry["full"]
             for path_relative in save_path_entry["relative"]:
@@ -701,11 +754,16 @@ class StoreBase:
                         skip_existing = True,
                         ignore_symlinks = True,
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     if success:
                         at_least_one_copy = True
         if not at_least_one_copy:
-            system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+            system.RemoveDirectory(
+                dir = tmp_dir_result,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
             return True
 
         # Pack save
@@ -715,12 +773,17 @@ class StoreBase:
             save_name = game_info.get_name(),
             save_dir = tmp_dir_result,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
 
         # Delete temporary directory
-        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         return True
 
     ############################################################
@@ -730,6 +793,7 @@ class StoreBase:
         self,
         game_info,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 

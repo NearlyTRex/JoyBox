@@ -220,7 +220,11 @@ def Trim3DSCCI(
         exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(dest_3ds_file)
@@ -242,7 +246,9 @@ def Untrim3DSCCI(
         return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -284,7 +290,11 @@ def Untrim3DSCCI(
         exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(dest_3ds_file)
@@ -306,7 +316,9 @@ def Extract3DSCIA(
         return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -358,7 +370,11 @@ def Extract3DSCIA(
         exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(extract_dir) and not system.IsDirectoryEmpty(extract_dir)
@@ -512,7 +528,9 @@ def VerifyWiiUNUSPackage(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -532,7 +550,11 @@ def VerifyWiiUNUSPackage(
         exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Check result
     return decryption_result
@@ -546,7 +568,9 @@ def InstallWiiUNusPackage(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -612,7 +636,11 @@ def InstallWiiUNusPackage(
             return False
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Should be installed
     return True
@@ -789,8 +817,16 @@ def TrimSwitchXCI(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(src_xci_file, verbose = verbose, pretend_run = pretend_run)
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
+        system.RemoveFile(
+            src = src_xci_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(dest_xci_file)
@@ -866,8 +902,16 @@ def UntrimSwitchXCI(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(src_xci_file, verbose = verbose, pretend_run = pretend_run)
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
+        system.RemoveFile(
+            src = src_xci_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(dest_xci_file)
@@ -921,7 +965,9 @@ def InstallSwitchNSP(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -968,7 +1014,11 @@ def InstallSwitchNSP(
             return False
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Should be installed
     return True

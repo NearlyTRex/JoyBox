@@ -1402,7 +1402,7 @@ def RemoveObject(obj, verbose = False, pretend_run = False, exit_on_failure = Fa
 ###########################################################
 
 # Read json file
-def ReadJsonFile(src, verbose = False, exit_on_failure = False):
+def ReadJsonFile(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if not src.endswith(".json"):
             return {}
@@ -1480,7 +1480,7 @@ def CleanJsonFile(src, sort_keys = False, remove_empty_values = False, verbose =
 ###########################################################
 
 # Read yaml file
-def ReadYamlFile(src, verbose = False, exit_on_failure = False):
+def ReadYamlFile(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         import yaml
         if not src.endswith(".yaml"):

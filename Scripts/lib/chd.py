@@ -57,7 +57,11 @@ def CreateDiscCHD(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(source_iso)
+        system.RemoveFile(
+            src = source_iso,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(chd_file)
@@ -103,7 +107,11 @@ def ExtractDiscCHD(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(chd_file)
+        system.RemoveFile(
+            src = chd_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(binary_file)
@@ -155,7 +163,8 @@ def ArchiveDiscCHD(
     system.RemoveDirectory(
         dir = tmp_dir_result,
         verbose = verbose,
-        pretend_run = pretend_run)
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(zip_file)
@@ -261,7 +270,8 @@ def MountDiscCHD(
     system.RemoveDirectory(
         dir = tmp_dir_result,
         verbose = verbose,
-        pretend_run = pretend_run)
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Check result
     return IsDiscCHDMounted(chd_file, mount_dir)

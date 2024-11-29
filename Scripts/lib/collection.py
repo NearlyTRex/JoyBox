@@ -620,7 +620,11 @@ def DownloadMetadataAsset(
         return False
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Should be successful
     return True

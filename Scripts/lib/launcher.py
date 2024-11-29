@@ -13,7 +13,13 @@ import saves
 import gui
 
 # Launch game
-def LaunchGame(game_info, capture_type = None, fullscreen = False, verbose = False, exit_on_failure = False):
+def LaunchGame(
+    game_info,
+    capture_type = None,
+    fullscreen = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get game info
     game_name = game_info.get_name()
@@ -42,13 +48,32 @@ def LaunchGame(game_info, capture_type = None, fullscreen = False, verbose = Fal
 
     # Unpack save if possible
     if saves.CanSaveBeUnpacked(game_category, game_subcategory, game_name):
-        saves.UnpackSave(game_category, game_subcategory, game_name, verbose = verbose, exit_on_failure = exit_on_failure)
+        saves.UnpackSave(
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            game_name = game_name,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Setup launcher save directory
     if game_launcher_save_dir:
-        system.MakeDirectory(system.GetFilenameDirectory(game_launcher_save_dir), verbose = verbose, exit_on_failure = exit_on_failure)
-        system.RemoveObject(game_launcher_save_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-        system.CreateSymlink(game_save_dir, game_launcher_save_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.MakeDirectory(
+            dir = system.GetFilenameDirectory(game_launcher_save_dir),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        system.RemoveObject(
+            obj = game_launcher_save_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        system.CreateSymlink(
+            src = game_save_dir,
+            dest = game_launcher_save_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Setup launcher config file
     if game_launcher_config_file:
@@ -59,6 +84,7 @@ def LaunchGame(game_info, capture_type = None, fullscreen = False, verbose = Fal
                 {"from": config.token_game_save_dir, "to": game_save_dir}
             ],
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Launch game
@@ -67,6 +93,7 @@ def LaunchGame(game_info, capture_type = None, fullscreen = False, verbose = Fal
         capture_type = capture_type,
         fullscreen = fullscreen,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Revert launcher config file
@@ -78,12 +105,21 @@ def LaunchGame(game_info, capture_type = None, fullscreen = False, verbose = Fal
                 {"from": game_save_dir, "to": config.token_game_save_dir}
             ],
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Revert launcher save directory
     if game_launcher_save_dir:
-        system.RemoveObject(game_launcher_save_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-        system.MakeDirectory(game_launcher_save_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.RemoveObject(
+            obj = game_launcher_save_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        system.MakeDirectory(
+            dir = game_launcher_save_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Pack save
     saves.PackSave(game_category, game_subcategory, game_name, verbose = verbose, exit_on_failure = exit_on_failure)

@@ -76,6 +76,7 @@ class GOG(storebase.StoreBase):
     def Login(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get tool
@@ -98,6 +99,7 @@ class GOG(storebase.StoreBase):
             options = command.CommandOptions(
                 blocking_processes = [gog_tool]),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return (code == 0)
 
@@ -107,6 +109,7 @@ class GOG(storebase.StoreBase):
     def GetPurchases(
         self,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get tool
@@ -137,6 +140,7 @@ class GOG(storebase.StoreBase):
             options = command.CommandOptions(
                 stdout = tmp_file_manifest),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if code != 0:
             system.LogError("Unable to find gog purchases")
@@ -181,6 +185,7 @@ class GOG(storebase.StoreBase):
         identifier,
         branch = None,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check identifier
@@ -196,6 +201,7 @@ class GOG(storebase.StoreBase):
         gog_json = network.GetRemoteJson(
             url = gog_url,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not gog_json:
             system.LogError("Unable to find gog release information from '%s'" % gog_url)
@@ -241,6 +247,7 @@ class GOG(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check identifier
@@ -250,6 +257,7 @@ class GOG(storebase.StoreBase):
         # Connect to web
         web_driver = self.WebConnect(
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not web_driver:
             return None
@@ -300,6 +308,7 @@ class GOG(storebase.StoreBase):
         success = self.WebDisconnect(
             web_driver = web_driver,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return None
@@ -314,6 +323,7 @@ class GOG(storebase.StoreBase):
         self,
         game_info,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return []
 
@@ -324,6 +334,7 @@ class GOG(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 
@@ -334,6 +345,7 @@ class GOG(storebase.StoreBase):
         self,
         identifier,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         return False
 
@@ -348,6 +360,7 @@ class GOG(storebase.StoreBase):
         branch = None,
         clean_output = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get tool
@@ -396,6 +409,7 @@ class GOG(storebase.StoreBase):
             options = command.CommandOptions(
                 blocking_processes = [gog_tool]),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if (code != 0):
             system.LogError("Files were not intalled successfully")
@@ -408,10 +422,12 @@ class GOG(storebase.StoreBase):
                 dest = tmp_dir_extra,
                 skip_existing = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.RemoveDirectory(
                 dir = tmp_dir_dlc_extra,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
         # Clean output
@@ -419,6 +435,7 @@ class GOG(storebase.StoreBase):
             system.RemoveDirectoryContents(
                 dir = output_dir,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
         # Move downloaded files
@@ -427,13 +444,22 @@ class GOG(storebase.StoreBase):
             dest = output_dir,
             show_progress = True,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+            system.RemoveDirectory(
+                dir = tmp_dir_result,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
             return False
 
         # Delete temporary directory
-        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
         # Check result
         return os.path.exists(output_dir)

@@ -14,20 +14,34 @@ def IsInstallImageMounted(install_file, mount_dir):
     return system.DoesDirectoryContainFiles(mount_dir)
 
 # Mount install image
-def MountInstallImage(install_file, mount_dir, verbose = False, exit_on_failure = False):
+def MountInstallImage(
+    install_file,
+    mount_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     if system.IsDirectoryEmpty(mount_dir):
         return UnpackInstallImage(
             input_image = install_file,
             output_dir = mount_dir,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     return True
 
 # Pack install image
-def PackInstallImage(input_dir, output_image, delete_original = False, verbose = False, exit_on_failure = False):
+def PackInstallImage(
+    input_dir,
+    output_image,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -49,11 +63,13 @@ def PackInstallImage(input_dir, output_image, delete_original = False, verbose =
         system.MakeDirectory(
             dir = system.GetFilenameDirectory(path_to),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         system.CopyFileOrDirectory(
             src = path_from,
             dest = path_to,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # There are no files to pack
@@ -65,23 +81,39 @@ def PackInstallImage(input_dir, output_image, delete_original = False, verbose =
         archive_file = output_image,
         source_dir = tmp_dir_result,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
 
     # Clean up
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if delete_original:
-        system.RemoveDirectory(input_dir, verbose = verbose)
+        system.RemoveDirectory(
+            dir = input_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(output_image)
 
 # Unpack install image
-def UnpackInstallImage(input_image, output_dir, delete_original = False, verbose = False, exit_on_failure = False):
+def UnpackInstallImage(
+    input_image,
+    output_dir,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     return archive.ExtractArchive(
         archive_file = input_image,
         extract_dir = output_dir,
         delete_original = delete_original,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

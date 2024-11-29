@@ -60,6 +60,7 @@ def SetupUserFiles(
     user_name,
     user_id,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Create username file
@@ -67,6 +68,7 @@ def SetupUserFiles(
         src = GenerateUserNameFile(prefix_dir),
         contents = "%s\n" % user_name,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -76,6 +78,7 @@ def SetupUserFiles(
         src = GenerateUserIDFile(prefix_dir),
         contents = "%s\n" % user_id,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -84,7 +87,12 @@ def SetupUserFiles(
     return True
 
 # Convert to native save
-def ConvertToNativeSave(save_dir, user_id, verbose = False, exit_on_failure = False):
+def ConvertToNativeSave(
+    save_dir,
+    user_id,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get relative paths
     roaming_path = os.path.join(config.save_type_general, config.computer_folder_appdata, "Roaming")
@@ -103,6 +111,7 @@ def ConvertToNativeSave(save_dir, user_id, verbose = False, exit_on_failure = Fa
                 skip_identical = False,
                 case_sensitive_paths = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             at_least_one_move = success
             if not success:
@@ -113,6 +122,7 @@ def ConvertToNativeSave(save_dir, user_id, verbose = False, exit_on_failure = Fa
     success = system.RemoveDirectory(
         dir = full_search_path,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -123,6 +133,7 @@ def ConvertToNativeSave(save_dir, user_id, verbose = False, exit_on_failure = Fa
         success = system.RemoveDirectory(
             dir = full_roaming_path,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
@@ -151,7 +162,7 @@ class GoldbergEmu(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("GoldbergEmu"):
@@ -161,11 +172,12 @@ class GoldbergEmu(toolbase.ToolBase):
                 install_dir = programs.GetLibraryInstallDir("GoldbergEmu", "lib"),
                 backups_dir = programs.GetLibraryBackupDir("GoldbergEmu", "lib"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup GoldbergEmu")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup library
         if programs.ShouldLibraryBeInstalled("GoldbergEmu"):
@@ -174,5 +186,6 @@ class GoldbergEmu(toolbase.ToolBase):
                 install_name = "GoldbergEmu",
                 install_dir = programs.GetLibraryInstallDir("GoldbergEmu", "lib"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup GoldbergEmu")

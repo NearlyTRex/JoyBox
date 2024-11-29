@@ -24,6 +24,7 @@ def CollectMetadataFromFile(
     allow_replacing = False,
     select_automatically = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Skip invalid metadata files
@@ -61,6 +62,7 @@ def CollectMetadataFromFile(
                     game_name = game_name,
                     select_automatically = select_automatically,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
             elif metadata_source == config.metadata_source_type_gamefaqs:
                 metadata_result = CollectMetadataFromGameFAQS(
@@ -68,6 +70,7 @@ def CollectMetadataFromFile(
                     game_name = game_name,
                     select_automatically = select_automatically,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
             elif metadata_source == config.metadata_source_type_store:
                 store_obj = stores.GetStoreByPlatform(game_platform)
@@ -75,6 +78,7 @@ def CollectMetadataFromFile(
                     metadata_result = store_obj.GetLatestMetadata(
                         identifier = game_entry.get_url(),
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
 
             # Merge in metadata result
@@ -109,6 +113,7 @@ def CollectMetadataFromDirectory(
     allow_replacing = False,
     select_automatically = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Collect missing metadata
@@ -121,6 +126,7 @@ def CollectMetadataFromDirectory(
             allow_replacing = allow_replacing,
             select_automatically = select_automatically,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
@@ -135,6 +141,7 @@ def CollectMetadataFromCategories(
     allow_replacing = False,
     select_automatically = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get metadata platform
@@ -159,6 +166,7 @@ def CollectMetadataFromCategories(
         allow_replacing = allow_replacing,
         select_automatically = select_automatically,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 ############################################################
@@ -169,6 +177,7 @@ def CollectMetadataFromTGDB(
     game_name,
     select_automatically = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Create web driver
@@ -288,6 +297,7 @@ def CollectMetadataFromGameFAQS(
     game_name,
     select_automatically = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Create web driver
@@ -377,6 +387,7 @@ def CollectMetadataFromAll(
     keys_to_check,
     select_automatically = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Metadata result
@@ -388,6 +399,7 @@ def CollectMetadataFromAll(
         game_name = game_name,
         select_automatically = select_automatically,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if isinstance(metadata_result_thegamesdb, metadataentry.MetadataEntry):
         metadata_result.merge(metadata_result_thegamesdb)
@@ -402,6 +414,7 @@ def CollectMetadataFromAll(
         game_name = game_name,
         select_automatically = select_automatically,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if isinstance(metadata_result_gamefaqs, metadataentry.MetadataEntry):
         metadata_result.merge(metadata_result_gamefaqs)
@@ -418,6 +431,7 @@ def CollectMetadataAssetFromSteamGridDB(
     asset_type,
     select_automatically = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Only allow BoxFront
@@ -466,6 +480,7 @@ def CollectMetadataAssetFromYouTube(
     asset_type,
     select_automatically = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Only allow Video
@@ -481,9 +496,8 @@ def CollectMetadataAssetFromYouTube(
         num_results = 20,
         sort_by_duration = True,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if len(search_results) == 0:
-        return None
 
     # Show search results to the user
     system.Log(f"Here are the search results for \"{game_name}\"")
@@ -521,6 +535,7 @@ def CollectMetadataAssetFromAll(
     asset_type,
     select_automatically = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Try from SteamGridDB
@@ -530,6 +545,7 @@ def CollectMetadataAssetFromAll(
         asset_type = asset_type,
         select_automatically = select_automatically,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if isinstance(metadata_asset, str):
         return metadata_asset
@@ -541,6 +557,7 @@ def CollectMetadataAssetFromAll(
         asset_type = asset_type,
         select_automatically = select_automatically,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if isinstance(metadata_asset, str):
         return metadata_asset

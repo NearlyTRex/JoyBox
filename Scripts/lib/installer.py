@@ -82,6 +82,7 @@ def RunWindowsInstallers(
     is_wine_prefix,
     is_sandboxie_prefix,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -125,6 +126,7 @@ def RunWindowsInstallers(
                 is_prefix_mapped_cwd = True,
                 blocking_processes = blocking_processes),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
 # Setup dos programs
@@ -138,6 +140,7 @@ def SetupDosPrograms(
     is_wine_prefix = False,
     is_sandboxie_prefix = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -153,8 +156,16 @@ def SetupDosPrograms(
     # Get dos drives
     dos_c_drive = os.path.join(prefix_c_drive_real, config.computer_folder_dos, "C")
     dos_d_drive = os.path.join(prefix_c_drive_real, config.computer_folder_dos, "D")
-    system.MakeDirectory(dos_c_drive, verbose = verbose, exit_on_failure = exit_on_failure)
-    system.MakeDirectory(dos_d_drive, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = dos_c_drive,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = dos_d_drive,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Copy installer discs
     for installer_disc in installer_discs:
@@ -162,6 +173,7 @@ def SetupDosPrograms(
             src = installer_disc,
             dest = dos_d_drive,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Run dos programs
@@ -190,6 +202,7 @@ def SetupDosPrograms(
                 is_sandboxie_prefix = sandbox.ShouldBeRunViaSandboxie(dos_emulator),
                 blocking_processes = [dos_emulator]),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
 # Setup win31 programs
@@ -202,6 +215,7 @@ def SetupWin31Programs(
     is_wine_prefix = False,
     is_sandboxie_prefix = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -212,8 +226,16 @@ def SetupWin31Programs(
     # Get dos drives
     dos_c_drive = os.path.join(prefix_c_drive_real, config.computer_folder_dos, "C")
     dos_d_drive = os.path.join(prefix_c_drive_real, config.computer_folder_dos, "D")
-    system.MakeDirectory(dos_c_drive, verbose = verbose, exit_on_failure = exit_on_failure)
-    system.MakeDirectory(dos_d_drive, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = dos_c_drive,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = dos_d_drive,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Copy installer discs
     for installer_disc in installer_discs:
@@ -221,6 +243,7 @@ def SetupWin31Programs(
             src = installer_disc,
             dest = dos_d_drive,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
 # Setup scumm programs
@@ -232,6 +255,7 @@ def SetupScummPrograms(
     is_wine_prefix = False,
     is_sandboxie_prefix = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -244,7 +268,11 @@ def SetupScummPrograms(
 
     # Get scumm dir
     scumm_dir = os.path.join(prefix_c_drive_real, config.computer_folder_scumm)
-    system.MakeDirectory(scumm_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = scumm_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Run setup steps
 def RunSetupSteps(
@@ -254,6 +282,7 @@ def RunSetupSteps(
     disc_base_dir,
     disc_token_map,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -293,6 +322,7 @@ def RunSetupSteps(
                 skip_identical = skip_identical,
                 case_sensitive_paths = False,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
         # Move step
@@ -304,6 +334,7 @@ def RunSetupSteps(
                 skip_identical = skip_identical,
                 case_sensitive_paths = False,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
         # Extract step
@@ -313,6 +344,7 @@ def RunSetupSteps(
                 extract_dir = paths["to"],
                 skip_existing = skip_existing,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
         # Lowercase step
@@ -320,10 +352,17 @@ def RunSetupSteps(
             system.LowercaseAllPaths(
                 dir = paths["dir"],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
 # Install computer game
-def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbose = False, exit_on_failure = False):
+def InstallComputerGame(
+    game_info,
+    output_image,
+    keep_setup_files = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get game info
     game_name = game_info.get_name()
@@ -348,7 +387,11 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
 
     # Get setup directory
     game_setup_dir = environment.GetCacheGamingSetupDir(game_category, game_subcategory, game_name)
-    system.MakeDirectory(game_setup_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = game_setup_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Get game disc files
     game_disc_files = system.BuildFileListByExtensions(game_rom_dir, [".chd"])
@@ -376,6 +419,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         wine_setup = game_wine_setup,
         sandboxie_setup = game_sandboxie_setup,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Get prefix C drive
@@ -416,6 +460,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         show_progress = True,
         skip_existing = True,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Get game disc files again
@@ -429,6 +474,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
             mount_dir = mount_dir,
             disc_type = game_disc_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         sandbox.MountDirectoryToAvailableDrive(
             source_dir = mount_dir,
@@ -436,6 +482,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
             is_wine_prefix = should_run_via_wine,
             is_sandboxie_prefix = should_run_via_sandboxie,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Run pre-install steps
@@ -446,6 +493,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         disc_base_dir = game_setup_dir,
         disc_token_map = tools.BuildComputerDiscTokenMap(game_disc_files),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Run windows installers
@@ -459,6 +507,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         is_wine_prefix = should_run_via_wine,
         is_sandboxie_prefix = should_run_via_sandboxie,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Setup dos programs
@@ -473,6 +522,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
             is_wine_prefix = should_run_via_wine,
             is_sandboxie_prefix = should_run_via_sandboxie,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Setup win31 programs
@@ -486,6 +536,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
             is_wine_prefix = should_run_via_wine,
             is_sandboxie_prefix = should_run_via_sandboxie,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Setup scumm programs
@@ -498,6 +549,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
             is_wine_prefix = should_run_via_wine,
             is_sandboxie_prefix = should_run_via_sandboxie,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Run post-install steps
@@ -508,6 +560,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         disc_base_dir = game_setup_dir,
         disc_token_map = tools.BuildComputerDiscTokenMap(game_disc_files),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Copy public files
@@ -520,11 +573,13 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         system.MakeDirectory(
             dir = prefix_public_profile_path_copy,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         system.CopyContents(
             src = prefix_public_profile_path,
             dest = prefix_public_profile_path_copy,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Backup setup registry
@@ -535,6 +590,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         is_wine_prefix = should_run_via_wine,
         is_sandboxie_prefix = should_run_via_sandboxie,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -544,6 +600,7 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         input_dir = prefix_c_drive_real,
         output_image = output_image,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -554,12 +611,21 @@ def InstallComputerGame(game_info, output_image, keep_setup_files = False, verbo
         is_wine_prefix = should_run_via_wine,
         is_sandboxie_prefix = should_run_via_sandboxie,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Cleanup
-    system.RemoveDirectory(prefix_dir, verbose = verbose)
+    system.RemoveDirectory(
+        dir = prefix_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if not keep_setup_files:
-        system.RemoveDirectory(game_setup_dir, verbose = verbose)
+        system.RemoveDirectory(
+            dir = game_setup_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Done installing
     return True

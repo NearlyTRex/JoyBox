@@ -10,7 +10,9 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import config
 import system
+import environment
 import collection
+import gameinfo
 import setup
 
 # Parse arguments
@@ -48,7 +50,6 @@ def main():
                     asset_type = args.asset_type,
                     skip_existing = args.skip_existing,
                     verbose = args.verbose,
-                    pretend_run = args.pretend_run,
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
 

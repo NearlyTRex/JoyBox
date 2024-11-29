@@ -171,7 +171,8 @@ def AddTransformedGameToCache(
     system.RemoveDirectory(
         dir = tmp_dir_result,
         verbose = verbose,
-        pretend_run = pretend_run)
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Return result
     return IsGameInCache(game_info)

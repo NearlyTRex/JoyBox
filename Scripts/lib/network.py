@@ -30,7 +30,12 @@ def IsUrlReachable(url):
         return False
 
 # Get remote json
-def GetRemoteJson(url, headers = None, verbose = False, exit_on_failure = False):
+def GetRemoteJson(
+    url,
+    headers = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if verbose:
             system.Log("Processing GET request to '%s'" % url)
@@ -48,7 +53,13 @@ def GetRemoteJson(url, headers = None, verbose = False, exit_on_failure = False)
         return None
 
 # Post remote json
-def PostRemoteJson(url, headers = None, data = None, verbose = False, exit_on_failure = False):
+def PostRemoteJson(
+    url,
+    headers = None,
+    data = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if verbose:
             system.Log("Processing POST request to '%s'" % url)
@@ -68,7 +79,12 @@ def PostRemoteJson(url, headers = None, data = None, verbose = False, exit_on_fa
         return None
 
 # Get remote xml
-def GetRemoteXml(url, headers = None, verbose = False, exit_on_failure = False):
+def GetRemoteXml(
+    url,
+    headers = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if verbose:
             system.Log("Processing GET request to '%s'" % url)
@@ -91,7 +107,13 @@ def GetRemoteXml(url, headers = None, verbose = False, exit_on_failure = False):
 ###########################################################
 
 # Download url to local dir
-def DownloadUrl(url, output_dir = None, output_file = None, verbose = False, exit_on_failure = False):
+def DownloadUrl(
+    url,
+    output_dir = None,
+    output_file = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     download_tool = None
@@ -119,7 +141,11 @@ def DownloadUrl(url, output_dir = None, output_file = None, verbose = False, exi
 
     # Create output directory
     if output_dir:
-        system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.MakeDirectory(
+            dir = output_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Run download command
     code = command.RunBlockingCommand(
@@ -127,6 +153,7 @@ def DownloadUrl(url, output_dir = None, output_file = None, verbose = False, exi
         options = command.CommandOptions(
             blocking_processes = [download_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         system.LogError("Download of %s failed" % url)
@@ -149,6 +176,7 @@ def DownloadGitUrl(
     recursive = True,
     clean = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Clear output dir
@@ -157,10 +185,12 @@ def DownloadGitUrl(
             src = output_dir,
             perms = 777,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         system.RemoveDirectoryContents(
             dir = output_dir,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Check output dir
@@ -194,6 +224,7 @@ def DownloadGitUrl(
             cwd = os.path.expanduser("~"),
             blocking_processes = [download_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         system.LogError("Git download of %s failed" % url)
@@ -227,7 +258,15 @@ def IsNetworkShareMounted(mount_dir, base_location, network_share):
     return False
 
 # Mount network share
-def MountNetworkShare(mount_dir, base_location, network_share, username, password, verbose = False, exit_on_failure = False):
+def MountNetworkShare(
+    mount_dir,
+    base_location,
+    network_share,
+    username,
+    password,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Windows
     if environment.IsWindowsPlatform():
@@ -250,6 +289,7 @@ def MountNetworkShare(mount_dir, base_location, network_share, username, passwor
         command.RunCheckedCommand(
             cmd = mount_cmd,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return True
 
@@ -267,7 +307,9 @@ def MountNetworkShare(mount_dir, base_location, network_share, username, passwor
         # Run mkdir command
         command.RunCheckedCommand(
             cmd = mkdir_cmd,
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
         # Check if already mounted
         if not system.IsDirectoryEmpty(mount_dir):
@@ -287,6 +329,7 @@ def MountNetworkShare(mount_dir, base_location, network_share, username, passwor
         command.RunCheckedCommand(
             cmd = mount_cmd,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return True
 
@@ -303,6 +346,7 @@ def GetGithubRepository(
     github_repo,
     github_token = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
     try:
         import github
@@ -326,6 +370,7 @@ def GetGithubRepositories(
     exclude_forks = False,
     exclude_private = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
     try:
         import github
@@ -363,6 +408,7 @@ def DownloadGithubRepository(
     recursive = True,
     clean = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
     github_url = "https://github.com/%s/%s.git" % (github_user, github_repo)
     if github_token and isinstance(github_token, str) and len(github_token):
@@ -373,6 +419,7 @@ def DownloadGithubRepository(
         recursive = recursive,
         clean = clean,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Update github repository
@@ -382,6 +429,7 @@ def UpdateGithubRepository(
     github_branch,
     github_token = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get update url
@@ -399,6 +447,7 @@ def UpdateGithubRepository(
             "branch": github_branch
         },
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not update_response:
         return False
@@ -423,10 +472,13 @@ def ArchiveGithubRepository(
     recursive = True,
     clean = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -435,8 +487,16 @@ def ArchiveGithubRepository(
     tmp_dir_archive = os.path.join(tmp_dir_result, "archive")
     tmp_file_archive = os.path.join(tmp_dir_archive, "tmp.zip")
     out_file_archive = os.path.join(output_dir, github_repo + "_" + str(environment.GetCurrentTimestamp()) + ".zip")
-    system.MakeDirectory(tmp_dir_download, verbose = verbose, exit_on_failure = exit_on_failure)
-    system.MakeDirectory(tmp_dir_archive, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = tmp_dir_download,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = tmp_dir_archive,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Download repository
     success = DownloadGithubRepository(
@@ -447,10 +507,15 @@ def ArchiveGithubRepository(
         recursive = recursive,
         clean = clean,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         system.LogError("Unable to download repository '%s' - '%s'" % (github_user, github_repo))
-        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         return False
 
     # Remove git folder
@@ -458,6 +523,7 @@ def ArchiveGithubRepository(
         success = system.RemoveDirectory(
             dir = os.path.join(tmp_dir_download, ".git"),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
@@ -467,20 +533,30 @@ def ArchiveGithubRepository(
         archive_file = tmp_file_archive,
         source_dir = tmp_dir_download,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not os.path.exists(tmp_file_archive):
         system.LogError("Unable to archive repository '%s' - '%s'" % (github_user, github_repo))
-        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         return False
 
     # Test archive
     success = archive.TestArchive(
         archive_file = tmp_file_archive,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         system.LogError("Validation failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
-        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         return False
 
     # Check if already archived
@@ -490,7 +566,11 @@ def ArchiveGithubRepository(
     if len(found_files) > 0:
         if verbose:
             system.Log("Repository '%s' - '%s' is already archived, skipping ..." % (github_user, github_repo))
-        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         return True
 
     # Move archive
@@ -498,13 +578,22 @@ def ArchiveGithubRepository(
         src = tmp_file_archive,
         dest = out_file_archive,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         return False
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(out_file_archive)
