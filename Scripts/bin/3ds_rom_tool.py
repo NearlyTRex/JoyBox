@@ -22,6 +22,7 @@ parser.add_argument("-u", "--untrim_cci", action="store_true", help="Untrim 3DS(
 parser.add_argument("-e", "--extract_cia", action="store_true", help="Extract CIA files")
 parser.add_argument("-i", "--info", action="store_true", help="Print info for all 3DS files")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:
@@ -56,6 +57,7 @@ def main():
                 src_3ds_file = current_file,
                 dest_3ds_file = output_file_trimmed_3ds,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
         # Convert 3DS(CCI) to CIA
@@ -64,6 +66,7 @@ def main():
                 src_3ds_file = current_file,
                 dest_3ds_file = output_file_cia,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
         # Trim 3DS
@@ -72,6 +75,7 @@ def main():
                 src_3ds_file = current_file,
                 dest_3ds_file = output_file_trimmed_3ds,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
         # Untrim 3DS
@@ -80,6 +84,7 @@ def main():
                 src_3ds_file = current_file,
                 dest_3ds_file = output_file_3ds,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
         # Extract CIA
@@ -88,6 +93,7 @@ def main():
                 src_3ds_file = current_file,
                 extract_dir = output_dir,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
         # Print info
@@ -95,6 +101,7 @@ def main():
             info = nintendo.Get3DSFileInfo(
                 src_3ds_file = current_file,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
             system.Log(info)
 

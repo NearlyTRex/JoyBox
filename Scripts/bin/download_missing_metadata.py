@@ -26,6 +26,7 @@ parser.add_argument("--force_download", action="store_true", help="Force downloa
 parser.add_argument("--allow_replacing", action="store_true", help="Allow replacing")
 parser.add_argument("-a", "--select_automatically", action="store_true", help="Select game automatically")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
@@ -53,6 +54,7 @@ def main():
         allow_replacing = args.allow_replacing,
         select_automatically = args.select_automatically,
         verbose = args.verbose,
+        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
 
 # Start

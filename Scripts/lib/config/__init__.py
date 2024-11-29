@@ -7,4 +7,5 @@ from config.keys import *
 from config.metadata import *
 from config.platforms import *
 from config.presets import *
+from config.templates import *
 from config.types import *

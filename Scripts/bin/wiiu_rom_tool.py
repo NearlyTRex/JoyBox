@@ -19,6 +19,7 @@ parser.add_argument("-r", "--decrypt_nus", action="store_true", help="Decrypt NU
 parser.add_argument("-e", "--verify_nus", action="store_true", help="Verify NUS packages")
 parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:
@@ -49,6 +50,7 @@ def main():
                     nus_package_dir = current_file_dir,
                     delete_original = args.delete_originals,
                     verbose = args.verbose,
+                    pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
 
             # Verify NUS package
@@ -56,6 +58,7 @@ def main():
                 nintendo.VerifyWiiUNUSPackage(
                     nus_package_dir = current_file_dir,
                     verbose = args.verbose,
+                    pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
 
 # Start

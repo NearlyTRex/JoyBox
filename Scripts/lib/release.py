@@ -33,6 +33,7 @@ def SetupStoredRelease(
     installer_type = None,
     release_type = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get list of potential archives
@@ -71,6 +72,7 @@ def SetupStoredRelease(
         installer_type = installer_type,
         release_type = release_type,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Setup general release
@@ -89,10 +91,13 @@ def SetupGeneralRelease(
     installer_type = None,
     release_type = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         system.LogError("Unable to create temporary directory")
         return False
@@ -109,7 +114,11 @@ def SetupGeneralRelease(
     archive_is_appimage = archive.IsAppImageArchive(archive_file)
 
     # Create install dir if necessary
-    success = system.MakeDirectory(install_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    success = system.MakeDirectory(
+        dir = install_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if not success:
         system.LogError("Unable to create install directory %s" % install_dir)
         return False
@@ -140,6 +149,7 @@ def SetupGeneralRelease(
                 src = archive_file,
                 dest = appimage_file,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 system.LogError("Unable to copy app image")
@@ -149,6 +159,7 @@ def SetupGeneralRelease(
             success = system.MarkAsExecutable(
                 src = appimage_file,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 system.LogError("Unable to mark app image as executable")
@@ -185,7 +196,11 @@ def SetupGeneralRelease(
                 is_sandboxie_prefix = should_run_via_sandboxie)
 
             # Create real install path
-            system.MakeDirectory(real_install_path, verbose = verbose, exit_on_failure = exit_on_failure)
+            system.MakeDirectory(
+                dir = real_install_path,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
 
             # Get installer setup command
             installer_setup_cmd = installer.GetInstallerSetupCommand(
@@ -204,6 +219,7 @@ def SetupGeneralRelease(
                 is_wine_prefix = should_run_via_wine,
                 is_sandboxie_prefix = should_run_via_sandboxie,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
             # Run installer
@@ -218,6 +234,7 @@ def SetupGeneralRelease(
                     force_prefix = True,
                     blocking_processes = [archive_file]),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if code != 0:
                 system.LogError("Error occurred running the setup installer")
@@ -238,6 +255,7 @@ def SetupGeneralRelease(
             archive_file = archive_file,
             extract_dir = tmp_dir_result,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             system.LogError("Unable to extract downloaded release archive %s" % archive_file)
@@ -268,6 +286,7 @@ def SetupGeneralRelease(
                 src = install_file_src,
                 dest = install_file_dest,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 system.LogError("Unable to copy install file %s" % install_file)
@@ -277,6 +296,7 @@ def SetupGeneralRelease(
             src = search_dir,
             dest = install_dir,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             system.LogError("Unable to copy install files from %s" % search_dir)
@@ -289,6 +309,7 @@ def SetupGeneralRelease(
                 registry_file = registry_file,
                 prefix_dir = prefix_dir,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 system.LogError("Unable to import registry file %s" % registry_file)
@@ -305,6 +326,7 @@ def SetupGeneralRelease(
                         src = filename,
                         perms = chmod_perms,
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     if not success:
                         system.LogError("Unable to update permissions for %s" % filename)
@@ -324,6 +346,7 @@ def SetupGeneralRelease(
                         src = filename,
                         dest = os.path.join(filename_dir, rename_to),
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     if not success:
                         system.LogError("Unable to rename file %s" % filename)
@@ -336,10 +359,15 @@ def SetupGeneralRelease(
             dest = os.path.join(backups_dir, system.GetFilenameFile(archive_file)),
             skip_identical = True,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Check result
     return system.DoesDirectoryContainFiles(install_dir)
@@ -360,10 +388,13 @@ def DownloadGeneralRelease(
     installer_type = None,
     release_type = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         system.LogError("Unable to create temporary directory")
         return False
@@ -380,6 +411,7 @@ def DownloadGeneralRelease(
         output_dir = tmp_dir_result,
         output_file = archive_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         system.LogError("Unable to download release from '%s'" % archive_url)
@@ -401,8 +433,13 @@ def DownloadGeneralRelease(
         installer_type = installer_type,
         release_type = release_type,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     return success
 
 # Download github release
@@ -424,6 +461,7 @@ def DownloadGithubRelease(
     release_type = None,
     get_latest = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get github url
@@ -435,6 +473,7 @@ def DownloadGithubRelease(
     release_json_list = network.GetRemoteJson(
         url = github_url,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not release_json_list:
         system.LogError("Unable to find github release information from '%s'" % github_url)
@@ -482,6 +521,7 @@ def DownloadGithubRelease(
         installer_type = installer_type,
         release_type = release_type,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Download webpage release
@@ -503,6 +543,7 @@ def DownloadWebpageRelease(
     release_type = None,
     get_latest = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get archive url
@@ -512,7 +553,9 @@ def DownloadWebpageRelease(
         starts_with = starts_with,
         ends_with = ends_with,
         get_latest = get_latest,
-        verbose = verbose)
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if not archive_url:
         system.LogError("Unable to find any release from '%s' matching start='%s' and end='%s'" % (webpage_url, starts_with, ends_with))
         return False
@@ -532,6 +575,7 @@ def DownloadWebpageRelease(
         installer_type = installer_type,
         release_type = release_type,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Build release from source
@@ -551,6 +595,7 @@ def BuildReleaseFromSource(
     internal_symlinks = [],
     external_copies = [],
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check if building appimage
@@ -564,13 +609,17 @@ def BuildReleaseFromSource(
             starts_with = starts_with,
             ends_with = ends_with,
             get_latest = True,
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         if not release_url:
             system.LogError("No release url could be found from webpage %s" % webpage_url)
             return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         system.LogError("Unable to create temporary directory")
         return False
@@ -584,10 +633,26 @@ def BuildReleaseFromSource(
         source_build_dir = os.path.abspath(os.path.join(source_dir, build_dir))
 
     # Make folders
-    system.MakeDirectory(install_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-    system.MakeDirectory(source_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-    system.MakeDirectory(appimage_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-    system.MakeDirectory(download_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = install_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = source_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = appimage_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = download_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Download sources
     if release_url.endswith(".git"):
@@ -598,6 +663,7 @@ def BuildReleaseFromSource(
             output_dir = source_dir,
             clean = True,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             system.LogError("Unable to download release from '%s'" % release_url)
@@ -614,6 +680,7 @@ def BuildReleaseFromSource(
             url = release_url,
             output_file = archive_file,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             system.LogError("Unable to download release from '%s'" % release_url)
@@ -623,13 +690,19 @@ def BuildReleaseFromSource(
         success = archive.ExtractArchive(
             archive_file = archive_file,
             extract_dir = source_dir,
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         if not success:
             system.LogError("Unable to extract source archive")
             return False
 
     # Make build folder
-    system.MakeDirectory(source_build_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = source_build_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Build release
     code = command.RunBlockingCommand(
@@ -637,7 +710,9 @@ def BuildReleaseFromSource(
         options = command.CommandOptions(
             cwd = source_build_dir,
             shell = True),
-        verbose = verbose)
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if code != 0:
         system.LogError("Unable to build release")
         return False
@@ -652,11 +727,13 @@ def BuildReleaseFromSource(
             system.MakeDirectory(
                 dir = os.path.dirname(dest_obj),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.SmartCopy(
                 src = src_obj,
                 dest = dest_obj,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
     # Symlink appimage objects
@@ -669,6 +746,7 @@ def BuildReleaseFromSource(
                 dest = dest_obj,
                 cwd = appimage_dir,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
     # Build appimage
@@ -677,7 +755,9 @@ def BuildReleaseFromSource(
             cmd = [programs.GetToolProgram("AppImageTool"), appimage_dir],
             options = command.CommandOptions(
                 cwd = tmp_dir_result),
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         if code != 0:
             system.LogError("Unable to create AppImage from built release")
             return False
@@ -701,6 +781,7 @@ def BuildReleaseFromSource(
         src = built_file,
         dest = os.path.join(install_dir, final_file),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Copy other objects
@@ -711,6 +792,7 @@ def BuildReleaseFromSource(
             src = src_obj,
             dest = dest_obj,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Backup release file
@@ -720,10 +802,15 @@ def BuildReleaseFromSource(
             dest = os.path.join(backups_dir, final_file),
             skip_identical = True,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(os.path.join(install_dir, final_file))

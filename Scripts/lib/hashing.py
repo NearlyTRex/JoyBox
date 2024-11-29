@@ -47,25 +47,31 @@ def CalculateStringXXH3(string):
 ###########################################################
 
 # Calculate file crc32
-def CalculateFileCRC32(filename, chunksize = config.hash_chunk_size, verbose = False, exit_on_failure = False):
+def CalculateFileCRC32(
+    filename,
+    chunksize = config.hash_chunk_size,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if verbose:
             system.Log("Calculating crc32 for %s" % filename)
-        import zlib
-        with open(filename, "rb") as file:
-            read_size = 0
-            total_size = os.path.getsize(filename)
-            percent_done = 0
-            checksum = 0
-            if verbose:
-                system.LogPercentComplete(percent_done)
-            while (chunk := file.read(chunksize)):
-                checksum = zlib.crc32(chunk, checksum)
+        if not pretend_run:
+            import zlib
+            with open(filename, "rb") as file:
+                read_size = 0
+                total_size = os.path.getsize(filename)
+                percent_done = 0
+                checksum = 0
                 if verbose:
-                    read_size += len(chunk)
-                    percent_done = int(round(100 * read_size / total_size))
                     system.LogPercentComplete(percent_done)
-            return "%x" % checksum
+                while (chunk := file.read(chunksize)):
+                    checksum = zlib.crc32(chunk, checksum)
+                    if verbose:
+                        read_size += len(chunk)
+                        percent_done = int(round(100 * read_size / total_size))
+                        system.LogPercentComplete(percent_done)
+                return "%x" % checksum
         return ""
     except Exception as e:
         if exit_on_failure:
@@ -74,25 +80,32 @@ def CalculateFileCRC32(filename, chunksize = config.hash_chunk_size, verbose = F
         return ""
 
 # Calculate file md5
-def CalculateFileMD5(filename, chunksize = config.hash_chunk_size, verbose = False, exit_on_failure = False):
+def CalculateFileMD5(
+    filename,
+    chunksize = config.hash_chunk_size,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if verbose:
             system.Log("Calculating md5 for %s" % filename)
-        import hashlib
-        with open(filename, "rb") as file:
-            read_size = 0
-            total_size = os.path.getsize(filename)
-            percent_done = 0
-            md5_hash = hashlib.md5()
-            if verbose:
-                system.LogPercentComplete(percent_done)
-            for chunk in iter(lambda: file.read(chunksize),b""):
-                md5_hash.update(chunk)
+        if not pretend_run:
+            import hashlib
+            with open(filename, "rb") as file:
+                read_size = 0
+                total_size = os.path.getsize(filename)
+                percent_done = 0
+                md5_hash = hashlib.md5()
                 if verbose:
-                    read_size += len(chunk)
-                    percent_done = int(round(100 * read_size / total_size))
                     system.LogPercentComplete(percent_done)
-            return md5_hash.hexdigest()
+                for chunk in iter(lambda: file.read(chunksize),b""):
+                    md5_hash.update(chunk)
+                    if verbose:
+                        read_size += len(chunk)
+                        percent_done = int(round(100 * read_size / total_size))
+                        system.LogPercentComplete(percent_done)
+                return md5_hash.hexdigest()
+        return ""
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate md5 for %s" % filename)
@@ -100,25 +113,32 @@ def CalculateFileMD5(filename, chunksize = config.hash_chunk_size, verbose = Fal
         return ""
 
 # Calculate file sha1
-def CalculateFileSHA1(filename, chunksize = config.hash_chunk_size, verbose = False, exit_on_failure = False):
+def CalculateFileSHA1(
+    filename,
+    chunksize = config.hash_chunk_size,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if verbose:
             system.Log("Calculating sha1 for %s" % filename)
-        import hashlib
-        with open(filename, "rb") as file:
-            read_size = 0
-            total_size = os.path.getsize(filename)
-            percent_done = 0
-            sha1_hash = hashlib.sha1()
-            if verbose:
-                system.LogPercentComplete(percent_done)
-            for chunk in iter(lambda: file.read(chunksize),b""):
-                sha1_hash.update(chunk)
+        if not pretend_run:
+            import hashlib
+            with open(filename, "rb") as file:
+                read_size = 0
+                total_size = os.path.getsize(filename)
+                percent_done = 0
+                sha1_hash = hashlib.sha1()
                 if verbose:
-                    read_size += len(chunk)
-                    percent_done = int(round(100 * read_size / total_size))
                     system.LogPercentComplete(percent_done)
-            return sha1_hash.hexdigest()
+                for chunk in iter(lambda: file.read(chunksize),b""):
+                    sha1_hash.update(chunk)
+                    if verbose:
+                        read_size += len(chunk)
+                        percent_done = int(round(100 * read_size / total_size))
+                        system.LogPercentComplete(percent_done)
+                return sha1_hash.hexdigest()
+        return ""
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate sha1 for %s" % filename)
@@ -126,25 +146,32 @@ def CalculateFileSHA1(filename, chunksize = config.hash_chunk_size, verbose = Fa
         return ""
 
 # Calculate file sha256
-def CalculateFileSHA256(filename, chunksize = config.hash_chunk_size, verbose = False, exit_on_failure = False):
+def CalculateFileSHA256(
+    filename,
+    chunksize = config.hash_chunk_size,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if verbose:
             system.Log("Calculating sha256 for %s" % filename)
-        import hashlib
-        with open(filename, "rb") as file:
-            read_size = 0
-            total_size = os.path.getsize(filename)
-            percent_done = 0
-            sha256_hash = hashlib.sha256()
-            if verbose:
-                system.LogPercentComplete(percent_done)
-            for chunk in iter(lambda: file.read(chunksize),b""):
-                sha256_hash.update(chunk)
+        if not pretend_run:
+            import hashlib
+            with open(filename, "rb") as file:
+                read_size = 0
+                total_size = os.path.getsize(filename)
+                percent_done = 0
+                sha256_hash = hashlib.sha256()
                 if verbose:
-                    read_size += len(chunk)
-                    percent_done = int(round(100 * read_size / total_size))
                     system.LogPercentComplete(percent_done)
-            return sha256_hash.hexdigest()
+                for chunk in iter(lambda: file.read(chunksize),b""):
+                    sha256_hash.update(chunk)
+                    if verbose:
+                        read_size += len(chunk)
+                        percent_done = int(round(100 * read_size / total_size))
+                        system.LogPercentComplete(percent_done)
+                return sha256_hash.hexdigest()
+        return ""
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate sha256 for %s" % filename)
@@ -152,25 +179,32 @@ def CalculateFileSHA256(filename, chunksize = config.hash_chunk_size, verbose = 
         return ""
 
 # Calculate file xxh3
-def CalculateFileXXH3(filename, chunksize = config.hash_chunk_size, verbose = False, exit_on_failure = False):
+def CalculateFileXXH3(
+    filename,
+    chunksize = config.hash_chunk_size,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if verbose:
             system.Log("Calculating xxh3 for %s" % filename)
-        import xxhash
-        with open(filename, "rb") as file:
-            read_size = 0
-            total_size = os.path.getsize(filename)
-            percent_done = 0
-            xxh3_hash = xxhash.xxh3_64()
-            if verbose:
-                system.LogPercentComplete(percent_done)
-            for chunk in iter(lambda: file.read(chunksize),b""):
-                xxh3_hash.update(chunk)
+        if not pretend_run:
+            import xxhash
+            with open(filename, "rb") as file:
+                read_size = 0
+                total_size = os.path.getsize(filename)
+                percent_done = 0
+                xxh3_hash = xxhash.xxh3_64()
                 if verbose:
-                    read_size += len(chunk)
-                    percent_done = int(round(100 * read_size / total_size))
                     system.LogPercentComplete(percent_done)
-            return xxh3_hash.hexdigest()
+                for chunk in iter(lambda: file.read(chunksize),b""):
+                    xxh3_hash.update(chunk)
+                    if verbose:
+                        read_size += len(chunk)
+                        percent_done = int(round(100 * read_size / total_size))
+                        system.LogPercentComplete(percent_done)
+                return xxh3_hash.hexdigest()
+        return ""
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate xxh3 for %s" % filename)
@@ -180,29 +214,29 @@ def CalculateFileXXH3(filename, chunksize = config.hash_chunk_size, verbose = Fa
 ###########################################################
 
 # Check if files are identical
-def AreFilesIdentical(first, second, case_sensitive_paths = True, verbose = False, exit_on_failure = False):
+def AreFilesIdentical(first, second, case_sensitive_paths = True, verbose = False, pretend_run = False, exit_on_failure = False):
     first_exists = system.DoesPathExist(first, case_sensitive_paths = case_sensitive_paths)
     second_exists = system.DoesPathExist(second, case_sensitive_paths = case_sensitive_paths)
     if first_exists and second_exists:
-        first_crc32 = CalculateFileCRC32(first, verbose = verbose, exit_on_failure = exit_on_failure)
-        second_crc32 = CalculateFileCRC32(second, verbose = verbose, exit_on_failure = exit_on_failure)
+        first_crc32 = CalculateFileCRC32(first, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+        second_crc32 = CalculateFileCRC32(second, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
         return first_crc32 == second_crc32
     return False
 
 # Find duplicate files in the search directory
-def FindDuplicateFiles(filename, directory, verbose = False, exit_on_failure = False):
+def FindDuplicateFiles(filename, directory, verbose = False, pretend_run = False, exit_on_failure = False):
     found_files = []
-    test_checksum = CalculateFileCRC32(filename, verbose = verbose, exit_on_failure = exit_on_failure)
+    test_checksum = CalculateFileCRC32(filename, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
     for obj in system.GetDirectoryContents(directory):
         obj_path = os.path.join(directory, obj)
         if os.path.isfile(obj_path):
-            obj_checksum = CalculateFileCRC32(obj_path, verbose = verbose, exit_on_failure = exit_on_failure)
+            obj_checksum = CalculateFileCRC32(obj_path, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
             if test_checksum == obj_checksum:
                 found_files.append(obj_path)
     return found_files
 
 # Find duplicate archives in the search directory
-def FindDuplicateArchives(filename, directory, verbose = False, exit_on_failure = False):
+def FindDuplicateArchives(filename, directory, verbose = False, pretend_run = False, exit_on_failure = False):
     found_files = []
     test_checksums = archive.GetArchiveChecksums(filename)
     for obj in system.GetDirectoryContents(directory):
@@ -216,26 +250,32 @@ def FindDuplicateArchives(filename, directory, verbose = False, exit_on_failure 
 ###########################################################
 
 # Read hash file
-def ReadHashFile(filename, verbose = False, exit_on_failure = False):
+def ReadHashFile(
+    filename,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if verbose:
             system.Log("Reading hash file %s" % filename)
-        hash_contents = {}
-        with open(filename, "r", encoding="utf8") as f:
-            for line in f.readlines():
-                tokens = line.strip().split(" || ")
-                if len(tokens) >= 4:
-                    file_location = tokens[0]
-                    file_hash = tokens[1]
-                    file_size = tokens[2]
-                    file_mtime = tokens[3]
-                    file_entry = {}
-                    file_entry["filename"] = file_location
-                    file_entry["hash"] = file_hash
-                    file_entry["size"] = file_size
-                    file_entry["mtime"] = file_mtime
-                    hash_contents[file_location] = file_entry
-        return hash_contents
+        if not pretend_run:
+            hash_contents = {}
+            with open(filename, "r", encoding="utf8") as f:
+                for line in f.readlines():
+                    tokens = line.strip().split(" || ")
+                    if len(tokens) >= 4:
+                        file_location = tokens[0]
+                        file_hash = tokens[1]
+                        file_size = tokens[2]
+                        file_mtime = tokens[3]
+                        file_entry = {}
+                        file_entry["filename"] = file_location
+                        file_entry["hash"] = file_hash
+                        file_entry["size"] = file_size
+                        file_entry["mtime"] = file_mtime
+                        hash_contents[file_location] = file_entry
+            return hash_contents
+        return {}
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to read hash file %s" % filename)
@@ -243,13 +283,44 @@ def ReadHashFile(filename, verbose = False, exit_on_failure = False):
         return {}
 
 # Write hash file
-def WriteHashFile(filename, hash_contents, verbose = False, exit_on_failure = False):
+def WriteHashFile(
+    filename,
+    hash_contents,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if verbose:
             system.Log("Writing hash file %s" % filename)
-        with open(filename, "w", encoding="utf8") as f:
-            for hash_key in sorted(hash_contents.keys()):
-                hash_data = hash_contents[hash_key]
+        if not pretend_run:
+            with open(filename, "w", encoding="utf8") as f:
+                for hash_key in sorted(hash_contents.keys()):
+                    hash_data = hash_contents[hash_key]
+                    hash_replacements = (
+                        hash_data["filename"],
+                        hash_data["hash"],
+                        hash_data["size"],
+                        hash_data["mtime"])
+                    f.write("%s || %s || %s || %s\n" % hash_replacements)
+        return True
+    except Exception as e:
+        if exit_on_failure:
+            system.LogError("Unable to write hash file %s" % filename)
+            system.LogErrorAndQuit(e)
+        return False
+
+# Append hash file
+def AppendHashFile(
+    filename,
+    hash_data,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    try:
+        if verbose:
+            system.Log("Appending hash file %s" % filename)
+        if not pretend_run:
+            with open(filename, "a", encoding="utf8") as f:
                 hash_replacements = (
                     hash_data["filename"],
                     hash_data["hash"],
@@ -259,41 +330,28 @@ def WriteHashFile(filename, hash_contents, verbose = False, exit_on_failure = Fa
         return True
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to write hash file %s" % filename)
-            system.LogErrorAndQuit(e)
-        return False
-
-# Append hash file
-def AppendHashFile(filename, hash_data, verbose = False, exit_on_failure = False):
-    try:
-        if verbose:
-            system.Log("Appending hash file %s" % filename)
-        with open(filename, "a", encoding="utf8") as f:
-            hash_replacements = (
-                hash_data["filename"],
-                hash_data["hash"],
-                hash_data["size"],
-                hash_data["mtime"])
-            f.write("%s || %s || %s || %s\n" % hash_replacements)
-        return True
-    except Exception as e:
-        if exit_on_failure:
             system.LogError("Unable to append hash file %s" % filename)
             system.LogErrorAndQuit(e)
         return False
 
 # Sort hash file
-def SortHashFile(filename, verbose = False, exit_on_failure = False):
+def SortHashFile(
+    filename,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     if verbose:
         system.Log("Sorting hash file %s" % filename)
     hash_contents = ReadHashFile(
         filename = filename,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return WriteHashFile(
         filename = filename,
         hash_contents = hash_contents,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Check if file needs to be hashed
@@ -312,7 +370,13 @@ def DoesFileNeedToBeHashed(input_file, base_path, hash_contents = {}):
 ###########################################################
 
 # Calculate hash
-def CalculateHash(filename, base_path, passphrase = None, verbose = False, exit_on_failure = False):
+def CalculateHash(
+    filename,
+    base_path,
+    passphrase = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get full path of file
     fullpath = os.path.join(base_path, filename)
@@ -326,6 +390,7 @@ def CalculateHash(filename, base_path, passphrase = None, verbose = False, exit_
             passphrase = passphrase,
             hasher = CalculateFileXXH3,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if file_info:
             hash_data["filename"] = os.path.join(system.GetFilenameDirectory(filename), file_info["filename"])
@@ -334,7 +399,11 @@ def CalculateHash(filename, base_path, passphrase = None, verbose = False, exit_
             hash_data["mtime"] = file_info["mtime"]
     else:
         hash_data["filename"] = filename
-        hash_data["hash"] = CalculateFileXXH3(fullpath, verbose = verbose, exit_on_failure = exit_on_failure)
+        hash_data["hash"] = CalculateFileXXH3(
+            filename = fullpath,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         hash_data["size"] = os.path.getsize(fullpath)
         hash_data["mtime"] = int(os.path.getmtime(fullpath))
 
@@ -342,12 +411,24 @@ def CalculateHash(filename, base_path, passphrase = None, verbose = False, exit_
     return hash_data
 
 # Hash files
-def HashFiles(input_path, base_path, output_file, passphrase = None, delete_nonexistent_files = False, verbose = False, exit_on_failure = False):
+def HashFiles(
+    input_path,
+    base_path,
+    output_file,
+    passphrase = None,
+    delete_nonexistent_files = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get hash contents
     hash_contents = {}
     if os.path.isfile(output_file):
-        hash_contents = ReadHashFile(output_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        hash_contents = ReadHashFile(
+            filename = output_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Hash each file in the input path
     for file in system.BuildFileList(input_path):
@@ -370,6 +451,7 @@ def HashFiles(input_path, base_path, output_file, passphrase = None, delete_none
                 base_path = relative_base,
                 passphrase = passphrase,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             hash_contents[hash_data["filename"]] = hash_data
 
@@ -395,12 +477,21 @@ def HashFiles(input_path, base_path, output_file, passphrase = None, delete_none
         filename = output_file,
         hash_contents = hash_contents,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 ###########################################################
 
 # Hash category files
-def HashCategoryFiles(input_path, file_supercategory, file_category, file_subcategory, passphrase = None, verbose = False, exit_on_failure = False):
+def HashCategoryFiles(
+    input_path,
+    file_supercategory,
+    file_category,
+    file_subcategory,
+    passphrase = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Check required types
     system.AssertIsString(file_supercategory, "file_supercategory")
@@ -418,10 +509,12 @@ def HashCategoryFiles(input_path, file_supercategory, file_category, file_subcat
     system.MakeDirectory(
         dir = system.GetFilenameDirectory(hash_file),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.TouchFile(
         src = hash_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Hash files
@@ -431,12 +524,17 @@ def HashCategoryFiles(input_path, file_supercategory, file_category, file_subcat
         output_file = hash_file,
         passphrase = passphrase,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         system.LogError("Unable to hash files from %s" % input_path)
         return False
 
     # Sort hash file
-    return SortHashFile(hash_file, verbose = verbose, exit_on_failure = exit_on_failure)
+    return SortHashFile(
+        filename = hash_file,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ###########################################################

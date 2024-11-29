@@ -42,6 +42,7 @@ parser.add_argument("-i", "--interactive", action="store_true", help="Enable int
 parser.add_argument("-q", "--quick", action="store_true", help="Enable quick mode")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
@@ -65,6 +66,7 @@ def main():
             remote_name = remote_name,
             remote_type = remote_type,
             verbose = args.verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
     # Download files
@@ -148,6 +150,7 @@ def main():
             diff_error_path = args.diff_error_path,
             quick = args.quick,
             verbose = args.verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
     # List files
@@ -159,6 +162,7 @@ def main():
             recursive = True,
             only_directories = False,
             verbose = args.verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
     # Mount files
@@ -174,6 +178,7 @@ def main():
             no_seek = "no_seek" in mount_flags,
             read_only = "read_only" in mount_flags,
             verbose = args.verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
 # Start

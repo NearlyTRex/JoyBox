@@ -24,6 +24,7 @@ def GetEmbeddedFilename(
     source_file,
     passphrase,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get tool
@@ -48,6 +49,7 @@ def GetEmbeddedFilename(
     info_output = command.RunOutputCommand(
         cmd = info_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Get embedded name
@@ -64,6 +66,7 @@ def GetEmbeddedFileInfo(
     hasher,
     chunksize = config.hash_chunk_size,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get embedded filename
@@ -71,12 +74,15 @@ def GetEmbeddedFileInfo(
         source_file = source_file,
         passphrase = passphrase,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not embedded_filename:
         return None
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return None
 
@@ -89,9 +95,14 @@ def GetEmbeddedFileInfo(
         passphrase = passphrase,
         output_file = tmp_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         return None
 
     # Get file info
@@ -102,12 +113,17 @@ def GetEmbeddedFileInfo(
             filename = tmp_file,
             chunksize = chunksize,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     file_info["size"] = os.path.getsize(tmp_file)
     file_info["mtime"] = int(os.path.getmtime(source_file))
 
     # Clean up
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Return file info
     return file_info
@@ -117,6 +133,7 @@ def GetRealFilePath(
     source_file,
     passphrase,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
     if not IsFileEncrypted(source_file):
         return source_file
@@ -125,6 +142,7 @@ def GetRealFilePath(
         source_file = source_file,
         passphrase = passphrase,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if real_name:
         return os.path.join(real_dir, real_name)
@@ -135,6 +153,7 @@ def GetRealFilePaths(
     source_files,
     passphrase,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
     real_paths = []
     if isinstance(source_files, list):
@@ -143,6 +162,7 @@ def GetRealFilePaths(
                 source_file = source_file,
                 passphrase = passphrase,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if real_path:
                 real_paths.append(real_path)
@@ -207,7 +227,11 @@ def EncryptFile(
 
     # Delete original
     if delete_original and os.path.exists(output_file):
-        system.RemoveFile(source_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.RemoveFile(
+            src = source_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(output_file)
@@ -234,6 +258,7 @@ def DecryptFile(
             source_file = source_file,
             passphrase = passphrase,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     if not system.IsPathValid(output_file):
         return False
@@ -274,7 +299,11 @@ def DecryptFile(
 
     # Delete original
     if delete_original and os.path.exists(output_file):
-        system.RemoveFile(source_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.RemoveFile(
+            src = source_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(output_file)

@@ -15,6 +15,7 @@ import gameinfo
 def InstallAddons(
     game_info,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get game info
@@ -39,6 +40,7 @@ def InstallAddons(
                 dlc_dirs = source_dlc_dirs,
                 update_dirs = source_update_dirs,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 return False

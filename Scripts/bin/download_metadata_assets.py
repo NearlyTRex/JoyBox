@@ -22,6 +22,7 @@ parser.add_argument("-a", "--asset_type",
 )
 parser.add_argument("-e", "--skip_existing", action="store_true", help="Skip existing files")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
@@ -38,6 +39,7 @@ def main():
             for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
 
                 # Download metadata asset
+                system.Log("Downloading metadata assets for %s - %s..." % (game_platform, game_name))
                 collection.DownloadMetadataAsset(
                     game_category = game_category,
                     game_subcategory = game_subcategory,
@@ -46,6 +48,8 @@ def main():
                     asset_type = args.asset_type,
                     skip_existing = args.skip_existing,
                     verbose = args.verbose,
+                    pretend_run = args.pretend_run,
+                    pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
 
 # Start

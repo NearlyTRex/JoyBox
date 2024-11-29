@@ -16,6 +16,7 @@ import setup
 parser = argparse.ArgumentParser(description="Rezip files deterministically.")
 parser.add_argument("input_path", help="Input path")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.input_path:
@@ -47,6 +48,7 @@ def main():
             extract_dir = current_file_extract_dir,
             delete_original = True,
             verbose = args.verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
             system.LogErrorAndQuit("Unable to unzip file %s" % current_file)
@@ -58,6 +60,7 @@ def main():
             source_dir = current_file_extract_dir,
             delete_original = True,
             verbose = args.verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
             system.LogErrorAndQuit("Unable to rezip file %s" % current_file)

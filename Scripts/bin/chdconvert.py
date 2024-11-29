@@ -18,6 +18,7 @@ parser.add_argument("path", help="Input path")
 parser.add_argument("-t", "--disc_image_types", type=str, default=".iso,.cue,.gdi", help="List of disc image types (comma delimited)")
 parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:
@@ -54,6 +55,7 @@ def main():
             source_iso = current_file,
             delete_original = args.delete_originals,
             verbose = args.verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
 # Start

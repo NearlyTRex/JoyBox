@@ -63,6 +63,7 @@ def SetupAutoconnectRemote(
     remote_name,
     remote_type,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get tool
@@ -88,6 +89,7 @@ def SetupAutoconnectRemote(
     code = command.RunBlockingCommand(
         cmd = create_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -105,6 +107,7 @@ def SetupAutoconnectRemote(
     code = command.RunBlockingCommand(
         cmd = authorize_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return code == 0
 
@@ -114,6 +117,7 @@ def SetupManualRemote(
     remote_type,
     remote_config = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get tool
@@ -141,6 +145,7 @@ def SetupManualRemote(
     code = command.RunBlockingCommand(
         cmd = create_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return code == 0
 
@@ -150,6 +155,7 @@ def SetupEncryptedRemote(
     remote_path,
     remote_encryption_key,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get tool
@@ -174,6 +180,7 @@ def SetupEncryptedRemote(
     code = command.RunBlockingCommand(
         cmd = create_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return code == 0
 
@@ -182,6 +189,7 @@ def SetupRemote(
     remote_name,
     remote_type,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # B2 requires manual setting
@@ -190,6 +198,7 @@ def SetupRemote(
             remote_type = remote_type,
             remote_name = remote_name,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Others should use autoconnect
@@ -198,6 +207,7 @@ def SetupRemote(
             remote_type = remote_type,
             remote_name = remote_name,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
 # Check if path exists
@@ -230,6 +240,7 @@ def DoesPathExist(
         options = command.CommandOptions(
             blocking_processes = [rclone_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check existence
@@ -288,6 +299,7 @@ def DownloadFilesFromRemote(
     code = command.RunBlockingCommand(
         cmd = copy_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return code == 0
 
@@ -335,6 +347,7 @@ def UploadFilesToRemote(
     code = command.RunBlockingCommand(
         cmd = copy_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return code == 0
 
@@ -382,6 +395,7 @@ def SyncFilesFromRemote(
     code = command.RunBlockingCommand(
         cmd = sync_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return code == 0
 
@@ -429,6 +443,7 @@ def SyncFilesToRemote(
     code = command.RunBlockingCommand(
         cmd = sync_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return code == 0
 
@@ -480,6 +495,7 @@ def SyncFilesBothWays(
     code = command.RunBlockingCommand(
         cmd = bisync_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return code == 0
 
@@ -497,6 +513,7 @@ def CheckFiles(
     diff_error_path = None,
     quick = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get tool
@@ -538,6 +555,7 @@ def CheckFiles(
     command.RunBlockingCommand(
         cmd = check_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Analyze combined output
@@ -573,6 +591,7 @@ def ListFiles(
     recursive = False,
     only_directories = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get tool
@@ -603,6 +622,7 @@ def ListFiles(
     code = command.RunBlockingCommand(
         cmd = list_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return code == 0
 
@@ -618,11 +638,15 @@ def MountFiles(
     no_seek = False,
     read_only = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Create mount point
     if environment.IsUnixPlatform():
-        system.MakeDirectory(mount_path, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.MakeDirectory(
+            dir = mount_path,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
         if not system.DoesPathExist(mount_path) or not system.IsDirectoryEmpty(mount_path):
             system.LogError("Mount point %s needs to exist and be empty" % mount_path)
             return False
@@ -669,5 +693,6 @@ def MountFiles(
     code = command.RunBlockingCommand(
         cmd = mount_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return code == 0

@@ -19,6 +19,7 @@ parser.add_argument("-d", "--decrypt", action="store_true", help="Decrypt NDS fi
 parser.add_argument("-e", "--encrypt", action="store_true", help="Verify NDS files")
 parser.add_argument("-g", "--generate_hash", action="store_true", help="Output size and hashes to a companion file")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:
@@ -48,6 +49,7 @@ def main():
                 nds_file = current_file,
                 generate_hash = args.generate_hash,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
         # Encrypt NDS file
@@ -56,6 +58,7 @@ def main():
                 nds_file = current_file,
                 generate_hash = args.generate_hash,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
 # Start

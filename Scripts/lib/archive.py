@@ -123,6 +123,7 @@ def CheckArchiveCompressionOutputFiles(
     archive_type,
     volume_size,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get output files
@@ -144,6 +145,7 @@ def CheckArchiveCompressionOutputFiles(
                 src = old_output_file,
                 dest = new_output_file,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             output_files = [new_output_file]
     else:
@@ -163,6 +165,7 @@ def CreateArchiveFromFile(
     volume_size = None,
     delete_original = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get tool
@@ -211,13 +214,18 @@ def CreateArchiveFromFile(
             output_paths = [archive_file],
             blocking_processes = [archive_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
 
     # Clean up
     if delete_original:
-        system.RemoveFile(source_file, verbose = verbose)
+        system.RemoveFile(
+            src = source_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check output files
     return CheckArchiveCompressionOutputFiles(
@@ -225,6 +233,7 @@ def CreateArchiveFromFile(
         archive_type = archive_type,
         volume_size = volume_size,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Create archive from folder
@@ -236,6 +245,7 @@ def CreateArchiveFromFolder(
     volume_size = None,
     delete_original = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get tool
@@ -289,13 +299,18 @@ def CreateArchiveFromFolder(
             output_paths = [archive_file],
             blocking_processes = [archive_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
 
     # Clean up
     if delete_original:
-        system.RemoveDirectory(source_dir, verbose = verbose)
+        system.RemoveDirectory(
+            dir = source_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check output files
     return CheckArchiveCompressionOutputFiles(
@@ -303,6 +318,7 @@ def CreateArchiveFromFolder(
         archive_type = archive_type,
         volume_size = volume_size,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Extract archive
@@ -313,6 +329,7 @@ def ExtractArchive(
     skip_existing = False,
     delete_original = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get tool
@@ -363,19 +380,28 @@ def ExtractArchive(
             output_paths = [extract_dir],
             blocking_processes = [archive_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
 
     # Clean up
     if delete_original:
-        system.RemoveFile(archive_file, verbose = verbose)
+        system.RemoveFile(
+            src = archive_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(extract_dir) and not system.IsDirectoryEmpty(extract_dir)
 
 # Test archive
-def TestArchive(archive_file, verbose = False, exit_on_failure = False):
+def TestArchive(
+    archive_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     archive_tool = None
@@ -398,5 +424,6 @@ def TestArchive(archive_file, verbose = False, exit_on_failure = False):
         options = command.CommandOptions(
             blocking_processes = [archive_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return (code == 0)

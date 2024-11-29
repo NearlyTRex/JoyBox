@@ -19,7 +19,12 @@ import jsondata
 class GameInfo:
 
     # Constructor
-    def __init__(self, json_file, verbose = False, exit_on_failure = False):
+    def __init__(
+        self,
+        json_file,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
 
         # Json info
         self.json_data = {}
@@ -36,13 +41,26 @@ class GameInfo:
         self.game_platform = None
 
         # Parse json file
-        self.parse_json_file(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        self.parse_json_file(
+            json_file = json_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Parse game json
-    def parse_json_file(self, json_file, verbose = False, exit_on_failure = False):
+    def parse_json_file(
+        self,
+        json_file,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
 
         # Read json data
-        self.json_data = system.ReadJsonFile(json_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        self.json_data = system.ReadJsonFile(
+            src = json_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
         # Save json file
         self.json_file = json_file
@@ -145,32 +163,56 @@ class GameInfo:
         return self.json_data
 
     # Read raw json data
-    def read_raw_json_data(self, verbose = False, exit_on_failure = False):
+    def read_raw_json_data(
+        self,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
         return system.ReadJsonFile(
             src = self.get_json_file(),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Write raw json data
-    def write_raw_json_data(self, json_data, verbose = False, exit_on_failure = False):
+    def write_raw_json_data(
+        self,
+        json_data,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
         return system.WriteJsonFile(
             src = self.get_json_file(),
             json_data = json_data,
             sort_keys = True,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Read wrapped json data
-    def read_wrapped_json_data(self, verbose = False, exit_on_failure = False):
+    def read_wrapped_json_data(
+        self,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
         return jsondata.JsonData(
-            json_data = self.read_raw_json_data(verbose = verbose, exit_on_failure = exit_on_failure),
+            json_data = self.read_raw_json_data(
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure),
             json_platform = self.get_platform())
 
     # Write wrapped json data
-    def write_wrapped_json_data(self, json_wrapper, verbose = False, exit_on_failure = False):
+    def write_wrapped_json_data(
+        self,
+        json_wrapper,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
         return self.write_raw_json_data(
             json_data = json_wrapper.get_data(),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     ##############################

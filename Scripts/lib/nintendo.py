@@ -16,7 +16,12 @@ import webpage
 ######################################################
 
 # Encrypt Nintendo DS rom
-def EncryptNDSRom(nds_file, generate_hash = False, verbose = False, exit_on_failure = False):
+def EncryptNDSRom(
+    nds_file,
+    generate_hash = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     encrypt_tool = None
@@ -39,11 +44,17 @@ def EncryptNDSRom(nds_file, generate_hash = False, verbose = False, exit_on_fail
         options = command.CommandOptions(
             blocking_processes = [encrypt_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return (code == 0)
 
 # Decrypt Nintendo DS rom
-def DecryptNDSRom(nds_file, generate_hash = False, verbose = False, exit_on_failure = False):
+def DecryptNDSRom(
+    nds_file,
+    generate_hash = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     decrypt_tool = None
@@ -66,6 +77,7 @@ def DecryptNDSRom(nds_file, generate_hash = False, verbose = False, exit_on_fail
         options = command.CommandOptions(
             blocking_processes = [decrypt_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return (code == 0)
 
@@ -74,7 +86,12 @@ def DecryptNDSRom(nds_file, generate_hash = False, verbose = False, exit_on_fail
 ######################################################
 
 # Convert 3DS CIA file to CCI file
-def Convert3DSCIAtoCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_failure = False):
+def Convert3DSCIAtoCCI(
+    src_3ds_file,
+    dest_3ds_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     convert_tool = None
@@ -98,6 +115,7 @@ def Convert3DSCIAtoCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_fai
         options = command.CommandOptions(
             blocking_processes = [convert_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -106,7 +124,12 @@ def Convert3DSCIAtoCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_fai
     return os.path.exists(dest_3ds_file)
 
 # Convert 3DS CCI file to CIA file
-def Convert3DSCCItoCIA(src_3ds_file, dest_3ds_file, verbose = False, exit_on_failure = False):
+def Convert3DSCCItoCIA(
+    src_3ds_file,
+    dest_3ds_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     convert_tool = None
@@ -130,6 +153,7 @@ def Convert3DSCCItoCIA(src_3ds_file, dest_3ds_file, verbose = False, exit_on_fai
         options = command.CommandOptions(
             blocking_processes = [convert_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -138,7 +162,12 @@ def Convert3DSCCItoCIA(src_3ds_file, dest_3ds_file, verbose = False, exit_on_fai
     return os.path.exists(dest_3ds_file)
 
 # Trim 3DS CCI file
-def Trim3DSCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_failure = False):
+def Trim3DSCCI(
+    src_3ds_file,
+    dest_3ds_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     trim_tool = None
@@ -149,7 +178,7 @@ def Trim3DSCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_failure = F
         return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -161,6 +190,7 @@ def Trim3DSCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_failure = F
         src = src_3ds_file,
         dest = tmp_3ds_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Get trim command
@@ -176,6 +206,7 @@ def Trim3DSCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_failure = F
         options = command.CommandOptions(
             blocking_processes = [trim_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -185,16 +216,22 @@ def Trim3DSCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_failure = F
         src = tmp_3ds_file,
         dest = dest_3ds_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
 
     # Check result
     return os.path.exists(dest_3ds_file)
 
 # Untrim 3DS CCI file
-def Untrim3DSCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_failure = False):
+def Untrim3DSCCI(
+    src_3ds_file,
+    dest_3ds_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     trim_tool = None
@@ -205,7 +242,7 @@ def Untrim3DSCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_failure =
         return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -217,6 +254,7 @@ def Untrim3DSCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_failure =
         src = src_3ds_file,
         dest = tmp_3ds_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Get trim command
@@ -232,6 +270,7 @@ def Untrim3DSCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_failure =
         options = command.CommandOptions(
             blocking_processes = [trim_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -241,16 +280,22 @@ def Untrim3DSCCI(src_3ds_file, dest_3ds_file, verbose = False, exit_on_failure =
         src = tmp_3ds_file,
         dest = dest_3ds_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
 
     # Check result
     return os.path.exists(dest_3ds_file)
 
 # Extract 3DS CIA file
-def Extract3DSCIA(src_3ds_file, extract_dir, verbose = False, exit_on_failure = False):
+def Extract3DSCIA(
+    src_3ds_file,
+    extract_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     extract_tool = None
@@ -261,7 +306,7 @@ def Extract3DSCIA(src_3ds_file, extract_dir, verbose = False, exit_on_failure = 
         return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -287,6 +332,7 @@ def Extract3DSCIA(src_3ds_file, extract_dir, verbose = False, exit_on_failure = 
         options = command.CommandOptions(
             blocking_processes = [extract_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -300,6 +346,7 @@ def Extract3DSCIA(src_3ds_file, extract_dir, verbose = False, exit_on_failure = 
                 src = obj_path,
                 dest = os.path.join(tmp_dir_result, obj_basename + ".app"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
     # Move extracted files
@@ -307,16 +354,21 @@ def Extract3DSCIA(src_3ds_file, extract_dir, verbose = False, exit_on_failure = 
         src = tmp_dir_result,
         dest = extract_dir,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
 
     # Check result
     return os.path.exists(extract_dir) and not system.IsDirectoryEmpty(extract_dir)
 
 # Get 3DS file info
-def Get3DSFileInfo(src_3ds_file, verbose = False, exit_on_failure = False):
+def Get3DSFileInfo(
+    src_3ds_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     print_tool = None
@@ -338,14 +390,24 @@ def Get3DSFileInfo(src_3ds_file, verbose = False, exit_on_failure = False):
         options = command.CommandOptions(
             blocking_processes = [print_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return output
 
 # Install 3DS CIA file
-def Install3DSCIA(src_3ds_file, sdmc_dir, verbose = False, exit_on_failure = False):
+def Install3DSCIA(
+    src_3ds_file,
+    sdmc_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get file info
-    file_info = Get3DSFileInfo(src_3ds_file, verbose = verbose, exit_on_failure = exit_on_failure)
+    file_info = Get3DSFileInfo(
+        src_3ds_file = src_3ds_file,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if len(file_info) == 0:
         return False
 
@@ -371,6 +433,7 @@ def Install3DSCIA(src_3ds_file, sdmc_dir, verbose = False, exit_on_failure = Fal
         src_3ds_file = src_3ds_file,
         extract_dir = app_install_dir,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -383,7 +446,12 @@ def Install3DSCIA(src_3ds_file, sdmc_dir, verbose = False, exit_on_failure = Fal
 ######################################################
 
 # Decrypt Wii U NUS package
-def DecryptWiiUNUSPackage(nus_package_dir, delete_original = False, verbose = False, exit_on_failure = False):
+def DecryptWiiUNUSPackage(
+    nus_package_dir,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     decrypt_tool = None
@@ -414,6 +482,7 @@ def DecryptWiiUNUSPackage(nus_package_dir, delete_original = False, verbose = Fa
             output_paths = [nus_package_dir],
             blocking_processes = [decrypt_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -429,16 +498,21 @@ def DecryptWiiUNUSPackage(nus_package_dir, delete_original = False, verbose = Fa
                 system.RemoveFile(
                     file = obj_path,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
 
     # Should be decrypted now
     return True
 
 # Verify Wii U NUS package
-def VerifyWiiUNUSPackage(nus_package_dir, verbose = False, exit_on_failure = False):
+def VerifyWiiUNUSPackage(
+    nus_package_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -447,25 +521,32 @@ def VerifyWiiUNUSPackage(nus_package_dir, verbose = False, exit_on_failure = Fal
         src = nus_package_dir,
         dest = tmp_dir_result,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Test decryption
     decryption_result = DecryptWiiUNUSPackage(
         nus_package_dir = nus_package_dir,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
 
     # Check result
     return decryption_result
 
 # Install Wii U NUS package
-def InstallWiiUNusPackage(nus_package_dir, nand_dir, verbose = False, exit_on_failure = False):
+def InstallWiiUNusPackage(
+    nus_package_dir,
+    nand_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -474,6 +555,7 @@ def InstallWiiUNusPackage(nus_package_dir, nand_dir, verbose = False, exit_on_fa
         src = nus_package_dir,
         dest = tmp_dir_result,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if system.IsDirectoryEmpty(tmp_dir_result):
         return False
@@ -482,6 +564,7 @@ def InstallWiiUNusPackage(nus_package_dir, nand_dir, verbose = False, exit_on_fa
     success = DecryptWiiUNUSPackage(
         nus_package_dir = tmp_dir_result,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -513,6 +596,7 @@ def InstallWiiUNusPackage(nus_package_dir, nand_dir, verbose = False, exit_on_fa
         success = system.MakeDirectory(
             dir = os.path.join(tmp_dir_result, obj),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
@@ -522,18 +606,24 @@ def InstallWiiUNusPackage(nus_package_dir, nand_dir, verbose = False, exit_on_fa
             src = os.path.join(tmp_dir_result, obj),
             dest = os.path.join(nand_dir, "usr", "title", app_type, app_folder, obj),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
 
     # Should be installed
     return True
 
 # Update Wii U keys file
-def UpdateWiiUKeys(src_key_file, dest_key_file, verbose = False, exit_on_failure = False):
+def UpdateWiiUKeys(
+    src_key_file,
+    dest_key_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Read existing keys
     existing_keys = set()
@@ -574,7 +664,13 @@ def IsValidSwitchProfileInfo(user_id, account_name):
     return True
 
 # Create Switch profiles dat
-def CreateSwitchProfilesDat(profiles_file, user_id, account_name, verbose = False, exit_on_failure = False):
+def CreateSwitchProfilesDat(
+    profiles_file,
+    user_id,
+    account_name,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Check profile info
     if not IsValidSwitchProfileInfo(user_id, account_name):
@@ -614,6 +710,7 @@ def CreateSwitchProfilesDat(profiles_file, user_id, account_name, verbose = Fals
         contents = b"".join(file_contents),
         contents_mode = "wb",
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -622,7 +719,13 @@ def CreateSwitchProfilesDat(profiles_file, user_id, account_name, verbose = Fals
     return os.path.exists(profiles_file)
 
 # Trim Switch XCI file
-def TrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbose = False, exit_on_failure = False):
+def TrimSwitchXCI(
+    src_xci_file,
+    dest_xci_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     python_tool = None
@@ -641,7 +744,7 @@ def TrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbose 
         return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -655,6 +758,7 @@ def TrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbose 
         src = src_xci_file,
         dest = tmp_xci_src_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Get trim command
@@ -670,6 +774,7 @@ def TrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbose 
     code = command.RunBlockingCommand(
         cmd = trim_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -679,18 +784,25 @@ def TrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbose 
         src = tmp_xci_dest_file,
         dest = dest_xci_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Clean up
     if delete_original:
-        system.RemoveFile(src_xci_file, verbose = verbose)
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveFile(src_xci_file, verbose = verbose, pretend_run = pretend_run)
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
 
     # Check result
     return os.path.exists(dest_xci_file)
 
 # Untrim Switch XCI file
-def UntrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbose = False, exit_on_failure = False):
+def UntrimSwitchXCI(
+    src_xci_file,
+    dest_xci_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     python_tool = None
@@ -709,7 +821,7 @@ def UntrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbos
         return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -723,6 +835,7 @@ def UntrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbos
         src = src_xci_file,
         dest = tmp_xci_src_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Get trim command
@@ -738,6 +851,7 @@ def UntrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbos
     code = command.RunBlockingCommand(
         cmd = untrim_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -747,18 +861,24 @@ def UntrimSwitchXCI(src_xci_file, dest_xci_file, delete_original = False, verbos
         src = tmp_xci_dest_file,
         dest = dest_xci_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Clean up
     if delete_original:
-        system.RemoveFile(src_xci_file, verbose = verbose)
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveFile(src_xci_file, verbose = verbose, pretend_run = pretend_run)
+    system.RemoveDirectory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
 
     # Check result
     return os.path.exists(dest_xci_file)
 
 # Extract Switch NSP file
-def ExtractSwitchNSP(nsp_file, extract_dir, verbose = False, exit_on_failure = False):
+def ExtractSwitchNSP(
+    nsp_file,
+    extract_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     extract_tool = None
@@ -784,6 +904,7 @@ def ExtractSwitchNSP(nsp_file, extract_dir, verbose = False, exit_on_failure = F
             output_paths = [extract_dir],
             blocking_processes = [extract_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -792,7 +913,12 @@ def ExtractSwitchNSP(nsp_file, extract_dir, verbose = False, exit_on_failure = F
     return os.path.exists(extract_dir) and not system.IsDirectoryEmpty(extract_dir)
 
 # Install Switch NSP file
-def InstallSwitchNSP(nsp_file, nand_dir, verbose = False, exit_on_failure = False):
+def InstallSwitchNSP(
+    nsp_file,
+    nand_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Create temporary directory
     tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
@@ -804,6 +930,7 @@ def InstallSwitchNSP(nsp_file, nand_dir, verbose = False, exit_on_failure = Fals
         nsp_file = nsp_file,
         extract_dir = tmp_dir_result,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Look at all the extracted nca files
@@ -823,8 +950,9 @@ def InstallSwitchNSP(nsp_file, nand_dir, verbose = False, exit_on_failure = Fals
         # Make NCA dir
         success = system.MakeDirectory(
             dir = nca_output_dir,
-            verbose = False,
-            exit_on_failure = False)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         if not success:
             return False
 
@@ -834,6 +962,7 @@ def InstallSwitchNSP(nsp_file, nand_dir, verbose = False, exit_on_failure = Fals
             dest = os.path.join(nca_output_dir, nca_id + ".nca"),
             skip_identical = True,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False

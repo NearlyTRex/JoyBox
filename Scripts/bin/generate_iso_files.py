@@ -25,6 +25,7 @@ parser.add_argument("-u", "--file_supercategory",
 parser.add_argument("-c", "--file_category", type=str, help="File category")
 parser.add_argument("-s", "--file_subcategory", type=str, help="File subcategory")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 

@@ -16,6 +16,7 @@ import chd
 parser = argparse.ArgumentParser(description="Verify disc images from CHD files.")
 parser.add_argument("path", help="Input path")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:

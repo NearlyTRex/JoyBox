@@ -120,7 +120,11 @@ class Metadata:
             merge_type = merge_type)
 
     # Verify roms
-    def verify_roms(self, verbose = False, exit_on_failure = False):
+    def verify_roms(
+        self,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
         for game_platform in self.get_sorted_platforms():
             for game_name in self.get_sorted_names(game_platform):
                 if verbose:
@@ -137,7 +141,14 @@ class Metadata:
                     system.LogErrorAndQuit("Verification of game %s in platform %s failed" % (game_name, game_platform))
 
     # Scan rom base directory
-    def scan_rom_base_dir(self, rom_base_dir, rom_category, rom_subcategory, verbose = False, exit_on_failure = False):
+    def scan_rom_base_dir(
+        self,
+        rom_base_dir,
+        rom_category,
+        rom_subcategory,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
         for obj in system.GetDirectoryContents(rom_base_dir):
             rom_dir = os.path.join(rom_base_dir, obj)
 
@@ -179,7 +190,14 @@ class Metadata:
             self.add_game(game_entry)
 
     # Scan roms
-    def scan_roms(self, rom_path, rom_category, rom_subcategory, verbose = False, exit_on_failure = False):
+    def scan_roms(
+        self,
+        rom_path,
+        rom_category,
+        rom_subcategory,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
         if rom_category == config.game_category_computer:
             for obj in system.GetDirectoryContents(rom_path):
                 self.scan_rom_base_dir(
@@ -187,6 +205,7 @@ class Metadata:
                     rom_category = rom_category,
                     rom_subcategory = rom_subcategory,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
         else:
             self.scan_rom_base_dir(
@@ -194,6 +213,7 @@ class Metadata:
                 rom_category = rom_category,
                 rom_subcategory = rom_subcategory,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
     # Import from pegasus file
@@ -201,6 +221,7 @@ class Metadata:
         self,
         pegasus_file,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         if os.path.exists(pegasus_file):
             with open(pegasus_file, "r", encoding="utf8") as file:
@@ -323,11 +344,13 @@ class Metadata:
         metadata_file,
         metadata_format = config.metadata_format_type_pegasus,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         if metadata_format == config.metadata_format_type_pegasus:
             self.import_from_pegasus_file(
                 pegasus_file = metadata_file,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
     # Export to pegasus file
@@ -336,12 +359,14 @@ class Metadata:
         pegasus_file,
         append_existing = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         file_mode = "a" if append_existing else "w"
         if not os.path.exists(pegasus_file):
             system.TouchFile(
                 src = pegasus_file,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         with open(pegasus_file, file_mode, encoding="utf8", newline="\n") as file:
             for game_platform in self.get_sorted_platforms():
@@ -431,10 +456,12 @@ class Metadata:
         metadata_format = config.metadata_format_type_pegasus,
         append_existing = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         if metadata_format == config.metadata_format_type_pegasus:
             self.export_to_pegasus_file(
                 pegasus_file = metadata_file,
                 append_existing = append_existing,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)

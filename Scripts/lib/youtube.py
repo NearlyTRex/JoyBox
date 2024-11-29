@@ -11,7 +11,13 @@ import system
 import environment
 
 # Get search results
-def GetSearchResults(search_terms, num_results = 10, sort_by_duration = False, verbose = False, exit_on_failure = False):
+def GetSearchResults(
+    search_terms,
+    num_results = 10,
+    sort_by_duration = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     youtube_tool = None
@@ -43,6 +49,7 @@ def GetSearchResults(search_terms, num_results = 10, sort_by_duration = False, v
             shell = True,
             blocking_processes = [youtube_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Parse search results
@@ -66,7 +73,12 @@ def GetSearchResults(search_terms, num_results = 10, sort_by_duration = False, v
     return search_results
 
 # Download video
-def DownloadVideo(video_url, output_file = None, verbose = False, exit_on_failure = False):
+def DownloadVideo(
+    video_url,
+    output_file = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     youtube_tool = None
@@ -94,5 +106,6 @@ def DownloadVideo(video_url, output_file = None, verbose = False, exit_on_failur
         options = command.CommandOptions(
             blocking_processes = [youtube_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return (code == 0)

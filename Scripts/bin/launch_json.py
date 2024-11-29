@@ -36,6 +36,7 @@ parser.add_argument("-t", "--capture_type",
     default=config.capture_type_none, help="Capture type"
 )
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 parser.add_argument("-f", "--fullscreen", action="store_true", help="Enable fullscreen mode")
 parser.add_argument("--force_cache_refresh", action="store_true", help="Force refresh of cached files")
@@ -113,6 +114,7 @@ def main():
     game_info = gameinfo.GameInfo(
         json_file = json_file,
         verbose = args.verbose,
+        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
 
     # Check ability to launch
@@ -126,6 +128,7 @@ def main():
         cache.RemoveGameFromCache(
             game_info = game_info,
             verbose = args.verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
     # Launch game
@@ -134,6 +137,7 @@ def main():
         capture_type = args.capture_type,
         fullscreen = args.fullscreen,
         verbose = args.verbose,
+        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
 
 # Start

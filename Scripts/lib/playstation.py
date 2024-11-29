@@ -26,7 +26,13 @@ def GetPS3DecryptionKey(dkey_file):
     return dkey_contents
 
 # Encrypt ps3 iso
-def EncryptPS3ISO(iso_file_dec, iso_file_enc, dkey_file, verbose = False, exit_on_failure = False):
+def EncryptPS3ISO(
+    iso_file_dec,
+    iso_file_enc,
+    dkey_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     encrypt_tool = None
@@ -56,6 +62,7 @@ def EncryptPS3ISO(iso_file_dec, iso_file_enc, dkey_file, verbose = False, exit_o
     code = command.RunBlockingCommand(
         cmd = encrypt_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
@@ -66,7 +73,13 @@ def EncryptPS3ISO(iso_file_dec, iso_file_enc, dkey_file, verbose = False, exit_o
     return os.path.exists(iso_file_enc)
 
 # Decrypt ps3 iso
-def DecryptPS3ISO(iso_file_enc, iso_file_dec, dkey_file, verbose = False, exit_on_failure = False):
+def DecryptPS3ISO(
+    iso_file_enc,
+    iso_file_dec,
+    dkey_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     decrypt_tool = None
@@ -96,6 +109,7 @@ def DecryptPS3ISO(iso_file_enc, iso_file_dec, dkey_file, verbose = False, exit_o
     code = command.RunBlockingCommand(
         cmd = decrypt_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
@@ -106,7 +120,14 @@ def DecryptPS3ISO(iso_file_enc, iso_file_dec, dkey_file, verbose = False, exit_o
     return os.path.exists(iso_file_dec)
 
 # Extract ps3 iso
-def ExtractPS3ISO(iso_file, dkey_file, extract_dir, delete_original = False, verbose = False, exit_on_failure = False):
+def ExtractPS3ISO(
+    iso_file,
+    dkey_file,
+    extract_dir,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get file info
     iso_file_basename = system.GetFilenameBasename(iso_file)
@@ -120,6 +141,7 @@ def ExtractPS3ISO(iso_file, dkey_file, extract_dir, delete_original = False, ver
         iso_file_dec = iso_file_dec,
         dkey_file = dkey_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -130,6 +152,7 @@ def ExtractPS3ISO(iso_file, dkey_file, extract_dir, delete_original = False, ver
         extract_dir = extract_dir,
         delete_original = delete_original,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -156,16 +179,26 @@ def ExtractPS3ISO(iso_file, dkey_file, extract_dir, delete_original = False, ver
 
     # Clean up
     if delete_original:
-        system.RemoveFile(iso_file_dec, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.RemoveFile(
+            src = iso_file_dec,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(extract_dir)
 
 # Verify ps3 chd
-def VerifyPS3CHD(chd_file, verbose = False, exit_on_failure = False):
+def VerifyPS3CHD(
+    chd_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -180,8 +213,16 @@ def VerifyPS3CHD(chd_file, verbose = False, exit_on_failure = False):
     output_iso_toc_file = os.path.join(iso_tmp_dir, input_chd_basename + ".toc")
 
     # Make directories
-    system.MakeDirectory(iso_tmp_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-    system.MakeDirectory(raw_tmp_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = iso_tmp_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = raw_tmp_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Extract chd
     success = chd.ExtractDiscCHD(
@@ -189,6 +230,7 @@ def VerifyPS3CHD(chd_file, verbose = False, exit_on_failure = False):
         binary_file = output_iso_bin_file,
         toc_file = output_iso_toc_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -199,18 +241,28 @@ def VerifyPS3CHD(chd_file, verbose = False, exit_on_failure = False):
         dkey_file = input_dkey_file,
         extract_dir = raw_tmp_dir,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run)
 
     # Should be verified now
     return True
 
 # Extract psn pkg
-def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = False, exit_on_failure = False):
+def ExtractPSNPKG(
+    pkg_file,
+    extract_dir,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     python_tool = None
@@ -240,7 +292,9 @@ def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = Fals
     try:
         command.RunExceptionCommand(
             cmd = extract_cmd,
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
     except:
         if exit_on_failure:
             system.LogErrorAndQuit("Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir))
@@ -248,7 +302,11 @@ def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = Fals
 
     # Clean up
     if delete_original:
-        system.RemoveFile(pkg_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.RemoveFile(
+            src = pkg_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(extract_dir)
@@ -258,7 +316,13 @@ def ExtractPSNPKG(pkg_file, extract_dir, delete_original = False, verbose = Fals
 ######################################################
 
 # Strip psv file
-def StripPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
+def StripPSV(
+    src_psv_file,
+    dest_psv_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     strip_tool = None
@@ -280,6 +344,7 @@ def StripPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fal
     code = command.RunBlockingCommand(
         cmd = strip_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
@@ -288,13 +353,24 @@ def StripPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fal
 
     # Clean up
     if delete_original:
-        system.RemoveFile(src_psv_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.RemoveFile(
+            src = src_psv_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(dest_psv_file)
 
 # Unstrip psv file
-def UnstripPSV(src_psv_file, src_psve_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
+def UnstripPSV(
+    src_psv_file,
+    src_psve_file,
+    dest_psv_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     unstrip_tool = None
@@ -317,6 +393,7 @@ def UnstripPSV(src_psv_file, src_psve_file, dest_psv_file, delete_original = Fal
     code = command.RunBlockingCommand(
         cmd = unstrip_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
@@ -325,13 +402,23 @@ def UnstripPSV(src_psv_file, src_psve_file, dest_psv_file, delete_original = Fal
 
     # Clean up
     if delete_original:
-        system.RemoveFile(src_psv_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.RemoveFile(
+            src = src_psv_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(dest_psv_file)
 
 # Trim psv file
-def TrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
+def TrimPSV(
+    src_psv_file,
+    dest_psv_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     python_tool = None
@@ -362,6 +449,7 @@ def TrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fals
     code = command.RunBlockingCommand(
         cmd = trim_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
@@ -370,13 +458,22 @@ def TrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fals
 
     # Clean up
     if delete_original:
-        system.RemoveFile(src_psv_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.RemoveFile(
+            src = src_psv_file,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(dest_psv_file)
 
 # Untrim psv file
-def UntrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = False, exit_on_failure = False):
+def UntrimPSV(
+    src_psv_file,
+    dest_psv_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     python_tool = None
@@ -407,6 +504,7 @@ def UntrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fa
     code = command.RunBlockingCommand(
         cmd = untrim_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
@@ -415,13 +513,21 @@ def UntrimPSV(src_psv_file, dest_psv_file, delete_original = False, verbose = Fa
 
     # Clean up
     if delete_original:
-        system.RemoveFile(src_psv_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        system.RemoveFile(
+            src = src_psv_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(dest_psv_file)
 
 # Verify psv file
-def VerifyPSV(psv_file, verbose = False, exit_on_failure = False):
+def VerifyPSV(
+    psv_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     python_tool = None
@@ -451,6 +557,7 @@ def VerifyPSV(psv_file, verbose = False, exit_on_failure = False):
     code = command.RunBlockingCommand(
         cmd = verify_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
@@ -509,7 +616,11 @@ def GetPSNFakeRifContentID(fakerif_file):
     return None
 
 # Get psn package info
-def GetPSNPackageInfo(pkg_file, verbose = False, exit_on_failure = False):
+def GetPSNPackageInfo(
+    pkg_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     python_tool = None
@@ -538,6 +649,7 @@ def GetPSNPackageInfo(pkg_file, verbose = False, exit_on_failure = False):
     info_output = command.RunOutputCommand(
         cmd = info_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not info_output or len(info_output) == 0:
         return None
@@ -575,7 +687,11 @@ def GetPSNPackageInfo(pkg_file, verbose = False, exit_on_failure = False):
     return info
 
 # Rename psn package file
-def RenamePSNPackageFile(pkg_file, verbose = False, exit_on_failure = False):
+def RenamePSNPackageFile(
+    pkg_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     content_id = GetPSNPackageContentID(pkg_file)
     if not content_id:
         return False
@@ -584,10 +700,15 @@ def RenamePSNPackageFile(pkg_file, verbose = False, exit_on_failure = False):
         dest = os.path.join(system.GetFilenameDirectory(pkg_file), content_id + ".pkg"),
         skip_existing = True,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Rename psn rap file
-def RenamePSNRapFile(rap_file, verbose = False, exit_on_failure = False):
+def RenamePSNRapFile(
+    rap_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     pkg_file = os.path.join(system.GetFilenameDirectory(rap_file), system.GetFilenameBasename(rap_file) + ".pkg")
     if not os.path.isfile(pkg_file):
         return False
@@ -599,10 +720,15 @@ def RenamePSNRapFile(rap_file, verbose = False, exit_on_failure = False):
         dest = os.path.join(system.GetFilenameDirectory(rap_file), content_id + ".rap"),
         skip_existing = True,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Rename psn work.bin file
-def RenamePSNWorkBinFile(workbin_file, verbose = False, exit_on_failure = False):
+def RenamePSNWorkBinFile(
+    workbin_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     content_id = GetPSNWorkBinContentID(workbin_file)
     if not content_id:
         return False
@@ -611,10 +737,15 @@ def RenamePSNWorkBinFile(workbin_file, verbose = False, exit_on_failure = False)
         dest = os.path.join(system.GetFilenameDirectory(workbin_file), content_id + ".work.bin"),
         skip_existing = True,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Rename psn fake.rif file
-def RenamePSNFakeRifFile(fakerif_file, verbose = False, exit_on_failure = False):
+def RenamePSNFakeRifFile(
+    fakerif_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     content_id = GetPSNFakeRifContentID(fakerif_file)
     if not content_id:
         return False
@@ -623,4 +754,5 @@ def RenamePSNFakeRifFile(fakerif_file, verbose = False, exit_on_failure = False)
         dest = os.path.join(system.GetFilenameDirectory(fakerif_file), content_id + ".fake.rif"),
         skip_existing = True,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

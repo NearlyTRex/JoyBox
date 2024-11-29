@@ -19,6 +19,7 @@ import setup
 # Parse arguments
 parser = argparse.ArgumentParser(description="Verify rom files.")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
@@ -63,6 +64,7 @@ def main():
                 game_info = gameinfo.GameInfo(
                     json_file = json_file,
                     verbose = args.verbose,
+                    pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
 
                 # Get game info

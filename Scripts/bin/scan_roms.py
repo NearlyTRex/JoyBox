@@ -23,6 +23,7 @@ parser.add_argument("-e", "--source_type",
     help="Source types"
 )
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
@@ -59,6 +60,7 @@ def main():
                 command.RunCheckedCommand(
                     cmd = build_game_list_cmd,
                     verbose = args.verbose,
+                    pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
 
     # Sort metadata files
@@ -66,6 +68,7 @@ def main():
     command.RunCheckedCommand(
         cmd = sort_metadata_files_bin,
         verbose = args.verbose,
+        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
 
     # Publish metadata files
@@ -73,6 +76,7 @@ def main():
     command.RunCheckedCommand(
         cmd = publish_metadata_files_bin,
         verbose = args.verbose,
+        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
 
 # Start

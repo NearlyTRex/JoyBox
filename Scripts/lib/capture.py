@@ -16,6 +16,7 @@ import background
 def CaptureScreenshot(
     output_file,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -37,6 +38,7 @@ def CaptureScreenshotWhileRunning(
     time_interval,
     time_units_type,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -47,6 +49,7 @@ def CaptureScreenshotWhileRunning(
         CaptureScreenshot(
             output_file = output_file,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Create background job for capturing
@@ -72,6 +75,7 @@ def CaptureVideo(
     capture_framerate,
     capture_duration,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -112,6 +116,7 @@ def CaptureVideo(
         audio_sources = command.RunOutputCommand(
             cmd = ["pactl", "list", "sources", "short"],
             verbose = False,
+            pretend_run = pretend_run,
             exit_on_failure = False)
         for audio_source in audio_sources.splitlines():
             if "output" not in audio_source:
@@ -147,6 +152,7 @@ def CaptureVideo(
             output_paths = [output_file],
             blocking_processes = [ffmpeg_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check result
@@ -161,6 +167,7 @@ def CaptureVideoWhileRunning(
     capture_framerate,
     capture_duration,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -183,6 +190,7 @@ def CaptureVideoWhileRunning(
             capture_framerate = capture_framerate,
             capture_duration = capture_duration,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Create background thread for capturing

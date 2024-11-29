@@ -44,6 +44,7 @@ parser.add_argument("-t", "--passphrase_type",
     default=config.passphrase_type_none, help="Passphrase type"
 )
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
@@ -87,6 +88,7 @@ def main():
             file_subcategory = args.file_subcategory,
             passphrase = passphrase,
             verbose = args.verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
     # Automatic according to standard layout
@@ -101,6 +103,7 @@ def main():
                 file_subcategory = args.file_subcategory,
                 passphrase = passphrase,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
         # Specific category/all subcategories in that category
@@ -113,6 +116,7 @@ def main():
                     file_subcategory = file_subcategory,
                     passphrase = passphrase,
                     verbose = args.verbose,
+                    pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
 
         # All categories/subcategories
@@ -126,6 +130,7 @@ def main():
                         file_subcategory = file_subcategory,
                         passphrase = passphrase,
                         verbose = args.verbose,
+                        pretend_run = args.pretend_run,
                         exit_on_failure = args.exit_on_failure)
 
 # Start

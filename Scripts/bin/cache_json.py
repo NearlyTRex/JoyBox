@@ -19,6 +19,7 @@ parser = argparse.ArgumentParser(description="Cache game files.")
 parser.add_argument("path", help="Input path")
 parser.add_argument("-k", "--keep_setup_files", action="store_true", help="Keep setup files")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 parser.add_argument("--force_cache_refresh", action="store_true", help="Force refresh of cached files")
 args, unknown = parser.parse_known_args()
@@ -44,6 +45,7 @@ def main():
         game_info = gameinfo.GameInfo(
             json_file = json_file,
             verbose = args.verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
         # Force cache refresh
@@ -51,6 +53,7 @@ def main():
             cache.RemoveGameFromCache(
                 game_info = game_info,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
         # Install game to cache
@@ -58,6 +61,7 @@ def main():
             game_info = game_info,
             keep_setup_files = args.keep_setup_files,
             verbose = args.verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
 # Start

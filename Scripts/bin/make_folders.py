@@ -16,6 +16,7 @@ parser = argparse.ArgumentParser(description="Create folders from certain file t
 parser.add_argument("path", help="Input path")
 parser.add_argument("-f", "--file_types", type=str, default=".iso,.chd,.rvz,.zip,.7z,.rar,.pkg", help="List of file types (comma delimited)")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:
@@ -43,13 +44,15 @@ def main():
                 new_folder = os.path.join(input_path, selected_file_basename)
                 new_file = os.path.join(input_path, selected_file_basename, obj)
                 system.MakeDirectory(
-                    new_folder,
+                    dir = new_folder,
                     verbose = args.verbose,
+                    pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
                 system.MoveFileOrDirectory(
-                    selected_file,
-                    new_file,
+                    src = selected_file,
+                    dest = new_file,
                     verbose = args.verbose,
+                    pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
 
 # Start

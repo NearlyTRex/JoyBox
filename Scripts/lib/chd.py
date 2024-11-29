@@ -19,7 +19,13 @@ def IsDiscCHDMounted(chd_file, mount_dir):
     )
 
 # Create disc chd
-def CreateDiscCHD(chd_file, source_iso, delete_original = False, verbose = False, exit_on_failure = False):
+def CreateDiscCHD(
+    chd_file,
+    source_iso,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     chd_tool = None
@@ -44,6 +50,7 @@ def CreateDiscCHD(chd_file, source_iso, delete_original = False, verbose = False
             output_paths = [chd_file],
             blocking_processes = [chd_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -56,7 +63,14 @@ def CreateDiscCHD(chd_file, source_iso, delete_original = False, verbose = False
     return os.path.exists(chd_file)
 
 # Extract disc chd
-def ExtractDiscCHD(chd_file, binary_file, toc_file, delete_original = False, verbose = False, exit_on_failure = False):
+def ExtractDiscCHD(
+    chd_file,
+    binary_file,
+    toc_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     chd_tool = None
@@ -82,6 +96,7 @@ def ExtractDiscCHD(chd_file, binary_file, toc_file, delete_original = False, ver
             output_paths = [toc_file, binary_file],
             blocking_processes = [chd_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -94,10 +109,19 @@ def ExtractDiscCHD(chd_file, binary_file, toc_file, delete_original = False, ver
     return os.path.exists(binary_file)
 
 # Archive disc chd
-def ArchiveDiscCHD(chd_file, zip_file, disc_type = None, delete_original = False, verbose = False, exit_on_failure = False):
+def ArchiveDiscCHD(
+    chd_file,
+    zip_file,
+    disc_type = None,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -107,6 +131,7 @@ def ArchiveDiscCHD(chd_file, zip_file, disc_type = None, delete_original = False
         mount_dir = tmp_dir_result,
         disc_type = disc_type,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -116,20 +141,31 @@ def ArchiveDiscCHD(chd_file, zip_file, disc_type = None, delete_original = False
         archive_file = zip_file,
         source_dir = tmp_dir_result,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
 
     # Clean up
     if delete_original:
-        system.RemoveFile(chd_file, verbose = verbose)
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveFile(
+            src = chd_file,
+            verbose = verbose,
+            pretend_run = pretend_run)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run)
 
     # Check result
     return os.path.exists(zip_file)
 
 # Verify disc chd
-def VerifyDiscCHD(chd_file, verbose = False, exit_on_failure = False):
+def VerifyDiscCHD(
+    chd_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     chd_tool = None
@@ -150,6 +186,7 @@ def VerifyDiscCHD(chd_file, verbose = False, exit_on_failure = False):
     verify_output = command.RunOutputCommand(
         cmd = verify_cmd,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check verification
@@ -159,14 +196,22 @@ def VerifyDiscCHD(chd_file, verbose = False, exit_on_failure = False):
     return "Overall SHA1 verification successful!" in verify_text
 
 # Mount disc chd
-def MountDiscCHD(chd_file, mount_dir, disc_type = None, verbose = False, exit_on_failure = False):
+def MountDiscCHD(
+    chd_file,
+    mount_dir,
+    disc_type = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Check if mounted
     if IsDiscCHDMounted(chd_file, mount_dir):
         return True
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -180,12 +225,17 @@ def MountDiscCHD(chd_file, mount_dir, disc_type = None, verbose = False, exit_on
         binary_file = temp_iso_file,
         toc_file = temp_toc_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
 
     # Make mount directories
-    system.MakeDirectory(mount_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = mount_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Extract iso files to mount point
     if disc_type == config.disc_type_macwin:
@@ -194,6 +244,7 @@ def MountDiscCHD(chd_file, mount_dir, disc_type = None, verbose = False, exit_on
             extract_dir = mount_dir,
             delete_original = True,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
         success = iso.ExtractISO(
@@ -201,18 +252,27 @@ def MountDiscCHD(chd_file, mount_dir, disc_type = None, verbose = False, exit_on
             extract_dir = mount_dir,
             delete_original = True,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run)
 
     # Check result
     return IsDiscCHDMounted(chd_file, mount_dir)
 
 # Unmount disc chd
-def UnmountDiscCHD(chd_file, mount_dir, verbose = False, exit_on_failure = False):
+def UnmountDiscCHD(
+    chd_file,
+    mount_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Check if mounted
     if not IsDiscCHDMounted(chd_file, mount_dir):
@@ -222,6 +282,7 @@ def UnmountDiscCHD(chd_file, mount_dir, verbose = False, exit_on_failure = False
     system.RemoveDirectory(
         dir = mount_dir,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check result

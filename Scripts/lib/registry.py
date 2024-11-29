@@ -16,6 +16,7 @@ def ReadRegistryFile(
     ignore_keys = [],
     keep_keys = [],
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get registry text
@@ -23,8 +24,9 @@ def ReadRegistryFile(
     try:
         if verbose:
             system.Log("Reading registry file '%s'" % registry_file)
-        with open(registry_file, "r", encoding="utf-16") as file:
-            registry_text = file.read()
+        if not pretend_run:
+            with open(registry_file, "r", encoding="utf-16") as file:
+                registry_text = file.read()
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to read registry file '%s'" % registry_file)
@@ -96,6 +98,7 @@ def WriteRegistryFile(
     registry_file,
     registry_data,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Create registry text
@@ -112,9 +115,10 @@ def WriteRegistryFile(
     try:
         if verbose:
             system.Log("Writing registry file '%s'" % registry_file)
-        with open(registry_file, "w", encoding="utf-16") as file:
-            file.write(registry_text)
-            return True
+        if not pretend_run:
+            with open(registry_file, "w", encoding="utf-16") as file:
+                file.write(registry_text)
+        return True
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to write registry file '%s'" % registry_file)
@@ -129,6 +133,7 @@ def ExportRegistryFile(
     prefix_dir,
     prefix_name = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -157,6 +162,7 @@ def ExportRegistryFile(
             shell = True,
             blocking_processes = ["reg"]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -170,6 +176,7 @@ def ImportRegistryFile(
     prefix_dir,
     prefix_name = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
@@ -192,6 +199,7 @@ def ImportRegistryFile(
             force_prefix = True,
             blocking_processes = ["reg"]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
@@ -208,13 +216,16 @@ def BackupUserRegistry(
     ignore_keys = [],
     keep_keys = [],
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check params
     system.AssertIsValidPath(registry_file, "registry_file")
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -229,6 +240,7 @@ def BackupUserRegistry(
             prefix_dir = prefix_dir,
             prefix_name = prefix_name,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
@@ -239,6 +251,7 @@ def BackupUserRegistry(
         ignore_keys = ignore_keys,
         keep_keys = keep_keys,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Write new pruned registry file
@@ -246,4 +259,5 @@ def BackupUserRegistry(
         registry_file = registry_file,
         registry_data = registry_data,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

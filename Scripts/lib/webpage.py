@@ -37,26 +37,38 @@ def CreateChromeWebDriver(
     download_dir = None,
     profile_dir = None,
     make_headless = False,
-    verbose = False):
-    from selenium.webdriver.chrome.service import Service as ChromeService
-    from selenium.webdriver.chrome.options import Options as ChromeOptions
-    from selenium.webdriver import Chrome
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
     webdriver_tool = None
     if programs.IsToolInstalled("ChromeDriver"):
         webdriver_tool = programs.GetToolProgram("ChromeDriver")
     if not webdriver_tool:
         system.LogError("ChromeDriver was not found")
         return None
+
+    # Create web driver
     try:
-        service = ChromeService(webdriver_tool, log_path=os.path.devnull)
-        options = ChromeOptions()
-        if make_headless:
-            options.add_argument("--headless")
-        web_driver = Chrome(service=service, options=options)
-        return web_driver
-    except Exception as e:
         if verbose:
+            system.Log("Creating chrome web driver")
+        if not pretend_run:
+            from selenium.webdriver.chrome.service import Service as ChromeService
+            from selenium.webdriver.chrome.options import Options as ChromeOptions
+            from selenium.webdriver import Chrome
+            service = ChromeService(webdriver_tool, log_path=os.path.devnull)
+            options = ChromeOptions()
+            if make_headless:
+                options.add_argument("--headless")
+            web_driver = Chrome(service=service, options=options)
+            return web_driver
+        return None
+    except Exception as e:
+        if exit_on_failure:
+            system.LogError("Unable to create chrome web driver")
             system.LogError(e)
+            system.QuitProgram()
     return None
 
 # Create firefox web driver
@@ -64,33 +76,45 @@ def CreateFirefoxWebDriver(
     download_dir = None,
     profile_dir = None,
     make_headless = False,
-    verbose = False):
-    from selenium.webdriver.firefox.service import Service as FirefoxService
-    from selenium.webdriver.firefox.options import Options as FirefoxOptions
-    from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
-    from selenium.webdriver import Firefox
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
     webdriver_tool = None
     if programs.IsToolInstalled("GeckoDriver"):
         webdriver_tool = programs.GetToolProgram("GeckoDriver")
     if not webdriver_tool:
         system.LogError("GeckoDriver was not found")
         return None
+
+    # Create web driver
     try:
-        service = FirefoxService(webdriver_tool, log_path=os.path.devnull)
-        options = FirefoxOptions()
-        if system.IsPathValid(download_dir) and system.DoesPathExist(download_dir):
-            options.set_preference("browser.download.folderList", 2)
-            options.set_preference("browser.download.dir", download_dir)
-        if system.IsPathValid(profile_dir) and system.DoesPathExist(profile_dir):
-            options.profile = FirefoxProfile(profile_directory = profile_dir)
-        if make_headless:
-            options.add_argument("--headless")
-        options.binary_location = programs.GetToolProgram("Firefox")
-        web_driver = Firefox(service=service, options=options)
-        return web_driver
-    except Exception as e:
         if verbose:
+            system.Log("Creating firefox web driver")
+        if not pretend_run:
+            from selenium.webdriver.firefox.service import Service as FirefoxService
+            from selenium.webdriver.firefox.options import Options as FirefoxOptions
+            from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
+            from selenium.webdriver import Firefox
+            service = FirefoxService(webdriver_tool, log_path=os.path.devnull)
+            options = FirefoxOptions()
+            if system.IsPathValid(download_dir) and system.DoesPathExist(download_dir):
+                options.set_preference("browser.download.folderList", 2)
+                options.set_preference("browser.download.dir", download_dir)
+            if system.IsPathValid(profile_dir) and system.DoesPathExist(profile_dir):
+                options.profile = FirefoxProfile(profile_directory = profile_dir)
+            if make_headless:
+                options.add_argument("--headless")
+            options.binary_location = programs.GetToolProgram("Firefox")
+            web_driver = Firefox(service=service, options=options)
+            return web_driver
+        return None
+    except Exception as e:
+        if exit_on_failure:
+            system.LogError("Unable to create firefox web driver")
             system.LogError(e)
+            system.QuitProgram()
     return None
 
 # Create web driver
@@ -99,7 +123,9 @@ def CreateWebDriver(
     download_dir = None,
     profile_dir = None,
     make_headless = False,
-    verbose = False):
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     if not driver_type:
         driver_type = config.web_driver_type_firefox
     if driver_type == config.web_driver_type_chrome:
@@ -107,34 +133,57 @@ def CreateWebDriver(
             download_dir = download_dir,
             profile_dir = profile_dir,
             make_headless = make_headless,
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
     elif driver_type == config.web_driver_type_firefox:
         return CreateFirefoxWebDriver(
             download_dir = download_dir,
             profile_dir = profile_dir,
             make_headless = make_headless,
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
     return None
 
 # Destroy web driver
-def DestroyWebDriver(driver, verbose = False):
+def DestroyWebDriver(
+    driver,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
-        if driver:
-            driver.quit()
+        if verbose:
+            system.Log("Destroying web driver")
+        if not pretend_run:
+            if driver:
+                driver.quit()
         return True
     except Exception as e:
-        if verbose:
+        if exit_on_failure:
+            system.LogError("Unable to destroy web driver")
             system.LogError(e)
+            system.QuitProgram()
     return False
 
 # Load url
-def LoadUrl(driver, url, verbose = False):
+def LoadUrl(
+    driver,
+    url,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
-        driver.get(url)
+        if verbose:
+            system.Log("Loading url %s" % url)
+        if not pretend_run:
+            driver.get(url)
         return True
     except Exception as e:
-        if verbose:
+        if exit_on_failure:
+            system.LogError("Unable to load url %s" % url)
             system.LogError(e)
+            system.QuitProgram()
     return False
 
 # Get current page url
@@ -202,10 +251,12 @@ def WaitForPageElements(
     class_name = None,
     css_selector = None,
     wait_time = 1000,
-    verbose = False):
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as ExpectedConditions
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
+        from selenium.webdriver.support.ui import WebDriverWait
+        from selenium.webdriver.support import expected_conditions as ExpectedConditions
         by_type, by_value = ParseByRequest(
             id = id,
             name = name,
@@ -219,8 +270,9 @@ def WaitForPageElements(
             ExpectedConditions.presence_of_all_elements_located((by_type, by_value))
         )
     except Exception as e:
-        if verbose:
+        if exit_on_failure:
             system.LogError(e)
+            system.QuitProgram()
     return None
 
 # Wait for page element by class
@@ -235,7 +287,9 @@ def WaitForPageElement(
     class_name = None,
     css_selector = None,
     wait_time = 1000,
-    verbose = False):
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     elements = WaitForPageElements(
         driver = driver,
         id = id,
@@ -247,7 +301,9 @@ def WaitForPageElement(
         class_name = class_name,
         css_selector = css_selector,
         wait_time = wait_time,
-        verbose = verbose)
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if isinstance(elements, list) and len(elements) > 0:
         return elements[0]
     return None
@@ -264,7 +320,9 @@ def GetElement(
     class_name = None,
     css_selector = None,
     all_elements = False,
-    verbose = False):
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         by_type, by_value = ParseByRequest(
             id = id,
@@ -280,8 +338,9 @@ def GetElement(
         else:
             return parent.find_element(by_type, by_value)
     except Exception as e:
-        if verbose:
+        if exit_on_failure:
             system.LogError(e)
+            system.QuitProgram()
     return None
 
 # Get element text
@@ -307,59 +366,95 @@ def GetElementChildrenText(element):
     return system.ExtractWebText(GetElementAttribute(element, "innerHTML"))
 
 # Click element
-def ClickElement(element, verbose = False):
+def ClickElement(
+    element,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if element:
             element.click()
     except Exception as e:
-        if verbose:
+        if exit_on_failure:
             system.LogError(e)
+            system.QuitProgram()
 
 # Scroll to end of page
-def ScrollToEndOfPage(driver, verbose = False):
+def ScrollToEndOfPage(
+    driver,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
     except Exception as e:
-        if verbose:
+        if exit_on_failure:
             system.LogError(e)
+            system.QuitProgram()
 
 # Get page source
-def GetPageSource(driver, url = None, verbose = False):
+def GetPageSource(
+    driver,
+    url = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if url:
             driver.get(url)
         return str(driver.page_source)
     except Exception as e:
-        if verbose:
+        if exit_on_failure:
             system.LogError(e)
+            system.QuitProgram()
     return None
 
 # Save cookie
-def SaveCookie(driver, path, verbose = False):
+def SaveCookie(
+    driver,
+    path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     if not system.IsPathValid(path):
         return False
     try:
-        with open(path, "w") as filehandler:
-            json.dump(driver.get_cookies(), filehandler)
+        if verbose:
+            system.Log("Saving cookie file '%s'" % path)
+        if not pretend_run:
+            with open(path, "w") as filehandler:
+                json.dump(driver.get_cookies(), filehandler)
         return True
     except Exception as e:
-        if verbose:
+        if exit_on_failure:
+            system.LogError("Unable to save cookie file '%s'" % path)
             system.LogError(e)
+            system.QuitProgram()
     return False
 
 # Load cookie
-def LoadCookie(driver, path, verbose = False):
+def LoadCookie(
+    driver,
+    path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     if not system.DoesPathExist(path):
         return False
     try:
-        with open(path, "r") as cookiesfile:
-            cookies = json.load(cookiesfile)
-        for cookie in cookies:
-            driver.add_cookie(cookie)
+        if verbose:
+            system.Log("Loading cookie file '%s'" % path)
+        if not pretend_run:
+            with open(path, "r") as cookiesfile:
+                cookies = json.load(cookiesfile)
+            for cookie in cookies:
+                driver.add_cookie(cookie)
         return True
     except Exception as e:
-        if verbose:
+        if exit_on_failure:
+            system.LogError("Unable to load cookie file '%s'" % path)
             system.LogError(e)
+            system.QuitProgram()
     return False
 
 ###########################################################
@@ -378,14 +473,17 @@ def LogIntoWebsite(
     class_name = None,
     css_selector = None,
     wait_time = 1000,
-    verbose = False):
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Load the login page
     try:
         driver.get(login_url)
     except Exception as e:
-        if verbose:
+        if exit_on_failure:
             system.LogError(e)
+            system.QuitProgram()
         return False
 
     # Look for element
@@ -400,23 +498,51 @@ def LogIntoWebsite(
         class_name = class_name,
         css_selector = css_selector,
         wait_time = wait_time,
-        verbose = verbose)
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if not login_check:
         return False
 
     # Save cookie
-    SaveCookie(driver, cookiefile)
-    return True
+    success = SaveCookie(
+        driver = driver,
+        path = cookiefile,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
 
 # Get all matching urls
-def GetMatchingUrls(url, base_url, params = {}, starts_with = "", ends_with = "", verbose = False):
+def GetMatchingUrls(
+    url,
+    base_url,
+    params = {},
+    starts_with = "",
+    ends_with = "",
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get page text
     page_text = ""
-    driver = CreateWebDriver(make_headless = True, verbose = verbose)
+    driver = CreateWebDriver(
+        make_headless = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if driver:
-        page_text = GetPageSource(driver, url, verbose = verbose)
-        DestroyWebDriver(driver, verbose = verbose)
+        page_text = GetPageSource(
+            driver = driver,
+            url = url,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        DestroyWebDriver(
+            driver = driver,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Fallback for getting page text
     if not page_text or len(page_text) == 0:
@@ -464,7 +590,16 @@ def GetMatchingUrls(url, base_url, params = {}, starts_with = "", ends_with = ""
     return matching_urls
 
 # Get matching url
-def GetMatchingUrl(url, base_url, params = {}, starts_with = "", ends_with = "", get_latest = False, verbose = False):
+def GetMatchingUrl(
+    url,
+    base_url,
+    params = {},
+    starts_with = "",
+    ends_with = "",
+    get_latest = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Find potential matching archive urls
     potential_urls = GetMatchingUrls(
@@ -473,7 +608,9 @@ def GetMatchingUrl(url, base_url, params = {}, starts_with = "", ends_with = "",
         params = params,
         starts_with = starts_with,
         ends_with = ends_with,
-        verbose = verbose)
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Did not find any matching release
     if len(potential_urls) == 0:

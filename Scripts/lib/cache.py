@@ -18,7 +18,11 @@ def IsGameInCache(game_info):
     return system.DoesDirectoryContainFiles(cache_dir)
 
 # Remove game from cache
-def RemoveGameFromCache(game_info, verbose = False, exit_on_failure = False):
+def RemoveGameFromCache(
+    game_info,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Ignore if not in cache
     if not IsGameInCache(game_info):
@@ -28,14 +32,21 @@ def RemoveGameFromCache(game_info, verbose = False, exit_on_failure = False):
     system.RemoveDirectory(
         dir = game_info.get_local_cache_dir(),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.RemoveDirectory(
         dir = game_info.get_remote_cache_dir(),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Install game to cache
-def InstallGameToCache(game_info, keep_setup_files = False, verbose = False, exit_on_failure = False):
+def InstallGameToCache(
+    game_info,
+    keep_setup_files = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get game info
     game_name = game_info.get_name()
@@ -69,6 +80,7 @@ def InstallGameToCache(game_info, keep_setup_files = False, verbose = False, exi
                 source_file = game_source_file,
                 keep_setup_files = keep_setup_files,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         gui.DisplayLoadingWindow(
             title_text = "Installing to cache",
@@ -84,6 +96,7 @@ def InstallGameToCache(game_info, keep_setup_files = False, verbose = False, exi
                 game_info = game_info,
                 source_file = game_source_file,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         gui.DisplayLoadingWindow(
             title_text = "Installing to cache",
@@ -99,23 +112,37 @@ def InstallGameToCache(game_info, keep_setup_files = False, verbose = False, exi
             message_text = "Game could not be cached\n%s\n%s" % (game_name, game_platform))
 
 # Add game to cache
-def AddGameToCache(game_info, source_file, verbose = False, exit_on_failure = False):
+def AddGameToCache(
+    game_info,
+    source_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Copy game files
     locker.DownloadAndDecryptPath(
         src = system.GetFilenameDirectory(source_file),
         dest = game_info.get_local_cache_dir(),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Return result
     return IsGameInCache(game_info)
 
 # Add transformed game to cache
-def AddTransformedGameToCache(game_info, source_file, keep_setup_files = False, verbose = False, exit_on_failure = False):
+def AddTransformedGameToCache(
+    game_info,
+    source_file,
+    keep_setup_files = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -126,6 +153,7 @@ def AddTransformedGameToCache(game_info, source_file, keep_setup_files = False, 
         output_dir = tmp_dir_result,
         keep_setup_files = keep_setup_files,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not transform_success:
         system.LogError(transform_result)
@@ -136,10 +164,14 @@ def AddTransformedGameToCache(game_info, source_file, keep_setup_files = False, 
         game_info = game_info,
         source_file = transform_result,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run)
 
     # Return result
     return IsGameInCache(game_info)
@@ -151,6 +183,7 @@ def LaunchCachedGame(
     launch_options = None,
     capture_type = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check if already cached
@@ -164,4 +197,5 @@ def LaunchCachedGame(
         options = launch_options,
         capture_type = capture_type,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

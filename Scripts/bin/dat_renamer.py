@@ -20,6 +20,7 @@ parser.add_argument("-d", "--dat_directory", type=str, help="Dat directory")
 parser.add_argument("-c", "--dat_cachefile", type=str, help="Dat cachefile")
 parser.add_argument("-g", "--generate_cachefile", action="store_true", help="Generate collected cachefile (if scanning normal dats)")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.input_path:
@@ -53,22 +54,26 @@ def main():
         game_dat.import_clrmamepro_dat_files(
             dat_dir = dat_directory,
             verbose = args.verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if args.generate_cachefile:
             game_dat.export_cache_dat_file(
                 dat_file = dat_cachefile,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
     elif os.path.isfile(dat_cachefile):
         game_dat.import_cache_dat_file(
             dat_file = dat_cachefile,
             verbose = args.verbose,
+            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
     # Rename files
     game_dat.rename_files(
         input_dir = input_path,
         verbose = args.verbose,
+        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
 
 # Start

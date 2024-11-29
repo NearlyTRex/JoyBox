@@ -27,6 +27,7 @@ parser.add_argument("-n", "--volume_name", type=str, default="", help="Volume na
 parser.add_argument("-a", "--auto_volume_name", action="store_true", help="Choose volume name based automatically")
 parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:
@@ -68,6 +69,7 @@ def main():
                 volume_name = volume_name,
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
     # Create iso images from zips
@@ -92,6 +94,7 @@ def main():
                 work_dir = current_dir,
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
             # Get volume name
@@ -107,6 +110,7 @@ def main():
                 volume_name = volume_name,
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
 # Start

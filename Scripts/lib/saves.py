@@ -13,7 +13,11 @@ import hashing
 import locker
 
 # Backup saves
-def BackupSaves(output_path, verbose = False, exit_on_failure = False):
+def BackupSaves(
+    output_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     save_tool = None
@@ -35,7 +39,9 @@ def BackupSaves(output_path, verbose = False, exit_on_failure = False):
     try:
         command.RunExceptionCommand(
             cmd = backup_command,
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to backup saves to output path '%s'" % output_path)
@@ -46,7 +52,11 @@ def BackupSaves(output_path, verbose = False, exit_on_failure = False):
     return system.IsDirectoryEmpty(output_path)
 
 # Restore saves
-def RestoreSaves(input_path, verbose = False, exit_on_failure = False):
+def RestoreSaves(
+    input_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     save_tool = None
@@ -68,7 +78,9 @@ def RestoreSaves(input_path, verbose = False, exit_on_failure = False):
     try:
         command.RunExceptionCommand(
             cmd = restore_command,
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to restore saves from input path '%s'" % input_path)
@@ -79,7 +91,10 @@ def RestoreSaves(input_path, verbose = False, exit_on_failure = False):
     return True
 
 # Can individual save be unpacked
-def CanSaveBeUnpacked(save_category, save_subcategory, save_name):
+def CanSaveBeUnpacked(
+    save_category,
+    save_subcategory,
+    save_name):
     input_save_dir = environment.GetLockerGamingSaveDir(save_category, save_subcategory, save_name)
     output_save_dir = environment.GetCacheGamingSaveDir(save_category, save_subcategory, save_name)
     if not os.path.isdir(input_save_dir) or system.IsDirectoryEmpty(input_save_dir):
@@ -89,7 +104,14 @@ def CanSaveBeUnpacked(save_category, save_subcategory, save_name):
     return True
 
 # Pack individual save
-def PackSave(save_category, save_subcategory, save_name, save_dir = None, verbose = False, exit_on_failure = False):
+def PackSave(
+    save_category,
+    save_subcategory,
+    save_name,
+    save_dir = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get input save dir
     input_save_dir = save_dir
@@ -100,10 +122,16 @@ def PackSave(save_category, save_subcategory, save_name, save_dir = None, verbos
 
     # Get output save dir
     output_save_dir = environment.GetLockerGamingSaveDir(save_category, save_subcategory, save_name)
-    system.MakeDirectory(output_save_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = output_save_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
@@ -121,9 +149,14 @@ def PackSave(save_category, save_subcategory, save_name, save_dir = None, verbos
         archive_file = tmp_save_archive_file,
         source_dir = input_save_dir,
         excludes = input_excludes,
-        verbose = verbose)
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if not success:
-        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run)
         return False
 
     # Check if already archived
@@ -133,7 +166,11 @@ def PackSave(save_category, save_subcategory, save_name, save_dir = None, verbos
     if len(found_files) > 0:
         if verbose:
             system.Log("Save '%s' - '%s' is already packed, skipping ..." % (save_name, save_subcategory))
-        system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         return True
 
     # Move save archive
@@ -141,6 +178,7 @@ def PackSave(save_category, save_subcategory, save_name, save_dir = None, verbos
         src = tmp_save_archive_file,
         dest = out_save_archive_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -149,18 +187,26 @@ def PackSave(save_category, save_subcategory, save_name, save_dir = None, verbos
     success = locker.UploadPath(
         src = out_save_archive_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(out_save_archive_file)
 
 # Pack all saves
-def PackSaves(verbose = False, exit_on_failure = False):
+def PackSaves(
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     for save_category in config.game_categories:
         for save_subcategory in config.game_subcategories[save_category]:
             save_base_dir = os.path.join(environment.GetCacheGamingSavesRootDir(), save_category, save_subcategory)
@@ -170,6 +216,7 @@ def PackSaves(verbose = False, exit_on_failure = False):
                     save_subcategory = save_subcategory,
                     save_name = save_name,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if success:
                     if verbose:
@@ -179,7 +226,14 @@ def PackSaves(verbose = False, exit_on_failure = False):
     return True
 
 # Unpack individual save
-def UnpackSave(save_category, save_subcategory, save_name, save_dir = None, verbose = False, exit_on_failure = False):
+def UnpackSave(
+    save_category,
+    save_subcategory,
+    save_name,
+    save_dir = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get input save dir
     input_save_dir = save_dir
@@ -190,7 +244,11 @@ def UnpackSave(save_category, save_subcategory, save_name, save_dir = None, verb
 
     # Get output save dir
     output_save_dir = environment.GetCacheGamingSaveDir(save_category, save_subcategory, save_name)
-    system.MakeDirectory(output_save_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = output_save_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if not system.IsDirectoryEmpty(output_save_dir):
         if verbose:
             system.Log("Save '%s' - '%s' is already unpacked, skipping ..." % (save_name, save_subcategory))
@@ -204,7 +262,9 @@ def UnpackSave(save_category, save_subcategory, save_name, save_dir = None, verb
     success = archive.ExtractArchive(
         archive_file = latest_save_archive,
         extract_dir = output_save_dir,
-        verbose = verbose)
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if not success:
         return False
 
@@ -212,7 +272,10 @@ def UnpackSave(save_category, save_subcategory, save_name, save_dir = None, verb
     return not system.IsDirectoryEmpty(output_save_dir)
 
 # Unpack all saves
-def UnpackSaves(verbose = False, exit_on_failure = False):
+def UnpackSaves(
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     for save_category in config.game_categories:
         for save_subcategory in config.game_subcategories[save_category]:
             save_base_dir = os.path.join(environment.GetLockerGamingSavesRootDir(), save_category, save_subcategory)
@@ -223,6 +286,7 @@ def UnpackSaves(verbose = False, exit_on_failure = False):
                         save_subcategory = save_subcategory,
                         save_name = save_name,
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     if success:
                         if verbose:
@@ -232,7 +296,14 @@ def UnpackSaves(verbose = False, exit_on_failure = False):
     return True
 
 # Normalize save dir
-def NormalizeSaveDir(save_category, save_subcategory, save_name, save_dir, verbose = False, exit_on_failure = False):
+def NormalizeSaveDir(
+    save_category,
+    save_subcategory,
+    save_name,
+    save_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Computer
     if save_category == config.game_category_computer:
@@ -244,6 +315,7 @@ def NormalizeSaveDir(save_category, save_subcategory, save_name, save_dir, verbo
                 success = system.MakeDirectory(
                     dir = user_path,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if not success:
                     return False
@@ -252,24 +324,42 @@ def NormalizeSaveDir(save_category, save_subcategory, save_name, save_dir, verbo
     return True
 
 # Normalize save archive
-def NormalizeSaveArchive(save_category, save_subcategory, save_name, save_archive, verbose = False, exit_on_failure = False):
+def NormalizeSaveArchive(
+    save_category,
+    save_subcategory,
+    save_name,
+    save_archive,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Make temporary dirs
     tmp_dir_extract = os.path.join(tmp_dir_result, "extract")
     tmp_dir_archive = os.path.join(tmp_dir_result, "archive")
-    system.MakeDirectory(tmp_dir_extract, verbose = verbose, exit_on_failure = exit_on_failure)
-    system.MakeDirectory(tmp_dir_archive, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = tmp_dir_extract,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = tmp_dir_archive,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Extract archive
     success = archive.ExtractArchive(
         archive_file = save_archive,
         extract_dir = tmp_dir_extract,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -281,6 +371,7 @@ def NormalizeSaveArchive(save_category, save_subcategory, save_name, save_archiv
         save_name = save_name,
         save_dir = tmp_dir_extract,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -290,6 +381,7 @@ def NormalizeSaveArchive(save_category, save_subcategory, save_name, save_archiv
         archive_file = os.path.join(tmp_dir_archive, system.GetFilenameFile(save_archive)),
         source_dir = tmp_dir_extract,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -299,18 +391,25 @@ def NormalizeSaveArchive(save_category, save_subcategory, save_name, save_archiv
         src = os.path.join(tmp_dir_archive, system.GetFilenameFile(save_archive)),
         dest = save_archive,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run)
 
     # Check result
     return os.path.exists(save_archive)
 
 # Normalize all saves
-def NormalizeSaves(verbose = False, exit_on_failure = False):
+def NormalizeSaves(
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     for save_category in config.game_categories:
         for save_subcategory in config.game_subcategories[save_category]:
             save_base_dir = os.path.join(environment.GetLockerGamingSavesRootDir(), save_category, save_subcategory)
@@ -323,18 +422,24 @@ def NormalizeSaves(verbose = False, exit_on_failure = False):
                         save_name = save_name,
                         save_archive = save_archive,
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     if not success:
                         return False
     return True
 
 # Clean empty saves
-def CleanEmptySaves(verbose = False, exit_on_failure = False):
+def CleanEmptySaves(
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     system.RemoveEmptyDirectories(
         dir = environment.GetCacheGamingSavesRootDir(),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.RemoveEmptyDirectories(
         dir = environment.GetLockerGamingSavesRootDir(),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

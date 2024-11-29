@@ -22,6 +22,7 @@ parser.add_argument("-n", "--untrim", action="store_true", help="Untrim PSV file
 parser.add_argument("-e", "--verify", action="store_true", help="Verify PSV files")
 parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 if not args.path:
@@ -52,6 +53,7 @@ def main():
                 dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_stripped.psv"),
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
         # Unstrip psv
@@ -62,6 +64,7 @@ def main():
                 dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_unstripped.psv"),
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
         # Trim psv
@@ -71,6 +74,7 @@ def main():
                 dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_trimmed.psv"),
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
         # Untrim psv
@@ -80,6 +84,7 @@ def main():
                 dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_untrimmed.psv"),
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
         # Verify psv
@@ -87,6 +92,7 @@ def main():
             playstation.VerifyPSV(
                 psv_file = current_file,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
 # Start

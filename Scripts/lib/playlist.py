@@ -11,16 +11,22 @@ import system
 import environment
 
 # Read playlist file
-def ReadPlaylist(input_file, verbose = False, exit_on_failure = False):
+def ReadPlaylist(
+    input_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if verbose:
             system.Log("Reading playlist file %s" % input_file)
-        playlist_contents = []
-        with open(input_file, "r", encoding="utf8") as f:
+        if not pretend_run:
             playlist_contents = []
-            for line in f.readlines():
-                playlist_contents.append(line.strip())
-        return playlist_contents
+            with open(input_file, "r", encoding="utf8") as f:
+                playlist_contents = []
+                for line in f.readlines():
+                    playlist_contents.append(line.strip())
+            return playlist_contents
+        return []
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to read playlist file %s" % input_file)
@@ -28,13 +34,19 @@ def ReadPlaylist(input_file, verbose = False, exit_on_failure = False):
         return []
 
 # Write playlist file
-def WritePlaylist(output_file, playlist_contents = [], verbose = False, exit_on_failure = False):
+def WritePlaylist(
+    output_file,
+    playlist_contents = [],
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if verbose:
             system.Log("Writing playlist file %s" % output_file)
-        with open(output_file, "w", encoding="utf8") as f:
-            for entry in playlist_contents:
-                f.write(entry + "\n")
+        if not pretend_run:
+            with open(output_file, "w", encoding="utf8") as f:
+                for entry in playlist_contents:
+                    f.write(entry + "\n")
         return True
     except Exception as e:
         if exit_on_failure:
@@ -52,6 +64,7 @@ def GeneratePlaylist(
     allow_single_lists = False,
     only_keep_ends = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Generate playlist contents
@@ -86,6 +99,7 @@ def GeneratePlaylist(
         output_file = output_file,
         playlist_contents = system.SortStringsWithLength(playlist_contents),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Generate tree playlist file
@@ -96,6 +110,7 @@ def GenerateTreePlaylist(
     allow_empty_lists = False,
     allow_single_lists = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
     return GeneratePlaylist(
         source_dir = source_dir,
@@ -105,6 +120,7 @@ def GenerateTreePlaylist(
         allow_empty_lists = allow_empty_lists,
         allow_single_lists = allow_single_lists,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Generate local playlists
@@ -114,6 +130,7 @@ def GenerateLocalPlaylists(
     allow_empty_lists = False,
     allow_single_lists = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check each directory for the requested files
@@ -133,6 +150,7 @@ def GenerateLocalPlaylists(
                 allow_single_lists = allow_single_lists,
                 only_keep_ends = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 return False

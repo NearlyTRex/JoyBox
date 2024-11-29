@@ -9,7 +9,13 @@ import programs
 import system
 
 # Extract Xbox ISO
-def ExtractXboxISO(iso_file, extract_dir, delete_original = False, verbose = False, exit_on_failure = False):
+def ExtractXboxISO(
+    iso_file,
+    extract_dir,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     extract_tool = None
@@ -33,6 +39,7 @@ def ExtractXboxISO(iso_file, extract_dir, delete_original = False, verbose = Fal
         options = command.CommandOptions(
             blocking_processes = [extract_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         system.LogError("Unable to extract xbox iso '%s' to '%s'" % (iso_file, extract_dir))
@@ -46,7 +53,12 @@ def ExtractXboxISO(iso_file, extract_dir, delete_original = False, verbose = Fal
     return os.path.exists(extract_dir)
 
 # Rewrite Xbox ISO
-def RewriteXboxISO(iso_file, delete_original = False, verbose = False, exit_on_failure = False):
+def RewriteXboxISO(
+    iso_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get tool
     extract_tool = None
@@ -72,6 +84,7 @@ def RewriteXboxISO(iso_file, delete_original = False, verbose = False, exit_on_f
         options = command.CommandOptions(
             blocking_processes = [extract_tool]),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         system.LogError("Unable to rewrite xbox iso '%s'" % iso_file)

@@ -28,6 +28,7 @@ def CreateGameJsonFile(
     initial_data = None,
     passphrase = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get platform
@@ -51,6 +52,7 @@ def CreateGameJsonFile(
         json_file_data = system.ReadJsonFile(
             src = json_file_path,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Get all files
@@ -60,6 +62,7 @@ def CreateGameJsonFile(
             source_files = all_files,
             passphrase = passphrase,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Get rebased files
@@ -162,6 +165,7 @@ def CreateGameJsonFile(
     success = system.MakeDirectory(
         dir = system.GetFilenameDirectory(json_file_path),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -171,6 +175,7 @@ def CreateGameJsonFile(
         src = json_file_path,
         json_data = json_obj.get_data(),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -181,6 +186,7 @@ def CreateGameJsonFile(
         sort_keys = True,
         remove_empty_values = True,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return success
 
@@ -191,6 +197,7 @@ def CreateGameJsonFiles(
     game_root,
     passphrase = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
     for game_name in gameinfo.FindAllGameNames(game_root, game_category, game_subcategory):
         success = CreateGameJsonFile(
@@ -199,6 +206,7 @@ def CreateGameJsonFiles(
             game_name = game_name,
             passphrase = passphrase,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
@@ -211,6 +219,7 @@ def GetGameJsonIgnoreEntries(
     game_category,
     game_subcategory,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get json file path
@@ -222,12 +231,14 @@ def GetGameJsonIgnoreEntries(
             src = json_file_path,
             contents = "{}",
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Read json data
     json_file_data = system.ReadJsonFile(
         src = json_file_path,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return json_file_data
 
@@ -238,6 +249,7 @@ def AddGameJsonIgnoreEntry(
     game_identifier,
     game_name,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get platform
@@ -252,12 +264,14 @@ def AddGameJsonIgnoreEntry(
             src = json_file_path,
             contents = "{}",
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Read json data
     json_file_data = system.ReadJsonFile(
         src = json_file_path,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Create json data object
@@ -274,6 +288,7 @@ def AddGameJsonIgnoreEntry(
         json_data = json_obj.get_data(),
         sort_keys = True,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Clean json file
@@ -282,6 +297,7 @@ def AddGameJsonIgnoreEntry(
         sort_keys = True,
         remove_empty_values = True,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return success
 
@@ -294,6 +310,7 @@ def AddMetadataEntry(
     game_name,
     initial_data = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Find metadata file
@@ -306,6 +323,7 @@ def AddMetadataEntry(
     metadata_obj.import_from_metadata_file(
         metadata_file = metadata_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Derive game data
@@ -337,6 +355,7 @@ def AddMetadataEntry(
         metadata_file = metadata_file,
         append_existing = False,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return True
 
@@ -347,6 +366,7 @@ def UpdateMetadataEntry(
     game_name,
     new_data = None,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Find metadata file
@@ -359,6 +379,7 @@ def UpdateMetadataEntry(
     metadata_obj.import_from_metadata_file(
         metadata_file = metadata_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Derive game data
@@ -409,8 +430,78 @@ def UpdateMetadataEntry(
         metadata_file = metadata_file,
         append_existing = False,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return True
+
+############################################################
+
+# Publish metadata entries
+def PublishMetadataEntries(
+    game_category,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Set metadata counter so we can use alternating row templates
+    metadata_counter = 1
+
+    # Add header
+    publish_contents = config.publish_html_header % game_category
+
+    # Iterate through each subcategory for the given category
+    for game_subcategory in config.game_subcategories[game_category]:
+
+        # Get metadata file
+        metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
+        if not os.path.isfile(metadata_file):
+            continue
+
+        # Read metadata
+        metadata_obj = metadata.Metadata()
+        metadata_obj.import_from_metadata_file(metadata_file)
+
+        # Iterate through each platform/entry
+        for game_platform in metadata_obj.get_sorted_platforms():
+            game_entry_id = 1
+            for game_entry in metadata_obj.get_sorted_entries(game_platform):
+
+                    # Get entry info
+                    game_entry_name = game_entry.get_game()
+                    game_entry_natural_name = gameinfo.DeriveRegularNameFromGameName(game_entry_name)
+                    game_entry_players = game_entry.get_players()
+                    game_entry_coop = game_entry.get_coop()
+                    game_entry_urlname = system.EncodeUrlString(game_entry_natural_name, use_plus = True)
+                    game_entry_info = (
+                        game_entry_id,
+                        game_platform,
+                        game_entry_name,
+                        game_entry_players,
+                        game_entry_coop,
+                        game_entry_urlname,
+                        game_entry_urlname
+                    )
+
+                    # Add entry (using odd/even templates)
+                    if (metadata_counter % 2) == 0:
+                        publish_contents += config.publish_html_entry_even % game_entry_info
+                    else:
+                        publish_contents += config.publish_html_entry_odd % game_entry_info
+                    metadata_counter += 1
+                    game_entry_id += 1
+
+    # Add footer
+    publish_contents += config.publish_html_footer
+
+    # Write publish file
+    success = system.TouchFile(
+        src = os.path.join(environment.GetPublishedMetadataRootDir(), game_category + ".html"),
+        contents = publish_contents,
+        encoding = None,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
 
 ############################################################
 
@@ -463,6 +554,7 @@ def DownloadMetadataAsset(
             game_name = game_name,
             asset_type = asset_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     if not network.IsUrlReachable(asset_url):
         return False
@@ -470,7 +562,11 @@ def DownloadMetadataAsset(
     # Get temp asset
     tmp_asset_file_original = os.path.join(tmp_dir_result, system.GetFilenameFile(asset_url))
     tmp_asset_file_converted = tmp_asset_file_original + output_asset_ext
-    system.MakeDirectory(output_asset_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = output_asset_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Download asset
     success = asset.DownloadAsset(
@@ -478,6 +574,7 @@ def DownloadMetadataAsset(
         asset_file = tmp_asset_file_original,
         asset_type = asset_type,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -508,6 +605,7 @@ def DownloadMetadataAsset(
         src = tmp_asset_file_converted,
         dest = output_asset_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
@@ -516,6 +614,7 @@ def DownloadMetadataAsset(
     success = locker.UploadPath(
         src = output_asset_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False

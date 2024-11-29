@@ -72,6 +72,7 @@ def DownloadAsset(
         url = asset_url,
         output_file = asset_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return success
 

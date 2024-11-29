@@ -39,6 +39,7 @@ parser.add_argument("-o", "--output_base_path", type=str, default=".", help="Out
 parser.add_argument("-e", "--skip_existing", action="store_true", help="Skip existing files")
 parser.add_argument("-i", "--skip_identical", action="store_true", help="Skip identical files")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 
 # Parse arguments
@@ -83,6 +84,7 @@ def main():
                 skip_existing = args.skip_existing,
                 skip_identical = args.skip_identical,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
     # Archive files
@@ -100,12 +102,14 @@ def main():
                     system.MakeDirectory(
                         dir = system.GetFilenameDirectory(sub_file),
                         verbose = args.verbose,
+                        pretend_run = args.pretend_run,
                         exit_on_failure = args.exit_on_failure)
                     archive.CreateArchiveFromFolder(
                         archive_file = sub_file,
                         source_dir = sub_dir,
                         volume_size = "4092m",
                         verbose = args.verbose,
+                        pretend_run = args.pretend_run,
                         exit_on_failure = args.exit_on_failure)
 
 # Start

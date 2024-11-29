@@ -33,6 +33,7 @@ parser.add_argument("-f", "--force", action="store_true", help="Force action")
 parser.add_argument("-r", "--recursive", action="store_true", help="Use recursion")
 parser.add_argument("-c", "--clean", action="store_true", help="Use cleaning first")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
@@ -74,6 +75,7 @@ def main():
         include_repos = include_repos,
         exclude_repos = exclude_repos,
         verbose = args.verbose,
+        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
 
     # Archive repositories
@@ -87,6 +89,7 @@ def main():
                 recursive = args.recursive,
                 clean = args.clean,
                 verbose = args.verbose,
+                pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
             if not success:
                 system.LogWarning("Unable to archive repository %s" % github_repository.name)
@@ -101,6 +104,7 @@ def main():
                     github_branch = github_repository.default_branch,
                     github_token = github_access_token,
                     verbose = args.verbose,
+                    pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
                 if not success:
                     system.LogWarning("Unable to update repository %s" % github_repository.name)

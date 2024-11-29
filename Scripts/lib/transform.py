@@ -26,6 +26,7 @@ def TransformComputerPrograms(
     output_dir,
     keep_setup_files = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get game info
@@ -41,8 +42,16 @@ def TransformComputerPrograms(
     cached_install_file = os.path.join(cached_install_dir, game_name + ".install")
 
     # Make directories
-    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
-    system.MakeDirectory(cached_install_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = output_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = cached_install_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Get pre-packaged archive
     prepackaged_archive = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".7z")
@@ -59,6 +68,7 @@ def TransformComputerPrograms(
             archive_file = prepackaged_archive,
             extract_dir = output_extract_dir,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return (False, "Unable to extract game")
@@ -75,6 +85,7 @@ def TransformComputerPrograms(
                 output_image = output_install_file,
                 keep_setup_files = keep_setup_files,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 return (False, "Unable to install computer game")
@@ -86,6 +97,7 @@ def TransformComputerPrograms(
                 delete_afterwards = True,
                 show_progress = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 return (False, "Unable to backup computer game install")
@@ -95,6 +107,7 @@ def TransformComputerPrograms(
             input_image = cached_install_file,
             output_dir = output_extract_dir,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return (False, "Unable to unpack install image")
@@ -103,6 +116,7 @@ def TransformComputerPrograms(
     success = system.TouchFile(
         src = output_extract_index_file,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return (False, "Unable to create raw index")
@@ -118,17 +132,26 @@ def TransformDiscImage(
     source_file,
     output_dir,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Make directories
-    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = output_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Get disc images
     disc_image_files = []
     if source_file.endswith(".chd"):
         disc_image_files = [system.GetFilenameFile(source_file)]
     if source_file.endswith(".m3u"):
-        disc_image_files = playlist.ReadPlaylist(source_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        disc_image_files = playlist.ReadPlaylist(
+            input_file = source_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Extract disc images
     for disc_image_file in disc_image_files:
@@ -138,6 +161,7 @@ def TransformDiscImage(
                 binary_file = os.path.join(output_dir, system.GetFilenameBasename(disc_image_file) + ".iso"),
                 toc_file = os.path.join(output_dir, system.GetFilenameBasename(disc_image_file) + ".toc"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 return (False, "Unable to extract disc images")
@@ -151,6 +175,7 @@ def TransformDiscImage(
             output_file = os.path.join(output_dir, system.GetFilenameBasename(source_file) + ".m3u"),
             playlist_contents = playlist_contents,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return (False, "Unable to write playlist")
@@ -172,17 +197,26 @@ def TransformXboxDiscImage(
     source_file,
     output_dir,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Make directories
-    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = output_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Get disc images
     disc_image_files = []
     if source_file.endswith(".iso"):
         disc_image_files = [system.GetFilenameFile(source_file)]
     if source_file.endswith(".m3u"):
-        disc_image_files = playlist.ReadPlaylist(source_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        disc_image_files = playlist.ReadPlaylist(
+            input_file = source_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Rewrite xbox disc images
     for disc_image_file in disc_image_files:
@@ -191,6 +225,7 @@ def TransformXboxDiscImage(
                 iso_file = os.path.join(system.GetFilenameDirectory(source_file), disc_image_file),
                 delete_original = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 return (False, "Unable to rewrite xbox disc images")
@@ -206,6 +241,7 @@ def TransformPS3DiscImage(
     source_file,
     output_dir,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get game info
@@ -213,7 +249,11 @@ def TransformPS3DiscImage(
     game_source_dir = game_info.get_source_dir()
 
     # Make directories
-    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = output_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Get dkey file
     dkey_file = os.path.join(game_source_dir, game_name + ".dkey")
@@ -225,7 +265,11 @@ def TransformPS3DiscImage(
     if source_file.endswith(".iso"):
         disc_image_files = [system.GetFilenameFile(source_file)]
     if source_file.endswith(".m3u"):
-        disc_image_files = playlist.ReadPlaylist(source_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        disc_image_files = playlist.ReadPlaylist(
+            input_file = source_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Extract disc images
     for disc_image_file in disc_image_files:
@@ -237,6 +281,7 @@ def TransformPS3DiscImage(
                 dkey_file = dkey_file,
                 extract_dir = output_dir,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 return (False, "Unable to extract ps3 disc images")
@@ -255,6 +300,7 @@ def TransformPS3DiscImage(
                         pkg_file = pkg_file,
                         extract_dir = os.path.join(pkg_dir, pkg_name),
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     if not success:
                         return (False, "Unable to extract ps3 pkg files")
@@ -263,6 +309,7 @@ def TransformPS3DiscImage(
     success = system.TouchFile(
         src = os.path.join(output_dir, config.raw_files_index),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return (False, "Unable to create raw index")
@@ -278,10 +325,15 @@ def TransformPS3NetworkPackage(
     source_file,
     output_dir,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Make directories
-    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = output_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Copy rap files
     for obj in system.GetDirectoryContents(system.GetFilenameDirectory(source_file)):
@@ -294,6 +346,7 @@ def TransformPS3NetworkPackage(
                     src = rap_file,
                     dest = os.path.join(output_dir, content_id + ".rap"),
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if not success:
                     return (False, "Unable to copy rap files")
@@ -306,6 +359,7 @@ def TransformPS3NetworkPackage(
                 pkg_file = pkg_file,
                 extract_dir = output_dir,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 return (False, "Unable to extract ps3 pkg files")
@@ -314,6 +368,7 @@ def TransformPS3NetworkPackage(
     success = system.TouchFile(
         src = os.path.join(output_dir, config.raw_files_index),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return (False, "Unable to create raw index")
@@ -329,10 +384,15 @@ def TransformPSVNetworkPackage(
     source_file,
     output_dir,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Make directories
-    system.MakeDirectory(output_dir, verbose = verbose, exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        dir = output_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Copy work.bin files
     for obj in system.GetDirectoryContents(system.GetFilenameDirectory(source_file)):
@@ -342,6 +402,7 @@ def TransformPSVNetworkPackage(
                 src = os.path.join(system.GetFilenameDirectory(source_file), obj),
                 dest = os.path.join(output_dir, "work.bin"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 return (False, "Unable to copy work.bin files")
@@ -354,6 +415,7 @@ def TransformPSVNetworkPackage(
                 pkg_file = pkg_file,
                 extract_dir = output_dir,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 return (False, "Unable to extract psv pkg files")
@@ -362,6 +424,7 @@ def TransformPSVNetworkPackage(
     success = system.TouchFile(
         src = os.path.join(output_dir, config.raw_files_index),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return (False, "Unable to create raw index")
@@ -378,6 +441,7 @@ def TransformGameFile(
     output_dir,
     keep_setup_files = False,
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Get game info
@@ -389,7 +453,9 @@ def TransformGameFile(
         return (False, "Output directory doesn't exist")
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
     if not tmp_dir_success:
         return (False, tmp_dir_result)
 
@@ -405,6 +471,7 @@ def TransformGameFile(
             output_dir = tmp_dir_result,
             keep_setup_files = keep_setup_files,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not transform_success:
             return (False, transform_result)
@@ -416,6 +483,7 @@ def TransformGameFile(
             source_file = source_file,
             output_dir = tmp_dir_result,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not iso_success:
             return (False, iso_result)
@@ -424,6 +492,7 @@ def TransformGameFile(
             source_file = iso_result,
             output_dir = tmp_dir_result,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not transform_success:
             return (False, transform_result)
@@ -435,6 +504,7 @@ def TransformGameFile(
             source_file = source_file,
             output_dir = os.path.join(tmp_dir_result, "iso"),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not iso_success:
             return (False, iso_result)
@@ -443,6 +513,7 @@ def TransformGameFile(
             source_file = iso_result,
             output_dir = os.path.join(tmp_dir_result, "output"),
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not transform_success:
             return (False, transform_result)
@@ -454,6 +525,7 @@ def TransformGameFile(
             source_file = source_file,
             output_dir = tmp_dir_result,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not transform_success:
             return (False, transform_result)
@@ -465,6 +537,7 @@ def TransformGameFile(
             source_file = source_file,
             output_dir = tmp_dir_result,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not transform_success:
             return (False, transform_result)
@@ -478,6 +551,7 @@ def TransformGameFile(
         src = system.GetFilenameDirectory(transform_result),
         dest = output_dir,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return (False, "Unable to move transformed output")
@@ -486,7 +560,11 @@ def TransformGameFile(
     final_result_path = os.path.join(output_dir, system.GetFilenameFile(transform_result))
 
     # Delete temporary directory
-    system.RemoveDirectory(tmp_dir_result, verbose = verbose)
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Return final result
     return (True, final_result_path)
