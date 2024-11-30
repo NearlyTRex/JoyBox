@@ -513,15 +513,15 @@ class StoreBase:
         # Get output dir
         if output_dir:
             output_offset = environment.GetLockerGamingRomDirOffset(
-                rom_category = game_info.get_category(),
-                rom_subcategory = game_info.get_subcategory(),
-                rom_name = game_info.get_name())
+                game_category = game_info.get_category(),
+                game_subcategory = game_info.get_subcategory(),
+                game_name = game_info.get_name())
             output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
         else:
             output_dir = environment.GetLockerGamingRomDir(
-                rom_category = game_info.get_category(),
-                rom_subcategory = game_info.get_subcategory(),
-                rom_name = game_info.get_name())
+                game_category = game_info.get_category(),
+                game_subcategory = game_info.get_subcategory(),
+                game_name = game_info.get_name())
         if skip_existing and system.DoesDirectoryContainFiles(output_dir):
             return True
 

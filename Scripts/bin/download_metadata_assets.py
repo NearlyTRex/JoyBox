@@ -22,6 +22,8 @@ parser.add_argument("-a", "--asset_type",
     default=config.asset_type_video,
     help="Asset type"
 )
+parser.add_argument("-c", "--game_category", type=str, help="Game category")
+parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")
 parser.add_argument("-e", "--skip_existing", action="store_true", help="Skip existing files")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
@@ -34,16 +36,34 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Download metadata assets
-    for game_category in config.game_categories:
-        for game_subcategory in config.game_subcategories[game_category]:
-            game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-            for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
+    # Specific category/subcategory
+    if args.game_category and args.game_subcategory:
+        game_platform = gameinfo.DeriveGamePlatformFromCategories(args.game_category, args.game_subcategory)
+        for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), args.game_category, args.game_subcategory):
+
+            # Download metadata asset
+            system.Log("Downloading metadata assets for %s - %s..." % (game_platform, game_name))
+            collection.DownloadMetadataAsset(
+                game_category = args.game_category,
+                game_subcategory = args.game_subcategory,
+                game_name = game_name,
+                asset_url = None,
+                asset_type = args.asset_type,
+                skip_existing = args.skip_existing,
+                verbose = args.verbose,
+                pretend_run = args.pretend_run,
+                exit_on_failure = args.exit_on_failure)
+
+    # Specific category/all subcategories in that category
+    elif args.game_category:
+        for game_subcategory in config.game_subcategories[args.game_category]:
+            game_platform = gameinfo.DeriveGamePlatformFromCategories(args.game_category, game_subcategory)
+            for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), args.game_category, game_subcategory):
 
                 # Download metadata asset
                 system.Log("Downloading metadata assets for %s - %s..." % (game_platform, game_name))
                 collection.DownloadMetadataAsset(
-                    game_category = game_category,
+                    game_category = args.game_category,
                     game_subcategory = game_subcategory,
                     game_name = game_name,
                     asset_url = None,
@@ -52,6 +72,26 @@ def main():
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
+
+    # All categories/subcategories
+    else:
+        for game_category in config.game_categories:
+            for game_subcategory in config.game_subcategories[game_category]:
+                game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+                for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
+
+                    # Download metadata asset
+                    system.Log("Downloading metadata assets for %s - %s..." % (game_platform, game_name))
+                    collection.DownloadMetadataAsset(
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_name = game_name,
+                        asset_url = None,
+                        asset_type = args.asset_type,
+                        skip_existing = args.skip_existing,
+                        verbose = args.verbose,
+                        pretend_run = args.pretend_run,
+                        exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

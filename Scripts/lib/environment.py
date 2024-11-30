@@ -300,14 +300,14 @@ def GetLockerGamingEmulatorSetupDir(emu_name, source_type = None):
     return os.path.join(GetLockerGamingEmulatorsRootDir(source_type), emu_name, "Setup")
 
 # Get locker gaming rom dir offset
-def GetLockerGamingRomDirOffset(rom_category, rom_subcategory, rom_name):
-    rom_platform = gameinfo.DeriveGamePlatformFromCategories(rom_category, rom_subcategory)
-    rom_name_path = gameinfo.DeriveGameNamePathFromName(rom_name, rom_platform)
-    return os.path.join(rom_category, rom_subcategory, rom_name_path)
+def GetLockerGamingRomDirOffset(game_category, game_subcategory, game_name):
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
+    return os.path.join(game_category, game_subcategory, game_name_path)
 
 # Get locker gaming rom dir
-def GetLockerGamingRomDir(rom_category, rom_subcategory, rom_name, source_type = None):
-    return os.path.join(GetLockerGamingRomsRootDir(source_type), GetLockerGamingRomDirOffset(rom_category, rom_subcategory, rom_name))
+def GetLockerGamingRomDir(game_category, game_subcategory, game_name, source_type = None):
+    return os.path.join(GetLockerGamingRomsRootDir(source_type), GetLockerGamingRomDirOffset(game_category, game_subcategory, game_name))
 
 # Get locker gaming save dir
 def GetLockerGamingSaveDir(game_category, game_subcategory, game_name, source_type = None):
@@ -449,34 +449,34 @@ def GetCacheGamingRomsRootDir():
     return os.path.join(GetCacheGamingRootDir(), config.game_supercategory_roms)
 
 # Get cache gaming rom dir
-def GetCacheGamingRomDir(rom_category, rom_subcategory, rom_name):
-    return os.path.join(GetCacheGamingRomsRootDir(), rom_category, rom_subcategory, rom_name)
+def GetCacheGamingRomDir(game_category, game_subcategory, game_name):
+    return os.path.join(GetCacheGamingRomsRootDir(), game_category, game_subcategory, game_name)
 
 # Get cache gaming install root dir
 def GetCacheGamingInstallsRootDir():
     return os.path.join(GetCacheGamingRootDir(), config.game_supercategory_installs)
 
 # Get cache gaming install dir
-def GetCacheGamingInstallDir(rom_category, rom_subcategory, rom_name):
-    rom_platform = gameinfo.DeriveGamePlatformFromCategories(rom_category, rom_subcategory)
-    rom_name_path = gameinfo.DeriveGameNamePathFromName(rom_name, rom_platform)
-    return os.path.join(GetCacheGamingInstallsRootDir(), rom_category, rom_subcategory, rom_name_path)
+def GetCacheGamingInstallDir(game_category, game_subcategory, game_name):
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
+    return os.path.join(GetCacheGamingInstallsRootDir(), game_category, game_subcategory, game_name_path)
 
 # Get cache gaming saves root dir
 def GetCacheGamingSavesRootDir():
     return os.path.join(GetCacheGamingRootDir(), config.game_supercategory_saves)
 
 # Get cache gaming save dir
-def GetCacheGamingSaveDir(rom_category, rom_subcategory, rom_name, rom_subname = None):
-    if rom_subname:
-        return os.path.join(GetCacheGamingSavesRootDir(), rom_category, rom_subcategory, rom_name, rom_subname)
+def GetCacheGamingSaveDir(game_category, game_subcategory, game_name, game_subname = None):
+    if game_subname:
+        return os.path.join(GetCacheGamingSavesRootDir(), game_category, game_subcategory, game_name, game_subname)
     else:
-        return os.path.join(GetCacheGamingSavesRootDir(), rom_category, rom_subcategory, rom_name)
+        return os.path.join(GetCacheGamingSavesRootDir(), game_category, game_subcategory, game_name)
 
 # Get cache gaming setup root dir
 def GetCacheGamingSetupRootDir():
     return os.path.join(GetCacheGamingRootDir(), config.game_supercategory_setup)
 
 # Get cache gaming setup dir
-def GetCacheGamingSetupDir(rom_category, rom_subcategory, rom_name):
-    return os.path.join(GetCacheGamingSetupRootDir(), rom_category, rom_subcategory, rom_name)
+def GetCacheGamingSetupDir(game_category, game_subcategory, game_name):
+    return os.path.join(GetCacheGamingSetupRootDir(), game_category, game_subcategory, game_name)

@@ -44,18 +44,18 @@ def main():
             game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
             # Metadata info
-            scan_rom_path = os.path.join(environment.GetLockerGamingRomsRootDir(args.source_type), game_category, game_subcategory)
+            scan_game_path = os.path.join(environment.GetLockerGamingRomsRootDir(args.source_type), game_category, game_subcategory)
             metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
 
             # Build metadata
-            if os.path.isdir(scan_rom_path):
+            if os.path.isdir(scan_game_path):
                 system.Log("Building metadata [Category: '%s', Subcategory: '%s'] ..." % (game_category, game_subcategory))
                 build_game_list_cmd = [
                     build_metadata_file_bin,
                     "-c", game_category,
                     "-s", game_subcategory,
                     "-o", metadata_file,
-                    scan_rom_path
+                    scan_game_path
                 ]
                 command.RunCheckedCommand(
                     cmd = build_game_list_cmd,

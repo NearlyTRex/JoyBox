@@ -30,10 +30,10 @@ parser.add_argument("-l", "--source_type",
     ],
     default=config.source_type_local, help="Source type"
 )
-parser.add_argument("-u", "--gaming_supercategory", type=str, help="Gaming supercategory")
-parser.add_argument("-c", "--gaming_category", type=str, help="Gaming category")
-parser.add_argument("-s", "--gaming_subcategory", type=str, help="Gaming subcategory")
-parser.add_argument("-n", "--gaming_offset", type=str, help="Gaming offset")
+parser.add_argument("-u", "--game_supercategory", type=str, help="Game supercategory")
+parser.add_argument("-c", "--game_category", type=str, help="Game category")
+parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")
+parser.add_argument("-n", "--gaming_offset", type=str, help="Game offset")
 parser.add_argument("-d", "--exclude_paths", type=str, default="", help="Excluded paths (comma separated list)")
 parser.add_argument("-o", "--output_base_path", type=str, default=".", help="Output base path")
 parser.add_argument("-e", "--skip_existing", action="store_true", help="Skip existing files")
@@ -60,12 +60,12 @@ def main():
     input_path = environment.GetLockerRootDir(args.source_type)
     if args.supercategory:
         input_path = os.path.join(input_path, config.locker_type_gaming, args.supercategory)
-        if args.category:
-            input_path = os.path.join(input_path, args.category)
-            if args.subcategory:
-                input_path = os.path.join(input_path, args.subcategory)
-                if args.offset:
-                    input_path = os.path.join(input_path, args.offset)
+        if args.game_category:
+            input_path = os.path.join(input_path, args.game_category)
+            if args.game_subcategory:
+                input_path = os.path.join(input_path, args.game_subcategory)
+                if args.game_offset:
+                    input_path = os.path.join(input_path, args.game_offset)
 
     # Get exclude paths
     exclude_paths = args.exclude_paths.split(",")

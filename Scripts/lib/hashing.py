@@ -485,25 +485,25 @@ def HashFiles(
 # Hash category files
 def HashCategoryFiles(
     input_path,
-    file_supercategory,
-    file_category,
-    file_subcategory,
+    game_supercategory,
+    game_category,
+    game_subcategory,
     passphrase = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Check required types
-    system.AssertIsString(file_supercategory, "file_supercategory")
-    system.AssertIsString(file_category, "file_category")
-    system.AssertIsString(file_subcategory, "file_subcategory")
+    system.AssertIsString(game_supercategory, "game_supercategory")
+    system.AssertIsString(game_category, "game_category")
+    system.AssertIsString(game_subcategory, "game_subcategory")
 
     # Check input path
     if not os.path.exists(input_path):
         return False
 
     # Get hash file
-    hash_file = environment.GetHashesMetadataFile(file_supercategory, file_category, file_subcategory)
+    hash_file = environment.GetHashesMetadataFile(game_supercategory, game_category, game_subcategory)
 
     # Make directories/files
     system.MakeDirectory(
@@ -520,7 +520,7 @@ def HashCategoryFiles(
     # Hash files
     success = HashFiles(
         input_path = input_path,
-        base_path = os.path.join(file_supercategory, file_category, file_subcategory),
+        base_path = os.path.join(game_supercategory, game_category, game_subcategory),
         output_file = hash_file,
         passphrase = passphrase,
         verbose = verbose,

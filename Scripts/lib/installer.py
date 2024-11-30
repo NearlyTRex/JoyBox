@@ -382,8 +382,8 @@ def InstallComputerGame(
     game_is_win31 = game_info.is_win31()
     game_is_scumm = game_info.is_scumm()
 
-    # Get game rom dir
-    game_rom_dir = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
+    # Get game base dir
+    game_base_dir = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
 
     # Get setup directory
     game_setup_dir = environment.GetCacheGamingSetupDir(game_category, game_subcategory, game_name)
@@ -394,7 +394,7 @@ def InstallComputerGame(
         exit_on_failure = exit_on_failure)
 
     # Get game disc files
-    game_disc_files = system.BuildFileListByExtensions(game_rom_dir, [".chd"])
+    game_disc_files = system.BuildFileListByExtensions(game_base_dir, [".chd"])
 
     # Check if installation should be run via wine/sandboxie
     should_run_via_wine = environment.IsWinePlatform()
@@ -453,9 +453,9 @@ def InstallComputerGame(
         disc_base_dir = game_setup_dir,
         disc_token_map = game_disc_token_map)
 
-    # Copy rom files
+    # Copy game files
     system.CopyContents(
-        src = game_rom_dir,
+        src = game_base_dir,
         dest = game_setup_dir,
         show_progress = True,
         skip_existing = True,

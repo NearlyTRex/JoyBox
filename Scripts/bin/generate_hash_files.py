@@ -18,13 +18,13 @@ import ini
 # Parse arguments
 parser = argparse.ArgumentParser(description="Generate file hashes.")
 parser.add_argument("-i", "--input_path", type=str, help="Input path")
-parser.add_argument("-u", "--file_supercategory",
+parser.add_argument("-u", "--game_supercategory",
     choices=config.game_supercategories,
     default=config.game_supercategory_roms,
-    help="File supercategory"
+    help="Game supercategory"
 )
-parser.add_argument("-c", "--file_category", type=str, help="File category")
-parser.add_argument("-s", "--file_subcategory", type=str, help="File subcategory")
+parser.add_argument("-c", "--game_category", type=str, help="Game category")
+parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")
 parser.add_argument("-f", "--source_files",
     choices=[
         "input",
@@ -66,7 +66,7 @@ def main():
     if args.source_files == "input":
         source_file_root = input_path
     elif args.source_files == "stored":
-        source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.file_supercategory)
+        source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.game_supercategory)
 
     # Get passphrase
     passphrase = None
@@ -77,15 +77,15 @@ def main():
 
     # Manually specify all parameters
     if args.generation_mode == "custom":
-        if not args.file_category:
+        if not args.game_category:
             system.LogErrorAndQuit("File category is required for custom mode")
-        if not args.file_subcategory:
+        if not args.game_subcategory:
             system.LogErrorAndQuit("File subcategory is required for custom mode")
         hashing.HashCategoryFiles(
             input_path = source_file_root,
-            file_supercategory = args.file_supercategory,
-            file_category = args.file_category,
-            file_subcategory = args.file_subcategory,
+            game_supercategory = args.game_supercategory,
+            game_category = args.game_category,
+            game_subcategory = args.game_subcategory,
             passphrase = passphrase,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -95,25 +95,25 @@ def main():
     elif args.generation_mode == "standard":
 
         # Specific category/subcategory
-        if args.file_category and args.file_subcategory:
+        if args.game_category and args.game_subcategory:
             hashing.HashCategoryFiles(
-                input_path = os.path.join(source_file_root, args.file_category, args.file_subcategory),
-                file_supercategory = args.file_supercategory,
-                file_category = args.file_category,
-                file_subcategory = args.file_subcategory,
+                input_path = os.path.join(source_file_root, args.game_category, args.game_subcategory),
+                game_supercategory = args.game_supercategory,
+                game_category = args.game_category,
+                game_subcategory = args.game_subcategory,
                 passphrase = passphrase,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
 
         # Specific category/all subcategories in that category
-        elif args.file_category:
-            for file_subcategory in config.game_subcategories[args.file_category]:
+        elif args.game_category:
+            for game_subcategory in config.game_subcategories[args.game_category]:
                 hashing.HashCategoryFiles(
-                    input_path = os.path.join(source_file_root, args.file_category, file_subcategory),
-                    file_supercategory = args.file_supercategory,
-                    file_category = args.file_category,
-                    file_subcategory = file_subcategory,
+                    input_path = os.path.join(source_file_root, args.game_category, game_subcategory),
+                    game_supercategory = args.game_supercategory,
+                    game_category = args.game_category,
+                    game_subcategory = game_subcategory,
                     passphrase = passphrase,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,
@@ -121,13 +121,13 @@ def main():
 
         # All categories/subcategories
         else:
-            for file_category in config.game_categories:
-                for file_subcategory in config.game_subcategories[file_category]:
+            for game_category in config.game_categories:
+                for game_subcategory in config.game_subcategories[game_category]:
                     hashing.HashCategoryFiles(
-                        input_path = os.path.join(source_file_root, file_category, file_subcategory),
-                        file_supercategory = args.file_supercategory,
-                        file_category = file_category,
-                        file_subcategory = file_subcategory,
+                        input_path = os.path.join(source_file_root, game_category, game_subcategory),
+                        game_supercategory = args.game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
                         passphrase = passphrase,
                         verbose = args.verbose,
                         pretend_run = args.pretend_run,

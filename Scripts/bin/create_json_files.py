@@ -18,14 +18,14 @@ import ini
 # Parse arguments
 parser = argparse.ArgumentParser(description="Create or update json files.")
 parser.add_argument("-i", "--input_path", type=str, help="Input path")
-parser.add_argument("-u", "--file_supercategory",
+parser.add_argument("-u", "--game_supercategory",
     choices=config.game_supercategories,
     default=config.game_supercategory_roms,
-    help="File supercategory"
+    help="Game supercategory"
 )
-parser.add_argument("-c", "--file_category", type=str, help="File category")
-parser.add_argument("-s", "--file_subcategory", type=str, help="File subcategory")
-parser.add_argument("-n", "--file_title", type=str, help="File title")
+parser.add_argument("-c", "--game_category", type=str, help="Game category")
+parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")
+parser.add_argument("-n", "--game_title", type=str, help="Game title")
 parser.add_argument("-e", "--source_type",
     choices=config.source_types,
     default=config.source_type_remote,
@@ -72,7 +72,7 @@ def main():
     if args.source_files == "input":
         source_file_root = input_path
     elif args.source_files == "stored":
-        source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.file_supercategory, args.source_type)
+        source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.game_supercategory, args.source_type)
 
     # Get passphrase
     passphrase = None
@@ -83,16 +83,16 @@ def main():
 
     # Manually specify all parameters
     if args.generation_mode == "custom":
-        if not args.file_category:
+        if not args.game_category:
             system.LogErrorAndQuit("File category is required for custom mode")
-        if not args.file_subcategory:
+        if not args.game_subcategory:
             system.LogErrorAndQuit("File subcategory is required for custom mode")
-        if not args.file_title:
+        if not args.game_title:
             system.LogErrorAndQuit("File title is required for custom mode")
         collection.CreateGameJsonFile(
-            game_category = args.file_category,
-            game_subcategory = args.file_subcategory,
-            game_title = args.file_title,
+            game_category = args.game_category,
+            game_subcategory = args.game_subcategory,
+            game_title = args.game_title,
             game_root = source_file_root,
             passphrase = passphrase,
             verbose = args.verbose,
@@ -103,10 +103,10 @@ def main():
     elif args.generation_mode == "standard":
 
         # Specific category/subcategory
-        if args.file_category and args.file_subcategory:
+        if args.game_category and args.game_subcategory:
             collection.CreateGameJsonFiles(
-                game_category = args.file_category,
-                game_subcategory = args.file_subcategory,
+                game_category = args.game_category,
+                game_subcategory = args.game_subcategory,
                 game_root = source_file_root,
                 passphrase = passphrase,
                 verbose = args.verbose,
@@ -114,11 +114,11 @@ def main():
                 exit_on_failure = args.exit_on_failure)
 
         # Specific category/all subcategories in that category
-        elif args.file_category:
-            for file_subcategory in config.game_subcategories[args.file_category]:
+        elif args.game_category:
+            for gaming_subcategory in config.game_subcategories[args.game_category]:
                 collection.CreateGameJsonFiles(
-                    game_category = args.file_category,
-                    game_subcategory = file_subcategory,
+                    game_category = args.game_category,
+                    game_subcategory = gaming_subcategory,
                     game_root = source_file_root,
                     passphrase = passphrase,
                     verbose = args.verbose,
@@ -127,11 +127,11 @@ def main():
 
         # All categories/subcategories
         else:
-            for file_category in config.game_categories:
-                for file_subcategory in config.game_subcategories[file_category]:
+            for gaming_category in config.game_categories:
+                for gaming_subcategory in config.game_subcategories[gaming_category]:
                     collection.CreateGameJsonFiles(
-                        game_category = file_category,
-                        game_subcategory = file_subcategory,
+                        game_category = gaming_category,
+                        game_subcategory = gaming_subcategory,
                         game_root = source_file_root,
                         passphrase = passphrase,
                         verbose = args.verbose,

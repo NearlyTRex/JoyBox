@@ -31,12 +31,12 @@ def main():
     hashes_base_dir = environment.GetHashesMetadataRootDir()
 
     # Sort hash files
-    for file_supercategory in config.game_supercategories:
-        for file_category in config.game_categories:
-            for file_subcategory in config.game_subcategories[file_category]:
+    for game_supercategory in config.game_supercategories:
+        for game_category in config.game_categories:
+            for game_subcategory in config.game_subcategories[game_category]:
 
                 # Get hash file
-                hash_file = os.path.join(hashes_base_dir, file_supercategory, file_category, file_subcategory + ".txt")
+                hash_file = os.path.join(hashes_base_dir, game_supercategory, game_category, game_subcategory + ".txt")
                 if not os.path.isfile(hash_file):
                     continue
 

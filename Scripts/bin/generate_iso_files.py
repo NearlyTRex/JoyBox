@@ -17,21 +17,21 @@ import setup
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Generate iso files.")
-parser.add_argument("-u", "--file_supercategory",
+parser.add_argument("-u", "--game_supercategory",
     choices=config.game_supercategories,
     default=config.game_supercategory_roms,
-    help="File supercategory"
+    help="Game supercategory"
 )
-parser.add_argument("-c", "--file_category", type=str, help="File category")
-parser.add_argument("-s", "--file_subcategory", type=str, help="File subcategory")
+parser.add_argument("-c", "--game_category", type=str, help="Game category")
+parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
 args, unknown = parser.parse_known_args()
 
 # Paths
-hashes_base_dir = os.path.join(environment.GetHashesMetadataRootDir(), args.file_supercategory)
-files_root_dir = environment.GetLockerGamingSupercategoryRootDir(args.file_supercategory)
+hashes_base_dir = os.path.join(environment.GetHashesMetadataRootDir(), args.game_supercategory)
+files_root_dir = environment.GetLockerGamingSupercategoryRootDir(args.game_supercategory)
 
 # Main
 def main():
@@ -95,15 +95,15 @@ def main():
 
     # Get hash files
     hash_files = []
-    if args.file_category and args.file_subcategory:
-        hash_files.append(os.path.join(hashes_base_dir, args.file_category, args.file_subcategory + ".txt"))
-    elif args.file_category:
-        for file_subcategory in config.game_subcategories[args.file_category]:
-            hash_files.append(os.path.join(files_root_dir, args.file_category, file_subcategory))
+    if args.game_category and args.game_subcategory:
+        hash_files.append(os.path.join(hashes_base_dir, args.game_category, args.game_subcategory + ".txt"))
+    elif args.game_category:
+        for game_subcategory in config.game_subcategories[args.game_category]:
+            hash_files.append(os.path.join(files_root_dir, args.game_category, game_subcategory))
     else:
-        for file_category in config.game_categories:
-            for file_subcategory in config.game_subcategories[file_category]:
-                hash_files.append(os.path.join(files_root_dir, file_category, file_subcategory))
+        for game_category in config.game_categories:
+            for game_subcategory in config.game_subcategories[game_category]:
+                hash_files.append(os.path.join(files_root_dir, game_category, game_subcategory))
 
     # Generate iso files
     if hash_files:

@@ -140,78 +140,78 @@ class Metadata:
                     system.LogError("File not found:\n%s" % file_path_relative)
                     system.LogErrorAndQuit("Verification of game %s in platform %s failed" % (game_name, game_platform))
 
-    # Scan rom base directory
-    def scan_rom_base_dir(
+    # Scan game base directory
+    def scan_game_base_dir(
         self,
-        rom_base_dir,
-        rom_category,
-        rom_subcategory,
+        game_base_dir,
+        game_category,
+        game_subcategory,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        for obj in system.GetDirectoryContents(rom_base_dir):
-            rom_dir = os.path.join(rom_base_dir, obj)
+        for obj in system.GetDirectoryContents(game_base_dir):
+            game_dir = os.path.join(game_base_dir, obj)
 
             # Skip non-game folders
-            if not rom_dir.endswith(")"):
+            if not game_dir.endswith(")"):
                 continue
 
             # Get info
-            rom_name = system.GetDirectoryName(rom_dir)
-            rom_platform = gameinfo.DeriveGamePlatformFromCategories(rom_category, rom_subcategory)
+            game_name = system.GetDirectoryName(game_dir)
+            game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
             # Get file
-            rom_file = system.RebaseFilePath(
-                path = environment.GetJsonRomMetadataFile(rom_category, rom_subcategory, rom_name),
+            game_file = system.RebaseFilePath(
+                path = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name),
                 old_base_path = environment.GetJsonRomsMetadataRootDir(),
                 new_base_path = "")
 
             # Get asset files
-            rom_boxfront = gameinfo.DeriveGameAssetPathFromName(rom_name, config.asset_type_boxfront)
-            rom_boxback = gameinfo.DeriveGameAssetPathFromName(rom_name, config.asset_type_boxback)
-            rom_background = gameinfo.DeriveGameAssetPathFromName(rom_name, config.asset_type_background)
-            rom_screenshot = gameinfo.DeriveGameAssetPathFromName(rom_name, config.asset_type_screenshot)
-            rom_video = gameinfo.DeriveGameAssetPathFromName(rom_name, config.asset_type_video)
+            game_boxfront = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_boxfront)
+            game_boxback = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_boxback)
+            game_background = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_background)
+            game_screenshot = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_screenshot)
+            game_video = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_video)
 
             # Create new entry
             if verbose:
-                system.Log("Found game: '%s' - '%s'" % (rom_platform, rom_name))
+                system.Log("Found game: '%s' - '%s'" % (game_platform, game_name))
             game_entry = metadataentry.MetadataEntry()
-            game_entry.set_platform(rom_platform)
-            game_entry.set_game(rom_name)
-            game_entry.set_file(rom_file)
-            game_entry.set_boxfront(rom_boxfront)
-            game_entry.set_boxback(rom_boxback)
-            game_entry.set_background(rom_background)
-            game_entry.set_screenshot(rom_screenshot)
+            game_entry.set_platform(game_platform)
+            game_entry.set_game(game_name)
+            game_entry.set_file(game_file)
+            game_entry.set_boxfront(game_boxfront)
+            game_entry.set_boxback(game_boxback)
+            game_entry.set_background(game_background)
+            game_entry.set_screenshot(game_screenshot)
             game_entry.set_players("1")
             game_entry.set_coop("No")
             game_entry.set_playable("Yes")
             self.add_game(game_entry)
 
-    # Scan roms
-    def scan_roms(
+    # Scan games
+    def scan_games(
         self,
-        rom_path,
-        rom_category,
-        rom_subcategory,
+        game_path,
+        game_category,
+        game_subcategory,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        if rom_category == config.game_category_computer:
-            for obj in system.GetDirectoryContents(rom_path):
-                self.scan_rom_base_dir(
-                    rom_base_dir = os.path.join(rom_path, obj),
-                    rom_category = rom_category,
-                    rom_subcategory = rom_subcategory,
+        if game_category == config.game_category_computer:
+            for obj in system.GetDirectoryContents(game_path):
+                self.scan_game_base_dir(
+                    game_base_dir = os.path.join(game_path, obj),
+                    game_category = game_category,
+                    game_subcategory = game_subcategory,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
         else:
-            self.scan_rom_base_dir(
-                rom_base_dir = rom_path,
-                rom_category = rom_category,
-                rom_subcategory = rom_subcategory,
+            self.scan_game_base_dir(
+                game_base_dir = game_path,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
