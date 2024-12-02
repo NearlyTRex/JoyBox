@@ -259,3 +259,8 @@ filler_words = [
     "to",
     "with"
 ]
+
+# Search terms
+search_terms_video = [
+    "trailer"
+]

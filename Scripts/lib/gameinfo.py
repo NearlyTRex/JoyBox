@@ -688,10 +688,13 @@ def DeriveGameLetterFromName(game_name):
     return letter
 
 # Derive game search terms from name
-def DeriveGameSearchTermsFromName(game_name, game_platform, search_terms = []):
+def DeriveGameSearchTermsFromName(game_name, game_platform, asset_type = None):
+    search_terms = []
     natural_name = DeriveRegularNameFromGameName(game_name)
-    search_phrase = f"{game_platform} {natural_name} {' '.join(search_terms)}"
-    return system.EncodeUrlString(search_phrase, use_plus = True)
+    if asset_type == config.asset_type_video:
+        search_terms.extend(config.search_terms_video)
+    search_terms.extend(natural_name.split(" "))
+    return system.EncodeUrlString(" ".join(search_terms), use_plus = True)
 
 # Derive game name path from name
 def DeriveGameNamePathFromName(game_name, game_platform):

@@ -710,13 +710,24 @@ class StoreBase:
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-        # Download asset
+        # Download metadata asset
         success = collection.DownloadMetadataAsset(
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),
             game_name = game_info.get_name(),
             asset_url = asset_url,
             asset_type = asset_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+        # Update metadata entry
+        success = collection.UpdateMetadataEntry(
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name(),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

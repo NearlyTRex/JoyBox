@@ -442,7 +442,10 @@ def CollectMetadataAssetFromSteamGridDB(
     web_driver = webpage.CreateWebDriver()
 
     # Get search terms
-    search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
+    search_terms = gameinfo.DeriveGameSearchTermsFromName(
+        game_name = game_name,
+        game_platform = game_platform,
+        asset_type = asset_type)
 
     # Metadata asset
     metadata_asset = None
@@ -490,9 +493,15 @@ def CollectMetadataAssetFromYouTube(
     # Metadata asset
     metadata_asset = None
 
+    # Get search terms
+    search_terms = gameinfo.DeriveGameSearchTermsFromName(
+        game_name = game_name,
+        game_platform = game_platform,
+        asset_type = asset_type)
+
     # Get search results
     search_results = youtube.GetSearchResults(
-        search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform, search_terms = ["trailer"]),
+        search_terms = search_terms,
         num_results = 20,
         sort_by_duration = True,
         verbose = verbose,

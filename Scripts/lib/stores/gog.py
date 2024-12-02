@@ -172,7 +172,7 @@ class GOG(storebase.StoreBase):
                 json_platform = self.GetPlatform())
             purchase.set_value(config.json_key_store_appname, line_appname)
             purchase.set_value(config.json_key_store_appid, line_appid)
-            purchase.set_value(config.json_key_store_appurl, "https://www.gog.com/en/game/%s" % line_appname)
+            purchase.set_value(config.json_key_store_appurl, self.GetLatestUrl(line_appname))
             purchase.set_value(config.json_key_store_name, line_title)
             purchases.append(purchase)
         return purchases
@@ -217,7 +217,7 @@ class GOG(storebase.StoreBase):
         if "slug" in gog_json:
             appslug = gog_json["slug"]
             game_info[config.json_key_store_appname] = appslug
-            game_info[config.json_key_store_appurl] = "https://www.gog.com/en/game/%s" % appslug
+            game_info[config.json_key_store_appurl] = self.GetLatestUrl(appslug)
         if "title" in gog_json:
             game_info[config.json_key_store_name] = gog_json["title"].strip()
         if "downloads" in gog_json:
@@ -315,6 +315,56 @@ class GOG(storebase.StoreBase):
 
         # Return metadata entry
         return metadata_entry
+
+    ############################################################
+
+    # Get latest url
+    def GetLatestUrl(
+        self,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return None
+
+        # Return latest url
+        latest_url = "https://www.gog.com/en/game/%s" % identifier
+        return latest_url
+
+    ############################################################
+
+    # Get latest asset url
+    def GetLatestAssetUrl(
+        self,
+        identifier,
+        asset_type,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return None
+
+        # Latest asset url
+        latest_asset_url = None
+
+        # Video
+        if asset_type == config.asset_type_video:
+            latest_asset_url = webpage.GetMatchingUrl(
+                url = self.GetLatestUrl(identifier),
+                base_url = "https://www.youtube.com/embed",
+                starts_with = "https://www.youtube.com/embed",
+                ends_with = "enablejsapi=1",
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
+        # Return latest asset url
+        return latest_asset_url
 
     ############################################################
 
