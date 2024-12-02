@@ -181,7 +181,7 @@ class Ares(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Ares", "windows"):
@@ -196,6 +196,7 @@ class Ares(emulatorbase.EmulatorBase):
                 backups_dir = programs.GetProgramBackupDir("Ares", "windows"),
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ares")
 
@@ -219,11 +220,12 @@ class Ares(emulatorbase.EmulatorBase):
                     {"from": "usr/bin/ares", "to": "AppRun"}
                 ],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ares")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Ares", "windows"):
@@ -233,6 +235,7 @@ class Ares(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Ares", "windows"),
                 search_file = "ares.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ares")
 
@@ -243,11 +246,12 @@ class Ares(emulatorbase.EmulatorBase):
                 install_name = "Ares",
                 install_dir = programs.GetProgramInstallDir("Ares", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ares")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -255,6 +259,7 @@ class Ares(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ares config files")
 
@@ -263,6 +268,7 @@ class Ares(emulatorbase.EmulatorBase):
             actual_md5 = hashing.CalculateFileMD5(
                 filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Ares"), filename),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
             system.AssertCondition(success, "Could not verify Ares system file %s" % filename)
@@ -274,6 +280,7 @@ class Ares(emulatorbase.EmulatorBase):
                     src = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Ares"), filename),
                     dest = os.path.join(programs.GetEmulatorPathConfigValue("Ares", "setup_dir", platform), filename),
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 system.AssertCondition(success, "Could not setup Ares system files")
 
@@ -316,4 +323,5 @@ class Ares(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

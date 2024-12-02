@@ -35,7 +35,7 @@ class Steamless(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Steamless", "windows"):
@@ -49,11 +49,12 @@ class Steamless(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Steamless", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Steamless", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Steamless")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Steamless", "windows"):
@@ -63,5 +64,6 @@ class Steamless(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Steamless", "windows"),
                 search_file = "Steamless.CLI.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Steamless")

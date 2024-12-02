@@ -79,7 +79,7 @@ class Xemu(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Xemu", "windows"):
@@ -94,6 +94,7 @@ class Xemu(emulatorbase.EmulatorBase):
                 backups_dir = programs.GetProgramBackupDir("Xemu", "windows"),
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Xemu")
 
@@ -117,11 +118,12 @@ class Xemu(emulatorbase.EmulatorBase):
                     {"from": "usr/bin/xemu", "to": "AppRun"}
                 ],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Xemu")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Xemu", "windows"):
@@ -131,6 +133,7 @@ class Xemu(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Xemu", "windows"),
                 search_file = "xemu.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Xemu")
 
@@ -141,11 +144,12 @@ class Xemu(emulatorbase.EmulatorBase):
                 install_name = "Xemu",
                 install_dir = programs.GetProgramInstallDir("Xemu", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Xemu")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -153,6 +157,7 @@ class Xemu(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Xemu config files")
 
@@ -161,6 +166,7 @@ class Xemu(emulatorbase.EmulatorBase):
             actual_md5 = hashing.CalculateFileMD5(
                 filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Xemu"), filename),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
             system.AssertCondition(success, "Could not verify Xemu system file %s" % filename)
@@ -172,6 +178,7 @@ class Xemu(emulatorbase.EmulatorBase):
                     src = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Xemu"), filename),
                     dest = os.path.join(programs.GetEmulatorPathConfigValue("Xemu", "setup_dir", platform), filename),
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 system.AssertCondition(success, "Could not setup Xemu system files")
 
@@ -200,4 +207,5 @@ class Xemu(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

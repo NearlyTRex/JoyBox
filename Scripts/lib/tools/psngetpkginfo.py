@@ -28,7 +28,7 @@ class PSNGetPkgInfo(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("PSNGetPkgInfo"):
@@ -38,6 +38,7 @@ class PSNGetPkgInfo(toolbase.ToolBase):
                 output_dir = programs.GetLibraryInstallDir("PSNGetPkgInfo", "lib"),
                 clean = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PSNGetPkgInfo")
             success = network.ArchiveGithubRepository(
@@ -47,11 +48,12 @@ class PSNGetPkgInfo(toolbase.ToolBase):
                 recursive = True,
                 clean = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PSNGetPkgInfo")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup library
         if programs.ShouldLibraryBeInstalled("PSNGetPkgInfo"):
@@ -60,5 +62,6 @@ class PSNGetPkgInfo(toolbase.ToolBase):
                 install_name = "PSNGetPkgInfo",
                 install_dir = programs.GetLibraryInstallDir("PSNGetPkgInfo", "lib"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PSNGetPkgInfo")

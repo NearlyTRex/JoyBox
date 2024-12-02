@@ -35,7 +35,7 @@ class Sigtop(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Sigtop", "windows"):
@@ -50,11 +50,12 @@ class Sigtop(toolbase.ToolBase):
                 backups_dir = programs.GetProgramBackupDir("Sigtop", "windows"),
                 install_files = ["sigtop.exe"],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Sigtop")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Sigtop", "windows"):
@@ -64,5 +65,6 @@ class Sigtop(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Sigtop", "windows"),
                 search_file = "sigtop.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Sigtop")

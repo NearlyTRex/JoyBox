@@ -43,7 +43,7 @@ class Snes9x(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Snes9x", "windows"):
@@ -57,6 +57,7 @@ class Snes9x(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Snes9x", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Snes9x", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Snes9x")
 
@@ -71,11 +72,12 @@ class Snes9x(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Snes9x", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Snes9x", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Snes9x")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Snes9x", "windows"):
@@ -85,6 +87,7 @@ class Snes9x(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Snes9x", "windows"),
                 search_file = "snes9x-x64.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Snes9x")
 
@@ -95,5 +98,6 @@ class Snes9x(emulatorbase.EmulatorBase):
                 install_name = "Snes9x",
                 install_dir = programs.GetProgramInstallDir("Snes9x", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Snes9x")

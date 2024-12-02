@@ -69,7 +69,7 @@ class Pegasus(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Pegasus", "windows"):
@@ -85,6 +85,7 @@ class Pegasus(toolbase.ToolBase):
                 install_files = ["pegasus-fe.exe"],
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Pegasus")
             success = network.DownloadGithubRepository(
@@ -93,6 +94,7 @@ class Pegasus(toolbase.ToolBase):
                 output_dir = os.path.join(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "windows"), "PegasusThemeGrid"),
                 clean = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Pegasus theme")
 
@@ -116,6 +118,7 @@ class Pegasus(toolbase.ToolBase):
                 ],
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Pegasus")
             success = network.DownloadGithubRepository(
@@ -124,11 +127,12 @@ class Pegasus(toolbase.ToolBase):
                 output_dir = os.path.join(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "linux"), "PegasusThemeGrid"),
                 clean = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Pegasus theme")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Pegasus", "windows"):
@@ -138,6 +142,7 @@ class Pegasus(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Pegasus", "windows"),
                 search_file = "pegasus-fe.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Pegasus")
 
@@ -148,11 +153,12 @@ class Pegasus(toolbase.ToolBase):
                 install_name = "Pegasus",
                 install_dir = programs.GetProgramInstallDir("Pegasus", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Pegasus")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Generate game dirs
         game_dirs = []
@@ -170,5 +176,6 @@ class Pegasus(toolbase.ToolBase):
                 src = os.path.join(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Pegasus config files")

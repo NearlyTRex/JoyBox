@@ -28,7 +28,7 @@ class PSVTools(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("PSVTools"):
@@ -38,6 +38,7 @@ class PSVTools(toolbase.ToolBase):
                 output_dir = programs.GetLibraryInstallDir("PSVTools", "lib"),
                 clean = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PSVTools")
             success = network.ArchiveGithubRepository(
@@ -47,11 +48,12 @@ class PSVTools(toolbase.ToolBase):
                 recursive = True,
                 clean = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PSVTools")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup library
         if programs.ShouldLibraryBeInstalled("PSVTools"):
@@ -60,5 +62,6 @@ class PSVTools(toolbase.ToolBase):
                 install_name = "PSVTools",
                 install_dir = programs.GetLibraryInstallDir("PSVTools", "lib"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PSVTools")

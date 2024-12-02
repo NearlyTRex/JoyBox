@@ -35,7 +35,7 @@ class HacTool(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("HacTool", "windows"):
@@ -50,6 +50,7 @@ class HacTool(toolbase.ToolBase):
                 backups_dir = programs.GetProgramBackupDir("HacTool", "windows"),
                 install_files = ["hactool.exe"],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup HacTool")
 
@@ -75,11 +76,12 @@ class HacTool(toolbase.ToolBase):
                     {"from": "usr/bin/hactool", "to": "AppRun"}
                 ],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup HacTool")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("HacTool", "windows"):
@@ -89,6 +91,7 @@ class HacTool(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("HacTool", "windows"),
                 search_file = "hactool.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup HacTool")
 
@@ -99,5 +102,6 @@ class HacTool(toolbase.ToolBase):
                 install_name = "HacTool",
                 install_dir = programs.GetProgramInstallDir("HacTool", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup HacTool")

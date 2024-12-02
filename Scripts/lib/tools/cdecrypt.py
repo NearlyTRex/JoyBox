@@ -35,7 +35,7 @@ class CDecrypt(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("CDecrypt", "windows"):
@@ -50,6 +50,7 @@ class CDecrypt(toolbase.ToolBase):
                 backups_dir = programs.GetProgramBackupDir("CDecrypt", "windows"),
                 install_files = ["cdecrypt.exe"],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup CDecrypt")
 
@@ -73,11 +74,12 @@ class CDecrypt(toolbase.ToolBase):
                     {"from": "usr/bin/cdecrypt", "to": "AppRun"}
                 ],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup CDecrypt")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("CDecrypt", "windows"):
@@ -87,6 +89,7 @@ class CDecrypt(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("CDecrypt", "windows"),
                 search_file = "cdecrypt.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup CDecrypt")
 
@@ -97,5 +100,6 @@ class CDecrypt(toolbase.ToolBase):
                 install_name = "CDecrypt",
                 install_dir = programs.GetProgramInstallDir("CDecrypt", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup CDecrypt")

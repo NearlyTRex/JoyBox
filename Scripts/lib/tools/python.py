@@ -66,7 +66,7 @@ class Python(toolbase.ToolBase):
         }
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create wrapper scripts
         for obj in system.GetDirectoryContents(environment.GetScriptsBinDir()):
@@ -84,6 +84,7 @@ class Python(toolbase.ToolBase):
                         src = script_path_windows,
                         contents = wrapper_script_windows.strip().replace(config.token_python_bin, programs.GetToolProgram("PythonVenvPython")),
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     system.AssertCondition(success, "Could not setup Python wrapper scripts")
 
@@ -93,10 +94,12 @@ class Python(toolbase.ToolBase):
                         src = script_path_unix,
                         contents = wrapper_script_unix.strip().replace(config.token_python_bin, programs.GetToolProgram("PythonVenvPython")),
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     system.AssertCondition(success, "Could not setup Python wrapper scripts")
                     success = system.MarkAsExecutable(
                         src = script_path_unix,
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     system.AssertCondition(success, "Could not setup Python wrapper scripts")

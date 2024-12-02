@@ -35,7 +35,7 @@ class ExtractXIso(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("ExtractXIso", "windows"):
@@ -50,6 +50,7 @@ class ExtractXIso(toolbase.ToolBase):
                 backups_dir = programs.GetProgramBackupDir("ExtractXIso", "windows"),
                 install_files = ["extract-xiso.exe"],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ExtractXIso")
 
@@ -76,11 +77,12 @@ class ExtractXIso(toolbase.ToolBase):
                     {"from": "usr/bin/extract-xiso", "to": "AppRun"}
                 ],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ExtractXIso")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("ExtractXIso", "windows"):
@@ -90,6 +92,7 @@ class ExtractXIso(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("ExtractXIso", "windows"),
                 search_file = "extract-xiso.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ExtractXIso")
 
@@ -100,5 +103,6 @@ class ExtractXIso(toolbase.ToolBase):
                 install_name = "ExtractXIso",
                 install_dir = programs.GetProgramInstallDir("ExtractXIso", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ExtractXIso")

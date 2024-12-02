@@ -57,7 +57,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("BigPEmu", "windows"):
@@ -71,11 +71,12 @@ class BigPEmu(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("BigPEmu", "windows"),
                 backups_dir = programs.GetProgramBackupDir("BigPEmu", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BigPEmu")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("BigPEmu", "windows"):
@@ -85,11 +86,12 @@ class BigPEmu(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("BigPEmu", "windows"),
                 search_file = "BigPEmu.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BigPEmu")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -97,6 +99,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BigPEmu config files")
 
@@ -122,4 +125,5 @@ class BigPEmu(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

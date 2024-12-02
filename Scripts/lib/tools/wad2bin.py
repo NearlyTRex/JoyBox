@@ -35,7 +35,7 @@ class Wad2Bin(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Wad2Bin", "windows"):
@@ -49,6 +49,7 @@ class Wad2Bin(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Wad2Bin", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Wad2Bin", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Wad2Bin")
 
@@ -64,11 +65,12 @@ class Wad2Bin(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Wad2Bin", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Wad2Bin", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Wad2Bin")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Wad2Bin", "windows"):
@@ -78,6 +80,7 @@ class Wad2Bin(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Wad2Bin", "windows"),
                 search_file = "wad2bin-windows-x64.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Wad2Bin")
 
@@ -89,5 +92,6 @@ class Wad2Bin(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("Wad2Bin", "linux"),
                 search_file = "wad2bin",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Wad2Bin")

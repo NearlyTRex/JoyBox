@@ -35,7 +35,7 @@ class NDecrypt(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
@@ -50,6 +50,7 @@ class NDecrypt(toolbase.ToolBase):
                 backups_dir = programs.GetProgramBackupDir("NDecrypt", "windows"),
                 install_files = ["NDecrypt.exe"],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup NDecrypt")
 
@@ -72,11 +73,12 @@ class NDecrypt(toolbase.ToolBase):
                     }
                 ],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup NDecrypt")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
@@ -86,6 +88,7 @@ class NDecrypt(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("NDecrypt", "windows"),
                 search_file = "NDecrypt.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup NDecrypt")
 
@@ -96,5 +99,6 @@ class NDecrypt(toolbase.ToolBase):
                 install_name = "NDecrypt",
                 install_dir = programs.GetProgramInstallDir("NDecrypt", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup NDecrypt")

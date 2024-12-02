@@ -43,7 +43,7 @@ class BSnes(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("BSnes", "windows"):
@@ -57,11 +57,12 @@ class BSnes(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("BSnes", "windows"),
                 backups_dir = programs.GetProgramBackupDir("BSnes", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BSnes")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("BSnes", "windows"):
@@ -71,5 +72,6 @@ class BSnes(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("BSnes", "windows"),
                 search_file = "bsnes.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BSnes")

@@ -28,7 +28,7 @@ class PyLnk(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("PyLnk"):
@@ -38,6 +38,7 @@ class PyLnk(toolbase.ToolBase):
                 output_dir = programs.GetLibraryInstallDir("PyLnk", "lib"),
                 clean = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PyLnk")
             success = network.ArchiveGithubRepository(
@@ -47,11 +48,12 @@ class PyLnk(toolbase.ToolBase):
                 recursive = True,
                 clean = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PyLnk")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup library
         if programs.ShouldLibraryBeInstalled("PyLnk"):
@@ -60,5 +62,6 @@ class PyLnk(toolbase.ToolBase):
                 install_name = "PyLnk",
                 install_dir = programs.GetLibraryInstallDir("PyLnk", "lib"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PyLnk")

@@ -64,7 +64,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("EKA2L1", "windows"):
@@ -79,6 +79,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 backups_dir = programs.GetProgramBackupDir("EKA2L1", "windows"),
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup EKA2L1")
 
@@ -94,11 +95,12 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 backups_dir = programs.GetProgramBackupDir("EKA2L1", "linux"),
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup EKA2L1")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("EKA2L1", "windows"):
@@ -108,6 +110,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("EKA2L1", "windows"),
                 search_file = "eka2l1_qt.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup EKA2L1")
 
@@ -118,11 +121,12 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 install_name = "EKA2L1",
                 install_dir = programs.GetProgramInstallDir("EKA2L1", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup EKA2L1")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -130,6 +134,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup EKA2L1 config files")
 
@@ -138,6 +143,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
             actual_md5 = hashing.CalculateFileMD5(
                 filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("EKA2L1"), filename),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
             system.AssertCondition(success, "Could not verify EKA2L1 system file %s" % filename)
@@ -151,6 +157,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
                         extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("EKA2L1", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     system.AssertCondition(success, "Could not extract EKA2L1 system files")
 
@@ -176,4 +183,5 @@ class EKA2L1(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

@@ -57,7 +57,7 @@ class DXVK(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("DXVK"):
@@ -70,11 +70,12 @@ class DXVK(toolbase.ToolBase):
                 install_dir = programs.GetLibraryInstallDir("DXVK", "lib"),
                 backups_dir = programs.GetLibraryBackupDir("DXVK", "lib"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DXVK")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup library
         if programs.ShouldLibraryBeInstalled("DXVK"):
@@ -83,5 +84,6 @@ class DXVK(toolbase.ToolBase):
                 install_name = "DXVK",
                 install_dir = programs.GetLibraryInstallDir("DXVK", "lib"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DXVK")

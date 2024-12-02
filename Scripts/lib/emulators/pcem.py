@@ -43,7 +43,7 @@ class PCEm(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PCEm", "windows"):
@@ -57,11 +57,12 @@ class PCEm(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("PCEm", "windows"),
                 backups_dir = programs.GetProgramBackupDir("PCEm", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PCEm")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("PCEm", "windows"):
@@ -71,5 +72,6 @@ class PCEm(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("PCEm", "windows"),
                 search_file = "PCem.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PCEm")

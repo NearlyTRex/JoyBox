@@ -76,7 +76,7 @@ class Citra(emulatorbase.EmulatorBase):
         }
 
     # Install add-ons
-    def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, exit_on_failure = False):
+    def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, pretend_run = False, exit_on_failure = False):
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
                 for cia_file in system.BuildFileListByExtensions(package_dir, extensions = [".cia"]):
@@ -84,13 +84,14 @@ class Citra(emulatorbase.EmulatorBase):
                         src_3ds_file = cia_file,
                         sdmc_dir = os.path.join(programs.GetEmulatorPathConfigValue("Citra", "setup_dir"), "sdmc"),
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     if not success:
                         return False
         return True
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Citra", "windows"):
@@ -100,6 +101,7 @@ class Citra(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Citra", "windows"),
                 search_file = "citra-qt.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Citra")
 
@@ -111,15 +113,16 @@ class Citra(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Citra", "linux"),
                 search_file = "citra-qt.AppImage",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Citra")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
-        self.Setup(verbose = verbose, exit_on_failure = exit_on_failure)
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+        self.Setup(verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -127,6 +130,7 @@ class Citra(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Citra config files")
 
@@ -135,6 +139,7 @@ class Citra(emulatorbase.EmulatorBase):
             actual_md5 = hashing.CalculateFileMD5(
                 filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Citra"), filename),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
             system.AssertCondition(success, "Could not verify Citra system file %s" % filename)
@@ -148,6 +153,7 @@ class Citra(emulatorbase.EmulatorBase):
                         extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("Citra", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     system.AssertCondition(success, "Could not extract Citra system files")
 
@@ -172,4 +178,5 @@ class Citra(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

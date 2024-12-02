@@ -138,7 +138,7 @@ class PCSX2(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PCSX2", "windows"):
@@ -152,6 +152,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("PCSX2", "windows"),
                 backups_dir = programs.GetProgramBackupDir("PCSX2", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PCSX2")
 
@@ -166,11 +167,12 @@ class PCSX2(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("PCSX2", "linux"),
                 backups_dir = programs.GetProgramBackupDir("PCSX2", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PCSX2")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("PCSX2", "windows"):
@@ -180,6 +182,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("PCSX2", "windows"),
                 search_file = "pcsx2-qt.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PCSX2")
 
@@ -190,11 +193,12 @@ class PCSX2(emulatorbase.EmulatorBase):
                 install_name = "PCSX2",
                 install_dir = programs.GetProgramInstallDir("PCSX2", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PCSX2")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -202,6 +206,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PCSX2 config files")
 
@@ -210,6 +215,7 @@ class PCSX2(emulatorbase.EmulatorBase):
             actual_md5 = hashing.CalculateFileMD5(
                 filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("PCSX2"), filename),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
             system.AssertCondition(success, "Could not verify PCSX2 system file %s" % filename)
@@ -221,6 +227,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                     src = os.path.join(environment.GetLockerGamingEmulatorSetupDir("PCSX2"), filename),
                     dest = os.path.join(programs.GetEmulatorPathConfigValue("PCSX2", "setup_dir", platform), filename),
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 system.AssertCondition(success, "Could not setup PCSX2 system files")
 
@@ -249,4 +256,5 @@ class PCSX2(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

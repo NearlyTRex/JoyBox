@@ -28,7 +28,7 @@ class ExifTool(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("ExifTool"):
@@ -38,6 +38,7 @@ class ExifTool(toolbase.ToolBase):
                 output_dir = programs.GetLibraryInstallDir("ExifTool", "lib"),
                 clean = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ExifTool")
             success = network.ArchiveGithubRepository(
@@ -47,11 +48,12 @@ class ExifTool(toolbase.ToolBase):
                 recursive = True,
                 clean = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ExifTool")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup library
         if programs.ShouldLibraryBeInstalled("ExifTool"):
@@ -60,5 +62,6 @@ class ExifTool(toolbase.ToolBase):
                 install_name = "ExifTool",
                 install_dir = programs.GetLibraryInstallDir("ExifTool", "lib"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ExifTool")

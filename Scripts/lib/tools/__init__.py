@@ -16,6 +16,7 @@ from .git import Git
 from .goldbergemu import GoldbergEmu
 from .gpg import Gpg
 from .hactool import HacTool
+from .heirloom import Heirloom
 from .itchdl import ItchDL
 from .jdupes import JDupes
 from .mkpl import Mkpl
@@ -77,6 +78,7 @@ def GetToolMap():
     instances["GoldbergEmu"] = GoldbergEmu()
     instances["Gpg"] = Gpg()
     instances["HacTool"] = HacTool()
+    instances["Heirloom"] = Heirloom()
     instances["ItchDL"] = ItchDL()
     instances["JDupes"] = JDupes()
     instances["Mkpl"] = Mkpl()

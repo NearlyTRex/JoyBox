@@ -35,7 +35,7 @@ class GeckoDriver(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("GeckoDriver", "windows"):
@@ -50,6 +50,7 @@ class GeckoDriver(toolbase.ToolBase):
                 backups_dir = programs.GetProgramBackupDir("GeckoDriver", "windows"),
                 install_files = ["geckodriver.exe"],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup GeckoDriver")
 
@@ -66,11 +67,12 @@ class GeckoDriver(toolbase.ToolBase):
                 backups_dir = programs.GetProgramBackupDir("GeckoDriver", "linux"),
                 install_files = ["geckodriver"],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup GeckoDriver")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("GeckoDriver", "windows"):
@@ -80,6 +82,7 @@ class GeckoDriver(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("GeckoDriver", "windows"),
                 search_file = "geckodriver.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup GeckoDriver")
 
@@ -90,5 +93,6 @@ class GeckoDriver(toolbase.ToolBase):
                 install_name = "GeckoDriver",
                 install_dir = programs.GetProgramInstallDir("GeckoDriver", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup GeckoDriver")

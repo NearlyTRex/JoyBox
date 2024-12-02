@@ -35,7 +35,7 @@ class PS3Dec(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PS3Dec", "windows"):
@@ -50,6 +50,7 @@ class PS3Dec(toolbase.ToolBase):
                 backups_dir = programs.GetProgramBackupDir("PS3Dec", "windows"),
                 install_files = ["PS3Dec.exe"],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PS3Dec")
 
@@ -76,11 +77,12 @@ class PS3Dec(toolbase.ToolBase):
                     {"from": "usr/bin/PS3Dec", "to": "AppRun"}
                 ],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PS3Dec")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("PS3Dec", "windows"):
@@ -90,6 +92,7 @@ class PS3Dec(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("PS3Dec", "windows"),
                 search_file = "PS3Dec.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PS3Dec")
 
@@ -100,5 +103,6 @@ class PS3Dec(toolbase.ToolBase):
                 install_name = "PS3Dec",
                 install_dir = programs.GetProgramInstallDir("PS3Dec", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PS3Dec")

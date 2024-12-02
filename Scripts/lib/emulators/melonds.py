@@ -82,7 +82,7 @@ class MelonDS(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("melonDS", "windows"):
@@ -97,6 +97,7 @@ class MelonDS(emulatorbase.EmulatorBase):
                 backups_dir = programs.GetProgramBackupDir("melonDS", "windows"),
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup melonDS")
 
@@ -123,11 +124,12 @@ class MelonDS(emulatorbase.EmulatorBase):
                     {"from": "usr/bin/melonDS", "to": "AppRun"}
                 ],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup melonDS")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("melonDS", "windows"):
@@ -137,6 +139,7 @@ class MelonDS(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("melonDS", "windows"),
                 search_file = "melonDS.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup melonDS")
 
@@ -147,11 +150,12 @@ class MelonDS(emulatorbase.EmulatorBase):
                 install_name = "melonDS",
                 install_dir = programs.GetProgramInstallDir("melonDS", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup melonDS")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -159,6 +163,7 @@ class MelonDS(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup melonDS config files")
 
@@ -167,6 +172,7 @@ class MelonDS(emulatorbase.EmulatorBase):
             actual_md5 = hashing.CalculateFileMD5(
                 filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("melonDS"), filename),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
             system.AssertCondition(success, "Could not verify melonDS system file %s" % filename)
@@ -178,6 +184,7 @@ class MelonDS(emulatorbase.EmulatorBase):
                     src = os.path.join(environment.GetLockerGamingEmulatorSetupDir("melonDS"), filename),
                     dest = os.path.join(programs.GetEmulatorPathConfigValue("melonDS", "setup_dir", platform), filename),
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 system.AssertCondition(success, "Could not setup melonDS system files")
 
@@ -206,4 +213,5 @@ class MelonDS(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

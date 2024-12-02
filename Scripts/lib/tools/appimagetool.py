@@ -43,7 +43,7 @@ class AppImageTool(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("AppImageTool", "linux"):
@@ -57,11 +57,12 @@ class AppImageTool(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("AppImageTool", "linux"),
                 backups_dir = programs.GetProgramBackupDir("AppImageTool", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup AppImageTool")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("AppImageTool", "linux"):
@@ -70,11 +71,12 @@ class AppImageTool(toolbase.ToolBase):
                 install_name = "AppImageTool",
                 install_dir = programs.GetProgramInstallDir("AppImageTool", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup AppImageTool")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Copy icon
         if environment.IsLinuxPlatform():
@@ -82,6 +84,7 @@ class AppImageTool(toolbase.ToolBase):
                 src = os.path.join(environment.GetScriptsIconsDir(), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
                 dest = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not copy AppImageTool icons")
 
@@ -92,5 +95,6 @@ class AppImageTool(toolbase.ToolBase):
                     src = os.path.join(environment.GetToolsRootDir(), config_filename),
                     contents = config_contents.strip(),
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 system.AssertCondition(success, "Could not create AppImageTool config files")

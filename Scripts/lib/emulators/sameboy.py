@@ -43,7 +43,7 @@ class SameBoy(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("SameBoy", "windows"):
@@ -57,11 +57,12 @@ class SameBoy(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("SameBoy", "windows"),
                 backups_dir = programs.GetProgramBackupDir("SameBoy", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup SameBoy")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("SameBoy", "windows"):
@@ -71,5 +72,6 @@ class SameBoy(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("SameBoy", "windows"),
                 search_file = "sameboy.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup SameBoy")

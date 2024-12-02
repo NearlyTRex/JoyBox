@@ -101,7 +101,7 @@ class RetroArch(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("RetroArch", "windows"):
@@ -112,6 +112,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("RetroArch", "windows"),
                 backups_dir = programs.GetProgramBackupDir("RetroArch", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch")
             success = release.DownloadGeneralRelease(
@@ -121,6 +122,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "windows"),
                 backups_dir = programs.GetProgramBackupDir("RetroArch", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch cores")
 
@@ -133,6 +135,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("RetroArch", "linux"),
                 backups_dir = programs.GetProgramBackupDir("RetroArch", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch")
             success = release.DownloadGeneralRelease(
@@ -142,11 +145,12 @@ class RetroArch(emulatorbase.EmulatorBase):
                 install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "linux"),
                 backups_dir = programs.GetProgramBackupDir("RetroArch", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch cores")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("RetroArch", "windows"):
@@ -157,6 +161,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 preferred_archive = "RetroArch.7z",
                 search_file = "retroarch.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch")
             success = release.SetupStoredRelease(
@@ -166,6 +171,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 preferred_archive = "RetroArch_cores.7z",
                 search_file = "snes9x_libretro.dll",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch cores")
 
@@ -178,6 +184,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 preferred_archive = "RetroArch.7z",
                 search_file = "RetroArch-Linux-x86_64.AppImage",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch")
             success = release.SetupStoredRelease(
@@ -187,11 +194,12 @@ class RetroArch(emulatorbase.EmulatorBase):
                 preferred_archive = "RetroArch_cores.7z",
                 search_file = "snes9x_libretro.so",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch cores")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -199,6 +207,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RetroArch config files")
 
@@ -207,6 +216,7 @@ class RetroArch(emulatorbase.EmulatorBase):
             actual_md5 = hashing.CalculateFileMD5(
                 filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("RetroArch"), filename),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
             system.AssertCondition(success, "Could not verify RetroArch system file %s" % filename)
@@ -218,6 +228,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                     src = os.path.join(environment.GetLockerGamingEmulatorSetupDir("RetroArch"), filename),
                     dest = os.path.join(programs.GetEmulatorPathConfigValue("RetroArch", "setup_dir", platform), filename),
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 system.AssertCondition(success, "Could not setup RetroArch system files")
 
@@ -268,4 +279,5 @@ class RetroArch(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

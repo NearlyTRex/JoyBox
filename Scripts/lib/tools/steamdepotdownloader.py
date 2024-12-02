@@ -35,7 +35,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("SteamDepotDownloader", "windows"):
@@ -50,6 +50,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 backups_dir = programs.GetProgramBackupDir("SteamDepotDownloader", "windows"),
                 install_files = ["DepotDownloader.exe"],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup SteamDepotDownloader")
 
@@ -73,11 +74,12 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 ],
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup SteamDepotDownloader")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("SteamDepotDownloader", "windows"):
@@ -87,6 +89,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "windows"),
                 search_file = "DepotDownloader.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup SteamDepotDownloader")
 
@@ -97,5 +100,6 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 install_name = "SteamDepotDownloader",
                 install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup SteamDepotDownloader")

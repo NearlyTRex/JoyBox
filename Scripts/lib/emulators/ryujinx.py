@@ -45,7 +45,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Ryujinx", "windows"):
@@ -59,6 +59,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Ryujinx", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Ryujinx", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ryujinx")
 
@@ -74,11 +75,12 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Ryujinx", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Ryujinx", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ryujinx")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Ryujinx", "windows"):
@@ -88,6 +90,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Ryujinx", "windows"),
                 search_file = "Ryujinx.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ryujinx")
 
@@ -99,11 +102,12 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Ryujinx", "linux"),
                 search_file = "Ryujinx.sh",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ryujinx")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -111,5 +115,6 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Ryujinx config files")

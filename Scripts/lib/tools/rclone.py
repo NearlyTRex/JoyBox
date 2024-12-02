@@ -46,7 +46,7 @@ class RClone(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("RClone", "windows"):
@@ -57,6 +57,7 @@ class RClone(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("RClone", "windows"),
                 backups_dir = programs.GetProgramBackupDir("RClone", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RClone")
 
@@ -69,11 +70,12 @@ class RClone(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("RClone", "linux"),
                 backups_dir = programs.GetProgramBackupDir("RClone", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RClone")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("RClone", "windows"):
@@ -83,6 +85,7 @@ class RClone(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("RClone", "windows"),
                 search_file = "rclone.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RClone")
 
@@ -93,11 +96,12 @@ class RClone(toolbase.ToolBase):
                 install_name = "RClone",
                 install_dir = programs.GetProgramInstallDir("RClone", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RClone")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -105,5 +109,6 @@ class RClone(toolbase.ToolBase):
                 src = os.path.join(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup RClone config files")

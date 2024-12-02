@@ -43,7 +43,7 @@ class Phoenix(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Phoenix", "windows"):
@@ -54,11 +54,12 @@ class Phoenix(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Phoenix", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Phoenix", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Phoenix")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Phoenix", "windows"):
@@ -68,5 +69,6 @@ class Phoenix(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Phoenix", "windows"),
                 search_file = "PhoenixEmuProject.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Phoenix")

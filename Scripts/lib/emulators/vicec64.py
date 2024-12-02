@@ -58,7 +58,7 @@ class ViceC64(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("VICE-C64", "windows"):
@@ -73,6 +73,7 @@ class ViceC64(emulatorbase.EmulatorBase):
                 backups_dir = programs.GetProgramBackupDir("VICE-C64", "windows"),
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup VICE-C64")
 
@@ -103,11 +104,12 @@ class ViceC64(emulatorbase.EmulatorBase):
                     {"from": "usr/bin/x64sc", "to": "AppRun"}
                 ],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup VICE-C64")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("VICE-C64", "windows"):
@@ -117,6 +119,7 @@ class ViceC64(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("VICE-C64", "windows"),
                 search_file = "x64sc.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup REPLACEME")
 
@@ -127,11 +130,12 @@ class ViceC64(emulatorbase.EmulatorBase):
                 install_name = "VICE-C64",
                 install_dir = programs.GetProgramInstallDir("VICE-C64", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup VICE-C64")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -139,6 +143,7 @@ class ViceC64(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup VICE-C64 config files")
 
@@ -163,4 +168,5 @@ class ViceC64(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

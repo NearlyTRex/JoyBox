@@ -35,7 +35,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("3DSRomTool", "windows"):
@@ -50,6 +50,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 backups_dir = programs.GetProgramBackupDir("3DSRomTool", "windows"),
                 install_files = ["rom_tool.exe"],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup 3DSRomTool")
 
@@ -75,11 +76,12 @@ class ThreeDSRomTool(toolbase.ToolBase):
                     {"from": "usr/bin/rom_tool", "to": "AppRun"}
                 ],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup 3DSRomTool")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("3DSRomTool", "windows"):
@@ -89,6 +91,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("3DSRomTool", "windows"),
                 search_file = "rom_tool.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup 3DSRomTool")
 
@@ -99,5 +102,6 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 install_name = "3DSRomTool",
                 install_dir = programs.GetProgramInstallDir("3DSRomTool", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup 3DSRomTool")

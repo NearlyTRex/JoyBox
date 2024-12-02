@@ -123,7 +123,7 @@ class StoreBase:
     ############################################################
 
     # Load manifest
-    def LoadManifest(self, verbose = False, exit_on_failure = False):
+    def LoadManifest(self, verbose = False, pretend_run = False, exit_on_failure = False):
         self.manifest = system.ReadYamlFile(
             src = tools.GetManifest(),
             verbose = verbose,

@@ -36,7 +36,7 @@ class BalenaEtcher(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("BalenaEtcher", "windows"):
@@ -50,6 +50,7 @@ class BalenaEtcher(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("BalenaEtcher", "windows"),
                 backups_dir = programs.GetProgramBackupDir("BalenaEtcher", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BalenaEtcher")
 
@@ -64,11 +65,12 @@ class BalenaEtcher(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("BalenaEtcher", "linux"),
                 backups_dir = programs.GetProgramBackupDir("BalenaEtcher", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BalenaEtcher")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("BalenaEtcher", "windows"):
@@ -78,6 +80,7 @@ class BalenaEtcher(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("BalenaEtcher", "windows"),
                 search_file = "balenaEtcher.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BalenaEtcher")
 
@@ -88,5 +91,6 @@ class BalenaEtcher(toolbase.ToolBase):
                 install_name = "BalenaEtcher",
                 install_dir = programs.GetProgramInstallDir("BalenaEtcher", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup BalenaEtcher")

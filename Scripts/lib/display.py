@@ -17,7 +17,7 @@ def GetCurrentScreenResolution():
     return (0, 0)
 
 # Set screen resolution
-def SetScreenResolution(width, height, colors, verbose = False, exit_on_failure = False):
+def SetScreenResolution(width, height, colors, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get tool
     nircmd_tool = None
@@ -42,11 +42,12 @@ def SetScreenResolution(width, height, colors, verbose = False, exit_on_failure 
         options = command.CommandOptions(
             shell = True),
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return True
 
 # Restore default screen resolution
-def RestoreDefaultScreenResolution(verbose = False, exit_on_failure = False):
+def RestoreDefaultScreenResolution(verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get resolution info
     screen_resolution_w = ini.GetIniIntegerValue("UserData.Resolution", "screen_resolution_w")
@@ -66,4 +67,5 @@ def RestoreDefaultScreenResolution(verbose = False, exit_on_failure = False):
         height = screen_resolution_h,
         colors = screen_resolution_c,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

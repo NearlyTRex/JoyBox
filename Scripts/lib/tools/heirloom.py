@@ -12,22 +12,18 @@ import toolbase
 # Config files
 config_files = {}
 
-# Get manifest
-def GetManifest():
-    return programs.GetToolPathConfigValue("LudusaviManifest", "manifest")
-
-# LudusaviManifest tool
-class LudusaviManifest(toolbase.ToolBase):
+# Heirloom tool
+class Heirloom(toolbase.ToolBase):
 
     # Get name
     def GetName(self):
-        return "LudusaviManifest"
+        return "Heirloom"
 
     # Get config
     def GetConfig(self):
         return {
-            "LudusaviManifest": {
-                "manifest": "LudusaviManifest/lib/data/manifest.yaml"
+            "Heirloom": {
+                "program": "Heirloom/lib/main.py"
             }
         }
 
@@ -35,37 +31,37 @@ class LudusaviManifest(toolbase.ToolBase):
     def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("LudusaviManifest"):
+        if programs.ShouldLibraryBeInstalled("Heirloom"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
-                github_repo = "LudusaviManifest",
-                output_dir = programs.GetLibraryInstallDir("LudusaviManifest", "lib"),
+                github_repo = "Heirloom",
+                output_dir = programs.GetLibraryInstallDir("Heirloom", "lib"),
                 clean = True,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup LudusaviManifest")
+            system.AssertCondition(success, "Could not setup Heirloom")
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
-                github_repo = "LudusaviManifest",
-                output_dir = programs.GetLibraryBackupDir("LudusaviManifest", "lib"),
+                github_repo = "Heirloom",
+                output_dir = programs.GetLibraryBackupDir("Heirloom", "lib"),
                 recursive = True,
                 clean = True,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup LudusaviManifest")
+            system.AssertCondition(success, "Could not setup Heirloom")
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("LudusaviManifest"):
+        if programs.ShouldLibraryBeInstalled("Heirloom"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("LudusaviManifest", "lib"),
-                install_name = "LudusaviManifest",
-                install_dir = programs.GetLibraryInstallDir("LudusaviManifest", "lib"),
+                archive_dir = programs.GetLibraryBackupDir("Heirloom", "lib"),
+                install_name = "Heirloom",
+                install_dir = programs.GetLibraryInstallDir("Heirloom", "lib"),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup LudusaviManifest")
+            system.AssertCondition(success, "Could not setup Heirloom")

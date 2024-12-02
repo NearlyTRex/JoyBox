@@ -69,7 +69,7 @@ class Cemu(emulatorbase.EmulatorBase):
         }
 
     # Install add-ons
-    def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, exit_on_failure = False):
+    def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, pretend_run = False, exit_on_failure = False):
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
                 for tik_file in system.BuildFileListByExtensions(package_dir, extensions = [".tik"]):
@@ -79,13 +79,14 @@ class Cemu(emulatorbase.EmulatorBase):
                             nus_package_dir = tik_dir,
                             nand_dir = os.path.join(programs.GetEmulatorPathConfigValue("Cemu", "setup_dir"), "mlc01"),
                             verbose = verbose,
+                            pretend_run = pretend_run,
                             exit_on_failure = exit_on_failure)
                         if not success:
                             return False
         return True
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Cemu", "windows"):
@@ -99,6 +100,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Cemu", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Cemu", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Cemu")
 
@@ -113,11 +115,12 @@ class Cemu(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Cemu", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Cemu", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Cemu")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Cemu", "windows"):
@@ -127,6 +130,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Cemu", "windows"),
                 search_file = "Cemu.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Cemu")
 
@@ -137,11 +141,12 @@ class Cemu(emulatorbase.EmulatorBase):
                 install_name = "Cemu",
                 install_dir = programs.GetProgramInstallDir("Cemu", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Cemu")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -149,6 +154,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Cemu config files")
 
@@ -168,6 +174,7 @@ class Cemu(emulatorbase.EmulatorBase):
         cache.InstallGameToCache(
             game_info = game_info,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Update keys
@@ -178,6 +185,7 @@ class Cemu(emulatorbase.EmulatorBase):
                         src_key_file = key_file,
                         dest_key_file = programs.GetEmulatorPathConfigValue("Cemu", "keys_file", platform),
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
 
         # Get launch command
@@ -196,4 +204,5 @@ class Cemu(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

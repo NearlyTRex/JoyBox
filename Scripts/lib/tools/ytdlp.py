@@ -36,7 +36,7 @@ class YtDlp(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("YtDlp", "windows"):
@@ -52,6 +52,7 @@ class YtDlp(toolbase.ToolBase):
                 install_files = ["yt-dlp.exe"],
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup YtDlp")
 
@@ -76,11 +77,12 @@ class YtDlp(toolbase.ToolBase):
                 ],
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup YtDlp")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("YtDlp", "windows"):
@@ -90,6 +92,7 @@ class YtDlp(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("YtDlp", "windows"),
                 search_file = "yt-dlp.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup YtDlp")
 
@@ -100,5 +103,6 @@ class YtDlp(toolbase.ToolBase):
                 install_name = "YtDlp",
                 install_dir = programs.GetProgramInstallDir("YtDlp", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup YtDlp")

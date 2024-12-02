@@ -77,7 +77,7 @@ class Vita3K(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Vita3K", "windows"):
@@ -92,6 +92,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                 backups_dir = programs.GetProgramBackupDir("Vita3K", "windows"),
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Vita3K")
 
@@ -107,11 +108,12 @@ class Vita3K(emulatorbase.EmulatorBase):
                 backups_dir = programs.GetProgramBackupDir("Vita3K", "linux"),
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Vita3K")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Vita3K", "windows"):
@@ -121,6 +123,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Vita3K", "windows"),
                 search_file = "Vita3K.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Vita3K")
 
@@ -131,11 +134,12 @@ class Vita3K(emulatorbase.EmulatorBase):
                 install_name = "Vita3K",
                 install_dir = programs.GetProgramInstallDir("Vita3K", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Vita3K")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -143,6 +147,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Vita3K config files")
 
@@ -151,6 +156,7 @@ class Vita3K(emulatorbase.EmulatorBase):
             actual_md5 = hashing.CalculateFileMD5(
                 filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Vita3K"), filename),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
             system.AssertCondition(success, "Could not verify Vita3K system file %s" % filename)
@@ -164,6 +170,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                         extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("Vita3K", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     system.AssertCondition(success, "Could not extract Vita3K system files")
 
@@ -187,4 +194,5 @@ class Vita3K(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

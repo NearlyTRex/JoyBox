@@ -60,7 +60,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PPSSPP", "windows"):
@@ -74,6 +74,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("PPSSPP", "windows"),
                 backups_dir = programs.GetProgramBackupDir("PPSSPP", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PPSSPP")
 
@@ -101,11 +102,12 @@ class PPSSPP(emulatorbase.EmulatorBase):
                     {"from": "usr/bin/PPSSPPSDL", "to": "AppRun"}
                 ],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PPSSPP")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("PPSSPP", "windows"):
@@ -115,6 +117,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("PPSSPP", "windows"),
                 search_file = "PPSSPPWindows64.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PPSSPP")
 
@@ -125,11 +128,12 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 install_name = "PPSSPP",
                 install_dir = programs.GetProgramInstallDir("PPSSPP", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PPSSPP")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -137,6 +141,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PPSSPP config files")
 
@@ -161,4 +166,5 @@ class PPSSPP(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

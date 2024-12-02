@@ -501,7 +501,7 @@ class Computer(emulatorbase.EmulatorBase):
         return None
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows programs
         if programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
@@ -516,6 +516,7 @@ class Computer(emulatorbase.EmulatorBase):
                 backups_dir = programs.GetProgramBackupDir("DosBoxX", "windows"),
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DosBoxX")
         if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
@@ -533,6 +534,7 @@ class Computer(emulatorbase.EmulatorBase):
                 ],
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ScummVM")
 
@@ -577,6 +579,7 @@ class Computer(emulatorbase.EmulatorBase):
                     {"from": "usr/bin/dosbox-x", "to": "AppRun"}
                 ],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DosBoxX")
         if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
@@ -617,11 +620,12 @@ class Computer(emulatorbase.EmulatorBase):
                     {"from": "usr/bin/scummvm", "to": "AppRun"}
                 ],
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ScummVM")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
@@ -631,6 +635,7 @@ class Computer(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("DosBoxX", "windows"),
                 search_file = "dosbox-x.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DosBoxX")
         if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
@@ -640,6 +645,7 @@ class Computer(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
                 search_file = "scummvm.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ScummVM")
 
@@ -650,6 +656,7 @@ class Computer(emulatorbase.EmulatorBase):
                 install_name = "DosBoxX",
                 install_dir = programs.GetProgramInstallDir("DosBoxX", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DosBoxX")
         if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
@@ -658,11 +665,12 @@ class Computer(emulatorbase.EmulatorBase):
                 install_name = "ScummVM",
                 install_dir = programs.GetProgramInstallDir("ScummVM", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ScummVM")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -670,6 +678,7 @@ class Computer(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DosBoxX/ScummVM config files")
 
@@ -711,6 +720,7 @@ class Computer(emulatorbase.EmulatorBase):
         cache.InstallGameToCache(
             game_info = game_info,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Get mount links
@@ -736,6 +746,7 @@ class Computer(emulatorbase.EmulatorBase):
                 sandboxie_setup = launch_info_sandboxie_setup,
                 is_32_bit = launch_info_is_32_bit,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         gui.DisplayLoadingWindow(
             title_text = "Creating game prefix",
@@ -891,6 +902,7 @@ class Computer(emulatorbase.EmulatorBase):
                 is_wine_prefix = should_run_via_wine,
                 is_sandboxie_prefix = should_run_via_sandboxie,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
             # Restore user data
@@ -899,6 +911,7 @@ class Computer(emulatorbase.EmulatorBase):
                     data_src = sync_obj["stored"],
                     data_dest = sync_obj["live"],
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
 
             # Launch game
@@ -918,6 +931,7 @@ class Computer(emulatorbase.EmulatorBase):
                         src = temp_cache_dir,
                         dest = real_cache_dir,
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
 
             # Clean dirs
@@ -926,6 +940,7 @@ class Computer(emulatorbase.EmulatorBase):
                     system.RemoveDirectoryContents(
                         dir = dir_to_clear,
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
 
             # Backup user data
@@ -934,6 +949,7 @@ class Computer(emulatorbase.EmulatorBase):
                     data_src = sync_obj["live"],
                     data_dest = sync_obj["stored"],
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
 
             # Backup game registry
@@ -944,9 +960,11 @@ class Computer(emulatorbase.EmulatorBase):
                 is_wine_prefix = should_run_via_wine,
                 is_sandboxie_prefix = should_run_via_sandboxie,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
             # Restore default screen resolution
             display.RestoreDefaultScreenResolution(
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)

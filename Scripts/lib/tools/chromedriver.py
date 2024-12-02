@@ -35,7 +35,7 @@ class ChromeDriver(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("ChromeDriver", "windows"):
@@ -49,6 +49,7 @@ class ChromeDriver(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("ChromeDriver", "windows"),
                 backups_dir = programs.GetProgramBackupDir("ChromeDriver", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ChromeDriver")
 
@@ -64,11 +65,12 @@ class ChromeDriver(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("ChromeDriver", "linux"),
                 backups_dir = programs.GetProgramBackupDir("ChromeDriver", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ChromeDriver")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("ChromeDriver", "windows"):
@@ -78,6 +80,7 @@ class ChromeDriver(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("ChromeDriver", "windows"),
                 search_file = "geckodriver.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ChromeDriver")
 
@@ -88,5 +91,6 @@ class ChromeDriver(toolbase.ToolBase):
                 install_name = "ChromeDriver",
                 install_dir = programs.GetProgramInstallDir("ChromeDriver", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup ChromeDriver")

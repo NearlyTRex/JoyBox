@@ -43,7 +43,7 @@ class Mesen(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Mesen", "windows"):
@@ -54,6 +54,7 @@ class Mesen(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Mesen", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Mesen", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Mesen")
 
@@ -66,11 +67,12 @@ class Mesen(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Mesen", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Mesen", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Mesen")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Mesen", "windows"):
@@ -80,6 +82,7 @@ class Mesen(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Mesen", "windows"),
                 search_file = "Mesen.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Mesen")
 
@@ -91,5 +94,6 @@ class Mesen(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Mesen", "linux"),
                 search_file = "Mesen.AppImage",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup Mesen")

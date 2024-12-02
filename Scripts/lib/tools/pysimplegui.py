@@ -28,7 +28,7 @@ class PySimpleGUI(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("PySimpleGUI"):
@@ -38,6 +38,7 @@ class PySimpleGUI(toolbase.ToolBase):
                 output_dir = programs.GetLibraryInstallDir("PySimpleGUI", "lib"),
                 clean = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PySimpleGUI")
             success = network.ArchiveGithubRepository(
@@ -47,11 +48,12 @@ class PySimpleGUI(toolbase.ToolBase):
                 recursive = True,
                 clean = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PySimpleGUI")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup library
         if programs.ShouldLibraryBeInstalled("PySimpleGUI"):
@@ -60,6 +62,7 @@ class PySimpleGUI(toolbase.ToolBase):
                 install_name = "PySimpleGUI",
                 install_dir = programs.GetLibraryInstallDir("PySimpleGUI", "lib"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup PySimpleGUI")
 

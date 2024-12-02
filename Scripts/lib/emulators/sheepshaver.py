@@ -43,7 +43,7 @@ class SheepShaver(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("SheepShaver", "windows"):
@@ -54,6 +54,7 @@ class SheepShaver(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("SheepShaver", "windows"),
                 backups_dir = programs.GetProgramBackupDir("SheepShaver", "windows"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup SheepShaver")
 
@@ -69,11 +70,12 @@ class SheepShaver(emulatorbase.EmulatorBase):
                 backups_dir = programs.GetProgramBackupDir("SheepShaver", "linux"),
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup SheepShaver")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("SheepShaver", "windows"):
@@ -83,6 +85,7 @@ class SheepShaver(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("SheepShaver", "windows"),
                 search_file = "SheepShaver.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup SheepShaver")
 
@@ -93,5 +96,6 @@ class SheepShaver(emulatorbase.EmulatorBase):
                 install_name = "SheepShaver",
                 install_dir = programs.GetProgramInstallDir("SheepShaver", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup SheepShaver")

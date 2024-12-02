@@ -33,28 +33,46 @@ def CheckRequirements():
         system.LogErrorAndQuit("Ini file not found, please run setup first")
 
 # Setup tools
-def SetupTools(offline = False, verbose = False, exit_on_failure = False):
+def SetupTools(offline = False, verbose = False, pretend_run = False, exit_on_failure = False):
     for tool in programs.GetTools():
         system.LogInfo("Installing tool %s ..." % tool.GetName())
         if offline:
-            tool.SetupOffline(verbose = verbose, exit_on_failure = exit_on_failure)
+            tool.SetupOffline(
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
         else:
-            tool.Setup(verbose = verbose, exit_on_failure = exit_on_failure)
-        tool.Configure(verbose = verbose, exit_on_failure = exit_on_failure)
+            tool.Setup(
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        tool.Configure(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
 # Setup emulators
-def SetupEmulators(offline = False, configure = False, verbose = False, exit_on_failure = False):
+def SetupEmulators(offline = False, configure = False, verbose = False, pretend_run = False, exit_on_failure = False):
     for emulator in programs.GetEmulators():
         system.LogInfo("Installing emulator %s ..." % emulator.GetName())
         if offline:
-            emulator.SetupOffline(verbose = verbose, exit_on_failure = exit_on_failure)
+            emulator.SetupOffline(
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
         else:
-            emulator.Setup(verbose = verbose, exit_on_failure = exit_on_failure)
+            emulator.Setup(
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
         if configure:
-            emulator.Configure(verbose = verbose, exit_on_failure = exit_on_failure)
+            emulator.Configure(
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
 
 # Setup assets
-def SetupAssets(verbose = False, exit_on_failure = False):
+def SetupAssets(verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Create asset symlinks
     for game_category in config.game_categories:
@@ -72,6 +90,7 @@ def SetupAssets(verbose = False, exit_on_failure = False):
                     system.MakeDirectory(
                         dir = source_dir,
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
 
                 # Create dest parent dir if it doesn't exist
@@ -79,12 +98,14 @@ def SetupAssets(verbose = False, exit_on_failure = False):
                     system.MakeDirectory(
                         dir = dest_parent_dir,
                         verbose = verbose,
+                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
 
                 # Remove existing symlink
                 system.RemoveSymlink(
                     symlink = dest_dir,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
 
                 # Make new symlink
@@ -93,4 +114,5 @@ def SetupAssets(verbose = False, exit_on_failure = False):
                     dest = dest_dir,
                     cwd = dest_parent_dir,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)

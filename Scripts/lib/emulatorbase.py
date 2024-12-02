@@ -87,19 +87,19 @@ class EmulatorBase:
         return saves_dir
 
     # Install add-ons
-    def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, exit_on_failure = False):
+    def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, pretend_run = False, exit_on_failure = False):
         pass
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
         pass
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
         pass
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
         pass
 
     # Launch
@@ -109,5 +109,6 @@ class EmulatorBase:
         capture_type,
         fullscreen = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
         pass

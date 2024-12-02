@@ -54,7 +54,7 @@ class VKD3D(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download library
         if programs.ShouldLibraryBeInstalled("VKD3D"):
@@ -67,11 +67,12 @@ class VKD3D(toolbase.ToolBase):
                 install_dir = programs.GetLibraryInstallDir("VKD3D", "lib"),
                 backups_dir = programs.GetLibraryBackupDir("VKD3D", "lib"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup VKD3D")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup library
         if programs.ShouldLibraryBeInstalled("VKD3D"):
@@ -80,5 +81,6 @@ class VKD3D(toolbase.ToolBase):
                 install_name = "VKD3D",
                 install_dir = programs.GetLibraryInstallDir("VKD3D", "lib"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup VKD3D")

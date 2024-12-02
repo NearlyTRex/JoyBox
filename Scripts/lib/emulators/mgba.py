@@ -81,7 +81,7 @@ class MGBA(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, exit_on_failure = False):
+    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("mGBA", "windows"):
@@ -96,6 +96,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 backups_dir = programs.GetProgramBackupDir("mGBA", "windows"),
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup mGBA")
 
@@ -111,11 +112,12 @@ class MGBA(emulatorbase.EmulatorBase):
                 backups_dir = programs.GetProgramBackupDir("mGBA", "linux"),
                 get_latest = True,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup mGBA")
 
     # Setup offline
-    def SetupOffline(self, verbose = False, exit_on_failure = False):
+    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("mGBA", "windows"):
@@ -125,6 +127,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("mGBA", "windows"),
                 search_file = "mGBA.exe",
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup mGBA")
 
@@ -135,11 +138,12 @@ class MGBA(emulatorbase.EmulatorBase):
                 install_name = "mGBA",
                 install_dir = programs.GetProgramInstallDir("mGBA", "linux"),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup mGBA")
 
     # Configure
-    def Configure(self, verbose = False, exit_on_failure = False):
+    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
@@ -147,6 +151,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup mGBA config files")
 
@@ -155,6 +160,7 @@ class MGBA(emulatorbase.EmulatorBase):
             actual_md5 = hashing.CalculateFileMD5(
                 filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("mGBA"), filename),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
             system.AssertCondition(success, "Could not verify mGBA system file %s" % filename)
@@ -166,6 +172,7 @@ class MGBA(emulatorbase.EmulatorBase):
                     src = os.path.join(environment.GetLockerGamingEmulatorSetupDir("mGBA"), filename),
                     dest = os.path.join(programs.GetEmulatorPathConfigValue("mGBA", "setup_dir", platform), filename),
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 system.AssertCondition(success, "Could not setup mGBA system files")
 
@@ -194,4 +201,5 @@ class MGBA(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
