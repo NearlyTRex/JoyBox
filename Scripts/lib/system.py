@@ -21,6 +21,7 @@ import config
 import environment
 import hashing
 import programs
+import network
 
 ###########################################################
 
@@ -120,12 +121,21 @@ def PromptForValue(description, default_value = None):
     return value
 
 # Prompt for integer value
-def PromptForIntegerValue(description, default_value):
-    value = PromptForValue(description, default_value)
-    try:
-        return int(value)
-    except:
-        return default_value
+def PromptForIntegerValue(description, default_value = None):
+    while True:
+        value = PromptForValue(description, default_value)
+        try:
+            return int(value)
+        except:
+            LogWarning("That was not a valid integer, please try again")
+
+# Prompt for url
+def PromptForUrl(description, default_value = None):
+    while True:
+        value = PromptForValue(description, default_value)
+        if network.IsUrlReachable(value):
+            return value
+        LogWarning("That was not a valid url, please try again")
 
 ###########################################################
 
