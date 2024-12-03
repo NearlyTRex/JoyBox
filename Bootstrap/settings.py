@@ -66,6 +66,9 @@ ini_defaults["UserData.GitHub"] = {}
 ini_defaults["UserData.GitHub"]["github_username"] = ""
 ini_defaults["UserData.GitHub"]["github_access_token"] = ""
 
+# UserData.Amazon
+ini_defaults["UserData.Amazon"] = {}
+
 # UserData.Epic
 ini_defaults["UserData.Epic"] = {}
 ini_defaults["UserData.Epic"]["epic_username"] = ""
@@ -80,6 +83,17 @@ ini_defaults["UserData.GOG"]["gog_username"] = ""
 ini_defaults["UserData.GOG"]["gog_platform"] = "windows"
 ini_defaults["UserData.GOG"]["gog_includes"] = "i,e"
 ini_defaults["UserData.GOG"]["gog_excludes"] = ""
+
+# UserData.Itchio
+ini_defaults["UserData.Itchio"] = {}
+
+# UserData.Legacy
+ini_defaults["UserData.Legacy"] = {}
+ini_defaults["UserData.Legacy"]["legacy_username"] = ""
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.Legacy"]["legacy_install_dir"] = "C:\\Program Files\\Legacy Games"
+else:
+    ini_defaults["UserData.Legacy"]["legacy_install_dir"] = "$HOME/Games/LegacyGames"
 
 # UserData.Steam
 ini_defaults["UserData.Steam"] = {}
