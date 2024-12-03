@@ -3,6 +3,7 @@ from .amazon import Amazon
 from .epic import Epic
 from .gog import GOG
 from .itchio import Itchio
+from .legacy import Legacy
 from .steam import Steam
 
 # Get store map
@@ -12,6 +13,7 @@ def GetStoreMap():
     instances["Epic"] = Epic()
     instances["GOG"] = GOG()
     instances["Itchio"] = Itchio()
+    instances["Legacy"] = Legacy()
     instances["Steam"] = Steam()
     return instances
 
