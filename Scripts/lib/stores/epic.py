@@ -280,9 +280,11 @@ class Epic(storebase.StoreBase):
                 base_path = None
                 if config.json_key_store_installdir in game_info:
                     base_path = game_info[config.json_key_store_installdir]
-                game_info[config.json_key_store_paths] = [
-                    storebase.TranslateStorePath(appgame["cloud_save_folder"].strip(), base_path)
-                ]
+                game_info[config.json_key_store_paths] = []
+                if appgame["cloud_save_folder"]:
+                    game_info[config.json_key_store_paths] += [
+                        storebase.TranslateStorePath(appgame["cloud_save_folder"].strip(), base_path)
+                    ]
 
         # Return game info
         return jsondata.JsonData(game_info, self.GetPlatform())
