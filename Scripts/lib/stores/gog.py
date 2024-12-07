@@ -272,14 +272,20 @@ class GOG(storebase.StoreBase):
         metadata_entry.set_url(identifier)
 
         # Look for game description
-        element_game_description = webpage.WaitForPageElement(web_driver, class_name = "description", verbose = verbose)
+        element_game_description = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "description"}),
+            verbose = verbose)
         if element_game_description:
             raw_game_description = webpage.GetElementChildrenText(element_game_description)
             if raw_game_description:
                 metadata_entry.set_description(raw_game_description)
 
         # Look for game details
-        elements_details = webpage.GetElement(web_driver, class_name = "details__row", all_elements = True)
+        elements_details = webpage.GetElement(
+            parent = web_driver,
+            locator = webpage.ElementLocator({"class": "details__row"}),
+            all_elements = True)
         if elements_details:
             for elements_detail in elements_details:
                 element_detail_text = webpage.GetElementChildrenText(elements_detail).strip()

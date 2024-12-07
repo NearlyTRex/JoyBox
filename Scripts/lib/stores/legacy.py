@@ -15,6 +15,12 @@ import webpage
 import storebase
 import metadataentry
 
+# Fix game title
+def FixGameTitle(title):
+    if title.endswith(" CE"):
+        title = title.replace(" CE", " Collector's Edition")
+    return title
+
 # Legacy store
 class Legacy(storebase.StoreBase):
 
@@ -59,7 +65,7 @@ class Legacy(storebase.StoreBase):
     # Get identifier
     def GetIdentifier(self, json_wrapper, identifier_type):
         if identifier_type == config.store_identifier_type_metadata:
-            return json_wrapper.get_value(config.json_key_store_appurl)
+            return json_wrapper.get_value(config.json_key_store_name)
         return json_wrapper.get_value(config.json_key_store_appid)
 
     # Get user name
@@ -186,9 +192,9 @@ class Legacy(storebase.StoreBase):
                 json_data = {},
                 json_platform = self.GetPlatform())
             if "installer_uuid" in entry:
-                purchase.set_value(config.json_key_store_appid, entry["installer_uuid"])
+                purchase.set_value(config.json_key_store_appid, entry["installer_uuid"].strip())
             if "game_name" in entry:
-                purchase.set_value(config.json_key_store_name, entry["game_name"].strip())
+                purchase.set_value(config.json_key_store_name, FixGameTitle(entry["game_name"]).strip())
             purchases.append(purchase)
         return purchases
 
@@ -257,7 +263,7 @@ class Legacy(storebase.StoreBase):
 
         # Augment by json
         if "game_name" in legacy_json:
-            game_info[config.json_key_store_name] = legacy_json["game_name"].strip()
+            game_info[config.json_key_store_name] = FixGameTitle(legacy_json["game_name"]).strip()
 
         # Return game info
         return jsondata.JsonData(game_info, self.GetPlatform())
@@ -271,7 +277,61 @@ class Legacy(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        return None
+
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return None
+
+        # Connect to web
+        web_driver = self.WebConnect(
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not web_driver:
+            return None
+
+        # Load url
+        success = webpage.LoadUrl(web_driver, identifier)
+        if not success:
+            return None
+
+        # Create metadata entry
+        metadata_entry = metadataentry.MetadataEntry()
+        metadata_entry.set_url(identifier)
+
+        # Look for game description
+        element_game_description = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "productFullDetail__descriptionContent"}),
+            verbose = verbose)
+        if not element_game_description:
+            return None
+
+        # Look for game bullets
+        element_game_bullets = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "productFullDetail__bullets"}),
+            verbose = verbose)
+        if not element_game_bullets:
+            return None
+
+        # Grab the description/bullets text
+        raw_game_description = webpage.GetElementText(element_game_description)
+        raw_game_bullets = webpage.GetElementText(element_game_bullets)
+
+        # Convert both to metadata format
+        if isinstance(raw_game_description, str) and isinstance(raw_game_bullets, str):
+            metadata_entry.set_description(raw_game_description + "\n" + raw_game_bullets)
+
+        # Disconnect from web
+        success = self.WebDisconnect(
+            web_driver = web_driver,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return None
+
+        # Return metadata entry
+        return metadata_entry
 
     ############################################################
 
@@ -283,8 +343,48 @@ class Legacy(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Ask them which one they want to use
-        return system.PromptForUrl("Which url do you want to use? [Enter a valid url]")
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return None
+
+        # Connect to web
+        web_driver = self.WebConnect(
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not web_driver:
+            return None
+
+        # Get keywords name
+        if identifier.endswith("CE"):
+            identifier += " Collector's Edition"
+        keywords_name = system.EncodeUrlString(identifier.strip(), use_plus = True)
+
+        # Load url
+        success = webpage.LoadUrl(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + keywords_name)
+        if not success:
+            return None
+
+        # Look for game description
+        element_game_description = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "productFullDetail__descriptionContent"}),
+            verbose = verbose)
+        if not element_game_description:
+            return None
+
+        # Get current url
+        appurl = system.StripStringQueryParams(webpage.GetCurrentPageUrl(web_driver))
+
+        # Disconnect from web
+        success = self.WebDisconnect(
+            web_driver = web_driver,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return None
+
+        # Return appurl
+        return appurl
 
     ############################################################
 

@@ -72,7 +72,7 @@ class Itchio(storebase.StoreBase):
             driver = web_driver,
             login_url = "https://itch.io/login",
             cookiefile = self.GetCookieFile(),
-            link_text = "My feed",
+            locator = webpage.ElementLocator({"link_text": "My feed"}),
             verbose = verbose)
         if not success:
             return None
@@ -113,17 +113,26 @@ class Itchio(storebase.StoreBase):
         # Scroll to end of page until everything is loaded
         while True:
             webpage.ScrollToEndOfPage(web_driver)
-            grid_loader = webpage.GetElement(web_driver, class_name = "grid_loader", tag_name = "div")
+            grid_loader = webpage.GetElement(
+                parent = web_driver,
+                locator = webpage.ElementLocator({"class": "grid_loader"}))
             if grid_loader is None:
                break
 
         # Parse game cells
         purchases = []
-        game_cells = webpage.GetElement(web_driver, class_name = "game_cell", all_elements = True)
+        game_cells = webpage.GetElement(
+            parent = web_driver,
+            locator = webpage.ElementLocator({"class": "game_cell"}),
+            all_elements = True)
         if game_cells:
             for game_cell in game_cells:
-                game_title = webpage.GetElement(game_cell, class_name = "title", tag_name = "a")
-                game_cover = webpage.GetElement(game_cell, class_name = "lazy_loaded", tag_name = "img")
+                game_title = webpage.GetElement(
+                    parent = game_cell,
+                    locator = webpage.ElementLocator({"class": "title"}))
+                game_cover = webpage.GetElement(
+                    parent = game_cell,
+                    locator = webpage.ElementLocator({"class_name": "lazy_loaded"}))
                 if not game_title or not game_cover:
                     continue
 
@@ -202,18 +211,18 @@ class Itchio(storebase.StoreBase):
         metadata_entry.set_url(identifier)
 
         # Load more information if necessary
-        element_more_information = webpage.WaitForPageElement(
+        element_more_information = webpage.WaitForElement(
             driver = web_driver,
-            xpath = "//div[@class='toggle_row']//a[contains(text(), 'More information')]",
+            locator = webpage.ElementLocator({"xpath": "//div[@class='toggle_row']//a[contains(text(), 'More information')]"}),
             verbose = verbose)
         if element_more_information:
             webpage.ClickElement(element_more_information)
             system.SleepProgram(3)
 
         # Look for game description
-        element_game_description = webpage.WaitForPageElement(
+        element_game_description = webpage.WaitForElement(
             driver = web_driver,
-            class_name = "formatted_description",
+            locator = webpage.ElementLocator({"class": "formatted_description"}),
             verbose = verbose)
         if element_game_description:
             raw_game_description = webpage.GetElementText(element_game_description)
@@ -221,7 +230,9 @@ class Itchio(storebase.StoreBase):
                 metadata_entry.set_description(raw_game_description)
 
         # Look for game details
-        element_game_details = webpage.GetElement(web_driver, class_name = "game_info_panel_widget")
+        element_game_details = webpage.GetElement(
+            parent = web_driver,
+            locator = webpage.ElementLocator({"class": "game_info_panel_widget"}))
         if element_game_details:
             raw_game_details = webpage.GetElementText(element_game_details)
             for game_detail_line in raw_game_details.split("\n"):

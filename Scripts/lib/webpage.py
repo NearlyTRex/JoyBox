@@ -200,74 +200,54 @@ def IsUrlLoaded(driver, url):
             return current_url.startswith(url)
     return False
 
-# Parse by request
-def ParseByRequest(
-    id = None,
-    name = None,
-    xpath = None,
-    link_text = None,
-    partial_link_text = None,
-    tag_name = None,
-    class_name = None,
-    css_selector = None):
-    from selenium.webdriver.common.by import By
-    by_type = None
-    by_value = None
-    if id:
-        by_type = By.ID
-        by_value = id
-    elif name:
-        by_type = By.NAME
-        by_value = name
-    elif xpath:
-        by_type = By.XPATH
-        by_value = xpath
-    elif link_text:
-        by_type = By.LINK_TEXT
-        by_value = link_text
-    elif partial_link_text:
-        by_type = By.PARTIAL_LINK_TEXT
-        by_value = partial_link_text
-    elif tag_name:
-        by_type = By.TAG_NAME
-        by_value = tag_name
-    elif class_name:
-        by_type = By.CLASS_NAME
-        by_value = class_name
-    elif css_selector:
-        by_type = By.CSS_SELECTOR
-        by_value = css_selector
-    return (by_type, by_value)
+###########################################################
 
-# Wait for page elements by class
-def WaitForPageElements(
+# Element locator
+class ElementLocator:
+    def __init__(self, info):
+        from selenium.webdriver.common.by import By
+        self.by_type = None
+        self.by_value = None
+        if isinstance(info, dict) and len(info) == 1:
+            for key, value in info.items():
+                if key == "id":
+                    self.by_type = By.ID
+                elif key == "name":
+                    self.by_type = By.NAME
+                elif key == "class":
+                    self.by_type = By.CLASS_NAME
+                elif key == "tag":
+                    self.by_type = By.TAG_NAME
+                elif key == "xpath":
+                    self.by_type = By.XPATH
+                elif key == "css_selector":
+                    self.by_type = By.CSS_SELECTOR
+                elif key == "link_text":
+                    self.by_type = By.LINK_TEXT
+                elif key == "partial_link_text":
+                    self.by_type = By.PARTIAL_LINK_TEXT
+                else:
+                    raise ValueError("Unsupported locator type: %s" % key)
+                self.by_value = value
+        else:
+            raise ValueError("Locator dictionary should contain exactly one key-value pair.")
+    def Get(self):
+        return (self.by_type, self.by_value)
+
+# Wait for all elements
+def WaitForAllElements(
     driver,
-    id = None,
-    name = None,
-    xpath = None,
-    link_text = None,
-    partial_link_text = None,
-    tag_name = None,
-    class_name = None,
-    css_selector = None,
+    locators = [],
     wait_time = 1000,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
         from selenium.webdriver.support.ui import WebDriverWait
-        from selenium.webdriver.support import expected_conditions as ExpectedConditions
-        by_type, by_value = ParseByRequest(
-            id = id,
-            name = name,
-            xpath = xpath,
-            link_text = link_text,
-            partial_link_text = partial_link_text,
-            tag_name = tag_name,
-            class_name = class_name,
-            css_selector = css_selector)
+        from selenium.webdriver.support import expected_conditions as EC
+        conditions = [EC.presence_of_element_located(locator.Get()) for locator in locators]
         return WebDriverWait(driver, wait_time).until(
-            ExpectedConditions.presence_of_all_elements_located((by_type, by_value))
+            EC.all_of(*conditions)
         )
     except Exception as e:
         if exit_on_failure:
@@ -275,68 +255,60 @@ def WaitForPageElements(
             system.QuitProgram()
     return None
 
-# Wait for page element by class
-def WaitForPageElement(
+# Wait for any element
+def WaitForAnyElement(
     driver,
-    id = None,
-    name = None,
-    xpath = None,
-    link_text = None,
-    partial_link_text = None,
-    tag_name = None,
-    class_name = None,
-    css_selector = None,
+    locators = [],
     wait_time = 1000,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    elements = WaitForPageElements(
-        driver = driver,
-        id = id,
-        name = name,
-        xpath = xpath,
-        link_text = link_text,
-        partial_link_text = partial_link_text,
-        tag_name = tag_name,
-        class_name = class_name,
-        css_selector = css_selector,
-        wait_time = wait_time,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if isinstance(elements, list) and len(elements) > 0:
-        return elements[0]
+    try:
+        from selenium.webdriver.support.ui import WebDriverWait
+        from selenium.webdriver.support import expected_conditions as EC
+        conditions = [EC.presence_of_element_located(locator.Get()) for locator in locators]
+        return WebDriverWait(driver, wait_time).until(
+            EC.any_of(*conditions)
+        )
+    except Exception as e:
+        if exit_on_failure:
+            system.LogError(e)
+            system.QuitProgram()
+    return None
+
+# Wait for element
+def WaitForElement(
+    driver,
+    locator,
+    wait_time = 1000,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    try:
+        from selenium.webdriver.support.ui import WebDriverWait
+        from selenium.webdriver.support import expected_conditions as EC
+        return WebDriverWait(driver, wait_time).until(
+            EC.presence_of_element_located(locator.Get())
+        )
+    except Exception as e:
+        if exit_on_failure:
+            system.LogError(e)
+            system.QuitProgram()
     return None
 
 # Get element
 def GetElement(
     parent,
-    id = None,
-    name = None,
-    xpath = None,
-    link_text = None,
-    partial_link_text = None,
-    tag_name = None,
-    class_name = None,
-    css_selector = None,
+    locator,
     all_elements = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
-        by_type, by_value = ParseByRequest(
-            id = id,
-            name = name,
-            xpath = xpath,
-            link_text = link_text,
-            partial_link_text = partial_link_text,
-            tag_name = tag_name,
-            class_name = class_name,
-            css_selector = css_selector)
         if all_elements:
-            return parent.find_elements(by_type, by_value)
+            return parent.find_elements(*locator.Get())
         else:
-            return parent.find_element(by_type, by_value)
+            return parent.find_element(*locator.Get())
     except Exception as e:
         if exit_on_failure:
             system.LogError(e)
@@ -464,14 +436,7 @@ def LogIntoWebsite(
     driver,
     login_url,
     cookiefile,
-    id = None,
-    name = None,
-    xpath = None,
-    link_text = None,
-    partial_link_text = None,
-    tag_name = None,
-    class_name = None,
-    css_selector = None,
+    locator,
     wait_time = 1000,
     verbose = False,
     pretend_run = False,
@@ -487,16 +452,9 @@ def LogIntoWebsite(
         return False
 
     # Look for element
-    login_check = WaitForPageElement(
+    login_check = WaitForElement(
         driver = driver,
-        id = id,
-        name = name,
-        xpath = xpath,
-        link_text = link_text,
-        partial_link_text = partial_link_text,
-        tag_name = tag_name,
-        class_name = class_name,
-        css_selector = css_selector,
+        locator = locator,
         wait_time = wait_time,
         verbose = verbose,
         pretend_run = pretend_run,

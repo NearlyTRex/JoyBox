@@ -404,7 +404,10 @@ class Steam(storebase.StoreBase):
         metadata_entry.set_url(identifier)
 
         # Look for game description
-        element_game_description = webpage.WaitForPageElement(web_driver, id = "aboutThisGame", verbose = verbose)
+        element_game_description = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"id": "aboutThisGame"}),
+            verbose = verbose)
         if element_game_description:
             raw_game_description = webpage.GetElementChildrenText(element_game_description)
             if raw_game_description:
@@ -415,7 +418,9 @@ class Steam(storebase.StoreBase):
                 metadata_entry.set_description(description_text)
 
         # Look for game details
-        element_game_details = webpage.GetElement(web_driver, id = "genresAndManufacturer")
+        element_game_details = webpage.GetElement(
+            parent = web_driver,
+            locator = webpage.ElementLocator({"id": "genresAndManufacturer"}))
         if element_game_details:
 
             # Grab the information text

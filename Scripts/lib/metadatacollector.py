@@ -201,13 +201,19 @@ def CollectMetadataFromTGDB(
         natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
 
         # Find the root container element
-        element_search_result = webpage.WaitForPageElement(web_driver, class_name = "container-fluid", wait_time = 5, verbose = verbose)
+        element_search_result = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "container-fluid"}),
+            verbose = verbose)
         if not element_search_result:
             return None
 
         # Score each potential title compared to the original title
         scores_list = []
-        game_cards = webpage.GetElement(element_search_result, class_name = "card-footer", all_elements = True)
+        game_cards = webpage.GetElement(
+            parent = element_search_result,
+            locator = webpage.ElementLocator({"class": "card-footer"}),
+            all_elements = True)
         if game_cards:
             for game_card in game_cards:
                 game_card_text = webpage.GetElementText(game_card)
@@ -235,7 +241,10 @@ def CollectMetadataFromTGDB(
             return None
 
     # Look for game description
-    element_game_description = webpage.WaitForPageElement(web_driver, class_name = "game-overview", verbose = verbose)
+    element_game_description = webpage.WaitForElement(
+        driver = web_driver,
+        locator = webpage.ElementLocator({"class": "game-overview"}),
+        verbose = verbose)
     if not element_game_description:
         return None
 
@@ -247,8 +256,14 @@ def CollectMetadataFromTGDB(
         metadata_result.set_description(raw_game_description)
 
     # Look for game details
-    for element_game_details in webpage.GetElement(web_driver, class_name = "card-body", all_elements = True):
-        for element_paragraph in webpage.GetElement(element_game_details, tag_name = "p", all_elements = True):
+    for element_game_details in webpage.GetElement(
+        parent = web_driver,
+        locator = webpage.ElementLocator({"class": "card-body"}),
+        all_elements = True):
+        for element_paragraph in webpage.GetElement(
+            parent = element_game_details,
+            locator = webpage.ElementLocator({"tag": "p"}),
+            all_elements = True):
             element_text = webpage.GetElementText(element_paragraph)
             if not element_text:
                 continue
@@ -315,7 +330,10 @@ def CollectMetadataFromGameFAQS(
         return None
 
     # Look for game description
-    element_game_description = webpage.WaitForPageElement(web_driver, class_name = "game_desc", verbose = verbose)
+    element_game_description = webpage.WaitForElement(
+        driver = web_driver,
+        locator = webpage.ElementLocator({"class": "game_desc"}),
+        verbose = verbose)
     if not element_game_description:
         return None
 
@@ -324,7 +342,9 @@ def CollectMetadataFromGameFAQS(
 
     # Click the "more" button if it's present
     if "more »" in raw_game_description:
-        element_game_description_more = webpage.GetElement(web_driver, link_text = "more »")
+        element_game_description_more = webpage.GetElement(
+            parent = web_driver,
+            locator = webpage.ElementLocator({"link_text": "more »"}))
         if element_game_description_more:
             webpage.ClickElement(element_game_description_more)
 
@@ -336,7 +356,10 @@ def CollectMetadataFromGameFAQS(
         metadata_result.set_description(raw_game_description)
 
     # Look for game details
-    for element_game_details in webpage.GetElement(web_driver, class_name = "content", all_elements = True):
+    for element_game_details in webpage.GetElement(
+        parent = web_driver,
+        locator = webpage.ElementLocator({"class": "content"}),
+        all_elements = True):
         element_text = webpage.GetElementText(element_game_details)
         if not element_text:
             continue
@@ -371,6 +394,63 @@ def CollectMetadataFromGameFAQS(
                 release_text = system.TrimSubstringFromStart(element_text, "First Released:").strip()
             release_text = system.ConvertUnknownDateString(release_text, "%Y-%m-%d")
             metadata_result.set_release(release_text)
+
+    # Cleanup web driver
+    webpage.DestroyWebDriver(web_driver)
+
+    # Return metadata
+    return metadata_result
+
+############################################################
+
+# Collect metadata from BigFishGames
+def CollectMetadataFromBigFishGames(
+    game_platform,
+    game_name,
+    select_automatically = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Create web driver
+    web_driver = webpage.CreateWebDriver()
+
+    # Get search terms
+    search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
+
+    # Metadata result
+    metadata_result = metadataentry.MetadataEntry()
+
+    # Load url
+    success = webpage.LoadUrl(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + search_terms)
+    if not success:
+        return None
+
+    # Look for game description
+    element_game_description = webpage.WaitForElement(
+        driver = web_driver,
+        locator = webpage.ElementLocator({"class": "productFullDetail__descriptionContent"}),
+        verbose = verbose)
+    if not element_game_description:
+        return None
+
+    # Look for game bullets
+    element_game_bullets = webpage.WaitForElement(
+        driver = web_driver,
+        locator = webpage.ElementLocator({"class": "productFullDetail__bullets"}),
+        verbose = verbose)
+    if not element_game_bullets:
+        return None
+
+    # Grab the description text
+    raw_game_description = webpage.GetElementText(element_game_description)
+
+    # Grab the bullets text
+    raw_game_bullets = webpage.GetElementText(element_game_bullets)
+
+    # Convert both to metadata format
+    if isinstance(raw_game_description, str) and isinstance(raw_game_bullets, str):
+        metadata_result.set_description(raw_game_description + "\n" + raw_game_bullets)
 
     # Cleanup web driver
     webpage.DestroyWebDriver(web_driver)
@@ -455,26 +535,57 @@ def CollectMetadataAssetFromSteamGridDB(
     if not success:
         return None
 
-    # Look for asset page
-    element_asset_page = webpage.WaitForPageElement(web_driver, class_name = "container-asset-page", verbose = verbose)
-    if not element_asset_page:
+    # Look for search results
+    element_search_results = webpage.WaitForElement(
+        driver = web_driver,
+        locator = webpage.ElementLocator({"class": "game-chunk"}),
+        verbose = verbose)
+    if not element_search_results:
         return None
 
-    # Look for asset download
-    element_asset_download = webpage.WaitForPageElement(web_driver, class_name = "asset-download", verbose = verbose)
+    # Now we have two potential paths:
+    # - The download button for one of the grids
+    # - The official steam artwork
+    element_asset_download = webpage.WaitForAnyElement(
+        driver = web_driver,
+        locators = [
+            webpage.ElementLocator({"class": "asset-download"}),
+            webpage.ElementLocator({"class": "modal-body"})
+        ],
+        verbose = verbose)
     if not element_asset_download:
         return None
 
-    # Get asset link
-    element_asset_link = webpage.GetElement(element_asset_download, class_name = "btn", verbose = verbose)
-    if element_asset_link:
-        metadata_asset = webpage.GetElementAttribute(element_asset_link, "href")
+    # Download button for selected grid
+    if "asset-download" in webpage.GetElementAttribute(element_asset_download, "class"):
+        element_asset_link = webpage.GetElement(
+            parent = element_asset_download,
+            locator = webpage.ElementLocator({"class": "btn"}),
+            verbose = verbose)
+        if element_asset_link:
+            metadata_asset = webpage.GetElementAttribute(element_asset_link, "href")
+
+    # Official steam artwork
+    elif "modal-body" in webpage.GetElementAttribute(element_asset_download, "class"):
+        element_asset_links = webpage.GetElement(
+            parent = element_asset_download,
+            locator = webpage.ElementLocator({"class": "orig-preview"}),
+            all_elements = True,
+            verbose = verbose)
+        if element_asset_links:
+            for element_asset_link in element_asset_links:
+                asset_url = system.StripStringQueryParams(webpage.GetElementAttribute(element_asset_link, "href"))
+                if asset_url.endswith("library_600x900_2x.jpg"):
+                    metadata_asset = asset_url
+                    break
 
     # Cleanup web driver
     webpage.DestroyWebDriver(web_driver)
 
     # Return metadata
     return metadata_asset
+
+############################################################
 
 # Collect metadata asset from YouTube
 def CollectMetadataAssetFromYouTube(
