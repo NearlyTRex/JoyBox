@@ -669,7 +669,11 @@ class StoreBase:
             return False
 
         # Update current data
-        current_metadata.merge(latest_metadata)
+        if isinstance(latest_metadata, metadataentry.MetadataEntry):
+            current_metadata.merge(latest_metadata)
+
+        # Sync assets
+        current_metadata.sync_assets()
 
         # Write back changes
         game_info.set_metadata(current_metadata)

@@ -387,40 +387,15 @@ def UpdateMetadataEntry(
 
     # Get current entry
     current_entry = metadata_obj.get_game(game_platform, game_name)
+    if not current_entry:
+        return False
+
+    # Update current data
     if isinstance(new_data, metadataentry.MetadataEntry):
         current_entry.merge(new_data)
 
-    # Check all asset types
-    for asset_type in config.asset_types_all:
-        game_asset_string = gameinfo.DeriveGameAssetPathFromName(game_name, asset_type)
-        game_asset_file = environment.GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type)
-
-        # Get metadata key associated with the asset type
-        game_metadata_key = None
-        if asset_type == config.asset_type_background:
-            game_metadata_key = config.metadata_key_background
-        elif asset_type == config.asset_type_boxback:
-            game_metadata_key = config.metadata_key_boxback
-        elif asset_type == config.asset_type_boxfront:
-            game_metadata_key = config.metadata_key_boxfront
-        elif asset_type == config.asset_type_label:
-            game_metadata_key = config.metadata_key_label
-        elif asset_type == config.asset_type_screenshot:
-            game_metadata_key = config.metadata_key_screenshot
-        elif asset_type == config.asset_type_video:
-            game_metadata_key = config.metadata_key_video
-
-        # Image asset types should always be there
-        if asset_type in config.asset_types_image:
-            current_entry.set_value(game_metadata_key, game_asset_string)
-            continue
-
-        # Otherwise, only set if the file is present
-        if os.path.isfile(game_asset_file):
-            current_entry.set_value(game_metadata_key, game_asset_string)
-        else:
-            if current_entry.is_key_set(game_metadata_key):
-                current_entry.delete_value(game_metadata_key)
+    # Sync assets
+    current_entry.sync_assets()
 
     # Update entry
     metadata_obj.set_game(game_platform, game_name, current_entry)

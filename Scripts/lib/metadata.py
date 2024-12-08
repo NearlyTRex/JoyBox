@@ -119,6 +119,11 @@ class Metadata:
             dict2 = other.game_database,
             merge_type = merge_type)
 
+    # Sync assets in each entry
+    def sync_assets(self):
+        for entry in self.get_all_sorted_entries():
+            entry.sync_assets()
+
     # Verify roms
     def verify_roms(
         self,

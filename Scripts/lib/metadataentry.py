@@ -5,6 +5,8 @@ import sys
 # Local imports
 import config
 import system
+import environment
+import gameinfo
 
 # Metadata entry class
 class MetadataEntry:
@@ -187,3 +189,33 @@ class MetadataEntry:
             if self.is_key_set(key_to_check) and self.get_value(key_to_check) == "":
                 return True
         return False
+
+    # Sync assets
+    def sync_assets(self):
+        for asset_type in config.asset_types_all:
+            game_asset_string = gameinfo.DeriveGameAssetPathFromName(
+                game_name = self.get_game(),
+                asset_type = asset_type)
+            game_asset_file = environment.GetLockerGamingAssetFile(
+                game_category = self.get_category(),
+                game_subcategory = self.get_subcategory(),
+                game_name = self.get_game(),
+                asset_type = asset_type)
+            game_metadata_key = None
+            if asset_type == config.asset_type_background:
+                game_metadata_key = config.metadata_key_background
+            elif asset_type == config.asset_type_boxback:
+                game_metadata_key = config.metadata_key_boxback
+            elif asset_type == config.asset_type_boxfront:
+                game_metadata_key = config.metadata_key_boxfront
+            elif asset_type == config.asset_type_label:
+                game_metadata_key = config.metadata_key_label
+            elif asset_type == config.asset_type_screenshot:
+                game_metadata_key = config.metadata_key_screenshot
+            elif asset_type == config.asset_type_video:
+                game_metadata_key = config.metadata_key_video
+            if os.path.isfile(game_asset_file):
+                self.set_value(game_metadata_key, game_asset_string)
+            else:
+                if self.is_key_set(game_metadata_key):
+                    self.delete_value(game_metadata_key)
