@@ -9,7 +9,7 @@ import command
 import archive
 import programs
 import system
-import hashing
+import ini
 import jsondata
 import webpage
 import storebase
