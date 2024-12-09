@@ -507,10 +507,6 @@ def IsPathValid(path):
     else:
         return True
 
-# Check if path is file or directory
-def IsPathFileOrDirectory(path):
-    return os.path.isfile(path) or os.path.isdir(path) and not os.path.islink(path)
-
 # Check if path is the parent of another
 def IsParentPath(parent_path, child_path):
     try:
@@ -538,6 +534,38 @@ def DoesPathExist(path, case_sensitive_paths = True, partial_paths = False):
             if path_name.lower() == obj.lower():
                 return True
     return False
+
+# Check if path is a file
+def IsPathFile(path):
+    if not IsPathValid(path):
+        return False
+    if not DoesPathExist(path):
+        return False
+    return os.path.isfile(path)
+
+# Check if path is a directory
+def IsPathDirectory(path):
+    if not IsPathValid(path):
+        return False
+    if not DoesPathExist(path):
+        return False
+    return os.path.isdir(path)
+
+# Check if path is a symlink
+def IsPathSymlink(path):
+    if not IsPathValid(path):
+        return False
+    if not DoesPathExist(path):
+        return False
+    return os.path.islink(path)
+
+# Check if path is file or directory
+def IsPathFileOrDirectory(path):
+    if not IsPathValid(path):
+        return False
+    if not DoesPathExist(path):
+        return False
+    return os.path.isfile(path) or os.path.isdir(path) and not os.path.islink(path)
 
 # Check if drive letter is valid
 def IsDriveLetterValid(drive_letter):
