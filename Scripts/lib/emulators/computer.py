@@ -805,9 +805,9 @@ class Computer(emulatorbase.EmulatorBase):
                 game_info = game_info,
                 base_dir = dos_c_drive,
                 default_cwd = dos_c_drive,
-                key_exe_list = config.json_key_main_game_dos_exe,
-                key_exe_cwd_dict = config.json_key_main_game_dos_exe_cwd,
-                key_exe_args_dict = config.json_key_main_game_dos_exe_args)
+                key_exe_list = config.json_key_launch_dos_exe,
+                key_exe_cwd_dict = config.json_key_launch_dos_exe_cwd,
+                key_exe_args_dict = config.json_key_launch_dos_exe_args)
             if selected_cmd:
                 launch_info_cmd = GetDosLaunchCommand(
                     prefix_dir = launch_save_dir,
@@ -830,9 +830,9 @@ class Computer(emulatorbase.EmulatorBase):
                 game_info = game_info,
                 base_dir = dos_c_drive,
                 default_cwd = dos_c_drive,
-                key_exe_list = config.json_key_main_game_win31_exe,
-                key_exe_cwd_dict = config.json_key_main_game_win31_exe_cwd,
-                key_exe_args_dict = config.json_key_main_game_win31_exe_args)
+                key_exe_list = config.json_key_launch_win31_exe,
+                key_exe_cwd_dict = config.json_key_launch_win31_exe_cwd,
+                key_exe_args_dict = config.json_key_launch_win31_exe_args)
             if selected_cmd:
                 launch_info_cmd = GetWin31LaunchCommand(
                     prefix_dir = launch_save_dir,
@@ -869,9 +869,9 @@ class Computer(emulatorbase.EmulatorBase):
                 game_info = game_info,
                 base_dir = prefix_c_drive,
                 default_cwd = launch_general_save_dir,
-                key_exe_list = config.json_key_main_game_exe,
-                key_exe_cwd_dict = config.json_key_main_game_exe_cwd,
-                key_exe_args_dict = config.json_key_main_game_exe_args)
+                key_exe_list = config.json_key_launch_exe,
+                key_exe_cwd_dict = config.json_key_launch_exe_cwd,
+                key_exe_args_dict = config.json_key_launch_exe_args)
             if selected_cmd:
                 launch_info_cmd = [selected_cmd] + selected_args
                 blocking_processes = sandbox.GetBlockingProcesses(

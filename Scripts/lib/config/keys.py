@@ -108,15 +108,15 @@ json_key_installer_exe = "installer_exe"
 json_key_installer_dos_exe = "installer_dos_exe"
 json_key_installer_type = "installer_type"
 json_key_disc_type = "disc_type"
-json_key_main_game_exe = "main_game_exe"
-json_key_main_game_exe_cwd = "main_game_exe_cwd"
-json_key_main_game_exe_args = "main_game_exe_args"
-json_key_main_game_dos_exe = "main_game_dos_exe"
-json_key_main_game_dos_exe_cwd = "main_game_dos_exe_cwd"
-json_key_main_game_dos_exe_args = "main_game_dos_exe_args"
-json_key_main_game_win31_exe = "main_game_win31_exe"
-json_key_main_game_win31_exe_cwd = "main_game_win31_exe_cwd"
-json_key_main_game_win31_exe_args = "main_game_win31_exe_args"
+json_key_launch_exe = "launch_exe"
+json_key_launch_exe_cwd = "launch_exe_cwd"
+json_key_launch_exe_args = "launch_exe_args"
+json_key_launch_dos_exe = "launch_dos_exe"
+json_key_launch_dos_exe_cwd = "launch_dos_exe_cwd"
+json_key_launch_dos_exe_args = "launch_dos_exe_args"
+json_key_launch_win31_exe = "launch_win31_exe"
+json_key_launch_win31_exe_cwd = "launch_win31_exe_cwd"
+json_key_launch_win31_exe_args = "launch_win31_exe_args"
 json_key_sandbox = "sandbox"
 json_key_sandbox_sandboxie = "sandboxie"
 json_key_sandbox_wine = "wine"
@@ -202,15 +202,15 @@ json_key_defaults.append({"key": json_key_installer_exe, "default": []})
 json_key_defaults.append({"key": json_key_installer_dos_exe, "default": []})
 json_key_defaults.append({"key": json_key_installer_type, "default": None})
 json_key_defaults.append({"key": json_key_disc_type, "default": None})
-json_key_defaults.append({"key": json_key_main_game_exe, "default": []})
-json_key_defaults.append({"key": json_key_main_game_exe_cwd, "default": {}})
-json_key_defaults.append({"key": json_key_main_game_exe_args, "default": {}})
-json_key_defaults.append({"key": json_key_main_game_dos_exe, "default": []})
-json_key_defaults.append({"key": json_key_main_game_dos_exe_cwd, "default": {}})
-json_key_defaults.append({"key": json_key_main_game_dos_exe_args, "default": {}})
-json_key_defaults.append({"key": json_key_main_game_win31_exe, "default": []})
-json_key_defaults.append({"key": json_key_main_game_win31_exe_cwd, "default": {}})
-json_key_defaults.append({"key": json_key_main_game_win31_exe_args, "default": {}})
+json_key_defaults.append({"key": json_key_launch_exe, "default": []})
+json_key_defaults.append({"key": json_key_launch_exe_cwd, "default": {}})
+json_key_defaults.append({"key": json_key_launch_exe_args, "default": {}})
+json_key_defaults.append({"key": json_key_launch_dos_exe, "default": []})
+json_key_defaults.append({"key": json_key_launch_dos_exe_cwd, "default": {}})
+json_key_defaults.append({"key": json_key_launch_dos_exe_args, "default": {}})
+json_key_defaults.append({"key": json_key_launch_win31_exe, "default": []})
+json_key_defaults.append({"key": json_key_launch_win31_exe_cwd, "default": {}})
+json_key_defaults.append({"key": json_key_launch_win31_exe_args, "default": {}})
 json_key_defaults.append({"key": json_key_sandbox, "default": {}})
 json_key_defaults.append({"key": (json_key_sandbox, json_key_sandbox_sandboxie), "default": {}})
 json_key_defaults.append({"key": (json_key_sandbox, json_key_sandbox_wine), "default": {}})
