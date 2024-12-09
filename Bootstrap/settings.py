@@ -38,10 +38,14 @@ ini_defaults["UserData.Protection"]["locker_passphrase"] = ""
 ini_defaults["UserData.Share"] = {}
 ini_defaults["UserData.Share"]["locker_remote_type"] = ""
 ini_defaults["UserData.Share"]["locker_remote_name"] = ""
-ini_defaults["UserData.Share"]["locker_remote_path"] = ""
-ini_defaults["UserData.Share"]["locker_local_path"] = ""
-ini_defaults["UserData.Share"]["locker_mount_path"] = ""
-ini_defaults["UserData.Share"]["locker_mount_flags"] = ""
+ini_defaults["UserData.Share"]["locker_remote_path"] = "/"
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.Share"]["locker_local_path"] = "%USERPROFILE%\\Locker"
+    ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "%USERPROFILE%\\LockerRemote"
+else:
+    ini_defaults["UserData.Share"]["locker_local_path"] = "$HOME/Locker"
+    ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "$HOME/LockerRemote"
+ini_defaults["UserData.Share"]["locker_remote_mount_flags"] = "no_checksum,no_modtime"
 
 # UserData.Resolution
 ini_defaults["UserData.Resolution"] = {}
@@ -232,8 +236,9 @@ ini_defaults["Tools.Firefox"] = {}
 if environment.IsWindowsPlatform():
     ini_defaults["Tools.Firefox"]["firefox_exe"] = "firefox.exe"
     ini_defaults["Tools.Firefox"]["firefox_install_dir"] = "%ProgramFiles%\\Mozilla Firefox"
+    ini_defaults["Tools.Firefox"]["firefox_download_dir"] = "%USERPROFILE%\\Downloads"
 else:
     ini_defaults["Tools.Firefox"]["firefox_exe"] = "firefox"
     ini_defaults["Tools.Firefox"]["firefox_install_dir"] = "/usr/bin"
-ini_defaults["Tools.Firefox"]["firefox_download_dir"] = ""
+    ini_defaults["Tools.Firefox"]["firefox_download_dir"] = "$HOME/Downloads"
 ini_defaults["Tools.Firefox"]["firefox_profile_dir"] = ""
