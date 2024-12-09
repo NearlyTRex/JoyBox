@@ -58,8 +58,8 @@ def main():
 
     # Get input path
     input_path = environment.GetLockerRootDir(args.source_type)
-    if args.supercategory:
-        input_path = os.path.join(input_path, config.locker_type_gaming, args.supercategory)
+    if args.game_supercategory:
+        input_path = os.path.join(input_path, config.locker_type_gaming, args.game_supercategory)
         if args.game_category:
             input_path = os.path.join(input_path, args.game_category)
             if args.game_subcategory:
