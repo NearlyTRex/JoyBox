@@ -201,6 +201,7 @@ class Yuzu(emulatorbase.EmulatorBase):
         capture_type,
         fullscreen = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get launch command
@@ -219,4 +220,5 @@ class Yuzu(emulatorbase.EmulatorBase):
             launch_cmd = launch_cmd,
             capture_type = capture_type,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

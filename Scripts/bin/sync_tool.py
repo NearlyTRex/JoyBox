@@ -31,7 +31,7 @@ parser.add_argument("-a", "--action",
     ],
     default="init", help="Sync action"
 )
-parser.add_argument("--excludes", type=str, default="", help="Excludes (comma delimited)")
+parser.add_argument("--excludes", type=str, default=",".join(config.excluded_sync_paths), help="Excludes (comma delimited)")
 parser.add_argument("--diff_combined_path", type=str, default="diff_combined.txt", help="Diff path (combined)")
 parser.add_argument("--diff_intersected_path", type=str, default="diff_intersected.txt", help="Diff path (intersection)")
 parser.add_argument("--diff_missing_src_path", type=str, default="diff_missing_src.txt", help="Diff path (missing src)")
@@ -57,8 +57,8 @@ def main():
     remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
     remote_path = ini.GetIniValue("UserData.Share", "locker_remote_path")
     local_path = ini.GetIniPathValue("UserData.Share", "locker_local_path")
-    mount_path = ini.GetIniPathValue("UserData.Share", "locker_mount_path")
-    mount_flags = ini.GetIniValue("UserData.Share", "locker_mount_flags").split(",")
+    mount_path = ini.GetIniPathValue("UserData.Share", "locker_remote_mount_path")
+    mount_flags = ini.GetIniValue("UserData.Share", "locker_remote_mount_flags").split(",")
 
     # Init sync
     if args.action == "init":

@@ -199,6 +199,13 @@ ignored_paths_install = [
     getpass.getuser()
 ]
 
+# Excluded sync paths
+excluded_sync_paths = [
+    "Gaming/Roms/**",
+    "Gaming/DLC/**",
+    "Gaming/Updates/**"
+]
+
 # Registry
 registry_filename_setup = "setup.reg"
 registry_filename_game = "game.reg"

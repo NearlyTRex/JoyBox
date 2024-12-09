@@ -164,6 +164,7 @@ class Citra(emulatorbase.EmulatorBase):
         capture_type,
         fullscreen = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Get launch command

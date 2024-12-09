@@ -689,6 +689,7 @@ class Computer(emulatorbase.EmulatorBase):
         capture_type,
         fullscreen = False,
         verbose = False,
+        pretend_run = False,
         exit_on_failure = False):
 
         # Check if command should be run via wine/sandboxie

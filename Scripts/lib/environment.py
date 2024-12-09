@@ -309,6 +309,10 @@ def GetLockerGamingRomDirOffset(game_category, game_subcategory, game_name):
 def GetLockerGamingRomDir(game_category, game_subcategory, game_name, source_type = None):
     return os.path.join(GetLockerGamingRomsRootDir(source_type), GetLockerGamingRomDirOffset(game_category, game_subcategory, game_name))
 
+# Get locker gaming rom category dir
+def GetLockerGamingRomCategoryDir(game_category, game_subcategory, source_type = None):
+    return os.path.join(GetLockerGamingRomsRootDir(source_type), game_category, game_subcategory)
+
 # Get locker gaming save dir
 def GetLockerGamingSaveDir(game_category, game_subcategory, game_name, source_type = None):
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
