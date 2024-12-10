@@ -23,9 +23,14 @@ import gui
 # Setup argument parser
 parser = argparse.ArgumentParser(description="Launch json game.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("-i", "--input_file", type=str, help="Json file to launch")
-parser.add_argument("-c", "--category", type=str, help="Json category")
-parser.add_argument("-s", "--subcategory", type=str, help="Json subcategory")
-parser.add_argument("-n", "--name", type=str, help="Json name")
+parser.add_argument("-e", "--source_type",
+    choices=config.source_types,
+    default=config.source_type_remote,
+    help="Source types"
+)
+parser.add_argument("-c", "--game_category", type=str, help="Game category")
+parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")
+parser.add_argument("-n", "--game_name", type=str, help="Game name")
 parser.add_argument("-r", "--fill_with_random", action="store_true", help="Fill unspecified fields with random values")
 parser.add_argument("-t", "--capture_type",
     choices=[
@@ -61,22 +66,22 @@ def main():
             json_file = os.path.join(environment.GetJsonRomsMetadataRootDir(), json_file)
 
     # Next use category values
-    elif args.category and args.subcategory and args.name:
+    elif args.game_category and args.game_subcategory and args.game_name:
         json_file = environment.GetJsonRomMetadataFile(
-            game_category = args.category,
-            game_subcategory = args.subcategory,
-            game_name = args.name)
+            game_category = args.game_category,
+            game_subcategory = args.game_subcategory,
+            game_name = args.game_name)
 
     # Finally, use random selection
     elif args.fill_with_random:
 
         # Get category
-        game_category = args.category
+        game_category = args.game_category
         if not game_category:
             game_category = random.choice(config.game_categories)
 
         # Get subcategory
-        game_subcategory = args.subcategory
+        game_subcategory = args.game_subcategory
         if not game_subcategory:
             potential_subcategories = []
             for potential_subcategory in config.game_subcategories[game_category]:
@@ -134,6 +139,7 @@ def main():
     # Launch game
     launcher.LaunchGame(
         game_info = game_info,
+        source_type = args.source_type,
         capture_type = args.capture_type,
         fullscreen = args.fullscreen,
         verbose = args.verbose,
