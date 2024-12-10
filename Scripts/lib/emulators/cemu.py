@@ -171,13 +171,6 @@ class Cemu(emulatorbase.EmulatorBase):
         # Get game info
         game_cache_dir = game_info.get_local_cache_dir()
 
-        # Install game to cache
-        cache.InstallGameToCache(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
         # Update keys
         for key_file in system.BuildFileListByExtensions(game_cache_dir, extensions = [".txt"]):
             if key_file.endswith(".key.txt"):

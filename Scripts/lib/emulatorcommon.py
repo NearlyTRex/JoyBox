@@ -29,13 +29,6 @@ def SimpleLaunch(
     game_launch_file = game_info.get_launch_file()
     game_cache_dir = game_info.get_local_cache_dir()
 
-    # Install game to cache
-    cache.InstallGameToCache(
-        game_info = game_info,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
     # Selected launch file
     selected_launch_file = ""
 

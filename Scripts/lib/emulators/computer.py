@@ -717,13 +717,6 @@ class Computer(emulatorbase.EmulatorBase):
         launch_info_is_win31 = game_info.is_win31()
         launch_info_is_scumm = game_info.is_scumm()
 
-        # Install game to cache
-        cache.InstallGameToCache(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
         # Get mount links
         mount_links = []
         for obj in system.GetDirectoryContents(launch_cache_dir):

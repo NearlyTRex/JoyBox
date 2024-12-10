@@ -179,18 +179,15 @@ class RPCS3(emulatorbase.EmulatorBase):
         game_save_dir = game_info.get_save_dir()
         game_cache_dir = game_info.get_local_cache_dir()
 
-        # Install game to cache
-        cache.InstallGameToCache(
-            game_info = game_info,
-            verbose = verbose)
-
         # Copy exdata files
         if game_platform == config.game_subcategory_sony_playstation_network_ps3:
             for exdata_file in system.BuildFileListByExtensions(game_cache_dir, extensions = [".rap", ".edat"]):
                 system.SmartCopy(
                     src = exdata_file,
                     dest = os.path.join(game_save_dir, "exdata"),
-                    verbose = verbose)
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
 
         # Get launch command
         launch_cmd = [
