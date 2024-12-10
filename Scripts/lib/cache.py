@@ -43,6 +43,7 @@ def RemoveGameFromCache(
 # Install game to cache
 def InstallGameToCache(
     game_info,
+    source_type,
     keep_setup_files = False,
     verbose = False,
     pretend_run = False,
@@ -52,20 +53,24 @@ def InstallGameToCache(
     game_name = game_info.get_name()
     game_platform = game_info.get_platform()
     game_artwork = game_info.get_boxfront_asset()
-    game_source_file = game_info.get_source_file()
-    game_source_dir = game_info.get_source_dir()
+    game_local_rom_dir = game_info.get_local_rom_dir()
+    game_remote_rom_dir = game_info.get_remote_rom_dir()
+
+    # Get source dir
+    source_dir = None
+    if source_type == config.source_type_local:
+        source_dir = game_local_rom_dir
+    elif source_type == config.source_type_remote:
+        source_dir = game_remote_rom_dir
+    if not source_dir:
+        return
 
     # Check if already installed
     if IsGameInCache(game_info):
         return
 
     # Check if source files are available
-    files_available = False
-    if len(game_source_file) and os.path.isfile(game_source_file):
-        files_available = True
-    elif len(game_source_dir) and os.path.isdir(game_source_dir):
-        files_available = True
-    if not files_available:
+    if not system.DoesDirectoryContainFiles(source_dir):
         gui.DisplayErrorPopup(
             title_text = "Source files unavailable",
             message_text = "Source files are not available\n%s\n%s" % (game_name, game_platform))
@@ -77,7 +82,7 @@ def InstallGameToCache(
         def InstallTransformedGame():
             return AddTransformedGameToCache(
                 game_info = game_info,
-                source_file = game_source_file,
+                source_dir = source_dir,
                 keep_setup_files = keep_setup_files,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -94,7 +99,7 @@ def InstallGameToCache(
         def InstallGame():
             return AddGameToCache(
                 game_info = game_info,
-                source_file = game_source_file,
+                source_dir = source_dir,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -114,18 +119,21 @@ def InstallGameToCache(
 # Add game to cache
 def AddGameToCache(
     game_info,
-    source_file,
+    source_dir,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Copy game files
-    locker.DownloadAndDecryptPath(
-        src = system.GetFilenameDirectory(source_file),
+    success = system.CopyContents(
+        src = source_dir,
         dest = game_info.get_local_cache_dir(),
+        show_progress = True,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Return result
     return IsGameInCache(game_info)
@@ -133,7 +141,7 @@ def AddGameToCache(
 # Add transformed game to cache
 def AddTransformedGameToCache(
     game_info,
-    source_file,
+    source_dir,
     keep_setup_files = False,
     verbose = False,
     pretend_run = False,
@@ -149,7 +157,7 @@ def AddTransformedGameToCache(
     # Transform game file
     transform_success, transform_result = transform.TransformGameFile(
         game_info = game_info,
-        source_file = source_file,
+        source_dir = source_dir,
         output_dir = tmp_dir_result,
         keep_setup_files = keep_setup_files,
         verbose = verbose,
@@ -162,7 +170,7 @@ def AddTransformedGameToCache(
     # Add to cache
     AddGameToCache(
         game_info = game_info,
-        source_file = transform_result,
+        source_dir = system.GetFilenameDirectory(transform_result),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

@@ -118,41 +118,16 @@ class GameInfo:
         general_save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.save_type_general)
         local_cache_dir = environment.GetCacheGamingRomDir(self.game_category, self.game_subcategory, self.game_name)
         remote_cache_dir = environment.GetCacheGamingInstallDir(self.game_category, self.game_subcategory, self.game_name)
+        local_rom_dir = environment.GetLockerGamingRomDir(self.game_category, self.game_subcategory, self.game_name, config.source_type_local)
+        remote_rom_dir = environment.GetLockerGamingRomDir(self.game_category, self.game_subcategory, self.game_name, config.source_type_remote)
 
         # Set paths
         self.set_value(config.json_key_save_dir, save_dir)
         self.set_value(config.json_key_general_save_dir, general_save_dir)
         self.set_value(config.json_key_local_cache_dir, local_cache_dir)
         self.set_value(config.json_key_remote_cache_dir, remote_cache_dir)
-
-        ##############################
-        # Fill source info
-        ##############################
-
-        # Get launch/transform info
-        json_launch_name = self.get_value(config.json_key_launch_name)
-        json_launch_file = self.get_value(config.json_key_launch_file)
-        json_transform_file = self.get_value(config.json_key_transform_file)
-
-        # Get source dir
-        source_dir = environment.GetLockerGamingRomDir(self.game_category, self.game_subcategory, self.game_name)
-
-        # Get source file
-        # In order of preference:
-        # - Use launch file
-        # - Use transform file
-        # - Use launch name
-        source_file = ""
-        if isinstance(json_launch_file, list) and len(json_launch_file) == 1:
-            source_file = os.path.join(source_dir, json_launch_file[0])
-        if isinstance(json_transform_file, list) and len(json_transform_file) == 1:
-            source_file = os.path.join(source_dir, json_transform_file[0])
-        if isinstance(json_launch_name, str) and len(source_file) == 0:
-            source_file = os.path.join(source_dir, json_launch_name)
-
-        # Set source info
-        self.set_value(config.json_key_source_file, source_file)
-        self.set_value(config.json_key_source_dir, source_dir)
+        self.set_value(config.json_key_local_rom_dir, local_rom_dir)
+        self.set_value(config.json_key_remote_rom_dir, remote_rom_dir)
 
     # Get json file
     def get_json_file(self):
@@ -444,13 +419,9 @@ class GameInfo:
     def get_transform_file(self):
         return self.get_value(config.json_key_transform_file)
 
-    # Get source file
-    def get_source_file(self):
-        return self.get_value(config.json_key_source_file)
-
-    # Get source dir
-    def get_source_dir(self):
-        return self.get_value(config.json_key_source_dir)
+    # Get key file
+    def get_key_file(self):
+        return self.get_value(config.json_key_key_file)
 
     # Get save dir
     def get_save_dir(self):
@@ -467,6 +438,14 @@ class GameInfo:
     # Get remote cache dir
     def get_remote_cache_dir(self):
         return self.get_value(config.json_key_remote_cache_dir)
+
+    # Get local rom dir
+    def get_local_rom_dir(self):
+        return self.get_value(config.json_key_local_rom_dir)
+
+    # Get remote rom dir
+    def get_remote_rom_dir(self):
+        return self.get_value(config.json_key_remote_rom_dir)
 
     ##############################
 

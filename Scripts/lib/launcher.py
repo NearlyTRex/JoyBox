@@ -10,11 +10,13 @@ import metadata
 import programs
 import gameinfo
 import saves
+import cache
 import gui
 
 # Launch game
 def LaunchGame(
     game_info,
+    source_type,
     capture_type = None,
     fullscreen = False,
     verbose = False,
@@ -86,6 +88,14 @@ def LaunchGame(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+
+    # Install game to cache
+    cache.InstallGameToCache(
+        game_info = game_info,
+        source_type = source_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Launch game
     game_launcher.Launch(

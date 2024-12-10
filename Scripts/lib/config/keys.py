@@ -88,6 +88,7 @@ json_key_launch_name = "launch_name"
 json_key_launch_file = "launch_file"
 json_key_launch_dir = "launch_dir"
 json_key_transform_file = "transform_file"
+json_key_key_file = "key_file"
 json_key_source_file = "source_file"
 json_key_source_dir = "source_dir"
 json_key_files = "files"
@@ -102,6 +103,8 @@ json_key_save_dir = "save_dir"
 json_key_general_save_dir = "general_save_dir"
 json_key_local_cache_dir = "local_cache_dir"
 json_key_remote_cache_dir = "remote_cache_dir"
+json_key_local_rom_dir = "local_rom_dir"
+json_key_remote_rom_dir = "remote_rom_dir"
 
 # Computer json keys
 json_key_installer_exe = "installer_exe"
@@ -191,6 +194,7 @@ json_key_defaults.append({"key": json_key_launch_name, "default": None})
 json_key_defaults.append({"key": json_key_launch_file, "default": []})
 json_key_defaults.append({"key": json_key_launch_dir, "default": None})
 json_key_defaults.append({"key": json_key_transform_file, "default": []})
+json_key_defaults.append({"key": json_key_key_file, "default": []})
 json_key_defaults.append({"key": json_key_source_file, "default": []})
 json_key_defaults.append({"key": json_key_source_dir, "default": None})
 json_key_defaults.append({"key": json_key_files, "default": []})

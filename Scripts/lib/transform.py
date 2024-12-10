@@ -128,7 +128,6 @@ def TransformComputerPrograms(
 
 # Transform disc images
 def TransformDiscImage(
-    game_info,
     source_file,
     output_dir,
     verbose = False,
@@ -193,7 +192,6 @@ def TransformDiscImage(
 
 # Transform Xbox disc image
 def TransformXboxDiscImage(
-    game_info,
     source_file,
     output_dir,
     verbose = False,
@@ -237,16 +235,12 @@ def TransformXboxDiscImage(
 
 # Transform PS3 disc image
 def TransformPS3DiscImage(
-    game_info,
     source_file,
+    source_file_dkey,
     output_dir,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get game info
-    game_name = game_info.get_name()
-    game_source_dir = game_info.get_source_dir()
 
     # Make directories
     system.MakeDirectory(
@@ -254,11 +248,6 @@ def TransformPS3DiscImage(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-
-    # Get dkey file
-    dkey_file = os.path.join(game_source_dir, game_name + ".dkey")
-    if not os.path.exists(dkey_file):
-        return (False, "Unable to find corresponding dkey file")
 
     # Get disc images
     disc_image_files = []
@@ -278,7 +267,7 @@ def TransformPS3DiscImage(
             # Extract ps3 disc image
             success = playstation.ExtractPS3ISO(
                 iso_file = os.path.join(system.GetFilenameDirectory(source_file), disc_image_file),
-                dkey_file = dkey_file,
+                dkey_file = source_file_dkey,
                 extract_dir = output_dir,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -321,7 +310,6 @@ def TransformPS3DiscImage(
 
 # Transform PS3 network package
 def TransformPS3NetworkPackage(
-    game_info,
     source_file,
     output_dir,
     verbose = False,
@@ -380,7 +368,6 @@ def TransformPS3NetworkPackage(
 
 # Transform PSV network package
 def TransformPSVNetworkPackage(
-    game_info,
     source_file,
     output_dir,
     verbose = False,
@@ -437,7 +424,7 @@ def TransformPSVNetworkPackage(
 # Transform game file
 def TransformGameFile(
     game_info,
-    source_file,
+    source_dir,
     output_dir,
     keep_setup_files = False,
     verbose = False,
@@ -447,6 +434,9 @@ def TransformGameFile(
     # Get game info
     game_category = game_info.get_category()
     game_subcategory = game_info.get_subcategory()
+    game_name = game_info.get_game()
+    game_transform_file = os.path.join(source_dir, game_info.get_transform_file())
+    game_key_file = os.path.join(source_dir, game_info.get_key_file())
 
     # Output dir doesn't exist
     if not os.path.isdir(output_dir):
@@ -467,7 +457,7 @@ def TransformGameFile(
     if game_category == config.game_category_computer:
         transform_success, transform_result = TransformComputerPrograms(
             game_info = game_info,
-            source_file = source_file,
+            source_file = transform_file,
             output_dir = tmp_dir_result,
             keep_setup_files = keep_setup_files,
             verbose = verbose,
@@ -479,8 +469,7 @@ def TransformGameFile(
     # Microsoft Xbox/Xbox 360
     elif game_subcategory in [config.game_subcategory_microsoft_xbox, config.game_subcategory_microsoft_xbox_360]:
         iso_success, iso_result = TransformDiscImage(
-            game_info = game_info,
-            source_file = source_file,
+            source_file = game_transform_file,
             output_dir = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -488,7 +477,6 @@ def TransformGameFile(
         if not iso_success:
             return (False, iso_result)
         transform_success, transform_result = TransformXboxDiscImage(
-            game_info = game_info,
             source_file = iso_result,
             output_dir = tmp_dir_result,
             verbose = verbose,
@@ -500,8 +488,7 @@ def TransformGameFile(
     # Sony PlayStation 3
     elif game_subcategory == config.game_subcategory_sony_playstation_3:
         iso_success, iso_result = TransformDiscImage(
-            game_info = game_info,
-            source_file = source_file,
+            source_file = game_transform_file,
             output_dir = os.path.join(tmp_dir_result, "iso"),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -509,8 +496,8 @@ def TransformGameFile(
         if not iso_success:
             return (False, iso_result)
         transform_success, transform_result = TransformPS3DiscImage(
-            game_info = game_info,
             source_file = iso_result,
+            source_file_dkey = game_key_file,
             output_dir = os.path.join(tmp_dir_result, "output"),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -521,8 +508,7 @@ def TransformGameFile(
     # Sony PlayStation Network - PlayStation 3
     elif game_subcategory == config.game_subcategory_sony_playstation_network_ps3:
         transform_success, transform_result = TransformPS3NetworkPackage(
-            game_info = game_info,
-            source_file = source_file,
+            source_file = game_transform_file,
             output_dir = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -533,8 +519,7 @@ def TransformGameFile(
     # Sony PlayStation Network - PlayStation Vita
     elif game_subcategory == config.game_subcategory_sony_playstation_network_psv:
         transform_success, transform_result = TransformPSVNetworkPackage(
-            game_info = game_info,
-            source_file = source_file,
+            source_file = game_transform_file,
             output_dir = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -542,9 +527,9 @@ def TransformGameFile(
         if not transform_success:
             return (False, transform_result)
 
-    # No transformation was able to be done, so default to the original file
+    # No transformation was able to be done
     if not os.path.exists(transform_result):
-        return (True, source_file)
+        return (False, "No transformation was able to be done")
 
     # Move transformed output out of temporary directory
     success = system.MoveContents(
