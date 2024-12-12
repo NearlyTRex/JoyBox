@@ -53,24 +53,14 @@ def InstallGameToCache(
     game_name = game_info.get_name()
     game_platform = game_info.get_platform()
     game_artwork = game_info.get_boxfront_asset()
-    game_local_rom_dir = game_info.get_local_rom_dir()
-    game_remote_rom_dir = game_info.get_remote_rom_dir()
-
-    # Get source dir
-    source_dir = None
-    if source_type == config.source_type_local:
-        source_dir = game_local_rom_dir
-    elif source_type == config.source_type_remote:
-        source_dir = game_remote_rom_dir
-    if not source_dir:
-        return
+    game_rom_dir = game_info.get_rom_dir(source_type)
 
     # Check if already installed
     if IsGameInCache(game_info):
         return
 
     # Check if source files are available
-    if not system.DoesDirectoryContainFiles(source_dir):
+    if not system.DoesDirectoryContainFiles(game_rom_dir):
         gui.DisplayErrorPopup(
             title_text = "Source files unavailable",
             message_text = "Source files are not available\n%s\n%s" % (game_name, game_platform))
@@ -82,7 +72,7 @@ def InstallGameToCache(
         def InstallTransformedGame():
             return AddTransformedGameToCache(
                 game_info = game_info,
-                source_dir = source_dir,
+                source_dir = game_rom_dir,
                 keep_setup_files = keep_setup_files,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -99,7 +89,7 @@ def InstallGameToCache(
         def InstallGame():
             return AddGameToCache(
                 game_info = game_info,
-                source_dir = source_dir,
+                source_dir = game_rom_dir,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)

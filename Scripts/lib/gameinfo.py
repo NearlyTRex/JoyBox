@@ -447,6 +447,14 @@ class GameInfo:
     def get_remote_rom_dir(self):
         return self.get_value(config.json_key_remote_rom_dir)
 
+    # Get rom dir
+    def get_rom_dir(self, source_type):
+        if source_type == config.source_type_local:
+            return self.get_local_rom_dir()
+        elif source_type == config.source_type_remote:
+            return self.get_remote_rom_dir()
+        return None
+
     ##############################
 
     # Get files

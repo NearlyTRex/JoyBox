@@ -9,10 +9,11 @@ import argparse
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
-import command
 import system
 import environment
 import gameinfo
+import collection
+import metadata
 import setup
 
 # Parse arguments
@@ -21,6 +22,10 @@ parser.add_argument("-e", "--source_type",
     choices=config.source_types,
     default=config.source_type_remote,
     help="Source types"
+)
+parser.add_argument("-t", "--passphrase_type",
+    choices=config.passphrase_types,
+    default=config.passphrase_type_none, help="Passphrase type"
 )
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
@@ -33,51 +38,73 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Scripts
-    build_metadata_file_bin = os.path.join(environment.GetScriptsBinDir(), "build_metadata_file" + environment.GetScriptsCommandExtension())
-    publish_metadata_files_bin = os.path.join(environment.GetScriptsBinDir(), "publish_metadata_files" + environment.GetScriptsCommandExtension())
-    sort_metadata_files_bin = os.path.join(environment.GetScriptsBinDir(), "sort_metadata_files" + environment.GetScriptsCommandExtension())
+    # Get passphrase
+    passphrase = None
+    if args.passphrase_type == config.passphrase_type_general:
+        passphrase = ini.GetIniValue("UserData.Protection", "general_passphrase")
+    elif args.passphrase_type == config.passphrase_type_locker:
+        passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
 
-    # Build metadata for each category/subcategory
+    # Build metadata files
+    system.Log("Building metadata files ...")
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
-            game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
-            # Metadata info
-            scan_game_path = os.path.join(environment.GetLockerGamingRomsRootDir(args.source_type), game_category, game_subcategory)
-            metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
+            # Get scan path
+            scan_game_path = environment.GetLockerGamingRomCategoryDir(
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                source_type = args.source_type)
 
             # Build metadata
             if os.path.isdir(scan_game_path):
                 system.Log("Building metadata [Category: '%s', Subcategory: '%s'] ..." % (game_category, game_subcategory))
-                build_game_list_cmd = [
-                    build_metadata_file_bin,
-                    "-c", game_category,
-                    "-s", game_subcategory,
-                    "-o", metadata_file,
-                    scan_game_path
-                ]
-                command.RunCheckedCommand(
-                    cmd = build_game_list_cmd,
+                collection.ScanForMetadataEntries(
+                    game_dir = scan_game_path,
+                    game_category = game_category,
+                    game_subcategory = game_subcategory,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+
+    # Build json files
+    for game_category in config.game_categories:
+        for game_subcategory in config.game_subcategories[game_category]:
+            game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+            for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
+
+                # Get scan path
+                scan_game_path = environment.GetLockerGamingRomDir(
+                    game_category = game_category,
+                    game_subcategory = game_subcategory,
+                    game_name = game_name,
+                    source_type = args.source_type)
+
+                # Build json
+                success = collection.CreateGameJsonFile(
+                    game_category = game_category,
+                    game_subcategory = game_subcategory,
+                    game_name = game_name,
+                    game_root = scan_game_path,
+                    passphrase = passphrase,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
-
-    # Sort metadata files
-    system.Log("Sorting metadata files ...")
-    command.RunCheckedCommand(
-        cmd = sort_metadata_files_bin,
-        verbose = args.verbose,
-        pretend_run = args.pretend_run,
-        exit_on_failure = args.exit_on_failure)
+                if not success:
+                    system.LogErrorAndQuit("Building json for '%s - %s' failed" % (game_platform, game_name))
 
     # Publish metadata files
     system.Log("Publishing metadata files ...")
-    command.RunCheckedCommand(
-        cmd = publish_metadata_files_bin,
-        verbose = args.verbose,
-        pretend_run = args.pretend_run,
-        exit_on_failure = args.exit_on_failure)
+    for game_category in config.game_categories:
+
+        # Publish metadata
+        success = collection.PublishMetadataEntries(
+            game_category = game_category,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
+        if not success:
+            system.LogErrorAndQuit("Publish of category '%s' failed" % game_category)
 
 # Start
 main()

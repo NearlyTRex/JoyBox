@@ -38,6 +38,8 @@ def CreateGameJsonFile(
     base_path = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
     if system.IsPathValid(game_root):
         base_path = os.path.realpath(game_root)
+    if not system.DoesPathExist(base_path):
+        return False
 
     # Get json file path
     json_file_path = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name)
@@ -359,6 +361,28 @@ def AddMetadataEntry(
         exit_on_failure = exit_on_failure)
     return True
 
+# Add metadata entries
+def AddMetadataEntries(
+    game_category,
+    game_subcategory,
+    game_root,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for game_name in gameinfo.FindAllGameNames(game_root, game_category, game_subcategory):
+        success = AddMetadataEntry(
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            game_name = game_name,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+    return True
+
+############################################################
+
 # Update metadata entry
 def UpdateMetadataEntry(
     game_category,
@@ -407,6 +431,62 @@ def UpdateMetadataEntry(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    return True
+
+# Update metadata entries
+def UpdateMetadataEntries(
+    game_category,
+    game_subcategory,
+    game_root,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for game_name in gameinfo.FindAllGameNames(game_root, game_category, game_subcategory):
+        success = UpdateMetadataEntry(
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            game_name = game_name,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+    return True
+
+############################################################
+
+# Scan for metadata entries
+def ScanForMetadataEntries(
+    game_dir,
+    game_category,
+    game_subcategory,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get platform
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+
+    # Gather directories to scan
+    scan_directories = []
+    if game_platform in config.letter_platforms:
+        for obj in system.GetDirectoryContents(game_dir):
+            scan_directories.append(os.path.join(game_dir, obj))
+    else:
+        scan_directories.append(game_dir)
+
+    # Add metadata entries
+    for game_directory in game_directories:
+        if game_directory.endswith(")"):
+            success = AddMetadataEntry(
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = system.GetDirectoryName(game_directory),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
     return True
 
 ############################################################

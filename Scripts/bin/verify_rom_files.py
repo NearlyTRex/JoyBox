@@ -47,7 +47,7 @@ def main():
             if os.path.isfile(metadata_file):
                 metadata_obj = metadata.Metadata()
                 metadata_obj.import_from_metadata_file(metadata_file)
-                metadata_obj.verify_roms()
+                metadata_obj.verify_files()
 
     # Verify json files
     for game_category in config.game_categories:

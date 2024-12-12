@@ -124,8 +124,8 @@ class Metadata:
         for entry in self.get_all_sorted_entries():
             entry.sync_assets()
 
-    # Verify roms
-    def verify_roms(
+    # Verify files
+    def verify_files(
         self,
         verbose = False,
         pretend_run = False,
@@ -133,7 +133,7 @@ class Metadata:
         for game_platform in self.get_sorted_platforms():
             for game_name in self.get_sorted_names(game_platform):
                 if verbose:
-                    system.Log("Checking %s - %s ..." % (game_platform, game_name))
+                    system.Log("Checking '%s - %s' ..." % (game_platform, game_name))
 
                 # Get game entry
                 game_entry = self.get_game(game_platform, game_name)
@@ -143,83 +143,7 @@ class Metadata:
                 file_path_real = os.path.join(environment.GetJsonRomsMetadataRootDir(), file_path_relative)
                 if not os.path.exists(file_path_real):
                     system.LogError("File not found:\n%s" % file_path_relative)
-                    system.LogErrorAndQuit("Verification of game %s in platform %s failed" % (game_name, game_platform))
-
-    # Scan game base directory
-    def scan_game_base_dir(
-        self,
-        game_base_dir,
-        game_category,
-        game_subcategory,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        for obj in system.GetDirectoryContents(game_base_dir):
-            game_dir = os.path.join(game_base_dir, obj)
-
-            # Skip non-game folders
-            if not game_dir.endswith(")"):
-                continue
-
-            # Get info
-            game_name = system.GetDirectoryName(game_dir)
-            game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-
-            # Get file
-            game_file = system.RebaseFilePath(
-                path = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name),
-                old_base_path = environment.GetJsonRomsMetadataRootDir(),
-                new_base_path = "")
-
-            # Get asset files
-            game_boxfront = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_boxfront)
-            game_boxback = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_boxback)
-            game_background = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_background)
-            game_screenshot = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_screenshot)
-            game_video = gameinfo.DeriveGameAssetPathFromName(game_name, config.asset_type_video)
-
-            # Create new entry
-            if verbose:
-                system.Log("Found game: '%s' - '%s'" % (game_platform, game_name))
-            game_entry = metadataentry.MetadataEntry()
-            game_entry.set_platform(game_platform)
-            game_entry.set_game(game_name)
-            game_entry.set_file(game_file)
-            game_entry.set_boxfront(game_boxfront)
-            game_entry.set_boxback(game_boxback)
-            game_entry.set_background(game_background)
-            game_entry.set_screenshot(game_screenshot)
-            game_entry.set_players("1")
-            game_entry.set_coop("No")
-            game_entry.set_playable("Yes")
-            self.add_game(game_entry)
-
-    # Scan games
-    def scan_games(
-        self,
-        game_path,
-        game_category,
-        game_subcategory,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        if game_category == config.game_category_computer:
-            for obj in system.GetDirectoryContents(game_path):
-                self.scan_game_base_dir(
-                    game_base_dir = os.path.join(game_path, obj),
-                    game_category = game_category,
-                    game_subcategory = game_subcategory,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-        else:
-            self.scan_game_base_dir(
-                game_base_dir = game_path,
-                game_category = game_category,
-                game_subcategory = game_subcategory,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                    system.LogErrorAndQuit("Verification of '%s - %s' failed" % (game_platform, game_name))
 
     # Import from pegasus file
     def import_from_pegasus_file(

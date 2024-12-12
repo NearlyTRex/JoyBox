@@ -9,14 +9,12 @@ import argparse
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
-import environment
 import system
 import collection
 import setup
-import ini
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Create or update json files.")
+parser = argparse.ArgumentParser(description="Build metadata files.")
 parser.add_argument("-i", "--input_path", type=str, help="Input path")
 parser.add_argument("-u", "--game_supercategory",
     choices=config.game_supercategories,
@@ -45,10 +43,6 @@ parser.add_argument("-m", "--generation_mode",
     ],
     default="standard", help="Generation mode"
 )
-parser.add_argument("-t", "--passphrase_type",
-    choices=config.passphrase_types,
-    default=config.passphrase_type_none, help="Passphrase type"
-)
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
@@ -74,13 +68,6 @@ def main():
     elif args.source_files == "stored":
         source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.game_supercategory, args.source_type)
 
-    # Get passphrase
-    passphrase = None
-    if args.passphrase_type == config.passphrase_type_general:
-        passphrase = ini.GetIniValue("UserData.Protection", "general_passphrase")
-    elif args.passphrase_type == config.passphrase_type_locker:
-        passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
-
     # Manually specify all parameters
     if args.generation_mode == "custom":
         if not args.game_category:
@@ -89,12 +76,10 @@ def main():
             system.LogErrorAndQuit("Game subcategory is required for custom mode")
         if not args.game_name:
             system.LogErrorAndQuit("Game name is required for custom mode")
-        collection.CreateGameJsonFile(
+        collection.AddMetadataEntry(
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
             game_name = args.game_name,
-            game_root = source_file_root,
-            passphrase = passphrase,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
@@ -104,11 +89,10 @@ def main():
 
         # Specific category/subcategory
         if args.game_category and args.game_subcategory:
-            collection.CreateGameJsonFiles(
+            collection.AddMetadataEntries(
                 game_category = args.game_category,
                 game_subcategory = args.game_subcategory,
                 game_root = source_file_root,
-                passphrase = passphrase,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
@@ -116,11 +100,10 @@ def main():
         # Specific category/all subcategories in that category
         elif args.game_category:
             for gaming_subcategory in config.game_subcategories[args.game_category]:
-                collection.CreateGameJsonFiles(
+                collection.AddMetadataEntries(
                     game_category = args.game_category,
                     game_subcategory = gaming_subcategory,
                     game_root = source_file_root,
-                    passphrase = passphrase,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
@@ -129,11 +112,10 @@ def main():
         else:
             for gaming_category in config.game_categories:
                 for gaming_subcategory in config.game_subcategories[gaming_category]:
-                    collection.CreateGameJsonFiles(
+                    collection.AddMetadataEntries(
                         game_category = gaming_category,
                         game_subcategory = gaming_subcategory,
                         game_root = source_file_root,
-                        passphrase = passphrase,
                         verbose = args.verbose,
                         pretend_run = args.pretend_run,
                         exit_on_failure = args.exit_on_failure)
