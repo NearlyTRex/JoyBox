@@ -60,10 +60,28 @@ def InstallGameToCache(
         return
 
     # Check if source files are available
-    if not system.DoesDirectoryContainFiles(game_rom_dir):
+    if not locker.DoesPathContainFiles(game_rom_dir, source_type):
         gui.DisplayErrorPopup(
             title_text = "Source files unavailable",
             message_text = "Source files are not available\n%s\n%s" % (game_name, game_platform))
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
+    if not tmp_dir_success:
+        return False
+
+    # Download files
+    success = locker.CopyFiles(
+        src = game_rom_dir,
+        dest = tmp_dir_result,
+        source_type = source_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Check if transformation is required
     if platforms.IsTransformPlatform(game_platform):
@@ -72,7 +90,7 @@ def InstallGameToCache(
         def InstallTransformedGame():
             return AddTransformedGameToCache(
                 game_info = game_info,
-                source_dir = game_rom_dir,
+                source_dir = tmp_dir_result,
                 keep_setup_files = keep_setup_files,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -89,7 +107,7 @@ def InstallGameToCache(
         def InstallGame():
             return AddGameToCache(
                 game_info = game_info,
-                source_dir = game_rom_dir,
+                source_dir = tmp_dir_result,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -99,6 +117,13 @@ def InstallGameToCache(
             failure_text = "Unable to install game to cache",
             image_file = game_artwork,
             run_func = InstallGame)
+
+    # Delete temporary directory
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Check if game is now installed
     if not IsGameInCache(game_info):
