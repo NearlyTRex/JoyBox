@@ -255,6 +255,46 @@ def DoesPathExist(
         return False
     return True
 
+# Check if path contains files
+def DoesPathContainFiles(
+    remote_name,
+    remote_type,
+    remote_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
+        return False
+
+    # Get list command
+    list_cmd = [
+        rclone_tool,
+        "lsf",
+        "--files-only",
+        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+    ]
+
+    # Run list command
+    list_output = command.RunOutputCommand(
+        cmd = list_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [rclone_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Check if there are any files in the directory
+    list_text = list_output
+    if isinstance(list_output, bytes):
+        list_text = list_output.decode()
+    return len(list_text.strip()) > 0
+
 # Download files from remote
 def DownloadFilesFromRemote(
     remote_name,
