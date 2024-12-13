@@ -38,8 +38,6 @@ def CreateGameJsonFile(
     base_path = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
     if system.IsPathValid(game_root):
         base_path = os.path.realpath(game_root)
-    if not system.DoesPathExist(base_path):
-        return False
 
     # Get json file path
     json_file_path = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name)
