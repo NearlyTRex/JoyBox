@@ -68,6 +68,7 @@ def main():
                     exit_on_failure = exit_on_failure)
 
     # Build json files
+    system.Log("Building json files ...")
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
             game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
@@ -81,7 +82,7 @@ def main():
                     source_type = args.source_type)
 
                 # Build json
-                success = collection.CreateGameJsonFile(
+                collection.CreateGameJsonFile(
                     game_category = game_category,
                     game_subcategory = game_subcategory,
                     game_name = game_name,
@@ -90,8 +91,6 @@ def main():
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
-                if not success:
-                    system.LogErrorAndQuit("Building json for '%s - %s' failed" % (game_platform, game_name))
 
     # Publish metadata files
     system.Log("Publishing metadata files ...")
