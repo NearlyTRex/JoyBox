@@ -181,8 +181,6 @@ def EncryptFile(
     # Check source file
     if not system.IsPathValid(source_file):
         return False
-    if IsFileEncrypted(source_file):
-        return True
 
     # Check output file
     if not output_file:
@@ -191,6 +189,17 @@ def EncryptFile(
         return False
     if system.DoesPathExist(output_file):
         return True
+
+    # Plain copy if already encrypted
+    if IsFileEncrypted(source_file):
+        success = system.SmartCopy(
+            src = source_file,
+            dest = output_file,
+            skip_existing = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return success
 
     # Get tool
     gpg_tool = None
@@ -249,8 +258,6 @@ def DecryptFile(
     # Check source file
     if not system.IsPathValid(source_file):
         return False
-    if not IsFileEncrypted(source_file):
-        return True
 
     # Check output file
     if not output_file:
@@ -264,6 +271,17 @@ def DecryptFile(
         return False
     if system.DoesPathExist(output_file):
         return True
+
+    # Plain copy if already decrypted
+    if not IsFileEncrypted(source_file):
+        success = system.SmartCopy(
+            src = source_file,
+            dest = output_file,
+            skip_existing = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return success
 
     # Get tool
     gpg_tool = None
