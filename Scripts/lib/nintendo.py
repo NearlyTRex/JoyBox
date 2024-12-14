@@ -818,7 +818,7 @@ def TrimSwitchXCI(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            src = src_xci_file,
+            file = src_xci_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -903,7 +903,7 @@ def UntrimSwitchXCI(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            src = src_xci_file,
+            file = src_xci_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

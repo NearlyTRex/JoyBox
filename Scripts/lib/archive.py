@@ -222,7 +222,7 @@ def CreateArchiveFromFile(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            src = source_file,
+            file = source_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -388,7 +388,7 @@ def ExtractArchive(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            src = archive_file,
+            file = archive_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

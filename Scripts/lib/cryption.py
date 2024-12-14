@@ -228,7 +228,7 @@ def EncryptFile(
     # Delete original
     if delete_original and os.path.exists(output_file):
         system.RemoveFile(
-            src = source_file,
+            file = source_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -300,7 +300,7 @@ def DecryptFile(
     # Delete original
     if delete_original and os.path.exists(output_file):
         system.RemoveFile(
-            src = source_file,
+            file = source_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

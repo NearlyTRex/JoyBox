@@ -180,7 +180,7 @@ def ExtractPS3ISO(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            src = iso_file_dec,
+            file = iso_file_dec,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -304,7 +304,7 @@ def ExtractPSNPKG(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            src = pkg_file,
+            file = pkg_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -355,7 +355,7 @@ def StripPSV(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            src = src_psv_file,
+            file = src_psv_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -404,7 +404,7 @@ def UnstripPSV(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            src = src_psv_file,
+            file = src_psv_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -460,7 +460,7 @@ def TrimPSV(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            src = src_psv_file,
+            file = src_psv_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -516,7 +516,7 @@ def UntrimPSV(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            src = src_psv_file,
+            file = src_psv_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

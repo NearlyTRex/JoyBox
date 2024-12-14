@@ -58,7 +58,7 @@ def CreateDiscCHD(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            src = source_iso,
+            file = source_iso,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -108,7 +108,7 @@ def ExtractDiscCHD(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            src = chd_file,
+            file = chd_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -157,7 +157,7 @@ def ArchiveDiscCHD(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            src = chd_file,
+            file = chd_file,
             verbose = verbose,
             pretend_run = pretend_run)
     system.RemoveDirectory(
