@@ -11,16 +11,38 @@ import environment
 import cryption
 import ini
 
-# Convert to relative path
-def ConvertToRelativePath(path, source_type = None):
-    return system.RebaseFilePath(path, environment.GetLockerRootDir(source_type), "")
+# Check if path is remote
+def IsRemotePath(path):
+    if system.DoesPathExist(path):
+        return False
+    if os.path.isabs(path):
+        return False
+    return True
+
+# Check if path is local
+def IsLocalPath(path):
+    return not IsRemotePath(path)
+
+# Convert to remote path
+def ConvertToRemotePath(path):
+    if IsRemotePath(path):
+        return path
+    return system.RebaseFilePath(
+        path = path,
+        old_base_path = environment.GetLockerRootDir(config.source_type_remote),
+        new_base_path = "")
+
+# Convert to local path
+def ConvertToLocalPath(path):
+    if IsLocalPath(path):
+        return path
+    return system.RebaseFilePath(
+        path = path,
+        old_base_path = environment.GetLockerRootDir(config.source_type_remote),
+        new_base_path = environment.GetLockerRootDir(config.source_type_local))
 
 # Check if path exists
-def DoesPathExist(path, source_type = None):
-
-    # Check path
-    if os.path.isabs(path):
-        path = ConvertToRelativePath(path, source_type)
+def DoesRemotePathExist(path):
 
     # Get options
     locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
@@ -30,15 +52,11 @@ def DoesPathExist(path, source_type = None):
     success = sync.DoesPathExist(
         remote_name = locker_remote_name,
         remote_type = locker_remote_type,
-        remote_path = path)
+        remote_path = ConvertToRemotePath(path))
     return success
 
 # Check if path contains files
-def DoesPathContainFiles(path, source_type = None):
-
-    # Check path
-    if os.path.isabs(path):
-        path = ConvertToRelativePath(path, source_type)
+def DoesRemotePathContainFiles(path):
 
     # Get options
     locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
@@ -48,7 +66,7 @@ def DoesPathContainFiles(path, source_type = None):
     success = sync.DoesPathContainFiles(
         remote_name = locker_remote_name,
         remote_type = locker_remote_type,
-        remote_path = path)
+        remote_path = ConvertToRemotePath(path))
     return success
 
 # Download path
@@ -59,20 +77,15 @@ def DownloadPath(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Check path
-    if os.path.isabs(src):
-        src = ConvertToRelativePath(src)
-
     # Get options
     locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
     locker_remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
-    locker_local_path = ini.GetIniPathValue("UserData.Share", "locker_local_path")
 
     # Get paths
-    remote_path = src
+    remote_path = ConvertToRemotePath(src)
     local_path = dest
     if not local_path:
-        local_path = os.path.join(locker_local_path, src)
+        local_path = ConvertToLocalPath(remote_path)
 
     # Download files
     success = sync.DownloadFilesFromRemote(
@@ -88,6 +101,40 @@ def DownloadPath(
 
     # Return result
     return (True, local_path)
+
+# Upload path
+def UploadPath(
+    src,
+    dest = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check path
+    if not system.DoesPathExist(src):
+        system.LogError("Path '%s' does not exist" % src)
+        return False
+
+    # Get options
+    locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
+    locker_remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
+
+    # Get paths
+    local_path = src
+    remote_path = dest
+    if not remote_path:
+        remote_path = system.GetFilenameDirectory(ConvertToRemotePath(src))
+
+    # Upload files
+    success = sync.UploadFilesToRemote(
+        remote_name = locker_remote_name,
+        remote_type = locker_remote_type,
+        remote_path = remote_path,
+        local_path = local_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
 
 # Download and decrypt path
 def DownloadAndDecryptPath(
@@ -111,128 +158,65 @@ def DownloadAndDecryptPath(
         return (False, "")
 
     # Decrypt files
+    output_files = []
     for file in system.BuildFileList(result):
+        output_file = cryption.GetRealFilePath(
+            source_file = file,
+            passphrase = locker_passphrase,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         success = cryption.DecryptFile(
             source_file = file,
-            output_file = cryption.GetDecryptedFilename(file),
+            output_file = output_file,
             passphrase = locker_passphrase,
             delete_original = True,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if not success:
-            return (False, "")
+        if success:
+            output_files.append(output_file)
+    if len(output_files) == 0:
+        return (False, "")
 
     # Return result
-    if os.path.isfile(result):
-        return (True, cryption.GetDecryptedFilename(result))
+    if os.path.isfile(result) or len(output_files) == 1:
+        return (True, output_files[0])
     return (True, result)
 
-# Upload path
-def UploadPath(
+# Upload and encrypt path
+def UploadAndEncryptPath(
     src,
     dest = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Check path
-    if not system.DoesPathExist(src):
-        system.LogError("Path '%s' does not exist" % src)
-        return False
-
     # Get options
-    locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
-    locker_remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
-
-    # Get paths
-    local_path = src
-    remote_path = dest
-    if not remote_path:
-        remote_path = system.GetFilenameDirectory(ConvertToRelativePath(src))
-
-    # Upload files
-    success = sync.UploadFilesToRemote(
-        remote_name = locker_remote_name,
-        remote_type = locker_remote_type,
-        remote_path = remote_path,
-        local_path = local_path,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    return success
-
-# Encrypt and upload path
-def EncryptAndUploadPath(
-    src,
-    dest = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Check path
-    if not system.DoesPathExist(src):
-        system.LogError("Path '%s' does not exist" % src)
-        return False
-
-    # Get options
-    locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
-    locker_remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
     locker_passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
 
-    # Get paths
-    local_path = src
-    remote_path = dest
-    if not remote_path:
-        remote_path = system.GetFilenameDirectory(ConvertToRelativePath(src))
-
     # Encrypt files
+    output_files = []
     for file in system.BuildFileList(src):
-        encrypted_file = cryption.GetEncryptedFilename(file)
+        output_file = cryption.GenerateEncryptedFilename(file)
         success = cryption.EncryptFile(
             source_file = file,
-            output_file = encrypted_file,
+            output_file = output_file,
             passphrase = locker_passphrase,
             delete_original = True,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if not success:
-            return False
+        if success:
+            output_files.append(output_file)
+    if len(output_files) == 0:
+        return False
 
     # Upload files
-    success = sync.UploadFilesToRemote(
-        remote_name = locker_remote_name,
-        remote_type = locker_remote_type,
-        remote_path = remote_path,
-        local_path = local_path,
+    success = UploadPath(
+        src = src,
+        dest = dest,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return success
-
-# Copy files
-def CopyFiles(
-    src,
-    dest = None,
-    source_type = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Copy files
-    if source_type == config.source_type_remote:
-        return DownloadAndDecryptPath(
-            src = src,
-            dest = dest,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    else:
-        return system.SmartCopy(
-            src = src,
-            dest = dest,
-            show_progress = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)

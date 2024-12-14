@@ -30,6 +30,14 @@ def LaunchGame(
     game_platform = game_info.get_platform()
     game_save_dir = game_info.get_save_dir()
 
+    # Install game to cache
+    cache.InstallGameToCache(
+        game_info = game_info,
+        source_type = source_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
     # Get launcher
     game_launcher = None
     for emulator in programs.GetEmulators():
@@ -88,14 +96,6 @@ def LaunchGame(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-
-    # Install game to cache
-    cache.InstallGameToCache(
-        game_info = game_info,
-        source_type = source_type,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
 
     # Launch game
     game_launcher.Launch(

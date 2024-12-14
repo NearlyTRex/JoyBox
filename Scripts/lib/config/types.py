@@ -118,6 +118,14 @@ save_type_general = "General"
 save_type_wine = "Wine"
 save_type_sandboxie = "Sandboxie"
 
+# Save action types
+save_action_type_pack = "pack"
+save_action_type_unpack = "unpack"
+save_action_types = [
+    save_action_type_pack,
+    save_action_type_unpack
+]
+
 # Capture types
 capture_type_none = "none"
 capture_type_screenshot = "screenshot"

@@ -53,14 +53,14 @@ def InstallGameToCache(
     game_name = game_info.get_name()
     game_platform = game_info.get_platform()
     game_artwork = game_info.get_boxfront_asset()
-    game_rom_dir = game_info.get_rom_dir(source_type)
+    game_remote_rom_dir = game_info.get_remote_rom_dir()
 
     # Check if already installed
     if IsGameInCache(game_info):
         return
 
     # Check if source files are available
-    if not locker.DoesPathContainFiles(game_rom_dir, source_type):
+    if not locker.DoesRemotePathContainFiles(game_remote_rom_dir):
         gui.DisplayErrorPopup(
             title_text = "Source files unavailable",
             message_text = "Source files are not available\n%s\n%s" % (game_name, game_platform))
@@ -73,10 +73,9 @@ def InstallGameToCache(
         return False
 
     # Download files
-    success = locker.CopyFiles(
-        src = game_rom_dir,
+    success = locker.DownloadAndDecryptPath(
+        src = game_remote_rom_dir,
         dest = tmp_dir_result,
-        source_type = source_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
