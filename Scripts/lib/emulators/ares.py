@@ -214,10 +214,14 @@ class Ares(emulatorbase.EmulatorBase):
                 internal_copies = [
                     {"from": "Source/desktop-ui/out/ares", "to": "AppImage/usr/bin/ares"},
                     {"from": "Source/desktop-ui/resource/ares.desktop", "to": "AppImage/ares.desktop"},
-                    {"from": "Source/desktop-ui/resource/ares.png", "to": "AppImage/ares.svg"}
+                    {"from": "Source/desktop-ui/resource/ares.png", "to": "AppImage/ares.png"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/ares", "to": "AppRun"}
+                ],
+                external_copies = [
+                    {"from": "Source/mia/Database", "to": "Ares.AppImage.home/.local/share/ares/Database"},
+                    {"from": "Source/mia/Firmware", "to": "Ares.AppImage.home/.local/share/ares/Firmware"}
                 ],
                 verbose = verbose,
                 pretend_run = pretend_run,
