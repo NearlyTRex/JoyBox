@@ -126,6 +126,40 @@ save_action_types = [
     save_action_type_unpack
 ]
 
+# Remote action types
+remote_action_type_init = "init"
+remote_action_type_download = "download"
+remote_action_type_upload = "upload"
+remote_action_type_pull = "pull"
+remote_action_type_push = "push"
+remote_action_type_merge = "merge"
+remote_action_type_diff = "diff"
+remote_action_type_list = "list"
+remote_action_type_mount = "mount"
+remote_action_types = [
+    remote_action_type_init,
+    remote_action_type_download,
+    remote_action_type_upload,
+    remote_action_type_pull,
+    remote_action_type_push,
+    remote_action_type_merge,
+    remote_action_type_diff,
+    remote_action_type_list,
+    remote_action_type_mount
+]
+remote_action_types_sync = [
+    remote_action_type_pull,
+    remote_action_type_push,
+    remote_action_type_merge
+]
+remote_action_types_change = [
+    remote_action_type_download,
+    remote_action_type_upload,
+    remote_action_type_pull,
+    remote_action_type_push,
+    remote_action_type_merge
+]
+
 # Capture types
 capture_type_none = "none"
 capture_type_screenshot = "screenshot"
