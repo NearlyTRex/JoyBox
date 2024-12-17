@@ -15,6 +15,8 @@ def IsFileEncrypted(source_file):
 
 # Generate encrypted filename
 def GenerateEncryptedFilename(source_file):
+    if IsFileEncrypted(source_file):
+        return source_file
     output_dir = system.GetFilenameDirectory(source_file)
     output_name = hashing.CalculateStringMD5(system.GetFilenameFile(source_file)) + config.encrypted_extension_general
     return os.path.join(output_dir, output_name)
