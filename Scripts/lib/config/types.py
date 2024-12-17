@@ -26,9 +26,11 @@ passphrase_types = [
 # Backup types
 backup_type_copy = "copy"
 backup_type_archive = "archive"
+backup_type_sync = "sync"
 backup_types = [
     backup_type_copy,
-    backup_type_archive
+    backup_type_archive,
+    backup_type_sync
 ]
 
 # Source types
@@ -39,21 +41,12 @@ source_types = [
     source_type_remote
 ]
 
-# Source file types
-source_file_type_input = "input"
-source_file_type_stored = "stored"
-source_file_types = [
-    source_file_type_input,
-    source_file_type_stored
-]
-
-# Json generation types
-json_generation_type_custom = "custom"
-json_generation_type_standard = "standard"
-json_generation_type_store = "store"
-json_generation_types = [
-    json_generation_type_custom,
-    json_generation_type_standard
+# Generation modes
+generation_mode_custom = "custom"
+generation_mode_standard = "standard"
+generation_modes = [
+    generation_mode_custom,
+    generation_mode_standard
 ]
 
 # Steam id formats

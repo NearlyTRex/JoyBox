@@ -25,19 +25,14 @@ parser.add_argument("-u", "--game_supercategory",
 )
 parser.add_argument("-c", "--game_category", type=str, help="Game category")
 parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")
-parser.add_argument("-f", "--source_files",
-    choices=[
-        "input",
-        "stored"
-    ],
-    default="stored", help="Source files"
+parser.add_argument("-e", "--source_type",
+    choices=config.source_types,
+    default=config.source_type_remote,
+    help="Source types"
 )
 parser.add_argument("-m", "--generation_mode",
-    choices=[
-        "custom",
-        "standard"
-    ],
-    default="standard", help="Generation mode"
+    choices=config.generation_modes,
+    default=config.generation_mode_standard, help="Generation mode"
 )
 parser.add_argument("-t", "--passphrase_type",
     choices=config.passphrase_types,
@@ -54,19 +49,14 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Get input path
-    input_path = ""
-    if args.input_path:
-        input_path = os.path.realpath(args.input_path)
-        if not os.path.exists(input_path):
-            system.LogErrorAndQuit("Path '%s' does not exist" % args.input_path)
-
     # Get source file root
-    source_file_root = ""
-    if args.source_files == "input":
-        source_file_root = input_path
-    elif args.source_files == "stored":
-        source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.game_supercategory)
+    source_file_root = None
+    if args.input_path:
+        source_file_root = os.path.realpath(args.input_path)
+    else:
+        source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.game_supercategory, args.source_type)
+    if not system.DoesPathExist(source_file_root):
+        system.LogErrorAndQuit("Path '%s' does not exist" % source_file_root)
 
     # Get passphrase
     passphrase = None
@@ -76,11 +66,11 @@ def main():
         passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
 
     # Manually specify all parameters
-    if args.generation_mode == "custom":
+    if args.generation_mode == config.generation_mode_custom:
         if not args.game_category:
-            system.LogErrorAndQuit("File category is required for custom mode")
+            system.LogErrorAndQuit("Game category is required for custom mode")
         if not args.game_subcategory:
-            system.LogErrorAndQuit("File subcategory is required for custom mode")
+            system.LogErrorAndQuit("Game subcategory is required for custom mode")
         hashing.HashCategoryFiles(
             input_path = source_file_root,
             game_supercategory = args.game_supercategory,
@@ -92,7 +82,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Automatic according to standard layout
-    elif args.generation_mode == "standard":
+    elif args.generation_mode == config.generation_mode_standard:
 
         # Specific category/subcategory
         if args.game_category and args.game_subcategory:
