@@ -30,7 +30,6 @@ parser.add_argument("--diff_error_path", type=str, default="diff_errors.txt", he
 parser.add_argument("-e", "--resync", action="store_true", help="Enable resync mode")
 parser.add_argument("-i", "--interactive", action="store_true", help="Enable interactive mode")
 parser.add_argument("-q", "--quick", action="store_true", help="Enable quick mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
 parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
