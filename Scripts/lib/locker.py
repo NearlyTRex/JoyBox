@@ -29,7 +29,7 @@ def ConvertToRemotePath(path):
         return path
     return system.RebaseFilePath(
         path = path,
-        old_base_path = environment.GetLockerRootDir(config.source_type_remote),
+        old_base_path = environment.GetLockerRootDir(config.source_type_local),
         new_base_path = "")
 
 # Convert to local path
@@ -123,7 +123,7 @@ def UploadPath(
     local_path = src
     remote_path = dest
     if not remote_path:
-        remote_path = system.GetFilenameDirectory(ConvertToRemotePath(src))
+        remote_path = ConvertToRemotePath(system.GetFilenameDirectory(src))
 
     # Upload files
     success = sync.UploadFilesToRemote(
