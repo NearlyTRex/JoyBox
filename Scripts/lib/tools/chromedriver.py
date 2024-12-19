@@ -78,7 +78,7 @@ class ChromeDriver(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("ChromeDriver", "windows"),
                 install_name = "ChromeDriver",
                 install_dir = programs.GetProgramInstallDir("ChromeDriver", "windows"),
-                search_file = "geckodriver.exe",
+                search_file = "chromedriver.exe",
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)

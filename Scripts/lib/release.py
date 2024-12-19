@@ -14,6 +14,7 @@ import installer
 import webpage
 import registry
 import network
+import locker
 
 # Setup stored release
 def SetupStoredRelease(
@@ -352,15 +353,33 @@ def SetupGeneralRelease(
                         system.LogError("Unable to rename file %s" % filename)
                         return False
 
-    # Backup archive
+    # Backup files
     if system.IsPathValid(backups_dir):
-        system.SmartCopy(
+
+        # Get backup file
+        backup_file = os.path.join(backups_dir, archive_filename)
+
+        # Copy backup file
+        success = system.SmartCopy(
             src = archive_file,
-            dest = os.path.join(backups_dir, system.GetFilenameFile(archive_file)),
+            dest = backup_file,
             skip_identical = True,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to copy backup file")
+            return False
+
+        # Upload backup file
+        success = locker.UploadPath(
+            src = backup_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to upload backup file")
+            return False
 
     # Delete temporary directory
     system.RemoveDirectory(
@@ -578,8 +597,8 @@ def DownloadWebpageRelease(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Build release from source
-def BuildReleaseFromSource(
+# Build AppImage from source
+def BuildAppImageFromSource(
     release_url = "",
     webpage_url = "",
     webpage_base_url = "",
@@ -597,9 +616,6 @@ def BuildReleaseFromSource(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Check if building appimage
-    is_building_appimage = output_file.endswith(".AppImage")
 
     # Find release url if necessary
     if len(webpage_url):
@@ -698,11 +714,14 @@ def BuildReleaseFromSource(
             return False
 
     # Make build folder
-    system.MakeDirectory(
+    success = system.MakeDirectory(
         dir = source_build_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if not success:
+        system.LogError("Unable to make build folder '%s'" % source_build_dir)
+        return False
 
     # Build release
     code = command.RunBlockingCommand(
@@ -717,50 +736,48 @@ def BuildReleaseFromSource(
         system.LogError("Unable to build release")
         return False
 
-    # Copy appimage objects
-    if is_building_appimage:
-        for obj in internal_copies:
-            src_obj = os.path.join(tmp_dir_result, obj["from"])
-            dest_obj = os.path.join(tmp_dir_result, obj["to"])
-            if obj["from"].startswith("AppImageTool"):
-                src_obj = os.path.join(environment.GetToolsRootDir(), obj["from"])
-            system.MakeDirectory(
-                dir = os.path.dirname(dest_obj),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            system.SmartCopy(
-                src = src_obj,
-                dest = dest_obj,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-    # Symlink appimage objects
-    if is_building_appimage:
-        for obj in internal_symlinks:
-            src_obj = obj["from"]
-            dest_obj = obj["to"]
-            system.CreateSymlink(
-                src = src_obj,
-                dest = dest_obj,
-                cwd = appimage_dir,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-    # Build appimage
-    if is_building_appimage:
-        code = command.RunBlockingCommand(
-            cmd = [programs.GetToolProgram("AppImageTool"), appimage_dir],
-            options = command.CommandOptions(
-                cwd = tmp_dir_result),
+    # Copy AppImage objects
+    for obj in internal_copies:
+        src_obj = os.path.join(tmp_dir_result, obj["from"])
+        dest_obj = os.path.join(tmp_dir_result, obj["to"])
+        if obj["from"].startswith("AppImageTool"):
+            src_obj = os.path.join(environment.GetToolsRootDir(), obj["from"])
+        success = system.SmartCopy(
+            src = src_obj,
+            dest = dest_obj,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if code != 0:
-            system.LogError("Unable to create AppImage from built release")
+        if not success:
+            system.LogError("Unable to copy AppImage file '%s' to '%s'" % (src_obj, dest_obj))
             return False
+
+    # Symlink AppImage objects
+    for obj in internal_symlinks:
+        src_obj = obj["from"]
+        dest_obj = obj["to"]
+        success = system.CreateSymlink(
+            src = src_obj,
+            dest = dest_obj,
+            cwd = appimage_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to symlink AppImage object '%s' to '%s'" % (src_obj, dest_obj))
+            return False
+
+    # Build AppImage
+    code = command.RunBlockingCommand(
+        cmd = [programs.GetToolProgram("AppImageTool"), appimage_dir],
+        options = command.CommandOptions(
+            cwd = tmp_dir_result),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        system.LogError("Unable to create AppImage from built release")
+        return False
 
     # Find built release file
     built_file = None
@@ -772,38 +789,60 @@ def BuildReleaseFromSource(
         return False
 
     # Get final file
-    final_file = output_file
-    if is_building_appimage:
-        final_file = install_name + ".AppImage"
+    final_file = install_name + ".AppImage"
 
     # Copy release file
-    system.SmartCopy(
+    success = system.SmartCopy(
         src = built_file,
         dest = os.path.join(install_dir, final_file),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if not success:
+        system.LogError("Unable to copy release files")
+        return False
 
     # Copy other objects
     for obj in external_copies:
         src_obj = os.path.join(tmp_dir_result, obj["from"])
         dest_obj = os.path.join(install_dir, obj["to"])
-        system.SmartCopy(
+        success = system.SmartCopy(
             src = src_obj,
             dest = dest_obj,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to copy other files")
+            return False
 
-    # Backup release file
+    # Backup files
     if system.IsPathValid(backups_dir):
-        system.SmartCopy(
+
+        # Get backup file
+        backup_file = os.path.join(backups_dir, final_file)
+
+        # Copy backup file
+        success = system.SmartCopy(
             src = built_file,
-            dest = os.path.join(backups_dir, final_file),
+            dest = backup_file,
             skip_identical = True,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to copy backup file")
+            return False
+
+        # Upload backup file
+        success = locker.UploadPath(
+            src = backup_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to upload backup file")
+            return False
 
     # Delete temporary directory
     system.RemoveDirectory(

@@ -80,7 +80,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("PPSSPP", "linux"):
-            success = release.BuildReleaseFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/PPSSPP.git",
                 output_file = "PPSSPPSDL-x86_64.AppImage",
                 install_name = "PPSSPP",

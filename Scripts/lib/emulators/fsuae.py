@@ -92,7 +92,7 @@ class FSUAE(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("FS-UAE", "linux"):
-            success = release.BuildReleaseFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/FrodeSolheim/fs-uae/releases/download/v3.1.66/fs-uae-3.1.66.tar.xz",
                 output_file = "FS-UAE-x86_64.AppImage",
                 install_name = "FS-UAE",

@@ -79,7 +79,7 @@ class ViceC64(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("VICE-C64", "linux"):
-            success = release.BuildReleaseFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ViceC64.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "VICE-C64",

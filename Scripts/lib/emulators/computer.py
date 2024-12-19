@@ -540,7 +540,7 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Build linux programs
         if programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
-            success = release.BuildReleaseFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/DosboxX.git",
                 output_file = "DOSBox-X-x86_64.AppImage",
                 install_name = "DosBoxX",
@@ -583,7 +583,7 @@ class Computer(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             system.AssertCondition(success, "Could not setup DosBoxX")
         if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
-            success = release.BuildReleaseFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ScummVM.git",
                 output_file = "ScummVM-x86_64.AppImage",
                 install_name = "ScummVM",

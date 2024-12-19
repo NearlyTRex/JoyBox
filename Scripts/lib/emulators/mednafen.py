@@ -90,7 +90,7 @@ class Mednafen(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("Mednafen", "linux"):
-            success = release.BuildReleaseFromSource(
+            success = release.BuildAppImageFromSource(
                 webpage_url = "https://mednafen.github.io",
                 webpage_base_url = "https://mednafen.github.io",
                 starts_with = "https://mednafen.github.io/releases/files/mednafen",

@@ -63,7 +63,7 @@ class XorrISO(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("XorrISO", "linux"):
-            success = release.BuildReleaseFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://ftp.gnu.org/gnu/xorriso/xorriso-1.5.2.tar.gz",
                 output_file = "App-x86_64.AppImage",
                 install_name = "XorrISO",

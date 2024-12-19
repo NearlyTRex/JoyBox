@@ -56,7 +56,7 @@ class PS3Dec(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("PS3Dec", "linux"):
-            success = release.BuildReleaseFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/PS3Dec.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "PS3Dec",

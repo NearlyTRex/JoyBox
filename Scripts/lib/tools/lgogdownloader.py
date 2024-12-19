@@ -41,7 +41,7 @@ class LGOGDownloader(toolbase.ToolBase):
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("LGOGDownloader", "linux"):
-            success = release.BuildReleaseFromSource(
+            success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/LGOGDownloader.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "LGOGDownloader",

@@ -471,19 +471,24 @@ def LogIntoWebsite(
         exit_on_failure = exit_on_failure)
     return success
 
-# Get all matching urls
-def GetMatchingUrls(
+# Get website text
+def GetWebsiteText(
     url,
-    base_url,
     params = {},
-    starts_with = "",
-    ends_with = "",
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get page text
-    page_text = ""
+    # Try requests
+    try:
+        import requests
+        reqs = requests.get(url, params=params)
+        return reqs.text
+    except Exception as e:
+        print(e)
+        pass
+
+    # Next try webdriver
     driver = CreateWebDriver(
         make_headless = True,
         verbose = verbose,
@@ -501,12 +506,29 @@ def GetMatchingUrls(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        return page_text
 
-    # Fallback for getting page text
-    if not page_text or len(page_text) == 0:
-        import requests
-        reqs = requests.get(url, params=params)
-        page_text = reqs.text
+    # No results
+    return ""
+
+# Get all matching urls
+def GetMatchingUrls(
+    url,
+    base_url,
+    params = {},
+    starts_with = "",
+    ends_with = "",
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get page text
+    page_text = GetWebsiteText(
+        url = url,
+        params = params,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Parse the HTML page
     matching_urls = []
