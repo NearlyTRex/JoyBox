@@ -48,7 +48,7 @@ class Mesen(emulatorbase.EmulatorBase):
         # Download windows program
         if programs.ShouldProgramBeInstalled("Mesen", "windows"):
             success = release.DownloadGeneralRelease(
-                archive_url = "https://nightly.link/SourMesen/Mesen2/workflows/build/master/Mesen%20%28Windows%29.zip",
+                archive_url = "https://nightly.link/SourMesen/Mesen2/workflows/build/master/Mesen%20%28Windows%20-%20net8.0%29.zip",
                 search_file = "Mesen.exe",
                 install_name = "Mesen",
                 install_dir = programs.GetProgramInstallDir("Mesen", "windows"),
