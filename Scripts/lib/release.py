@@ -372,14 +372,15 @@ def SetupGeneralRelease(
             return False
 
         # Upload backup file
-        success = locker.UploadPath(
-            src = backup_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            system.LogError("Unable to upload backup file")
-            return False
+        if locker.IsToolInstalled():
+            success = locker.UploadPath(
+                src = backup_file,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                system.LogError("Unable to upload backup file")
+                return False
 
     # Delete temporary directory
     system.RemoveDirectory(
@@ -835,14 +836,15 @@ def BuildAppImageFromSource(
             return False
 
         # Upload backup file
-        success = locker.UploadPath(
-            src = backup_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            system.LogError("Unable to upload backup file")
-            return False
+        if locker.IsToolInstalled():
+            success = locker.UploadPath(
+                src = backup_file,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                system.LogError("Unable to upload backup file")
+                return False
 
     # Delete temporary directory
     system.RemoveDirectory(

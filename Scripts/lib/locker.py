@@ -11,6 +11,10 @@ import environment
 import cryption
 import ini
 
+# Check if tool is installed
+def IsToolInstalled():
+    return sync.IsToolInstalled()
+
 # Check if path is remote
 def IsRemotePath(path):
     if system.DoesPathExist(path):

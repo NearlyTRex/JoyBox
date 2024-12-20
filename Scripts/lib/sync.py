@@ -10,6 +10,10 @@ import programs
 import system
 import environment
 
+# Check if tool is installed
+def IsToolInstalled():
+    return programs.IsToolInstalled("RClone")
+
 # Get unencrypted remote name
 def GetUnencryptedRemoteName(remote_name):
     if remote_name.endswith("Enc"):
