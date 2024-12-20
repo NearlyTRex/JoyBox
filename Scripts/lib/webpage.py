@@ -479,16 +479,7 @@ def GetWebsiteText(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Try requests
-    try:
-        import requests
-        reqs = requests.get(url, params=params)
-        return reqs.text
-    except Exception as e:
-        print(e)
-        pass
-
-    # Next try webdriver
+    # First, try webdriver
     driver = CreateWebDriver(
         make_headless = True,
         verbose = verbose,
@@ -507,6 +498,14 @@ def GetWebsiteText(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return page_text
+
+    # Next, try requests
+    try:
+        import requests
+        reqs = requests.get(url, params=params)
+        return reqs.text
+    except Exception as e:
+        pass
 
     # No results
     return ""
