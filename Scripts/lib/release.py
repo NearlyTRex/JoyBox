@@ -355,32 +355,18 @@ def SetupGeneralRelease(
 
     # Backup files
     if system.IsPathValid(backups_dir):
-
-        # Get backup file
-        backup_file = os.path.join(backups_dir, archive_filename)
-
-        # Copy backup file
-        success = system.SmartCopy(
+        sucess = locker.BackupFiles(
             src = archive_file,
-            dest = backup_file,
+            dest = os.path.join(backups_dir, archive_filename),
+            show_progress = True,
+            skip_existing = True,
             skip_identical = True,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to copy backup file")
+            system.LogError("Unable to backup files")
             return False
-
-        # Upload backup file
-        if locker.IsToolInstalled():
-            success = locker.UploadPath(
-                src = backup_file,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                system.LogError("Unable to upload backup file")
-                return False
 
     # Delete temporary directory
     system.RemoveDirectory(
@@ -819,32 +805,18 @@ def BuildAppImageFromSource(
 
     # Backup files
     if system.IsPathValid(backups_dir):
-
-        # Get backup file
-        backup_file = os.path.join(backups_dir, final_file)
-
-        # Copy backup file
-        success = system.SmartCopy(
+        sucess = locker.BackupFiles(
             src = built_file,
-            dest = backup_file,
+            dest = os.path.join(backups_dir, final_file),
+            show_progress = True,
+            skip_existing = True,
             skip_identical = True,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to copy backup file")
+            system.LogError("Unable to backup files")
             return False
-
-        # Upload backup file
-        if locker.IsToolInstalled():
-            success = locker.UploadPath(
-                src = backup_file,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                system.LogError("Unable to upload backup file")
-                return False
 
     # Delete temporary directory
     system.RemoveDirectory(

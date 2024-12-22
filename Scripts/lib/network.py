@@ -14,7 +14,7 @@ import programs
 import installer
 import webpage
 import registry
-import hashing
+import locker
 
 ###########################################################
 # Info
@@ -511,11 +511,6 @@ def ArchiveGithubRepository(
         exit_on_failure = exit_on_failure)
     if not success:
         system.LogError("Unable to download repository '%s' - '%s'" % (github_user, github_repo))
-        system.RemoveDirectory(
-            dir = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
         return False
 
     # Remove git folder
@@ -537,11 +532,6 @@ def ArchiveGithubRepository(
         exit_on_failure = exit_on_failure)
     if not os.path.exists(tmp_file_archive):
         system.LogError("Unable to archive repository '%s' - '%s'" % (github_user, github_repo))
-        system.RemoveDirectory(
-            dir = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
         return False
 
     # Test archive
@@ -552,40 +542,20 @@ def ArchiveGithubRepository(
         exit_on_failure = exit_on_failure)
     if not success:
         system.LogError("Validation failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
-        system.RemoveDirectory(
-            dir = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
         return False
 
-    # Check if already archived
-    found_files = hashing.FindDuplicateArchives(
-        filename = tmp_file_archive,
-        directory = output_dir)
-    if len(found_files) > 0:
-        if verbose:
-            system.Log("Repository '%s' - '%s' is already archived, skipping ..." % (github_user, github_repo))
-        system.RemoveDirectory(
-            dir = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return True
-
-    # Move archive
-    success = system.SmartMove(
+    # Backup archive
+    success = locker.BackupFiles(
         src = tmp_file_archive,
         dest = out_file_archive,
+        show_progress = True,
+        skip_existing = True,
+        skip_identical = True,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.RemoveDirectory(
-            dir = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        system.LogError("Backup failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
         return False
 
     # Delete temporary directory

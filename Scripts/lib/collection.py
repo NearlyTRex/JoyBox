@@ -592,8 +592,6 @@ def DownloadMetadataAsset(
     output_asset_dir = environment.GetLockerGamingAssetDir(game_category, game_subcategory, asset_type)
     output_asset_file = environment.GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type)
     output_asset_ext = system.GetFilenameExtension(output_asset_file)
-    if skip_existing and system.DoesPathExist(output_asset_file):
-        return True
 
     # Create temporary directory
     tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
@@ -630,6 +628,7 @@ def DownloadMetadataAsset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
+        system.LogError("Download failed for asset %s of '%s' - '%s'" % (asset_type, game_platform, game_name))
         return False
 
     # Convert asset
@@ -641,6 +640,7 @@ def DownloadMetadataAsset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
+        system.LogError("Convert failed for asset %s of '%s' - '%s'" % (asset_type, game_platform, game_name))
         return False
 
     # Clean asset
@@ -651,25 +651,20 @@ def DownloadMetadataAsset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
+        system.LogError("Clean failed for asset %s of '%s' - '%s'" % (asset_type, game_platform, game_name))
         return False
 
-    # Move asset
-    success = system.MoveFileOrDirectory(
+    # Backup asset
+    success = locker.BackupFiles(
         src = tmp_asset_file_converted,
         dest = output_asset_file,
+        show_progress = True,
+        skip_existing = skip_existing,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        return False
-
-    # Upload asset
-    success = locker.UploadPath(
-        src = output_asset_file,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
+        system.LogError("Backup failed for asset %s of '%s' - '%s'" % (asset_type, game_platform, game_name))
         return False
 
     # Delete temporary directory

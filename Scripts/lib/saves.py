@@ -9,7 +9,6 @@ import system
 import environment
 import programs
 import archive
-import hashing
 import locker
 
 # Can individual save be unpacked
@@ -75,44 +74,31 @@ def PackSave(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.RemoveDirectory(
-            dir = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        system.LogError("Unable to archive save for '%s' - '%s' - '%s'" % (game_category, game_subcategory, game_name))
         return False
 
-    # Check if already archived
-    found_files = hashing.FindDuplicateArchives(
-        filename = tmp_save_archive_file,
-        directory = output_save_dir)
-    if len(found_files) > 0:
-        if verbose:
-            system.Log("Save '%s' - '%s' is already packed, skipping ..." % (game_name, game_subcategory))
-        system.RemoveDirectory(
-            dir = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return True
+    # Test archive
+    success = archive.TestArchive(
+        archive_file = tmp_save_archive_file,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        system.LogError("Unable to validate save for '%s' - '%s' - '%s'" % (game_category, game_subcategory, game_name))
+        return False
 
-    # Move save archive
-    success = system.MoveFileOrDirectory(
+    # Backup archive
+    success = locker.BackupFiles(
         src = tmp_save_archive_file,
         dest = out_save_archive_file,
+        show_progress = True,
+        skip_existing = True,
+        skip_identical = True,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        return False
-
-    # Upload save archive
-    success = locker.UploadPath(
-        src = out_save_archive_file,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
+        system.LogError("Unable to backup save for '%s' - '%s' - '%s'" % (game_category, game_subcategory, game_name))
         return False
 
     # Delete temporary directory
@@ -151,7 +137,7 @@ def UnpackSave(
         exit_on_failure = exit_on_failure)
     if not system.IsDirectoryEmpty(output_save_dir):
         if verbose:
-            system.Log("Save '%s' - '%s' is already unpacked, skipping ..." % (game_name, game_subcategory))
+            system.Log("Save already unpacked for '%s' - '%s' - '%s'" % (game_category, game_subcategory, game_name))
         return True
 
     # Get latest save archive
@@ -166,6 +152,7 @@ def UnpackSave(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
+        system.LogError("Unable to unpack save for '%s' - '%s' - '%s'" % (game_category, game_subcategory, game_name))
         return False
 
     # Check result
