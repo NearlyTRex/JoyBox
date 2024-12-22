@@ -213,18 +213,13 @@ def CalculateFileXXH3(
 
 ###########################################################
 
-# Check if files are identical
-def AreFilesIdentical(first, second, case_sensitive_paths = True, verbose = False, pretend_run = False, exit_on_failure = False):
-    first_exists = system.DoesPathExist(first, case_sensitive_paths = case_sensitive_paths)
-    second_exists = system.DoesPathExist(second, case_sensitive_paths = case_sensitive_paths)
-    if first_exists and second_exists:
-        first_crc32 = CalculateFileCRC32(first, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-        second_crc32 = CalculateFileCRC32(second, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-        return first_crc32 == second_crc32
-    return False
-
 # Find duplicate files in the search directory
-def FindDuplicateFiles(filename, directory, verbose = False, pretend_run = False, exit_on_failure = False):
+def FindDuplicateFiles(
+    filename,
+    directory,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     found_files = []
     test_checksum = CalculateFileCRC32(filename, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
     for obj in system.GetDirectoryContents(directory):
@@ -236,7 +231,12 @@ def FindDuplicateFiles(filename, directory, verbose = False, pretend_run = False
     return found_files
 
 # Find duplicate archives in the search directory
-def FindDuplicateArchives(filename, directory, verbose = False, pretend_run = False, exit_on_failure = False):
+def FindDuplicateArchives(
+    filename,
+    directory,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     found_files = []
     test_checksums = archive.GetArchiveChecksums(filename)
     for obj in system.GetDirectoryContents(directory):
@@ -246,6 +246,73 @@ def FindDuplicateArchives(filename, directory, verbose = False, pretend_run = Fa
             if [i for i in test_checksums if i not in obj_checksums] == []:
                 found_files.append(obj_path)
     return found_files
+
+# Check if plain files are identical
+def ArePlainFilesIdentical(
+    first,
+    second,
+    case_sensitive_paths = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    first_exists = system.DoesPathExist(first, case_sensitive_paths = case_sensitive_paths)
+    second_exists = system.DoesPathExist(second, case_sensitive_paths = case_sensitive_paths)
+    if first_exists and second_exists:
+        first_crc32 = CalculateFileCRC32(first, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+        second_crc32 = CalculateFileCRC32(second, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+        return first_crc32 == second_crc32
+    return False
+
+# Check if archive files are identical
+def AreArchiveFilesIdentical(
+    first,
+    second,
+    case_sensitive_paths = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    first_is_archive = archive.IsArchive(first, case_sensitive_paths = case_sensitive_paths)
+    second_is_archive = archive.IsArchive(second, case_sensitive_paths = case_sensitive_paths)
+    if first_is_archive and second_is_archive:
+        first_checksums = sorted(archive.GetArchiveChecksums(first))
+        second_checksums = sorted(archive.GetArchiveChecksums(second))
+        if len(first_checksums) > 0 and len(second_checksums) > 0:
+            return first_checksums == second_checksums
+    return False
+
+# Check if files are identical
+def AreFilesIdentical(
+    first,
+    second,
+    case_sensitive_paths = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Compare as plain files
+    identical = ArePlainFilesIdentical(
+        first = first,
+        second = second,
+        case_sensitive_paths = case_sensitive_paths,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if identical:
+        return True
+
+    # Compare as archive files
+    identical = AreArchiveFilesIdentical(
+        first = first,
+        second = second,
+        case_sensitive_paths = case_sensitive_paths,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if identical:
+        return True
+
+    # These are different files
+    return False
 
 ###########################################################
 
