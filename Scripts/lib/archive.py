@@ -13,7 +13,9 @@ import environment
 import sandbox
 
 # Determine if file is a known archive
-def IsKnownArchive(archive_file, extensions = [], mime_types = []):
+def IsKnownArchive(archive_file, extensions = [], mime_types = [], case_sensitive_paths = True):
+    if not system.DoesPathExist(archive_file, case_sensitive_paths = case_sensitive_paths):
+        return False
     for ext in extensions:
         if archive_file.lower().endswith(ext.lower()):
             return True
@@ -24,65 +26,71 @@ def IsKnownArchive(archive_file, extensions = [], mime_types = []):
     return False
 
 # Determine if file is an archive
-def IsArchive(archive_file):
-    if IsZipArchive(archive_file):
+def IsArchive(archive_file, case_sensitive_paths = True):
+    if IsZipArchive(archive_file, case_sensitive_paths = case_sensitive_paths):
         return True
-    elif Is7zArchive(archive_file):
+    elif Is7zArchive(archive_file, case_sensitive_paths = case_sensitive_paths):
         return True
-    elif IsTarballArchive(archive_file):
+    elif IsTarballArchive(archive_file, case_sensitive_paths = case_sensitive_paths):
         return True
-    elif IsExeArchive(archive_file):
+    elif IsExeArchive(archive_file, case_sensitive_paths = case_sensitive_paths):
         return True
-    elif IsAppImageArchive(archive_file):
+    elif IsAppImageArchive(archive_file, case_sensitive_paths = case_sensitive_paths):
         return True
     return False
 
 # Determine if file is a zip archive
-def IsZipArchive(archive_file):
+def IsZipArchive(archive_file, case_sensitive_paths = True):
     return IsKnownArchive(
         archive_file = archive_file,
         extensions = config.computer_archive_extensions_zip,
-        mime_types = config.mime_types_zip)
+        mime_types = config.mime_types_zip,
+        case_sensitive_paths = case_sensitive_paths)
 
 # Determine if file is a 7z archive
-def Is7zArchive(archive_file):
+def Is7zArchive(archive_file, case_sensitive_paths = True):
     return IsKnownArchive(
         archive_file = archive_file,
         extensions = config.computer_archive_extensions_7z,
-        mime_types = config.mime_types_7z)
+        mime_types = config.mime_types_7z,
+        case_sensitive_paths = case_sensitive_paths)
 
 # Determine if file is a tarball archive
-def IsTarballArchive(archive_file):
+def IsTarballArchive(archive_file, case_sensitive_paths = True):
     return IsKnownArchive(
         archive_file = archive_file,
         extensions = config.computer_archive_extensions_tarball,
-        mime_types = config.mime_types_tarball)
+        mime_types = config.mime_types_tarball,
+        case_sensitive_paths = case_sensitive_paths)
 
 # Determine if file is an exe archive
-def IsExeArchive(archive_file):
+def IsExeArchive(archive_file, case_sensitive_paths = True):
     return IsKnownArchive(
         archive_file = archive_file,
         extensions = config.computer_archive_extensions_exe,
-        mime_types = config.mime_types_exe)
+        mime_types = config.mime_types_exe,
+        case_sensitive_paths = case_sensitive_paths)
 
 # Determine if file is an appimage archive
-def IsAppImageArchive(archive_file):
+def IsAppImageArchive(archive_file, case_sensitive_paths = True):
     return IsKnownArchive(
         archive_file = archive_file,
         extensions = config.computer_archive_extensions_appimage,
-        mime_types = config.mime_types_appimage)
+        mime_types = config.mime_types_appimage,
+        case_sensitive_paths = case_sensitive_paths)
 
 # Check archive checksums
 def GetArchiveChecksums(archive_file):
     checksums = []
-    with zipfile.ZipFile(archive_file) as zf:
-        for info in zf.infolist():
-            if info.is_dir():
-                continue
-            entry = {}
-            entry["path"] = info.filename
-            entry["crc"] = hex(info.CRC)
-            checksums.append(entry)
+    if IsZipArchive(archive_file):
+        with zipfile.ZipFile(archive_file) as zf:
+            for info in zf.infolist():
+                if info.is_dir():
+                    continue
+                entry = {}
+                entry["path"] = info.filename
+                entry["crc"] = hex(info.CRC)
+                checksums.append(entry)
     return checksums
 
 # Get archive compression flags
