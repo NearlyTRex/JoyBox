@@ -224,3 +224,58 @@ def UploadAndEncryptPath(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return success
+
+# Backup files
+def BackupFiles(
+    src,
+    dest,
+    delete_afterwards = False,
+    show_progress = False,
+    skip_existing = False,
+    skip_identical = False,
+    case_sensitive_paths = True,
+    upload_encrypted = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Transfer files
+    success = system.TransferFile(
+        src = src,
+        dest = dest,
+        delete_afterwards = delete_afterwards,
+        show_progress = show_progress,
+        skip_existing = skip_existing,
+        skip_identical = skip_identical,
+        case_sensitive_paths = case_sensitive_paths,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Upload files
+    if IsToolInstalled():
+
+        # Upload encryped files
+        if upload_encrypted:
+            success = UploadAndEncryptPath(
+                src = dest,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+        # Upload plain files
+        else:
+            success = UploadPath(
+                src = dest,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+    # Should be successful
+    return True
