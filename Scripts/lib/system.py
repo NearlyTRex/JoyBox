@@ -146,7 +146,8 @@ def FindQuotedSubstrings(string, delimiter = "\""):
 
 # Get enclosed substrings
 def FindEnclosedSubstrings(string, delimiter = "\""):
-    pattern = "([%s])(?:\\?.)*?\1" % delimiter
+    delimiter_escaped = re.escape(delimiter)
+    pattern = rf'(?<!\\){delimiter_escaped}(.*?)(?<!\\){delimiter_escaped}'
     return re.findall(pattern, string)
 
 # Get string similarity ratio
@@ -161,12 +162,14 @@ def GetStringSimilarityRatio(string1, string2):
 def SplitByEnclosedSubstrings(string, delimiter = "\""):
     string_list = []
     enclosed_substrings = FindEnclosedSubstrings(string, delimiter)
-    for string_segment in string.strip().split(delimiter):
-        string_segment_enclosed = delimiter + string_segment + delimiter
-        if string_segment_enclosed in enclosed_substrings:
-            string_list.append(string_segment)
+    segments = re.split(rf'({re.escape(delimiter)})', string)
+    for i in range(len(segments)):
+        if segments[i] == delimiter:
+            continue
+        if segments[i] in enclosed_substrings:
+            string_list.append(segments[i])
         else:
-            string_list += string_segment.strip().split()
+            string_list.extend(segments[i].strip().split())
     return string_list
 
 # Sort strings
