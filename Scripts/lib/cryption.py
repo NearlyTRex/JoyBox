@@ -57,7 +57,7 @@ def GetEmbeddedFilename(
     # Get embedded name
     if isinstance(info_output, bytes):
         info_output = info_output.decode()
-    for possible_name in system.FindQuotedSubstrings(info_output):
+    for possible_name in system.FindEnclosedSubstrings(info_output, "\"", "\""):
         return system.CleanRichText(possible_name)
     return None
 

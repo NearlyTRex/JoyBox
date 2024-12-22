@@ -46,7 +46,7 @@ def CreateCommandList(cmd):
         return copy.deepcopy(cmd)
     if isinstance(cmd, str):
         cmd = cmd.replace(" ", config.token_command_split)
-        for quoted_substring in system.SplitByEnclosedSubstrings(cmd, "\""):
+        for quoted_substring in system.SplitByEnclosedSubstrings(cmd, "\"", "\""):
             cmd = cmd.replace(quoted_substring, quoted_substring.replace(config.token_command_split, " "))
         return cmd.split(config.token_command_split)
     return []

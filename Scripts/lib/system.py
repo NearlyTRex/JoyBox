@@ -139,16 +139,33 @@ def PromptForUrl(description, default_value = None):
 
 ###########################################################
 
-# Get quoted substrings
-def FindQuotedSubstrings(string, delimiter = "\""):
-    pattern = "%s(.*?)%s" % (delimiter, delimiter)
+# Get enclosed substrings
+def FindEnclosedSubstrings(string, opening_delim = "\"", closing_delim = "\""):
+    pattern = rf'(?<!\\){re.escape(opening_delim)}(.*?)(?<!\\){re.escape(closing_delim)}'
     return re.findall(pattern, string)
 
-# Get enclosed substrings
-def FindEnclosedSubstrings(string, delimiter = "\""):
-    delimiter_escaped = re.escape(delimiter)
-    pattern = rf'(?<!\\){delimiter_escaped}(.*?)(?<!\\){delimiter_escaped}'
-    return re.findall(pattern, string)
+# Split by enclosed substrings
+def SplitByEnclosedSubstrings(string, opening_delim = "\"", closing_delim = "\""):
+    split_substrings = []
+    pattern = rf'(?<!\\){re.escape(opening_delim)}.*?(?<!\\){re.escape(closing_delim)}'
+    substring_index = 0
+    enclosed_substrings = FindEnclosedSubstrings(string, opening_delim, closing_delim)
+    for part in re.split(pattern, string):
+        split_substrings.append(part.strip())
+        if substring_index < len(enclosed_substrings):
+            split_substrings.append(enclosed_substrings[substring_index].strip())
+            substring_index += 1
+    return [part for part in split_substrings if part]
+
+# Remove enclosed substrings
+def RemoveEnclosedSubstrings(string, opening_delim = "\"", closing_delim = "\""):
+    for substring in FindEnclosedSubstrings(string, opening_delim, closing_delim):
+        full_braced_substring = f"{opening_delim}{substring}{closing_delim}"
+        string = string.replace(f" {full_braced_substring} ", " ")
+        string = string.replace(f" {full_braced_substring}", " ")
+        string = string.replace(f"{full_braced_substring} ", " ")
+        string = string.replace(full_braced_substring, "")
+    return string.strip()
 
 # Get string similarity ratio
 def GetStringSimilarityRatio(string1, string2):
@@ -157,20 +174,6 @@ def GetStringSimilarityRatio(string1, string2):
         return fuzz.ratio(string1, string2)
     except:
         return 0
-
-# Split by enclosed substrings
-def SplitByEnclosedSubstrings(string, delimiter = "\""):
-    string_list = []
-    enclosed_substrings = FindEnclosedSubstrings(string, delimiter)
-    segments = re.split(rf'({re.escape(delimiter)})', string)
-    for i in range(len(segments)):
-        if segments[i] == delimiter:
-            continue
-        if segments[i] in enclosed_substrings:
-            string_list.append(segments[i])
-        else:
-            string_list.extend(segments[i].strip().split())
-    return string_list
 
 # Sort strings
 def SortStrings(strings):
@@ -1973,7 +1976,7 @@ def GetLinkInfo(lnk_path, lnk_base_path):
             # Get arguments
             lnk_arguments = []
             if has_arguments:
-                lnk_arguments = SplitByEnclosedSubstrings(lnk.arguments.strip("\x00"), delimiter = "\"")
+                lnk_arguments = SplitByEnclosedSubstrings(lnk.arguments.strip("\x00"), "\"", "\"")
 
             # Get target
             lnk_target = NormalizeFilePath(os.path.join(lnk_base_path, lnk_offset_path))
