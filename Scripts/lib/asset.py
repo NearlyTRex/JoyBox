@@ -64,8 +64,7 @@ def DownloadAsset(
                 output_file = asset_file,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            if not success:
-                return False
+            return success
 
     # Download file by default
     success = network.DownloadUrl(
