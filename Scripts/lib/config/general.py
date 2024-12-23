@@ -271,3 +271,46 @@ filler_words = [
 search_terms_video = [
     "trailer"
 ]
+
+# Rich text replacements
+rich_text_replacements = {
+    "“": "\"",
+    "”": "\"",
+    "＂": "\"",
+    "’": "'",
+    "ʻ": "'",
+    "‘": "'",
+    "…": "...",
+    "•": "*",
+    "·": "-",
+    "—": "-",
+    "–": "-",
+    "？": "?",
+    "｜": "|",
+    "\\x7e": "~"
+}
+
+# Web text replacements
+web_text_replacements = {
+    "<span>": " ",
+    "</span>": " ",
+    "&lt;": " ",
+    "&gt;": " ",
+    "&quot;": " ",
+    "&amp;": " ",
+    "amp;": " ",
+    "()": ""
+}
+
+# Path text replacements
+path_text_replacements = {
+    "<": "",
+    ">": "",
+    ":": "",
+    "\"": "",
+    "/": "",
+    "\\": "",
+    "|": "",
+    "?": "",
+    "*": ""
+}

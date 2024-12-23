@@ -297,37 +297,22 @@ def WrapTextToLines(text, width = 80, spacer = "."):
 
 # Clean rich text
 def CleanRichText(text):
-    new_text = text.strip()
-    new_text = new_text.replace("“", "\"")
-    new_text = new_text.replace("”", "\"")
-    new_text = new_text.replace("’", "'")
-    new_text = new_text.replace("ʻ", "'")
-    new_text = new_text.replace("‘", "'")
-    new_text = new_text.replace("…", "...")
-    new_text = new_text.replace("•", "*")
-    new_text = new_text.replace("·", "-")
-    new_text = new_text.replace("—", "-")
-    new_text = new_text.replace("–", "-")
-    new_text = new_text.replace("á", "a")
-    new_text = new_text.replace("Æ", "Ae")
-    new_text = new_text.replace("é", "e")
-    new_text = new_text.replace("ó", "o")
-    new_text = new_text.replace("ǔ", "u")
-    new_text = new_text.replace("\\x7e", "~")
+    new_text = text
+    try:
+        import unidecode
+        new_text = unidecode.unidecode(new_text)
+    except:
+        pass
+    for old, new in config.rich_text_replacements.items():
+        new_text = new_text.replace(old, new)
     new_text = new_text.encode("ascii", "ignore").decode()
-    return new_text
+    return new_text.strip()
 
 # Clean web text
 def CleanWebText(text):
     new_text = CleanRichText(text)
-    new_text = new_text.replace("<span>", " ")
-    new_text = new_text.replace("</span>", " ")
-    new_text = new_text.replace("&lt;", " ")
-    new_text = new_text.replace("&gt;", " ")
-    new_text = new_text.replace("&quot;", " ")
-    new_text = new_text.replace("&amp;", " ")
-    new_text = new_text.replace("amp;", " ")
-    new_text = new_text.replace("()", "")
+    for old, new in config.web_text_replacements.items():
+        new_text = new_text.replace(old, new)
     return new_text
 
 # Extract web text
@@ -582,17 +567,12 @@ def IsDriveLetterValid(drive_letter):
 # Replace invalid path characters
 def ReplaceInvalidPathCharacters(path):
 
+    # Rich text
+    new_path = CleanRichText(path)
+
     # Printable characters
-    new_path = path
-    new_path = new_path.replace("<", "")
-    new_path = new_path.replace(">", "")
-    new_path = new_path.replace(":", "")
-    new_path = new_path.replace("\"", "")
-    new_path = new_path.replace("/", "")
-    new_path = new_path.replace("\\", "")
-    new_path = new_path.replace("|", "")
-    new_path = new_path.replace("?", "")
-    new_path = new_path.replace("*", "")
+    for old, new in config.path_text_replacements.items():
+        new_path = new_path.replace(old, new)
 
     # Non-printable characters
     for i in range(0, 32):
@@ -600,6 +580,9 @@ def ReplaceInvalidPathCharacters(path):
 
     # Trailing space or dot
     new_path = new_path.rstrip(" .")
+
+    # Excessive spaces
+    new_path = " ".join(new_path.split())
 
     # Return new path
     return new_path
