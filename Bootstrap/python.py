@@ -49,6 +49,7 @@ packages = [
     "thefuzz",
     "tqdm",
     "typer",
+    "Unidecode",
     "vdf",
     "wheel",
     "xmltodict",
