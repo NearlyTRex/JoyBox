@@ -7,69 +7,31 @@ import subprocess
 import environment
 
 ###########################################################
-# Helpers
-###########################################################
-
-# Check for ubuntu mantic distro
-def IsUbuntuMantic():
-    if "mantic" in environment.GetLinuxDistroValue("UBUNTU_CODENAME"):
-        return True
-    if "23.10" in environment.GetLinuxDistroVersion():
-        return True
-    return False
-
-# Check for ubuntu lunar distro
-def IsUbuntuLunar():
-    if "lunar" in environment.GetLinuxDistroValue("UBUNTU_CODENAME"):
-        return True
-    if "23.04" in environment.GetLinuxDistroVersion():
-        return True
-    return False
-
-# Check for ubuntu jammy distro
-def IsUbuntuJammy():
-    if "jammy" in environment.GetLinuxDistroValue("UBUNTU_CODENAME"):
-        return True
-    if "22.04" in environment.GetLinuxDistroVersion():
-        return True
-    return False
-
-# Check for ubuntu focal distro
-def IsUbuntuFocal():
-    if "focal" in environment.GetLinuxDistroValue("UBUNTU_CODENAME"):
-        return True
-    if "20.04" in environment.GetLinuxDistroVersion():
-        return True
-    return False
-
-###########################################################
 # Preliminaries
 ###########################################################
 preliminaries = []
 
 # Wine
 if not os.path.isfile("/usr/bin/wine"):
+
+    # Setup architecture
     preliminaries += [
-        "sudo dpkg --add-architecture i386",
+        "sudo dpkg --add-architecture i386"
+    ]
+
+    # Setup key
+    preliminaries += [
         "sudo mkdir -pm755 /etc/apt/keyrings",
         "sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key"
     ]
-    if IsUbuntuMantic():
-        preliminaries += [
-            "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/mantic/winehq-mantic.sources"
-        ]
-    elif IsUbuntuLunar():
-        preliminaries += [
-            "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/lunar/winehq-lunar.sources"
-        ]
-    elif IsUbuntuJammy():
-        preliminaries += [
-            "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources"
-        ]
-    elif IsUbuntuFocal():
-        preliminaries += [
-            "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources"
-        ]
+
+    # Setup sources
+    preliminaries += [
+        "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/%s/winehq-%s.sources" % (
+            environment.GetUbuntuCodename(),
+            environment.GetUbuntuCodename()
+        )
+    ]
 
 ###########################################################
 # Apt packages

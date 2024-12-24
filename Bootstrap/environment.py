@@ -76,3 +76,7 @@ def IsUbuntuDistro():
     elif "ubuntu" in GetLinuxDistroIdLike():
         return True
     return False
+
+# Get ubuntu codename
+def GetUbuntuCodename():
+    return GetLinuxDistroValue("UBUNTU_CODENAME")
