@@ -48,27 +48,27 @@ def DisplayPopup(
 
     # Get correct popup function
     popup_func = psg.popup
-    if message_type == config.message_type_ok:
+    if message_type == config.MessageType.OK:
         popup_func = psg.popup_ok
-    elif message_type == config.message_type_yes_no:
+    elif message_type == config.MessageType.YES_NO:
         popup_func = psg.popup_yes_no
-    elif message_type == config.message_type_cancel:
+    elif message_type == config.MessageType.CANCEL:
         popup_func = psg.popup_cancel
-    elif message_type == config.message_type_ok_cancel:
+    elif message_type == config.MessageType.OK_CANCEL:
         popup_func = psg.popup_ok_cancel
-    elif message_type == config.message_type_error:
+    elif message_type == config.MessageType.ERROR:
         popup_func = psg.popup_error
-    elif message_type == config.message_type_auto_close:
+    elif message_type == config.MessageType.AUTO_CLOSE:
         popup_func = psg.popup_auto_close
-    elif message_type == config.message_type_get_text:
+    elif message_type == config.MessageType.GET_TEXT:
         popup_func = psg.popup_get_text
-    elif message_type == config.message_type_get_file:
+    elif message_type == config.MessageType.GET_FILE:
         popup_func = psg.popup_get_file
-    elif message_type == config.message_type_get_folder:
+    elif message_type == config.MessageType.GET_FOLDER:
         popup_func = psg.popup_get_folder
 
     # Display popup (and return result)
-    if message_type == config.message_type_auto_close:
+    if message_type == config.MessageType.AUTO_CLOSE:
         return popup_func(
             message_text,
             title = title_text,
@@ -85,7 +85,7 @@ def DisplayPopup(
             keep_on_top = keep_on_top,
             image = image_file,
             modal = modal)
-    elif message_type == config.message_type_get_text:
+    elif message_type == config.MessageType.GET_TEXT:
         return popup_func(
             message_text,
             title = title_text,
@@ -99,7 +99,7 @@ def DisplayPopup(
             keep_on_top = keep_on_top,
             image = image_file,
             modal = modal)
-    elif message_type == config.message_type_get_file:
+    elif message_type == config.MessageType.GET_FILE:
         return popup_func(
             message_text,
             title = title_text,
@@ -118,7 +118,7 @@ def DisplayPopup(
             file_types = file_types,
             initial_folder = initial_folder,
             default_path = default_path)
-    elif message_type == config.message_type_get_folder:
+    elif message_type == config.MessageType.GET_FOLDER:
         return popup_func(
             message_text,
             title = title_text,
@@ -157,7 +157,7 @@ def DisplayInfoPopup(title_text, message_text):
     DisplayPopup(
         title_text = title_text,
         message_text = message_text,
-        message_type = config.message_type_ok,
+        message_type = config.MessageType.OK,
         keep_on_top = True)
 
 # Display warning popup
@@ -165,7 +165,7 @@ def DisplayWarningPopup(title_text, message_text):
     response = DisplayPopup(
         title_text = title_text,
         message_text = message_text,
-        message_type = config.message_type_yes_no,
+        message_type = config.MessageType.YES_NO,
         keep_on_top = True)
     if response == "No":
         system.QuitProgram()
@@ -175,7 +175,7 @@ def DisplayErrorPopup(title_text, message_text):
     DisplayPopup(
         title_text = title_text,
         message_text = message_text,
-        message_type = config.message_type_error,
+        message_type = config.MessageType.ERROR,
         keep_on_top = True)
     system.QuitProgram()
 
@@ -184,21 +184,21 @@ def DisplayTextInputPopup(title_text, message_text):
     return DisplayPopup(
         title_text = title_text,
         message_text = message_text,
-        message_type = config.message_type_get_text)
+        message_type = config.MessageType.GET_TEXT)
 
 # Display file chooser popup
 def DisplayFileChooserPopup(title_text, message_text):
     return DisplayPopup(
         title_text = title_text,
         message_text = message_text,
-        message_type = config.message_type_get_file)
+        message_type = config.MessageType.GET_FILE)
 
 # Display folder chooser popup
 def DisplayFolderChooserPopup(title_text, message_text):
     return DisplayPopup(
         title_text = title_text,
         message_text = message_text,
-        message_type = config.message_type_get_folder)
+        message_type = config.MessageType.GET_FOLDER)
 
 # Display loading window
 def DisplayLoadingWindow(

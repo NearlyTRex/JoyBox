@@ -96,7 +96,7 @@ def GetArchiveChecksums(archive_file):
 # Get archive compression flags
 def GetArchiveCompressionFlags(archive_type, password, volume_size):
     compression_flags = []
-    if archive_type == config.archive_type_zip:
+    if archive_type == config.ArchiveType.ZIP:
         compression_flags += [
             "-tzip", # Archive format
             "-bb3", # Show files being added
@@ -107,7 +107,7 @@ def GetArchiveCompressionFlags(archive_type, password, volume_size):
             "-mmt=on", # Use multithreading
             "-ma=1", # Reproducible archive
         ]
-    elif archive_type == config.archive_type_7z:
+    elif archive_type == config.ArchiveType.SEVENZIP:
         compression_flags += [
             "-t7z", # Archive format
             "-bb3", # Show files being added
@@ -187,9 +187,9 @@ def CreateArchiveFromFile(
     # Get archive type
     archive_type = None
     if IsZipArchive(archive_file):
-        archive_type = config.archive_type_zip
+        archive_type = config.ArchiveType.ZIP
     elif Is7zArchive(archive_file):
-        archive_type = config.archive_type_7z
+        archive_type = config.ArchiveType.SEVENZIP
     if not archive_type:
         system.LogError("Unrecognized archive type for %s" % archive_file)
         return False
@@ -267,9 +267,9 @@ def CreateArchiveFromFolder(
     # Get archive type
     archive_type = None
     if IsZipArchive(archive_file):
-        archive_type = config.archive_type_zip
+        archive_type = config.ArchiveType.ZIP
     elif Is7zArchive(archive_file):
-        archive_type = config.archive_type_7z
+        archive_type = config.ArchiveType.SEVENZIP
     if not archive_type:
         system.LogError("Unrecognized archive type for %s" % archive_file)
         return False

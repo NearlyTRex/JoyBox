@@ -17,11 +17,8 @@ import setup
 parser = argparse.ArgumentParser(description="Compress files.")
 parser.add_argument("path", help="Input path")
 parser.add_argument("-a", "--archive_type",
-    choices=[
-        config.archive_type_zip,
-        config.archive_type_7z
-    ],
-    default=config.archive_type_zip, help="Archive type"
+    choices=config.ArchiveType.members(),
+    default=config.ArchiveType.ZIP, help="Archive type"
 )
 parser.add_argument("-p", "--password", type=str, help="Password to set")
 parser.add_argument("-s", "--volume_size", type=str, help="Volume size for output files (100m, etc)")
@@ -61,7 +58,7 @@ def main():
             continue
 
         # Get output file
-        output_file = output_file = os.path.join(root_path, system.GetFilenameBasename(obj_path) + "." + args.archive_type)
+        output_file = output_file = os.path.join(root_path, system.GetFilenameBasename(obj_path) + "." + args.archive_type.lowercase)
         if os.path.exists(output_file):
             continue
 

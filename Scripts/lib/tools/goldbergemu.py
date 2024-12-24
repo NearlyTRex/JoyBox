@@ -44,14 +44,14 @@ def GenerateUserIDFile(prefix_dir):
 
 # Convert from native path
 def ConvertFromNativePath(path, user_id):
-    src_path = os.path.join(config.computer_folder_store, config.store_type_steam, "userdata", user_id)
+    src_path = os.path.join(config.computer_folder_store, config.StoreType.STEAM.camelcase, "userdata", user_id)
     dest_path = os.path.join(config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
     return path.replace(src_path, dest_path)
 
 # Convert to native path
 def ConvertToNativePath(path, user_id):
     src_path = os.path.join(config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
-    dest_path = os.path.join(config.computer_folder_store, config.store_type_steam, "userdata", user_id)
+    dest_path = os.path.join(config.computer_folder_store, config.StoreType.STEAM.camelcase, "userdata", user_id)
     return path.replace(src_path, dest_path)
 
 # Setup user files
@@ -95,10 +95,10 @@ def ConvertToNativeSave(
     exit_on_failure = False):
 
     # Get relative paths
-    roaming_path = os.path.join(config.save_type_general, config.computer_folder_appdata, "Roaming")
-    search_path = os.path.join(config.save_type_general, config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
-    ignore_path = os.path.join(config.save_type_general, config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves", "settings")
-    replace_path = os.path.join(config.save_type_general, config.computer_folder_store, config.store_type_steam, "userdata", user_id)
+    roaming_path = os.path.join(config.SaveType.GENERAL.camelcase, config.computer_folder_appdata, "Roaming")
+    search_path = os.path.join(config.SaveType.GENERAL.camelcase, config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
+    ignore_path = os.path.join(config.SaveType.GENERAL.camelcase, config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves", "settings")
+    replace_path = os.path.join(config.SaveType.GENERAL.camelcase, config.computer_folder_store, config.StoreType.STEAM.camelcase, "userdata", user_id)
 
     # Move save files
     for save_file in system.BuildFileList(save_dir):

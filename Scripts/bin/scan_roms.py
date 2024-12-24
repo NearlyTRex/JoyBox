@@ -19,13 +19,13 @@ import setup
 # Parse arguments
 parser = argparse.ArgumentParser(description="Scan roms.")
 parser.add_argument("-e", "--source_type",
-    choices=config.source_types,
-    default=config.source_type_remote,
+    choices=config.SourceType.members(),
+    default=config.SourceType.REMOTE,
     help="Source types"
 )
 parser.add_argument("-t", "--passphrase_type",
-    choices=config.passphrase_types,
-    default=config.passphrase_type_none, help="Passphrase type"
+    choices=config.PassphraseType.members(),
+    default=config.PassphraseType.NONE, help="Passphrase type"
 )
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
@@ -40,9 +40,9 @@ def main():
 
     # Get passphrase
     passphrase = None
-    if args.passphrase_type == config.passphrase_type_general:
+    if args.passphrase_type == config.PassphraseType.GENERAL:
         passphrase = ini.GetIniValue("UserData.Protection", "general_passphrase")
-    elif args.passphrase_type == config.passphrase_type_locker:
+    elif args.passphrase_type == config.PassphraseType.LOCKER:
         passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
 
     # Build metadata files

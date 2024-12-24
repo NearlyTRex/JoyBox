@@ -130,14 +130,14 @@ def SetupGeneralRelease(
     # Guess the release type if none specified
     if not release_type:
         if archive_is_zip or archive_is_7z or archive_is_tarball:
-            release_type = config.release_type_archive
+            release_type = config.ReleaseType.ARCHIVE
         elif archive_is_exe or archive_is_appimage:
-            release_type = config.release_type_program
+            release_type = config.ReleaseType.PROGRAM
 
     ####################################
     # Standalone program
     ####################################
-    if release_type == config.release_type_program:
+    if release_type == config.ReleaseType.PROGRAM:
 
         # AppImage format
         if archive_extension.lower() == ".appimage":
@@ -178,7 +178,7 @@ def SetupGeneralRelease(
     ####################################
     # Executable installer
     ####################################
-    elif release_type == config.release_type_installer:
+    elif release_type == config.ReleaseType.INSTALLER:
 
         # Exe installer
         if archive_extension == ".exe":
@@ -243,13 +243,13 @@ def SetupGeneralRelease(
 
             # Set search directory to best location for installed files
             search_dir = prefix_dir
-            if installer_type != config.installer_type_unknown:
+            if installer_type != config.InstallerType.UNKNOWN:
                 search_dir = real_install_path
 
     ####################################
     # Archive
     ####################################
-    elif release_type == config.release_type_archive:
+    elif release_type == config.ReleaseType.ARCHIVE:
 
         # Extract archive
         success = archive.ExtractArchive(

@@ -94,27 +94,27 @@ class StoreBase:
 
     # Get info identifier
     def GetInfoIdentifier(self, json_wrapper):
-        return self.GetIdentifier(json_wrapper, config.store_identifier_type_info)
+        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.INFO)
 
     # Get install identifier
     def GetInstallIdentifier(self, json_wrapper):
-        return self.GetIdentifier(json_wrapper, config.store_identifier_type_install)
+        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.INSTALL)
 
     # Get launch identifier
     def GetLaunchIdentifier(self, json_wrapper):
-        return self.GetIdentifier(json_wrapper, config.store_identifier_type_launch)
+        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.LAUNCH)
 
     # Get download identifier
     def GetDownloadIdentifier(self, json_wrapper):
-        return self.GetIdentifier(json_wrapper, config.store_identifier_type_download)
+        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.DOWNLOAD)
 
     # Get asset identifier
     def GetAssetIdentifier(self, json_wrapper):
-        return self.GetIdentifier(json_wrapper, config.store_identifier_type_asset)
+        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.ASSET)
 
     # Get metadata identifier
     def GetMetadataIdentifier(self, json_wrapper):
-        return self.GetIdentifier(json_wrapper, config.store_identifier_type_metadata)
+        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.METADATA)
 
     # Is valid identifier
     def IsValidIdentifier(self, identifier):
@@ -318,7 +318,7 @@ class StoreBase:
                 return False
 
             # Download assets
-            for asset_type in config.asset_types_min:
+            for asset_type in config.AssetMinType.members():
                 success = collection.DownloadMetadataAsset(
                     game_category = self.GetCategory(),
                     game_subcategory = self.GetSubcategory(),

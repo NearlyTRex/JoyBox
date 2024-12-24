@@ -127,8 +127,8 @@ def CreateWebDriver(
     pretend_run = False,
     exit_on_failure = False):
     if not driver_type:
-        driver_type = config.web_driver_type_firefox
-    if driver_type == config.web_driver_type_chrome:
+        driver_type = config.WebDriverType.FIREFOX
+    if driver_type == config.WebDriverType.CHROME:
         return CreateChromeWebDriver(
             download_dir = download_dir,
             profile_dir = profile_dir,
@@ -136,7 +136,7 @@ def CreateWebDriver(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    elif driver_type == config.web_driver_type_firefox:
+    elif driver_type == config.WebDriverType.FIREFOX:
         return CreateFirefoxWebDriver(
             download_dir = download_dir,
             profile_dir = profile_dir,

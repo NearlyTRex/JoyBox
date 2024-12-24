@@ -28,28 +28,28 @@ def GetEncryptedRemoteName(remote_name):
 
 # Get remote connection path
 def GetRemoteConnectionPath(remote_name, remote_type, remote_path):
-    if remote_type == config.sync_type_b2:
+    if remote_type == config.SyncRemoteType.B2:
         return "%s:%s%s" % (remote_name, GetUnencryptedRemoteName(remote_name), remote_path)
     else:
         return "%s:%s" % (remote_name, remote_path)
 
 # Get common remote flags
-def GetCommonRemoteFlags(remote_name, remote_type, remote_action):
+def GetCommonRemoteFlags(remote_name, remote_type, remote_action_type):
     flags = [
         "--fast-list",
         "--tpslimit", "10",
         "--transfers", "1",
         "--order-by", "size,ascending"
     ]
-    if remote_action in config.remote_action_types_sync:
+    if remote_action_type in config.RemoteActionSyncType.members():
         flags += [
             "--track-renames"
         ]
-    if remote_action in config.remote_action_types_change:
+    if remote_action_type in config.RemoteActionChangeType.members():
         flags += [
             "--create-empty-src-dirs"
         ]
-    if remote_type == config.sync_type_gdrive:
+    if remote_type == config.SyncRemoteType.DRIVE:
         flags += [
             "--drive-acknowledge-abuse",
             "--drive-stop-on-upload-limit",
@@ -204,7 +204,7 @@ def SetupRemote(
     exit_on_failure = False):
 
     # B2 requires manual setting
-    if remote_type == config.sync_type_b2:
+    if remote_type == config.SyncRemoteType.B2:
         return SetupManualRemote(
             remote_type = remote_type,
             remote_name = remote_name,
@@ -336,7 +336,7 @@ def DownloadFilesFromRemote(
     copy_cmd += GetCommonRemoteFlags(
         remote_name = remote_name,
         remote_type = remote_type,
-        remote_action = config.remote_action_type_download)
+        remote_action_type = config.RemoteActionType.DOWNLOAD)
     copy_cmd += GetExcludeFlags(excludes)
     if pretend_run:
         copy_cmd += ["--dry-run"]
@@ -386,7 +386,7 @@ def UploadFilesToRemote(
     copy_cmd += GetCommonRemoteFlags(
         remote_name = remote_name,
         remote_type = remote_type,
-        remote_action = config.remote_action_type_upload)
+        remote_action_type = config.RemoteActionType.UPLOAD)
     copy_cmd += GetExcludeFlags(excludes)
     if pretend_run:
         copy_cmd += ["--dry-run"]
@@ -436,7 +436,7 @@ def PullFilesFromRemote(
     sync_cmd += GetCommonRemoteFlags(
         remote_name = remote_name,
         remote_type = remote_type,
-        remote_action = config.remote_action_type_pull)
+        remote_action_type = config.RemoteActionType.PULL)
     sync_cmd += GetExcludeFlags(excludes)
     if pretend_run:
         sync_cmd += ["--dry-run"]
@@ -486,7 +486,7 @@ def PushFilesToRemote(
     sync_cmd += GetCommonRemoteFlags(
         remote_name = remote_name,
         remote_type = remote_type,
-        remote_action = config.remote_action_type_push)
+        remote_action_type = config.RemoteActionType.PUSH)
     sync_cmd += GetExcludeFlags(excludes)
     if pretend_run:
         sync_cmd += ["--dry-run"]
@@ -538,7 +538,7 @@ def MergeFilesBothWays(
     bisync_cmd += GetCommonRemoteFlags(
         remote_name = remote_name,
         remote_type = remote_type,
-        remote_action = config.remote_action_type_merge)
+        remote_action_type = config.RemoteActionType.MERGE)
     bisync_cmd += GetExcludeFlags(excludes)
     if resync:
         bisync_cmd += ["--resync"]
@@ -595,7 +595,7 @@ def DiffFiles(
     check_cmd += GetCommonRemoteFlags(
         remote_name = remote_name,
         remote_type = remote_type,
-        remote_action = config.remote_action_type_diff)
+        remote_action_type = config.RemoteActionType.DIFF)
     check_cmd += GetExcludeFlags(excludes)
     if system.IsPathValid(diff_combined_path):
         check_cmd += ["--combined", diff_combined_path]

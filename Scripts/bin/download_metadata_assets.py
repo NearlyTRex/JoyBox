@@ -18,8 +18,8 @@ import setup
 # Parse arguments
 parser = argparse.ArgumentParser(description="Download metadata assets.")
 parser.add_argument("-a", "--asset_type",
-    choices=config.asset_types_all,
-    default=config.asset_type_video,
+    choices=config.AssetType.members(),
+    default=config.AssetType.VIDEO,
     help="Asset type"
 )
 parser.add_argument("-c", "--game_category", type=str, help="Game category")

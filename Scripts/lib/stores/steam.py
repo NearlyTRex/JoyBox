@@ -57,7 +57,7 @@ class Steam(storebase.StoreBase):
 
     # Get type
     def GetType(self):
-        return config.store_type_steam
+        return config.StoreType.STEAM
 
     # Get platform
     def GetPlatform(self):
@@ -77,7 +77,7 @@ class Steam(storebase.StoreBase):
 
     # Get identifier
     def GetIdentifier(self, json_wrapper, identifier_type):
-        if identifier_type == config.store_identifier_type_metadata:
+        if identifier_type == config.StoreIdentifierType.METADATA:
             return json_wrapper.get_value(config.json_key_store_appurl)
         return json_wrapper.get_value(config.json_key_store_appid)
 
@@ -102,11 +102,11 @@ class Steam(storebase.StoreBase):
         steamid = self.userid
         steamid64ident = 76561197960265728
         steamidacct = int(self.userid) - steamid64ident
-        if format_type == config.steam_id_format_3l:
+        if format_type == config.SteamIDFormatType.STEAMID_3L:
             steamid = "[U:1:" + str(steamidacct) + "]"
-        elif format_type == config.steam_id_format_3s:
+        elif format_type == config.SteamIDFormatType.STEAMID_3S:
             steamid = str(steamidacct)
-        elif format_type == config.steam_id_format_cl:
+        elif format_type == config.SteamIDFormatType.STEAMID_CL:
             steamid = "STEAM_0:"
             if steamidacct % 2 == 0:
                 steamid += "0:"
@@ -114,7 +114,7 @@ class Steam(storebase.StoreBase):
                 steamid += "1:"
             steamid += str(steamidacct // 2)
             return steamid
-        elif format_type == config.steam_id_format_cs:
+        elif format_type == config.SteamIDFormatType.STEAMID_CS:
             steamid = str(steamidacct // 2)
         return steamid
 
@@ -171,7 +171,7 @@ class Steam(storebase.StoreBase):
         # Get steam url
         steam_url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/"
         steam_url += "?key=%s" % self.GetWebApiKey()
-        steam_url += "&steamid=%s" % self.GetUserId(config.steam_id_format_64)
+        steam_url += "&steamid=%s" % self.GetUserId(config.SteamIDFormatType.STEAMID_64)
         steam_url += "&include_appinfo=true"
         steam_url += "&include_played_free_games=true"
         steam_url += "&format=json"
@@ -497,11 +497,11 @@ class Steam(storebase.StoreBase):
         latest_asset_url = None
 
         # BoxFront
-        if asset_type == config.asset_type_boxfront:
+        if asset_type == config.AssetType.BOXFRONT:
             latest_asset_url = "https://cdn.cloudflare.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % identifier
 
         # Video
-        elif asset_type == config.asset_type_video:
+        elif asset_type == config.AssetType.VIDEO:
             latest_asset_url = webpage.GetMatchingUrl(
                 url = self.GetLatestUrl(identifier),
                 base_url = "https://video.fastly.steamstatic.com/store_trailers",
@@ -544,9 +544,9 @@ class Steam(storebase.StoreBase):
                             game_paths.append(path.replace(appdata_base, appdata_variant))
 
         # Get user info
-        user_id64 = self.GetUserId(config.steam_id_format_64)
-        user_id3 = self.GetUserId(config.steam_id_format_3s)
-        user_idc = self.GetUserId(config.steam_id_format_cs)
+        user_id64 = self.GetUserId(config.SteamIDFormatType.STEAMID_64)
+        user_id3 = self.GetUserId(config.SteamIDFormatType.STEAMID_3S)
+        user_idc = self.GetUserId(config.SteamIDFormatType.STEAMID_CS)
 
         # Ignore invalid identifier
         if not self.IsValidIdentifier(game_appid):
@@ -573,9 +573,9 @@ class Steam(storebase.StoreBase):
                 for key_replacement in translation_map[base_key]:
 
                     # Get potential user ids
-                    userid_64 = self.GetUserId(config.steam_id_format_64)
-                    userid_3s = self.GetUserId(config.steam_id_format_3s)
-                    userid_cs = self.GetUserId(config.steam_id_format_cs)
+                    userid_64 = self.GetUserId(config.SteamIDFormatType.STEAMID_64)
+                    userid_3s = self.GetUserId(config.SteamIDFormatType.STEAMID_3S)
+                    userid_cs = self.GetUserId(config.SteamIDFormatType.STEAMID_CS)
 
                     # Get potential full paths
                     fullpath = path.replace(base_key, key_replacement)
@@ -590,10 +590,10 @@ class Steam(storebase.StoreBase):
                     relativepath_idcs = relativepath.replace(config.token_store_user_id, userid_cs)
 
                     # Get potential new base paths
-                    new_base_general = config.save_type_general
-                    new_base_public = os.path.join(config.save_type_general, config.computer_folder_public)
-                    new_base_registry = os.path.join(config.save_type_general, config.computer_folder_registry)
-                    new_base_store = os.path.join(config.save_type_general, config.computer_folder_store, config.store_type_steam)
+                    new_base_general = config.SaveType.GENERAL.camelcase
+                    new_base_public = os.path.join(new_base_general, config.computer_folder_public)
+                    new_base_registry = os.path.join(new_base_general, config.computer_folder_registry)
+                    new_base_store = os.path.join(new_base_general, config.computer_folder_store, config.StoreType.STEAM.camelcase)
 
                     # Determine which paths exist
                     real_userid = None

@@ -88,7 +88,7 @@ class JsonData:
             self.set_value(key, system.MergeData(
                 data1 = self.get_value(key),
                 data2 = value,
-                merge_type = config.merge_type_safeadditive))
+                merge_type = config.MergeType.SAFE_ADDITIVE))
 
     # Fill subvalue
     def fill_subvalue(self, key, subkey, value):
@@ -101,4 +101,4 @@ class JsonData:
             self.set_subvalue(key, subkey, system.MergeData(
                 data1 = self.get_subvalue(key, subkey),
                 data2 = value,
-                merge_type = config.merge_type_safeadditive))
+                merge_type = config.MergeType.SAFE_ADDITIVE))

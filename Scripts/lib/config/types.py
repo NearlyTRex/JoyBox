@@ -1,358 +1,274 @@
 # Imports
 import os
 import sys
+import enum
+
+# Case enumeration type
+class CaseEnum(enum.Enum):
+    def __new__(cls, value, lowercase, camelcase):
+        obj = object.__new__(cls)
+        obj._value_ = value
+        obj.lowercase = lowercase
+        obj.camelcase = camelcase
+        return obj
+    @classmethod
+    def members(cls):
+        return [member for member in cls.__members__.values()]
+    @classmethod
+    def get_values(cls):
+        return [member.value for member in cls]
+    @classmethod
+    def get_lowercase_values(cls):
+        return [member.lowercase for member in cls]
+    @classmethod
+    def get_camelcase_values(cls):
+        return [member.camelcase for member in cls]
 
 # Locker types
-locker_type_artwork = "Artwork"
-locker_type_books = "Books"
-locker_type_development = "Development"
-locker_type_documents = "Documents"
-locker_type_gaming = "Gaming"
-locker_type_movies = "Movies"
-locker_type_music = "Music"
-locker_type_photos = "Photos"
-locker_type_programs = "Programs"
+class LockerType(CaseEnum):
+    ARTWORK     = (0, "artwork", "Artwork")
+    BOOKS       = (1, "books", "Books")
+    DEVELOPMENT = (2, "development", "Development")
+    DOCUMENTS   = (3, "documents", "Documents")
+    GAMING      = (4, "gaming", "Gaming")
+    MOVIES      = (5, "movies", "Movies")
+    MUSIC       = (6, "music", "Music")
+    PHOTOS      = (7, "photos", "Photos")
+    PROGRAMS    = (8, "programs", "Programs")
 
 # Passphrase types
-passphrase_type_none = "None"
-passphrase_type_general = "General"
-passphrase_type_locker = "Locker"
-passphrase_types = [
-    passphrase_type_none,
-    passphrase_type_general,
-    passphrase_type_locker
-]
+class PassphraseType(CaseEnum):
+    NONE        = (0, "none", "None")
+    GENERAL     = (1, "general", "General")
+    LOCKER      = (2, "locker", "Locker")
 
 # Backup types
-backup_type_copy = "copy"
-backup_type_archive = "archive"
-backup_type_sync = "sync"
-backup_types = [
-    backup_type_copy,
-    backup_type_archive,
-    backup_type_sync
-]
+class BackupType(CaseEnum):
+    COPY        = (0, "copy", "Copy")
+    ARCHIVE     = (1, "archive", "Archive")
+    SYNC        = (2, "sync", "Sync")
 
 # Source types
-source_type_local = "local"
-source_type_remote = "remote"
-source_types = [
-    source_type_local,
-    source_type_remote
-]
+class SourceType(CaseEnum):
+    LOCAL       = (0, "local", "Local")
+    REMOTE      = (1, "remote", "Remote")
 
 # Generation modes
-generation_mode_custom = "custom"
-generation_mode_standard = "standard"
-generation_modes = [
-    generation_mode_custom,
-    generation_mode_standard
-]
+class GenerationType(CaseEnum):
+    CUSTOM      = (0, "custom", "Custom")
+    STANDARD    = (1, "standard", "Standard")
 
 # Steam id formats
-steam_id_format_64 = "steamid64"
-steam_id_format_3l = "steamid3l"
-steam_id_format_3s = "steamid3s"
-steam_id_format_cl = "steamidcl"
-steam_id_format_cs = "steamidcs"
-steam_id_formats = [
-    steam_id_format_64,
-    steam_id_format_3l,
-    steam_id_format_3s,
-    steam_id_format_cl,
-    steam_id_format_cs
-]
+class SteamIDFormatType(CaseEnum):
+    STEAMID_64  = (0, "steamid64", "SteamID64")
+    STEAMID_3L  = (1, "steamid3l", "SteamID3L")
+    STEAMID_3S  = (2, "steamid3s", "SteamID3S")
+    STEAMID_CL  = (3, "steamidcl", "SteamIDCL")
+    STEAMID_CS  = (4, "steamidcs", "SteamIDCS")
 
 # Steam branch formats
-steam_branch_format_public = "public"
-steam_branch_formats = [
-    steam_branch_format_public
-]
+class SteamBranchType(CaseEnum):
+    PUBLIC      = (0, "public", "Public")
 
 # Metadata format types
-metadata_format_type_pegasus = "pegasus"
-metadata_format_types = [
-    metadata_format_type_pegasus
-]
+class MetadataFormatType(CaseEnum):
+    PEGASUS     = (0, "pegasus", "Pegasus")
 
 # Metadata source types
-metadata_source_type_thegamesdb = "thegamesdb"
-metadata_source_type_gamefaqs = "gamefaqs"
-metadata_source_type_store = "store"
-metadata_source_types = [
-    metadata_source_type_thegamesdb,
-    metadata_source_type_gamefaqs,
-    metadata_source_type_store
-]
+class MetadataSourceType(CaseEnum):
+    THEGAMESDB  = (0, "thegamesdb", "TheGamesDB")
+    GAMEFAQS    = (1, "gamefaqs", "GameFAQs")
+    STORE       = (2, "store", "Store")
 
 # Addon types
-addon_type_dlc = "dlc"
-addon_type_updates = "updates"
+class AddonType(CaseEnum):
+    DLC         = (0, "dlc", "DLC")
+    UPDATES     = (1, "updates", "Updates")
 
 # Launch types
-launch_type_none = "no_launcher"
-launch_type_file = "launch_file"
-launch_type_name = "launch_name"
+class LaunchType(CaseEnum):
+    NONE        = (0, "none", "None")
+    LAUNCH_FILE = (1, "launch_file", "LaunchFile")
+    LAUNCH_NAME = (2, "launch_name", "LaunchName")
 
 # Unit types
-unit_type_seconds = "seconds"
-unit_type_minutes = "minutes"
-unit_type_hours = "hours"
+class UnitType(CaseEnum):
+    SECONDS     = (0, "seconds", "Seconds")
+    MINUTES     = (1, "minutes", "Minutes")
+    HOURS       = (2, "hours", "Hours")
 
 # Prefix types
-prefix_type_default = "Default"
-prefix_type_tool = "Tool"
-prefix_type_emulator = "Emulator"
-prefix_type_game = "Game"
-prefix_type_setup = "Setup"
+class PrefixType(CaseEnum):
+    DEFAULT     = (0, "default", "Default")
+    TOOL        = (1, "tool", "Tool")
+    EMULATOR    = (2, "emulator", "Emulator")
+    GAME        = (3, "game", "Game")
+    SETUP       = (4, "setup", "Setup")
 
 # Save types
-save_type_general = "General"
-save_type_wine = "Wine"
-save_type_sandboxie = "Sandboxie"
+class SaveType(CaseEnum):
+    GENERAL     = (0, "general", "General")
+    WINE        = (1, "wine", "Wine")
+    SANDBOXIE   = (2, "sandboxie", "Sandboxie")
 
 # Save action types
-save_action_type_pack = "pack"
-save_action_type_unpack = "unpack"
-save_action_types = [
-    save_action_type_pack,
-    save_action_type_unpack
-]
+class SaveActionType(CaseEnum):
+    PACK        = (0, "pack", "Pack")
+    UNPACK      = (1, "unpack", "Unpack")
 
 # Remote action types
-remote_action_type_init = "init"
-remote_action_type_download = "download"
-remote_action_type_upload = "upload"
-remote_action_type_pull = "pull"
-remote_action_type_push = "push"
-remote_action_type_merge = "merge"
-remote_action_type_diff = "diff"
-remote_action_type_list = "list"
-remote_action_type_mount = "mount"
-remote_action_types = [
-    remote_action_type_init,
-    remote_action_type_download,
-    remote_action_type_upload,
-    remote_action_type_pull,
-    remote_action_type_push,
-    remote_action_type_merge,
-    remote_action_type_diff,
-    remote_action_type_list,
-    remote_action_type_mount
-]
-remote_action_types_sync = [
-    remote_action_type_pull,
-    remote_action_type_push,
-    remote_action_type_merge
-]
-remote_action_types_change = [
-    remote_action_type_download,
-    remote_action_type_upload,
-    remote_action_type_pull,
-    remote_action_type_push,
-    remote_action_type_merge
-]
+class RemoteActionType(CaseEnum):
+    INIT        = (0, "init", "Init")
+    DOWNLOAD    = (1, "download", "Download")
+    UPLOAD      = (2, "upload", "Upload")
+    PULL        = (3, "pull", "Pull")
+    PUSH        = (4, "push", "Push")
+    MERGE       = (5, "merge", "Merge")
+    DIFF        = (6, "diff", "Diff")
+    LIST        = (7, "list", "List")
+    MOUNT       = (8, "mount", "Mount")
+class RemoteActionSyncType(CaseEnum):
+    PULL = RemoteActionType.PULL
+    PUSH = RemoteActionType.PUSH
+    MERGE = RemoteActionType.MERGE
+class RemoteActionChangeType(CaseEnum):
+    DOWNLOAD = RemoteActionType.DOWNLOAD
+    UPLOAD = RemoteActionType.UPLOAD
+    PULL = RemoteActionType.PULL
+    PUSH = RemoteActionType.PUSH
+    MERGE = RemoteActionType.MERGE
 
 # Capture types
-capture_type_none = "none"
-capture_type_screenshot = "screenshot"
-capture_type_video = "video"
+class CaptureType(CaseEnum):
+    NONE        = (0, "none", "None")
+    SCREENSHOT  = (1, "screenshot", "Screenshot")
+    VIDEO       = (2, "video", "Video")
 
 # Disc types
-disc_type_normal = "normal"
-disc_type_macwin = "macwin"
+class DiscType(CaseEnum):
+    NORMAL      = (0, "normal", "Normal")
+    MACWIN      = (1, "macwin", "MacWin")
 
 # Asset types
-asset_type_background = "Background"
-asset_type_boxback = "BoxBack"
-asset_type_boxfront = "BoxFront"
-asset_type_label = "Label"
-asset_type_screenshot = "Screenshot"
-asset_type_video = "Video"
-asset_types_all = [
-    asset_type_background,
-    asset_type_boxback,
-    asset_type_boxfront,
-    asset_type_label,
-    asset_type_screenshot,
-    asset_type_video
-]
-asset_types_min = [
-    asset_type_boxfront,
-    asset_type_video
-]
-asset_types_image = [
-    asset_type_background,
-    asset_type_boxback,
-    asset_type_boxfront,
-    asset_type_label,
-    asset_type_screenshot
-]
-asset_types_movie = [
-    asset_type_video
-]
-asset_type_extensions = {
-    asset_type_background: ".jpg",
-    asset_type_boxback: ".jpg",
-    asset_type_boxfront: ".jpg",
-    asset_type_label: ".png",
-    asset_type_screenshot: ".jpg",
-    asset_type_video: ".mp4",
-}
+class AssetType(CaseEnum):
+    BACKGROUND  = (0, "background", "Background")
+    BOXBACK     = (1, "boxback", "BoxBack")
+    BOXFRONT    = (2, "boxfront", "BoxFront")
+    LABEL       = (3, "label", "Label")
+    SCREENSHOT  = (4, "screenshot", "Screenshot")
+    VIDEO       = (5, "video", "Video")
+class AssetMinType(CaseEnum):
+    BOXFRONT = AssetType.BOXFRONT
+    VIDEO = AssetType.VIDEO
+class AssetImageType(CaseEnum):
+    BACKGROUND = AssetType.BACKGROUND
+    BOXBACK = AssetType.BOXBACK
+    BOXFRONT = AssetType.BOXFRONT
+    LABEL = AssetType.LABEL
+    SCREENSHOT = AssetType.SCREENSHOT
+class AssetVideoType(CaseEnum):
+    VIDEO = AssetType.VIDEO
 
 # Message types
-message_type_general = "general"
-message_type_ok = "ok"
-message_type_yes_no = "yesno"
-message_type_cancel = "cancel"
-message_type_ok_cancel = "ok_cancel"
-message_type_error = "error"
-message_type_auto_close = "auto_close"
-message_type_get_text = "get_text"
-message_type_get_file = "get_file"
-message_type_get_folder = "get_folder"
+class MessageType(CaseEnum):
+    GENERAL     = (0, "general", "General")
+    OK          = (1, "ok", "OK")
+    YES_NO      = (2, "yesno", "YesNo")
+    CANCEL      = (3, "cancel", "Cancel")
+    OK_CANCEL   = (4, "ok_cancel", "OkCancel")
+    ERROR       = (5, "error", "Error")
+    AUTO_CLOSE  = (6, "auto_close", "AutoClose")
+    GET_TEXT    = (7, "get_text", "GetText")
+    GET_FILE    = (8, "get_file", "GetFile")
+    GET_FOLDER  = (9, "get_folder", "GetFolder")
 
 # Installer types
-installer_type_inno = "inno"
-installer_type_nsis = "nsis"
-installer_type_ins = "installshield"
-installer_type_7zip = "7zip"
-installer_type_winrar = "winrar"
-installer_type_unknown = "unknown"
+class InstallerType(CaseEnum):
+    INNO        = (0, "inno", "Inno")
+    NSIS        = (1, "nsis", "NSIS")
+    INS         = (2, "installshield", "InstallShield")
+    SEVENZIP    = (3, "7zip", "7Zip")
+    WINRAR      = (4, "winrar", "WinRAR")
+    UNKNOWN     = (5, "unknown", "Unknown")
 
 # Release types
-release_type_program = "program"
-release_type_installer = "installer"
-release_type_archive = "archive"
+class ReleaseType(CaseEnum):
+    PROGRAM     = (0, "program", "Program")
+    INSTALLER   = (1, "installer", "Installer")
+    ARCHIVE     = (2, "archive", "Archive")
 
-# Sync types
-sync_type_gdrive = "drive"
-sync_type_b2 = "b2"
+# Sync remote types
+class SyncRemoteType(CaseEnum):
+    DRIVE       = (0, "drive", "Drive")
+    B2          = (1, "b2", "B2")
 
 # Archive types
-archive_type_zip = "zip"
-archive_type_7z = "7z"
-
-# Mime types
-mime_types_zip = ["application/zip"]
-mime_types_7z = ["application/x-7z-compressed"]
-mime_types_rar = ["application/x-rar-compressed"]
-mime_types_tarball = ["application/x-gzip", "application/gzip"]
-mime_types_exe = ["application/x-dosexec"]
-mime_types_appimage = ["application/x-executable"]
+class ArchiveType(CaseEnum):
+    ZIP         = (0, "zip", "Zip")
+    SEVENZIP    = (1, "7z", "7Z")
 
 # Preset types
-preset_type_backup_microsoft = "Backup_Microsoft"
-preset_type_backup_nintendogen = "Backup_NintendoGen"
-preset_type_backup_nintendoswitch = "Backup_NintendoSwitch"
-preset_type_backup_othergen = "Backup_OtherGen"
-preset_type_backup_sonygen = "Backup_SonyGen"
-preset_type_backup_sonyps3 = "Backup_SonyPS3"
-preset_type_backup_sonyps4 = "Backup_SonyPS4"
-preset_type_backup_sonypsn = "Backup_SonyPSN"
-preset_types = [
-    preset_type_backup_microsoft,
-    preset_type_backup_nintendogen,
-    preset_type_backup_nintendoswitch,
-    preset_type_backup_othergen,
-    preset_type_backup_sonygen,
-    preset_type_backup_sonyps3,
-    preset_type_backup_sonyps4,
-    preset_type_backup_sonypsn
-]
+class PresetType(CaseEnum):
+    BACKUP_MICROSOFT        = (0, "backup_microsoft", "Backup_Microsoft")
+    BACKUP_NINTENDOGEN      = (1, "backup_nintendogen", "Backup_NintendoGen")
+    BACKUP_NINTENDOSWITCH   = (2, "backup_nintendoswitch", "Backup_NintendoSwitch")
+    BACKUP_OTHERGEN         = (3, "backup_othergen", "Backup_OtherGen")
+    BACKUP_SONYGEN          = (4, "backup_sonygen", "Backup_SonyGen")
+    BACKUP_SONYPS3          = (5, "backup_sonyps3", "Backup_SonyPS3")
+    BACKUP_SONYPS4          = (6, "backup_sonyps4", "Backup_SonyPS4")
+    BACKUP_SONYPSN          = (7, "backup_sonypsn", "Backup_SonyPSN")
 
 # Store types
-store_type_amazon = "Amazon"
-store_type_gog = "GOG"
-store_type_epic = "Epic"
-store_type_itchio = "Itchio"
-store_type_legacy = "Legacy"
-store_type_steam = "Steam"
-store_types = [
-    store_type_amazon,
-    store_type_gog,
-    store_type_epic,
-    store_type_itchio,
-    store_type_legacy,
-    store_type_steam
-]
+class StoreType(CaseEnum):
+    AMAZON                  = (0, "amazon", "Amazon")
+    GOG                     = (1, "gog", "GOG")
+    EPIC                    = (2, "epic", "Epic")
+    ITCHIO                  = (3, "itchio", "Itchio")
+    LEGACY                  = (4, "legacy", "Legacy")
+    STEAM                   = (5, "steam", "Steam")
 
 # Store action types
-store_action_type_login = "login"
-store_action_type_display_purchases = "display_purchases"
-store_action_type_import_purchases = "import_purchases"
-store_action_type_install_game = "install_game"
-store_action_type_launch_game = "launch_game"
-store_action_type_download_game = "download_game"
-store_action_type_download_asset = "download_asset"
-store_action_type_update_json = "update_json"
-store_action_type_update_metadata = "update_metadata"
-store_action_type_check_versions = "check_versions"
-store_action_type_export_saves = "export_saves"
-store_action_type_import_saves = "import_saves"
-store_action_types = [
-    store_action_type_login,
-    store_action_type_display_purchases,
-    store_action_type_import_purchases,
-    store_action_type_install_game,
-    store_action_type_launch_game,
-    store_action_type_download_game,
-    store_action_type_download_asset,
-    store_action_type_update_json,
-    store_action_type_update_metadata,
-    store_action_type_check_versions,
-    store_action_type_export_saves,
-    store_action_type_import_saves
-]
+class StoreActionType(CaseEnum):
+    LOGIN                   = (0, "login", "Login")
+    DISPLAY_PURCHASES       = (1, "display_purchases", "DisplayPurchases")
+    IMPORT_PURCHASES        = (2, "import_purchases", "ImportPurchases")
+    INSTALL_GAME            = (3, "install_game", "InstallGame")
+    LAUNCH_GAME             = (4, "launch_game", "LaunchGame")
+    DOWNLOAD_GAME           = (5, "download_game", "DownloadGame")
+    DOWNLOAD_ASSET          = (6, "download_asset", "DownloadAsset")
+    UPDATE_JSON             = (7, "update_json", "UpdateJson")
+    UPDATE_METADATA         = (8, "update_metadata", "UpdateMetadata")
+    CHECK_VERSIONS          = (9, "check_versions", "CheckVersions")
+    EXPORT_SAVES            = (10, "export_saves", "ExportSaves")
+    IMPORT_SAVES            = (11, "import_saves", "ImportSaves")
 
 # Store identifier types
-store_identifier_type_info = "info"
-store_identifier_type_install = "install"
-store_identifier_type_launch = "launch"
-store_identifier_type_download = "download"
-store_identifier_type_asset = "asset"
-store_identifier_type_metadata = "metadata"
-store_identifier_types = [
-    store_identifier_type_info,
-    store_identifier_type_install,
-    store_identifier_type_launch,
-    store_identifier_type_download,
-    store_identifier_type_asset,
-    store_identifier_type_metadata
-]
+class StoreIdentifierType(CaseEnum):
+    INFO                    = (0, "info", "Info")
+    INSTALL                 = (1, "install", "Install")
+    LAUNCH                  = (2, "launch", "Launch")
+    DOWNLOAD                = (3, "download", "Download")
+    ASSET                   = (4, "asset", "Asset")
+    METADATA                = (5, "metadata", "Metadata")
 
 # Playlist types
-playlist_type_tree = "tree"
-playlist_type_local = "local"
-playlist_types = [
-    playlist_type_tree,
-    playlist_type_local
-]
+class PlaylistType(CaseEnum):
+    TREE                    = (0, "tree", "Tree")
+    LOCAL                   = (1, "local", "Local")
 
 # Merge types
-merge_type_replace = "replace"
-merge_type_additive = "additive"
-merge_type_safereplace = "safereplace"
-merge_type_safeadditive = "safeadditive"
-merge_types = [
-    merge_type_replace,
-    merge_type_additive,
-    merge_type_safereplace,
-    merge_type_safeadditive
-]
+class MergeType(CaseEnum):
+    REPLACE                 = (0, "replace", "Replace")
+    ADDITIVE                = (1, "additive", "Additive")
+    SAFE_REPLACE            = (2, "safereplace", "SafeReplace")
+    SAFE_ADDITIVE           = (3, "safeadditive", "SafeAdditive")
 
 # Web driver types
-web_driver_type_firefox = "firefox"
-web_driver_type_chrome = "chrome"
-web_driver_types = [
-    web_driver_type_firefox,
-    web_driver_type_chrome
-]
+class WebDriverType(CaseEnum):
+    FIREFOX                 = (0, "firefox", "Firefox")
+    CHROME                  = (1, "chrome", "Chrome")
 
 # Image types
-image_type_jpeg = "JPEG"
-image_type_png = "PNG"
-image_types = [
-    image_type_jpeg,
-    image_type_png
-]
+class ImageType(CaseEnum):
+    JPEG                    = (0, "jpeg", "JPEG")
+    PNG                     = (1, "png", "PNG")

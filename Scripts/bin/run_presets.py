@@ -23,6 +23,10 @@ parser.add_argument("-t", "--preset_tool",
 )
 parser.add_argument("-p", "--preset_type", choices=config.preset_types, help="Preset type")
 parser.add_argument("-o", "--output_path", type=str, default=".", help="Output path")
+parser.add_argument("-t", "--passphrase_type",
+    choices=config.PassphraseType.members(),
+    default=config.PassphraseType.NONE, help="Passphrase type"
+)
 parser.add_argument("-e", "--skip_existing", action="store_true", help="Skip existing files")
 parser.add_argument("-i", "--skip_identical", action="store_true", help="Skip identical files")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
@@ -66,7 +70,7 @@ def main():
 
         # Update base command
         base_cmd += [
-            "-t", config.share_type_vault,
+            "-t", args.passphrase_type,
             "-o", output_path
         ]
         if args.skip_existing:

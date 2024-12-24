@@ -56,7 +56,7 @@ def CollectMetadataFromFile(
 
             # Collect metadata
             metadata_result = None
-            if metadata_source == config.metadata_source_type_thegamesdb:
+            if metadata_source == config.MetadataSourceType.THEGAMESDB:
                 metadata_result = CollectMetadataFromTGDB(
                     game_platform = game_platform,
                     game_name = game_name,
@@ -64,7 +64,7 @@ def CollectMetadataFromFile(
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
-            elif metadata_source == config.metadata_source_type_gamefaqs:
+            elif metadata_source == config.MetadataSourceType.GAMEFAQS:
                 metadata_result = CollectMetadataFromGameFAQS(
                     game_platform = game_platform,
                     game_name = game_name,
@@ -72,7 +72,7 @@ def CollectMetadataFromFile(
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
-            elif metadata_source == config.metadata_source_type_store:
+            elif metadata_source == config.MetadataSourceType.STORE:
                 store_obj = stores.GetStoreByPlatform(game_platform)
                 if store_obj:
                     metadata_result = store_obj.GetLatestMetadata(
@@ -148,9 +148,9 @@ def CollectMetadataFromCategories(
     metadata_platform = gameinfo.DeriveGamePlatformFromCategories(metadata_category, metadata_subcategory)
 
     # Get metadata source
-    metadata_source = config.metadata_source_type_thegamesdb
+    metadata_source = config.MetadataSourceType.THEGAMESDB
     if stores.GetStoreByPlatform(metadata_platform):
-        metadata_source = config.metadata_source_type_store
+        metadata_source = config.MetadataSourceType.STORE
 
     # Get metadata file
     metadata_file = environment.GetMetadataFile(metadata_category, metadata_subcategory)
@@ -515,7 +515,7 @@ def CollectMetadataAssetFromSteamGridDB(
     exit_on_failure = False):
 
     # Only allow BoxFront
-    if asset_type != config.asset_type_boxfront:
+    if asset_type != config.AssetType.BOXFRONT:
         return None
 
     # Create web driver
@@ -598,7 +598,7 @@ def CollectMetadataAssetFromYouTube(
     exit_on_failure = False):
 
     # Only allow Video
-    if asset_type != config.asset_type_video:
+    if asset_type != config.AssetType.VIDEO:
         return None
 
     # Metadata asset

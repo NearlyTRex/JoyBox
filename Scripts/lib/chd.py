@@ -247,7 +247,7 @@ def MountDiscCHD(
         exit_on_failure = exit_on_failure)
 
     # Extract iso files to mount point
-    if disc_type == config.disc_type_macwin:
+    if disc_type == config.DiscType.MACWIN:
         success = archive.ExtractArchive(
             archive_file = temp_iso_file,
             extract_dir = mount_dir,

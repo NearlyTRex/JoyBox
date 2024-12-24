@@ -38,7 +38,7 @@ class Epic(storebase.StoreBase):
 
     # Get type
     def GetType(self):
-        return config.store_type_epic
+        return config.StoreType.EPIC
 
     # Get platform
     def GetPlatform(self):
@@ -58,7 +58,7 @@ class Epic(storebase.StoreBase):
 
     # Get identifier
     def GetIdentifier(self, json_wrapper, identifier_type):
-        if identifier_type == config.store_identifier_type_metadata:
+        if identifier_type == config.StoreIdentifierType.METADATA:
             return json_wrapper.get_value(config.json_key_store_appurl)
         return json_wrapper.get_value(config.json_key_store_appname)
 

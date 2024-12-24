@@ -19,8 +19,8 @@ parser.add_argument("input_path", help="Input path")
 parser.add_argument("-o", "--output_file", default="playlist.m3u", type=str, help="Output file")
 parser.add_argument("-f", "--file_types", type=str, help="List of file types (comma delimited)")
 parser.add_argument("-t", "--playlist_type",
-    choices=config.playlist_types,
-    default=config.playlist_type_tree,
+    choices=config.PlaylistType.members(),
+    default=config.PlaylistType.TREE,
     help="Playlist type"
 )
 parser.add_argument("--allow_empty_lists", action="store_true", help="Allow empty lists")
@@ -45,7 +45,7 @@ def main():
     setup.CheckRequirements()
 
     # Generate tree playlists
-    if args.playlist_type == config.playlist_type_tree:
+    if args.playlist_type == config.PlaylistType.TREE:
         playlist.GenerateTreePlaylist(
             source_dir = input_path,
             output_file = args.output_file,
@@ -57,7 +57,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Generate local playlists
-    elif args.playlist_type == config.playlist_type_local:
+    elif args.playlist_type == config.PlaylistType.LOCAL:
         playlist.GenerateLocalPlaylists(
             source_dir = input_path,
             extensions = args.file_types.split(","),

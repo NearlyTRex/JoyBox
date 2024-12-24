@@ -33,7 +33,7 @@ def ConvertToRemotePath(path):
         return path
     return system.RebaseFilePath(
         path = path,
-        old_base_path = environment.GetLockerRootDir(config.source_type_local),
+        old_base_path = environment.GetLockerRootDir(config.SourceType.LOCAL),
         new_base_path = "")
 
 # Convert to local path
@@ -42,8 +42,8 @@ def ConvertToLocalPath(path):
         return path
     return system.RebaseFilePath(
         path = path,
-        old_base_path = environment.GetLockerRootDir(config.source_type_remote),
-        new_base_path = environment.GetLockerRootDir(config.source_type_local))
+        old_base_path = environment.GetLockerRootDir(config.SourceType.REMOTE),
+        new_base_path = environment.GetLockerRootDir(config.SourceType.LOCAL))
 
 # Check if path exists
 def DoesRemotePathExist(path):

@@ -97,7 +97,7 @@ class ProjectCTR(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("CtrMakeRom", "linux"),
                 backups_dir = programs.GetProgramBackupDir("CtrMakeRom", "linux"),
                 install_files = ["makerom"],
-                release_type = config.release_type_archive,
+                release_type = config.ReleaseType.ARCHIVE,
                 chmod_files = [
                     {
                         "file": "makerom",
@@ -121,7 +121,7 @@ class ProjectCTR(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("CtrTool", "linux"),
                 backups_dir = programs.GetProgramBackupDir("CtrTool", "linux"),
                 install_files = ["ctrtool"],
-                release_type = config.release_type_archive,
+                release_type = config.ReleaseType.ARCHIVE,
                 chmod_files = [
                     {
                         "file": "ctrtool",

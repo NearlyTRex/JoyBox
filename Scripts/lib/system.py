@@ -330,13 +330,13 @@ def MergeDictionaries(dict1, dict2, merge_type = None):
     if isinstance(dict1, dict) and isinstance(dict2, dict):
         try:
             import mergedeep
-            if merge_type == config.merge_type_replace:
+            if merge_type == config.MergeType.REPLACE:
                 return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.REPLACE)
-            elif merge_type == config.merge_type_additive:
+            elif merge_type == config.MergeType.ADDITIVE:
                 return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.ADDITIVE)
-            elif merge_type == config.merge_type_safereplace:
+            elif merge_type == config.MergeType.SAFE_REPLACE:
                 return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_REPLACE)
-            elif merge_type == config.merge_type_safeadditive:
+            elif merge_type == config.MergeType.SAFE_ADDITIVE:
                 return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_ADDITIVE)
             else:
                 return mergedeep.merge(dict1, dict2)

@@ -15,7 +15,7 @@ class BackgroundJob:
         job_func,
         units_exact = None,
         units_range = None,
-        units_type = config.unit_type_seconds,
+        units_type = config.UnitType.SECONDS,
         sleep_interval = 0):
 
         # Check params
@@ -56,11 +56,11 @@ class BackgroundJob:
 
         # Configure job
         if self.job:
-            if self.units_type == config.unit_type_seconds:
+            if self.units_type == config.UnitType.SECONDS:
                 self.job.seconds.do(self.job_func)
-            elif self.units_type == config.unit_type_minutes:
+            elif self.units_type == config.UnitType.MINUTES:
                 self.job.minutes.do(self.job_func)
-            elif self.units_type == config.unit_type_hours:
+            elif self.units_type == config.UnitType.HOURS:
                 self.job.hours.do(self.job_func)
 
         # Start thread

@@ -43,7 +43,7 @@ class MetadataEntry:
     # Merge data
     def merge(self, other, merge_type = None):
         if not merge_type:
-            merge_type = config.merge_type_replace
+            merge_type = config.MergeType.REPLACE
         self.game_entry = system.MergeDictionaries(
             dict1 = other.game_entry,
             dict2 = self.game_entry,
@@ -192,7 +192,7 @@ class MetadataEntry:
 
     # Sync assets
     def sync_assets(self):
-        for asset_type in config.asset_types_all:
+        for asset_type in config.AssetType.members():
             game_asset_string = gameinfo.DeriveGameAssetPathFromName(
                 game_name = self.get_game(),
                 asset_type = asset_type)
@@ -202,17 +202,17 @@ class MetadataEntry:
                 game_name = self.get_game(),
                 asset_type = asset_type)
             game_metadata_key = None
-            if asset_type == config.asset_type_background:
+            if asset_type == config.AssetType.BACKGROUND:
                 game_metadata_key = config.metadata_key_background
-            elif asset_type == config.asset_type_boxback:
+            elif asset_type == config.AssetType.BOXBACK:
                 game_metadata_key = config.metadata_key_boxback
-            elif asset_type == config.asset_type_boxfront:
+            elif asset_type == config.AssetType.BOXFRONT:
                 game_metadata_key = config.metadata_key_boxfront
-            elif asset_type == config.asset_type_label:
+            elif asset_type == config.AssetType.LABEL:
                 game_metadata_key = config.metadata_key_label
-            elif asset_type == config.asset_type_screenshot:
+            elif asset_type == config.AssetType.SCREENSHOT:
                 game_metadata_key = config.metadata_key_screenshot
-            elif asset_type == config.asset_type_video:
+            elif asset_type == config.AssetType.VIDEO:
                 game_metadata_key = config.metadata_key_video
             if os.path.isfile(game_asset_file):
                 self.set_value(game_metadata_key, game_asset_string)

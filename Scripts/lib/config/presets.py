@@ -10,13 +10,13 @@ from . import types
 presets_options = {}
 
 # Backup_Microsoft
-presets_options[types.preset_type_backup_microsoft] = {
+presets_options[types.PresetType.BACKUP_MICROSOFT] = {
     "supercategory": categories.game_supercategory_roms,
     "category": categories.game_category_microsoft
 }
 
 # Backup_NintendoGen
-presets_options[types.preset_type_backup_nintendogen] = {
+presets_options[types.PresetType.BACKUP_NINTENDOGEN] = {
     "supercategory": categories.game_supercategory_roms,
     "category": categories.game_category_nintendo,
     "subcategories": [
@@ -46,7 +46,7 @@ presets_options[types.preset_type_backup_nintendogen] = {
 }
 
 # Backup_NintendoSwitch
-presets_options[types.preset_type_backup_nintendoswitch] = {
+presets_options[types.PresetType.BACKUP_NINTENDOSWITCH] = {
     "supercategory": categories.game_supercategory_roms,
     "category": categories.game_category_nintendo,
     "subcategories": [
@@ -56,13 +56,13 @@ presets_options[types.preset_type_backup_nintendoswitch] = {
 }
 
 # Backup_OtherGen
-presets_options[types.preset_type_backup_othergen] = {
+presets_options[types.PresetType.BACKUP_OTHERGEN] = {
     "supercategory": categories.game_supercategory_roms,
     "category": categories.game_category_other
 }
 
 # Backup_SonyGen
-presets_options[types.preset_type_backup_sonygen] = {
+presets_options[types.PresetType.BACKUP_SONYGEN] = {
     "supercategory": categories.game_supercategory_roms,
     "category": categories.game_category_sony,
     "subcategories": [
@@ -75,7 +75,7 @@ presets_options[types.preset_type_backup_sonygen] = {
 }
 
 # Backup_SonyPS3
-presets_options[types.preset_type_backup_sonyps3] = {
+presets_options[types.PresetType.BACKUP_SONYPS3] = {
     "supercategory": categories.game_supercategory_roms,
     "category": categories.game_category_sony,
     "subcategories": [
@@ -84,7 +84,7 @@ presets_options[types.preset_type_backup_sonyps3] = {
 }
 
 # Backup_SonyPS4
-presets_options[types.preset_type_backup_sonyps4] = {
+presets_options[types.PresetType.BACKUP_SONYPS4] = {
     "supercategory": categories.game_supercategory_roms,
     "category": categories.game_category_sony,
     "subcategories": [
@@ -93,7 +93,7 @@ presets_options[types.preset_type_backup_sonyps4] = {
 }
 
 # Backup_SonyPSN
-presets_options[types.preset_type_backup_sonypsn] = {
+presets_options[types.PresetType.BACKUP_SONYPSN] = {
     "supercategory": categories.game_supercategory_roms,
     "category": categories.game_category_sony,
     "subcategories": [

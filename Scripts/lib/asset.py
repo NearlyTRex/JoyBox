@@ -55,7 +55,7 @@ def DownloadAsset(
     exit_on_failure = False):
 
     # Video
-    if asset_type == config.asset_type_video:
+    if asset_type == config.AssetType.VIDEO:
 
         # YouTube
         if asset_url.startswith("https://www.youtube.com"):
@@ -105,7 +105,7 @@ def ConvertAsset(
     exit_on_failure = False):
 
     # Image assets
-    if asset_type in config.asset_types_image:
+    if asset_type in config.AssetImageType.members():
         success = image.ConvertImageToJPEG(
             image_src = asset_src,
             image_dest = asset_dest,

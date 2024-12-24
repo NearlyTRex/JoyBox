@@ -284,9 +284,9 @@ def RestoreRegistry(
 
     # Get registry file
     registry_file = ""
-    if prefix_name == config.prefix_type_setup:
+    if prefix_name == config.PrefixType.SETUP:
         registry_file = os.path.join(registry_dir, config.registry_filename_setup)
-    elif prefix_name == config.prefix_type_game:
+    elif prefix_name == config.PrefixType.GAME:
         registry_file = os.path.join(registry_dir, config.registry_filename_game)
     if not os.path.exists(registry_file):
         return True
@@ -328,23 +328,23 @@ def BackupRegistry(
 
     # Get registry file
     registry_file = ""
-    if prefix_name == config.prefix_type_setup:
+    if prefix_name == config.PrefixType.SETUP:
         registry_file = os.path.join(registry_dir, config.registry_filename_setup)
-    elif prefix_name == config.prefix_type_game:
+    elif prefix_name == config.PrefixType.GAME:
         registry_file = os.path.join(registry_dir, config.registry_filename_game)
 
     # Get registry export keys
     registry_export_keys = []
-    if prefix_name == config.prefix_type_setup:
+    if prefix_name == config.PrefixType.SETUP:
         registry_export_keys = config.registry_export_keys_setup
-    elif prefix_name == config.prefix_type_game:
+    elif prefix_name == config.PrefixType.GAME:
         registry_export_keys = config.registry_export_keys_game
 
     # Get registry ignore keys
     registry_ignore_keys = []
-    if prefix_name == config.prefix_type_setup:
+    if prefix_name == config.PrefixType.SETUP:
         registry_ignore_keys = config.ignored_registry_keys_setup
-    elif prefix_name == config.prefix_type_game:
+    elif prefix_name == config.PrefixType.GAME:
         registry_ignore_keys = config.ignored_registry_keys_game
 
     # Backup registry
@@ -758,7 +758,7 @@ def SetupPrefixCommand(
             GetSandboxieCommand(),
             "/box:%s" % options.prefix_name
         ]
-        if options.prefix_name == config.prefix_type_tool:
+        if options.prefix_name == config.PrefixType.TOOL:
             new_cmd += ["/hide_window"]
 
     # Modify for wine

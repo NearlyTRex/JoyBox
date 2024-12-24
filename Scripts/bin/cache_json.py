@@ -18,8 +18,8 @@ import setup
 parser = argparse.ArgumentParser(description="Cache game files.")
 parser.add_argument("-i", "--input_file", type=str, help="Json file to cache")
 parser.add_argument("-e", "--source_type",
-    choices=config.source_types,
-    default=config.source_type_remote,
+    choices=config.SourceType.members(),
+    default=config.SourceType.REMOTE,
     help="Source types"
 )
 parser.add_argument("-c", "--game_category", type=str, help="Game category")

@@ -303,7 +303,7 @@ def SetupPrefixCommand(
     if not new_options.prefix_name or not new_options.prefix_dir:
         new_options.is_wine_prefix = sandbox.ShouldBeRunViaWine(cmd)
         new_options.is_sandboxie_prefix = sandbox.ShouldBeRunViaSandboxie(cmd)
-        new_options.prefix_name = config.prefix_type_default
+        new_options.prefix_name = config.PrefixType.DEFAULT
         new_options.prefix_dir = sandbox.GetPrefix(
             name = new_options.prefix_name,
             is_wine_prefix = new_options.is_wine_prefix,
@@ -664,7 +664,7 @@ def RunGameCommand(
     overwrite_videos = ini.GetIniBoolValue("UserData.Capture", "overwrite_videos")
 
     # Screenshot capturing
-    if capture_type == config.capture_type_screenshot:
+    if capture_type == config.CaptureType.SCREENSHOT:
 
         # Get output file
         output_file = game_info.get_screenshot_asset()
@@ -681,12 +681,12 @@ def RunGameCommand(
                 capture_resolution = (capture_resolution_w, capture_resolution_h),
                 time_duration = capture_duration,
                 time_interval = capture_interval,
-                time_units_type = config.unit_type_seconds,
+                time_units_type = config.UnitType.SECONDS,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 
     # Video capturing
-    elif capture_type == config.capture_type_video:
+    elif capture_type == config.CaptureType.VIDEO:
 
         # Get output file
         output_file = game_info.get_video_asset()

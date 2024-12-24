@@ -480,9 +480,9 @@ class Computer(emulatorbase.EmulatorBase):
     # Get save type
     def GetSaveType(self):
         if environment.IsWindowsPlatform():
-            return config.save_type_sandboxie
+            return config.SaveType.SANDBOXIE
         else:
-            return config.save_type_wine
+            return config.SaveType.WINE
 
     # Get config file
     def GetConfigFile(self, emulator_platform = None):
@@ -729,7 +729,7 @@ class Computer(emulatorbase.EmulatorBase):
         def CreateGamePrefix():
             return sandbox.CreateLinkedPrefix(
                 prefix_dir = launch_save_dir,
-                prefix_name = config.prefix_type_game,
+                prefix_name = config.PrefixType.GAME,
                 prefix_winver = launch_info_winver,
                 general_prefix_dir = launch_general_save_dir,
                 other_links = mount_links,
@@ -812,7 +812,7 @@ class Computer(emulatorbase.EmulatorBase):
                     fullscreen = fullscreen)
                 launch_info_options = command.CommandOptions(
                     prefix_dir = launch_save_dir,
-                    prefix_name = config.prefix_type_game,
+                    prefix_name = config.PrefixType.GAME,
                     prefix_winver = launch_info_winver,
                     is_wine_prefix = should_run_via_wine,
                     is_sandboxie_prefix = should_run_via_sandboxie)
@@ -837,7 +837,7 @@ class Computer(emulatorbase.EmulatorBase):
                     fullscreen = fullscreen)
                 launch_info_options = command.CommandOptions(
                     prefix_dir = launch_save_dir,
-                    prefix_name = config.prefix_type_game,
+                    prefix_name = config.PrefixType.GAME,
                     prefix_winver = launch_info_winver,
                     is_wine_prefix = should_run_via_wine,
                     is_sandboxie_prefix = should_run_via_sandboxie)
@@ -851,7 +851,7 @@ class Computer(emulatorbase.EmulatorBase):
                 fullscreen = fullscreen)
             launch_info_options = command.CommandOptions(
                 prefix_dir = launch_save_dir,
-                prefix_name = config.prefix_type_game,
+                prefix_name = config.PrefixType.GAME,
                 prefix_winver = launch_info_winver,
                 is_wine_prefix = should_run_via_wine,
                 is_sandboxie_prefix = should_run_via_sandboxie)
@@ -875,7 +875,7 @@ class Computer(emulatorbase.EmulatorBase):
                     cwd = os.path.expanduser("~"),
                     force_prefix = True,
                     prefix_dir = launch_save_dir,
-                    prefix_name = config.prefix_type_game,
+                    prefix_name = config.PrefixType.GAME,
                     prefix_winver = launch_info_winver,
                     prefix_cwd = selected_cwd,
                     is_wine_prefix = should_run_via_wine,
@@ -892,7 +892,7 @@ class Computer(emulatorbase.EmulatorBase):
             # Restore game registry
             sandbox.RestoreRegistry(
                 prefix_dir = launch_save_dir,
-                prefix_name = config.prefix_type_game,
+                prefix_name = config.PrefixType.GAME,
                 is_wine_prefix = should_run_via_wine,
                 is_sandboxie_prefix = should_run_via_sandboxie,
                 verbose = verbose,
@@ -949,7 +949,7 @@ class Computer(emulatorbase.EmulatorBase):
             # Backup game registry
             sandbox.BackupRegistry(
                 prefix_dir = launch_save_dir,
-                prefix_name = config.prefix_type_game,
+                prefix_name = config.PrefixType.GAME,
                 registry_keys = launch_info_registry_game_keys,
                 is_wine_prefix = should_run_via_wine,
                 is_sandboxie_prefix = should_run_via_sandboxie,

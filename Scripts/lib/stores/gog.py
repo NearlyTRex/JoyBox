@@ -44,7 +44,7 @@ class GOG(storebase.StoreBase):
 
     # Get type
     def GetType(self):
-        return config.store_type_gog
+        return config.StoreType.GOG
 
     # Get platform
     def GetPlatform(self):
@@ -64,9 +64,9 @@ class GOG(storebase.StoreBase):
 
     # Get identifier
     def GetIdentifier(self, json_wrapper, identifier_type):
-        if identifier_type == config.store_identifier_type_info:
+        if identifier_type == config.StoreIdentifierType.INFO:
             return json_wrapper.get_value(config.json_key_store_appid)
-        elif identifier_type == config.store_identifier_type_metadata:
+        elif identifier_type == config.StoreIdentifierType.METADATA:
             return json_wrapper.get_value(config.json_key_store_appurl)
         return json_wrapper.get_value(config.json_key_store_appname)
 
@@ -359,7 +359,7 @@ class GOG(storebase.StoreBase):
         latest_asset_url = None
 
         # Video
-        if asset_type == config.asset_type_video:
+        if asset_type == config.AssetType.VIDEO:
             latest_asset_url = webpage.GetMatchingUrl(
                 url = self.GetLatestUrl(identifier),
                 base_url = "https://www.youtube.com/embed",

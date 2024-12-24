@@ -113,7 +113,7 @@ class Metadata:
     # Merge with other metadata
     def merge_contents(self, other, merge_type = None):
         if not merge_type:
-            merge_type = config.merge_type_replace
+            merge_type = config.MergeType.REPLACE
         self.game_database = system.MergeDictionaries(
             dict1 = self.game_database,
             dict2 = other.game_database,
@@ -271,11 +271,11 @@ class Metadata:
     def import_from_metadata_file(
         self,
         metadata_file,
-        metadata_format = config.metadata_format_type_pegasus,
+        metadata_format = config.MetadataFormatType.PEGASUS,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        if metadata_format == config.metadata_format_type_pegasus:
+        if metadata_format == config.MetadataFormatType.PEGASUS:
             self.import_from_pegasus_file(
                 pegasus_file = metadata_file,
                 verbose = verbose,
@@ -382,12 +382,12 @@ class Metadata:
     def export_to_metadata_file(
         self,
         metadata_file,
-        metadata_format = config.metadata_format_type_pegasus,
+        metadata_format = config.MetadataFormatType.PEGASUS,
         append_existing = False,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        if metadata_format == config.metadata_format_type_pegasus:
+        if metadata_format == config.MetadataFormatType.PEGASUS:
             self.export_to_pegasus_file(
                 pegasus_file = metadata_file,
                 append_existing = append_existing,

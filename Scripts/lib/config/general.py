@@ -3,6 +3,9 @@ import os
 import sys
 import getpass
 
+# Local imports
+from . import types
+
 # Project
 project_name = "JoyBox"
 
@@ -111,6 +114,23 @@ computer_archive_extensions += computer_archive_extensions_exe
 computer_archive_extensions += computer_archive_extensions_appimage
 image_extensions_jpeg = [".jpg", ".jpeg"]
 image_extensions_png = [".png"]
+video_extensions_mp4 = [".mp4"]
+asset_extensions = {
+    types.AssetType.BACKGROUND: ".jpg",
+    types.AssetType.BOXBACK: ".jpg",
+    types.AssetType.BOXFRONT: ".jpg",
+    types.AssetType.LABEL: ".png",
+    types.AssetType.SCREENSHOT: ".jpg",
+    types.AssetType.VIDEO: ".mp4",
+}
+
+# Mime types
+mime_types_zip = ["application/zip"]
+mime_types_7z = ["application/x-7z-compressed"]
+mime_types_rar = ["application/x-rar-compressed"]
+mime_types_tarball = ["application/x-gzip", "application/gzip"]
+mime_types_exe = ["application/x-dosexec"]
+mime_types_appimage = ["application/x-executable"]
 
 # Folders
 general_folder_numeric = "#-0"

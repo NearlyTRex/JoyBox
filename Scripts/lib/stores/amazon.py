@@ -29,7 +29,7 @@ class Amazon(storebase.StoreBase):
 
     # Get type
     def GetType(self):
-        return config.store_type_amazon
+        return config.StoreType.AMAZON
 
     # Get platform
     def GetPlatform(self):
@@ -49,7 +49,7 @@ class Amazon(storebase.StoreBase):
 
     # Get identifier
     def GetIdentifier(self, json_wrapper, identifier_type):
-        if identifier_type == config.store_identifier_type_metadata:
+        if identifier_type == config.StoreIdentifierType.METADATA:
             return json_wrapper.get_value(config.json_key_store_name)
         return json_wrapper.get_value(config.json_key_store_appid)
 

@@ -18,8 +18,8 @@ import ini
 # Parse arguments
 parser = argparse.ArgumentParser(description="Sync tool.")
 parser.add_argument("-a", "--action",
-    choices=config.remote_action_types,
-    default=config.remote_action_type_init, help="Sync action"
+    choices=config.RemoteActionType.members(),
+    default=config.RemoteActionType.INIT, help="Sync action"
 )
 parser.add_argument("--excludes", type=str, default=",".join(config.excluded_sync_paths), help="Excludes (comma delimited)")
 parser.add_argument("--diff_combined_path", type=str, default="diff_combined.txt", help="Diff path (combined)")
@@ -50,7 +50,7 @@ def main():
     mount_flags = ini.GetIniValue("UserData.Share", "locker_remote_mount_flags").split(",")
 
     # Init sync
-    if args.action == config.remote_action_type_init:
+    if args.action == config.RemoteActionType.INIT:
         sync.SetupRemote(
             remote_name = remote_name,
             remote_type = remote_type,
@@ -59,7 +59,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Download files
-    elif args.action == config.remote_action_type_download:
+    elif args.action == config.RemoteActionType.DOWNLOAD:
         sync.DownloadFilesFromRemote(
             remote_name = remote_name,
             remote_type = remote_type,
@@ -72,7 +72,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Upload files
-    elif args.action == config.remote_action_type_upload:
+    elif args.action == config.RemoteActionType.UPLOAD:
         sync.UploadFilesToRemote(
             remote_name = remote_name,
             remote_type = remote_type,
@@ -85,7 +85,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Pull files
-    elif args.action == config.remote_action_type_pull:
+    elif args.action == config.RemoteActionType.PULL:
         sync.PullFilesFromRemote(
             remote_name = remote_name,
             remote_type = remote_type,
@@ -98,7 +98,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Push files
-    elif args.action == config.remote_action_type_push:
+    elif args.action == config.RemoteActionType.PUSH:
         sync.PushFilesToRemote(
             remote_name = remote_name,
             remote_type = remote_type,
@@ -111,7 +111,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Merge files
-    elif args.action == config.remote_action_type_merge:
+    elif args.action == config.RemoteActionType.MERGE:
         sync.MergeFilesBothWays(
             remote_name = remote_name,
             remote_type = remote_type,
@@ -125,7 +125,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Diff files
-    elif args.action == config.remote_action_type_diff:
+    elif args.action == config.RemoteActionType.DIFF:
         sync.DiffFiles(
             remote_name = remote_name,
             remote_type = remote_type,
@@ -143,7 +143,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # List files
-    elif args.action == config.remote_action_type_list:
+    elif args.action == config.RemoteActionType.LIST:
         sync.ListFiles(
             remote_name = remote_name,
             remote_type = remote_type,
@@ -155,7 +155,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Mount files
-    elif args.action == config.remote_action_type_mount:
+    elif args.action == config.RemoteActionType.MOUNT:
         sync.MountFiles(
             remote_name = remote_name,
             remote_type = remote_type,

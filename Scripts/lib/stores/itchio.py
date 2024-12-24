@@ -29,7 +29,7 @@ class Itchio(storebase.StoreBase):
 
     # Get type
     def GetType(self):
-        return config.store_type_itchio
+        return config.StoreType.ITCHIO
 
     # Get platform
     def GetPlatform(self):

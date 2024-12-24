@@ -112,14 +112,14 @@ class GameInfo:
         save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name)
         if self.game_category == config.game_category_computer:
             if environment.IsWindowsPlatform():
-                save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.save_type_sandboxie)
+                save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.SANDBOXIE)
             else:
-                save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.save_type_wine)
-        general_save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.save_type_general)
+                save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.WINE)
+        general_save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.GENERAL)
         local_cache_dir = environment.GetCacheGamingRomDir(self.game_category, self.game_subcategory, self.game_name)
         remote_cache_dir = environment.GetCacheGamingInstallDir(self.game_category, self.game_subcategory, self.game_name)
-        local_rom_dir = environment.GetLockerGamingRomDir(self.game_category, self.game_subcategory, self.game_name, config.source_type_local)
-        remote_rom_dir = environment.GetLockerGamingRomDir(self.game_category, self.game_subcategory, self.game_name, config.source_type_remote)
+        local_rom_dir = environment.GetLockerGamingRomDir(self.game_category, self.game_subcategory, self.game_name, config.SourceType.LOCAL)
+        remote_rom_dir = environment.GetLockerGamingRomDir(self.game_category, self.game_subcategory, self.game_name, config.SourceType.REMOTE)
 
         # Set paths
         self.set_value(config.json_key_save_dir, save_dir)
@@ -359,7 +359,7 @@ class GameInfo:
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
-            asset_type = config.asset_type_background)
+            asset_type = config.AssetType.BACKGROUND)
 
     # Get boxback asset
     def get_boxback_asset(self):
@@ -367,7 +367,7 @@ class GameInfo:
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
-            asset_type = config.asset_type_boxback)
+            asset_type = config.AssetType.BOXBACK)
 
     # Get boxfront asset
     def get_boxfront_asset(self):
@@ -375,7 +375,7 @@ class GameInfo:
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
-            asset_type = config.asset_type_boxfront)
+            asset_type = config.AssetType.BOXFRONT)
 
     # Get label asset
     def get_label_asset(self):
@@ -383,7 +383,7 @@ class GameInfo:
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
-            asset_type = config.asset_type_label)
+            asset_type = config.AssetType.LABEL)
 
     # Get screenshot asset
     def get_screenshot_asset(self):
@@ -391,7 +391,7 @@ class GameInfo:
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
-            asset_type = config.asset_type_screenshot)
+            asset_type = config.AssetType.SCREENSHOT)
 
     # Get video asset
     def get_video_asset(self):
@@ -399,7 +399,7 @@ class GameInfo:
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
-            asset_type = config.asset_type_video)
+            asset_type = config.AssetType.VIDEO)
 
     ##############################
 
@@ -449,9 +449,9 @@ class GameInfo:
 
     # Get rom dir
     def get_rom_dir(self, source_type):
-        if source_type == config.source_type_local:
+        if source_type == config.SourceType.LOCAL:
             return self.get_local_rom_dir()
-        elif source_type == config.source_type_remote:
+        elif source_type == config.SourceType.REMOTE:
             return self.get_remote_rom_dir()
         return None
 
@@ -678,7 +678,7 @@ def DeriveGameLetterFromName(game_name):
 def DeriveGameSearchTermsFromName(game_name, game_platform, asset_type = None):
     search_terms = []
     natural_name = DeriveRegularNameFromGameName(game_name)
-    if asset_type == config.asset_type_video:
+    if asset_type == config.AssetType.VIDEO:
         search_terms.extend(config.search_terms_video)
     search_terms.extend(natural_name.split(" "))
     return system.EncodeUrlString(" ".join(search_terms), use_plus = True)
@@ -692,7 +692,7 @@ def DeriveGameNamePathFromName(game_name, game_platform):
 
 # Derive game asset path from name
 def DeriveGameAssetPathFromName(game_name, asset_type):
-    return "%s/%s%s" % (asset_type, game_name, config.asset_type_extensions[asset_type])
+    return "%s/%s%s" % (asset_type, game_name, config.asset_extensions[asset_type])
 
 # Derive game categories from platform
 def DeriveGameCategoriesFromPlatform(game_platform):
