@@ -210,23 +210,23 @@ def GetLockerRootDir(source_type = None):
 
 # Get locker development root dir
 def GetLockerDevelopmentRootDir(source_type = None):
-    return os.path.join(GetLockerRootDir(source_type), config.LockerType.DEVELOPMENT.camelcase)
+    return os.path.join(GetLockerRootDir(source_type), config.LockerType.DEVELOPMENT.cvalue)
 
 # Get locker gaming root dir
 def GetLockerGamingRootDir(source_type = None):
-    return os.path.join(GetLockerRootDir(source_type), config.LockerType.GAMING.camelcase)
+    return os.path.join(GetLockerRootDir(source_type), config.LockerType.GAMING.cvalue)
 
 # Get locker music root dir
 def GetLockerMusicRootDir(source_type = None):
-    return os.path.join(GetLockerRootDir(source_type), config.LockerType.MUSIC.camelcase)
+    return os.path.join(GetLockerRootDir(source_type), config.LockerType.MUSIC.cvalue)
 
 # Get locker photos root dir
 def GetLockerPhotosRootDir(source_type = None):
-    return os.path.join(GetLockerRootDir(source_type), config.LockerType.PHOTOS.camelcase)
+    return os.path.join(GetLockerRootDir(source_type), config.LockerType.PHOTOS.cvalue)
 
 # Get locker programs root dir
 def GetLockerProgramsRootDir(source_type = None):
-    return os.path.join(GetLockerRootDir(source_type), config.LockerType.PROGRAMS.camelcase)
+    return os.path.join(GetLockerRootDir(source_type), config.LockerType.PROGRAMS.cvalue)
 
 # Get locker programs tools root dir
 def GetLockerProgramsToolsRootDir(source_type = None):
@@ -446,7 +446,7 @@ def GetCacheRootDir():
 
 # Get cache gaming root dir
 def GetCacheGamingRootDir():
-    return os.path.join(GetCacheRootDir(), config.LockerType.GAMING.camelcase)
+    return os.path.join(GetCacheRootDir(), config.LockerType.GAMING.cvalue)
 
 # Get cache gaming roms root dir
 def GetCacheGamingRomsRootDir():
@@ -473,7 +473,7 @@ def GetCacheGamingSavesRootDir():
 # Get cache gaming save dir
 def GetCacheGamingSaveDir(game_category, game_subcategory, game_name, save_type = None):
     if save_type:
-        return os.path.join(GetCacheGamingSavesRootDir(), game_category, game_subcategory, game_name, save_type.camelcase)
+        return os.path.join(GetCacheGamingSavesRootDir(), game_category, game_subcategory, game_name, save_type.cvalue)
     else:
         return os.path.join(GetCacheGamingSavesRootDir(), game_category, game_subcategory, game_name)
 

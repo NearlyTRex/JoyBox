@@ -24,7 +24,7 @@ parser.add_argument("-t", "--preset_tool",
 parser.add_argument("-p", "--preset_type", choices=config.preset_types, help="Preset type")
 parser.add_argument("-o", "--output_path", type=str, default=".", help="Output path")
 parser.add_argument("-t", "--passphrase_type",
-    choices=config.PassphraseType.members(),
+    choices=config.PassphraseType.values(),
     default=config.PassphraseType.NONE, help="Passphrase type"
 )
 parser.add_argument("-e", "--skip_existing", action="store_true", help="Skip existing files")

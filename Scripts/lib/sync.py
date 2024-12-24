@@ -41,11 +41,11 @@ def GetCommonRemoteFlags(remote_name, remote_type, remote_action_type):
         "--transfers", "1",
         "--order-by", "size,ascending"
     ]
-    if remote_action_type in config.RemoteActionSyncType.members():
+    if remote_action_type in config.RemoteActionSyncTypes:
         flags += [
             "--track-renames"
         ]
-    if remote_action_type in config.RemoteActionChangeType.members():
+    if remote_action_type in config.RemoteActionChangeTypes:
         flags += [
             "--create-empty-src-dirs"
         ]
@@ -90,7 +90,7 @@ def SetupAutoconnectRemote(
         rclone_tool,
         "config",
         "create", remote_name,
-        remote_type,
+        remote_type.value,
         "config_is_local=false"
     ]
     if verbose:
@@ -144,7 +144,7 @@ def SetupManualRemote(
         rclone_tool,
         "config",
         "create", remote_name,
-        remote_type
+        remote_type.value
     ]
     if isinstance(remote_config, dict):
         for config_key, config_value in remote_config.items():

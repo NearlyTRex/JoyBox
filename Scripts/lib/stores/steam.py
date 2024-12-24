@@ -590,10 +590,10 @@ class Steam(storebase.StoreBase):
                     relativepath_idcs = relativepath.replace(config.token_store_user_id, userid_cs)
 
                     # Get potential new base paths
-                    new_base_general = config.SaveType.GENERAL.camelcase
+                    new_base_general = config.SaveType.GENERAL.cvalue
                     new_base_public = os.path.join(new_base_general, config.computer_folder_public)
                     new_base_registry = os.path.join(new_base_general, config.computer_folder_registry)
-                    new_base_store = os.path.join(new_base_general, config.computer_folder_store, config.StoreType.STEAM.camelcase)
+                    new_base_store = os.path.join(new_base_general, config.computer_folder_store, config.StoreType.STEAM.cvalue)
 
                     # Determine which paths exist
                     real_userid = None

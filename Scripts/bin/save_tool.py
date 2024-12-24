@@ -17,7 +17,7 @@ import setup
 parser = argparse.ArgumentParser(description="Save tool.")
 parser.add_argument("-i", "--input_path", type=str, help="Input path")
 parser.add_argument("-a", "--action",
-    choices=config.SaveActionType.members(),
+    choices=config.SaveActionType.values(),
     default=config.SaveActionType.PACK, help="Save action"
 )
 parser.add_argument("-c", "--game_category", type=str, help="Game category")

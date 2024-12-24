@@ -20,7 +20,7 @@ parser.add_argument("path", help="Input path")
 parser.add_argument("-e", "--encrypt", action="store_true", help="Encrypt files")
 parser.add_argument("-d", "--decrypt", action="store_true", help="Decrypt files")
 parser.add_argument("-t", "--passphrase_type",
-    choices=config.PassphraseType.members(),
+    choices=config.PassphraseType.values(),
     default=config.PassphraseType.GENERAL,
     help="Passphrase type"
 )

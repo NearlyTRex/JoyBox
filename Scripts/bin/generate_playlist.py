@@ -19,7 +19,7 @@ parser.add_argument("input_path", help="Input path")
 parser.add_argument("-o", "--output_file", default="playlist.m3u", type=str, help="Output file")
 parser.add_argument("-f", "--file_types", type=str, help="List of file types (comma delimited)")
 parser.add_argument("-t", "--playlist_type",
-    choices=config.PlaylistType.members(),
+    choices=config.PlaylistType.values(),
     default=config.PlaylistType.TREE,
     help="Playlist type"
 )

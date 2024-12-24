@@ -19,17 +19,17 @@ import setup
 parser = argparse.ArgumentParser(description="Manage store games.")
 parser.add_argument("-i", "--input_path", type=str, default=".", help="Input path")
 parser.add_argument("-t", "--store_type",
-    choices=config.StoreType.members(),
+    choices=config.StoreType.values(),
     default=config.StoreType.STEAM,
     help="Store type"
 )
 parser.add_argument("-a", "--store_action",
-    choices=config.StoreActionType.members(),
+    choices=config.StoreActionType.values(),
     default=config.StoreActionType.LOGIN,
     help="Store action"
 )
 parser.add_argument("-e", "--asset_type",
-    choices=config.AssetType.members(),
+    choices=config.AssetType.values(),
     help="Asset type"
 )
 parser.add_argument("-s", "--skip_existing", action="store_true", help="Skip existing entries")

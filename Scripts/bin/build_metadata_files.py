@@ -25,7 +25,7 @@ parser.add_argument("-c", "--game_category", type=str, help="Game category")
 parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")
 parser.add_argument("-n", "--game_name", type=str, help="Game name")
 parser.add_argument("-e", "--source_type",
-    choices=config.SourceType.members(),
+    choices=config.SourceType.values(),
     default=config.SourceType.REMOTE,
     help="Source types"
 )

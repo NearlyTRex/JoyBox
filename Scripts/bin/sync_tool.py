@@ -18,7 +18,7 @@ import ini
 # Parse arguments
 parser = argparse.ArgumentParser(description="Sync tool.")
 parser.add_argument("-a", "--action",
-    choices=config.RemoteActionType.members(),
+    choices=config.RemoteActionType.values(),
     default=config.RemoteActionType.INIT, help="Sync action"
 )
 parser.add_argument("--excludes", type=str, default=",".join(config.excluded_sync_paths), help="Excludes (comma delimited)")

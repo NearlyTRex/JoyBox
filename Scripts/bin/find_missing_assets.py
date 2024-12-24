@@ -48,7 +48,7 @@ def main():
             metadata_obj.import_from_metadata_file(filename)
             for game_platform in metadata_obj.get_sorted_platforms():
                 for game_entry in metadata_obj.get_sorted_entries(game_platform):
-                    for asset_type in config.AssetType.members():
+                    for asset_type in config.AssetType.values():
 
                         # Get game info
                         game_name = game_entry.get_game()
@@ -66,7 +66,7 @@ def main():
                             missing_assets[asset_type].add(asset_file)
 
     # Write missing assets
-    for asset_type in config.AssetType.members():
+    for asset_type in config.AssetType.values():
         with open("Missing_" + asset_type + ".txt", "w", encoding="utf8") as file:
             if asset_type in missing_assets:
                 for missing_asset in sorted(missing_assets[asset_type]):
@@ -74,7 +74,7 @@ def main():
 
     # Gather extra assets
     extra_assets = all_assets - found_assets
-    for asset_type in config.AssetType.members():
+    for asset_type in config.AssetType.values():
         if asset_type in missing_assets:
             extra_assets = extra_assets - missing_assets[asset_type]
 

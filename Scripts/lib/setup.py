@@ -78,7 +78,7 @@ def SetupAssets(verbose = False, pretend_run = False, exit_on_failure = False):
     for game_category in config.game_categories:
         for game_subcategory in config.game_subcategories[game_category]:
             system.LogInfo("Creating asset symlinks for %s - %s ..." % (game_category, game_subcategory))
-            for asset_type in config.AssetType.members():
+            for asset_type in config.AssetType.values():
 
                 # Get directories
                 source_dir = environment.GetLockerGamingAssetDir(game_category, game_subcategory, asset_type)

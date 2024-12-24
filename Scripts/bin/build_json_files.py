@@ -27,8 +27,8 @@ parser.add_argument("-c", "--game_category", type=str, help="Game category")
 parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")
 parser.add_argument("-n", "--game_name", type=str, help="Game name")
 parser.add_argument("-e", "--source_type",
-    choices=config.SourceType.members(),
-    default=config.SourceType.REMOTE,
+    choices=config.SourceType.values(),
+    default=config.SourceType.REMOTE.value,
     help="Source types"
 )
 parser.add_argument("-m", "--generation_mode",
@@ -36,8 +36,8 @@ parser.add_argument("-m", "--generation_mode",
     default=config.generation_mode_standard, help="Generation mode"
 )
 parser.add_argument("-t", "--passphrase_type",
-    choices=config.PassphraseType.members(),
-    default=config.PassphraseType.NONE, help="Passphrase type"
+    choices=config.PassphraseType.values(),
+    default=config.PassphraseType.NONE.value, help="Passphrase type"
 )
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")

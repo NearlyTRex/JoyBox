@@ -19,12 +19,12 @@ import setup
 # Parse arguments
 parser = argparse.ArgumentParser(description="Scan roms.")
 parser.add_argument("-e", "--source_type",
-    choices=config.SourceType.members(),
+    choices=config.SourceType.values(),
     default=config.SourceType.REMOTE,
     help="Source types"
 )
 parser.add_argument("-t", "--passphrase_type",
-    choices=config.PassphraseType.members(),
+    choices=config.PassphraseType.values(),
     default=config.PassphraseType.NONE, help="Passphrase type"
 )
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
