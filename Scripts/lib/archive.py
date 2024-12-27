@@ -13,9 +13,7 @@ import environment
 import sandbox
 
 # Determine if file is a known archive
-def IsKnownArchive(archive_file, extensions = [], mime_types = [], case_sensitive_paths = True):
-    if not system.DoesPathExist(archive_file, case_sensitive_paths = case_sensitive_paths):
-        return False
+def IsKnownArchive(archive_file, extensions = [], mime_types = []):
     for ext in extensions:
         if archive_file.lower().endswith(ext.lower()):
             return True
@@ -26,58 +24,53 @@ def IsKnownArchive(archive_file, extensions = [], mime_types = [], case_sensitiv
     return False
 
 # Determine if file is an archive
-def IsArchive(archive_file, case_sensitive_paths = True):
-    if IsZipArchive(archive_file, case_sensitive_paths = case_sensitive_paths):
+def IsArchive(archive_file):
+    if IsZipArchive(archive_file):
         return True
-    elif Is7zArchive(archive_file, case_sensitive_paths = case_sensitive_paths):
+    elif Is7zArchive(archive_file):
         return True
-    elif IsTarballArchive(archive_file, case_sensitive_paths = case_sensitive_paths):
+    elif IsTarballArchive(archive_file):
         return True
-    elif IsExeArchive(archive_file, case_sensitive_paths = case_sensitive_paths):
+    elif IsExeArchive(archive_file):
         return True
-    elif IsAppImageArchive(archive_file, case_sensitive_paths = case_sensitive_paths):
+    elif IsAppImageArchive(archive_file):
         return True
     return False
 
 # Determine if file is a zip archive
-def IsZipArchive(archive_file, case_sensitive_paths = True):
+def IsZipArchive(archive_file):
     return IsKnownArchive(
         archive_file = archive_file,
         extensions = config.computer_archive_extensions_zip,
-        mime_types = config.mime_types_zip,
-        case_sensitive_paths = case_sensitive_paths)
+        mime_types = config.mime_types_zip)
 
 # Determine if file is a 7z archive
-def Is7zArchive(archive_file, case_sensitive_paths = True):
+def Is7zArchive(archive_file):
     return IsKnownArchive(
         archive_file = archive_file,
         extensions = config.computer_archive_extensions_7z,
-        mime_types = config.mime_types_7z,
-        case_sensitive_paths = case_sensitive_paths)
+        mime_types = config.mime_types_7z)
 
 # Determine if file is a tarball archive
-def IsTarballArchive(archive_file, case_sensitive_paths = True):
+def IsTarballArchive(archive_file):
     return IsKnownArchive(
         archive_file = archive_file,
         extensions = config.computer_archive_extensions_tarball,
-        mime_types = config.mime_types_tarball,
-        case_sensitive_paths = case_sensitive_paths)
+        mime_types = config.mime_types_tarball)
 
 # Determine if file is an exe archive
-def IsExeArchive(archive_file, case_sensitive_paths = True):
+def IsExeArchive(archive_file):
     return IsKnownArchive(
         archive_file = archive_file,
         extensions = config.computer_archive_extensions_exe,
-        mime_types = config.mime_types_exe,
-        case_sensitive_paths = case_sensitive_paths)
+        mime_types = config.mime_types_exe)
 
 # Determine if file is an appimage archive
-def IsAppImageArchive(archive_file, case_sensitive_paths = True):
+def IsAppImageArchive(archive_file):
     return IsKnownArchive(
         archive_file = archive_file,
         extensions = config.computer_archive_extensions_appimage,
-        mime_types = config.mime_types_appimage,
-        case_sensitive_paths = case_sensitive_paths)
+        mime_types = config.mime_types_appimage)
 
 # Check archive checksums
 def GetArchiveChecksums(archive_file):

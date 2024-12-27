@@ -267,12 +267,11 @@ def ArePlainFilesIdentical(
 def AreArchiveFilesIdentical(
     first,
     second,
-    case_sensitive_paths = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    first_is_archive = archive.IsArchive(first, case_sensitive_paths = case_sensitive_paths)
-    second_is_archive = archive.IsArchive(second, case_sensitive_paths = case_sensitive_paths)
+    first_is_archive = archive.IsArchive(first)
+    second_is_archive = archive.IsArchive(second)
     if first_is_archive and second_is_archive:
         first_checksums = sorted(archive.GetArchiveChecksums(first))
         second_checksums = sorted(archive.GetArchiveChecksums(second))
@@ -304,7 +303,6 @@ def AreFilesIdentical(
     identical = AreArchiveFilesIdentical(
         first = first,
         second = second,
-        case_sensitive_paths = case_sensitive_paths,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
