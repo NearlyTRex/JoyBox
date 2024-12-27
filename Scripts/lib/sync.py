@@ -28,7 +28,7 @@ def GetEncryptedRemoteName(remote_name):
 
 # Get remote connection path
 def GetRemoteConnectionPath(remote_name, remote_type, remote_path):
-    if remote_type == config.SyncRemoteType.B2:
+    if remote_type == config.RemoteType.B2:
         return "%s:%s%s" % (remote_name, GetUnencryptedRemoteName(remote_name), remote_path)
     else:
         return "%s:%s" % (remote_name, remote_path)
@@ -49,7 +49,7 @@ def GetCommonRemoteFlags(remote_name, remote_type, remote_action_type):
         flags += [
             "--create-empty-src-dirs"
         ]
-    if remote_type == config.SyncRemoteType.DRIVE:
+    if remote_type == config.RemoteType.DRIVE:
         flags += [
             "--drive-acknowledge-abuse",
             "--drive-stop-on-upload-limit",
@@ -204,7 +204,7 @@ def SetupRemote(
     exit_on_failure = False):
 
     # B2 requires manual setting
-    if remote_type == config.SyncRemoteType.B2:
+    if remote_type == config.RemoteType.B2:
         return SetupManualRemote(
             remote_type = remote_type,
             remote_name = remote_name,

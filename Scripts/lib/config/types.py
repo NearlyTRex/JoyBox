@@ -42,7 +42,6 @@ class PassphraseType(CaseEnum):
 class BackupType(CaseEnum):
     COPY                    = ("copy", "Copy")
     ARCHIVE                 = ("archive", "Archive")
-    SYNC                    = ("sync", "Sync")
 
 # Source types
 class SourceType(CaseEnum):
@@ -111,6 +110,11 @@ class SaveType(CaseEnum):
 class SaveActionType(CaseEnum):
     PACK                    = ("pack", "Pack")
     UNPACK                  = ("unpack", "Unpack")
+
+# Remote types
+class RemoteType(CaseEnum):
+    DRIVE                   = ("drive", "Drive")
+    B2                      = ("b2", "B2")
 
 # Remote action types
 class RemoteActionType(CaseEnum):
@@ -197,11 +201,6 @@ class ReleaseType(CaseEnum):
     PROGRAM                 = ("program", "Program")
     INSTALLER               = ("installer", "Installer")
     ARCHIVE                 = ("archive", "Archive")
-
-# Sync remote types
-class SyncRemoteType(CaseEnum):
-    DRIVE                   = ("drive", "Drive")
-    B2                      = ("b2", "B2")
 
 # Archive types
 class ArchiveType(CaseEnum):
