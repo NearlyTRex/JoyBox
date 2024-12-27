@@ -20,7 +20,9 @@ parser.add_argument("-i", "--input_file", type=str, help="Json file to cache")
 parser.add_argument("-e", "--source_type",
     choices=config.SourceType.values(),
     default=config.SourceType.REMOTE,
-    help="Source types"
+    type=config.SourceType,
+    action=config.EnumArgparseAction,
+    help="Source type"
 )
 parser.add_argument("-c", "--game_category", type=str, help="Game category")
 parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")

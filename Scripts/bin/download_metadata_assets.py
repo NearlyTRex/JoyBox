@@ -20,6 +20,8 @@ parser = argparse.ArgumentParser(description="Download metadata assets.")
 parser.add_argument("-a", "--asset_type",
     choices=config.AssetType.values(),
     default=config.AssetType.VIDEO,
+    type=config.AssetType,
+    action=config.EnumArgparseAction,
     help="Asset type"
 )
 parser.add_argument("-c", "--game_category", type=str, help="Game category")

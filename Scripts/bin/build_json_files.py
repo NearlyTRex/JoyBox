@@ -29,15 +29,23 @@ parser.add_argument("-n", "--game_name", type=str, help="Game name")
 parser.add_argument("-e", "--source_type",
     choices=config.SourceType.values(),
     default=config.SourceType.REMOTE.value,
-    help="Source types"
+    type=config.SourceType,
+    action=config.EnumArgparseAction,
+    help="Source type"
 )
 parser.add_argument("-m", "--generation_mode",
-    choices=config.generation_modes,
-    default=config.generation_mode_standard, help="Generation mode"
+    choices=config.GenerationModeType.values(),
+    default=config.GenerationModeType.STANDARD,
+    type=config.GenerationModeType,
+    action=config.EnumArgparseAction,
+    help="Generation mode type"
 )
 parser.add_argument("-t", "--passphrase_type",
     choices=config.PassphraseType.values(),
-    default=config.PassphraseType.NONE.value, help="Passphrase type"
+    default=config.PassphraseType.NONE.value,
+    type=config.PassphraseType,
+    action=config.EnumArgparseAction,
+    help="Passphrase type"
 )
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
@@ -67,7 +75,7 @@ def main():
         passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
 
     # Manually specify all parameters
-    if args.generation_mode == config.GenerationType.CUSTOM:
+    if args.generation_mode == config.GenerationModeType.CUSTOM:
         if not args.game_category:
             system.LogErrorAndQuit("Game category is required for custom mode")
         if not args.game_subcategory:
@@ -85,7 +93,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Automatic according to standard layout
-    elif args.generation_mode == config.generation_mode_standard:
+    elif args.generation_mode == config.GenerationModeType.STANDARD:
 
         # Specific category/subcategory
         if args.game_category and args.game_subcategory:

@@ -16,12 +16,12 @@ import setup
 # Parse arguments
 parser = argparse.ArgumentParser(description="Make ISO images out of all folders or zips in a path.")
 parser.add_argument("path", help="Input path")
-parser.add_argument("-t", "--input_type",
-    choices=[
-        "folder",
-        "zip"
-    ],
-    default="folder", help="Input type"
+parser.add_argument("-t", "--disc_source_type",
+    choices=config.DiscSourceType.values(),
+    default=config.DiscSourceType.FOLDER.value,
+    type=config.DiscSourceType,
+    action=config.EnumArgparseAction,
+    help="Disc source type"
 )
 parser.add_argument("-n", "--volume_name", type=str, default="", help="Volume name to use")
 parser.add_argument("-a", "--auto_volume_name", action="store_true", help="Choose volume name based automatically")
@@ -46,7 +46,7 @@ def main():
     setup.CheckRequirements()
 
     # Create iso images from folders
-    if args.input_type == "folder":
+    if args.disc_source_type == config.DiscSourceType.FOLDER:
         for obj in system.GetDirectoryContents(input_path):
             obj_path = os.path.join(input_path, obj)
             if not os.path.isdir(obj_path):
@@ -73,7 +73,7 @@ def main():
                 exit_on_failure = args.exit_on_failure)
 
     # Create iso images from zips
-    elif args.input_type == "zip":
+    elif args.disc_source_type == config.DiscSourceType.ZIP:
         for file in system.BuildFileListByExtensions(input_path, extensions = [".zip"]):
 
             # Get file info

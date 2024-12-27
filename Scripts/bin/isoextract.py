@@ -17,11 +17,11 @@ import archive
 parser = argparse.ArgumentParser(description="Extract data from ISO files.")
 parser.add_argument("path", help="Input path")
 parser.add_argument("-e", "--extract_method",
-    choices=[
-        "iso",
-        "archive"
-    ],
-    default="iso", help="Extract method"
+    choices=config.DiscExtractType.values,
+    default=config.DiscExtractType.ISO.value,
+    type=config.DiscExtractType,
+    action=config.EnumArgparseAction,
+    help="Disc extract type"
 )
 parser.add_argument("-s", "--skip_existing", action="store_true", help="Skip existing extracted files")
 parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
@@ -58,7 +58,7 @@ def main():
             continue
 
         # Extract as iso
-        if args.extract_method == "iso":
+        if args.extract_method == config.DiscExtractType.ISO:
             iso.ExtractISO(
                 iso_file = current_file,
                 extract_dir = output_dir,
@@ -68,7 +68,7 @@ def main():
                 exit_on_failure = args.exit_on_failure)
 
         # Extract as archive
-        elif args.extract_method == "archive":
+        elif args.extract_method == config.DiscExtractType.ARCHIVE:
             archive.ExtractArchive(
                 archive_file = current_file,
                 extract_dir = output_dir,

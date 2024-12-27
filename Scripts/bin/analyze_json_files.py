@@ -17,12 +17,11 @@ import setup
 # Parse arguments
 parser = argparse.ArgumentParser(description="Analyze json files.")
 parser.add_argument("-m", "--mode",
-    choices=[
-        "all",
-        "missing_game_files",
-        "unplayable_games"
-    ],
-    default="all", help="Analyze mode"
+    choices=config.AnalyzeModeType.values(),
+    default=config.AnalyzeModeType.ALL,
+    type=config.AnalyzeModeType,
+    action=config.EnumArgparseAction,
+    help="Analyze mode type"
 )
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
@@ -65,14 +64,14 @@ def main():
                     json_files_unplayable.append(json_file)
 
     # List games with no files
-    if args.mode == "all" or args.mode == "missing_game_files":
+    if args.mode == config.AnalyzeModeType.ALL or args.mode == config.AnalyzeModeType.MISSING_GAME_FILES:
         if len(json_files_no_files):
             system.LogInfo("Games with no files:")
             for json_file in json_files_no_files:
                 system.Log(json_file)
 
     # List unplayable games
-    if args.mode == "all" or args.mode == "unplayable_games":
+    if args.mode == config.AnalyzeModeType.ALL or args.mode == config.AnalyzeModeType.UNPLAYABLE_GAMES:
         if len(json_files_unplayable):
             system.LogInfo("Games marked as unplayable:")
             for json_file in json_files_unplayable:

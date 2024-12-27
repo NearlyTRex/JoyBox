@@ -21,15 +21,21 @@ parser.add_argument("-i", "--input_path", type=str, default=".", help="Input pat
 parser.add_argument("-t", "--store_type",
     choices=config.StoreType.values(),
     default=config.StoreType.STEAM,
+    type=config.StoreType,
+    action=config.EnumArgparseAction,
     help="Store type"
 )
 parser.add_argument("-a", "--store_action",
     choices=config.StoreActionType.values(),
     default=config.StoreActionType.LOGIN,
-    help="Store action"
+    type=config.StoreActionType,
+    action=config.EnumArgparseAction,
+    help="Store action type"
 )
 parser.add_argument("-e", "--asset_type",
     choices=config.AssetType.values(),
+    type=config.AssetType,
+    action=config.EnumArgparseAction,
     help="Asset type"
 )
 parser.add_argument("-s", "--skip_existing", action="store_true", help="Skip existing entries")

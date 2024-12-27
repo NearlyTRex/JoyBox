@@ -21,11 +21,16 @@ parser = argparse.ArgumentParser(description="Scan roms.")
 parser.add_argument("-e", "--source_type",
     choices=config.SourceType.values(),
     default=config.SourceType.REMOTE,
-    help="Source types"
+    type=config.SourceType,
+    action=config.EnumArgparseAction,
+    help="Source type"
 )
 parser.add_argument("-t", "--passphrase_type",
     choices=config.PassphraseType.values(),
-    default=config.PassphraseType.NONE, help="Passphrase type"
+    default=config.PassphraseType.NONE,
+    type=config.PassphraseType,
+    action=config.EnumArgparseAction,
+    help="Passphrase type"
 )
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")

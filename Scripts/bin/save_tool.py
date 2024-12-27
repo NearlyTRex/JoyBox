@@ -18,7 +18,10 @@ parser = argparse.ArgumentParser(description="Save tool.")
 parser.add_argument("-i", "--input_path", type=str, help="Input path")
 parser.add_argument("-a", "--action",
     choices=config.SaveActionType.values(),
-    default=config.SaveActionType.PACK, help="Save action"
+    default=config.SaveActionType.PACK,
+    type=config.SaveActionType,
+    action=config.EnumArgparseAction,
+    help="Save action type"
 )
 parser.add_argument("-c", "--game_category", type=str, help="Game category")
 parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")
@@ -35,7 +38,7 @@ def main():
     setup.CheckRequirements()
 
     # Pack saves
-    if args.action == "pack":
+    if args.action == config.SaveActionType.PACK:
         saves.PackSave(
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
@@ -46,7 +49,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Unpack saves
-    elif args.action == "unpack":
+    elif args.action == config.SaveActionType.UNPACK:
         saves.UnpackSave(
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,

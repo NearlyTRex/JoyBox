@@ -26,6 +26,8 @@ parser.add_argument("-i", "--input_file", type=str, help="Json file to launch")
 parser.add_argument("-e", "--source_type",
     choices=config.SourceType.values(),
     default=config.SourceType.REMOTE.value,
+    type=config.SourceType,
+    action=config.EnumArgparseAction,
     help="Source types"
 )
 parser.add_argument("-c", "--game_category", type=str, help="Game category")
@@ -34,7 +36,10 @@ parser.add_argument("-n", "--game_name", type=str, help="Game name")
 parser.add_argument("-r", "--fill_with_random", action="store_true", help="Fill unspecified fields with random values")
 parser.add_argument("-t", "--capture_type",
     choices=config.CaptureType.values(),
-    default=config.CaptureType.NONE.value, help="Capture type"
+    default=config.CaptureType.NONE.value,
+    type=config.CaptureType,
+    action=config.EnumArgparseAction,
+    help="Capture type"
 )
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")

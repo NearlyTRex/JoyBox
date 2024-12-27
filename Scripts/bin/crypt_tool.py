@@ -22,6 +22,8 @@ parser.add_argument("-d", "--decrypt", action="store_true", help="Decrypt files"
 parser.add_argument("-t", "--passphrase_type",
     choices=config.PassphraseType.values(),
     default=config.PassphraseType.GENERAL,
+    type=config.PassphraseType,
+    action=config.EnumArgparseAction,
     help="Passphrase type"
 )
 parser.add_argument("-k", "--keep_originals", action="store_true", help="Keep original files")

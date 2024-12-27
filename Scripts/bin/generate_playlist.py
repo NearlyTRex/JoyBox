@@ -21,6 +21,8 @@ parser.add_argument("-f", "--file_types", type=str, help="List of file types (co
 parser.add_argument("-t", "--playlist_type",
     choices=config.PlaylistType.values(),
     default=config.PlaylistType.TREE,
+    type=config.PlaylistType,
+    action=config.EnumArgparseAction,
     help="Playlist type"
 )
 parser.add_argument("--allow_empty_lists", action="store_true", help="Allow empty lists")

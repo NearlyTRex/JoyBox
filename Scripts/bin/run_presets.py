@@ -16,16 +16,21 @@ import setup
 
 # Parse arguments
 parser = argparse.ArgumentParser(description="Run tool presets.")
-parser.add_argument("-t", "--preset_tool",
-    choices=[
-        "backup_tool"
-    ], help="Tool to use"
+parser.add_argument("-t", "--preset_tool_type",
+    choices=config.PresetToolType.values(),
+    default=config.PresetToolType.BACKUP_TOOL.value,
+    type=config.PresetToolType,
+    action=config.EnumArgparseAction,
+    help="Preset tool type"
 )
 parser.add_argument("-p", "--preset_type", choices=config.preset_types, help="Preset type")
 parser.add_argument("-o", "--output_path", type=str, default=".", help="Output path")
 parser.add_argument("-t", "--passphrase_type",
     choices=config.PassphraseType.values(),
-    default=config.PassphraseType.NONE, help="Passphrase type"
+    default=config.PassphraseType.NONE.value,
+    type=config.PassphraseType,
+    action=config.EnumArgparseAction,
+    help="Passphrase type"
 )
 parser.add_argument("-e", "--skip_existing", action="store_true", help="Skip existing files")
 parser.add_argument("-i", "--skip_identical", action="store_true", help="Skip identical files")
@@ -50,7 +55,7 @@ def main():
 
     # Create base command
     base_cmd = [
-        os.path.join(environment.GetScriptsBinDir(), args.preset_tool + environment.GetScriptsCommandExtension())
+        os.path.join(environment.GetScriptsBinDir(), args.preset_tool_type.value + environment.GetScriptsCommandExtension())
     ]
     if args.verbose:
         base_cmd += ["--verbose"]
@@ -61,7 +66,7 @@ def main():
     preset_cmds = []
 
     # Backup tool
-    if args.preset_tool == "backup_tool":
+    if args.preset_tool_type == config.PresetToolType.BACKUP_TOOL:
 
         # Check preset options
         has_supercategory = "supercategory" in preset_options
@@ -70,7 +75,7 @@ def main():
 
         # Update base command
         base_cmd += [
-            "-t", args.passphrase_type,
+            "-t", args.passphrase_type.value,
             "-o", output_path
         ]
         if args.skip_existing:

@@ -18,7 +18,10 @@ parser = argparse.ArgumentParser(description="Compress folders.")
 parser.add_argument("path", help="Input path")
 parser.add_argument("-a", "--archive_type",
     choices=config.ArchiveType.values(),
-    default=config.ArchiveType.ZIP.value, help="Archive type"
+    default=config.ArchiveType.ZIP.value,
+    type=config.ArchiveType,
+    action=config.EnumArgparseAction,
+    help="Archive type"
 )
 parser.add_argument("-p", "--password", type=str, help="Password to set")
 parser.add_argument("-s", "--volume_size", type=str, help="Volume size for output files (100m, etc)")

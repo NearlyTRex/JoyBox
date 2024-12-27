@@ -18,11 +18,11 @@ import ini
 # Parse arguments
 parser = argparse.ArgumentParser(description="Github tool.")
 parser.add_argument("-a", "--action",
-    choices=[
-        "archive",
-        "update"
-    ],
-    default="archive", help="Github action"
+    choices=config.GithubActionType.values(),
+    default=config.GithubActionType.ARCHIVE,
+    type=config.GithubActionType,
+    action=config.EnumArgparseAction,
+    help="Github action type"
 )
 parser.add_argument("-u", "--github_username", type=str, help="Github username")
 parser.add_argument("-t", "--github_access_token", type=str, help="Github access token")
@@ -39,7 +39,7 @@ args, unknown = parser.parse_known_args()
 
 # Get archive base directory
 archive_base_dir = ""
-if args.action == "archive":
+if args.action == config.GithubActionType.ARCHIVE:
     archive_base_dir = os.path.realpath(args.archive_base_dir)
     if not os.path.exists(archive_base_dir):
         system.LogErrorAndQuit("Archive base dir '%s' does not exist" % args.archive_base_dir)
@@ -79,7 +79,7 @@ def main():
         exit_on_failure = args.exit_on_failure)
 
     # Archive repositories
-    if args.action == "archive":
+    if args.action == config.GithubActionType.ARCHIVE:
         for github_repository in github_repositories:
             success = network.ArchiveGithubRepository(
                 github_user = github_username,
@@ -95,7 +95,7 @@ def main():
                 system.LogWarning("Unable to archive repository %s" % github_repository.name)
 
     # Update repositories
-    elif args.action == "update":
+    elif args.action == config.GithubActionType.UPDATE:
         for github_repository in github_repositories:
             if github_repository.fork:
                 success = network.UpdateGithubRepository(

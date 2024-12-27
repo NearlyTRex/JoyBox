@@ -17,7 +17,10 @@ import setup
 parser = argparse.ArgumentParser(description="Backup tool.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("-b", "--backup_type",
     choices=config.BackupType.values(),
-    default=config.BackupType.COPY.value, help="Backup type"
+    default=config.BackupType.COPY.value,
+    type=config.BackupType,
+    action=config.EnumArgparseAction,
+    help="Backup type"
 )
 parser.add_argument("-i", "--input_path", type=str, help="Input path")
 parser.add_argument("-o", "--output_path", type=str, help="Output path")
@@ -31,11 +34,17 @@ parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory
 parser.add_argument("-n", "--gaming_offset", type=str, help="Game offset")
 parser.add_argument("-l", "--source_type",
     choices=config.SourceType.values(),
-    default=config.SourceType.LOCAL.value, help="Source type"
+    default=config.SourceType.LOCAL.value,
+    type=config.SourceType,
+    action=config.EnumArgparseAction,
+    help="Source type"
 )
 parser.add_argument("-q", "--destination_type",
     choices=config.SourceType.values(),
-    default=config.SourceType.LOCAL.value, help="Destination type"
+    default=config.SourceType.LOCAL.value,
+    type=config.SourceType,
+    action=config.EnumArgparseAction,
+    help="Destination type"
 )
 parser.add_argument("-w", "--exclude_paths", type=str, default="", help="Excluded paths (comma separated list)")
 parser.add_argument("-e", "--skip_existing", action="store_true", help="Skip existing files")
