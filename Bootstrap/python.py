@@ -41,7 +41,6 @@ packages = [
     "requests",
     "rich",
     "ruamel.yaml",
-    "rummage",
     "schedule",
     "screeninfo",
     "selenium",

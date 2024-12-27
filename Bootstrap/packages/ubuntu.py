@@ -40,6 +40,7 @@ apt_packages = [
 
     # Admin
     "7zip",
+    "7zip-standalone",
     "apt-file",
     "blueman",
     "clamav",
@@ -52,7 +53,6 @@ apt_packages = [
     # Devel
     "autoconf",
     "automake",
-    "awscli",
     "bison",
     "build-essential",
     "clang",
