@@ -11,10 +11,6 @@ import environment
 import cryption
 import ini
 
-# Check if tool is installed
-def IsToolInstalled():
-    return sync.IsToolInstalled()
-
 # Check if path is remote
 def IsRemotePath(path):
     if system.DoesPathExist(path):
@@ -239,6 +235,10 @@ def BackupFiles(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Get options
+    locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
+    locker_remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
+
     # Transfer files
     success = system.TransferFile(
         src = src,
@@ -255,27 +255,32 @@ def BackupFiles(
         return False
 
     # Upload files
-    if IsToolInstalled():
+    if sync.IsToolInstalled():
 
-        # Upload encryped files
-        if upload_encrypted:
-            success = UploadAndEncryptPath(
-                src = dest,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
+        # Check if remote configured
+        if sync.IsRemoteConfigured(
+            remote_name = locker_remote_name,
+            remote_type = locker_remote_type):
 
-        # Upload plain files
-        else:
-            success = UploadPath(
-                src = dest,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
+            # Upload encryped files
+            if upload_encrypted:
+                success = UploadAndEncryptPath(
+                    src = dest,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+                if not success:
+                    return False
+
+            # Upload plain files
+            else:
+                success = UploadPath(
+                    src = dest,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+                if not success:
+                    return False
 
     # Should be successful
     return True

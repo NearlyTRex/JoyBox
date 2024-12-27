@@ -2,6 +2,7 @@
 import os
 import os.path
 import sys
+import re
 
 # Local imports
 import config
@@ -68,6 +69,80 @@ def GetExcludeFlags(excludes):
     elif isinstance(excludes, str) and len(excludes) > 0:
         flags += ["--exclude", excludes]
     return flags
+
+# Get configured remotes
+def GetConfiguredRemotes(
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
+        return []
+
+    # Get list command
+    list_cmd = [
+        rclone_tool,
+        "listremotes"
+    ]
+
+    # Run list command
+    list_output = command.RunOutputCommand(
+        cmd = list_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [rclone_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Return remote list
+    list_text = list_output
+    if isinstance(list_output, bytes):
+        list_text = list_output.decode()
+    return list_text.splitlines()
+
+# Check if remote is configured
+def IsRemoteConfigured(
+    remote_name,
+    remote_type,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check if the remote name exists in the list of remotes
+    if not any(remote.startswith(remote_name) for remote in GetConfiguredRemotes()):
+        return False
+
+    # Get show command
+    show_cmd = [
+        rclone_tool,
+        "config",
+        "show", remote_name
+    ]
+
+    # Run show command
+    show_output = command.RunOutputCommand(
+        cmd = show_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [rclone_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Check if the remote is configured
+    show_text = show_output
+    if isinstance(show_output, bytes):
+        show_text = show_output.decode()
+    if "couldn't find type of fs for" in show_text:
+        return False
+
+    # Check if the remote type matches
+    match = re.search(r"type\s*=\s*(\S+)", show_text)
+    return match and (match.group(1) == remote_type.value)
 
 # Setup autoconnect remote
 def SetupAutoconnectRemote(
@@ -643,7 +718,7 @@ def DiffFiles(
                     count_error += 1
         system.LogInfo("Number of unchanged files: %d" % count_unchanged)
         system.LogInfo("Number of changed files: %d" % count_changed)
-        system.LogInfo("Number of files only on %s%s: %d" % (remote_type, remote_path, count_only_dest))
+        system.LogInfo("Number of files only on %s%s: %d" % (remote_type.value, remote_path, count_only_dest))
         system.LogInfo("Number of files only on %s: %d" % (local_path, count_only_src))
         system.LogInfo("Number of error files: %d" % count_error)
 
