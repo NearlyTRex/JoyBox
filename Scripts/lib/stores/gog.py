@@ -40,7 +40,7 @@ class GOG(storebase.StoreBase):
 
     # Get name
     def GetName(self):
-        return "GOG"
+        return config.StoreType.GOG.cvalue
 
     # Get type
     def GetType(self):

@@ -25,7 +25,7 @@ class Itchio(storebase.StoreBase):
 
     # Get name
     def GetName(self):
-        return "Itchio"
+        return config.StoreType.ITCHIO.cvalue
 
     # Get type
     def GetType(self):

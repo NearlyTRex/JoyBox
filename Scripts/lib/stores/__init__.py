@@ -9,12 +9,15 @@ from .steam import Steam
 # Get store map
 def GetStoreMap():
     instances = {}
-    instances["Amazon"] = Amazon()
-    instances["Epic"] = Epic()
-    instances["GOG"] = GOG()
-    instances["Itchio"] = Itchio()
-    instances["Legacy"] = Legacy()
-    instances["Steam"] = Steam()
+    def AddInstance(class_name):
+        instance = class_name()
+        instances[instance.GetName()] = instance
+    AddInstance(Amazon)
+    AddInstance(Epic)
+    AddInstance(GOG)
+    AddInstance(Itchio)
+    AddInstance(Legacy)
+    AddInstance(Steam)
     return instances
 
 # Get store list

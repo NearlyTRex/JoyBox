@@ -53,7 +53,7 @@ class Steam(storebase.StoreBase):
 
     # Get name
     def GetName(self):
-        return "Steam"
+        return config.StoreType.STEAM.cvalue
 
     # Get type
     def GetType(self):

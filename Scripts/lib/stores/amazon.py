@@ -25,7 +25,7 @@ class Amazon(storebase.StoreBase):
 
     # Get name
     def GetName(self):
-        return "Amazon"
+        return config.StoreType.AMAZON.cvalue
 
     # Get type
     def GetType(self):
