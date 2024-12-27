@@ -39,6 +39,7 @@ ini_defaults["UserData.Share"] = {}
 ini_defaults["UserData.Share"]["locker_remote_type"] = ""
 ini_defaults["UserData.Share"]["locker_remote_name"] = ""
 ini_defaults["UserData.Share"]["locker_remote_path"] = "/"
+ini_defaults["UserData.Share"]["locker_remote_token"] = ""
 if environment.IsWindowsPlatform():
     ini_defaults["UserData.Share"]["locker_local_path"] = "%USERPROFILE%\\Locker"
     ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "%USERPROFILE%\\LockerRemote"
