@@ -3,7 +3,6 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
@@ -11,40 +10,28 @@ sys.path.append(lib_folder)
 import config
 import system
 import cryption
-import setup
 import ini
+import arguments
+import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Encrypt/decrypt files.")
-parser.add_argument("path", help="Input path")
-parser.add_argument("-e", "--encrypt", action="store_true", help="Encrypt files")
-parser.add_argument("-d", "--decrypt", action="store_true", help="Decrypt files")
-parser.add_argument("-t", "--passphrase_type",
-    choices=config.PassphraseType.values(),
-    default=config.PassphraseType.GENERAL,
-    type=config.PassphraseType,
-    action=config.EnumArgparseAction,
-    help="Passphrase type"
-)
-parser.add_argument("-k", "--keep_originals", action="store_true", help="Keep original files")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Encrypt/decrypt files.")
+parser.add_input_path_argument()
+parser.add_passphrase_type_argument()
+parser.add_boolean_argument(args = ("-e", "--encrypt"), description = "Encrypt files")
+parser.add_boolean_argument(args = ("-d", "--decrypt"), description = "Decrypt files")
+parser.add_boolean_argument(args = ("-k", "--keep_originals"), description = "Keep original files")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
-if not args.path:
-    parser.print_help()
-    system.QuitProgram()
-
-# Check that path exists first
-root_path = os.path.realpath(args.path)
-if not os.path.exists(root_path):
-    system.LogErrorAndQuit("Path '%s' does not exist" % args.path)
 
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get input path
+    input_path = parser.get_input_path()
 
     # Get passphrase
     passphrase = None
@@ -57,7 +44,7 @@ def main():
 
     # Encrypt file
     if args.encrypt:
-        for file in system.BuildFileList(root_path):
+        for file in system.BuildFileList(input_path):
             cryption.EncryptFile(
                 source_file = file,
                 passphrase = passphrase,
@@ -68,7 +55,7 @@ def main():
 
     # Decrypt file
     elif args.decrypt:
-        for file in system.BuildFileList(root_path):
+        for file in system.BuildFileList(input_path):
             cryption.DecryptFile(
                 source_file = file,
                 passphrase = passphrase,

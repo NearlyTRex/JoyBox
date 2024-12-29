@@ -80,7 +80,7 @@ def GeneratePlaylist(
     else:
         for obj in system.GetDirectoryContents(source_dir):
             obj_path = os.path.join(source_dir, obj)
-            if os.path.isfile(obj_path):
+            if system.IsPathFile(obj_path):
                 for extension in extensions:
                     if obj_path.endswith(extension):
                         if only_keep_ends:

@@ -18,9 +18,9 @@ def CanSaveBeUnpacked(
     game_name):
     input_save_dir = environment.GetLockerGamingSaveDir(game_category, game_subcategory, game_name)
     output_save_dir = environment.GetCacheGamingSaveDir(game_category, game_subcategory, game_name)
-    if not os.path.isdir(input_save_dir) or system.IsDirectoryEmpty(input_save_dir):
+    if not system.IsPathDirectory(input_save_dir) or system.IsDirectoryEmpty(input_save_dir):
         return False
-    if os.path.isdir(output_save_dir) and not system.IsDirectoryEmpty(output_save_dir):
+    if system.IsPathDirectory(output_save_dir) and not system.IsDirectoryEmpty(output_save_dir):
         return False
     return True
 
@@ -62,8 +62,8 @@ def PackSave(
 
     # Get excludes
     input_excludes = []
-    if game_category == config.game_category_computer:
-        input_excludes = [config.SaveType.WINE.cvalue, config.SaveType.SANDBOXIE.cvalue]
+    if game_category == config.Category.COMPUTER:
+        input_excludes = [config.SaveType.WINE.value, config.SaveType.SANDBOXIE.value]
 
     # Archive save
     success = archive.CreateArchiveFromFolder(
@@ -169,11 +169,11 @@ def NormalizeSaveDir(
     exit_on_failure = False):
 
     # Computer
-    if game_category == config.game_category_computer:
+    if game_category == config.Category.COMPUTER:
 
         # Create user folders
         for user_folder in config.computer_user_folders:
-            user_path = os.path.join(save_dir, config.SaveType.GENERAL.cvalue, user_folder)
+            user_path = os.path.join(save_dir, config.SaveType.GENERAL.value, user_folder)
             if not os.path.exists(user_path):
                 success = system.MakeDirectory(
                     dir = user_path,

@@ -38,13 +38,13 @@ def GetPlatformValue(platform_name, platform_value):
 # Check if transform platform
 def IsTransformPlatform(platform_name):
     if platform_name:
-        return platform_name in config.transform_platforms
+        return platform_name in config.TransformPlatforms
     return False
 
 # Check if letter platform
 def IsLetterPlatform(platform_name):
     if platform_name:
-        return platform_name in config.letter_platforms
+        return platform_name in config.LetterPlatforms
     return False
 
 ###########################################################
@@ -73,7 +73,7 @@ def GetLauncherTypes(platform_name):
 
 # Check if no launcher available
 def HasNoLauncher(platform_name):
-    return config.LaunchType.NONE in GetLauncherTypes(platform_name)
+    return config.LaunchType.NO_LAUNCHER in GetLauncherTypes(platform_name)
 
 # Check if launched by name
 def IsLaunchedByName(platform_name):

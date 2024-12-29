@@ -507,7 +507,7 @@ def DecryptWiiUNUSPackage(
     if delete_original:
         for obj in system.GetDirectoryContents(nus_package_dir):
             obj_path = os.path.join(nus_package_dir, obj)
-            if not os.path.isfile(obj_path):
+            if not system.IsPathFile(obj_path):
                 continue
             obj_ext = system.GetFilenameExtension(obj_path)
             if obj_ext in config.encrypted_extensions_wiiu:

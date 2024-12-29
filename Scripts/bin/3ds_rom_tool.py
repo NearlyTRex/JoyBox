@@ -3,42 +3,35 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import system
-import setup
 import nintendo
+import arguments
+import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Nintendo 3DS rom tool.")
-parser.add_argument("path", help="Input path")
-parser.add_argument("-a", "--cia_to_cci", action="store_true", help="Convert CIA to 3DS(CCI)")
-parser.add_argument("-b", "--cci_to_cia", action="store_true", help="Convert 3DS(CCI) to CIA")
-parser.add_argument("-t", "--trim_cci", action="store_true", help="Trim 3DS(CCI) files")
-parser.add_argument("-u", "--untrim_cci", action="store_true", help="Untrim 3DS(CCI) files")
-parser.add_argument("-e", "--extract_cia", action="store_true", help="Extract CIA files")
-parser.add_argument("-i", "--info", action="store_true", help="Print info for all 3DS files")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Nintendo 3DS rom tool.")
+parser.add_input_path_argument()
+parser.add_boolean_argument("-a", "--cia_to_cci", description = "Convert CIA to 3DS(CCI)")
+parser.add_boolean_argument("-b", "--cci_to_cia", description = "Convert 3DS(CCI) to CIA")
+parser.add_boolean_argument("-t", "--trim_cci", description = "Trim 3DS(CCI) files")
+parser.add_boolean_argument("-u", "--untrim_cci", description = "Untrim 3DS(CCI) files")
+parser.add_boolean_argument("-e", "--extract_cia", description = "Extract CIA files")
+parser.add_boolean_argument("-i", "--info", description = "Print info for all 3DS files")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
-if not args.path:
-    parser.print_help()
-    system.QuitProgram()
-
-# Check input path
-input_path = os.path.realpath(args.path)
-if not os.path.exists(input_path):
-    system.LogErrorAndQuit("Path '%s' does not exist" % args.path)
 
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get input path
+    input_path = parser.get_input_path()
 
     # Find rom files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".cia", ".3ds"]):

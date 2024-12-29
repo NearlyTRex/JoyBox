@@ -6,101 +6,101 @@ import sys
 from . import categories
 from . import types
 
-# Presets
-presets_options = {}
+# Preset option groups
+presets_option_groups = {}
 
 # Backup_Microsoft
-presets_options[types.PresetType.BACKUP_MICROSOFT] = {
-    "supercategory": categories.game_supercategory_roms,
-    "category": categories.game_category_microsoft
+presets_option_groups[types.PresetOptionGroupType.BACKUP_MICROSOFT] = {
+    "supercategory": categories.Supercategory.ROMS,
+    "category": categories.Category.MICROSOFT
 }
 
 # Backup_NintendoGen
-presets_options[types.PresetType.BACKUP_NINTENDOGEN] = {
-    "supercategory": categories.game_supercategory_roms,
-    "category": categories.game_category_nintendo,
+presets_option_groups[types.PresetOptionGroupType.BACKUP_NINTENDOGEN] = {
+    "supercategory": categories.Supercategory.ROMS,
+    "category": categories.Category.NINTENDO,
     "subcategories": [
-        categories.game_subcategory_nintendo_3ds,
-        categories.game_subcategory_nintendo_3ds_apps,
-        categories.game_subcategory_nintendo_3ds_eshop,
-        categories.game_subcategory_nintendo_64,
-        categories.game_subcategory_nintendo_ds,
-        categories.game_subcategory_nintendo_dsi,
-        categories.game_subcategory_nintendo_famicom,
-        categories.game_subcategory_nintendo_game_boy,
-        categories.game_subcategory_nintendo_game_boy_advance,
-        categories.game_subcategory_nintendo_game_boy_advance_ereader,
-        categories.game_subcategory_nintendo_game_boy_color,
-        categories.game_subcategory_nintendo_gamecube,
-        categories.game_subcategory_nintendo_nes,
-        categories.game_subcategory_nintendo_snes,
-        categories.game_subcategory_nintendo_snes_msu1,
-        categories.game_subcategory_nintendo_super_famicom,
-        categories.game_subcategory_nintendo_super_game_boy,
-        categories.game_subcategory_nintendo_super_game_boy_color,
-        categories.game_subcategory_nintendo_virtual_boy,
-        categories.game_subcategory_nintendo_wii,
-        categories.game_subcategory_nintendo_wii_u,
-        categories.game_subcategory_nintendo_wii_u_eshop
+        categories.Subcategory.NINTENDO_3DS,
+        categories.Subcategory.NINTENDO_3DS_APPS,
+        categories.Subcategory.NINTENDO_3DS_ESHOP,
+        categories.Subcategory.NINTENDO_64,
+        categories.Subcategory.NINTENDO_DS,
+        categories.Subcategory.NINTENDO_DSI,
+        categories.Subcategory.NINTENDO_FAMICOM,
+        categories.Subcategory.NINTENDO_GAME_BOY,
+        categories.Subcategory.NINTENDO_GAME_BOY_ADVANCE,
+        categories.Subcategory.NINTENDO_GAME_BOY_ADVANCE_EREADER,
+        categories.Subcategory.NINTENDO_GAME_BOY_COLOR,
+        categories.Subcategory.NINTENDO_GAMECUBE,
+        categories.Subcategory.NINTENDO_NES,
+        categories.Subcategory.NINTENDO_SNES,
+        categories.Subcategory.NINTENDO_SNES_MSU1,
+        categories.Subcategory.NINTENDO_SUPER_FAMICOM,
+        categories.Subcategory.NINTENDO_SUPER_GAME_BOY,
+        categories.Subcategory.NINTENDO_SUPER_GAME_BOY_COLOR,
+        categories.Subcategory.NINTENDO_VIRTUAL_BOY,
+        categories.Subcategory.NINTENDO_WII,
+        categories.Subcategory.NINTENDO_WII_U,
+        categories.Subcategory.NINTENDO_WII_U_ESHOP
     ]
 }
 
 # Backup_NintendoSwitch
-presets_options[types.PresetType.BACKUP_NINTENDOSWITCH] = {
-    "supercategory": categories.game_supercategory_roms,
-    "category": categories.game_category_nintendo,
+presets_option_groups[types.PresetOptionGroupType.BACKUP_NINTENDOSWITCH] = {
+    "supercategory": categories.Supercategory.ROMS,
+    "category": categories.Category.NINTENDO,
     "subcategories": [
-        categories.game_subcategory_nintendo_switch,
-        categories.game_subcategory_nintendo_switch_eshop
+        categories.Subcategory.NINTENDO_SWITCH,
+        categories.Subcategory.NINTENDO_SWITCH_ESHOP
     ]
 }
 
 # Backup_OtherGen
-presets_options[types.PresetType.BACKUP_OTHERGEN] = {
-    "supercategory": categories.game_supercategory_roms,
-    "category": categories.game_category_other
+presets_option_groups[types.PresetOptionGroupType.BACKUP_OTHERGEN] = {
+    "supercategory": categories.Supercategory.ROMS,
+    "category": categories.Category.OTHER
 }
 
 # Backup_SonyGen
-presets_options[types.PresetType.BACKUP_SONYGEN] = {
-    "supercategory": categories.game_supercategory_roms,
-    "category": categories.game_category_sony,
+presets_option_groups[types.PresetOptionGroupType.BACKUP_SONYGEN] = {
+    "supercategory": categories.Supercategory.ROMS,
+    "category": categories.Category.SONY,
     "subcategories": [
-        categories.game_subcategory_sony_playstation,
-        categories.game_subcategory_sony_playstation_2,
-        categories.game_subcategory_sony_playstation_portable,
-        categories.game_subcategory_sony_playstation_portable_video,
-        categories.game_subcategory_sony_playstation_vita
+        categories.Subcategory.SONY_PLAYSTATION,
+        categories.Subcategory.SONY_PLAYSTATION_2,
+        categories.Subcategory.SONY_PLAYSTATION_PORTABLE,
+        categories.Subcategory.SONY_PLAYSTATION_PORTABLE_VIDEO,
+        categories.Subcategory.SONY_PLAYSTATION_VITA
     ]
 }
 
 # Backup_SonyPS3
-presets_options[types.PresetType.BACKUP_SONYPS3] = {
-    "supercategory": categories.game_supercategory_roms,
-    "category": categories.game_category_sony,
+presets_option_groups[types.PresetOptionGroupType.BACKUP_SONYPS3] = {
+    "supercategory": categories.Supercategory.ROMS,
+    "category": categories.Category.SONY,
     "subcategories": [
-        categories.game_subcategory_sony_playstation_3
+        categories.Subcategory.SONY_PLAYSTATION_3
     ]
 }
 
 # Backup_SonyPS4
-presets_options[types.PresetType.BACKUP_SONYPS4] = {
-    "supercategory": categories.game_supercategory_roms,
-    "category": categories.game_category_sony,
+presets_option_groups[types.PresetOptionGroupType.BACKUP_SONYPS4] = {
+    "supercategory": categories.Supercategory.ROMS,
+    "category": categories.Category.SONY,
     "subcategories": [
-        categories.game_subcategory_sony_playstation_4
+        categories.Subcategory.SONY_PLAYSTATION_4
     ]
 }
 
 # Backup_SonyPSN
-presets_options[types.PresetType.BACKUP_SONYPSN] = {
-    "supercategory": categories.game_supercategory_roms,
-    "category": categories.game_category_sony,
+presets_option_groups[types.PresetOptionGroupType.BACKUP_SONYPSN] = {
+    "supercategory": categories.Supercategory.ROMS,
+    "category": categories.Category.SONY,
     "subcategories": [
-        categories.game_subcategory_sony_playstation_network_ps3,
-        categories.game_subcategory_sony_playstation_network_ps4,
-        categories.game_subcategory_sony_playstation_network_psp,
-        categories.game_subcategory_sony_playstation_network_pspm,
-        categories.game_subcategory_sony_playstation_network_psv
+        categories.Subcategory.SONY_PLAYSTATION_NETWORK_PS3,
+        categories.Subcategory.SONY_PLAYSTATION_NETWORK_PS4,
+        categories.Subcategory.SONY_PLAYSTATION_NETWORK_PSP,
+        categories.Subcategory.SONY_PLAYSTATION_NETWORK_PSPM,
+        categories.Subcategory.SONY_PLAYSTATION_NETWORK_PSV
     ]
 }

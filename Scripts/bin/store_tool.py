@@ -3,7 +3,6 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
@@ -13,62 +12,50 @@ import system
 import environment
 import gameinfo
 import stores
+import arguments
 import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Manage store games.")
-parser.add_argument("-i", "--input_path", type=str, default=".", help="Input path")
-parser.add_argument("-t", "--store_type",
-    choices=config.StoreType.values(),
-    default=config.StoreType.STEAM,
-    type=config.StoreType,
-    action=config.EnumArgparseAction,
-    help="Store type"
-)
-parser.add_argument("-a", "--store_action",
-    choices=config.StoreActionType.values(),
-    default=config.StoreActionType.LOGIN,
-    type=config.StoreActionType,
-    action=config.EnumArgparseAction,
-    help="Store action type"
-)
-parser.add_argument("-e", "--asset_type",
-    choices=config.AssetType.values(),
-    type=config.AssetType,
-    action=config.EnumArgparseAction,
-    help="Asset type"
-)
-parser.add_argument("-s", "--skip_existing", action="store_true", help="Skip existing entries")
-parser.add_argument("-f", "--force", action="store_true", help="Always run action")
-parser.add_argument("-k", "--keys", type=str, help="Keys to use (comma delimited)")
-parser.add_argument("-o", "--output_dir", type=str, default=".", help="Output directory")
-parser.add_argument("-m", "--load_manifest", action="store_true", help="Load manifest")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Manage store games.")
+parser.add_input_path_argument(default = ".")
+parser.add_enum_argument(
+    args = ("-t", "--store_type"),
+    arg_type = config.StoreType,
+    default = config.StoreType.STEAM,
+    description = "Store type")
+parser.add_enum_argument(
+    args = ("-a", "--store_action"),
+    arg_type = config.StoreActionType,
+    default = config.StoreActionType.LOGIN,
+    description = "Store action type")
+parser.add_asset_type_argument()
+parser.add_boolean_argument(args = ("-s", "--skip_existing"), description = "Skip existing entries")
+parser.add_boolean_argument(args = ("-f", "--force"), description = "Always run action")
+parser.add_string_argument(args = ("-k", "--keys"), description = "Keys to use (comma delimited)")
+parser.add_output_path_argument()
+parser.add_boolean_argument(args = ("-m", "--load_manifest"), description = "Load manifest")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
-
-# Get store
-store_obj = stores.GetStoreByType(args.store_type)
-if not store_obj:
-    system.LogErrorAndQuit("Invalid store")
-
-# Get input path
-input_path = None
-if system.IsPathValid(args.input_path):
-    input_path = os.path.realpath(args.input_path)
-    if not os.path.exists(input_path):
-        system.LogErrorAndQuit("Path '%s' does not exist" % args.input_path)
-if not input_path:
-    input_path = environment.GetJsonRomMetadataDir(
-        game_category = store_obj.GetCategory(),
-        game_subcategory = store_obj.GetSubcategory())
 
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get store
+    store_obj = stores.GetStoreByType(args.store_type)
+    if not store_obj:
+        system.LogErrorAndQuit("Invalid store")
+
+    # Get input path
+    input_path = None
+    if system.IsPathValid(args.input_path):
+        input_path = parser.get_input_path()
+    if not input_path:
+        input_path = environment.GetJsonRomMetadataDir(
+            game_category = store_obj.GetCategory(),
+            game_subcategory = store_obj.GetSubcategory())
 
     # Load manifest
     if args.load_manifest:
@@ -142,7 +129,7 @@ def main():
             if game_info and game_info.is_valid():
                 success = store_obj.DownloadByGameInfo(
                     game_info = game_info,
-                    output_dir = args.output_dir,
+                    output_dir = args.output_path,
                     skip_existing = args.skip_existing,
                     force = args.force,
                     verbose = args.verbose,

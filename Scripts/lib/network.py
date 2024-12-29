@@ -163,10 +163,10 @@ def DownloadUrl(
     if output_dir:
         for obj in system.GetDirectoryContents(output_dir):
             obj_path = os.path.join(output_dir, obj)
-            if os.path.isfile(obj_path) and obj.endswith(system.GetFilenameFile(url)):
+            if system.IsPathFile(obj_path) and obj.endswith(system.GetFilenameFile(url)):
                 return True
     elif output_file:
-        return os.path.isfile(output_file)
+        return system.IsPathFile(output_file)
     return False
 
 # Download git url
@@ -194,7 +194,7 @@ def DownloadGitUrl(
             exit_on_failure = exit_on_failure)
 
     # Check output dir
-    if os.path.isdir(output_dir) and system.DoesDirectoryContainFiles(output_dir):
+    if system.IsPathDirectory(output_dir) and system.DoesDirectoryContainFiles(output_dir):
         return True
 
     # Get tool
@@ -242,7 +242,7 @@ def IsNetworkShareMounted(mount_dir, base_location, network_share):
 
     # Windows
     if environment.IsWindowsPlatform():
-        return os.path.isdir(mount_dir) and not system.IsDirectoryEmpty(mount_dir)
+        return system.IsPathDirectory(mount_dir) and not system.IsDirectoryEmpty(mount_dir)
 
     # Linux
     elif environment.IsLinuxPlatform():
@@ -272,7 +272,7 @@ def MountNetworkShare(
     if environment.IsWindowsPlatform():
 
         # Check if already mounted
-        if os.path.isdir(mount_dir):
+        if system.IsPathDirectory(mount_dir):
             return True
 
         # Get mount command

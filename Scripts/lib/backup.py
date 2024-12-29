@@ -26,7 +26,7 @@ def ResolvePath(
 
     # Augment with gaming categories
     if game_supercategory:
-        resolved_path = os.path.join(resolved_path, config.LockerType.GAMING.cvalue, game_supercategory)
+        resolved_path = os.path.join(resolved_path, config.LockerType.GAMING.value, game_supercategory)
         if game_category:
             resolved_path = os.path.join(resolved_path, game_category)
             if game_subcategory:
@@ -96,7 +96,7 @@ def ArchiveFiles(
     # Look at non-excluded dirs in the input base path
     for base_obj in system.GetDirectoryContents(input_base_path, excludes = exclude_paths):
         base_dir = os.path.join(input_base_path, base_obj)
-        if os.path.isdir(base_dir):
+        if system.IsPathDirectory(base_dir):
 
             # Only look for subdirectories to archive in each main directory
             for sub_obj in system.GetDirectoryContents(base_dir):
@@ -104,9 +104,13 @@ def ArchiveFiles(
                 if not system.IsPathDirectory(sub_dir):
                     continue
 
+                # Get archive info
+                archive_basename = sub_obj
+                archive_ext = archive.GetArchiveExtension(archive_type)
+
                 # Get paths
-                tmp_archive_file = os.path.join(tmp_dir_result, sub_obj + f".{archive_type.value}")
-                out_archive_file = os.path.join(output_base_path, base_obj, sub_obj + f".{archive_type.value}")
+                tmp_archive_file = os.path.join(tmp_dir_result, archive_basename + "." + archive_ext)
+                out_archive_file = os.path.join(output_base_path, base_obj, archive_basename + "." + archive_ext)
 
                 # Archive subdirectory
                 success = archive.CreateArchiveFromFolder(

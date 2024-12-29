@@ -123,34 +123,34 @@ def CreateGameJsonFile(
     json_obj.fill_value(config.json_key_transform_file, best_game_file)
 
     # Set computer keys
-    if game_category == config.game_category_computer:
+    if game_category == config.Category.COMPUTER:
         json_obj.fill_value(config.json_key_installer_exe, computer_installers)
-        if game_subcategory == config.game_subcategory_amazon_games:
+        if game_subcategory == config.Subcategory.COMPUTER_AMAZON_GAMES:
             json_obj.fill_value(config.json_key_amazon, {
                 config.json_key_store_appid: "",
                 config.json_key_store_name: ""
             })
-        elif game_subcategory == config.game_subcategory_epic_games:
+        elif game_subcategory == config.Subcategory.COMPUTER_EPIC_GAMES:
             json_obj.fill_value(config.json_key_epic, {
                 config.json_key_store_appname: ""
             })
-        elif game_subcategory == config.game_subcategory_gog:
+        elif game_subcategory == config.Subcategory.COMPUTER_GOG:
             json_obj.fill_value(config.json_key_gog, {
                 config.json_key_store_appid: "",
                 config.json_key_store_appname: ""
             })
-        elif game_subcategory == config.game_subcategory_itchio:
+        elif game_subcategory == config.Subcategory.COMPUTER_ITCHIO:
             json_obj.fill_value(config.json_key_itchio, {
                 config.json_key_store_appid: "",
                 config.json_key_store_appurl: "",
                 config.json_key_store_name: ""
             })
-        elif game_subcategory == config.game_subcategory_legacy_games:
+        elif game_subcategory == config.Subcategory.COMPUTER_LEGACY_GAMES:
             json_obj.fill_value(config.json_key_legacy, {
                 config.json_key_store_appid: "",
                 config.json_key_store_name: ""
             })
-        elif game_subcategory == config.game_subcategory_steam:
+        elif game_subcategory == config.Subcategory.COMPUTER_STEAM:
             json_obj.fill_value(config.json_key_steam, {
                 config.json_key_store_appid: "",
                 config.json_key_store_branchid: config.steam_branch_format_public
@@ -467,7 +467,7 @@ def ScanForMetadataEntries(
 
     # Gather directories to scan
     scan_directories = []
-    if game_platform in config.letter_platforms:
+    if game_platform in config.LetterPlatforms:
         for obj in system.GetDirectoryContents(game_dir):
             scan_directories.append(os.path.join(game_dir, obj))
     else:
@@ -503,11 +503,11 @@ def PublishMetadataEntries(
     publish_contents = config.publish_html_header % game_category
 
     # Iterate through each subcategory for the given category
-    for game_subcategory in config.game_subcategories[game_category]:
+    for game_subcategory in config.subcategory_map[game_category]:
 
         # Get metadata file
         metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
-        if not os.path.isfile(metadata_file):
+        if not system.IsPathFile(metadata_file):
             continue
 
         # Read metadata

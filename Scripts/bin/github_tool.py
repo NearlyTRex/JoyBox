@@ -3,7 +3,6 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
@@ -12,43 +11,41 @@ import config
 import environment
 import system
 import network
-import setup
 import ini
+import arguments
+import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Github tool.")
-parser.add_argument("-a", "--action",
-    choices=config.GithubActionType.values(),
-    default=config.GithubActionType.ARCHIVE,
-    type=config.GithubActionType,
-    action=config.EnumArgparseAction,
-    help="Github action type"
-)
-parser.add_argument("-u", "--github_username", type=str, help="Github username")
-parser.add_argument("-t", "--github_access_token", type=str, help="Github access token")
-parser.add_argument("-d", "--archive_base_dir", type=str, default=environment.GetLockerDevelopmentArchivesRootDir(), help="Archive base directory")
-parser.add_argument("-i", "--include_repos", type=str, default="", help="Only include these repos (comma delimited)")
-parser.add_argument("-e", "--exclude_repos", type=str, default="", help="Use all repos except these (comma delimited)")
-parser.add_argument("-f", "--force", action="store_true", help="Force action")
-parser.add_argument("-r", "--recursive", action="store_true", help="Use recursion")
-parser.add_argument("-c", "--clean", action="store_true", help="Use cleaning first")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Github tool.")
+parser.add_enum_argument(
+    args = ("-a", "--action"),
+    arg_type = config.GithubActionType,
+    default = config.GithubActionType.TREE,
+    description = "Github action type")
+parser.add_string_argument(args = ("-u", "--github_username"), description = "Github username")
+parser.add_string_argument(args = ("-t", "--github_access_token"), description = "Github access token")
+parser.add_string_argument(
+    args = ("-d", "--archive_base_dir"),
+    default = environment.GetLockerDevelopmentArchivesRootDir(),
+    description = "Archive base directory")
+parser.add_string_argument(args = ("-i", "--include_repos"), default = "", description = "Only include these repos (comma delimited)")
+parser.add_string_argument(args = ("-e", "--exclude_repos"), default = "", description = "Use all repos except these (comma delimited)")
+parser.add_boolean_argument(args = ("-f", "--force"), description = "Force action")
+parser.add_boolean_argument(args = ("-r", "--recursive"), description = "Use recursion")
+parser.add_boolean_argument(args = ("-c", "--clean"), description = "Use cleaning first")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
-
-# Get archive base directory
-archive_base_dir = ""
-if args.action == config.GithubActionType.ARCHIVE:
-    archive_base_dir = os.path.realpath(args.archive_base_dir)
-    if not os.path.exists(archive_base_dir):
-        system.LogErrorAndQuit("Archive base dir '%s' does not exist" % args.archive_base_dir)
 
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get archive base directory
+    archive_base_dir = ""
+    if args.action == config.GithubActionType.ARCHIVE:
+        archive_base_dir = parser.get_checked_path("archive_base_dir")
 
     # Get github username
     github_username = args.github_username

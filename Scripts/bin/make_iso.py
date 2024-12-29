@@ -3,41 +3,30 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
+import config
 import system
 import archive
 import iso
+import arguments
 import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Make ISO images out of all folders or zips in a path.")
-parser.add_argument("path", help="Input path")
-parser.add_argument("-t", "--disc_source_type",
-    choices=config.DiscSourceType.values(),
-    default=config.DiscSourceType.FOLDER.value,
-    type=config.DiscSourceType,
-    action=config.EnumArgparseAction,
-    help="Disc source type"
-)
-parser.add_argument("-n", "--volume_name", type=str, default="", help="Volume name to use")
-parser.add_argument("-a", "--auto_volume_name", action="store_true", help="Choose volume name based automatically")
-parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Make ISO images out of all folders or zips in a path.")
+parser.add_input_path_argument()
+parser.add_enum_argument(
+    args = ("-t", "--disc_source_type"),
+    arg_type = config.DiscSourceType,
+    default = config.DiscSourceType.FOLDER,
+    description = "Disc source type")
+parser.add_string_argument(args = ("-n", "--volume_name"), default = "", description = "Volume name to use")
+parser.add_boolean_argument(args = ("-a", "--auto_volume_name"), description = "Choose volume name based automatically")
+parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete original files")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
-if not args.path:
-    parser.print_help()
-    system.QuitProgram()
-
-# Check input path
-input_path = os.path.realpath(args.path)
-if not os.path.exists(input_path):
-    system.LogErrorAndQuit("Path '%s' does not exist" % args.path)
 
 # Main
 def main():
@@ -45,11 +34,14 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get input path
+    input_path = parser.get_input_path()
+
     # Create iso images from folders
     if args.disc_source_type == config.DiscSourceType.FOLDER:
         for obj in system.GetDirectoryContents(input_path):
             obj_path = os.path.join(input_path, obj)
-            if not os.path.isdir(obj_path):
+            if not system.IsPathDirectory(obj_path):
                 continue
 
             # Check if iso already exists

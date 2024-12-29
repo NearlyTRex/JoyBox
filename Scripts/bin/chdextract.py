@@ -3,39 +3,33 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
+import config
 import system
 import chd
+import arguments
 import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Extract disc images from CHD files.")
-parser.add_argument("path", help="Input path")
-parser.add_argument("-t", "--toc_ext", type=str, default=".cue", help="Table of contents output extension")
-parser.add_argument("-b", "--bin_ext", type=str, default=".bin", help="Binary output extension")
-parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Extract disc images from CHD files.")
+parser.add_input_path_argument()
+parser.add_string_argument(args = ("-t", "--toc_ext"), default = ".cue", description = "Table of contents output extension")
+parser.add_string_argument(args = ("-b", "--bin_ext"), default = ".bin", description = "Binary output extension")
+parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete original files")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
-if not args.path:
-    parser.print_help()
-    system.QuitProgram()
-
-# Check that path exists first
-input_path = os.path.realpath(args.path)
-if not os.path.exists(input_path):
-    system.LogErrorAndQuit("Path '%s' does not exist" % args.path)
 
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get input path
+    input_path = parser.get_input_path()
 
     # Convert disc image files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".chd"]):

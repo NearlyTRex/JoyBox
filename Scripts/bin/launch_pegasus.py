@@ -3,7 +3,6 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
@@ -13,13 +12,12 @@ import system
 import environment
 import command
 import programs
+import arguments
 import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Launch pegasus.")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Launch pegasus.")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
 # Main

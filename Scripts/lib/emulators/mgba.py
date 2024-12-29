@@ -45,12 +45,12 @@ class MGBA(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.game_subcategory_nintendo_game_boy_advance,
-            config.game_subcategory_nintendo_game_boy_advance_ereader,
-            config.game_subcategory_nintendo_game_boy,
-            config.game_subcategory_nintendo_game_boy_color,
-            config.game_subcategory_nintendo_super_game_boy,
-            config.game_subcategory_nintendo_super_game_boy_color
+            config.Subcategory.NINTENDO_GAME_BOY_ADVANCE,
+            config.Subcategory.NINTENDO_GAME_BOY_ADVANCE_EREADER,
+            config.Subcategory.NINTENDO_GAME_BOY,
+            config.Subcategory.NINTENDO_GAME_BOY_COLOR,
+            config.Subcategory.NINTENDO_SUPER_GAME_BOY,
+            config.Subcategory.NINTENDO_SUPER_GAME_BOY_COLOR
         ]
 
     # Get config

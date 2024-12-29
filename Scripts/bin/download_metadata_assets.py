@@ -3,7 +3,6 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
@@ -13,23 +12,15 @@ import system
 import environment
 import collection
 import gameinfo
+import arguments
 import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Download metadata assets.")
-parser.add_argument("-a", "--asset_type",
-    choices=config.AssetType.values(),
-    default=config.AssetType.VIDEO,
-    type=config.AssetType,
-    action=config.EnumArgparseAction,
-    help="Asset type"
-)
-parser.add_argument("-c", "--game_category", type=str, help="Game category")
-parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")
-parser.add_argument("-e", "--skip_existing", action="store_true", help="Skip existing files")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Download metadata assets.")
+parser.add_game_category_arguments()
+parser.add_asset_type_argument(args = ("-t", "--asset_type"), description = "Asset type")
+parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Skip existing files")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
 # Main
@@ -58,7 +49,7 @@ def main():
 
     # Specific category/all subcategories in that category
     elif args.game_category:
-        for game_subcategory in config.game_subcategories[args.game_category]:
+        for game_subcategory in config.subcategory_map[args.game_category]:
             game_platform = gameinfo.DeriveGamePlatformFromCategories(args.game_category, game_subcategory)
             for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), args.game_category, game_subcategory):
 
@@ -77,8 +68,8 @@ def main():
 
     # All categories/subcategories
     else:
-        for game_category in config.game_categories:
-            for game_subcategory in config.game_subcategories[game_category]:
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
                 game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
                 for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
 

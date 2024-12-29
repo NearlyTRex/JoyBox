@@ -712,7 +712,7 @@ def RenamePSNRapFile(
     pretend_run = False,
     exit_on_failure = False):
     pkg_file = os.path.join(system.GetFilenameDirectory(rap_file), system.GetFilenameBasename(rap_file) + ".pkg")
-    if not os.path.isfile(pkg_file):
+    if not system.IsPathFile(pkg_file):
         return False
     content_id = GetPSNPackageContentID(pkg_file)
     if not content_id:

@@ -53,7 +53,7 @@ class Steam(storebase.StoreBase):
 
     # Get name
     def GetName(self):
-        return config.StoreType.STEAM.cvalue
+        return config.StoreType.STEAM.value
 
     # Get type
     def GetType(self):
@@ -65,11 +65,11 @@ class Steam(storebase.StoreBase):
 
     # Get category
     def GetCategory(self):
-        return config.game_category_computer
+        return config.Category.COMPUTER
 
     # Get subcategory
     def GetSubcategory(self):
-        return config.game_subcategory_steam
+        return config.Subcategory.STEAM
 
     # Get key
     def GetKey(self):
@@ -590,10 +590,10 @@ class Steam(storebase.StoreBase):
                     relativepath_idcs = relativepath.replace(config.token_store_user_id, userid_cs)
 
                     # Get potential new base paths
-                    new_base_general = config.SaveType.GENERAL.cvalue
+                    new_base_general = config.SaveType.GENERAL.value
                     new_base_public = os.path.join(new_base_general, config.computer_folder_public)
                     new_base_registry = os.path.join(new_base_general, config.computer_folder_registry)
-                    new_base_store = os.path.join(new_base_general, config.computer_folder_store, config.StoreType.STEAM.cvalue)
+                    new_base_store = os.path.join(new_base_general, config.computer_folder_store, config.StoreType.STEAM.value)
 
                     # Determine which paths exist
                     real_userid = None

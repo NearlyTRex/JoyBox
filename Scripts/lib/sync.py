@@ -27,6 +27,10 @@ def GetEncryptedRemoteName(remote_name):
         return remote_name
     return "%sEnc" % (remote_name)
 
+# Get remote raw type
+def GetRemoteRawType(remote_type):
+    return remote_type.value.lower()
+
 # Get remote connection path
 def GetRemoteConnectionPath(remote_name, remote_type, remote_path):
     if remote_type == config.RemoteType.B2:
@@ -42,11 +46,11 @@ def GetCommonRemoteFlags(remote_name, remote_type, remote_action_type):
         "--transfers", "1",
         "--order-by", "size,ascending"
     ]
-    if remote_action_type in config.RemoteActionSyncTypes:
+    if remote_action_type in config.remote_action_sync_types:
         flags += [
             "--track-renames"
         ]
-    if remote_action_type in config.RemoteActionChangeTypes:
+    if remote_action_type in config.remote_action_change_types:
         flags += [
             "--create-empty-src-dirs"
         ]
@@ -142,7 +146,7 @@ def IsRemoteConfigured(
 
     # Check if the remote type matches
     match = re.search(r"type\s*=\s*(\S+)", show_text)
-    return match and (match.group(1) == remote_type.value)
+    return match and (match.group(1) == GetRemoteRawType(remote_type))
 
 # Setup autoconnect remote
 def SetupAutoconnectRemote(
@@ -165,7 +169,7 @@ def SetupAutoconnectRemote(
         rclone_tool,
         "config",
         "create", remote_name,
-        remote_type.value,
+        GetRemoteRawType(remote_type),
         "config_is_local=false"
     ]
     if verbose:
@@ -219,7 +223,7 @@ def SetupManualRemote(
         rclone_tool,
         "config",
         "create", remote_name,
-        remote_type.value
+        GetRemoteRawType(remote_type)
     ]
     if isinstance(remote_config, dict):
         for config_key, config_value in remote_config.items():
@@ -718,7 +722,7 @@ def DiffFiles(
                     count_error += 1
         system.LogInfo("Number of unchanged files: %d" % count_unchanged)
         system.LogInfo("Number of changed files: %d" % count_changed)
-        system.LogInfo("Number of files only on %s%s: %d" % (remote_type.value, remote_path, count_only_dest))
+        system.LogInfo("Number of files only on %s%s: %d" % (GetRemoteRawType(remote_type), remote_path, count_only_dest))
         system.LogInfo("Number of files only on %s: %d" % (local_path, count_only_src))
         system.LogInfo("Number of error files: %d" % count_error)
 

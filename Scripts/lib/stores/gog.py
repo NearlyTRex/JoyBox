@@ -40,7 +40,7 @@ class GOG(storebase.StoreBase):
 
     # Get name
     def GetName(self):
-        return config.StoreType.GOG.cvalue
+        return config.StoreType.GOG.value
 
     # Get type
     def GetType(self):
@@ -52,11 +52,11 @@ class GOG(storebase.StoreBase):
 
     # Get category
     def GetCategory(self):
-        return config.game_category_computer
+        return config.Category.COMPUTER
 
     # Get subcategory
     def GetSubcategory(self):
-        return config.game_subcategory_gog
+        return config.Subcategory.COMPUTER_GOG
 
     # Get key
     def GetKey(self):

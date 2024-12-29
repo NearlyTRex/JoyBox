@@ -33,7 +33,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.game_subcategory_nokia_ngage
+            config.Subcategory.OTHER_NOKIA_NGAGE
         ]
 
     # Get config

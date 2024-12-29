@@ -15,8 +15,8 @@ import archive
 # Check if iso is mounted
 def IsISOMounted(iso_file, mount_dir):
     return (
-        os.path.isfile(iso_file) and
-        os.path.isdir(mount_dir) and
+        system.IsPathFile(iso_file) and
+        system.IsPathDirectory(mount_dir) and
         not system.IsDirectoryEmpty(mount_dir)
     )
 

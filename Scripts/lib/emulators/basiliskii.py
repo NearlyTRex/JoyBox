@@ -80,7 +80,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.game_subcategory_apple_macos_8
+            config.Subcategory.OTHER_APPLE_MACOS_8
         ]
 
     # Get config

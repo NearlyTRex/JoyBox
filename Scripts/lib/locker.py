@@ -180,7 +180,7 @@ def DownloadAndDecryptPath(
         return (False, "")
 
     # Return result
-    if os.path.isfile(result) or len(output_files) == 1:
+    if system.IsPathFile(result) or len(output_files) == 1:
         return (True, output_files[0])
     return (True, result)
 

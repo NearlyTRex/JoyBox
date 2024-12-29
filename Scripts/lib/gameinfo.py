@@ -110,7 +110,7 @@ class GameInfo:
 
         # Get paths
         save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name)
-        if self.game_category == config.game_category_computer:
+        if self.game_category == config.Category.COMPUTER:
             if environment.IsWindowsPlatform():
                 save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.SANDBOXIE)
             else:
@@ -627,8 +627,11 @@ def FindBestGameFile(game_files):
 # Find all game names
 def FindAllGameNames(base_dir, game_category, game_subcategory):
     game_names = []
-    base_path = os.path.join(base_dir, game_category, game_subcategory)
-    if game_category == config.game_category_computer:
+    base_path = os.path.join(
+        base_dir,
+        game_category.value,
+        game_subcategory.value)
+    if game_category == config.Category.COMPUTER:
         for game_letter in system.GetDirectoryContents(base_path):
             for game_name in system.GetDirectoryContents(os.path.join(base_path, game_letter)):
                 game_names.append(game_name)
@@ -692,36 +695,36 @@ def DeriveGameNamePathFromName(game_name, game_platform):
 
 # Derive game asset path from name
 def DeriveGameAssetPathFromName(game_name, asset_type):
-    return "%s/%s%s" % (asset_type, game_name, config.asset_extensions[asset_type])
+    return "%s/%s%s" % (asset_type.value, game_name, config.asset_extensions[asset_type])
 
 # Derive game categories from platform
 def DeriveGameCategoriesFromPlatform(game_platform):
     if not game_platform:
         return (None, None, None)
-    derived_category = ""
-    derived_subcategory = ""
-    if game_platform.startswith(config.game_category_computer):
-        derived_category = config.game_category_computer
-        derived_subcategory = game_platform.replace(config.game_category_computer + " - ", "")
-    elif game_platform.startswith(config.game_category_microsoft):
-        derived_category = config.game_category_microsoft
-        derived_subcategory = game_platform
-    elif game_platform.startswith(config.game_category_nintendo):
-        derived_category = config.game_category_nintendo
-        derived_subcategory = game_platform
-    elif game_platform.startswith(config.game_category_sony):
-        derived_category = config.game_category_sony
-        derived_subcategory = game_platform
+    derived_category = None
+    derived_subcategory = None
+    if game_platform.startswith(config.Category.COMPUTER.value):
+        derived_category = config.Category.COMPUTER
+        derived_subcategory = config.Category.from_string(game_platform.replace(config.Category.COMPUTER.value + " - ", ""))
+    elif game_platform.startswith(config.Category.MICROSOFT.value):
+        derived_category = config.Category.MICROSOFT
+        derived_subcategory = config.Category.from_string(game_platform)
+    elif game_platform.startswith(config.Category.NINTENDO.value):
+        derived_category = config.Category.NINTENDO
+        derived_subcategory = config.Category.from_string(game_platform)
+    elif game_platform.startswith(config.Category.SONY.value):
+        derived_category = config.Category.SONY
+        derived_subcategory = config.Category.from_string(game_platform)
     else:
-        derived_category = config.game_category_other
-        derived_subcategory = game_platform
-    return (config.game_supercategory_roms, derived_category, derived_subcategory)
+        derived_category = config.Category.OTHER
+        derived_subcategory = config.Category.from_string(game_platform)
+    return (config.Supercategory.ROMS, derived_category, derived_subcategory)
 
 # Derive game platform from categories
 def DeriveGamePlatformFromCategories(game_category, game_subcategory):
     game_platform = game_subcategory
-    if game_category == config.game_category_computer:
-        game_platform = game_category + " - " + game_subcategory
+    if game_category == config.Category.COMPUTER:
+        game_platform = game_category.value + " - " + game_subcategory.value
     return game_platform
 
 # Derive game categories from file
@@ -748,32 +751,33 @@ def DeriveGameCategoriesFromFile(game_file):
         relative_source_dir = system.RebaseFilePath(relative_source_dir, root_dir, "")
 
     # Derive supercategory
-    derived_supercategory = ""
-    for possible_supercategory in config.game_supercategories:
-        if relative_source_dir.startswith(possible_supercategory):
+    derived_supercategory = None
+    for possible_supercategory in config.Supercategory.members():
+        if relative_source_dir.startswith(possible_supercategory.value):
             derived_supercategory = possible_supercategory
-    if len(derived_supercategory) == 0:
+    if not derived_supercategory:
         return (None, None, None)
 
     # Get relative path
-    relative_file_path = relative_source_dir[relative_source_dir.index(derived_supercategory) + len(derived_supercategory):].strip(os.sep)
+    relative_source_index = relative_source_dir.index(derived_supercategory.value) + len(derived_supercategory.value)
+    relative_file_path = relative_source_dir[relative_source_index:].strip(os.sep)
     relative_file_path_tokens = relative_file_path.split(os.sep)
     if len(relative_file_path_tokens) < 2:
         return (None, None, None)
 
     # Get derived category and subcategory
-    derived_category = ""
-    derived_subcategory = relative_file_path_tokens[1]
-    if relative_file_path.startswith(config.game_category_computer):
-        derived_category = config.game_category_computer
-    elif relative_file_path.startswith(config.game_category_microsoft):
-        derived_category = config.game_category_microsoft
-    elif relative_file_path.startswith(config.game_category_nintendo):
-        derived_category = config.game_category_nintendo
-    elif relative_file_path.startswith(config.game_category_sony):
-        derived_category = config.game_category_sony
+    derived_category = None
+    derived_subcategory = config.Subcategory.from_string(relative_file_path_tokens[1])
+    if relative_file_path.startswith(config.Category.COMPUTER.value):
+        derived_category = config.Category.COMPUTER
+    elif relative_file_path.startswith(config.Category.MICROSOFT.value):
+        derived_category = config.Category.MICROSOFT
+    elif relative_file_path.startswith(config.Category.NINTENDO.value):
+        derived_category = config.Category.NINTENDO
+    elif relative_file_path.startswith(config.Category.SONY.value):
+        derived_category = config.Category.SONY
     else:
-        derived_category = config.game_category_other
+        derived_category = config.Category.OTHER
     return (derived_supercategory, derived_category, derived_subcategory)
 
 ###########################################################

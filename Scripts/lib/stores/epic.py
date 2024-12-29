@@ -34,7 +34,7 @@ class Epic(storebase.StoreBase):
 
     # Get name
     def GetName(self):
-        return config.StoreType.EPIC.cvalue
+        return config.StoreType.EPIC.value
 
     # Get type
     def GetType(self):
@@ -46,11 +46,11 @@ class Epic(storebase.StoreBase):
 
     # Get category
     def GetCategory(self):
-        return config.game_category_computer
+        return config.Category.COMPUTER
 
     # Get subcategory
     def GetSubcategory(self):
-        return config.game_subcategory_epic_games
+        return config.Subcategory.COMPUTER_EPIC_GAMES
 
     # Get key
     def GetKey(self):

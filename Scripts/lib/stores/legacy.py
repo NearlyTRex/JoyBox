@@ -41,7 +41,7 @@ class Legacy(storebase.StoreBase):
 
     # Get name
     def GetName(self):
-        return config.StoreType.LEGACY.cvalue
+        return config.StoreType.LEGACY.value
 
     # Get type
     def GetType(self):
@@ -53,11 +53,11 @@ class Legacy(storebase.StoreBase):
 
     # Get category
     def GetCategory(self):
-        return config.game_category_computer
+        return config.Category.COMPUTER
 
     # Get subcategory
     def GetSubcategory(self):
-        return config.game_subcategory_legacy_games
+        return config.Subcategory.LEGACY_GAMES
 
     # Get key
     def GetKey(self):

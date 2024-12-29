@@ -12,6 +12,10 @@ import system
 import environment
 import sandbox
 
+# Get archive extension
+def GetArchiveExtension(archive_type):
+    return archive_type.value.lower()
+
 # Determine if file is a known archive
 def IsKnownArchive(archive_file, extensions = [], mime_types = []):
     for ext in extensions:

@@ -10,11 +10,15 @@ import system
 import iso
 import archive
 
+# Get disc image extension
+def GetDiscImageExtension(disc_image_type):
+    return disc_image_type.value.lower()
+
 # Check if disc chd is mounted
 def IsDiscCHDMounted(chd_file, mount_dir):
     return (
-        os.path.isfile(chd_file) and
-        os.path.isdir(mount_dir) and
+        system.IsPathFile(chd_file) and
+        system.IsPathDirectory(mount_dir) and
         not system.IsDirectoryEmpty(mount_dir)
     )
 

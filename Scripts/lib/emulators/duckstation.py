@@ -99,7 +99,7 @@ class DuckStation(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.game_subcategory_sony_playstation
+            config.Subcategory.SONY_PLAYSTATION
         ]
 
     # Get config

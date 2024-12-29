@@ -3,7 +3,6 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
@@ -12,30 +11,27 @@ import config
 import environment
 import system
 import sync
-import setup
 import ini
+import arguments
+import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Sync tool.")
-parser.add_argument("-a", "--action",
-    choices=config.RemoteActionType.values(),
-    default=config.RemoteActionType.INIT,
-    type=config.RemoteActionType,
-    action=config.EnumArgparseAction,
-    help="Remote action type"
-)
-parser.add_argument("--excludes", type=str, default=",".join(config.excluded_sync_paths), help="Excludes (comma delimited)")
-parser.add_argument("--diff_combined_path", type=str, default="diff_combined.txt", help="Diff path (combined)")
-parser.add_argument("--diff_intersected_path", type=str, default="diff_intersected.txt", help="Diff path (intersection)")
-parser.add_argument("--diff_missing_src_path", type=str, default="diff_missing_src.txt", help="Diff path (missing src)")
-parser.add_argument("--diff_missing_dest_path", type=str, default="diff_missing_dest.txt", help="Diff path (missing dest)")
-parser.add_argument("--diff_error_path", type=str, default="diff_errors.txt", help="Diff path (errors)")
-parser.add_argument("-e", "--resync", action="store_true", help="Enable resync mode")
-parser.add_argument("-i", "--interactive", action="store_true", help="Enable interactive mode")
-parser.add_argument("-q", "--quick", action="store_true", help="Enable quick mode")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Sync tool.")
+parser.add_enum_argument(
+    args = ("-a", "--action"),
+    arg_type = config.RemoteActionType,
+    default = config.RemoteActionType.INIT,
+    description = "Remote action type")
+parser.add_string_argument(args = ("--excludes"), default = ",".join(config.excluded_sync_paths), description = "Excludes (comma delimited)")
+parser.add_string_argument(args = ("--diff_combined_path"), default = "diff_combined.txt", description = "Diff path (combined)")
+parser.add_string_argument(args = ("--diff_intersected_path"), default = "diff_intersected.txt", description = "Diff path (intersection)")
+parser.add_string_argument(args = ("--diff_missing_src_path"), default = "diff_missing_src.txt", description = "Diff path (missing src)")
+parser.add_string_argument(args = ("--diff_missing_dest_path"), default = "diff_missing_dest.txt", description = "Diff path (missing dest)")
+parser.add_string_argument(args = ("--diff_error_path"), default = "diff_errors.txt", description = "Diff path (errors)")
+parser.add_boolean_argument(args = ("-e", "--resync"), description = "Enable resync mode")
+parser.add_boolean_argument(args = ("-i", "--interactive"), description = "Enable interactive mode")
+parser.add_boolean_argument(args = ("-q", "--quick"), description = "Enable quick mode")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
 # Main

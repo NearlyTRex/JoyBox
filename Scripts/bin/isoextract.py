@@ -3,46 +3,38 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
+import config
 import system
 import setup
 import iso
+import arguments
 import archive
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Extract data from ISO files.")
-parser.add_argument("path", help="Input path")
-parser.add_argument("-e", "--extract_method",
-    choices=config.DiscExtractType.values,
-    default=config.DiscExtractType.ISO.value,
-    type=config.DiscExtractType,
-    action=config.EnumArgparseAction,
-    help="Disc extract type"
-)
-parser.add_argument("-s", "--skip_existing", action="store_true", help="Skip existing extracted files")
-parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Extract data from ISO files.")
+parser.add_input_path_argument()
+parser.add_enum_argument(
+    args = ("-e", "--extract_method"),
+    arg_type = config.DiscExtractType,
+    default = config.DiscExtractType.ISO,
+    description = "Disc extract type")
+parser.add_boolean_argument(args = ("-s", "--skip_existing"), description = "Skip existing extracted files")
+parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete original files")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
-if not args.path:
-    parser.print_help()
-    system.QuitProgram()
-
-# Check that path exists first
-input_path = os.path.realpath(args.path)
-if not os.path.exists(input_path):
-    system.LogErrorAndQuit("Path '%s' does not exist" % args.path)
 
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get input path
+    input_path = parser.get_input_path()
 
     # Convert disc image files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".iso"]):
@@ -54,7 +46,7 @@ def main():
 
         # Check if output dir already exists
         output_dir = os.path.join(current_dir, current_basename)
-        if os.path.isdir(output_dir):
+        if system.IsPathDirectory(output_dir):
             continue
 
         # Extract as iso

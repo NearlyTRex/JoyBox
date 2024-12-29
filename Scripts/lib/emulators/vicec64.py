@@ -31,7 +31,7 @@ class ViceC64(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.game_subcategory_commodore_64
+            config.Subcategory.OTHER_COMMODORE_64
         ]
 
     # Get config

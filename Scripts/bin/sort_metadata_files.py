@@ -3,7 +3,6 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
@@ -12,13 +11,12 @@ import config
 import system
 import metadata
 import environment
+import arguments
 import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Sort metadata files.")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Sort metadata files.")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
 # Main
@@ -28,12 +26,12 @@ def main():
     setup.CheckRequirements()
 
     # Sort metadata files
-    for game_category in config.game_categories:
-        for game_subcategory in config.game_subcategories[game_category]:
+    for game_category in config.Category.members():
+        for game_subcategory in config.subcategory_map[game_category]:
 
             # Get metadata file
             metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
-            if not os.path.isfile(metadata_file):
+            if not system.IsPathFile(metadata_file):
                 continue
 
             # Sort metadata

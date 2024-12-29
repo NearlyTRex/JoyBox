@@ -214,7 +214,7 @@ class MetadataEntry:
                 game_metadata_key = config.metadata_key_screenshot
             elif asset_type == config.AssetType.VIDEO:
                 game_metadata_key = config.metadata_key_video
-            if os.path.isfile(game_asset_file):
+            if system.IsPathFile(game_asset_file):
                 self.set_value(game_metadata_key, game_asset_string)
             else:
                 if self.is_key_set(game_metadata_key):

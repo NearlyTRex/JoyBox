@@ -2,265 +2,244 @@
 import os
 import sys
 
-# Supercategories
-game_supercategory_assets = "Assets"
-game_supercategory_emulators = "Emulators"
-game_supercategory_roms = "Roms"
-game_supercategory_dlc = "DLC"
-game_supercategory_updates = "Updates"
-game_supercategory_tags = "Tags"
-game_supercategory_saves = "Saves"
-game_supercategory_setup = "Setup"
-game_supercategory_installs = "Installs"
-game_supercategories = [
-    game_supercategory_assets,
-    game_supercategory_emulators,
-    game_supercategory_roms,
-    game_supercategory_dlc,
-    game_supercategory_updates,
-    game_supercategory_tags,
-    game_supercategory_saves,
-    game_supercategory_setup,
-    game_supercategory_installs
-]
+# Local imports
+from . import types
 
-# Categories
-game_category_computer = "Computer"
-game_category_microsoft = "Microsoft"
-game_category_nintendo = "Nintendo"
-game_category_other = "Other"
-game_category_sony = "Sony"
-game_categories = [
-    game_category_computer,
-    game_category_microsoft,
-    game_category_nintendo,
-    game_category_other,
-    game_category_sony
-]
+# Supercategory
+class Supercategory(types.EnumType):
+    ASSETS                              = ("Assets")
+    EMULATORS                           = ("Emulators")
+    ROMS                                = ("Roms")
+    DLC                                 = ("DLC")
+    UPDATES                             = ("Updates")
+    TAGS                                = ("Tags")
+    SAVES                               = ("Saves")
+    SETUP                               = ("Setup")
+    INSTALLS                            = ("Installs")
 
-# Subcategories - Computer
-game_subcategory_amazon_games = "Amazon Games"
-game_subcategory_disc = "Disc"
-game_subcategory_epic_games = "Epic Games"
-game_subcategory_gog = "GOG"
-game_subcategory_humble_bundle = "Humble Bundle"
-game_subcategory_itchio = "Itchio"
-game_subcategory_legacy_games = "Legacy Games"
-game_subcategory_puppet_combo = "Puppet Combo"
-game_subcategory_red_candle = "Red Candle"
-game_subcategory_square_enix = "Square Enix"
-game_subcategory_steam = "Steam"
-game_subcategory_zoom = "Zoom"
-game_subcategories_computer = [
-    game_subcategory_amazon_games,
-    game_subcategory_disc,
-    game_subcategory_epic_games,
-    game_subcategory_gog,
-    game_subcategory_humble_bundle,
-    game_subcategory_itchio,
-    game_subcategory_legacy_games,
-    game_subcategory_puppet_combo,
-    game_subcategory_red_candle,
-    game_subcategory_square_enix,
-    game_subcategory_steam,
-    game_subcategory_zoom
-]
+# Category
+class Category(types.EnumType):
+    COMPUTER                            = ("Computer")
+    MICROSOFT                           = ("Microsoft")
+    NINTENDO                            = ("Nintendo")
+    OTHER                               = ("Other")
+    SONY                                = ("Sony")
 
-# Subcategories - Microsoft
-game_subcategory_microsoft_msx = "Microsoft MSX"
-game_subcategory_microsoft_xbox = "Microsoft Xbox"
-game_subcategory_microsoft_xbox_360 = "Microsoft Xbox 360"
-game_subcategory_microsoft_xbox_360_god = "Microsoft Xbox 360 GOD"
-game_subcategory_microsoft_xbox_360_xbla = "Microsoft Xbox 360 XBLA"
-game_subcategory_microsoft_xbox_360_xig = "Microsoft Xbox 360 XIG"
-game_subcategory_microsoft_xbox_one = "Microsoft Xbox One"
-game_subcategory_microsoft_xbox_one_god = "Microsoft Xbox One GOD"
-game_subcategories_microsoft = [
-    game_subcategory_microsoft_msx,
-    game_subcategory_microsoft_xbox,
-    game_subcategory_microsoft_xbox_360,
-    game_subcategory_microsoft_xbox_360_god,
-    game_subcategory_microsoft_xbox_360_xbla,
-    game_subcategory_microsoft_xbox_360_xig,
-    game_subcategory_microsoft_xbox_one,
-    game_subcategory_microsoft_xbox_one_god
-]
+# Subcategory
+class Subcategory(types.EnumType):
 
-# Subcategories - Nintendo
-game_subcategory_nintendo_3ds = "Nintendo 3DS"
-game_subcategory_nintendo_3ds_apps = "Nintendo 3DS Apps"
-game_subcategory_nintendo_3ds_eshop = "Nintendo 3DS eShop"
-game_subcategory_nintendo_64 = "Nintendo 64"
-game_subcategory_nintendo_amiibo = "Nintendo Amiibo"
-game_subcategory_nintendo_ds = "Nintendo DS"
-game_subcategory_nintendo_dsi = "Nintendo DSi"
-game_subcategory_nintendo_famicom = "Nintendo Famicom"
-game_subcategory_nintendo_game_boy = "Nintendo Game Boy"
-game_subcategory_nintendo_game_boy_advance = "Nintendo Game Boy Advance"
-game_subcategory_nintendo_game_boy_advance_ereader = "Nintendo Game Boy Advance e-Reader"
-game_subcategory_nintendo_game_boy_color = "Nintendo Game Boy Color"
-game_subcategory_nintendo_gamecube = "Nintendo Gamecube"
-game_subcategory_nintendo_nes = "Nintendo NES"
-game_subcategory_nintendo_snes = "Nintendo SNES"
-game_subcategory_nintendo_snes_msu1 = "Nintendo SNES MSU-1"
-game_subcategory_nintendo_super_famicom = "Nintendo Super Famicom"
-game_subcategory_nintendo_super_game_boy = "Nintendo Super Game Boy"
-game_subcategory_nintendo_super_game_boy_color = "Nintendo Super Game Boy Color"
-game_subcategory_nintendo_switch = "Nintendo Switch"
-game_subcategory_nintendo_switch_eshop = "Nintendo Switch eShop"
-game_subcategory_nintendo_virtual_boy = "Nintendo Virtual Boy"
-game_subcategory_nintendo_wii = "Nintendo Wii"
-game_subcategory_nintendo_wii_u = "Nintendo Wii U"
-game_subcategory_nintendo_wii_u_eshop = "Nintendo Wii U eShop"
-game_subcategory_nintendo_wiiware = "Nintendo WiiWare"
-game_subcategories_nintendo = [
-    game_subcategory_nintendo_3ds,
-    game_subcategory_nintendo_3ds_apps,
-    game_subcategory_nintendo_3ds_eshop,
-    game_subcategory_nintendo_64,
-    game_subcategory_nintendo_amiibo,
-    game_subcategory_nintendo_ds,
-    game_subcategory_nintendo_dsi,
-    game_subcategory_nintendo_famicom,
-    game_subcategory_nintendo_game_boy,
-    game_subcategory_nintendo_game_boy_advance,
-    game_subcategory_nintendo_game_boy_advance_ereader,
-    game_subcategory_nintendo_game_boy_color,
-    game_subcategory_nintendo_gamecube,
-    game_subcategory_nintendo_nes,
-    game_subcategory_nintendo_snes,
-    game_subcategory_nintendo_snes_msu1,
-    game_subcategory_nintendo_super_famicom,
-    game_subcategory_nintendo_super_game_boy,
-    game_subcategory_nintendo_super_game_boy_color,
-    game_subcategory_nintendo_switch,
-    game_subcategory_nintendo_switch_eshop,
-    game_subcategory_nintendo_virtual_boy,
-    game_subcategory_nintendo_wii,
-    game_subcategory_nintendo_wii_u,
-    game_subcategory_nintendo_wii_u_eshop,
-    game_subcategory_nintendo_wiiware
-]
+    # Computer
+    COMPUTER_AMAZON_GAMES               = ("Amazon Games")
+    COMPUTER_DISC                       = ("Disc")
+    COMPUTER_EPIC_GAMES                 = ("Epic Games")
+    COMPUTER_GOG                        = ("GOG")
+    COMPUTER_HUMBLE_BUNDLE              = ("Humble Bundle")
+    COMPUTER_ITCHIO                     = ("Itchio")
+    COMPUTER_LEGACY_GAMES               = ("Legacy Games")
+    COMPUTER_PUPPET_COMBO               = ("Puppet Combo")
+    COMPUTER_RED_CANDLE                 = ("Red Candle")
+    COMPUTER_SQUARE_ENIX                = ("Square Enix")
+    COMPUTER_STEAM                      = ("Steam")
+    COMPUTER_ZOOM                       = ("Zoom")
 
-# Subcategories - Other
-game_subcategory_apple_ios = "Apple iOS"
-game_subcategory_apple_macos_8 = "Apple MacOS 8"
-game_subcategory_arcade = "Arcade"
-game_subcategory_atari_800 = "Atari 800"
-game_subcategory_atari_2600 = "Atari 2600"
-game_subcategory_atari_5200 = "Atari 5200"
-game_subcategory_atari_7800 = "Atari 7800"
-game_subcategory_atari_jaguar = "Atari Jaguar"
-game_subcategory_atari_jaguar_cd = "Atari Jaguar CD"
-game_subcategory_atari_lynx = "Atari Lynx"
-game_subcategory_bandai_wonderswan = "Bandai WonderSwan"
-game_subcategory_bandai_wonderswan_color = "Bandai WonderSwan Color"
-game_subcategory_coleco_colecovision = "Coleco ColecoVision"
-game_subcategory_commodore_64 = "Commodore 64"
-game_subcategory_commodore_amiga = "Commodore Amiga"
-game_subcategory_google_android = "Google Android"
-game_subcategory_magnavox_odyssey_2 = "Magnavox Odyssey 2"
-game_subcategory_mattel_intellivision = "Mattel Intellivision"
-game_subcategory_nec_pcengine = "NEC PC-Engine"
-game_subcategory_nec_pcengine_cd = "NEC PC-Engine CD"
-game_subcategory_nec_supergrafx = "NEC SuperGrafx"
-game_subcategory_nec_turbografx_16 = "NEC TurboGrafx-16"
-game_subcategory_nec_turbografx_cd = "NEC TurboGrafx CD"
-game_subcategory_nokia_ngage = "Nokia N-Gage"
-game_subcategory_panasonic_3do = "Panasonic 3DO"
-game_subcategory_philips_cdi = "Philips CDi"
-game_subcategory_snk_neogeo_pocket_color = "SNK Neo Geo Pocket Color"
-game_subcategory_sega_32x = "Sega 32X"
-game_subcategory_sega_cd = "Sega CD"
-game_subcategory_sega_cd_32x = "Sega CD 32X"
-game_subcategory_sega_dreamcast = "Sega Dreamcast"
-game_subcategory_sega_game_gear = "Sega Game Gear"
-game_subcategory_sega_genesis = "Sega Genesis"
-game_subcategory_sega_master_system = "Sega Master System"
-game_subcategory_sega_saturn = "Sega Saturn"
-game_subcategory_sinclair_zx_spectrum = "Sinclair ZX Spectrum"
-game_subcategory_texas_instruments_ti994a = "Texas Instruments TI-99-4A"
-game_subcategory_tiger_gamecom = "Tiger Game.com"
-game_subcategories_other = [
-    game_subcategory_apple_ios,
-    game_subcategory_apple_macos_8,
-    game_subcategory_arcade,
-    game_subcategory_atari_800,
-    game_subcategory_atari_2600,
-    game_subcategory_atari_5200,
-    game_subcategory_atari_7800,
-    game_subcategory_atari_jaguar,
-    game_subcategory_atari_jaguar_cd,
-    game_subcategory_atari_lynx,
-    game_subcategory_bandai_wonderswan,
-    game_subcategory_bandai_wonderswan_color,
-    game_subcategory_coleco_colecovision,
-    game_subcategory_commodore_64,
-    game_subcategory_commodore_amiga,
-    game_subcategory_google_android,
-    game_subcategory_magnavox_odyssey_2,
-    game_subcategory_mattel_intellivision,
-    game_subcategory_nec_pcengine,
-    game_subcategory_nec_pcengine_cd,
-    game_subcategory_nec_supergrafx,
-    game_subcategory_nec_turbografx_16,
-    game_subcategory_nec_turbografx_cd,
-    game_subcategory_nokia_ngage,
-    game_subcategory_panasonic_3do,
-    game_subcategory_philips_cdi,
-    game_subcategory_snk_neogeo_pocket_color,
-    game_subcategory_sega_32x,
-    game_subcategory_sega_cd,
-    game_subcategory_sega_cd_32x,
-    game_subcategory_sega_dreamcast,
-    game_subcategory_sega_game_gear,
-    game_subcategory_sega_genesis,
-    game_subcategory_sega_master_system,
-    game_subcategory_sega_saturn,
-    game_subcategory_sinclair_zx_spectrum,
-    game_subcategory_texas_instruments_ti994a,
-    game_subcategory_tiger_gamecom
-]
+    # Microsoft
+    MICROSOFT_MSX                       = ("Microsoft MSX")
+    MICROSOFT_XBOX                      = ("Microsoft Xbox")
+    MICROSOFT_XBOX_360                  = ("Microsoft Xbox 360")
+    MICROSOFT_XBOX_360_GOD              = ("Microsoft Xbox 360 GOD")
+    MICROSOFT_XBOX_360_XBLA             = ("Microsoft Xbox 360 XBLA")
+    MICROSOFT_XBOX_360_XIG              = ("Microsoft Xbox 360 XIG")
+    MICROSOFT_XBOX_ONE                  = ("Microsoft Xbox One")
+    MICROSOFT_XBOX_ONE_GOD              = ("Microsoft Xbox One GOD")
 
-# Subcategories - Sony
-game_subcategory_sony_playstation = "Sony PlayStation"
-game_subcategory_sony_playstation_2 = "Sony PlayStation 2"
-game_subcategory_sony_playstation_3 = "Sony PlayStation 3"
-game_subcategory_sony_playstation_4 = "Sony PlayStation 4"
-game_subcategory_sony_playstation_network_ps3 = "Sony PlayStation Network - PlayStation 3"
-game_subcategory_sony_playstation_network_ps4 = "Sony PlayStation Network - PlayStation 4"
-game_subcategory_sony_playstation_network_psp = "Sony PlayStation Network - PlayStation Portable"
-game_subcategory_sony_playstation_network_pspm = "Sony PlayStation Network - PlayStation Portable Minis"
-game_subcategory_sony_playstation_network_psv = "Sony PlayStation Network - PlayStation Vita"
-game_subcategory_sony_playstation_portable = "Sony PlayStation Portable"
-game_subcategory_sony_playstation_portable_video = "Sony PlayStation Portable Video"
-game_subcategory_sony_playstation_vita = "Sony PlayStation Vita"
-game_subcategories_sony = [
-    game_subcategory_sony_playstation,
-    game_subcategory_sony_playstation_2,
-    game_subcategory_sony_playstation_3,
-    game_subcategory_sony_playstation_4,
-    game_subcategory_sony_playstation_network_ps3,
-    game_subcategory_sony_playstation_network_ps4,
-    game_subcategory_sony_playstation_network_psp,
-    game_subcategory_sony_playstation_network_pspm,
-    game_subcategory_sony_playstation_network_psv,
-    game_subcategory_sony_playstation_portable,
-    game_subcategory_sony_playstation_portable_video,
-    game_subcategory_sony_playstation_vita
-]
+    # Nintendo
+    NINTENDO_3DS                        = ("Nintendo 3DS")
+    NINTENDO_3DS_APPS                   = ("Nintendo 3DS Apps")
+    NINTENDO_3DS_ESHOP                  = ("Nintendo 3DS eShop")
+    NINTENDO_64                         = ("Nintendo 64")
+    NINTENDO_AMIIBO                     = ("Nintendo Amiibo")
+    NINTENDO_DS                         = ("Nintendo DS")
+    NINTENDO_DSI                        = ("Nintendo DSi")
+    NINTENDO_FAMICOM                    = ("Nintendo Famicom")
+    NINTENDO_GAME_BOY                   = ("Nintendo Game Boy")
+    NINTENDO_GAME_BOY_ADVANCE           = ("Nintendo Game Boy Advance")
+    NINTENDO_GAME_BOY_ADVANCE_EREADER   = ("Nintendo Game Boy Advance e-Reader")
+    NINTENDO_GAME_BOY_COLOR             = ("Nintendo Game Boy Color")
+    NINTENDO_GAMECUBE                   = ("Nintendo Gamecube")
+    NINTENDO_NES                        = ("Nintendo NES")
+    NINTENDO_SNES                       = ("Nintendo SNES")
+    NINTENDO_SNES_MSU1                  = ("Nintendo SNES MSU-1")
+    NINTENDO_SUPER_FAMICOM              = ("Nintendo Super Famicom")
+    NINTENDO_SUPER_GAME_BOY             = ("Nintendo Super Game Boy")
+    NINTENDO_SUPER_GAME_BOY_COLOR       = ("Nintendo Super Game Boy Color")
+    NINTENDO_SWITCH                     = ("Nintendo Switch")
+    NINTENDO_SWITCH_ESHOP               = ("Nintendo Switch eShop")
+    NINTENDO_VIRTUAL_BOY                = ("Nintendo Virtual Boy")
+    NINTENDO_WII                        = ("Nintendo Wii")
+    NINTENDO_WII_U                      = ("Nintendo Wii U")
+    NINTENDO_WII_U_ESHOP                = ("Nintendo Wii U eShop")
+    NINTENDO_WIIWARE                    = ("Nintendo WiiWare")
 
-# Subcategories
-game_subcategories = {
-    game_category_computer: game_subcategories_computer,
-    game_category_microsoft: game_subcategories_microsoft,
-    game_category_nintendo: game_subcategories_nintendo,
-    game_category_other: game_subcategories_other,
-    game_category_sony: game_subcategories_sony
+    # Other
+    OTHER_APPLE_IOS                     = ("Apple iOS")
+    OTHER_APPLE_MACOS_8                 = ("Apple MacOS 8")
+    OTHER_ARCADE                        = ("Arcade")
+    OTHER_ATARI_800                     = ("Atari 800")
+    OTHER_ATARI_2600                    = ("Atari 2600")
+    OTHER_ATARI_5200                    = ("Atari 5200")
+    OTHER_ATARI_7800                    = ("Atari 7800")
+    OTHER_ATARI_JAGUAR                  = ("Atari Jaguar")
+    OTHER_ATARI_JAGUAR_CD               = ("Atari Jaguar CD")
+    OTHER_ATARI_LYNX                    = ("Atari Lynx")
+    OTHER_BANDAI_WONDERSWAN             = ("Bandai WonderSwan")
+    OTHER_BANDAI_WONDERSWAN_COLOR       = ("Bandai WonderSwan Color")
+    OTHER_COLECO_COLECOVISION           = ("Coleco ColecoVision")
+    OTHER_COMMODORE_64                  = ("Commodore 64")
+    OTHER_COMMODORE_AMIGA               = ("Commodore Amiga")
+    OTHER_GOOGLE_ANDROID                = ("Google Android")
+    OTHER_MAGNAVOX_ODYSSEY_2            = ("Magnavox Odyssey 2")
+    OTHER_MATTEL_INTELLIVISION          = ("Mattel Intellivision")
+    OTHER_NEC_PCENGINE                  = ("NEC PC-Engine")
+    OTHER_NEC_PCENGINE_CD               = ("NEC PC-Engine CD")
+    OTHER_NEC_SUPERGRAFX                = ("NEC SuperGrafx")
+    OTHER_NEC_TURBOGRAFX_16             = ("NEC TurboGrafx-16")
+    OTHER_NEC_TURBOGRAFX_CD             = ("NEC TurboGrafx CD")
+    OTHER_NOKIA_NGAGE                   = ("Nokia N-Gage")
+    OTHER_PANASONIC_3DO                 = ("Panasonic 3DO")
+    OTHER_PHILIPS_CDI                   = ("Philips CDi")
+    OTHER_SNK_NEOGEO_POCKET_COLOR       = ("SNK Neo Geo Pocket Color")
+    OTHER_SEGA_32X                      = ("Sega 32X")
+    OTHER_SEGA_CD                       = ("Sega CD")
+    OTHER_SEGA_CD_32X                   = ("Sega CD 32X")
+    OTHER_SEGA_DREAMCAST                = ("Sega Dreamcast")
+    OTHER_SEGA_GAME_GEAR                = ("Sega Game Gear")
+    OTHER_SEGA_GENESIS                  = ("Sega Genesis")
+    OTHER_SEGA_MASTER_SYSTEM            = ("Sega Master System")
+    OTHER_SEGA_SATURN                   = ("Sega Saturn")
+    OTHER_SINCLAIR_ZX_SPECTRUM          = ("Sinclair ZX Spectrum")
+    OTHER_TEXAS_INSTRUMENTS_TI994A      = ("Texas Instruments TI-99-4A")
+    OTHER_TIGER_GAMECOM                 = ("Tiger Game.com")
+
+    # Sony
+    SONY_PLAYSTATION                    = ("Sony PlayStation")
+    SONY_PLAYSTATION_2                  = ("Sony PlayStation 2")
+    SONY_PLAYSTATION_3                  = ("Sony PlayStation 3")
+    SONY_PLAYSTATION_4                  = ("Sony PlayStation 4")
+    SONY_PLAYSTATION_NETWORK_PS3        = ("Sony PlayStation Network - PlayStation 3")
+    SONY_PLAYSTATION_NETWORK_PS4        = ("Sony PlayStation Network - PlayStation 4")
+    SONY_PLAYSTATION_NETWORK_PSP        = ("Sony PlayStation Network - PlayStation Portable")
+    SONY_PLAYSTATION_NETWORK_PSPM       = ("Sony PlayStation Network - PlayStation Portable Minis")
+    SONY_PLAYSTATION_NETWORK_PSV        = ("Sony PlayStation Network - PlayStation Vita")
+    SONY_PLAYSTATION_PORTABLE           = ("Sony PlayStation Portable")
+    SONY_PLAYSTATION_PORTABLE_VIDEO     = ("Sony PlayStation Portable Video")
+    SONY_PLAYSTATION_VITA               = ("Sony PlayStation Vita")
+
+# Subcategory map
+subcategory_map = {
+    Category.COMPUTER: [
+        Subcategory.COMPUTER_AMAZON_GAMES,
+        Subcategory.COMPUTER_DISC,
+        Subcategory.COMPUTER_EPIC_GAMES,
+        Subcategory.COMPUTER_GOG,
+        Subcategory.COMPUTER_HUMBLE_BUNDLE,
+        Subcategory.COMPUTER_ITCHIO,
+        Subcategory.COMPUTER_LEGACY_GAMES,
+        Subcategory.COMPUTER_PUPPET_COMBO,
+        Subcategory.COMPUTER_RED_CANDLE,
+        Subcategory.COMPUTER_SQUARE_ENIX,
+        Subcategory.COMPUTER_STEAM,
+        Subcategory.COMPUTER_ZOOM
+    ],
+    Category.MICROSOFT: [
+        Subcategory.MICROSOFT_MSX,
+        Subcategory.MICROSOFT_XBOX,
+        Subcategory.MICROSOFT_XBOX_360,
+        Subcategory.MICROSOFT_XBOX_360_GOD,
+        Subcategory.MICROSOFT_XBOX_360_XBLA,
+        Subcategory.MICROSOFT_XBOX_360_XIG,
+        Subcategory.MICROSOFT_XBOX_ONE,
+        Subcategory.MICROSOFT_XBOX_ONE_GOD
+    ],
+    Category.NINTENDO: [
+        Subcategory.NINTENDO_3DS,
+        Subcategory.NINTENDO_3DS_APPS,
+        Subcategory.NINTENDO_3DS_ESHOP,
+        Subcategory.NINTENDO_64,
+        Subcategory.NINTENDO_AMIIBO,
+        Subcategory.NINTENDO_DS,
+        Subcategory.NINTENDO_DSI,
+        Subcategory.NINTENDO_FAMICOM,
+        Subcategory.NINTENDO_GAME_BOY,
+        Subcategory.NINTENDO_GAME_BOY_ADVANCE,
+        Subcategory.NINTENDO_GAME_BOY_ADVANCE_EREADER,
+        Subcategory.NINTENDO_GAME_BOY_COLOR,
+        Subcategory.NINTENDO_GAMECUBE,
+        Subcategory.NINTENDO_NES,
+        Subcategory.NINTENDO_SNES,
+        Subcategory.NINTENDO_SNES_MSU1,
+        Subcategory.NINTENDO_SUPER_FAMICOM,
+        Subcategory.NINTENDO_SUPER_GAME_BOY,
+        Subcategory.NINTENDO_SUPER_GAME_BOY_COLOR,
+        Subcategory.NINTENDO_SWITCH,
+        Subcategory.NINTENDO_SWITCH_ESHOP,
+        Subcategory.NINTENDO_VIRTUAL_BOY,
+        Subcategory.NINTENDO_WII,
+        Subcategory.NINTENDO_WII_U,
+        Subcategory.NINTENDO_WII_U_ESHOP,
+        Subcategory.NINTENDO_WIIWARE
+    ],
+    Category.OTHER: [
+        Subcategory.OTHER_APPLE_IOS,
+        Subcategory.OTHER_APPLE_MACOS_8,
+        Subcategory.OTHER_ARCADE,
+        Subcategory.OTHER_ATARI_800,
+        Subcategory.OTHER_ATARI_2600,
+        Subcategory.OTHER_ATARI_5200,
+        Subcategory.OTHER_ATARI_7800,
+        Subcategory.OTHER_ATARI_JAGUAR,
+        Subcategory.OTHER_ATARI_JAGUAR_CD,
+        Subcategory.OTHER_ATARI_LYNX,
+        Subcategory.OTHER_BANDAI_WONDERSWAN,
+        Subcategory.OTHER_BANDAI_WONDERSWAN_COLOR,
+        Subcategory.OTHER_COLECO_COLECOVISION,
+        Subcategory.OTHER_COMMODORE_64,
+        Subcategory.OTHER_COMMODORE_AMIGA,
+        Subcategory.OTHER_GOOGLE_ANDROID,
+        Subcategory.OTHER_MAGNAVOX_ODYSSEY_2,
+        Subcategory.OTHER_MATTEL_INTELLIVISION,
+        Subcategory.OTHER_NEC_PCENGINE,
+        Subcategory.OTHER_NEC_PCENGINE_CD,
+        Subcategory.OTHER_NEC_SUPERGRAFX,
+        Subcategory.OTHER_NEC_TURBOGRAFX_16,
+        Subcategory.OTHER_NEC_TURBOGRAFX_CD,
+        Subcategory.OTHER_NOKIA_NGAGE,
+        Subcategory.OTHER_PANASONIC_3DO,
+        Subcategory.OTHER_PHILIPS_CDI,
+        Subcategory.OTHER_SNK_NEOGEO_POCKET_COLOR,
+        Subcategory.OTHER_SEGA_32X,
+        Subcategory.OTHER_SEGA_CD,
+        Subcategory.OTHER_SEGA_CD_32X,
+        Subcategory.OTHER_SEGA_DREAMCAST,
+        Subcategory.OTHER_SEGA_GAME_GEAR,
+        Subcategory.OTHER_SEGA_GENESIS,
+        Subcategory.OTHER_SEGA_MASTER_SYSTEM,
+        Subcategory.OTHER_SEGA_SATURN,
+        Subcategory.OTHER_SINCLAIR_ZX_SPECTRUM,
+        Subcategory.OTHER_TEXAS_INSTRUMENTS_TI994A,
+        Subcategory.OTHER_TIGER_GAMECOM
+    ],
+    Category.SONY: [
+        Subcategory.SONY_PLAYSTATION,
+        Subcategory.SONY_PLAYSTATION_2,
+        Subcategory.SONY_PLAYSTATION_3,
+        Subcategory.SONY_PLAYSTATION_4,
+        Subcategory.SONY_PLAYSTATION_NETWORK_PS3,
+        Subcategory.SONY_PLAYSTATION_NETWORK_PS4,
+        Subcategory.SONY_PLAYSTATION_NETWORK_PSP,
+        Subcategory.SONY_PLAYSTATION_NETWORK_PSPM,
+        Subcategory.SONY_PLAYSTATION_NETWORK_PSV,
+        Subcategory.SONY_PLAYSTATION_PORTABLE,
+        Subcategory.SONY_PLAYSTATION_PORTABLE_VIDEO,
+        Subcategory.SONY_PLAYSTATION_VITA
+    ]
 }
-game_subcategories_all = []
-game_subcategories_all += game_subcategories_computer
-game_subcategories_all += game_subcategories_microsoft
-game_subcategories_all += game_subcategories_nintendo
-game_subcategories_all += game_subcategories_other
-game_subcategories_all += game_subcategories_sony

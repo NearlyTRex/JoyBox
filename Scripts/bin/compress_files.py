@@ -3,7 +3,6 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
@@ -11,34 +10,19 @@ sys.path.append(lib_folder)
 import config
 import system
 import archive
+import arguments
 import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Compress files.")
-parser.add_argument("path", help="Input path")
-parser.add_argument("-a", "--archive_type",
-    choices=config.ArchiveType.values(),
-    default=config.ArchiveType.ZIP.value,
-    type=config.ArchiveType,
-    action=config.EnumArgparseAction,
-    help="Archive type"
-)
-parser.add_argument("-w", "--password", type=str, help="Password to set")
-parser.add_argument("-s", "--volume_size", type=str, help="Volume size for output files (100m, etc)")
-parser.add_argument("-t", "--file_types", type=str, default="", help="List of file types (comma delimited)")
-parser.add_argument("-d", "--delete_originals", action="store_true", help="Delete original files")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Compress files.")
+parser.add_input_path_argument()
+parser.add_archive_type_argument()
+parser.add_string_argument(args = ("-w", "--password"), description = "Password to set")
+parser.add_string_argument(args = ("-s", "--volume_size"), description = "Volume size for output files (100m, etc)")
+parser.add_string_argument(args = ("-t", "--file_types"), default = "", description = "List of file types (comma delimited)")
+parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete original files")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
-if not args.path:
-    parser.print_help()
-    system.QuitProgram()
-
-# Check that path exists first
-root_path = os.path.realpath(args.path)
-if not os.path.exists(root_path):
-    system.LogErrorAndQuit("Path '%s' does not exist" % args.path)
 
 # Main
 def main():
@@ -46,9 +30,12 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get input path
+    input_path = parser.get_input_path()
+
     # Compress files
-    for obj in system.GetDirectoryContents(root_path):
-        obj_path = os.path.join(root_path, obj)
+    for obj in system.GetDirectoryContents(input_path):
+        obj_path = os.path.join(input_path, obj)
         if not os.path.isfile(obj_path):
             continue
 
@@ -61,7 +48,9 @@ def main():
             continue
 
         # Get output file
-        output_file = output_file = os.path.join(root_path, system.GetFilenameBasename(obj_path) + "." + args.archive_type.value)
+        output_basename = system.GetFilenameBasename(obj_path)
+        output_ext = archive.GetArchiveExtension(args.archive_type)
+        output_file = os.path.join(input_path, output_basename + "." + output_ext)
         if os.path.exists(output_file):
             continue
 

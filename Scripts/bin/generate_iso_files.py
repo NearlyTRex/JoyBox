@@ -3,7 +3,6 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
@@ -13,20 +12,13 @@ import system
 import environment
 import metadata
 import hashing
+import arguments
 import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Generate iso files.")
-parser.add_argument("-u", "--game_supercategory",
-    choices=config.game_supercategories,
-    default=config.game_supercategory_roms,
-    help="Game supercategory"
-)
-parser.add_argument("-c", "--game_category", type=str, help="Game category")
-parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Generate iso files.")
+parser.add_game_category_arguments()
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
 # Paths
@@ -98,11 +90,11 @@ def main():
     if args.game_category and args.game_subcategory:
         hash_files.append(os.path.join(hashes_base_dir, args.game_category, args.game_subcategory + ".txt"))
     elif args.game_category:
-        for game_subcategory in config.game_subcategories[args.game_category]:
+        for game_subcategory in config.subcategory_map[args.game_category]:
             hash_files.append(os.path.join(files_root_dir, args.game_category, game_subcategory))
     else:
-        for game_category in config.game_categories:
-            for game_subcategory in config.game_subcategories[game_category]:
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
                 hash_files.append(os.path.join(files_root_dir, game_category, game_subcategory))
 
     # Generate iso files

@@ -3,30 +3,20 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import system
+import arguments
 import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Create folders from certain file types.")
-parser.add_argument("path", help="Input path")
-parser.add_argument("-f", "--file_types", type=str, default=".iso,.chd,.rvz,.zip,.7z,.rar,.pkg", help="List of file types (comma delimited)")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Create folders from certain file types.")
+parser.add_input_path_argument()
+parser.add_string_argument("-f", "--file_types", default = ".iso,.chd,.rvz,.zip,.7z,.rar,.pkg", description = "List of file types (comma delimited)")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
-if not args.path:
-    parser.print_help()
-    system.QuitProgram()
-
-# Check that path exists first
-input_path = os.path.realpath(args.path)
-if not os.path.exists(input_path):
-    system.LogErrorAndQuit("Path '%s' does not exist" % args.path)
 
 # Main
 def main():
@@ -34,10 +24,13 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get input path
+    input_path = parser.get_input_path()
+
     # Make folders from file types
     for obj in system.GetDirectoryContents(input_path):
         obj_path = os.path.join(input_path, obj)
-        if os.path.isfile(obj_path):
+        if system.IsPathFile(obj_path):
             if obj.endswith(tuple(args.file_types.split(","))):
                 selected_file = obj_path
                 selected_file_basename = system.GetFilenameBasename(selected_file)

@@ -25,7 +25,7 @@ class Amazon(storebase.StoreBase):
 
     # Get name
     def GetName(self):
-        return config.StoreType.AMAZON.cvalue
+        return config.StoreType.AMAZON.value
 
     # Get type
     def GetType(self):
@@ -37,11 +37,11 @@ class Amazon(storebase.StoreBase):
 
     # Get category
     def GetCategory(self):
-        return config.game_category_computer
+        return config.Category.COMPUTER
 
     # Get subcategory
     def GetSubcategory(self):
-        return config.game_subcategory_amazon_games
+        return config.Subcategory.COMPUTER_AMAZON_GAMES
 
     # Get key
     def GetKey(self):

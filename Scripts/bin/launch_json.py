@@ -3,7 +3,6 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 import random
 
 # Custom imports
@@ -16,36 +15,25 @@ import platforms
 import launcher
 import metadata
 import cache
-import setup
 import gameinfo
 import gui
+import arguments
+import setup
 
 # Setup argument parser
-parser = argparse.ArgumentParser(description="Launch json game.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("-i", "--input_file", type=str, help="Json file to launch")
-parser.add_argument("-e", "--source_type",
-    choices=config.SourceType.values(),
-    default=config.SourceType.REMOTE.value,
-    type=config.SourceType,
-    action=config.EnumArgparseAction,
-    help="Source types"
-)
-parser.add_argument("-c", "--game_category", type=str, help="Game category")
-parser.add_argument("-s", "--game_subcategory", type=str, help="Game subcategory")
-parser.add_argument("-n", "--game_name", type=str, help="Game name")
-parser.add_argument("-r", "--fill_with_random", action="store_true", help="Fill unspecified fields with random values")
-parser.add_argument("-t", "--capture_type",
-    choices=config.CaptureType.values(),
-    default=config.CaptureType.NONE.value,
-    type=config.CaptureType,
-    action=config.EnumArgparseAction,
-    help="Capture type"
-)
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
-parser.add_argument("-f", "--fullscreen", action="store_true", help="Enable fullscreen mode")
-parser.add_argument("--force_cache_refresh", action="store_true", help="Force refresh of cached files")
+parser = arguments.ArgumentParser(description = "Launch json game.")
+parser.add_input_path_argument()
+parser.add_source_type_argument()
+parser.add_game_category_arguments()
+parser.add_game_name_argument()
+parser.add_boolean_argument(args = ("-r", "--fill_with_random"), description = "Fill unspecified fields with random values")
+parser.add_enum_argument(
+    args = ("-t", "--capture_type"),
+    arg_type = config.CaptureType,
+    description = "Capture type")
+parser.add_boolean_argument(args = ("-f", "--fullscreen"), description = "Enable fullscreen mode")
+parser.add_boolean_argument(args = ("--force_cache_refresh"), description = "Force refresh of cached files")
+parser.add_common_arguments()
 
 # Parse arguments
 args, unknownargs = parser.parse_known_args()
@@ -60,11 +48,8 @@ def main():
     json_file = None
 
     # Prefer input file if it was specified
-    if args.input_file:
-        if os.path.isfile(args.input_file):
-            json_file = args.input_file
-        else:
-            json_file = os.path.join(environment.GetJsonRomsMetadataRootDir(), json_file)
+    if args.input_path:
+        json_file = parser.get_input_path()
 
     # Next use category values
     elif args.game_category and args.game_subcategory and args.game_name:
@@ -79,13 +64,13 @@ def main():
         # Get category
         game_category = args.game_category
         if not game_category:
-            game_category = random.choice(config.game_categories)
+            game_category = random.choice(config.Category.members())
 
         # Get subcategory
         game_subcategory = args.game_subcategory
         if not game_subcategory:
             potential_subcategories = []
-            for potential_subcategory in config.game_subcategories[game_category]:
+            for potential_subcategory in config.subcategory_map[game_category]:
                 potential_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, potential_subcategory)
                 if not platforms.HasNoLauncher(potential_platform):
                     potential_subcategories.append(potential_subcategory)
@@ -111,7 +96,7 @@ def main():
         gui.DisplayErrorPopup(
             title_text = "No json file specified",
             message_text = "No json file was specified")
-    if not os.path.isfile(json_file):
+    if not system.IsPathFile(json_file):
         gui.DisplayErrorPopup(
             title_text = "Json file not found",
             message_text = "Json file %s was not found" % json_file)

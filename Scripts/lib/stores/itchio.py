@@ -25,7 +25,7 @@ class Itchio(storebase.StoreBase):
 
     # Get name
     def GetName(self):
-        return config.StoreType.ITCHIO.cvalue
+        return config.StoreType.ITCHIO.value
 
     # Get type
     def GetType(self):
@@ -37,11 +37,11 @@ class Itchio(storebase.StoreBase):
 
     # Get category
     def GetCategory(self):
-        return config.game_category_computer
+        return config.Category.COMPUTER
 
     # Get subcategory
     def GetSubcategory(self):
-        return config.game_subcategory_itchio
+        return config.Subcategory.ITCHIO
 
     # Get key
     def GetKey(self):

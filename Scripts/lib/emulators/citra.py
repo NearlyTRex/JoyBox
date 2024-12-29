@@ -43,9 +43,9 @@ class Citra(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.game_subcategory_nintendo_3ds,
-            config.game_subcategory_nintendo_3ds_apps,
-            config.game_subcategory_nintendo_3ds_eshop
+            config.Subcategory.NINTENDO_3DS,
+            config.Subcategory.NINTENDO_3DS_APPS,
+            config.Subcategory.NINTENDO_3DS_ESHOP
         ]
 
     # Get config

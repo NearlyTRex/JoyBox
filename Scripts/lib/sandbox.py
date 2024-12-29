@@ -1307,7 +1307,7 @@ def TransferFromSandbox(
 
     # Transfer from sandbox
     if keep_in_sandbox:
-        if os.path.isdir(real_path):
+        if system.IsPathDirectory(real_path):
             system.CopyContents(
                 src = real_path,
                 dest = path,
@@ -1322,7 +1322,7 @@ def TransferFromSandbox(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
     else:
-        if os.path.isdir(real_path):
+        if system.IsPathDirectory(real_path):
             system.MoveContents(
                 src = real_path,
                 dest = path,

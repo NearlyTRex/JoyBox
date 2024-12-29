@@ -61,7 +61,7 @@ def TransformComputerPrograms(
             prepackaged_archive = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".exe")
 
     # Pre-packaged archive
-    if os.path.isfile(prepackaged_archive):
+    if system.IsPathFile(prepackaged_archive):
 
         # Extract file
         success = archive.ExtractArchive(
@@ -439,7 +439,7 @@ def TransformGameFile(
     game_key_file = os.path.join(source_dir, game_info.get_key_file())
 
     # Output dir doesn't exist
-    if not os.path.isdir(output_dir):
+    if not system.IsPathDirectory(output_dir):
         return (False, "Output directory doesn't exist")
 
     # Create temporary directory
@@ -454,7 +454,7 @@ def TransformGameFile(
     transform_result = ""
 
     # Computer
-    if game_category == config.game_category_computer:
+    if game_category == config.Category.COMPUTER:
         transform_success, transform_result = TransformComputerPrograms(
             game_info = game_info,
             source_file = transform_file,
@@ -467,7 +467,7 @@ def TransformGameFile(
             return (False, transform_result)
 
     # Microsoft Xbox/Xbox 360
-    elif game_subcategory in [config.game_subcategory_microsoft_xbox, config.game_subcategory_microsoft_xbox_360]:
+    elif game_subcategory in [config.Subcategory.MICROSOFT_XBOX, config.Subcategory.MICROSOFT_XBOX_360]:
         iso_success, iso_result = TransformDiscImage(
             source_file = game_transform_file,
             output_dir = tmp_dir_result,
@@ -486,7 +486,7 @@ def TransformGameFile(
             return (False, transform_result)
 
     # Sony PlayStation 3
-    elif game_subcategory == config.game_subcategory_sony_playstation_3:
+    elif game_subcategory == config.Subcategory.SONY_PLAYSTATION_3:
         iso_success, iso_result = TransformDiscImage(
             source_file = game_transform_file,
             output_dir = os.path.join(tmp_dir_result, "iso"),
@@ -506,7 +506,7 @@ def TransformGameFile(
             return (False, transform_result)
 
     # Sony PlayStation Network - PlayStation 3
-    elif game_subcategory == config.game_subcategory_sony_playstation_network_ps3:
+    elif game_subcategory == config.Subcategory.SONY_PLAYSTATION_NETWORK_PS3:
         transform_success, transform_result = TransformPS3NetworkPackage(
             source_file = game_transform_file,
             output_dir = tmp_dir_result,
@@ -517,7 +517,7 @@ def TransformGameFile(
             return (False, transform_result)
 
     # Sony PlayStation Network - PlayStation Vita
-    elif game_subcategory == config.game_subcategory_sony_playstation_network_psv:
+    elif game_subcategory == config.Subcategory.SONY_PLAYSTATION_NETWORK_PSV:
         transform_success, transform_result = TransformPSVNetworkPackage(
             source_file = game_transform_file,
             output_dir = tmp_dir_result,

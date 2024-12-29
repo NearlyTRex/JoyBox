@@ -3,7 +3,6 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
@@ -11,42 +10,36 @@ sys.path.append(lib_folder)
 import system
 import environment
 import dat
+import arguments
 import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Dat renamer.")
-parser.add_argument("input_path", type=str, help="Input path")
-parser.add_argument("-d", "--dat_directory", type=str, help="Dat directory")
-parser.add_argument("-c", "--dat_cachefile", type=str, help="Dat cachefile")
-parser.add_argument("-g", "--generate_cachefile", action="store_true", help="Generate collected cachefile (if scanning normal dats)")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Dat renamer.")
+parser.add_input_path_argument()
+parser.add_string_argument(args = ("-d", "--dat_directory"), description = "Dat directory")
+parser.add_string_argument(args = ("-c", "--dat_cachefile"), description = "Dat cachefile")
+parser.add_boolean_argument(args = ("-g", "--generate_cachefile"), description = "Generate collected cachefile (if scanning normal dats)")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
-if not args.input_path:
-    parser.print_help()
-    system.QuitProgram()
-
-# Get input path
-input_path = os.path.realpath(args.input_path)
-if not os.path.isdir(input_path):
-    system.LogErrorAndQuit("Path '%s' does not exist" % args.input_path)
-
-# Get dat directory
-dat_directory = ""
-if args.dat_directory:
-    dat_directory = os.path.realpath(args.dat_directory)
-
-# Get dat cachefile
-dat_cachefile = ""
-if args.dat_cachefile:
-    dat_cachefile = os.path.realpath(args.dat_cachefile)
 
 # Main
 def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get input path
+    input_path = parser.get_input_path()
+
+    # Get dat directory
+    dat_directory = ""
+    if args.dat_directory:
+        dat_directory = os.path.realpath(args.dat_directory)
+
+    # Get dat cachefile
+    dat_cachefile = ""
+    if args.dat_cachefile:
+        dat_cachefile = os.path.realpath(args.dat_cachefile)
 
     # Load game dat(s)
     game_dat = dat.Dat()

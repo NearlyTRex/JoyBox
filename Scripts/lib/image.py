@@ -49,7 +49,7 @@ def ConvertImage(
                 elif image_ext in config.image_extensions_png:
                     image_format = config.ImageType.PNG
             if not pretend_run:
-                rgb_image.save(image_dest, image_format.cvalue)
+                rgb_image.save(image_dest, image_format.value)
             return system.DoesPathExist(image_dest)
         return False
     except Exception as e:

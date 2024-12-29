@@ -3,7 +3,6 @@
 # Imports
 import os, os.path
 import sys
-import argparse
 
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
@@ -14,13 +13,12 @@ import system
 import metadata
 import hashing
 import gameinfo
+import arguments
 import setup
 
 # Parse arguments
-parser = argparse.ArgumentParser(description="Verify rom files.")
-parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
-parser.add_argument("-p", "--pretend_run", action="store_true", help="Do a pretend run with no permanent changes")
-parser.add_argument("-x", "--exit_on_failure", action="store_true", help="Enable exit on failure mode")
+parser = arguments.ArgumentParser(description = "Verify rom files.")
+parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
 # Main
@@ -41,17 +39,17 @@ def main():
             system.LogErrorAndQuit("Extraneous json file '%s' found" % json_file)
 
     # Verify metadata files
-    for game_category in config.game_categories:
-        for game_subcategory in config.game_subcategories[game_category]:
+    for game_category in config.Category.members():
+        for game_subcategory in config.subcategory_map[game_category]:
             metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
-            if os.path.isfile(metadata_file):
+            if system.IsPathFile(metadata_file):
                 metadata_obj = metadata.Metadata()
                 metadata_obj.import_from_metadata_file(metadata_file)
                 metadata_obj.verify_files()
 
     # Verify json files
-    for game_category in config.game_categories:
-        for game_subcategory in config.game_subcategories[game_category]:
+    for game_category in config.Category.members():
+        for game_subcategory in config.subcategory_map[game_category]:
             game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
             for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
 
@@ -89,9 +87,9 @@ def main():
                         system.LogErrorAndQuit("File '%s' referenced in json file not found" % file_to_check)
 
     # Verify hash files
-    for game_supercategory in config.game_supercategories:
-        for game_category in config.game_categories:
-            for game_subcategory in config.game_subcategories[game_category]:
+    for game_supercategory in config.Supercategory.members():
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
 
                 # Get hash file path
                 hash_file_path = environment.GetHashesMetadataFile(game_supercategory, game_category, game_subcategory)

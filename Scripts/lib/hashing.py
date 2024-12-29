@@ -224,7 +224,7 @@ def FindDuplicateFiles(
     test_checksum = CalculateFileCRC32(filename, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
     for obj in system.GetDirectoryContents(directory):
         obj_path = os.path.join(directory, obj)
-        if os.path.isfile(obj_path):
+        if system.IsPathFile(obj_path):
             obj_checksum = CalculateFileCRC32(obj_path, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
             if test_checksum == obj_checksum:
                 found_files.append(obj_path)
@@ -241,7 +241,7 @@ def FindDuplicateArchives(
     test_checksums = archive.GetArchiveChecksums(filename)
     for obj in system.GetDirectoryContents(directory):
         obj_path = os.path.join(directory, obj)
-        if os.path.isfile(obj_path):
+        if system.IsPathFile(obj_path):
             obj_checksums = archive.GetArchiveChecksums(obj_path)
             if [i for i in test_checksums if i not in obj_checksums] == []:
                 found_files.append(obj_path)
@@ -488,7 +488,7 @@ def HashFiles(
 
     # Get hash contents
     hash_contents = {}
-    if os.path.isfile(output_file):
+    if system.IsPathFile(output_file):
         hash_contents = ReadHashFile(
             filename = output_file,
             verbose = verbose,
