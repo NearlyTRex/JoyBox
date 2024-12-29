@@ -7,6 +7,7 @@ import sys
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
+import config
 import system
 import environment
 import dat
@@ -43,7 +44,7 @@ def main():
 
     # Load game dat(s)
     game_dat = dat.Dat()
-    if os.path.isdir(dat_directory):
+    if system.IsPathDirectory(dat_directory):
         game_dat.import_clrmamepro_dat_files(
             dat_dir = dat_directory,
             verbose = args.verbose,
@@ -55,7 +56,7 @@ def main():
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
-    elif os.path.isfile(dat_cachefile):
+    elif system.IsPathFile(dat_cachefile):
         game_dat.import_cache_dat_file(
             dat_file = dat_cachefile,
             verbose = args.verbose,

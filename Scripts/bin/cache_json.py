@@ -53,7 +53,7 @@ def main():
         gui.DisplayErrorPopup(
             title_text = "No json file specified",
             message_text = "No json file was specified")
-    if not os.path.isfile(json_file):
+    if not system.IsPathFile(json_file):
         gui.DisplayErrorPopup(
             title_text = "Json file not found",
             message_text = "Json file %s was not found" % json_file)

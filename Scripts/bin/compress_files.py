@@ -36,7 +36,7 @@ def main():
     # Compress files
     for obj in system.GetDirectoryContents(input_path):
         obj_path = os.path.join(input_path, obj)
-        if not os.path.isfile(obj_path):
+        if not system.IsPathFile(obj_path):
             continue
 
         # Check file type
