@@ -335,7 +335,17 @@ def GetElementAttribute(element, attribute_name):
 
 # Get element children text
 def GetElementChildrenText(element):
-    return system.ExtractWebText(GetElementAttribute(element, "innerHTML"))
+    attribute = GetElementAttribute(element, "innerHTML")
+    if attribute:
+        return system.ExtractWebText(attribute)
+    return None
+
+# Get element link url
+def GetElementLinkUrl(element):
+    element = GetElement(parent = element, locator = ElementLocator({"tag": "a"}))
+    if element:
+        return GetElementAttribute(element, "href")
+    return None
 
 # Click element
 def ClickElement(
