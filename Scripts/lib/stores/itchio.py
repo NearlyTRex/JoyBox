@@ -132,7 +132,7 @@ class Itchio(storebase.StoreBase):
                     locator = webpage.ElementLocator({"class": "title"}))
                 game_cover = webpage.GetElement(
                     parent = game_cell,
-                    locator = webpage.ElementLocator({"class_name": "lazy_loaded"}))
+                    locator = webpage.ElementLocator({"class": "lazy_loaded"}))
                 if not game_title or not game_cover:
                     continue
 
