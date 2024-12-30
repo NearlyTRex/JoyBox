@@ -35,7 +35,7 @@ def main():
     # Compress folders
     for obj in system.GetDirectoryContents(input_path):
         obj_path = os.path.join(input_path, obj)
-        if not os.path.isdir(obj_path):
+        if not system.IsPathDirectory(obj_path):
             continue
 
         # Get output file

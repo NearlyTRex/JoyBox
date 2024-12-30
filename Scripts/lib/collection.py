@@ -467,7 +467,7 @@ def ScanForMetadataEntries(
 
     # Gather directories to scan
     scan_directories = []
-    if game_platform in config.LetterPlatforms:
+    if platforms.IsLetterPlatform(game_platform):
         for obj in system.GetDirectoryContents(game_dir):
             scan_directories.append(os.path.join(game_dir, obj))
     else:
