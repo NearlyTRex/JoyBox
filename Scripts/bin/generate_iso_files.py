@@ -17,7 +17,9 @@ import setup
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Generate iso files.")
-parser.add_game_category_arguments()
+parser.add_game_supercategory_argument()
+parser.add_game_category_argument()
+parser.add_game_subcategory_argument()
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

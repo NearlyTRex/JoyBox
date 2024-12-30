@@ -26,7 +26,10 @@ parser.add_enum_argument(
     args = ("-g", "--preset_option_group_type"),
     arg_type = config.PresetOptionGroupType,
     description = "Preset option group type")
-parser.add_passphrase_type_argument()
+parser.add_enum_argument(
+    args = ("-t", "--passphrase_type"),
+    arg_type = config.PassphraseType,
+    description = "Passphrase type")
 parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Skip existing files")
 parser.add_boolean_argument(args = ("-i", "--skip_identical"), description = "Skip identical files")
 parser.add_common_arguments()

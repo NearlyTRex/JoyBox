@@ -152,111 +152,27 @@ class ArgumentParser:
 
     #################################################
 
-    # Add passphrase type argument
-    def add_passphrase_type_argument(
-        self,
-        args = ("-t", "--passphrase_type"),
-        description = "Passphrase type",
-        allow_multiple = False):
+    # Add game supercategory argument
+    def add_game_supercategory_argument(self, args = ("-u", "--game_supercategory"), description = "Game supercategory type"):
         self.add_enum_argument(
             args = args,
-            arg_type = config.PassphraseType,
-            description = description,
-            allow_multiple = allow_multiple)
-
-    # Add source type argument
-    def add_source_type_argument(
-        self,
-        args = ("-l", "--source_type"),
-        default = config.SourceType.REMOTE,
-        description = "Source type",
-        allow_multiple = False):
-        self.add_enum_argument(args = args,
-            arg_type = config.SourceType,
-            default = default,
-            description = description,
-            allow_multiple = allow_multiple)
-
-    # Add asset type argument
-    def add_asset_type_argument(
-        self,
-        args = ("-e", "--asset_type"),
-        default = config.AssetType.BOXFRONT,
-        description = "Asset type",
-        allow_multiple = False):
-        self.add_enum_argument(
-            args = args,
-            arg_type = config.AssetType,
-            default = default,
-            description = description,
-            allow_multiple = allow_multiple)
-
-    # Add archive type argument
-    def add_archive_type_argument(
-        self,
-        args = ("-a", "--archive_type"),
-        default = config.ArchiveType.ZIP,
-        description = "Archive type",
-        allow_multiple = False):
-        self.add_enum_argument(
-            args = args,
-            arg_type = config.ArchiveType,
-            default = default,
-            description = description,
-            allow_multiple = allow_multiple)
-
-    # Add disc image type argument
-    def add_disc_image_type_argument(
-        self,
-        args = ("-t", "--disc_image_type"),
-        default = config.DiscImageType.ISO,
-        description = "Disc image type",
-        allow_multiple = False):
-        self.add_enum_argument(
-            args = args,
-            arg_type = config.DiscImageType,
-            default = default,
-            description = description,
-            allow_multiple = allow_multiple)
-
-    # Add generation mode argument
-    def add_generation_mode_argument(
-        self,
-        args = ("-m", "--generation_mode"),
-        default = config.GenerationModeType.STANDARD,
-        description = "Generation mode",
-        allow_multiple = False):
-        self.add_enum_argument(
-            args = args,
-            arg_type = config.GenerationModeType,
-            default = default,
-            description = description,
-            allow_multiple = allow_multiple)
-
-    #################################################
-
-    # Add game category arguments
-    def add_game_category_arguments(
-        self,
-        supercategory_args = ("-u", "--game_supercategory"),
-        category_args = ("-c", "--game_category"),
-        subcategory_args = ("-s", "--game_subcategory"),
-        supercategory_description = "Game supercategory type",
-        category_description = "Game category type",
-        subcategory_description = "Game subcategory type"):
-        self.add_enum_argument(
-            args = supercategory_args,
             arg_type = config.Supercategory,
             default = config.Supercategory.ROMS,
-            description = supercategory_description)
+            description = description)
+
+    # Add game category argument
+    def add_game_category_argument(self, args = ("-c", "--game_category"), description = "Game category type"):
         self.add_enum_argument(
-            args = category_args,
+            args = args,
             arg_type = config.Category,
-            description = category_description)
+            description = description)
+
+    # Add game subcategory argument
+    def add_game_subcategory_argument(self, args = ("-s", "--game_subcategory"), description = "Game subcategory type"):
         self.add_enum_argument(
-            args = subcategory_args,
+            args = args,
             arg_type = config.Subcategory,
-            description = subcategory_description)
+            description = description)
 
     # Add game name argument
     def add_game_name_argument(self, args = ("-n", "--game_name"), description = "Game name"):

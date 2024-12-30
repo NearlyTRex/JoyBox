@@ -17,16 +17,25 @@ import setup
 parser = arguments.ArgumentParser(description = "Backup tool.")
 parser.add_input_path_argument()
 parser.add_output_path_argument()
-parser.add_game_category_arguments()
+parser.add_game_supercategory_argument()
+parser.add_game_category_argument()
+parser.add_game_subcategory_argument()
 parser.add_game_offset_argument()
 parser.add_enum_argument(
     args = ("-b", "--backup_type"),
     arg_type = config.BackupType,
     default = config.BackupType.COPY,
-    description = "Backup type"
-)
-parser.add_source_type_argument(args = ("-l", "--source_type"), default = config.SourceType.LOCAL, description = "Source type")
-parser.add_source_type_argument(args = ("-q", "--destination_type"), default = config.SourceType.LOCAL, description = "Destination type")
+    description = "Backup type")
+parser.add_enum_argument(
+    args = ("-l", "--source_type"),
+    arg_type = config.SourceType,
+    default = config.SourceType.LOCAL,
+    description = "Source type")
+parser.add_enum_argument(
+    args = ("-q", "--destination_type"),
+    arg_type = config.SourceType,
+    default = config.SourceType.LOCAL,
+    description = "Destination type")
 parser.add_string_argument(args = ("-w", "--exclude_paths"), default = "", description = "Excluded paths (comma separated list)")
 parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Skip existing files")
 parser.add_boolean_argument(args = ("-a", "--skip_identical"), description = "Skip identical files")

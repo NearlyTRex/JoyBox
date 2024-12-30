@@ -21,7 +21,8 @@ parser.add_enum_argument(
     arg_type = config.SaveActionType,
     default = config.SaveActionType.PACK,
     description = "Save action type")
-parser.add_game_category_arguments()
+parser.add_game_category_argument()
+parser.add_game_subcategory_argument()
 parser.add_game_name_argument()
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()

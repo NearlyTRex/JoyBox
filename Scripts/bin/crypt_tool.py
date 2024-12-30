@@ -17,7 +17,10 @@ import setup
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Encrypt/decrypt files.")
 parser.add_input_path_argument()
-parser.add_passphrase_type_argument()
+parser.add_enum_argument(
+    args = ("-t", "--passphrase_type"),
+    arg_type = config.PassphraseType,
+    description = "Passphrase type")
 parser.add_boolean_argument(args = ("-e", "--encrypt"), description = "Encrypt files")
 parser.add_boolean_argument(args = ("-d", "--decrypt"), description = "Decrypt files")
 parser.add_boolean_argument(args = ("-k", "--keep_originals"), description = "Keep original files")

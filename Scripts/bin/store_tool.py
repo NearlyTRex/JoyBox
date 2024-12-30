@@ -18,6 +18,7 @@ import setup
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Manage store games.")
 parser.add_input_path_argument(default = ".")
+parser.add_output_path_argument()
 parser.add_enum_argument(
     args = ("-t", "--store_type"),
     arg_type = config.StoreType,
@@ -28,11 +29,13 @@ parser.add_enum_argument(
     arg_type = config.StoreActionType,
     default = config.StoreActionType.LOGIN,
     description = "Store action type")
-parser.add_asset_type_argument()
+parser.add_enum_argument(
+    args = ("-e", "--asset_type"),
+    arg_type = config.AssetType,
+    description = "Asset type")
 parser.add_boolean_argument(args = ("-s", "--skip_existing"), description = "Skip existing entries")
 parser.add_boolean_argument(args = ("-f", "--force"), description = "Always run action")
 parser.add_string_argument(args = ("-k", "--keys"), description = "Keys to use (comma delimited)")
-parser.add_output_path_argument()
 parser.add_boolean_argument(args = ("-m", "--load_manifest"), description = "Load manifest")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()

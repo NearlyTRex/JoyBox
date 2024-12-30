@@ -17,8 +17,12 @@ import setup
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Download metadata assets.")
-parser.add_game_category_arguments()
-parser.add_asset_type_argument(args = ("-t", "--asset_type"), description = "Asset type")
+parser.add_game_category_argument()
+parser.add_game_subcategory_argument()
+parser.add_enum_argument(
+    args = ("-t", "--asset_type"),
+    arg_type = config.AssetType,
+    description = "Asset type")
 parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Skip existing files")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()

@@ -7,6 +7,7 @@ import sys
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
+import config
 import system
 import archive
 import arguments
@@ -15,8 +16,9 @@ import setup
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Verify archive files.")
 parser.add_input_path_argument()
-parser.add_archive_type_argument(
+parser.add_enum_argument(
     args = ("-a", "--archive_types"),
+    arg_type = config.ArchiveType,
     default = [config.ArchiveType.ZIP],
     description = "Archive types",
     allow_multiple = True)

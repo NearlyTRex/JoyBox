@@ -16,8 +16,9 @@ import setup
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Decompress archive files.")
 parser.add_input_path_argument()
-parser.add_archive_type_argument(
+parser.add_enum_argument(
     args = ("-a", "--archive_types"),
+    arg_type = config.ArchiveType,
     default = [config.ArchiveType.ZIP],
     description = "Archive types",
     allow_multiple = True)

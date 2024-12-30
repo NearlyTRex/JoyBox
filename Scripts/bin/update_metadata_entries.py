@@ -17,7 +17,8 @@ import setup
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Update metadata entries.")
-parser.add_game_category_arguments()
+parser.add_game_category_argument()
+parser.add_game_subcategory_argument()
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

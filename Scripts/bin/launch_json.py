@@ -23,8 +23,13 @@ import setup
 # Setup argument parser
 parser = arguments.ArgumentParser(description = "Launch json game.")
 parser.add_input_path_argument()
-parser.add_source_type_argument()
-parser.add_game_category_arguments()
+parser.add_enum_argument(
+    args = ("-l", "--source_type"),
+    arg_type = config.SourceType,
+    default = config.SourceType.REMOTE,
+    description = "Source type")
+parser.add_game_category_argument()
+parser.add_game_subcategory_argument()
 parser.add_game_name_argument()
 parser.add_boolean_argument(args = ("-r", "--fill_with_random"), description = "Fill unspecified fields with random values")
 parser.add_enum_argument(

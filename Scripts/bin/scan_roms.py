@@ -18,8 +18,15 @@ import setup
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Scan roms.")
-parser.add_source_type_argument()
-parser.add_passphrase_type_argument()
+parser.add_enum_argument(
+    args = ("-l", "--source_type"),
+    arg_type = config.SourceType,
+    default = config.SourceType.REMOTE,
+    description = "Source type")
+parser.add_enum_argument(
+    args = ("-t", "--passphrase_type"),
+    arg_type = config.PassphraseType,
+    description = "Passphrase type")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

@@ -16,8 +16,9 @@ import setup
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Convert disc images to CHD files.")
 parser.add_input_path_argument()
-parser.add_disc_image_type_argument(
+parser.add_enum_argument(
     args = ("-t", "--disc_image_types"),
+    arg_type = config.DiscImageType,
     default = [config.DiscImageType.ISO, config.DiscImageType.CUE, config.DiscImageType.GDI],
     description = "Disc image types",
     allow_multiple = True)

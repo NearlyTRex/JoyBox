@@ -16,7 +16,11 @@ import setup
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Compress files.")
 parser.add_input_path_argument()
-parser.add_archive_type_argument()
+parser.add_enum_argument(
+    args = ("-a", "--archive_type"),
+    arg_type = config.ArchiveType,
+    default = config.ArchiveType.ZIP,
+    description = "Archive type")
 parser.add_string_argument(args = ("-w", "--password"), description = "Password to set")
 parser.add_string_argument(args = ("-s", "--volume_size"), description = "Volume size for output files (100m, etc)")
 parser.add_string_argument(args = ("-t", "--file_types"), default = "", description = "List of file types (comma delimited)")
