@@ -701,31 +701,23 @@ def DeriveGameAssetPathFromName(game_name, asset_type):
 def DeriveGameCategoriesFromPlatform(game_platform):
     if not game_platform:
         return (None, None, None)
+    derived_supercategory = config.Supercategory.ROMS
     derived_category = None
     derived_subcategory = None
-    if game_platform.startswith(config.Category.COMPUTER.value):
-        derived_category = config.Category.COMPUTER
-        derived_subcategory = config.Category.from_string(game_platform.replace(config.Category.COMPUTER.value + " - ", ""))
-    elif game_platform.startswith(config.Category.MICROSOFT.value):
-        derived_category = config.Category.MICROSOFT
-        derived_subcategory = config.Category.from_string(game_platform)
-    elif game_platform.startswith(config.Category.NINTENDO.value):
-        derived_category = config.Category.NINTENDO
-        derived_subcategory = config.Category.from_string(game_platform)
-    elif game_platform.startswith(config.Category.SONY.value):
-        derived_category = config.Category.SONY
-        derived_subcategory = config.Category.from_string(game_platform)
-    else:
-        derived_category = config.Category.OTHER
-        derived_subcategory = config.Category.from_string(game_platform)
-    return (config.Supercategory.ROMS, derived_category, derived_subcategory)
+    for game_category in config.Category.members():
+        if game_platform.name.startswith(game_category.name):
+            derived_category = game_category
+    for game_subcategory in config.Subcategory.members():
+        if game_platform.name.startswith(game_subcategory.name):
+            derived_subcategory = game_subcategory
+    return (derived_supercategory, derived_category, derived_subcategory)
 
 # Derive game platform from categories
 def DeriveGamePlatformFromCategories(game_category, game_subcategory):
-    game_platform = game_subcategory
-    if game_category == config.Category.COMPUTER:
-        game_platform = game_category.value + " - " + game_subcategory.value
-    return game_platform
+    for game_platform in config.Platform.members():
+        if game_platform.value.endswith(game_subcategory.value):
+            return game_platform
+    return None
 
 # Derive game categories from file
 def DeriveGameCategoriesFromFile(game_file):

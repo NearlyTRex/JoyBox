@@ -48,7 +48,7 @@ class Xemu(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.Subcategory.MICROSOFT_XBOX
+            config.Platform.MICROSOFT_XBOX
         ]
 
     # Get config

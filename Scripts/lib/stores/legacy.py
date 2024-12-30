@@ -49,7 +49,7 @@ class Legacy(storebase.StoreBase):
 
     # Get platform
     def GetPlatform(self):
-        return config.platform_computer_legacy_games
+        return config.Platform.COMPUTER_LEGACY_GAMES
 
     # Get category
     def GetCategory(self):
@@ -57,7 +57,7 @@ class Legacy(storebase.StoreBase):
 
     # Get subcategory
     def GetSubcategory(self):
-        return config.Subcategory.LEGACY_GAMES
+        return config.Subcategory.COMPUTER_LEGACY_GAMES
 
     # Get key
     def GetKey(self):

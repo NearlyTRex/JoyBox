@@ -75,14 +75,14 @@ class Mame(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.Subcategory.OTHER_ARCADE,
-            config.Subcategory.OTHER_ATARI_5200,
-            config.Subcategory.OTHER_ATARI_7800,
-            config.Subcategory.OTHER_MAGNAVOX_ODYSSEY_2,
-            config.Subcategory.OTHER_MATTEL_INTELLIVISION,
-            config.Subcategory.OTHER_PHILIPS_CDI,
-            config.Subcategory.OTHER_TEXAS_INSTRUMENTS_TI994A,
-            config.Subcategory.OTHER_TIGER_GAMECOM
+            config.Platform.OTHER_ARCADE,
+            config.Platform.OTHER_ATARI_5200,
+            config.Platform.OTHER_ATARI_7800,
+            config.Platform.OTHER_MAGNAVOX_ODYSSEY_2,
+            config.Platform.OTHER_MATTEL_INTELLIVISION,
+            config.Platform.OTHER_PHILIPS_CDI,
+            config.Platform.OTHER_TEXAS_INSTRUMENTS_TI994A,
+            config.Platform.OTHER_TIGER_GAMECOM
         ]
 
     # Get config
@@ -262,7 +262,7 @@ class Mame(emulatorbase.EmulatorBase):
         ]
 
         # Add rom path
-        if game_platform == config.Subcategory.OTHER_ARCADE:
+        if game_platform == config.Platform.OTHER_ARCADE:
             launch_cmd += [
                 "-rompath", config.token_game_dir
             ]
@@ -272,41 +272,41 @@ class Mame(emulatorbase.EmulatorBase):
             ]
 
         # Add launch file
-        if game_platform == config.Subcategory.OTHER_ARCADE:
+        if game_platform == config.Platform.OTHER_ARCADE:
             launch_cmd += [
                 config.token_game_name
             ]
-        elif game_platform == config.Subcategory.OTHER_ATARI_5200:
+        elif game_platform == config.Platform.OTHER_ATARI_5200:
             launch_cmd += [
                 "a5200",
                 "-cart", config.token_game_file
             ]
-        elif game_platform == config.Subcategory.OTHER_ATARI_7800:
+        elif game_platform == config.Platform.OTHER_ATARI_7800:
             launch_cmd += [
                 "a7800",
                 "-cart", config.token_game_file
             ]
-        elif game_platform == config.Subcategory.OTHER_MAGNAVOX_ODYSSEY_2:
+        elif game_platform == config.Platform.OTHER_MAGNAVOX_ODYSSEY_2:
             launch_cmd += [
                 "odyssey2",
                 "-cart", config.token_game_file
             ]
-        elif game_platform == config.Subcategory.OTHER_MATTEL_INTELLIVISION:
+        elif game_platform == config.Platform.OTHER_MATTEL_INTELLIVISION:
             launch_cmd += [
                 "intv",
                 "-cart", config.token_game_file
             ]
-        elif game_platform == config.Subcategory.OTHER_PHILIPS_CDI:
+        elif game_platform == config.Platform.OTHER_PHILIPS_CDI:
             launch_cmd += [
                 "cdimono1",
                 "-cdrom", config.token_game_file
             ]
-        elif game_platform == config.Subcategory.OTHER_TEXAS_INSTRUMENTS_TI994A:
+        elif game_platform == config.Platform.OTHER_TEXAS_INSTRUMENTS_TI994A:
             launch_cmd += [
                 "ti99_4a",
                 "-cart", config.token_game_file
             ]
-        elif game_platform == config.Subcategory.OTHER_TIGER_GAMECOM:
+        elif game_platform == config.Platform.OTHER_TIGER_GAMECOM:
             launch_cmd += [
                 "gamecom",
                 "-cart1", config.token_game_file

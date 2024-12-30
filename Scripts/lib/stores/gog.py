@@ -48,7 +48,7 @@ class GOG(storebase.StoreBase):
 
     # Get platform
     def GetPlatform(self):
-        return config.platform_computer_gog
+        return config.Platform.COMPUTER_GOG
 
     # Get category
     def GetCategory(self):

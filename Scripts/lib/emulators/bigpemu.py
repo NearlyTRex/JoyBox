@@ -29,8 +29,8 @@ class BigPEmu(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.Subcategory.OTHER_ATARI_JAGUAR,
-            config.Subcategory.OTHER_ATARI_JAGUAR_CD
+            config.Platform.OTHER_ATARI_JAGUAR,
+            config.Platform.OTHER_ATARI_JAGUAR_CD
         ]
 
     # Get config

@@ -34,10 +34,10 @@ class Xenia(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.Subcategory.MICROSOFT_XBOX_360,
-            config.Subcategory.MICROSOFT_XBOX_360_GOD,
-            config.Subcategory.MICROSOFT_XBOX_360_XBLA,
-            config.Subcategory.MICROSOFT_XBOX_360_XIG
+            config.Platform.MICROSOFT_XBOX_360,
+            config.Platform.MICROSOFT_XBOX_360_GOD,
+            config.Platform.MICROSOFT_XBOX_360_XBLA,
+            config.Platform.MICROSOFT_XBOX_360_XIG
         ]
 
     # Get config

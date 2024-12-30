@@ -55,8 +55,8 @@ class Yuzu(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.Subcategory.NINTENDO_SWITCH,
-            config.Subcategory.NINTENDO_SWITCH_ESHOP
+            config.Platform.NINTENDO_SWITCH,
+            config.Platform.NINTENDO_SWITCH_ESHOP
         ]
 
     # Get config

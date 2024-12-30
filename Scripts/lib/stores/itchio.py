@@ -33,7 +33,7 @@ class Itchio(storebase.StoreBase):
 
     # Get platform
     def GetPlatform(self):
-        return config.platform_computer_itchio
+        return config.Platform.COMPUTER_ITCHIO
 
     # Get category
     def GetCategory(self):
@@ -41,7 +41,7 @@ class Itchio(storebase.StoreBase):
 
     # Get subcategory
     def GetSubcategory(self):
-        return config.Subcategory.ITCHIO
+        return config.Subcategory.COMPUTER_ITCHIO
 
     # Get key
     def GetKey(self):

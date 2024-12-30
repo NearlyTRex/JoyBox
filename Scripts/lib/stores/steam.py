@@ -61,7 +61,7 @@ class Steam(storebase.StoreBase):
 
     # Get platform
     def GetPlatform(self):
-        return config.platform_computer_steam
+        return config.Platform.COMPUTER_STEAM
 
     # Get category
     def GetCategory(self):
@@ -69,7 +69,7 @@ class Steam(storebase.StoreBase):
 
     # Get subcategory
     def GetSubcategory(self):
-        return config.Subcategory.STEAM
+        return config.Subcategory.COMPUTER_STEAM
 
     # Get key
     def GetKey(self):

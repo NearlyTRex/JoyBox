@@ -33,7 +33,7 @@ class Amazon(storebase.StoreBase):
 
     # Get platform
     def GetPlatform(self):
-        return config.platform_computer_amazon_games
+        return config.Platform.COMPUTER_AMAZON_GAMES
 
     # Get category
     def GetCategory(self):

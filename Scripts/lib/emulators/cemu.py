@@ -33,8 +33,8 @@ class Cemu(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.Subcategory.NINTENDO_WII_U,
-            config.Subcategory.NINTENDO_WII_U_ESHOP
+            config.Platform.NINTENDO_WII_U,
+            config.Platform.NINTENDO_WII_U_ESHOP
         ]
 
     # Get config

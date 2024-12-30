@@ -42,7 +42,7 @@ class Epic(storebase.StoreBase):
 
     # Get platform
     def GetPlatform(self):
-        return config.platform_computer_epic_games
+        return config.Platform.COMPUTER_EPIC_GAMES
 
     # Get category
     def GetCategory(self):

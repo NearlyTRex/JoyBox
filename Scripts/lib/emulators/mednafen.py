@@ -35,10 +35,10 @@ class Mednafen(emulatorbase.EmulatorBase):
         return [
 
             # Nintendo
-            config.Subcategory.NINTENDO_VIRTUAL_BOY,
+            config.Platform.NINTENDO_VIRTUAL_BOY,
 
             # Other
-            config.Subcategory.OTHER_ATARI_LYNX
+            config.Platform.OTHER_ATARI_LYNX
         ]
 
     # Get config

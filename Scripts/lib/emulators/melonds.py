@@ -50,8 +50,8 @@ class MelonDS(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.Subcategory.NINTENDO_DS,
-            config.Subcategory.NINTENDO_DSI
+            config.Platform.NINTENDO_DS,
+            config.Platform.NINTENDO_DSI
         ]
 
     # Get config

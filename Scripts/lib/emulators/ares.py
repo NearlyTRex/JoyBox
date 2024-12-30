@@ -87,34 +87,34 @@ class Ares(emulatorbase.EmulatorBase):
         return [
 
             # Microsoft
-            config.Subcategory.MICROSOFT_MSX,
+            config.Platform.MICROSOFT_MSX,
 
             # Nintendo
-            config.Subcategory.NINTENDO_64,
-            config.Subcategory.NINTENDO_FAMICOM,
-            config.Subcategory.NINTENDO_NES,
-            config.Subcategory.NINTENDO_SNES,
-            config.Subcategory.NINTENDO_SNES_MSU1,
-            config.Subcategory.NINTENDO_SUPER_FAMICOM,
+            config.Platform.NINTENDO_64,
+            config.Platform.NINTENDO_FAMICOM,
+            config.Platform.NINTENDO_NES,
+            config.Platform.NINTENDO_SNES,
+            config.Platform.NINTENDO_SNES_MSU1,
+            config.Platform.NINTENDO_SUPER_FAMICOM,
 
             # Other
-            config.Subcategory.OTHER_ATARI_2600,
-            config.Subcategory.OTHER_BANDAI_WONDERSWAN_COLOR,
-            config.Subcategory.OTHER_BANDAI_WONDERSWAN,
-            config.Subcategory.OTHER_COLECO_COLECOVISION,
-            config.Subcategory.OTHER_NEC_PCENGINE,
-            config.Subcategory.OTHER_NEC_PCENGINE_CD,
-            config.Subcategory.OTHER_NEC_SUPERGRAFX,
-            config.Subcategory.OTHER_NEC_TURBOGRAFX_16,
-            config.Subcategory.OTHER_NEC_TURBOGRAFX_CD,
-            config.Subcategory.OTHER_SEGA_32X,
-            config.Subcategory.OTHER_SEGA_CD_32X,
-            config.Subcategory.OTHER_SEGA_CD,
-            config.Subcategory.OTHER_SEGA_GAME_GEAR,
-            config.Subcategory.OTHER_SEGA_GENESIS,
-            config.Subcategory.OTHER_SEGA_MASTER_SYSTEM,
-            config.Subcategory.OTHER_SINCLAIR_ZX_SPECTRUM,
-            config.Subcategory.OTHER_SNK_NEOGEO_POCKET_COLOR
+            config.Platform.OTHER_ATARI_2600,
+            config.Platform.OTHER_BANDAI_WONDERSWAN_COLOR,
+            config.Platform.OTHER_BANDAI_WONDERSWAN,
+            config.Platform.OTHER_COLECO_COLECOVISION,
+            config.Platform.OTHER_NEC_PCENGINE,
+            config.Platform.OTHER_NEC_PCENGINE_CD,
+            config.Platform.OTHER_NEC_SUPERGRAFX,
+            config.Platform.OTHER_NEC_TURBOGRAFX_16,
+            config.Platform.OTHER_NEC_TURBOGRAFX_CD,
+            config.Platform.OTHER_SEGA_32X,
+            config.Platform.OTHER_SEGA_CD_32X,
+            config.Platform.OTHER_SEGA_CD,
+            config.Platform.OTHER_SEGA_GAME_GEAR,
+            config.Platform.OTHER_SEGA_GENESIS,
+            config.Platform.OTHER_SEGA_MASTER_SYSTEM,
+            config.Platform.OTHER_SINCLAIR_ZX_SPECTRUM,
+            config.Platform.OTHER_SNK_NEOGEO_POCKET_COLOR
         ]
 
     # Get config
@@ -136,34 +136,34 @@ class Ares(emulatorbase.EmulatorBase):
                 "save_sub_dirs": {
 
                     # Microsoft
-                    config.Subcategory.MICROSOFT_MSX: "MSX",
+                    config.Platform.MICROSOFT_MSX: "MSX",
 
                     # Nintendo
-                    config.Subcategory.NINTENDO_64: "Nintendo 64",
-                    config.Subcategory.NINTENDO_FAMICOM: "Famicom",
-                    config.Subcategory.NINTENDO_NES: "Famicom",
-                    config.Subcategory.NINTENDO_SNES: "Super Famicom",
-                    config.Subcategory.NINTENDO_SNES_MSU1: "Super Famicom",
-                    config.Subcategory.NINTENDO_SUPER_FAMICOM: "Super Famicom",
+                    config.Platform.NINTENDO_64: "Nintendo 64",
+                    config.Platform.NINTENDO_FAMICOM: "Famicom",
+                    config.Platform.NINTENDO_NES: "Famicom",
+                    config.Platform.NINTENDO_SNES: "Super Famicom",
+                    config.Platform.NINTENDO_SNES_MSU1: "Super Famicom",
+                    config.Platform.NINTENDO_SUPER_FAMICOM: "Super Famicom",
 
                     # Other
-                    config.Subcategory.OTHER_ATARI_2600: "Atari 2600",
-                    config.Subcategory.OTHER_BANDAI_WONDERSWAN: "WonderSwan",
-                    config.Subcategory.OTHER_BANDAI_WONDERSWAN_COLOR: "WonderSwan Color",
-                    config.Subcategory.OTHER_COLECO_COLECOVISION: "ColecoVision",
-                    config.Subcategory.OTHER_NEC_PCENGINE: "PC Engine",
-                    config.Subcategory.OTHER_NEC_PCENGINE_CD: "PC Engine CD",
-                    config.Subcategory.OTHER_NEC_SUPERGRAFX: "SuperGrafx",
-                    config.Subcategory.OTHER_NEC_TURBOGRAFX_16: "PC Engine",
-                    config.Subcategory.OTHER_NEC_TURBOGRAFX_CD: "PC Engine CD",
-                    config.Subcategory.OTHER_SEGA_32X: "Mega 32X",
-                    config.Subcategory.OTHER_SEGA_CD: "Mega CD",
-                    config.Subcategory.OTHER_SEGA_CD_32X: "Mega CD 32X",
-                    config.Subcategory.OTHER_SEGA_GAME_GEAR: "Game Gear",
-                    config.Subcategory.OTHER_SEGA_GENESIS: "Mega Drive",
-                    config.Subcategory.OTHER_SEGA_MASTER_SYSTEM: "Master System",
-                    config.Subcategory.OTHER_SINCLAIR_ZX_SPECTRUM: "ZX Spectrum",
-                    config.Subcategory.OTHER_SNK_NEOGEO_POCKET_COLOR: "Neo Geo Pocket Color"
+                    config.Platform.OTHER_ATARI_2600: "Atari 2600",
+                    config.Platform.OTHER_BANDAI_WONDERSWAN: "WonderSwan",
+                    config.Platform.OTHER_BANDAI_WONDERSWAN_COLOR: "WonderSwan Color",
+                    config.Platform.OTHER_COLECO_COLECOVISION: "ColecoVision",
+                    config.Platform.OTHER_NEC_PCENGINE: "PC Engine",
+                    config.Platform.OTHER_NEC_PCENGINE_CD: "PC Engine CD",
+                    config.Platform.OTHER_NEC_SUPERGRAFX: "SuperGrafx",
+                    config.Platform.OTHER_NEC_TURBOGRAFX_16: "PC Engine",
+                    config.Platform.OTHER_NEC_TURBOGRAFX_CD: "PC Engine CD",
+                    config.Platform.OTHER_SEGA_32X: "Mega 32X",
+                    config.Platform.OTHER_SEGA_CD: "Mega CD",
+                    config.Platform.OTHER_SEGA_CD_32X: "Mega CD 32X",
+                    config.Platform.OTHER_SEGA_GAME_GEAR: "Game Gear",
+                    config.Platform.OTHER_SEGA_GENESIS: "Mega Drive",
+                    config.Platform.OTHER_SEGA_MASTER_SYSTEM: "Master System",
+                    config.Platform.OTHER_SINCLAIR_ZX_SPECTRUM: "ZX Spectrum",
+                    config.Platform.OTHER_SNK_NEOGEO_POCKET_COLOR: "Neo Geo Pocket Color"
                 },
                 "setup_dir": {
                     "windows": "Ares/windows",

@@ -97,8 +97,8 @@ class Dolphin(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.Subcategory.NINTENDO_GAMECUBE,
-            config.Subcategory.NINTENDO_WII
+            config.Platform.NINTENDO_GAMECUBE,
+            config.Platform.NINTENDO_WII
         ]
 
     # Get config
@@ -120,8 +120,8 @@ class Dolphin(emulatorbase.EmulatorBase):
                 "save_sub_dirs": {
 
                     # Nintendo
-                    config.Subcategory.NINTENDO_GAMECUBE: "GC",
-                    config.Subcategory.NINTENDO_WII: "Wii/title/00010000"
+                    config.Platform.NINTENDO_GAMECUBE: "GC",
+                    config.Platform.NINTENDO_WII: "Wii/title/00010000"
                 },
                 "setup_dir": {
                     "windows": "Dolphin/windows/User",

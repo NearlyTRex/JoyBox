@@ -35,8 +35,8 @@ class RPCS3(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.Subcategory.SONY_PLAYSTATION_3,
-            config.Subcategory.SONY_PLAYSTATION_NETWORK_PS3
+            config.Platform.SONY_PLAYSTATION_3,
+            config.Platform.SONY_PLAYSTATION_NETWORK_PS3
         ]
 
     # Get config
@@ -180,7 +180,7 @@ class RPCS3(emulatorbase.EmulatorBase):
         game_cache_dir = game_info.get_local_cache_dir()
 
         # Copy exdata files
-        if game_platform == config.Subcategory.SONY_PLAYSTATION_NETWORK_PS3:
+        if game_platform == config.Platform.SONY_PLAYSTATION_NETWORK_PS3:
             for exdata_file in system.BuildFileListByExtensions(game_cache_dir, extensions = [".rap", ".edat"]):
                 system.SmartCopy(
                     src = exdata_file,

@@ -31,9 +31,9 @@ class PPSSPP(emulatorbase.EmulatorBase):
     # Get platforms
     def GetPlatforms(self):
         return [
-            config.Subcategory.SONY_PLAYSTATION_NETWORK_PSP,
-            config.Subcategory.SONY_PLAYSTATION_NETWORK_PSPM,
-            config.Subcategory.SONY_PLAYSTATION_PORTABLE
+            config.Platform.SONY_PLAYSTATION_NETWORK_PSP,
+            config.Platform.SONY_PLAYSTATION_NETWORK_PSPM,
+            config.Platform.SONY_PLAYSTATION_PORTABLE
         ]
 
     # Get config
