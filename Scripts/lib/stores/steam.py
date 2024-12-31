@@ -388,6 +388,7 @@ class Steam(storebase.StoreBase):
 
         # Connect to web
         web_driver = self.WebConnect(
+            headless = True,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -402,6 +403,30 @@ class Steam(storebase.StoreBase):
         # Create metadata entry
         metadata_entry = metadataentry.MetadataEntry()
         metadata_entry.set_url(identifier)
+
+        # Check for age gate
+        element_age_gate = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"id": "app_agegate"}),
+            wait_time = 5,
+            verbose = verbose)
+        if element_age_gate:
+
+            # Get age selectors
+            day_selector = webpage.GetElement(parent = element_age_gate, locator = webpage.ElementLocator({"id": "ageDay"}))
+            month_selector = webpage.GetElement(parent = element_age_gate, locator = webpage.ElementLocator({"id": "ageMonth"}))
+            year_selector = webpage.GetElement(parent = element_age_gate, locator = webpage.ElementLocator({"id": "ageYear"}))
+
+            # Select date
+            webpage.SendKeysToElement(day_selector, "1")
+            webpage.SendKeysToElement(month_selector, "January")
+            webpage.SendKeysToElement(year_selector, "1980")
+
+            # Click confirm button
+            confirm_button = webpage.GetElement(
+                parent = element_age_gate,
+                locator = webpage.ElementLocator({"id": "view_product_page_btn"}))
+            webpage.ClickElement(confirm_button)
 
         # Look for game description
         element_game_description = webpage.WaitForElement(
