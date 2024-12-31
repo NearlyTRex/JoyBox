@@ -655,17 +655,28 @@ def DeriveRegularNameFromGameName(game_name):
     return regular_name
 
 # Derive game name from regular name
-def DeriveGameNameFromRegularName(regular_name, region = "USA"):
-    game_name = regular_name.replace(":", " -").replace("&", "and")
+def DeriveGameNameFromRegularName(regular_name, region="USA"):
+    game_name = regular_name.strip()
+    game_name = game_name.replace(":", " -")
+    game_name = game_name.replace("&", "and")
+    game_name = re.sub(r"-?\s*CE$", " Collector's Edition", game_name)
     game_name = system.CleanRichText(game_name)
     game_name = system.CapitalizeText(game_name)
     game_name = system.ReplaceInvalidPathCharacters(game_name)
     for flippable_word in config.flippable_words:
-        segment_before = f"{flippable_word} "
-        segment_after = f", {flippable_word}"
-        if game_name.startswith(segment_before):
-            game_name = game_name.replace(segment_before, "")
-            game_name = game_name + segment_after
+        if game_name.startswith(f"{flippable_word} "):
+            base_name = game_name[len(flippable_word) + 1:]
+            if " - " in base_name:
+                parts = base_name.split(" - ", 1)
+                if len(parts) == 2:
+                    first_part = parts[0].strip()
+                    second_part = parts[1].strip()
+                    game_name = f"{first_part}, {flippable_word} - {second_part}"
+                else:
+                    game_name = f"{base_name}, {flippable_word}"
+            else:
+                game_name = f"{base_name}, {flippable_word}"
+            break
     return f"{game_name} ({region})"
 
 # Derive game letter from name
