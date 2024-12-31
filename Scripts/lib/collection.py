@@ -611,7 +611,7 @@ def DownloadMetadataAsset(
         return False
 
     # Get temp asset
-    tmp_asset_file_original = os.path.join(tmp_dir_result, system.GetFilenameFile(asset_url))
+    tmp_asset_file_original = os.path.join(tmp_dir_result, system.ReplaceInvalidPathCharacters(system.GetFilenameFile(asset_url)))
     tmp_asset_file_converted = tmp_asset_file_original + output_asset_ext
     system.MakeDirectory(
         dir = output_asset_dir,
