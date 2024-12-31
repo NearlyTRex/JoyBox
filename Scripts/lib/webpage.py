@@ -361,6 +361,21 @@ def ClickElement(
             system.LogError(e)
             system.QuitProgram()
 
+# Send keys to element
+def SendKeysToElement(
+    element,
+    keys,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    try:
+        if element:
+            element.send_keys(keys)
+    except Exception as e:
+        if exit_on_failure:
+            system.LogError(e)
+            system.QuitProgram()
+
 # Scroll to end of page
 def ScrollToEndOfPage(
     driver,
