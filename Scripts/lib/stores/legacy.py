@@ -16,12 +16,6 @@ import storebase
 import metadataentry
 import metadatacollector
 
-# Fix game title
-def FixGameTitle(title):
-    if title.endswith(" CE"):
-        title = title.replace(" CE", " Collector's Edition")
-    return title
-
 # Legacy store
 class Legacy(storebase.StoreBase):
 
@@ -195,7 +189,7 @@ class Legacy(storebase.StoreBase):
             if "installer_uuid" in entry:
                 purchase.set_value(config.json_key_store_appid, entry["installer_uuid"].strip())
             if "game_name" in entry:
-                purchase.set_value(config.json_key_store_name, FixGameTitle(entry["game_name"]).strip())
+                purchase.set_value(config.json_key_store_name, entry["game_name"].strip())
             purchases.append(purchase)
         return purchases
 
@@ -264,7 +258,7 @@ class Legacy(storebase.StoreBase):
 
         # Augment by json
         if "game_name" in legacy_json:
-            game_info[config.json_key_store_name] = FixGameTitle(legacy_json["game_name"]).strip()
+            game_info[config.json_key_store_name] = legacy_json["game_name"].strip()
 
         # Return game info
         return jsondata.JsonData(game_info, self.GetPlatform())
@@ -314,7 +308,7 @@ class Legacy(storebase.StoreBase):
             return None
 
         # Get keywords name
-        keywords_name = system.EncodeUrlString(FixGameTitle(identifier).strip(), use_plus = True)
+        keywords_name = system.EncodeUrlString(identifier.strip(), use_plus = True)
 
         # Load url
         success = webpage.LoadUrl(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + keywords_name)
