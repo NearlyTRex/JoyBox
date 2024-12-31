@@ -14,7 +14,7 @@ import sandbox
 
 # Get archive extension
 def GetArchiveExtension(archive_type):
-    return archive_type.value.lower()
+    return config.ArchiveType.to_lower_string(archive_type)
 
 # Determine if file is a known archive
 def IsKnownArchive(archive_file, extensions = [], mime_types = []):

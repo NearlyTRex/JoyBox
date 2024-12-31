@@ -34,7 +34,7 @@ class Epic(storebase.StoreBase):
 
     # Get name
     def GetName(self):
-        return config.StoreType.EPIC.value
+        return config.StoreType.EPIC.val()
 
     # Get type
     def GetType(self):

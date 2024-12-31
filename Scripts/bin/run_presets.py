@@ -26,10 +26,6 @@ parser.add_enum_argument(
     args = ("-g", "--preset_option_group_type"),
     arg_type = config.PresetOptionGroupType,
     description = "Preset option group type")
-parser.add_enum_argument(
-    args = ("-t", "--passphrase_type"),
-    arg_type = config.PassphraseType,
-    description = "Passphrase type")
 parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Skip existing files")
 parser.add_boolean_argument(args = ("-i", "--skip_identical"), description = "Skip identical files")
 parser.add_common_arguments()
@@ -49,7 +45,7 @@ def main():
 
     # Create base command
     base_cmd = [
-        os.path.join(environment.GetScriptsBinDir(), args.preset_tool_type.value + environment.GetScriptsCommandExtension())
+        os.path.join(environment.GetScriptsBinDir(), args.preset_tool_type.val() + environment.GetScriptsCommandExtension())
     ]
     if args.verbose:
         base_cmd += ["--verbose"]
@@ -69,7 +65,6 @@ def main():
 
         # Update base command
         base_cmd += [
-            "-t", args.passphrase_type.value,
             "-o", output_path
         ]
         if args.skip_existing:

@@ -26,7 +26,7 @@ def ResolvePath(
 
     # Augment with gaming categories
     if game_supercategory:
-        resolved_path = os.path.join(resolved_path, config.LockerType.GAMING.value, game_supercategory)
+        resolved_path = os.path.join(resolved_path, config.LockerType.GAMING.val(), game_supercategory)
         if game_category:
             resolved_path = os.path.join(resolved_path, game_category)
             if game_subcategory:

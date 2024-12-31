@@ -212,31 +212,31 @@ def GetLockerRootDir(source_type = None):
 def GetLockerDevelopmentRootDir(source_type = None):
     return os.path.join(
         GetLockerRootDir(source_type),
-        config.LockerType.DEVELOPMENT.value)
+        config.LockerType.DEVELOPMENT.val())
 
 # Get locker gaming root dir
 def GetLockerGamingRootDir(source_type = None):
     return os.path.join(
         GetLockerRootDir(source_type),
-        config.LockerType.GAMING.value)
+        config.LockerType.GAMING.val())
 
 # Get locker music root dir
 def GetLockerMusicRootDir(source_type = None):
     return os.path.join(
         GetLockerRootDir(source_type),
-        config.LockerType.MUSIC.value)
+        config.LockerType.MUSIC.val())
 
 # Get locker photos root dir
 def GetLockerPhotosRootDir(source_type = None):
     return os.path.join(
         GetLockerRootDir(source_type),
-        config.LockerType.PHOTOS.value)
+        config.LockerType.PHOTOS.val())
 
 # Get locker programs root dir
 def GetLockerProgramsRootDir(source_type = None):
     return os.path.join(
         GetLockerRootDir(source_type),
-        config.LockerType.PROGRAMS.value)
+        config.LockerType.PROGRAMS.val())
 
 # Get locker programs tools root dir
 def GetLockerProgramsToolsRootDir(source_type = None):
@@ -248,43 +248,43 @@ def GetLockerProgramsToolsRootDir(source_type = None):
 def GetLockerGamingAssetsRootDir(source_type = None):
     return os.path.join(
         GetLockerGamingRootDir(source_type),
-        config.Supercategory.ASSETS.value)
+        config.Supercategory.ASSETS.val())
 
 # Get locker gaming emulators root dir
 def GetLockerGamingEmulatorsRootDir(source_type = None):
     return os.path.join(
         GetLockerGamingRootDir(source_type),
-        config.Supercategory.EMULATORS.value)
+        config.Supercategory.EMULATORS.val())
 
 # Get locker gaming roms root dir
 def GetLockerGamingRomsRootDir(source_type = None):
     return os.path.join(
         GetLockerGamingRootDir(source_type),
-        config.Supercategory.ROMS.value)
+        config.Supercategory.ROMS.val())
 
 # Get locker gaming dlc root dir
 def GetLockerGamingDLCRootDir(source_type = None):
     return os.path.join(
         GetLockerGamingRootDir(source_type),
-        config.Supercategory.DLC.value)
+        config.Supercategory.DLC.val())
 
 # Get locker gaming update root dir
 def GetLockerGamingUpdateRootDir(source_type = None):
     return os.path.join(
         GetLockerGamingRootDir(source_type),
-        config.Supercategory.UPDATES.value)
+        config.Supercategory.UPDATES.val())
 
 # Get locker gaming tags root dir
 def GetLockerGamingTagsRootDir(source_type = None):
     return os.path.join(
         GetLockerGamingRootDir(source_type),
-        config.Supercategory.TAGS.value)
+        config.Supercategory.TAGS.val())
 
 # Get locker gaming saves root dir
 def GetLockerGamingSavesRootDir(source_type = None):
     return os.path.join(
         GetLockerGamingRootDir(source_type),
-        config.Supercategory.SAVES.value)
+        config.Supercategory.SAVES.val())
 
 # Get locker gaming supercategory root dir
 def GetLockerGamingSupercategoryRootDir(supercategory, source_type = None):
@@ -312,18 +312,18 @@ def GetLockerDevelopmentArchivesRootDir(source_type = None):
 def GetLockerGamingAssetDir(game_category, game_subcategory, asset_type, source_type = None):
     return os.path.join(
         GetLockerGamingAssetsRootDir(source_type),
-        game_category.value,
-        game_subcategory.value,
-        asset_type.value)
+        game_category.val(),
+        game_subcategory.val(),
+        asset_type.val())
 
 # Get locker gaming asset file
 def GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type, source_type = None):
     asset_file = "%s%s" % (game_name, config.asset_extensions[asset_type])
     return os.path.join(
         GetLockerGamingAssetsRootDir(source_type),
-        game_category.value,
-        game_subcategory.value,
-        asset_type.value,
+        game_category.val(),
+        game_subcategory.val(),
+        asset_type.val(),
         asset_file)
 
 # Get locker gaming emulator binaries dir
@@ -346,8 +346,8 @@ def GetLockerGamingRomDirOffset(game_category, game_subcategory, game_name):
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
     game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
     return os.path.join(
-        game_category.value,
-        game_subcategory.value,
+        game_category.val(),
+        game_subcategory.val(),
         game_name_path)
 
 # Get locker gaming rom dir
@@ -360,8 +360,8 @@ def GetLockerGamingRomDir(game_category, game_subcategory, game_name, source_typ
 def GetLockerGamingRomCategoryDir(game_category, game_subcategory, source_type = None):
     return os.path.join(
         GetLockerGamingRomsRootDir(source_type),
-        game_category.value,
-        game_subcategory.value)
+        game_category.val(),
+        game_subcategory.val())
 
 # Get locker gaming save dir
 def GetLockerGamingSaveDir(game_category, game_subcategory, game_name, source_type = None):
@@ -369,8 +369,8 @@ def GetLockerGamingSaveDir(game_category, game_subcategory, game_name, source_ty
     game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
     return os.path.join(
         GetLockerGamingSavesRootDir(source_type),
-        game_category.value,
-        game_subcategory.value,
+        game_category.val(),
+        game_subcategory.val(),
         game_name_path)
 
 # Get locker program tool dir
@@ -401,19 +401,19 @@ def GetPegasusMetadataRootDir():
 def GetPegasusMetadataFile(game_category, game_subcategory):
     return os.path.join(
         GetPegasusMetadataRootDir(),
-        config.Supercategory.ROMS.value,
-        game_category.value,
-        game_subcategory.value,
+        config.Supercategory.ROMS.val(),
+        game_category.val(),
+        game_subcategory.val(),
         "metadata.pegasus.txt")
 
 # Get pegasus metadata asset dir
 def GetPegasusMetadataAssetDir(game_category, game_subcategory, asset_type):
     return os.path.join(
         GetPegasusMetadataRootDir(),
-        config.Supercategory.ROMS.value,
-        game_category.value,
-        game_subcategory.value,
-        asset_type.value)
+        config.Supercategory.ROMS.val(),
+        game_category.val(),
+        game_subcategory.val(),
+        asset_type.val())
 
 # Get metadata file
 def GetMetadataFile(game_category, game_subcategory, metadata_format = config.MetadataFormatType.PEGASUS):
@@ -438,9 +438,9 @@ def GetHashesMetadataFile(game_supercategory, game_category, game_subcategory):
     return os.path.join(
         GetHashesMetadataRootDir(),
         "Main",
-        game_supercategory.value,
-        game_category.value,
-        game_subcategory.value + ".txt")
+        game_supercategory.val(),
+        game_category.val(),
+        game_subcategory.val() + ".txt")
 
 # Get misc metadata root dir
 def GetMiscMetadataRootDir():
@@ -462,14 +462,14 @@ def GetJsonMetadataRootDir():
 def GetJsonRomsMetadataRootDir():
     return os.path.join(
         GetJsonMetadataRootDir(),
-        config.Supercategory.ROMS.value)
+        config.Supercategory.ROMS.val())
 
 # Get json rom metadata dir
 def GetJsonRomMetadataDir(game_category, game_subcategory):
     return os.path.join(
         GetJsonRomsMetadataRootDir(),
-        game_category.value,
-        game_subcategory.value)
+        game_category.val(),
+        game_subcategory.val())
 
 # Get json rom metadata file
 def GetJsonRomMetadataFile(game_category, game_subcategory, game_name):
@@ -477,8 +477,8 @@ def GetJsonRomMetadataFile(game_category, game_subcategory, game_name):
     game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
     return os.path.join(
         GetJsonRomsMetadataRootDir(),
-        game_category.value,
-        game_subcategory.value,
+        game_category.val(),
+        game_subcategory.val(),
         game_name_path,
         game_name + ".json")
 
@@ -534,27 +534,27 @@ def GetCacheRootDir():
 def GetCacheGamingRootDir():
     return os.path.join(
         GetCacheRootDir(),
-        config.LockerType.GAMING.value)
+        config.LockerType.GAMING.val())
 
 # Get cache gaming roms root dir
 def GetCacheGamingRomsRootDir():
     return os.path.join(
         GetCacheGamingRootDir(),
-        config.Supercategory.ROMS.value)
+        config.Supercategory.ROMS.val())
 
 # Get cache gaming rom dir
 def GetCacheGamingRomDir(game_category, game_subcategory, game_name):
     return os.path.join(
         GetCacheGamingRomsRootDir(),
-        game_category.value,
-        game_subcategory.value,
+        game_category.val(),
+        game_subcategory.val(),
         game_name)
 
 # Get cache gaming install root dir
 def GetCacheGamingInstallsRootDir():
     return os.path.join(
         GetCacheGamingRootDir(),
-        config.Supercategory.INSTALLS.value)
+        config.Supercategory.INSTALLS.val())
 
 # Get cache gaming install dir
 def GetCacheGamingInstallDir(game_category, game_subcategory, game_name):
@@ -562,42 +562,42 @@ def GetCacheGamingInstallDir(game_category, game_subcategory, game_name):
     game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
     return os.path.join(
         GetCacheGamingInstallsRootDir(),
-        game_category.value,
-        game_subcategory.value,
+        game_category.val(),
+        game_subcategory.val(),
         game_name_path)
 
 # Get cache gaming saves root dir
 def GetCacheGamingSavesRootDir():
     return os.path.join(
         GetCacheGamingRootDir(),
-        config.Supercategory.SAVES.value)
+        config.Supercategory.SAVES.val())
 
 # Get cache gaming save dir
 def GetCacheGamingSaveDir(game_category, game_subcategory, game_name, save_type = None):
     if save_type:
         return os.path.join(
             GetCacheGamingSavesRootDir(),
-            game_category.value,
-            game_subcategory.value,
+            game_category.val(),
+            game_subcategory.val(),
             game_name,
-            save_type.value)
+            save_type.val())
     else:
         return os.path.join(
             GetCacheGamingSavesRootDir(),
-            game_category.value,
-            game_subcategory.value,
+            game_category.val(),
+            game_subcategory.val(),
             game_name)
 
 # Get cache gaming setup root dir
 def GetCacheGamingSetupRootDir():
     return os.path.join(
         GetCacheGamingRootDir(),
-        config.Supercategory.SETUP.value)
+        config.Supercategory.SETUP.val())
 
 # Get cache gaming setup dir
 def GetCacheGamingSetupDir(game_category, game_subcategory, game_name):
     return os.path.join(
         GetCacheGamingSetupRootDir(),
-        game_category.value,
-        game_subcategory.value,
+        game_category.val(),
+        game_subcategory.val(),
         game_name)

@@ -53,7 +53,7 @@ class Steam(storebase.StoreBase):
 
     # Get name
     def GetName(self):
-        return config.StoreType.STEAM.value
+        return config.StoreType.STEAM.val()
 
     # Get type
     def GetType(self):
@@ -209,7 +209,7 @@ class Steam(storebase.StoreBase):
                     purchase.set_value(config.json_key_store_appid, line_appid)
                     purchase.set_value(config.json_key_store_appurl, self.GetLatestUrl(line_appid))
                     purchase.set_value(config.json_key_store_name, line_title)
-                    purchase.set_value(config.json_key_store_branchid, config.steam_branch_format_public)
+                    purchase.set_value(config.json_key_store_branchid, config.SteamBranchType.PUBLIC.lower())
                     purchase.set_value(config.json_key_store_keys, line_keys)
                     purchase.set_value(config.json_key_store_paths, line_paths)
                     purchases.append(purchase)
@@ -590,10 +590,10 @@ class Steam(storebase.StoreBase):
                     relativepath_idcs = relativepath.replace(config.token_store_user_id, userid_cs)
 
                     # Get potential new base paths
-                    new_base_general = config.SaveType.GENERAL.value
+                    new_base_general = config.SaveType.GENERAL.val()
                     new_base_public = os.path.join(new_base_general, config.computer_folder_public)
                     new_base_registry = os.path.join(new_base_general, config.computer_folder_registry)
-                    new_base_store = os.path.join(new_base_general, config.computer_folder_store, config.StoreType.STEAM.value)
+                    new_base_store = os.path.join(new_base_general, config.computer_folder_store, config.StoreType.STEAM.val())
 
                     # Determine which paths exist
                     real_userid = None

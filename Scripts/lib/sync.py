@@ -29,7 +29,7 @@ def GetEncryptedRemoteName(remote_name):
 
 # Get remote raw type
 def GetRemoteRawType(remote_type):
-    return remote_type.value.lower()
+    return config.RemoteType.to_lower_string(remote_type)
 
 # Get remote connection path
 def GetRemoteConnectionPath(remote_name, remote_type, remote_path):
@@ -119,6 +119,14 @@ def IsRemoteConfigured(
 
     # Check if the remote name exists in the list of remotes
     if not any(remote.startswith(remote_name) for remote in GetConfiguredRemotes()):
+        return False
+
+    # Get tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
         return False
 
     # Get show command

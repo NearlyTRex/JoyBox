@@ -168,7 +168,7 @@ class Metadata:
 
                     # Create new entry
                     game_entry = metadataentry.MetadataEntry()
-                    game_entry.set_platform(collection_platform)
+                    game_entry.set_platform(config.Platform.from_string(collection_platform))
                     in_description_section = False
 
                     # Parse entry tokens
@@ -301,9 +301,17 @@ class Metadata:
             for game_platform in self.get_sorted_platforms():
                 game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
 
+                # Get launch command
+                launch_cmd = [
+                    "{env.JOYBOX_LAUNCH_JSON}",
+                    "-c", "\"" + game_category.val() + "\"",
+                    "-s", "\"" + game_subcategory.val() + "\"",
+                    "-n", "{file.basename}"
+                ]
+
                 # Write header
-                file.write("collection: %s\n" % game_platform)
-                file.write("launch: {env.JOYBOX_LAUNCH_JSON} -c \"%s\" -s \"%s\" -n {file.basename}\n" % (game_category, game_subcategory))
+                file.write("collection: %s\n" % game_platform.val())
+                file.write("launch: %s\n" % " ".join(launch_cmd))
                 file.write("\n\n")
 
                 # Write each entry

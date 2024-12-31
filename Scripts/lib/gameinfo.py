@@ -629,8 +629,8 @@ def FindAllGameNames(base_dir, game_category, game_subcategory):
     game_names = []
     base_path = os.path.join(
         base_dir,
-        game_category.value,
-        game_subcategory.value)
+        game_category.val(),
+        game_subcategory.val())
     if game_category == config.Category.COMPUTER:
         for game_letter in system.GetDirectoryContents(base_path):
             for game_name in system.GetDirectoryContents(os.path.join(base_path, game_letter)):
@@ -695,7 +695,7 @@ def DeriveGameNamePathFromName(game_name, game_platform):
 
 # Derive game asset path from name
 def DeriveGameAssetPathFromName(game_name, asset_type):
-    return "%s/%s%s" % (asset_type.value, game_name, config.asset_extensions[asset_type])
+    return "%s/%s%s" % (asset_type.val(), game_name, config.asset_extensions[asset_type])
 
 # Derive game categories from platform
 def DeriveGameCategoriesFromPlatform(game_platform):
@@ -715,7 +715,7 @@ def DeriveGameCategoriesFromPlatform(game_platform):
 # Derive game platform from categories
 def DeriveGamePlatformFromCategories(game_category, game_subcategory):
     for game_platform in config.Platform.members():
-        if game_platform.value.endswith(game_subcategory.value):
+        if game_platform.val().endswith(game_subcategory.val()):
             return game_platform
     return None
 
@@ -745,13 +745,13 @@ def DeriveGameCategoriesFromFile(game_file):
     # Derive supercategory
     derived_supercategory = None
     for possible_supercategory in config.Supercategory.members():
-        if relative_source_dir.startswith(possible_supercategory.value):
+        if relative_source_dir.startswith(possible_supercategory.val()):
             derived_supercategory = possible_supercategory
     if not derived_supercategory:
         return (None, None, None)
 
     # Get relative path
-    relative_source_index = relative_source_dir.index(derived_supercategory.value) + len(derived_supercategory.value)
+    relative_source_index = relative_source_dir.index(derived_supercategory.val()) + len(derived_supercategory.val())
     relative_file_path = relative_source_dir[relative_source_index:].strip(os.sep)
     relative_file_path_tokens = relative_file_path.split(os.sep)
     if len(relative_file_path_tokens) < 2:
@@ -760,13 +760,13 @@ def DeriveGameCategoriesFromFile(game_file):
     # Get derived category and subcategory
     derived_category = None
     derived_subcategory = config.Subcategory.from_string(relative_file_path_tokens[1])
-    if relative_file_path.startswith(config.Category.COMPUTER.value):
+    if relative_file_path.startswith(config.Category.COMPUTER.val()):
         derived_category = config.Category.COMPUTER
-    elif relative_file_path.startswith(config.Category.MICROSOFT.value):
+    elif relative_file_path.startswith(config.Category.MICROSOFT.val()):
         derived_category = config.Category.MICROSOFT
-    elif relative_file_path.startswith(config.Category.NINTENDO.value):
+    elif relative_file_path.startswith(config.Category.NINTENDO.val()):
         derived_category = config.Category.NINTENDO
-    elif relative_file_path.startswith(config.Category.SONY.value):
+    elif relative_file_path.startswith(config.Category.SONY.val()):
         derived_category = config.Category.SONY
     else:
         derived_category = config.Category.OTHER

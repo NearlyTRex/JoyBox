@@ -44,7 +44,7 @@ def main():
     if args.input_path:
         source_file_root = parser.get_input_path()
     else:
-        source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.game_supercategory, args.source_type.value)
+        source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.game_supercategory, args.source_type)
 
     # Manually specify all parameters
     if args.generation_mode == config.GenerationModeType.CUSTOM:

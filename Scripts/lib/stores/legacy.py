@@ -41,7 +41,7 @@ class Legacy(storebase.StoreBase):
 
     # Get name
     def GetName(self):
-        return config.StoreType.LEGACY.value
+        return config.StoreType.LEGACY.val()
 
     # Get type
     def GetType(self):

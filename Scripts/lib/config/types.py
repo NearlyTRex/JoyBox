@@ -24,11 +24,44 @@ class EnumType(enum.Enum):
         return [member.cvalue for member in cls]
 
     @classmethod
-    def from_string(cls, value_str):
+    def from_string(cls, value):
         for member in cls:
-            if member.value.lower() == value_str.lower():
+            if member.value.lower() == value.lower():
                 return member
         return None
+
+    @classmethod
+    def to_string(cls, value):
+        if isinstance(value, cls):
+            return value.value
+        if isinstance(value, str):
+            member = cls.from_string(value)
+            if member:
+                return member.value
+        return None
+
+    @classmethod
+    def to_lower_string(cls, value):
+        value_str = cls.to_string(value)
+        if value_str:
+            return value_str.lower()
+        return None
+
+    @classmethod
+    def to_upper_string(cls, value):
+        value_str = cls.to_string(value)
+        if value_str:
+            return value_str.upper()
+        return None
+
+    def val(self):
+        return self.value
+
+    def lower(self):
+        return self.value.lower()
+
+    def upper(self):
+        return self.value.upper()
 
 # Locker types
 class LockerType(EnumType):
@@ -246,10 +279,11 @@ class ReleaseType(EnumType):
 class ArchiveType(EnumType):
     ZIP                     = ("Zip")
     SEVENZIP                = ("7Z")
+    RAR                     = ("RAR")
 
 # Preset tool types
 class PresetToolType(EnumType):
-    BACKUP_TOOL             = ("BackupTool")
+    BACKUP_TOOL             = ("backup_tool")
 
 # Preset option group types
 class PresetOptionGroupType(EnumType):

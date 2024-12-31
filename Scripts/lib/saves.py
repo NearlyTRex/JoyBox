@@ -63,7 +63,7 @@ def PackSave(
     # Get excludes
     input_excludes = []
     if game_category == config.Category.COMPUTER:
-        input_excludes = [config.SaveType.WINE.value, config.SaveType.SANDBOXIE.value]
+        input_excludes = [config.SaveType.WINE.val(), config.SaveType.SANDBOXIE.val()]
 
     # Archive save
     success = archive.CreateArchiveFromFolder(
@@ -173,7 +173,7 @@ def NormalizeSaveDir(
 
         # Create user folders
         for user_folder in config.computer_user_folders:
-            user_path = os.path.join(save_dir, config.SaveType.GENERAL.value, user_folder)
+            user_path = os.path.join(save_dir, config.SaveType.GENERAL.val(), user_folder)
             if not os.path.exists(user_path):
                 success = system.MakeDirectory(
                     dir = user_path,

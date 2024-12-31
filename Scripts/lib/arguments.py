@@ -105,7 +105,7 @@ class ArgumentParser:
             if default is not None:
                 if not isinstance(default, list):
                     default = [default]
-                default = [val.value if isinstance(val, arg_type) else val for val in default]
+                default = [val.val() if isinstance(val, arg_type) else val for val in default]
             else:
                 default = []
             self.parser.add_argument(
@@ -118,7 +118,7 @@ class ArgumentParser:
                 metavar = "")
         else:
             if isinstance(default, arg_type):
-                default = default.value
+                default = default.val()
             self.parser.add_argument(
                 *args if isinstance(args, tuple) else (args,),
                 default = default,
