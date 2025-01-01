@@ -24,6 +24,12 @@ class EnumType(enum.Enum):
         return [member.cvalue for member in cls]
 
     @classmethod
+    def is_valid(cls, value):
+        if isinstance(value, cls):
+            return True
+        return value in cls.values()
+
+    @classmethod
     def from_string(cls, value):
         for member in cls:
             if member.value.lower() == value.lower():
