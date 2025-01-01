@@ -11,6 +11,7 @@ import command
 import programs
 import environment
 import system
+import ini
 
 ###########################################################
 
@@ -36,6 +37,7 @@ def ParseXmlPageSource(xml_contents):
 def CreateChromeWebDriver(
     download_dir = None,
     profile_dir = None,
+    binary_location = None,
     make_headless = False,
     verbose = False,
     pretend_run = False,
@@ -61,6 +63,8 @@ def CreateChromeWebDriver(
             options = ChromeOptions()
             if make_headless:
                 options.add_argument("--headless")
+            if system.IsPathValid(binary_location) and system.DoesPathExist(binary_location):
+                options.binary_location = binary_location
             web_driver = Chrome(service=service, options=options)
             return web_driver
         return None
@@ -75,6 +79,7 @@ def CreateChromeWebDriver(
 def CreateFirefoxWebDriver(
     download_dir = None,
     profile_dir = None,
+    binary_location = None,
     make_headless = False,
     verbose = False,
     pretend_run = False,
@@ -103,10 +108,11 @@ def CreateFirefoxWebDriver(
                 options.set_preference("browser.download.folderList", 2)
                 options.set_preference("browser.download.dir", download_dir)
             if system.IsPathValid(profile_dir) and system.DoesPathExist(profile_dir):
-                options.profile = FirefoxProfile(profile_directory = profile_dir)
+                options.set_preference('profile', profile_dir)
             if make_headless:
                 options.add_argument("--headless")
-            options.binary_location = programs.GetToolProgram("Firefox")
+            if system.IsPathValid(binary_location) and system.DoesPathExist(binary_location):
+                options.binary_location = binary_location
             web_driver = Firefox(service=service, options=options)
             return web_driver
         return None
@@ -127,19 +133,32 @@ def CreateWebDriver(
     pretend_run = False,
     exit_on_failure = False):
     if not driver_type:
+        driver_type = config.WebDriverType.from_string(ini.GetIniValue("UserData.Scraping", "web_driver_type"))
+    if not driver_type:
         driver_type = config.WebDriverType.FIREFOX
-    if driver_type == config.WebDriverType.CHROME:
-        return CreateChromeWebDriver(
+    if driver_type == config.WebDriverType.FIREFOX:
+        return CreateFirefoxWebDriver(
             download_dir = download_dir,
             profile_dir = profile_dir,
+            binary_location = programs.GetToolProgram("Firefox"),
             make_headless = make_headless,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    elif driver_type == config.WebDriverType.FIREFOX:
-        return CreateFirefoxWebDriver(
+    elif driver_type == config.WebDriverType.CHROME:
+        return CreateChromeWebDriver(
             download_dir = download_dir,
             profile_dir = profile_dir,
+            binary_location = programs.GetToolProgram("Chrome"),
+            make_headless = make_headless,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    elif driver_type == config.WebDriverType.BRAVE:
+        return CreateChromeWebDriver(
+            download_dir = download_dir,
+            profile_dir = profile_dir,
+            binary_location = programs.GetToolProgram("Brave"),
             make_headless = make_headless,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -157,6 +176,7 @@ def DestroyWebDriver(
             system.Log("Destroying web driver")
         if not pretend_run:
             if driver:
+                driver.close()
                 driver.quit()
         return True
     except Exception as e:
