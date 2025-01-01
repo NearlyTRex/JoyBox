@@ -33,6 +33,24 @@ if not os.path.isfile("/usr/bin/wine"):
         )
     ]
 
+# Brave
+if not os.path.isfile("/usr/bin/brave-browser"):
+
+    # Setup key
+    preliminaries += [
+        "sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg",
+        "echo \"deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main\"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list"
+    ]
+
+# Chrome
+if not os.path.isfile("/usr/bin/google-chrome"):
+
+    # Install deb
+    preliminaries += [
+        "wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb",
+        "sudo dpkg -i google-chrome-stable_current_amd64.deb"
+    ]
+
 ###########################################################
 # Apt packages
 ###########################################################
@@ -245,6 +263,7 @@ apt_packages = [
 
     # Web
     "firefox",
+    "brave-browser",
     "uget",
 
     # X11
@@ -268,7 +287,6 @@ flatpak_packages = [
     ["flathub", "org.cryptomator.Cryptomator"],
 
     # Web
-    ["flathub", "com.brave.Browser"],
     ["flathub", "com.discordapp.Discord"],
     ["flathub", "org.signal.Signal"],
     ["flathub", "org.telegram.desktop"]
