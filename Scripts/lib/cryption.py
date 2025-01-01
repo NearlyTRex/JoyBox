@@ -13,6 +13,10 @@ import hashing
 def IsFileEncrypted(source_file):
     return source_file.endswith(config.encrypted_extension_general)
 
+# Determine if passphrase is valid
+def IsPassphraseValid(passphrase):
+    return isinstance(passphrase, str) and len(passphrase) > 0
+
 # Generate encrypted filename
 def GenerateEncryptedFilename(source_file):
     if IsFileEncrypted(source_file):
@@ -28,6 +32,9 @@ def GetEmbeddedFilename(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Check passphrase
+    system.AssertIsNonEmptyString(passphrase, "passphrase")
 
     # Get tool
     gpg_tool = None
@@ -180,6 +187,9 @@ def EncryptFile(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Check passphrase
+    system.AssertIsNonEmptyString(passphrase, "passphrase")
+
     # Check source file
     if not system.IsPathValid(source_file):
         return False
@@ -256,6 +266,9 @@ def DecryptFile(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Check passphrase
+    system.AssertIsNonEmptyString(passphrase, "passphrase")
 
     # Check source file
     if not system.IsPathValid(source_file):
