@@ -48,6 +48,10 @@ else:
     ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "$HOME/LockerRemote"
 ini_defaults["UserData.Share"]["locker_remote_mount_flags"] = "no_checksum,no_modtime"
 
+# UserData.Scraping
+ini_defaults["UserData.Scraping"] = {}
+ini_defaults["UserData.Scraping"]["web_driver_type"] = "brave"
+
 # UserData.Resolution
 ini_defaults["UserData.Resolution"] = {}
 ini_defaults["UserData.Resolution"]["screen_resolution_w"] = "1920"
@@ -243,3 +247,25 @@ else:
     ini_defaults["Tools.Firefox"]["firefox_install_dir"] = "/usr/bin"
     ini_defaults["Tools.Firefox"]["firefox_download_dir"] = "$HOME/Downloads"
 ini_defaults["Tools.Firefox"]["firefox_profile_dir"] = ""
+
+# Tools.Chrome
+ini_defaults["Tools.Chrome"] = {}
+if environment.IsWindowsPlatform():
+    ini_defaults["Tools.Chrome"]["chrome_exe"] = "chrome.exe"
+    ini_defaults["Tools.Chrome"]["chrome_install_dir"] = "%ProgramFiles%\\Google\\Chrome\\Application"
+    ini_defaults["Tools.Chrome"]["chrome_download_dir"] = "%USERPROFILE%\\Downloads"
+else:
+    ini_defaults["Tools.Chrome"]["chrome_exe"] = "google-chrome"
+    ini_defaults["Tools.Chrome"]["chrome_install_dir"] = "/usr/bin"
+    ini_defaults["Tools.Chrome"]["chrome_download_dir"] = "$HOME/Downloads"
+
+# Tools.Brave
+ini_defaults["Tools.Brave"] = {}
+if environment.IsWindowsPlatform():
+    ini_defaults["Tools.Brave"]["brave_exe"] = "brave.exe"
+    ini_defaults["Tools.Brave"]["brave_install_dir"] = "%ProgramFiles%\\BraveSoftware\\Brave-Browser\\Application"
+    ini_defaults["Tools.Brave"]["brave_download_dir"] = "%USERPROFILE%\\Downloads"
+else:
+    ini_defaults["Tools.Brave"]["brave_exe"] = "brave-browser"
+    ini_defaults["Tools.Brave"]["brave_install_dir"] = "/usr/bin"
+    ini_defaults["Tools.Brave"]["brave_download_dir"] = "$HOME/Downloads"
