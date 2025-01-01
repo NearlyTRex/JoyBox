@@ -1,7 +1,9 @@
 # Imports
 from .appimagetool import AppImageTool
 from .balenaetcher import BalenaEtcher
+from .brave import Brave
 from .cdecrypt import CDecrypt
+from .chrome import Chrome
 from .chromedriver import ChromeDriver
 from .curl import Curl
 from .dxvk import DXVK
@@ -68,7 +70,9 @@ def GetToolMap():
         instances[instance.GetName()] = instance
     AddInstance(AppImageTool)
     AddInstance(BalenaEtcher)
+    AddInstance(Brave)
     AddInstance(CDecrypt)
+    AddInstance(Chrome)
     AddInstance(ChromeDriver)
     AddInstance(Curl)
     AddInstance(DXVK)
