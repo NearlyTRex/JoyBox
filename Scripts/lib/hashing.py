@@ -449,7 +449,7 @@ def CalculateHash(
 
     # Create hash data
     hash_data = {}
-    if cryption.IsFileEncrypted(fullpath):
+    if cryption.IsFileEncrypted(fullpath) and cryption.IsPassphraseValid(passphrase):
         file_info = cryption.GetEmbeddedFileInfo(
             source_file = fullpath,
             passphrase = passphrase,
@@ -518,7 +518,18 @@ def HashFiles(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            hash_contents[hash_data["filename"]] = hash_data
+            hash_entry_key = hash_data["filename"]
+
+            # Merge hash
+            if hash_entry_key in hash_contents:
+                old_hash = hash_contents[hash_entry_key]["hash"]
+                old_size = int(hash_contents[hash_entry_key]["size"])
+                new_hash = hash_data["hash"]
+                new_size = int(hash_data["size"])
+                if (old_hash != new_hash) or (old_size != new_size):
+                    hash_contents[hash_entry_key] = hash_data
+            else:
+                hash_contents[hash_entry_key] = hash_data
 
             # Append hash
             success = AppendHashFile(
@@ -559,9 +570,9 @@ def HashCategoryFiles(
     exit_on_failure = False):
 
     # Check required types
-    system.AssertIsString(game_supercategory, "game_supercategory")
-    system.AssertIsString(game_category, "game_category")
-    system.AssertIsString(game_subcategory, "game_subcategory")
+    system.AssertIsNotNone(game_supercategory, "game_supercategory")
+    system.AssertIsNotNone(game_category, "game_category")
+    system.AssertIsNotNone(game_subcategory, "game_subcategory")
 
     # Check input path
     if not os.path.exists(input_path):
@@ -585,7 +596,7 @@ def HashCategoryFiles(
     # Hash files
     success = HashFiles(
         input_path = input_path,
-        base_path = os.path.join(game_supercategory, game_category, game_subcategory),
+        base_path = os.path.join(game_supercategory.val(), game_category.val(), game_subcategory.val()),
         output_file = hash_file,
         passphrase = passphrase,
         verbose = verbose,
