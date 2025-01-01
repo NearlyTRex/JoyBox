@@ -61,6 +61,7 @@ def CreateChromeWebDriver(
             from selenium.webdriver import Chrome
             service = ChromeService(webdriver_tool, log_path=os.path.devnull)
             options = ChromeOptions()
+            options.add_argument("--start-maximized")
             if make_headless:
                 options.add_argument("--headless")
             if system.IsPathValid(binary_location) and system.DoesPathExist(binary_location):
