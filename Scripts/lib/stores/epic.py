@@ -107,32 +107,7 @@ class Epic(storebase.StoreBase):
             cmd = login_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        if code != 0:
-            return False
-
-        # Connect to web
-        web_driver = self.WebConnect(
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not web_driver:
-            return False
-
-        # Log into website
-        success = webpage.LogIntoWebsite(
-            driver = web_driver,
-            login_url = "https://www.epicgames.com/id/login",
-            cookiefile = self.GetCookieFile(),
-            locator = webpage.ElementLocator({"class": "dropdown--account"}),
-            verbose = verbose)
-        if not success:
-            return None
-
-        # Disconnect from web
-        success = self.WebDisconnect(
-            web_driver = web_driver,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        return success
+        return (code != 0)
 
     ############################################################
 
