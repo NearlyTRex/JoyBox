@@ -345,6 +345,7 @@ class MergeType(EnumType):
 class WebDriverType(EnumType):
     FIREFOX                 = ("Firefox")
     CHROME                  = ("Chrome")
+    BRAVE                   = ("Brave")
 
 # Image types (UPPER)
 class ImageType(EnumType):
