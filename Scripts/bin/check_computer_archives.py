@@ -30,7 +30,7 @@ def main():
     for file in system.BuildFileListByExtensions(input_path, extensions = [".exe"]):
 
         # Check exe size
-        system.Log("Checking exe file %s ..." % file)
+        system.LogInfo("Checking exe file %s ..." % file)
         exe_filesize = os.path.getsize(file)
         if exe_filesize > 4290772992:
             system.LogErrorAndQuit("Executable '%s' is larger than 4092 MB" % file)

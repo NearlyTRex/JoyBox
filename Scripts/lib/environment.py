@@ -61,7 +61,15 @@ def GetHomeDirectory():
 
 # Get cookie directory
 def GetCookieDirectory():
-    return GetHomeDirectory()
+    return os.path.join(GetHomeDirectory(), "Cookies")
+
+# Get log directory
+def GetLogDirectory():
+    return os.path.join(GetHomeDirectory(), "Logs")
+
+# Get log file
+def GetLogFile():
+    return os.path.join(GetLogDirectory(), "output.log")
 
 # Determine if symlinks are supported
 def AreSymlinksSupported():

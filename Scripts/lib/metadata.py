@@ -133,7 +133,7 @@ class Metadata:
         for game_platform in self.get_sorted_platforms():
             for game_name in self.get_sorted_names(game_platform):
                 if verbose:
-                    system.Log("Checking '%s - %s' ..." % (game_platform, game_name))
+                    system.LogInfo("Checking '%s - %s' ..." % (game_platform, game_name))
 
                 # Get game entry
                 game_entry = self.get_game(game_platform, game_name)

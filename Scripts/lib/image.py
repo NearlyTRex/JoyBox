@@ -37,7 +37,7 @@ def ConvertImage(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Converting image %s to %s" % (image_src, image_dest))
+            system.LogInfo("Converting image %s to %s" % (image_src, image_dest))
         if not pretend_run:
             from PIL import Image
             src_image = Image.open(image_src)

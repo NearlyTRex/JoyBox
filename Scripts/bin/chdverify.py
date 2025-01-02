@@ -32,10 +32,10 @@ def main():
     for file in system.BuildFileListByExtensions(input_path, extensions = [".chd"]):
 
         # Verify disc chd
-        system.Log("Verifying %s ..." % file)
+        system.LogInfo("Verifying %s ..." % file)
         verification_success = chd.VerifyDiscCHD(file)
         if verification_success:
-            system.LogSuccess("Verified!")
+            system.LogInfo("Verified!")
         else:
             system.LogErrorAndQuit("Verification failed!")
 

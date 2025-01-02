@@ -44,7 +44,7 @@ def main():
         passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
 
     # Build metadata files
-    system.Log("Building metadata files ...")
+    system.LogInfo("Building metadata files ...")
     for game_category in config.Category.members():
         for game_subcategory in config.subcategory_map[game_category]:
 
@@ -56,7 +56,7 @@ def main():
 
             # Build metadata
             if system.IsPathDirectory(scan_game_path):
-                system.Log("Building metadata [Category: '%s', Subcategory: '%s'] ..." % (game_category, game_subcategory))
+                system.LogInfo("Building metadata [Category: '%s', Subcategory: '%s'] ..." % (game_category, game_subcategory))
                 collection.ScanForMetadataEntries(
                     game_dir = scan_game_path,
                     game_category = game_category,
@@ -66,7 +66,7 @@ def main():
                     exit_on_failure = exit_on_failure)
 
     # Build json files
-    system.Log("Building json files ...")
+    system.LogInfo("Building json files ...")
     for game_category in config.Category.members():
         for game_subcategory in config.subcategory_map[game_category]:
             game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
@@ -91,7 +91,7 @@ def main():
                     exit_on_failure = args.exit_on_failure)
 
     # Publish metadata files
-    system.Log("Publishing metadata files ...")
+    system.LogInfo("Publishing metadata files ...")
     for game_category in config.Category.members():
 
         # Publish metadata

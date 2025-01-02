@@ -35,7 +35,7 @@ def main():
         current_file_extract_dir = os.path.join(current_file_dir, current_file_basename + "_extracted")
 
         # Unzip file
-        system.Log("Unzipping file %s ..." % current_file)
+        system.LogInfo("Unzipping file %s ..." % current_file)
         success = archive.ExtractArchive(
             archive_file = current_file,
             extract_dir = current_file_extract_dir,
@@ -47,7 +47,7 @@ def main():
             system.LogErrorAndQuit("Unable to unzip file %s" % current_file)
 
         # Deterministically zip file
-        system.Log("Deterministically rezipping ...")
+        system.LogInfo("Deterministically rezipping ...")
         success = archive.CreateArchiveFromFolder(
             archive_file = current_file,
             source_dir = current_file_extract_dir,

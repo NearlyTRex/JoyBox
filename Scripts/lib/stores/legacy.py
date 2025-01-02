@@ -61,6 +61,8 @@ class Legacy(storebase.StoreBase):
     def GetIdentifier(self, json_wrapper, identifier_type):
         if identifier_type == config.StoreIdentifierType.METADATA:
             return json_wrapper.get_value(config.json_key_store_name)
+        elif identifier_type == config.StoreIdentifierType.ASSET:
+            return json_wrapper.get_value(config.json_key_store_appurl)
         return json_wrapper.get_value(config.json_key_store_appid)
 
     # Get user name
@@ -336,6 +338,38 @@ class Legacy(storebase.StoreBase):
 
         # Return appurl
         return appurl
+
+    ############################################################
+
+    # Get latest asset url
+    def GetLatestAssetUrl(
+        self,
+        identifier,
+        asset_type,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return None
+
+        # Latest asset url
+        latest_asset_url = None
+
+        # Video
+        if asset_type == config.AssetType.VIDEO:
+            latest_asset_url = webpage.GetMatchingUrl(
+                url = identifier,
+                base_url = "https://www.bigfishgames.com",
+                starts_with = "https://www.youtube.com/embed",
+                ends_with = "enablejsapi=1",
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
+        # Return latest asset url
+        return latest_asset_url
 
     ############################################################
 

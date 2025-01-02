@@ -290,14 +290,8 @@ class Epic(storebase.StoreBase):
         if not success:
             return None
 
-        # Load cookie
-        success = webpage.LoadCookie(web_driver, self.GetCookieFile())
-        if not success:
-            return None
-
         # Create metadata entry
         metadata_entry = metadataentry.MetadataEntry()
-        metadata_entry.set_url(identifier)
 
         # Look for game description
         element_game_description = webpage.WaitForElement(

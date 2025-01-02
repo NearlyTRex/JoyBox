@@ -55,7 +55,7 @@ def CalculateFileCRC32(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Calculating crc32 for %s" % filename)
+            system.LogInfo("Calculating crc32 for %s" % filename)
         if not pretend_run:
             import zlib
             with open(filename, "rb") as file:
@@ -88,7 +88,7 @@ def CalculateFileMD5(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Calculating md5 for %s" % filename)
+            system.LogInfo("Calculating md5 for %s" % filename)
         if not pretend_run:
             import hashlib
             with open(filename, "rb") as file:
@@ -121,7 +121,7 @@ def CalculateFileSHA1(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Calculating sha1 for %s" % filename)
+            system.LogInfo("Calculating sha1 for %s" % filename)
         if not pretend_run:
             import hashlib
             with open(filename, "rb") as file:
@@ -154,7 +154,7 @@ def CalculateFileSHA256(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Calculating sha256 for %s" % filename)
+            system.LogInfo("Calculating sha256 for %s" % filename)
         if not pretend_run:
             import hashlib
             with open(filename, "rb") as file:
@@ -187,7 +187,7 @@ def CalculateFileXXH3(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Calculating xxh3 for %s" % filename)
+            system.LogInfo("Calculating xxh3 for %s" % filename)
         if not pretend_run:
             import xxhash
             with open(filename, "rb") as file:
@@ -322,7 +322,7 @@ def ReadHashFile(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Reading hash file %s" % filename)
+            system.LogInfo("Reading hash file %s" % filename)
         if not pretend_run:
             hash_contents = {}
             with open(filename, "r", encoding="utf8") as f:
@@ -356,7 +356,7 @@ def WriteHashFile(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Writing hash file %s" % filename)
+            system.LogInfo("Writing hash file %s" % filename)
         if not pretend_run:
             with open(filename, "w", encoding="utf8") as f:
                 for hash_key in sorted(hash_contents.keys()):
@@ -383,7 +383,7 @@ def AppendHashFile(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Appending hash file %s" % filename)
+            system.LogInfo("Appending hash file %s" % filename)
         if not pretend_run:
             with open(filename, "a", encoding="utf8") as f:
                 hash_replacements = (
@@ -406,7 +406,7 @@ def SortHashFile(
     pretend_run = False,
     exit_on_failure = False):
     if verbose:
-        system.Log("Sorting hash file %s" % filename)
+        system.LogInfo("Sorting hash file %s" % filename)
     hash_contents = ReadHashFile(
         filename = filename,
         verbose = verbose,
@@ -445,7 +445,7 @@ def CalculateHash(
 
     # Get full path of file
     fullpath = os.path.join(base_path, filename)
-    system.Log("Hashing file %s ..." % fullpath)
+    system.LogInfo("Hashing file %s ..." % fullpath)
 
     # Create hash data
     hash_data = {}

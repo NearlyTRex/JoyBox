@@ -308,6 +308,7 @@ def AddMetadataEntry(
     game_category,
     game_subcategory,
     game_name,
+    game_url = None,
     initial_data = None,
     verbose = False,
     pretend_run = False,
@@ -346,6 +347,8 @@ def AddMetadataEntry(
     new_entry.set_players("1")
     new_entry.set_coop("No")
     new_entry.set_playable("Yes")
+    if isinstance(game_url, str) and len(game_url) > 0 and game_url.startswith("http"):
+        new_entry.set_url(game_url)
 
     # Add new entry
     metadata_obj.add_game(new_entry)

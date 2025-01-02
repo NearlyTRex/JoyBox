@@ -34,7 +34,7 @@ def main():
         for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), args.game_category, args.game_subcategory):
 
             # Update metadata entry
-            system.Log("Updating metadata entry for %s - %s..." % (game_platform.val(), game_name))
+            system.LogInfo("Updating metadata entry for %s - %s..." % (game_platform.val(), game_name))
             collection.UpdateMetadataEntry(
                 game_category = args.game_category,
                 game_subcategory = args.game_subcategory,
@@ -50,7 +50,7 @@ def main():
             for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), args.game_category, game_subcategory):
 
                 # Update metadata entry
-                system.Log("Updating metadata entry for %s - %s..." % (game_platform.val(), game_name))
+                system.LogInfo("Updating metadata entry for %s - %s..." % (game_platform.val(), game_name))
                 collection.UpdateMetadataEntry(
                     game_category = args.game_category,
                     game_subcategory = game_subcategory,
@@ -67,7 +67,7 @@ def main():
                 for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
 
                     # Update metadata entry
-                    system.Log("Updating metadata entry for %s - %s..." % (game_platform.val(), game_name))
+                    system.LogInfo("Updating metadata entry for %s - %s..." % (game_platform.val(), game_name))
                     collection.UpdateMetadataEntry(
                         game_category = game_category,
                         game_subcategory = game_subcategory,

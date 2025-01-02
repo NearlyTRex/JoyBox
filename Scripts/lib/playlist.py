@@ -18,7 +18,7 @@ def ReadPlaylist(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Reading playlist file %s" % input_file)
+            system.LogInfo("Reading playlist file %s" % input_file)
         if not pretend_run:
             playlist_contents = []
             with open(input_file, "r", encoding="utf8") as f:
@@ -42,7 +42,7 @@ def WritePlaylist(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Writing playlist file %s" % output_file)
+            system.LogInfo("Writing playlist file %s" % output_file)
         if not pretend_run:
             with open(output_file, "w", encoding="utf8") as f:
                 for entry in playlist_contents:

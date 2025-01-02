@@ -31,7 +31,7 @@ def main():
     for json_file in system.BuildFileListByExtensions(environment.GetJsonMetadataRootDir(), extensions = [".json"]):
 
         # Check if json file matches up to a real game path
-        system.Log("Checking if game matching '%s' exists ..." % json_file)
+        system.LogInfo("Checking if game matching '%s' exists ..." % json_file)
         game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromFile(json_file)
         game_name = system.GetFilenameBasename(json_file)
         game_base_dir = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
@@ -97,7 +97,7 @@ def main():
                     continue
 
                 # Read hash file
-                system.Log("Checking hash file '%s' ..." % hash_file_path)
+                system.LogInfo("Checking hash file '%s' ..." % hash_file_path)
                 hash_file_data = hashing.ReadHashFile(hash_file_path)
                 for hash_reference_file in hash_file_data.keys():
 

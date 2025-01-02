@@ -68,6 +68,8 @@ class GOG(storebase.StoreBase):
             return json_wrapper.get_value(config.json_key_store_appid)
         elif identifier_type == config.StoreIdentifierType.METADATA:
             return json_wrapper.get_value(config.json_key_store_appurl)
+        elif identifier_type == config.StoreIdentifierType.ASSET:
+            return json_wrapper.get_value(config.json_key_store_appurl)
         return json_wrapper.get_value(config.json_key_store_appname)
 
     ############################################################
@@ -269,7 +271,6 @@ class GOG(storebase.StoreBase):
 
         # Create metadata entry
         metadata_entry = metadataentry.MetadataEntry()
-        metadata_entry.set_url(identifier)
 
         # Look for game description
         element_game_description = webpage.WaitForElement(
@@ -361,7 +362,7 @@ class GOG(storebase.StoreBase):
         # Video
         if asset_type == config.AssetType.VIDEO:
             latest_asset_url = webpage.GetMatchingUrl(
-                url = self.GetLatestUrl(identifier),
+                url = identifier,
                 base_url = "https://www.youtube.com/embed",
                 starts_with = "https://www.youtube.com/embed",
                 ends_with = "enablejsapi=1",

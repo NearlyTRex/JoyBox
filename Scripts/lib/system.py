@@ -1,6 +1,8 @@
 # Imports
 import os, os.path
 import re
+import inspect
+import logging
 import stat
 import sys
 import errno
@@ -22,6 +24,10 @@ import environment
 import hashing
 import programs
 import network
+
+# Globals
+console_logger = None
+file_logger = None
 
 ###########################################################
 
@@ -392,57 +398,72 @@ def DeduplicateAdjacentLines(lines):
 
 ###########################################################
 
-# Log message
-def Log(message):
-    try:
-        print(message)
-    except UnicodeEncodeError:
-        print(message.encode("utf-8", "ignore").decode("utf-8"))
-    except:
-        pass
+# Get source info
+def GetSourceInfo():
+    frame = inspect.currentframe().f_back
+    file_name = os.path.basename(frame.f_code.co_filename)
+    line_number = frame.f_lineno
+    return f"({file_name}:{line_number})"
 
-# Log colored
-def LogColored(message, color = None, on_color = None, attrs = None):
-    try:
-        import termcolor
-        if environment.IsWindowsPlatform():
-            import colorama
-            colorama.just_fix_windows_console()
-        termcolor.cprint(message, color, on_color, attrs)
-    except:
-        Log(message)
+###########################################################
 
-# Log colored with header
-def LogColoredWithHeader(message, header, color):
-    try:
-        import termcolor
-        if environment.IsWindowsPlatform():
-            import colorama
-            colorama.just_fix_windows_console()
-        Log(termcolor.colored("%s:" % header, color) + " " + message)
-    except:
-        Log("%s: " % header + message)
+# Get console logger
+def GetConsoleLogger():
+    global console_logger
+    if not console_logger:
+        console_logger = logging.getLogger("ConsoleLogger")
+        console_logger.setLevel(logging.DEBUG)
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.DEBUG)
+        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        console_handler.setFormatter(formatter)
+        console_logger.addHandler(console_handler)
+    return console_logger
+
+# Get file logger
+def GetFileLogger():
+    global file_logger
+    if not file_logger:
+        file_logger = logging.getLogger("FileLogger")
+        file_logger.setLevel(logging.DEBUG)
+        file_handler = logging.FileHandler(environment.GetLogFile(), mode="a", encoding="utf-8")
+        file_handler.setLevel(logging.DEBUG)
+        file_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        file_handler.setFormatter(file_formatter)
+        file_logger.addHandler(file_handler)
+    return file_logger
 
 # Log info
 def LogInfo(message):
-    LogColoredWithHeader(str(message), "INFO", "light_blue")
+    console_logger = GetConsoleLogger()
+    file_logger = GetFileLogger()
+    if console_logger:
+        console_logger.info(message)
+    if file_logger:
+        file_logger.info(f"{GetSourceInfo()} {message}")
 
 # Log warning
 def LogWarning(message):
-    LogColoredWithHeader(str(message), "WARNING", "yellow")
+    console_logger = GetConsoleLogger()
+    file_logger = GetFileLogger()
+    if console_logger:
+        console_logger.warning(message)
+    if file_logger:
+        file_logger.warning(message)
 
 # Log error
 def LogError(message):
-    LogColoredWithHeader(str(message), "ERROR", "red")
+    console_logger = GetConsoleLogger()
+    file_logger = GetFileLogger()
+    if console_logger:
+        console_logger.error(f"{GetSourceInfo()} {message}")
+    if file_logger:
+        file_logger.error(f"{GetSourceInfo()} {message}")
 
-# Log error
+# Log error and quit program
 def LogErrorAndQuit(message):
     LogError(message)
     QuitProgram()
-
-# Log success
-def LogSuccess(message):
-    LogColoredWithHeader(str(message), "SUCCESS", "green")
 
 # Log percent complete
 def LogPercentComplete(percent_complete):
@@ -460,7 +481,7 @@ def DisplayTable(table_data):
             if index == 0:
                 table.header(entry.keys())
             table.add_row(entry.values())
-        Log(table.draw())
+        print(table.draw())
         return True
     except Exception as e:
         LogError(e)
@@ -509,6 +530,8 @@ def IsParentPath(parent_path, child_path):
 
 # Check if path exists
 def DoesPathExist(path, case_sensitive_paths = True, partial_paths = False):
+    if not path:
+        return False
     if case_sensitive_paths:
         return os.path.exists(path)
     elif partial_paths:
@@ -605,10 +628,10 @@ def ReplaceStringsInFile(src, replacements = [], verbose = False, pretend_run = 
     try:
         if not os.path.isfile(src):
             if verbose:
-                Log("Path %s is not a file" % src)
+                LogInfo("Path %s is not a file" % src)
             return False
         if verbose:
-            Log("Replacing lines in file %s" % src)
+            LogInfo("Replacing lines in file %s" % src)
         if not pretend_run:
             src_contents = ""
             with open(src, "r", encoding="utf-8") as f:
@@ -633,10 +656,10 @@ def AppendLineToFile(src, line, verbose = False, pretend_run = False, exit_on_fa
     try:
         if not os.path.isfile(src):
             if verbose:
-                Log("Path %s is not a file" % src)
+                LogInfo("Path %s is not a file" % src)
             return False
         if verbose:
-            Log("Adding line '%s' to file %s" % (line, src))
+            LogInfo("Adding line '%s' to file %s" % (line, src))
         if not pretend_run:
             with open(src, "r+", encoding="utf8") as f:
                 ends_with_newline = True
@@ -661,10 +684,10 @@ def SortFileContents(src, verbose = False, pretend_run = False, exit_on_failure 
     try:
         if not os.path.isfile(src):
             if verbose:
-                Log("Path %s is not a file" % src)
+                LogInfo("Path %s is not a file" % src)
             return False
         if verbose:
-            Log("Sorting contents of file %s" % src)
+            LogInfo("Sorting contents of file %s" % src)
         if not pretend_run:
             sorted_contents = ""
             with open(src, "r", encoding="utf8") as f:
@@ -717,7 +740,7 @@ def ReplaceSymlinkedDirectories(dir, verbose = False, pretend_run = False, exit_
 def LowercaseAllPaths(dir, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            Log("Lowercasing all paths in directory %s" % dir)
+            LogInfo("Lowercasing all paths in directory %s" % dir)
         def onFoundItems(root, items):
             for name in items:
                 if not pretend_run:
@@ -740,7 +763,7 @@ def LowercaseAllPaths(dir, verbose = False, pretend_run = False, exit_on_failure
 def TouchFile(src, contents = "", contents_mode = "w", encoding = None, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            Log("Touching file %s" % src)
+            LogInfo("Touching file %s" % src)
         if not pretend_run:
             os.makedirs(GetFilenameDirectory(src), exist_ok = True)
             if len(contents):
@@ -764,7 +787,7 @@ def TouchFile(src, contents = "", contents_mode = "w", encoding = None, verbose 
 def ChmodFileOrDirectory(src, perms, dperms = None, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            Log("Changing permissions of %s to %s" % (src, str(perms)))
+            LogInfo("Changing permissions of %s to %s" % (src, str(perms)))
         if not pretend_run:
             if os.path.isfile(src):
                 os.chmod(src, int(str(perms), base=8))
@@ -789,7 +812,7 @@ def ChmodFileOrDirectory(src, perms, dperms = None, verbose = False, pretend_run
 def MarkAsExecutable(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            Log("Marking %s as executable" % src)
+            LogInfo("Marking %s as executable" % src)
         if not pretend_run:
             st = os.stat(src)
             os.chmod(src, st.st_mode | stat.S_IEXEC)
@@ -804,12 +827,12 @@ def MarkAsExecutable(src, verbose = False, pretend_run = False, exit_on_failure 
 # Create temporary directory
 def CreateTemporaryDirectory(verbose = False, pretend_run = False):
     if verbose:
-        Log("Creating temporary directory")
+        LogInfo("Creating temporary directory")
     dir = ""
     if not pretend_run:
         dir = os.path.realpath(tempfile.mkdtemp())
         if verbose:
-            Log("Created temporary directory %s" % dir)
+            LogInfo("Created temporary directory %s" % dir)
     if not os.path.isdir(dir):
         return (False, "Unable to create temporary directory")
     return (True, dir)
@@ -818,7 +841,7 @@ def CreateTemporaryDirectory(verbose = False, pretend_run = False):
 def CreateSymlink(src, dest, cwd = None, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            Log("Creating symlink from %s to %s" % (src, dest))
+            LogInfo("Creating symlink from %s to %s" % (src, dest))
         if not pretend_run:
             if cwd:
                 os.chdir(cwd)
@@ -853,7 +876,7 @@ def CopyFileOrDirectory(
                 exit_on_failure = exit_on_failure):
                 return True
         if verbose:
-            Log("Copying %s to %s" % (src, dest))
+            LogInfo("Copying %s to %s" % (src, dest))
         if not pretend_run:
             if os.path.isdir(src):
                 shutil.copytree(src, dest, dirs_exist_ok=True)
@@ -889,7 +912,7 @@ def MoveFileOrDirectory(
                 exit_on_failure = exit_on_failure):
                 return True
         if verbose:
-            Log("Moving %s to %s" % (src, dest))
+            LogInfo("Moving %s to %s" % (src, dest))
         if not pretend_run:
             shutil.move(src, dest)
         return True
@@ -924,7 +947,7 @@ def TransferFile(
                 exit_on_failure = exit_on_failure):
                 return True
         if verbose:
-            Log("Transferring %s to %s" % (src, dest))
+            LogInfo("Transferring %s to %s" % (src, dest))
         if not pretend_run:
             total_size = GetFileSize(src)
             progress_bar = None
@@ -960,7 +983,7 @@ def MakeDirectory(dir, verbose = False, pretend_run = False, exit_on_failure = F
     try:
         if not os.path.isdir(dir):
             if verbose:
-                Log("Making directory %s" % dir)
+                LogInfo("Making directory %s" % dir)
             if not pretend_run:
                 os.makedirs(dir)
         return True
@@ -977,7 +1000,7 @@ def MakeDirectory(dir, verbose = False, pretend_run = False, exit_on_failure = F
 def RemoveFile(file, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            Log("Removing file %s" % file)
+            LogInfo("Removing file %s" % file)
         if not pretend_run:
             if os.path.isfile(file):
                 os.remove(file)
@@ -993,7 +1016,7 @@ def RemoveFile(file, verbose = False, pretend_run = False, exit_on_failure = Fal
 def RemoveSymlink(symlink, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            Log("Removing symlink %s" % symlink)
+            LogInfo("Removing symlink %s" % symlink)
         if not pretend_run:
             if os.path.islink(symlink):
                 os.unlink(symlink)
@@ -1009,7 +1032,7 @@ def RemoveSymlink(symlink, verbose = False, pretend_run = False, exit_on_failure
 def RemoveDirectory(dir, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            Log("Removing directory %s" % dir)
+            LogInfo("Removing directory %s" % dir)
         if not pretend_run:
             if os.path.isdir(dir):
                 shutil.rmtree(dir)
@@ -1025,7 +1048,7 @@ def RemoveDirectory(dir, verbose = False, pretend_run = False, exit_on_failure =
 def RemoveDirectoryContents(dir, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            Log("Removing contents of directory %s" % dir)
+            LogInfo("Removing contents of directory %s" % dir)
         if not pretend_run:
             for root, dirs, files in os.walk(dir):
                 for f in files:
@@ -1434,7 +1457,7 @@ def ReadJsonFile(src, verbose = False, pretend_run = False, exit_on_failure = Fa
         if not src.endswith(".json"):
             return {}
         if verbose:
-            Log("Reading %s" % src)
+            LogInfo("Reading %s" % src)
         json_data = {}
         with open(src, "r") as input_file:
             file_contents = input_file.read()
@@ -1453,7 +1476,7 @@ def WriteJsonFile(src, json_data, sort_keys = False, verbose = False, pretend_ru
         if not src.endswith(".json"):
             return False
         if verbose:
-            Log("Writing %s" % src)
+            LogInfo("Writing %s" % src)
         if not pretend_run:
             with open(src, "w", newline='\n') as output_file:
                 json_string = json.dumps(json_data, indent = 4, sort_keys = sort_keys)
@@ -1472,7 +1495,7 @@ def CleanJsonFile(src, sort_keys = False, remove_empty_values = False, verbose =
         if not src.endswith(".json"):
             return False
         if verbose:
-            Log("Cleaning %s" % src)
+            LogInfo("Cleaning %s" % src)
         if not pretend_run:
             json_data = None
             with open(src, "r") as input_file:
@@ -1513,7 +1536,7 @@ def ReadYamlFile(src, verbose = False, pretend_run = False, exit_on_failure = Fa
         if not src.endswith(".yaml"):
             return {}
         if verbose:
-            Log("Reading %s" % src)
+            LogInfo("Reading %s" % src)
         yaml_data = {}
         with open(src, "r") as input_file:
             file_contents = input_file.read()

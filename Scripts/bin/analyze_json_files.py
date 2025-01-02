@@ -64,14 +64,14 @@ def main():
         if len(json_files_no_files):
             system.LogInfo("Games with no files:")
             for json_file in json_files_no_files:
-                system.Log(json_file)
+                system.LogInfo(json_file)
 
     # List unplayable games
     if args.mode == config.AnalyzeModeType.ALL or args.mode == config.AnalyzeModeType.UNPLAYABLE_GAMES:
         if len(json_files_unplayable):
             system.LogInfo("Games marked as unplayable:")
             for json_file in json_files_unplayable:
-                system.Log(json_file)
+                system.LogInfo(json_file)
 
 # Start
 main()

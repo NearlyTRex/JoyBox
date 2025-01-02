@@ -38,7 +38,7 @@ def GetRemoteJson(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Processing GET request to '%s'" % url)
+            system.LogInfo("Processing GET request to '%s'" % url)
         import requests
         if not headers:
             headers = {"Accept": "application/json"}
@@ -62,7 +62,7 @@ def PostRemoteJson(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Processing POST request to '%s'" % url)
+            system.LogInfo("Processing POST request to '%s'" % url)
         import requests
         if not headers:
             headers = {"Accept": "application/json"}
@@ -87,7 +87,7 @@ def GetRemoteXml(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Processing GET request to '%s'" % url)
+            system.LogInfo("Processing GET request to '%s'" % url)
         import requests
         import xmltodict
         if not headers:
@@ -351,7 +351,7 @@ def GetGithubRepository(
     try:
         import github
         if verbose:
-            system.Log("Getting github repository '%s/%s'" % (github_user, github_repo))
+            system.LogInfo("Getting github repository '%s/%s'" % (github_user, github_repo))
         gh = github.Github(github_token)
         repo = gh.get_repo("%s/%s" % (github_user, github_repo))
         return repo
@@ -375,7 +375,7 @@ def GetGithubRepositories(
     try:
         import github
         if verbose:
-            system.Log("Getting github repositories for '%s'" % github_user)
+            system.LogInfo("Getting github repositories for '%s'" % github_user)
         gh = github.Github(github_token)
         user = gh.get_user()
         login = user.login
@@ -456,7 +456,7 @@ def UpdateGithubRepository(
     if "message" in update_response:
         update_message = update_response["message"]
         if "success" in update_message.lower():
-            system.LogSuccess("Repository '%s' - '%s' was successfully updated from upstream" % (github_user, github_repo))
+            system.LogInfo("Repository '%s' - '%s' was successfully updated from upstream" % (github_user, github_repo))
         if "branch is not behind" in update_message.lower():
             system.LogInfo("Repository '%s' - '%s' was already up to date with upstream" % (github_user, github_repo))
 

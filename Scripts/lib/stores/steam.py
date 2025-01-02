@@ -402,7 +402,6 @@ class Steam(storebase.StoreBase):
 
         # Create metadata entry
         metadata_entry = metadataentry.MetadataEntry()
-        metadata_entry.set_url(identifier)
 
         # Check for age gate
         element_age_gate = webpage.WaitForElement(

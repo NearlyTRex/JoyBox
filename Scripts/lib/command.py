@@ -408,9 +408,9 @@ def PostprocessCommand(
 # Print command
 def PrintCommand(cmd):
     if isinstance(cmd, str):
-        system.Log(cmd)
+        system.LogInfo(cmd)
     if isinstance(cmd, list):
-        system.Log(" ".join(cmd))
+        system.LogInfo(" ".join(cmd))
 
 ###########################################################
 
@@ -608,7 +608,7 @@ def RunBlockingCommand(
                 if output == "" and process.poll() is not None:
                     break
                 if output:
-                    system.Log(output.strip())
+                    system.LogInfo(output.strip())
             code = process.poll()
             if isinstance(options.blocking_processes, list) and len(options.blocking_processes) > 0:
                 environment.WaitForNamedProcesses(options.blocking_processes)

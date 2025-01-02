@@ -54,7 +54,7 @@ def CreateChromeWebDriver(
     # Create web driver
     try:
         if verbose:
-            system.Log("Creating chrome web driver")
+            system.LogInfo("Creating chrome web driver")
         if not pretend_run:
             from selenium.webdriver.chrome.service import Service as ChromeService
             from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -97,7 +97,7 @@ def CreateFirefoxWebDriver(
     # Create web driver
     try:
         if verbose:
-            system.Log("Creating firefox web driver")
+            system.LogInfo("Creating firefox web driver")
         if not pretend_run:
             from selenium.webdriver.firefox.service import Service as FirefoxService
             from selenium.webdriver.firefox.options import Options as FirefoxOptions
@@ -174,7 +174,7 @@ def DestroyWebDriver(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Destroying web driver")
+            system.LogInfo("Destroying web driver")
         if not pretend_run:
             if driver:
                 driver.close()
@@ -196,7 +196,7 @@ def LoadUrl(
     exit_on_failure = False):
     try:
         if verbose:
-            system.Log("Loading url %s" % url)
+            system.LogInfo("Loading url %s" % url)
         if not pretend_run:
             driver.get(url)
         return True
@@ -436,19 +436,22 @@ def SaveCookie(
     exit_on_failure = False):
     if not system.IsPathValid(path):
         return False
-    try:
-        if verbose:
-            system.Log("Saving cookie file '%s'" % path)
-        if not pretend_run:
-            with open(path, "w") as filehandler:
-                json.dump(driver.get_cookies(), filehandler)
-        return True
-    except Exception as e:
-        if exit_on_failure:
-            system.LogError("Unable to save cookie file '%s'" % path)
-            system.LogError(e)
-            system.QuitProgram()
-    return False
+    if not driver.get_cookies():
+        return False
+    success = system.MakeDirectory(
+        dir = system.GetFilenameDirectory(path),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+    success = system.TouchFile(
+        src = path,
+        contents = json.dumps(driver.get_cookies()),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
 
 # Load cookie
 def LoadCookie(
@@ -459,20 +462,15 @@ def LoadCookie(
     exit_on_failure = False):
     if not system.DoesPathExist(path):
         return False
-    try:
-        if verbose:
-            system.Log("Loading cookie file '%s'" % path)
-        if not pretend_run:
-            with open(path, "r") as cookiesfile:
-                cookies = json.load(cookiesfile)
-            for cookie in cookies:
-                driver.add_cookie(cookie)
+    cookie_list = system.ReadJsonFile(
+        src = path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if isinstance(cookie_list, list):
+        for cookie in cookie_list:
+            driver.add_cookie(cookie)
         return True
-    except Exception as e:
-        if exit_on_failure:
-            system.LogError("Unable to load cookie file '%s'" % path)
-            system.LogError(e)
-            system.QuitProgram()
     return False
 
 ###########################################################
@@ -583,18 +581,24 @@ def GetMatchingUrls(
         # List to store potential URLs
         potential_urls = []
 
+        # Process tag url
+        def ProcessTagUrl(value, base_url, is_iframe = False):
+            if not value:
+                return []
+            if not value.startswith("http"):
+                if is_iframe and value.startswith("//"):
+                    value = "https:" + value
+                elif not is_iframe:
+                    value = system.JoinStringsAsUrl(base_url, value)
+            return [value, system.StripStringQueryParams(value)]
+
         # Look through tags to find links
         for tag in parser.find_all("a", href=True):
             value = tag.get("href")
-            if value:
-                if not value.startswith("http"):
-                    if base_url.endswith("/"):
-                        value = system.JoinStringsAsUrl(base_url, value)
-                    else:
-                        value = system.JoinStringsAsUrl(base_url + "/", value)
-                if value:
-                    potential_urls.append(value)
-                    potential_urls.append(system.StripStringQueryParams(value))
+            potential_urls.extend(ProcessTagUrl(value, base_url))
+        for tag in parser.find_all("iframe", src=True):
+            value = tag.get("src")
+            potential_urls.extend(ProcessTagUrl(value, base_url, is_iframe=True))
 
         # Look through tag attributes to find links
         for tag in parser.find_all(True):

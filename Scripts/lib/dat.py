@@ -35,7 +35,7 @@ class Dat:
     def import_cache_dat_file(self, dat_file, verbose = False, pretend_run = False, exit_on_failure = False):
         try:
             if verbose:
-                system.Log("Importing cache dat file '%s'" % dat_file)
+                system.LogInfo("Importing cache dat file '%s'" % dat_file)
             if not pretend_run:
                 with open(dat_file, "r", encoding="utf8", newline="\n") as file:
                     for line in file.readlines():
@@ -59,7 +59,7 @@ class Dat:
     def export_cache_dat_file(self, dat_file, verbose = False, pretend_run = False, exit_on_failure = False):
         try:
             if verbose:
-                system.Log("Exporting cache dat file '%s'" % dat_file)
+                system.LogInfo("Exporting cache dat file '%s'" % dat_file)
             if not pretend_run:
                 with open(dat_file, "w", encoding="utf8", newline="\n") as file:
                     for key in self.game_database.keys():
@@ -83,7 +83,7 @@ class Dat:
     def import_clrmamepro_dat_file(self, dat_file, verbose = False, pretend_run = False, exit_on_failure = False):
         try:
             if verbose:
-                system.Log("Importing clrmamepro dat file '%s'" % dat_file)
+                system.LogInfo("Importing clrmamepro dat file '%s'" % dat_file)
             if not pretend_run:
                 dom = minidom.parse(dat_file)
                 game_tags = dom.getElementsByTagName("game")
@@ -119,10 +119,10 @@ class Dat:
     # Rename files
     def rename_files(self, input_dir, verbose = False, pretend_run = False, exit_on_failure = False):
         if verbose:
-            system.Log("Renaming files in '%s' according to imported dats ..." % input_dir)
+            system.LogInfo("Renaming files in '%s' according to imported dats ..." % input_dir)
         for file in system.BuildFileList(input_dir):
             if verbose:
-                system.Log("Examining '%s'" % file)
+                system.LogInfo("Examining '%s'" % file)
             file_dir = system.GetFilenameDirectory(file)
             file_md5 = hashing.CalculateFileMD5(file, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
             if self.is_md5_present(file_md5):

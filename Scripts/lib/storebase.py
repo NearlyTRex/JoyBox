@@ -248,15 +248,15 @@ class StoreBase:
                 continue
 
             # Determine if this should be imported
-            system.Log("Found new potential entry:")
+            system.LogInfo("Found new potential entry:")
             if purchase_appid:
-                system.Log(" - Appid:\t" + purchase_appid)
+                system.LogInfo(" - Appid:\t" + purchase_appid)
             if purchase_appname:
-                system.Log(" - Appname:\t" + purchase_appname)
+                system.LogInfo(" - Appname:\t" + purchase_appname)
             if purchase_appurl:
-                system.Log(" - Appurl:\t" + purchase_appurl)
+                system.LogInfo(" - Appurl:\t" + purchase_appurl)
             if purchase_name:
-                system.Log(" - Name:\t" + purchase_name)
+                system.LogInfo(" - Name:\t" + purchase_name)
             should_import = system.PromptForValue("Import this? (n to skip, i to ignore)", default_value = "n")
             if should_import.lower() == "n":
                 continue
@@ -305,6 +305,7 @@ class StoreBase:
                 game_category = self.GetCategory(),
                 game_subcategory = self.GetSubcategory(),
                 game_name = entry_name,
+                game_url = purchase_appurl,
                 initial_data = self.GetLatestMetadata(
                     identifier = self.GetMetadataIdentifier(purchase),
                     verbose = verbose,

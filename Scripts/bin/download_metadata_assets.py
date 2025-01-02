@@ -39,7 +39,7 @@ def main():
         for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), args.game_category, args.game_subcategory):
 
             # Download metadata asset
-            system.Log("Downloading metadata assets for %s - %s..." % (game_platform, game_name))
+            system.LogInfo("Downloading metadata assets for %s - %s..." % (game_platform, game_name))
             collection.DownloadMetadataAsset(
                 game_category = args.game_category,
                 game_subcategory = args.game_subcategory,
@@ -58,7 +58,7 @@ def main():
             for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), args.game_category, game_subcategory):
 
                 # Download metadata asset
-                system.Log("Downloading metadata assets for %s - %s..." % (game_platform, game_name))
+                system.LogInfo("Downloading metadata assets for %s - %s..." % (game_platform, game_name))
                 collection.DownloadMetadataAsset(
                     game_category = args.game_category,
                     game_subcategory = game_subcategory,
@@ -78,7 +78,7 @@ def main():
                 for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
 
                     # Download metadata asset
-                    system.Log("Downloading metadata assets for %s - %s..." % (game_platform, game_name))
+                    system.LogInfo("Downloading metadata assets for %s - %s..." % (game_platform, game_name))
                     collection.DownloadMetadataAsset(
                         game_category = game_category,
                         game_subcategory = game_subcategory,

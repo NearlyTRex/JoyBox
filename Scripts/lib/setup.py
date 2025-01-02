@@ -73,8 +73,6 @@ def SetupEmulators(offline = False, configure = False, verbose = False, pretend_
 
 # Setup assets
 def SetupAssets(verbose = False, pretend_run = False, exit_on_failure = False):
-
-    # Create asset symlinks
     for game_category in config.Category.members():
         for game_subcategory in config.subcategory_map[game_category]:
             system.LogInfo("Creating asset symlinks for %s - %s ..." % (game_category, game_subcategory))

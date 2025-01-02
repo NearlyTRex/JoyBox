@@ -23,7 +23,7 @@ def ReadRegistryFile(
     registry_text = ""
     try:
         if verbose:
-            system.Log("Reading registry file '%s'" % registry_file)
+            system.LogInfo("Reading registry file '%s'" % registry_file)
         if not pretend_run:
             with open(registry_file, "r", encoding="utf-16") as file:
                 registry_text = file.read()
@@ -114,7 +114,7 @@ def WriteRegistryFile(
     # Write registry file
     try:
         if verbose:
-            system.Log("Writing registry file '%s'" % registry_file)
+            system.LogInfo("Writing registry file '%s'" % registry_file)
         if not pretend_run:
             with open(registry_file, "w", encoding="utf-16") as file:
                 file.write(registry_text)

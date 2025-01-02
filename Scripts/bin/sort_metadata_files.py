@@ -35,7 +35,7 @@ def main():
                 continue
 
             # Sort metadata
-            system.Log("Sorting metadata files for %s - %s..." % (game_category, game_subcategory))
+            system.LogInfo("Sorting metadata files for %s - %s..." % (game_category, game_subcategory))
             metadata_obj = metadata.Metadata()
             metadata_obj.import_from_metadata_file(metadata_file)
             metadata_obj.export_to_metadata_file(metadata_file)

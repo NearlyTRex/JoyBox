@@ -51,7 +51,7 @@ def CollectMetadataFromFile(
 
             # Get entry
             if verbose:
-                system.Log("Collecting metadata for %s - %s ..." % (game_platform, game_name))
+                system.LogInfo("Collecting metadata for %s - %s ..." % (game_platform, game_name))
             game_entry = metadata_obj.get_game(game_platform, game_name)
 
             # Collect metadata
@@ -98,7 +98,7 @@ def CollectMetadataFromFile(
 
             # Wait
             if verbose:
-                system.Log("Waiting to get next entry ...")
+                system.LogInfo("Waiting to get next entry ...")
             system.SleepProgram(5)
 
     # Should be successful
@@ -324,10 +324,64 @@ def CollectMetadataFromGameFAQS(
     # Metadata result
     metadata_result = metadataentry.MetadataEntry()
 
+    # Load homepage
+    success = webpage.LoadUrl(web_driver, "https://gamefaqs.gamespot.com")
+    if not success:
+        return None
+
+    # Look for homepage marker
+    element_homepage_marker = webpage.WaitForElement(
+        driver = web_driver,
+        locator = webpage.ElementLocator({"class": "home_jbi_ft"}),
+        verbose = verbose)
+    if not element_homepage_marker:
+        return None
+
     # Load url
     success = webpage.LoadUrl(web_driver, "https://gamefaqs.gamespot.com/search_advanced?game=" + search_terms)
     if not success:
         return None
+
+    # Look for search results
+    element_search_result = webpage.WaitForElement(
+        driver = web_driver,
+        locator = webpage.ElementLocator({"class": "span12"}),
+        verbose = verbose)
+    if not element_search_result:
+        return None
+
+    # Look for search table
+    elements_search_table = webpage.GetElement(
+        parent = element_search_result,
+        locator = webpage.ElementLocator({"tag": "tbody"}))
+    if elements_search_table:
+
+        # Look for search rows
+        elements_search_rows = webpage.GetElement(
+            parent = elements_search_table,
+            locator = webpage.ElementLocator({"tag": "tr"}),
+            all_elements = True)
+        if elements_search_rows:
+            for elements_search_row in elements_search_rows:
+
+                # Examine columns
+                elements_search_cols = webpage.GetElement(
+                    parent = elements_search_row,
+                    locator = webpage.ElementLocator({"tag": "td"}),
+                    all_elements = True)
+                if elements_search_cols and len(elements_search_cols) >= 4:
+                    search_platform = elements_search_cols[0]
+                    search_game = elements_search_cols[1]
+                    search_game_platform = webpage.GetElementChildrenText(search_platform)
+                    search_game_name = webpage.GetElementChildrenText(search_game)
+                    search_game_link = webpage.GetElementLinkUrl(search_game)
+                    if not search_game_platform or not search_game_name or not search_game_link:
+                        continue
+
+                    # Navigate to the entry if this matches the search terms
+                    if search_game_platform == config.gamefaqs_platforms[game_platform][0]:
+                        webpage.LoadUrl(web_driver, search_game_link)
+                        break
 
     # Look for game description
     element_game_description = webpage.WaitForElement(
@@ -620,14 +674,14 @@ def CollectMetadataAssetFromYouTube(
         exit_on_failure = exit_on_failure)
 
     # Show search results to the user
-    system.Log(f"Here are the search results for \"{game_name}\"")
+    system.LogInfo(f"Here are the search results for \"{game_name}\"")
     for index in range(0, len(search_results)):
         search_result = search_results[index]
         search_title = search_result["title"]
         search_channel = search_result["channel"]
         search_duration = search_result["duration_string"]
         search_url = search_result["url"]
-        system.Log(f"{index}) \"{search_title}\" ({search_channel}) [{search_duration}] - {search_url}")
+        system.LogInfo(f"{index}) \"{search_title}\" ({search_channel}) [{search_duration}] - {search_url}")
 
     # Ask them which one they want to use
     value = system.PromptForValue("Which do you want to use? [Enter an index or type a url to use that]")

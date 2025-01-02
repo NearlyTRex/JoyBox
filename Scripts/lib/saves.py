@@ -137,7 +137,7 @@ def UnpackSave(
         exit_on_failure = exit_on_failure)
     if not system.IsDirectoryEmpty(output_save_dir):
         if verbose:
-            system.Log("Save already unpacked for '%s' - '%s' - '%s'" % (game_category, game_subcategory, game_name))
+            system.LogInfo("Save already unpacked for '%s' - '%s' - '%s'" % (game_category, game_subcategory, game_name))
         return True
 
     # Get latest save archive

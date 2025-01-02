@@ -37,14 +37,14 @@ def main():
     # Verify archives
     archive_extensions = [archive.GetArchiveExtension(archive_type) for archive_type in args.archive_types]
     for file in system.BuildFileListByExtensions(input_path, extensions = archive_extensions):
-        system.Log("Verifying %s ..." % file)
+        system.LogInfo("Verifying %s ..." % file)
         verification_success = archive.TestArchive(
             archive_file = file,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if verification_success:
-            system.LogSuccess("Verified!")
+            system.LogInfo("Verified!")
         else:
             system.LogErrorAndQuit("Verification failed!")
 
