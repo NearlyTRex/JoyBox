@@ -451,7 +451,7 @@ def GetHashesMetadataFile(game_supercategory, game_category, game_subcategory):
         GetHashesMetadataRootDir(),
         game_supercategory.val(),
         game_category.val(),
-        game_subcategory.val() + ".txt")
+        game_subcategory.val() + ".json")
 
 # Get json metadata root dir
 def GetJsonMetadataRootDir():
