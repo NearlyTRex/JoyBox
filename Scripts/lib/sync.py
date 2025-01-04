@@ -46,11 +46,11 @@ def GetCommonRemoteFlags(remote_name, remote_type, remote_action_type):
         "--transfers", "1",
         "--order-by", "size,ascending"
     ]
-    if remote_action_type in config.remote_action_sync_types:
+    if remote_action_type in config.RemoteActionSyncType.members():
         flags += [
             "--track-renames"
         ]
-    if remote_action_type in config.remote_action_change_types:
+    if remote_action_type in config.RemoteActionChangeType.members():
         flags += [
             "--create-empty-src-dirs"
         ]

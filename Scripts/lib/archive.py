@@ -79,6 +79,32 @@ def IsAppImageArchive(archive_file):
         extensions = [config.LinuxProgramFileType.APPIMAGE.cval()],
         mime_types = config.mime_types_appimage)
 
+# Get archive type
+def GetArchiveType(archive_file):
+    archive_ext = system.GetFilenameExtension(archive_file)
+    for archive_type in config.ArchiveFileType.members():
+        if archive_ext == archive_type.cval():
+            return archive_type
+    return None
+
+# Determine if creatable archive type
+def IsCreatableArchiveType(archive_type):
+    if archive_type in config.ArchiveZipFileType.members():
+        return True
+    if archive_type in config.Archive7zFileType.members():
+        return True
+    return False
+
+# Determine if extractable archive type
+def IsExtractableArchiveType(archive_file):
+    if archive_type in config.ArchiveZipFileType.members():
+        return True
+    if archive_type in config.Archive7zFileType.members():
+        return True
+    if archive_type in config.ArchiveTarballFileType.members():
+        return True
+    return False
+
 # Check archive checksums
 def GetArchiveChecksums(archive_file):
     checksums = []
@@ -185,13 +211,14 @@ def CreateArchiveFromFile(
         return False
 
     # Get archive type
-    archive_type = None
-    if IsZipArchive(archive_file):
-        archive_type = config.ArchiveFileType.ZIP
-    elif Is7zArchive(archive_file):
-        archive_type = config.ArchiveFileType.SEVENZIP
+    archive_type = GetArchiveType(archive_file)
     if not archive_type:
         system.LogError("Unrecognized archive type for %s" % archive_file)
+        return False
+
+    # Check if creatable
+    if not IsCreatableArchiveType(archive_type):
+        system.LogError("Unable to create archives of type %s" % archive_type.val())
         return False
 
     # Get path to add
@@ -265,13 +292,14 @@ def CreateArchiveFromFolder(
         return False
 
     # Get archive type
-    archive_type = None
-    if IsZipArchive(archive_file):
-        archive_type = config.ArchiveFileType.ZIP
-    elif Is7zArchive(archive_file):
-        archive_type = config.ArchiveFileType.SEVENZIP
+    archive_type = GetArchiveType(archive_file)
     if not archive_type:
         system.LogError("Unrecognized archive type for %s" % archive_file)
+        return False
+
+    # Check if creatable
+    if not IsCreatableArchiveType(archive_type):
+        system.LogError("Unable to create archives of type %s" % archive_type.val())
         return False
 
     # Create list of objects to add
@@ -354,6 +382,17 @@ def ExtractArchive(
         if not archive_tool:
             system.LogError("7-Zip was not found")
             return False
+
+    # Get archive type
+    archive_type = GetArchiveType(archive_file)
+    if not archive_type:
+        system.LogError("Unrecognized archive type for %s" % archive_file)
+        return False
+
+    # Check if extractable
+    if not IsExtractableArchiveType(archive_type):
+        system.LogError("Unable to extract archives of type %s" % archive_type.val())
+        return False
 
     # Get extract command
     extract_cmd = []

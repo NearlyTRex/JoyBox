@@ -6,9 +6,16 @@ import enum
 # Type enum
 class EnumType(enum.Enum):
     def __new__(cls, value, cvalue = None):
+        if isinstance(value, EnumType):
+            value = value.value
+            cvalue = value.cval() if hasattr(value, 'cval') else value
+        elif isinstance(value, str):
+            cvalue = cvalue if cvalue is not None else value
+        elif isinstance(value, tuple):
+            value, cvalue = value
         obj = object.__new__(cls)
         obj._value_ = value
-        obj.cvalue = cvalue if cvalue is not None else value
+        obj.cvalue = cvalue
         return obj
 
     @classmethod
@@ -190,19 +197,19 @@ class RemoteActionType(EnumType):
     LIST                    = ("List")
     MOUNT                   = ("Mount")
 
-# Remote action type subsets
-remote_action_sync_types = [
-    RemoteActionType.PULL,
-    RemoteActionType.PUSH,
-    RemoteActionType.MERGE
-]
-remote_action_change_types = [
-    RemoteActionType.DOWNLOAD,
-    RemoteActionType.UPLOAD,
-    RemoteActionType.PULL,
-    RemoteActionType.PUSH,
-    RemoteActionType.MERGE
-]
+# Remote action sync types
+class RemoteActionSyncType(EnumType):
+    PULL                    = RemoteActionType.PULL
+    PUSH                    = RemoteActionType.PUSH
+    MERGE                   = RemoteActionType.MERGE
+
+# Remote action change types
+class RemoteActionChangeType(EnumType):
+    DOWNLOAD                = RemoteActionType.DOWNLOAD
+    UPLOAD                  = RemoteActionType.UPLOAD
+    PULL                    = RemoteActionType.PULL
+    PUSH                    = RemoteActionType.PUSH
+    MERGE                   = RemoteActionType.MERGE
 
 # Capture types
 class CaptureType(EnumType):
@@ -233,21 +240,22 @@ class AssetType(EnumType):
     SCREENSHOT              = ("Screenshot", ".jpg")
     VIDEO                   = ("Video", ".mp4")
 
-# Asset type subsets
-asset_min_types = [
-    AssetType.BOXFRONT,
-    AssetType.VIDEO
-]
-asset_image_types = [
-    AssetType.BACKGROUND,
-    AssetType.BOXBACK,
-    AssetType.BOXFRONT,
-    AssetType.LABEL,
-    AssetType.SCREENSHOT
-]
-asset_video_types = [
-    AssetType.VIDEO
-]
+# Asset min types
+class AssetMinType(EnumType):
+    BOXFRONT                = AssetType.BOXFRONT
+    VIDEO                   = AssetType.VIDEO
+
+# Asset image types
+class AssetImageType(EnumType):
+    BACKGROUND              = AssetType.BACKGROUND
+    BOXBACK                 = AssetType.BOXBACK
+    BOXFRONT                = AssetType.BOXFRONT
+    LABEL                   = AssetType.LABEL
+    SCREENSHOT              = AssetType.SCREENSHOT
+
+# Asset video types
+class AssetVideoType(EnumType):
+    VIDEO                   = AssetType.VIDEO
 
 # Message types
 class MessageType(EnumType):

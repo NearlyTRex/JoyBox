@@ -319,7 +319,7 @@ class StoreBase:
                 return False
 
             # Download assets
-            for asset_type in config.asset_min_types:
+            for asset_type in config.AssetMinType.members():
                 success = collection.DownloadMetadataAsset(
                     game_category = self.GetCategory(),
                     game_subcategory = self.GetSubcategory(),
