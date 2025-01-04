@@ -2,6 +2,7 @@
 import os
 import sys
 from config.categories import *
+from config.files import *
 from config.general import *
 from config.keys import *
 from config.metadata import *

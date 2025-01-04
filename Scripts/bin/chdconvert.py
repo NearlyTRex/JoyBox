@@ -18,8 +18,8 @@ parser = arguments.ArgumentParser(description = "Convert disc images to CHD file
 parser.add_input_path_argument()
 parser.add_enum_argument(
     args = ("-t", "--disc_image_types"),
-    arg_type = config.DiscImageType,
-    default = [config.DiscImageType.ISO, config.DiscImageType.CUE, config.DiscImageType.GDI],
+    arg_type = config.DiscImageFileType,
+    default = [config.DiscImageFileType.ISO, config.DiscImageFileType.CUE, config.DiscImageFileType.GDI],
     description = "Disc image types",
     allow_multiple = True)
 parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete original files")
@@ -36,7 +36,7 @@ def main():
     input_path = parser.get_input_path()
 
     # Convert disc image files
-    disc_image_extensions = [chd.GetDiscImageExtension(disc_image_type) for disc_image_type in args.disc_image_types]
+    disc_image_extensions = [disc_image_type.cval() for disc_image_type in args.disc_image_types]
     for file in system.BuildFileListByExtensions(input_path, extensions = disc_image_extensions):
 
         # Get file info

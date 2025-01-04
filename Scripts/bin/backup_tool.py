@@ -88,7 +88,7 @@ def main():
         backup.ArchiveFiles(
             input_base_path = source_file_root,
             output_base_path = dest_file_root,
-            archive_type = config.ArchiveType.SEVENZIP,
+            archive_type = config.ArchiveFileType.SEVENZIP,
             exclude_paths = args.exclude_paths.split(","),
             show_progress = True,
             skip_existing = args.skip_existing,

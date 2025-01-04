@@ -510,7 +510,7 @@ def DecryptWiiUNUSPackage(
             if not system.IsPathFile(obj_path):
                 continue
             obj_ext = system.GetFilenameExtension(obj_path)
-            if obj_ext in config.encrypted_extensions_wiiu:
+            if obj_ext in config.NintendoWiiUFileType.cvalues():
                 system.RemoveFile(
                     file = obj_path,
                     verbose = verbose,

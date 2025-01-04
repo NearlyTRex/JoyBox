@@ -328,7 +328,7 @@ def GetSelectedLaunchInfo(
         # Get the complete list of runnable files from the install
         runnable_files_all = system.BuildFileListByExtensions(
             root = base_dir,
-            extensions = config.computer_program_extensions,
+            extensions = config.WindowsProgramFileType.cvalues(),
             use_relative_paths = True,
             follow_symlink_dirs = True)
 

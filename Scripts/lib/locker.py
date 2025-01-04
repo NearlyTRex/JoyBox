@@ -198,7 +198,7 @@ def UploadAndEncryptPath(
     # Encrypt files
     output_files = []
     for file in system.BuildFileList(src):
-        output_file = cryption.GenerateEncryptedFilename(file)
+        output_file = cryption.GenerateEncryptedPath(file)
         success = cryption.EncryptFile(
             source_file = file,
             output_file = output_file,

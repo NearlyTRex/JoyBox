@@ -18,8 +18,8 @@ parser = arguments.ArgumentParser(description = "Compress files.")
 parser.add_input_path_argument()
 parser.add_enum_argument(
     args = ("-a", "--archive_type"),
-    arg_type = config.ArchiveType,
-    default = config.ArchiveType.ZIP,
+    arg_type = config.ArchiveFileType,
+    default = config.ArchiveFileType.ZIP,
     description = "Archive type")
 parser.add_string_argument(args = ("-w", "--password"), description = "Password to set")
 parser.add_string_argument(args = ("-s", "--volume_size"), description = "Volume size for output files (100m, etc)")
@@ -53,7 +53,7 @@ def main():
 
         # Get output file
         output_basename = system.GetFilenameBasename(obj_path)
-        output_ext = archive.GetArchiveExtension(args.archive_type)
+        output_ext = args.archive_type.cval()
         output_file = os.path.join(input_path, output_basename + "." + output_ext)
         if os.path.exists(output_file):
             continue

@@ -18,8 +18,8 @@ parser = arguments.ArgumentParser(description = "Verify archive files.")
 parser.add_input_path_argument()
 parser.add_enum_argument(
     args = ("-a", "--archive_types"),
-    arg_type = config.ArchiveType,
-    default = [config.ArchiveType.ZIP],
+    arg_type = config.ArchiveFileType,
+    default = [config.ArchiveFileType.ZIP],
     description = "Archive types",
     allow_multiple = True)
 parser.add_common_arguments()
@@ -35,7 +35,7 @@ def main():
     input_path = parser.get_input_path()
 
     # Verify archives
-    archive_extensions = [archive.GetArchiveExtension(archive_type) for archive_type in args.archive_types]
+    archive_extensions = [archive_type.cval() for archive_type in args.archive_types]
     for file in system.BuildFileListByExtensions(input_path, extensions = archive_extensions):
         system.LogInfo("Verifying %s ..." % file)
         verification_success = archive.TestArchive(

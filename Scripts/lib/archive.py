@@ -12,10 +12,6 @@ import system
 import environment
 import sandbox
 
-# Get archive extension
-def GetArchiveExtension(archive_type):
-    return config.ArchiveType.to_lower_string(archive_type)
-
 # Determine if file is a known archive
 def IsKnownArchive(archive_file, extensions = [], mime_types = []):
     for ext in extensions:
@@ -45,35 +41,42 @@ def IsArchive(archive_file):
 def IsZipArchive(archive_file):
     return IsKnownArchive(
         archive_file = archive_file,
-        extensions = config.computer_archive_extensions_zip,
+        extensions = config.ArchiveZipFileType.cvalues(),
         mime_types = config.mime_types_zip)
 
 # Determine if file is a 7z archive
 def Is7zArchive(archive_file):
     return IsKnownArchive(
         archive_file = archive_file,
-        extensions = config.computer_archive_extensions_7z,
+        extensions = config.Archive7zFileType.cvalues(),
         mime_types = config.mime_types_7z)
+
+# Determine if file is a rar archive
+def IsRarArchive(archive_file):
+    return IsKnownArchive(
+        archive_file = archive_file,
+        extensions = config.ArchiveRarFileType.cvalues(),
+        mime_types = config.mime_types_rar)
 
 # Determine if file is a tarball archive
 def IsTarballArchive(archive_file):
     return IsKnownArchive(
         archive_file = archive_file,
-        extensions = config.computer_archive_extensions_tarball,
+        extensions = config.ArchiveTarballFileType.cvalues(),
         mime_types = config.mime_types_tarball)
 
 # Determine if file is an exe archive
 def IsExeArchive(archive_file):
     return IsKnownArchive(
         archive_file = archive_file,
-        extensions = config.computer_archive_extensions_exe,
+        extensions = [config.WindowsProgramFileType.EXE.cval()],
         mime_types = config.mime_types_exe)
 
 # Determine if file is an appimage archive
 def IsAppImageArchive(archive_file):
     return IsKnownArchive(
         archive_file = archive_file,
-        extensions = config.computer_archive_extensions_appimage,
+        extensions = [config.LinuxProgramFileType.APPIMAGE.cval()],
         mime_types = config.mime_types_appimage)
 
 # Check archive checksums
@@ -93,7 +96,7 @@ def GetArchiveChecksums(archive_file):
 # Get archive compression flags
 def GetArchiveCompressionFlags(archive_type, password, volume_size):
     compression_flags = []
-    if archive_type == config.ArchiveType.ZIP:
+    if archive_type == config.ArchiveFileType.ZIP:
         compression_flags += [
             "-tzip", # Archive format
             "-bb3", # Show files being added
@@ -104,7 +107,7 @@ def GetArchiveCompressionFlags(archive_type, password, volume_size):
             "-mmt=on", # Use multithreading
             "-ma=1", # Reproducible archive
         ]
-    elif archive_type == config.ArchiveType.SEVENZIP:
+    elif archive_type == config.ArchiveFileType.SEVENZIP:
         compression_flags += [
             "-t7z", # Archive format
             "-bb3", # Show files being added
@@ -184,9 +187,9 @@ def CreateArchiveFromFile(
     # Get archive type
     archive_type = None
     if IsZipArchive(archive_file):
-        archive_type = config.ArchiveType.ZIP
+        archive_type = config.ArchiveFileType.ZIP
     elif Is7zArchive(archive_file):
-        archive_type = config.ArchiveType.SEVENZIP
+        archive_type = config.ArchiveFileType.SEVENZIP
     if not archive_type:
         system.LogError("Unrecognized archive type for %s" % archive_file)
         return False
@@ -264,9 +267,9 @@ def CreateArchiveFromFolder(
     # Get archive type
     archive_type = None
     if IsZipArchive(archive_file):
-        archive_type = config.ArchiveType.ZIP
+        archive_type = config.ArchiveFileType.ZIP
     elif Is7zArchive(archive_file):
-        archive_type = config.ArchiveType.SEVENZIP
+        archive_type = config.ArchiveFileType.SEVENZIP
     if not archive_type:
         system.LogError("Unrecognized archive type for %s" % archive_file)
         return False

@@ -326,7 +326,7 @@ def GetLockerGamingAssetDir(game_category, game_subcategory, asset_type, source_
 
 # Get locker gaming asset file
 def GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type, source_type = None):
-    asset_file = "%s%s" % (game_name, config.asset_extensions[asset_type])
+    asset_file = "%s%s" % (game_name, asset_type.cvalue())
     return os.path.join(
         GetLockerGamingAssetsRootDir(source_type),
         game_category.val(),
@@ -437,6 +437,10 @@ def IsMetadataFile(metadata_file):
 def GetPublishedMetadataRootDir():
     return os.path.join(GetMetadataRootDir(), "Published")
 
+# Get misc metadata root dir
+def GetMiscMetadataRootDir():
+    return os.path.join(GetMetadataRootDir(), "Misc")
+
 # Get hashes metadata root dir
 def GetHashesMetadataRootDir():
     return os.path.join(GetMetadataRootDir(), "Hashes")
@@ -445,22 +449,9 @@ def GetHashesMetadataRootDir():
 def GetHashesMetadataFile(game_supercategory, game_category, game_subcategory):
     return os.path.join(
         GetHashesMetadataRootDir(),
-        "Main",
         game_supercategory.val(),
         game_category.val(),
         game_subcategory.val() + ".txt")
-
-# Get misc metadata root dir
-def GetMiscMetadataRootDir():
-    return os.path.join(GetMetadataRootDir(), "Misc")
-
-# Get main metadata hashes dir
-def GetMainMetadataHashesDir():
-    return os.path.join(GetHashesMetadataRootDir(), "Main")
-
-# Get disc metadata hashes dir
-def GetDiscMetadataHashesDir():
-    return os.path.join(GetHashesMetadataRootDir(), "Disc")
 
 # Get json metadata root dir
 def GetJsonMetadataRootDir():

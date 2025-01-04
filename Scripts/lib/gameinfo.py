@@ -706,7 +706,7 @@ def DeriveGameNamePathFromName(game_name, game_platform):
 
 # Derive game asset path from name
 def DeriveGameAssetPathFromName(game_name, asset_type):
-    return "%s/%s%s" % (asset_type.val(), game_name, config.asset_extensions[asset_type])
+    return "%s/%s%s" % (asset_type.val(), game_name, asset_type.cval())
 
 # Derive game categories from platform
 def DeriveGameCategoriesFromPlatform(game_platform):

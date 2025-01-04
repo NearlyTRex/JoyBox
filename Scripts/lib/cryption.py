@@ -11,7 +11,10 @@ import hashing
 
 # Determine if file is encrypted
 def IsFileEncrypted(source_file):
-    return source_file.endswith(config.encrypted_extension_general)
+    for ext in config.EncryptedFileType.cvalues():
+        if source_file.endswith(ext):
+            return True
+    return False
 
 # Determine if passphrase is valid
 def IsPassphraseValid(passphrase):
@@ -21,8 +24,12 @@ def IsPassphraseValid(passphrase):
 def GenerateEncryptedFilename(source_file):
     if IsFileEncrypted(source_file):
         return source_file
-    output_dir = system.GetFilenameDirectory(source_file)
-    output_name = hashing.CalculateStringMD5(system.GetFilenameFile(source_file)) + config.encrypted_extension_general
+    return hashing.CalculateStringMD5(source_file) + config.EncryptedFileType.ENC.val()
+
+# Generate encrypted path
+def GenerateEncryptedPath(source_path):
+    output_dir = system.GetFilenameDirectory(source_path)
+    output_name = GenerateEncryptedFilename(system.GetFilenameFile(source_path))
     return os.path.join(output_dir, output_name)
 
 # Get embedded filename
@@ -196,7 +203,7 @@ def EncryptFile(
 
     # Check output file
     if not output_file:
-        output_file = GenerateEncryptedFilename(source_file)
+        output_file = GenerateEncryptedPath(source_file)
     if not system.IsPathValid(output_file):
         return False
     if system.DoesPathExist(output_file):

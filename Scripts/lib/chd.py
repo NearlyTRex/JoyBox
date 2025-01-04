@@ -10,10 +10,6 @@ import system
 import iso
 import archive
 
-# Get disc image extension
-def GetDiscImageExtension(disc_image_type):
-    return config.DiscImageType.to_lower_string(disc_image_type)
-
 # Check if disc chd is mounted
 def IsDiscCHDMounted(chd_file, mount_dir):
     return (

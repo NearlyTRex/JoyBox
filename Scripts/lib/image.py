@@ -19,13 +19,13 @@ def IsImageFormat(image_file, image_format):
 def IsImageJPEG(image_file):
     return IsImageFormat(
         image_file = image_file,
-        image_format = config.ImageType.JPEG)
+        image_format = config.ImageFileType.JPEG)
 
 # Detect if image is png
 def IsImagePNG(image_file):
     return IsImageFormat(
         image_file = image_file,
-        image_format = config.ImageType.PNG)
+        image_format = config.ImageFileType.PNG)
 
 # Convert image
 def ConvertImage(
@@ -44,10 +44,10 @@ def ConvertImage(
             rgb_image = src_image.convert("RGB")
             if not image_format:
                 image_ext = system.GetFilenameExtension(image_dest).lower()
-                if image_ext in config.image_extensions_jpeg:
-                    image_format = config.ImageType.JPEG
-                elif image_ext in config.image_extensions_png:
-                    image_format = config.ImageType.PNG
+                if image_ext in [".jpg", ".jpeg"]:
+                    image_format = config.ImageFileType.JPEG
+                elif image_ext in [".png"]:
+                    image_format = config.ImageFileType.PNG
             if not pretend_run:
                 rgb_image.save(image_dest, image_format.val())
             return system.DoesPathExist(image_dest)
@@ -77,7 +77,7 @@ def ConvertImageToJPEG(
     return ConvertImage(
         image_src = image_src,
         image_dest = image_dest,
-        image_format = config.ImageType.JPEG,
+        image_format = config.ImageFileType.JPEG,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -100,7 +100,7 @@ def ConvertImageToPNG(
     return ConvertImage(
         image_src = image_src,
         image_dest = image_dest,
-        image_format = config.ImageType.PNG,
+        image_format = config.ImageFileType.PNG,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

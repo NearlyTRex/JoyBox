@@ -63,6 +63,9 @@ class EnumType(enum.Enum):
     def val(self):
         return self.value
 
+    def cval(self):
+        return self.cvalue
+
     def lower(self):
         return self.value.lower()
 
@@ -213,7 +216,7 @@ class DiscType(EnumType):
 
 # Disc extract type
 class DiscExtractType(EnumType):
-    ISO                     = ("ISO")
+    ISO                     = ("Iso")
     ARCHIVE                 = ("Archive")
 
 # Disc source type
@@ -221,21 +224,14 @@ class DiscSourceType(EnumType):
     FOLDER                  = ("Folder")
     ZIP                     = ("Zip")
 
-# Disc image type
-class DiscImageType(EnumType):
-    ISO                     = ("ISO")
-    CUE                     = ("CUE")
-    GDI                     = ("GDI")
-    CHD                     = ("CHD")
-
 # Asset types
 class AssetType(EnumType):
-    BACKGROUND              = ("Background")
-    BOXBACK                 = ("BoxBack")
-    BOXFRONT                = ("BoxFront")
-    LABEL                   = ("Label")
-    SCREENSHOT              = ("Screenshot")
-    VIDEO                   = ("Video")
+    BACKGROUND              = ("Background", ".jpg")
+    BOXBACK                 = ("BoxBack", ".jpg")
+    BOXFRONT                = ("BoxFront", ".jpg")
+    LABEL                   = ("Label", ".png")
+    SCREENSHOT              = ("Screenshot", ".jpg")
+    VIDEO                   = ("Video", ".mp4")
 
 # Asset type subsets
 asset_min_types = [
@@ -280,12 +276,6 @@ class ReleaseType(EnumType):
     PROGRAM                 = ("Program")
     INSTALLER               = ("Installer")
     ARCHIVE                 = ("Archive")
-
-# Archive types
-class ArchiveType(EnumType):
-    ZIP                     = ("Zip")
-    SEVENZIP                = ("7Z")
-    RAR                     = ("RAR")
 
 # Preset tool types
 class PresetToolType(EnumType):
@@ -353,7 +343,3 @@ class WebDriverType(EnumType):
     CHROME                  = ("Chrome")
     BRAVE                   = ("Brave")
 
-# Image types (UPPER)
-class ImageType(EnumType):
-    JPEG                    = ("JPEG")
-    PNG                     = ("PNG")

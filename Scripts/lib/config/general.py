@@ -89,44 +89,6 @@ os_envpathsep = os.pathsep
 drive_root_windows = "C:\\"
 drive_root_posix = "/"
 
-# Extensions
-encrypted_extension_general = ".enc"
-encrypted_extensions_wiiu = [".app", ".h3", ".tik", ".tmd", ".cert"]
-computer_program_extensions = [".exe", ".lnk", ".bat"]
-computer_archive_extensions_zip = [".zip", ".install"]
-computer_archive_extensions_7z = [".7z"]
-computer_archive_extensions_rar = [".rar"]
-computer_archive_extensions_tarball = [
-    ".tar.bz2", ".tb2", ".tbz", ".tbz2", ".tz2",    # bzip2
-    ".tar.gz", ".taz", ".tgz",                      # gzip
-    ".tar.lz",                                      # lzip
-    ".tar.lzma", ".tlz",                            # lzma
-    ".tar.lzo",                                     # lzop
-    ".tar.xz", ".txz",                              # xz
-    ".tar.Z", ".tZ,", ".taZ",                       # compress
-    ".tar.zst", ".tzst"                             # zstd
-]
-computer_archive_extensions_exe = [".exe"]
-computer_archive_extensions_appimage = [".AppImage"]
-computer_archive_extensions = []
-computer_archive_extensions += computer_archive_extensions_zip
-computer_archive_extensions += computer_archive_extensions_7z
-computer_archive_extensions += computer_archive_extensions_rar
-computer_archive_extensions += computer_archive_extensions_tarball
-computer_archive_extensions += computer_archive_extensions_exe
-computer_archive_extensions += computer_archive_extensions_appimage
-image_extensions_jpeg = [".jpg", ".jpeg"]
-image_extensions_png = [".png"]
-video_extensions_mp4 = [".mp4"]
-asset_extensions = {
-    types.AssetType.BACKGROUND: ".jpg",
-    types.AssetType.BOXBACK: ".jpg",
-    types.AssetType.BOXFRONT: ".jpg",
-    types.AssetType.LABEL: ".png",
-    types.AssetType.SCREENSHOT: ".jpg",
-    types.AssetType.VIDEO: ".mp4",
-}
-
 # Mime types
 mime_types_zip = ["application/zip"]
 mime_types_7z = ["application/x-7z-compressed"]

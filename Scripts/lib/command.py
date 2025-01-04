@@ -80,7 +80,7 @@ def IsOnlyStarterCommand(cmd):
 def GetRunnableCommandPath(cmd, search_dirs = []):
     for search_dir in search_dirs:
         potential_paths = [os.path.join(search_dir, cmd)]
-        for cmd_ext in config.computer_program_extensions:
+        for cmd_ext in config.WindowsProgramFileType.cvalues():
             potential_paths.append(os.path.join(search_dir, cmd + cmd_ext))
         for potential_path in potential_paths:
             verified_path = shutil.which(potential_path)
@@ -146,7 +146,7 @@ def IsLocalSandboxedProgramCommand(cmd):
 def IsWindowsExecutableCommand(cmd):
     return IsCommandTypeFound(
         cmd = GetStarterCommand(cmd),
-        cmd_exts = config.computer_program_extensions)
+        cmd_exts = config.WindowsProgramFileType.cvalues())
 
 # Check if powershell command
 def IsPowershellCommand(cmd):

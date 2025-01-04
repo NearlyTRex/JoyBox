@@ -84,7 +84,7 @@ def ArchiveFiles(
 
     # Select archive type
     if not archive_type:
-        archive_type = config.ArchiveType.SEVENZIP
+        archive_type = config.ArchiveFileType.SEVENZIP
 
     # Create temporary directory
     tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
@@ -106,7 +106,7 @@ def ArchiveFiles(
 
                 # Get archive info
                 archive_basename = sub_obj
-                archive_ext = archive.GetArchiveExtension(archive_type)
+                archive_ext = archive_type.cval()
 
                 # Get paths
                 tmp_archive_file = os.path.join(tmp_dir_result, archive_basename + "." + archive_ext)

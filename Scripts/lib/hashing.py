@@ -320,32 +320,23 @@ def ReadHashFile(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    try:
-        if verbose:
-            system.LogInfo("Reading hash file %s" % filename)
-        if not pretend_run:
-            hash_contents = {}
-            with open(filename, "r", encoding="utf8") as f:
-                for line in f.readlines():
-                    tokens = line.strip().split(" || ")
-                    if len(tokens) >= 4:
-                        file_location = tokens[0]
-                        file_hash = tokens[1]
-                        file_size = tokens[2]
-                        file_mtime = tokens[3]
-                        file_entry = {}
-                        file_entry["filename"] = file_location
-                        file_entry["hash"] = file_hash
-                        file_entry["size"] = file_size
-                        file_entry["mtime"] = file_mtime
-                        hash_contents[file_location] = file_entry
-            return hash_contents
-        return {}
-    except Exception as e:
-        if exit_on_failure:
-            system.LogError("Unable to read hash file %s" % filename)
-            system.LogErrorAndQuit(e)
-        return {}
+    json_hashes = system.ReadJsonFile(
+        src = filename,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    hash_contents = {}
+    if isinstance(json_hashes, list):
+        for json_hash in json_hashes:
+            if "filename_enc" not in json_hash:
+                json_hash["filename_enc"] = cryption.GenerateEncryptedFilename(json_hash["filename"])
+            if "hash_enc" not in json_hash:
+                json_hash["hash_enc"] = ""
+            if "size_enc" not in json_hash:
+                json_hash["size_enc"] = 0
+            file_location = os.path.join(json_hash["dir"], json_hash["filename"])
+            hash_contents[file_location] = json_hash
+    return hash_contents
 
 # Write hash file
 def WriteHashFile(
@@ -354,50 +345,17 @@ def WriteHashFile(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    try:
-        if verbose:
-            system.LogInfo("Writing hash file %s" % filename)
-        if not pretend_run:
-            with open(filename, "w", encoding="utf8") as f:
-                for hash_key in sorted(hash_contents.keys()):
-                    hash_data = hash_contents[hash_key]
-                    hash_replacements = (
-                        hash_data["filename"],
-                        hash_data["hash"],
-                        hash_data["size"],
-                        hash_data["mtime"])
-                    f.write("%s || %s || %s || %s\n" % hash_replacements)
-        return True
-    except Exception as e:
-        if exit_on_failure:
-            system.LogError("Unable to write hash file %s" % filename)
-            system.LogErrorAndQuit(e)
-        return False
-
-# Append hash file
-def AppendHashFile(
-    filename,
-    hash_data,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    try:
-        if verbose:
-            system.LogInfo("Appending hash file %s" % filename)
-        if not pretend_run:
-            with open(filename, "a", encoding="utf8") as f:
-                hash_replacements = (
-                    hash_data["filename"],
-                    hash_data["hash"],
-                    hash_data["size"],
-                    hash_data["mtime"])
-                f.write("%s || %s || %s || %s\n" % hash_replacements)
-        return True
-    except Exception as e:
-        if exit_on_failure:
-            system.LogError("Unable to append hash file %s" % filename)
-            system.LogErrorAndQuit(e)
-        return False
+    json_hashes = []
+    for hash_key in sorted(hash_contents.keys()):
+        json_hashes.append(hash_contents[hash_key])
+    success = system.WriteJsonFile(
+        src = filename,
+        json_data = json_hashes,
+        sort_keys = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
 
 # Sort hash file
 def SortHashFile(
@@ -443,34 +401,48 @@ def CalculateHash(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get full path of file
-    fullpath = os.path.join(base_path, filename)
-    system.LogInfo("Hashing file %s ..." % fullpath)
+    # Get path info
+    path_file = system.GetFilenameFile(filename)
+    path_dir = system.GetFilenameDirectory(filename)
+    path_full = os.path.join(base_path, path_dir, path_file)
+    system.LogInfo("Hashing file %s ..." % path_full)
 
     # Create hash data
     hash_data = {}
-    if cryption.IsFileEncrypted(fullpath) and cryption.IsPassphraseValid(passphrase):
+    if cryption.IsFileEncrypted(path_full) and cryption.IsPassphraseValid(passphrase):
         file_info = cryption.GetEmbeddedFileInfo(
-            source_file = fullpath,
+            source_file = path_full,
             passphrase = passphrase,
             hasher = CalculateFileXXH3,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if file_info:
-            hash_data["filename"] = os.path.join(system.GetFilenameDirectory(filename), file_info["filename"])
+            hash_data["dir"] = path_dir
+            hash_data["filename"] = file_info["filename"]
+            hash_data["filename_enc"] = path_file
             hash_data["hash"] = file_info["hash"]
+            hash_data["hash_enc"] = CalculateFileMD5(
+                filename = path_full,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
             hash_data["size"] = file_info["size"]
+            hash_data["size_enc"] = os.path.getsize(path_full)
             hash_data["mtime"] = file_info["mtime"]
     else:
-        hash_data["filename"] = filename
+        hash_data["dir"] = path_dir
+        hash_data["filename"] = path_file
+        hash_data["filename_enc"] = cryption.GenerateEncryptedFilename(path_file)
         hash_data["hash"] = CalculateFileXXH3(
-            filename = fullpath,
+            filename = path_full,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        hash_data["size"] = os.path.getsize(fullpath)
-        hash_data["mtime"] = int(os.path.getmtime(fullpath))
+        hash_data["hash_enc"] = ""
+        hash_data["size"] = os.path.getsize(path_full)
+        hash_data["size_enc"] = 0
+        hash_data["mtime"] = int(os.path.getmtime(path_full))
 
     # Return hash data
     return hash_data
@@ -481,7 +453,7 @@ def HashFiles(
     base_path,
     output_file,
     passphrase = None,
-    delete_nonexistent_files = False,
+    checked_base_path = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -518,33 +490,36 @@ def HashFiles(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            hash_entry_key = hash_data["filename"]
+            hash_entry_key = os.path.join(hash_data["dir"], hash_data["filename"])
 
             # Merge hash
             if hash_entry_key in hash_contents:
-                old_hash = hash_contents[hash_entry_key]["hash"]
-                old_size = int(hash_contents[hash_entry_key]["size"])
-                new_hash = hash_data["hash"]
-                new_size = int(hash_data["size"])
-                if (old_hash != new_hash) or (old_size != new_size):
-                    hash_contents[hash_entry_key] = hash_data
+                different_hash = hash_contents[hash_entry_key]["hash"] == hash_data["hash"]
+                different_size = int(hash_contents[hash_entry_key]["size"]) == int(hash_data["size"])
+                different_hash_enc = hash_contents[hash_entry_key]["hash_enc"] == hash_data["hash_enc"]
+                different_size_enc = int(hash_contents[hash_entry_key]["size_enc"]) == int(hash_data["size_enc"])
+                if different_hash or different_size or different_hash_enc or different_size_enc:
+                    hash_contents[hash_entry_key] = system.MergeDictionaries(
+                        dict1 = hash_contents[hash_entry_key],
+                        dict2 = hash_data,
+                        merge_type = config.MergeType.REPLACE)
             else:
                 hash_contents[hash_entry_key] = hash_data
 
-            # Append hash
-            success = AppendHashFile(
+            # Write hash file
+            success = WriteHashFile(
                 filename = output_file,
-                hash_data = hash_data,
+                hash_contents = hash_contents,
+                verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 return False
 
     # Remove keys regarding files that do not exist
-    if delete_nonexistent_files:
+    if system.DoesPathExist(checked_base_path):
         for hash_key in sorted(hash_contents.keys()):
-            hashed_file_base = environment.GetLockerGamingRootDir()
-            hashed_file_offset = hash_contents[hash_key]["filename"]
-            hashed_file = os.path.join(hashed_file_base, hashed_file_offset)
+            hashed_file = os.path.join(checked_base_path, hash_key)
             if not os.path.exists(hashed_file):
                 del hash_contents[hash_key]
 

@@ -1857,14 +1857,14 @@ def GetFilenameSplit(path):
 
 # Get filename basename
 def GetFilenameBasename(path):
-    for tarball_ext in config.computer_archive_extensions_tarball:
+    for tarball_ext in config.ArchiveTarballFileType.cvalues():
         if path.endswith(tarball_ext):
-            path = path[:-len(tarball_ext.replace(".", ""))]
+            return path[:-len(tarball_ext)]
     return str(pathlib.Path(path).stem)
 
 # Get filename extension
 def GetFilenameExtension(path):
-    for tarball_ext in config.computer_archive_extensions_tarball:
+    for tarball_ext in config.ArchiveTarballFileType.cvalues():
         if path.endswith(tarball_ext):
             return tarball_ext
     return pathlib.Path(path).suffix
