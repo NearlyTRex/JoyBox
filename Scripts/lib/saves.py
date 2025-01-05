@@ -57,8 +57,8 @@ def PackSave(
         return False
 
     # Get save archive info
-    tmp_save_archive_file = os.path.join(tmp_dir_result, game_name + ".zip")
-    out_save_archive_file = os.path.join(output_save_dir, game_name + "_" + str(environment.GetCurrentTimestamp()) + ".zip")
+    tmp_save_archive_file = system.JoinPaths(tmp_dir_result, game_name + config.ArchiveFileType.ZIP.cval())
+    out_save_archive_file = system.JoinPaths(output_save_dir, game_name + "_" + str(environment.GetCurrentTimestamp()) + config.ArchiveFileType.ZIP.cval())
 
     # Get excludes
     input_excludes = []
@@ -173,7 +173,7 @@ def NormalizeSaveDir(
 
         # Create user folders
         for user_folder in config.computer_user_folders:
-            user_path = os.path.join(save_dir, config.SaveType.GENERAL.val(), user_folder)
+            user_path = system.JoinPaths(save_dir, config.SaveType.GENERAL, user_folder)
             if not os.path.exists(user_path):
                 success = system.MakeDirectory(
                     dir = user_path,
@@ -204,8 +204,8 @@ def NormalizeSaveArchive(
         return False
 
     # Make temporary dirs
-    tmp_dir_extract = os.path.join(tmp_dir_result, "extract")
-    tmp_dir_archive = os.path.join(tmp_dir_result, "archive")
+    tmp_dir_extract = system.JoinPaths(tmp_dir_result, "extract")
+    tmp_dir_archive = system.JoinPaths(tmp_dir_result, "archive")
     system.MakeDirectory(
         dir = tmp_dir_extract,
         verbose = verbose,
@@ -241,7 +241,7 @@ def NormalizeSaveArchive(
 
     # Create archive
     success = archive.CreateArchiveFromFolder(
-        archive_file = os.path.join(tmp_dir_archive, system.GetFilenameFile(save_archive)),
+        archive_file = system.JoinPaths(tmp_dir_archive, system.GetFilenameFile(save_archive)),
         source_dir = tmp_dir_extract,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -251,7 +251,7 @@ def NormalizeSaveArchive(
 
     # Replace archive
     success = system.TransferFile(
-        src = os.path.join(tmp_dir_archive, system.GetFilenameFile(save_archive)),
+        src = system.JoinPaths(tmp_dir_archive, system.GetFilenameFile(save_archive)),
         dest = save_archive,
         verbose = verbose,
         pretend_run = pretend_run,

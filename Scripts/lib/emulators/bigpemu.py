@@ -96,7 +96,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
-                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 pretend_run = pretend_run,

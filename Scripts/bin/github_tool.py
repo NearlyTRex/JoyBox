@@ -82,7 +82,7 @@ def main():
                 github_user = github_username,
                 github_repo = github_repository.name,
                 github_token = github_access_token,
-                output_dir = os.path.join(archive_base_dir, github_username, github_repository.name),
+                output_dir = system.JoinPaths(archive_base_dir, github_username, github_repository.name),
                 recursive = args.recursive,
                 clean = args.clean,
                 verbose = args.verbose,

@@ -162,7 +162,7 @@ def DownloadUrl(
     # Check result
     if output_dir:
         for obj in system.GetDirectoryContents(output_dir):
-            obj_path = os.path.join(output_dir, obj)
+            obj_path = system.JoinPaths(output_dir, obj)
             if system.IsPathFile(obj_path) and obj.endswith(system.GetFilenameFile(url)):
                 return True
     elif output_file:
@@ -483,10 +483,10 @@ def ArchiveGithubRepository(
         return False
 
     # Make temporary dirs
-    tmp_dir_download = os.path.join(tmp_dir_result, "download")
-    tmp_dir_archive = os.path.join(tmp_dir_result, "archive")
-    tmp_file_archive = os.path.join(tmp_dir_archive, "tmp.zip")
-    out_file_archive = os.path.join(output_dir, github_repo + "_" + str(environment.GetCurrentTimestamp()) + ".zip")
+    tmp_dir_download = system.JoinPaths(tmp_dir_result, "download")
+    tmp_dir_archive = system.JoinPaths(tmp_dir_result, "archive")
+    tmp_file_archive = system.JoinPaths(tmp_dir_archive, "tmp.zip")
+    out_file_archive = system.JoinPaths(output_dir, github_repo + "_" + str(environment.GetCurrentTimestamp()) + config.ArchiveFileType.ZIP.cval())
     system.MakeDirectory(
         dir = tmp_dir_download,
         verbose = verbose,
@@ -516,7 +516,7 @@ def ArchiveGithubRepository(
     # Remove git folder
     if clean:
         success = system.RemoveDirectory(
-            dir = os.path.join(tmp_dir_download, ".git"),
+            dir = system.JoinPaths(tmp_dir_download, ".git"),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

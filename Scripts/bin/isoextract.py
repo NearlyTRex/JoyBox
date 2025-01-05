@@ -45,7 +45,7 @@ def main():
         current_basename = system.GetFilenameBasename(current_file)
 
         # Check if output dir already exists
-        output_dir = os.path.join(current_dir, current_basename)
+        output_dir = system.JoinPaths(current_dir, current_basename)
         if system.IsPathDirectory(output_dir):
             continue
 

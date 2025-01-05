@@ -105,7 +105,7 @@ class Sunshine(toolbase.ToolBase):
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
-                src = os.path.join(environment.GetToolsRootDir(), config_filename),
+                src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 pretend_run = pretend_run,

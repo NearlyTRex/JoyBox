@@ -223,7 +223,7 @@ def FindDuplicateFiles(
     found_files = []
     test_checksum = CalculateFileCRC32(filename, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
     for obj in system.GetDirectoryContents(directory):
-        obj_path = os.path.join(directory, obj)
+        obj_path = system.JoinPaths(directory, obj)
         if system.IsPathFile(obj_path):
             obj_checksum = CalculateFileCRC32(obj_path, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
             if test_checksum == obj_checksum:
@@ -240,7 +240,7 @@ def FindDuplicateArchives(
     found_files = []
     test_checksums = archive.GetArchiveChecksums(filename)
     for obj in system.GetDirectoryContents(directory):
-        obj_path = os.path.join(directory, obj)
+        obj_path = system.JoinPaths(directory, obj)
         if system.IsPathFile(obj_path):
             obj_checksums = archive.GetArchiveChecksums(obj_path)
             if [i for i in test_checksums if i not in obj_checksums] == []:
@@ -334,7 +334,7 @@ def ReadHashFile(
                 json_hash["hash_enc"] = ""
             if "size_enc" not in json_hash:
                 json_hash["size_enc"] = 0
-            file_location = os.path.join(json_hash["dir"], json_hash["filename"])
+            file_location = system.JoinPaths(json_hash["dir"], json_hash["filename"])
             hash_contents[file_location] = json_hash
     return hash_contents
 
@@ -381,7 +381,7 @@ def SortHashFile(
 def DoesFileNeedToBeHashed(input_file, base_path, hash_contents = {}):
     if input_file not in hash_contents.keys():
         return True
-    input_file_fullpath = os.path.join(base_path, input_file)
+    input_file_fullpath = system.JoinPaths(base_path, input_file)
     input_file_size = str(os.path.getsize(input_file_fullpath))
     input_file_mtime = str(int(os.path.getmtime(input_file_fullpath)))
     if input_file_size != hash_contents[input_file]["size"]:
@@ -404,7 +404,7 @@ def CalculateHash(
     # Get path info
     path_file = system.GetFilenameFile(filename)
     path_dir = system.GetFilenameDirectory(filename)
-    path_full = os.path.join(base_path, path_dir, path_file)
+    path_full = system.JoinPaths(base_path, path_dir, path_file)
     system.LogInfo("Hashing file %s ..." % path_full)
 
     # Create hash data
@@ -479,7 +479,7 @@ def HashFiles(
 
         # Check if file needs to be hashed
         relative_base = file_parts[0]
-        relative_file = os.path.join(base_path, file_parts[1])
+        relative_file = system.JoinPaths(base_path, file_parts[1])
         if DoesFileNeedToBeHashed(relative_file, relative_base, hash_contents):
 
             # Calculate hash
@@ -490,7 +490,7 @@ def HashFiles(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            hash_entry_key = os.path.join(hash_data["dir"], hash_data["filename"])
+            hash_entry_key = system.JoinPaths(hash_data["dir"], hash_data["filename"])
 
             # Merge hash
             if hash_entry_key in hash_contents:
@@ -519,7 +519,7 @@ def HashFiles(
     # Remove keys regarding files that do not exist
     if system.DoesPathExist(checked_base_path):
         for hash_key in sorted(hash_contents.keys()):
-            hashed_file = os.path.join(checked_base_path, hash_key)
+            hashed_file = system.JoinPaths(checked_base_path, hash_key)
             if not os.path.exists(hashed_file):
                 del hash_contents[hash_key]
 
@@ -571,7 +571,7 @@ def HashCategoryFiles(
     # Hash files
     success = HashFiles(
         input_path = input_path,
-        base_path = os.path.join(game_supercategory.val(), game_category.val(), game_subcategory.val()),
+        base_path = system.JoinPaths(game_supercategory, game_category, game_subcategory),
         output_file = hash_file,
         passphrase = passphrase,
         verbose = verbose,

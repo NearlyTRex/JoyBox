@@ -44,7 +44,7 @@ def main():
         current_file = file
         file_dir = system.GetFilenameDirectory(current_file)
         file_basename = system.GetFilenameBasename(current_file)
-        output_dir = os.path.join(file_dir, file_basename)
+        output_dir = system.JoinPaths(file_dir, file_basename)
         if args.same_dir:
             output_dir = file_dir
 

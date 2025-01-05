@@ -230,7 +230,7 @@ def BackupUserRegistry(
         return False
 
     # Temporary files
-    temp_reg_file = os.path.join(tmp_dir_result, "temp.reg")
+    temp_reg_file = system.JoinPaths(tmp_dir_result, "temp.reg")
 
     # Export current user registry
     for base_key in export_keys:

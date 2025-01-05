@@ -308,7 +308,7 @@ def CreateArchiveFromFolder(
         if obj in excludes:
             continue
         path_to_add = sandbox.TranslatePathIfNecessary(
-            path = os.path.join(source_dir, obj),
+            path = system.JoinPaths(source_dir, obj),
             program_exe = archive_tool,
             program_name = "7-Zip")
         objs_to_add.append(path_to_add)

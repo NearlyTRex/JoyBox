@@ -3,9 +3,10 @@ import os, os.path
 import sys
 
 # Local imports
+import system
 import environment
-import ini
 import toolbase
+import ini
 
 # Config files
 config_files = {}
@@ -37,22 +38,22 @@ class Sandboxie(toolbase.ToolBase):
 
             # Sandboxie
             "Sandboxie": {
-                "program": os.path.join(sandboxie_install_dir, sandboxie_exe),
+                "program": system.JoinPaths(sandboxie_install_dir, sandboxie_exe),
                 "sandbox_dir": sandboxie_sandbox_dir
             },
 
             # SandboxieIni
             "SandboxieIni": {
-                "program": os.path.join(sandboxie_install_dir, sandboxie_ini_exe)
+                "program": system.JoinPaths(sandboxie_install_dir, sandboxie_ini_exe)
             },
 
             # SandboxieRpcss
             "SandboxieRpcss": {
-                "program": os.path.join(sandboxie_install_dir, sandboxie_rpcss_exe)
+                "program": system.JoinPaths(sandboxie_install_dir, sandboxie_rpcss_exe)
             },
 
             # SandboxieDcomlaunch
             "SandboxieDcomlaunch": {
-                "program": os.path.join(sandboxie_install_dir, sandboxie_dcomlaunch_exe)
+                "program": system.JoinPaths(sandboxie_install_dir, sandboxie_dcomlaunch_exe)
             }
         }

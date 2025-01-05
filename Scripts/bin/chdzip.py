@@ -7,6 +7,7 @@ import sys
 # Custom imports
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
+import config
 import system
 import chd
 import arguments
@@ -37,7 +38,7 @@ def main():
         current_basename = system.GetFilenameBasename(current_file)
 
         # Check if output already exists
-        output_zip = os.path.join(current_dir, current_basename + ".zip")
+        output_zip = system.JoinPaths(current_dir, current_basename + config.ArchiveFileType.ZIP.cval())
         if os.path.exists(output_zip):
             continue
 

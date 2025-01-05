@@ -30,7 +30,7 @@ def GenerateEncryptedFilename(source_file):
 def GenerateEncryptedPath(source_path):
     output_dir = system.GetFilenameDirectory(source_path)
     output_name = GenerateEncryptedFilename(system.GetFilenameFile(source_path))
-    return os.path.join(output_dir, output_name)
+    return system.JoinPaths(output_dir, output_name)
 
 # Get embedded filename
 def GetEmbeddedFilename(
@@ -103,7 +103,7 @@ def GetEmbeddedFileInfo(
         return None
 
     # Get temporary file
-    tmp_file = os.path.join(tmp_dir_result, embedded_filename)
+    tmp_file = system.JoinPaths(tmp_dir_result, embedded_filename)
 
     # Decrypt file
     success = DecryptFile(
@@ -161,7 +161,7 @@ def GetRealFilePath(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if real_name:
-        return os.path.join(real_dir, real_name)
+        return system.JoinPaths(real_dir, real_name)
     return None
 
 # Get real file paths

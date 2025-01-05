@@ -82,7 +82,7 @@ def main():
 
                 # Each of these files should exist
                 for file_to_check in files_to_check:
-                    stored_file = os.path.join(environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name), file_to_check)
+                    stored_file = system.JoinPaths(environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name), file_to_check)
                     if not os.path.exists(stored_file):
                         system.LogErrorAndQuit("File '%s' referenced in json file not found" % file_to_check)
 
@@ -102,7 +102,7 @@ def main():
                 for hash_reference_file in hash_file_data.keys():
 
                     # Check if file exists
-                    stored_file = os.path.join(environment.GetLockerGamingRootDir(), hash_reference_file)
+                    stored_file = system.JoinPaths(environment.GetLockerGamingRootDir(), hash_reference_file)
                     if not os.path.exists(stored_file):
                         system.LogErrorAndQuit("File '%s' referenced in hash file not found" % stored_file)
 

@@ -627,13 +627,13 @@ def FindBestGameFile(game_files):
 # Find all game names
 def FindAllGameNames(base_dir, game_category, game_subcategory):
     game_names = []
-    base_path = os.path.join(
+    base_path = system.JoinPaths(
         base_dir,
-        game_category.val(),
-        game_subcategory.val())
+        game_category,
+        game_subcategory)
     if game_category == config.Category.COMPUTER:
         for game_letter in system.GetDirectoryContents(base_path):
-            for game_name in system.GetDirectoryContents(os.path.join(base_path, game_letter)):
+            for game_name in system.GetDirectoryContents(system.JoinPaths(base_path, game_letter)):
                 game_names.append(game_name)
     else:
         for game_name in system.GetDirectoryContents(base_path):
@@ -700,7 +700,7 @@ def DeriveGameSearchTermsFromName(game_name, game_platform, asset_type = None):
 # Derive game name path from name
 def DeriveGameNamePathFromName(game_name, game_platform):
     if platforms.IsLetterPlatform(game_platform):
-        return os.path.join(DeriveGameLetterFromName(game_name), game_name)
+        return system.JoinPaths(DeriveGameLetterFromName(game_name), game_name)
     else:
         return game_name
 

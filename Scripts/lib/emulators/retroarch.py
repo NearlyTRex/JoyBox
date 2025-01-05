@@ -204,7 +204,7 @@ class RetroArch(emulatorbase.EmulatorBase):
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
-                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -214,7 +214,7 @@ class RetroArch(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("RetroArch"), filename),
+                filename = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("RetroArch"), filename),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -225,8 +225,8 @@ class RetroArch(emulatorbase.EmulatorBase):
         for filename in system_files.keys():
             for platform in ["windows", "linux"]:
                 success = system.SmartCopy(
-                    src = os.path.join(environment.GetLockerGamingEmulatorSetupDir("RetroArch"), filename),
-                    dest = os.path.join(programs.GetEmulatorPathConfigValue("RetroArch", "setup_dir", platform), filename),
+                    src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("RetroArch"), filename),
+                    dest = system.JoinPaths(programs.GetEmulatorPathConfigValue("RetroArch", "setup_dir", platform), filename),
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
@@ -257,7 +257,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 message_text = "Launch platform %s not defined in RetroArch config" % game_platform)
 
         # Check if core is installed
-        core_file = os.path.join(cores_dir, cores_mapping[game_platform] + cores_ext)
+        core_file = system.JoinPaths(cores_dir, cores_mapping[game_platform] + cores_ext)
         if not os.path.exists(core_file):
             gui.DisplayErrorPopup(
                 title_text = "RetroArch core not found",
@@ -266,7 +266,7 @@ class RetroArch(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.GetEmulatorProgram("RetroArch"),
-            "-L", os.path.join(cores_dir, cores_mapping[game_platform] + cores_ext),
+            "-L", system.JoinPaths(cores_dir, cores_mapping[game_platform] + cores_ext),
             config.token_game_file
         ]
         if fullscreen:

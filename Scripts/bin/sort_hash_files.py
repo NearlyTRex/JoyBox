@@ -34,7 +34,7 @@ def main():
             for game_subcategory in config.subcategory_map[game_category]:
 
                 # Get hash file
-                hash_file = os.path.join(hashes_base_dir, game_supercategory, game_category, game_subcategory + ".txt")
+                hash_file = system.JoinPaths(hashes_base_dir, game_supercategory, game_category, game_subcategory.val() + ".txt")
                 if not system.IsPathFile(hash_file):
                     continue
 

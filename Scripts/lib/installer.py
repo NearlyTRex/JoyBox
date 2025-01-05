@@ -154,8 +154,8 @@ def SetupDosPrograms(
     system.AssertPathExists(dos_emulator, "dos_emulator")
 
     # Get dos drives
-    dos_c_drive = os.path.join(prefix_c_drive_real, config.computer_folder_dos, "C")
-    dos_d_drive = os.path.join(prefix_c_drive_real, config.computer_folder_dos, "D")
+    dos_c_drive = system.JoinPaths(prefix_c_drive_real, config.computer_folder_dos, "C")
+    dos_d_drive = system.JoinPaths(prefix_c_drive_real, config.computer_folder_dos, "D")
     system.MakeDirectory(
         dir = dos_c_drive,
         verbose = verbose,
@@ -224,8 +224,8 @@ def SetupWin31Programs(
     system.AssertPathExists(prefix_c_drive_real, "prefix_c_drive_real")
 
     # Get dos drives
-    dos_c_drive = os.path.join(prefix_c_drive_real, config.computer_folder_dos, "C")
-    dos_d_drive = os.path.join(prefix_c_drive_real, config.computer_folder_dos, "D")
+    dos_c_drive = system.JoinPaths(prefix_c_drive_real, config.computer_folder_dos, "C")
+    dos_d_drive = system.JoinPaths(prefix_c_drive_real, config.computer_folder_dos, "D")
     system.MakeDirectory(
         dir = dos_c_drive,
         verbose = verbose,
@@ -267,7 +267,7 @@ def SetupScummPrograms(
     system.AssertPathExists(scumm_emulator, "scumm_emulator")
 
     # Get scumm dir
-    scumm_dir = os.path.join(prefix_c_drive_real, config.computer_folder_scumm)
+    scumm_dir = system.JoinPaths(prefix_c_drive_real, config.computer_folder_scumm)
     system.MakeDirectory(
         dir = scumm_dir,
         verbose = verbose,
@@ -468,7 +468,7 @@ def InstallComputerGame(
 
     # Mount discs
     for game_disc_file in game_disc_files:
-        mount_dir = os.path.join(game_setup_dir, system.GetFilenameBasename(game_disc_file))
+        mount_dir = system.JoinPaths(game_setup_dir, system.GetFilenameBasename(game_disc_file))
         chd.MountDiscCHD(
             chd_file = game_disc_file,
             mount_dir = mount_dir,
@@ -569,7 +569,7 @@ def InstallComputerGame(
         is_wine_prefix = should_run_via_wine,
         is_sandboxie_prefix = should_run_via_sandboxie)
     if os.path.exists(prefix_public_profile_path):
-        prefix_public_profile_path_copy = os.path.join(prefix_c_drive_real, "Public")
+        prefix_public_profile_path_copy = system.JoinPaths(prefix_c_drive_real, "Public")
         system.MakeDirectory(
             dir = prefix_public_profile_path_copy,
             verbose = verbose,

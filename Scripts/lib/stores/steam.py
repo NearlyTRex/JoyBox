@@ -199,7 +199,7 @@ class Steam(storebase.StoreBase):
                     line_title = entry["name"]
                     line_keys = []
                     line_paths = [
-                        os.path.join(config.token_store_install_dir, "userdata", config.token_store_user_id, line_appid)
+                        system.JoinPaths(config.token_store_install_dir, "userdata", config.token_store_user_id, line_appid)
                     ]
 
                     # Create purchase
@@ -290,7 +290,7 @@ class Steam(storebase.StoreBase):
 
         # Add standard steam paths
         game_info[config.json_key_store_paths] += [
-            os.path.join(config.token_store_install_dir, "userdata", config.token_store_user_id, identifier)
+            system.JoinPaths(config.token_store_install_dir, "userdata", config.token_store_user_id, identifier)
         ]
 
         # Augment by json
@@ -557,7 +557,7 @@ class Steam(storebase.StoreBase):
             parts = system.SplitFilePath(path, base)
             if len(parts) != 2:
                 return False
-            return system.IsPathFileOrDirectory(os.path.join(parts[0], variant))
+            return system.IsPathFileOrDirectory(system.JoinPaths(parts[0], variant))
 
         # Add alternate paths
         for path in sorted(game_paths):
@@ -579,14 +579,14 @@ class Steam(storebase.StoreBase):
         # Build translation map
         translation_map = {}
         translation_map[config.token_user_registry_dir] = []
-        translation_map[config.token_user_registry_dir].append(os.path.join(self.install_dir, "steamapps", "compatdata", game_appid, "pfx"))
+        translation_map[config.token_user_registry_dir].append(system.JoinPaths(self.install_dir, "steamapps", "compatdata", game_appid, "pfx"))
         translation_map[config.token_user_public_dir] = []
         translation_map[config.token_user_public_dir].append("C:\\Users\\Public")
-        translation_map[config.token_user_public_dir].append(os.path.join(self.install_dir, "steamapps", "compatdata", game_appid, "pfx", "drive_c", "users", "Public"))
+        translation_map[config.token_user_public_dir].append(system.JoinPaths(self.install_dir, "steamapps", "compatdata", game_appid, "pfx", "drive_c", "users", "Public"))
         translation_map[config.token_user_profile_dir] = []
         if "USERPROFILE" in os.environ:
             translation_map[config.token_user_profile_dir].append(os.environ["USERPROFILE"])
-        translation_map[config.token_user_profile_dir].append(os.path.join(self.install_dir, "steamapps", "compatdata", game_appid, "pfx", "drive_c", "users", "steamuser"))
+        translation_map[config.token_user_profile_dir].append(system.JoinPaths(self.install_dir, "steamapps", "compatdata", game_appid, "pfx", "drive_c", "users", "steamuser"))
         translation_map[config.token_store_install_dir] = []
         translation_map[config.token_store_install_dir].append(self.install_dir)
 
@@ -615,9 +615,9 @@ class Steam(storebase.StoreBase):
 
                     # Get potential new base paths
                     new_base_general = config.SaveType.GENERAL.val()
-                    new_base_public = os.path.join(new_base_general, config.computer_folder_public)
-                    new_base_registry = os.path.join(new_base_general, config.computer_folder_registry)
-                    new_base_store = os.path.join(new_base_general, config.computer_folder_store, config.StoreType.STEAM.val())
+                    new_base_public = system.JoinPaths(new_base_general, config.computer_folder_public)
+                    new_base_registry = system.JoinPaths(new_base_general, config.computer_folder_registry)
+                    new_base_store = system.JoinPaths(new_base_general, config.computer_folder_store, config.StoreType.STEAM)
 
                     # Determine which paths exist
                     real_userid = None
@@ -767,8 +767,8 @@ class Steam(storebase.StoreBase):
             return False
 
         # Make temporary dirs
-        tmp_dir_dowload = os.path.join(tmp_dir_result, "download")
-        tmp_dir_archive = os.path.join(tmp_dir_result, "archive")
+        tmp_dir_dowload = system.JoinPaths(tmp_dir_result, "download")
+        tmp_dir_archive = system.JoinPaths(tmp_dir_result, "archive")
         system.MakeDirectory(
             dir = tmp_dir_download,
             verbose = verbose,
@@ -814,7 +814,7 @@ class Steam(storebase.StoreBase):
 
         # Archive downloaded files
         success = archive.CreateArchiveFromFolder(
-            archive_file = os.path.join(tmp_dir_archive, "%s.7z" % output_name),
+            archive_file = system.JoinPaths(tmp_dir_archive, "%s.7z" % output_name),
             source_dir = tmp_dir_download,
             excludes = [".DepotDownloader"],
             volume_size = "4092m",

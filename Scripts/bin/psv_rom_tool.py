@@ -43,7 +43,7 @@ def main():
         if args.strip:
             playstation.StripPSV(
                 src_psv_file = current_file,
-                dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_stripped.psv"),
+                dest_psv_file = system.JoinPaths(current_file_dir, current_file_basename + "_stripped.psv"),
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
@@ -53,8 +53,8 @@ def main():
         elif args.unstrip:
             playstation.UnstripPSV(
                 src_psv_file = current_file,
-                src_psve_file = os.path.join(current_file_dir, current_file_basename + ".psve"),
-                dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_unstripped.psv"),
+                src_psve_file = system.JoinPaths(current_file_dir, current_file_basename + ".psve"),
+                dest_psv_file = system.JoinPaths(current_file_dir, current_file_basename + "_unstripped.psv"),
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
@@ -64,7 +64,7 @@ def main():
         elif args.trim:
             playstation.TrimPSV(
                 src_psv_file = current_file,
-                dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_trimmed.psv"),
+                dest_psv_file = system.JoinPaths(current_file_dir, current_file_basename + "_trimmed.psv"),
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
@@ -74,7 +74,7 @@ def main():
         elif args.untrim:
             playstation.UntrimPSV(
                 src_psv_file = current_file,
-                dest_psv_file = os.path.join(current_file_dir, current_file_basename + "_untrimmed.psv"),
+                dest_psv_file = system.JoinPaths(current_file_dir, current_file_basename + "_untrimmed.psv"),
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,

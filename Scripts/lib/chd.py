@@ -225,8 +225,8 @@ def MountDiscCHD(
         return False
 
     # Get temporary files
-    temp_iso_file = os.path.join(tmp_dir_result, system.GetFilenameBasename(chd_file) + ".iso")
-    temp_toc_file = os.path.join(tmp_dir_result, system.GetFilenameBasename(chd_file) + ".toc")
+    temp_iso_file = system.JoinPaths(tmp_dir_result, system.GetFilenameBasename(chd_file) + config.DiscImageFileType.ISO.cval())
+    temp_toc_file = system.JoinPaths(tmp_dir_result, system.GetFilenameBasename(chd_file) + ".toc")
 
     # Extract iso from chd
     success = ExtractDiscCHD(

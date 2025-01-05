@@ -104,11 +104,11 @@ def GetBlockingProcesses(initial_processes = [], is_wine_prefix = False, is_sand
 
 # Get wine prefix
 def GetWinePrefix(name):
-    return os.path.join(programs.GetToolPathConfigValue("Wine", "sandbox_dir"), name)
+    return system.JoinPaths(programs.GetToolPathConfigValue("Wine", "sandbox_dir"), name)
 
 # Get sandboxie prefix
 def GetSandboxiePrefix(name):
-    return os.path.join(programs.GetToolPathConfigValue("Sandboxie", "sandbox_dir"), name)
+    return system.JoinPaths(programs.GetToolPathConfigValue("Sandboxie", "sandbox_dir"), name)
 
 # Get prefix
 def GetPrefix(name, is_wine_prefix = False, is_sandboxie_prefix = False):
@@ -125,13 +125,13 @@ def GetPrefix(name, is_wine_prefix = False, is_sandboxie_prefix = False):
 # Get wine real drive path
 def GetWineRealDrivePath(prefix_dir, drive):
     if drive.lower() == "c":
-        return os.path.join(prefix_dir, "drive_c")
+        return system.JoinPaths(prefix_dir, "drive_c")
     else:
-        return os.path.join(prefix_dir, "dosdevices", drive.lower() + ":")
+        return system.JoinPaths(prefix_dir, "dosdevices", drive.lower() + ":")
 
 # Get sandboxie real drive path
 def GetSandboxieRealDrivePath(prefix_dir, drive):
-    return os.path.join(prefix_dir, "drive", drive.upper())
+    return system.JoinPaths(prefix_dir, "drive", drive.upper())
 
 # Get real drive path
 def GetRealDrivePath(prefix_dir, drive, is_wine_prefix = False, is_sandboxie_prefix = False):
@@ -146,11 +146,11 @@ def GetRealDrivePath(prefix_dir, drive, is_wine_prefix = False, is_sandboxie_pre
 
 # Get wine user profile path
 def GetWineUserProfilePath(prefix_dir):
-    return system.NormalizeFilePath(os.path.join(prefix_dir, "drive_c", "users", getpass.getuser()))
+    return system.NormalizeFilePath(system.JoinPaths(prefix_dir, "drive_c", "users", getpass.getuser()))
 
 # Get sandboxie user profile path
 def GetSandboxieUserProfilePath(prefix_dir):
-    return system.NormalizeFilePath(os.path.join(prefix_dir, "user", "current"))
+    return system.NormalizeFilePath(system.JoinPaths(prefix_dir, "user", "current"))
 
 # Get user profile path
 def GetUserProfilePath(prefix_dir, is_wine_prefix = False, is_sandboxie_prefix = False):
@@ -165,11 +165,11 @@ def GetUserProfilePath(prefix_dir, is_wine_prefix = False, is_sandboxie_prefix =
 
 # Get wine public profile path
 def GetWinePublicProfilePath(prefix_dir):
-    return system.NormalizeFilePath(os.path.join(prefix_dir, "drive_c", "users", "Public"))
+    return system.NormalizeFilePath(system.JoinPaths(prefix_dir, "drive_c", "users", "Public"))
 
 # Get sandboxie public profile path
 def GetSandboxiePublicProfilePath(prefix_dir):
-    return system.NormalizeFilePath(os.path.join(prefix_dir, "drive", "C", "Public"))
+    return system.NormalizeFilePath(system.JoinPaths(prefix_dir, "drive", "C", "Public"))
 
 # Get public profile path
 def GetPublicProfilePath(prefix_dir, is_wine_prefix = False, is_sandboxie_prefix = False):
@@ -192,8 +192,8 @@ def InstallWineDlls(
     pretend_run = False,
     exit_on_failure = False):
     wine_c_drive = GetWineRealDrivePath(prefix_dir, "c")
-    wine_system32_dir = os.path.join(wine_c_drive, "windows", "system32")
-    wine_syswow64_dir = os.path.join(wine_c_drive, "windows", "syswow64")
+    wine_system32_dir = system.JoinPaths(wine_c_drive, "windows", "system32")
+    wine_syswow64_dir = system.JoinPaths(wine_c_drive, "windows", "syswow64")
     if is_32_bit:
         for lib32 in dlls_32:
             system.CopyFileOrDirectory(
@@ -206,7 +206,7 @@ def InstallWineDlls(
         for lib64 in dlls_64:
             system.CopyFileOrDirectory(
                 src = lib64,
-                dest = os.path.join(wine_c_drive, "windows", "system32"),
+                dest = system.JoinPaths(wine_c_drive, "windows", "system32"),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -280,14 +280,14 @@ def RestoreRegistry(
         return False
 
     # Get registry dir
-    registry_dir = os.path.join(user_profile_dir, config.computer_folder_registry)
+    registry_dir = system.JoinPaths(user_profile_dir, config.computer_folder_registry)
 
     # Get registry file
     registry_file = ""
     if prefix_name == config.PrefixType.SETUP:
-        registry_file = os.path.join(registry_dir, config.registry_filename_setup)
+        registry_file = system.JoinPaths(registry_dir, config.registry_filename_setup)
     elif prefix_name == config.PrefixType.GAME:
-        registry_file = os.path.join(registry_dir, config.registry_filename_game)
+        registry_file = system.JoinPaths(registry_dir, config.registry_filename_game)
     if not os.path.exists(registry_file):
         return True
 
@@ -324,14 +324,14 @@ def BackupRegistry(
         return False
 
     # Get registry dir
-    registry_dir = os.path.join(user_profile_dir, config.computer_folder_registry)
+    registry_dir = system.JoinPaths(user_profile_dir, config.computer_folder_registry)
 
     # Get registry file
     registry_file = ""
     if prefix_name == config.PrefixType.SETUP:
-        registry_file = os.path.join(registry_dir, config.registry_filename_setup)
+        registry_file = system.JoinPaths(registry_dir, config.registry_filename_setup)
     elif prefix_name == config.PrefixType.GAME:
-        registry_file = os.path.join(registry_dir, config.registry_filename_game)
+        registry_file = system.JoinPaths(registry_dir, config.registry_filename_game)
 
     # Get registry export keys
     registry_export_keys = []
@@ -518,9 +518,9 @@ def GetPrefixPathInfo(
         # Find drive base
         if is_virtual_path:
             if is_wine_prefix:
-                path_drive_base = os.path.join(prefix_dir, "dosdevices", path_drive_letter.lower() + ":")
+                path_drive_base = system.JoinPaths(prefix_dir, "dosdevices", path_drive_letter.lower() + ":")
             elif is_sandboxie_prefix:
-                path_drive_base = os.path.join(prefix_dir, "drives", path_drive_letter.upper())
+                path_drive_base = system.JoinPaths(prefix_dir, "drives", path_drive_letter.upper())
         elif is_real_path:
             path_drive_base = path[-len(path_drive_offset):]
 
@@ -540,7 +540,7 @@ def GetPrefixPathInfo(
         elif is_sandboxie_prefix:
             path_drive_letter = system.GetDirectoryDrive(path)
             path_drive_offset = path[len(system.GetDirectoryAnchor(path)):]
-            path_drive_extra = system.NormalizeFilePath(os.path.join("Users", getpass.getuser()), separator = config.os_pathsep)
+            path_drive_extra = system.NormalizeFilePath(system.JoinPaths("Users", getpass.getuser()), separator = config.os_pathsep)
             if path_drive_offset.startswith(path_drive_extra):
                 path_drive_base = GetSandboxieUserProfilePath(prefix_dir)
                 path_drive_offset = path_drive_offset[len(path_drive_extra + config.os_pathsep):]
@@ -563,7 +563,7 @@ def GetPrefixPathInfo(
     path_full_real = ""
     if is_virtual_path:
         path_full_virtual = path
-        path_full_real = os.path.join(path_drive_base, path_drive_offset)
+        path_full_real = system.JoinPaths(path_drive_base, path_drive_offset)
     elif is_real_path:
         path_full_virtual += path_drive_letter.upper() + ":" + config.os_pathsep
         path_full_virtual += path_drive_extra + config.os_pathsep
@@ -621,8 +621,8 @@ def GetPrefixSyncObjs(
     if general_prefix_dir and user_data_sync_basedir:
         for sync_obj in user_data_sync_objs:
             sync_entry = {}
-            sync_entry["stored"] = os.path.join(general_prefix_dir, config.computer_folder_gamedata, sync_obj)
-            sync_entry["live"] = os.path.join(user_data_sync_basedir, sync_obj)
+            sync_entry["stored"] = system.JoinPaths(general_prefix_dir, config.computer_folder_gamedata, sync_obj)
+            sync_entry["live"] = system.JoinPaths(user_data_sync_basedir, sync_obj)
             sync_objs.append(sync_entry)
 
     # Add user profile mapping
@@ -630,8 +630,8 @@ def GetPrefixSyncObjs(
         if is_sandboxie_prefix:
             for sync_dir in config.computer_user_folders:
                 sync_entry = {}
-                sync_entry["stored"] = os.path.join(general_prefix_dir, sync_dir)
-                sync_entry["live"] = os.path.join(user_profile_dir, sync_dir)
+                sync_entry["stored"] = system.JoinPaths(general_prefix_dir, sync_dir)
+                sync_entry["live"] = system.JoinPaths(user_profile_dir, sync_dir)
                 sync_objs.append(sync_entry)
 
     # Return sync objs
@@ -809,7 +809,7 @@ def SetupPrefixCommand(
         is_wine_prefix = new_options.is_wine_prefix,
         is_sandboxie_prefix = new_options.is_sandboxie_prefix)
     if prefix_c_drive and new_options.prefix_cwd and len(new_options.prefix_cwd):
-        new_options.cwd = os.path.realpath(os.path.join(prefix_c_drive, new_options.prefix_cwd))
+        new_options.cwd = os.path.realpath(system.JoinPaths(prefix_c_drive, new_options.prefix_cwd))
 
     # Return results
     return (new_cmd, new_options)
@@ -1097,7 +1097,7 @@ def CreateLinkedPrefix(
     # Create general prefix subfolders
     for folder in config.computer_user_folders:
         system.MakeDirectory(
-            dir = os.path.join(general_prefix_dir, folder),
+            dir = system.JoinPaths(general_prefix_dir, folder),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -1153,7 +1153,7 @@ def CreateLinkedPrefix(
     # Link other paths
     for other_link in other_links:
         path_from = other_link["from"]
-        path_to = os.path.join(prefix_c_drive, other_link["to"])
+        path_to = system.JoinPaths(prefix_c_drive, other_link["to"])
         if not os.path.exists(path_from):
             continue
         system.RemoveObject(

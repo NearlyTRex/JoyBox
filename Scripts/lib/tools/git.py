@@ -3,8 +3,9 @@ import os, os.path
 import sys
 
 # Local imports
-import ini
+import system
 import toolbase
+import ini
 
 # Config files
 config_files = {}
@@ -26,6 +27,6 @@ class Git(toolbase.ToolBase):
         # Return config
         return {
             "Git": {
-                "program": os.path.join(git_install_dir, git_exe)
+                "program": system.JoinPaths(git_install_dir, git_exe)
             }
         }

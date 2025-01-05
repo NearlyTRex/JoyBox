@@ -77,7 +77,7 @@ class Cemu(emulatorbase.EmulatorBase):
                         tik_dir = system.GetFilenameDirectory(tik_file)
                         success = nintendo.InstallWiiUNusPackage(
                             nus_package_dir = tik_dir,
-                            nand_dir = os.path.join(programs.GetEmulatorPathConfigValue("Cemu", "setup_dir"), "mlc01"),
+                            nand_dir = system.JoinPaths(programs.GetEmulatorPathConfigValue("Cemu", "setup_dir"), "mlc01"),
                             verbose = verbose,
                             pretend_run = pretend_run,
                             exit_on_failure = exit_on_failure)
@@ -151,7 +151,7 @@ class Cemu(emulatorbase.EmulatorBase):
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
-                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 pretend_run = pretend_run,

@@ -3,8 +3,9 @@ import os, os.path
 import sys
 
 # Local imports
-import ini
+import system
 import toolbase
+import ini
 
 # Config files
 config_files = {}
@@ -28,6 +29,6 @@ class Steam(toolbase.ToolBase):
 
             # Steam
             "Steam": {
-                "program": os.path.join(steam_install_dir, steam_exe)
+                "program": system.JoinPaths(steam_install_dir, steam_exe)
             }
         }

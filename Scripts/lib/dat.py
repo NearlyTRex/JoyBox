@@ -127,7 +127,7 @@ class Dat:
             file_md5 = hashing.CalculateFileMD5(file, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
             if self.is_md5_present(file_md5):
                 game_entry = self.get_by_md5(file_md5)
-                file_path_new = os.path.join(file_dir, game_entry[config.dat_key_file])
+                file_path_new = system.JoinPaths(file_dir, game_entry[config.dat_key_file])
                 if file != file_path_new:
                     system.MoveFileOrDirectory(
                         src = file,

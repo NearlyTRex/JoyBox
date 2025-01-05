@@ -183,7 +183,7 @@ def Trim3DSCCI(
         return False
 
     # Temporary files
-    tmp_3ds_file = os.path.join(tmp_dir_result, "temp.3ds")
+    tmp_3ds_file = system.JoinPaths(tmp_dir_result, "temp.3ds")
 
     # Copy source file
     system.CopyFileOrDirectory(
@@ -253,7 +253,7 @@ def Untrim3DSCCI(
         return False
 
     # Temporary files
-    tmp_3ds_file = os.path.join(tmp_dir_result, "temp.3ds")
+    tmp_3ds_file = system.JoinPaths(tmp_dir_result, "temp.3ds")
 
     # Copy source file
     system.CopyFileOrDirectory(
@@ -323,10 +323,10 @@ def Extract3DSCIA(
         return False
 
     # Get temporary files
-    tmp_file_cer = os.path.join(tmp_dir_result, "00000000.cer")
-    tmp_file_tik = os.path.join(tmp_dir_result, "00000000.tik")
-    tmp_file_tmd = os.path.join(tmp_dir_result, "00000000.tmd")
-    tmp_base_contents = os.path.join(tmp_dir_result, "contents")
+    tmp_file_cer = system.JoinPaths(tmp_dir_result, "00000000.cer")
+    tmp_file_tik = system.JoinPaths(tmp_dir_result, "00000000.tik")
+    tmp_file_tmd = system.JoinPaths(tmp_dir_result, "00000000.tmd")
+    tmp_base_contents = system.JoinPaths(tmp_dir_result, "contents")
 
     # Get extract command
     extract_cmd = [
@@ -352,11 +352,11 @@ def Extract3DSCIA(
     # Rename app files
     for obj in system.GetDirectoryContents(tmp_dir_result):
         if obj.startswith("contents"):
-            obj_path = os.path.join(tmp_dir_result, obj)
+            obj_path = system.JoinPaths(tmp_dir_result, obj)
             obj_basename = system.GetFilenameExtension(obj).strip(".")
             system.MoveFileOrDirectory(
                 src = obj_path,
-                dest = os.path.join(tmp_dir_result, obj_basename + ".app"),
+                dest = system.JoinPaths(tmp_dir_result, obj_basename + ".app"),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -441,8 +441,8 @@ def Install3DSCIA(
     # Get app info
     app_type = app_titleid[:8].lower()
     app_folder = app_titleid[8:].lower()
-    app_base_dir = os.path.join(sdmc_dir, "Nintendo 3DS", "00000000000000000000000000000000", "00000000000000000000000000000000", "title")
-    app_install_dir = os.path.join(app_base_dir, app_type, app_folder, "content")
+    app_base_dir = system.JoinPaths(sdmc_dir, "Nintendo 3DS", "00000000000000000000000000000000", "00000000000000000000000000000000", "title")
+    app_install_dir = system.JoinPaths(app_base_dir, app_type, app_folder, "content")
 
     # Extract cia file
     success = Extract3DSCIA(
@@ -478,8 +478,8 @@ def DecryptWiiUNUSPackage(
         return False
 
     # Get input files
-    input_file_tmd = os.path.join(nus_package_dir, "title.tmd")
-    input_file_tik = os.path.join(nus_package_dir, "title.tik")
+    input_file_tmd = system.JoinPaths(nus_package_dir, "title.tmd")
+    input_file_tik = system.JoinPaths(nus_package_dir, "title.tik")
     if not os.path.exists(input_file_tmd) or not os.path.exists(input_file_tik):
         return False
 
@@ -506,7 +506,7 @@ def DecryptWiiUNUSPackage(
     # Clean up
     if delete_original:
         for obj in system.GetDirectoryContents(nus_package_dir):
-            obj_path = os.path.join(nus_package_dir, obj)
+            obj_path = system.JoinPaths(nus_package_dir, obj)
             if not system.IsPathFile(obj_path):
                 continue
             obj_ext = system.GetFilenameExtension(obj_path)
@@ -594,7 +594,7 @@ def InstallWiiUNusPackage(
         return False
 
     # Get app xml
-    app_xml_file = os.path.join(tmp_dir_result, "code", "app.xml")
+    app_xml_file = system.JoinPaths(tmp_dir_result, "code", "app.xml")
     if not os.path.exists(app_xml_file):
         return False
 
@@ -618,7 +618,7 @@ def InstallWiiUNusPackage(
 
         # Make folder
         success = system.MakeDirectory(
-            dir = os.path.join(tmp_dir_result, obj),
+            dir = system.JoinPaths(tmp_dir_result, obj),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -627,8 +627,8 @@ def InstallWiiUNusPackage(
 
         # Move folder
         success = system.MoveFileOrDirectory(
-            src = os.path.join(tmp_dir_result, obj),
-            dest = os.path.join(nand_dir, "usr", "title", app_type, app_folder, obj),
+            src = system.JoinPaths(tmp_dir_result, obj),
+            dest = system.JoinPaths(nand_dir, "usr", "title", app_type, app_folder, obj),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -778,8 +778,8 @@ def TrimSwitchXCI(
 
     # Temporary files
     tmp_xci_basename = system.GetFilenameBasename(src_xci_file)
-    tmp_xci_src_file = os.path.join(tmp_dir_result, tmp_xci_basename + ".xci")
-    tmp_xci_dest_file = os.path.join(tmp_dir_result, tmp_xci_basename + "_trimmed.xci")
+    tmp_xci_src_file = system.JoinPaths(tmp_dir_result, tmp_xci_basename + ".xci")
+    tmp_xci_dest_file = system.JoinPaths(tmp_dir_result, tmp_xci_basename + "_trimmed.xci")
 
     # Copy source file
     system.CopyFileOrDirectory(
@@ -863,8 +863,8 @@ def UntrimSwitchXCI(
 
     # Temporary files
     tmp_xci_basename = system.GetFilenameBasename(src_xci_file)
-    tmp_xci_src_file = os.path.join(tmp_dir_result, tmp_xci_basename + ".xci")
-    tmp_xci_dest_file = os.path.join(tmp_dir_result, tmp_xci_basename + "_padded.xci")
+    tmp_xci_src_file = system.JoinPaths(tmp_dir_result, tmp_xci_basename + ".xci")
+    tmp_xci_dest_file = system.JoinPaths(tmp_dir_result, tmp_xci_basename + "_padded.xci")
 
     # Copy source file
     system.CopyFileOrDirectory(
@@ -991,7 +991,7 @@ def InstallSwitchNSP(
         nca_id_bytes = bytes.fromhex(nca_id)
         nca_id_sha256 = hashing.CalculateStringSHA256(nca_id_bytes).upper()
         nca_id_dir = "000000%s" % nca_id_sha256[0:2]
-        nca_output_dir = os.path.join(nand_dir, "user", "Contents", "registered", nca_id_dir)
+        nca_output_dir = system.JoinPaths(nand_dir, "user", "Contents", "registered", nca_id_dir)
 
         # Make NCA dir
         success = system.MakeDirectory(
@@ -1005,7 +1005,7 @@ def InstallSwitchNSP(
         # Copy NCA file
         success = system.CopyFileOrDirectory(
             src = nca_file,
-            dest = os.path.join(nca_output_dir, nca_id + ".nca"),
+            dest = system.JoinPaths(nca_output_dir, nca_id + ".nca"),
             skip_identical = True,
             verbose = verbose,
             pretend_run = pretend_run,

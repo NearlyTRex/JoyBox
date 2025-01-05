@@ -45,7 +45,7 @@ def main():
 
     # Create base command
     base_cmd = [
-        os.path.join(environment.GetScriptsBinDir(), args.preset_tool_type.val() + environment.GetScriptsCommandExtension())
+        system.JoinPaths(environment.GetScriptsBinDir(), args.preset_tool_type.val() + environment.GetScriptsCommandExtension())
     ]
     if args.verbose:
         base_cmd += ["--verbose"]

@@ -3,8 +3,9 @@ import os, os.path
 import sys
 
 # Local imports
-import ini
+import system
 import toolbase
+import ini
 
 # Config files
 config_files = {}
@@ -28,7 +29,7 @@ class Firefox(toolbase.ToolBase):
         # Return config
         return {
             "Firefox": {
-                "program": os.path.join(firefox_install_dir, firefox_exe),
+                "program": system.JoinPaths(firefox_install_dir, firefox_exe),
                 "download_dir": firefox_download_dir,
                 "profile_dir": firefox_profile_dir
             }

@@ -32,7 +32,7 @@ def main():
         current_file = file
         current_file_dir = system.GetFilenameDirectory(current_file)
         current_file_basename = system.GetFilenameBasename(current_file)
-        current_file_extract_dir = os.path.join(current_file_dir, current_file_basename + "_extracted")
+        current_file_extract_dir = system.JoinPaths(current_file_dir, current_file_basename + "_extracted")
 
         # Unzip file
         system.LogInfo("Unzipping file %s ..." % current_file)

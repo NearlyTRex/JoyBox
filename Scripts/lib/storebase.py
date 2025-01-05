@@ -174,7 +174,7 @@ class StoreBase:
     def GetCookieFile(self):
         cookie_file = self.GetName().lower() + ".cookie.txt"
         cookie_dir = environment.GetCookieDirectory()
-        return os.path.join(cookie_dir, cookie_file)
+        return system.JoinPaths(cookie_dir, cookie_file)
 
     ############################################################
 
@@ -517,7 +517,7 @@ class StoreBase:
                 game_category = game_info.get_category(),
                 game_subcategory = game_info.get_subcategory(),
                 game_name = game_info.get_name())
-            output_dir = os.path.join(os.path.realpath(output_dir), output_offset)
+            output_dir = system.JoinPaths(os.path.realpath(output_dir), output_offset)
         else:
             output_dir = environment.GetLockerGamingRomDir(
                 game_category = game_info.get_category(),
@@ -765,7 +765,7 @@ class StoreBase:
                 if system.DoesDirectoryContainFiles(path_full):
                     success = system.SmartCopy(
                         src = path_full,
-                        dest = os.path.join(tmp_dir_result, path_relative),
+                        dest = system.JoinPaths(tmp_dir_result, path_relative),
                         show_progress = True,
                         skip_existing = True,
                         ignore_symlinks = True,

@@ -105,16 +105,16 @@ def ResolveJsonPath(
         replace_to = hdd_base_dir
     elif path.startswith(config.token_dos_main_root):
         replace_from = config.token_dos_main_root
-        replace_to = os.path.join(hdd_base_dir, config.computer_folder_dos)
+        replace_to = system.JoinPaths(hdd_base_dir, config.computer_folder_dos)
     elif path.startswith(config.token_scumm_main_root):
         replace_from = config.token_scumm_main_root
-        replace_to = os.path.join(hdd_base_dir, config.computer_folder_scumm)
+        replace_to = system.JoinPaths(hdd_base_dir, config.computer_folder_scumm)
     for disc_token in config.tokens_disc:
         if disc_token in path and disc_token in disc_token_map:
             mapped_value = disc_token_map[disc_token]
             replace_from = disc_token
             if len(disc_token_map[disc_token]) > 3:
-                replace_to = os.path.join(disc_base_dir, disc_token_map[disc_token])
+                replace_to = system.JoinPaths(disc_base_dir, disc_token_map[disc_token])
             else:
                 replace_to = disc_token_map[disc_token]
             break
@@ -158,8 +158,8 @@ def GetDosLaunchCommand(
         is_sandboxie_prefix = is_sandboxie_prefix)
 
     # Get dos drives
-    dos_c_drive = os.path.join(prefix_c_drive, config.computer_folder_dos, "C")
-    dos_d_drive = os.path.join(prefix_c_drive, config.computer_folder_dos, "D")
+    dos_c_drive = system.JoinPaths(prefix_c_drive, config.computer_folder_dos, "C")
+    dos_d_drive = system.JoinPaths(prefix_c_drive, config.computer_folder_dos, "D")
 
     # Search for disc images
     disc_images = system.BuildFileListByExtensions(dos_d_drive, [".chd"])
@@ -222,8 +222,8 @@ def GetWin31LaunchCommand(
         is_sandboxie_prefix = is_sandboxie_prefix)
 
     # Get dos drives
-    dos_c_drive = os.path.join(prefix_c_drive, config.computer_folder_dos, "C")
-    dos_d_drive = os.path.join(prefix_c_drive, config.computer_folder_dos, "D")
+    dos_c_drive = system.JoinPaths(prefix_c_drive, config.computer_folder_dos, "C")
+    dos_d_drive = system.JoinPaths(prefix_c_drive, config.computer_folder_dos, "D")
 
     # Search for disc images
     disc_images = system.BuildFileListByExtensions(dos_d_drive, [".chd"])
@@ -294,11 +294,11 @@ def GetScummLaunchCommand(
     # Create launch command
     launch_cmd = [programs.GetEmulatorProgram("ScummVM")]
     launch_cmd += [
-        "--path=%s" % os.path.join(prefix_c_drive, config.computer_folder_scumm)
+        "--path=%s" % system.JoinPaths(prefix_c_drive, config.computer_folder_scumm)
     ]
     launch_cmd += ["--auto-detect"]
     launch_cmd += [
-        "--savepath=%s" % os.path.join(prefix_user_profile, config.computer_folder_gamedata)
+        "--savepath=%s" % system.JoinPaths(prefix_user_profile, config.computer_folder_gamedata)
     ]
     if fullscreen:
         launch_cmd += ["--fullscreen"]
@@ -367,7 +367,7 @@ def GetSelectedLaunchInfo(
 
     # Get launch info
     def GetLaunchInfo(game_exe):
-        cmd = os.path.join(base_dir, game_exe)
+        cmd = system.JoinPaths(base_dir, game_exe)
         cwd = default_cwd
         args = []
         if game_exe in game_exe_cwds:
@@ -688,7 +688,7 @@ class Computer(emulatorbase.EmulatorBase):
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
-                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -734,7 +734,7 @@ class Computer(emulatorbase.EmulatorBase):
         mount_links = []
         for obj in system.GetDirectoryContents(launch_cache_dir):
             mount_links.append({
-                "from": os.path.join(launch_cache_dir, obj),
+                "from": system.JoinPaths(launch_cache_dir, obj),
                 "to": obj
             })
 
@@ -770,8 +770,8 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Build list of dirs to clear
         dirs_to_clear = []
-        dirs_to_clear += [os.path.join(user_profile_dir, config.computer_folder_temp)]
-        dirs_to_clear += [os.path.join(user_profile_dir, config.computer_folder_appdata, "Local", "CrashDumps")]
+        dirs_to_clear += [system.JoinPaths(user_profile_dir, config.computer_folder_temp)]
+        dirs_to_clear += [system.JoinPaths(user_profile_dir, config.computer_folder_appdata, "Local", "CrashDumps")]
 
         # Find sync base directory
         sync_basedir = None
@@ -798,8 +798,8 @@ class Computer(emulatorbase.EmulatorBase):
             is_sandboxie_prefix = should_run_via_sandboxie)
 
         # Get dos drives
-        dos_c_drive = os.path.join(prefix_c_drive, config.computer_folder_dos, "C")
-        dos_d_drive = os.path.join(prefix_c_drive, config.computer_folder_dos, "D")
+        dos_c_drive = system.JoinPaths(prefix_c_drive, config.computer_folder_dos, "C")
+        dos_d_drive = system.JoinPaths(prefix_c_drive, config.computer_folder_dos, "D")
 
         # Get launch info
         launch_info_cmd = []
@@ -931,7 +931,7 @@ class Computer(emulatorbase.EmulatorBase):
 
             # Move sandboxed data back
             if should_run_via_sandboxie:
-                temp_cache_dir = os.path.join(user_profile_dir, "Cache")
+                temp_cache_dir = system.JoinPaths(user_profile_dir, "Cache")
                 real_cache_dir = environment.GetCacheRootDir()
                 if system.DoesDirectoryContainFiles(temp_cache_dir):
                     system.MoveContents(

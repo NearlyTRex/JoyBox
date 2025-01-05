@@ -3,8 +3,9 @@ import os, os.path
 import sys
 
 # Local imports
-import ini
+import system
 import toolbase
+import ini
 
 # Config files
 config_files = {}
@@ -26,6 +27,6 @@ class Gpg(toolbase.ToolBase):
         # Return config
         return {
             "Gpg": {
-                "program": os.path.join(gpg_install_dir, gpg_exe)
+                "program": system.JoinPaths(gpg_install_dir, gpg_exe)
             }
         }

@@ -71,7 +71,7 @@ def SimpleLaunch(
 
         # Replace game file
         if selected_launch_file:
-            cmd_segment = cmd_segment.replace(config.token_game_file, os.path.join(game_cache_dir, selected_launch_file))
+            cmd_segment = cmd_segment.replace(config.token_game_file, system.JoinPaths(game_cache_dir, selected_launch_file))
 
         # Replace game dir
         cmd_segment = cmd_segment.replace(config.token_game_dir, game_cache_dir)

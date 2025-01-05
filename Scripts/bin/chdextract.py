@@ -40,8 +40,8 @@ def main():
         current_basename = system.GetFilenameBasename(current_file)
 
         # Check if output already exists
-        output_bin = os.path.join(current_dir, current_basename + args.bin_ext)
-        output_toc = os.path.join(current_dir, current_basename + args.toc_ext)
+        output_bin = system.JoinPaths(current_dir, current_basename + args.bin_ext)
+        output_toc = system.JoinPaths(current_dir, current_basename + args.toc_ext)
         if os.path.exists(output_bin) or os.path.exists(output_toc):
             continue
 

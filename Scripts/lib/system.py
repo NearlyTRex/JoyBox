@@ -1729,6 +1729,18 @@ def RebaseFilePaths(paths, old_base_path, new_base_path):
         rebased_paths.append(RebaseFilePath(path, old_base_path, new_base_path))
     return rebased_paths
 
+# Join paths
+def JoinPaths(*paths):
+    processed_paths = []
+    for path in paths:
+        if isinstance(path, config.EnumType):
+            processed_paths.append(path.val())
+        elif isinstance(path, str):
+            processed_paths.append(path)
+        else:
+            raise TypeError(f"Path {path} must be a string or an Enum, not {type(path)}.")
+    return os.path.join(*processed_paths)
+
 ###########################################################
 
 # Get directory name

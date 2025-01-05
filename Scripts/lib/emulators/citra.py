@@ -82,7 +82,7 @@ class Citra(emulatorbase.EmulatorBase):
                 for cia_file in system.BuildFileListByExtensions(package_dir, extensions = [".cia"]):
                     success = nintendo.Install3DSCIA(
                         src_3ds_file = cia_file,
-                        sdmc_dir = os.path.join(programs.GetEmulatorPathConfigValue("Citra", "setup_dir"), "sdmc"),
+                        sdmc_dir = system.JoinPaths(programs.GetEmulatorPathConfigValue("Citra", "setup_dir"), "sdmc"),
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
@@ -127,7 +127,7 @@ class Citra(emulatorbase.EmulatorBase):
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
-                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -137,7 +137,7 @@ class Citra(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Citra"), filename),
+                filename = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Citra"), filename),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -147,10 +147,10 @@ class Citra(emulatorbase.EmulatorBase):
         # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["nand", "sysdata"]:
-                if os.path.exists(os.path.join(environment.GetLockerGamingEmulatorSetupDir("Citra"), obj + ".zip")):
+                if os.path.exists(system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Citra"), obj + config.ArchiveFileType.ZIP.cval())):
                     success = archive.ExtractArchive(
-                        archive_file = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Citra"), obj + ".zip"),
-                        extract_dir = os.path.join(programs.GetEmulatorPathConfigValue("Citra", "setup_dir", platform), obj),
+                        archive_file = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Citra"), obj + config.ArchiveFileType.ZIP.cval()),
+                        extract_dir = system.JoinPaths(programs.GetEmulatorPathConfigValue("Citra", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = verbose,
                         pretend_run = pretend_run,

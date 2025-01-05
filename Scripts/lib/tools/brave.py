@@ -3,8 +3,9 @@ import os, os.path
 import sys
 
 # Local imports
-import ini
+import system
 import toolbase
+import ini
 
 # Config files
 config_files = {}
@@ -27,7 +28,7 @@ class Brave(toolbase.ToolBase):
         # Return config
         return {
             "Brave": {
-                "program": os.path.join(brave_install_dir, brave_exe),
+                "program": system.JoinPaths(brave_install_dir, brave_exe),
                 "download_dir": brave_download_dir
             }
         }

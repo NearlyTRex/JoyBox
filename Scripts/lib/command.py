@@ -79,9 +79,9 @@ def IsOnlyStarterCommand(cmd):
 # Get runnable command path
 def GetRunnableCommandPath(cmd, search_dirs = []):
     for search_dir in search_dirs:
-        potential_paths = [os.path.join(search_dir, cmd)]
+        potential_paths = [system.JoinPaths(search_dir, cmd)]
         for cmd_ext in config.WindowsProgramFileType.cvalues():
-            potential_paths.append(os.path.join(search_dir, cmd + cmd_ext))
+            potential_paths.append(system.JoinPaths(search_dir, cmd + cmd_ext))
         for potential_path in potential_paths:
             verified_path = shutil.which(potential_path)
             if verified_path:
@@ -277,10 +277,10 @@ def SetupAppImageCommand(
         if cmd_segment.lower().endswith(".appimage"):
             appimage_home_dir = os.path.realpath(cmd_segment + ".home")
             if os.path.exists(appimage_home_dir):
-                new_options.env["XDG_CONFIG_HOME"] = os.path.join(appimage_home_dir, ".config")
-                new_options.env["XDG_CACHE_HOME"] = os.path.join(appimage_home_dir, ".cache")
-                new_options.env["XDG_DATA_HOME"] = os.path.join(appimage_home_dir, ".local", "share")
-                new_options.env["XDG_STATE_HOME"] = os.path.join(appimage_home_dir, ".local", "state")
+                new_options.env["XDG_CONFIG_HOME"] = system.JoinPaths(appimage_home_dir, ".config")
+                new_options.env["XDG_CACHE_HOME"] = system.JoinPaths(appimage_home_dir, ".cache")
+                new_options.env["XDG_DATA_HOME"] = system.JoinPaths(appimage_home_dir, ".local", "share")
+                new_options.env["XDG_STATE_HOME"] = system.JoinPaths(appimage_home_dir, ".local", "state")
                 break
     return (new_cmd, new_options)
 

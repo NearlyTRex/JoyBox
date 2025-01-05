@@ -4,11 +4,11 @@ import sys
 
 # Local imports
 import config
-import ini
 import system
 import environment
 import programs
 import toolbase
+import ini
 
 # Config files
 config_files = {}
@@ -44,23 +44,23 @@ class Python(toolbase.ToolBase):
 
             # Python
             "Python": {
-                "program": os.path.join(python_install_dir, python_exe),
+                "program": system.JoinPaths(python_install_dir, python_exe),
                 "venv_dir": python_venv_dir
             },
 
             # PythonVenvPython
             "PythonVenvPython": {
                 "program": {
-                    "windows": os.path.join(python_venv_dir, "Scripts", python_exe),
-                    "linux": os.path.join(python_venv_dir, "bin", python_exe)
+                    "windows": system.JoinPaths(python_venv_dir, "Scripts", python_exe),
+                    "linux": system.JoinPaths(python_venv_dir, "bin", python_exe)
                 }
             },
 
             # PythonVenvPip
             "PythonVenvPip": {
                 "program": {
-                    "windows": os.path.join(python_venv_dir, "Scripts", python_pip_exe),
-                    "linux": os.path.join(python_venv_dir, "bin", python_pip_exe)
+                    "windows": system.JoinPaths(python_venv_dir, "Scripts", python_pip_exe),
+                    "linux": system.JoinPaths(python_venv_dir, "bin", python_pip_exe)
                 }
             }
         }
@@ -74,9 +74,9 @@ class Python(toolbase.ToolBase):
 
                 # Get script info
                 script_basename = system.GetFilenameBasename(obj)
-                script_path_orig = os.path.join(environment.GetScriptsBinDir(), obj)
-                script_path_windows = os.path.join(environment.GetScriptsBinDir(), script_basename + ".bat")
-                script_path_unix = os.path.join(environment.GetScriptsBinDir(), script_basename)
+                script_path_orig = system.JoinPaths(environment.GetScriptsBinDir(), obj)
+                script_path_windows = system.JoinPaths(environment.GetScriptsBinDir(), script_basename + config.WindowsProgramFileType.BAT.cval())
+                script_path_unix = system.JoinPaths(environment.GetScriptsBinDir(), script_basename)
 
                 # Create windows wrapper script
                 if environment.IsWindowsPlatform():

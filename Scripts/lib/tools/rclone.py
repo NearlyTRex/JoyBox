@@ -126,7 +126,7 @@ class RClone(toolbase.ToolBase):
             config_contents = config_contents.replace(config.token_remote_type, locker_remote_type)
             config_contents = config_contents.replace(config.token_remote_token, locker_remote_token)
             success = system.TouchFile(
-                src = os.path.join(environment.GetToolsRootDir(), config_filename),
+                src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents,
                 verbose = verbose,
                 pretend_run = pretend_run,

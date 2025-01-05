@@ -3,8 +3,9 @@ import os, os.path
 import sys
 
 # Local imports
-import ini
+import system
 import toolbase
+import ini
 
 # Config files
 config_files = {}
@@ -27,7 +28,7 @@ class Chrome(toolbase.ToolBase):
         # Return config
         return {
             "Chrome": {
-                "program": os.path.join(chrome_install_dir, chrome_exe),
+                "program": system.JoinPaths(chrome_install_dir, chrome_exe),
                 "download_dir": chrome_download_dir
             }
         }

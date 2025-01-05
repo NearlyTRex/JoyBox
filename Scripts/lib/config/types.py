@@ -18,6 +18,9 @@ class EnumType(enum.Enum):
         obj.cvalue = cvalue
         return obj
 
+    def __str__(self):
+        return self.value
+
     @classmethod
     def members(cls):
         return [member for member in cls.__members__.values()]

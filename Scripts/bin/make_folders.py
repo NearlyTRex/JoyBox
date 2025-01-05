@@ -14,7 +14,7 @@ import setup
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Create folders from certain file types.")
 parser.add_input_path_argument()
-parser.add_string_argument("-f", "--file_types", default = ".iso,.chd,.rvz,.zip,.7z,.rar,.pkg", description = "List of file types (comma delimited)")
+parser.add_string_argument(args = ("-f", "--file_types"), default = ".iso,.chd,.rvz,.zip,.7z,.rar,.pkg", description = "List of file types (comma delimited)")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -29,13 +29,13 @@ def main():
 
     # Make folders from file types
     for obj in system.GetDirectoryContents(input_path):
-        obj_path = os.path.join(input_path, obj)
+        obj_path = system.JoinPaths(input_path, obj)
         if system.IsPathFile(obj_path):
             if obj.endswith(tuple(args.file_types.split(","))):
                 selected_file = obj_path
                 selected_file_basename = system.GetFilenameBasename(selected_file)
-                new_folder = os.path.join(input_path, selected_file_basename)
-                new_file = os.path.join(input_path, selected_file_basename, obj)
+                new_folder = system.JoinPaths(input_path, selected_file_basename)
+                new_file = system.JoinPaths(input_path, selected_file_basename, obj)
                 system.MakeDirectory(
                     dir = new_folder,
                     verbose = args.verbose,

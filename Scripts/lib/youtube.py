@@ -144,11 +144,11 @@ def DownloadVideo(
 
         # Replace invalid path characters
         for obj in system.GetDirectoryContents(sanitize_dir):
-            obj_path = os.path.join(sanitize_dir, obj)
+            obj_path = system.JoinPaths(sanitize_dir, obj)
             if system.IsPathFile(obj_path) and obj.endswith(".mp4"):
                 system.MoveFileOrDirectory(
                     src = obj_path,
-                    dest = os.path.join(sanitize_dir, system.ReplaceInvalidPathCharacters(obj)),
+                    dest = system.JoinPaths(sanitize_dir, system.ReplaceInvalidPathCharacters(obj)),
                     skip_existing = True,
                     verbose = verbose,
                     pretend_run = pretend_run,

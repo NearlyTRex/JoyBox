@@ -212,7 +212,7 @@ class Mame(emulatorbase.EmulatorBase):
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
-                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -222,7 +222,7 @@ class Mame(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Mame"), filename),
+                filename = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Mame"), filename),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -233,8 +233,8 @@ class Mame(emulatorbase.EmulatorBase):
         for filename in system_files.keys():
             for platform in ["windows", "linux"]:
                 success = system.SmartCopy(
-                    src = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Mame"), filename),
-                    dest = os.path.join(programs.GetEmulatorPathConfigValue("Mame", "setup_dir", platform), filename),
+                    src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Mame"), filename),
+                    dest = system.JoinPaths(programs.GetEmulatorPathConfigValue("Mame", "setup_dir", platform), filename),
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)

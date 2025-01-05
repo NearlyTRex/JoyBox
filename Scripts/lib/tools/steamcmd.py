@@ -3,8 +3,9 @@ import os, os.path
 import sys
 
 # Local imports
-import ini
+import system
 import toolbase
+import ini
 
 # Config files
 config_files = {}
@@ -28,6 +29,6 @@ class SteamCMD(toolbase.ToolBase):
 
             # SteamCMD
             "SteamCMD": {
-                "program": os.path.join(steamcmd_install_dir, steamcmd_exe)
+                "program": system.JoinPaths(steamcmd_install_dir, steamcmd_exe)
             }
         }

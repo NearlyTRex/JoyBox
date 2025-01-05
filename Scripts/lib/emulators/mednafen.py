@@ -151,7 +151,7 @@ class Mednafen(emulatorbase.EmulatorBase):
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
-                src = os.path.join(environment.GetEmulatorsRootDir(), config_filename),
+                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -161,7 +161,7 @@ class Mednafen(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                filename = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Mednafen"), filename),
+                filename = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Mednafen"), filename),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -172,8 +172,8 @@ class Mednafen(emulatorbase.EmulatorBase):
         for filename in system_files.keys():
             for platform in ["windows", "linux"]:
                 success = system.SmartCopy(
-                    src = os.path.join(environment.GetLockerGamingEmulatorSetupDir("Mednafen"), filename),
-                    dest = os.path.join(programs.GetEmulatorPathConfigValue("Mednafen", "setup_dir", platform), filename),
+                    src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Mednafen"), filename),
+                    dest = system.JoinPaths(programs.GetEmulatorPathConfigValue("Mednafen", "setup_dir", platform), filename),
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)

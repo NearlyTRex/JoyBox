@@ -35,7 +35,7 @@ def GetPathConfigValue(program_config, base_dir, program_name, program_key, prog
     if program_path:
         if os.path.exists(program_path):
             return program_path
-        return os.path.join(base_dir, program_path)
+        return system.JoinPaths(base_dir, program_path)
     return None
 
 # Get program
@@ -47,9 +47,9 @@ def GetProgram(program_config, base_dir, program_name, program_platform = None):
 # Get program install dir
 def GetProgramInstallDir(program_name, program_platform = None):
     if IsProgramNameTool(program_name, program_platform):
-        return os.path.join(environment.GetToolsRootDir(), program_name, program_platform)
+        return system.JoinPaths(environment.GetToolsRootDir(), program_name, program_platform)
     elif IsProgramNameEmulator(program_name, program_platform):
-        return os.path.join(environment.GetEmulatorsRootDir(), program_name, program_platform)
+        return system.JoinPaths(environment.GetEmulatorsRootDir(), program_name, program_platform)
     return None
 
 # Get program backup dir
@@ -63,14 +63,14 @@ def GetProgramBackupDir(program_name, program_platform = None):
 # Get library install dir
 def GetLibraryInstallDir(library_name, library_platform = None):
     if library_platform:
-        return os.path.join(environment.GetToolsRootDir(), library_name, library_platform)
+        return system.JoinPaths(environment.GetToolsRootDir(), library_name, library_platform)
     else:
-        return os.path.join(environment.GetToolsRootDir(), library_name)
+        return system.JoinPaths(environment.GetToolsRootDir(), library_name)
 
 # Get library backup dir
 def GetLibraryBackupDir(library_name, library_platform = None):
     if library_platform:
-        return os.path.join(environment.GetLockerProgramToolDir(library_name), library_platform)
+        return system.JoinPaths(environment.GetLockerProgramToolDir(library_name), library_platform)
     else:
         return environment.GetLockerProgramToolDir(library_name)
 

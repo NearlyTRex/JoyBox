@@ -3,8 +3,9 @@ import os, os.path
 import sys
 
 # Local imports
-import ini
+import system
 import toolbase
+import ini
 
 # Config files
 config_files = {}
@@ -26,6 +27,6 @@ class Tar(toolbase.ToolBase):
         # Return config
         return {
             "Tar": {
-                "program": os.path.join(tar_install_dir, tar_exe)
+                "program": system.JoinPaths(tar_install_dir, tar_exe)
             }
         }

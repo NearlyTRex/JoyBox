@@ -26,13 +26,13 @@ def ResolvePath(
 
     # Augment with gaming categories
     if game_supercategory:
-        resolved_path = os.path.join(resolved_path, config.LockerType.GAMING.val(), game_supercategory)
+        resolved_path = system.JoinPaths(resolved_path, config.LockerType.GAMING, game_supercategory)
         if game_category:
-            resolved_path = os.path.join(resolved_path, game_category)
+            resolved_path = system.JoinPaths(resolved_path, game_category)
             if game_subcategory:
-                resolved_path = os.path.join(resolved_path, game_subcategory)
+                resolved_path = system.JoinPaths(resolved_path, game_subcategory)
                 if game_offset:
-                    resolved_path = os.path.join(resolved_path, game_offset)
+                    resolved_path = system.JoinPaths(resolved_path, game_offset)
 
     # Return result
     return resolved_path
@@ -54,8 +54,8 @@ def CopyFiles(
 
         # Copy files
         success = system.SmartCopy(
-            src = os.path.join(input_base_path, src_file),
-            dest = os.path.join(output_base_path, src_file),
+            src = system.JoinPaths(input_base_path, src_file),
+            dest = system.JoinPaths(output_base_path, src_file),
             show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
@@ -95,12 +95,12 @@ def ArchiveFiles(
 
     # Look at non-excluded dirs in the input base path
     for base_obj in system.GetDirectoryContents(input_base_path, excludes = exclude_paths):
-        base_dir = os.path.join(input_base_path, base_obj)
+        base_dir = system.JoinPaths(input_base_path, base_obj)
         if system.IsPathDirectory(base_dir):
 
             # Only look for subdirectories to archive in each main directory
             for sub_obj in system.GetDirectoryContents(base_dir):
-                sub_dir = os.path.join(base_dir, sub_obj)
+                sub_dir = system.JoinPaths(base_dir, sub_obj)
                 if not system.IsPathDirectory(sub_dir):
                     continue
 
@@ -109,8 +109,8 @@ def ArchiveFiles(
                 archive_ext = archive_type.cval()
 
                 # Get paths
-                tmp_archive_file = os.path.join(tmp_dir_result, archive_basename + "." + archive_ext)
-                out_archive_file = os.path.join(output_base_path, base_obj, archive_basename + "." + archive_ext)
+                tmp_archive_file = system.JoinPaths(tmp_dir_result, archive_basename + "." + archive_ext)
+                out_archive_file = system.JoinPaths(output_base_path, base_obj, archive_basename + "." + archive_ext)
 
                 # Archive subdirectory
                 success = archive.CreateArchiveFromFolder(

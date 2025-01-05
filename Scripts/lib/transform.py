@@ -35,11 +35,11 @@ def TransformComputerPrograms(
     game_subcategory = game_info.get_subcategory()
 
     # Get paths
-    output_extract_dir = os.path.join(output_dir, gameinfo.DeriveRegularNameFromGameName(game_name))
-    output_extract_index_file = os.path.join(output_extract_dir, config.raw_files_index)
-    output_install_file = os.path.join(output_dir, game_name + ".install")
+    output_extract_dir = system.JoinPaths(output_dir, gameinfo.DeriveRegularNameFromGameName(game_name))
+    output_extract_index_file = system.JoinPaths(output_extract_dir, config.raw_files_index)
+    output_install_file = system.JoinPaths(output_dir, game_name + ".install")
     cached_install_dir = environment.GetCacheGamingInstallDir(game_category, game_subcategory, game_name)
-    cached_install_file = os.path.join(cached_install_dir, game_name + ".install")
+    cached_install_file = system.JoinPaths(cached_install_dir, game_name + ".install")
 
     # Make directories
     system.MakeDirectory(
@@ -54,11 +54,11 @@ def TransformComputerPrograms(
         exit_on_failure = exit_on_failure)
 
     # Get pre-packaged archive
-    prepackaged_archive = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".7z")
+    prepackaged_archive = system.JoinPaths(system.GetFilenameDirectory(source_file), game_name + ".7z")
     if not os.path.exists(prepackaged_archive):
-        prepackaged_archive = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".7z.001")
+        prepackaged_archive = system.JoinPaths(system.GetFilenameDirectory(source_file), game_name + ".7z.001")
         if not os.path.exists(prepackaged_archive):
-            prepackaged_archive = os.path.join(system.GetFilenameDirectory(source_file), game_name + ".exe")
+            prepackaged_archive = system.JoinPaths(system.GetFilenameDirectory(source_file), game_name + ".exe")
 
     # Pre-packaged archive
     if system.IsPathFile(prepackaged_archive):
@@ -156,9 +156,9 @@ def TransformDiscImage(
     for disc_image_file in disc_image_files:
         if disc_image_file.endswith(".chd"):
             success = chd.ExtractDiscCHD(
-                chd_file = os.path.join(system.GetFilenameDirectory(source_file), disc_image_file),
-                binary_file = os.path.join(output_dir, system.GetFilenameBasename(disc_image_file) + ".iso"),
-                toc_file = os.path.join(output_dir, system.GetFilenameBasename(disc_image_file) + ".toc"),
+                chd_file = system.JoinPaths(system.GetFilenameDirectory(source_file), disc_image_file),
+                binary_file = system.JoinPaths(output_dir, system.GetFilenameBasename(disc_image_file) + config.DiscImageFileType.ISO.cval()),
+                toc_file = system.JoinPaths(output_dir, system.GetFilenameBasename(disc_image_file) + ".toc"),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -171,7 +171,7 @@ def TransformDiscImage(
         for disc_image_file in disc_image_files:
             playlist_contents += [disc_image_file.replace(".chd", ".iso")]
         success = playlist.WritePlaylist(
-            output_file = os.path.join(output_dir, system.GetFilenameBasename(source_file) + ".m3u"),
+            output_file = system.JoinPaths(output_dir, system.GetFilenameBasename(source_file) + ".m3u"),
             playlist_contents = playlist_contents,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -181,9 +181,9 @@ def TransformDiscImage(
 
     # Return output
     if source_file.endswith(".chd"):
-        return (True, os.path.join(output_dir, system.GetFilenameBasename(source_file) + ".iso"))
+        return (True, system.JoinPaths(output_dir, system.GetFilenameBasename(source_file) + config.DiscImageFileType.ISO.cval()))
     elif source_file.endswith(".m3u"):
-        return (True, os.path.join(output_dir, system.GetFilenameBasename(source_file) + ".m3u"))
+        return (True, system.JoinPaths(output_dir, system.GetFilenameBasename(source_file) + ".m3u"))
 
     # No transformation was done
     return (False, source_file)
@@ -220,7 +220,7 @@ def TransformXboxDiscImage(
     for disc_image_file in disc_image_files:
         if disc_image_file.endswith(".iso"):
             success = xbox.RewriteXboxISO(
-                iso_file = os.path.join(system.GetFilenameDirectory(source_file), disc_image_file),
+                iso_file = system.JoinPaths(system.GetFilenameDirectory(source_file), disc_image_file),
                 delete_original = True,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -229,7 +229,7 @@ def TransformXboxDiscImage(
                 return (False, "Unable to rewrite xbox disc images")
 
     # Return output
-    return (True, os.path.join(output_dir, system.GetFilenameFile(source_file)))
+    return (True, system.JoinPaths(output_dir, system.GetFilenameFile(source_file)))
 
 ###########################################################
 
@@ -266,7 +266,7 @@ def TransformPS3DiscImage(
 
             # Extract ps3 disc image
             success = playstation.ExtractPS3ISO(
-                iso_file = os.path.join(system.GetFilenameDirectory(source_file), disc_image_file),
+                iso_file = system.JoinPaths(system.GetFilenameDirectory(source_file), disc_image_file),
                 dkey_file = source_file_dkey,
                 extract_dir = output_dir,
                 verbose = verbose,
@@ -287,7 +287,7 @@ def TransformPS3DiscImage(
                     pkg_name = system.GetFilenameBasename(pkg_file)
                     success = playstation.ExtractPSNPKG(
                         pkg_file = pkg_file,
-                        extract_dir = os.path.join(pkg_dir, pkg_name),
+                        extract_dir = system.JoinPaths(pkg_dir, pkg_name),
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
@@ -296,7 +296,7 @@ def TransformPS3DiscImage(
 
     # Touch index file
     success = system.TouchFile(
-        src = os.path.join(output_dir, config.raw_files_index),
+        src = system.JoinPaths(output_dir, config.raw_files_index),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -304,7 +304,7 @@ def TransformPS3DiscImage(
         return (False, "Unable to create raw index")
 
     # Return output
-    return (True, os.path.join(output_dir, config.raw_files_index))
+    return (True, system.JoinPaths(output_dir, config.raw_files_index))
 
 ###########################################################
 
@@ -326,13 +326,13 @@ def TransformPS3NetworkPackage(
     # Copy rap files
     for obj in system.GetDirectoryContents(system.GetFilenameDirectory(source_file)):
         if obj.endswith(".rap"):
-            rap_file = os.path.join(system.GetFilenameDirectory(source_file), obj)
-            pkg_file = os.path.join(system.GetFilenameDirectory(source_file), obj.replace(".rap", ".pkg"))
+            rap_file = system.JoinPaths(system.GetFilenameDirectory(source_file), obj)
+            pkg_file = system.JoinPaths(system.GetFilenameDirectory(source_file), obj.replace(".rap", ".pkg"))
             content_id = playstation.GetPSNPackageContentID(pkg_file)
             if content_id:
                 success = system.CopyFileOrDirectory(
                     src = rap_file,
-                    dest = os.path.join(output_dir, content_id + ".rap"),
+                    dest = system.JoinPaths(output_dir, content_id + ".rap"),
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
@@ -342,7 +342,7 @@ def TransformPS3NetworkPackage(
     # Extract ps3 pkg files
     for obj in system.GetDirectoryContents(system.GetFilenameDirectory(source_file)):
         if obj.endswith(".pkg"):
-            pkg_file = os.path.join(system.GetFilenameDirectory(source_file), obj)
+            pkg_file = system.JoinPaths(system.GetFilenameDirectory(source_file), obj)
             success = playstation.ExtractPSNPKG(
                 pkg_file = pkg_file,
                 extract_dir = output_dir,
@@ -354,7 +354,7 @@ def TransformPS3NetworkPackage(
 
     # Touch index file
     success = system.TouchFile(
-        src = os.path.join(output_dir, config.raw_files_index),
+        src = system.JoinPaths(output_dir, config.raw_files_index),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -362,7 +362,7 @@ def TransformPS3NetworkPackage(
         return (False, "Unable to create raw index")
 
     # Return output
-    return (True, os.path.join(output_dir, config.raw_files_index))
+    return (True, system.JoinPaths(output_dir, config.raw_files_index))
 
 ###########################################################
 
@@ -384,10 +384,10 @@ def TransformPSVNetworkPackage(
     # Copy work.bin files
     for obj in system.GetDirectoryContents(system.GetFilenameDirectory(source_file)):
         if obj.endswith(".work.bin"):
-            work_bin_file = os.path.join(system.GetFilenameDirectory(source_file), obj)
+            work_bin_file = system.JoinPaths(system.GetFilenameDirectory(source_file), obj)
             success = system.CopyFileOrDirectory(
-                src = os.path.join(system.GetFilenameDirectory(source_file), obj),
-                dest = os.path.join(output_dir, "work.bin"),
+                src = system.JoinPaths(system.GetFilenameDirectory(source_file), obj),
+                dest = system.JoinPaths(output_dir, "work.bin"),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -397,7 +397,7 @@ def TransformPSVNetworkPackage(
     # Extract psv pkg files
     for obj in system.GetDirectoryContents(system.GetFilenameDirectory(source_file)):
         if obj.endswith(".pkg"):
-            pkg_file = os.path.join(system.GetFilenameDirectory(source_file), obj)
+            pkg_file = system.JoinPaths(system.GetFilenameDirectory(source_file), obj)
             success = playstation.ExtractPSNPKG(
                 pkg_file = pkg_file,
                 extract_dir = output_dir,
@@ -409,7 +409,7 @@ def TransformPSVNetworkPackage(
 
     # Touch index file
     success = system.TouchFile(
-        src = os.path.join(output_dir, config.raw_files_index),
+        src = system.JoinPaths(output_dir, config.raw_files_index),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -417,7 +417,7 @@ def TransformPSVNetworkPackage(
         return (False, "Unable to create raw index")
 
     # Return output
-    return (True, os.path.join(output_dir, config.raw_files_index))
+    return (True, system.JoinPaths(output_dir, config.raw_files_index))
 
 ###########################################################
 
@@ -435,8 +435,8 @@ def TransformGameFile(
     game_category = game_info.get_category()
     game_subcategory = game_info.get_subcategory()
     game_name = game_info.get_game()
-    game_transform_file = os.path.join(source_dir, game_info.get_transform_file())
-    game_key_file = os.path.join(source_dir, game_info.get_key_file())
+    game_transform_file = system.JoinPaths(source_dir, game_info.get_transform_file())
+    game_key_file = system.JoinPaths(source_dir, game_info.get_key_file())
 
     # Output dir doesn't exist
     if not system.IsPathDirectory(output_dir):
@@ -489,7 +489,7 @@ def TransformGameFile(
     elif game_subcategory == config.Subcategory.SONY_PLAYSTATION_3:
         iso_success, iso_result = TransformDiscImage(
             source_file = game_transform_file,
-            output_dir = os.path.join(tmp_dir_result, "iso"),
+            output_dir = system.JoinPaths(tmp_dir_result, "iso"),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -498,7 +498,7 @@ def TransformGameFile(
         transform_success, transform_result = TransformPS3DiscImage(
             source_file = iso_result,
             source_file_dkey = game_key_file,
-            output_dir = os.path.join(tmp_dir_result, "output"),
+            output_dir = system.JoinPaths(tmp_dir_result, "output"),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -542,7 +542,7 @@ def TransformGameFile(
         return (False, "Unable to move transformed output")
 
     # Get final result
-    final_result_path = os.path.join(output_dir, system.GetFilenameFile(transform_result))
+    final_result_path = system.JoinPaths(output_dir, system.GetFilenameFile(transform_result))
 
     # Delete temporary directory
     system.RemoveDirectory(

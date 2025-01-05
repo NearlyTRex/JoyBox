@@ -143,7 +143,7 @@ def SetupGeneralRelease(
         if archive_extension.lower() == ".appimage":
 
             # Get new appimage file
-            appimage_file = os.path.join(tmp_dir_result, install_name + ".AppImage")
+            appimage_file = system.JoinPaths(tmp_dir_result, install_name + ".AppImage")
 
             # Copy app image
             success = system.SmartCopy(
@@ -188,7 +188,7 @@ def SetupGeneralRelease(
             should_run_via_sandboxie = environment.IsSandboxiePlatform()
 
             # Get real and virtual install paths
-            real_install_path = os.path.join(tmp_dir_result, "install")
+            real_install_path = system.JoinPaths(tmp_dir_result, "install")
             virtual_install_path = sandbox.TranslateRealPathToVirtualPath(
                 path = real_install_path,
                 prefix_dir = prefix_dir,
@@ -281,8 +281,8 @@ def SetupGeneralRelease(
     # Copy release files
     if isinstance(install_files, list) and len(install_files):
         for install_file in install_files:
-            install_file_src = os.path.abspath(os.path.join(search_dir, install_file))
-            install_file_dest = os.path.join(install_dir, install_file)
+            install_file_src = os.path.abspath(system.JoinPaths(search_dir, install_file))
+            install_file_dest = system.JoinPaths(install_dir, install_file)
             success = system.SmartCopy(
                 src = install_file_src,
                 dest = install_file_dest,
@@ -345,7 +345,7 @@ def SetupGeneralRelease(
                 if system.GetStringSimilarityRatio(rename_from, filename_file) > rename_ratio:
                     success = system.SmartMove(
                         src = filename,
-                        dest = os.path.join(filename_dir, rename_to),
+                        dest = system.JoinPaths(filename_dir, rename_to),
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
@@ -357,7 +357,7 @@ def SetupGeneralRelease(
     if system.IsPathValid(backups_dir):
         sucess = locker.BackupFiles(
             src = archive_file,
-            dest = os.path.join(backups_dir, archive_filename),
+            dest = system.JoinPaths(backups_dir, archive_filename),
             show_progress = True,
             skip_existing = True,
             skip_identical = True,
@@ -409,7 +409,7 @@ def DownloadGeneralRelease(
     archive_basename = system.GetFilenameBasename(archive_url)
     archive_extension = system.GetFilenameExtension(archive_url)
     archive_filename = system.GetFilenameFile(archive_url)
-    archive_file = os.path.join(tmp_dir_result, archive_filename)
+    archive_file = system.JoinPaths(tmp_dir_result, archive_filename)
 
     # Download release
     success = network.DownloadUrl(
@@ -628,12 +628,12 @@ def BuildAppImageFromSource(
         return False
 
     # Get directories
-    appimage_dir = os.path.join(tmp_dir_result, "AppImage")
-    source_dir = os.path.join(tmp_dir_result, "Source")
-    download_dir = os.path.join(tmp_dir_result, "Download")
+    appimage_dir = system.JoinPaths(tmp_dir_result, "AppImage")
+    source_dir = system.JoinPaths(tmp_dir_result, "Source")
+    download_dir = system.JoinPaths(tmp_dir_result, "Download")
     source_build_dir = source_dir
     if len(build_dir) > 0:
-        source_build_dir = os.path.abspath(os.path.join(source_dir, build_dir))
+        source_build_dir = os.path.abspath(system.JoinPaths(source_dir, build_dir))
 
     # Make folders
     system.MakeDirectory(
@@ -676,7 +676,7 @@ def BuildAppImageFromSource(
         # Get archive info
         archive_basename = system.GetFilenameBasename(release_url)
         archive_extension = system.GetFilenameExtension(release_url)
-        archive_file = os.path.join(download_dir, archive_basename + archive_extension)
+        archive_file = system.JoinPaths(download_dir, archive_basename + archive_extension)
 
         # Download source archive
         success = network.DownloadUrl(
@@ -725,10 +725,10 @@ def BuildAppImageFromSource(
 
     # Copy AppImage objects
     for obj in internal_copies:
-        src_obj = os.path.join(tmp_dir_result, obj["from"])
-        dest_obj = os.path.join(tmp_dir_result, obj["to"])
+        src_obj = system.JoinPaths(tmp_dir_result, obj["from"])
+        dest_obj = system.JoinPaths(tmp_dir_result, obj["to"])
         if obj["from"].startswith("AppImageTool"):
-            src_obj = os.path.join(environment.GetToolsRootDir(), obj["from"])
+            src_obj = system.JoinPaths(environment.GetToolsRootDir(), obj["from"])
         success = system.SmartCopy(
             src = src_obj,
             dest = dest_obj,
@@ -781,7 +781,7 @@ def BuildAppImageFromSource(
     # Copy release file
     success = system.SmartCopy(
         src = built_file,
-        dest = os.path.join(install_dir, final_file),
+        dest = system.JoinPaths(install_dir, final_file),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -791,8 +791,8 @@ def BuildAppImageFromSource(
 
     # Copy other objects
     for obj in external_copies:
-        src_obj = os.path.join(tmp_dir_result, obj["from"])
-        dest_obj = os.path.join(install_dir, obj["to"])
+        src_obj = system.JoinPaths(tmp_dir_result, obj["from"])
+        dest_obj = system.JoinPaths(install_dir, obj["to"])
         success = system.SmartCopy(
             src = src_obj,
             dest = dest_obj,
@@ -807,7 +807,7 @@ def BuildAppImageFromSource(
     if system.IsPathValid(backups_dir):
         sucess = locker.BackupFiles(
             src = built_file,
-            dest = os.path.join(backups_dir, final_file),
+            dest = system.JoinPaths(backups_dir, final_file),
             show_progress = True,
             skip_existing = True,
             skip_identical = True,
@@ -826,4 +826,4 @@ def BuildAppImageFromSource(
         exit_on_failure = exit_on_failure)
 
     # Check result
-    return os.path.exists(os.path.join(install_dir, final_file))
+    return os.path.exists(system.JoinPaths(install_dir, final_file))

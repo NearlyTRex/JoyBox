@@ -58,8 +58,8 @@ def PackInstallImage(
             continue
 
         # Copy path
-        path_from = os.path.join(input_dir, relative_path)
-        path_to = os.path.join(tmp_dir_result, relative_path)
+        path_from = system.JoinPaths(input_dir, relative_path)
+        path_to = system.JoinPaths(tmp_dir_result, relative_path)
         system.MakeDirectory(
             dir = system.GetFilenameDirectory(path_to),
             verbose = verbose,

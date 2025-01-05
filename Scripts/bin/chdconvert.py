@@ -45,7 +45,7 @@ def main():
         current_basename = system.GetFilenameBasename(current_file)
 
         # Check if output already exists
-        output_chd = os.path.join(current_dir, current_basename + ".chd")
+        output_chd = system.JoinPaths(current_dir, current_basename + config.DiscImageFileType.CHD.cval())
         if os.path.exists(output_chd):
             continue
 

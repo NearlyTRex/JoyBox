@@ -3,9 +3,10 @@ import os, os.path
 import sys
 
 # Local imports
+import system
 import environment
-import ini
 import toolbase
+import ini
 
 # Config files
 config_files = {}
@@ -37,22 +38,22 @@ class Wine(toolbase.ToolBase):
 
             # Wine
             "Wine": {
-                "program": os.path.join(wine_install_dir, wine_exe),
+                "program": system.JoinPaths(wine_install_dir, wine_exe),
                 "sandbox_dir": wine_sandbox_dir
             },
 
             # WineBoot
             "WineBoot": {
-                "program": os.path.join(wine_install_dir, wine_boot_exe)
+                "program": system.JoinPaths(wine_install_dir, wine_boot_exe)
             },
 
             # WineServer
             "WineServer": {
-                "program": os.path.join(wine_install_dir, wine_server_exe)
+                "program": system.JoinPaths(wine_install_dir, wine_server_exe)
             },
 
             # WineTricks
             "WineTricks": {
-                "program": os.path.join(wine_install_dir, wine_tricks_exe)
+                "program": system.JoinPaths(wine_install_dir, wine_tricks_exe)
             }
         }

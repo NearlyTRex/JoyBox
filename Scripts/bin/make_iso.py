@@ -40,12 +40,12 @@ def main():
     # Create iso images from folders
     if args.disc_source_type == config.DiscSourceType.FOLDER:
         for obj in system.GetDirectoryContents(input_path):
-            obj_path = os.path.join(input_path, obj)
+            obj_path = system.JoinPaths(input_path, obj)
             if not system.IsPathDirectory(obj_path):
                 continue
 
             # Check if iso already exists
-            output_file = os.path.join(input_path, obj + ".iso")
+            output_file = system.JoinPaths(input_path, obj + config.DiscImageFileType.ISO.cval())
             if os.path.exists(output_file):
                 continue
 
@@ -74,12 +74,12 @@ def main():
             current_basename = system.GetFilenameBasename(current_file)
 
             # Check if iso already exists
-            output_file = os.path.join(current_dir, current_basename + ".iso")
+            output_file = system.JoinPaths(current_dir, current_basename + config.DiscImageFileType.ISO.cval())
             if os.path.exists(output_file):
                 continue
 
             # Decompress zip
-            extracted_dir = os.path.join(current_dir, current_basename + "_extracted")
+            extracted_dir = system.JoinPaths(current_dir, current_basename + "_extracted")
             archive.ExtractArchive(
                 archive_file = current_file,
                 extract_dir = extracted_dir,

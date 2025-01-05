@@ -24,7 +24,7 @@ parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
 # Paths
-hashes_base_dir = os.path.join(environment.GetHashesMetadataRootDir(), args.game_supercategory)
+hashes_base_dir = system.JoinPaths(environment.GetHashesMetadataRootDir(), args.game_supercategory)
 files_root_dir = environment.GetLockerGamingSupercategoryRootDir(args.game_supercategory)
 
 # Main
@@ -90,14 +90,14 @@ def main():
     # Get hash files
     hash_files = []
     if args.game_category and args.game_subcategory:
-        hash_files.append(os.path.join(hashes_base_dir, args.game_category, args.game_subcategory + ".txt"))
+        hash_files.append(system.JoinPaths(hashes_base_dir, args.game_category, args.game_subcategory.val() + ".txt"))
     elif args.game_category:
         for game_subcategory in config.subcategory_map[args.game_category]:
-            hash_files.append(os.path.join(files_root_dir, args.game_category, game_subcategory))
+            hash_files.append(system.JoinPaths(files_root_dir, args.game_category, game_subcategory))
     else:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                hash_files.append(os.path.join(files_root_dir, game_category, game_subcategory))
+                hash_files.append(system.JoinPaths(files_root_dir, game_category, game_subcategory))
 
     # Generate iso files
     if hash_files:

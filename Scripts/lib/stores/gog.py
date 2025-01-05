@@ -128,7 +128,7 @@ class GOG(storebase.StoreBase):
             return None
 
         # Get temporary paths
-        tmp_file_manifest = os.path.join(tmp_dir_result, "manifest.json")
+        tmp_file_manifest = system.JoinPaths(tmp_dir_result, "manifest.json")
 
         # Get list command
         list_cmd = [
@@ -434,9 +434,9 @@ class GOG(storebase.StoreBase):
             return False
 
         # Get temporary paths
-        tmp_dir_extra = os.path.join(tmp_dir_result, "extra")
-        tmp_dir_dlc = os.path.join(tmp_dir_result, "dlc")
-        tmp_dir_dlc_extra = os.path.join(tmp_dir_dlc, "extra")
+        tmp_dir_extra = system.JoinPaths(tmp_dir_result, "extra")
+        tmp_dir_dlc = system.JoinPaths(tmp_dir_result, "dlc")
+        tmp_dir_dlc_extra = system.JoinPaths(tmp_dir_dlc, "extra")
 
         # Get fetch command
         fetch_cmd = [

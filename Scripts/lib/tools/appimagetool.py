@@ -81,8 +81,8 @@ class AppImageTool(toolbase.ToolBase):
         # Copy icon
         if environment.IsLinuxPlatform():
             success = system.CopyFileOrDirectory(
-                src = os.path.join(environment.GetScriptsIconsDir(), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
-                dest = os.path.join(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
+                src = system.JoinPaths(environment.GetScriptsIconsDir(), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
+                dest = system.JoinPaths(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -92,7 +92,7 @@ class AppImageTool(toolbase.ToolBase):
         if environment.IsLinuxPlatform():
             for config_filename, config_contents in config_files.items():
                 success = system.TouchFile(
-                    src = os.path.join(environment.GetToolsRootDir(), config_filename),
+                    src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
                     contents = config_contents.strip(),
                     verbose = verbose,
                     pretend_run = pretend_run,

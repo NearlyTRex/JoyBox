@@ -38,14 +38,14 @@ def main():
 
     # Compress folders
     for obj in system.GetDirectoryContents(input_path):
-        obj_path = os.path.join(input_path, obj)
+        obj_path = system.JoinPaths(input_path, obj)
         if not system.IsPathDirectory(obj_path):
             continue
 
         # Get output file
         output_basename = obj
         output_ext = args.archive_type.cval()
-        output_file = output_file = os.path.join(input_path, output_basename + "." + output_ext)
+        output_file = system.JoinPaths(input_path, output_basename + "." + output_ext)
         if os.path.exists(output_file):
             continue
 

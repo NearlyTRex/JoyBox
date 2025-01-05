@@ -79,7 +79,7 @@ def GeneratePlaylist(
                 playlist_contents.append(file)
     else:
         for obj in system.GetDirectoryContents(source_dir):
-            obj_path = os.path.join(source_dir, obj)
+            obj_path = system.JoinPaths(source_dir, obj)
             if system.IsPathFile(obj_path):
                 for extension in extensions:
                     if obj_path.endswith(extension):
@@ -143,7 +143,7 @@ def GenerateLocalPlaylists(
             # Generate local playlist
             success = GeneratePlaylist(
                 source_dir = input_dir,
-                output_file = os.path.join(input_dir, system.GetDirectoryName(input_dir) + ".m3u"),
+                output_file = system.JoinPaths(input_dir, system.GetDirectoryName(input_dir) + ".m3u"),
                 extensions = extensions,
                 recursive = False,
                 allow_empty_lists = allow_empty_lists,

@@ -388,8 +388,8 @@ class Amazon(storebase.StoreBase):
             return False
 
         # Make temporary dirs
-        tmp_dir_fetch = os.path.join(tmp_dir_result, "fetch")
-        tmp_dir_archive = os.path.join(tmp_dir_result, "archive")
+        tmp_dir_fetch = system.JoinPaths(tmp_dir_result, "fetch")
+        tmp_dir_archive = system.JoinPaths(tmp_dir_result, "archive")
         system.MakeDirectory(
             dir = tmp_dir_fetch,
             verbose = verbose,
@@ -427,7 +427,7 @@ class Amazon(storebase.StoreBase):
 
         # Archive downloaded files
         success = archive.CreateArchiveFromFolder(
-            archive_file = os.path.join(tmp_dir_archive, "%s.7z" % output_name),
+            archive_file = system.JoinPaths(tmp_dir_archive, "%s.7z" % output_name),
             source_dir = tmp_dir_fetch,
             volume_size = "4092m",
             verbose = verbose,

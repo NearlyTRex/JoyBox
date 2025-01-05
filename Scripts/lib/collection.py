@@ -100,8 +100,8 @@ def CreateGameJsonFile(
     best_game_file = system.GetFilenameFile(best_game_file)
 
     # Get computer roots
-    computer_root_dlc = os.path.join(config.token_setup_main_root, config.json_key_dlc)
-    computer_root_updates = os.path.join(config.token_setup_main_root, config.json_key_update)
+    computer_root_dlc = system.JoinPaths(config.token_setup_main_root, config.json_key_dlc)
+    computer_root_updates = system.JoinPaths(config.token_setup_main_root, config.json_key_update)
 
     # Get computer installers
     computer_installers = []
@@ -472,7 +472,7 @@ def ScanForMetadataEntries(
     scan_directories = []
     if platforms.IsLetterPlatform(game_platform):
         for obj in system.GetDirectoryContents(game_dir):
-            scan_directories.append(os.path.join(game_dir, obj))
+            scan_directories.append(system.JoinPaths(game_dir, obj))
     else:
         scan_directories.append(game_dir)
 
@@ -551,7 +551,7 @@ def PublishMetadataEntries(
 
     # Write publish file
     success = system.TouchFile(
-        src = os.path.join(environment.GetPublishedMetadataRootDir(), game_category + ".html"),
+        src = system.JoinPaths(environment.GetPublishedMetadataRootDir(), game_category + ".html"),
         contents = publish_contents,
         encoding = None,
         verbose = verbose,
@@ -614,7 +614,7 @@ def DownloadMetadataAsset(
         return False
 
     # Get temp asset
-    tmp_asset_file_original = os.path.join(tmp_dir_result, system.ReplaceInvalidPathCharacters(system.GetFilenameFile(asset_url)))
+    tmp_asset_file_original = system.JoinPaths(tmp_dir_result, system.ReplaceInvalidPathCharacters(system.GetFilenameFile(asset_url)))
     tmp_asset_file_converted = tmp_asset_file_original + output_asset_ext
     system.MakeDirectory(
         dir = output_asset_dir,
