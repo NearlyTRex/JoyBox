@@ -308,6 +308,74 @@ def SetupRemote(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+# Get path MD5
+def GetPathMD5(
+    remote_name,
+    remote_type,
+    remote_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get rclone tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
+        return None
+
+    # Get md5sum command
+    md5sum_cmd = [
+        rclone_tool,
+        "md5sum",
+        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+    ]
+
+    # Run md5sum command
+    md5sum_output = command.RunOutputCommand(
+        cmd = md5sum_cmd,
+        options = command.CommandOptions(
+            blocking_processes = [rclone_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Get md5
+    md5sum_text = md5sum_output
+    if isinstance(md5sum_output, bytes):
+        md5sum_text = md5sum_output.decode()
+    if "file does not exist" in md5sum_text or "error" in md5sum_text:
+        return None
+    md5sum_parts = md5sum_text.strip().split("  ", 1)
+    if len(md5sum_parts) > 1:
+        return md5sum_parts[0]
+    return None
+
+# Check if path matches md5
+def DoesPathMatchMD5(
+    remote_name,
+    remote_type,
+    remote_path,
+    expected_md5,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get MD5 checksum from remote path
+    remote_md5 = GetFileMD5Sum(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = remote_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Check match
+    if remote_md5 and remote_md5.lower() == expected_md5.lower():
+        return True
+    return False
+
 # Check if path exists
 def DoesPathExist(
     remote_name,
