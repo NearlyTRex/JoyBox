@@ -183,6 +183,45 @@ class ArgumentParser:
             args = args,
             description = description)
 
+    # Get selected supercategories
+    def get_selected_supercategories(self, argname = "game_supercategory"):
+        args, unknown = self.parse_known_args()
+        supercategories = []
+        supercategory_arg = getattr(args, argname, None)
+        if supercategory_arg:
+            supercategories = [supercategory_arg]
+        else:
+            supercategories = config.Supercategory.members()
+        return supercategories
+
+    # Get selected categories
+    def get_selected_categories(self, argname = "game_category"):
+        args, unknown = self.parse_known_args()
+        categories = []
+        category_arg = getattr(args, argname, None)
+        if category_arg:
+            categories = [category_arg]
+        else:
+            categories = config.Category.members()
+        return categories
+
+    # Get selected subcategories
+    def get_selected_subcategories(
+        self,
+        category_argname = "game_category",
+        subcategory_argname = "game_subcategory"):
+        args, unknown = self.parse_known_args()
+        subcategory_map = {}
+        for category in self.get_selected_categories(argname = category_argname):
+            subcategories = []
+            subcategory_arg = getattr(args, subcategory_argname, None)
+            if subcategory_arg:
+                subcategories = [subcategory_arg]
+            else:
+                subcategories = config.subcategory_map.get(category, [])
+            subcategory_map[category] = subcategories
+        return subcategory_map
+
     #################################################
 
     # Add common arguments
