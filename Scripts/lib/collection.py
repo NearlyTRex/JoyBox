@@ -8,14 +8,69 @@ import environment
 import gameinfo
 import platforms
 import system
-import cryption
-import network
 import asset
+import network
+import cryption
 import locker
+import hashing
 import jsondata
 import metadata
 import metadataentry
 import metadatacollector
+
+############################################################
+
+# Upload game file
+def UploadGameFile(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    game_name,
+    game_root = None,
+    passphrase = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get platform
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+
+    # Get base path
+    base_path = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
+    if system.IsPathValid(game_root):
+        base_path = os.path.realpath(game_root)
+
+    # Encrypt all files
+    success = cryption.EncryptFiles(
+        src = base_path,
+        passphrase = passphrase,
+        delete_original = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Hash all files
+    success = hashing.HashCategoryFiles(
+        src = base_path,
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        passphrase = passphrase,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Upload all files
+    success = locker.UploadPath(
+        src = base_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
 
 ############################################################
 
@@ -59,7 +114,7 @@ def CreateGameJsonFile(
     all_files = system.BuildFileList(base_path)
     if isinstance(passphrase, str) and len(passphrase) > 0:
         all_files = cryption.GetRealFilePaths(
-            source_files = all_files,
+            src = all_files,
             passphrase = passphrase,
             verbose = verbose,
             pretend_run = pretend_run,

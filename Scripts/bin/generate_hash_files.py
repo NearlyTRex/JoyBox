@@ -65,7 +65,7 @@ def main():
         if not args.game_subcategory:
             system.LogErrorAndQuit("Game subcategory is required for custom mode")
         hashing.HashCategoryFiles(
-            input_path = source_file_root,
+            src = source_file_root,
             game_supercategory = args.game_supercategory,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
@@ -80,7 +80,7 @@ def main():
         # Specific category/subcategory
         if args.game_category and args.game_subcategory:
             hashing.HashCategoryFiles(
-                input_path = system.JoinPaths(source_file_root, args.game_category, args.game_subcategory),
+                src = system.JoinPaths(source_file_root, args.game_category, args.game_subcategory),
                 game_supercategory = args.game_supercategory,
                 game_category = args.game_category,
                 game_subcategory = args.game_subcategory,
@@ -93,7 +93,7 @@ def main():
         elif args.game_category:
             for game_subcategory in config.subcategory_map[args.game_category]:
                 hashing.HashCategoryFiles(
-                    input_path = system.JoinPaths(source_file_root, args.game_category, game_subcategory),
+                    src = system.JoinPaths(source_file_root, args.game_category, game_subcategory),
                     game_supercategory = args.game_supercategory,
                     game_category = args.game_category,
                     game_subcategory = game_subcategory,
@@ -107,7 +107,7 @@ def main():
             for game_category in config.Category.members():
                 for game_subcategory in config.subcategory_map[game_category]:
                     hashing.HashCategoryFiles(
-                        input_path = system.JoinPaths(source_file_root, game_category, game_subcategory),
+                        src = system.JoinPaths(source_file_root, game_category, game_subcategory),
                         game_supercategory = args.game_supercategory,
                         game_category = game_category,
                         game_subcategory = game_subcategory,

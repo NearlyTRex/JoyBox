@@ -17,7 +17,7 @@ import arguments
 import setup
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Scan roms.")
+parser = arguments.ArgumentParser(description = "Scan roms files.")
 parser.add_enum_argument(
     args = ("-l", "--source_type"),
     arg_type = config.SourceType,

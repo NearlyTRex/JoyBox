@@ -10,9 +10,9 @@ import system
 import hashing
 
 # Determine if file is encrypted
-def IsFileEncrypted(source_file):
+def IsFileEncrypted(src):
     for ext in config.EncryptedFileType.cvalues():
-        if source_file.endswith(ext):
+        if src.endswith(ext):
             return True
     return False
 
@@ -21,10 +21,10 @@ def IsPassphraseValid(passphrase):
     return isinstance(passphrase, str) and len(passphrase) > 0
 
 # Generate encrypted filename
-def GenerateEncryptedFilename(source_file):
-    if IsFileEncrypted(source_file):
-        return source_file
-    return hashing.CalculateStringMD5(source_file) + config.EncryptedFileType.ENC.val()
+def GenerateEncryptedFilename(src):
+    if IsFileEncrypted(src):
+        return src
+    return hashing.CalculateStringMD5(src) + config.EncryptedFileType.ENC.val()
 
 # Generate encrypted path
 def GenerateEncryptedPath(source_path):
@@ -34,7 +34,7 @@ def GenerateEncryptedPath(source_path):
 
 # Get embedded filename
 def GetEmbeddedFilename(
-    source_file,
+    src,
     passphrase,
     verbose = False,
     pretend_run = False,
@@ -58,7 +58,7 @@ def GetEmbeddedFilename(
         "--passphrase", passphrase,
         "--quiet",
         "--batch",
-        source_file
+        src
     ]
 
     # Run info command
@@ -77,7 +77,7 @@ def GetEmbeddedFilename(
 
 # Get embedded file info
 def GetEmbeddedFileInfo(
-    source_file,
+    src,
     passphrase,
     hasher,
     chunksize = config.hash_chunk_size,
@@ -87,7 +87,7 @@ def GetEmbeddedFileInfo(
 
     # Get embedded filename
     embedded_filename = GetEmbeddedFilename(
-        source_file = source_file,
+        src = src,
         passphrase = passphrase,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -107,7 +107,7 @@ def GetEmbeddedFileInfo(
 
     # Decrypt file
     success = DecryptFile(
-        source_file = source_file,
+        src = src,
         passphrase = passphrase,
         output_file = tmp_file,
         verbose = verbose,
@@ -132,7 +132,7 @@ def GetEmbeddedFileInfo(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     file_info["size"] = os.path.getsize(tmp_file)
-    file_info["mtime"] = int(os.path.getmtime(source_file))
+    file_info["mtime"] = int(os.path.getmtime(src))
 
     # Clean up
     system.RemoveDirectory(
@@ -146,16 +146,16 @@ def GetEmbeddedFileInfo(
 
 # Get real file path
 def GetRealFilePath(
-    source_file,
+    src,
     passphrase,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if not IsFileEncrypted(source_file):
-        return source_file
-    real_dir = system.GetFilenameDirectory(source_file)
+    if not IsFileEncrypted(src):
+        return src
+    real_dir = system.GetFilenameDirectory(src)
     real_name = GetEmbeddedFilename(
-        source_file = source_file,
+        src = src,
         passphrase = passphrase,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -166,16 +166,16 @@ def GetRealFilePath(
 
 # Get real file paths
 def GetRealFilePaths(
-    source_files,
+    src,
     passphrase,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     real_paths = []
-    if isinstance(source_files, list):
-        for source_file in source_files:
+    if isinstance(src, list):
+        for source_file in src:
             real_path = GetRealFilePath(
-                source_file = source_file,
+                src = source_file,
                 passphrase = passphrase,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -186,7 +186,7 @@ def GetRealFilePaths(
 
 # Encrypt file
 def EncryptFile(
-    source_file,
+    src,
     passphrase,
     output_file = None,
     delete_original = False,
@@ -198,21 +198,21 @@ def EncryptFile(
     system.AssertIsNonEmptyString(passphrase, "passphrase")
 
     # Check source file
-    if not system.IsPathValid(source_file):
+    if not system.IsPathValid(src):
         return False
 
     # Check output file
     if not output_file:
-        output_file = GenerateEncryptedPath(source_file)
+        output_file = GenerateEncryptedPath(src)
     if not system.IsPathValid(output_file):
         return False
     if system.DoesPathExist(output_file):
         return True
 
     # Plain copy if already encrypted
-    if IsFileEncrypted(source_file):
+    if IsFileEncrypted(src):
         success = system.SmartCopy(
-            src = source_file,
+            src = src,
             dest = output_file,
             skip_existing = True,
             verbose = verbose,
@@ -238,7 +238,7 @@ def EncryptFile(
         "--quiet",
         "--batch",
         "--output", output_file,
-        source_file
+        src
     ]
 
     # Run encrypt command
@@ -250,13 +250,13 @@ def EncryptFile(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
-        system.LogError("Unable to encrypt file '%s'" % source_file)
+        system.LogError("Unable to encrypt file '%s'" % src)
         return False
 
     # Delete original
     if delete_original and os.path.exists(output_file):
         system.RemoveFile(
-            file = source_file,
+            file = src,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -266,7 +266,7 @@ def EncryptFile(
 
 # Decrypt file
 def DecryptFile(
-    source_file,
+    src,
     passphrase,
     output_file = None,
     delete_original = False,
@@ -278,13 +278,13 @@ def DecryptFile(
     system.AssertIsNonEmptyString(passphrase, "passphrase")
 
     # Check source file
-    if not system.IsPathValid(source_file):
+    if not system.IsPathValid(src):
         return False
 
     # Check output file
     if not output_file:
         output_file = GetRealFilePath(
-            source_file = source_file,
+            src = src,
             passphrase = passphrase,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -295,9 +295,9 @@ def DecryptFile(
         return True
 
     # Plain copy if already decrypted
-    if not IsFileEncrypted(source_file):
+    if not IsFileEncrypted(src):
         success = system.SmartCopy(
-            src = source_file,
+            src = src,
             dest = output_file,
             skip_existing = True,
             verbose = verbose,
@@ -322,7 +322,7 @@ def DecryptFile(
         "--quiet",
         "--batch",
         "--decrypt",
-        source_file
+        src
     ]
 
     # Run decrypt command
@@ -334,16 +334,67 @@ def DecryptFile(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
-        system.LogError("Unable to decrypt file '%s'" % source_file)
+        system.LogError("Unable to decrypt file '%s'" % src)
         return False
 
     # Delete original
     if delete_original and os.path.exists(output_file):
         system.RemoveFile(
-            file = source_file,
+            file = src,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(output_file)
+
+# Encrypt files
+def EncryptFiles(
+    source_path,
+    passphrase,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    output_files = []
+    for file in system.BuildFileList(source_path):
+        output_file = GenerateEncryptedPath(file)
+        success = EncryptFile(
+            src = file,
+            output_file = output_file,
+            passphrase = passphrase,
+            delete_original = delete_original,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if success:
+            output_files.append(output_file)
+    return output_files
+
+# Decrypt files
+def DecryptFiles(
+    source_path,
+    passphrase,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    output_files = []
+    for file in system.BuildFileList(source_path):
+        output_file = GetRealFilePath(
+            src = file,
+            passphrase = passphrase,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        success = DecryptFile(
+            src = file,
+            output_file = output_file,
+            passphrase = passphrase,
+            delete_original = delete_original,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if success:
+            output_files.append(output_file)
+    return output_files

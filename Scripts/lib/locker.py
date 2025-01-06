@@ -158,24 +158,13 @@ def DownloadAndDecryptPath(
         return (False, "")
 
     # Decrypt files
-    output_files = []
-    for file in system.BuildFileList(result):
-        output_file = cryption.GetRealFilePath(
-            source_file = file,
-            passphrase = locker_passphrase,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        success = cryption.DecryptFile(
-            source_file = file,
-            output_file = output_file,
-            passphrase = locker_passphrase,
-            delete_original = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if success:
-            output_files.append(output_file)
+    output_files = cryption.DecryptFiles(
+        src = result,
+        passphrase = locker_passphrase,
+        delete_original = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if len(output_files) == 0:
         return (False, "")
 
@@ -196,19 +185,13 @@ def UploadAndEncryptPath(
     locker_passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
 
     # Encrypt files
-    output_files = []
-    for file in system.BuildFileList(src):
-        output_file = cryption.GenerateEncryptedPath(file)
-        success = cryption.EncryptFile(
-            source_file = file,
-            output_file = output_file,
-            passphrase = locker_passphrase,
-            delete_original = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if success:
-            output_files.append(output_file)
+    output_files = cryption.EncryptFiles(
+        src = src,
+        passphrase = locker_passphrase,
+        delete_original = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if len(output_files) == 0:
         return False
 

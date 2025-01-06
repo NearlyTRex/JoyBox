@@ -49,7 +49,7 @@ def main():
     if args.encrypt:
         for file in system.BuildFileList(input_path):
             cryption.EncryptFile(
-                source_file = file,
+                src = file,
                 passphrase = passphrase,
                 delete_original = not args.keep_originals,
                 verbose = args.verbose,
@@ -60,7 +60,7 @@ def main():
     elif args.decrypt:
         for file in system.BuildFileList(input_path):
             cryption.DecryptFile(
-                source_file = file,
+                src = file,
                 passphrase = passphrase,
                 delete_original = not args.keep_originals,
                 verbose = args.verbose,

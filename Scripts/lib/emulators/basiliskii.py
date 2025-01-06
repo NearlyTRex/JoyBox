@@ -184,7 +184,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                filename = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("BasiliskII"), filename),
+                src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("BasiliskII"), filename),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
