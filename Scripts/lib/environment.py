@@ -457,34 +457,27 @@ def GetHashesMetadataFile(game_supercategory, game_category, game_subcategory):
 def GetJsonMetadataRootDir():
     return system.JoinPaths(GetMetadataRootDir(), "Json")
 
-# Get json roms metadata root dir
-def GetJsonRomsMetadataRootDir():
+# Get json rom metadata dir
+def GetJsonMetadataDir(game_supercategory, game_category, game_subcategory):
     return system.JoinPaths(
         GetJsonMetadataRootDir(),
-        config.Supercategory.ROMS)
-
-# Get json rom metadata dir
-def GetJsonRomMetadataDir(game_category, game_subcategory):
-    return system.JoinPaths(
-        GetJsonRomsMetadataRootDir(),
+        game_supercategory,
         game_category,
         game_subcategory)
 
-# Get json rom metadata file
-def GetJsonRomMetadataFile(game_category, game_subcategory, game_name):
+# Get json metadata file
+def GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name):
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
     game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
     return system.JoinPaths(
-        GetJsonRomsMetadataRootDir(),
-        game_category,
-        game_subcategory,
+        GetJsonMetadataDir(game_supercategory, game_category, game_subcategory),
         game_name_path,
         game_name + ".json")
 
-# Get json rom metadata ignore file
-def GetJsonRomMetadataIgnoreFile(game_category, game_subcategory):
+# Get json metadata ignore file
+def GetJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcategory):
     return system.JoinPaths(
-        GetJsonRomMetadataDir(game_category, game_subcategory),
+        GetJsonMetadataDir(game_supercategory, game_category, game_subcategory),
         "ignores.json")
 
 ###########################################################

@@ -51,11 +51,11 @@ def main():
     for game_category in config.Category.members():
         for game_subcategory in config.subcategory_map[game_category]:
             game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-            for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
+            for game_name in gameinfo.FindAllGameNames(environment.GetJsonMetadataRootDir(), config.Supercategory.ROMS, game_category, game_subcategory):
 
                 # Get json file
-                json_file = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name)
-                if not os.path.exists(json_file):
+                json_file = environment.GetJsonMetadataFile(config.Supercategory.ROMS, game_category, game_subcategory, game_name)
+                if not system.IsPathFile(json_file):
                     continue
 
                 # Get game info

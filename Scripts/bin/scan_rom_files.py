@@ -70,7 +70,7 @@ def main():
     for game_category in config.Category.members():
         for game_subcategory in config.subcategory_map[game_category]:
             game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-            for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
+            for game_name in gameinfo.FindAllGameNames(environment.GetJsonMetadataRootDir(), config.Supercategory.ROMS, game_category, game_subcategory):
 
                 # Get scan path
                 scan_game_path = environment.GetLockerGamingRomDir(

@@ -354,7 +354,8 @@ def GetSelectedLaunchInfo(
         game_exe_list = runnable_files_likely
 
         # Get original json file
-        json_file = environment.GetJsonRomMetadataFile(
+        json_file = environment.GetJsonMetadataFile(
+            game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),
             game_name = game_info.get_name())

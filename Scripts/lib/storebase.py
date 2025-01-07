@@ -76,6 +76,10 @@ class StoreBase:
     def GetPlatform(self):
         return ""
 
+    # Get supercategory
+    def GetSupercategory(self):
+        return ""
+
     # Get category
     def GetCategory(self):
         return ""
@@ -571,7 +575,7 @@ class StoreBase:
         pretend_run = False,
         exit_on_failure = False):
         json_files = system.BuildFileListByExtensions(
-            root = environment.GetJsonRomMetadataDir(self.GetCategory(), self.GetSubcategory()),
+            root = environment.GetJsonMetadataDir(self.GetSupercategory(), self.GetCategory(), self.GetSubcategory()),
             extensions = [".json"])
         for json_file in json_files:
             json_data = system.ReadJsonFile(

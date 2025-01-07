@@ -79,42 +79,16 @@ def main():
 
     # Automatic according to standard layout
     elif args.generation_mode == config.GenerationModeType.STANDARD:
-
-        # Specific category/subcategory
-        if args.game_category and args.game_subcategory:
-            collection.CreateGameJsonFiles(
-                game_category = args.game_category,
-                game_subcategory = args.game_subcategory,
-                game_root = source_file_root,
-                passphrase = passphrase,
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
-
-        # Specific category/all subcategories in that category
-        elif args.game_category:
-            for gaming_subcategory in config.subcategory_map[args.game_category]:
+        for game_category, game_subcategories in parser.get_selected_subcategories().items():
+            for game_subcategory in game_subcategories:
                 collection.CreateGameJsonFiles(
-                    game_category = args.game_category,
-                    game_subcategory = gaming_subcategory,
+                    game_category = game_category,
+                    game_subcategory = game_subcategory,
                     game_root = source_file_root,
                     passphrase = passphrase,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
-
-        # All categories/subcategories
-        else:
-            for gaming_category in config.Category.members():
-                for gaming_subcategory in config.subcategory_map[gaming_category]:
-                    collection.CreateGameJsonFiles(
-                        game_category = gaming_category,
-                        game_subcategory = gaming_subcategory,
-                        game_root = source_file_root,
-                        passphrase = passphrase,
-                        verbose = args.verbose,
-                        pretend_run = args.pretend_run,
-                        exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

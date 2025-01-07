@@ -8,23 +8,24 @@ import sys
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
-import system
 import environment
-import hashing
+import system
+import sync
 import ini
 import arguments
 import setup
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Generate file hashes.")
+parser = arguments.ArgumentParser(description = "Upload rom files.")
 parser.add_input_path_argument()
 parser.add_game_supercategory_argument()
 parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
+parser.add_game_name_argument()
 parser.add_enum_argument(
     args = ("-l", "--source_type"),
     arg_type = config.SourceType,
-    default = config.SourceType.REMOTE,
+    default = config.SourceType.LOCAL,
     description = "Source type")
 parser.add_enum_argument(
     args = ("-m", "--generation_mode"),
@@ -64,11 +65,13 @@ def main():
             system.LogErrorAndQuit("Game category is required for custom mode")
         if not args.game_subcategory:
             system.LogErrorAndQuit("Game subcategory is required for custom mode")
-        hashing.HashCategoryFiles(
-            src = source_file_root,
+        if not args.game_name:
+            system.LogErrorAndQuit("Game name is required for custom mode")
+        collection.UploadGameFile(
             game_supercategory = args.game_supercategory,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
+            game_name = args.game_name,
             passphrase = passphrase,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -79,11 +82,11 @@ def main():
         for game_supercategory in parser.get_selected_supercategories():
             for game_category, game_subcategories in parser.get_selected_subcategories().items():
                 for game_subcategory in game_subcategories:
-                    hashing.HashCategoryFiles(
-                        src = system.JoinPaths(source_file_root, game_category, game_subcategory),
+                    collection.UploadGameFiles(
                         game_supercategory = game_supercategory,
                         game_category = game_category,
                         game_subcategory = game_subcategory,
+                        game_root = source_file_root,
                         passphrase = passphrase,
                         verbose = args.verbose,
                         pretend_run = args.pretend_run,

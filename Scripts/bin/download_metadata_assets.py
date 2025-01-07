@@ -17,12 +17,24 @@ import setup
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Download metadata assets.")
+parser.add_game_supercategory_argument()
 parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
+parser.add_game_name_argument()
 parser.add_enum_argument(
     args = ("-t", "--asset_type"),
     arg_type = config.AssetType,
     description = "Asset type")
+parser.add_enum_argument(
+    args = ("-l", "--source_type"),
+    arg_type = config.SourceType,
+    default = config.SourceType.REMOTE,
+    description = "Source type")
+parser.add_enum_argument(
+    args = ("-m", "--generation_mode"),
+    arg_type = config.GenerationModeType,
+    default = config.GenerationModeType.STANDARD,
+    description = "Generation mode")
 parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Skip existing files")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
@@ -33,62 +45,38 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Specific category/subcategory
-    if args.game_category and args.game_subcategory:
-        game_platform = gameinfo.DeriveGamePlatformFromCategories(args.game_category, args.game_subcategory)
-        for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), args.game_category, args.game_subcategory):
+    # Manually specify all parameters
+    if args.generation_mode == config.GenerationModeType.CUSTOM:
+        if not args.game_category:
+            system.LogErrorAndQuit("Game category is required for custom mode")
+        if not args.game_subcategory:
+            system.LogErrorAndQuit("Game subcategory is required for custom mode")
+        if not args.game_name:
+            system.LogErrorAndQuit("Game name is required for custom mode")
+        collection.DownloadMetadataAsset(
+            game_category = args.game_category,
+            game_subcategory = args.game_subcategory,
+            game_name = args.game_name,
+            asset_url = None,
+            asset_type = args.asset_type,
+            skip_existing = args.skip_existing,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
 
-            # Download metadata asset
-            system.LogInfo("Downloading metadata assets for %s - %s..." % (game_platform, game_name))
-            collection.DownloadMetadataAsset(
-                game_category = args.game_category,
-                game_subcategory = args.game_subcategory,
-                game_name = game_name,
-                asset_url = None,
-                asset_type = args.asset_type,
-                skip_existing = args.skip_existing,
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
-
-    # Specific category/all subcategories in that category
-    elif args.game_category:
-        for game_subcategory in config.subcategory_map[args.game_category]:
-            game_platform = gameinfo.DeriveGamePlatformFromCategories(args.game_category, game_subcategory)
-            for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), args.game_category, game_subcategory):
-
-                # Download metadata asset
-                system.LogInfo("Downloading metadata assets for %s - %s..." % (game_platform, game_name))
-                collection.DownloadMetadataAsset(
-                    game_category = args.game_category,
+    # Automatic according to standard layout
+    elif args.generation_mode == config.GenerationModeType.STANDARD:
+        for game_category, game_subcategories in parser.get_selected_subcategories().items():
+            for game_subcategory in game_subcategories:
+                collection.DownloadMetadataAssets(
+                    game_category = game_category,
                     game_subcategory = game_subcategory,
-                    game_name = game_name,
                     asset_url = None,
                     asset_type = args.asset_type,
                     skip_existing = args.skip_existing,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
-
-    # All categories/subcategories
-    else:
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-                game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-                for game_name in gameinfo.FindAllGameNames(environment.GetJsonRomsMetadataRootDir(), game_category, game_subcategory):
-
-                    # Download metadata asset
-                    system.LogInfo("Downloading metadata assets for %s - %s..." % (game_platform, game_name))
-                    collection.DownloadMetadataAsset(
-                        game_category = game_category,
-                        game_subcategory = game_subcategory,
-                        game_name = game_name,
-                        asset_url = None,
-                        asset_type = args.asset_type,
-                        skip_existing = args.skip_existing,
-                        verbose = args.verbose,
-                        pretend_run = args.pretend_run,
-                        exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

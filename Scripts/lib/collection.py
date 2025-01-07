@@ -72,6 +72,30 @@ def UploadGameFile(
         exit_on_failure = exit_on_failure)
     return success
 
+# Upload game files
+def UploadGameFiles(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    game_root = None,
+    passphrase = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for game_name in gameinfo.FindAllGameNames(game_root, game_supercategory, game_category, game_subcategory):
+        success = UploadGameFile(
+            game_supercategory = game_supercategory,
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            game_name = game_name,
+            passphrase = passphrase,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+    return True
+
 ############################################################
 
 # Create game json file
@@ -95,7 +119,7 @@ def CreateGameJsonFile(
         base_path = os.path.realpath(game_root)
 
     # Get json file path
-    json_file_path = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name)
+    json_file_path = environment.GetJsonMetadataFile(config.Supercategory.ROMS, game_category, game_subcategory, game_name)
 
     # Build json data
     json_file_data = {}
@@ -254,7 +278,7 @@ def CreateGameJsonFiles(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_name in gameinfo.FindAllGameNames(game_root, game_category, game_subcategory):
+    for game_name in gameinfo.FindAllGameNames(game_root, config.Supercategory.ROMS, game_category, game_subcategory):
         success = CreateGameJsonFile(
             game_category = game_category,
             game_subcategory = game_subcategory,
@@ -278,7 +302,7 @@ def GetGameJsonIgnoreEntries(
     exit_on_failure = False):
 
     # Get json file path
-    json_file_path = environment.GetJsonRomMetadataIgnoreFile(game_category, game_subcategory)
+    json_file_path = environment.GetJsonMetadataIgnoreFile(config.Supercategory.ROMS, game_category, game_subcategory)
 
     # Create file if necessary
     if not os.path.exists(json_file_path):
@@ -311,7 +335,7 @@ def AddGameJsonIgnoreEntry(
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
     # Get json file path
-    json_file_path = environment.GetJsonRomMetadataIgnoreFile(game_category, game_subcategory)
+    json_file_path = environment.GetJsonMetadataIgnoreFile(config.Supercategory.ROMS, game_category, game_subcategory)
 
     # Create file if necessary
     if not os.path.exists(json_file_path):
@@ -384,12 +408,12 @@ def AddMetadataEntry(
 
     # Derive game data
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-    game_json_file = environment.GetJsonRomMetadataFile(game_category, game_subcategory, game_name)
+    game_json_file = environment.GetJsonMetadataFile(config.Supercategory.ROMS, game_category, game_subcategory, game_name)
 
     # Adjust json file path
     game_json_file = system.RebaseFilePath(
         path = game_json_file,
-        old_base_path = environment.GetJsonRomsMetadataRootDir(),
+        old_base_path = environment.GetJsonMetadataRootDir(),
         new_base_path = "")
 
     # Create new entry
@@ -425,7 +449,7 @@ def AddMetadataEntries(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_name in gameinfo.FindAllGameNames(game_root, game_category, game_subcategory):
+    for game_name in gameinfo.FindAllGameNames(game_root, config.Supercategory.ROMS, game_category, game_subcategory):
         success = AddMetadataEntry(
             game_category = game_category,
             game_subcategory = game_subcategory,
@@ -497,7 +521,7 @@ def UpdateMetadataEntries(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_name in gameinfo.FindAllGameNames(game_root, game_category, game_subcategory):
+    for game_name in gameinfo.FindAllGameNames(game_root, config.Supercategory.ROMS, game_category, game_subcategory):
         success = UpdateMetadataEntry(
             game_category = game_category,
             game_subcategory = game_subcategory,
@@ -733,6 +757,31 @@ def DownloadMetadataAsset(
         exit_on_failure = exit_on_failure)
 
     # Should be successful
+    return True
+
+# Download metadata assets
+def DownloadMetadataAssets(
+    game_category,
+    game_subcategory,
+    asset_url,
+    asset_type,
+    skip_existing = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for game_name in gameinfo.FindAllGameNames(game_root, config.Supercategory.ROMS, game_category, game_subcategory):
+        success = DownloadMetadataAsset(
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            game_name = game_name,
+            asset_url = asset_url,
+            asset_type = asset_type,
+            skip_existing = skip_existing,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
     return True
 
 ############################################################

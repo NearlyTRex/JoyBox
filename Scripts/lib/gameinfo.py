@@ -607,6 +607,8 @@ class GameInfo:
 
 # Find best suited game file
 def FindBestGameFile(game_files):
+
+    # Collect game file entries
     game_file_entries = []
     if isinstance(game_files, list):
         for file in game_files:
@@ -618,6 +620,8 @@ def FindBestGameFile(game_files):
                     game_file_entry["weight"] = config.gametype_weights[key]
                     break
             game_file_entries.append(game_file_entry)
+
+    # Use this to get the best file
     game_file = ""
     for game_file_entry in sorted(game_file_entries, key=lambda d: d["weight"]):
         game_file = game_file_entry["file"]
@@ -625,13 +629,17 @@ def FindBestGameFile(game_files):
     return game_file
 
 # Find all game names
-def FindAllGameNames(base_dir, game_category, game_subcategory):
+def FindAllGameNames(base_dir, game_supercategory, game_category, game_subcategory):
+
+    # Get base path
+    base_path = system.JoinPaths(base_dir, game_supercategory, game_category, game_subcategory)
+
+    # Get platform
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+
+    # Collect game names
     game_names = []
-    base_path = system.JoinPaths(
-        base_dir,
-        game_category,
-        game_subcategory)
-    if game_category == config.Category.COMPUTER:
+    if platforms.IsLetterPlatform(game_platform):
         for game_letter in system.GetDirectoryContents(base_path):
             for game_name in system.GetDirectoryContents(system.JoinPaths(base_path, game_letter)):
                 game_names.append(game_name)

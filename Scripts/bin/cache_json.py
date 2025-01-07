@@ -48,7 +48,8 @@ def main():
 
     # Next use category values
     elif args.game_category and args.game_subcategory and args.game_name:
-        json_file = environment.GetJsonRomMetadataFile(
+        json_file = environment.GetJsonMetadataFile(
+            game_supercategory = config.Supercategory.ROMS,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
             game_name = args.game_name)

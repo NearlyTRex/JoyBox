@@ -35,6 +35,10 @@ class Itchio(storebase.StoreBase):
     def GetPlatform(self):
         return config.Platform.COMPUTER_ITCHIO
 
+    # Get supercategory
+    def GetSupercategory(self):
+        return config.Supercategory.ROMS
+
     # Get category
     def GetCategory(self):
         return config.Category.COMPUTER

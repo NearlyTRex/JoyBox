@@ -56,7 +56,8 @@ def main():
     if system.IsPathValid(args.input_path):
         input_path = parser.get_input_path()
     if not input_path:
-        input_path = environment.GetJsonRomMetadataDir(
+        input_path = environment.GetJsonMetadataDir(
+            game_supercategory = store_obj.GetSupercategory(),
             game_category = store_obj.GetCategory(),
             game_subcategory = store_obj.GetSubcategory())
 
