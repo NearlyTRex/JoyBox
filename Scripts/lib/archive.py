@@ -96,7 +96,7 @@ def IsCreatableArchiveType(archive_type):
     return False
 
 # Determine if extractable archive type
-def IsExtractableArchiveType(archive_file):
+def IsExtractableArchiveType(archive_type):
     if archive_type in config.ArchiveZipFileType.members():
         return True
     if archive_type in config.Archive7zFileType.members():
