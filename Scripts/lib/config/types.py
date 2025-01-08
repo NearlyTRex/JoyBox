@@ -21,6 +21,27 @@ class EnumType(enum.Enum):
     def __str__(self):
         return self.value
 
+    def __hash__(self):
+        return hash(self.value)
+
+    def __eq__(self, other):
+        if isinstance(other, EnumType):
+            return self.val() == other.val()
+        if isinstance(other, str):
+            return self.val() == other
+        return False
+
+    def __contains__(cls, other):
+        if isinstance(other, cls):
+            return other in cls.members()
+        if isinstance(other, EnumType):
+            for member in cls.members():
+                if member.val() == other.val():
+                    return True
+        if isinstance(other, str):
+            return any(member.val() == other for member in cls.members())
+        return False
+
     @classmethod
     def members(cls):
         return [member for member in cls.__members__.values()]
@@ -38,6 +59,20 @@ class EnumType(enum.Enum):
         if isinstance(value, cls):
             return True
         return value in cls.values()
+
+    @classmethod
+    def from_enum(cls, other):
+        if isinstance(other, cls):
+            return other
+        if isinstance(other, EnumType):
+            for member in cls.members():
+                if member.val() == other.val():
+                    return member
+        if isinstance(other, str):
+            for member in cls.members():
+                if member.val() == other:
+                    return member
+        return None
 
     @classmethod
     def from_string(cls, value):
