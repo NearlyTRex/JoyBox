@@ -216,53 +216,31 @@ def GetLockerRootDir(source_type = None):
     else:
         return GetLocalLockerRootDir()
 
+###########################################################
+# Locker - Development
+###########################################################
+
 # Get locker development root dir
 def GetLockerDevelopmentRootDir(source_type = None):
     return system.JoinPaths(
         GetLockerRootDir(source_type),
         config.LockerType.DEVELOPMENT)
 
+# Get locker development archives root dir
+def GetLockerDevelopmentArchivesRootDir(source_type = None):
+    return system.JoinPaths(
+        GetLockerDevelopmentRootDir(source_type),
+        "Archive")
+
+###########################################################
+# Locker - Gaming
+###########################################################
+
 # Get locker gaming root dir
 def GetLockerGamingRootDir(source_type = None):
     return system.JoinPaths(
         GetLockerRootDir(source_type),
         config.LockerType.GAMING)
-
-# Get locker music root dir
-def GetLockerMusicRootDir(source_type = None):
-    return system.JoinPaths(
-        GetLockerRootDir(source_type),
-        config.LockerType.MUSIC)
-
-# Get locker photos root dir
-def GetLockerPhotosRootDir(source_type = None):
-    return system.JoinPaths(
-        GetLockerRootDir(source_type),
-        config.LockerType.PHOTOS)
-
-# Get locker programs root dir
-def GetLockerProgramsRootDir(source_type = None):
-    return system.JoinPaths(
-        GetLockerRootDir(source_type),
-        config.LockerType.PROGRAMS)
-
-# Get locker programs tools root dir
-def GetLockerProgramsToolsRootDir(source_type = None):
-    return system.JoinPaths(
-        GetLockerProgramsRootDir(source_type),
-        "Tools")
-
-# Get locker gaming assets root dir
-def GetLockerGamingAssetsRootDir(source_type = None):
-    return system.JoinPaths(
-        GetLockerGamingRootDir(source_type),
-        config.Supercategory.ASSETS)
-
-# Get locker gaming emulators root dir
-def GetLockerGamingEmulatorsRootDir(source_type = None):
-    return system.JoinPaths(
-        GetLockerGamingRootDir(source_type),
-        config.Supercategory.EMULATORS)
 
 # Get locker gaming roms root dir
 def GetLockerGamingRomsRootDir(source_type = None):
@@ -288,33 +266,62 @@ def GetLockerGamingTagsRootDir(source_type = None):
         GetLockerGamingRootDir(source_type),
         config.Supercategory.TAGS)
 
+###########################################################
+# Locker - Gaming - Files
+###########################################################
+
+# Get locker gaming files offset
+def GetLockerGamingFilesOffset(game_supercategory, game_category, game_subcategory, game_name):
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
+    return system.JoinPaths(
+        game_category,
+        game_subcategory,
+        game_name_path)
+
+# Get locker gaming categories dir
+def GetLockerGamingCategoriesDir(game_supercategory, game_category, game_subcategory, source_type = None):
+    return system.JoinPaths(
+        GetLockerGamingRootDir(source_type),
+        game_supercategory,
+        game_category,
+        game_subcategory)
+
+# Get locker gaming files dir
+def GetLockerGamingFilesDir(game_supercategory, game_category, game_subcategory, game_name, source_type = None):
+    return system.JoinPaths(
+        GetLockerGamingRootDir(source_type),
+        GetLockerGamingFilesOffset(game_supercategory, game_category, game_subcategory, game_name))
+
+###########################################################
+# Locker - Gaming - Saves
+###########################################################
+
 # Get locker gaming saves root dir
 def GetLockerGamingSavesRootDir(source_type = None):
     return system.JoinPaths(
         GetLockerGamingRootDir(source_type),
         config.Supercategory.SAVES)
 
-# Get locker gaming supercategory root dir
-def GetLockerGamingSupercategoryRootDir(supercategory, source_type = None):
-    if supercategory == config.Supercategory.ASSETS:
-        return GetLockerGamingAssetsRootDir(source_type)
-    elif supercategory == config.Supercategory.EMULATORS:
-        return GetLockerGamingEmulatorsRootDir(source_type)
-    elif supercategory == config.Supercategory.ROMS:
-        return GetLockerGamingRomsRootDir(source_type)
-    elif supercategory == config.Supercategory.DLC:
-        return GetLockerGamingDLCRootDir(source_type)
-    elif supercategory == config.Supercategory.UPDATES:
-        return GetLockerGamingUpdateRootDir(source_type)
-    elif supercategory == config.Supercategory.TAGS:
-        return GetLockerGamingTagsRootDir(source_type)
-    elif supercategory == config.Supercategory.SAVES:
-        return GetLockerGamingSavesRootDir(source_type)
-    return None
+# Get locker gaming save dir
+def GetLockerGamingSaveDir(game_category, game_subcategory, game_name, source_type = None):
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
+    return system.JoinPaths(
+        GetLockerGamingSavesRootDir(source_type),
+        game_category,
+        game_subcategory,
+        game_name_path)
 
-# Get locker development archives root dir
-def GetLockerDevelopmentArchivesRootDir(source_type = None):
-    return system.JoinPaths(GetLockerDevelopmentRootDir(source_type), "Archive")
+###########################################################
+# Locker - Gaming - Assets
+###########################################################
+
+# Get locker gaming assets root dir
+def GetLockerGamingAssetsRootDir(source_type = None):
+    return system.JoinPaths(
+        GetLockerGamingRootDir(source_type),
+        config.Supercategory.ASSETS)
 
 # Get locker gaming asset dir
 def GetLockerGamingAssetDir(game_category, game_subcategory, asset_type, source_type = None):
@@ -334,6 +341,16 @@ def GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_t
         asset_type,
         asset_file)
 
+###########################################################
+# Locker - Gaming - Emulators
+###########################################################
+
+# Get locker gaming emulators root dir
+def GetLockerGamingEmulatorsRootDir(source_type = None):
+    return system.JoinPaths(
+        GetLockerGamingRootDir(source_type),
+        config.Supercategory.EMULATORS)
+
 # Get locker gaming emulator binaries dir
 def GetLockerGamingEmulatorBinariesDir(emu_name, emu_platform, source_type = None):
     return system.JoinPaths(
@@ -349,37 +366,41 @@ def GetLockerGamingEmulatorSetupDir(emu_name, source_type = None):
         emu_name,
         "Setup")
 
-# Get locker gaming rom dir offset
-def GetLockerGamingRomDirOffset(game_category, game_subcategory, game_name):
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-    game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
-    return system.JoinPaths(
-        game_category,
-        game_subcategory,
-        game_name_path)
+###########################################################
+# Locker - Music
+###########################################################
 
-# Get locker gaming rom dir
-def GetLockerGamingRomDir(game_category, game_subcategory, game_name, source_type = None):
+# Get locker music root dir
+def GetLockerMusicRootDir(source_type = None):
     return system.JoinPaths(
-        GetLockerGamingRomsRootDir(source_type),
-        GetLockerGamingRomDirOffset(game_category, game_subcategory, game_name))
+        GetLockerRootDir(source_type),
+        config.LockerType.MUSIC)
 
-# Get locker gaming rom category dir
-def GetLockerGamingRomCategoryDir(game_category, game_subcategory, source_type = None):
-    return system.JoinPaths(
-        GetLockerGamingRomsRootDir(source_type),
-        game_category,
-        game_subcategory)
+###########################################################
+# Locker - Photos
+###########################################################
 
-# Get locker gaming save dir
-def GetLockerGamingSaveDir(game_category, game_subcategory, game_name, source_type = None):
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-    game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
+# Get locker photos root dir
+def GetLockerPhotosRootDir(source_type = None):
     return system.JoinPaths(
-        GetLockerGamingSavesRootDir(source_type),
-        game_category,
-        game_subcategory,
-        game_name_path)
+        GetLockerRootDir(source_type),
+        config.LockerType.PHOTOS)
+
+###########################################################
+# Locker - Programs
+###########################################################
+
+# Get locker programs root dir
+def GetLockerProgramsRootDir(source_type = None):
+    return system.JoinPaths(
+        GetLockerRootDir(source_type),
+        config.LockerType.PROGRAMS)
+
+# Get locker programs tools root dir
+def GetLockerProgramsToolsRootDir(source_type = None):
+    return system.JoinPaths(
+        GetLockerProgramsRootDir(source_type),
+        "Tools")
 
 # Get locker program tool dir
 def GetLockerProgramToolDir(tool_name, tool_platform = None, source_type = None):

@@ -17,7 +17,6 @@ import setup
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Update metadata entries.")
-parser.add_input_path_argument()
 parser.add_game_supercategory_argument()
 parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
@@ -41,13 +40,6 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Get source file root
-    source_file_root = None
-    if args.input_path:
-        source_file_root = parser.get_input_path()
-    else:
-        source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.game_supercategory, args.source_type)
-
     # Manually specify all parameters
     if args.generation_mode == config.GenerationModeType.CUSTOM:
         if not args.game_category:
@@ -57,6 +49,7 @@ def main():
         if not args.game_name:
             system.LogErrorAndQuit("Game name is required for custom mode")
         collection.UpdateMetadataEntry(
+            game_supercategory = args.game_supercategory,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
             game_name = args.game_name,
@@ -66,15 +59,22 @@ def main():
 
     # Automatic according to standard layout
     elif args.generation_mode == config.GenerationModeType.STANDARD:
-        for game_category, game_subcategories in parser.get_selected_subcategories().items():
-            for game_subcategory in game_subcategories:
-                collection.UpdateMetadataEntries(
-                    game_category = game_category,
-                    game_subcategory = game_subcategory,
-                    game_root = source_file_root,
-                    verbose = args.verbose,
-                    pretend_run = args.pretend_run,
-                    exit_on_failure = args.exit_on_failure)
+        for game_supercategory in parser.get_selected_supercategories():
+            for game_category, game_subcategories in parser.get_selected_subcategories().items():
+                for game_subcategory in game_subcategories:
+                    game_names = gameinfo.FindLockerGameNames(
+                        game_supercategory,
+                        game_category,
+                        game_subcategory,
+                        args.source_type)
+                    for game_name in game_names:
+                        collection.UpdateMetadataEntry(
+                            game_supercategory = game_supercategory,
+                            game_category = game_category,
+                            game_subcategory = game_subcategory,
+                            verbose = args.verbose,
+                            pretend_run = args.pretend_run,
+                            exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

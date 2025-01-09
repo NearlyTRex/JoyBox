@@ -10,7 +10,7 @@ sys.path.append(lib_folder)
 import config
 import environment
 import system
-import sync
+import collection
 import ini
 import arguments
 import setup
@@ -45,13 +45,6 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Get source file root
-    source_file_root = None
-    if args.input_path:
-        source_file_root = parser.get_input_path()
-    else:
-        source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.game_supercategory, args.source_type)
-
     # Get passphrase
     passphrase = None
     if args.passphrase_type == config.PassphraseType.GENERAL:
@@ -72,6 +65,7 @@ def main():
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
             game_name = args.game_name,
+            game_root = parser.get_input_path(),
             passphrase = passphrase,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -82,15 +76,28 @@ def main():
         for game_supercategory in parser.get_selected_supercategories():
             for game_category, game_subcategories in parser.get_selected_subcategories().items():
                 for game_subcategory in game_subcategories:
-                    collection.UploadGameFiles(
-                        game_supercategory = game_supercategory,
-                        game_category = game_category,
-                        game_subcategory = game_subcategory,
-                        game_root = source_file_root,
-                        passphrase = passphrase,
-                        verbose = args.verbose,
-                        pretend_run = args.pretend_run,
-                        exit_on_failure = args.exit_on_failure)
+                    game_names = gameinfo.FindLockerGameNames(
+                        game_supercategory,
+                        game_category,
+                        game_subcategory,
+                        args.source_type)
+                    for game_name in game_names:
+                        game_root = environment.GetLockerGamingFilesDir(
+                            game_supercategory,
+                            game_category,
+                            game_subcategory,
+                            game_name,
+                            args.source_type)
+                        collection.UploadGameFile(
+                            game_supercategory = game_supercategory,
+                            game_category = game_category,
+                            game_subcategory = game_subcategory,
+                            game_name = game_name,
+                            game_root = game_root,
+                            passphrase = passphrase,
+                            verbose = args.verbose,
+                            pretend_run = args.pretend_run,
+                            exit_on_failure = args.exit_on_failure)
 
 # Start
 main()

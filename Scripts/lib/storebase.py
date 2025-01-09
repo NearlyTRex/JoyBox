@@ -215,6 +215,7 @@ class StoreBase:
 
         # Get all ignores
         ignores = collection.GetGameJsonIgnoreEntries(
+            game_supercategory = self.GetSupercategory(),
             game_category = self.GetCategory(),
             game_subcategory = self.GetSubcategory(),
             verbose = verbose,
@@ -268,6 +269,7 @@ class StoreBase:
             # Add to ignore
             if should_import.lower() == "i":
                 collection.AddGameJsonIgnoreEntry(
+                    game_supercategory = self.GetSupercategory(),
                     game_category = self.GetCategory(),
                     game_subcategory = self.GetSubcategory(),
                     game_identifier = info_identifier,
@@ -293,6 +295,7 @@ class StoreBase:
 
             # Create json file
             success = collection.CreateGameJsonFile(
+                game_supercategory = self.GetSupercategory(),
                 game_category = self.GetCategory(),
                 game_subcategory = self.GetSubcategory(),
                 game_name = entry_name,
@@ -306,6 +309,7 @@ class StoreBase:
 
             # Add metadata entry
             success = collection.AddMetadataEntry(
+                game_supercategory = self.GetSupercategory(),
                 game_category = self.GetCategory(),
                 game_subcategory = self.GetSubcategory(),
                 game_name = entry_name,
@@ -325,6 +329,7 @@ class StoreBase:
             # Download assets
             for asset_type in config.AssetMinType.members():
                 success = collection.DownloadMetadataAsset(
+                    game_supercategory = self.GetSupercategory(),
                     game_category = self.GetCategory(),
                     game_subcategory = self.GetSubcategory(),
                     game_name = entry_name,
@@ -343,6 +348,7 @@ class StoreBase:
 
             # Update metadata entry
             success = collection.UpdateMetadataEntry(
+                game_supercategory = self.GetSupercategory(),
                 game_category = self.GetCategory(),
                 game_subcategory = self.GetSubcategory(),
                 game_name = entry_name,
@@ -517,13 +523,15 @@ class StoreBase:
 
         # Get output dir
         if output_dir:
-            output_offset = environment.GetLockerGamingRomDirOffset(
+            output_offset = environment.GetLockerGamingFilesOffset(
+                game_supercategory = game_info.get_supercategory(),
                 game_category = game_info.get_category(),
                 game_subcategory = game_info.get_subcategory(),
                 game_name = game_info.get_name())
             output_dir = system.JoinPaths(os.path.realpath(output_dir), output_offset)
         else:
-            output_dir = environment.GetLockerGamingRomDir(
+            output_dir = environment.GetLockerGamingFilesDir(
+                game_supercategory = game_info.get_supercategory(),
                 game_category = game_info.get_category(),
                 game_subcategory = game_info.get_subcategory(),
                 game_name = game_info.get_name())
@@ -699,6 +707,7 @@ class StoreBase:
 
         # Check if asset exists
         asset_exists = collection.DoesMetadataAssetExist(
+            game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),
             game_name = game_info.get_name(),
@@ -721,6 +730,7 @@ class StoreBase:
 
         # Download metadata asset
         success = collection.DownloadMetadataAsset(
+            game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),
             game_name = game_info.get_name(),
@@ -734,6 +744,7 @@ class StoreBase:
 
         # Update metadata entry
         success = collection.UpdateMetadataEntry(
+            game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),
             game_name = game_info.get_name(),

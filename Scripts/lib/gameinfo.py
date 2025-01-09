@@ -118,8 +118,18 @@ class GameInfo:
         general_save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.GENERAL)
         local_cache_dir = environment.GetCacheGamingRomDir(self.game_category, self.game_subcategory, self.game_name)
         remote_cache_dir = environment.GetCacheGamingInstallDir(self.game_category, self.game_subcategory, self.game_name)
-        local_rom_dir = environment.GetLockerGamingRomDir(self.game_category, self.game_subcategory, self.game_name, config.SourceType.LOCAL)
-        remote_rom_dir = environment.GetLockerGamingRomDir(self.game_category, self.game_subcategory, self.game_name, config.SourceType.REMOTE)
+        local_rom_dir = environment.GetLockerGamingFilesDir(
+            self.game_supercategory,
+            self.game_category,
+            self.game_subcategory,
+            self.game_name,
+            config.SourceType.LOCAL)
+        remote_rom_dir = environment.GetLockerGamingFilesDir(
+            self.game_supercategory,
+            self.game_category,
+            self.game_subcategory,
+            self.game_name,
+            config.SourceType.REMOTE)
 
         # Set paths
         self.set_value(config.json_key_save_dir, save_dir)
@@ -635,7 +645,7 @@ def FindAllGameNames(base_dir, game_supercategory, game_category, game_subcatego
     base_path = system.JoinPaths(base_dir, game_supercategory, game_category, game_subcategory)
 
     # Get platform
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_platform = DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
     # Collect game names
     game_names = []
@@ -647,6 +657,11 @@ def FindAllGameNames(base_dir, game_supercategory, game_category, game_subcatego
         for game_name in system.GetDirectoryContents(base_path):
             game_names.append(game_name)
     return game_names
+
+# Find locker game names
+def FindLockerGameNames(game_supercategory, game_category, game_subcategory, source_type = None):
+    base_dir = environment.GetLockerGamingCategoriesDir(game_supercategory, game_category, game_subcategory, source_type)
+    return FindAllGameNames(FindAllGameNames(base_dir, game_supercategory, game_category, game_subcategory))
 
 ###########################################################
 

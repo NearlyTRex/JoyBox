@@ -45,63 +45,76 @@ def main():
 
     # Build metadata files
     system.LogInfo("Building metadata files ...")
-    for game_category in config.Category.members():
-        for game_subcategory in config.subcategory_map[game_category]:
+    for game_supercategory in config.Supercategory.members():
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
 
-            # Get scan path
-            scan_game_path = environment.GetLockerGamingRomCategoryDir(
-                game_category = game_category,
-                game_subcategory = game_subcategory,
-                source_type = args.source_type)
-
-            # Build metadata
-            if system.IsPathDirectory(scan_game_path):
-                system.LogInfo("Building metadata [Category: '%s', Subcategory: '%s'] ..." % (game_category, game_subcategory))
-                collection.ScanForMetadataEntries(
-                    game_dir = scan_game_path,
+                # Get scan path
+                scan_game_path = environment.GetLockerGamingFilesDir(
+                    game_supercategory = game_supercategory,
                     game_category = game_category,
                     game_subcategory = game_subcategory,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+                    source_type = args.source_type)
+
+                # Build metadata
+                if system.IsPathDirectory(scan_game_path):
+                    system.LogInfo("Building metadata [Category: '%s', Subcategory: '%s'] ..." % (game_category, game_subcategory))
+                    collection.ScanForMetadataEntries(
+                        game_supercategory = game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_root = scan_game_path,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
 
     # Build json files
     system.LogInfo("Building json files ...")
-    for game_category in config.Category.members():
-        for game_subcategory in config.subcategory_map[game_category]:
-            game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-            for game_name in gameinfo.FindAllGameNames(environment.GetJsonMetadataRootDir(), config.Supercategory.ROMS, game_category, game_subcategory):
+    for game_supercategory in config.Supercategory.members():
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
+                game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+                game_names = gameinfo.FindAllGameNames(
+                    environment.GetJsonMetadataRootDir(),
+                    game_supercategory,
+                    game_category,
+                    game_subcategory)
+                for game_name in game_names:
 
-                # Get scan path
-                scan_game_path = environment.GetLockerGamingRomDir(
-                    game_category = game_category,
-                    game_subcategory = game_subcategory,
-                    game_name = game_name,
-                    source_type = args.source_type)
+                    # Get scan path
+                    scan_game_path = environment.GetLockerGamingFilesDir(
+                        game_supercategory = game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_name = game_name,
+                        source_type = args.source_type)
 
-                # Build json
-                collection.CreateGameJsonFile(
-                    game_category = game_category,
-                    game_subcategory = game_subcategory,
-                    game_name = game_name,
-                    game_root = scan_game_path,
-                    passphrase = passphrase,
-                    verbose = args.verbose,
-                    pretend_run = args.pretend_run,
-                    exit_on_failure = args.exit_on_failure)
+                    # Build json
+                    collection.CreateGameJsonFile(
+                        game_supercategory = game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_name = game_name,
+                        game_root = scan_game_path,
+                        passphrase = passphrase,
+                        verbose = args.verbose,
+                        pretend_run = args.pretend_run,
+                        exit_on_failure = args.exit_on_failure)
 
     # Publish metadata files
     system.LogInfo("Publishing metadata files ...")
-    for game_category in config.Category.members():
+    for game_supercategory in config.Supercategory.members():
+        for game_category in config.Category.members():
 
-        # Publish metadata
-        success = collection.PublishMetadataEntries(
-            game_category = game_category,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
-        if not success:
-            system.LogErrorAndQuit("Publish of category '%s' failed" % game_category)
+            # Publish metadata
+            success = collection.PublishMetadataEntries(
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                verbose = args.verbose,
+                pretend_run = args.pretend_run,
+                exit_on_failure = args.exit_on_failure)
+            if not success:
+                system.LogErrorAndQuit("Publish of category '%s' failed" % game_category)
 
 # Start
 main()

@@ -34,7 +34,7 @@ def main():
         system.LogInfo("Checking if game matching '%s' exists ..." % json_file)
         game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromFile(json_file)
         game_name = system.GetFilenameBasename(json_file)
-        game_base_dir = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
+        game_base_dir = environment.GetLockerGamingFilesDir(game_supercategory, game_category, game_subcategory, game_name)
         if not os.path.exists(game_base_dir):
             system.LogErrorAndQuit("Extraneous json file '%s' found" % json_file)
 
@@ -48,43 +48,51 @@ def main():
                 metadata_obj.verify_files()
 
     # Verify json files
-    for game_category in config.Category.members():
-        for game_subcategory in config.subcategory_map[game_category]:
-            game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-            for game_name in gameinfo.FindAllGameNames(environment.GetJsonMetadataRootDir(), config.Supercategory.ROMS, game_category, game_subcategory):
+    for game_supercategory in config.Supercategory.members():
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
+                game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+                game_names = gameinfo.FindAllGameNames(
+                    environment.GetJsonMetadataRootDir(),
+                    game_supercategory,
+                    game_category,
+                    game_subcategory)
+                for game_name in game_names:
 
-                # Get json file
-                json_file = environment.GetJsonMetadataFile(config.Supercategory.ROMS, game_category, game_subcategory, game_name)
-                if not system.IsPathFile(json_file):
-                    continue
+                    # Get json file
+                    json_file = environment.GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+                    if not system.IsPathFile(json_file):
+                        continue
 
-                # Get game info
-                game_info = gameinfo.GameInfo(
-                    json_file = json_file,
-                    verbose = args.verbose,
-                    pretend_run = args.pretend_run,
-                    exit_on_failure = args.exit_on_failure)
+                    # Get game info
+                    game_info = gameinfo.GameInfo(
+                        json_file = json_file,
+                        verbose = args.verbose,
+                        pretend_run = args.pretend_run,
+                        exit_on_failure = args.exit_on_failure)
 
-                # Get game info
-                json_file_list = game_info.get_files()
-                json_launch_file = game_info.get_launch_file()
-                json_transform_file = game_info.get_transform_file()
+                    # Get game info
+                    json_file_list = game_info.get_files()
+                    json_launch_file = game_info.get_launch_file()
+                    json_transform_file = game_info.get_transform_file()
 
-                # Files to check
-                files_to_check = []
+                    # Files to check
+                    files_to_check = []
 
-                # Add files
-                files_to_check += json_file_list
-                if len(json_transform_file):
-                    files_to_check += json_transform_file
-                else:
-                    files_to_check += json_launch_file
+                    # Add files
+                    files_to_check += json_file_list
+                    if len(json_transform_file):
+                        files_to_check += json_transform_file
+                    else:
+                        files_to_check += json_launch_file
 
-                # Each of these files should exist
-                for file_to_check in files_to_check:
-                    stored_file = system.JoinPaths(environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name), file_to_check)
-                    if not os.path.exists(stored_file):
-                        system.LogErrorAndQuit("File '%s' referenced in json file not found" % file_to_check)
+                    # Each of these files should exist
+                    for file_to_check in files_to_check:
+                        stored_file = system.JoinPaths(
+                            environment.GetLockerGamingFilesDir(game_supercategory, game_category, game_subcategory, game_name),
+                            file_to_check)
+                        if not os.path.exists(stored_file):
+                            system.LogErrorAndQuit("File '%s' referenced in json file not found" % file_to_check)
 
     # Verify hash files
     for game_supercategory in config.Supercategory.members():

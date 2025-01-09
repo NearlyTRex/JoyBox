@@ -383,7 +383,7 @@ def InstallComputerGame(
     game_is_scumm = game_info.is_scumm()
 
     # Get game base dir
-    game_base_dir = environment.GetLockerGamingRomDir(game_category, game_subcategory, game_name)
+    game_base_dir = environment.GetLockerGamingFilesDir(game_category, game_subcategory, game_name)
 
     # Get setup directory
     game_setup_dir = environment.GetCacheGamingSetupDir(game_category, game_subcategory, game_name)

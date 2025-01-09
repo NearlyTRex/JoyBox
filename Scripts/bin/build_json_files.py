@@ -45,13 +45,6 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Get source file root
-    source_file_root = None
-    if args.input_path:
-        source_file_root = parser.get_input_path()
-    else:
-        source_file_root = environment.GetLockerGamingSupercategoryRootDir(args.game_supercategory, args.source_type)
-
     # Get passphrase
     passphrase = None
     if args.passphrase_type == config.PassphraseType.GENERAL:
@@ -68,10 +61,11 @@ def main():
         if not args.game_name:
             system.LogErrorAndQuit("Game name is required for custom mode")
         collection.CreateGameJsonFile(
+            game_supercategory = args.game_supercategory,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
             game_name = args.game_name,
-            game_root = source_file_root,
+            game_root = parser.get_input_path(),
             passphrase = passphrase,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -79,16 +73,31 @@ def main():
 
     # Automatic according to standard layout
     elif args.generation_mode == config.GenerationModeType.STANDARD:
-        for game_category, game_subcategories in parser.get_selected_subcategories().items():
-            for game_subcategory in game_subcategories:
-                collection.CreateGameJsonFiles(
-                    game_category = game_category,
-                    game_subcategory = game_subcategory,
-                    game_root = source_file_root,
-                    passphrase = passphrase,
-                    verbose = args.verbose,
-                    pretend_run = args.pretend_run,
-                    exit_on_failure = args.exit_on_failure)
+        for game_supercategory in parser.get_selected_supercategories():
+            for game_category, game_subcategories in parser.get_selected_subcategories().items():
+                for game_subcategory in game_subcategories:
+                    game_names = gameinfo.FindLockerGameNames(
+                        game_supercategory,
+                        game_category,
+                        game_subcategory,
+                        args.source_type)
+                    for game_name in game_names:
+                        game_root = environment.GetLockerGamingFilesDir(
+                            game_supercategory,
+                            game_category,
+                            game_subcategory,
+                            game_name,
+                            args.source_type)
+                        collection.CreateGameJsonFile(
+                            game_supercategory = game_supercategory,
+                            game_category = game_category,
+                            game_subcategory = game_subcategory,
+                            game_name = game_name,
+                            game_root = game_root,
+                            passphrase = passphrase,
+                            verbose = args.verbose,
+                            pretend_run = args.pretend_run,
+                            exit_on_failure = args.exit_on_failure)
 
 # Start
 main()
