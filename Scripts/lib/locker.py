@@ -123,7 +123,10 @@ def UploadPath(
     local_path = src
     remote_path = dest
     if not remote_path:
-        remote_path = ConvertToRemotePath(system.GetFilenameDirectory(src))
+        if system.IsPathDirectory(src):
+            remote_path = ConvertToRemotePath(src)
+        else:
+            remote_path = ConvertToRemotePath(src)
 
     # Upload files
     success = sync.UploadFilesToRemote(
