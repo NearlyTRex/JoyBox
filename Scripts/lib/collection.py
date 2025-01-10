@@ -34,10 +34,45 @@ def AreGameMetadataFilePossible(
     game_subcategory):
     return (game_supercategory == config.Supercategory.ROMS)
 
+###########################################################
+
+# Hash game files
+def HashGameFiles(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    game_root,
+    passphrase = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get base path
+    base_path = None
+    if system.IsPathValid(game_root):
+        base_path = os.path.realpath(game_root)
+    if not system.DoesPathExist(base_path):
+        return False
+
+    # Get hash info
+    hash_file = environment.GetHashesMetadataFile(game_supercategory, game_category, game_subcategory)
+    hash_offset = system.JoinPaths(game_supercategory, game_category, game_subcategory)
+
+    # Hash files
+    success = hashing.HashFiles(
+        src = base_path,
+        offset = hash_offset,
+        output_file = hash_file,
+        passphrase = passphrase,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
+
 ############################################################
 
-# Upload game file
-def UploadGameFile(
+# Upload game files
+def UploadGameFiles(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -47,9 +82,6 @@ def UploadGameFile(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get platform
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
     # Get base path
     base_path = None
@@ -70,7 +102,7 @@ def UploadGameFile(
         return False
 
     # Hash all files
-    success = hashing.HashCategoryFiles(
+    success = HashGameFiles(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,

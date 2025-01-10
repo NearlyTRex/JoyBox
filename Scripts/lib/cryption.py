@@ -126,7 +126,7 @@ def GetEmbeddedFileInfo(
     file_info["filename"] = embedded_filename
     if callable(hasher):
         file_info["hash"] = hasher(
-            filename = tmp_file,
+            src = tmp_file,
             chunksize = chunksize,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -350,14 +350,14 @@ def DecryptFile(
 
 # Encrypt files
 def EncryptFiles(
-    source_path,
+    src,
     passphrase,
     delete_original = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     output_files = []
-    for file in system.BuildFileList(source_path):
+    for file in system.BuildFileList(src):
         output_file = GenerateEncryptedPath(file)
         success = EncryptFile(
             src = file,
@@ -373,14 +373,14 @@ def EncryptFiles(
 
 # Decrypt files
 def DecryptFiles(
-    source_path,
+    src,
     passphrase,
     delete_original = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     output_files = []
-    for file in system.BuildFileList(source_path):
+    for file in system.BuildFileList(src):
         output_file = GetRealFilePath(
             src = file,
             passphrase = passphrase,

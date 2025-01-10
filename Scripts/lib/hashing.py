@@ -312,6 +312,60 @@ def AreFilesIdentical(
     # These are different files
     return False
 
+# Get file groupings
+def GetFileGroupings(filenames, max_group_size):
+
+    # Group results
+    results = {}
+
+    # Add empty group
+    def add_empty_group(group_name):
+        results[group_name] = {}
+        results[group_name]["size"] = 0
+        results[group_name]["files"] = []
+
+    # Groups info
+    group_counter = 1
+    group_name = "Group" + str(group_counter)
+    previous_basename = ""
+    current_basename = ""
+
+    # Create initial group
+    add_empty_group(group_name)
+
+    # Aggregate similar files together into sets
+    hash_sets = {}
+    for hash_filename in sorted(filenames):
+        hash_contents = ReadHashFile(hash_filename)
+        for hash_key in sorted(hash_contents.keys()):
+            file_location = hash_key
+            file_directory = system.GetFilenameDirectory(file_location)
+            file_size = int(hash_contents[hash_key]["size"])
+            if not file_directory in hash_sets:
+                hash_sets[file_directory] = {}
+                hash_sets[file_directory]["size"] = 0
+                hash_sets[file_directory]["files"] = []
+            hash_sets[file_directory]["size"] += file_size
+            hash_sets[file_directory]["files"].append(file_location)
+
+    # Add to each group based on sizing
+    for hash_set_key in sorted(hash_sets.keys()):
+        hash_set_size = hash_sets[hash_set_key]["size"]
+        hash_set_files = hash_sets[hash_set_key]["files"]
+
+        # Check if we need to start a new group
+        if hash_set_size + results[group_name]["size"] > max_group_size:
+            group_counter += 1
+            group_name = "Group" + str(group_counter)
+            add_empty_group(group_name)
+
+        # Add to group
+        results[group_name]["size"] += hash_set_size
+        results[group_name]["files"] += hash_set_files
+
+    # Return groups
+    return results
+
 ###########################################################
 
 # Read hash file
@@ -450,13 +504,19 @@ def CalculateHash(
 # Hash files
 def HashFiles(
     src,
-    base_path,
+    offset,
     output_file,
     passphrase = None,
-    checked_base_path = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Make sure directory exists
+    system.MakeDirectory(
+        dir = system.GetFilenameDirectory(output_file),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Get hash contents
     hash_contents = {}
@@ -473,18 +533,18 @@ def HashFiles(
             continue
 
         # Split by base path
-        file_parts = system.SplitFilePath(file, base_path)
+        file_parts = system.SplitFilePath(file, offset)
         if len(file_parts) != 2:
             continue
 
         # Check if file needs to be hashed
         relative_base = file_parts[0]
-        relative_file = system.JoinPaths(base_path, file_parts[1])
+        relative_file = system.JoinPaths(offset, file_parts[1])
         if DoesFileNeedToBeHashed(relative_file, relative_base, hash_contents):
 
             # Calculate hash
             hash_data = CalculateHash(
-                filename = relative_file,
+                src = relative_file,
                 base_path = relative_base,
                 passphrase = passphrase,
                 verbose = verbose,
@@ -516,13 +576,6 @@ def HashFiles(
             if not success:
                 return False
 
-    # Remove keys regarding files that do not exist
-    if system.DoesPathExist(checked_base_path):
-        for hash_key in sorted(hash_contents.keys()):
-            hashed_file = system.JoinPaths(checked_base_path, hash_key)
-            if not os.path.exists(hashed_file):
-                del hash_contents[hash_key]
-
     # Write hash file
     return WriteHashFile(
         src = output_file,
@@ -530,53 +583,5 @@ def HashFiles(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-
-###########################################################
-
-# Hash category files
-def HashCategoryFiles(
-    src,
-    game_supercategory,
-    game_category,
-    game_subcategory,
-    passphrase = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Check required types
-    system.AssertIsNotNone(game_supercategory, "game_supercategory")
-    system.AssertIsNotNone(game_category, "game_category")
-    system.AssertIsNotNone(game_subcategory, "game_subcategory")
-
-    # Check input path
-    if not os.path.exists(src):
-        return False
-
-    # Get hash file
-    hash_file = environment.GetHashesMetadataFile(game_supercategory, game_category, game_subcategory)
-
-    # Make directories/files
-    system.MakeDirectory(
-        dir = system.GetFilenameDirectory(hash_file),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    system.TouchFile(
-        src = hash_file,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Hash files
-    success = HashFiles(
-        src = src,
-        base_path = system.JoinPaths(game_supercategory, game_category, game_subcategory),
-        output_file = hash_file,
-        passphrase = passphrase,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    return success
 
 ###########################################################

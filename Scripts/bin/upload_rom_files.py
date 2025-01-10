@@ -8,9 +8,10 @@ import sys
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
-import environment
 import system
+import environment
 import collection
+import gameinfo
 import ini
 import arguments
 import setup
@@ -60,7 +61,7 @@ def main():
             system.LogErrorAndQuit("Game subcategory is required for custom mode")
         if not args.game_name:
             system.LogErrorAndQuit("Game name is required for custom mode")
-        collection.UploadGameFile(
+        collection.UploadGameFiles(
             game_supercategory = args.game_supercategory,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
@@ -88,7 +89,7 @@ def main():
                             game_subcategory,
                             game_name,
                             args.source_type)
-                        collection.UploadGameFile(
+                        collection.UploadGameFiles(
                             game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,
