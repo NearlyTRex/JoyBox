@@ -37,7 +37,7 @@ def main():
         if verification_success:
             system.LogInfo("Verified!")
         else:
-            system.LogErrorAndQuit("Verification failed!")
+            system.LogError("Verification failed!", quit_program = True)
 
 # Start
 main()

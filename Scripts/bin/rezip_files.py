@@ -44,7 +44,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogErrorAndQuit("Unable to unzip file %s" % current_file)
+            system.LogError("Unable to unzip file %s" % current_file, quit_program = True)
 
         # Deterministically zip file
         system.LogInfo("Deterministically rezipping ...")
@@ -56,7 +56,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogErrorAndQuit("Unable to rezip file %s" % current_file)
+            system.LogError("Unable to rezip file %s" % current_file, quit_program = True)
 
 # Start
 main()

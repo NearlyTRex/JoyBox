@@ -144,7 +144,7 @@ class Steam(storebase.StoreBase):
         if programs.IsToolInstalled("SteamCMD"):
             steam_tool = programs.GetToolProgram("SteamCMD")
         if not steam_tool:
-            system.LogErrorAndQuit("SteamCMD was not found")
+            system.LogError("SteamCMD was not found", quit_program = True)
 
         # Get login command
         login_cmd = [
@@ -686,7 +686,7 @@ class Steam(storebase.StoreBase):
         if programs.IsToolInstalled("SteamCMD"):
             steam_tool = programs.GetToolProgram("SteamCMD")
         if not steam_tool:
-            system.LogErrorAndQuit("SteamCMD was not found")
+            system.LogError("SteamCMD was not found", quit_program = True)
 
         # Get install command
         install_cmd = [
@@ -722,7 +722,7 @@ class Steam(storebase.StoreBase):
         if programs.IsToolInstalled("Steam"):
             steam_tool = programs.GetToolProgram("Steam")
         if not steam_tool:
-            system.LogErrorAndQuit("Steam was not found")
+            system.LogError("Steam was not found", quit_program = True)
 
         # Get launch command
         launch_cmd = [
@@ -763,7 +763,7 @@ class Steam(storebase.StoreBase):
         if programs.IsToolInstalled("SteamDepotDownloader"):
             steamdepot_tool = programs.GetToolProgram("SteamDepotDownloader")
         if not steamdepot_tool:
-            system.LogErrorAndQuit("SteamDepotDownloader was not found")
+            system.LogError("SteamDepotDownloader was not found", quit_program = True)
 
         # Create temporary directory
         tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)

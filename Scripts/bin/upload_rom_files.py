@@ -56,11 +56,11 @@ def main():
     # Manually specify all parameters
     if args.generation_mode == config.GenerationModeType.CUSTOM:
         if not args.game_category:
-            system.LogErrorAndQuit("Game category is required for custom mode")
+            system.LogError("Game category is required for custom mode", quit_program = True)
         if not args.game_subcategory:
-            system.LogErrorAndQuit("Game subcategory is required for custom mode")
+            system.LogError("Game subcategory is required for custom mode", quit_program = True)
         if not args.game_name:
-            system.LogErrorAndQuit("Game name is required for custom mode")
+            system.LogError("Game name is required for custom mode", quit_program = True)
         collection.UploadGameFiles(
             game_supercategory = args.game_supercategory,
             game_category = args.game_category,
@@ -89,7 +89,7 @@ def main():
                             game_subcategory,
                             game_name,
                             args.source_type)
-                        collection.UploadGameFiles(
+                        success = collection.UploadGameFiles(
                             game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,
@@ -99,6 +99,14 @@ def main():
                             verbose = args.verbose,
                             pretend_run = args.pretend_run,
                             exit_on_failure = args.exit_on_failure)
+                        if not success:
+                            system.LogError(
+                                message = "Upload of game files failed!",
+                                game_supercategory = game_supercategory,
+                                game_category = game_category,
+                                game_subcategory = game_subcategory,
+                                game_name = game_name,
+                                quit_program = True)
 
 # Start
 main()

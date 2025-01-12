@@ -49,7 +49,7 @@ def main():
     # Get store
     store_obj = stores.GetStoreByType(args.store_type)
     if not store_obj:
-        system.LogErrorAndQuit("Invalid store")
+        system.LogError("Invalid store", quit_program = True)
 
     # Get input path
     input_path = None
@@ -104,7 +104,7 @@ def main():
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
                 if not success:
-                    system.LogErrorAndQuit("Install of '%s' failed!" % json_file)
+                    system.LogError("Install of '%s' failed!" % json_file, quit_program = True)
 
     # Launch game
     elif args.store_action == config.StoreActionType.LAUNCH_GAME:
@@ -140,7 +140,7 @@ def main():
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
                 if not success:
-                    system.LogErrorAndQuit("Download of '%s' failed!" % json_file)
+                    system.LogError("Download of '%s' failed!" % json_file, quit_program = True)
 
     # Download asset
     elif args.store_action == config.StoreActionType.DOWNLOAD_ASSET:
@@ -159,7 +159,7 @@ def main():
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
                 if not success:
-                    system.LogErrorAndQuit("Download of asset for '%s' failed!" % json_file)
+                    system.LogError("Download of asset for '%s' failed!" % json_file, quit_program = True)
 
     # Update json
     elif args.store_action == config.StoreActionType.UPDATE_JSON:
@@ -176,7 +176,7 @@ def main():
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
                 if not success:
-                    system.LogErrorAndQuit("Update of '%s' failed!" % json_file)
+                    system.LogError("Update of '%s' failed!" % json_file, quit_program = True)
 
     # Update metadata
     elif args.store_action == config.StoreActionType.UPDATE_METADATA:
@@ -195,7 +195,7 @@ def main():
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
                 if not success:
-                    system.LogErrorAndQuit("Update of '%s' failed!" % json_file)
+                    system.LogError("Update of '%s' failed!" % json_file, quit_program = True)
 
     # Check versions
     elif args.store_action == config.StoreActionType.CHECK_VERSIONS:
@@ -229,7 +229,7 @@ def main():
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
                 if not success:
-                    system.LogErrorAndQuit("Export of '%s' failed!" % json_file)
+                    system.LogError("Export of '%s' failed!" % json_file, quit_program = True)
 
     # Import saves
     elif args.store_action == config.StoreActionType.IMPORT_SAVES:
@@ -246,7 +246,7 @@ def main():
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
                 if not success:
-                    system.LogErrorAndQuit("Import of '%s' failed!" % json_file)
+                    system.LogError("Import of '%s' failed!" % json_file, quit_program = True)
 
 # Start
 main()

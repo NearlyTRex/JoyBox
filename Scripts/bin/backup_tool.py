@@ -57,7 +57,7 @@ def main():
         game_subcategory = args.game_subcategory,
         game_offset = args.game_offset)
     if not system.IsPathDirectory(source_file_root):
-        system.LogErrorAndQuit("Could not resolve source path")
+        system.LogError("Could not resolve source path", quit_program = True)
 
     # Get destination file root
     dest_file_root = backup.ResolvePath(
@@ -68,7 +68,7 @@ def main():
         game_subcategory = args.game_subcategory,
         game_offset = args.game_offset)
     if not system.IsPathDirectory(dest_file_root):
-        system.LogErrorAndQuit("Could not resolve destination path")
+        system.LogError("Could not resolve destination path", quit_program = True)
 
     # Copy files
     if args.backup_type == config.BackupType.COPY:

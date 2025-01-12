@@ -64,7 +64,7 @@ class ArgumentParser:
     def get_checked_path(self, argname):
         path = self.get_path(argname)
         if not system.DoesPathExist(path):
-            system.LogErrorAndQuit("Path '%s' does not exist" % path)
+            system.LogError("Path '%s' does not exist" % path, quit_program = True)
         return path
 
     #################################################

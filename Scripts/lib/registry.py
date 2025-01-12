@@ -30,7 +30,7 @@ def ReadRegistryFile(
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to read registry file '%s'" % registry_file)
-            system.LogErrorAndQuit(e)
+            system.LogError(e, quit_program = True)
         return {}
 
     # Create registry container
@@ -122,7 +122,7 @@ def WriteRegistryFile(
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to write registry file '%s'" % registry_file)
-            system.LogErrorAndQuit(e)
+            system.LogError(e, quit_program = True)
         return False
     return False
 

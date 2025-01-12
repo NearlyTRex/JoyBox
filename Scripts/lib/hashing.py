@@ -76,7 +76,7 @@ def CalculateFileCRC32(
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate crc32 for %s" % src)
-            system.LogErrorAndQuit(e)
+            system.LogError(e, quit_program = True)
         return ""
 
 # Calculate file md5
@@ -109,7 +109,7 @@ def CalculateFileMD5(
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate md5 for %s" % src)
-            system.LogErrorAndQuit(e)
+            system.LogError(e, quit_program = True)
         return ""
 
 # Calculate file sha1
@@ -142,7 +142,7 @@ def CalculateFileSHA1(
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate sha1 for %s" % src)
-            system.LogErrorAndQuit(e)
+            system.LogError(e, quit_program = True)
         return ""
 
 # Calculate file sha256
@@ -175,7 +175,7 @@ def CalculateFileSHA256(
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate sha256 for %s" % src)
-            system.LogErrorAndQuit(e)
+            system.LogError(e, quit_program = True)
         return ""
 
 # Calculate file xxh3
@@ -208,7 +208,7 @@ def CalculateFileXXH3(
     except Exception as e:
         if exit_on_failure:
             system.LogError("Unable to calculate xxh3 for %s" % src)
-            system.LogErrorAndQuit(e)
+            system.LogError(e, quit_program = True)
         return ""
 
 ###########################################################

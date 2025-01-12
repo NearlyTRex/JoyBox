@@ -468,7 +468,7 @@ def RunOutputCommand(
         if verbose:
             system.LogError(e)
         elif exit_on_failure:
-            system.LogErrorAndQuit(e)
+            system.LogError(e, quit_program = True)
         if options.include_stderr:
             return e.output
         return ""
@@ -476,7 +476,7 @@ def RunOutputCommand(
         if verbose:
             system.LogError(e)
         elif exit_on_failure:
-            system.LogErrorAndQuit(e)
+            system.LogError(e, quit_program = True)
         return ""
 
 # Run returncode command
@@ -533,13 +533,13 @@ def RunReturncodeCommand(
         if verbose:
             system.LogError(e)
         elif exit_on_failure:
-            system.LogErrorAndQuit(e)
+            system.LogError(e, quit_program = True)
         return e.returncode
     except Exception as e:
         if verbose:
             system.LogError(e)
         elif exit_on_failure:
-            system.LogErrorAndQuit(e)
+            system.LogError(e, quit_program = True)
         return 1
 
 # Run checked command
@@ -624,13 +624,13 @@ def RunBlockingCommand(
         if verbose:
             system.LogError(e)
         elif exit_on_failure:
-            system.LogErrorAndQuit(e)
+            system.LogError(e, quit_program = True)
         return e.returncode
     except Exception as e:
         if verbose:
             system.LogError(e)
         elif exit_on_failure:
-            system.LogErrorAndQuit(e)
+            system.LogError(e, quit_program = True)
         return 1
 
 # Run game command

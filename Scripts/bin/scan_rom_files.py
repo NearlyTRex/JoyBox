@@ -114,7 +114,7 @@ def main():
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
             if not success:
-                system.LogErrorAndQuit("Publish of category '%s' failed" % game_category)
+                system.LogError("Publish of category '%s' failed" % game_category, quit_program = True)
 
 # Start
 main()

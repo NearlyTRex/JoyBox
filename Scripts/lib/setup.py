@@ -22,15 +22,15 @@ def CheckRequirements():
     is_windows = environment.IsWindowsPlatform()
     is_linux = environment.IsLinuxPlatform()
     if is_windows == False and is_linux == False:
-        system.LogErrorAndQuit("Only windows and linux are supported right now")
+        system.LogError("Only windows and linux are supported right now", quit_program = True)
 
     # Check symlink support
     if not environment.AreSymlinksSupported():
-        system.LogErrorAndQuit("Symlinks are required, please enable them for your system")
+        system.LogError("Symlinks are required, please enable them for your system", quit_program = True)
 
     # Check ini file
     if not ini.IsIniPresent():
-        system.LogErrorAndQuit("Ini file not found, please run setup first")
+        system.LogError("Ini file not found, please run setup first", quit_program = True)
 
 # Setup tools
 def SetupTools(offline = False, verbose = False, pretend_run = False, exit_on_failure = False):

@@ -31,7 +31,7 @@ def main():
     if programs.IsToolInstalled("Pegasus"):
         pegasus_tool = programs.GetToolProgram("Pegasus")
     if not pegasus_tool:
-        system.LogErrorAndQuit("Pegasus was not found")
+        system.LogError("Pegasus was not found", quit_program = True)
 
     # Get launch command
     launch_cmd = [

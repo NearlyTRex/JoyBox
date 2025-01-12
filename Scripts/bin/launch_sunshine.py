@@ -29,7 +29,7 @@ def main():
     if programs.IsToolInstalled("Sunshine"):
         sunshine_tool = programs.GetToolProgram("Sunshine")
     if not sunshine_tool:
-        system.LogErrorAndQuit("Sunshine was not found")
+        system.LogError("Sunshine was not found", quit_program = True)
 
     # Get launch command
     launch_cmd = [

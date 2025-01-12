@@ -32,7 +32,7 @@ def main():
     if programs.IsToolInstalled("JDupes"):
         dupes_tool = programs.GetToolProgram("JDupes")
     if not dupes_tool:
-        system.LogErrorAndQuit("JDupes was not found")
+        system.LogError("JDupes was not found", quit_program = True)
 
     # Get list command
     list_cmd = [

@@ -43,7 +43,7 @@ def main():
     elif args.passphrase_type == config.PassphraseType.LOCKER:
         passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
     if not passphrase:
-        system.LogErrorAndQuit("No passphrase set")
+        system.LogError("No passphrase set", quit_program = True)
 
     # Encrypt file
     if args.encrypt:

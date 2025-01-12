@@ -433,37 +433,88 @@ def GetFileLogger():
         file_logger.addHandler(file_handler)
     return file_logger
 
+# Add logging context
+def AddLoggingContext(
+    message,
+    game_supercategory = None,
+    game_category = None,
+    game_subcategory = None,
+    game_name = None):
+    context = ""
+    if game_supercategory:
+        context += "[%s]" % game_supercategory.val()
+    if game_category:
+        context += "[%s]" % game_category.val()
+    if game_subcategory:
+        context += "[%s]" % game_subcategory.val()
+    if game_name:
+        context += "[%s]" % game_name.val()
+    if len(context) > 0:
+        return f"{context} {message}"
+    return message
+
 # Log info
-def LogInfo(message):
+def LogInfo(
+    message,
+    game_supercategory = None,
+    game_category = None,
+    game_subcategory = None,
+    game_name = None):
+    message = AddLoggingContext(
+        message = message,
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name)
     console_logger = GetConsoleLogger()
     file_logger = GetFileLogger()
     if console_logger:
-        console_logger.info(message)
+        console_logger.info(f"{message}")
     if file_logger:
         file_logger.info(f"{GetSourceInfo()} {message}")
 
 # Log warning
-def LogWarning(message):
+def LogWarning(
+    message,
+    game_supercategory = None,
+    game_category = None,
+    game_subcategory = None,
+    game_name = None):
+    message = AddLoggingContext(
+        message = message,
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name)
     console_logger = GetConsoleLogger()
     file_logger = GetFileLogger()
     if console_logger:
-        console_logger.warning(message)
+        console_logger.warning(f"{message}")
     if file_logger:
-        file_logger.warning(message)
+        file_logger.warning(f"{GetSourceInfo()} {message}")
 
 # Log error
-def LogError(message):
+def LogError(
+    message,
+    game_supercategory = None,
+    game_category = None,
+    game_subcategory = None,
+    game_name = None,
+    quit_program = False):
+    message = AddLoggingContext(
+        message = message,
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name)
     console_logger = GetConsoleLogger()
     file_logger = GetFileLogger()
     if console_logger:
         console_logger.error(f"{GetSourceInfo()} {message}")
     if file_logger:
         file_logger.error(f"{GetSourceInfo()} {message}")
-
-# Log error and quit program
-def LogErrorAndQuit(message):
-    LogError(message)
-    QuitProgram()
+    if quit_program:
+        QuitProgram()
 
 # Log percent complete
 def LogPercentComplete(percent_complete):

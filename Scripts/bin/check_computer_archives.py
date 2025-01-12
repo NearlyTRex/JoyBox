@@ -33,7 +33,7 @@ def main():
         system.LogInfo("Checking exe file %s ..." % file)
         exe_filesize = os.path.getsize(file)
         if exe_filesize > 4290772992:
-            system.LogErrorAndQuit("Executable '%s' is larger than 4092 MB" % file)
+            system.LogError("Executable '%s' is larger than 4092 MB" % file, quit_program = True)
 
 # Start
 main()

@@ -46,7 +46,7 @@ def EncryptPS3ISO(
     encryption_key = GetPS3DecryptionKey(dkey_file)
     if len(encryption_key) == 0:
         if exit_on_failure:
-            system.LogErrorAndQuit("PS3 key file '%s' is invalid" % dkey_file)
+            system.LogError("PS3 key file '%s' is invalid" % dkey_file, quit_program = True)
         return False
 
     # Get encrypt command
@@ -66,7 +66,7 @@ def EncryptPS3ISO(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogErrorAndQuit("Unable to encrypt ps3 iso '%s' to '%s'" % (iso_file_dec, iso_file_enc))
+            system.LogError("Unable to encrypt ps3 iso '%s' to '%s'" % (iso_file_dec, iso_file_enc), quit_program = True)
         return False
 
     # Check result
@@ -93,7 +93,7 @@ def DecryptPS3ISO(
     decryption_key = GetPS3DecryptionKey(dkey_file)
     if len(decryption_key) == 0:
         if exit_on_failure:
-            system.LogErrorAndQuit("PS3 key file '%s' is invalid" % dkey_file)
+            system.LogError("PS3 key file '%s' is invalid" % dkey_file, quit_program = True)
         return False
 
     # Get decrypt command
@@ -113,7 +113,7 @@ def DecryptPS3ISO(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogErrorAndQuit("Unable to decrypt ps3 iso '%s' to '%s'" % (iso_file_enc, iso_file_dec))
+            system.LogError("Unable to decrypt ps3 iso '%s' to '%s'" % (iso_file_enc, iso_file_dec), quit_program = True)
         return False
 
     # Check result
@@ -298,7 +298,7 @@ def ExtractPSNPKG(
             exit_on_failure = exit_on_failure)
     except:
         if exit_on_failure:
-            system.LogErrorAndQuit("Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir))
+            system.LogError("Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir), quit_program = True)
         return False
 
     # Clean up
@@ -349,7 +349,7 @@ def StripPSV(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogErrorAndQuit("Unable to strip psv file '%s'" % src_psv_file)
+            system.LogError("Unable to strip psv file '%s'" % src_psv_file, quit_program = True)
         return False
 
     # Clean up
@@ -398,7 +398,7 @@ def UnstripPSV(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogErrorAndQuit("Unable to unstrip psv file '%s'" % src_psv_file)
+            system.LogError("Unable to unstrip psv file '%s'" % src_psv_file, quit_program = True)
         return False
 
     # Clean up
@@ -454,7 +454,7 @@ def TrimPSV(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogErrorAndQuit("Unable to trim psv file '%s'" % src_psv_file)
+            system.LogError("Unable to trim psv file '%s'" % src_psv_file, quit_program = True)
         return False
 
     # Clean up
@@ -510,7 +510,7 @@ def UntrimPSV(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogErrorAndQuit("Unable to untrim psv file '%s'" % src_psv_file)
+            system.LogError("Unable to untrim psv file '%s'" % src_psv_file, quit_program = True)
         return False
 
     # Clean up
@@ -563,7 +563,7 @@ def VerifyPSV(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogErrorAndQuit("Unable to verify psv file '%s'" % psv_file)
+            system.LogError("Unable to verify psv file '%s'" % psv_file, quit_program = True)
         return False
 
     # Must be good
