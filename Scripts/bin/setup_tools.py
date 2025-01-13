@@ -13,6 +13,7 @@ import setup
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Setup tools.")
 parser.add_boolean_argument(args = ("-e", "--offline"), description = "Enable offline mode")
+parser.add_boolean_argument(args = ("-c", "--configure"), description = "Enable configuration mode")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -25,6 +26,7 @@ def main():
     # Setup tools
     setup.SetupTools(
         offline = args.offline,
+        configure = args.configure,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
