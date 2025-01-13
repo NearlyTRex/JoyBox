@@ -56,8 +56,8 @@ class Sunshine(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Sunshine")
-				return False
+                system.LogError("Could not setup Sunshine")
+                return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Sunshine", "linux"):
@@ -74,8 +74,8 @@ class Sunshine(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Sunshine")
-				return False
+                system.LogError("Could not setup Sunshine")
+                return False
         return True
 
     # Setup offline
@@ -92,8 +92,8 @@ class Sunshine(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Sunshine")
-				return False
+                system.LogError("Could not setup Sunshine")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Sunshine", "linux"):
@@ -105,8 +105,8 @@ class Sunshine(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Sunshine")
-				return False
+                system.LogError("Could not setup Sunshine")
+                return False
         return True
 
     # Configure
@@ -121,6 +121,6 @@ class Sunshine(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Sunshine config files")
-				return False
+                system.LogError("Could not setup Sunshine config files")
+                return False
         return True

@@ -53,8 +53,8 @@ class GeckoDriver(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup GeckoDriver")
-				return False
+                system.LogError("Could not setup GeckoDriver")
+                return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("GeckoDriver", "linux"):
@@ -72,8 +72,8 @@ class GeckoDriver(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup GeckoDriver")
-				return False
+                system.LogError("Could not setup GeckoDriver")
+                return False
         return True
 
     # Setup offline
@@ -90,8 +90,8 @@ class GeckoDriver(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup GeckoDriver")
-				return False
+                system.LogError("Could not setup GeckoDriver")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("GeckoDriver", "linux"):
@@ -103,6 +103,6 @@ class GeckoDriver(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup GeckoDriver")
-				return False
+                system.LogError("Could not setup GeckoDriver")
+                return False
         return True

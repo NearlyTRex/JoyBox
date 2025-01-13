@@ -49,8 +49,8 @@ class NirCmd(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup NirCmd")
-				return False
+                system.LogError("Could not setup NirCmd")
+                return False
         return True
 
     # Setup offline
@@ -67,6 +67,6 @@ class NirCmd(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup NirCmd")
-				return False
+                system.LogError("Could not setup NirCmd")
+                return False
         return True

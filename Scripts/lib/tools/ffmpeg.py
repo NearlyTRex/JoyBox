@@ -53,8 +53,8 @@ class FFMpeg(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup FFMpeg")
-				return False
+                system.LogError("Could not setup FFMpeg")
+                return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("FFMpeg", "linux"):
@@ -72,8 +72,8 @@ class FFMpeg(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup FFMpeg")
-				return False
+                system.LogError("Could not setup FFMpeg")
+                return False
         return True
 
     # Setup offline
@@ -90,8 +90,8 @@ class FFMpeg(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup FFMpeg")
-				return False
+                system.LogError("Could not setup FFMpeg")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("FFMpeg", "linux"):
@@ -104,6 +104,6 @@ class FFMpeg(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup FFMpeg")
-				return False
+                system.LogError("Could not setup FFMpeg")
+                return False
         return True

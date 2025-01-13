@@ -53,8 +53,8 @@ class HacTool(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup HacTool")
-				return False
+                system.LogError("Could not setup HacTool")
+                return False
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("HacTool", "linux"):
@@ -81,8 +81,8 @@ class HacTool(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup HacTool")
-				return False
+                system.LogError("Could not setup HacTool")
+                return False
         return True
 
     # Setup offline
@@ -99,8 +99,8 @@ class HacTool(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup HacTool")
-				return False
+                system.LogError("Could not setup HacTool")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("HacTool", "linux"):
@@ -112,6 +112,6 @@ class HacTool(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup HacTool")
-				return False
+                system.LogError("Could not setup HacTool")
+                return False
         return True

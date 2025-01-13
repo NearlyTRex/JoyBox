@@ -88,8 +88,8 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Pegasus")
-				return False
+                system.LogError("Could not setup Pegasus")
+                return False
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
@@ -99,8 +99,8 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Pegasus theme")
-				return False
+                system.LogError("Could not setup Pegasus theme")
+                return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Pegasus", "linux"):
@@ -125,8 +125,8 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Pegasus")
-				return False
+                system.LogError("Could not setup Pegasus")
+                return False
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
@@ -136,8 +136,8 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Pegasus theme")
-				return False
+                system.LogError("Could not setup Pegasus theme")
+                return False
         return True
 
     # Setup offline
@@ -154,8 +154,8 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Pegasus")
-				return False
+                system.LogError("Could not setup Pegasus")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Pegasus", "linux"):
@@ -167,8 +167,8 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Pegasus")
-				return False
+                system.LogError("Could not setup Pegasus")
+                return False
         return True
 
     # Configure
@@ -193,6 +193,6 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Pegasus config files")
-				return False
+                system.LogError("Could not setup Pegasus config files")
+                return False
         return True

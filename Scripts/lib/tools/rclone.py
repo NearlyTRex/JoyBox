@@ -71,8 +71,8 @@ class RClone(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup RClone")
-				return False
+                system.LogError("Could not setup RClone")
+                return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("RClone", "linux"):
@@ -86,8 +86,8 @@ class RClone(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup RClone")
-				return False
+                system.LogError("Could not setup RClone")
+                return False
         return True
 
     # Setup offline
@@ -104,8 +104,8 @@ class RClone(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup RClone")
-				return False
+                system.LogError("Could not setup RClone")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("RClone", "linux"):
@@ -117,8 +117,8 @@ class RClone(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup RClone")
-				return False
+                system.LogError("Could not setup RClone")
+                return False
         return True
 
     # Configure
@@ -142,6 +142,6 @@ class RClone(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup RClone config files")
-				return False
+                system.LogError("Could not setup RClone config files")
+                return False
         return True

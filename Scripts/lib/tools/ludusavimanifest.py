@@ -45,8 +45,8 @@ class LudusaviManifest(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup LudusaviManifest")
-				return False
+                system.LogError("Could not setup LudusaviManifest")
+                return False
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "LudusaviManifest",
@@ -57,8 +57,8 @@ class LudusaviManifest(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup LudusaviManifest")
-				return False
+                system.LogError("Could not setup LudusaviManifest")
+                return False
         return True
 
     # Setup offline
@@ -74,6 +74,6 @@ class LudusaviManifest(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup LudusaviManifest")
-				return False
+                system.LogError("Could not setup LudusaviManifest")
+                return False
         return True

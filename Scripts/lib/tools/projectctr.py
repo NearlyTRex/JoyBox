@@ -67,8 +67,8 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup CtrMakeRom")
-				return False
+                system.LogError("Could not setup CtrMakeRom")
+                return False
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("CtrTool", "windows"):
@@ -86,8 +86,8 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup CtrTool")
-				return False
+                system.LogError("Could not setup CtrTool")
+                return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("CtrMakeRom", "linux"):
@@ -112,8 +112,8 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup CtrMakeRom")
-				return False
+                system.LogError("Could not setup CtrMakeRom")
+                return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("CtrTool", "linux"):
@@ -138,8 +138,8 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup CtrTool")
-				return False
+                system.LogError("Could not setup CtrTool")
+                return False
         return True
 
     # Setup offline
@@ -156,8 +156,8 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup CtrMakeRom")
-				return False
+                system.LogError("Could not setup CtrMakeRom")
+                return False
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("CtrTool", "windows"):
@@ -170,8 +170,8 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup CtrTool")
-				return False
+                system.LogError("Could not setup CtrTool")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("CtrMakeRom", "linux"):
@@ -183,8 +183,8 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup CtrMakeRom")
-				return False
+                system.LogError("Could not setup CtrMakeRom")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("CtrTool", "linux"):
@@ -196,6 +196,6 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup CtrTool")
-				return False
+                system.LogError("Could not setup CtrTool")
+                return False
         return True

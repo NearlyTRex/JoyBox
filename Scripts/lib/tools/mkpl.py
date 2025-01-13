@@ -41,8 +41,8 @@ class Mkpl(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Mkpl")
-				return False
+                system.LogError("Could not setup Mkpl")
+                return False
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "Mkpl",
@@ -53,8 +53,8 @@ class Mkpl(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Mkpl")
-				return False
+                system.LogError("Could not setup Mkpl")
+                return False
         return True
 
     # Setup offline
@@ -70,6 +70,6 @@ class Mkpl(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Mkpl")
-				return False
+                system.LogError("Could not setup Mkpl")
+                return False
         return True

@@ -52,8 +52,8 @@ class JDupes(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup JDupes")
-				return False
+                system.LogError("Could not setup JDupes")
+                return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("JDupes", "linux"):
@@ -70,8 +70,8 @@ class JDupes(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup JDupes")
-				return False
+                system.LogError("Could not setup JDupes")
+                return False
         return True
 
     # Setup offline
@@ -88,8 +88,8 @@ class JDupes(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup JDupes")
-				return False
+                system.LogError("Could not setup JDupes")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("JDupes", "linux"):
@@ -101,6 +101,6 @@ class JDupes(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup JDupes")
-				return False
+                system.LogError("Could not setup JDupes")
+                return False
         return True

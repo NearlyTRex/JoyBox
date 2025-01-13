@@ -53,8 +53,8 @@ class PS3Dec(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup PS3Dec")
-				return False
+                system.LogError("Could not setup PS3Dec")
+                return False
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("PS3Dec", "linux"):
@@ -82,8 +82,8 @@ class PS3Dec(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup PS3Dec")
-				return False
+                system.LogError("Could not setup PS3Dec")
+                return False
         return True
 
     # Setup offline
@@ -100,8 +100,8 @@ class PS3Dec(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup PS3Dec")
-				return False
+                system.LogError("Could not setup PS3Dec")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("PS3Dec", "linux"):
@@ -113,6 +113,6 @@ class PS3Dec(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup PS3Dec")
-				return False
+                system.LogError("Could not setup PS3Dec")
+                return False
         return True

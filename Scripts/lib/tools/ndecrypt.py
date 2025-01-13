@@ -53,8 +53,8 @@ class NDecrypt(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup NDecrypt")
-				return False
+                system.LogError("Could not setup NDecrypt")
+                return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("NDecrypt", "linux"):
@@ -78,8 +78,8 @@ class NDecrypt(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup NDecrypt")
-				return False
+                system.LogError("Could not setup NDecrypt")
+                return False
         return True
 
     # Setup offline
@@ -96,8 +96,8 @@ class NDecrypt(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup NDecrypt")
-				return False
+                system.LogError("Could not setup NDecrypt")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("NDecrypt", "linux"):
@@ -109,6 +109,6 @@ class NDecrypt(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup NDecrypt")
-				return False
+                system.LogError("Could not setup NDecrypt")
+                return False
         return True

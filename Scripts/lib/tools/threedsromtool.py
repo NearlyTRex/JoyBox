@@ -53,8 +53,8 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup 3DSRomTool")
-				return False
+                system.LogError("Could not setup 3DSRomTool")
+                return False
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("3DSRomTool", "linux"):
@@ -81,8 +81,8 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup 3DSRomTool")
-				return False
+                system.LogError("Could not setup 3DSRomTool")
+                return False
         return True
 
     # Setup offline
@@ -99,8 +99,8 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup 3DSRomTool")
-				return False
+                system.LogError("Could not setup 3DSRomTool")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("3DSRomTool", "linux"):
@@ -112,6 +112,6 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup 3DSRomTool")
-				return False
+                system.LogError("Could not setup 3DSRomTool")
+                return False
         return True

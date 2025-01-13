@@ -58,8 +58,8 @@ class MameTools(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup MameChdman")
-				return False
+                system.LogError("Could not setup MameChdman")
+                return False
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("MameChdman", "linux"):
@@ -84,8 +84,8 @@ class MameTools(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup MameChdman")
-				return False
+                system.LogError("Could not setup MameChdman")
+                return False
         return True
 
     # Setup offline
@@ -102,8 +102,8 @@ class MameTools(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup MameChdman")
-				return False
+                system.LogError("Could not setup MameChdman")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("MameChdman", "linux"):
@@ -115,6 +115,6 @@ class MameTools(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup MameChdman")
-				return False
+                system.LogError("Could not setup MameChdman")
+                return False
         return True

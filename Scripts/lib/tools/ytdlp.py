@@ -55,8 +55,8 @@ class YtDlp(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup YtDlp")
-				return False
+                system.LogError("Could not setup YtDlp")
+                return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("YtDlp", "linux"):
@@ -82,8 +82,8 @@ class YtDlp(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup YtDlp")
-				return False
+                system.LogError("Could not setup YtDlp")
+                return False
         return True
 
     # Setup offline
@@ -100,8 +100,8 @@ class YtDlp(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup YtDlp")
-				return False
+                system.LogError("Could not setup YtDlp")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("YtDlp", "linux"):
@@ -113,6 +113,6 @@ class YtDlp(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup YtDlp")
-				return False
+                system.LogError("Could not setup YtDlp")
+                return False
         return True

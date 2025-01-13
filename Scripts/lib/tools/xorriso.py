@@ -50,8 +50,8 @@ class XorrISO(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup XorrISO")
-				return False
+                system.LogError("Could not setup XorrISO")
+                return False
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "XorrISOWindows",
@@ -62,8 +62,8 @@ class XorrISO(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup XorrISO")
-				return False
+                system.LogError("Could not setup XorrISO")
+                return False
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("XorrISO", "linux"):
@@ -93,8 +93,8 @@ class XorrISO(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup XorrISO")
-				return False
+                system.LogError("Could not setup XorrISO")
+                return False
         return True
 
     # Setup offline
@@ -110,8 +110,8 @@ class XorrISO(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup XorrISO")
-				return False
+                system.LogError("Could not setup XorrISO")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("XorrISO", "linux"):
@@ -123,6 +123,6 @@ class XorrISO(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup XorrISO")
-				return False
+                system.LogError("Could not setup XorrISO")
+                return False
         return True

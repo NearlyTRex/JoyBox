@@ -41,8 +41,8 @@ class PySimpleGUI(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup PySimpleGUI")
-				return False
+                system.LogError("Could not setup PySimpleGUI")
+                return False
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PySimpleGUI",
@@ -53,8 +53,8 @@ class PySimpleGUI(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup PySimpleGUI")
-				return False
+                system.LogError("Could not setup PySimpleGUI")
+                return False
         return True
 
     # Setup offline
@@ -70,7 +70,7 @@ class PySimpleGUI(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup PySimpleGUI")
-				return False
+                system.LogError("Could not setup PySimpleGUI")
+                return False
         return True
 

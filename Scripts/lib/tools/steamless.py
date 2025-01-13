@@ -52,8 +52,8 @@ class Steamless(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Steamless")
-				return False
+                system.LogError("Could not setup Steamless")
+                return False
         return True
 
     # Setup offline
@@ -70,6 +70,6 @@ class Steamless(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Steamless")
-				return False
+                system.LogError("Could not setup Steamless")
+                return False
         return True

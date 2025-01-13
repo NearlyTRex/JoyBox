@@ -104,8 +104,8 @@ class Ludusavi(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Ludusavi")
-				return False
+                system.LogError("Could not setup Ludusavi")
+                return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Ludusavi", "linux"):
@@ -129,8 +129,8 @@ class Ludusavi(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Ludusavi")
-				return False
+                system.LogError("Could not setup Ludusavi")
+                return False
         return True
 
     # Setup offline
@@ -147,8 +147,8 @@ class Ludusavi(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Ludusavi")
-				return False
+                system.LogError("Could not setup Ludusavi")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Ludusavi", "linux"):
@@ -160,8 +160,8 @@ class Ludusavi(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Ludusavi")
-				return False
+                system.LogError("Could not setup Ludusavi")
+                return False
         return True
 
     # Configure
@@ -176,6 +176,6 @@ class Ludusavi(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Ludusavi config files")
-				return False
+                system.LogError("Could not setup Ludusavi config files")
+                return False
         return True

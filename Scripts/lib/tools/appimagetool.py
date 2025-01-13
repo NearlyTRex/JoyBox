@@ -60,8 +60,8 @@ class AppImageTool(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup AppImageTool")
-				return False
+                system.LogError("Could not setup AppImageTool")
+                return False
         return True
 
     # Setup offline
@@ -77,8 +77,8 @@ class AppImageTool(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup AppImageTool")
-				return False
+                system.LogError("Could not setup AppImageTool")
+                return False
         return True
 
     # Configure
@@ -93,8 +93,8 @@ class AppImageTool(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not copy AppImageTool icons")
-				return False
+                system.LogError("Could not copy AppImageTool icons")
+                return False
 
         # Create config files
         if environment.IsLinuxPlatform():
@@ -106,6 +106,6 @@ class AppImageTool(toolbase.ToolBase):
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if not success:
-				    system.LogError("Could not create AppImageTool config files")
-				    return False
+                    system.LogError("Could not create AppImageTool config files")
+                    return False
         return True

@@ -53,8 +53,8 @@ class CDecrypt(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup CDecrypt")
-				return False
+                system.LogError("Could not setup CDecrypt")
+                return False
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("CDecrypt", "linux"):
@@ -79,8 +79,8 @@ class CDecrypt(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup CDecrypt")
-				return False
+                system.LogError("Could not setup CDecrypt")
+                return False
         return True
 
     # Setup offline
@@ -97,8 +97,8 @@ class CDecrypt(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup CDecrypt")
-				return False
+                system.LogError("Could not setup CDecrypt")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("CDecrypt", "linux"):
@@ -110,6 +110,6 @@ class CDecrypt(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup CDecrypt")
-				return False
+                system.LogError("Could not setup CDecrypt")
+                return False
         return True

@@ -70,8 +70,8 @@ class VKD3D(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup VKD3D")
-				return False
+                system.LogError("Could not setup VKD3D")
+                return False
         return True
 
     # Setup offline
@@ -87,6 +87,6 @@ class VKD3D(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup VKD3D")
-				return False
+                system.LogError("Could not setup VKD3D")
+                return False
         return True

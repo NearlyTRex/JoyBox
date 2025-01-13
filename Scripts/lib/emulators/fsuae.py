@@ -181,8 +181,8 @@ class FSUAE(emulatorbase.EmulatorBase):
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
-				system.LogError("Could not verify FS-UAE system file %s" % filename)
-				return False
+                system.LogError("Could not verify FS-UAE system file %s" % filename)
+                return False
 
         # Copy system files
         for filename in system_files.keys():
@@ -194,8 +194,8 @@ class FSUAE(emulatorbase.EmulatorBase):
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if not success:
-                system.LogError("Could not setup FS-UAE system files")
-                return False
+                    system.LogError("Could not setup FS-UAE system files")
+                    return False
         return True
 
     # Launch

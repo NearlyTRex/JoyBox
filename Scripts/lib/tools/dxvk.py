@@ -73,8 +73,8 @@ class DXVK(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup DXVK")
-				return False
+                system.LogError("Could not setup DXVK")
+                return False
         return True
 
     # Setup offline
@@ -90,6 +90,6 @@ class DXVK(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup DXVK")
-				return False
+                system.LogError("Could not setup DXVK")
+                return False
         return True

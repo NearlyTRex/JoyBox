@@ -41,8 +41,8 @@ class ItchDL(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup ItchDL")
-				return False
+                system.LogError("Could not setup ItchDL")
+                return False
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "ItchDL",
@@ -53,8 +53,8 @@ class ItchDL(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup ItchDL")
-				return False
+                system.LogError("Could not setup ItchDL")
+                return False
         return True
 
     # Setup offline
@@ -70,6 +70,6 @@ class ItchDL(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup ItchDL")
-				return False
+                system.LogError("Could not setup ItchDL")
+                return False
         return True

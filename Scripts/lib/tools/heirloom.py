@@ -41,8 +41,8 @@ class Heirloom(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Heirloom")
-				return False
+                system.LogError("Could not setup Heirloom")
+                return False
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "Heirloom",
@@ -53,8 +53,8 @@ class Heirloom(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Heirloom")
-				return False
+                system.LogError("Could not setup Heirloom")
+                return False
         return True
 
     # Setup offline
@@ -70,6 +70,6 @@ class Heirloom(toolbase.ToolBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-				system.LogError("Could not setup Heirloom")
-				return False
+                system.LogError("Could not setup Heirloom")
+                return False
         return True
