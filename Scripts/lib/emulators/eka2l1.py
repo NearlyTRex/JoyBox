@@ -158,7 +158,9 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             success = (expected_md5 == actual_md5)
-            system.AssertCondition(success, "Could not verify EKA2L1 system file %s" % filename)
+            if not success:
+				system.LogError("Could not verify EKA2L1 system file %s" % filename)
+				return False
 
         # Extract system files
         for platform in ["windows", "linux"]:
