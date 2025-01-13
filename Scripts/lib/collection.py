@@ -144,13 +144,6 @@ def CreateGameJsonFile(
     # Get platform
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
-    # Get base path
-    base_path = None
-    if system.IsPathValid(game_root):
-        base_path = os.path.realpath(game_root)
-    if not system.DoesPathExist(base_path):
-        return False
-
     # Get json file path
     json_file_path = environment.GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
 
@@ -168,7 +161,7 @@ def CreateGameJsonFile(
             exit_on_failure = exit_on_failure)
 
     # Get all files
-    all_files = system.BuildFileList(base_path)
+    all_files = system.BuildFileList(game_root)
     if isinstance(passphrase, str) and len(passphrase) > 0:
         all_files = cryption.GetRealFilePaths(
             src = all_files,
@@ -178,7 +171,7 @@ def CreateGameJsonFile(
             exit_on_failure = exit_on_failure)
 
     # Get rebased files
-    rebased_files = system.ConvertFileListToRelativePaths(all_files, base_path)
+    rebased_files = system.ConvertFileListToRelativePaths(all_files, game_root)
 
     # Build path lists
     all_main = []

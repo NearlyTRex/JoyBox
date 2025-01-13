@@ -280,14 +280,6 @@ def GetLockerGamingFilesOffset(game_supercategory, game_category, game_subcatego
         game_subcategory,
         game_name_path)
 
-# Get locker gaming categories dir
-def GetLockerGamingCategoriesDir(game_supercategory, game_category, game_subcategory, source_type = None):
-    return system.JoinPaths(
-        GetLockerGamingRootDir(source_type),
-        game_supercategory,
-        game_category,
-        game_subcategory)
-
 # Get locker gaming files dir
 def GetLockerGamingFilesDir(game_supercategory, game_category, game_subcategory, game_name, source_type = None):
     return system.JoinPaths(
@@ -334,7 +326,7 @@ def GetLockerGamingAssetDir(game_category, game_subcategory, asset_type, source_
 
 # Get locker gaming asset file
 def GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type, source_type = None):
-    asset_file = "%s%s" % (game_name, asset_type.cvalue())
+    asset_file = "%s%s" % (game_name, asset_type.cval())
     return system.JoinPaths(
         GetLockerGamingAssetsRootDir(source_type),
         game_category,
