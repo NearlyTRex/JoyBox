@@ -57,13 +57,14 @@ def InstallGameToCache(
 
     # Check if already installed
     if IsGameInCache(game_info):
-        return
+        return True
 
     # Check if source files are available
     if not locker.DoesRemotePathContainFiles(game_remote_rom_dir):
         gui.DisplayErrorPopup(
             title_text = "Source files unavailable",
             message_text = "Source files are not available\n%s\n%s" % (game_name, game_platform))
+        return False
 
     # Create temporary directory
     tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
@@ -129,6 +130,7 @@ def InstallGameToCache(
         gui.DisplayErrorPopup(
             title_text = "Failed to cache game",
             message_text = "Game could not be cached\n%s\n%s" % (game_name, game_platform))
+    return True
 
 # Add game to cache
 def AddGameToCache(
@@ -211,10 +213,10 @@ def LaunchCachedGame(
 
     # Check if already cached
     if not IsGameInCache(game_info):
-        return
+        return False
 
     # Launch game
-    command.RunGameCommand(
+    return command.RunGameCommand(
         game_info = game_info,
         cmd = launch_cmd,
         options = launch_options,

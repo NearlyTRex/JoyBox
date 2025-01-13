@@ -59,7 +59,10 @@ class Stella(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Stella")
+            if not success:
+                system.LogError("Could not setup Stella")
+                return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -74,4 +77,7 @@ class Stella(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Stella")
+            if not success:
+                system.LogError("Could not setup Stella")
+                return False
+        return True

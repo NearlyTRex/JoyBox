@@ -59,7 +59,10 @@ class AppImageTool(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup AppImageTool")
+            if not success:
+				system.LogError("Could not setup AppImageTool")
+				return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -73,7 +76,10 @@ class AppImageTool(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup AppImageTool")
+            if not success:
+				system.LogError("Could not setup AppImageTool")
+				return False
+        return True
 
     # Configure
     def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -86,7 +92,9 @@ class AppImageTool(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not copy AppImageTool icons")
+            if not success:
+				system.LogError("Could not copy AppImageTool icons")
+				return False
 
         # Create config files
         if environment.IsLinuxPlatform():
@@ -97,4 +105,7 @@ class AppImageTool(toolbase.ToolBase):
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
-                system.AssertCondition(success, "Could not create AppImageTool config files")
+                if not success:
+				    system.LogError("Could not create AppImageTool config files")
+				    return False
+        return True

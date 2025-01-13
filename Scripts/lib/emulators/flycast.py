@@ -74,7 +74,9 @@ class Flycast(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Flycast")
+            if not success:
+                system.LogError("Could not setup Flycast")
+                return False
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("Flycast", "linux"):
@@ -101,7 +103,10 @@ class Flycast(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Flycast")
+            if not success:
+                system.LogError("Could not setup Flycast")
+                return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -116,7 +121,9 @@ class Flycast(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Flycast")
+            if not success:
+                system.LogError("Could not setup Flycast")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Flycast", "linux"):
@@ -127,7 +134,10 @@ class Flycast(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Flycast")
+            if not success:
+                system.LogError("Could not setup Flycast")
+                return False
+        return True
 
     # Configure
     def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -140,7 +150,10 @@ class Flycast(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Flycast config files")
+            if not success:
+                system.LogError("Could not setup Flycast config files")
+                return False
+        return True
 
     # Launch
     def Launch(
@@ -163,7 +176,7 @@ class Flycast(emulatorbase.EmulatorBase):
             ]
 
         # Launch game
-        emulatorcommon.SimpleLaunch(
+        return emulatorcommon.SimpleLaunch(
             game_info = game_info,
             launch_cmd = launch_cmd,
             capture_type = capture_type,

@@ -52,7 +52,9 @@ class GeckoDriver(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup GeckoDriver")
+            if not success:
+				system.LogError("Could not setup GeckoDriver")
+				return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("GeckoDriver", "linux"):
@@ -69,7 +71,10 @@ class GeckoDriver(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup GeckoDriver")
+            if not success:
+				system.LogError("Could not setup GeckoDriver")
+				return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -84,7 +89,9 @@ class GeckoDriver(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup GeckoDriver")
+            if not success:
+				system.LogError("Could not setup GeckoDriver")
+				return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("GeckoDriver", "linux"):
@@ -95,4 +102,7 @@ class GeckoDriver(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup GeckoDriver")
+            if not success:
+				system.LogError("Could not setup GeckoDriver")
+				return False
+        return True

@@ -356,6 +356,7 @@ class StoreActionType(EnumType):
     LAUNCH_GAME             = ("LaunchGame")
     DOWNLOAD_GAME           = ("DownloadGame")
     DOWNLOAD_ASSET          = ("DownloadAsset")
+    BACKUP_GAME             = ("BackupGame")
     UPDATE_JSON             = ("UpdateJson")
     UPDATE_METADATA         = ("UpdateMetadata")
     CHECK_VERSIONS          = ("CheckVersions")

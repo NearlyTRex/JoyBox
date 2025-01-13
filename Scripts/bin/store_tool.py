@@ -30,9 +30,18 @@ parser.add_enum_argument(
     default = config.StoreActionType.LOGIN,
     description = "Store action type")
 parser.add_enum_argument(
+    args = ("-l", "--source_type"),
+    arg_type = config.SourceType,
+    default = config.SourceType.REMOTE,
+    description = "Source type")
+parser.add_enum_argument(
     args = ("-e", "--asset_type"),
     arg_type = config.AssetType,
     description = "Asset type")
+parser.add_enum_argument(
+    args = ("-w", "--passphrase_type"),
+    arg_type = config.PassphraseType,
+    description = "Passphrase type")
 parser.add_boolean_argument(args = ("-s", "--skip_existing"), description = "Skip existing entries")
 parser.add_boolean_argument(args = ("-f", "--force"), description = "Always run action")
 parser.add_string_argument(args = ("-k", "--keys"), description = "Keys to use (comma delimited)")
@@ -45,6 +54,13 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Get passphrase
+    passphrase = None
+    if args.passphrase_type == config.PassphraseType.GENERAL:
+        passphrase = ini.GetIniValue("UserData.Protection", "general_passphrase")
+    elif args.passphrase_type == config.PassphraseType.LOCKER:
+        passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
 
     # Get store
     store_obj = stores.GetStoreByType(args.store_type)
@@ -108,19 +124,22 @@ def main():
 
     # Launch game
     elif args.store_action == config.StoreActionType.LAUNCH_GAME:
-        for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
+        json_files = system.BuildFileListByExtensions(input_path, extensions = [".json"])
+        if len(json_files) > 0:
+            json_file = json_files[0]
             game_info = gameinfo.GameInfo(
                 json_file = json_file,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
             if game_info and game_info.is_valid():
-                store_obj.LaunchByGameInfo(
+                success = store_obj.LaunchByGameInfo(
                     game_info = game_info,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
-            break
+                if not success:
+                    system.LogError("Launch of '%s' failed!" % json_file, quit_program = True)
 
     # Download game
     elif args.store_action == config.StoreActionType.DOWNLOAD_GAME:
@@ -160,6 +179,24 @@ def main():
                     exit_on_failure = args.exit_on_failure)
                 if not success:
                     system.LogError("Download of asset for '%s' failed!" % json_file, quit_program = True)
+
+    # Backup game
+    elif args.store_action == config.StoreActionType.BACKUP_GAME:
+        for json_file in system.BuildFileListByExtensions(input_path, extensions = [".json"]):
+            game_info = gameinfo.GameInfo(
+                json_file = json_file,
+                verbose = args.verbose,
+                pretend_run = args.pretend_run,
+                exit_on_failure = args.exit_on_failure)
+            if game_info and game_info.is_valid():
+                success = store_obj.BackupGame(
+                    game_info = game_info,
+                    passphrase = passphrase,
+                    verbose = args.verbose,
+                    pretend_run = args.pretend_run,
+                    exit_on_failure = args.exit_on_failure)
+                if not success:
+                    system.LogError("Backup of '%s' failed!" % json_file, quit_program = True)
 
     # Update json
     elif args.store_action == config.StoreActionType.UPDATE_JSON:

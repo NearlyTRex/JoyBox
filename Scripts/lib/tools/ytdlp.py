@@ -54,7 +54,9 @@ class YtDlp(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup YtDlp")
+            if not success:
+				system.LogError("Could not setup YtDlp")
+				return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("YtDlp", "linux"):
@@ -79,7 +81,10 @@ class YtDlp(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup YtDlp")
+            if not success:
+				system.LogError("Could not setup YtDlp")
+				return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -94,7 +99,9 @@ class YtDlp(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup YtDlp")
+            if not success:
+				system.LogError("Could not setup YtDlp")
+				return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("YtDlp", "linux"):
@@ -105,4 +112,7 @@ class YtDlp(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup YtDlp")
+            if not success:
+				system.LogError("Could not setup YtDlp")
+				return False
+        return True

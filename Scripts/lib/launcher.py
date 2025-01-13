@@ -31,12 +31,14 @@ def LaunchGame(
     game_save_dir = game_info.get_save_dir()
 
     # Install game to cache
-    cache.InstallGameToCache(
+    success = cache.InstallGameToCache(
         game_info = game_info,
         source_type = source_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Get launcher
     game_launcher = None
@@ -50,6 +52,7 @@ def LaunchGame(
         gui.DisplayErrorPopup(
             title_text = "Launcher not found",
             message_text = "Launcher for game '%s' in platform '%s' could not be found" % (game_name, game_platform))
+        return False
 
     # Get game launcher info
     game_launcher_config_file = game_launcher.GetConfigFile()
@@ -58,32 +61,40 @@ def LaunchGame(
 
     # Unpack save if possible
     if saves.CanSaveBeUnpacked(game_category, game_subcategory, game_name):
-        saves.UnpackSave(
+        success = saves.UnpackSave(
             game_category = game_category,
             game_subcategory = game_subcategory,
             game_name = game_name,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Setup launcher save directory
     if game_launcher_save_dir:
-        system.MakeDirectory(
+        success = system.MakeDirectory(
             dir = system.GetFilenameDirectory(game_launcher_save_dir),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        system.RemoveObject(
+        if not success:
+            return False
+        success = system.RemoveObject(
             obj = game_launcher_save_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        system.CreateSymlink(
+        if not success:
+            return False
+        success = system.CreateSymlink(
             src = game_save_dir,
             dest = game_launcher_save_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Setup launcher config file
     if game_launcher_config_file:
@@ -98,13 +109,15 @@ def LaunchGame(
             exit_on_failure = exit_on_failure)
 
     # Launch game
-    game_launcher.Launch(
+    success = game_launcher.Launch(
         game_info = game_info,
         capture_type = capture_type,
         fullscreen = fullscreen,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Revert launcher config file
     if game_launcher_config_file:
@@ -120,16 +133,27 @@ def LaunchGame(
 
     # Revert launcher save directory
     if game_launcher_save_dir:
-        system.RemoveObject(
+        success = system.RemoveObject(
             obj = game_launcher_save_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        system.MakeDirectory(
+        if not success:
+            return False
+        success = system.MakeDirectory(
             dir = game_launcher_save_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Pack save
-    saves.PackSave(game_category, game_subcategory, game_name, verbose = verbose, exit_on_failure = exit_on_failure)
+    success = saves.PackSave(
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success

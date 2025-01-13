@@ -73,7 +73,10 @@ class BigPEmu(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup BigPEmu")
+            if not success:
+                system.LogError("Could not setup BigPEmu")
+                return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -88,7 +91,10 @@ class BigPEmu(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup BigPEmu")
+            if not success:
+                system.LogError("Could not setup BigPEmu")
+                return False
+        return True
 
     # Configure
     def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -101,7 +107,10 @@ class BigPEmu(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup BigPEmu config files")
+            if not success:
+                system.LogError("Could not setup BigPEmu config files")
+                return False
+        return True
 
     # Launch
     def Launch(
@@ -121,7 +130,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
         ]
 
         # Launch game
-        emulatorcommon.SimpleLaunch(
+        return emulatorcommon.SimpleLaunch(
             game_info = game_info,
             launch_cmd = launch_cmd,
             capture_type = capture_type,

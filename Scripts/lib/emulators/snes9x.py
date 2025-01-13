@@ -59,7 +59,9 @@ class Snes9x(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Snes9x")
+            if not success:
+                system.LogError("Could not setup Snes9x")
+                return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Snes9x", "linux"):
@@ -74,7 +76,10 @@ class Snes9x(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Snes9x")
+            if not success:
+                system.LogError("Could not setup Snes9x")
+                return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -89,7 +94,9 @@ class Snes9x(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Snes9x")
+            if not success:
+                system.LogError("Could not setup Snes9x")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Snes9x", "linux"):
@@ -100,4 +107,7 @@ class Snes9x(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Snes9x")
+            if not success:
+                system.LogError("Could not setup Snes9x")
+                return False
+        return True

@@ -52,7 +52,9 @@ class HacTool(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup HacTool")
+            if not success:
+				system.LogError("Could not setup HacTool")
+				return False
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("HacTool", "linux"):
@@ -78,7 +80,10 @@ class HacTool(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup HacTool")
+            if not success:
+				system.LogError("Could not setup HacTool")
+				return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -93,7 +98,9 @@ class HacTool(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup HacTool")
+            if not success:
+				system.LogError("Could not setup HacTool")
+				return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("HacTool", "linux"):
@@ -104,4 +111,7 @@ class HacTool(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup HacTool")
+            if not success:
+				system.LogError("Could not setup HacTool")
+				return False
+        return True

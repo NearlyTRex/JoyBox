@@ -70,7 +70,9 @@ class RClone(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup RClone")
+            if not success:
+				system.LogError("Could not setup RClone")
+				return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("RClone", "linux"):
@@ -83,7 +85,10 @@ class RClone(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup RClone")
+            if not success:
+				system.LogError("Could not setup RClone")
+				return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -98,7 +103,9 @@ class RClone(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup RClone")
+            if not success:
+				system.LogError("Could not setup RClone")
+				return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("RClone", "linux"):
@@ -109,7 +116,10 @@ class RClone(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup RClone")
+            if not success:
+				system.LogError("Could not setup RClone")
+				return False
+        return True
 
     # Configure
     def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -131,4 +141,7 @@ class RClone(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup RClone config files")
+            if not success:
+				system.LogError("Could not setup RClone config files")
+				return False
+        return True

@@ -40,7 +40,9 @@ class PySimpleGUI(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup PySimpleGUI")
+            if not success:
+				system.LogError("Could not setup PySimpleGUI")
+				return False
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PySimpleGUI",
@@ -50,7 +52,10 @@ class PySimpleGUI(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup PySimpleGUI")
+            if not success:
+				system.LogError("Could not setup PySimpleGUI")
+				return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -64,5 +69,8 @@ class PySimpleGUI(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup PySimpleGUI")
+            if not success:
+				system.LogError("Could not setup PySimpleGUI")
+				return False
+        return True
 

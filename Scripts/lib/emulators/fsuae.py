@@ -88,7 +88,9 @@ class FSUAE(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup FS-UAE")
+            if not success:
+                system.LogError("Could not setup FS-UAE")
+                return False
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("FS-UAE", "linux"):
@@ -119,7 +121,10 @@ class FSUAE(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup FS-UAE")
+            if not success:
+                system.LogError("Could not setup FS-UAE")
+                return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -134,7 +139,9 @@ class FSUAE(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup FS-UAE")
+            if not success:
+                system.LogError("Could not setup FS-UAE")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("FS-UAE", "linux"):
@@ -145,7 +152,10 @@ class FSUAE(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup FS-UAE")
+            if not success:
+                system.LogError("Could not setup FS-UAE")
+                return False
+        return True
 
     # Configure
     def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -158,7 +168,9 @@ class FSUAE(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup FS-UAE config files")
+            if not success:
+                system.LogError("Could not setup FS-UAE config files")
+                return False
 
         # Verify system files
         for filename, expected_md5 in system_files.items():
@@ -179,7 +191,10 @@ class FSUAE(emulatorbase.EmulatorBase):
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
-                system.AssertCondition(success, "Could not setup FS-UAE system files")
+                if not success:
+                system.LogError("Could not setup FS-UAE system files")
+                return False
+        return True
 
     # Launch
     def Launch(
@@ -202,7 +217,7 @@ class FSUAE(emulatorbase.EmulatorBase):
             ]
 
         # Launch game
-        emulatorcommon.SimpleLaunch(
+        return emulatorcommon.SimpleLaunch(
             game_info = game_info,
             launch_cmd = launch_cmd,
             capture_type = capture_type,

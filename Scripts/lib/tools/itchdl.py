@@ -40,7 +40,9 @@ class ItchDL(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup ItchDL")
+            if not success:
+				system.LogError("Could not setup ItchDL")
+				return False
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "ItchDL",
@@ -50,7 +52,10 @@ class ItchDL(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup ItchDL")
+            if not success:
+				system.LogError("Could not setup ItchDL")
+				return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -64,4 +69,7 @@ class ItchDL(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup ItchDL")
+            if not success:
+				system.LogError("Could not setup ItchDL")
+				return False
+        return True

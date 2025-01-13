@@ -174,7 +174,10 @@ class GoldbergEmu(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup GoldbergEmu")
+            if not success:
+				system.LogError("Could not setup GoldbergEmu")
+				return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -188,4 +191,7 @@ class GoldbergEmu(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup GoldbergEmu")
+            if not success:
+				system.LogError("Could not setup GoldbergEmu")
+				return False
+        return True

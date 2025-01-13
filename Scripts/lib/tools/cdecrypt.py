@@ -52,7 +52,9 @@ class CDecrypt(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup CDecrypt")
+            if not success:
+				system.LogError("Could not setup CDecrypt")
+				return False
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("CDecrypt", "linux"):
@@ -76,7 +78,10 @@ class CDecrypt(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup CDecrypt")
+            if not success:
+				system.LogError("Could not setup CDecrypt")
+				return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -91,7 +96,9 @@ class CDecrypt(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup CDecrypt")
+            if not success:
+				system.LogError("Could not setup CDecrypt")
+				return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("CDecrypt", "linux"):
@@ -102,4 +109,7 @@ class CDecrypt(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup CDecrypt")
+            if not success:
+				system.LogError("Could not setup CDecrypt")
+				return False
+        return True

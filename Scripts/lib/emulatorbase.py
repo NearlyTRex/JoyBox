@@ -88,19 +88,19 @@ class EmulatorBase:
 
     # Install add-ons
     def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, pretend_run = False, exit_on_failure = False):
-        pass
+        return False
 
     # Setup
     def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
-        pass
+        return False
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
-        pass
+        return False
 
     # Configure
     def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
-        pass
+        return False
 
     # Launch
     def Launch(
@@ -111,4 +111,4 @@ class EmulatorBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        pass
+        return False

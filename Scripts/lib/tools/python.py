@@ -86,7 +86,9 @@ class Python(toolbase.ToolBase):
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
-                    system.AssertCondition(success, "Could not setup Python wrapper scripts")
+                    if not success:
+				        system.LogError("Could not setup Python wrapper scripts")
+				        return False
 
                 # Create unix wrapper script
                 if environment.IsUnixPlatform():
@@ -96,10 +98,15 @@ class Python(toolbase.ToolBase):
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
-                    system.AssertCondition(success, "Could not setup Python wrapper scripts")
+                    if not success:
+				        system.LogError("Could not setup Python wrapper scripts")
+				        return False
                     success = system.MarkAsExecutable(
                         src = script_path_unix,
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
-                    system.AssertCondition(success, "Could not setup Python wrapper scripts")
+                    if not success:
+				        system.LogError("Could not setup Python wrapper scripts")
+				        return False
+        return True

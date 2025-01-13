@@ -103,7 +103,9 @@ class Ludusavi(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Ludusavi")
+            if not success:
+				system.LogError("Could not setup Ludusavi")
+				return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Ludusavi", "linux"):
@@ -126,7 +128,10 @@ class Ludusavi(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Ludusavi")
+            if not success:
+				system.LogError("Could not setup Ludusavi")
+				return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -141,7 +146,9 @@ class Ludusavi(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Ludusavi")
+            if not success:
+				system.LogError("Could not setup Ludusavi")
+				return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Ludusavi", "linux"):
@@ -152,7 +159,10 @@ class Ludusavi(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Ludusavi")
+            if not success:
+				system.LogError("Could not setup Ludusavi")
+				return False
+        return True
 
     # Configure
     def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -165,4 +175,7 @@ class Ludusavi(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Ludusavi config files")
+            if not success:
+				system.LogError("Could not setup Ludusavi config files")
+				return False
+        return True

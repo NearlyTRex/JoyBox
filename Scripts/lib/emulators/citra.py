@@ -103,7 +103,9 @@ class Citra(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Citra")
+            if not success:
+                system.LogError("Could not setup Citra")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Citra", "linux"):
@@ -115,7 +117,10 @@ class Citra(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Citra")
+            if not success:
+                system.LogError("Could not setup Citra")
+                return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -132,7 +137,9 @@ class Citra(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Citra config files")
+            if not success:
+                system.LogError("Could not setup Citra config files")
+                return False
 
         # Verify system files
         for filename, expected_md5 in system_files.items():
@@ -155,7 +162,10 @@ class Citra(emulatorbase.EmulatorBase):
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
-                    system.AssertCondition(success, "Could not extract Citra system files")
+                    if not success:
+                system.LogError("Could not extract Citra system files")
+                return False
+        return True
 
     # Launch
     def Launch(
@@ -174,7 +184,7 @@ class Citra(emulatorbase.EmulatorBase):
         ]
 
         # Launch game
-        emulatorcommon.SimpleLaunch(
+        return emulatorcommon.SimpleLaunch(
             game_info = game_info,
             launch_cmd = launch_cmd,
             capture_type = capture_type,

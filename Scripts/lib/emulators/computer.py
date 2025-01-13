@@ -532,7 +532,9 @@ class Computer(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup DosBoxX")
+            if not success:
+                system.LogError("Could not setup DosBoxX")
+                return False
         if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
             success = release.DownloadWebpageRelease(
                 webpage_url = "https://www.scummvm.org/downloads",
@@ -550,7 +552,9 @@ class Computer(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup ScummVM")
+            if not success:
+                system.LogError("Could not setup ScummVM")
+                return False
 
         # Build linux programs
         if programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
@@ -595,7 +599,9 @@ class Computer(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup DosBoxX")
+            if not success:
+                system.LogError("Could not setup DosBoxX")
+                return False
         if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ScummVM.git",
@@ -636,7 +642,10 @@ class Computer(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup ScummVM")
+            if not success:
+                system.LogError("Could not setup ScummVM")
+                return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -651,7 +660,9 @@ class Computer(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup DosBoxX")
+            if not success:
+                system.LogError("Could not setup DosBoxX")
+                return False
         if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
             success = release.SetupStoredRelease(
                 archive_dir = programs.GetProgramBackupDir("ScummVM", "windows"),
@@ -661,7 +672,9 @@ class Computer(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup ScummVM")
+            if not success:
+                system.LogError("Could not setup ScummVM")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
@@ -672,7 +685,9 @@ class Computer(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup DosBoxX")
+            if not success:
+                system.LogError("Could not setup DosBoxX")
+                return False
         if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
             success = release.SetupStoredRelease(
                 archive_dir = programs.GetProgramBackupDir("ScummVM", "linux"),
@@ -681,7 +696,10 @@ class Computer(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup ScummVM")
+            if not success:
+                system.LogError("Could not setup ScummVM")
+                return False
+        return True
 
     # Configure
     def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -694,7 +712,10 @@ class Computer(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup DosBoxX/ScummVM config files")
+            if not success:
+                system.LogError("Could not setup DosBoxX/ScummVM config files")
+                return False
+        return True
 
     # Launch
     def Launch(
@@ -976,3 +997,4 @@ class Computer(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
+        return True

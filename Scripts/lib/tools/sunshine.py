@@ -55,7 +55,9 @@ class Sunshine(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Sunshine")
+            if not success:
+				system.LogError("Could not setup Sunshine")
+				return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Sunshine", "linux"):
@@ -71,7 +73,10 @@ class Sunshine(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Sunshine")
+            if not success:
+				system.LogError("Could not setup Sunshine")
+				return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -86,7 +91,9 @@ class Sunshine(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Sunshine")
+            if not success:
+				system.LogError("Could not setup Sunshine")
+				return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Sunshine", "linux"):
@@ -97,7 +104,10 @@ class Sunshine(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Sunshine")
+            if not success:
+				system.LogError("Could not setup Sunshine")
+				return False
+        return True
 
     # Configure
     def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -110,4 +120,7 @@ class Sunshine(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Sunshine config files")
+            if not success:
+				system.LogError("Could not setup Sunshine config files")
+				return False
+        return True

@@ -59,7 +59,7 @@ def SimpleLaunch(
     # Nothing to run
     if len(selected_launch_file) == 0 and not game_launch_name:
         system.LogWarning("Nothing to run")
-        return
+        return False
 
     # Replace game tokens
     real_launch_cmd = []
@@ -80,7 +80,7 @@ def SimpleLaunch(
         real_launch_cmd += [cmd_segment]
 
     # Launch game
-    cache.LaunchCachedGame(
+    return cache.LaunchCachedGame(
         game_info = game_info,
         launch_cmd = real_launch_cmd,
         launch_options = launch_options,

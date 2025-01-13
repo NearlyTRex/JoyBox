@@ -147,7 +147,9 @@ class DuckStation(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup DuckStation")
+            if not success:
+                system.LogError("Could not setup DuckStation")
+                return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("DuckStation", "linux"):
@@ -163,7 +165,10 @@ class DuckStation(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup DuckStation")
+            if not success:
+                system.LogError("Could not setup DuckStation")
+                return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -178,7 +183,9 @@ class DuckStation(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup DuckStation")
+            if not success:
+                system.LogError("Could not setup DuckStation")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("DuckStation", "linux"):
@@ -189,7 +196,10 @@ class DuckStation(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup DuckStation")
+            if not success:
+                system.LogError("Could not setup DuckStation")
+                return False
+        return True
 
     # Configure
     def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -202,7 +212,9 @@ class DuckStation(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup DuckStation config files")
+            if not success:
+                system.LogError("Could not setup DuckStation config files")
+                return False
 
         # Verify system files
         for filename, expected_md5 in system_files.items():
@@ -223,7 +235,10 @@ class DuckStation(emulatorbase.EmulatorBase):
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
-                system.AssertCondition(success, "Could not setup DuckStation system files")
+                if not success:
+                system.LogError("Could not setup DuckStation system files")
+                return False
+        return True
 
     # Launch
     def Launch(
@@ -246,7 +261,7 @@ class DuckStation(emulatorbase.EmulatorBase):
             ]
 
         # Launch game
-        emulatorcommon.SimpleLaunch(
+        return emulatorcommon.SimpleLaunch(
             game_info = game_info,
             launch_cmd = launch_cmd,
             capture_type = capture_type,

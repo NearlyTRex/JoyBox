@@ -87,7 +87,9 @@ class Pegasus(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Pegasus")
+            if not success:
+				system.LogError("Could not setup Pegasus")
+				return False
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
@@ -96,7 +98,9 @@ class Pegasus(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Pegasus theme")
+            if not success:
+				system.LogError("Could not setup Pegasus theme")
+				return False
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("Pegasus", "linux"):
@@ -120,7 +124,9 @@ class Pegasus(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Pegasus")
+            if not success:
+				system.LogError("Could not setup Pegasus")
+				return False
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
@@ -129,7 +135,10 @@ class Pegasus(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Pegasus theme")
+            if not success:
+				system.LogError("Could not setup Pegasus theme")
+				return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -144,7 +153,9 @@ class Pegasus(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Pegasus")
+            if not success:
+				system.LogError("Could not setup Pegasus")
+				return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Pegasus", "linux"):
@@ -155,7 +166,10 @@ class Pegasus(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Pegasus")
+            if not success:
+				system.LogError("Could not setup Pegasus")
+				return False
+        return True
 
     # Configure
     def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -178,4 +192,7 @@ class Pegasus(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Pegasus config files")
+            if not success:
+				system.LogError("Could not setup Pegasus config files")
+				return False
+        return True

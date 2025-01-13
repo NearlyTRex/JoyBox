@@ -645,12 +645,13 @@ def RunGameCommand(
 
     # Blocking game start method
     def run_game():
-        RunBlockingCommand(
+        code = RunBlockingCommand(
             cmd = cmd,
             options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        return (code == 0)
 
     # Get capture info
     capture_duration = ini.GetIniIntegerValue("UserData.Capture", "capture_duration")
@@ -671,9 +672,9 @@ def RunGameCommand(
 
         # Run game while capturing screenshots
         if os.path.exists(output_file) and not overwrite_screenshots:
-            run_game()
+            return run_game()
         else:
-            capture.CaptureScreenshotWhileRunning(
+            return capture.CaptureScreenshotWhileRunning(
                 run_func = run_game,
                 output_file = output_file,
                 current_win = True,
@@ -693,9 +694,9 @@ def RunGameCommand(
 
         # Run game while capturing video
         if os.path.exists(output_file) and not overwrite_videos:
-            run_game()
+            return run_game()
         else:
-            capture.CaptureVideoWhileRunning(
+            return capture.CaptureVideoWhileRunning(
                 run_func = run_game,
                 output_file = output_file,
                 capture_origin = (capture_origin_x, capture_origin_y),
@@ -707,6 +708,6 @@ def RunGameCommand(
 
     # No capture
     else:
-        run_game()
+        return run_game()
 
 ###########################################################

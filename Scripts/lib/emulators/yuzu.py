@@ -131,7 +131,9 @@ class Yuzu(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Yuzu")
+            if not success:
+                system.LogError("Could not setup Yuzu")
+                return False
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("Yuzu", "linux"):
@@ -143,11 +145,14 @@ class Yuzu(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Yuzu")
+            if not success:
+                system.LogError("Could not setup Yuzu")
+                return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
-        self.Setup(verbose = verbose, pretend_run = pretend_run,exit_on_failure = exit_on_failure)
+        return self.Setup(verbose = verbose, pretend_run = pretend_run,exit_on_failure = exit_on_failure)
 
     # Configure
     def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -160,7 +165,9 @@ class Yuzu(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Yuzu config files")
+            if not success:
+                system.LogError("Could not setup Yuzu config files")
+                return False
 
         # Create profiles
         for platform in ["windows", "linux"]:
@@ -171,7 +178,9 @@ class Yuzu(emulatorbase.EmulatorBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup Yuzu profiles")
+            if not success:
+                system.LogError("Could not setup Yuzu profiles")
+                return False
 
         # Verify system files
         for filename, expected_md5 in system_files.items():
@@ -192,7 +201,10 @@ class Yuzu(emulatorbase.EmulatorBase):
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
-                system.AssertCondition(success, "Could not setup Yuzu system files")
+                if not success:
+                    system.LogError("Could not setup Yuzu system files")
+                    return False
+        return True
 
     # Launch
     def Launch(
@@ -215,7 +227,7 @@ class Yuzu(emulatorbase.EmulatorBase):
             ]
 
         # Launch game
-        emulatorcommon.SimpleLaunch(
+        return emulatorcommon.SimpleLaunch(
             game_info = game_info,
             launch_cmd = launch_cmd,
             capture_type = capture_type,

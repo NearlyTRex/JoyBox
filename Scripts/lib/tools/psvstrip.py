@@ -52,7 +52,10 @@ class PSVStrip(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup PSVStrip")
+            if not success:
+				system.LogError("Could not setup PSVStrip")
+				return False
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -67,4 +70,7 @@ class PSVStrip(toolbase.ToolBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.AssertCondition(success, "Could not setup PSVStrip")
+            if not success:
+				system.LogError("Could not setup PSVStrip")
+				return False
+        return True

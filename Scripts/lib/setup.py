@@ -33,43 +33,56 @@ def CheckRequirements():
         system.LogError("Ini file not found, please run setup first", quit_program = True)
 
 # Setup tools
-def SetupTools(offline = False, verbose = False, pretend_run = False, exit_on_failure = False):
+def SetupTools(offline = False, configure = False, verbose = False, pretend_run = False, exit_on_failure = False):
     for tool in programs.GetTools():
         system.LogInfo("Installing tool %s ..." % tool.GetName())
+        success = False
         if offline:
-            tool.SetupOffline(
+            success = tool.SetupOffline(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         else:
-            tool.Setup(
+            success = tool.Setup(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-        tool.Configure(
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+        if not configure:
+            success = tool.Configure(
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+    return True
 
 # Setup emulators
 def SetupEmulators(offline = False, configure = False, verbose = False, pretend_run = False, exit_on_failure = False):
     for emulator in programs.GetEmulators():
         system.LogInfo("Installing emulator %s ..." % emulator.GetName())
+        success = False
         if offline:
-            emulator.SetupOffline(
+            success = emulator.SetupOffline(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         else:
-            emulator.Setup(
+            success = emulator.Setup(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
+        if not success:
+            return False
         if configure:
-            emulator.Configure(
+            success = emulator.Configure(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+    return True
 
 # Setup assets
 def SetupAssets(verbose = False, pretend_run = False, exit_on_failure = False):
@@ -114,3 +127,4 @@ def SetupAssets(verbose = False, pretend_run = False, exit_on_failure = False):
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
+    return True

@@ -10,6 +10,7 @@ import saves
 import gameinfo
 import jsondata
 import network
+import launcher
 import collection
 import tools
 import webpage
@@ -484,16 +485,27 @@ class StoreBase:
     def LaunchByGameInfo(
         self,
         game_info,
+        source_type,
+        capture_type,
+        fullscreen,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
 
+        # Check ability to launch
+        if not game_info.is_playable():
+            return False
+
         # Launch game
-        return self.LaunchByIdentifier(
-            identifier = self.GetLaunchIdentifier(game_info.get_wrapped_value(self.GetKey())),
+        success = launcher.LaunchGame(
+            game_info = game_info,
+            source_type = source_type,
+            capture_type = capture_type,
+            fullscreen = fullscreen,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        return success
 
     ############################################################
 
@@ -601,6 +613,52 @@ class StoreBase:
         return None
 
     ############################################################
+
+    # Backup game
+    def BackupGame(
+        self,
+        game_info,
+        passphrase,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Create temporary directory
+        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+        if not tmp_dir_success:
+            return False
+
+        # Download game files
+        success = self.DownloadByGameInfo(
+            game_info = game_info,
+            output_dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+        # Upload game files
+        success = collection.UploadGameFiles(
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name(),
+            game_root = parser.get_input_path(),
+            passphrase = passphrase,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+        # Delete temporary directory
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return True
 
     # Update json
     def UpdateJson(
