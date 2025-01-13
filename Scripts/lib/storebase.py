@@ -300,6 +300,11 @@ class StoreBase:
                 game_category = self.GetCategory(),
                 game_subcategory = self.GetSubcategory(),
                 game_name = entry_name,
+                game_root = environment.GetLockerGamingFilesDir(
+                    game_supercategory = self.GetSupercategory(),
+                    game_category = self.GetCategory(),
+                    game_subcategory = self.GetSubcategory(),
+                    game_name = entry_name),
                 initial_data = {self.GetKey(): purchase.get_data()},
                 verbose = verbose,
                 pretend_run = pretend_run,
