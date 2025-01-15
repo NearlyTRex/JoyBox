@@ -237,17 +237,17 @@ class RemoteActionType(EnumType):
 
 # Remote action sync types
 class RemoteActionSyncType(EnumType):
-    PULL                    = RemoteActionType.PULL
-    PUSH                    = RemoteActionType.PUSH
-    MERGE                   = RemoteActionType.MERGE
+    PULL                    = (RemoteActionType.PULL.val())
+    PUSH                    = (RemoteActionType.PUSH.val())
+    MERGE                   = (RemoteActionType.MERGE.val())
 
 # Remote action change types
 class RemoteActionChangeType(EnumType):
-    DOWNLOAD                = RemoteActionType.DOWNLOAD
-    UPLOAD                  = RemoteActionType.UPLOAD
-    PULL                    = RemoteActionType.PULL
-    PUSH                    = RemoteActionType.PUSH
-    MERGE                   = RemoteActionType.MERGE
+    DOWNLOAD                = (RemoteActionType.DOWNLOAD.val())
+    UPLOAD                  = (RemoteActionType.UPLOAD.val())
+    PULL                    = (RemoteActionType.PULL.val())
+    PUSH                    = (RemoteActionType.PUSH.val())
+    MERGE                   = (RemoteActionType.MERGE.val())
 
 # Capture types
 class CaptureType(EnumType):
@@ -280,20 +280,20 @@ class AssetType(EnumType):
 
 # Asset min types
 class AssetMinType(EnumType):
-    BOXFRONT                = AssetType.BOXFRONT
-    VIDEO                   = AssetType.VIDEO
+    BOXFRONT                = (AssetType.BOXFRONT.val(), AssetType.BOXFRONT.cval())
+    VIDEO                   = (AssetType.VIDEO.val(), AssetType.VIDEO.cval())
 
 # Asset image types
 class AssetImageType(EnumType):
-    BACKGROUND              = AssetType.BACKGROUND
-    BOXBACK                 = AssetType.BOXBACK
-    BOXFRONT                = AssetType.BOXFRONT
-    LABEL                   = AssetType.LABEL
-    SCREENSHOT              = AssetType.SCREENSHOT
+    BACKGROUND              = (AssetType.BACKGROUND.val(), AssetType.BACKGROUND.cval())
+    BOXBACK                 = (AssetType.BOXBACK.val(), AssetType.BOXBACK.cval())
+    BOXFRONT                = (AssetType.BOXFRONT.val(), AssetType.BOXFRONT.cval())
+    LABEL                   = (AssetType.LABEL.val(), AssetType.LABEL.cval())
+    SCREENSHOT              = (AssetType.SCREENSHOT.val(), AssetType.SCREENSHOT.cval())
 
 # Asset video types
 class AssetVideoType(EnumType):
-    VIDEO                   = AssetType.VIDEO
+    VIDEO                   = (AssetType.VIDEO.val(), AssetType.VIDEO.cval())
 
 # Message types
 class MessageType(EnumType):
