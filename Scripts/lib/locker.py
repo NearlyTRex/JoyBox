@@ -126,7 +126,7 @@ def UploadPath(
         if system.IsPathDirectory(src):
             remote_path = ConvertToRemotePath(src)
         else:
-            remote_path = ConvertToRemotePath(src)
+            remote_path = ConvertToRemotePath(system.GetFilenameDirectory(src))
 
     # Upload files
     success = sync.UploadFilesToRemote(
