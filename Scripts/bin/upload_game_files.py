@@ -17,7 +17,7 @@ import arguments
 import setup
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Upload rom files.")
+parser = arguments.ArgumentParser(description = "Upload game files.")
 parser.add_input_path_argument()
 parser.add_game_supercategory_argument()
 parser.add_game_category_argument()
