@@ -15,12 +15,12 @@ class ToolBase:
 
     # Setup
     def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
-        pass
+        return True
 
     # Setup offline
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
-        pass
+        return True
 
     # Configure
     def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
-        pass
+        return True
