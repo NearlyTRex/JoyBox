@@ -26,11 +26,6 @@ parser.add_enum_argument(
     arg_type = config.AssetType,
     description = "Asset type")
 parser.add_enum_argument(
-    args = ("-l", "--source_type"),
-    arg_type = config.SourceType,
-    default = config.SourceType.REMOTE,
-    description = "Source type")
-parser.add_enum_argument(
     args = ("-m", "--generation_mode"),
     arg_type = config.GenerationModeType,
     default = config.GenerationModeType.STANDARD,
@@ -70,11 +65,10 @@ def main():
         for game_supercategory in parser.get_selected_supercategories():
             for game_category, game_subcategories in parser.get_selected_subcategories().items():
                 for game_subcategory in game_subcategories:
-                    game_names = gameinfo.FindLockerGameNames(
+                    game_names = gameinfo.FindJsonGameNames(
                         game_supercategory,
                         game_category,
-                        game_subcategory,
-                        args.source_type)
+                        game_subcategory)
                     for game_name in game_names:
                         success = collection.DownloadMetadataAsset(
                             game_supercategory = game_supercategory,

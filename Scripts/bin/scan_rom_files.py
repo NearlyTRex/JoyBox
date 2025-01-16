@@ -74,8 +74,7 @@ def main():
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
                 game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-                game_names = gameinfo.FindAllGameNames(
-                    environment.GetJsonMetadataRootDir(),
+                game_names = gameinfo.FindJsonGameNames(
                     game_supercategory,
                     game_category,
                     game_subcategory)

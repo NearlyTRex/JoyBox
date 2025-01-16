@@ -658,6 +658,11 @@ def FindAllGameNames(base_dir, game_supercategory, game_category, game_subcatego
             game_names.append(game_name)
     return game_names
 
+# Find json game names
+def FindJsonGameNames(game_supercategory, game_category, game_subcategory):
+    base_dir = environment.GetJsonMetadataRootDir()
+    return FindAllGameNames(base_dir, game_supercategory, game_category, game_subcategory)
+
 # Find locker game names
 def FindLockerGameNames(game_supercategory, game_category, game_subcategory, source_type = None):
     base_dir = environment.GetLockerGamingRootDir(source_type)
