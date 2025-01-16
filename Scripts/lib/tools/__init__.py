@@ -41,6 +41,7 @@ from .psvstrip import PSVStrip
 from .psvtools import PSVTools
 from .pylnk import PyLnk
 from .pysimplegui import PySimpleGUI
+from .pysteamgriddb import PySteamGridDB
 from .python import Python
 from .rclone import RClone
 from .sandboxie import Sandboxie
@@ -107,6 +108,7 @@ def GetToolMap():
     AddInstance(PSVTools)
     AddInstance(PyLnk)
     AddInstance(PySimpleGUI)
+    AddInstance(PySteamGridDB)
     AddInstance(Python)
     AddInstance(RClone)
     AddInstance(Sandboxie)
