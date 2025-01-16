@@ -664,6 +664,16 @@ def DownloadMetadataAsset(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Check if asset exists
+    asset_exists = DoesMetadataAssetExist(
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        asset_type = asset_type)
+    if skip_existing and asset_exists:
+        return True
+
     # Get platform
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
