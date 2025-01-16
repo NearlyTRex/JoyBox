@@ -527,21 +527,6 @@ def CollectMetadataFromAll(
     # Metadata result
     metadata_result = metadataentry.MetadataEntry()
 
-    # Try from TheGamesDB
-    metadata_result_thegamesdb = CollectMetadataFromTGDB(
-        game_platform = game_platform,
-        game_name = game_name,
-        select_automatically = select_automatically,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if isinstance(metadata_result_thegamesdb, metadataentry.MetadataEntry):
-        metadata_result.merge(metadata_result_thegamesdb)
-
-    # Check if done
-    if not metadata_result.is_missing_data(keys_to_check):
-        return metadata_result
-
     # Try from GameFAQs
     metadata_result_gamefaqs = CollectMetadataFromGameFAQS(
         game_platform = game_platform,
@@ -552,6 +537,21 @@ def CollectMetadataFromAll(
         exit_on_failure = exit_on_failure)
     if isinstance(metadata_result_gamefaqs, metadataentry.MetadataEntry):
         metadata_result.merge(metadata_result_gamefaqs)
+
+    # Check if done
+    if not metadata_result.is_missing_data(keys_to_check):
+        return metadata_result
+
+    # Try from TheGamesDB
+    metadata_result_thegamesdb = CollectMetadataFromTGDB(
+        game_platform = game_platform,
+        game_name = game_name,
+        select_automatically = select_automatically,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if isinstance(metadata_result_thegamesdb, metadataentry.MetadataEntry):
+        metadata_result.merge(metadata_result_thegamesdb)
 
     # Return result
     return metadata_result
