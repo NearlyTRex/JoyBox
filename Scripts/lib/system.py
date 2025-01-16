@@ -1998,7 +1998,7 @@ def GetFilenameInfo(path):
 def GetLinkInfo(lnk_path, lnk_base_path):
 
     # Import pylnk
-    environment.ImportPythonModule(
+    environment.ImportPythonModuleFile(
         module_path = programs.GetToolProgram("PyLnk"),
         module_name = "pylnk")
 

@@ -89,14 +89,30 @@ def AreSymlinksSupported():
 # Python modules
 ###########################################################
 
-# Import python module
-def ImportPythonModule(module_path, module_name):
+# Import python module package
+def ImportPythonModulePackage(module_path, module_name):
+    import importlib
+    init_file = os.path.join(module_path, "__init__.py")
+    if system.IsPathFile(init_file):
+        if module_name not in sys.modules:
+            sys.path.insert(0, module_path)
+            module = importlib.import_module(module_name)
+            sys.path.pop(0)
+            return module
+        else:
+            return sys.modules[module_name]
+    return None
+
+# Import python module file
+def ImportPythonModuleFile(module_path, module_name):
     import importlib.util
-    spec = importlib.util.spec_from_file_location(module_name, module_path)
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[module_name] = module
-    spec.loader.exec_module(module)
-    return sys.modules[module_name]
+    if system.IsPathFile(module_path):
+        spec = importlib.util.spec_from_file_location(module_name, module_path)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = module
+        spec.loader.exec_module(module)
+        return sys.modules[module_name]
+    return None
 
 ###########################################################
 # Root access

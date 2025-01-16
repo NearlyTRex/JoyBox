@@ -35,7 +35,7 @@ def DisplayPopup(
     modal = True):
 
     # Import PySimpleGUI
-    psg = environment.ImportPythonModule(
+    psg = environment.ImportPythonModuleFile(
         module_path = programs.GetToolProgram("PySimpleGUI"),
         module_name = "psg")
 
@@ -216,7 +216,7 @@ def DisplayLoadingWindow(
     **run_func_args):
 
     # Import PySimpleGUI
-    psg = environment.ImportPythonModule(
+    psg = environment.ImportPythonModuleFile(
         module_path = programs.GetToolProgram("PySimpleGUI"),
         module_name = "psg")
 
@@ -345,7 +345,7 @@ def DisplayChoicesWindow(
     run_func = None):
 
     # Import PySimpleGUI
-    psg = environment.ImportPythonModule(
+    psg = environment.ImportPythonModuleFile(
         module_path = programs.GetToolProgram("PySimpleGUI"),
         module_name = "psg")
 
