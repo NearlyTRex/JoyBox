@@ -23,7 +23,8 @@ class PySteamGridDB(toolbase.ToolBase):
     def GetConfig(self):
         return {
             "PySteamGridDB": {
-                "package_dir": "PySteamGridDB/lib/steamgrid"
+                "package_dir": "PySteamGridDB/lib",
+                "package_name": "steamgrid"
             }
         }
 
