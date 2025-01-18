@@ -5,6 +5,12 @@ from .gog import GOG
 from .itchio import Itchio
 from .legacy import Legacy
 from .steam import Steam
+from .steam import GetLikelySteamPage
+from .steam import GetLikelySteamCover
+from .steam import GetLikelySteamTrailer
+from .steam import FindSteamAppIDMatches
+from .steam import FindSteamAppIDMatch
+from .steam import FindSteamGridDBCovers
 
 # Get store map
 def GetStoreMap():

@@ -5,63 +5,10 @@ import sys
 # Local imports
 import config
 import system
-import environment
-import platforms
 import gameinfo
-import webpage
 import youtube
-import steamgriddb
+import stores
 import metadata
-import metadataentry
-
-############################################################
-
-# Collect metadata assets from SteamGridDB
-def CollectMetadataAssetsFromSteamGridDB(
-    game_platform,
-    game_name,
-    asset_type,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Only allow BoxFront
-    if asset_type != config.AssetType.BOXFRONT:
-        return []
-
-    # Get search terms
-    search_terms = gameinfo.DeriveGameSearchTermsFromName(
-        game_name = game_name,
-        game_platform = game_platform,
-        asset_type = asset_type)
-
-    # Get search results
-    search_results = steamgriddb.FindSteamGridDBCovers(
-        search_terms = search_terms,
-        image_dimensions = (600, 900),
-        image_types = config.ImageFileType.members(),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Build asset list
-    metadata_assets = []
-    for search_result in search_results:
-        result_author = search_result["author"]["name"]
-        result_style = search_result["style"]
-        result_nsfw = str(search_result["nsfw"])
-        result_humor = str(search_result["humor"])
-        result_language = search_result["language"]
-        result_types = ",".join(search_result["types"])
-        result_name = search_result["name"]
-        result_id = search_result["id"]
-        result_release_date = search_result["release_date"]
-        result_url = search_result["url"]
-        new_asset = {}
-        new_asset["url"] = result_url
-        new_asset["description"] = f"{result_url} - ({result_id}) ({result_name}) [{result_release_date}] [{result_style}]"
-        metadata_assets.append(new_asset)
-    return metadata_assets
 
 ############################################################
 
@@ -106,6 +53,107 @@ def CollectMetadataAssetsFromYouTube(
         metadata_assets.append(new_asset)
     return metadata_assets
 
+
+############################################################
+
+# Collect metadata assets from Steam
+def CollectMetadataAssetsFromSteam(
+    game_platform,
+    game_name,
+    asset_type,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Only allow BoxFront and Video
+    if asset_type not in [config.AssetType.BOXFRONT, config.AssetType.VIDEO]:
+        return []
+
+    # Get search terms
+    search_terms = gameinfo.DeriveGameSearchTermsFromName(
+        game_name = game_name,
+        game_platform = game_platform,
+        asset_type = asset_type)
+
+    # Build asset list
+    metadata_assets = []
+    asset_url = None
+    if asset_type == config.AssetType.BOXFRONT:
+        asset_url = stores.GetLikelySteamCover(search_terms)
+    elif asset_type == config.AssetType.VIDEO:
+        asset_url = stores.GetLikelySteamTrailer(
+            search_terms = search_terms,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    if asset_url:
+        new_asset = {}
+        new_asset["url"] = asset_url
+        new_asset["description"] = f"{result_url}"
+        metadata_assets.append(new_asset)
+    return metadata_assets
+
+############################################################
+
+# Collect metadata assets from SteamGridDB
+def CollectMetadataAssetsFromSteamGridDB(
+    game_platform,
+    game_name,
+    asset_type,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Only allow BoxFront
+    if asset_type != config.AssetType.BOXFRONT:
+        return []
+
+    # Get search terms
+    search_terms = gameinfo.DeriveGameSearchTermsFromName(
+        game_name = game_name,
+        game_platform = game_platform,
+        asset_type = asset_type)
+
+    # Get search results
+    search_results = stores.FindSteamGridDBCovers(
+        search_terms = search_terms,
+        image_dimensions = (600, 900),
+        image_types = config.ImageFileType.members(),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Build asset list
+    metadata_assets = []
+    for search_result in search_results:
+        result_author = search_result["author"]["name"]
+        result_style = search_result["style"]
+        result_nsfw = str(search_result["nsfw"])
+        result_humor = str(search_result["humor"])
+        result_language = search_result["language"]
+        result_types = ",".join(search_result["types"])
+        result_name = search_result["name"]
+        result_id = search_result["id"]
+        result_release_date = search_result["release_date"]
+        result_url = search_result["url"]
+        new_asset = {}
+        new_asset["url"] = result_url
+        new_asset["description"] = f"{result_url} - ({result_id}) ({result_name}) [{result_release_date}] [{result_style}]"
+        metadata_assets.append(new_asset)
+    return metadata_assets
+
+############################################################
+
+# Collect metadata assets from google
+def CollectMetadataAssetsFromGoogle(
+    game_platform,
+    game_name,
+    asset_type,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    return []
+
 ############################################################
 
 # Collect metadata asset from all
@@ -120,6 +168,24 @@ def CollectMetadataAssetFromAll(
     # Metadata assets
     metadata_assets = []
 
+    # Try from YouTube
+    metadata_assets += CollectMetadataAssetsFromYouTube(
+        game_platform = game_platform,
+        game_name = game_name,
+        asset_type = asset_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Try from Steam
+    metadata_assets += CollectMetadataAssetsFromSteam(
+        game_platform = game_platform,
+        game_name = game_name,
+        asset_type = asset_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
     # Try from SteamGridDB
     metadata_assets += CollectMetadataAssetsFromSteamGridDB(
         game_platform = game_platform,
@@ -129,8 +195,8 @@ def CollectMetadataAssetFromAll(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Try from YouTube
-    metadata_assets += CollectMetadataAssetsFromYouTube(
+    # Try from Google
+    metadata_assets += CollectMetadataAssetsFromGoogle(
         game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
