@@ -51,6 +51,9 @@ ini_defaults["UserData.Share"]["locker_remote_mount_flags"] = "no_checksum,no_mo
 # UserData.Scraping
 ini_defaults["UserData.Scraping"] = {}
 ini_defaults["UserData.Scraping"]["web_driver_type"] = "brave"
+ini_defaults["UserData.Scraping"]["steamgriddb_api_key"] = ""
+ini_defaults["UserData.Scraping"]["google_search_engine_id"] = ""
+ini_defaults["UserData.Scraping"]["google_search_engine_api_key"] = ""
 
 # UserData.Resolution
 ini_defaults["UserData.Resolution"] = {}
