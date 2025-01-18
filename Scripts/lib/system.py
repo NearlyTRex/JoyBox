@@ -17,6 +17,7 @@ import json
 import time
 import datetime
 import urllib.parse
+import collections.abc
 
 # Local imports
 import config
@@ -395,6 +396,16 @@ def DeduplicateAdjacentLines(lines):
         if len(new_lines) == 0 or line != new_lines[-1]:
             new_lines.append(line)
     return new_lines
+
+# Determine if container is iterable
+def IsIterableContainer(obj):
+    return isinstance(obj, collections.abc.Iterable)
+
+# Determine if container is iterable non-string
+def IsIterableNonString(obj):
+    if isinstance(obj, str):
+        return False
+    return IsIterableContainer(obj)
 
 ###########################################################
 
