@@ -14,6 +14,7 @@ import posixpath
 import ntpath
 import glob
 import json
+import csv
 import time
 import datetime
 import urllib.parse
@@ -182,6 +183,21 @@ def GetStringSimilarityRatio(string1, string2):
     except:
         return 0
 
+# Check if strings are highly similar
+def AreStringsHighlySimilar(string1, string2):
+    ratio = GetStringSimilarityRatio(string1, string2)
+    return (ratio >= 90) and (ratio <= 100)
+
+# Check if strings are moderately similar
+def AreStringsModeratelySimilar(string1, string2):
+    ratio = GetStringSimilarityRatio(string1, string2)
+    return (ratio >= 80) and (ratio <= 90)
+
+# Check if strings are possibly similar
+def AreStringsPossiblySimilar(string1, string2):
+    ratio = GetStringSimilarityRatio(string1, string2)
+    return (ratio >= 50) and (ratio <= 80)
+
 # Sort strings
 def SortStrings(strings):
     return sorted(strings, key=lambda item: (item, len(item)))
@@ -267,7 +283,7 @@ def JoinStringsAsUrl(string1, string2, allow_fragments = True):
 
 # Strip string query params
 def StripStringQueryParams(string):
-    return urllib.parse.urlunparse(urllib.parse.urlparse(string)._replace(query=''))
+    return urllib.parse.urlunparse(urllib.parse.urlparse(string)._replace(query=""))
 
 ###########################################################
 
@@ -1602,8 +1618,8 @@ def ReadYamlFile(src, verbose = False, pretend_run = False, exit_on_failure = Fa
         yaml_data = {}
         with open(src, "r") as input_file:
             file_contents = input_file.read()
-            file_contents = file_contents.replace(u'\x81', '')
-            file_contents = file_contents.replace(u'\x82', '')
+            file_contents = file_contents.replace(u'\x81', "")
+            file_contents = file_contents.replace(u'\x82', "")
             yaml_data = yaml.safe_load(file_contents)
         return yaml_data
     except Exception as e:
@@ -1612,6 +1628,31 @@ def ReadYamlFile(src, verbose = False, pretend_run = False, exit_on_failure = Fa
             LogError(e)
             QuitProgram()
         return {}
+
+###########################################################
+
+# Read csv file
+def ReadCsvFile(src, headers, verbose = False, pretend_run = False, exit_on_failure = False):
+    try:
+        if not src.endswith(".csv"):
+            return []
+        if verbose:
+            LogInfo("Reading %s" % src)
+        csv_data = []
+        with open(src, mode="r", newline="", encoding="utf-8") as input_file:
+            csv_reader = csv.reader(input_file)
+            for row in csv_reader:
+                if len(row) == len(headers):
+                    row = [field.strip('"') for field in row]
+                    row_dict = {headers[i]: row[i] for i in range(len(headers))}
+                    csv_data.append(row_dict)
+        return csv_data
+    except Exception as e:
+        if exit_on_failure:
+            LogError("Unable to read %s" % src)
+            LogError(e)
+            QuitProgram()
+        return []
 
 ###########################################################
 
