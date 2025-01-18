@@ -6,14 +6,26 @@ import sys
 import config
 import system
 
+# Get image format
+def GetImageFormat(image_file):
+    if system.IsPathFile(image_file):
+        try:
+            from PIL import Image
+            with Image.open(image_file) as img:
+                return config.ImageFileType.from_string(img.format)
+        except:
+            return None
+    else:
+        image_ext = system.GetFilenameExtension(image_file).lower()
+        if image_ext in [".jpg", ".jpeg"]:
+            return config.ImageFileType.JPEG
+        if image_ext in [".png"]:
+            return config.ImageFileType.PNG
+        return None
+
 # Detect if image is a certain format
 def IsImageFormat(image_file, image_format):
-    try:
-        from PIL import Image
-        with Image.open(image_file) as img:
-            return img.format == image_format
-    except:
-        return False
+    return (GetImageFormat(image_file) == image_format)
 
 # Detect if image is jpeg
 def IsImageJPEG(image_file):
