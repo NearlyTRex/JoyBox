@@ -17,6 +17,7 @@ import jsondata
 import metadata
 import metadataentry
 import metadatacollector
+import metadataassetcollector
 
 ############################################################
 
@@ -689,7 +690,7 @@ def DownloadMetadataAsset(
 
     # Check asset url
     if not network.IsUrlReachable(asset_url):
-        asset_url = metadatacollector.CollectMetadataAssetFromAll(
+        asset_url = metadataassetcollector.CollectMetadataAssetFromAll(
             game_platform = game_platform,
             game_name = game_name,
             asset_type = asset_type,

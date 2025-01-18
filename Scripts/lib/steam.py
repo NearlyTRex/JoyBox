@@ -11,8 +11,62 @@ import programs
 import image
 import ini
 
-# Get search results
-def GetSearchResults(
+# Get steam cover
+def GetSteamCover(appid):
+    return "https://cdn.cloudflare.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % appid
+
+# Get likely steam cover
+def GetLikelySteamCover(search_terms):
+    likely_match = FindSteamAppIDMatch(search_terms)
+    if likely_match:
+        return GetSteamCover(likely_match["appid"])
+    return None
+
+# Find steam appid matches
+def FindSteamAppIDMatches(
+    search_terms,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Load appid list
+    appid_list = system.ReadCsvFile(
+        src = programs.GetToolPathConfigValue("SteamAppIDList", "csv"),
+        headers = ["appid", "name"],
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Build list of matches
+    matches = []
+    for entry in appid_list:
+        if system.AreStringsHighlySimilar(search_terms, entry["name"]):
+            entry["relevance"] = system.GetStringSimilarityRatio(search_terms, entry["name"])
+            matches.append(entry)
+    return matches
+
+# Find steam appid match
+def FindSteamAppIDMatch(
+    search_terms,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get relevant matches
+    matches = FindSteamAppIDMatches(
+        search_terms = search_terms,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not matches:
+        return None
+
+    # Return top match
+    matches.sort(key=lambda x: x["relevance"], reverse = True)
+    return matches[0]
+
+# Find SteamGridDB covers
+def FindSteamGridDBCovers(
     search_terms,
     image_dimensions = None,
     image_types = None,
@@ -40,6 +94,10 @@ def GetSearchResults(
         search_grids = sgdb.get_grids_by_gameid(game_ids=[search_result.id])
         if system.IsIterableContainer(search_grids):
             for search_grid in search_grids:
+
+                # Ignore dissimilar images
+                if not system.AreStringsHighlySimilar(search_terms, search_result.name):
+                    continue
 
                 # Ignore images that do not match requested dimensions
                 if system.IsIterableNonString(image_dimensions) and len(image_dimensions) == 2:

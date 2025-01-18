@@ -10,8 +10,8 @@ import environment
 import command
 import programs
 
-# Get search results
-def GetSearchResults(
+# Find videos
+def FindVideos(
     search_terms,
     num_results = 10,
     sort_by_duration = False,
