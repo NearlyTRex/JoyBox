@@ -12,18 +12,18 @@ import toolbase
 # Config files
 config_files = {}
 
-# LudusaviManifest tool
-class LudusaviManifest(toolbase.ToolBase):
+# SteamAppIDList tool
+class SteamAppIDList(toolbase.ToolBase):
 
     # Get name
     def GetName(self):
-        return "LudusaviManifest"
+        return "SteamAppIDList"
 
     # Get config
     def GetConfig(self):
         return {
-            "LudusaviManifest": {
-                "yaml": "LudusaviManifest/lib/data/manifest.yaml"
+            "SteamAppIDList": {
+                "csv": "SteamAppIDList/lib/steamcmd_appid.csv"
             }
         }
 
@@ -31,29 +31,29 @@ class LudusaviManifest(toolbase.ToolBase):
     def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("LudusaviManifest"):
+        if programs.ShouldLibraryBeInstalled("SteamAppIDList"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
-                github_repo = "LudusaviManifest",
-                output_dir = programs.GetLibraryInstallDir("LudusaviManifest", "lib"),
+                github_repo = "SteamAppIDList",
+                output_dir = programs.GetLibraryInstallDir("SteamAppIDList", "lib"),
                 clean = True,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-                system.LogError("Could not setup LudusaviManifest")
+                system.LogError("Could not setup SteamAppIDList")
                 return False
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
-                github_repo = "LudusaviManifest",
-                output_dir = programs.GetLibraryBackupDir("LudusaviManifest", "lib"),
+                github_repo = "SteamAppIDList",
+                output_dir = programs.GetLibraryBackupDir("SteamAppIDList", "lib"),
                 recursive = True,
                 clean = True,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-                system.LogError("Could not setup LudusaviManifest")
+                system.LogError("Could not setup SteamAppIDList")
                 return False
         return True
 
@@ -61,15 +61,15 @@ class LudusaviManifest(toolbase.ToolBase):
     def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("LudusaviManifest"):
+        if programs.ShouldLibraryBeInstalled("SteamAppIDList"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("LudusaviManifest", "lib"),
-                install_name = "LudusaviManifest",
-                install_dir = programs.GetLibraryInstallDir("LudusaviManifest", "lib"),
+                archive_dir = programs.GetLibraryBackupDir("SteamAppIDList", "lib"),
+                install_name = "SteamAppIDList",
+                install_dir = programs.GetLibraryInstallDir("SteamAppIDList", "lib"),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-                system.LogError("Could not setup LudusaviManifest")
+                system.LogError("Could not setup SteamAppIDList")
                 return False
         return True

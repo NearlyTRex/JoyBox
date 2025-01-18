@@ -26,7 +26,6 @@ from .legendary import Legendary
 from .lgogdownloader import LGOGDownloader
 from .ludusavi import Ludusavi
 from .ludusavimanifest import LudusaviManifest
-from .ludusavimanifest import GetManifest
 from .mametools import MameTools
 from .moonlight import Moonlight
 from .ndecrypt import NDecrypt
@@ -48,6 +47,7 @@ from .sandboxie import Sandboxie
 from .sevenzip import SevenZip
 from .sigtop import Sigtop
 from .steam import Steam
+from .steamappidlist import SteamAppIDList
 from .steamcmd import SteamCMD
 from .steamdepotdownloader import SteamDepotDownloader
 from .steamless import Steamless
@@ -115,6 +115,7 @@ def GetToolMap():
     AddInstance(SevenZip)
     AddInstance(Sigtop)
     AddInstance(Steam)
+    AddInstance(SteamAppIDList)
     AddInstance(SteamCMD)
     AddInstance(SteamDepotDownloader)
     AddInstance(Steamless)

@@ -12,7 +12,7 @@ import jsondata
 import network
 import launcher
 import collection
-import tools
+import programs
 import webpage
 import metadataentry
 import metadatacollector
@@ -130,7 +130,7 @@ class StoreBase:
     # Load manifest
     def LoadManifest(self, verbose = False, pretend_run = False, exit_on_failure = False):
         self.manifest = system.ReadYamlFile(
-            src = tools.GetManifest(),
+            src = programs.GetToolPathConfigValue("LudusaviManifest", "yaml"),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
