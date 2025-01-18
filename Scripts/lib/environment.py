@@ -92,12 +92,10 @@ def AreSymlinksSupported():
 # Import python module package
 def ImportPythonModulePackage(module_path, module_name):
     import importlib
-    init_file = os.path.join(module_path, "__init__.py")
-    if system.IsPathFile(init_file):
+    if system.IsPathDirectory(module_path):
         if module_name not in sys.modules:
-            sys.path.insert(0, module_path)
+            sys.path.append(module_path)
             module = importlib.import_module(module_name)
-            sys.path.pop(0)
             return module
         else:
             return sys.modules[module_name]
