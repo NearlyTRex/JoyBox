@@ -1438,6 +1438,47 @@ def SmartMove(
                 exit_on_failure = exit_on_failure)
     return True
 
+# Smart transfer
+def SmartTransfer(
+    src,
+    dest,
+    delete_afterwards = False,
+    show_progress = False,
+    skip_existing = False,
+    skip_identical = False,
+    case_sensitive_paths = True,
+    ignore_symlinks = False,
+    follow_symlink_dirs = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if delete_afterwards:
+        return SmartMove(
+            src = src,
+            dest = dest,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            case_sensitive_paths = case_sensitive_paths,
+            ignore_symlinks = ignore_symlinks,
+            follow_symlink_dirs = follow_symlink_dirs,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    else:
+        return SmartCopy(
+            src = src,
+            dest = dest,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            case_sensitive_paths = case_sensitive_paths,
+            ignore_symlinks = ignore_symlinks,
+            follow_symlink_dirs = follow_symlink_dirs,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
 # Sync contents
 def SyncContents(
     src,
