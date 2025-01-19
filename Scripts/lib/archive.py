@@ -17,6 +17,8 @@ def IsKnownArchive(archive_file, extensions = [], mime_types = []):
     for ext in extensions:
         if archive_file.lower().endswith(ext.lower()):
             return True
+    if not system.IsPathFile(archive_file):
+        return False
     actual_mime_type = system.GetFileMimeType(archive_file)
     for potential_mime_type in mime_types:
         if potential_mime_type.lower() in actual_mime_type.lower():
@@ -108,15 +110,16 @@ def IsExtractableArchiveType(archive_type):
 # Check archive checksums
 def GetArchiveChecksums(archive_file):
     checksums = []
-    if IsZipArchive(archive_file):
-        with zipfile.ZipFile(archive_file) as zf:
-            for info in zf.infolist():
-                if info.is_dir():
-                    continue
-                entry = {}
-                entry["path"] = info.filename
-                entry["crc"] = hex(info.CRC)
-                checksums.append(entry)
+    if system.IsPathFile(archive_file):
+        if IsZipArchive(archive_file):
+            with zipfile.ZipFile(archive_file) as zf:
+                for info in zf.infolist():
+                    if info.is_dir():
+                        continue
+                    entry = {}
+                    entry["path"] = info.filename
+                    entry["crc"] = hex(info.CRC)
+                    checksums.append(entry)
     return checksums
 
 # Get archive compression flags
