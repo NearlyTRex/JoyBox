@@ -390,3 +390,8 @@ class WebDriverType(EnumType):
     CHROME                  = ("Chrome")
     BRAVE                   = ("Brave")
 
+# Size types
+class SizeType(EnumType):
+    SMALL                   = ("Small")
+    MEDIUM                  = ("Medium")
+    LARGE                   = ("Large")
