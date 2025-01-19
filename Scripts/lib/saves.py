@@ -250,7 +250,7 @@ def NormalizeSaveArchive(
         return False
 
     # Replace archive
-    success = system.TransferFile(
+    success = system.SmartTransfer(
         src = system.JoinPaths(tmp_dir_archive, system.GetFilenameFile(save_archive)),
         dest = save_archive,
         verbose = verbose,

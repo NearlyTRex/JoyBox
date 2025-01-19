@@ -79,7 +79,7 @@ def ConvertImageToJPEG(
     pretend_run = False,
     exit_on_failure = False):
     if IsImageJPEG(image_src):
-        return system.TransferFile(
+        return system.SmartTransfer(
             src = image_src,
             dest = image_dest,
             skip_existing = True,
@@ -102,7 +102,7 @@ def ConvertImageToPNG(
     pretend_run = False,
     exit_on_failure = False):
     if IsImagePNG(image_src):
-        return system.TransferFile(
+        return system.SmartTransfer(
             src = image_src,
             dest = image_dest,
             skip_existing = True,

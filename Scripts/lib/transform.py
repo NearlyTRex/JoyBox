@@ -91,7 +91,7 @@ def TransformComputerPrograms(
                 return (False, "Unable to install computer game")
 
             # Backup install image
-            success = system.TransferFile(
+            success = system.SmartTransfer(
                 src = output_install_file,
                 dest = cached_install_file,
                 delete_afterwards = True,

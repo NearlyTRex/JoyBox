@@ -226,7 +226,7 @@ def BackupFiles(
     locker_remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
 
     # Transfer files
-    success = system.TransferFile(
+    success = system.SmartTransfer(
         src = src,
         dest = dest,
         delete_afterwards = delete_afterwards,

@@ -116,7 +116,7 @@ def ConvertAsset(
             return False
 
     # Transfer file by default
-    success = system.TransferFile(
+    success = system.SmartTransfer(
         src = asset_src,
         dest = asset_dest,
         skip_existing = True,
