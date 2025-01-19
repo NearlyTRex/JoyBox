@@ -273,8 +273,8 @@ def AreArchiveFilesIdentical(
     first_is_archive = archive.IsArchive(first)
     second_is_archive = archive.IsArchive(second)
     if first_is_archive and second_is_archive:
-        first_checksums = sorted(archive.GetArchiveChecksums(first))
-        second_checksums = sorted(archive.GetArchiveChecksums(second))
+        first_checksums = sorted(archive.GetArchiveChecksums(first), key=lambda item: (item['path'], item['crc']))
+        second_checksums = sorted(archive.GetArchiveChecksums(second), key=lambda item: (item['path'], item['crc']))
         if len(first_checksums) > 0 and len(second_checksums) > 0:
             return first_checksums == second_checksums
     return False
