@@ -13,9 +13,9 @@ import ini
 
 # Find images
 def FindImages(
-    search_terms,
-    image_type,
-    image_size,
+    search_name,
+    image_type = None,
+    image_size = None,
     image_dimensions = None,
     num_results = 20,
     verbose = False,
@@ -28,10 +28,12 @@ def FindImages(
 
     # Get search url
     search_url = "https://www.googleapis.com/customsearch/v1"
-    search_url += "?q=%s" % system.EncodeUrlString(search_terms)
+    search_url += "?q=%s" % system.EncodeUrlString(search_name)
     search_url += "&searchType=image"
-    search_url += "&fileType=%s" % image_type.val().lower()
-    search_url += "&imgSize=%s" % image_size.val().lower()
+    if config.ImageFileType.is_member(image_type):
+        search_url += "&fileType=%s" % image_type.lower()
+    if config.SizeType.is_member(image_size):
+        search_url += "&imgSize=%s" % image_size.lower()
     search_url += "&cx=%s" % google_search_engine_id
     search_url += "&key=%s" % google_search_engine_api_key
 
@@ -52,34 +54,34 @@ def FindImages(
         if system.IsIterableContainer(image_json_items):
             for image_json_item in image_json_items:
 
-                # Get image info
-                image_title = image_json_item["title"]
-                image_url = image_json_item["link"]
-                image_mime = image_json_item["mime"]
-                image_width = image_json_item["image"]["width"]
+                # Get item info
+                item_title = image_json_item["title"]
+                item_url = image_json_item["link"]
+                item_mime = image_json_item["mime"]
+                item_width = image_json_item["image"]["width"]
                 image_height = image_json_item["image"]["height"]
 
                 # Ignore dissimilar images
-                if not system.AreStringsHighlySimilar(search_terms, image_title):
+                if not system.AreStringsHighlySimilar(search_name, item_title):
                     continue
 
                 # Ignore images that do not match requested dimensions
                 if system.IsIterableNonString(image_dimensions) and len(image_dimensions) == 2:
                     requested_width = image_dimensions[0]
                     requested_height = image_dimensions[1]
-                    if image_width != requested_width:
+                    if item_width != requested_width:
                         continue
                     if image_height != requested_height:
                         continue
 
                 # Add search result
                 search_result = {}
-                search_result["title"] = image_title
-                search_result["url"] = image_url
-                search_result["mime"] = image_mime
-                search_result["width"] = image_width
+                search_result["title"] = item_title
+                search_result["url"] = item_url
+                search_result["mime"] = item_mime
+                search_result["width"] = item_width
                 search_result["height"] = image_height
-                search_result["relevance"] = system.GetStringSimilarityRatio(search_terms, image_title)
+                search_result["relevance"] = system.GetStringSimilarityRatio(search_name, item_title)
                 search_results.append(search_result)
 
     # Sort search results
@@ -90,7 +92,7 @@ def FindImages(
 
 # Find videos
 def FindVideos(
-    search_terms,
+    search_name,
     num_results = 20,
     verbose = False,
     pretend_run = False,
@@ -107,7 +109,7 @@ def FindVideos(
     # Get search command
     search_cmd = [
         youtube_tool,
-        "ytsearch%d:\"%s\"" % (num_results, search_terms),
+        "ytsearch%d:\"%s\"" % (num_results, search_name),
         "--dump-json",
         "--default-search", "ytsearch",
         "--no-playlist",

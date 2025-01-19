@@ -252,11 +252,6 @@ filler_words = [
     "with"
 ]
 
-# Search terms
-search_terms_video = [
-    "trailer"
-]
-
 # Rich text replacements
 rich_text_replacements = {
     "“": "\"",

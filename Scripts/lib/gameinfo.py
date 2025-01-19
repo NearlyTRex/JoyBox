@@ -671,7 +671,7 @@ def FindLockerGameNames(game_supercategory, game_category, game_subcategory, sou
 ###########################################################
 
 # Derive regular name from game name
-def DeriveRegularNameFromGameName(game_name):
+def DeriveRegularNameFromGameName(game_name, custom_prefix = "", custom_suffix = ""):
     regular_name = game_name
     for flippable_word in config.flippable_words:
         segment_before = f", {flippable_word} "
@@ -680,6 +680,7 @@ def DeriveRegularNameFromGameName(game_name):
             regular_name = regular_name.replace(segment_before, " ")
             regular_name = segment_after + regular_name
     regular_name = re.sub(r"\((.*?)\)", "", regular_name).strip()
+    regular_name = f"{custom_prefix}{regular_name}{custom_suffix}"
     return regular_name
 
 # Derive game name from regular name
@@ -717,13 +718,9 @@ def DeriveGameLetterFromName(game_name):
     return letter
 
 # Derive game search terms from name
-def DeriveGameSearchTermsFromName(game_name, game_platform, asset_type = None):
-    search_terms = []
+def DeriveGameSearchTermsFromName(game_name, game_platform):
     natural_name = DeriveRegularNameFromGameName(game_name)
-    if asset_type == config.AssetType.VIDEO:
-        search_terms.extend(config.search_terms_video)
-    search_terms.extend(natural_name.split(" "))
-    return system.EncodeUrlString(" ".join(search_terms), use_plus = True)
+    return system.EncodeUrlString(natural_name, use_plus = True)
 
 # Derive game name path from name
 def DeriveGameNamePathFromName(game_name, game_platform):

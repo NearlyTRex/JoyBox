@@ -19,11 +19,17 @@ import metadataentry
 
 # Get steam page
 def GetSteamPage(appid):
-    return "https://store.steampowered.com/app/%s" % appid
+    url = "https://store.steampowered.com/app/%s" % appid
+    if network.IsUrlReachable(url):
+        return url
+    return None
 
 # Get steam cover
 def GetSteamCover(appid):
-    return "https://cdn.cloudflare.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % appid
+    url = "https://cdn.cloudflare.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % appid
+    if network.IsUrlReachable(url):
+        return url
+    return None
 
 # Get steam trailer
 def GetSteamTrailer(
@@ -42,12 +48,12 @@ def GetSteamTrailer(
 
 # Get likely steam page
 def GetLikelySteamPage(
-    search_terms,
+    search_name,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     likely_match = FindSteamAppIDMatch(
-        search_terms = search_terms,
+        search_name = search_name,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -57,12 +63,12 @@ def GetLikelySteamPage(
 
 # Get likely steam cover
 def GetLikelySteamCover(
-    search_terms,
+    search_name,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     likely_match = FindSteamAppIDMatch(
-        search_terms = search_terms,
+        search_name = search_name,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -72,12 +78,12 @@ def GetLikelySteamCover(
 
 # Get likely steam trailer
 def GetLikelySteamTrailer(
-    search_terms,
+    search_name,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     likely_match = FindSteamAppIDMatch(
-        search_terms = search_terms,
+        search_name = search_name,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -91,7 +97,7 @@ def GetLikelySteamTrailer(
 
 # Find steam appid matches
 def FindSteamAppIDMatches(
-    search_terms,
+    search_name,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -107,21 +113,22 @@ def FindSteamAppIDMatches(
     # Build list of matches
     matches = []
     for entry in appid_list:
-        if system.AreStringsHighlySimilar(search_terms, entry["name"]):
-            entry["relevance"] = system.GetStringSimilarityRatio(search_terms, entry["name"])
+        if system.AreStringsHighlySimilar(search_name, entry["name"]):
+            entry["relevance"] = system.GetStringSimilarityRatio(search_name, entry["name"])
             matches.append(entry)
     return matches
 
 # Find steam appid match
 def FindSteamAppIDMatch(
-    search_terms,
+    search_name,
+    only_active_pages = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Get relevant matches
     matches = FindSteamAppIDMatches(
-        search_terms = search_terms,
+        search_name = search_name,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -129,12 +136,18 @@ def FindSteamAppIDMatch(
         return None
 
     # Return top match
-    matches.sort(key=lambda x: x["relevance"], reverse = True)
-    return matches[0]
+    if only_active_pages:
+        for match in sorted(matches, key=lambda x: x["relevance"], reverse=True):
+            steam_page = GetSteamPage(match["appid"])
+            if steam_page:
+                return match
+        return None
+    else:
+        return matches[0]
 
 # Find SteamGridDB covers
 def FindSteamGridDBCovers(
-    search_terms,
+    search_name,
     image_dimensions = None,
     image_types = None,
     verbose = False,
@@ -154,28 +167,30 @@ def FindSteamGridDBCovers(
 
     # Build search results
     search_results = []
-    for game_entry in sgdb.search_game(search_terms):
+    for game_entry in sgdb.search_game(system.EncodeUrlString(search_name, use_plus = True)):
         search_grids = sgdb.get_grids_by_gameid(game_ids=[game_entry.id])
         if system.IsIterableContainer(search_grids):
             for search_grid in search_grids:
 
-                # Get image info
-                image_id = game_entry.id
-                image_name = game_entry.name
-                image_release_date = game_entry.release_date
-                image_types = game_entry.types
+                # Get grid info
+                grid_id = game_entry.id
+                grid_name = game_entry.name
+                grid_release_date = game_entry.release_date
+                grid_types = game_entry.types
+                grid_width = search_grid.width
+                grid_height = search_grid.height
 
                 # Ignore dissimilar images
-                if not system.AreStringsHighlySimilar(search_terms, image_name):
+                if not system.AreStringsHighlySimilar(search_name, grid_name):
                     continue
 
                 # Ignore images that do not match requested dimensions
                 if system.IsIterableNonString(image_dimensions) and len(image_dimensions) == 2:
                     requested_width = image_dimensions[0]
                     requested_height = image_dimensions[1]
-                    if search_grid.width != requested_width:
+                    if grid_width != requested_width:
                         continue
-                    if search_grid.height != requested_height:
+                    if grid_height != requested_height:
                         continue
 
                 # Ignore images that do not match requested types
@@ -186,11 +201,13 @@ def FindSteamGridDBCovers(
 
                 # Add image link
                 search_result = search_grid.to_json()
-                search_result["id"] = image_id
-                search_result["name"] = image_name
-                search_result["release_date"] = image_release_date
-                search_result["types"] = image_types
-                search_result["relevance"] = system.GetStringSimilarityRatio(search_terms, image_name)
+                search_result["id"] = grid_id
+                search_result["name"] = grid_name
+                search_result["release_date"] = grid_release_date
+                search_result["types"] = grid_types
+                search_result["width"] = grid_width
+                search_result["height"] = grid_height
+                search_result["relevance"] = system.GetStringSimilarityRatio(search_name, grid_name)
                 search_results.append(search_result)
 
     # Sort search results

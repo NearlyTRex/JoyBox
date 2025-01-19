@@ -55,7 +55,11 @@ class EnumType(enum.Enum):
         return [member.cvalue for member in cls]
 
     @classmethod
-    def is_valid(cls, value):
+    def is_member(cls, value):
+        return isinstance(value, cls)
+
+    @classmethod
+    def is_convertible(cls, value):
         if isinstance(value, cls):
             return True
         return value in cls.values()
