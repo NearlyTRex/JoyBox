@@ -149,30 +149,33 @@ def FindSteamGridDBCovers(
         module_path = programs.GetToolPathConfigValue("PySteamGridDB", "package_dir"),
         module_name = programs.GetToolConfigValue("PySteamGridDB", "package_name"))
 
-    # Create image links
-    image_links = []
-
     # Initialize client
     sgdb = steamgrid.SteamGridDB(steamgriddb_api_key)
 
-    # Search for the image links
-    search_results = sgdb.search_game(search_terms)
-    for search_result in search_results:
-        search_grids = sgdb.get_grids_by_gameid(game_ids=[search_result.id])
+    # Build search results
+    search_results = []
+    for game_entry in sgdb.search_game(search_terms):
+        search_grids = sgdb.get_grids_by_gameid(game_ids=[game_entry.id])
         if system.IsIterableContainer(search_grids):
             for search_grid in search_grids:
 
+                # Get image info
+                image_id = game_entry.id
+                image_name = game_entry.name
+                image_release_date = game_entry.release_date
+                image_types = game_entry.types
+
                 # Ignore dissimilar images
-                if not system.AreStringsHighlySimilar(search_terms, search_result.name):
+                if not system.AreStringsHighlySimilar(search_terms, image_name):
                     continue
 
                 # Ignore images that do not match requested dimensions
                 if system.IsIterableNonString(image_dimensions) and len(image_dimensions) == 2:
-                    requested_w = image_dimensions[0]
-                    requested_h = image_dimensions[1]
-                    if search_grid.width != requested_w:
+                    requested_width = image_dimensions[0]
+                    requested_height = image_dimensions[1]
+                    if search_grid.width != requested_width:
                         continue
-                    if search_grid.height != requested_h:
+                    if search_grid.height != requested_height:
                         continue
 
                 # Ignore images that do not match requested types
@@ -182,16 +185,19 @@ def FindSteamGridDBCovers(
                         continue
 
                 # Add image link
-                search_grid_dict = search_grid.to_json()
-                search_grid_dict["id"] = search_result.id
-                search_grid_dict["name"] = search_result.name
-                search_grid_dict["release_date"] = search_result.release_date
-                search_grid_dict["types"] = search_result.types
-                search_grid_dict["relevance"] = system.GetStringSimilarityRatio(search_terms, search_result.name)
-                image_links.append(search_grid_dict)
+                search_result = search_grid.to_json()
+                search_result["id"] = image_id
+                search_result["name"] = image_name
+                search_result["release_date"] = image_release_date
+                search_result["types"] = image_types
+                search_result["relevance"] = system.GetStringSimilarityRatio(search_terms, image_name)
+                search_results.append(search_result)
 
-    # Return image links
-    return sorted(image_links, key=lambda x: x["relevance"], reverse = True)
+    # Sort search results
+    search_results = sorted(search_results, key=lambda x: x["relevance"], reverse = True)
+
+    # Return search results
+    return search_results
 
 # Steam store
 class Steam(storebase.StoreBase):

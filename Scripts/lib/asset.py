@@ -9,7 +9,7 @@ import command
 import programs
 import network
 import image
-import youtube
+import google
 
 # Clean exif data
 def CleanExifData(
@@ -59,7 +59,7 @@ def DownloadAsset(
 
         # YouTube
         if asset_url.startswith("https://www.youtube.com"):
-            success = youtube.DownloadVideo(
+            success = google.DownloadVideo(
                 video_url = asset_url,
                 output_file = asset_file,
                 verbose = verbose,

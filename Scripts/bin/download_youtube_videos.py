@@ -10,7 +10,7 @@ sys.path.append(lib_folder)
 import config
 import system
 import metadata
-import youtube
+import google
 import arguments
 import setup
 
@@ -31,7 +31,7 @@ def main():
     setup.CheckRequirements()
 
     # Download videos
-    youtube.DownloadVideo(
+    google.DownloadVideo(
         video_url = args.youtube_url,
         output_file = args.output_file,
         output_dir = args.output_dir,

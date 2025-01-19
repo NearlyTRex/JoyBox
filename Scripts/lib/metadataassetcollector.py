@@ -6,9 +6,49 @@ import sys
 import config
 import system
 import gameinfo
-import youtube
+import google
 import stores
 import metadata
+
+############################################################
+
+# Collect metadata assets from google images
+def CollectMetadataAssetsFromGoogleImages(
+    game_platform,
+    game_name,
+    asset_type,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Only allow BoxFront
+    if asset_type != config.AssetType.BOXFRONT:
+        return []
+
+    # Get search terms
+    search_terms = gameinfo.DeriveGameSearchTermsFromName(
+        game_name = game_name,
+        game_platform = game_platform,
+        asset_type = asset_type)
+
+    # Get search results
+    search_results = google.FindImages(
+        search_terms = search_terms,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Build asset list
+    metadata_assets = []
+    for search_result in search_results:
+        result_title = search_result["title"]
+        result_mime = search_result["mime"]
+        result_url = search_result["url"]
+        new_asset = {}
+        new_asset["url"] = result_url
+        new_asset["description"] = f"\"{result_title}\" ({result_mime}) - {result_url}"
+        metadata_assets.append(new_asset)
+    return metadata_assets
 
 ############################################################
 
@@ -32,10 +72,8 @@ def CollectMetadataAssetsFromYouTube(
         asset_type = asset_type)
 
     # Get search results
-    search_results = youtube.FindVideos(
+    search_results = google.FindVideos(
         search_terms = search_terms,
-        num_results = 20,
-        sort_by_duration = True,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -52,7 +90,6 @@ def CollectMetadataAssetsFromYouTube(
         new_asset["description"] = f"\"{result_title}\" ({result_channel}) [{result_duration}] - {result_url}"
         metadata_assets.append(new_asset)
     return metadata_assets
-
 
 ############################################################
 
@@ -144,18 +181,6 @@ def CollectMetadataAssetsFromSteamGridDB(
 
 ############################################################
 
-# Collect metadata assets from google
-def CollectMetadataAssetsFromGoogle(
-    game_platform,
-    game_name,
-    asset_type,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    return []
-
-############################################################
-
 # Collect metadata asset from all
 def CollectMetadataAssetFromAll(
     game_platform,
@@ -195,8 +220,8 @@ def CollectMetadataAssetFromAll(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Try from Google
-    metadata_assets += CollectMetadataAssetsFromGoogle(
+    # Try from Google Images
+    metadata_assets += CollectMetadataAssetsFromGoogleImages(
         game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
