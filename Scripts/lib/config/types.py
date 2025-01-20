@@ -399,3 +399,8 @@ class SizeType(EnumType):
     SMALL                   = ("Small")
     MEDIUM                  = ("Medium")
     LARGE                   = ("Large")
+
+# Content delivery network types
+class ContentDeliveryNetworkType(EnumType):
+    CLOUDFLARE              = ("Cloudflare")
+    FASTLY                  = ("Fastly")

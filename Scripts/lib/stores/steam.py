@@ -27,9 +27,10 @@ def GetSteamPage(appid):
 
 # Get steam cover
 def GetSteamCover(appid):
-    url = "https://cdn.cloudflare.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % appid
-    if network.IsUrlReachable(url):
-        return url
+    for cdn_type in config.ContentDeliveryNetworkType.members():
+        url = "https://cdn.%s.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % (cdn_type.lower(), appid)
+        if network.IsUrlReachable(url):
+            return url
     return None
 
 # Get steam trailer
@@ -38,14 +39,18 @@ def GetSteamTrailer(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    return webpage.GetMatchingUrl(
-        url = GetSteamPage(appid),
-        base_url = "https://video.fastly.steamstatic.com/store_trailers",
-        starts_with = "https://video.fastly.steamstatic.com/store_trailers",
-        ends_with = ".mp4",
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    for cdn_type in config.ContentDeliveryNetworkType.members():
+        asset_url = webpage.GetMatchingUrl(
+            url = GetSteamPage(appid),
+            base_url = "https://video.%s.steamstatic.com/store_trailers" % cdn_type.lower(),
+            starts_with = "https://video.%s.steamstatic.com/store_trailers" % cdn_type.lower(),
+            ends_with = ".mp4",
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if asset_url:
+            return asset_url
+    return None
 
 # Find steam appid matches
 def FindSteamAppIDMatches(
