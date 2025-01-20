@@ -166,6 +166,11 @@ max_disc_data_size_100gb = 88 * bytes_per_gigabyte
 hash_chunk_size = 2 ** 32
 transfer_chunk_size = 4096 * 1024
 
+# Asset sizes
+asset_boxfront_width = 600
+asset_boxfront_height = 900
+asset_boxfront_dimensions = (asset_boxfront_width, asset_boxfront_height)
+
 # Ignored install paths
 ignored_paths_install = [
     "ProgramData/Microsoft",
