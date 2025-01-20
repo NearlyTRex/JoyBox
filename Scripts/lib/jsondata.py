@@ -11,8 +11,8 @@ import system
 class JsonData:
 
     # Constructor
-    def __init__(self, json_data = {}, json_platform = None):
-        self.json_data = json_data
+    def __init__(self, json_data = None, json_platform = None):
+        self.json_data = json_data if json_data is not None else {}
         self.json_platform = json_platform
 
     # Get data
