@@ -186,17 +186,17 @@ def GetStringSimilarityRatio(string1, string2):
 # Check if strings are highly similar
 def AreStringsHighlySimilar(string1, string2):
     ratio = GetStringSimilarityRatio(string1, string2)
-    return (ratio >= 90) and (ratio <= 100)
+    return (ratio >= 90)
 
 # Check if strings are moderately similar
 def AreStringsModeratelySimilar(string1, string2):
     ratio = GetStringSimilarityRatio(string1, string2)
-    return (ratio >= 80) and (ratio <= 90)
+    return (ratio >= 80)
 
 # Check if strings are possibly similar
 def AreStringsPossiblySimilar(string1, string2):
     ratio = GetStringSimilarityRatio(string1, string2)
-    return (ratio >= 50) and (ratio <= 80)
+    return (ratio >= 50)
 
 # Sort strings
 def SortStrings(strings):
