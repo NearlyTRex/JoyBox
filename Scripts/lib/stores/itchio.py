@@ -220,7 +220,9 @@ class Itchio(storebase.StoreBase):
         element_more_information = webpage.WaitForElement(
             driver = web_driver,
             locator = webpage.ElementLocator({"xpath": "//div[@class='toggle_row']//a[contains(text(), 'More information')]"}),
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         if element_more_information:
             webpage.ClickElement(element_more_information)
             system.SleepProgram(3)
@@ -229,7 +231,9 @@ class Itchio(storebase.StoreBase):
         element_game_description = webpage.WaitForElement(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "formatted_description"}),
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         if element_game_description:
             raw_game_description = webpage.GetElementText(element_game_description)
             if raw_game_description:

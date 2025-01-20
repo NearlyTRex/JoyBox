@@ -262,6 +262,7 @@ class GOG(storebase.StoreBase):
 
         # Connect to web
         web_driver = self.WebConnect(
+            headless = True,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -280,7 +281,9 @@ class GOG(storebase.StoreBase):
         element_game_description = webpage.WaitForElement(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "description"}),
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         if element_game_description:
             raw_game_description = webpage.GetElementChildrenText(element_game_description)
             if raw_game_description:

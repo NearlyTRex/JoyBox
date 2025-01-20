@@ -303,7 +303,9 @@ class Epic(storebase.StoreBase):
         element_game_description = webpage.WaitForElement(
             driver = web_driver,
             locator = webpage.ElementLocator({"id": "about-long-description"}),
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         if element_game_description:
             raw_game_description = webpage.GetElementChildrenText(element_game_description)
             if raw_game_description:
@@ -389,11 +391,11 @@ class Epic(storebase.StoreBase):
         if not web_driver:
             return None
 
-        # Get keywords name
-        keywords_name = system.EncodeUrlString(identifier.strip(), use_plus = True)
+        # Get search terms
+        search_terms = system.EncodeUrlString(identifier.strip(), use_plus = True)
 
         # Load url
-        success = webpage.LoadUrl(web_driver, "https://store.epicgames.com/en-US/browse?sortBy=relevancy&sortDir=DESC&q=" + keywords_name)
+        success = webpage.LoadUrl(web_driver, "https://store.epicgames.com/en-US/browse?sortBy=relevancy&sortDir=DESC&q=" + search_terms)
         if not success:
             return None
 
@@ -401,7 +403,9 @@ class Epic(storebase.StoreBase):
         element_search_result = webpage.WaitForElement(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "css-1ufzxyu"}),
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         if not element_search_result:
             return None
 
@@ -412,25 +416,27 @@ class Epic(storebase.StoreBase):
             locator = webpage.ElementLocator({"class": "css-2mlzob"}),
             all_elements = True)
         if game_cells:
-            for game_card in game_cells:
+            for game_cell in game_cells:
+
+                # Get possible title
                 game_title_element = webpage.GetElement(
-                    parent = game_card,
+                    parent = game_cell,
                     locator = webpage.ElementLocator({"class": "css-lgj0h8"}),
                     verbose = verbose)
-                game_card_text = webpage.GetElementChildrenText(game_title_element)
+                game_cell_text = webpage.GetElementChildrenText(game_title_element)
 
                 # Add comparison score
                 score_entry = {}
-                score_entry["element"] = game_card
-                score_entry["ratio"] = system.GetStringSimilarityRatio(identifier, game_card_text)
+                score_entry["element"] = game_cell
+                score_entry["ratio"] = system.GetStringSimilarityRatio(identifier, game_cell_text)
                 scores_list.append(score_entry)
 
         # Get the best url match
         appurl = None
         for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
-            game_card = score_entry["element"]
+            game_cell = score_entry["element"]
             game_link_element = webpage.GetElement(
-                parent = game_card,
+                parent = game_cell,
                 locator = webpage.ElementLocator({"class": "css-g3jcms"}),
                 verbose = verbose)
             if game_link_element:

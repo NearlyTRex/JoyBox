@@ -598,7 +598,9 @@ class Steam(storebase.StoreBase):
             driver = web_driver,
             locator = webpage.ElementLocator({"id": "app_agegate"}),
             wait_time = 5,
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         if element_age_gate:
 
             # Get age selectors
@@ -621,7 +623,9 @@ class Steam(storebase.StoreBase):
         element_game_description = webpage.WaitForElement(
             driver = web_driver,
             locator = webpage.ElementLocator({"id": "aboutThisGame"}),
-            verbose = verbose)
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         if element_game_description:
             raw_game_description = webpage.GetElementChildrenText(element_game_description)
             if raw_game_description:

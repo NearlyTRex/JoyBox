@@ -26,7 +26,6 @@ parser.add_enum_argument(
 parser.add_string_argument(args = ("--keys_to_check"), description = "Check against specific keys (comma delimited)")
 parser.add_boolean_argument(args = ("--force_download"), description = "Force download")
 parser.add_boolean_argument(args = ("--allow_replacing"), description = "Allow replacing")
-parser.add_boolean_argument(args = ("-a", "--select_automatically"), description = "Select game automatically")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -52,7 +51,6 @@ def main():
         keys_to_check = keys_to_check,
         force_download = args.force_download,
         allow_replacing = args.allow_replacing,
-        select_automatically = args.select_automatically,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)

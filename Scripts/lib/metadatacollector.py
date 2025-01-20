@@ -22,7 +22,6 @@ def CollectMetadataFromFile(
     keys_to_check = [],
     force_download = False,
     allow_replacing = False,
-    select_automatically = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -60,7 +59,6 @@ def CollectMetadataFromFile(
                 metadata_result = CollectMetadataFromTGDB(
                     game_platform = game_platform,
                     game_name = game_name,
-                    select_automatically = select_automatically,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
@@ -68,7 +66,6 @@ def CollectMetadataFromFile(
                 metadata_result = CollectMetadataFromGameFAQS(
                     game_platform = game_platform,
                     game_name = game_name,
-                    select_automatically = select_automatically,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
@@ -111,7 +108,6 @@ def CollectMetadataFromDirectory(
     keys_to_check = [],
     force_download = False,
     allow_replacing = False,
-    select_automatically = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -124,7 +120,6 @@ def CollectMetadataFromDirectory(
             keys_to_check = keys_to_check,
             force_download = force_download,
             allow_replacing = allow_replacing,
-            select_automatically = select_automatically,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -139,7 +134,6 @@ def CollectMetadataFromCategories(
     keys_to_check = [],
     force_download = False,
     allow_replacing = False,
-    select_automatically = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -164,7 +158,6 @@ def CollectMetadataFromCategories(
         keys_to_check = keys_to_check,
         force_download = force_download,
         allow_replacing = allow_replacing,
-        select_automatically = select_automatically,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -175,13 +168,12 @@ def CollectMetadataFromCategories(
 def CollectMetadataFromTGDB(
     game_platform,
     game_name,
-    select_automatically = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Create web driver
-    web_driver = webpage.CreateWebDriver()
+    web_driver = webpage.CreateWebDriver(make_headless = True)
 
     # Get search terms
     search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
@@ -194,57 +186,58 @@ def CollectMetadataFromTGDB(
     if not success:
         return None
 
-    # Select an entry automatically
-    if select_automatically:
+    # Get natural name
+    natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
 
-        # Get natural name
-        natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
+    # Find the root container element
+    element_search_result = webpage.WaitForElement(
+        driver = web_driver,
+        locator = webpage.ElementLocator({"class": "container-fluid"}),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not element_search_result:
+        return None
 
-        # Find the root container element
-        element_search_result = webpage.WaitForElement(
-            driver = web_driver,
-            locator = webpage.ElementLocator({"class": "container-fluid"}),
-            verbose = verbose)
-        if not element_search_result:
-            return None
+    # Score each potential title compared to the original title
+    scores_list = []
+    game_cells = webpage.GetElement(
+        parent = element_search_result,
+        locator = webpage.ElementLocator({"class": "card-footer"}),
+        all_elements = True)
+    if game_cells:
+        for game_cell in game_cells:
 
-        # Score each potential title compared to the original title
-        scores_list = []
-        game_cards = webpage.GetElement(
-            parent = element_search_result,
-            locator = webpage.ElementLocator({"class": "card-footer"}),
-            all_elements = True)
-        if game_cards:
-            for game_card in game_cards:
-                game_card_text = webpage.GetElementText(game_card)
+            # Get possible title
+            game_cell_text = webpage.GetElementText(game_cell)
+            potential_title = ""
+            if game_cell_text:
+                for game_cell_text_token in game_cell_text.split("\n"):
+                    potential_title = game_cell_text_token
+                    break
 
-                # Get potential title
-                potential_title = ""
-                if game_card_text:
-                    for game_card_text_token in game_card_text.split("\n"):
-                        potential_title = game_card_text_token
-                        break
+            # Add comparison score
+            score_entry = {}
+            score_entry["element"] = game_cell
+            score_entry["ratio"] = system.GetStringSimilarityRatio(natural_name, potential_title)
+            scores_list.append(score_entry)
 
-                # Get comparison score
-                score_entry = {}
-                score_entry["node"] = game_card
-                score_entry["ratio"] = system.GetStringSimilarityRatio(natural_name, potential_title)
-                scores_list.append(score_entry)
+    # Click on the highest score element
+    for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
+        webpage.ClickElement(score_entry["element"])
+        break
 
-        # Click on the highest score node
-        for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
-            webpage.ClickElement(score_entry["node"])
-            break
-
-        # Check if the url has changed
-        if webpage.IsUrlLoaded(web_driver, "https://thegamesdb.net/search.php?name="):
-            return None
+    # Check if the url has changed
+    if webpage.IsUrlLoaded(web_driver, "https://thegamesdb.net/search.php?name="):
+        return None
 
     # Look for game description
     element_game_description = webpage.WaitForElement(
         driver = web_driver,
         locator = webpage.ElementLocator({"class": "game-overview"}),
-        verbose = verbose)
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if not element_game_description:
         return None
 
@@ -310,13 +303,12 @@ def CollectMetadataFromTGDB(
 def CollectMetadataFromGameFAQS(
     game_platform,
     game_name,
-    select_automatically = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Create web driver
-    web_driver = webpage.CreateWebDriver()
+    web_driver = webpage.CreateWebDriver(make_headless = True)
 
     # Get search terms
     search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
@@ -333,7 +325,9 @@ def CollectMetadataFromGameFAQS(
     element_homepage_marker = webpage.WaitForElement(
         driver = web_driver,
         locator = webpage.ElementLocator({"class": "home_jbi_ft"}),
-        verbose = verbose)
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if not element_homepage_marker:
         return None
 
@@ -346,7 +340,9 @@ def CollectMetadataFromGameFAQS(
     element_search_result = webpage.WaitForElement(
         driver = web_driver,
         locator = webpage.ElementLocator({"class": "span12"}),
-        verbose = verbose)
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if not element_search_result:
         return None
 
@@ -387,7 +383,9 @@ def CollectMetadataFromGameFAQS(
     element_game_description = webpage.WaitForElement(
         driver = web_driver,
         locator = webpage.ElementLocator({"class": "game_desc"}),
-        verbose = verbose)
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if not element_game_description:
         return None
 
@@ -461,13 +459,12 @@ def CollectMetadataFromGameFAQS(
 def CollectMetadataFromBigFishGames(
     game_platform,
     game_name,
-    select_automatically = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Create web driver
-    web_driver = webpage.CreateWebDriver()
+    web_driver = webpage.CreateWebDriver(make_headless = True)
 
     # Get search terms
     search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
@@ -484,7 +481,9 @@ def CollectMetadataFromBigFishGames(
     element_game_description = webpage.WaitForElement(
         driver = web_driver,
         locator = webpage.ElementLocator({"class": "productFullDetail__descriptionContent"}),
-        verbose = verbose)
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if not element_game_description:
         return None
 
@@ -492,7 +491,9 @@ def CollectMetadataFromBigFishGames(
     element_game_bullets = webpage.WaitForElement(
         driver = web_driver,
         locator = webpage.ElementLocator({"class": "productFullDetail__bullets"}),
-        verbose = verbose)
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     if not element_game_bullets:
         return None
 
@@ -519,7 +520,6 @@ def CollectMetadataFromAll(
     game_platform,
     game_name,
     keys_to_check,
-    select_automatically = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -531,27 +531,11 @@ def CollectMetadataFromAll(
     metadata_result_gamefaqs = CollectMetadataFromGameFAQS(
         game_platform = game_platform,
         game_name = game_name,
-        select_automatically = select_automatically,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if isinstance(metadata_result_gamefaqs, metadataentry.MetadataEntry):
         metadata_result.merge(metadata_result_gamefaqs)
-
-    # Check if done
-    if not metadata_result.is_missing_data(keys_to_check):
-        return metadata_result
-
-    # Try from TheGamesDB
-    metadata_result_thegamesdb = CollectMetadataFromTGDB(
-        game_platform = game_platform,
-        game_name = game_name,
-        select_automatically = select_automatically,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if isinstance(metadata_result_thegamesdb, metadataentry.MetadataEntry):
-        metadata_result.merge(metadata_result_thegamesdb)
 
     # Return result
     return metadata_result

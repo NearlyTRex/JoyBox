@@ -152,9 +152,9 @@ def FindMetadataAsset(
         exit_on_failure = exit_on_failure)
 
     # Show possible assets to the user
-    system.LogInfo(f"Here are the results for \"{game_name}\"")
+    system.LogInfo("Here are the %s results for \"%s\"" % (asset_type.val(), game_name))
     for index, search_result in enumerate(search_results):
-        system.LogInfo(f"{index}) {search_result.get_description()} - {search_result.get_url()}")
+        system.LogInfo(f"%d) %s - %s" % (index, search_result.get_description(), search_result.get_url()))
 
     # Ask them which one they want to use
     value = system.PromptForValue("Which do you want to use? [Enter an index or type a url to use that]")

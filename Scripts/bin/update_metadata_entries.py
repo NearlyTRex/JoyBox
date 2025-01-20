@@ -62,16 +62,16 @@ def main():
         for game_supercategory in parser.get_selected_supercategories():
             for game_category, game_subcategories in parser.get_selected_subcategories().items():
                 for game_subcategory in game_subcategories:
-                    game_names = gameinfo.FindLockerGameNames(
+                    game_names = gameinfo.FindJsonGameNames(
                         game_supercategory,
                         game_category,
-                        game_subcategory,
-                        args.source_type)
+                        game_subcategory)
                     for game_name in game_names:
                         success = collection.UpdateMetadataEntry(
                             game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,
+                            game_name = game_name,
                             verbose = args.verbose,
                             pretend_run = args.pretend_run,
                             exit_on_failure = args.exit_on_failure)
