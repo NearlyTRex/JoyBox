@@ -690,7 +690,7 @@ def DownloadMetadataAsset(
 
     # Check asset url
     if not network.IsUrlReachable(asset_url):
-        asset_url = metadataassetcollector.CollectMetadataAssetFromAll(
+        asset_url = metadataassetcollector.FindMetadataAsset(
             game_platform = game_platform,
             game_name = game_name,
             asset_type = asset_type,

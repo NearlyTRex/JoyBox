@@ -61,6 +61,12 @@ class AssetSearchResult(jsondata.JsonData):
     def get_height(self):
         return self.get_value(config.asset_key_height)
 
+    # Duration
+    def set_duration(self, value):
+        self.set_value(config.asset_key_duration, value)
+    def get_duration(self):
+        return self.get_value(config.asset_key_duration)
+
     # Relevance
     def set_relevance(self, value):
         self.set_value(config.asset_key_relevance, value)

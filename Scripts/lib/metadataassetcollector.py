@@ -8,12 +8,11 @@ import system
 import gameinfo
 import google
 import stores
-import metadata
 
 ############################################################
 
-# Collect metadata assets from google images
-def CollectMetadataAssetsFromGoogleImages(
+# Find metadata assets from google images
+def FindMetadataAssetsFromGoogleImages(
     game_platform,
     game_name,
     asset_type,
@@ -25,35 +24,18 @@ def CollectMetadataAssetsFromGoogleImages(
     if asset_type != config.AssetType.BOXFRONT:
         return []
 
-    # Get search terms
-    search_terms = gameinfo.DeriveGameSearchTermsFromName(
-        game_name = game_name,
-        game_platform = game_platform,
-        asset_type = asset_type)
-
-    # Get search results
-    search_results = google.FindImages(
-        search_terms = search_terms,
+    # Return search results
+    return google.FindImages(
+        search_name = gameinfo.DeriveRegularNameFromGameName(game_name),
+        image_dimensions = config.asset_boxfront_dimensions,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Build asset list
-    metadata_assets = []
-    for search_result in search_results:
-        result_title = search_result["title"]
-        result_mime = search_result["mime"]
-        result_url = search_result["url"]
-        new_asset = {}
-        new_asset["url"] = result_url
-        new_asset["description"] = f"\"{result_title}\" ({result_mime}) - {result_url}"
-        metadata_assets.append(new_asset)
-    return metadata_assets
-
 ############################################################
 
-# Collect metadata asset from YouTube
-def CollectMetadataAssetsFromYouTube(
+# Find metadata asset from YouTube
+def FindMetadataAssetsFromYouTube(
     game_platform,
     game_name,
     asset_type,
@@ -65,36 +47,17 @@ def CollectMetadataAssetsFromYouTube(
     if asset_type != config.AssetType.VIDEO:
         return []
 
-    # Get search terms
-    search_terms = gameinfo.DeriveGameSearchTermsFromName(
-        game_name = game_name,
-        game_platform = game_platform,
-        asset_type = asset_type)
-
-    # Get search results
-    search_results = google.FindVideos(
-        search_terms = search_terms,
+    # Return search results
+    return google.FindVideos(
+        search_name = gameinfo.DeriveRegularNameFromGameName(game_name, custom_suffix = " trailer"),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Build asset list
-    metadata_assets = []
-    for search_result in search_results:
-        result_title = search_result["title"]
-        result_channel = search_result["channel"]
-        result_duration = search_result["duration_string"]
-        result_url = search_result["url"]
-        new_asset = {}
-        new_asset["url"] = result_url
-        new_asset["description"] = f"\"{result_title}\" ({result_channel}) [{result_duration}] - {result_url}"
-        metadata_assets.append(new_asset)
-    return metadata_assets
-
 ############################################################
 
-# Collect metadata assets from Steam
-def CollectMetadataAssetsFromSteam(
+# Find metadata assets from Steam
+def FindMetadataAssetsFromSteam(
     game_platform,
     game_name,
     asset_type,
@@ -106,34 +69,18 @@ def CollectMetadataAssetsFromSteam(
     if asset_type not in [config.AssetType.BOXFRONT, config.AssetType.VIDEO]:
         return []
 
-    # Get search terms
-    search_terms = gameinfo.DeriveGameSearchTermsFromName(
-        game_name = game_name,
-        game_platform = game_platform,
-        asset_type = asset_type)
-
     # Build asset list
-    metadata_assets = []
-    asset_url = None
-    if asset_type == config.AssetType.BOXFRONT:
-        asset_url = stores.GetLikelySteamCover(search_terms)
-    elif asset_type == config.AssetType.VIDEO:
-        asset_url = stores.GetLikelySteamTrailer(
-            search_terms = search_terms,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    if asset_url:
-        new_asset = {}
-        new_asset["url"] = asset_url
-        new_asset["description"] = f"{result_url}"
-        metadata_assets.append(new_asset)
-    return metadata_assets
+    return stores.FindSteamAssets(
+        search_name = gameinfo.DeriveRegularNameFromGameName(game_name),
+        asset_type = asset_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ############################################################
 
-# Collect metadata assets from SteamGridDB
-def CollectMetadataAssetsFromSteamGridDB(
+# Find metadata assets from SteamGridDB
+def FindMetadataAssetsFromSteamGridDB(
     game_platform,
     game_name,
     asset_type,
@@ -145,44 +92,19 @@ def CollectMetadataAssetsFromSteamGridDB(
     if asset_type != config.AssetType.BOXFRONT:
         return []
 
-    # Get search terms
-    search_terms = gameinfo.DeriveGameSearchTermsFromName(
-        game_name = game_name,
-        game_platform = game_platform,
-        asset_type = asset_type)
-
-    # Get search results
-    search_results = stores.FindSteamGridDBCovers(
-        search_terms = search_terms,
-        image_dimensions = (600, 900),
+    # Return search results
+    return stores.FindSteamGridDBCovers(
+        search_name = gameinfo.DeriveRegularNameFromGameName(game_name),
+        image_dimensions = config.asset_boxfront_dimensions,
         image_types = config.ImageFileType.members(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Build asset list
-    metadata_assets = []
-    for search_result in search_results:
-        result_author = search_result["author"]["name"]
-        result_style = search_result["style"]
-        result_nsfw = str(search_result["nsfw"])
-        result_humor = str(search_result["humor"])
-        result_language = search_result["language"]
-        result_types = ",".join(search_result["types"])
-        result_name = search_result["name"]
-        result_id = search_result["id"]
-        result_release_date = search_result["release_date"]
-        result_url = search_result["url"]
-        new_asset = {}
-        new_asset["url"] = result_url
-        new_asset["description"] = f"{result_url} - ({result_id}) ({result_name}) [{result_release_date}] [{result_style}]"
-        metadata_assets.append(new_asset)
-    return metadata_assets
-
 ############################################################
 
-# Collect metadata asset from all
-def CollectMetadataAssetFromAll(
+# Find metadata asset
+def FindMetadataAsset(
     game_platform,
     game_name,
     asset_type,
@@ -190,11 +112,11 @@ def CollectMetadataAssetFromAll(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Metadata assets
-    metadata_assets = []
+    # Search results
+    search_results = []
 
-    # Try from YouTube
-    metadata_assets += CollectMetadataAssetsFromYouTube(
+    # Try searching Google Images
+    search_results += FindMetadataAssetsFromGoogleImages(
         game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
@@ -202,8 +124,8 @@ def CollectMetadataAssetFromAll(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Try from Steam
-    metadata_assets += CollectMetadataAssetsFromSteam(
+    # Try searching YouTube
+    search_results += FindMetadataAssetsFromYouTube(
         game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
@@ -211,8 +133,8 @@ def CollectMetadataAssetFromAll(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Try from SteamGridDB
-    metadata_assets += CollectMetadataAssetsFromSteamGridDB(
+    # Try searching Steam
+    search_results += FindMetadataAssetsFromSteam(
         game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
@@ -220,8 +142,8 @@ def CollectMetadataAssetFromAll(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Try from Google Images
-    metadata_assets += CollectMetadataAssetsFromGoogleImages(
+    # Try searching SteamGridDB
+    search_results += FindMetadataAssetsFromSteamGridDB(
         game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
@@ -231,10 +153,8 @@ def CollectMetadataAssetFromAll(
 
     # Show possible assets to the user
     system.LogInfo(f"Here are the results for \"{game_name}\"")
-    for index in range(0, len(metadata_assets)):
-        metadata_asset = metadata_assets[index]
-        metadata_asset_description = metadata_asset["description"]
-        system.LogInfo(f"{index}) \"{metadata_asset_description}\"")
+    for index, search_result in enumerate(search_results):
+        system.LogInfo(f"{index}) {search_result.get_description()} - {search_result.get_url()}")
 
     # Ask them which one they want to use
     value = system.PromptForValue("Which do you want to use? [Enter an index or type a url to use that]")
@@ -242,15 +162,16 @@ def CollectMetadataAssetFromAll(
         return None
 
     # Get asset link
+    asset_link = None
     if value.startswith("http"):
-        metadata_asset = value
+        asset_link = value
     elif value.isdigit():
         try:
-            metadata_asset = metadata_assets[int(value)]["url"]
+            asset_link = search_results[int(value)].get_url()
         except:
             pass
 
     # Return metadata
-    return metadata_asset
+    return asset_link
 
 ############################################################

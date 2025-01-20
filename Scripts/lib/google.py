@@ -9,6 +9,7 @@ import system
 import command
 import programs
 import network
+import containers
 import ini
 
 # Find images
@@ -58,8 +59,8 @@ def FindImages(
                 item_title = image_json_item["title"]
                 item_url = image_json_item["link"]
                 item_mime = image_json_item["mime"]
-                item_width = image_json_item["image"]["width"]
-                image_height = image_json_item["image"]["height"]
+                item_width = int(image_json_item["image"]["width"])
+                item_height = int(image_json_item["image"]["height"])
 
                 # Ignore dissimilar images
                 if not system.AreStringsHighlySimilar(search_name, item_title):
@@ -67,28 +68,22 @@ def FindImages(
 
                 # Ignore images that do not match requested dimensions
                 if system.IsIterableNonString(image_dimensions) and len(image_dimensions) == 2:
-                    requested_width = image_dimensions[0]
-                    requested_height = image_dimensions[1]
-                    if item_width != requested_width:
-                        continue
-                    if image_height != requested_height:
+                    requested_width, requested_height = map(int, image_dimensions)
+                    if item_width != requested_width or item_height != requested_height:
                         continue
 
                 # Add search result
-                search_result = {}
-                search_result["title"] = item_title
-                search_result["url"] = item_url
-                search_result["mime"] = item_mime
-                search_result["width"] = item_width
-                search_result["height"] = image_height
-                search_result["relevance"] = system.GetStringSimilarityRatio(search_name, item_title)
+                search_result = containers.AssetSearchResult()
+                search_result.set_title(item_title)
+                search_result.set_url(item_url)
+                search_result.set_mime(item_mime)
+                search_result.set_width(item_width)
+                search_result.set_height(item_height)
+                search_result.set_relevance(system.GetStringSimilarityRatio(search_name, item_title))
                 search_results.append(search_result)
 
-    # Sort search results
-    search_results = sorted(search_results, key=lambda x: x["relevance"], reverse = True)
-
     # Return search results
-    return search_results
+    return sorted(search_results, key=lambda x: x.get_relevance(), reverse = True)
 
 # Find videos
 def FindVideos(
@@ -135,20 +130,32 @@ def FindVideos(
     search_results = []
     for line in search_output.split("\n"):
         try:
-            search_result = json.loads(line)
-            if "duration" not in search_result:
+
+            # Get line info
+            line_json = json.loads(line)
+            line_id = line_json["id"] if "id" in line_json else ""
+            line_title = line_json["title"] if "title" in line_json else ""
+            line_channel = line_json["channel"] if "channel" in line_json else "Unknown"
+            line_duration = line_json["duration"] if "duration" in line_json and line_json["duration"] else 0
+            line_duration_str = line_json["duration_string"] if "duration_string" in line_json and line_json["duration_string"] else "Unknown"
+            line_url = line_json["url"] if "url" in line_json else ""
+
+            # Ignore dissimilar videos
+            if not system.AreStringsModeratelySimilar(search_name, line_title):
                 continue
-            if search_result["duration"] == None:
-                continue
+
+            # Add search result
+            search_result = containers.AssetSearchResult()
+            search_result.set_title(line_title)
+            search_result.set_description(f"{line_title} ({line_channel}) [{line_duration_str}]")
+            search_result.set_duration(line_duration)
+            search_result.set_url(line_url)
             search_results.append(search_result)
         except Exception as e:
             pass
 
-    # Sort search results
-    search_results = sorted(search_results, key=lambda d: d["duration"])
-
     # Return search results
-    return search_results
+    return sorted(search_results, key=lambda d: d.get_duration())
 
 # Download video
 def DownloadVideo(

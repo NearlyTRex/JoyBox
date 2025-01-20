@@ -83,6 +83,18 @@ metadata_keys_all = [
     metadata_key_json
 ]
 
+# Asset keys
+asset_key_id = "id"
+asset_key_title = "title"
+asset_key_description = "description"
+asset_key_url = "url"
+asset_key_mime = "mime"
+asset_key_date = "date"
+asset_key_width = "width"
+asset_key_height = "height"
+asset_key_duration = "duration"
+asset_key_relevance = "relevance"
+
 # General json keys
 json_key_launch_name = "launch_name"
 json_key_launch_file = "launch_file"

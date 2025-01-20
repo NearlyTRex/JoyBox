@@ -5,11 +5,12 @@ from .gog import GOG
 from .itchio import Itchio
 from .legacy import Legacy
 from .steam import Steam
-from .steam import GetLikelySteamPage
-from .steam import GetLikelySteamCover
-from .steam import GetLikelySteamTrailer
+from .steam import GetSteamPage
+from .steam import GetSteamCover
+from .steam import GetSteamTrailer
 from .steam import FindSteamAppIDMatches
 from .steam import FindSteamAppIDMatch
+from .steam import FindSteamAssets
 from .steam import FindSteamGridDBCovers
 
 # Get store map

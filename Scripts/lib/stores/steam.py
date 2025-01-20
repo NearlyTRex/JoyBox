@@ -13,6 +13,7 @@ import network
 import ini
 import image
 import jsondata
+import containers
 import webpage
 import storebase
 import metadataentry
@@ -46,55 +47,6 @@ def GetSteamTrailer(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Get likely steam page
-def GetLikelySteamPage(
-    search_name,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    likely_match = FindSteamAppIDMatch(
-        search_name = search_name,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if likely_match:
-        return GetSteamPage(likely_match["appid"])
-    return None
-
-# Get likely steam cover
-def GetLikelySteamCover(
-    search_name,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    likely_match = FindSteamAppIDMatch(
-        search_name = search_name,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if likely_match:
-        return GetSteamCover(likely_match["appid"])
-    return None
-
-# Get likely steam trailer
-def GetLikelySteamTrailer(
-    search_name,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    likely_match = FindSteamAppIDMatch(
-        search_name = search_name,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if likely_match:
-        return GetSteamTrailer(
-            appid = likely_match["appid"],
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    return None
-
 # Find steam appid matches
 def FindSteamAppIDMatches(
     search_name,
@@ -105,18 +57,19 @@ def FindSteamAppIDMatches(
     # Load appid list
     appid_list = system.ReadCsvFile(
         src = programs.GetToolPathConfigValue("SteamAppIDList", "csv"),
-        headers = ["appid", "name"],
+        headers = [config.asset_key_id, config.asset_key_title],
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Build list of matches
-    matches = []
+    search_results = []
     for entry in appid_list:
-        if system.AreStringsHighlySimilar(search_name, entry["name"]):
-            entry["relevance"] = system.GetStringSimilarityRatio(search_name, entry["name"])
-            matches.append(entry)
-    return matches
+        search_result = containers.AssetSearchResult(entry)
+        if system.AreStringsHighlySimilar(search_name, search_result.get_title()):
+            search_result.set_relevance(system.GetStringSimilarityRatio(search_name, search_result.get_title()))
+            search_results.append(search_result)
+    return search_results
 
 # Find steam appid match
 def FindSteamAppIDMatch(
@@ -127,23 +80,57 @@ def FindSteamAppIDMatch(
     exit_on_failure = False):
 
     # Get relevant matches
-    matches = FindSteamAppIDMatches(
+    search_results = FindSteamAppIDMatches(
         search_name = search_name,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if len(matches) == 0:
+    if len(search_results) == 0:
         return None
 
-    # Return top match
+    # Return top search result
     if only_active_pages:
-        for match in sorted(matches, key=lambda x: x["relevance"], reverse=True):
-            steam_page = GetSteamPage(match["appid"])
+        for search_result in sorted(search_results, key=lambda x: x.get_relevance(), reverse=True):
+            steam_page = GetSteamPage(search_result.get_id())
             if steam_page:
-                return match
+                return search_result
         return None
     else:
-        return matches[0]
+        return search_results[0]
+
+# Find Steam assets
+def FindSteamAssets(
+    search_name,
+    asset_type,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get search result
+    search_result = FindSteamAppIDMatch(
+        search_name = search_name,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not search_result:
+        return []
+
+    # Get asset url
+    asset_url = None
+    if asset_type == config.AssetType.BOXFRONT:
+        asset_url = GetSteamCover(search_result.get_id())
+    elif asset_type == config.AssetType.VIDEO:
+        asset_url = GetSteamTrailer(
+            appid = search_result.get_id(),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    if not asset_url:
+        return []
+
+    # Return search result
+    search_result.set_url(asset_url)
+    return [search_result]
 
 # Find SteamGridDB covers
 def FindSteamGridDBCovers(
@@ -176,9 +163,9 @@ def FindSteamGridDBCovers(
                 grid_id = game_entry.id
                 grid_name = game_entry.name
                 grid_release_date = game_entry.release_date
-                grid_types = game_entry.types
-                grid_width = search_grid.width
-                grid_height = search_grid.height
+                grid_url = search_grid.url
+                grid_width = int(search_grid.width)
+                grid_height = int(search_grid.height)
 
                 # Ignore dissimilar images
                 if not system.AreStringsHighlySimilar(search_name, grid_name):
@@ -186,35 +173,30 @@ def FindSteamGridDBCovers(
 
                 # Ignore images that do not match requested dimensions
                 if system.IsIterableNonString(image_dimensions) and len(image_dimensions) == 2:
-                    requested_width = image_dimensions[0]
-                    requested_height = image_dimensions[1]
-                    if grid_width != requested_width:
-                        continue
-                    if grid_height != requested_height:
+                    requested_width, requested_height = map(int, image_dimensions)
+                    if grid_width != requested_width or grid_height != requested_height:
                         continue
 
                 # Ignore images that do not match requested types
                 if system.IsIterableNonString(image_types) and len(image_types) > 0:
-                    found_type = image.GetImageFormat(search_grid.url)
+                    found_type = image.GetImageFormat(grid_url)
                     if found_type and found_type not in image_types:
                         continue
 
-                # Add image link
-                search_result = search_grid.to_json()
-                search_result["id"] = grid_id
-                search_result["name"] = grid_name
-                search_result["release_date"] = grid_release_date
-                search_result["types"] = grid_types
-                search_result["width"] = grid_width
-                search_result["height"] = grid_height
-                search_result["relevance"] = system.GetStringSimilarityRatio(search_name, grid_name)
+                # Add search result
+                search_result = containers.AssetSearchResult()
+                search_result.set_id(grid_id)
+                search_result.set_title(grid_name)
+                search_result.set_description(f"{grid_name} ({grid_release_date})")
+                search_result.set_date(grid_release_date)
+                search_result.set_url(grid_url)
+                search_result.set_width(grid_width)
+                search_result.set_height(grid_height)
+                search_result.set_relevance(system.GetStringSimilarityRatio(search_name, grid_name))
                 search_results.append(search_result)
 
-    # Sort search results
-    search_results = sorted(search_results, key=lambda x: x["relevance"], reverse = True)
-
     # Return search results
-    return search_results
+    return sorted(search_results, key=lambda x: x.get_relevance(), reverse = True)
 
 # Steam store
 class Steam(storebase.StoreBase):
