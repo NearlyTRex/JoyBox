@@ -73,10 +73,10 @@ class Itchio(storebase.StoreBase):
             return False
 
         # Log into website
-        success = webpage.LogIntoWebsite(
+        success = webpage.LoginCookieWebsite(
             driver = web_driver,
-            login_url = "https://itch.io/login",
-            cookiefile = self.GetCookieFile(),
+            url = "https://itch.io/login",
+            cookie = self.GetCookieFile(),
             locator = webpage.ElementLocator({"link_text": "My feed"}),
             verbose = verbose)
         if not success:
@@ -107,12 +107,13 @@ class Itchio(storebase.StoreBase):
             return None
 
         # Load url
-        success = webpage.LoadUrl(web_driver, "https://itch.io/my-purchases")
-        if not success:
-            return None
-
-        # Load cookie
-        success = webpage.LoadCookie(web_driver, self.GetCookieFile())
+        success = webpage.LoadCookieWebsite(
+            driver = web_driver,
+            url = "https://itch.io/my-purchases",
+            cookie = self.GetCookieFile(),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         if not success:
             return None
 
@@ -204,12 +205,13 @@ class Itchio(storebase.StoreBase):
             return None
 
         # Load url
-        success = webpage.LoadUrl(web_driver, identifier)
-        if not success:
-            return None
-
-        # Load cookie
-        success = webpage.LoadCookie(web_driver, self.GetCookieFile())
+        success = webpage.LoadCookieWebsite(
+            driver = web_driver,
+            url = identifier,
+            cookie = self.GetCookieFile(),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         if not success:
             return None
 

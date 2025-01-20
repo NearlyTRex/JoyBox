@@ -434,6 +434,8 @@ def GetPageSource(
             system.QuitProgram()
     return None
 
+###########################################################
+
 # Save cookie
 def SaveCookie(
     driver,
@@ -480,13 +482,19 @@ def LoadCookie(
         return True
     return False
 
+# Get cookie file
+def GetCookieFile(base_name):
+    cookie_file = base_name + config.cookie_suffix_path
+    cookie_dir = environment.GetCookieDirectory()
+    return system.JoinPaths(cookie_dir, cookie_file)
+
 ###########################################################
 
-# Log into website
-def LogIntoWebsite(
+# Login cookie website
+def LoginCookieWebsite(
     driver,
-    login_url,
-    cookiefile,
+    url,
+    cookie,
     locator,
     wait_time = 1000,
     verbose = False,
@@ -494,12 +502,13 @@ def LogIntoWebsite(
     exit_on_failure = False):
 
     # Load the login page
-    try:
-        driver.get(login_url)
-    except Exception as e:
-        if exit_on_failure:
-            system.LogError(e)
-            system.QuitProgram()
+    success = LoadUrl(
+        driver = driver,
+        url = url,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
         return False
 
     # Look for element
@@ -516,11 +525,51 @@ def LogIntoWebsite(
     # Save cookie
     success = SaveCookie(
         driver = driver,
-        path = cookiefile,
+        path = cookie,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return success
+
+# Load cookie website
+def LoadCookieWebsite(
+    driver,
+    url,
+    cookie,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # First load of cookie url
+    success = LoadUrl(
+        driver = driver,
+        url = url,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Load cookie file
+    success = LoadCookie(
+        driver = driver,
+        path = cookie,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Load cookie url a second time
+    success = LoadUrl(
+        driver = driver,
+        url = url,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
+
+###########################################################
 
 # Get website text
 def GetWebsiteText(

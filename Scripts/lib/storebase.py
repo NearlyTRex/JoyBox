@@ -177,9 +177,7 @@ class StoreBase:
 
     # Get cookie file
     def GetCookieFile(self):
-        cookie_file = self.GetName().lower() + ".cookie.txt"
-        cookie_dir = environment.GetCookieDirectory()
-        return system.JoinPaths(cookie_dir, cookie_file)
+        return webpage.GetCookieFile(self.GetName().lower())
 
     ############################################################
 

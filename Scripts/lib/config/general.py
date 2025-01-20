@@ -171,6 +171,9 @@ asset_boxfront_width = 600
 asset_boxfront_height = 900
 asset_boxfront_dimensions = (asset_boxfront_width, asset_boxfront_height)
 
+# Cookie paths
+cookie_suffix_path = ".cookie.json"
+
 # Ignored install paths
 ignored_paths_install = [
     "ProgramData/Microsoft",
