@@ -13,6 +13,7 @@ import environment
 import hashing
 import jsondata
 import webpage
+import collection
 import storebase
 import metadataentry
 
@@ -332,5 +333,130 @@ class Itchio(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
         return False
+
+    ############################################################
+
+    # Download asset
+    def DownloadAsset(
+        self,
+        game_info,
+        asset_type,
+        force = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check if asset exists
+        asset_exists = collection.DoesMetadataAssetExist(
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name(),
+            asset_type = asset_type)
+
+        # Check if asset should be downloaded
+        should_download = False
+        if force or not asset_exists:
+            should_download = True
+        if not should_download:
+            return True
+
+        # Latest asset url
+        latest_asset_url = None
+
+        # BoxFront
+        if asset_type == config.AssetType.BOXFRONT:
+
+            # Connect to web
+            web_driver = self.WebConnect(
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not web_driver:
+                return False
+
+            # Get search terms
+            search_terms = system.EncodeUrlString(game_info.get_store_name(self.GetKey()), use_plus = True)
+
+            # Load url
+            success = webpage.LoadCookieWebsite(
+                driver = web_driver,
+                url = "https://itch.io/search?q=" + search_terms,
+                cookie = self.GetCookieFile(),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+            # Find the root container element
+            element_search_result = webpage.WaitForElement(
+                driver = web_driver,
+                locator = webpage.ElementLocator({"class": "browse_game_grid"}),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not element_search_result:
+                return False
+
+            # Search through search results
+            game_cells = webpage.GetElement(
+                parent = element_search_result,
+                locator = webpage.ElementLocator({"class": "game_cell"}),
+                all_elements = True)
+            if game_cells:
+                for game_cell in game_cells:
+                    game_title = webpage.GetElement(
+                        parent = game_cell,
+                        locator = webpage.ElementLocator({"class": "title"}))
+                    game_cover = webpage.GetElement(
+                        parent = game_cell,
+                        locator = webpage.ElementLocator({"class": "lazy_loaded"}))
+                    if not game_title or not game_cover:
+                        continue
+
+                    # Check for cover
+                    line_appurl = webpage.GetElementAttribute(game_title, "href")
+                    line_cover = webpage.GetElementAttribute(game_cover, "src")
+                    if line_appurl == game_info.get_store_appurl(self.GetKey()):
+                        latest_asset_url = line_cover
+                        break
+
+            # Disconnect from web
+            success = self.WebDisconnect(
+                web_driver = web_driver,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+        # Check if asset url is valid
+        if not latest_asset_url:
+            return False
+
+        # Download metadata asset
+        success = collection.DownloadMetadataAsset(
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name(),
+            asset_url = latest_asset_url,
+            asset_type = asset_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+        # Update metadata entry
+        success = collection.UpdateMetadataEntry(
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name(),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return success
 
     ############################################################
