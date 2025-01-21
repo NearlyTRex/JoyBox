@@ -53,6 +53,8 @@ def ConvertImage(
         if not pretend_run:
             from PIL import Image
             src_image = Image.open(image_src)
+            if src_image.is_animated:
+                src_image.seek(0)
             rgb_image = src_image.convert("RGB")
             if not image_format:
                 image_ext = system.GetFilenameExtension(image_dest).lower()
