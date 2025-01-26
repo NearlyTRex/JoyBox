@@ -19,6 +19,8 @@ from .goldbergemu import GoldbergEmu
 from .gpg import Gpg
 from .hactool import HacTool
 from .heirloom import Heirloom
+from .heroicgogdl import HeroicGogDL
+from .humblebundlemanager import HumbleBundleManager
 from .itchdl import ItchDL
 from .jdupes import JDupes
 from .mkpl import Mkpl
@@ -87,6 +89,8 @@ def GetToolMap():
     AddInstance(Gpg)
     AddInstance(HacTool)
     AddInstance(Heirloom)
+    AddInstance(HeroicGogDL)
+    AddInstance(HumbleBundleManager)
     AddInstance(ItchDL)
     AddInstance(JDupes)
     AddInstance(Mkpl)
