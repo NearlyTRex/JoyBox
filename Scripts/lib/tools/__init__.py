@@ -64,6 +64,7 @@ from .wine import Wine
 from .xcitrimmer import XCITrimmer
 from .xorriso import XorrISO
 from .ytdlp import YtDlp
+from .zoomplatformsh import ZoomPlatformSH
 
 # Get tool map
 def GetToolMap():
@@ -132,6 +133,7 @@ def GetToolMap():
     AddInstance(XCITrimmer)
     AddInstance(XorrISO)
     AddInstance(YtDlp)
+    AddInstance(ZoomPlatformSH)
     return instances
 
 # Get tool list
