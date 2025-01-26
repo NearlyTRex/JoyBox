@@ -285,6 +285,14 @@ def JoinStringsAsUrl(string1, string2, allow_fragments = True):
 def StripStringQueryParams(string):
     return urllib.parse.urlunparse(urllib.parse.urlparse(string)._replace(query=""))
 
+# Get slug string
+def GetSlugString(string):
+    string = string.strip().lower()
+    string = string.replace(" ", "_")
+    string = re.sub(r'[^a-z0-9_]', '', string)
+    string = string.replace("__", "_")
+    return string
+
 ###########################################################
 
 # Capitalize text
