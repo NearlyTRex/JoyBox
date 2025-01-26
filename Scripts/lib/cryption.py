@@ -24,7 +24,7 @@ def IsPassphraseValid(passphrase):
 def GenerateEncryptedFilename(src):
     if IsFileEncrypted(src):
         return src
-    return hashing.CalculateStringMD5(src) + config.EncryptedFileType.ENC.val()
+    return hashing.CalculateStringMD5(src) + config.EncryptedFileType.ENC.cval()
 
 # Generate encrypted path
 def GenerateEncryptedPath(source_path):
