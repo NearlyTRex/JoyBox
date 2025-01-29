@@ -24,6 +24,10 @@ class Itchio(storebase.StoreBase):
     def __init__(self):
         super().__init__()
 
+    ############################################################
+    # Store
+    ############################################################
+
     # Get name
     def GetName(self):
         return config.StoreType.ITCHIO.val()
@@ -56,6 +60,8 @@ class Itchio(storebase.StoreBase):
     def GetIdentifier(self, json_wrapper, identifier_type):
         return json_wrapper.get_value(config.json_key_store_appurl)
 
+    ############################################################
+    # Connection
     ############################################################
 
     # Login
@@ -90,6 +96,8 @@ class Itchio(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         return success
 
+    ############################################################
+    # Purchases
     ############################################################
 
     # Get purchases
@@ -172,17 +180,7 @@ class Itchio(storebase.StoreBase):
         return purchases
 
     ############################################################
-
-    # Get latest jsondata
-    def GetLatestJsondata(
-        self,
-        identifier,
-        branch = None,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return None
-
+    # Metadata
     ############################################################
 
     # Get latest metadata
@@ -287,53 +285,7 @@ class Itchio(storebase.StoreBase):
         return metadata_entry
 
     ############################################################
-
-    # Get game save paths
-    def GetGameSavePaths(
-        self,
-        game_info,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return []
-
-    ############################################################
-
-    # Install by identifier
-    def InstallByIdentifier(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return False
-
-    ############################################################
-
-    # Launch by identifier
-    def LaunchByIdentifier(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return False
-
-    ############################################################
-
-    # Download by identifier
-    def DownloadByIdentifier(
-        self,
-        identifier,
-        output_dir,
-        output_name = None,
-        branch = None,
-        clean_output = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return False
-
+    # Assets
     ############################################################
 
     # Download asset
@@ -429,6 +381,16 @@ class Itchio(storebase.StoreBase):
                 exit_on_failure = exit_on_failure)
             if not success:
                 return False
+
+        # Video
+        if asset_type == config.AssetType.VIDEO:
+            latest_asset_url = webpage.GetMatchingUrl(
+                url = game_info.get_store_appurl(self.GetKey()),
+                base_url = "https://www.youtube.com/embed",
+                starts_with = "https://www.youtube.com/embed",
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
 
         # Check if asset url is valid
         if not latest_asset_url:

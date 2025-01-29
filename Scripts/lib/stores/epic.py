@@ -29,8 +29,12 @@ class Epic(storebase.StoreBase):
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.Epic", "epic_install_dir")
-        if not system.IsPathValid(self.install_dir) or not system.DoesPathExist(self.install_dir):
+        if not system.IsPathValid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid epic install dir")
+
+    ############################################################
+    # Store
+    ############################################################
 
     # Get name
     def GetName(self):
@@ -75,6 +79,8 @@ class Epic(storebase.StoreBase):
         return self.install_dir
 
     ############################################################
+    # Connection
+    ############################################################
 
     # Login
     def Login(
@@ -113,6 +119,96 @@ class Epic(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         return (code != 0)
 
+    ############################################################
+    # Page
+    ############################################################
+
+    # Get latest url
+    def GetLatestUrl(
+        self,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return None
+
+        # Connect to web
+        web_driver = self.WebConnect(
+            headless = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not web_driver:
+            return None
+
+        # Get search terms
+        search_terms = system.EncodeUrlString(identifier.strip(), use_plus = True)
+
+        # Load url
+        success = webpage.LoadUrl(web_driver, "https://store.epicgames.com/en-US/browse?sortBy=relevancy&sortDir=DESC&q=" + search_terms)
+        if not success:
+            return None
+
+        # Find the root container element
+        element_search_result = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "css-1ufzxyu"}),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not element_search_result:
+            return None
+
+        # Score each potential title compared to the original title
+        scores_list = []
+        game_cells = webpage.GetElement(
+            parent = element_search_result,
+            locator = webpage.ElementLocator({"class": "css-2mlzob"}),
+            all_elements = True)
+        if game_cells:
+            for game_cell in game_cells:
+
+                # Get possible title
+                game_title_element = webpage.GetElement(
+                    parent = game_cell,
+                    locator = webpage.ElementLocator({"class": "css-lgj0h8"}),
+                    verbose = verbose)
+                game_cell_text = webpage.GetElementChildrenText(game_title_element)
+
+                # Add comparison score
+                score_entry = {}
+                score_entry["element"] = game_cell
+                score_entry["ratio"] = system.GetStringSimilarityRatio(identifier, game_cell_text)
+                scores_list.append(score_entry)
+
+        # Get the best url match
+        appurl = None
+        for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
+            game_cell = score_entry["element"]
+            game_link_element = webpage.GetElement(
+                parent = game_cell,
+                locator = webpage.ElementLocator({"class": "css-g3jcms"}),
+                verbose = verbose)
+            if game_link_element:
+                appurl = webpage.GetElementAttribute(game_link_element, "href")
+                break
+
+        # Disconnect from web
+        success = self.WebDisconnect(
+            web_driver = web_driver,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return None
+
+        # Return appurl
+        return appurl
+
+    ############################################################
+    # Purchases
     ############################################################
 
     # Get purchases
@@ -186,6 +282,8 @@ class Epic(storebase.StoreBase):
             purchases.append(purchase)
         return purchases
 
+    ############################################################
+    # Json
     ############################################################
 
     # Get latest jsondata
@@ -268,6 +366,8 @@ class Epic(storebase.StoreBase):
         # Return game info
         return jsondata.JsonData(game_info, self.GetPlatform())
 
+    ############################################################
+    # Metadata
     ############################################################
 
     # Get latest metadata
@@ -367,139 +467,5 @@ class Epic(storebase.StoreBase):
 
         # Return metadata entry
         return metadata_entry
-
-    ############################################################
-
-    # Get latest url
-    def GetLatestUrl(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Check identifier
-        if not self.IsValidIdentifier(identifier):
-            return None
-
-        # Connect to web
-        web_driver = self.WebConnect(
-            headless = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not web_driver:
-            return None
-
-        # Get search terms
-        search_terms = system.EncodeUrlString(identifier.strip(), use_plus = True)
-
-        # Load url
-        success = webpage.LoadUrl(web_driver, "https://store.epicgames.com/en-US/browse?sortBy=relevancy&sortDir=DESC&q=" + search_terms)
-        if not success:
-            return None
-
-        # Find the root container element
-        element_search_result = webpage.WaitForElement(
-            driver = web_driver,
-            locator = webpage.ElementLocator({"class": "css-1ufzxyu"}),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not element_search_result:
-            return None
-
-        # Score each potential title compared to the original title
-        scores_list = []
-        game_cells = webpage.GetElement(
-            parent = element_search_result,
-            locator = webpage.ElementLocator({"class": "css-2mlzob"}),
-            all_elements = True)
-        if game_cells:
-            for game_cell in game_cells:
-
-                # Get possible title
-                game_title_element = webpage.GetElement(
-                    parent = game_cell,
-                    locator = webpage.ElementLocator({"class": "css-lgj0h8"}),
-                    verbose = verbose)
-                game_cell_text = webpage.GetElementChildrenText(game_title_element)
-
-                # Add comparison score
-                score_entry = {}
-                score_entry["element"] = game_cell
-                score_entry["ratio"] = system.GetStringSimilarityRatio(identifier, game_cell_text)
-                scores_list.append(score_entry)
-
-        # Get the best url match
-        appurl = None
-        for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
-            game_cell = score_entry["element"]
-            game_link_element = webpage.GetElement(
-                parent = game_cell,
-                locator = webpage.ElementLocator({"class": "css-g3jcms"}),
-                verbose = verbose)
-            if game_link_element:
-                appurl = webpage.GetElementAttribute(game_link_element, "href")
-                break
-
-        # Disconnect from web
-        success = self.WebDisconnect(
-            web_driver = web_driver,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return None
-
-        # Return appurl
-        return appurl
-
-    ############################################################
-
-    # Get game save paths
-    def GetGameSavePaths(
-        self,
-        game_info,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return []
-
-    ############################################################
-
-    # Install by identifier
-    def InstallByIdentifier(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return False
-
-    ############################################################
-
-    # Launch by identifier
-    def LaunchByIdentifier(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return False
-
-    ############################################################
-
-    # Download by identifier
-    def DownloadByIdentifier(
-        self,
-        identifier,
-        output_dir,
-        output_name = None,
-        branch = None,
-        clean_output = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return False
 
     ############################################################

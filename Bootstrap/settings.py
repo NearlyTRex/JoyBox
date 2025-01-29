@@ -80,6 +80,17 @@ ini_defaults["UserData.GitHub"]["github_access_token"] = ""
 
 # UserData.Amazon
 ini_defaults["UserData.Amazon"] = {}
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.Amazon"]["amazon_install_dir"] = "C:\\Program Files (x86)\\Amazon Games"
+else:
+    ini_defaults["UserData.Amazon"]["amazon_install_dir"] = "$HOME/Games/Amazon"
+
+# UserData.Disc
+ini_defaults["UserData.Disc"] = {}
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.Disc"]["disc_install_dir"] = "C:\\Games\\Disc"
+else:
+    ini_defaults["UserData.Disc"]["disc_install_dir"] = "$HOME/Games/Disc"
 
 # UserData.Epic
 ini_defaults["UserData.Epic"] = {}
@@ -87,7 +98,7 @@ ini_defaults["UserData.Epic"]["epic_username"] = ""
 if environment.IsWindowsPlatform():
     ini_defaults["UserData.Epic"]["epic_install_dir"] = "C:\\Program Files\\Epic Games"
 else:
-    ini_defaults["UserData.Epic"]["epic_install_dir"] = "$HOME/.wine/drive_c/Program Files/Epic Games"
+    ini_defaults["UserData.Epic"]["epic_install_dir"] = "$HOME/Games/Epic"
 
 # UserData.GOG
 ini_defaults["UserData.GOG"] = {}
@@ -95,17 +106,53 @@ ini_defaults["UserData.GOG"]["gog_username"] = ""
 ini_defaults["UserData.GOG"]["gog_platform"] = "windows"
 ini_defaults["UserData.GOG"]["gog_includes"] = "i,e"
 ini_defaults["UserData.GOG"]["gog_excludes"] = ""
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.GOG"]["gog_install_dir"] = "C:\\GOG Games"
+else:
+    ini_defaults["UserData.GOG"]["gog_install_dir"] = "$HOME/Games/GOG"
+
+# UserData.HumbleBundle
+ini_defaults["UserData.HumbleBundle"] = {}
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.HumbleBundle"]["humblebundle_install_dir"] = "C:\\Program Files (x86)\\Humble Bundle"
+else:
+    ini_defaults["UserData.HumbleBundle"]["humblebundle_install_dir"] = "$HOME/Games/Humble"
 
 # UserData.Itchio
 ini_defaults["UserData.Itchio"] = {}
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.Itchio"]["itchio_install_dir"] = "%USERPROFILE%\\AppData\\Local\\itch\\apps"
+else:
+    ini_defaults["UserData.Itchio"]["itchio_install_dir"] = "$HOME/Games/Itchio"
 
 # UserData.Legacy
 ini_defaults["UserData.Legacy"] = {}
 ini_defaults["UserData.Legacy"]["legacy_username"] = ""
 if environment.IsWindowsPlatform():
-    ini_defaults["UserData.Legacy"]["legacy_install_dir"] = "C:\\Program Files\\Legacy Games"
+    ini_defaults["UserData.Legacy"]["legacy_install_dir"] = "C:\\Program Files (x86)\\Legacy Games"
 else:
-    ini_defaults["UserData.Legacy"]["legacy_install_dir"] = "$HOME/Games/LegacyGames"
+    ini_defaults["UserData.Legacy"]["legacy_install_dir"] = "$HOME/Games/Legacy"
+
+# UserData.PuppetCombo
+ini_defaults["UserData.PuppetCombo"] = {}
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.PuppetCombo"]["puppetcombo_install_dir"] = "C:\\Games\\PuppetCombo"
+else:
+    ini_defaults["UserData.PuppetCombo"]["puppetcombo_install_dir"] = "$HOME/Games/PuppetCombo"
+
+# UserData.RedCandle
+ini_defaults["UserData.RedCandle"] = {}
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.RedCandle"]["redcandle_install_dir"] = "C:\Program Files (x86)\Red Candle Games"
+else:
+    ini_defaults["UserData.RedCandle"]["redcandle_install_dir"] = "$HOME/Games/RedCandle"
+
+# UserData.SquareEnix
+ini_defaults["UserData.SquareEnix"] = {}
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.SquareEnix"]["squareenix_install_dir"] = "C:\\Program Files (x86)\\Square Enix"
+else:
+    ini_defaults["UserData.SquareEnix"]["squareenix_install_dir"] = "$HOME/Games/SquareEnix"
 
 # UserData.Steam
 ini_defaults["UserData.Steam"] = {}
@@ -119,6 +166,13 @@ if environment.IsWindowsPlatform():
     ini_defaults["UserData.Steam"]["steam_install_dir"] = "C:\\Program Files (x86)\\Steam"
 else:
     ini_defaults["UserData.Steam"]["steam_install_dir"] = "$HOME/.steam/steam"
+
+# UserData.Zoom
+ini_defaults["UserData.Zoom"] = {}
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.Zoom"]["zoom_install_dir"] = "C:\\Program Files (x86)\\Zoom Platform"
+else:
+    ini_defaults["UserData.Zoom"]["zoom_install_dir"] = "$HOME/Games/Zoom"
 
 # UserData.Switch
 ini_defaults["UserData.Switch"] = {}

@@ -38,6 +38,15 @@ class GOG(storebase.StoreBase):
         # Get excludes
         self.excludes = ini.GetIniValue("UserData.GOG", "gog_excludes")
 
+        # Get install dir
+        self.install_dir = ini.GetIniValue("UserData.GOG", "gog_install_dir")
+        if not system.IsPathValid(self.install_dir):
+            raise RuntimeError("Ini file does not have a valid gog install dir")
+
+    ############################################################
+    # Store
+    ############################################################
+
     # Get name
     def GetName(self):
         return config.StoreType.GOG.val()
@@ -70,16 +79,32 @@ class GOG(storebase.StoreBase):
     def GetIdentifier(self, json_wrapper, identifier_type):
         if identifier_type == config.StoreIdentifierType.INFO:
             return json_wrapper.get_value(config.json_key_store_appid)
-        elif identifier_type == config.StoreIdentifierType.METADATA:
-            return json_wrapper.get_value(config.json_key_store_appurl)
+        elif identifier_type == config.StoreIdentifierType.INSTALL:
+            return json_wrapper.get_value(config.json_key_store_appid)
         elif identifier_type == config.StoreIdentifierType.ASSET:
+            return json_wrapper.get_value(config.json_key_store_appurl)
+        elif identifier_type == config.StoreIdentifierType.METADATA:
             return json_wrapper.get_value(config.json_key_store_appurl)
         return json_wrapper.get_value(config.json_key_store_appname)
 
+    # Get platform
+    def GetPlatform(self):
+        return self.platform
+
+    # Get user name
+    def GetUserName(self):
+        return self.username
+
+    # Get install dir
+    def GetInstallDir(self):
+        return self.install_dir
+
+    ############################################################
+    # Connection
     ############################################################
 
-    # Login
-    def Login(
+    # Login LGOGDownloader
+    def LoginLGOGDownloader(
         self,
         verbose = False,
         pretend_run = False,
@@ -109,6 +134,88 @@ class GOG(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         return (code == 0)
 
+    # Login HeroicGogDL
+    def LoginHeroicGogDL(
+        self,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Get tool
+        python_tool = None
+        if programs.IsToolInstalled("PythonVenvPython"):
+            python_tool = programs.GetToolProgram("PythonVenvPython")
+        if not python_tool:
+            system.LogError("PythonVenvPython was not found")
+            return False
+
+        # Get script
+        login_script = None
+        if programs.IsToolInstalled("HeroicGogDL"):
+            login_script = programs.GetToolPathConfigValue("HeroicGogDL", "login_script")
+            auth_json = programs.GetToolPathConfigValue("HeroicGogDL", "auth_json")
+        if not login_script and not auth_json:
+            system.LogError("HeroicGogDL was not found")
+            return False
+
+        # Get login command
+        login_cmd = [
+            python_tool,
+            login_script,
+            auth_json
+        ]
+
+        # Run login command
+        code = command.RunBlockingCommand(
+            cmd = login_cmd,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        return (code != 0)
+
+    # Login
+    def Login(
+        self,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Login LGOGDownloader
+        success = self.LoginLGOGDownloader(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+        # Login HeroicGogDL
+        success = self.LoginHeroicGogDL(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return success
+
+    ############################################################
+    # Page
+    ############################################################
+
+    # Get latest url
+    def GetLatestUrl(
+        self,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return None
+
+        # Return latest url
+        latest_url = "https://www.gog.com/en/game/%s" % identifier
+        return latest_url
+
+    ############################################################
+    # Purchases
     ############################################################
 
     # Get purchases
@@ -184,6 +291,8 @@ class GOG(storebase.StoreBase):
         return purchases
 
     ############################################################
+    # Json
+    ############################################################
 
     # Get latest jsondata
     def GetLatestJsondata(
@@ -246,6 +355,8 @@ class GOG(storebase.StoreBase):
         # Return game info
         return jsondata.JsonData(game_info, self.GetPlatform())
 
+    ############################################################
+    # Metadata
     ############################################################
 
     # Get latest metadata
@@ -331,23 +442,7 @@ class GOG(storebase.StoreBase):
         return metadata_entry
 
     ############################################################
-
-    # Get latest url
-    def GetLatestUrl(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Check identifier
-        if not self.IsValidIdentifier(identifier):
-            return None
-
-        # Return latest url
-        latest_url = "https://www.gog.com/en/game/%s" % identifier
-        return latest_url
-
+    # Assets
     ############################################################
 
     # Get latest asset url
@@ -381,16 +476,7 @@ class GOG(storebase.StoreBase):
         return latest_asset_url
 
     ############################################################
-
-    # Get game save paths
-    def GetGameSavePaths(
-        self,
-        game_info,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return []
-
+    # Install
     ############################################################
 
     # Install by identifier
@@ -400,8 +486,49 @@ class GOG(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        return False
 
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return None
+
+        # Get tool
+        python_tool = None
+        if programs.IsToolInstalled("PythonVenvPython"):
+            python_tool = programs.GetToolProgram("PythonVenvPython")
+        if not python_tool:
+            system.LogError("PythonVenvPython was not found")
+            return False
+
+        # Get script
+        gogdl_script = None
+        if programs.IsToolInstalled("HeroicGogDL"):
+            gogdl_script = programs.GetToolProgram("HeroicGogDL")
+            auth_json = programs.GetToolPathConfigValue("HeroicGogDL", "auth_json")
+        if not gogdl_script and not auth_json:
+            system.LogError("HeroicGogDL was not found")
+            return False
+
+        # Get install command
+        install_cmd = [
+            python_tool,
+            gogdl_script,
+            "--auth-config-path",
+            auth_json,
+            "download",
+            identifier,
+            "--platform", "windows",
+            "--path", os.path.join(self.GetInstallDir(), identifier)
+        ]
+
+        # Run login command
+        code = command.RunBlockingCommand(
+            cmd = install_cmd,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        return (code != 0)
+
+    ############################################################
+    # Launch
     ############################################################
 
     # Launch by identifier
@@ -413,6 +540,8 @@ class GOG(storebase.StoreBase):
         exit_on_failure = False):
         return False
 
+    ############################################################
+    # Download
     ############################################################
 
     # Download by identifier
@@ -445,8 +574,8 @@ class GOG(storebase.StoreBase):
         tmp_dir_dlc = system.JoinPaths(tmp_dir_result, "dlc")
         tmp_dir_dlc_extra = system.JoinPaths(tmp_dir_dlc, "extra")
 
-        # Get fetch command
-        fetch_cmd = [
+        # Get download command
+        download_cmd = [
             gog_tool,
             "--download",
             "--game=^%s$" % identifier,
@@ -459,24 +588,23 @@ class GOG(storebase.StoreBase):
             "--subdir-dlc=dlc"
         ]
         if isinstance(self.includes, str) and len(self.includes):
-            fetch_cmd += [
+            download_cmd += [
                 "--include=%s" % self.includes
             ]
         if isinstance(self.excludes, str) and len(self.excludes):
-            fetch_cmd += [
+            download_cmd += [
                 "--exclude=%s" % self.excludes
             ]
 
-        # Run fetch command
+        # Run download command
         code = command.RunBlockingCommand(
-            cmd = fetch_cmd,
+            cmd = download_cmd,
             options = command.CommandOptions(
                 blocking_processes = [gog_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if (code != 0):
-            system.LogError("Files were not intalled successfully")
+        if code != 0:
             return False
 
         # Move dlc extra into main extra

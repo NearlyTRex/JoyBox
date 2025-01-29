@@ -39,8 +39,8 @@ gametype_weights[".chd"] = gametype_counter; gametype_counter += 1          # Ge
 gametype_weights[".ccd"] = gametype_counter; gametype_counter += 1          # General disc - CCD
 gametype_weights[".cdi"] = gametype_counter; gametype_counter += 1          # General disc - CDI
 gametype_weights[".pkg"] = gametype_counter; gametype_counter += 1          # Sony PSN Package
-gametype_weights[".txt"] = gametype_counter; gametype_counter += 1          # General index
 gametype_weights[".zip"] = gametype_counter; gametype_counter += 1          # Zip archive
+gametype_weights[".txt"] = gametype_counter; gametype_counter += 1          # Text file
 
 # Other game types
 gametype_weight_else = 100

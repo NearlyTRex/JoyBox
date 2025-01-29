@@ -23,7 +23,9 @@ class HeroicGogDL(toolbase.ToolBase):
     def GetConfig(self):
         return {
             "HeroicGogDL": {
-                "program": "HeroicGogDL/lib/main.py"
+                "program": "HeroicGogDL/lib/main.py",
+                "login_script": "HeroicGogDL/lib/login.py",
+                "auth_json": "HeroicGogDL/lib/auth.json"
             }
         }
 

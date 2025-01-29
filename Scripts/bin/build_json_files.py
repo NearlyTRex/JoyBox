@@ -10,6 +10,7 @@ sys.path.append(lib_folder)
 import config
 import environment
 import system
+import gameinfo
 import collection
 import arguments
 import setup

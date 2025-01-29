@@ -13,6 +13,7 @@ import network
 import cryption
 import locker
 import hashing
+import stores
 import jsondata
 import metadata
 import metadataentry
@@ -193,27 +194,12 @@ def CreateGameJsonFile(
         else:
             all_main.append(rebased_file)
 
-    # Build exe lists
-    exe_main = [f for f in all_main if f.endswith(".exe") or f.endswith(".msi")]
-    exe_dlc = [f for f in all_dlc if f.endswith(".exe") or f.endswith(".msi")]
-    exe_updates = [f for f in all_updates if f.endswith(".exe") or f.endswith(".msi")]
-
     # Get top level paths
     top_level_paths = system.ConvertToTopLevelPaths(rebased_files)
 
     # Get best game file
     best_game_file = gameinfo.FindBestGameFile(top_level_paths)
     best_game_file = system.GetFilenameFile(best_game_file)
-
-    # Get computer roots
-    computer_root_dlc = system.JoinPaths(config.token_setup_main_root, config.json_key_dlc)
-    computer_root_updates = system.JoinPaths(config.token_setup_main_root, config.json_key_update)
-
-    # Get computer installers
-    computer_installers = []
-    computer_installers += system.ConvertFileListToAbsolutePaths(exe_main, config.token_setup_main_root)
-    computer_installers += system.ConvertFileListToAbsolutePaths(exe_updates, computer_root_updates)
-    computer_installers += system.ConvertFileListToAbsolutePaths(exe_dlc, computer_root_dlc)
 
     # Create json data object
     json_obj = jsondata.JsonData(
@@ -230,36 +216,13 @@ def CreateGameJsonFile(
 
     # Set computer keys
     if game_category == config.Category.COMPUTER:
-        json_obj.fill_value(config.json_key_installer_exe, computer_installers)
-        if game_subcategory == config.Subcategory.COMPUTER_AMAZON_GAMES:
-            json_obj.fill_value(config.json_key_amazon, {
+        store_obj = stores.GetStoreByPlatform(game_platform)
+        if store_obj:
+            json_obj.fill_value(store_obj.GetKey(), {
                 config.json_key_store_appid: "",
-                config.json_key_store_name: ""
-            })
-        elif game_subcategory == config.Subcategory.COMPUTER_EPIC_GAMES:
-            json_obj.fill_value(config.json_key_epic, {
-                config.json_key_store_appname: ""
-            })
-        elif game_subcategory == config.Subcategory.COMPUTER_GOG:
-            json_obj.fill_value(config.json_key_gog, {
-                config.json_key_store_appid: "",
-                config.json_key_store_appname: ""
-            })
-        elif game_subcategory == config.Subcategory.COMPUTER_ITCHIO:
-            json_obj.fill_value(config.json_key_itchio, {
-                config.json_key_store_appid: "",
+                config.json_key_store_appname: "",
                 config.json_key_store_appurl: "",
                 config.json_key_store_name: ""
-            })
-        elif game_subcategory == config.Subcategory.COMPUTER_LEGACY_GAMES:
-            json_obj.fill_value(config.json_key_legacy, {
-                config.json_key_store_appid: "",
-                config.json_key_store_name: ""
-            })
-        elif game_subcategory == config.Subcategory.COMPUTER_STEAM:
-            json_obj.fill_value(config.json_key_steam, {
-                config.json_key_store_appid: "",
-                config.json_key_store_branchid: config.SteamBranchType.PUBLIC.lower()
             })
 
     # Set other platform keys

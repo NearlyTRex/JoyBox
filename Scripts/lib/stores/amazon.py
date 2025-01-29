@@ -23,6 +23,10 @@ class Amazon(storebase.StoreBase):
     def __init__(self):
         super().__init__()
 
+    ############################################################
+    # Store
+    ############################################################
+
     # Get name
     def GetName(self):
         return config.StoreType.AMAZON.val()
@@ -57,6 +61,8 @@ class Amazon(storebase.StoreBase):
             return json_wrapper.get_value(config.json_key_store_name)
         return json_wrapper.get_value(config.json_key_store_appid)
 
+    ############################################################
+    # Connection
     ############################################################
 
     # Login
@@ -117,6 +123,8 @@ class Amazon(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         return (code == 0)
 
+    ############################################################
+    # Purchases
     ############################################################
 
     # Get purchases
@@ -223,6 +231,8 @@ class Amazon(storebase.StoreBase):
         return purchases
 
     ############################################################
+    # Json
+    ############################################################
 
     # Get jsondata
     def GetLatestJsondata(
@@ -299,6 +309,8 @@ class Amazon(storebase.StoreBase):
         return jsondata.JsonData(game_info, self.GetPlatform())
 
     ############################################################
+    # Metadata
+    ############################################################
 
     # Get latest metadata
     def GetLatestMetadata(
@@ -322,38 +334,7 @@ class Amazon(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
 
     ############################################################
-
-    # Get game save paths
-    def GetGameSavePaths(
-        self,
-        game_info,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return []
-
-    ############################################################
-
-    # Install by identifier
-    def InstallByIdentifier(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return False
-
-    ############################################################
-
-    # Launch by identifier
-    def LaunchByIdentifier(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return False
-
+    # Download
     ############################################################
 
     # Download by identifier
@@ -391,82 +372,34 @@ class Amazon(storebase.StoreBase):
         if not tmp_dir_success:
             return False
 
-        # Make temporary dirs
-        tmp_dir_fetch = system.JoinPaths(tmp_dir_result, "fetch")
-        tmp_dir_archive = system.JoinPaths(tmp_dir_result, "archive")
-        system.MakeDirectory(
-            dir = tmp_dir_fetch,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        system.MakeDirectory(
-            dir = tmp_dir_archive,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-        # Get fetch command
-        fetch_cmd = [
+        # Get download command
+        download_cmd = [
             python_tool,
             nile_script,
             "verify",
-            "--path", tmp_dir_fetch,
+            "--path", tmp_dir_result,
             identifier
         ]
 
-        # Run fetch command
+        # Run download command
         code = command.RunBlockingCommand(
-            cmd = fetch_cmd,
+            cmd = download_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if code != 0:
-            system.LogError("Encountered error fetching")
-            return False
-
-        # Check that files downloaded
-        if system.IsDirectoryEmpty(tmp_dir_fetch):
-            system.LogError("Files were not downloaded successfully")
             return False
 
         # Archive downloaded files
-        success = archive.CreateArchiveFromFolder(
-            archive_file = system.JoinPaths(tmp_dir_archive, "%s.7z" % output_name),
-            source_dir = tmp_dir_fetch,
-            volume_size = "4092m",
+        success = self.Archive(
+            source_dir = tmp_dir_result,
+            output_dir = output_dir,
+            output_name = output_name,
+            clean_output = clean_output,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.RemoveDirectory(
-                dir = tmp_dir_result,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            return False
-
-        # Clean output
-        if clean_output:
-            system.RemoveDirectoryContents(
-                dir = output_dir,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Move archived files
-        success = system.MoveContents(
-            src = tmp_dir_archive,
-            dest = output_dir,
-            show_progress = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            system.RemoveDirectory(
-                dir = tmp_dir_result,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
             return False
 
         # Delete temporary directory
@@ -476,7 +409,7 @@ class Amazon(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-        # Check result
-        return os.path.exists(output_dir)
+        # Check results
+        return system.DoesDirectoryContainFiles(output_dir)
 
     ############################################################

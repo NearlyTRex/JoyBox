@@ -65,6 +65,10 @@ class StoreBase:
     def __init__(self):
         self.manifest = None
 
+    ############################################################
+    # Store
+    ############################################################
+
     # Get name
     def GetName(self):
         return ""
@@ -125,6 +129,28 @@ class StoreBase:
     def IsValidIdentifier(self, identifier):
         return isinstance(identifier, str) and len(identifier)
 
+    # Get platform
+    def GetPlatform(self):
+        return None
+
+    # Get architecture
+    def GetArchitecture(self):
+        return None
+
+    # Get account name
+    def GetAccountName(self):
+        return None
+
+    # Get user name
+    def GetUserName(self):
+        return None
+
+    # Get install dir
+    def GetInstallDir(self):
+        return None
+
+    ############################################################
+    # Manifest
     ############################################################
 
     # Load manifest
@@ -135,6 +161,8 @@ class StoreBase:
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+    ############################################################
+    # Connection
     ############################################################
 
     # Login
@@ -179,6 +207,48 @@ class StoreBase:
     def GetCookieFile(self):
         return webpage.GetCookieFile(self.GetName().lower())
 
+    ############################################################
+    # Versions
+    ############################################################
+
+    # Get versions
+    def GetVersions(
+        self,
+        game_info,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Get latest jsondata
+        latest_jsondata = self.GetLatestJsondata(
+            identifier = self.GetInfoIdentifier(game_info.get_wrapped_value(self.GetKey())),
+            branch = game_info.get_store_branchid(self.GetKey()),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not latest_jsondata:
+            return (None, None)
+
+        # Return versions
+        local_version = game_info.get_store_buildid(self.GetKey())
+        remote_version = latest_jsondata.get_value(config.json_key_store_buildid)
+        return (local_version, remote_version)
+
+    ############################################################
+    # Page
+    ############################################################
+
+    # Get latest url
+    def GetLatestUrl(
+        self,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        return None
+
+    ############################################################
+    # Purchases
     ############################################################
 
     # Get purchases
@@ -239,7 +309,7 @@ class StoreBase:
                 continue
 
             # Check if json file already exists
-            found_file = self.FindJsonByIdentifiers(
+            found_file = self.FindPurchases(
                 identifiers = purchase_identifiers,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -365,6 +435,33 @@ class StoreBase:
         # Should be successful
         return True
 
+    # Find purchases
+    def FindPurchases(
+        self,
+        identifiers,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        json_files = system.BuildFileListByExtensions(
+            root = environment.GetJsonMetadataDir(self.GetSupercategory(), self.GetCategory(), self.GetSubcategory()),
+            extensions = [".json"])
+        for json_file in json_files:
+            json_data = system.ReadJsonFile(
+                src = json_file,
+                exit_on_failure = exit_on_failure)
+            if self.GetKey() not in json_data:
+                continue
+            json_store_data = json_data[self.GetKey()]
+            for appdata_key in config.json_keys_store_appdata:
+                if appdata_key not in json_store_data:
+                    continue
+                for identifier in identifiers:
+                    if identifier and identifier == json_store_data[appdata_key]:
+                        return json_file
+        return None
+
+    ############################################################
+    # Json
     ############################################################
 
     # Get latest jsondata
@@ -377,6 +474,51 @@ class StoreBase:
         exit_on_failure = False):
         return None
 
+    # Update json
+    def UpdateJson(
+        self,
+        game_info,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Get current jsondata
+        current_jsondata = game_info.read_wrapped_json_data(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not current_jsondata:
+            return False
+
+        # Get latest jsondata
+        latest_jsondata = self.GetLatestJsondata(
+            identifier = self.GetInfoIdentifier(game_info.get_wrapped_value(self.GetKey())),
+            branch = game_info.get_store_branchid(self.GetKey()),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not latest_jsondata:
+            return False
+
+        # Update current data
+        for store_key in config.json_keys_store_subdata:
+            if latest_jsondata.has_key(store_key):
+                current_jsondata.fill_subvalue(self.GetKey(), store_key, latest_jsondata.get_value(store_key))
+                if store_key == config.json_key_store_paths:
+                    paths = current_jsondata.get_subvalue(self.GetKey(), store_key, [])
+                    paths = system.PruneChildPaths(paths)
+                    current_jsondata.set_subvalue(self.GetKey(), store_key, paths)
+
+        # Write back changes
+        success = game_info.write_wrapped_json_data(
+            json_wrapper = current_jsondata,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return success
+
+    ############################################################
+    # Metadata
     ############################################################
 
     # Get latest metadata
@@ -388,17 +530,56 @@ class StoreBase:
         exit_on_failure = False):
         return None
 
-    ############################################################
-
-    # Get latest url
-    def GetLatestUrl(
+    # Update metadata
+    def UpdateMetadata(
         self,
-        identifier,
+        game_info,
+        keys = [],
+        force = False,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        return None
 
+        # Get current metadata
+        current_metadata = game_info.get_metadata()
+        if not current_metadata:
+            return False
+
+        # Determine if update is needed
+        should_update = False
+        if force:
+            should_update = True
+        else:
+            if isinstance(keys, list) and len(keys) > 0:
+                should_update = current_metadata.is_missing_data(keys)
+            else:
+                should_update = current_metadata.is_missing_data(config.metadata_keys_downloadable)
+        if not should_update:
+            return True
+
+        # Get latest metadata
+        latest_metadata = self.GetLatestMetadata(
+            identifier = self.GetMetadataIdentifier(game_info.get_wrapped_value(self.GetKey())),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not latest_metadata:
+            return False
+
+        # Update current data
+        if isinstance(latest_metadata, metadataentry.MetadataEntry):
+            current_metadata.merge(latest_metadata)
+
+        # Sync assets
+        current_metadata.sync_assets()
+
+        # Write back changes
+        game_info.set_metadata(current_metadata)
+        game_info.write_metadata()
+        return True
+
+    ############################################################
+    # Assets
     ############################################################
 
     # Get latest asset url
@@ -411,42 +592,66 @@ class StoreBase:
         exit_on_failure = False):
         return None
 
-    ############################################################
-
-    # Get save paths
-    def GetSavePaths(
+    # Download asset
+    def DownloadAsset(
         self,
         game_info,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return []
-
-    ############################################################
-
-    # Get versions
-    def GetVersions(
-        self,
-        game_info,
+        asset_type,
+        force = False,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
 
-        # Get latest jsondata
-        latest_jsondata = self.GetLatestJsondata(
-            identifier = self.GetInfoIdentifier(game_info.get_wrapped_value(self.GetKey())),
-            branch = game_info.get_store_branchid(self.GetKey()),
+        # Check if asset exists
+        asset_exists = collection.DoesMetadataAssetExist(
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name(),
+            asset_type = asset_type)
+
+        # Check if asset should be downloaded
+        should_download = False
+        if force or not asset_exists:
+            should_download = True
+        if not should_download:
+            return True
+
+        # Get latest asset url
+        asset_url = self.GetLatestAssetUrl(
+            identifier = self.GetAssetIdentifier(game_info.get_wrapped_value(self.GetKey())),
+            asset_type = asset_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if not latest_jsondata:
-            return (None, None)
 
-        # Return versions
-        local_version = game_info.get_store_buildid(self.GetKey())
-        remote_version = latest_jsondata.get_key(config.json_key_store_buildid)
-        return (local_version, remote_version)
+        # Download metadata asset
+        success = collection.DownloadMetadataAsset(
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name(),
+            asset_url = asset_url,
+            asset_type = asset_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
+        # Update metadata entry
+        success = collection.UpdateMetadataEntry(
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name(),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return success
+
+    ############################################################
+    # Install
     ############################################################
 
     # Install game by identifier
@@ -473,6 +678,8 @@ class StoreBase:
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+    ############################################################
+    # Launch
     ############################################################
 
     # Launch by identifier
@@ -510,6 +717,8 @@ class StoreBase:
             exit_on_failure = exit_on_failure)
         return success
 
+    ############################################################
+    # Download
     ############################################################
 
     # Download by identifier
@@ -589,235 +798,20 @@ class StoreBase:
         return success
 
     ############################################################
-
-    # Find json by identifiers
-    def FindJsonByIdentifiers(
-        self,
-        identifiers,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        json_files = system.BuildFileListByExtensions(
-            root = environment.GetJsonMetadataDir(self.GetSupercategory(), self.GetCategory(), self.GetSubcategory()),
-            extensions = [".json"])
-        for json_file in json_files:
-            json_data = system.ReadJsonFile(
-                src = json_file,
-                exit_on_failure = exit_on_failure)
-            if self.GetKey() not in json_data:
-                continue
-            json_store_data = json_data[self.GetKey()]
-            for appdata_key in config.json_keys_store_appdata:
-                if appdata_key not in json_store_data:
-                    continue
-                for identifier in identifiers:
-                    if identifier and identifier == json_store_data[appdata_key]:
-                        return json_file
-        return None
-
+    # Saves
     ############################################################
 
-    # Backup game
-    def BackupGame(
-        self,
-        game_info,
-        passphrase,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Create temporary directory
-        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
-        if not tmp_dir_success:
-            return False
-
-        # Download game files
-        success = self.DownloadByGameInfo(
-            game_info = game_info,
-            output_dir = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Upload game files
-        success = collection.UploadGameFiles(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name(),
-            game_root = parser.get_input_path(),
-            passphrase = passphrase,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Delete temporary directory
-        system.RemoveDirectory(
-            dir = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return True
-
-    # Update json
-    def UpdateJson(
+    # Get save paths
+    def GetSavePaths(
         self,
         game_info,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+        return []
 
-        # Get current jsondata
-        current_jsondata = game_info.read_wrapped_json_data(
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not current_jsondata:
-            return False
-
-        # Get latest jsondata
-        latest_jsondata = self.GetLatestJsondata(
-            identifier = self.GetInfoIdentifier(game_info.get_wrapped_value(self.GetKey())),
-            branch = game_info.get_store_branchid(self.GetKey()),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not latest_jsondata:
-            return False
-
-        # Update current data
-        for store_key in config.json_keys_store_subdata:
-            if latest_jsondata.has_key(store_key):
-                current_jsondata.fill_subvalue(self.GetKey(), store_key, latest_jsondata.get_value(store_key))
-                if store_key == config.json_key_store_paths:
-                    paths = current_jsondata.get_subvalue(self.GetKey(), store_key, [])
-                    paths = system.PruneChildPaths(paths)
-                    current_jsondata.set_subvalue(self.GetKey(), store_key, paths)
-
-        # Write back changes
-        success = game_info.write_wrapped_json_data(
-            json_wrapper = current_jsondata,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return success
-
-    # Update metadata
-    def UpdateMetadata(
-        self,
-        game_info,
-        keys = [],
-        force = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get current metadata
-        current_metadata = game_info.get_metadata()
-        if not current_metadata:
-            return False
-
-        # Determine if update is needed
-        should_update = False
-        if force:
-            should_update = True
-        else:
-            if isinstance(keys, list) and len(keys) > 0:
-                should_update = current_metadata.is_missing_data(keys)
-            else:
-                should_update = current_metadata.is_missing_data(config.metadata_keys_downloadable)
-        if not should_update:
-            return True
-
-        # Get latest metadata
-        latest_metadata = self.GetLatestMetadata(
-            identifier = self.GetMetadataIdentifier(game_info.get_wrapped_value(self.GetKey())),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not latest_metadata:
-            return False
-
-        # Update current data
-        if isinstance(latest_metadata, metadataentry.MetadataEntry):
-            current_metadata.merge(latest_metadata)
-
-        # Sync assets
-        current_metadata.sync_assets()
-
-        # Write back changes
-        game_info.set_metadata(current_metadata)
-        game_info.write_metadata()
-        return True
-
-    ############################################################
-
-    # Download asset
-    def DownloadAsset(
-        self,
-        game_info,
-        asset_type,
-        force = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Check if asset exists
-        asset_exists = collection.DoesMetadataAssetExist(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name(),
-            asset_type = asset_type)
-
-        # Check if asset should be downloaded
-        should_download = False
-        if force or not asset_exists:
-            should_download = True
-        if not should_download:
-            return True
-
-        # Get latest asset url
-        asset_url = self.GetLatestAssetUrl(
-            identifier = self.GetAssetIdentifier(game_info.get_wrapped_value(self.GetKey())),
-            asset_type = asset_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-        # Download metadata asset
-        success = collection.DownloadMetadataAsset(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name(),
-            asset_url = asset_url,
-            asset_type = asset_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Update metadata entry
-        success = collection.UpdateMetadataEntry(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name(),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return success
-
-    ############################################################
-
-    # Export save
-    def ExportSave(
+    # Export saves
+    def ExportSaves(
         self,
         game_info,
         verbose = False,
@@ -831,7 +825,7 @@ class StoreBase:
 
         # Copy save files
         at_least_one_copy = False
-        for save_path_entry in self.GetGameSavePaths(
+        for save_path_entry in self.GetSavePaths(
             game_info = game_info,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -878,15 +872,134 @@ class StoreBase:
             exit_on_failure = exit_on_failure)
         return True
 
-    ############################################################
-
-    # Import save
-    def ImportSave(
+    # Import saves
+    def ImportSaves(
         self,
         game_info,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
         return False
+
+    ############################################################
+    # Archive
+    ############################################################
+
+    # Archive
+    def Archive(
+        self,
+        source_dir,
+        output_dir,
+        output_name,
+        excludes = [],
+        clean_output = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Create temporary directory
+        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+        if not tmp_dir_success:
+            return False
+
+        # Get file paths
+        archive_filename = output_name + config.ArchiveFileType.SEVENZIP.cval()
+        tmp_archive_file = system.JoinPaths(tmp_dir_result, archive_filename)
+        out_archive_file = system.JoinPaths(output_dir, archive_filename)
+
+        # Archive files
+        success = archive.CreateArchiveFromFolder(
+            archive_file = tmp_archive_file,
+            source_dir = source_dir,
+            excludes = excludes,
+            volume_size = "4092m",
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+        # Clean output
+        if clean_output:
+            system.RemoveDirectoryContents(
+                dir = output_dir,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
+        # Move archive
+        success = system.SmartMove(
+            src = tmp_dir_archive,
+            dest = out_archive_file,
+            show_progress = True,
+            skip_existing = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+        # Delete temporary directory
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+        # Check result
+        return os.path.exists(out_archive_file)
+
+    ############################################################
+    # Backup
+    ############################################################
+
+    # Backup
+    def Backup(
+        self,
+        game_info,
+        passphrase,
+        excludes = [],
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Create temporary directory
+        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+        if not tmp_dir_success:
+            return False
+
+        # Download files
+        success = self.DownloadByGameInfo(
+            game_info = game_info,
+            output_dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+        # Upload files
+        success = collection.UploadGameFiles(
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name(),
+            game_root = tmp_dir_result,
+            passphrase = passphrase,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+        # Delete temporary directory
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+        # Should be successful
+        return True
 
     ############################################################

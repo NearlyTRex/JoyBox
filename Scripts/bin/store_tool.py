@@ -14,6 +14,7 @@ import gameinfo
 import stores
 import arguments
 import setup
+import ini
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Manage store games.")
@@ -189,7 +190,7 @@ def main():
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
             if game_info and game_info.is_valid():
-                success = store_obj.BackupGame(
+                success = store_obj.Backup(
                     game_info = game_info,
                     passphrase = passphrase,
                     verbose = args.verbose,
@@ -260,7 +261,7 @@ def main():
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
             if game_info and game_info.is_valid():
-                success = store_obj.ExportSave(
+                success = store_obj.ExportSaves(
                     game_info = game_info,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,
@@ -277,7 +278,7 @@ def main():
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
             if game_info and game_info.is_valid():
-                success = store_obj.ImportSave(
+                success = store_obj.ImportSaves(
                     game_info = game_info,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,

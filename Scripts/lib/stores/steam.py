@@ -234,8 +234,12 @@ class Steam(storebase.StoreBase):
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.Steam", "steam_install_dir")
-        if not system.IsPathValid(self.install_dir) or not system.DoesPathExist(self.install_dir):
+        if not system.IsPathValid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid steam install dir")
+
+    ############################################################
+    # Store
+    ############################################################
 
     # Get name
     def GetName(self):
@@ -317,6 +321,8 @@ class Steam(storebase.StoreBase):
         return self.install_dir
 
     ############################################################
+    # Connection
+    ############################################################
 
     # Login
     def Login(
@@ -349,6 +355,27 @@ class Steam(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         return (code == 0)
 
+    ############################################################
+    # Page
+    ############################################################
+
+    # Get latest url
+    def GetLatestUrl(
+        self,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return None
+
+        # Return latest url
+        return GetSteamPage(identifier)
+
+    ############################################################
+    # Purchases
     ############################################################
 
     # Get purchases
@@ -405,6 +432,8 @@ class Steam(storebase.StoreBase):
                     purchases.append(purchase)
         return purchases
 
+    ############################################################
+    # Json
     ############################################################
 
     # Get latest jsondata
@@ -563,6 +592,8 @@ class Steam(storebase.StoreBase):
         return jsondata.JsonData(game_info, self.GetPlatform())
 
     ############################################################
+    # Metadata
+    ############################################################
 
     # Get latest metadata
     def GetLatestMetadata(
@@ -679,22 +710,7 @@ class Steam(storebase.StoreBase):
         return metadata_entry
 
     ############################################################
-
-    # Get latest url
-    def GetLatestUrl(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Check identifier
-        if not self.IsValidIdentifier(identifier):
-            return None
-
-        # Return latest url
-        return GetSteamPage(identifier)
-
+    # Assets
     ############################################################
 
     # Get latest asset url
@@ -729,9 +745,169 @@ class Steam(storebase.StoreBase):
         return latest_asset_url
 
     ############################################################
+    # Install
+    ############################################################
+
+    # Install by identifier
+    def InstallByIdentifier(
+        self,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Get tool
+        steam_tool = None
+        if programs.IsToolInstalled("SteamCMD"):
+            steam_tool = programs.GetToolProgram("SteamCMD")
+        if not steam_tool:
+            system.LogError("SteamCMD was not found", quit_program = True)
+
+        # Get install command
+        install_cmd = [
+            steam_tool,
+            "@sSteamCmdForcePlatformType", self.GetPlatform(),
+            "+login", self.GetAccountName(),
+            "app_update", identifier,
+            "validate",
+            "+quit"
+        ]
+
+        # Run install command
+        code = command.RunBlockingCommand(
+            cmd = install_cmd,
+            options = command.CommandOptions(
+                blocking_processes = [steam_tool]),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return (code == 0)
+
+    ############################################################
+    # Launch
+    ############################################################
+
+    # Launch by identifier
+    def LaunchByIdentifier(
+        self,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Get tool
+        steam_tool = None
+        if programs.IsToolInstalled("Steam"):
+            steam_tool = programs.GetToolProgram("Steam")
+        if not steam_tool:
+            system.LogError("Steam was not found", quit_program = True)
+
+        # Get launch command
+        launch_cmd = [
+            steam_tool,
+            "steam://rungameid/%s" % identifier,
+        ]
+
+        # Run launch command
+        code = command.RunBlockingCommand(
+            cmd = launch_cmd,
+            options = command.CommandOptions(
+                blocking_processes = [steam_tool]),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return (code == 0)
+
+    ############################################################
+    # Download
+    ############################################################
+
+    # Download by identifier
+    def DownloadByIdentifier(
+        self,
+        identifier,
+        output_dir,
+        output_name = None,
+        branch = None,
+        clean_output = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return False
+
+        # Get tool
+        steamdepot_tool = None
+        if programs.IsToolInstalled("SteamDepotDownloader"):
+            steamdepot_tool = programs.GetToolProgram("SteamDepotDownloader")
+        if not steamdepot_tool:
+            system.LogError("SteamDepotDownloader was not found", quit_program = True)
+
+        # Create temporary directory
+        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+        if not tmp_dir_success:
+            return False
+
+        # Get download command
+        download_cmd = [
+            steamdepot_tool,
+            "-app", identifier,
+            "-os", self.GetPlatform(),
+            "-osarch", self.GetArchitecture(),
+            "-dir", tmp_dir_result
+        ]
+        if isinstance(branch, str) and len(branch) and branch != "public":
+            download_cmd += [
+                "-beta", branch
+            ]
+        if isinstance(self.GetAccountName(), str) and len(self.GetAccountName()):
+            download_cmd += [
+                "-username", self.GetAccountName(),
+                "-remember-password"
+            ]
+
+        # Run download command
+        code = command.RunBlockingCommand(
+            cmd = download_cmd,
+            options = command.CommandOptions(
+                blocking_processes = [steamdepot_tool]),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            return False
+
+        # Archive downloaded files
+        success = self.Archive(
+            source_dir = tmp_dir_result,
+            output_dir = output_dir,
+            output_name = output_name,
+            excludes = [".DepotDownloader"],
+            clean_output = clean_output,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+        # Delete temporary directory
+        system.RemoveDirectory(
+            dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+        # Check results
+        return system.DoesDirectoryContainFiles(output_dir)
+
+    ############################################################
+    # Saves
+    ############################################################
 
     # Get game save paths
-    def GetGameSavePaths(
+    def GetSavePaths(
         self,
         game_info,
         verbose = False,
@@ -856,201 +1032,5 @@ class Steam(storebase.StoreBase):
                     if "full" in entry and "relative" in entry:
                         translated_paths.append(entry)
         return translated_paths
-
-    ############################################################
-
-    # Install by identifier
-    def InstallByIdentifier(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get tool
-        steam_tool = None
-        if programs.IsToolInstalled("SteamCMD"):
-            steam_tool = programs.GetToolProgram("SteamCMD")
-        if not steam_tool:
-            system.LogError("SteamCMD was not found", quit_program = True)
-
-        # Get install command
-        install_cmd = [
-            steam_tool,
-            "@sSteamCmdForcePlatformType", self.GetPlatform(),
-            "+login", self.GetAccountName(),
-            "app_update", identifier,
-            "+quit"
-        ]
-
-        # Run install command
-        code = command.RunBlockingCommand(
-            cmd = install_cmd,
-            options = command.CommandOptions(
-                blocking_processes = [steam_tool]),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return (code == 0)
-
-    ############################################################
-
-    # Launch by identifier
-    def LaunchByIdentifier(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get tool
-        steam_tool = None
-        if programs.IsToolInstalled("Steam"):
-            steam_tool = programs.GetToolProgram("Steam")
-        if not steam_tool:
-            system.LogError("Steam was not found", quit_program = True)
-
-        # Get launch command
-        launch_cmd = [
-            steam_tool,
-            "steam://rungameid/%s" % identifier,
-        ]
-
-        # Run launch command
-        code = command.RunBlockingCommand(
-            cmd = launch_cmd,
-            options = command.CommandOptions(
-                blocking_processes = [steam_tool]),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return (code == 0)
-
-    ############################################################
-
-    # Download by identifier
-    def DownloadByIdentifier(
-        self,
-        identifier,
-        output_dir,
-        output_name = None,
-        branch = None,
-        clean_output = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Check identifier
-        if not self.IsValidIdentifier(identifier):
-            return False
-
-        # Get tool
-        steamdepot_tool = None
-        if programs.IsToolInstalled("SteamDepotDownloader"):
-            steamdepot_tool = programs.GetToolProgram("SteamDepotDownloader")
-        if not steamdepot_tool:
-            system.LogError("SteamDepotDownloader was not found", quit_program = True)
-
-        # Create temporary directory
-        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
-        if not tmp_dir_success:
-            return False
-
-        # Make temporary dirs
-        tmp_dir_dowload = system.JoinPaths(tmp_dir_result, "download")
-        tmp_dir_archive = system.JoinPaths(tmp_dir_result, "archive")
-        system.MakeDirectory(
-            dir = tmp_dir_download,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        system.MakeDirectory(
-            dir = tmp_dir_archive,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-        # Get download command
-        download_cmd = [
-            steamdepot_tool,
-            "-app", identifier,
-            "-os", self.GetPlatform(),
-            "-osarch", self.GetArchitecture(),
-            "-dir", tmp_dir_download
-        ]
-        if isinstance(branch, str) and len(branch) and branch != "public":
-            download_cmd += [
-                "-beta", branch
-            ]
-        if isinstance(self.GetAccountName(), str) and len(self.GetAccountName()):
-            download_cmd += [
-                "-username", self.GetAccountName(),
-                "-remember-password"
-            ]
-
-        # Run download command
-        command.RunBlockingCommand(
-            cmd = download_cmd,
-            options = command.CommandOptions(
-                blocking_processes = [steamdepot_tool]),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-        # Check that files downloaded
-        if system.IsDirectoryEmpty(tmp_dir_download):
-            system.LogError("Files were not downloaded successfully")
-            return False
-
-        # Archive downloaded files
-        success = archive.CreateArchiveFromFolder(
-            archive_file = system.JoinPaths(tmp_dir_archive, "%s.7z" % output_name),
-            source_dir = tmp_dir_download,
-            excludes = [".DepotDownloader"],
-            volume_size = "4092m",
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            system.RemoveDirectory(
-                dir = tmp_dir_result,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            return False
-
-        # Clean output
-        if clean_output:
-            system.RemoveDirectoryContents(
-                dir = output_dir,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Move archived files
-        success = system.MoveContents(
-            src = tmp_dir_archive,
-            dest = output_dir,
-            show_progress = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            system.RemoveDirectory(
-                dir = tmp_dir_result,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            return False
-
-        # Delete temporary directory
-        system.RemoveDirectory(
-            dir = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-        # Check result
-        return os.path.exists(output_dir)
 
     ############################################################
