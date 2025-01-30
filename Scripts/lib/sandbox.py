@@ -599,44 +599,6 @@ def GetPrefixPathInfo(
     info["virtual"] = system.NormalizeFilePath(path_full_virtual, force_windows = True)
     return info
 
-# Get prefix sync objects
-def GetPrefixSyncObjs(
-    prefix_dir,
-    general_prefix_dir,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False,
-    user_data_sync_basedir = None,
-    user_data_sync_objs = []):
-
-    # Create sync objs
-    sync_objs = []
-
-    # Get user profile directory
-    user_profile_dir = GetUserProfilePath(
-        prefix_dir = prefix_dir,
-        is_wine_prefix = is_wine_prefix,
-        is_sandboxie_prefix = is_sandboxie_prefix)
-
-    # Add user data mapping
-    if general_prefix_dir and user_data_sync_basedir:
-        for sync_obj in user_data_sync_objs:
-            sync_entry = {}
-            sync_entry["stored"] = system.JoinPaths(general_prefix_dir, config.computer_folder_gamedata, sync_obj)
-            sync_entry["live"] = system.JoinPaths(user_data_sync_basedir, sync_obj)
-            sync_objs.append(sync_entry)
-
-    # Add user profile mapping
-    if general_prefix_dir and user_profile_dir:
-        if is_sandboxie_prefix:
-            for sync_dir in config.computer_user_folders:
-                sync_entry = {}
-                sync_entry["stored"] = system.JoinPaths(general_prefix_dir, sync_dir)
-                sync_entry["live"] = system.JoinPaths(user_profile_dir, sync_dir)
-                sync_objs.append(sync_entry)
-
-    # Return sync objs
-    return sync_objs
-
 ###########################################################
 
 # Setup prefix environment

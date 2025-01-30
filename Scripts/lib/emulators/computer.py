@@ -742,8 +742,6 @@ class Computer(emulatorbase.EmulatorBase):
         launch_cache_dir = game_info.get_local_cache_dir()
         launch_info_wine_setup = game_info.get_wine_setup()
         launch_info_sandboxie_setup = game_info.get_sandboxie_setup()
-        launch_info_sync_search = system.NormalizeFilePath(game_info.get_sync_search())
-        launch_info_sync_data = game_info.get_sync_data()
         launch_info_registry_setup_keys = game_info.get_setup_registry_keys()
         launch_info_registry_game_keys = game_info.get_game_registry_keys()
         launch_info_winver = game_info.get_winver()
@@ -794,23 +792,6 @@ class Computer(emulatorbase.EmulatorBase):
         dirs_to_clear = []
         dirs_to_clear += [system.JoinPaths(user_profile_dir, config.computer_folder_temp)]
         dirs_to_clear += [system.JoinPaths(user_profile_dir, config.computer_folder_appdata, "Local", "CrashDumps")]
-
-        # Find sync base directory
-        sync_basedir = None
-        if len(launch_info_sync_search):
-            for sync_search_file in system.BuildFileList(launch_cache_dir):
-                if sync_search_file.endswith(launch_info_sync_search):
-                    sync_basedir = system.GetFilenameDirectory(sync_search_file)
-                    break
-
-        # Get sync objects
-        sync_objs = sandbox.GetPrefixSyncObjs(
-            prefix_dir = launch_save_dir,
-            general_prefix_dir = launch_general_save_dir,
-            is_wine_prefix = should_run_via_wine,
-            is_sandboxie_prefix = should_run_via_sandboxie,
-            user_data_sync_basedir = sync_basedir,
-            user_data_sync_objs = launch_info_sync_data)
 
         # Get prefix c drive
         prefix_c_drive = sandbox.GetRealDrivePath(
@@ -934,15 +915,6 @@ class Computer(emulatorbase.EmulatorBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
-            # Restore user data
-            for sync_obj in sync_objs:
-                system.SyncData(
-                    data_src = sync_obj["stored"],
-                    data_dest = sync_obj["live"],
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-
             # Launch game
             command.RunGameCommand(
                 game_info = game_info,
@@ -971,15 +943,6 @@ class Computer(emulatorbase.EmulatorBase):
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
-
-            # Backup user data
-            for sync_obj in sync_objs:
-                system.SyncData(
-                    data_src = sync_obj["live"],
-                    data_dest = sync_obj["stored"],
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
 
             # Backup game registry
             sandbox.BackupRegistry(
