@@ -142,7 +142,7 @@ def CollectMetadataFromCategories(
     metadata_platform = gameinfo.DeriveGamePlatformFromCategories(metadata_category, metadata_subcategory)
 
     # Get metadata source
-    metadata_source = config.MetadataSourceType.THEGAMESDB
+    metadata_source = config.MetadataSourceType.GAMEFAQS
     if stores.GetStoreByPlatform(metadata_platform):
         metadata_source = config.MetadataSourceType.STORE
 
