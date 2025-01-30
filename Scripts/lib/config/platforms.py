@@ -165,6 +165,37 @@ letter_platforms = [
 
 ######################################################################################
 
+# Computer autofill json keys
+json_keys_autofill_computer = [
+    keys.json_key_files,
+    keys.json_key_dlc,
+    keys.json_key_update,
+    keys.json_key_extra,
+    keys.json_key_dependencies,
+    keys.json_key_transform_file,
+    keys.json_key_store_builddate,
+    keys.json_key_store_buildid,
+    keys.json_key_store_name,
+    keys.json_key_store_controller_support,
+    keys.json_key_store_installdir
+]
+
+# Computer fillonce json keys
+json_keys_fillonce_computer = [
+    keys.json_key_store_appid,
+    keys.json_key_store_appname,
+    keys.json_key_store_appurl,
+    keys.json_key_store_branchid
+]
+
+# Computer merge json keys
+json_keys_merge_computer = [
+    keys.json_key_store_paths,
+    keys.json_key_store_keys,
+    keys.json_key_store_launch,
+    keys.json_key_store_setup
+]
+
 # Platforms
 platforms = {}
 
@@ -177,30 +208,9 @@ computer_amazon_games[keys.platform_key_category] = categories.Category.COMPUTER
 computer_amazon_games[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_AMAZON_GAMES
 computer_amazon_games[keys.platform_key_addons] = []
 computer_amazon_games[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_amazon_games[keys.platform_key_autofill_json] = [
-    keys.json_key_files,
-    keys.json_key_dlc,
-    keys.json_key_update,
-    keys.json_key_extra,
-    keys.json_key_dependencies,
-    keys.json_key_installer_exe,
-    keys.json_key_transform_file,
-    keys.json_key_store_builddate,
-    keys.json_key_store_buildid,
-    keys.json_key_store_name,
-    keys.json_key_store_controller_support,
-    keys.json_key_store_installdir
-]
-computer_amazon_games[keys.platform_key_fillonce_json] = [
-    keys.json_key_amazon,
-    keys.json_key_store_appid,
-    keys.json_key_store_appname,
-    keys.json_key_store_appurl,
-    keys.json_key_store_branchid,
-    keys.json_key_store_paths,
-    keys.json_key_store_keys
-]
-computer_amazon_games[keys.platform_key_merge_json] = []
+computer_amazon_games[keys.platform_key_autofill_json] = json_keys_autofill_computer
+computer_amazon_games[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
+computer_amazon_games[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_amazon]
 platforms[Platform.COMPUTER_AMAZON_GAMES] = computer_amazon_games
 
 ###########################################################
@@ -212,16 +222,9 @@ computer_disc[keys.platform_key_category] = categories.Category.COMPUTER
 computer_disc[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_DISC
 computer_disc[keys.platform_key_addons] = []
 computer_disc[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_disc[keys.platform_key_autofill_json] = [
-    keys.json_key_files,
-    keys.json_key_dlc,
-    keys.json_key_update,
-    keys.json_key_extra,
-    keys.json_key_dependencies,
-    keys.json_key_transform_file
-]
-computer_disc[keys.platform_key_fillonce_json] = []
-computer_disc[keys.platform_key_merge_json] = []
+computer_disc[keys.platform_key_autofill_json] = json_keys_autofill_computer
+computer_disc[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
+computer_disc[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_disc]
 platforms[Platform.COMPUTER_DISC] = computer_disc
 
 ###########################################################
@@ -233,31 +236,9 @@ computer_epic_games[keys.platform_key_category] = categories.Category.COMPUTER
 computer_epic_games[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_EPIC_GAMES
 computer_epic_games[keys.platform_key_addons] = []
 computer_epic_games[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_epic_games[keys.platform_key_autofill_json] = [
-    keys.json_key_files,
-    keys.json_key_dlc,
-    keys.json_key_update,
-    keys.json_key_extra,
-    keys.json_key_dependencies,
-    keys.json_key_installer_exe,
-    keys.json_key_transform_file,
-    keys.json_key_store_builddate,
-    keys.json_key_store_buildid,
-    keys.json_key_store_name,
-    keys.json_key_store_controller_support,
-    keys.json_key_store_installdir
-]
-computer_epic_games[keys.platform_key_fillonce_json] = [
-    keys.json_key_epic,
-    keys.json_key_store_appid,
-    keys.json_key_store_appname,
-    keys.json_key_store_appurl,
-    keys.json_key_store_branchid
-]
-computer_epic_games[keys.platform_key_merge_json] = [
-    keys.json_key_store_paths,
-    keys.json_key_store_keys
-]
+computer_epic_games[keys.platform_key_autofill_json] = json_keys_autofill_computer
+computer_epic_games[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
+computer_epic_games[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_epic]
 platforms[Platform.COMPUTER_EPIC_GAMES] = computer_epic_games
 
 ###########################################################
@@ -269,30 +250,9 @@ computer_gog[keys.platform_key_category] = categories.Category.COMPUTER
 computer_gog[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_GOG
 computer_gog[keys.platform_key_addons] = []
 computer_gog[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_gog[keys.platform_key_autofill_json] = [
-    keys.json_key_files,
-    keys.json_key_dlc,
-    keys.json_key_update,
-    keys.json_key_extra,
-    keys.json_key_dependencies,
-    keys.json_key_installer_exe,
-    keys.json_key_transform_file,
-    keys.json_key_store_builddate,
-    keys.json_key_store_buildid,
-    keys.json_key_store_name,
-    keys.json_key_store_controller_support,
-    keys.json_key_store_installdir
-]
-computer_gog[keys.platform_key_fillonce_json] = [
-    keys.json_key_gog,
-    keys.json_key_store_appid,
-    keys.json_key_store_appname,
-    keys.json_key_store_appurl,
-    keys.json_key_store_branchid,
-    keys.json_key_store_paths,
-    keys.json_key_store_keys
-]
-computer_gog[keys.platform_key_merge_json] = []
+computer_gog[keys.platform_key_autofill_json] = json_keys_autofill_computer
+computer_gog[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
+computer_gog[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_gog]
 platforms[Platform.COMPUTER_GOG] = computer_gog
 
 ###########################################################
@@ -304,17 +264,9 @@ computer_humble_bundle[keys.platform_key_category] = categories.Category.COMPUTE
 computer_humble_bundle[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_HUMBLE_BUNDLE
 computer_humble_bundle[keys.platform_key_addons] = []
 computer_humble_bundle[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_humble_bundle[keys.platform_key_autofill_json] = [
-    keys.json_key_files,
-    keys.json_key_dlc,
-    keys.json_key_update,
-    keys.json_key_extra,
-    keys.json_key_dependencies,
-    keys.json_key_installer_exe,
-    keys.json_key_transform_file
-]
-computer_humble_bundle[keys.platform_key_fillonce_json] = []
-computer_humble_bundle[keys.platform_key_merge_json] = []
+computer_humble_bundle[keys.platform_key_autofill_json] = json_keys_autofill_computer
+computer_humble_bundle[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
+computer_humble_bundle[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_humble]
 platforms[Platform.COMPUTER_HUMBLE_BUNDLE] = computer_humble_bundle
 
 ###########################################################
@@ -326,30 +278,9 @@ computer_itchio[keys.platform_key_category] = categories.Category.COMPUTER
 computer_itchio[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_ITCHIO
 computer_itchio[keys.platform_key_addons] = []
 computer_itchio[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_itchio[keys.platform_key_autofill_json] = [
-    keys.json_key_files,
-    keys.json_key_dlc,
-    keys.json_key_update,
-    keys.json_key_extra,
-    keys.json_key_dependencies,
-    keys.json_key_installer_exe,
-    keys.json_key_transform_file,
-    keys.json_key_store_builddate,
-    keys.json_key_store_buildid,
-    keys.json_key_store_name,
-    keys.json_key_store_controller_support,
-    keys.json_key_store_installdir
-]
-computer_itchio[keys.platform_key_fillonce_json] = [
-    keys.json_key_itchio,
-    keys.json_key_store_appid,
-    keys.json_key_store_appname,
-    keys.json_key_store_appurl,
-    keys.json_key_store_branchid,
-    keys.json_key_store_paths,
-    keys.json_key_store_keys
-]
-computer_itchio[keys.platform_key_merge_json] = []
+computer_itchio[keys.platform_key_autofill_json] = json_keys_autofill_computer
+computer_itchio[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
+computer_itchio[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_itchio]
 platforms[Platform.COMPUTER_ITCHIO] = computer_itchio
 
 ###########################################################
@@ -361,31 +292,9 @@ computer_legacy_games[keys.platform_key_category] = categories.Category.COMPUTER
 computer_legacy_games[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_LEGACY_GAMES
 computer_legacy_games[keys.platform_key_addons] = []
 computer_legacy_games[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_legacy_games[keys.platform_key_autofill_json] = [
-    keys.json_key_files,
-    keys.json_key_dlc,
-    keys.json_key_update,
-    keys.json_key_extra,
-    keys.json_key_dependencies,
-    keys.json_key_installer_exe,
-    keys.json_key_transform_file,
-    keys.json_key_store_builddate,
-    keys.json_key_store_buildid,
-    keys.json_key_store_name,
-    keys.json_key_store_controller_support,
-    keys.json_key_store_installdir
-]
-computer_legacy_games[keys.platform_key_fillonce_json] = [
-    keys.json_key_legacy,
-    keys.json_key_store_appid,
-    keys.json_key_store_appname,
-    keys.json_key_store_appurl,
-    keys.json_key_store_branchid
-]
-computer_legacy_games[keys.platform_key_merge_json] = [
-    keys.json_key_store_paths,
-    keys.json_key_store_keys
-]
+computer_legacy_games[keys.platform_key_autofill_json] = json_keys_autofill_computer
+computer_legacy_games[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
+computer_legacy_games[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_legacy]
 platforms[Platform.COMPUTER_LEGACY_GAMES] = computer_legacy_games
 
 ###########################################################
@@ -397,17 +306,9 @@ computer_puppet_combo[keys.platform_key_category] = categories.Category.COMPUTER
 computer_puppet_combo[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_PUPPET_COMBO
 computer_puppet_combo[keys.platform_key_addons] = []
 computer_puppet_combo[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_puppet_combo[keys.platform_key_autofill_json] = [
-    keys.json_key_files,
-    keys.json_key_dlc,
-    keys.json_key_update,
-    keys.json_key_extra,
-    keys.json_key_dependencies,
-    keys.json_key_installer_exe,
-    keys.json_key_transform_file
-]
-computer_puppet_combo[keys.platform_key_fillonce_json] = []
-computer_puppet_combo[keys.platform_key_merge_json] = []
+computer_puppet_combo[keys.platform_key_autofill_json] = json_keys_autofill_computer
+computer_puppet_combo[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
+computer_puppet_combo[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_puppetcombo]
 platforms[Platform.COMPUTER_PUPPET_COMBO] = computer_puppet_combo
 
 ###########################################################
@@ -419,17 +320,9 @@ computer_red_candle[keys.platform_key_category] = categories.Category.COMPUTER
 computer_red_candle[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_RED_CANDLE
 computer_red_candle[keys.platform_key_addons] = []
 computer_red_candle[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_red_candle[keys.platform_key_autofill_json] = [
-    keys.json_key_files,
-    keys.json_key_dlc,
-    keys.json_key_update,
-    keys.json_key_extra,
-    keys.json_key_dependencies,
-    keys.json_key_installer_exe,
-    keys.json_key_transform_file
-]
-computer_red_candle[keys.platform_key_fillonce_json] = []
-computer_red_candle[keys.platform_key_merge_json] = []
+computer_red_candle[keys.platform_key_autofill_json] = json_keys_autofill_computer
+computer_red_candle[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
+computer_red_candle[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_redcandle]
 platforms[Platform.COMPUTER_RED_CANDLE] = computer_red_candle
 
 ###########################################################
@@ -441,17 +334,9 @@ computer_square_enix[keys.platform_key_category] = categories.Category.COMPUTER
 computer_square_enix[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_SQUARE_ENIX
 computer_square_enix[keys.platform_key_addons] = []
 computer_square_enix[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_square_enix[keys.platform_key_autofill_json] = [
-    keys.json_key_files,
-    keys.json_key_dlc,
-    keys.json_key_update,
-    keys.json_key_extra,
-    keys.json_key_dependencies,
-    keys.json_key_installer_exe,
-    keys.json_key_transform_file
-]
-computer_square_enix[keys.platform_key_fillonce_json] = []
-computer_square_enix[keys.platform_key_merge_json] = []
+computer_square_enix[keys.platform_key_autofill_json] = json_keys_autofill_computer
+computer_square_enix[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
+computer_square_enix[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_squareenix]
 platforms[Platform.COMPUTER_SQUARE_ENIX] = computer_square_enix
 
 ###########################################################
@@ -463,31 +348,9 @@ computer_steam[keys.platform_key_category] = categories.Category.COMPUTER
 computer_steam[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_STEAM
 computer_steam[keys.platform_key_addons] = []
 computer_steam[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_steam[keys.platform_key_autofill_json] = [
-    keys.json_key_files,
-    keys.json_key_dlc,
-    keys.json_key_update,
-    keys.json_key_extra,
-    keys.json_key_dependencies,
-    keys.json_key_installer_exe,
-    keys.json_key_transform_file,
-    keys.json_key_store_builddate,
-    keys.json_key_store_buildid,
-    keys.json_key_store_name,
-    keys.json_key_store_controller_support,
-    keys.json_key_store_installdir
-]
-computer_steam[keys.platform_key_fillonce_json] = [
-    keys.json_key_steam,
-    keys.json_key_store_appid,
-    keys.json_key_store_appname,
-    keys.json_key_store_appurl,
-    keys.json_key_store_branchid
-]
-computer_steam[keys.platform_key_merge_json] = [
-    keys.json_key_store_paths,
-    keys.json_key_store_keys
-]
+computer_steam[keys.platform_key_autofill_json] = json_keys_autofill_computer
+computer_steam[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
+computer_steam[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_steam]
 platforms[Platform.COMPUTER_STEAM] = computer_steam
 
 ###########################################################
@@ -499,17 +362,9 @@ computer_zoom[keys.platform_key_category] = categories.Category.COMPUTER
 computer_zoom[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_ZOOM
 computer_zoom[keys.platform_key_addons] = []
 computer_zoom[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_zoom[keys.platform_key_autofill_json] = [
-    keys.json_key_files,
-    keys.json_key_dlc,
-    keys.json_key_update,
-    keys.json_key_extra,
-    keys.json_key_dependencies,
-    keys.json_key_installer_exe,
-    keys.json_key_transform_file
-]
-computer_zoom[keys.platform_key_fillonce_json] = []
-computer_zoom[keys.platform_key_merge_json] = []
+computer_zoom[keys.platform_key_autofill_json] = json_keys_autofill_computer
+computer_zoom[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
+computer_zoom[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_zoom]
 platforms[Platform.COMPUTER_ZOOM] = computer_zoom
 
 ######################################################################################
