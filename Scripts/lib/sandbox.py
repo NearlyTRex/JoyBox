@@ -664,18 +664,8 @@ def SetupPrefixEnvironment(
 
         # Get wine setup
         wine_setup_overrides = {}
-        wine_setup_use_dxvk = False
-        wine_setup_use_vkd3d = False
         if config.json_key_sandbox_wine_overrides in new_options.wine_setup:
             wine_setup_overrides = new_options.wine_setup[config.json_key_sandbox_wine_overrides]
-        if config.json_key_sandbox_wine_use_dxvk in new_options.wine_setup:
-            wine_setup_use_dxvk = new_options.wine_setup[config.json_key_sandbox_wine_use_dxvk]
-        if config.json_key_sandbox_wine_use_vkd3d in new_options.wine_setup:
-            wine_setup_use_vkd3d = new_options.wine_setup[config.json_key_sandbox_wine_use_vkd3d]
-
-        # Set dxvk options
-        if wine_setup_use_dxvk:
-            new_options.env["DXVK_HUD"] = "0"
 
         # Improve performance by not showing everything
         # To show only errors, change to fixme-all
@@ -866,14 +856,8 @@ def CreateWinePrefix(
 
     # Get wine setup
     wine_setup_tricks = {}
-    wine_setup_use_dxvk = False
-    wine_setup_use_vkd3d = False
     if config.json_key_sandbox_wine_tricks in wine_setup:
         wine_setup_tricks = wine_setup[config.json_key_sandbox_wine_tricks]
-    if config.json_key_sandbox_wine_use_dxvk in wine_setup:
-        wine_setup_use_dxvk = wine_setup[config.json_key_sandbox_wine_use_dxvk]
-    if config.json_key_sandbox_wine_use_vkd3d in wine_setup:
-        wine_setup_use_vkd3d = wine_setup[config.json_key_sandbox_wine_use_vkd3d]
 
     # Get list of winetricks
     winetricks = []
@@ -907,22 +891,6 @@ def CreateWinePrefix(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-
-    # Copy dxvk libraries
-    if wine_setup_use_dxvk:
-        InstallWineDlls(
-            prefix_dir = prefix_dir,
-            dlls_32 = tools.GetDXVKLibs32(),
-            dlls_64 = tools.GetDXVKLibs64(),
-            is_32_bit = is_32_bit)
-
-    # Copy vkd3d libraries
-    if wine_setup_use_vkd3d:
-        InstallWineDlls(
-            prefix_dir = prefix_dir,
-            dlls_32 = tools.GetVKD3DLibs32(),
-            dlls_64 = tools.GetVKD3DLibs64(),
-            is_32_bit = is_32_bit)
 
     # Creation successful
     return True
