@@ -345,11 +345,17 @@ class PresetOptionGroupType(EnumType):
 # Store types
 class StoreType(EnumType):
     AMAZON                  = ("Amazon")
+    DISC                    = ("Disc")
     GOG                     = ("GOG")
     EPIC                    = ("Epic")
+    HUMBLE_BUNDLE           = ("HumbleBundle")
     ITCHIO                  = ("Itchio")
     LEGACY                  = ("Legacy")
+    PUPPET_COMBO            = ("PuppetCombo")
+    RED_CANDLE              = ("RedCandle")
+    SQUARE_ENIX             = ("SquareEnix")
     STEAM                   = ("Steam")
+    ZOOM                    = ("Zoom")
 
 # Store action types
 class StoreActionType(EnumType):
