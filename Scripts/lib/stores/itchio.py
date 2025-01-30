@@ -24,6 +24,11 @@ class Itchio(storebase.StoreBase):
     def __init__(self):
         super().__init__()
 
+        # Get install dir
+        self.install_dir = ini.GetIniPathValue("UserData.Itchio", "itchio_install_dir")
+        if not system.IsPathValid(self.install_dir):
+            raise RuntimeError("Ini file does not have a valid install dir")
+
     ############################################################
     # Store
     ############################################################
@@ -59,6 +64,10 @@ class Itchio(storebase.StoreBase):
     # Get identifier
     def GetIdentifier(self, json_wrapper, identifier_type):
         return json_wrapper.get_value(config.json_key_store_appurl)
+
+    # Get install dir
+    def GetInstallDir(self):
+        return self.install_dir
 
     ############################################################
     # Connection

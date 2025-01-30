@@ -25,12 +25,12 @@ class GOG(storebase.StoreBase):
         # Get username
         self.username = ini.GetIniValue("UserData.GOG", "gog_username")
         if not self.username:
-            raise RuntimeError("Ini file does not have a valid gog username")
+            raise RuntimeError("Ini file does not have a valid username")
 
         # Get platform
         self.platform = ini.GetIniValue("UserData.GOG", "gog_platform")
         if not self.platform:
-            raise RuntimeError("Ini file does not have a valid gog platform")
+            raise RuntimeError("Ini file does not have a valid platform")
 
         # Get includes
         self.includes = ini.GetIniValue("UserData.GOG", "gog_includes")
@@ -39,9 +39,9 @@ class GOG(storebase.StoreBase):
         self.excludes = ini.GetIniValue("UserData.GOG", "gog_excludes")
 
         # Get install dir
-        self.install_dir = ini.GetIniValue("UserData.GOG", "gog_install_dir")
+        self.install_dir = ini.GetIniPathValue("UserData.GOG", "gog_install_dir")
         if not system.IsPathValid(self.install_dir):
-            raise RuntimeError("Ini file does not have a valid gog install dir")
+            raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################
     # Store

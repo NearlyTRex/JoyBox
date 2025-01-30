@@ -25,12 +25,12 @@ class Epic(storebase.StoreBase):
         # Get user details
         self.username = ini.GetIniValue("UserData.Epic", "epic_username")
         if not self.username:
-            raise RuntimeError("Ini file does not have a valid epic user details")
+            raise RuntimeError("Ini file does not have a valid username")
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.Epic", "epic_install_dir")
         if not system.IsPathValid(self.install_dir):
-            raise RuntimeError("Ini file does not have a valid epic install dir")
+            raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################
     # Store

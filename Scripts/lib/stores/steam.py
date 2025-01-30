@@ -214,28 +214,28 @@ class Steam(storebase.StoreBase):
         self.platform = ini.GetIniPathValue("UserData.Steam", "steam_platform")
         self.arch = ini.GetIniPathValue("UserData.Steam", "steam_arch")
         if not self.platform or not self.arch:
-            raise RuntimeError("Ini file does not have a valid steam platform/arch")
+            raise RuntimeError("Ini file does not have a valid platform/arch")
 
         # Get account name
         self.accountname = ini.GetIniValue("UserData.Steam", "steam_accountname")
         if not self.accountname:
-            raise RuntimeError("Ini file does not have a valid steam account")
+            raise RuntimeError("Ini file does not have a valid account name")
 
         # Get user details
         self.username = ini.GetIniValue("UserData.Steam", "steam_username")
         self.userid = ini.GetIniValue("UserData.Steam", "steam_userid")
         if not self.username or not self.userid:
-            raise RuntimeError("Ini file does not have a valid steam user details")
+            raise RuntimeError("Ini file does not have a valid username")
 
         # Get web api key
         self.web_api_key = ini.GetIniValue("UserData.Steam", "steam_web_api_key")
         if not self.web_api_key:
-            raise RuntimeError("Ini file does not have a valid steam web api key")
+            raise RuntimeError("Ini file does not have a valid web api key")
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.Steam", "steam_install_dir")
         if not system.IsPathValid(self.install_dir):
-            raise RuntimeError("Ini file does not have a valid steam install dir")
+            raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################
     # Store

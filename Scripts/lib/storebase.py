@@ -528,7 +528,19 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        return None
+
+        # Check identifier
+        if not self.IsValidIdentifier(identifier):
+            return None
+
+        # Collect metadata entry
+        return metadatacollector.CollectMetadataFromAll(
+            game_platform = self.GetPlatform(),
+            game_name = identifier,
+            keys_to_check = config.metadata_keys_downloadable,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Update metadata
     def UpdateMetadata(

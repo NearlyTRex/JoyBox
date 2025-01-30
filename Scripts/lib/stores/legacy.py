@@ -26,12 +26,12 @@ class Legacy(storebase.StoreBase):
         # Get user details
         self.username = ini.GetIniValue("UserData.Legacy", "legacy_username")
         if not self.username:
-            raise RuntimeError("Ini file does not have a valid legacy user details")
+            raise RuntimeError("Ini file does not have a valid username")
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.Legacy", "legacy_install_dir")
         if not system.IsPathValid(self.install_dir):
-            raise RuntimeError("Ini file does not have a valid legacy install dir")
+            raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################
     # Store
@@ -365,31 +365,6 @@ class Legacy(storebase.StoreBase):
 
         # Return game info
         return jsondata.JsonData(game_info, self.GetPlatform())
-
-    ############################################################
-    # Metadata
-    ############################################################
-
-    # Get latest metadata
-    def GetLatestMetadata(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Check identifier
-        if not self.IsValidIdentifier(identifier):
-            return None
-
-        # Collect metadata entry
-        return metadatacollector.CollectMetadataFromAll(
-            game_platform = self.GetPlatform(),
-            game_name = identifier,
-            keys_to_check = config.metadata_keys_downloadable,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
 
     ############################################################
     # Assets
