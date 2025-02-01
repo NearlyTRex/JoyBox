@@ -97,7 +97,7 @@ def GetConfiguredRemotes(
     # Run list command
     list_output = command.RunOutputCommand(
         cmd = list_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [rclone_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -139,7 +139,7 @@ def IsRemoteConfigured(
     # Run show command
     show_output = command.RunOutputCommand(
         cmd = show_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [rclone_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -335,7 +335,7 @@ def GetPathMD5(
     # Run md5sum command
     md5sum_output = command.RunOutputCommand(
         cmd = md5sum_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [rclone_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -403,7 +403,7 @@ def DoesPathExist(
     # Run list command
     list_output = command.RunOutputCommand(
         cmd = list_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [rclone_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -449,7 +449,7 @@ def DoesPathContainFiles(
     # Run list command
     list_output = command.RunOutputCommand(
         cmd = list_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [rclone_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

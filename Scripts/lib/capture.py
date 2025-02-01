@@ -144,7 +144,7 @@ def CaptureVideo(
     # Run capture command
     command.RunBlockingCommand(
         cmd = capture_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             prefix_dir = prefix_dir,
             prefix_name = prefix_name,
             is_wine_prefix = sandbox.ShouldBeRunViaWine(ffmpeg_tool),

@@ -127,7 +127,7 @@ class GOG(storebase.StoreBase):
         # Run login command
         code = command.RunBlockingCommand(
             cmd = login_cmd,
-            options = command.CommandOptions(
+            options = command.CreateCommandOptions(
                 blocking_processes = [gog_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -250,7 +250,7 @@ class GOG(storebase.StoreBase):
         # Run list command
         code = command.RunReturncodeCommand(
             cmd = list_cmd,
-            options = command.CommandOptions(
+            options = command.CreateCommandOptions(
                 stdout = tmp_file_manifest),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -599,7 +599,7 @@ class GOG(storebase.StoreBase):
         # Run download command
         code = command.RunBlockingCommand(
             cmd = download_cmd,
-            options = command.CommandOptions(
+            options = command.CreateCommandOptions(
                 blocking_processes = [gog_tool]),
             verbose = verbose,
             pretend_run = pretend_run,

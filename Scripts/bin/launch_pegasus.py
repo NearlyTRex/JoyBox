@@ -39,7 +39,7 @@ def main():
     ]
 
     # Get launch options
-    launch_options = command.CommandOptions()
+    launch_options = command.CreateCommandOptions()
     launch_options.cwd = system.GetFilenameDirectory(pegasus_tool)
     launch_options.env = os.environ
     launch_options.env["JOYBOX_LAUNCH_JSON"] = system.JoinPaths(environment.GetScriptsBinDir(), "launch_json" + environment.GetScriptsCommandExtension())

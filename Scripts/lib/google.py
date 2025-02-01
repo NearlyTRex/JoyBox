@@ -119,7 +119,7 @@ def FindVideos(
     # Run search command
     search_output = command.RunOutputCommand(
         cmd = search_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             shell = True,
             blocking_processes = [youtube_tool]),
         verbose = verbose,
@@ -209,7 +209,7 @@ def DownloadVideo(
     # Run download command
     code = command.RunBlockingCommand(
         cmd = download_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [youtube_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

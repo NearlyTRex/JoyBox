@@ -150,7 +150,7 @@ def DownloadUrl(
     # Run download command
     code = command.RunBlockingCommand(
         cmd = download_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [download_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -220,7 +220,7 @@ def DownloadGitUrl(
     # Run download command
     code = command.RunBlockingCommand(
         cmd = download_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             cwd = os.path.expanduser("~"),
             blocking_processes = [download_tool]),
         verbose = verbose,

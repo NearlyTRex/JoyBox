@@ -119,44 +119,18 @@ json_key_local_rom_dir = "local_rom_dir"
 json_key_remote_rom_dir = "remote_rom_dir"
 
 # Computer json keys
-json_key_installer_exe = "installer_exe"
-json_key_installer_dos_exe = "installer_dos_exe"
-json_key_installer_type = "installer_type"
-json_key_disc_type = "disc_type"
-json_key_launch_exe = "launch_exe"
-json_key_launch_exe_cwd = "launch_exe_cwd"
-json_key_launch_exe_args = "launch_exe_args"
-json_key_launch_dos_exe = "launch_dos_exe"
-json_key_launch_dos_exe_cwd = "launch_dos_exe_cwd"
-json_key_launch_dos_exe_args = "launch_dos_exe_args"
-json_key_launch_win31_exe = "launch_win31_exe"
-json_key_launch_win31_exe_cwd = "launch_win31_exe_cwd"
-json_key_launch_win31_exe_args = "launch_win31_exe_args"
-json_key_sandbox = "sandbox"
-json_key_sandbox_sandboxie = "sandboxie"
-json_key_sandbox_wine = "wine"
-json_key_sandbox_wine_tricks = "tricks"
-json_key_sandbox_wine_overrides = "overrides"
-json_key_sandbox_wine_desktop = "desktop"
-json_key_sandbox_wine_use_dxvk = "use_dxvk"
-json_key_sandbox_wine_use_vkd3d = "use_vkd3d"
-json_key_sandbox_wine_use_virtual_desktop = "use_virtual_desktop"
-json_key_steps = "steps"
-json_key_steps_preinstall = "preinstall"
-json_key_steps_postinstall = "postinstall"
-json_key_sync = "sync"
-json_key_sync_search = "search"
-json_key_sync_data = "data"
-json_key_registry = "registry"
-json_key_registry_setup_keys = "setup_keys"
-json_key_registry_game_keys = "game_keys"
-json_key_serials = "serials"
 json_key_amazon = "amazon"
+json_key_disc = "disc"
 json_key_epic = "epic"
 json_key_gog = "gog"
+json_key_humble = "humble"
 json_key_itchio = "itchio"
 json_key_legacy = "legacy"
+json_key_puppetcombo = "puppetcombo"
+json_key_redcandle = "redcandle"
+json_key_squareenix = "squareenix"
 json_key_steam = "steam"
+json_key_zoom = "zoom"
 json_key_store_appid = "appid"
 json_key_store_appname = "appname"
 json_key_store_appurl = "appurl"
@@ -168,18 +142,39 @@ json_key_store_controller_support = "controller_support"
 json_key_store_installdir = "installdir"
 json_key_store_paths = "paths"
 json_key_store_keys = "keys"
-json_key_winver = "winver"
-json_key_is_32_bit = "is_32_bit"
-json_key_is_dos = "is_dos"
-json_key_is_win31 = "is_win31"
-json_key_is_scumm = "is_scumm"
+json_key_store_launch = "launch"
+json_key_store_setup = "setup"
+json_key_store_setup_install = "install"
+json_key_store_setup_preinstall = "preinstall"
+json_key_store_setup_postinstall = "postinstall"
+json_key_store_program_exe = "exe"
+json_key_store_program_cwd = "cwd"
+json_key_store_program_args = "args"
+json_key_store_program_winver = "winver"
+json_key_store_program_is_32_bit = "is_32_bit"
+json_key_store_program_is_dos = "is_dos"
+json_key_store_program_is_win31 = "is_win31"
+json_key_store_program_is_scumm = "is_scumm"
+json_key_store_program_tricks = "tricks"
+json_key_store_program_overrides = "overrides"
+json_key_store_program_desktop = "desktop"
+json_key_store_program_use_virtual_desktop = "use_virtual_desktop"
+json_key_store_program_disc_type = "disc_type"
+json_key_store_program_installer_type = "installer_type"
+json_key_store_program_serial = "serial"
 json_keys_store = [
     json_key_amazon,
+    json_key_disc,
     json_key_epic,
     json_key_gog,
+    json_key_humble,
     json_key_itchio,
     json_key_legacy,
-    json_key_steam
+    json_key_puppetcombo,
+    json_key_redcandle,
+    json_key_squareenix,
+    json_key_steam,
+    json_key_zoom
 ]
 json_keys_store_appdata = [
     json_key_store_appid,
@@ -197,7 +192,9 @@ json_keys_store_subdata = [
     json_key_store_controller_support,
     json_key_store_installdir,
     json_key_store_paths,
-    json_key_store_keys
+    json_key_store_keys,
+    json_key_store_launch,
+    json_key_store_setup
 ]
 
 # Json key defaults
@@ -214,36 +211,18 @@ json_key_defaults.append({"key": json_key_dlc, "default": []})
 json_key_defaults.append({"key": json_key_update, "default": []})
 json_key_defaults.append({"key": json_key_extra, "default": []})
 json_key_defaults.append({"key": json_key_dependencies, "default": []})
-json_key_defaults.append({"key": json_key_installer_exe, "default": []})
-json_key_defaults.append({"key": json_key_installer_dos_exe, "default": []})
-json_key_defaults.append({"key": json_key_installer_type, "default": None})
-json_key_defaults.append({"key": json_key_disc_type, "default": None})
-json_key_defaults.append({"key": json_key_launch_exe, "default": []})
-json_key_defaults.append({"key": json_key_launch_exe_cwd, "default": {}})
-json_key_defaults.append({"key": json_key_launch_exe_args, "default": {}})
-json_key_defaults.append({"key": json_key_launch_dos_exe, "default": []})
-json_key_defaults.append({"key": json_key_launch_dos_exe_cwd, "default": {}})
-json_key_defaults.append({"key": json_key_launch_dos_exe_args, "default": {}})
-json_key_defaults.append({"key": json_key_launch_win31_exe, "default": []})
-json_key_defaults.append({"key": json_key_launch_win31_exe_cwd, "default": {}})
-json_key_defaults.append({"key": json_key_launch_win31_exe_args, "default": {}})
-json_key_defaults.append({"key": json_key_sandbox, "default": {}})
-json_key_defaults.append({"key": (json_key_sandbox, json_key_sandbox_sandboxie), "default": {}})
-json_key_defaults.append({"key": (json_key_sandbox, json_key_sandbox_wine), "default": {}})
-json_key_defaults.append({"key": json_key_steps, "default": {}})
-json_key_defaults.append({"key": (json_key_steps, json_key_steps_preinstall), "default": []})
-json_key_defaults.append({"key": (json_key_steps, json_key_steps_postinstall), "default": []})
-json_key_defaults.append({"key": json_key_sync, "default": {}})
-json_key_defaults.append({"key": (json_key_sync, json_key_sync_search), "default": ""})
-json_key_defaults.append({"key": (json_key_sync, json_key_sync_data), "default": []})
-json_key_defaults.append({"key": json_key_registry, "default": {}})
-json_key_defaults.append({"key": (json_key_registry, json_key_registry_setup_keys), "default": []})
-json_key_defaults.append({"key": (json_key_registry, json_key_registry_game_keys), "default": []})
-json_key_defaults.append({"key": json_key_serials, "default": {}})
 json_key_defaults.append({"key": json_key_amazon, "default": {}})
+json_key_defaults.append({"key": json_key_disc, "default": {}})
 json_key_defaults.append({"key": json_key_epic, "default": {}})
 json_key_defaults.append({"key": json_key_gog, "default": {}})
+json_key_defaults.append({"key": json_key_humble, "default": {}})
+json_key_defaults.append({"key": json_key_itchio, "default": {}})
+json_key_defaults.append({"key": json_key_legacy, "default": {}})
+json_key_defaults.append({"key": json_key_puppetcombo, "default": {}})
+json_key_defaults.append({"key": json_key_redcandle, "default": {}})
+json_key_defaults.append({"key": json_key_squareenix, "default": {}})
 json_key_defaults.append({"key": json_key_steam, "default": {}})
+json_key_defaults.append({"key": json_key_zoom, "default": {}})
 for json_key in json_keys_store:
     json_key_defaults.append({"key": (json_key, json_key_store_appid), "default": ""})
     json_key_defaults.append({"key": (json_key, json_key_store_appname), "default": ""})
@@ -256,11 +235,8 @@ for json_key in json_keys_store:
     json_key_defaults.append({"key": (json_key, json_key_store_installdir), "default": ""})
     json_key_defaults.append({"key": (json_key, json_key_store_paths), "default": []})
     json_key_defaults.append({"key": (json_key, json_key_store_keys), "default": []})
-json_key_defaults.append({"key": json_key_winver, "default": None})
-json_key_defaults.append({"key": json_key_is_32_bit, "default": False})
-json_key_defaults.append({"key": json_key_is_dos, "default": False})
-json_key_defaults.append({"key": json_key_is_win31, "default": False})
-json_key_defaults.append({"key": json_key_is_scumm, "default": False})
+    json_key_defaults.append({"key": (json_key, json_key_store_launch), "default": {}})
+    json_key_defaults.append({"key": (json_key, json_key_store_setup), "default": {}})
 
 # Filter keys
 filter_key_launchable_only = "launchable_only"

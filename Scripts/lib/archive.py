@@ -247,7 +247,7 @@ def CreateArchiveFromFile(
     # Run create command
     code = command.RunBlockingCommand(
         cmd = create_command,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             cwd = system.GetFilenameDirectory(source_file),
             output_paths = [archive_file],
             blocking_processes = [archive_tool]),
@@ -333,7 +333,7 @@ def CreateArchiveFromFolder(
     # Run create command
     code = command.RunBlockingCommand(
         cmd = create_command,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             cwd = source_dir,
             output_paths = [archive_file],
             blocking_processes = [archive_tool]),
@@ -426,7 +426,7 @@ def ExtractArchive(
     # Run extract command
     code = command.RunBlockingCommand(
         cmd = extract_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             output_paths = [extract_dir],
             blocking_processes = [archive_tool]),
         verbose = verbose,
@@ -471,7 +471,7 @@ def TestArchive(
     # Run test command
     code = command.RunBlockingCommand(
         cmd = test_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [archive_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

@@ -10,12 +10,17 @@ import copy
 import config
 import system
 import environment
+import commandoptions
 import programs
 import sandbox
 import capture
 import ini
 
 ###########################################################
+
+# Create command options
+def CreateCommandOptions(*args, **kwargs):
+    return commandoptions.CommandOptions(*args, **kwargs)
 
 # Create command string
 def CreateCommandString(cmd):
@@ -171,76 +176,10 @@ def IsPrefixCommand(cmd):
 
 ###########################################################
 
-# Command options
-class CommandOptions:
-    def __init__(
-        self,
-        cwd = None,
-        env = None,
-        shell = False,
-        is_32_bit = False,
-        allow_processing = True,
-        force_powershell = False,
-        force_appimage = False,
-        force_prefix = False,
-        is_wine_prefix = False,
-        is_sandboxie_prefix = False,
-        is_prefix_mapped_cwd = False,
-        wine_setup = {},
-        sandboxie_setup = {},
-        prefix_dir = None,
-        prefix_name = None,
-        prefix_winver = None,
-        prefix_cwd = None,
-        lnk_base_path = None,
-        output_paths = [],
-        blocking_processes = [],
-        creationflags = 0,
-        stdout = None,
-        stderr = None,
-        include_stderr = False):
-
-        # Core
-        self.cwd = cwd
-        if env:
-            self.env = env
-        else:
-            self.env = copy.deepcopy(os.environ)
-        self.shell = shell
-        self.is_32_bit = is_32_bit
-
-        # Flags
-        self.allow_processing = allow_processing
-        self.force_powershell = force_powershell
-        self.force_appimage = force_appimage
-        self.force_prefix = force_prefix
-
-        # Prefix
-        self.is_wine_prefix = is_wine_prefix
-        self.is_sandboxie_prefix = is_sandboxie_prefix
-        self.is_prefix_mapped_cwd = is_prefix_mapped_cwd
-        self.wine_setup = wine_setup
-        self.sandboxie_setup = sandboxie_setup
-        self.prefix_dir = prefix_dir
-        self.prefix_name = prefix_name
-        self.prefix_winver = prefix_winver
-        self.prefix_cwd = prefix_cwd
-
-        # Other
-        self.lnk_base_path = lnk_base_path
-        self.output_paths = output_paths
-        self.blocking_processes = blocking_processes
-        self.creationflags = creationflags
-        self.stdout = stdout
-        self.stderr = stderr
-        self.include_stderr = include_stderr
-
-###########################################################
-
 # Setup powershell command
 def SetupPowershellCommand(
     cmd,
-    options = CommandOptions(),
+    options = CreateCommandOptions(),
     verbose = False,
     exit_on_failure = False):
 
@@ -260,7 +199,7 @@ def SetupPowershellCommand(
 # Setup appimage command
 def SetupAppImageCommand(
     cmd,
-    options = CommandOptions(),
+    options = CreateCommandOptions(),
     verbose = False,
     exit_on_failure = False):
 
@@ -287,8 +226,9 @@ def SetupAppImageCommand(
 # Setup prefix command
 def SetupPrefixCommand(
     cmd,
-    options = CommandOptions(),
+    options = CreateCommandOptions(),
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Check if prefix command
@@ -304,10 +244,7 @@ def SetupPrefixCommand(
         new_options.is_wine_prefix = sandbox.ShouldBeRunViaWine(cmd)
         new_options.is_sandboxie_prefix = sandbox.ShouldBeRunViaSandboxie(cmd)
         new_options.prefix_name = config.PrefixType.DEFAULT
-        new_options.prefix_dir = sandbox.GetPrefix(
-            name = new_options.prefix_name,
-            is_wine_prefix = new_options.is_wine_prefix,
-            is_sandboxie_prefix = new_options.is_sandboxie_prefix)
+        new_options.prefix_dir = sandbox.GetPrefix(new_options)
 
     # Create prefix dir if necessary
     if system.IsPathValid(new_options.prefix_dir) and not os.path.exists(new_options.prefix_dir):
@@ -340,7 +277,7 @@ def SetupPrefixCommand(
 # Pre-process command
 def PreprocessCommand(
     cmd,
-    options = CommandOptions(),
+    options = CreateCommandOptions(),
     verbose = False,
     exit_on_failure = False):
 
@@ -371,7 +308,7 @@ def PreprocessCommand(
 # Post-process command
 def PostprocessCommand(
     cmd,
-    options = CommandOptions(),
+    options = CreateCommandOptions(),
     verbose = False,
     exit_on_failure = False):
 
@@ -417,14 +354,14 @@ def PrintCommand(cmd):
 # Run output command
 def RunOutputCommand(
     cmd,
-    options = CommandOptions(),
+    options = CreateCommandOptions(),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
         cmd = CreateCommandList(cmd)
         if not options:
-            options = CommandOptions()
+            options = CreateCommandOptions()
         if not pretend_run:
             if options.allow_processing:
                 cmd, options = PreprocessCommand(
@@ -482,14 +419,14 @@ def RunOutputCommand(
 # Run returncode command
 def RunReturncodeCommand(
     cmd,
-    options = CommandOptions(),
+    options = CreateCommandOptions(),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
         cmd = CreateCommandList(cmd)
         if not options:
-            options = CommandOptions()
+            options = CreateCommandOptions()
         if not pretend_run:
             if options.allow_processing:
                 cmd, options = PreprocessCommand(
@@ -545,7 +482,7 @@ def RunReturncodeCommand(
 # Run checked command
 def RunCheckedCommand(
     cmd,
-    options = CommandOptions(),
+    options = CreateCommandOptions(),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -561,7 +498,7 @@ def RunCheckedCommand(
 # Run exception command
 def RunExceptionCommand(
     cmd,
-    options = CommandOptions(),
+    options = CreateCommandOptions(),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -577,14 +514,14 @@ def RunExceptionCommand(
 # Run blocking command
 def RunBlockingCommand(
     cmd,
-    options = CommandOptions(),
+    options = CreateCommandOptions(),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
         cmd = CreateCommandList(cmd)
         if not options:
-            options = CommandOptions()
+            options = CreateCommandOptions()
         if not pretend_run:
             if options.allow_processing:
                 cmd, options = PreprocessCommand(
@@ -637,7 +574,7 @@ def RunBlockingCommand(
 def RunGameCommand(
     game_info,
     cmd,
-    options = CommandOptions(),
+    options = CreateCommandOptions(),
     capture_type = None,
     verbose = False,
     pretend_run = False,

@@ -41,7 +41,7 @@ def EncryptNDSRom(
     # Run encrypt command
     code = command.RunBlockingCommand(
         cmd = encrypt_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [encrypt_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -74,7 +74,7 @@ def DecryptNDSRom(
     # Run decrypt command
     code = command.RunBlockingCommand(
         cmd = decrypt_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [decrypt_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -112,7 +112,7 @@ def Convert3DSCIAtoCCI(
     # Run convert command
     code = command.RunBlockingCommand(
         cmd = convert_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [convert_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -150,7 +150,7 @@ def Convert3DSCCItoCIA(
     # Run convert command
     code = command.RunBlockingCommand(
         cmd = convert_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [convert_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -203,7 +203,7 @@ def Trim3DSCCI(
     # Run trim command
     code = command.RunBlockingCommand(
         cmd = trim_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [trim_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -273,7 +273,7 @@ def Untrim3DSCCI(
     # Run trim command
     code = command.RunBlockingCommand(
         cmd = trim_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [trim_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -341,7 +341,7 @@ def Extract3DSCIA(
     # Run extract command
     code = command.RunBlockingCommand(
         cmd = extract_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [extract_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -403,7 +403,7 @@ def Get3DSFileInfo(
     # Run print command
     output = command.RunOutputCommand(
         cmd = print_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [print_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -493,7 +493,7 @@ def DecryptWiiUNUSPackage(
     # Run decrypt command
     code = command.RunBlockingCommand(
         cmd = decrypt_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             cwd = nus_package_dir,
             output_paths = [nus_package_dir],
             blocking_processes = [decrypt_tool]),
@@ -944,7 +944,7 @@ def ExtractSwitchNSP(
     # Run extract command
     code = command.RunBlockingCommand(
         cmd = extract_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             output_paths = [extract_dir],
             blocking_processes = [extract_tool]),
         verbose = verbose,

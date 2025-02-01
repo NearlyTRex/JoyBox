@@ -19,6 +19,7 @@ import time
 import datetime
 import urllib.parse
 import collections.abc
+import uuid
 
 # Local imports
 import config
@@ -40,6 +41,12 @@ def QuitProgram(exit_code = -1):
 # Sleep program
 def SleepProgram(seconds):
     time.sleep(seconds)
+
+###########################################################
+
+# Generate unique ID
+def GenerateUniqueID():
+    return str(uuid.uuid4())
 
 ###########################################################
 

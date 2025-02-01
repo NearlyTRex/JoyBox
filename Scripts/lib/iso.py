@@ -59,7 +59,7 @@ def CreateISO(
     # Run create command
     command.RunBlockingCommand(
         cmd = create_command,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             output_paths = [iso_file],
             blocking_processes = [iso_tool]),
         verbose = verbose,
@@ -106,7 +106,7 @@ def ExtractISO(
     # Run extract command
     command.RunBlockingCommand(
         cmd = extract_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             output_paths = [extract_dir],
             blocking_processes = [iso_tool]),
         verbose = verbose,

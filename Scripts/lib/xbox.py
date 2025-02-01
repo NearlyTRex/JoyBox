@@ -36,7 +36,7 @@ def ExtractXboxISO(
     # Run extract command
     code = command.RunBlockingCommand(
         cmd = extract_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [extract_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -85,7 +85,7 @@ def RewriteXboxISO(
     # Run rewrite command
     code = command.RunBlockingCommand(
         cmd = rewrite_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [extract_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

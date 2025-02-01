@@ -5,14 +5,12 @@ import sys
 # Local imports
 import config
 import command
-import sandbox
 import system
 import environment
 import archive
 import programs
 import installer
 import webpage
-import registry
 import network
 import locker
 
@@ -25,10 +23,7 @@ def SetupStoredRelease(
     use_first_found = False,
     use_last_found = True,
     search_file = None,
-    prefix_dir = None,
-    prefix_name = None,
     install_files = [],
-    registry_files = [],
     chmod_files = [],
     rename_files = [],
     installer_type = None,
@@ -64,10 +59,7 @@ def SetupStoredRelease(
         install_name = install_name,
         install_dir = install_dir,
         search_file = search_file,
-        prefix_dir = prefix_dir,
-        prefix_name = prefix_name,
         install_files = install_files,
-        registry_files = registry_files,
         chmod_files = chmod_files,
         rename_files = rename_files,
         installer_type = installer_type,
@@ -83,10 +75,7 @@ def SetupGeneralRelease(
     install_dir,
     search_file = None,
     backups_dir = None,
-    prefix_dir = None,
-    prefix_name = None,
     install_files = [],
-    registry_files = [],
     chmod_files = [],
     rename_files = [],
     installer_type = None,
@@ -176,77 +165,6 @@ def SetupGeneralRelease(
             search_dir = archive_dir
 
     ####################################
-    # Executable installer
-    ####################################
-    elif release_type == config.ReleaseType.INSTALLER:
-
-        # Exe installer
-        if archive_extension == ".exe":
-
-            # Check if installer should be run via wine/sandboxie
-            should_run_via_wine = environment.IsWinePlatform()
-            should_run_via_sandboxie = environment.IsSandboxiePlatform()
-
-            # Get real and virtual install paths
-            real_install_path = system.JoinPaths(tmp_dir_result, "install")
-            virtual_install_path = sandbox.TranslateRealPathToVirtualPath(
-                path = real_install_path,
-                prefix_dir = prefix_dir,
-                prefix_name = prefix_name,
-                is_wine_prefix = should_run_via_wine,
-                is_sandboxie_prefix = should_run_via_sandboxie)
-
-            # Create real install path
-            system.MakeDirectory(
-                dir = real_install_path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-            # Get installer setup command
-            installer_setup_cmd = installer.GetInstallerSetupCommand(
-                installer_file = archive_file,
-                installer_type = installer_type,
-                install_dir = virtual_install_path,
-                silent_install = False)
-            if not installer_setup_cmd:
-                system.LogError("Unable to get installer setup command")
-                return False
-
-            # Create prefix
-            sandbox.CreateBasicPrefix(
-                prefix_dir = prefix_dir,
-                prefix_name = prefix_name,
-                is_wine_prefix = should_run_via_wine,
-                is_sandboxie_prefix = should_run_via_sandboxie,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-            # Run installer
-            code = command.RunBlockingCommand(
-                cmd = installer_setup_cmd,
-                options = command.CommandOptions(
-                    cwd = real_install_path,
-                    prefix_dir = prefix_dir,
-                    prefix_name = prefix_name,
-                    is_wine_prefix = should_run_via_wine,
-                    is_sandboxie_prefix = should_run_via_sandboxie,
-                    force_prefix = True,
-                    blocking_processes = [archive_file]),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if code != 0:
-                system.LogError("Error occurred running the setup installer")
-                return False
-
-            # Set search directory to best location for installed files
-            search_dir = prefix_dir
-            if installer_type != config.InstallerType.UNKNOWN:
-                search_dir = real_install_path
-
-    ####################################
     # Archive
     ####################################
     elif release_type == config.ReleaseType.ARCHIVE:
@@ -302,19 +220,6 @@ def SetupGeneralRelease(
         if not success:
             system.LogError("Unable to copy install files from %s" % search_dir)
             return False
-
-    # Registry files
-    if isinstance(registry_files, list) and len(registry_files):
-        for registry_file in registry_files:
-            success = registry.ImportRegistryFile(
-                registry_file = registry_file,
-                prefix_dir = prefix_dir,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                system.LogError("Unable to import registry file %s" % registry_file)
-                return False
 
     # Chmod files
     if isinstance(chmod_files, list) and len(chmod_files):
@@ -385,10 +290,7 @@ def DownloadGeneralRelease(
     install_dir,
     search_file = None,
     backups_dir = None,
-    prefix_dir = None,
-    prefix_name = None,
     install_files = [],
-    registry_files = [],
     chmod_files = [],
     rename_files = [],
     installer_type = None,
@@ -430,10 +332,7 @@ def DownloadGeneralRelease(
         install_dir = install_dir,
         search_file = search_file,
         backups_dir = backups_dir,
-        prefix_dir = prefix_dir,
-        prefix_name = prefix_name,
         install_files = install_files,
-        registry_files = registry_files,
         chmod_files = chmod_files,
         rename_files = rename_files,
         installer_type = installer_type,
@@ -458,8 +357,6 @@ def DownloadGithubRelease(
     install_dir,
     search_file = None,
     backups_dir = None,
-    prefix_dir = None,
-    prefix_name = None,
     install_files = [],
     chmod_files = [],
     rename_files = [],
@@ -519,8 +416,6 @@ def DownloadGithubRelease(
         install_dir = install_dir,
         search_file = search_file,
         backups_dir = backups_dir,
-        prefix_dir = prefix_dir,
-        prefix_name = prefix_name,
         install_files = install_files,
         chmod_files = chmod_files,
         rename_files = rename_files,
@@ -540,8 +435,6 @@ def DownloadWebpageRelease(
     install_dir,
     search_file = None,
     backups_dir = None,
-    prefix_dir = None,
-    prefix_name = None,
     install_files = [],
     chmod_files = [],
     rename_files = [],
@@ -573,8 +466,6 @@ def DownloadWebpageRelease(
         install_dir = install_dir,
         search_file = search_file,
         backups_dir = backups_dir,
-        prefix_dir = prefix_dir,
-        prefix_name = prefix_name,
         install_files = install_files,
         chmod_files = chmod_files,
         rename_files = rename_files,
@@ -713,7 +604,7 @@ def BuildAppImageFromSource(
     # Build release
     code = command.RunBlockingCommand(
         cmd = build_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             cwd = source_build_dir,
             shell = True),
         verbose = verbose,
@@ -757,7 +648,7 @@ def BuildAppImageFromSource(
     # Build AppImage
     code = command.RunBlockingCommand(
         cmd = [programs.GetToolProgram("AppImageTool"), appimage_dir],
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             cwd = tmp_dir_result),
         verbose = verbose,
         pretend_run = pretend_run,

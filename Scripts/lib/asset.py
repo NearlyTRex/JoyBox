@@ -38,7 +38,7 @@ def CleanExifData(
     # Run clean command
     code = command.RunBlockingCommand(
         cmd = clean_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             blocking_processes = [exif_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

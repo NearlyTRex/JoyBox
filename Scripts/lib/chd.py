@@ -46,7 +46,7 @@ def CreateDiscCHD(
     # Run create command
     code = command.RunBlockingCommand(
         cmd = create_command,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             output_paths = [chd_file],
             blocking_processes = [chd_tool]),
         verbose = verbose,
@@ -96,7 +96,7 @@ def ExtractDiscCHD(
     # Run extract command
     code = command.RunBlockingCommand(
         cmd = extract_cmd,
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             output_paths = [toc_file, binary_file],
             blocking_processes = [chd_tool]),
         verbose = verbose,
