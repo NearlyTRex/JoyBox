@@ -362,6 +362,28 @@ class StoreBase:
                 if purchase_appurl:
                     purchase.set_value(config.json_key_store_appurl, purchase_appurl)
 
+            # Download assets
+            for asset_type in config.AssetMinType.members():
+                success = collection.DownloadMetadataAsset(
+                    game_supercategory = self.GetSupercategory(),
+                    game_category = self.GetCategory(),
+                    game_subcategory = self.GetSubcategory(),
+                    game_name = entry_name,
+                    asset_url = self.GetLatestAssetUrl(
+                        identifier = self.GetAssetIdentifier(purchase),
+                        asset_type = asset_type,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure),
+                    asset_type = asset_type,
+                    skip_existing = True,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+                if not success:
+                    system.LogWarning("Unable to download asset %s for game '%s'" % (asset_type, entry_name))
+                    return False
+
             # Create json file
             success = collection.CreateGameJsonFile(
                 game_supercategory = self.GetSupercategory(),
@@ -373,7 +395,7 @@ class StoreBase:
                     game_category = self.GetCategory(),
                     game_subcategory = self.GetSubcategory(),
                     game_name = entry_name),
-                initial_data = {self.GetKey(): purchase.get_data()},
+                initial_data = {self.GetKey(): purchase.get_data_copy()},
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -382,7 +404,7 @@ class StoreBase:
                 return False
 
             # Add metadata entry
-            success = collection.AddMetadataEntry(
+            success = collection.AddOrUpdateMetadataEntry(
                 game_supercategory = self.GetSupercategory(),
                 game_category = self.GetCategory(),
                 game_subcategory = self.GetSubcategory(),
@@ -399,38 +421,6 @@ class StoreBase:
             if not success:
                 system.LogError("Unable to add metadata entry for game '%s'" % entry_name)
                 return False
-
-            # Download assets
-            for asset_type in config.AssetMinType.members():
-                success = collection.DownloadMetadataAsset(
-                    game_supercategory = self.GetSupercategory(),
-                    game_category = self.GetCategory(),
-                    game_subcategory = self.GetSubcategory(),
-                    game_name = entry_name,
-                    asset_url = self.GetLatestAssetUrl(
-                        identifier = self.GetAssetIdentifier(purchase),
-                        asset_type = asset_type,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure),
-                    asset_type = asset_type,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                if not success:
-                    system.LogWarning("Unable to download asset %s for game '%s'" % (asset_type, entry_name))
-
-            # Update metadata entry
-            success = collection.UpdateMetadataEntry(
-                game_supercategory = self.GetSupercategory(),
-                game_category = self.GetCategory(),
-                game_subcategory = self.GetSubcategory(),
-                game_name = entry_name,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                system.LogWarning("Unable to update metadata entry for game '%s'" % entry_name)
 
         # Should be successful
         return True
@@ -652,7 +642,7 @@ class StoreBase:
             return False
 
         # Update metadata entry
-        success = collection.UpdateMetadataEntry(
+        success = collection.AddOrUpdateMetadataEntry(
             game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),

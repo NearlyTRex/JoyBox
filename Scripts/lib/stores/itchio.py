@@ -16,6 +16,7 @@ import webpage
 import collection
 import storebase
 import metadataentry
+import ini
 
 # Itchio store
 class Itchio(storebase.StoreBase):
@@ -420,7 +421,7 @@ class Itchio(storebase.StoreBase):
             return False
 
         # Update metadata entry
-        success = collection.UpdateMetadataEntry(
+        success = collection.AddOrUpdateMetadataEntry(
             game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),

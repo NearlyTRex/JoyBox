@@ -155,7 +155,7 @@ def CreateGameJsonFile(
         json_file_data = initial_data
 
     # Already existing json file
-    if os.path.exists(json_file_path):
+    if system.DoesPathExist(json_file_path):
         json_file_data = system.ReadJsonFile(
             src = json_file_path,
             verbose = verbose,
@@ -218,16 +218,10 @@ def CreateGameJsonFile(
     if game_category == config.Category.COMPUTER:
         store_obj = stores.GetStoreByPlatform(game_platform)
         if store_obj:
-            json_obj.fill_value(store_obj.GetKey(), {
-                config.json_key_store_appid: "",
-                config.json_key_store_appname: "",
-                config.json_key_store_appurl: "",
-                config.json_key_store_name: ""
-            })
+            json_obj.fill_value(store_obj.GetKey(), {})
 
     # Set other platform keys
     else:
-        json_obj.fill_value(config.json_key_launch_name, "REPLACEME")
         json_obj.fill_value(config.json_key_launch_file, best_game_file)
 
     # Create json directory
@@ -278,7 +272,7 @@ def GetGameJsonIgnoreEntries(
     json_file_path = environment.GetJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcategory)
 
     # Create file if necessary
-    if not os.path.exists(json_file_path):
+    if not system.DoesPathExist(json_file_path):
         system.TouchFile(
             src = json_file_path,
             contents = "{}",
@@ -316,7 +310,7 @@ def AddGameJsonIgnoreEntry(
     json_file_path = environment.GetJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcategory)
 
     # Create file if necessary
-    if not os.path.exists(json_file_path):
+    if not system.DoesPathExist(json_file_path):
         system.TouchFile(
             src = json_file_path,
             contents = "{}",
@@ -360,8 +354,8 @@ def AddGameJsonIgnoreEntry(
 
 ############################################################
 
-# Add metadata entry
-def AddMetadataEntry(
+# Add or update metadata entry
+def AddOrUpdateMetadataEntry(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -399,78 +393,32 @@ def AddMetadataEntry(
         old_base_path = environment.GetJsonMetadataRootDir(),
         new_base_path = "")
 
-    # Create new entry
-    new_entry = metadataentry.MetadataEntry()
+    # Get game entry
+    game_entry = metadata_obj.get_game(game_platform, game_name)
+    if not isinstance(game_entry, metadataentry.MetadataEntry):
+        game_entry = metadataentry.MetadataEntry()
     if isinstance(initial_data, metadataentry.MetadataEntry):
-        new_entry = initial_data
-    new_entry.set_game(game_name)
-    new_entry.set_platform(game_platform)
-    new_entry.set_file(game_json_file)
-    new_entry.set_players("1")
-    new_entry.set_coop("No")
-    new_entry.set_playable("Yes")
+        game_entry.merge(initial_data)
+
+    # Update game entry
+    game_entry.set_supercategory(game_supercategory)
+    game_entry.set_category(game_category)
+    game_entry.set_subcategory(game_subcategory)
+    game_entry.set_game(game_name)
+    game_entry.set_platform(game_platform)
+    game_entry.set_file(game_json_file)
+    if not game_entry.get_players():
+        game_entry.set_players("1")
+    if not game_entry.get_coop():
+        game_entry.set_coop("No")
+    if not game_entry.get_playable():
+        game_entry.set_playable("Yes")
     if isinstance(game_url, str) and len(game_url) > 0 and game_url.startswith("http"):
-        new_entry.set_url(game_url)
+        game_entry.set_url(game_url)
+    game_entry.sync_assets()
 
-    # Add new entry
-    metadata_obj.add_game(new_entry)
-
-    # Write metadata file
-    metadata_obj.export_to_metadata_file(
-        metadata_file = metadata_file,
-        append_existing = False,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    return True
-
-############################################################
-
-# Update metadata entry
-def UpdateMetadataEntry(
-    game_supercategory,
-    game_category,
-    game_subcategory,
-    game_name,
-    new_data = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Check categories
-    if not AreGameMetadataFilePossible(game_supercategory, game_category, game_subcategory):
-        return True
-
-    # Find metadata file
-    metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
-    if not metadata_file:
-        return False
-
-    # Load metadata file
-    metadata_obj = metadata.Metadata()
-    metadata_obj.import_from_metadata_file(
-        metadata_file = metadata_file,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Derive game data
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-
-    # Get current entry
-    current_entry = metadata_obj.get_game(game_platform, game_name)
-    if not current_entry:
-        return False
-
-    # Update current data
-    if isinstance(new_data, metadataentry.MetadataEntry):
-        current_entry.merge(new_data)
-
-    # Sync assets
-    current_entry.sync_assets()
-
-    # Update entry
-    metadata_obj.set_game(game_platform, game_name, current_entry)
+    # Set game entry
+    metadata_obj.set_game(game_platform, game_name, game_entry)
 
     # Write metadata file
     metadata_obj.export_to_metadata_file(
@@ -511,7 +459,7 @@ def ScanForMetadataEntries(
     # Add metadata entries
     for game_directory in game_directories:
         if game_directory.endswith(")"):
-            success = AddMetadataEntry(
+            success = AddOrUpdateMetadataEntry(
                 game_supercategory = game_supercategory,
                 game_category = game_category,
                 game_subcategory = game_subcategory,

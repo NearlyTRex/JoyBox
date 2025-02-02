@@ -46,7 +46,7 @@ def main():
             system.LogError("Game subcategory is required for custom mode", quit_program = True)
         if not args.game_name:
             system.LogError("Game name is required for custom mode", quit_program = True)
-        collection.AddMetadataEntry(
+        collection.AddOrUpdateMetadataEntry(
             game_supercategory = args.game_supercategory,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
@@ -66,7 +66,7 @@ def main():
                         game_subcategory,
                         args.source_type)
                     for game_name in game_names:
-                        success = collection.AddMetadataEntry(
+                        success = collection.AddOrUpdateMetadataEntry(
                             game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,
