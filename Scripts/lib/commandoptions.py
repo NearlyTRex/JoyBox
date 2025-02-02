@@ -30,6 +30,7 @@ class CommandOptions:
         is_prefix_mapped_cwd = False,
         prefix_dir = None,
         general_prefix_dir = None,
+        prefix_user_profile_dir = None,
         prefix_c_drive_virtual = None,
         prefix_c_drive_real = None,
         prefix_name = None,
@@ -72,6 +73,7 @@ class CommandOptions:
         self.is_prefix_mapped_cwd = is_prefix_mapped_cwd
         self.prefix_dir = prefix_dir
         self.general_prefix_dir = general_prefix_dir
+        self.prefix_user_profile_dir = prefix_user_profile_dir
         self.prefix_c_drive_virtual = prefix_c_drive_virtual
         self.prefix_c_drive_real = prefix_c_drive_real
         self.prefix_name = prefix_name
@@ -211,6 +213,16 @@ class CommandOptions:
         return system.IsPathValid(self.general_prefix_dir)
     def has_existing_general_prefix_dir(self):
         return system.DoesPathExist(self.prefix_dir)
+
+    # Prefix user profile dir
+    def get_prefix_user_profile_dir(self):
+        return self.prefix_user_profile_dir
+    def set_prefix_user_profile_dir(self, value):
+        self.prefix_user_profile_dir = value
+    def has_valid_prefix_user_profile_dir(self):
+        return system.IsPathValid(self.prefix_user_profile_dir)
+    def has_existing_prefix_user_profile_dir(self):
+        return system.DoesPathExist(self.prefix_user_profile_dir)
 
     # Prefix c drive virtual
     def get_prefix_c_drive_virtual(self):
