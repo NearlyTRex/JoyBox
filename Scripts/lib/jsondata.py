@@ -1,6 +1,7 @@
 # Imports
 import os, os.path
 import sys
+import copy
 
 # Local imports
 import config
@@ -15,9 +16,19 @@ class JsonData:
         self.json_data = json_data if json_data is not None else {}
         self.json_platform = json_platform
 
+    # Copy method
+    def copy(self):
+        return JsonData(
+            json_data = copy.deepcopy(self.json_data),
+            json_platform = copy.deepcopy(self.json_platform))
+
     # Get data
     def get_data(self):
         return self.json_data
+
+    # Get data copy
+    def get_data_copy(self):
+        return copy.deepcopy(self.json_data)
 
     # Get platform
     def get_platform(self):
