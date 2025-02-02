@@ -95,14 +95,29 @@ asset_key_height = "height"
 asset_key_duration = "duration"
 asset_key_relevance = "relevance"
 
+# Computer program keys
+program_key_exe = "exe"
+program_key_cwd = "cwd"
+program_key_args = "args"
+program_key_winver = "winver"
+program_key_is_32_bit = "is_32_bit"
+program_key_is_dos = "is_dos"
+program_key_is_win31 = "is_win31"
+program_key_is_scumm = "is_scumm"
+program_key_tricks = "tricks"
+program_key_overrides = "overrides"
+program_key_desktop = "desktop"
+program_key_use_virtual_desktop = "use_virtual_desktop"
+program_key_disc_type = "disc_type"
+program_key_installer_type = "installer_type"
+program_key_serial = "serial"
+
 # General json keys
 json_key_launch_name = "launch_name"
 json_key_launch_file = "launch_file"
 json_key_launch_dir = "launch_dir"
 json_key_transform_file = "transform_file"
 json_key_key_file = "key_file"
-json_key_source_file = "source_file"
-json_key_source_dir = "source_dir"
 json_key_files = "files"
 json_key_dlc = "dlc"
 json_key_update = "update"
@@ -147,21 +162,6 @@ json_key_store_setup = "setup"
 json_key_store_setup_install = "install"
 json_key_store_setup_preinstall = "preinstall"
 json_key_store_setup_postinstall = "postinstall"
-json_key_store_program_exe = "exe"
-json_key_store_program_cwd = "cwd"
-json_key_store_program_args = "args"
-json_key_store_program_winver = "winver"
-json_key_store_program_is_32_bit = "is_32_bit"
-json_key_store_program_is_dos = "is_dos"
-json_key_store_program_is_win31 = "is_win31"
-json_key_store_program_is_scumm = "is_scumm"
-json_key_store_program_tricks = "tricks"
-json_key_store_program_overrides = "overrides"
-json_key_store_program_desktop = "desktop"
-json_key_store_program_use_virtual_desktop = "use_virtual_desktop"
-json_key_store_program_disc_type = "disc_type"
-json_key_store_program_installer_type = "installer_type"
-json_key_store_program_serial = "serial"
 json_keys_store = [
     json_key_amazon,
     json_key_disc,
@@ -204,8 +204,6 @@ json_key_defaults.append({"key": json_key_launch_file, "default": []})
 json_key_defaults.append({"key": json_key_launch_dir, "default": None})
 json_key_defaults.append({"key": json_key_transform_file, "default": []})
 json_key_defaults.append({"key": json_key_key_file, "default": []})
-json_key_defaults.append({"key": json_key_source_file, "default": []})
-json_key_defaults.append({"key": json_key_source_dir, "default": None})
 json_key_defaults.append({"key": json_key_files, "default": []})
 json_key_defaults.append({"key": json_key_dlc, "default": []})
 json_key_defaults.append({"key": json_key_update, "default": []})

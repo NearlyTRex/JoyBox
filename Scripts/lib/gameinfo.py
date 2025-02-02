@@ -433,6 +433,28 @@ class GameInfo:
     def get_key_file(self):
         return self.get_value(config.json_key_key_file)
 
+    # Get files
+    def get_files(self):
+        return self.get_value(config.json_key_files)
+
+    # Get dlc
+    def get_dlc(self):
+        return self.get_value(config.json_key_dlc)
+
+    # Get updates
+    def get_updates(self):
+        return self.get_value(config.json_key_update)
+
+    # Get extras
+    def get_extras(self):
+        return self.get_value(config.json_key_extra)
+
+    # Get dependencies
+    def get_dependencies(self):
+        return self.get_value(config.json_key_dependencies)
+
+    ##############################
+
     # Get save dir
     def get_save_dir(self):
         return self.get_value(config.json_key_save_dir)
@@ -464,86 +486,6 @@ class GameInfo:
         elif source_type == config.SourceType.REMOTE:
             return self.get_remote_rom_dir()
         return None
-
-    ##############################
-
-    # Get files
-    def get_files(self):
-        return self.get_value(config.json_key_files)
-
-    # Get dlc
-    def get_dlc(self):
-        return self.get_value(config.json_key_dlc)
-
-    # Get updates
-    def get_updates(self):
-        return self.get_value(config.json_key_update)
-
-    # Get extras
-    def get_extras(self):
-        return self.get_value(config.json_key_extra)
-
-    # Get dependencies
-    def get_dependencies(self):
-        return self.get_value(config.json_key_dependencies)
-
-    ##############################
-
-    # Get installer exe
-    def get_installer_exe(self):
-        return self.get_value(config.json_key_installer_exe)
-
-    # Get installer dos exe
-    def get_installer_dos_exe(self):
-        return self.get_value(config.json_key_installer_dos_exe)
-
-    # Get installer type
-    def get_installer_type(self):
-        return self.get_value(config.json_key_installer_type)
-
-    # Get disc type
-    def get_disc_type(self):
-        return self.get_value(config.json_key_disc_type)
-
-    ##############################
-
-    # Get wine setup
-    def get_wine_setup(self):
-        return self.get_subvalue(config.json_key_sandbox, config.json_key_sandbox_wine)
-
-    # Get sandboxie setup
-    def get_sandboxie_setup(self):
-        return self.get_subvalue(config.json_key_sandbox, config.json_key_sandbox_sandboxie)
-
-    ##############################
-
-    # Get preinstall steps
-    def get_preinstall_steps(self):
-        return self.get_subvalue(config.json_key_steps, config.json_key_steps_preinstall)
-
-    # Get postinstall steps
-    def get_postinstall_steps(self):
-        return self.get_subvalue(config.json_key_steps, config.json_key_steps_postinstall)
-
-    ##############################
-
-    # Get sync search
-    def get_sync_search(self):
-        return self.get_subvalue(config.json_key_sync, config.json_key_sync_search)
-
-    # Get sync data
-    def get_sync_data(self):
-        return self.get_subvalue(config.json_key_sync, config.json_key_sync_data)
-
-    ##############################
-
-    # Get setup registry keys
-    def get_setup_registry_keys(self):
-        return self.get_subvalue(config.json_key_registry, config.json_key_registry_setup_keys)
-
-    # Get game registry keys
-    def get_game_registry_keys(self):
-        return self.get_subvalue(config.json_key_registry, config.json_key_registry_game_keys)
 
     ##############################
 
@@ -591,27 +533,13 @@ class GameInfo:
     def get_store_keys(self, store_key):
         return self.get_subvalue(store_key, config.json_key_store_keys)
 
-    ##############################
+    # Get store launch
+    def get_store_launch(self, store_key):
+        return self.get_subvalue(store_key, config.json_key_store_launch)
 
-    # Get windows version
-    def get_winver(self):
-        return self.get_value(config.json_key_winver)
-
-    # Check if 32bit
-    def is_32_bit(self):
-        return self.get_value(config.json_key_is_32_bit)
-
-    # Check if dos
-    def is_dos(self):
-        return self.get_value(config.json_key_is_dos)
-
-    # Check if windows 3.1
-    def is_win31(self):
-        return self.get_value(config.json_key_is_win31)
-
-    # Check if scumm
-    def is_scumm(self):
-        return self.get_value(config.json_key_is_scumm)
+    # Get store setup
+    def get_store_setup(self, store_key):
+        return self.get_subvalue(store_key, config.json_key_store_setup)
 
 ###########################################################
 
@@ -708,6 +636,15 @@ def DeriveGameNameFromRegularName(regular_name, region="USA"):
             break
     return f"{game_name} ({region})"
 
+# Derive slug name from regular name
+def DeriveSlugNameFromRegularName(regular_name):
+    return system.GetSlugString(regular_name)
+
+# Derive slug name from game name
+def DeriveSlugNameFromGameName(game_name, custom_prefix = "", custom_suffix = ""):
+    regular_name = DeriveRegularNameFromGameName(game_name, custom_prefix, custom_suffix)
+    return DeriveSlugNameFromRegularName(regular_name)
+
 # Derive game letter from name
 def DeriveGameLetterFromName(game_name):
     letter = ""
@@ -718,9 +655,9 @@ def DeriveGameLetterFromName(game_name):
     return letter
 
 # Derive game search terms from name
-def DeriveGameSearchTermsFromName(game_name, game_platform):
-    natural_name = DeriveRegularNameFromGameName(game_name)
-    return system.EncodeUrlString(natural_name, use_plus = True)
+def DeriveGameSearchTermsFromName(game_name, game_platform, custom_prefix = "", custom_suffix = ""):
+    regular_name = DeriveRegularNameFromGameName(game_name, custom_prefix, custom_suffix)
+    return system.EncodeUrlString(regular_name, use_plus = True)
 
 # Derive game name path from name
 def DeriveGameNamePathFromName(game_name, game_platform):
