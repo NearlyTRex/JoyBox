@@ -489,57 +489,116 @@ class GameInfo:
 
     ##############################
 
+    # Get main store key
+    def get_main_store_key(self):
+        for store_key in config.json_keys_store:
+            if self.has_key(store_key):
+                return store_key
+        return None
+
     # Get store appid
-    def get_store_appid(self, store_key):
+    def get_store_appid(self, store_key = None):
+        if not store_key:
+            store_key = self.get_main_store_key()
         return self.get_subvalue(store_key, config.json_key_store_appid)
+    def set_store_appid(self, value):
+        self.set_subvalue(store_key, config.json_key_store_appid, value)
 
     # Get store appname
-    def get_store_appname(self, store_key):
+    def get_store_appname(self, store_key = None):
+        if not store_key:
+            store_key = self.get_main_store_key()
         return self.get_subvalue(store_key, config.json_key_store_appname)
+    def set_store_appname(self, value):
+        self.set_subvalue(store_key, config.json_key_store_appname, value)
 
     # Get store appurl
-    def get_store_appurl(self, store_key):
+    def get_store_appurl(self, store_key = None):
+        if not store_key:
+            store_key = self.get_main_store_key()
         return self.get_subvalue(store_key, config.json_key_store_appurl)
+    def set_store_appurl(self, value):
+        self.set_subvalue(store_key, config.json_key_store_appurl, value)
 
     # Get store branchid
-    def get_store_branchid(self, store_key):
+    def get_store_branchid(self, store_key = None):
+        if not store_key:
+            store_key = self.get_main_store_key()
         return self.get_subvalue(store_key, config.json_key_store_branchid)
+    def set_store_branchid(self, value):
+        self.set_subvalue(store_key, config.json_key_store_branchid, value)
 
     # Get store builddate
-    def get_store_builddate(self, store_key):
+    def get_store_builddate(self, store_key = None):
+        if not store_key:
+            store_key = self.get_main_store_key()
         return self.get_subvalue(store_key, config.json_key_store_builddate)
+    def set_store_builddate(self, value):
+        self.set_subvalue(store_key, config.json_key_store_builddate, value)
 
     # Get store buildid
-    def get_store_buildid(self, store_key):
+    def get_store_buildid(self, store_key = None):
+        if not store_key:
+            store_key = self.get_main_store_key()
         return self.get_subvalue(store_key, config.json_key_store_buildid)
+    def set_store_buildid(self, value):
+        self.set_subvalue(store_key, config.json_key_store_buildid, value)
 
     # Get store name
-    def get_store_name(self, store_key):
+    def get_store_name(self, store_key = None):
+        if not store_key:
+            store_key = self.get_main_store_key()
         return self.get_subvalue(store_key, config.json_key_store_name)
+    def set_store_name(self, value):
+        self.set_subvalue(store_key, config.json_key_store_name, value)
 
     # Get store controller support
-    def get_store_controller_support(self, store_key):
+    def get_store_controller_support(self, store_key = None):
+        if not store_key:
+            store_key = self.get_main_store_key()
         return self.get_subvalue(store_key, config.json_key_store_controller_support)
+    def set_store_controller_support(self, value):
+        self.set_subvalue(store_key, config.json_key_store_controller_support, value)
 
     # Get store installdir
-    def get_store_installdir(self, store_key):
+    def get_store_installdir(self, store_key = None):
+        if not store_key:
+            store_key = self.get_main_store_key()
         return self.get_subvalue(store_key, config.json_key_store_installdir)
+    def set_store_installdir(self, value):
+        self.set_subvalue(store_key, config.json_key_store_installdir, value)
 
     # Get store paths
-    def get_store_paths(self, store_key):
+    def get_store_paths(self, store_key = None):
+        if not store_key:
+            store_key = self.get_main_store_key()
         return self.get_subvalue(store_key, config.json_key_store_paths)
+    def set_store_paths(self, value):
+        self.set_subvalue(store_key, config.json_key_store_paths, value)
 
     # Get store keys
-    def get_store_keys(self, store_key):
+    def get_store_keys(self, store_key = None):
+        if not store_key:
+            store_key = self.get_main_store_key()
         return self.get_subvalue(store_key, config.json_key_store_keys)
+    def set_store_keys(self, value):
+        self.set_subvalue(store_key, config.json_key_store_keys, value)
 
     # Get store launch
-    def get_store_launch(self, store_key):
+    def get_store_launch(self, store_key = None):
+        if not store_key:
+            store_key = self.get_main_store_key()
         return self.get_subvalue(store_key, config.json_key_store_launch)
+    def set_store_launch(self, value):
+        self.set_subvalue(store_key, config.json_key_store_launch, value)
 
     # Get store setup
-    def get_store_setup(self, store_key):
+    def get_store_setup(self, store_key = None):
+        if not store_key:
+            store_key = self.get_main_store_key()
         return self.get_subvalue(store_key, config.json_key_store_setup)
+    def set_store_setup(self, value):
+        self.set_subvalue(store_key, config.json_key_store_setup, value)
 
 ###########################################################
 

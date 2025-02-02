@@ -139,30 +139,14 @@ def ResolveJsonPaths(
 
 # Get dos launch command
 def GetDosLaunchCommand(
-    prefix_dir,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False,
+    options,
     start_program = None,
     start_letter = "c",
     start_offset = None,
     fullscreen = False):
 
-    # Check params
-    system.AssertPathExists(prefix_dir, "prefix_dir")
-
-    # Get prefix c drive
-    prefix_c_drive = sandbox.GetRealDrivePath(
-        prefix_dir = prefix_dir,
-        drive = "c",
-        is_wine_prefix = is_wine_prefix,
-        is_sandboxie_prefix = is_sandboxie_prefix)
-
-    # Get dos drives
-    dos_c_drive = system.JoinPaths(prefix_c_drive, config.computer_folder_dos, "C")
-    dos_d_drive = system.JoinPaths(prefix_c_drive, config.computer_folder_dos, "D")
-
     # Search for disc images
-    disc_images = system.BuildFileListByExtensions(dos_d_drive, [".chd"])
+    disc_images = system.BuildFileListByExtensions(options.get_prefix_dos_d_drive(), [".chd"])
 
     # Create launch command
     launch_cmd = [programs.GetEmulatorProgram("DosBoxX")]
@@ -174,9 +158,10 @@ def GetDosLaunchCommand(
     ]
 
     # Add c drive mount
-    launch_cmd += [
-        "-c", "mount c \"%s\"" % dos_c_drive
-    ]
+    if options.has_valid_prefix_dos_c_drive():
+        launch_cmd += [
+            "-c", "mount c \"%s\"" % options.get_prefix_dos_c_drive()
+        ]
 
     # Add disc drive mounts
     if len(disc_images):
@@ -203,30 +188,14 @@ def GetDosLaunchCommand(
 
 # Get win31 launch command
 def GetWin31LaunchCommand(
-    prefix_dir,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False,
+    options,
     start_program = None,
     start_letter = "c",
     start_offset = None,
     fullscreen = False):
 
-    # Check params
-    system.AssertPathExists(prefix_dir, "prefix_dir")
-
-    # Get prefix c drive
-    prefix_c_drive = sandbox.GetRealDrivePath(
-        prefix_dir = prefix_dir,
-        drive = "c",
-        is_wine_prefix = is_wine_prefix,
-        is_sandboxie_prefix = is_sandboxie_prefix)
-
-    # Get dos drives
-    dos_c_drive = system.JoinPaths(prefix_c_drive, config.computer_folder_dos, "C")
-    dos_d_drive = system.JoinPaths(prefix_c_drive, config.computer_folder_dos, "D")
-
     # Search for disc images
-    disc_images = system.BuildFileListByExtensions(dos_d_drive, [".chd"])
+    disc_images = system.BuildFileListByExtensions(options.get_prefix_dos_d_drive(), [".chd"])
 
     # Create launch command
     launch_cmd = [programs.GetEmulatorProgram("DosBoxX")]
@@ -238,9 +207,10 @@ def GetWin31LaunchCommand(
     ]
 
     # Add c drive mount
-    launch_cmd += [
-        "-c", "mount c \"%s\"" % dos_c_drive
-    ]
+    if options.has_valid_prefix_dos_c_drive():
+        launch_cmd += [
+            "-c", "mount c \"%s\"" % options.get_prefix_dos_c_drive()
+        ]
 
     # Add disc drive mounts
     if len(disc_images):
@@ -270,35 +240,17 @@ def GetWin31LaunchCommand(
 
 # Get scumm launch command
 def GetScummLaunchCommand(
-    prefix_dir,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False,
+    options,
     fullscreen = False):
-
-    # Check params
-    system.AssertPathExists(prefix_dir, "prefix_dir")
-
-    # Get prefix c drive
-    prefix_c_drive = sandbox.GetRealDrivePath(
-        prefix_dir = prefix_dir,
-        drive = "c",
-        is_wine_prefix = is_wine_prefix,
-        is_sandboxie_prefix = is_sandboxie_prefix)
-
-    # Get prefix user profile path
-    prefix_user_profile = sandbox.GetUserProfilePath(
-        prefix_dir = prefix_dir,
-        is_wine_prefix = is_wine_prefix,
-        is_sandboxie_prefix = is_sandboxie_prefix)
 
     # Create launch command
     launch_cmd = [programs.GetEmulatorProgram("ScummVM")]
     launch_cmd += [
-        "--path=%s" % system.JoinPaths(prefix_c_drive, config.computer_folder_scumm)
+        "--path=%s" % system.JoinPaths(options.get_prefix_c_drive_real(), config.computer_folder_scumm)
     ]
     launch_cmd += ["--auto-detect"]
     launch_cmd += [
-        "--savepath=%s" % system.JoinPaths(prefix_user_profile, config.computer_folder_gamedata)
+        "--savepath=%s" % system.JoinPaths(options.get_prefix_user_profile_dir(), config.computer_folder_gamedata)
     ]
     if fullscreen:
         launch_cmd += ["--fullscreen"]
@@ -310,20 +262,15 @@ def GetScummLaunchCommand(
 def GetSelectedLaunchInfo(
     game_info,
     base_dir,
-    default_cwd,
-    key_exe_list,
-    key_exe_cwd_dict,
-    key_exe_args_dict):
+    default_cwd):
 
-    # Get game exe list
-    game_exe_list = game_info.get_value(key_exe_list)
-
-    # Get cwd and arg dicts
-    game_exe_cwds = game_info.get_value(key_exe_cwd_dict)
-    game_exe_args = game_info.get_value(key_exe_args_dict)
+    # Get list of launch objects from the json
+    launch_entries = game_info.get_store_launch()
+    if not launch_entries:
+        launch_entries = []
 
     # No existing entries
-    if len(game_exe_list) == 0:
+    if len(launch_entries) == 0:
 
         # Get the complete list of runnable files from the install
         runnable_files_all = system.BuildFileListByExtensions(
@@ -345,47 +292,44 @@ def GetSelectedLaunchInfo(
                 continue
             runnable_files_likely.append(path_to_add)
 
-        # Generate working directories
-        runnable_files_cwds = {}
-        for runnable_file in runnable_files_likely:
-            runnable_files_cwds[runnable_file] = system.GetFilenameDirectory(runnable_file)
-
-        # Use list of likely files
-        game_exe_list = runnable_files_likely
-
-        # Get original json file
-        json_file = environment.GetJsonMetadataFile(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name())
+        # Add to launch entries
+        for runnable_file_likely in runnable_files_likey:
+            runnable_entry = {}
+            runnable_entry[config.program_key_exe] = system.GetFilenameFile(runnable_file)
+            runnable_entry[config.program_key_cwd] = system.GetFilenameDirectory(runnable_file)
+            launch_entries.append(runnable_entry)
 
         # Try to record these for later
-        new_json_data = system.ReadJsonFile(json_file)
-        new_json_data[key_exe_list] = runnable_files_likely
-        new_json_data[key_exe_cwd_dict] = runnable_files_cwds
-        system.WriteJsonFile(json_file, new_json_data)
+        json_wrapper = game_info.read_wrapped_json_data()
+        json_wrapper.set_store_launch(launch_entries)
+        game_info.write_wrapped_json_data(json_wrapper)
 
     # Get launch info
     def GetLaunchInfo(game_exe):
         cmd = system.JoinPaths(base_dir, game_exe)
         cwd = default_cwd
         args = []
-        if game_exe in game_exe_cwds:
-            cwd = game_exe_cwds[game_exe]
-        if game_exe in game_exe_args:
-            args = game_exe_args[game_exe]
+        for launch_entry in launch_entries:
+            launch_exe = launch_entry[config.program_key_exe]
+            launch_cwd = launch_entry[config.program_key_cwd]
+            launch_args = launch_entry[config.program_key_args]
+            if system.JoinPaths(launch_cwd, launch_exe) in game_exe:
+                cwd = launch_cwd
+                args = launch_args
+                break
         return [cmd, cwd, args]
 
     # Check that we have something to run
-    if len(game_exe_list) == 0:
+    if len(launch_entries) == 0:
         gui.DisplayErrorPopup(
             title_text = "No runnable files",
             message_text = "Computer install has no runnable files")
 
     # If we have exactly one choice, use that
-    if len(game_exe_list) == 1:
-        return GetLaunchInfo(game_exe_list[0])
+    if len(launch_entries) == 1:
+        launch_exe = launch_entries[0][config.program_key_exe]
+        launch_cwd = launch_entries[0][config.program_key_cwd]
+        return GetLaunchInfo(system.JoinPaths(launch_cwd, launch_exe))
 
     # Create launch command
     launch_cmd = None
@@ -399,9 +343,16 @@ def GetSelectedLaunchInfo(
         nonlocal launch_args
         launch_cmd, launch_cwd, launch_args = GetLaunchInfo(selected_file)
 
+    # Build runnable choices list
+    runnable_choices = []
+    for launch_entry in launch_entries:
+        launch_exe = launch_entry[config.program_key_exe]
+        launch_cwd = launch_entry[config.program_key_cwd]
+        runnable_choices.append(system.JoinPaths(launch_cwd, launch_exe))
+
     # Display list of runnable files and let user decide which to run
     gui.DisplayChoicesWindow(
-        choice_list = game_exe_list,
+        choice_list = runnable_choices,
         title_text = "Select Program",
         message_text = "Select program to run",
         button_text = "Run program",
@@ -727,237 +678,124 @@ class Computer(emulatorbase.EmulatorBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Check if command should be run via wine/sandboxie
-        should_run_via_wine = environment.IsLinuxPlatform()
-        should_run_via_sandboxie = environment.IsWindowsPlatform()
-
-        # Get launch info
-        launch_name = game_info.get_name()
-        launch_category = game_info.get_category()
-        launch_subcategory = game_info.get_subcategory()
-        launch_platform = game_info.get_platform()
-        launch_artwork = game_info.get_boxfront_asset()
-        launch_save_dir = game_info.get_save_dir()
-        launch_general_save_dir = game_info.get_general_save_dir()
-        launch_cache_dir = game_info.get_local_cache_dir()
-        launch_info_wine_setup = game_info.get_wine_setup()
-        launch_info_sandboxie_setup = game_info.get_sandboxie_setup()
-        launch_info_registry_setup_keys = game_info.get_setup_registry_keys()
-        launch_info_registry_game_keys = game_info.get_game_registry_keys()
-        launch_info_winver = game_info.get_winver()
-        launch_info_is_32_bit = game_info.is_32_bit()
-        launch_info_is_dos = game_info.is_dos()
-        launch_info_is_win31 = game_info.is_win31()
-        launch_info_is_scumm = game_info.is_scumm()
+        # Get launch options
+        launch_options = command.CreateCommandOptions(
+            is_32_bit = game_info.is_32_bit(),
+            is_dos = game_info.is_dos(),
+            is_win31 = game_info.is_win31(),
+            is_scumm = game_info.is_scumm(),
+            is_wine_prefix = environment.IsLinuxPlatform(),
+            is_sandboxie_prefix = environment.IsWindowsPlatform(),
+            prefix_dir = game_info.get_save_dir(),
+            general_prefix_dir = game_info.get_general_save_dir(),
+            prefix_name = config.PrefixType.GAME,
+            prefix_winver = game_info.get_winver())
 
         # Get mount links
         mount_links = []
-        for obj in system.GetDirectoryContents(launch_cache_dir):
+        for obj in system.GetDirectoryContents(game_info.get_local_cache_dir()):
             mount_links.append({
-                "from": system.JoinPaths(launch_cache_dir, obj),
+                "from": system.JoinPaths(game_info.get_local_cache_dir(), obj),
                 "to": obj
             })
 
         # Create linked prefix
         def CreateGamePrefix():
             return sandbox.CreateLinkedPrefix(
-                prefix_dir = launch_save_dir,
-                prefix_name = config.PrefixType.GAME,
-                prefix_winver = launch_info_winver,
-                general_prefix_dir = launch_general_save_dir,
+                options = launch_options,
                 other_links = mount_links,
                 clean_existing = False,
-                is_wine_prefix = should_run_via_wine,
-                is_sandboxie_prefix = should_run_via_sandboxie,
-                wine_setup = launch_info_wine_setup,
-                sandboxie_setup = launch_info_sandboxie_setup,
-                is_32_bit = launch_info_is_32_bit,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         gui.DisplayLoadingWindow(
             title_text = "Creating game prefix",
-            message_text = "Creating game prefix\n%s\n%s" % (launch_name, launch_platform),
+            message_text = "Creating game prefix\n%s\n%s" % (game_info.get_name(), game_info.get_platform()),
             failure_text = "Unable to create game prefix",
-            image_file = launch_artwork,
+            image_file = game_info.get_boxfront_asset(),
             run_func = CreateGamePrefix)
 
-        # Get user profile
-        user_profile_dir = sandbox.GetUserProfilePath(
-            prefix_dir = launch_save_dir,
-            is_wine_prefix = should_run_via_wine,
-            is_sandboxie_prefix = should_run_via_sandboxie)
-
-        # Build list of dirs to clear
-        dirs_to_clear = []
-        dirs_to_clear += [system.JoinPaths(user_profile_dir, config.computer_folder_temp)]
-        dirs_to_clear += [system.JoinPaths(user_profile_dir, config.computer_folder_appdata, "Local", "CrashDumps")]
+        # Get prefix user profile dir
+        launch_options.set_prefix_user_profile_dir(sandbox.GetUserProfilePath(launch_options))
+        if not launch_options.has_existing_prefix_user_profile_dir():
+            return False
 
         # Get prefix c drive
-        prefix_c_drive = sandbox.GetRealDrivePath(
-            prefix_dir = launch_save_dir,
-            drive = "c",
-            is_wine_prefix = should_run_via_wine,
-            is_sandboxie_prefix = should_run_via_sandboxie)
-
-        # Get dos drives
-        dos_c_drive = system.JoinPaths(prefix_c_drive, config.computer_folder_dos, "C")
-        dos_d_drive = system.JoinPaths(prefix_c_drive, config.computer_folder_dos, "D")
+        launch_options.set_prefix_c_drive_virtual(config.drive_root_windows)
+        launch_options.set_prefix_c_drive_real(sandbox.GetRealCDrivePath(launch_options))
+        if not launch_options.has_existing_prefix_c_drive_real():
+            return False
 
         # Get launch info
-        launch_info_cmd = []
-        launch_info_options = None
+        launch_cmd = []
 
         # Dos launcher
-        if launch_info_is_dos:
+        if launch_options.is_dos():
             selected_cmd, selected_cwd, selected_args = GetSelectedLaunchInfo(
                 game_info = game_info,
-                base_dir = dos_c_drive,
-                default_cwd = dos_c_drive,
-                key_exe_list = config.json_key_launch_dos_exe,
-                key_exe_cwd_dict = config.json_key_launch_dos_exe_cwd,
-                key_exe_args_dict = config.json_key_launch_dos_exe_args)
+                base_dir = launch_options.get_prefix_dos_c_drive(),
+                default_cwd = launch_options.get_prefix_dos_c_drive())
             if selected_cmd:
-                launch_info_cmd = GetDosLaunchCommand(
-                    prefix_dir = launch_save_dir,
-                    is_wine_prefix = should_run_via_wine,
-                    is_sandboxie_prefix = should_run_via_sandboxie,
+                launch_cmd = GetDosLaunchCommand(
+                    options = launch_options,
                     start_program = selected_cmd,
                     start_letter = "c",
                     start_offset = selected_cwd,
                     fullscreen = fullscreen)
-                launch_info_options = command.CommandOptions(
-                    prefix_dir = launch_save_dir,
-                    prefix_name = config.PrefixType.GAME,
-                    prefix_winver = launch_info_winver,
-                    is_wine_prefix = should_run_via_wine,
-                    is_sandboxie_prefix = should_run_via_sandboxie)
 
         # Win31 launcher
-        elif launch_info_is_win31:
+        elif launch_options.is_win31():
             selected_cmd, selected_cwd, selected_args = GetSelectedLaunchInfo(
                 game_info = game_info,
-                base_dir = dos_c_drive,
-                default_cwd = dos_c_drive,
-                key_exe_list = config.json_key_launch_win31_exe,
-                key_exe_cwd_dict = config.json_key_launch_win31_exe_cwd,
-                key_exe_args_dict = config.json_key_launch_win31_exe_args)
+                base_dir = launch_options.get_prefix_dos_c_drive(),
+                default_cwd = launch_options.get_prefix_dos_c_drive())
             if selected_cmd:
-                launch_info_cmd = GetWin31LaunchCommand(
-                    prefix_dir = launch_save_dir,
-                    is_wine_prefix = should_run_via_wine,
-                    is_sandboxie_prefix = should_run_via_sandboxie,
+                launch_cmd = GetWin31LaunchCommand(
+                    options = launch_options,
                     start_program = selected_cmd,
                     start_letter = "c",
                     start_offset = selected_cwd,
                     fullscreen = fullscreen)
-                launch_info_options = command.CommandOptions(
-                    prefix_dir = launch_save_dir,
-                    prefix_name = config.PrefixType.GAME,
-                    prefix_winver = launch_info_winver,
-                    is_wine_prefix = should_run_via_wine,
-                    is_sandboxie_prefix = should_run_via_sandboxie)
 
         # Scumm launcher
-        elif launch_info_is_scumm:
-            launch_info_cmd = GetScummLaunchCommand(
-                prefix_dir = launch_save_dir,
-                is_wine_prefix = should_run_via_wine,
-                is_sandboxie_prefix = should_run_via_sandboxie,
+        elif launch_options.is_scumm():
+            launch_cmd = GetScummLaunchCommand(
+                options = launch_options,
                 fullscreen = fullscreen)
-            launch_info_options = command.CommandOptions(
-                prefix_dir = launch_save_dir,
-                prefix_name = config.PrefixType.GAME,
-                prefix_winver = launch_info_winver,
-                is_wine_prefix = should_run_via_wine,
-                is_sandboxie_prefix = should_run_via_sandboxie)
 
         # Regular launcher
         else:
             selected_cmd, selected_cwd, selected_args = GetSelectedLaunchInfo(
                 game_info = game_info,
-                base_dir = prefix_c_drive,
-                default_cwd = launch_general_save_dir,
-                key_exe_list = config.json_key_launch_exe,
-                key_exe_cwd_dict = config.json_key_launch_exe_cwd,
-                key_exe_args_dict = config.json_key_launch_exe_args)
+                base_dir = launch_options.get_prefix_c_drive_real(),
+                default_cwd = game_info.get_general_save_dir())
             if selected_cmd:
-                launch_info_cmd = [selected_cmd] + selected_args
+                launch_cmd = [selected_cmd] + selected_args
                 blocking_processes = sandbox.GetBlockingProcesses(
-                    initial_processes = [command.GetStarterCommand(selected_cmd)],
-                    is_wine_prefix = should_run_via_wine,
-                    is_sandboxie_prefix = should_run_via_sandboxie)
-                launch_info_options = command.CommandOptions(
-                    cwd = os.path.expanduser("~"),
-                    force_prefix = True,
-                    prefix_dir = launch_save_dir,
-                    prefix_name = config.PrefixType.GAME,
-                    prefix_winver = launch_info_winver,
-                    prefix_cwd = selected_cwd,
-                    is_wine_prefix = should_run_via_wine,
-                    is_sandboxie_prefix = should_run_via_sandboxie,
-                    wine_setup = launch_info_wine_setup,
-                    sandboxie_setup = launch_info_sandboxie_setup,
-                    is_32_bit = launch_info_is_32_bit,
-                    lnk_base_path = launch_cache_dir,
-                    blocking_processes = blocking_processes)
+                    options = launch_options,
+                    initial_processes = [command.GetStarterCommand(selected_cmd)])
+                launch_options.set_force_prefix(True)
+                launch_options.set_cwd(os.path.expanduser("~"))
+                launch_options.set_prefix_cwd(selected_cwd)
+                launch_options.set_lnk_base_path(game_info.get_local_cache_dir())
+                launch_options.set_blocking_processes(blocking_processes)
 
         # Check launch command
-        if len(launch_info_cmd):
-
-            # Restore game registry
-            sandbox.RestoreRegistry(
-                prefix_dir = launch_save_dir,
-                prefix_name = config.PrefixType.GAME,
-                is_wine_prefix = should_run_via_wine,
-                is_sandboxie_prefix = should_run_via_sandboxie,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+        if len(launch_cmd):
 
             # Launch game
             command.RunGameCommand(
                 game_info = game_info,
-                cmd = launch_info_cmd,
-                options = launch_info_options,
+                cmd = launch_cmd,
+                options = launch_options,
                 capture_type = capture_type,
                 verbose = verbose)
-
-            # Move sandboxed data back
-            if should_run_via_sandboxie:
-                temp_cache_dir = system.JoinPaths(user_profile_dir, "Cache")
-                real_cache_dir = environment.GetCacheRootDir()
-                if system.DoesDirectoryContainFiles(temp_cache_dir):
-                    system.MoveContents(
-                        src = temp_cache_dir,
-                        dest = real_cache_dir,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-
-            # Clean dirs
-            for dir_to_clear in dirs_to_clear:
-                if os.path.exists(dir_to_clear):
-                    system.RemoveDirectoryContents(
-                        dir = dir_to_clear,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-
-            # Backup game registry
-            sandbox.BackupRegistry(
-                prefix_dir = launch_save_dir,
-                prefix_name = config.PrefixType.GAME,
-                registry_keys = launch_info_registry_game_keys,
-                is_wine_prefix = should_run_via_wine,
-                is_sandboxie_prefix = should_run_via_sandboxie,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
 
             # Restore default screen resolution
             display.RestoreDefaultScreenResolution(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
+
+        # Should be successful
         return True

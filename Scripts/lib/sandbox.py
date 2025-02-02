@@ -92,109 +92,112 @@ def GetSandboxieBlockingProcesses():
     ]
 
 # Get blocking processes
-def GetBlockingProcesses(initial_processes = [], is_wine_prefix = False, is_sandboxie_prefix = False):
+def GetBlockingProcesses(options, initial_processes = []):
     blocking_processes = copy.deepcopy(initial_processes)
-    if is_wine_prefix:
+    if options.is_wine_prefix():
         blocking_processes += GetWineBlockingProcesses()
-    elif is_sandboxie_prefix:
+    elif options.is_sandboxie_prefix():
         blocking_processes += GetSandboxieBlockingProcesses()
     return blocking_processes
 
 ###########################################################
 
 # Get wine prefix
-def GetWinePrefix(name):
-    return system.JoinPaths(programs.GetToolPathConfigValue("Wine", "sandbox_dir"), name)
+def GetWinePrefix(options):
+    return system.JoinPaths(programs.GetToolPathConfigValue("Wine", "sandbox_dir"), options.get_prefix_name())
 
 # Get sandboxie prefix
-def GetSandboxiePrefix(name):
-    return system.JoinPaths(programs.GetToolPathConfigValue("Sandboxie", "sandbox_dir"), name)
+def GetSandboxiePrefix(options):
+    return system.JoinPaths(programs.GetToolPathConfigValue("Sandboxie", "sandbox_dir"), options.get_prefix_name())
 
 # Get prefix
-def GetPrefix(name, is_wine_prefix = False, is_sandboxie_prefix = False):
+def GetPrefix(options):
     prefix_dir = None
-    if name:
-        if is_wine_prefix:
-            prefix_dir = GetWinePrefix(name)
-        elif is_sandboxie_prefix:
-            prefix_dir = GetSandboxiePrefix(name)
+    if options.get_prefix_name():
+        if options.is_wine_prefix():
+            prefix_dir = GetWinePrefix(options)
+        elif options.is_sandboxie_prefix():
+            prefix_dir = GetSandboxiePrefix(options)
     return prefix_dir
 
 ###########################################################
 
 # Get wine real drive path
-def GetWineRealDrivePath(prefix_dir, drive):
+def GetWineRealDrivePath(options, drive):
     if drive.lower() == "c":
-        return system.JoinPaths(prefix_dir, "drive_c")
+        return system.JoinPaths(options.get_prefix_dir(), "drive_c")
     else:
-        return system.JoinPaths(prefix_dir, "dosdevices", drive.lower() + ":")
+        return system.JoinPaths(options.get_prefix_dir(), "dosdevices", drive.lower() + ":")
 
 # Get sandboxie real drive path
-def GetSandboxieRealDrivePath(prefix_dir, drive):
-    return system.JoinPaths(prefix_dir, "drive", drive.upper())
+def GetSandboxieRealDrivePath(options, drive):
+    return system.JoinPaths(options.get_prefix_dir(), "drive", drive.upper())
 
 # Get real drive path
-def GetRealDrivePath(prefix_dir, drive, is_wine_prefix = False, is_sandboxie_prefix = False):
+def GetRealDrivePath(options, drive):
     real_drive_path = None
-    if is_wine_prefix:
-        real_drive_path = GetWineRealDrivePath(prefix_dir, drive)
-    elif is_sandboxie_prefix:
-        real_drive_path = GetSandboxieRealDrivePath(prefix_dir, drive)
+    if options.is_wine_prefix():
+        real_drive_path = GetWineRealDrivePath(options, drive)
+    elif options.is_sandboxie_prefix():
+        real_drive_path = GetSandboxieRealDrivePath(options, drive)
     return real_drive_path
+
+# Get real c drive path
+def GetRealCDrivePath(options):
+    return GetRealDrivePath(options, "c")
 
 ###########################################################
 
 # Get wine user profile path
-def GetWineUserProfilePath(prefix_dir):
-    return system.NormalizeFilePath(system.JoinPaths(prefix_dir, "drive_c", "users", getpass.getuser()))
+def GetWineUserProfilePath(options):
+    return system.NormalizeFilePath(system.JoinPaths(options.get_prefix_dir(), "drive_c", "users", getpass.getuser()))
 
 # Get sandboxie user profile path
-def GetSandboxieUserProfilePath(prefix_dir):
-    return system.NormalizeFilePath(system.JoinPaths(prefix_dir, "user", "current"))
+def GetSandboxieUserProfilePath(options):
+    return system.NormalizeFilePath(system.JoinPaths(options.get_prefix_dir(), "user", "current"))
 
 # Get user profile path
-def GetUserProfilePath(prefix_dir, is_wine_prefix = False, is_sandboxie_prefix = False):
+def GetUserProfilePath(options):
     user_profile_dir = None
-    if is_wine_prefix:
-        user_profile_dir = GetWineUserProfilePath(prefix_dir)
-    elif is_sandboxie_prefix:
-        user_profile_dir = GetSandboxieUserProfilePath(prefix_dir)
+    if options.is_wine_prefix():
+        user_profile_dir = GetWineUserProfilePath(options)
+    elif options.is_sandboxie_prefix():
+        user_profile_dir = GetSandboxieUserProfilePath(options)
     return user_profile_dir
 
 ###########################################################
 
 # Get wine public profile path
-def GetWinePublicProfilePath(prefix_dir):
-    return system.NormalizeFilePath(system.JoinPaths(prefix_dir, "drive_c", "users", "Public"))
+def GetWinePublicProfilePath(options):
+    return system.NormalizeFilePath(system.JoinPaths(options.get_prefix_dir(), "drive_c", "users", "Public"))
 
 # Get sandboxie public profile path
-def GetSandboxiePublicProfilePath(prefix_dir):
-    return system.NormalizeFilePath(system.JoinPaths(prefix_dir, "drive", "C", "Public"))
+def GetSandboxiePublicProfilePath(options):
+    return system.NormalizeFilePath(system.JoinPaths(options.get_prefix_dir(), "drive", "C", "Public"))
 
 # Get public profile path
-def GetPublicProfilePath(prefix_dir, is_wine_prefix = False, is_sandboxie_prefix = False):
+def GetPublicProfilePath(options):
     public_profile_dir = None
-    if is_wine_prefix:
-        public_profile_dir = GetWinePublicProfilePath(prefix_dir)
-    elif is_sandboxie_prefix:
-        public_profile_dir = GetSandboxiePublicProfilePath(prefix_dir)
+    if options.is_wine_prefix():
+        public_profile_dir = GetWinePublicProfilePath(options)
+    elif options.is_sandboxie_prefix():
+        public_profile_dir = GetSandboxiePublicProfilePath(options)
     return public_profile_dir
 
 ###########################################################
 
 # Install wine dlls
 def InstallWineDlls(
-    prefix_dir,
+    options,
     dlls_32 = [],
     dlls_64 = [],
-    is_32_bit = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    wine_c_drive = GetWineRealDrivePath(prefix_dir, "c")
+    wine_c_drive = GetWineRealDrivePath(options, "c")
     wine_system32_dir = system.JoinPaths(wine_c_drive, "windows", "system32")
     wine_syswow64_dir = system.JoinPaths(wine_c_drive, "windows", "syswow64")
-    if is_32_bit:
+    if options.is_32_bit():
         for lib32 in dlls_32:
             system.CopyFileOrDirectory(
                 src = lib32,
@@ -220,10 +223,9 @@ def InstallWineDlls(
 
 # Install sandboxie dlls
 def InstallSandboxieDlls(
-    prefix_dir,
+    options,
     dlls_32 = [],
     dlls_64 = [],
-    is_32_bit = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -231,30 +233,25 @@ def InstallSandboxieDlls(
 
 # Install dlls
 def InstallDlls(
-    prefix_dir,
+    options,
     dlls_32 = [],
     dlls_64 = [],
-    is_32_bit = False,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if is_wine_prefix:
+    if options.is_wine_prefix():
         InstallWineDlls(
-            prefix_dir = prefix_dir,
+            options = options,
             dlls_32 = dlls_32,
             dlls_64 = dlls_64,
-            is_32_bit = is_32_bit,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    elif is_sandboxie_prefix:
+    elif options.is_sandboxie_prefix():
         InstallSandboxieDlls(
-            prefix_dir = prefix_dir,
+            options = options,
             dlls_32 = dlls_32,
             dlls_64 = dlls_64,
-            is_32_bit = is_32_bit,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -263,19 +260,13 @@ def InstallDlls(
 
 # Restore registry
 def RestoreRegistry(
-    prefix_dir,
-    prefix_name,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False,
+    options,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Get user profile
-    user_profile_dir = GetUserProfilePath(
-        prefix_dir = prefix_dir,
-        is_wine_prefix = is_wine_prefix,
-        is_sandboxie_prefix = is_sandboxie_prefix)
+    user_profile_dir = GetUserProfilePath(options)
     if not user_profile_dir:
         return False
 
@@ -284,29 +275,25 @@ def RestoreRegistry(
 
     # Get registry file
     registry_file = ""
-    if prefix_name == config.PrefixType.SETUP:
+    if options.get_prefix_name() == config.PrefixType.SETUP:
         registry_file = system.JoinPaths(registry_dir, config.registry_filename_setup)
-    elif prefix_name == config.PrefixType.GAME:
+    elif options.get_prefix_name() == config.PrefixType.GAME:
         registry_file = system.JoinPaths(registry_dir, config.registry_filename_game)
-    if not os.path.exists(registry_file):
+    if not system.DoesPathExist(registry_file):
         return True
 
     # Import registry file
     return registry.ImportRegistryFile(
         registry_file = registry_file,
-        prefix_dir = prefix_dir,
-        prefix_name = prefix_name,
+        options = options,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Backup registry
 def BackupRegistry(
-    prefix_dir,
-    prefix_name,
+    options,
     registry_keys = [],
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -316,11 +303,8 @@ def BackupRegistry(
         return True
 
     # Get user profile
-    user_profile_dir = GetUserProfilePath(
-        prefix_dir = prefix_dir,
-        is_wine_prefix = is_wine_prefix,
-        is_sandboxie_prefix = is_sandboxie_prefix)
-    if not user_profile_dir:
+    user_profile_dir = GetUserProfilePath(options)
+    if not system.IsPathFile(user_profile_dir):
         return False
 
     # Get registry dir
@@ -328,30 +312,29 @@ def BackupRegistry(
 
     # Get registry file
     registry_file = ""
-    if prefix_name == config.PrefixType.SETUP:
+    if options.get_prefix_name() == config.PrefixType.SETUP:
         registry_file = system.JoinPaths(registry_dir, config.registry_filename_setup)
-    elif prefix_name == config.PrefixType.GAME:
+    elif options.get_prefix_name() == config.PrefixType.GAME:
         registry_file = system.JoinPaths(registry_dir, config.registry_filename_game)
 
     # Get registry export keys
     registry_export_keys = []
-    if prefix_name == config.PrefixType.SETUP:
+    if options.get_prefix_name() == config.PrefixType.SETUP:
         registry_export_keys = config.registry_export_keys_setup
-    elif prefix_name == config.PrefixType.GAME:
+    elif options.get_prefix_name() == config.PrefixType.GAME:
         registry_export_keys = config.registry_export_keys_game
 
     # Get registry ignore keys
     registry_ignore_keys = []
-    if prefix_name == config.PrefixType.SETUP:
+    if options.get_prefix_name() == config.PrefixType.SETUP:
         registry_ignore_keys = config.ignored_registry_keys_setup
-    elif prefix_name == config.PrefixType.GAME:
+    elif options.get_prefix_name() == config.PrefixType.GAME:
         registry_ignore_keys = config.ignored_registry_keys_game
 
     # Backup registry
     return registry.BackupUserRegistry(
         registry_file = registry_file,
-        prefix_dir = prefix_dir,
-        prefix_name = prefix_name,
+        options = options,
         export_keys = registry_export_keys,
         ignore_keys = registry_ignore_keys,
         keep_keys = registry_keys,
@@ -362,21 +345,19 @@ def BackupRegistry(
 ###########################################################
 
 # Find first available real drive path
-def FindFirstAvailableRealDrivePath(prefix_dir, is_wine_prefix = False, is_sandboxie_prefix = False):
+def FindFirstAvailableRealDrivePath(options):
 
     # Check params
-    system.AssertPathExists(prefix_dir, "prefix_dir")
+    system.AssertPathExists(options.get_prefix_dir(), "prefix_dir")
 
     # Only go through potentially available drives
     for letter in config.drives_regular:
 
         # Get drive path and check if its available
         drive_path = GetRealDrivePath(
-            prefix_dir = prefix_dir,
-            drive = letter,
-            is_wine_prefix = is_wine_prefix,
-            is_sandboxie_prefix = is_sandboxie_prefix)
-        if not os.path.exists(drive_path):
+            options = options,
+            drive = letter)
+        if not system.DoesPathExist(drive_path):
             return drive_path
 
     # Nothing available
@@ -384,29 +365,24 @@ def FindFirstAvailableRealDrivePath(prefix_dir, is_wine_prefix = False, is_sandb
 
 # Mount directory to available drive
 def MountDirectoryToAvailableDrive(
-    source_dir,
-    prefix_dir,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False,
+    src,
+    options,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Check params
-    system.AssertPathExists(source_dir, "source_dir")
-    system.AssertPathExists(prefix_dir, "prefix_dir")
+    system.AssertPathExists(src, "source_dir")
+    system.AssertPathExists(options.get_prefix_dir(), "prefix_dir")
 
     # Get first available drive path
-    drive_path = FindFirstAvailableRealDrivePath(
-        prefix_dir,
-        is_wine_prefix = is_wine_prefix,
-        is_sandboxie_prefix = is_sandboxie_prefix)
+    drive_path = FindFirstAvailableRealDrivePath(options)
     if not system.IsPathValid(drive_path):
         return False
 
     # Create symlink
     return system.CreateSymlink(
-        src = source_dir,
+        src = src,
         dest = drive_path,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -414,25 +390,21 @@ def MountDirectoryToAvailableDrive(
 
 # Unmount all mounted drives
 def UnmountAllMountedDrives(
-    prefix_dir,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False,
+    options,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Check params
-    system.AssertPathExists(prefix_dir, "prefix_dir")
+    system.AssertPathExists(options.get_prefix_dir(), "prefix_dir")
 
     # Only go through potentially available drives
     for letter in config.drives_regular:
 
         # Get real drive path
         drive_path = GetRealDrivePath(
-            prefix_dir = prefix_dir,
-            drive = letter,
-            is_wine_prefix = is_wine_prefix,
-            is_sandboxie_prefix = is_sandboxie_prefix)
+            options = options,
+            drive = letter)
 
         # Remove symlink
         system.RemoveSymlink(
@@ -446,18 +418,16 @@ def UnmountAllMountedDrives(
 # Get prefix path info
 def GetPrefixPathInfo(
     path,
-    prefix_dir,
+    options,
     is_virtual_path = False,
-    is_real_path = False,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False):
+    is_real_path = False):
 
     # Check path
     if not system.IsPathValid(path):
         return None
 
     # Check prefix
-    if not system.IsPathValid(prefix_dir):
+    if not options.has_valid_prefix_dir():
         return None
 
     # These are some potential types of paths
@@ -466,13 +436,17 @@ def GetPrefixPathInfo(
     # - C:/Sandboxie/Sandbox/Default/drives/C/foo/bar
     # - C:/foo/bar
 
+    # Copy params
+    new_path = copy.deepcopy(path)
+    new_options = copy.deepcopy(options)
+
     # Normalize paths
-    path = system.NormalizeFilePath(path, separator = config.os_pathsep)
-    prefix_dir = system.NormalizeFilePath(prefix_dir, separator = config.os_pathsep)
+    new_path = system.NormalizeFilePath(new_path, separator = config.os_pathsep)
+    new_options.set_prefix_dir(system.NormalizeFilePath(new_options.get_prefix_dir(), separator = config.os_pathsep))
 
     # Fix path inconsistencies
-    if is_wine_prefix:
-        if is_virtual_path and path.startswith(config.drive_root_posix):
+    if new_options.is_wine_prefix():
+        if is_virtual_path and new_path.startswith(config.drive_root_posix):
             is_virtual_path = False
             is_real_path = True
 
@@ -483,15 +457,15 @@ def GetPrefixPathInfo(
     path_drive_base = ""
 
     # Path starts with prefix
-    if path.startswith(prefix_dir):
+    if new_path.startswith(new_options.get_prefix_dir()):
 
         # Find drive letter and offset
         if is_virtual_path:
-            path_drive_letter = system.GetDirectoryDrive(path)
-            path_drive_offset = path[len(system.GetDirectoryAnchor(path)):]
+            path_drive_letter = system.GetDirectoryDrive(new_path)
+            path_drive_offset = new_path[len(system.GetDirectoryAnchor(new_path)):]
         elif is_real_path:
-            path_drive_start = path[len(prefix_dir + config.os_pathsep):]
-            if is_wine_prefix:
+            path_drive_start = new_path[len(new_options.get_prefix_dir() + config.os_pathsep):]
+            if new_options.is_wine_prefix():
                 if path_drive_start.startswith("drive_c"):
                     path_drive_letter = "c"
                     path_drive_offset = path_drive_start[len("drive_c" + config.os_pathsep):]
@@ -504,7 +478,7 @@ def GetPrefixPathInfo(
                     if len(path_drive_token) > 0:
                         path_drive_letter = path_drive_token[0].lower()
                         path_drive_offset = path_drive_start[len(path_drive_token + config.os_pathsep):]
-            elif is_sandboxie_prefix:
+            elif new_options.is_sandboxie_prefix():
                 if path_drive_start.startswith("drives"):
                     path_drive_start = path_drive_start[len("drives" + config.os_pathsep):]
                     path_drive_token = ""
@@ -517,44 +491,44 @@ def GetPrefixPathInfo(
 
         # Find drive base
         if is_virtual_path:
-            if is_wine_prefix:
-                path_drive_base = system.JoinPaths(prefix_dir, "dosdevices", path_drive_letter.lower() + ":")
-            elif is_sandboxie_prefix:
-                path_drive_base = system.JoinPaths(prefix_dir, "drives", path_drive_letter.upper())
+            if new_options.is_wine_prefix():
+                path_drive_base = system.JoinPaths(new_options.get_prefix_dir(), "dosdevices", path_drive_letter.lower() + ":")
+            elif new_options.is_sandboxie_prefix():
+                path_drive_base = system.JoinPaths(new_options.get_prefix_dir(), "drives", path_drive_letter.upper())
         elif is_real_path:
-            path_drive_base = path[-len(path_drive_offset):]
+            path_drive_base = new_path[-len(path_drive_offset):]
 
     # Prefix and path are not related
     else:
 
         # Wine
-        if is_wine_prefix:
+        if new_options.is_wine_prefix():
             if is_virtual_path:
-                path_drive_letter = system.GetDirectoryDrive(path)
+                path_drive_letter = system.GetDirectoryDrive(new_path)
             else:
                 path_drive_letter = "z"
-            path_drive_offset = path[len(system.GetDirectoryAnchor(path)):]
-            path_drive_base = GetWineRealDrivePath(prefix_dir, path_drive_letter)
+            path_drive_offset = new_path[len(system.GetDirectoryAnchor(new_path)):]
+            path_drive_base = GetWineRealDrivePath(new_options.get_prefix_dir(), path_drive_letter)
 
         # Sandboxie
-        elif is_sandboxie_prefix:
-            path_drive_letter = system.GetDirectoryDrive(path)
-            path_drive_offset = path[len(system.GetDirectoryAnchor(path)):]
+        elif new_options.is_sandboxie_prefix():
+            path_drive_letter = system.GetDirectoryDrive(new_path)
+            path_drive_offset = new_path[len(system.GetDirectoryAnchor(new_path)):]
             path_drive_extra = system.NormalizeFilePath(system.JoinPaths("Users", getpass.getuser()), separator = config.os_pathsep)
             if path_drive_offset.startswith(path_drive_extra):
-                path_drive_base = GetSandboxieUserProfilePath(prefix_dir)
+                path_drive_base = GetSandboxieUserProfilePath(new_options.get_prefix_dir())
                 path_drive_offset = path_drive_offset[len(path_drive_extra + config.os_pathsep):]
             else:
-                path_drive_base = GetSandboxieRealDrivePath(prefix_dir, path_drive_letter)
+                path_drive_base = GetSandboxieRealDrivePath(new_options.get_prefix_dir(), path_drive_letter)
 
         # Neither
         else:
-            path_drive_offset = path[len(system.GetDirectoryAnchor(path)):]
-            path_drive_base = system.GetDirectoryDrive(path)
+            path_drive_offset = new_path[len(system.GetDirectoryAnchor(new_path)):]
+            path_drive_base = system.GetDirectoryDrive(new_path)
             if environment.IsWinePlatform():
                 path_drive_letter = "z"
             else:
-                path_drive_letter = system.GetDirectoryDrive(path)
+                path_drive_letter = system.GetDirectoryDrive(new_path)
             is_virtual_path = False
             is_real_path = True
 
@@ -562,32 +536,32 @@ def GetPrefixPathInfo(
     path_full_virtual = ""
     path_full_real = ""
     if is_virtual_path:
-        path_full_virtual = path
+        path_full_virtual = new_path
         path_full_real = system.JoinPaths(path_drive_base, path_drive_offset)
     elif is_real_path:
         path_full_virtual += path_drive_letter.upper() + ":" + config.os_pathsep
         path_full_virtual += path_drive_extra + config.os_pathsep
         path_full_virtual += path_drive_offset
-        path_full_real = path
+        path_full_real = new_path
 
     # Check for consistency
     if is_virtual_path:
         system.AssertCondition(
-            condition = (path == path_full_virtual),
+            condition = (new_path == path_full_virtual),
             description = "Original virtual path must match constructed virtual path")
     elif is_real_path:
         system.AssertCondition(
-            condition = (path == path_full_real),
+            condition = (new_path == path_full_real),
             description = "Original real path must match constructed real path")
 
     # Return path info
     info = {}
-    info["path"] = system.NormalizeFilePath(path)
-    info["prefix"] = system.NormalizeFilePath(prefix_dir)
+    info["path"] = system.NormalizeFilePath(new_path)
+    info["prefix"] = system.NormalizeFilePath(new_options.get_prefix_dir())
     info["is_virtual"] = is_virtual_path
     info["is_real"] = is_real_path
-    info["is_wine"] = is_wine_prefix
-    info["is_sandboxie"] = is_sandboxie_prefix
+    info["is_wine"] = new_options.is_wine_prefix()
+    info["is_sandboxie"] = new_options.is_sandboxie_prefix()
     info["letter"] = path_drive_letter
     info["base"] = system.NormalizeFilePath(path_drive_base)
     info["offset"] = system.NormalizeFilePath(path_drive_offset)
@@ -611,51 +585,43 @@ def SetupPrefixEnvironment(
 
     # Check options
     if not options:
-        options = command.CommandOptions()
+        options = command.CreateCommandOptions()
 
     # Ignore non-prefix environments
-    if not options.is_wine_prefix and not options.is_sandboxie_prefix:
+    if not options.is_prefix():
         return (cmd, options)
 
     # Copy params
-    new_cmd = cmd
+    new_cmd = copy.deepcopy(cmd)
     new_options = copy.deepcopy(options)
 
     # Modify for wine
-    if new_options.is_wine_prefix:
-
-        # Get wine setup
-        wine_setup_overrides = {}
-        if config.json_key_sandbox_wine_overrides in new_options.wine_setup:
-            wine_setup_overrides = new_options.wine_setup[config.json_key_sandbox_wine_overrides]
+    if new_options.is_wine_prefix():
 
         # Improve performance by not showing everything
         # To show only errors, change to fixme-all
-        new_options.env["WINEDEBUG"] = "-all"
+        new_options.add_env("WINEDEBUG", "-all")
 
         # Set prefix location
-        if system.IsPathValid(new_options.prefix_dir):
-            new_options.env["WINEPREFIX"] = new_options.prefix_dir
+        if new_options.has_valid_prefix_dir():
+            new_options.add_env("WINEPREFIX", new_options.get_prefix_dir())
 
         # Set prefix bitness
-        if new_options.is_32_bit:
-            new_options.env["WINEARCH"] = "win32"
+        if new_options.is_32_bit():
+            new_options.add_env("WINEARCH", "win32")
         else:
-            new_options.env["WINEARCH"] = "win64"
+            new_options.add_env("WINEARCH", "win64")
 
         # Set prefix overrides
         wine_overrides = ["winemenubuilder.exe=d"]
-        if new_options.prefix_name and new_options.prefix_name.lower() in wine_setup_overrides:
-            wine_overrides += wine_setup_overrides[new_options.prefix_name.lower()]
-        new_options.env["WINEDLLOVERRIDES"] = ";".join(wine_overrides)
+        wine_overrides += new_options.get_prefix_overrides()
+        new_options.add_env("WINEDLLOVERRIDES", ";".join(wine_overrides))
 
         # Map the current working directory to the prefix
-        if new_options.is_prefix_mapped_cwd and system.IsPathValid(new_options.cwd):
+        if new_options.is_prefix_mapped_cwd() and new_options.has_valid_cwd():
             cwd_drive = GetRealDrivePath(
-                prefix_dir = new_options.prefix_dir,
-                drive = config.drive_prefix_cwd,
-                is_wine_prefix = new_options.is_wine_prefix,
-                is_sandboxie_prefix = new_options.is_sandboxie_prefix)
+                options = new_options,
+                drive = config.drive_prefix_cwd)
             if system.IsPathValid(cwd_drive):
                 system.RemoveSymlink(
                     symlink = cwd_drive,
@@ -663,14 +629,14 @@ def SetupPrefixEnvironment(
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 system.CreateSymlink(
-                    src = new_options.cwd,
+                    src = new_options.get_cwd(),
                     dest = cwd_drive,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
 
     # Modify for sandboxie
-    elif new_options.is_sandboxie_prefix:
+    elif new_options.is_sandboxie_prefix():
         pass
 
     # Return results
@@ -686,10 +652,10 @@ def SetupPrefixCommand(
 
     # Check options
     if not options:
-        options = command.CommandOptions()
+        options = command.CreateCommandOptions()
 
     # Ignore non-prefix commands
-    if not options.is_wine_prefix and not options.is_sandboxie_prefix:
+    if not options.is_prefix():
         return (cmd, options)
 
     # Get original command info
@@ -703,65 +669,48 @@ def SetupPrefixCommand(
     new_options = copy.deepcopy(options)
 
     # Create command
-    if options.is_wine_prefix:
+    if new_options.is_wine_prefix():
         new_cmd = [GetWineCommand()]
-    elif options.is_sandboxie_prefix:
+    elif new_options.is_sandboxie_prefix():
         new_cmd = [
             GetSandboxieCommand(),
-            "/box:%s" % options.prefix_name
+            "/box:%s" % options.get_prefix_name().val()
         ]
-        if options.prefix_name == config.PrefixType.TOOL:
+        if new_options.get_prefix_name() == config.PrefixType.TOOL:
             new_cmd += ["/hide_window"]
 
     # Modify for wine
-    if new_options.is_wine_prefix:
-
-        # Get wine setup
-        wine_setup_desktop = ""
-        wine_setup_use_virtual_desktop = False
-        if config.json_key_sandbox_wine_desktop in new_options.wine_setup:
-            wine_setup_desktop = new_options.wine_setup[config.json_key_sandbox_wine_desktop]
-        if config.json_key_sandbox_wine_use_virtual_desktop in new_options.wine_setup:
-            wine_setup_use_virtual_desktop = new_options.wine_setup[config.json_key_sandbox_wine_use_virtual_desktop]
+    if new_options.is_wine_prefix():
 
         # Set desktop options
-        if wine_setup_use_virtual_desktop:
-            if len(wine_setup_desktop):
-                new_cmd += ["explorer", "/desktop=" + wine_setup_desktop]
-            else:
-                desktop_width = ini.GetIniValue("UserData.Resolution", "screen_resolution_w")
-                desktop_height = ini.GetIniValue("UserData.Resolution", "screen_resolution_h")
-                new_cmd += ["explorer", "/desktop=%sx%s" % (desktop_width, desktop_height)]
+        if new_options.is_prefix_using_virtual_desktop():
+            new_cmd += ["explorer", "/desktop=" + new_options.get_prefix_desktop_dimensions()]
 
     # Adjust command based on executable type
     if orig_cmd_starter.endswith(".lnk"):
         info = system.GetLinkInfo(
             lnk_path = orig_cmd_starter,
             lnk_base_path = options.lnk_base_path)
-        has_valid_target = os.path.exists(info["target"])
-        has_valid_cwd = os.path.exists(info["cwd"])
+        has_valid_target = system.DoesPathExist(info["target"])
+        has_valid_cwd = system.DoesPathExist(info["cwd"])
         if not has_valid_target or not has_valid_cwd:
             gui.DisplayErrorPopup(
                 title_text = "Unable to resolve LNK file",
                 message_text = "Unable to resolve LNK file %s to an actual target" % orig_cmd_starter)
         new_cmd += [info["target"]]
         new_cmd += info["args"]
-        new_options.cwd = info["cwd"]
+        new_options.set_cwd(info["cwd"])
     elif orig_cmd_starter.endswith(".bat"):
-        if options.is_sandboxie_prefix:
+        if options.is_sandboxie_prefix():
             new_cmd += ["cmd", "/c"]
         new_cmd += orig_cmd_list
     else:
         new_cmd += orig_cmd_list
 
     # Override cwd if requested for this prefix
-    prefix_c_drive = GetRealDrivePath(
-        prefix_dir = new_options.prefix_dir,
-        drive = "c",
-        is_wine_prefix = new_options.is_wine_prefix,
-        is_sandboxie_prefix = new_options.is_sandboxie_prefix)
-    if prefix_c_drive and new_options.prefix_cwd and len(new_options.prefix_cwd):
-        new_options.cwd = os.path.realpath(system.JoinPaths(prefix_c_drive, new_options.prefix_cwd))
+    prefix_c_drive = GetRealCDrivePath(new_options)
+    if prefix_c_drive and new_options.get_prefix_cwd() and len(new_options.get_prefix_cwd()):
+        new_options.set_cwd(os.path.realpath(system.JoinPaths(prefix_c_drive, new_options.get_prefix_cwd())))
 
     # Return results
     return (new_cmd, new_options)
@@ -777,7 +726,7 @@ def CleanupWine(cmd, options, verbose = False, pretend_run = False, exit_on_fail
     # Kill processes running under wine
     command.RunBlockingCommand(
         cmd = [wine_server_tool, "-k"],
-        options = command.CommandOptions(
+        options = command.CreateCommandOptions(
             shell = True),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -794,18 +743,14 @@ def CleanupSandboxie(cmd, options, verbose = False, pretend_run = False, exit_on
 
 # Create wine prefix
 def CreateWinePrefix(
-    prefix_dir,
-    prefix_name,
-    prefix_winver,
-    wine_setup = {},
-    is_32_bit = False,
+    options,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Make directory
     system.MakeDirectory(
-        dir = prefix_dir,
+        dir = options.get_prefix_dir(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -816,40 +761,25 @@ def CreateWinePrefix(
     # Get wine tricks tool
     wine_tricks_tool = programs.GetToolProgram("WineTricks")
 
-    # Get wine setup
-    wine_setup_tricks = {}
-    if config.json_key_sandbox_wine_tricks in wine_setup:
-        wine_setup_tricks = wine_setup[config.json_key_sandbox_wine_tricks]
-
-    # Get list of winetricks
-    winetricks = []
-    if prefix_winver and isinstance(prefix_winver, str) and len(prefix_winver):
-        winetricks += [prefix_winver]
-    if prefix_name and prefix_name.lower() in wine_setup_tricks:
-        winetricks += wine_setup_tricks[prefix_name.lower()]
+    # Copy params
+    new_options = copy.deepcopy(options)
+    new_options.set_is_wine_prefix(True)
 
     # Initialize prefix
     cmds_to_run = []
     cmds_to_run.append([wine_boot_tool])
-    if len(winetricks):
-        cmds_to_run.append([wine_tricks_tool] + winetricks)
+    cmds_to_run.append(new_options.get_prefix_tricks())
     for cmd in cmds_to_run:
-        options = command.CommandOptions(
-            is_wine_prefix = True,
-            is_32_bit = is_32_bit,
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            prefix_winver = prefix_winver,
-            blocking_processes = [command.GetStarterCommand(cmd)])
-        cmd, options = SetupPrefixEnvironment(
-            cmd = cmd,
-            options = options,
+        new_options.set_blocking_processes([command.GetStarterCommand(cmd)])
+        new_cmd, new_options = SetupPrefixEnvironment(
+            cmd = new_cmd,
+            options = new_options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         command.RunBlockingCommand(
-            cmd = cmd,
-            options = options,
+            cmd = new_cmd,
+            options = new_options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -859,28 +789,24 @@ def CreateWinePrefix(
 
 # Create sandboxie prefix
 def CreateSandboxiePrefix(
-    prefix_dir,
-    prefix_name,
-    prefix_winver,
-    sandboxie_setup = {},
-    is_32_bit = False,
+    options,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Make directories
     system.MakeDirectory(
-        dir = prefix_dir,
+        dir = options.get_prefix_dir(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.MakeDirectory(
-        dir = GetSandboxieRealDrivePath(prefix_dir, "C"),
+        dir = GetSandboxieRealDrivePath(options.get_prefix_dir(), "C"),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.MakeDirectory(
-        dir = GetSandboxieUserProfilePath(prefix_dir),
+        dir = GetSandboxieUserProfilePath(options.get_prefix_dir()),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -888,138 +814,115 @@ def CreateSandboxiePrefix(
     # Get sandboxie ini tool
     sandboxie_ini_tool = programs.GetToolProgram("SandboxieIni")
 
+    # Copy params
+    new_options = copy.deepcopy(options)
+    new_options.set_is_sandboxie_prefix(True)
+    new_options.set_blocking_processes([sandboxie_ini_tool])
+    new_options.set_shell(True)
+
     # Set sandboxie param
-    def SetSandboxieBoxParam(sandbox_name, sandbox_param, sandbox_value):
-        cmd = [sandboxie_ini_tool, "set", sandbox_name, sandbox_param, sandbox_value]
-        options = command.CommandOptions(
-            is_sandboxie_prefix = True,
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            blocking_processes = [sandboxie_ini_tool],
-            shell = True)
-        cmd, options = SetupPrefixEnvironment(
+    def SetSandboxieBoxParam(options, param, value):
+        cmd = [sandboxie_ini_tool, "set", sandbox_options.get_prefix_name().val(), param, value]
+        new_cmd, new_options = SetupPrefixEnvironment(
             cmd = cmd,
             options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         command.RunBlockingCommand(
-            cmd = cmd,
-            options = options,
+            cmd = new_cmd,
+            options = new_options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Initialize prefix
-    SetSandboxieBoxParam(prefix_name, "Enabled", "y")
-    SetSandboxieBoxParam(prefix_name, "FileRootPath", prefix_dir)
-    SetSandboxieBoxParam(prefix_name, "BlockNetParam", "n")
-    SetSandboxieBoxParam(prefix_name, "BlockNetworkFiles", "y")
-    SetSandboxieBoxParam(prefix_name, "RecoverFolder", "%Desktop%")
-    SetSandboxieBoxParam(prefix_name, "BorderColor", "#00ffff,off,6")
-    SetSandboxieBoxParam(prefix_name, "ConfigLevel", "10")
-    SetSandboxieBoxParam(prefix_name, "BoxNameTitle", "-")
-    SetSandboxieBoxParam(prefix_name, "CopyLimitKb", "-1")
-    SetSandboxieBoxParam(prefix_name, "NoSecurityIsolation", "y")
-    SetSandboxieBoxParam(prefix_name, "Template", "OpenBluetooth")
+    SetSandboxieBoxParam(new_options, "Enabled", "y")
+    SetSandboxieBoxParam(new_options, "FileRootPath", new_options.get_prefix_dir())
+    SetSandboxieBoxParam(new_options, "BlockNetParam", "n")
+    SetSandboxieBoxParam(new_options, "BlockNetworkFiles", "y")
+    SetSandboxieBoxParam(new_options, "RecoverFolder", "%Desktop%")
+    SetSandboxieBoxParam(new_options, "BorderColor", "#00ffff,off,6")
+    SetSandboxieBoxParam(new_options, "ConfigLevel", "10")
+    SetSandboxieBoxParam(new_options, "BoxNameTitle", "-")
+    SetSandboxieBoxParam(new_options, "CopyLimitKb", "-1")
+    SetSandboxieBoxParam(new_options, "NoSecurityIsolation", "y")
+    SetSandboxieBoxParam(new_options, "Template", "OpenBluetooth")
 
     # Creation successful
     return True
 
 # Create basic prefix
 def CreateBasicPrefix(
-    prefix_dir,
-    prefix_name,
-    prefix_winver = None,
+    options,
     clean_existing = True,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False,
-    wine_setup = {},
-    sandboxie_setup = {},
-    is_32_bit = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Check prefix
-    if not system.IsPathValid(prefix_dir):
+    if not options.has_valid_prefix_dir():
         return False
 
     # Clean prefix
     if clean_existing:
         system.RemoveObject(
-            obj = prefix_dir,
+            obj = options.get_prefix_dir(),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Setup wine prefix
-    if is_wine_prefix:
+    if options.is_wine_prefix():
 
         # Create wine prefix
         CreateWinePrefix(
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            prefix_winver = prefix_winver,
-            wine_setup = wine_setup,
-            is_32_bit = is_32_bit,
+            options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Replace symlinked directories
         system.ReplaceSymlinkedDirectories(
-            dir = GetWineUserProfilePath(prefix_dir),
+            dir = GetWineUserProfilePath(options),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Setup sandboxie prefix
-    elif is_sandboxie_prefix:
+    elif options.is_sandboxie_prefix():
 
         # Create sandboxie prefix
         CreateSandboxiePrefix(
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            prefix_winver = prefix_winver,
-            sandboxie_setup = sandboxie_setup,
-            is_32_bit = is_32_bit,
+            options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Check result
-    return system.IsPathValid(prefix_dir)
+    return options.has_valid_prefix_dir()
 
 # Create linked prefix
 def CreateLinkedPrefix(
-    prefix_dir,
-    prefix_name,
-    prefix_winver = None,
-    general_prefix_dir = None,
+    options,
     other_links = [],
     clean_existing = True,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False,
-    wine_setup = {},
-    sandboxie_setup = {},
-    is_32_bit = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Check prefix
-    if not system.IsPathValid(prefix_dir):
+    if not options.has_valid_prefix_dir():
         return False
 
     # Check general prefix
-    if not system.IsPathValid(general_prefix_dir):
+    if not options.has_valid_general_prefix_dir():
         return False
 
     # Create prefix
     if clean_existing:
         system.RemoveObject(
-            obj = prefix_dir,
+            obj = options.get_prefix_dir(),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -1027,55 +930,43 @@ def CreateLinkedPrefix(
     # Create general prefix subfolders
     for folder in config.computer_user_folders:
         system.MakeDirectory(
-            dir = system.JoinPaths(general_prefix_dir, folder),
+            dir = system.JoinPaths(options.get_general_prefix_dir(), folder),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Get prefix c drive
-    prefix_c_drive = GetRealDrivePath(
-        prefix_dir = prefix_dir,
-        drive = "c",
-        is_wine_prefix = is_wine_prefix,
-        is_sandboxie_prefix = is_sandboxie_prefix)
+    prefix_c_drive = GetRealCDrivePath(options)
 
     # Setup wine prefix
-    if is_wine_prefix:
+    if options.is_wine_prefix():
 
         # Create wine prefix
         CreateWinePrefix(
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            prefix_winver = prefix_winver,
-            wine_setup = wine_setup,
-            is_32_bit = is_32_bit,
+            options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Link prefix
         system.RemoveObject(
-            obj = GetWineUserProfilePath(prefix_dir),
+            obj = GetWineUserProfilePath(options),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         system.CreateSymlink(
-            src = general_prefix_dir,
-            dest = GetWineUserProfilePath(prefix_dir),
+            src = options.get_general_prefix_dir(),
+            dest = GetWineUserProfilePath(options),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Setup sandboxie prefix
-    elif is_sandboxie_prefix:
+    elif options.is_sandboxie_prefix():
 
         # Create sandboxie prefix
         CreateSandboxiePrefix(
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            prefix_winver = prefix_winver,
-            sandboxie_setup = sandboxie_setup,
-            is_32_bit = is_32_bit,
+            options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -1084,7 +975,7 @@ def CreateLinkedPrefix(
     for other_link in other_links:
         path_from = other_link["from"]
         path_to = system.JoinPaths(prefix_c_drive, other_link["to"])
-        if not os.path.exists(path_from):
+        if not system.DoesPathExist(path_from):
             continue
         system.RemoveObject(
             obj = path_to,
@@ -1100,7 +991,7 @@ def CreateLinkedPrefix(
             exit_on_failure = exit_on_failure)
 
     # Check result
-    return system.IsPathValid(prefix_dir)
+    return options.has_valid_prefix_dir()
 
 ###########################################################
 
@@ -1118,46 +1009,42 @@ def TranslatePathIfNecessary(path, program_exe, program_name):
     if not should_run_via_wine and not should_run_via_sandboxie:
         return path
 
-    # Translate path
-    return TranslateRealPathToVirtualPath(
-        path = path,
+    # Get prefix options
+    options = command.CreateCommandOptions(
         prefix_dir = programs.GetProgramPrefixDir(program_name),
         prefix_name = programs.GetProgramPrefixName(program_name),
         is_wine_prefix = should_run_via_wine,
         is_sandboxie_prefix = should_run_via_sandboxie)
 
+    # Translate path
+    return TranslateRealPathToVirtualPath(
+        path = path,
+        options = options)
+
 # Translate virtual path to real path
 def TranslateVirtualPathToRealPath(
     path,
-    prefix_dir = None,
-    prefix_name = None,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False):
+    options):
 
     # Check params
     system.AssertIsValidPath(path, "path")
 
     # Check prefix type
-    if not is_wine_prefix and not is_sandboxie_prefix:
+    if not options.is_prefix():
         return path
 
     # Check prefix
-    if not prefix_dir:
-        prefix_dir = GetPrefix(
-            name = prefix_name,
-            is_wine_prefix = is_wine_prefix,
-            is_sandboxie_prefix = is_sandboxie_prefix)
-    if not prefix_dir:
+    if not options.get_prefix_dir():
+        options.set_prefix_dir(GetPrefix(options))
+    if not options.get_prefix_dir():
         return None
 
     # Get path info
     path_info = GetPrefixPathInfo(
         path = path,
-        prefix_dir = prefix_dir,
+        options = options,
         is_virtual_path = True,
-        is_real_path = False,
-        is_wine_prefix = is_wine_prefix,
-        is_sandboxie_prefix = is_sandboxie_prefix)
+        is_real_path = False)
     if not path_info:
         return None
 
@@ -1167,35 +1054,27 @@ def TranslateVirtualPathToRealPath(
 # Translate real path to virtual path
 def TranslateRealPathToVirtualPath(
     path,
-    prefix_dir = None,
-    prefix_name = None,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False):
+    options):
 
     # Check params
     system.AssertIsValidPath(path, "path")
 
     # Check prefix type
-    if not is_wine_prefix and not is_sandboxie_prefix:
+    if not options.is_prefix():
         return path
 
     # Check prefix
-    if not prefix_dir:
-        prefix_dir = GetPrefix(
-            name = prefix_name,
-            is_wine_prefix = is_wine_prefix,
-            is_sandboxie_prefix = is_sandboxie_prefix)
-    if not prefix_dir:
+    if not options.get_prefix_dir():
+        options.set_prefix_dir(GetPrefix(options))
+    if not options.get_prefix_dir():
         return None
 
     # Get path info
     path_info = GetPrefixPathInfo(
         path = path,
-        prefix_dir = prefix_dir,
+        options = options,
         is_virtual_path = False,
-        is_real_path = True,
-        is_wine_prefix = is_wine_prefix,
-        is_sandboxie_prefix = is_sandboxie_prefix)
+        is_real_path = True)
     if not path_info:
         return None
 
@@ -1205,11 +1084,8 @@ def TranslateRealPathToVirtualPath(
 # Transfer from sandbox
 def TransferFromSandbox(
     path,
+    options,
     keep_in_sandbox = False,
-    prefix_dir = None,
-    prefix_name = None,
-    is_wine_prefix = False,
-    is_sandboxie_prefix = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -1220,10 +1096,7 @@ def TransferFromSandbox(
     # Get real path
     real_path = TranslateVirtualPathToRealPath(
         path = path,
-        prefix_dir = prefix_dir,
-        prefix_name = prefix_name,
-        is_wine_prefix = is_wine_prefix,
-        is_sandboxie_prefix = is_sandboxie_prefix)
+        options = options)
     if not real_path:
         return
 
@@ -1232,7 +1105,7 @@ def TransferFromSandbox(
         return
 
     # Ignore if not present in sandbox
-    if not os.path.exists(real_path):
+    if not system.DoesPathExist(real_path):
         return
 
     # Transfer from sandbox
