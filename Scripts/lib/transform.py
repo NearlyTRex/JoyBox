@@ -54,6 +54,7 @@ def TransformComputerPrograms(
         exit_on_failure = exit_on_failure)
 
     # Get pre-packaged archive
+    # TODO: This should be a separate function to get the prepackaged archive file (the one manually created because some platforms like steam only send you raw files)
     prepackaged_archive = system.JoinPaths(system.GetFilenameDirectory(source_file), game_name + ".7z")
     if not os.path.exists(prepackaged_archive):
         prepackaged_archive = system.JoinPaths(system.GetFilenameDirectory(source_file), game_name + ".7z.001")
@@ -82,6 +83,7 @@ def TransformComputerPrograms(
             # Create install image
             success = installer.InstallComputerGame(
                 game_info = game_info,
+                # TODO: This should get the source transform file (the one that has already been copied to local storage and decrypted)
                 output_image = output_install_file,
                 keep_setup_files = keep_setup_files,
                 verbose = verbose,
@@ -180,6 +182,7 @@ def TransformDiscImage(
             return (False, "Unable to write playlist")
 
     # Return output
+    # TODO: These kinds of functions would be better as a function (IsFileCHD, or something)
     if source_file.endswith(".chd"):
         return (True, system.JoinPaths(output_dir, system.GetFilenameBasename(source_file) + config.DiscImageFileType.ISO.cval()))
     elif source_file.endswith(".m3u"):
@@ -457,7 +460,7 @@ def TransformGameFile(
     if game_category == config.Category.COMPUTER:
         transform_success, transform_result = TransformComputerPrograms(
             game_info = game_info,
-            source_file = transform_file,
+            source_file = game_transform_file,
             output_dir = tmp_dir_result,
             keep_setup_files = keep_setup_files,
             verbose = verbose,
