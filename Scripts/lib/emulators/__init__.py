@@ -11,8 +11,8 @@ from .cemu import Cemu
 from .citra import Citra
 from .computer import Computer
 from .computer import GetDosLaunchCommand as GetComputerDosLaunchCommand
-from .computer import ResolveJsonPath as ResolveComputerJsonPath
-from .computer import ResolveJsonPaths as ResolveComputerJsonPaths
+from .computer import ResolveProgramPath as ResolveComputerProgramPath
+from .computer import ResolveProgramPaths as ResolveComputerProgramPaths
 from .computer import BuildDiscTokenMap as BuildComputerDiscTokenMap
 from .cxbxreloaded import CxBxReloaded
 from .demul import Demul

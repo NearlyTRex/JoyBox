@@ -600,6 +600,69 @@ class GameInfo:
     def set_store_setup(self, value):
         self.set_subvalue(store_key, config.json_key_store_setup, value)
 
+    # Get store setup install
+    def get_store_setup_install(self, store_key = None):
+        store_setup = self.get_store_setup(store_key)
+        if not store_setup:
+            return []
+        if config.json_key_store_setup_install in store_setup:
+            return store_setup[config.json_key_store_setup_install]
+        return []
+
+    # Get store setup preinstall
+    def get_store_setup_preinstall(self, store_key = None):
+        store_setup = self.get_store_setup(store_key)
+        if not store_setup:
+            return []
+        if config.json_key_store_setup_preinstall in store_setup:
+            return store_setup[config.json_key_store_setup_preinstall]
+        return []
+
+    # Get store setup postinstall
+    def get_store_setup_postinstall(self, store_key = None):
+        store_setup = self.get_store_setup(store_key)
+        if not store_setup:
+            return []
+        if config.json_key_store_setup_postinstall in store_setup:
+            return store_setup[config.json_key_store_setup_postinstall]
+        return []
+
+    # Find store setup matching installers
+    def find_store_setup_matching_installers(self, store_key = None, store_subkey = None):
+        store_setup = self.get_store_setup(store_key)
+        if not store_setup or config.json_key_store_setup_install not in store_setup:
+            return []
+        matching_installers = []
+        for setup_install in store_setup[config.json_key_store_setup_install]:
+            if store_subkey and store_subkey in setup_install:
+                matching_installers.append(setup_install)
+        return matching_installers
+
+    # Determine if store setup has dos installers
+    def does_store_setup_have_dos_installers(self, store_key = None):
+        matching_installers = self.find_store_setup_matching_installers(store_subkey = config.program_key_is_dos)
+        return len(matching_installers) > 0
+
+    # Determine if store setup has win31 installers
+    def does_store_setup_have_win31_installers(self, store_key = None):
+        matching_installers = self.find_store_setup_matching_installers(store_subkey = config.program_key_is_win31)
+        return len(matching_installers) > 0
+
+    # Determine if store setup has scumm installers
+    def does_store_setup_have_scumm_installers(self, store_key = None):
+        matching_installers = self.find_store_setup_matching_installers(store_subkey = config.program_key_is_scumm)
+        return len(matching_installers) > 0
+
+    # Determine if store setup has windows installers
+    def does_store_setup_have_windows_installers(self, store_key = None):
+        if self.does_store_setup_have_dos_installers():
+            return False
+        if self.does_store_setup_have_win31_installers():
+            return False
+        if self.does_store_setup_have_scumm_installers():
+            return False
+        return True
+
 ###########################################################
 
 # Find best suited game file

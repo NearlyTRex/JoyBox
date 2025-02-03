@@ -94,6 +94,10 @@ class CommandOptions:
         self.stderr = stderr
         self.include_stderr = include_stderr
 
+    # Copy method
+    def copy(self):
+        return copy.deepcopy(self)
+
     ###########################################################
     # Core
     ###########################################################

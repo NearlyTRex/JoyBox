@@ -18,9 +18,7 @@ class JsonData:
 
     # Copy method
     def copy(self):
-        return JsonData(
-            json_data = copy.deepcopy(self.json_data),
-            json_platform = copy.deepcopy(self.json_platform))
+        return copy.deepcopy(self)
 
     # Get data
     def get_data(self):

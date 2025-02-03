@@ -130,8 +130,7 @@ def WriteRegistryFile(
 def ExportRegistryFile(
     registry_file,
     registry_key,
-    prefix_dir,
-    prefix_name = None,
+    options,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -139,7 +138,6 @@ def ExportRegistryFile(
     # Check params
     system.AssertIsValidPath(registry_file, "registry_file")
     system.AssertIsNonEmptyString(registry_key, "registry_key")
-    system.AssertPathExists(prefix_dir, "prefix_dir")
 
     # Get registry command
     registry_cmd = [
@@ -150,17 +148,16 @@ def ExportRegistryFile(
         "/y"
     ]
 
+    # Get registry options
+    registry_options = options.copy()
+    registry_options.set_force_prefix(True)
+    registry_options.set_shell(True)
+    registry_options.set_blocking_processes(["reg"])
+
     # Run registry command
     code = command.RunBlockingCommand(
         cmd = registry_cmd,
-        options = command.CommandOptions(
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            is_wine_prefix = environment.IsWinePlatform(),
-            is_sandboxie_prefix = environment.IsSandboxiePlatform(),
-            force_prefix = True,
-            shell = True,
-            blocking_processes = ["reg"]),
+        options = registry_options,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -173,8 +170,7 @@ def ExportRegistryFile(
 # Import registry file
 def ImportRegistryFile(
     registry_file,
-    prefix_dir,
-    prefix_name = None,
+    options,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -188,16 +184,15 @@ def ImportRegistryFile(
         "import", registry_file
     ]
 
+    # Get registry options
+    registry_options = options.copy()
+    registry_options.set_force_prefix(True)
+    registry_options.set_blocking_processes(["reg"])
+
     # Run registry command
     code = command.RunBlockingCommand(
         cmd = registry_cmd,
-        options = command.CommandOptions(
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            is_wine_prefix = environment.IsWinePlatform(),
-            is_sandboxie_prefix = environment.IsSandboxiePlatform(),
-            force_prefix = True,
-            blocking_processes = ["reg"]),
+        options = registry_options,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -210,8 +205,7 @@ def ImportRegistryFile(
 # Backup registry
 def BackupUserRegistry(
     registry_file,
-    prefix_dir,
-    prefix_name = None,
+    options,
     export_keys = [],
     ignore_keys = [],
     keep_keys = [],
@@ -237,8 +231,7 @@ def BackupUserRegistry(
         success = ExportRegistryFile(
             registry_file = temp_reg_file,
             registry_key = base_key,
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
+            options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

@@ -18,6 +18,7 @@ import ini
 import gui
 import gameinfo
 import emulatorbase
+import jsondata
 
 # Config files
 config_files = {}
@@ -88,29 +89,36 @@ def BuildDiscTokenMap(disc_files = [], use_drive_letters = False):
                 disc_token_map[disc_token_to_use] = disc_file_basename
     return disc_token_map
 
-# Resolve json path
-def ResolveJsonPath(
-    path,
+# Resolve program path
+def ResolveProgramPath(
+    program,
     setup_base_dir,
     hdd_base_dir,
     disc_base_dir,
     disc_token_map = {}):
+
+    # Get program info
+    program_wrapper = jsondata.JsonData(json_data = program)
+    program_exe = program_wrapper.get_value(config.program_key_exe)
+    program_cwd = program_wrapper.get_value(config.program_key_cwd)
+
+    # Find replacements
     replace_from = ""
     replace_to = ""
-    if path.startswith(config.token_setup_main_root):
+    if program_cwd.startswith(config.token_setup_main_root):
         replace_from = config.token_setup_main_root
         replace_to = setup_base_dir
-    elif path.startswith(config.token_hdd_main_root):
+    elif program_cwd.startswith(config.token_hdd_main_root):
         replace_from = config.token_hdd_main_root
         replace_to = hdd_base_dir
-    elif path.startswith(config.token_dos_main_root):
+    elif program_cwd.startswith(config.token_dos_main_root):
         replace_from = config.token_dos_main_root
         replace_to = system.JoinPaths(hdd_base_dir, config.computer_folder_dos)
-    elif path.startswith(config.token_scumm_main_root):
+    elif program_cwd.startswith(config.token_scumm_main_root):
         replace_from = config.token_scumm_main_root
         replace_to = system.JoinPaths(hdd_base_dir, config.computer_folder_scumm)
     for disc_token in config.tokens_disc:
-        if disc_token in path and disc_token in disc_token_map:
+        if disc_token in program_cwd and disc_token in disc_token_map:
             mapped_value = disc_token_map[disc_token]
             replace_from = disc_token
             if len(disc_token_map[disc_token]) > 3:
@@ -118,24 +126,28 @@ def ResolveJsonPath(
             else:
                 replace_to = disc_token_map[disc_token]
             break
-    return path.replace(replace_from, replace_to)
 
-# Resolve json paths
-def ResolveJsonPaths(
-    paths,
+    # Update program info
+    program_wrapper.set_value(config.program_key_exe, program_exe.replace(replace_from, replace_to))
+    program_wrapper.set_value(config.program_key_cwd, program_cwd.replace(replace_from, replace_to))
+    return program_wrapper.get_data()
+
+# Resolve program paths
+def ResolveProgramPaths(
+    programs,
     setup_base_dir,
     hdd_base_dir,
     disc_base_dir,
     disc_token_map = {}):
-    new_paths = []
-    for path in paths:
-        new_paths.append(ResolveJsonPath(
-            path = path,
+    new_programs = []
+    for program in programs:
+        new_programs.append(ResolveProgramPath(
+            program = program,
             setup_base_dir = setup_base_dir,
             hdd_base_dir = hdd_base_dir,
             disc_base_dir = disc_base_dir,
             disc_token_map = disc_token_map))
-    return new_paths
+    return new_programs
 
 # Get dos launch command
 def GetDosLaunchCommand(
