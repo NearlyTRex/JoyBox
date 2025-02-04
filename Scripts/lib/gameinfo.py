@@ -12,6 +12,7 @@ import metadata
 import metadataentry
 import platforms
 import jsondata
+import stores
 
 ###########################################################
 
@@ -434,8 +435,15 @@ class GameInfo:
         return self.get_value(config.json_key_key_file)
 
     # Get files
-    def get_files(self):
-        return self.get_value(config.json_key_files)
+    def get_files(self, extension = None):
+        files = self.get_value(config.json_key_files)
+        if not files:
+            return []
+        if isinstance(extension, str):
+            return [file for file in files if file.lower().endswith(extension.lower())]
+        elif isinstance(extension, (list, tuple)):
+            return [file for file in files if any(file.lower().endswith(ext.lower()) for ext in extension)]
+        return files
 
     # Get dlc
     def get_dlc(self):
@@ -491,10 +499,26 @@ class GameInfo:
 
     # Get main store key
     def get_main_store_key(self):
-        for store_key in config.json_keys_store:
-            if self.has_key(store_key):
-                return store_key
+        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        if store_obj:
+            return store_obj.GetKey()
         return None
+
+    # Get main store type
+    def get_main_store_type(self):
+        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        if store_obj:
+            return store_obj.GetType()
+        return None
+
+    # Get main store install dir
+    def get_main_store_install_dir(self):
+        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        if store_obj:
+            return store_obj.GetInstallDir()
+        return None
+
+    ##############################
 
     # Get store appid
     def get_store_appid(self, store_key = None):
