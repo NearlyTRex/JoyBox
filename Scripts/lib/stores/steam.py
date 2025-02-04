@@ -62,7 +62,7 @@ def FindSteamAppIDMatches(
     # Load appid list
     appid_list = system.ReadCsvFile(
         src = programs.GetToolPathConfigValue("SteamAppIDList", "csv"),
-        headers = [config.asset_key_id, config.asset_key_title],
+        headers = [config.search_result_key_id, config.search_result_key_title],
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -572,7 +572,11 @@ class Steam(storebase.StoreBase):
                                 # Get base path
                                 base_path = None
                                 if config.json_key_store_installdir in game_info:
-                                    base_path = "steamapps/common/%s" % game_info[config.json_key_store_installdir]
+                                    base_path = system.JoinPaths(
+                                        config.token_store_install_dir,
+                                        "steamapps",
+                                        "common",
+                                        game_info[config.json_key_store_installdir])
 
                                 # Save path
                                 game_paths.add(storebase.TranslateStorePath(path_location, base_path))

@@ -57,11 +57,32 @@ config_files["ScummVM/linux/ScummVM.AppImage.home/.config/scummvm/scummvm.ini"] 
 # System files
 system_files = {}
 
-# Build disc token map
-def BuildDiscTokenMap(disc_files = [], use_drive_letters = False):
+# Build token map
+def BuildTokenMap(
+    store_install_dir = None,
+    game_install_dir = None,
+    setup_base_dir = None,
+    hdd_base_dir = None,
+    disc_base_dir = None,
+    disc_files = [],
+    use_drive_letters = False):
 
-    # Create disc token map
-    disc_token_map = {}
+    # Create token map
+    token_map = {}
+
+    # Add paths
+    if store_base_dir:
+        token_map[config.token_store_install_dir] = store_base_dir
+    if game_install_dir:
+        token_map[config.token_game_install_dir] = game_install_dir
+    if setup_base_dir:
+        token_map[config.token_setup_main_root] = setup_base_dir
+    if hdd_base_dir:
+        token_map[config.token_hdd_main_root] = hdd_base_dir
+        token_map[config.token_dos_main_root] = system.JoinPaths(hdd_base_dir, config.computer_folder_dos)
+        token_map[config.token_scumm_main_root] = system.JoinPaths(hdd_base_dir, config.computer_folder_scumm)
+
+    # Add discs
     disc_letter_index = 0
     for disc_file in disc_files:
 
@@ -84,50 +105,29 @@ def BuildDiscTokenMap(disc_files = [], use_drive_letters = False):
         # Add entry
         if disc_token_to_use:
             if use_drive_letters:
-                disc_token_map[disc_token_to_use] = "%s:/" % disc_letter_drive
+                token_map[disc_token_to_use] = "%s:/" % disc_letter_drive
             else:
-                disc_token_map[disc_token_to_use] = disc_file_basename
-    return disc_token_map
+                if disc_base_dir:
+                    token_map[disc_token_to_use] = system.JoinPaths(disc_base_dir, disc_file_basename)
+                else:
+                    token_map[disc_token_to_use] = disc_file_basename
+
+    # Return token map
+    return token_map
 
 # Resolve path
 def ResolvePath(
     path,
-    setup_base_dir,
-    hdd_base_dir,
-    disc_base_dir,
-    disc_token_map = {}):
-    replace_from = ""
-    replace_to = ""
-    if path.startswith(config.token_setup_main_root):
-        replace_from = config.token_setup_main_root
-        replace_to = setup_base_dir
-    elif path.startswith(config.token_hdd_main_root):
-        replace_from = config.token_hdd_main_root
-        replace_to = hdd_base_dir
-    elif path.startswith(config.token_dos_main_root):
-        replace_from = config.token_dos_main_root
-        replace_to = system.JoinPaths(hdd_base_dir, config.computer_folder_dos)
-    elif path.startswith(config.token_scumm_main_root):
-        replace_from = config.token_scumm_main_root
-        replace_to = system.JoinPaths(hdd_base_dir, config.computer_folder_scumm)
-    for disc_token in config.tokens_disc:
-        if disc_token in path and disc_token in disc_token_map:
-            mapped_value = disc_token_map[disc_token]
-            replace_from = disc_token
-            if len(disc_token_map[disc_token]) > 3:
-                replace_to = system.JoinPaths(disc_base_dir, disc_token_map[disc_token])
-            else:
-                replace_to = disc_token_map[disc_token]
-            break
-    return path.replace(replace_from, replace_to)
+    token_map = {}):
+    for token, replacement in token_map.items():
+        if token in path:
+            path = path.replace(token, replacement)
+    return path
 
 # Resolve program path
 def ResolveProgramPath(
     program,
-    setup_base_dir,
-    hdd_base_dir,
-    disc_base_dir,
-    disc_token_map = {}):
+    token_map = {}):
 
     # Get program info
     program_wrapper = jsondata.JsonData(json_data = program)
@@ -137,16 +137,10 @@ def ResolveProgramPath(
     # Resolve paths
     program_exe = ResolvePath(
         path = program_exe,
-        setup_base_dir = setup_base_dir,
-        hdd_base_dir = hdd_base_dir,
-        disc_base_dir = disc_base_dir,
-        disc_token_map = disc_token_map)
+        token_map = token_map)
     program_cwd = ResolvePath(
         path = program_cwd,
-        setup_base_dir = setup_base_dir,
-        hdd_base_dir = hdd_base_dir,
-        disc_base_dir = disc_base_dir,
-        disc_token_map = disc_token_map)
+        token_map = token_map)
 
     # Update program info
     program_wrapper.set_value(config.program_key_exe, program_exe)
@@ -156,18 +150,12 @@ def ResolveProgramPath(
 # Resolve program paths
 def ResolveProgramPaths(
     programs,
-    setup_base_dir,
-    hdd_base_dir,
-    disc_base_dir,
-    disc_token_map = {}):
+    token_map = {}):
     new_programs = []
     for program in programs:
         new_programs.append(ResolveProgramPath(
             program = program,
-            setup_base_dir = setup_base_dir,
-            hdd_base_dir = hdd_base_dir,
-            disc_base_dir = disc_base_dir,
-            disc_token_map = disc_token_map))
+            token_map = token_map))
     return new_programs
 
 # Get dos launch command

@@ -71,7 +71,6 @@ def GetInstallerSetupCommand(
 def SetupWindowsPrograms(
     installer_programs,
     installer_base_dir,
-    installer_type,
     options,
     verbose = False,
     pretend_run = False,
@@ -250,10 +249,7 @@ def SetupScummPrograms(
 # Run setup steps
 def RunSetupSteps(
     steps,
-    setup_base_dir,
-    hdd_base_dir,
-    disc_base_dir,
-    disc_token_map,
+    token_map,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -273,12 +269,9 @@ def RunSetupSteps(
         # Resolve paths
         for path_key, path_value in paths.items():
             if len(path_value):
-                paths[path_key] = tools.ResolveComputerJsonPath(
+                paths[path_key] = tools.ResolveComputerPath(
                     path = path_value,
-                    setup_base_dir = setup_base_dir,
-                    hdd_base_dir = hdd_base_dir,
-                    disc_base_dir = disc_base_dir,
-                    disc_token_map = disc_token_map)
+                    token_map = token_map)
 
         # Copy step
         if step_type == "copy":
@@ -325,6 +318,7 @@ def RunSetupSteps(
 # Install computer game
 def InstallComputerGame(
     game_info,
+    source_file,
     output_image,
     keep_setup_files = False,
     verbose = False,
@@ -336,11 +330,7 @@ def InstallComputerGame(
     game_category = game_info.get_category()
     game_subcategory = game_info.get_subcategory()
 
-    # Get game base dir (TODO: this doesn't have a source type)
-    game_base_dir = environment.GetLockerGamingFilesDir(game_category, game_subcategory, game_name)
 
-    # Get game disc files (TODO: This could easily be gotten from just the game json file instead of the base dir)
-    game_disc_files = system.BuildFileListByExtensions(game_base_dir, [".chd"])
 
     # Get setup directory
     game_setup_dir = environment.GetCacheGamingSetupDir(game_category, game_subcategory, game_name)
@@ -377,22 +367,29 @@ def InstallComputerGame(
     if not game_setup_options.has_existing_prefix_c_drive_real():
         return False
 
-    # Build disc token map
-    game_disc_token_map = tools.BuildComputerDiscTokenMap(
+    # Get game disc files
+    game_disc_files = system.RebaseFilePaths(
+        paths = game_info.get_files(extension = [".chd"]),
+        old_base_path = "",
+        new_base_path = system.GetFilenameDirectory(source_file))
+
+    # Build token map
+    game_token_map = tools.BuildComputerTokenMap(
+        store_install_dir = game_info.get_main_store_install_dir(),
+        setup_base_dir = game_setup_dir,
+        hdd_base_dir = game_setup_options.get_prefix_c_drive_real(),
+        disc_base_dir = game_setup_dir,
         disc_files = game_disc_files,
         use_drive_letters = game_setup_options.is_dos() or game_setup_options.is_win31())
 
     # Resolve installer paths
     game_setup_install = tools.ResolveComputerProgramPaths(
         paths = game_setup_install,
-        setup_base_dir = game_setup_dir,
-        hdd_base_dir = game_setup_options.get_prefix_c_drive_real(),
-        disc_base_dir = game_setup_dir,
-        disc_token_map = game_disc_token_map)
+        token_map = game_token_map)
 
     # Copy game files
     system.CopyContents(
-        src = game_base_dir,
+        src = system.GetFilenameDirectory(source_file),
         dest = game_setup_dir,
         show_progress = True,
         skip_existing = True,
@@ -402,6 +399,14 @@ def InstallComputerGame(
 
     # Get game disc files again
     game_disc_files = system.BuildFileListByExtensions(game_setup_dir, [".chd"])
+
+    # Build token map again
+    game_token_map = tools.BuildComputerTokenMap(
+        store_install_dir = game_info.get_main_store_install_dir(),
+        setup_base_dir = game_setup_dir,
+        hdd_base_dir = game_setup_options.get_prefix_c_drive_real(),
+        disc_base_dir = game_setup_dir,
+        disc_files = game_disc_files)
 
     # Mount discs
     for game_disc_file in game_disc_files:
@@ -423,10 +428,7 @@ def InstallComputerGame(
     # Run pre-install steps
     RunSetupSteps(
         steps = game_info.get_store_setup_preinstall(),
-        setup_base_dir = game_setup_dir,
-        hdd_base_dir = game_setup_options.get_prefix_c_drive_real(),
-        disc_base_dir = game_setup_dir,
-        disc_token_map = tools.BuildComputerDiscTokenMap(game_disc_files),
+        token_map = game_token_map,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -435,7 +437,6 @@ def InstallComputerGame(
     SetupWindowsPrograms(
         installer_programs = game_info.get_store_setup_install(),
         installer_base_dir = game_setup_options.get_prefix_c_drive_real(),
-        installer_type = game_installer_type,
         options = game_setup_options,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -477,10 +478,7 @@ def InstallComputerGame(
     # Run post-install steps
     RunSetupSteps(
         steps = game_info.get_store_setup_postinstall(),
-        setup_base_dir = game_setup_dir,
-        hdd_base_dir = game_setup_options.get_prefix_c_drive_real(),
-        disc_base_dir = game_setup_dir,
-        disc_token_map = tools.BuildComputerDiscTokenMap(game_disc_files),
+        token_map = game_token_map,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

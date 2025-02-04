@@ -78,12 +78,12 @@ def TransformComputerPrograms(
     else:
 
         # Check for existing install image
-        if not os.path.exists(cached_install_file):
+        if not system.DoesPathExist(cached_install_file):
 
             # Create install image
             success = installer.InstallComputerGame(
                 game_info = game_info,
-                # TODO: This should get the source transform file (the one that has already been copied to local storage and decrypted)
+                source_file = source_file,
                 output_image = output_install_file,
                 keep_setup_files = keep_setup_files,
                 verbose = verbose,

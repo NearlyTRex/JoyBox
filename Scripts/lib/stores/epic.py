@@ -356,7 +356,9 @@ class Epic(storebase.StoreBase):
             if "cloud_save_folder" in appgame:
                 base_path = None
                 if config.json_key_store_installdir in game_info:
-                    base_path = game_info[config.json_key_store_installdir]
+                    base_path = system.JoinPaths(
+                        config.token_game_install_dir,
+                        game_info[config.json_key_store_installdir])
                 game_info[config.json_key_store_paths] = []
                 if appgame["cloud_save_folder"]:
                     game_info[config.json_key_store_paths] += [

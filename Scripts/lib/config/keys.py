@@ -83,17 +83,20 @@ metadata_keys_all = [
     metadata_key_json
 ]
 
+# Search keys
+search_result_key_id = "id"
+search_result_key_title = "title"
+search_result_key_description = "description"
+search_result_key_url = "url"
+search_result_key_date = "date"
+search_result_key_relevance = "relevance"
+search_result_key_data = "data"
+
 # Asset keys
-asset_key_id = "id"
-asset_key_title = "title"
-asset_key_description = "description"
-asset_key_url = "url"
 asset_key_mime = "mime"
-asset_key_date = "date"
 asset_key_width = "width"
 asset_key_height = "height"
 asset_key_duration = "duration"
-asset_key_relevance = "relevance"
 
 # Computer program keys
 program_key_exe = "exe"
