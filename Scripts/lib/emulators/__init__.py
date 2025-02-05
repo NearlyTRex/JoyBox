@@ -14,7 +14,7 @@ from .computer import GetDosLaunchCommand as GetComputerDosLaunchCommand
 from .computer import ResolvePath as ResolveComputerPath
 from .computer import ResolveProgramPath as ResolveComputerProgramPath
 from .computer import ResolveProgramPaths as ResolveComputerProgramPaths
-from .computer import BuildDiscTokenMap as BuildComputerDiscTokenMap
+from .computer import BuildTokenMap as BuildComputerTokenMap
 from .cxbxreloaded import CxBxReloaded
 from .demul import Demul
 from .dolphin import Dolphin
