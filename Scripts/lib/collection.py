@@ -146,6 +146,9 @@ def CreateGameJsonFile(
     # Get platform
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
+    # Get regular name
+    game_regular_name = gameinfo.DeriveRegularNameFromGameName(game_name)
+
     # Get json file path
     json_file_path = environment.GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
 
@@ -219,6 +222,10 @@ def CreateGameJsonFile(
         store_obj = stores.GetStoreByPlatform(game_platform)
         if store_obj:
             json_obj.fill_value(store_obj.GetKey(), {})
+            if game_platform in config.manual_import_platforms:
+                json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_appid, system.GenerateUniqueID())
+                json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_appname, system.GetSlugString(game_regular_name))
+                json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_name, game_regular_name)
 
     # Set other platform keys
     else:

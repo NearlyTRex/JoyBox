@@ -163,6 +163,17 @@ letter_platforms = [
     Platform.COMPUTER_ZOOM
 ]
 
+# Manual import platforms
+manual_import_platforms = [
+
+    # Computer
+    Platform.COMPUTER_DISC,
+    Platform.COMPUTER_PUPPET_COMBO,
+    Platform.COMPUTER_RED_CANDLE,
+    Platform.COMPUTER_SQUARE_ENIX,
+    Platform.COMPUTER_ZOOM
+]
+
 ######################################################################################
 
 # Computer autofill json keys
