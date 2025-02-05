@@ -16,6 +16,7 @@ import programs
 import webpage
 import metadataentry
 import metadatacollector
+import manifest
 
 # Translate store path
 def TranslateStorePath(path, base_path = None):
@@ -63,7 +64,7 @@ class StoreBase:
 
     # Constructor
     def __init__(self):
-        self.manifest = None
+        self.manifest = manifest.Manifest()
 
     ############################################################
     # Store
@@ -129,12 +130,12 @@ class StoreBase:
     def IsValidIdentifier(self, identifier):
         return isinstance(identifier, str) and len(identifier)
 
-    # Get platform
-    def GetPlatform(self):
+    # Get preferred platform
+    def GetPreferredPlatform(self):
         return None
 
-    # Get architecture
-    def GetArchitecture(self):
+    # Get preferred architecture
+    def GetPreferredArchitecture(self):
         return None
 
     # Get account name
@@ -155,8 +156,7 @@ class StoreBase:
 
     # Load manifest
     def LoadManifest(self, verbose = False, pretend_run = False, exit_on_failure = False):
-        self.manifest = system.ReadYamlFile(
-            src = programs.GetToolPathConfigValue("LudusaviManifest", "yaml"),
+        self.manifest.load(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

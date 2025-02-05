@@ -87,8 +87,8 @@ class GOG(storebase.StoreBase):
             return json_wrapper.get_value(config.json_key_store_appurl)
         return json_wrapper.get_value(config.json_key_store_appname)
 
-    # Get platform
-    def GetPlatform(self):
+    # Get preferred platform
+    def GetPreferredPlatform(self):
         return self.platform
 
     # Get user name
@@ -340,7 +340,7 @@ class GOG(storebase.StoreBase):
             if "installers" in appdownloads:
                 appinstallers = appdownloads["installers"]
                 for appinstaller in appinstallers:
-                    if appinstaller["os"] == self.platform:
+                    if appinstaller["os"] == self.GetPreferredPlatform():
                         if appinstaller["version"]:
                             game_info[config.json_key_store_buildid] = appinstaller["version"]
                         else:
@@ -579,7 +579,7 @@ class GOG(storebase.StoreBase):
             gog_tool,
             "--download",
             "--game=^%s$" % identifier,
-            "--platform=%s" % self.platform,
+            "--platform=%s" % self.GetPreferredPlatform(),
             "--directory=%s" % tmp_dir_result,
             "--check-free-space",
             "--threads=1",

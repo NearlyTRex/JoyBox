@@ -275,12 +275,12 @@ class Steam(storebase.StoreBase):
             return json_wrapper.get_value(config.json_key_store_appurl)
         return json_wrapper.get_value(config.json_key_store_appid)
 
-    # Get platform
-    def GetPlatform(self):
+    # Get preferred platform
+    def GetPreferredPlatform(self):
         return self.platform
 
-    # Get architecture
-    def GetArchitecture(self):
+    # Get preferred architecture
+    def GetPreferredArchitecture(self):
         return self.arch
 
     # Get account name
@@ -540,56 +540,32 @@ class Steam(storebase.StoreBase):
 
         # Augment by manifest
         if self.manifest:
-            for manifest_name, manifest_data in self.manifest.items():
-
-                # Skip games that are not present
-                if "steam" not in manifest_data:
-                    continue
-                if "id" in manifest_data["steam"] and str(manifest_data["steam"]["id"]) != identifier:
-                    continue
+            manifest_entry = self.manifest.find_entry_by_steamid(
+                steamid = identifier,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if manifest_entry:
 
                 # Get existing paths and keys
                 game_paths = set(game_info[config.json_key_store_paths])
                 game_keys = set(game_info[config.json_key_store_keys])
 
-                # Examine manifest file data
-                if "files" in manifest_data:
-                    for path_location, path_info in manifest_data["files"].items():
-                        if "when" in path_info:
-                            for when_info in path_info["when"]:
+                # Get base path
+                base_path = None
+                if config.json_key_store_installdir in game_info:
+                    base_path = system.JoinPaths(
+                        config.token_store_install_dir,
+                        "steamapps",
+                        "common",
+                        game_info[config.json_key_store_installdir])
 
-                                # Determine if path is relevant
-                                when_os = when_info["os"] if "os" in when_info else ""
-                                when_store = when_info["store"] if "store" in when_info else ""
-                                is_steam_path = False
-                                if (when_os == "windows" or when_os == "dos") and (when_store == "steam" or when_store == ""):
-                                    is_steam_path = True
-                                elif when_store == "steam" and when_os == "":
-                                    is_steam_path = True
-                                if not is_steam_path:
-                                    continue
+                # Update paths and keys
+                game_paths = game_paths.union(manifest_entry.get_paths(base_path))
+                game_keys = game_keys.union(manifest_entry.get_keys())
 
-                                # Get base path
-                                base_path = None
-                                if config.json_key_store_installdir in game_info:
-                                    base_path = system.JoinPaths(
-                                        config.token_store_install_dir,
-                                        "steamapps",
-                                        "common",
-                                        game_info[config.json_key_store_installdir])
-
-                                # Save path
-                                game_paths.add(storebase.TranslateStorePath(path_location, base_path))
-
-                # Examine manifest registry data
-                if "registry" in manifest_data:
-                    for key in manifest_data["registry"]:
-                        game_keys.add(key)
-
-                # Clean and save paths
+                # Save paths and keys
                 game_info[config.json_key_store_paths] = system.SortStrings(game_paths)
-
-                # Save keys
                 game_info[config.json_key_store_keys] = system.SortStrings(game_keys)
 
         # Return game info
@@ -770,7 +746,7 @@ class Steam(storebase.StoreBase):
         # Get install command
         install_cmd = [
             steam_tool,
-            "@sSteamCmdForcePlatformType", self.GetPlatform(),
+            "@sSteamCmdForcePlatformType", self.GetPreferredPlatform(),
             "+login", self.GetAccountName(),
             "app_update", identifier,
             "validate",
@@ -858,7 +834,7 @@ class Steam(storebase.StoreBase):
         download_cmd = [
             steamdepot_tool,
             "-app", identifier,
-            "-os", self.GetPlatform(),
+            "-os", self.GetPreferredPlatform(),
             "-osarch", self.GetArchitecture(),
             "-dir", tmp_dir_result
         ]
