@@ -447,6 +447,17 @@ def GetSourceInfo():
     line_number = frame.f_lineno
     return f"({file_name}:{line_number})"
 
+# Get backtrace
+def GetBacktrace():
+    stack = inspect.stack()
+    backtrace = []
+    for frame_info in stack:
+        filename = frame_info.filename
+        lineno = frame_info.lineno
+        name = frame_info.function
+        backtrace.append(f"File: {filename}, Line: {lineno}, Function: {name}")
+    return "\n".join(backtrace)
+
 ###########################################################
 
 # Get console logger
@@ -511,9 +522,9 @@ def LogInfo(
     console_logger = GetConsoleLogger()
     file_logger = GetFileLogger()
     if console_logger:
-        console_logger.info(f"{message}")
+        console_logger.info(message)
     if file_logger:
-        file_logger.info(f"{GetSourceInfo()} {message}")
+        file_logger.info(message)
 
 # Log warning
 def LogWarning(
@@ -531,9 +542,9 @@ def LogWarning(
     console_logger = GetConsoleLogger()
     file_logger = GetFileLogger()
     if console_logger:
-        console_logger.warning(f"{message}")
+        console_logger.warning(message)
     if file_logger:
-        file_logger.warning(f"{GetSourceInfo()} {message}")
+        file_logger.warning(message)
 
 # Log error
 def LogError(
@@ -552,9 +563,11 @@ def LogError(
     console_logger = GetConsoleLogger()
     file_logger = GetFileLogger()
     if console_logger:
-        console_logger.error(f"{GetSourceInfo()} {message}")
+        console_logger.error(GetBacktrace())
+        console_logger.error(message)
     if file_logger:
-        file_logger.error(f"{GetSourceInfo()} {message}")
+        file_logger.error(GetBacktrace())
+        file_logger.error(message)
     if quit_program:
         QuitProgram()
 
