@@ -44,17 +44,9 @@ def TranslateStorePath(path, base_path = None):
     new_path = new_path.replace("<home>", config.token_user_profile_dir)
     new_path = new_path.replace("<root>", config.token_store_install_dir)
     if system.IsPathValid(base_path):
-        new_path = new_path.replace("<base>", "%s/%s" % (config.token_store_install_dir, base_path))
+        new_path = new_path.replace("<base>", base_path)
     else:
-        new_path = new_path.replace("<base>", config.token_store_install_dir)
-
-    # Replace wildcards
-    if "/**/" in new_path:
-        for new_path_part in new_path.split("/**/"):
-            new_path = new_path_part
-            break
-    if "*" in system.GetFilenameFile(new_path):
-        new_path = system.GetFilenameDirectory(new_path)
+        new_path = new_path.replace("<base>", config.token_game_install_dir)
 
     # Return path
     return system.NormalizeFilePath(new_path)

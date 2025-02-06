@@ -7,7 +7,9 @@ import sys
 import config
 import system
 import environment
+import containers
 import programs
+import storebase
 
 # Manifest entry
 class ManifestEntry:
@@ -31,7 +33,7 @@ class ManifestEntry:
                         elif when_os == "" and when_store == "steam":
                             is_windows_path = True
                         if is_windows_path:
-                            paths.add(storebase.TranslateStorePath(path_location, base_path))
+                            paths.append(storebase.TranslateStorePath(path_location, base_path))
         return paths
 
     # Get keys
@@ -39,7 +41,7 @@ class ManifestEntry:
         keys = []
         if "registry" in self.manifest_data:
             for key in self.manifest_data["registry"]:
-                keys.add(key)
+                keys.append(key)
         return keys
 
     # Get install dir
@@ -72,7 +74,7 @@ class Manifest:
                 search_result = containers.SearchResult()
                 search_result.set_title(manifest_name)
                 search_result.set_relevance(system.GetStringSimilarityRatio(name, manifest_name))
-                search_result.set_data()
+                search_result.set_data(manifest_entry)
                 search_results.append(search_result)
         for search_result in sorted(search_results, key=lambda x: x.get_relevance(), reverse = True):
             return ManifestEntry(search_result.get_data())
