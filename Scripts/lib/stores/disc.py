@@ -109,8 +109,13 @@ class Disc(storebase.StoreBase):
                 base_path = config.token_game_install_dir
 
                 # Update paths and keys
-                game_paths = game_paths.union(manifest_entry.get_paths(base_path))
-                game_keys = game_keys.union(manifest_entry.get_keys())
+                game_paths = list(game_paths.union(manifest_entry.get_paths(base_path)))
+                game_keys = list(game_keys.union(manifest_entry.get_keys()))
+
+                # Remove invalid paths
+                game_paths = [item for item in game_paths if not item.startswith("C:")]
+                game_paths = [item for item in game_paths if not config.token_store_install_dir in item]
+                game_paths = [item for item in game_paths if not config.token_store_user_id in item]
 
                 # Save paths and keys
                 game_info[config.json_key_store_paths] = system.SortStrings(game_paths)
