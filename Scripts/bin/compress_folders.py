@@ -45,7 +45,7 @@ def main():
         # Get output file
         output_basename = obj
         output_ext = args.archive_type.cval()
-        output_file = system.JoinPaths(input_path, output_basename + "." + output_ext)
+        output_file = system.JoinPaths(input_path, output_basename + output_ext)
         if os.path.exists(output_file):
             continue
 
