@@ -62,13 +62,17 @@ class Itchio(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_itchio
 
-    # Get identifier
-    def GetIdentifier(self, json_wrapper, identifier_type):
-        return json_wrapper.get_value(config.json_key_store_appurl)
-
     # Get install dir
     def GetInstallDir(self):
         return self.install_dir
+
+    ############################################################
+    # Identifiers
+    ############################################################
+
+    # Get identifier
+    def GetIdentifier(self, json_wrapper, identifier_type):
+        return json_wrapper.get_value(config.json_key_store_appurl)
 
     ############################################################
     # Connection

@@ -60,15 +60,19 @@ class Amazon(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_amazon
 
+    # Get install dir
+    def GetInstallDir(self):
+        return self.install_dir
+
+    ############################################################
+    # Identifiers
+    ############################################################
+
     # Get identifier
     def GetIdentifier(self, json_wrapper, identifier_type):
         if identifier_type == config.StoreIdentifierType.METADATA:
             return json_wrapper.get_value(config.json_key_store_name)
         return json_wrapper.get_value(config.json_key_store_appid)
-
-    # Get install dir
-    def GetInstallDir(self):
-        return self.install_dir
 
     ############################################################
     # Connection

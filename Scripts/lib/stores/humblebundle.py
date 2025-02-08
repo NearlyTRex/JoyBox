@@ -54,6 +54,14 @@ class HumbleBundle(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_humble
 
+    # Get install dir
+    def GetInstallDir(self):
+        return self.install_dir
+
+    ############################################################
+    # Identifiers
+    ############################################################
+
     # Get identifier
     def GetIdentifier(self, json_wrapper, identifier_type):
         if identifier_type == config.StoreIdentifierType.ASSET:
@@ -61,9 +69,5 @@ class HumbleBundle(storebase.StoreBase):
         elif identifier_type == config.StoreIdentifierType.METADATA:
             return json_wrapper.get_value(config.json_key_store_name)
         return json_wrapper.get_value(config.json_key_store_appname)
-
-    # Get install dir
-    def GetInstallDir(self):
-        return self.install_dir
 
     ############################################################

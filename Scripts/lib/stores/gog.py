@@ -75,18 +75,6 @@ class GOG(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_gog
 
-    # Get identifier
-    def GetIdentifier(self, json_wrapper, identifier_type):
-        if identifier_type == config.StoreIdentifierType.INFO:
-            return json_wrapper.get_value(config.json_key_store_appid)
-        elif identifier_type == config.StoreIdentifierType.INSTALL:
-            return json_wrapper.get_value(config.json_key_store_appid)
-        elif identifier_type == config.StoreIdentifierType.ASSET:
-            return json_wrapper.get_value(config.json_key_store_appurl)
-        elif identifier_type == config.StoreIdentifierType.METADATA:
-            return json_wrapper.get_value(config.json_key_store_appurl)
-        return json_wrapper.get_value(config.json_key_store_appname)
-
     # Get preferred platform
     def GetPreferredPlatform(self):
         return self.platform
@@ -98,6 +86,22 @@ class GOG(storebase.StoreBase):
     # Get install dir
     def GetInstallDir(self):
         return self.install_dir
+
+    ############################################################
+    # Identifiers
+    ############################################################
+
+    # Get identifier
+    def GetIdentifier(self, json_wrapper, identifier_type):
+        if identifier_type == config.StoreIdentifierType.INFO:
+            return json_wrapper.get_value(config.json_key_store_appid)
+        elif identifier_type == config.StoreIdentifierType.INSTALL:
+            return json_wrapper.get_value(config.json_key_store_appid)
+        elif identifier_type == config.StoreIdentifierType.ASSET:
+            return json_wrapper.get_value(config.json_key_store_appurl)
+        elif identifier_type == config.StoreIdentifierType.METADATA:
+            return json_wrapper.get_value(config.json_key_store_appurl)
+        return json_wrapper.get_value(config.json_key_store_appname)
 
     ############################################################
     # Connection

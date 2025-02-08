@@ -269,12 +269,6 @@ class Steam(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_steam
 
-    # Get identifier
-    def GetIdentifier(self, json_wrapper, identifier_type):
-        if identifier_type == config.StoreIdentifierType.METADATA:
-            return json_wrapper.get_value(config.json_key_store_appurl)
-        return json_wrapper.get_value(config.json_key_store_appid)
-
     # Get preferred platform
     def GetPreferredPlatform(self):
         return self.platform
@@ -292,7 +286,7 @@ class Steam(storebase.StoreBase):
         return self.username
 
     # Get user id
-    def GetUserId(self, format_type):
+    def GetUserId(self, format_type = None):
         steamid = self.userid
         steamid64ident = 76561197960265728
         steamidacct = int(self.userid) - steamid64ident
@@ -319,6 +313,16 @@ class Steam(storebase.StoreBase):
     # Get install dir
     def GetInstallDir(self):
         return self.install_dir
+
+    ############################################################
+    # Identifiers
+    ############################################################
+
+    # Get identifier
+    def GetIdentifier(self, json_wrapper, identifier_type):
+        if identifier_type == config.StoreIdentifierType.METADATA:
+            return json_wrapper.get_value(config.json_key_store_appurl)
+        return json_wrapper.get_value(config.json_key_store_appid)
 
     ############################################################
     # Connection

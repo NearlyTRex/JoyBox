@@ -90,6 +90,30 @@ class StoreBase:
     def GetKey(self):
         return ""
 
+    # Get preferred platform
+    def GetPreferredPlatform(self):
+        return None
+
+    # Get preferred architecture
+    def GetPreferredArchitecture(self):
+        return None
+
+    # Get account name
+    def GetAccountName(self):
+        return None
+
+    # Get user name
+    def GetUserName(self):
+        return None
+
+    # Get install dir
+    def GetInstallDir(self):
+        return None
+
+    ############################################################
+    # Identifiers
+    ############################################################
+
     # Get identifier
     def GetIdentifier(self, json_wrapper, identifier_type):
         return ""
@@ -121,26 +145,6 @@ class StoreBase:
     # Is valid identifier
     def IsValidIdentifier(self, identifier):
         return isinstance(identifier, str) and len(identifier)
-
-    # Get preferred platform
-    def GetPreferredPlatform(self):
-        return None
-
-    # Get preferred architecture
-    def GetPreferredArchitecture(self):
-        return None
-
-    # Get account name
-    def GetAccountName(self):
-        return None
-
-    # Get user name
-    def GetUserName(self):
-        return None
-
-    # Get install dir
-    def GetInstallDir(self):
-        return None
 
     ############################################################
     # Manifest

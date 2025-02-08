@@ -64,12 +64,6 @@ class Epic(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_epic
 
-    # Get identifier
-    def GetIdentifier(self, json_wrapper, identifier_type):
-        if identifier_type == config.StoreIdentifierType.METADATA:
-            return json_wrapper.get_value(config.json_key_store_appurl)
-        return json_wrapper.get_value(config.json_key_store_appname)
-
     # Get user name
     def GetUserName(self):
         return self.username
@@ -77,6 +71,16 @@ class Epic(storebase.StoreBase):
     # Get install dir
     def GetInstallDir(self):
         return self.install_dir
+
+    ############################################################
+    # Identifiers
+    ############################################################
+
+    # Get identifier
+    def GetIdentifier(self, json_wrapper, identifier_type):
+        if identifier_type == config.StoreIdentifierType.METADATA:
+            return json_wrapper.get_value(config.json_key_store_appurl)
+        return json_wrapper.get_value(config.json_key_store_appname)
 
     ############################################################
     # Connection

@@ -54,18 +54,16 @@ class PuppetCombo(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_puppetcombo
 
-    # Get identifier
-    def GetIdentifier(self, json_wrapper, identifier_type):
-        if identifier_type == config.StoreIdentifierType.INFO:
-            return json_wrapper.get_value(config.json_key_store_name)
-        elif identifier_type == config.StoreIdentifierType.ASSET:
-            return json_wrapper.get_value(config.json_key_store_name)
-        elif identifier_type == config.StoreIdentifierType.METADATA:
-            return json_wrapper.get_value(config.json_key_store_name)
-        return json_wrapper.get_value(config.json_key_store_appname)
-
     # Get install dir
     def GetInstallDir(self):
         return self.install_dir
+
+    ############################################################
+    # Identifiers
+    ############################################################
+
+    # Get identifier
+    def GetIdentifier(self, json_wrapper, identifier_type):
+        return json_wrapper.get_value(config.json_key_store_name)
 
     ############################################################
