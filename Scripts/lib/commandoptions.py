@@ -12,87 +12,19 @@ import ini
 class CommandOptions:
 
     # Constructor
-    def __init__(
-        self,
-        cwd = None,
-        env = None,
-        shell = False,
-        is_32_bit = False,
-        is_dos = False,
-        is_win31 = False,
-        is_scumm = False,
-        allow_processing = True,
-        force_powershell = False,
-        force_appimage = False,
-        force_prefix = False,
-        is_wine_prefix = False,
-        is_sandboxie_prefix = False,
-        is_prefix_mapped_cwd = False,
-        prefix_dir = None,
-        general_prefix_dir = None,
-        prefix_user_profile_dir = None,
-        prefix_c_drive_virtual = None,
-        prefix_c_drive_real = None,
-        prefix_name = None,
-        prefix_winver = None,
-        prefix_cwd = None,
-        prefix_tricks = None,
-        prefix_overrides = None,
-        prefix_desktop_width = None,
-        prefix_desktop_height = None,
-        prefix_use_virtual_desktop = False,
-        lnk_base_path = None,
-        output_paths = [],
-        blocking_processes = [],
-        creationflags = 0,
-        stdout = None,
-        stderr = None,
-        include_stderr = False):
+    def __init__(self, **kwargs):
+        self.options = {}
 
-        # Core
-        self.cwd = cwd
-        if env:
-            self.env = env
-        else:
-            self.env = copy.deepcopy(os.environ)
-        self.shell = shell
-        self.is_32_bit = is_32_bit
+        # Set defaults
+        for program_key_default in config.program_key_defaults:
+            key = program_key_default["key"]
+            default = program_key_default["default"]
+            self.options[key] = default
 
-        # Flags
-        self.allow_processing = allow_processing
-        self.force_powershell = force_powershell
-        self.force_appimage = force_appimage
-        self.force_prefix = force_prefix
-
-        # Prefix
-        self.is_dos = is_dos
-        self.is_win31 = is_win31
-        self.is_scumm = is_scumm
-        self.is_wine_prefix = is_wine_prefix
-        self.is_sandboxie_prefix = is_sandboxie_prefix
-        self.is_prefix_mapped_cwd = is_prefix_mapped_cwd
-        self.prefix_dir = prefix_dir
-        self.general_prefix_dir = general_prefix_dir
-        self.prefix_user_profile_dir = prefix_user_profile_dir
-        self.prefix_c_drive_virtual = prefix_c_drive_virtual
-        self.prefix_c_drive_real = prefix_c_drive_real
-        self.prefix_name = prefix_name
-        self.prefix_winver = prefix_winver
-        self.prefix_cwd = prefix_cwd
-        self.prefix_tricks = prefix_tricks
-        self.prefix_overrides = prefix_overrides
-        self.prefix_desktop_width = prefix_desktop_width
-        self.prefix_desktop_height = prefix_desktop_height
-        self.prefix_use_virtual_desktop = prefix_use_virtual_desktop
-
-        # Other
-        self.lnk_base_path = lnk_base_path
-        self.output_paths = output_paths
-        self.blocking_processes = blocking_processes
-        self.creationflags = creationflags
-        self.stdout = stdout
-        self.stderr = stderr
-        self.include_stderr = include_stderr
+        # Override default values with kwargs
+        for key, value in kwargs.items():
+            if key in self.options:
+                self.options[key] = value
 
     # Copy method
     def copy(self):
@@ -104,147 +36,224 @@ class CommandOptions:
 
     # Working directory
     def get_cwd(self):
-        return self.cwd
+        return self.options[config.program_key_cwd]
     def set_cwd(self, value):
-        self.cwd = value
+        self.options[config.program_key_cwd] = value
     def has_valid_cwd(self):
-        return system.IsPathValid(self.cwd)
+        return system.IsPathValid(self.options[config.program_key_cwd])
 
     # Environment variables
     def get_env(self):
-        return self.env
+        return self.options[config.program_key_env]
     def set_env(self, value):
-        self.env = value
-    def add_env(self, key, value):
-        self.env[key] = value
+        self.options[config.program_key_env] = value
+    def get_env_var(self, key):
+        return self.options[config.program_key_env].get(key, None)
+    def set_env_var(self, key, value):
+        self.options[config.program_key_env][key] = value
 
-    # Shell execution
-    def get_shell(self):
-        return self.shell
-    def set_shell(self, value):
-        self.shell = value
+    # Arguments
+    def get_args(self):
+        return self.options[config.program_key_args]
+    def set_args(self, value):
+        self.options[config.program_key_args] = value
 
-    # 32-bit execution
-    def is_32_bit(self):
-        return self.is_32_bit
-    def set_is_32_bit(self, value):
-        self.is_32_bit = value
+    # Windows version
+    def get_winver(self):
+        return self.options[config.program_key_winver]
+    def set_winver(self, value):
+        self.options[config.program_key_winver] = value
+
+    # Tricks
+    def get_tricks(self):
+        tricks = []
+        if isinstance(self.options[config.program_key_winver], str):
+            tricks += [self.options[config.program_key_winver]]
+        if isinstance(self.options[config.program_key_tricks], list):
+            tricks += self.options[config.program_key_tricks]
+        return tricks
+    def set_tricks(self, value):
+        self.options[config.program_key_tricks] = value
+
+    # Overrides
+    def get_overrides(self):
+        return self.options[config.program_key_overrides]
+    def set_overrides(self, value):
+        self.options[config.program_key_overrides] = value
+
+    # Desktop width
+    def get_desktop_width(self):
+        ini_default = ini.GetIniValue("UserData.Resolution", "screen_resolution_w")
+        return self.options[config.program_key_desktop_width] or ini_default
+    def set_desktop_width(self, value):
+        self.options[config.program_key_desktop_width] = value
+
+    # Desktop height
+    def get_desktop_height(self):
+        ini_default = ini.GetIniValue("UserData.Resolution", "screen_resolution_h")
+        return self.options[config.program_key_desktop_height] or ini_default
+    def set_desktop_height(self, value):
+        self.options[config.program_key_desktop_height] = value
+
+    # Desktop dimensions
+    def get_desktop_dimensions(self):
+        return "%sx%s" % (self.get_desktop_width(), self.get_desktop_height())
+
+    # Disc type
+    def get_disc_type(self):
+        return self.options[config.program_key_disc_type]
+    def set_disc_type(self, value):
+        self.options[config.program_key_disc_type] = value
+
+    # Installer type
+    def get_installer_type(self):
+        return self.options[config.program_key_installer_type]
+    def set_installer_type(self, value):
+        self.options[config.program_key_installer_type] = value
+
+    # Serial
+    def get_serial(self):
+        return self.options[config.program_key_serial]
+    def set_serial(self, value):
+        self.options[config.program_key_serial] = value
 
     ###########################################################
     # Flags
     ###########################################################
 
+    # Shell execution
+    def is_shell(self):
+        return self.options[config.program_key_is_shell]
+    def set_is_shell(self, value):
+        self.options[config.program_key_is_shell] = value
+
+    # 32-bit execution
+    def is_32_bit(self):
+        return self.options[config.program_key_is_32_bit]
+    def set_is_32_bit(self, value):
+        self.options[config.program_key_is_32_bit] = value
+
+    # Dos execution
+    def is_dos(self):
+        return self.options[config.program_key_is_dos]
+    def set_is_dos(self, value):
+        self.options[config.program_key_is_dos] = value
+
+    # Windows 3.1 execution
+    def is_win31(self):
+        return self.options[config.program_key_is_win31]
+    def set_is_win31(self, value):
+        self.options[config.program_key_is_win31] = value
+
+    # Scumm execution
+    def is_scumm(self):
+        return self.options[config.program_key_is_scumm]
+    def set_is_scumm(self, value):
+        self.options[config.program_key_is_scumm] = value
+
     # Allow processing
-    def get_allow_processing(self):
-        return self.allow_processing
+    def allow_processing(self):
+        return self.options[config.program_key_allow_processing]
     def set_allow_processing(self, value):
-        self.allow_processing = value
+        self.options[config.program_key_allow_processing] = value
 
     # Force powershell
-    def get_force_powershell(self):
-        return self.force_powershell
+    def force_powershell(self):
+        return self.options[config.program_key_force_powershell]
     def set_force_powershell(self, value):
-        self.force_powershell = value
+        self.options[config.program_key_force_powershell] = value
 
     # Force AppImage
-    def get_force_appimage(self):
-        return self.force_appimage
+    def force_appimage(self):
+        return self.options[config.program_key_force_appimage]
     def set_force_appimage(self, value):
-        self.force_appimage = value
+        self.options[config.program_key_force_appimage] = value
+
+    # Use virtual desktop
+    def use_virtual_desktop(self):
+        return self.options[config.program_key_use_virtual_desktop]
+    def set_use_virtual_desktop(self, value):
+        self.options[config.program_key_use_virtual_desktop] = value
 
     ###########################################################
     # Prefix
     ###########################################################
 
-    # Dos execution
-    def is_dos(self):
-        return self.is_dos
-    def set_is_dos(self, value):
-        self.is_dos = value
-
-    # Windows 3.1 execution
-    def is_win31(self):
-        return self.is_win31
-    def set_is_win31(self, value):
-        self.is_win31 = value
-
-    # Scumm execution
-    def is_scumm(self):
-        return self.is_scumm
-    def set_is_scumm(self, value):
-        self.is_scumm = value
-
     # Force prefix
-    def get_force_prefix(self):
-        return self.force_prefix
+    def force_prefix(self):
+        return self.options[config.program_key_force_prefix]
     def set_force_prefix(self, value):
-        self.force_prefix = value
+        self.options[config.program_key_force_prefix] = value
 
     # Wine prefix
     def is_wine_prefix(self):
-        return self.is_wine_prefix
+        return self.options[config.program_key_is_wine_prefix]
     def set_is_wine_prefix(self, value):
-        self.is_wine_prefix = value
+        self.options[config.program_key_is_wine_prefix] = value
 
     # Sandboxie prefix
     def is_sandboxie_prefix(self):
-        return self.is_sandboxie_prefix
+        return self.options[config.program_key_is_sandboxie_prefix]
     def set_is_sandboxie_prefix(self, value):
-        self.is_sandboxie_prefix = value
+        self.options[config.program_key_is_sandboxie_prefix] = value
 
-    # Working dir prefix mapping
+    # General prefix
+    def is_prefix(self):
+        return self.is_wine_prefix() or self.is_sandboxie_prefix()
+
+    # Prefix mapped current working directory
     def is_prefix_mapped_cwd(self):
-        return self.is_prefix_mapped_cwd
+        return self.options[config.program_key_is_prefix_mapped_cwd]
     def set_is_prefix_mapped_cwd(self, value):
-        self.is_prefix_mapped_cwd = value
+        self.options[config.program_key_is_prefix_mapped_cwd] = value
 
     # Prefix dir
     def get_prefix_dir(self):
-        return self.prefix_dir
+        return self.options[config.program_key_prefix_dir]
     def set_prefix_dir(self, value):
-        self.prefix_dir = value
+        self.options[config.program_key_prefix_dir] = value
     def has_valid_prefix_dir(self):
-        return system.IsPathValid(self.prefix_dir)
+        return system.IsPathValid(self.options[config.program_key_prefix_dir])
     def has_existing_prefix_dir(self):
-        return system.DoesPathExist(self.prefix_dir)
+        return system.DoesPathExist(self.options[config.program_key_prefix_dir])
 
     # General prefix dir
     def get_general_prefix_dir(self):
-        return self.general_prefix_dir
+        return self.options[config.program_key_general_prefix_dir]
     def set_general_prefix_dir(self, value):
-        self.general_prefix_dir = value
+        self.options[config.program_key_general_prefix_dir] = value
     def has_valid_general_prefix_dir(self):
-        return system.IsPathValid(self.general_prefix_dir)
+        return system.IsPathValid(self.options[config.program_key_general_prefix_dir])
     def has_existing_general_prefix_dir(self):
-        return system.DoesPathExist(self.prefix_dir)
+        return system.DoesPathExist(self.options[config.program_key_general_prefix_dir])
 
     # Prefix user profile dir
     def get_prefix_user_profile_dir(self):
-        return self.prefix_user_profile_dir
+        return self.options[config.program_key_prefix_user_profile_dir]
     def set_prefix_user_profile_dir(self, value):
-        self.prefix_user_profile_dir = value
+        self.options[config.program_key_prefix_user_profile_dir] = value
     def has_valid_prefix_user_profile_dir(self):
-        return system.IsPathValid(self.prefix_user_profile_dir)
+        return system.IsPathValid(self.options[config.program_key_prefix_user_profile_dir])
     def has_existing_prefix_user_profile_dir(self):
-        return system.DoesPathExist(self.prefix_user_profile_dir)
+        return system.DoesPathExist(self.options[config.program_key_prefix_user_profile_dir])
 
     # Prefix c drive virtual
     def get_prefix_c_drive_virtual(self):
-        return self.prefix_c_drive_virtual
-    def set_prefix_c_drive_real(self, value):
-        self.prefix_c_drive_virtual = value
+        return self.options[config.program_key_prefix_c_drive_virtual]
+    def set_prefix_c_drive_virtual(self, value):
+        self.options[config.program_key_prefix_c_drive_virtual] = value
     def has_valid_prefix_c_drive_virtual(self):
-        return system.IsPathValid(self.prefix_c_drive_virtual)
+        return system.IsPathValid(self.options[config.program_key_prefix_c_drive_virtual])
 
     # Prefix c drive real
     def get_prefix_c_drive_real(self):
-        return self.prefix_c_drive_real
+        return self.options[config.program_key_prefix_c_drive_real]
     def set_prefix_c_drive_real(self, value):
-        self.prefix_c_drive_real = value
+        self.options[config.program_key_prefix_c_drive_real] = value
     def has_valid_prefix_c_drive_real(self):
-        return system.IsPathValid(self.prefix_c_drive_real)
+        return system.IsPathValid(self.options[config.program_key_prefix_c_drive_real])
     def has_existing_prefix_c_drive_real(self):
-        return system.DoesPathExist(self.prefix_c_drive_real)
+        return system.DoesPathExist(self.options[config.program_key_prefix_c_drive_real])
 
     # Prefix dos c drive
     def get_prefix_dos_c_drive(self):
@@ -264,56 +273,15 @@ class CommandOptions:
 
     # Prefix name
     def get_prefix_name(self):
-        return self.prefix_name
+        return self.options[config.program_key_prefix_name]
     def set_prefix_name(self, value):
-        self.prefix_name = value
-
-    # Prefix windows version
-    def get_prefix_winver(self):
-        return self.prefix_winver
-    def set_prefix_winver(self, value):
-        self.prefix_winver = value
+        self.options[config.program_key_prefix_name] = value
 
     # Prefix working directory
     def get_prefix_cwd(self):
-        return self.prefix_cwd
+        return self.options[config.program_key_prefix_cwd]
     def set_prefix_cwd(self, value):
-        self.prefix_cwd = value
-
-    # Prefix tricks
-    def get_prefix_tricks(self):
-        tricks = []
-        if isinstance(self.prefix_winver, str):
-            tricks += [self.prefix_winver]
-        if isinstance(self.prefix_tricks, list):
-            tricks += self.prefix_tricks
-        return tricks
-
-    # Prefix overrides
-    def get_prefix_overrides(self):
-        if isinstance(self.prefix_overrides, list):
-            return self.prefix_overrides
-        return []
-
-    # Prefix desktop width
-    def get_prefix_desktop_width(self):
-        if self.prefix_desktop_width:
-            return self.prefix_desktop_width
-        return ini.GetIniValue("UserData.Resolution", "screen_resolution_w")
-    def set_prefix_desktop_width(self, value):
-        self.prefix_desktop_width = value
-
-    # Prefix desktop height
-    def get_prefix_desktop_height(self):
-        if self.prefix_desktop_height:
-            return self.prefix_desktop_height
-        return ini.GetIniValue("UserData.Resolution", "screen_resolution_h")
-    def set_prefix_desktop_height(self, value):
-        self.prefix_desktop_height = value
-
-    # Prefix desktop dimensions
-    def get_prefix_desktop_dimensions(self):
-        return "%sx%s" % (self.get_prefix_desktop_width(), self.get_prefix_desktop_height())
+        self.options[config.program_key_prefix_cwd] = value
 
     ###########################################################
     # Other
@@ -321,42 +289,42 @@ class CommandOptions:
 
     # Link base path
     def get_lnk_base_path(self):
-        return self.lnk_base_path
+        return self.options[config.program_key_lnk_base_path]
     def set_lnk_base_path(self, value):
-        self.lnk_base_path = value
+        self.options[config.program_key_lnk_base_path] = value
 
     # Output paths
     def get_output_paths(self):
-        return self.output_paths
+        return self.options[config.program_key_output_paths]
     def set_output_paths(self, value):
-        self.output_paths = value
+        self.options[config.program_key_output_paths] = value
 
     # Blocking processes
     def get_blocking_processes(self):
-        return self.blocking_processes
+        return self.options[config.program_key_blocking_processes]
     def set_blocking_processes(self, value):
-        self.blocking_processes = value
+        self.options[config.program_key_blocking_processes] = value
 
     # Creation flags
     def get_creationflags(self):
-        return self.creationflags
+        return self.options[config.program_key_creationflags]
     def set_creationflags(self, value):
-        self.creationflags = value
+        self.options[config.program_key_creationflags] = value
 
     # Stdout
     def get_stdout(self):
-        return self.stdout
+        return self.options[config.program_key_stdout]
     def set_stdout(self, value):
-        self.stdout = value
+        self.options[config.program_key_stdout] = value
 
     # Stderr
     def get_stderr(self):
-        return self.stderr
+        return self.options[config.program_key_stderr]
     def set_stderr(self, value):
-        self.stderr = value
+        self.options[config.program_key_stderr] = value
 
     # Include stderr in stdout
     def include_stderr(self):
-        return self.include_stderr
+        return self.options[config.program_key_include_stderr]
     def set_include_stderr(self, value):
-        self.include_stderr = value
+        self.options[config.program_key_include_stderr] = value

@@ -600,22 +600,22 @@ def SetupPrefixEnvironment(
 
         # Improve performance by not showing everything
         # To show only errors, change to fixme-all
-        new_options.add_env("WINEDEBUG", "-all")
+        new_options.set_env_var("WINEDEBUG", "-all")
 
         # Set prefix location
         if new_options.has_valid_prefix_dir():
-            new_options.add_env("WINEPREFIX", new_options.get_prefix_dir())
+            new_options.set_env_var("WINEPREFIX", new_options.get_prefix_dir())
 
         # Set prefix bitness
         if new_options.is_32_bit():
-            new_options.add_env("WINEARCH", "win32")
+            new_options.set_env_var("WINEARCH", "win32")
         else:
-            new_options.add_env("WINEARCH", "win64")
+            new_options.set_env_var("WINEARCH", "win64")
 
         # Set prefix overrides
         wine_overrides = ["winemenubuilder.exe=d"]
         wine_overrides += new_options.get_prefix_overrides()
-        new_options.add_env("WINEDLLOVERRIDES", ";".join(wine_overrides))
+        new_options.set_env_var("WINEDLLOVERRIDES", ";".join(wine_overrides))
 
         # Map the current working directory to the prefix
         if new_options.is_prefix_mapped_cwd() and new_options.has_valid_cwd():
@@ -684,13 +684,13 @@ def SetupPrefixCommand(
 
         # Set desktop options
         if new_options.is_prefix_using_virtual_desktop():
-            new_cmd += ["explorer", "/desktop=" + new_options.get_prefix_desktop_dimensions()]
+            new_cmd += ["explorer", "/desktop=" + new_options.get_desktop_dimensions()]
 
     # Adjust command based on executable type
     if orig_cmd_starter.endswith(".lnk"):
         info = system.GetLinkInfo(
             lnk_path = orig_cmd_starter,
-            lnk_base_path = options.lnk_base_path)
+            lnk_base_path = options.get_lnk_base_path())
         has_valid_target = system.DoesPathExist(info["target"])
         has_valid_cwd = system.DoesPathExist(info["cwd"])
         if not has_valid_target or not has_valid_cwd:
@@ -768,7 +768,7 @@ def CreateWinePrefix(
     # Initialize prefix
     cmds_to_run = []
     cmds_to_run.append([wine_boot_tool])
-    cmds_to_run.append(new_options.get_prefix_tricks())
+    cmds_to_run.append(new_options.get_tricks())
     for cmd in cmds_to_run:
         new_options.set_blocking_processes([command.GetStarterCommand(cmd)])
         new_cmd, new_options = SetupPrefixEnvironment(

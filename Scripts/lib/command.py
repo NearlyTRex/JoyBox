@@ -184,7 +184,7 @@ def SetupPowershellCommand(
     exit_on_failure = False):
 
     # Check if powershell command
-    if not IsPowershellCommand(cmd) and not options.force_powershell:
+    if not IsPowershellCommand(cmd) and not options.force_powershell():
         return (cmd, options)
 
     # Copy params
@@ -204,7 +204,7 @@ def SetupAppImageCommand(
     exit_on_failure = False):
 
     # Check if appimage command
-    if not IsAppImageCommand(cmd) and not options.force_appimage:
+    if not IsAppImageCommand(cmd) and not options.force_appimage():
         return (cmd, options)
 
     # Copy params
@@ -216,10 +216,10 @@ def SetupAppImageCommand(
         if cmd_segment.lower().endswith(".appimage"):
             appimage_home_dir = os.path.realpath(cmd_segment + ".home")
             if os.path.exists(appimage_home_dir):
-                new_options.env["XDG_CONFIG_HOME"] = system.JoinPaths(appimage_home_dir, ".config")
-                new_options.env["XDG_CACHE_HOME"] = system.JoinPaths(appimage_home_dir, ".cache")
-                new_options.env["XDG_DATA_HOME"] = system.JoinPaths(appimage_home_dir, ".local", "share")
-                new_options.env["XDG_STATE_HOME"] = system.JoinPaths(appimage_home_dir, ".local", "state")
+                new_options.set_env_var("XDG_CONFIG_HOME", system.JoinPaths(appimage_home_dir, ".config"))
+                new_options.set_env_var("XDG_CACHE_HOME", system.JoinPaths(appimage_home_dir, ".cache"))
+                new_options.set_env_var("XDG_DATA_HOME", system.JoinPaths(appimage_home_dir, ".local", "share"))
+                new_options.set_env_var("XDG_STATE_HOME", system.JoinPaths(appimage_home_dir, ".local", "state"))
                 break
     return (new_cmd, new_options)
 
@@ -232,7 +232,7 @@ def SetupPrefixCommand(
     exit_on_failure = False):
 
     # Check if prefix command
-    if not IsPrefixCommand(cmd) and not options.force_prefix:
+    if not IsPrefixCommand(cmd) and not options.force_prefix():
         return (cmd, options)
 
     # Copy params
@@ -240,22 +240,16 @@ def SetupPrefixCommand(
     new_options = copy.deepcopy(options)
 
     # Get default prefix if not specified
-    if not new_options.prefix_name or not new_options.prefix_dir:
-        new_options.is_wine_prefix = sandbox.ShouldBeRunViaWine(cmd)
-        new_options.is_sandboxie_prefix = sandbox.ShouldBeRunViaSandboxie(cmd)
-        new_options.prefix_name = config.PrefixType.DEFAULT
-        new_options.prefix_dir = sandbox.GetPrefix(new_options)
+    if not new_options.get_prefix_name() or not new_options.get_prefix_dir():
+        new_options.set_is_wine_prefix(sandbox.ShouldBeRunViaWine(cmd))
+        new_options.set_is_sandboxie_prefix(sandbox.ShouldBeRunViaSandboxie(cmd))
+        new_options.set_prefix_name(config.PrefixType.DEFAULT)
+        new_options.set_prefix_dir(sandbox.GetPrefix(new_options))
 
     # Create prefix dir if necessary
-    if system.IsPathValid(new_options.prefix_dir) and not os.path.exists(new_options.prefix_dir):
+    if new_options.has_valid_prefix_dir() and not new_options.has_existing_prefix_dir():
         sandbox.CreateBasicPrefix(
-            prefix_dir = new_options.prefix_dir,
-            prefix_name = new_options.prefix_name,
-            prefix_winver = new_options.prefix_winver,
-            is_wine_prefix = new_options.is_wine_prefix,
-            is_sandboxie_prefix = new_options.is_sandboxie_prefix,
-            wine_setup = new_options.wine_setup,
-            sandboxie_setup = new_options.sandboxie_setup,
+            options = new_options,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
@@ -329,14 +323,11 @@ def PostprocessCommand(
             exit_on_failure = exit_on_failure)
 
     # Transfer files from sandbox if necessary
-    if isinstance(options.output_paths, list):
-        for output_path in options.output_paths:
+    if isinstance(options.get_output_paths(), list):
+        for output_path in options.get_output_paths():
             sandbox.TransferFromSandbox(
                 path = output_path,
-                prefix_dir = options.prefix_dir,
-                prefix_name = options.prefix_name,
-                is_wine_prefix = options.is_wine_prefix,
-                is_sandboxie_prefix = options.is_sandboxie_prefix,
+                options = options,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 
@@ -363,7 +354,7 @@ def RunOutputCommand(
         if not options:
             options = CreateCommandOptions()
         if not pretend_run:
-            if options.allow_processing:
+            if options.allow_processing():
                 cmd, options = PreprocessCommand(
                     cmd = cmd,
                     options = options,
@@ -371,29 +362,29 @@ def RunOutputCommand(
                     exit_on_failure = exit_on_failure)
             if verbose:
                 PrintCommand(cmd)
-            if options.shell:
+            if options.is_shell():
                 cmd = CreateCommandString(cmd)
             output = ""
-            if options.include_stderr:
+            if options.include_stderr():
                 output = subprocess.run(
                     cmd,
-                    shell = options.shell,
-                    cwd = options.cwd,
-                    env = options.env,
-                    creationflags = options.creationflags,
+                    shell = options.is_shell(),
+                    cwd = options.get_cwd(),
+                    env = options.get_env(),
+                    creationflags = options.get_creationflags(),
                     stdout = subprocess.PIPE,
                     stderr = subprocess.STDOUT).stdout
             else:
                 output = subprocess.run(
                     cmd,
-                    shell = options.shell,
-                    cwd = options.cwd,
-                    env = options.env,
-                    creationflags = options.creationflags,
+                    shell = options.is_shell(),
+                    cwd = options.get_cwd(),
+                    env = options.get_env(),
+                    creationflags = options.get_creationflags(),
                     stdout = subprocess.PIPE).stdout
-            if isinstance(options.blocking_processes, list) and len(options.blocking_processes) > 0:
-                environment.WaitForNamedProcesses(options.blocking_processes)
-            if options.allow_processing:
+            if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
+                environment.WaitForNamedProcesses(options.get_blocking_processes())
+            if options.allow_processing():
                 PostprocessCommand(
                     cmd = cmd,
                     options = options,
@@ -406,7 +397,7 @@ def RunOutputCommand(
             system.LogError(e)
         elif exit_on_failure:
             system.LogError(e, quit_program = True)
-        if options.include_stderr:
+        if options.include_stderr():
             return e.output
         return ""
     except Exception as e:
@@ -428,7 +419,7 @@ def RunReturncodeCommand(
         if not options:
             options = CreateCommandOptions()
         if not pretend_run:
-            if options.allow_processing:
+            if options.allow_processing():
                 cmd, options = PreprocessCommand(
                     cmd = cmd,
                     options = options,
@@ -436,29 +427,29 @@ def RunReturncodeCommand(
                     exit_on_failure = exit_on_failure)
             if verbose:
                 PrintCommand(cmd)
-            if options.shell:
+            if options.is_shell():
                 cmd = CreateCommandString(cmd)
-            stdout = options.stdout
-            stderr = options.stderr
-            if system.IsPathValid(options.stdout):
-                stdout = open(options.stdout, "w")
-            if system.IsPathValid(options.stderr):
-                stderr = open(options.stderr, "w")
+            stdout = options.get_stdout()
+            stderr = options.get_stderr()
+            if system.IsPathValid(options.get_stdout()):
+                stdout = open(options.get_stdout(), "w")
+            if system.IsPathValid(options.get_stderr()):
+                stderr = open(options.get_stderr(), "w")
             code = subprocess.call(
                 cmd,
-                shell = options.shell,
-                cwd = options.cwd,
-                env = options.env,
-                creationflags = options.creationflags,
+                shell = options.is_shell(),
+                cwd = options.get_cwd(),
+                env = options.get_env(),
+                creationflags = options.get_creationflags(),
                 stdout = stdout,
                 stderr = stderr)
-            if isinstance(options.blocking_processes, list) and len(options.blocking_processes) > 0:
-                environment.WaitForNamedProcesses(options.blocking_processes)
-            if system.IsPathValid(options.stdout):
+            if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
+                environment.WaitForNamedProcesses(options.get_blocking_processes())
+            if system.IsPathValid(options.get_stdout()):
                 stdout.close()
-            if system.IsPathValid(options.stderr):
+            if system.IsPathValid(options.get_stderr()):
                 stderr.close()
-            if options.allow_processing:
+            if options.allow_processing():
                 PostprocessCommand(
                     cmd = cmd,
                     options = options,
@@ -523,7 +514,7 @@ def RunBlockingCommand(
         if not options:
             options = CreateCommandOptions()
         if not pretend_run:
-            if options.allow_processing:
+            if options.allow_processing():
                 cmd, options = PreprocessCommand(
                     cmd = cmd,
                     options = options,
@@ -531,14 +522,14 @@ def RunBlockingCommand(
                     exit_on_failure = exit_on_failure)
             if verbose:
                 PrintCommand(cmd)
-            if options.shell:
+            if options.is_shell():
                 cmd = CreateCommandString(cmd)
             process = subprocess.Popen(
                 cmd,
-                shell = options.shell,
-                cwd = options.cwd,
-                env = options.env,
-                creationflags = options.creationflags,
+                shell = options.is_shell(),
+                cwd = options.get_cwd(),
+                env = options.get_env(),
+                creationflags = options.get_creationflags(),
                 stdout = subprocess.PIPE)
             while True:
                 output = CleanCommandOutput(process.stdout.readline().rstrip())
@@ -547,9 +538,9 @@ def RunBlockingCommand(
                 if output:
                     system.LogInfo(output.strip())
             code = process.poll()
-            if isinstance(options.blocking_processes, list) and len(options.blocking_processes) > 0:
-                environment.WaitForNamedProcesses(options.blocking_processes)
-            if options.allow_processing:
+            if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
+                environment.WaitForNamedProcesses(options.get_blocking_processes())
+            if options.allow_processing():
                 PostprocessCommand(
                     cmd = cmd,
                     options = options,
