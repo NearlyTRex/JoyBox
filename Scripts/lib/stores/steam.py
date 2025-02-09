@@ -372,7 +372,8 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidPageIdentifier(identifier):
+            system.LogWarning("Page identifier '%s' was not valid" % identifier)
             return None
 
         # Return latest url
@@ -450,7 +451,8 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidInfoIdentifier(identifier):
+            system.LogWarning("Info identifier '%s' was not valid" % identifier)
             return None
 
         # Get tool
@@ -588,7 +590,8 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidMetadataIdentifier(identifier):
+            system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
         # Connect to web
@@ -707,7 +710,8 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidAssetIdentifier(identifier):
+            system.LogWarning("Asset identifier '%s' was not valid" % identifier)
             return None
 
         # Latest asset url
@@ -739,6 +743,11 @@ class Steam(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidInstallIdentifier(identifier):
+            system.LogWarning("Install identifier '%s' was not valid" % identifier)
+            return False
 
         # Get tool
         steam_tool = None
@@ -778,6 +787,11 @@ class Steam(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidInstallIdentifier(identifier):
+            system.LogWarning("Launch identifier '%s' was not valid" % identifier)
+            return False
 
         # Get tool
         steam_tool = None
@@ -819,7 +833,8 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidDownloadIdentifier(identifier):
+            system.LogWarning("Download identifier '%s' was not valid" % identifier)
             return False
 
         # Get tool
@@ -902,6 +917,10 @@ class Steam(storebase.StoreBase):
         game_appid = game_info.get_store_appid(self.GetKey())
         game_paths = game_info.get_store_paths(self.GetKey())
 
+        # Ignore invalid identifier
+        if not self.IsValidInfoIdentifier(game_appid):
+            return []
+
         # Check if path should be added
         def ShouldAddPath(path, base, variant):
             parts = system.SplitFilePath(path, base)
@@ -921,10 +940,6 @@ class Steam(storebase.StoreBase):
         user_id64 = self.GetUserId(config.SteamIDFormatType.STEAMID_64)
         user_id3 = self.GetUserId(config.SteamIDFormatType.STEAMID_3S)
         user_idc = self.GetUserId(config.SteamIDFormatType.STEAMID_CS)
-
-        # Ignore invalid identifier
-        if not self.IsValidIdentifier(game_appid):
-            return []
 
         # Build translation map
         translation_map = {}

@@ -211,7 +211,8 @@ class GOG(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidPageIdentifier(identifier):
+            system.LogWarning("Page identifier '%s' was not valid" % identifier)
             return None
 
         # Return latest url
@@ -308,7 +309,8 @@ class GOG(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidInfoIdentifier(identifier):
+            system.LogWarning("Info identifier '%s' was not valid" % identifier)
             return None
 
         # Get gog url
@@ -372,7 +374,8 @@ class GOG(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidMetadataIdentifier(identifier):
+            system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
         # Connect to web
@@ -459,7 +462,8 @@ class GOG(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidAssetIdentifier(identifier):
+            system.LogWarning("Asset identifier '%s' was not valid" % identifier)
             return None
 
         # Latest asset url
@@ -492,8 +496,9 @@ class GOG(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
-            return None
+        if not self.IsValidInstallIdentifier(identifier):
+            system.LogWarning("Install identifier '%s' was not valid" % identifier)
+            return False
 
         # Get tool
         python_tool = None
@@ -559,6 +564,11 @@ class GOG(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidDownloadIdentifier(identifier):
+            system.LogWarning("Download identifier '%s' was not valid" % identifier)
+            return False
 
         # Get tool
         gog_tool = None

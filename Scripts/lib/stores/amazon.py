@@ -257,7 +257,8 @@ class Amazon(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidInfoIdentifier(identifier):
+            system.LogWarning("Info identifier '%s' was not valid" % identifier)
             return None
 
         # Get tool
@@ -336,6 +337,11 @@ class Amazon(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidDownloadIdentifier(identifier):
+            system.LogWarning("Download identifier '%s' was not valid" % identifier)
+            return False
 
         # Get tool
         python_tool = None

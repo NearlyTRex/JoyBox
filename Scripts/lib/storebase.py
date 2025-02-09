@@ -142,9 +142,41 @@ class StoreBase:
     def GetMetadataIdentifier(self, json_wrapper):
         return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.METADATA)
 
+    # Get page identifier
+    def GetPageIdentifier(self, json_wrapper):
+        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.PAGE)
+
     # Is valid identifier
     def IsValidIdentifier(self, identifier):
         return isinstance(identifier, str) and len(identifier)
+
+    # Is valid info identifier
+    def IsValidInfoIdentifier(self, identifier):
+        return self.IsValidIdentifier(identifier)
+
+    # Is valid install identifier
+    def IsValidInstallIdentifier(self, identifier):
+        return self.IsValidIdentifier(identifier)
+
+    # Is valid launch identifier
+    def IsValidLaunchIdentifier(self, identifier):
+        return self.IsValidIdentifier(identifier)
+
+    # Is valid download identifier
+    def IsValidDownloadIdentifier(self, identifier):
+        return self.IsValidIdentifier(identifier)
+
+    # Is valid asset identifier
+    def IsValidAssetIdentifier(self, identifier):
+        return self.IsValidIdentifier(identifier)
+
+    # Is valid metadata identifier
+    def IsValidMetadataIdentifier(self, identifier):
+        return self.IsValidIdentifier(identifier)
+
+    # Is valid page identifier
+    def IsValidPageIdentifier(self, identifier):
+        return self.IsValidIdentifier(identifier)
 
     ############################################################
     # Manifest
@@ -460,7 +492,8 @@ class StoreBase:
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidInfoIdentifier(identifier):
+            system.LogWarning("Info identifier '%s' was not valid" % identifier)
             return None
 
         # Build game info
@@ -556,7 +589,8 @@ class StoreBase:
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidMetadataIdentifier(identifier):
+            system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
         # Collect metadata entry

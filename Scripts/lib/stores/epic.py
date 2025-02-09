@@ -136,7 +136,8 @@ class Epic(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidPageIdentifier(identifier):
+            system.LogWarning("Page identifier '%s' was not valid" % identifier)
             return None
 
         # Connect to web
@@ -300,7 +301,8 @@ class Epic(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidInfoIdentifier(identifier):
+            system.LogWarning("Info identifier '%s' was not valid" % identifier)
             return None
 
         # Get tool
@@ -385,7 +387,8 @@ class Epic(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidMetadataIdentifier(identifier):
+            system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
         # Connect to web

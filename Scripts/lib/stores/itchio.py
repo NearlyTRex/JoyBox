@@ -206,7 +206,8 @@ class Itchio(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidIdentifier(identifier):
+        if not self.IsValidMetadataIdentifier(identifier):
+            system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
         # Connect to web

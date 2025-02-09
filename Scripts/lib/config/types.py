@@ -381,6 +381,7 @@ class StoreIdentifierType(EnumType):
     DOWNLOAD                = ("Download")
     ASSET                   = ("Asset")
     METADATA                = ("Metadata")
+    PAGE                    = ("Page")
 
 # Playlist types
 class PlaylistType(EnumType):
