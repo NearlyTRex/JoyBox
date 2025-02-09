@@ -12,6 +12,7 @@ import system
 import saves
 import arguments
 import setup
+import gameinfo
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Save tool.")
@@ -35,25 +36,81 @@ def main():
 
     # Pack saves
     if args.action == config.SaveActionType.PACK:
-        saves.PackSave(
-            game_category = args.game_category,
-            game_subcategory = args.game_subcategory,
-            game_name = args.game_name,
-            save_dir = args.input_path,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
+        for game_supercategory in parser.get_selected_supercategories():
+            for game_category, game_subcategories in parser.get_selected_subcategories().items():
+                for game_subcategory in game_subcategories:
+                    game_names = gameinfo.FindJsonGameNames(
+                        game_supercategory,
+                        game_category,
+                        game_subcategory)
+                    for game_name in game_names:
+                        success = saves.PackSave(
+                            game_category = game_category,
+                            game_subcategory = game_subcategory,
+                            game_name = game_name,
+                            verbose = args.verbose,
+                            pretend_run = args.pretend_run,
+                            exit_on_failure = args.exit_on_failure)
+                        if not success:
+                            system.LogError(
+                                message = "Packing of save failed!",
+                                game_supercategory = game_supercategory,
+                                game_category = game_category,
+                                game_subcategory = game_subcategory,
+                                game_name = game_name,
+                                quit_program = True)
 
     # Unpack saves
     elif args.action == config.SaveActionType.UNPACK:
-        saves.UnpackSave(
-            game_category = args.game_category,
-            game_subcategory = args.game_subcategory,
-            game_name = args.game_name,
-            save_dir = args.input_path,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
+        for game_supercategory in parser.get_selected_supercategories():
+            for game_category, game_subcategories in parser.get_selected_subcategories().items():
+                for game_subcategory in game_subcategories:
+                    game_names = gameinfo.FindJsonGameNames(
+                        game_supercategory,
+                        game_category,
+                        game_subcategory)
+                    for game_name in game_names:
+                        success = saves.UnpackSave(
+                            game_category = game_category,
+                            game_subcategory = game_subcategory,
+                            game_name = game_name,
+                            verbose = args.verbose,
+                            pretend_run = args.pretend_run,
+                            exit_on_failure = args.exit_on_failure)
+                        if not success:
+                            system.LogError(
+                                message = "Unpacking of save failed!",
+                                game_supercategory = game_supercategory,
+                                game_category = game_category,
+                                game_subcategory = game_subcategory,
+                                game_name = game_name,
+                                quit_program = True)
+
+    # Import save paths
+    elif args.action == config.SaveActionType.IMPORT_SAVE_PATHS:
+        for game_supercategory in parser.get_selected_supercategories():
+            for game_category, game_subcategories in parser.get_selected_subcategories().items():
+                for game_subcategory in game_subcategories:
+                    game_names = gameinfo.FindJsonGameNames(
+                        game_supercategory,
+                        game_category,
+                        game_subcategory)
+                    for game_name in game_names:
+                        success = saves.ImportSavePaths(
+                            game_category = game_category,
+                            game_subcategory = game_subcategory,
+                            game_name = game_name,
+                            verbose = args.verbose,
+                            pretend_run = args.pretend_run,
+                            exit_on_failure = args.exit_on_failure)
+                        if not success:
+                            system.LogError(
+                                message = "Import of save paths failed!",
+                                game_supercategory = game_supercategory,
+                                game_category = game_category,
+                                game_subcategory = game_subcategory,
+                                game_name = game_name,
+                                quit_program = True)
 
 # Start
 main()

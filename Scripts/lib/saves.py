@@ -10,6 +10,8 @@ import environment
 import programs
 import archive
 import locker
+import gameinfo
+import jsondata
 
 # Can individual save be unpacked
 def CanSaveBeUnpacked(
@@ -268,3 +270,79 @@ def NormalizeSaveArchive(
 
     # Check result
     return os.path.exists(save_archive)
+
+# Import save paths
+def ImportSavePaths(
+    game_category,
+    game_subcategory,
+    game_name,
+    save_dir = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Ignore non-computer categories
+    if game_category != config.Category.COMPUTER:
+        return True
+
+    # Get input save dir
+    input_save_dir = save_dir
+    if not input_save_dir:
+        input_save_dir = environment.GetLockerGamingSaveDir(game_category, game_subcategory, game_name)
+    if system.IsDirectoryEmpty(input_save_dir) or not system.DoesDirectoryContainFiles(input_save_dir):
+        return True
+
+    # Get json file
+    json_file = environment.GetJsonMetadataFile(
+        game_supercategory = config.Supercategory.ROMS,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name)
+    if not system.IsPathFile(json_file):
+        return False
+
+    # Get game info
+    game_info = gameinfo.GameInfo(
+        json_file = json_file,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Get store key
+    store_key = game_info.get_main_store_key()
+    if not store_key:
+        return False
+
+    # Get current jsondata
+    current_jsondata = game_info.read_wrapped_json_data(
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not current_jsondata:
+        return False
+
+    # Get current paths
+    save_paths = current_jsondata.get_subvalue(store_key, config.json_key_store_paths)
+
+    # Read save files and add paths
+    for archive_file in system.BuildFileList(input_save_dir):
+        new_paths = archive.ListArchive(
+            archive_file = archive_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        new_paths = [path.replace(config.SaveType.GENERAL.val(), config.token_user_profile_dir) for path in new_paths]
+        save_paths += new_paths
+
+    # Update current paths
+    save_paths = list(set(save_paths))
+    save_paths = system.SortStrings(save_paths)
+    current_jsondata.set_subvalue(store_key, config.json_key_store_paths, save_paths)
+
+    # Write back changes
+    success = game_info.write_wrapped_json_data(
+        json_wrapper = current_jsondata,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
