@@ -870,6 +870,89 @@ class StoreBase:
         return success
 
     ############################################################
+    # Paths
+    ############################################################
+
+    # Translate registered path to package path
+    def TranslateRegisteredPathToPackagePath(self, path, store_user_id = None):
+
+        # Get package paths
+        path_general = config.SaveType.GENERAL.val()
+        path_gamedata = system.JoinPaths(path_general, config.computer_folder_gamedata)
+        path_public = system.JoinPaths(path_general, config.computer_folder_public)
+        path_registry = system.JoinPaths(path_general, config.computer_folder_registry)
+        path_store = system.JoinPaths(path_general, config.computer_folder_store, self.GetType())
+
+        # Translate path
+        path = path.replace(config.token_game_install_dir, path_gamedata)
+        path = path.replace(config.token_user_public_dir, path_public)
+        path = path.replace(config.token_user_registry_dir, path_registry)
+        path = path.replace(config.token_store_install_dir, path_store)
+        if store_user_id:
+            path = path.replace(config.token_store_user_id, store_user_id)
+        path = path.replace(config.token_user_profile_dir, path_general)
+        return path
+
+    # Translate package path to registered path
+    def TranslatePackagePathToRegisteredPath(self, path, store_user_id = None):
+
+        # Get package paths
+        path_general = config.SaveType.GENERAL.val()
+        path_gamedata = system.JoinPaths(path_general, config.computer_folder_gamedata)
+        path_public = system.JoinPaths(path_general, config.computer_folder_public)
+        path_registry = system.JoinPaths(path_general, config.computer_folder_registry)
+        path_store = system.JoinPaths(path_general, config.computer_folder_store, self.GetType())
+
+        # Translate path
+        path = path.replace(path_gamedata, config.token_game_install_dir)
+        path = path.replace(path_public, config.token_user_public_dir)
+        path = path.replace(path_registry, config.token_user_registry_dir)
+        path = path.replace(path_store, config.token_store_install_dir)
+        if store_user_id:
+            path = path.replace(store_user_id, config.token_store_user_id)
+        path = path.replace(path_general, config.token_user_profile_dir)
+        return path
+
+    # Build path translation map
+    def BuildPathTranslationMap(self, game_info):
+
+        # Build translation map
+        translation_map = {}
+
+        # Add registry dir
+        translation_map[config.token_user_registry_dir] = []
+
+        # Add user public dir
+        translation_map[config.token_user_public_dir] = []
+        translation_map[config.token_user_public_dir].append("C:\\Users\\Public")
+
+        # Add user profile dir
+        translation_map[config.token_user_profile_dir] = []
+        if "USERPROFILE" in os.environ:
+            translation_map[config.token_user_profile_dir].append(os.environ["USERPROFILE"])
+
+        # Add store install dir
+        translation_map[config.token_store_install_dir] = []
+        translation_map[config.token_store_install_dir].append(self.GetInstallDir())
+
+        # Return translation map
+        return translation_map
+
+    # Get registered paths
+    def GetRegisteredPaths(self, game_info):
+
+        # Get paths
+        paths = game_info.get_store_paths(self.GetKey())
+
+        # Add AppData variants
+        for path in sorted(paths):
+            for appdata_base in config.appdata_variants.keys():
+                if appdata_base in path:
+                    for appdata_variant in config.appdata_variants[appdata_base]:
+                        paths.append(path.replace(appdata_base, appdata_variant))
+        return paths
+
+    ############################################################
     # Saves
     ############################################################
 
@@ -880,7 +963,23 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        return []
+
+        # Get paths
+        paths = self.GetRegisteredPaths()
+
+        # Get translation map
+        translation_map = self.BuildPathTranslationMap(game_info)
+
+        # Translate paths
+        translated_paths = []
+        for path in paths:
+            for base_key in translation_map.keys():
+                for key_replacement in translation_map[base_key]:
+                    entry = {}
+                    entry["full"] = path.replace(base_key, key_replacement)
+                    entry["relative"] = [self.TranslateRegisteredPathToPackagePath(path)]
+                    translated_paths.append(entry)
+        return translated_paths
 
     # Export saves
     def ExportSaves(

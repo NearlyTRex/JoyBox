@@ -902,134 +902,44 @@ class Steam(storebase.StoreBase):
         return system.DoesDirectoryContainFiles(output_dir)
 
     ############################################################
-    # Saves
+    # Paths
     ############################################################
 
-    # Get game save paths
-    def GetSavePaths(
-        self,
-        game_info,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
+    # Build path translation map
+    def BuildPathTranslationMap(self, game_info):
 
-        # Get game info
+        # Get game appid
         game_appid = game_info.get_store_appid(self.GetKey())
-        game_paths = game_info.get_store_paths(self.GetKey())
+        if not game_appid:
+            return {}
 
-        # Ignore invalid identifier
-        if not self.IsValidInfoIdentifier(game_appid):
-            return []
-
-        # Check if path should be added
-        def ShouldAddPath(path, base, variant):
-            parts = system.SplitFilePath(path, base)
-            if len(parts) != 2:
-                return False
-            return system.IsPathFileOrDirectory(system.JoinPaths(parts[0], variant))
-
-        # Add alternate paths
-        for path in sorted(game_paths):
-            for appdata_base in config.appdata_variants.keys():
-                if appdata_base in path:
-                    for appdata_variant in config.appdata_variants[appdata_base]:
-                        if ShouldAddPath(path, appdata_base, appdata_variant):
-                            game_paths.append(path.replace(appdata_base, appdata_variant))
-
-        # Get user info
-        user_id64 = self.GetUserId(config.SteamIDFormatType.STEAMID_64)
-        user_id3 = self.GetUserId(config.SteamIDFormatType.STEAMID_3S)
-        user_idc = self.GetUserId(config.SteamIDFormatType.STEAMID_CS)
+        # Get prefix path
+        prefix_path = system.JoinPaths(self.GetInstallDir(), "steamapps", "compatdata", game_appid, "pfx")
 
         # Build translation map
-        translation_map = {}
-        translation_map[config.token_user_registry_dir] = []
-        translation_map[config.token_user_registry_dir].append(system.JoinPaths(self.install_dir, "steamapps", "compatdata", game_appid, "pfx"))
-        translation_map[config.token_user_public_dir] = []
-        translation_map[config.token_user_public_dir].append("C:\\Users\\Public")
-        translation_map[config.token_user_public_dir].append(system.JoinPaths(self.install_dir, "steamapps", "compatdata", game_appid, "pfx", "drive_c", "users", "Public"))
-        translation_map[config.token_user_profile_dir] = []
-        if "USERPROFILE" in os.environ:
-            translation_map[config.token_user_profile_dir].append(os.environ["USERPROFILE"])
-        translation_map[config.token_user_profile_dir].append(system.JoinPaths(self.install_dir, "steamapps", "compatdata", game_appid, "pfx", "drive_c", "users", "steamuser"))
-        translation_map[config.token_store_install_dir] = []
-        translation_map[config.token_store_install_dir].append(self.install_dir)
+        translation_map = super().BuildPathTranslationMap(game_info)
+        translation_map[config.token_user_registry_dir].append(prefix_path)
+        translation_map[config.token_user_public_dir].append(system.JoinPaths(prefix_path, "drive_c", "users", "Public"))
+        translation_map[config.token_user_profile_dir].append(system.JoinPaths(prefix_path, "drive_c", "users", "steamuser"))
+        return translation_map
 
-        # Translate save paths
-        translated_paths = []
-        for path in game_paths:
-            for base_key in translation_map.keys():
-                for key_replacement in translation_map[base_key]:
+    # Get registered paths
+    def GetRegisteredPaths(self, game_info):
 
-                    # Get potential user ids
-                    userid_64 = self.GetUserId(config.SteamIDFormatType.STEAMID_64)
-                    userid_3s = self.GetUserId(config.SteamIDFormatType.STEAMID_3S)
-                    userid_cs = self.GetUserId(config.SteamIDFormatType.STEAMID_CS)
+        # Get paths
+        paths = super().GetRegisteredPaths(game_info)
 
-                    # Get potential full paths
-                    fullpath = path.replace(base_key, key_replacement)
-                    fullpath_id64 = fullpath.replace(config.token_store_user_id, userid_64)
-                    fullpath_id3s = fullpath.replace(config.token_store_user_id, userid_3s)
-                    fullpath_idcs = fullpath.replace(config.token_store_user_id, userid_cs)
+        # Get user info
+        userid_64 = self.GetUserId(config.SteamIDFormatType.STEAMID_64)
+        userid_3s = self.GetUserId(config.SteamIDFormatType.STEAMID_3S)
+        userid_cs = self.GetUserId(config.SteamIDFormatType.STEAMID_CS)
 
-                    # Get potential relative paths
-                    relativepath = path
-                    relativepath_id64 = relativepath.replace(config.token_store_user_id, userid_64)
-                    relativepath_id3s = relativepath.replace(config.token_store_user_id, userid_3s)
-                    relativepath_idcs = relativepath.replace(config.token_store_user_id, userid_cs)
-
-                    # Get potential new base paths
-                    new_base_general = config.SaveType.GENERAL.val()
-                    new_base_public = system.JoinPaths(new_base_general, config.computer_folder_public)
-                    new_base_registry = system.JoinPaths(new_base_general, config.computer_folder_registry)
-                    new_base_store = system.JoinPaths(new_base_general, config.computer_folder_store, config.StoreType.STEAM)
-
-                    # Determine which paths exist
-                    real_userid = None
-                    real_fullpath = None
-                    real_relativepath = None
-                    if system.IsPathFileOrDirectory(fullpath):
-                        real_userid = userid_64
-                        real_fullpath = fullpath
-                        real_relativepath = relativepath
-                    elif system.IsPathFileOrDirectory(fullpath_id64):
-                        real_userid = userid_64
-                        real_fullpath = fullpath_id64
-                        real_relativepath = relativepath_id64
-                    elif system.IsPathFileOrDirectory(fullpath_id3s):
-                        real_userid = userid_3s
-                        real_fullpath = fullpath_id3s
-                        real_relativepath = relativepath_id3s
-                    elif system.IsPathFileOrDirectory(fullpath_idcs):
-                        real_userid = userid_cs
-                        real_fullpath = fullpath_idcs
-                        real_relativepath = relativepath_idcs
-                    if not real_userid or not real_fullpath or not real_relativepath:
-                        continue
-
-                    # Create translation entry
-                    entry = {}
-
-                    # Set full path
-                    entry["full"] = real_fullpath
-
-                    # Set relative path
-                    if base_key == config.token_user_profile_dir:
-                        relative_path = real_relativepath.replace(base_key, new_base_general)
-                        entry["relative"] = [relative_path]
-                    elif base_key == config.token_user_public_dir:
-                        relative_path = real_relativepath.replace(base_key, new_base_public)
-                        entry["relative"] = [relative_path]
-                    elif base_key == config.token_user_registry_dir:
-                        relative_path = real_relativepath.replace(base_key, new_base_registry)
-                        entry["relative"] = [relative_path]
-                    elif base_key == config.token_store_install_dir:
-                        relative_path = real_relativepath.replace(base_key, new_base_store)
-                        entry["relative"] = [relative_path]
-
-                    # Add entry
-                    if "full" in entry and "relative" in entry:
-                        translated_paths.append(entry)
-        return translated_paths
+        # Add user id variants
+        for path in paths:
+            if config.token_store_user_id in path:
+                paths.append(path.replace(config.token_store_user_id, userid_64))
+                paths.append(path.replace(config.token_store_user_id, userid_3s))
+                paths.append(path.replace(config.token_store_user_id, userid_cs))
+        return paths
 
     ############################################################
