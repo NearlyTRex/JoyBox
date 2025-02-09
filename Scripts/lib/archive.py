@@ -3,6 +3,7 @@ import os
 import os.path
 import sys
 import zipfile
+import re
 
 # Local imports
 import config
@@ -477,3 +478,58 @@ def TestArchive(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return (code == 0)
+
+# List archive
+def ListArchive(
+    archive_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    archive_tool = None
+    if programs.IsToolInstalled("7-Zip"):
+        archive_tool = programs.GetToolProgram("7-Zip")
+    if not archive_tool:
+        system.LogError("7-Zip was not found")
+        return []
+
+    # Get list command
+    list_command = [
+        archive_tool,
+        "l", archive_file
+    ]
+
+    # Run list command
+    list_output = command.RunOutputCommand(
+        cmd = list_command,
+        options = command.CreateCommandOptions(
+            blocking_processes=[archive_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Get output text
+    list_text = list_output
+    if isinstance(list_output, bytes):
+        list_text = list_output.decode()
+
+    # Get full list of paths
+    all_paths = []
+    for line in list_text.splitlines():
+        pattern = r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} (\S+)\s+(\d+)\s+(\d+)\s+(.+)$"
+        match = re.match(pattern, line)
+        if match:
+            attr = match.group(1)
+            size = match.group(2)
+            compressed = match.group(3)
+            path = match.group(4)
+            if not attr.startswith("D.."):
+                all_paths.append(path)
+
+    # Condense paths
+    condensed_paths = []
+    for path in sorted(all_paths, key=lambda x: -len(x)):
+        if not any(path + "/" == existing[:len(path) + 1] for existing in condensed_paths):
+            condensed_paths.append(path)
+    return condensed_paths
