@@ -501,7 +501,7 @@ def AddLoggingContext(
     if game_subcategory:
         context += "[%s]" % game_subcategory.val()
     if game_name:
-        context += "[%s]" % game_name.val()
+        context += "[%s]" % game_name
     if len(context) > 0:
         return f"{context} {message}"
     return message
