@@ -43,6 +43,8 @@ def GetRemoteJson(
         if not headers:
             headers = {"Accept": "application/json"}
         get = requests.get(url, headers=headers)
+        if verbose:
+            system.LogInfo("Got response: %s" % str(get.status_code))
         if get.status_code == 200:
             return get.json()
         return None
@@ -68,7 +70,7 @@ def PostRemoteJson(
             headers = {"Accept": "application/json"}
         post = requests.post(url, headers=headers, json=data)
         if verbose:
-            system.LogInfo("Got response: " + post.text)
+            system.LogInfo("Got response: %s" % str(post.status_code))
         if post.status_code == 200:
             return post.json()
         return None
@@ -93,6 +95,8 @@ def GetRemoteXml(
         if not headers:
             headers = {"Accept": "text/xml"}
         get = requests.get(url, headers=headers)
+        if verbose:
+            system.LogInfo("Got response: %s" % str(get.status_code))
         if get.status_code == 200:
             return xmltodict.parse(get.text)
         return None

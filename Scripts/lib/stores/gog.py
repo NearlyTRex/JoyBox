@@ -358,6 +358,27 @@ class GOG(storebase.StoreBase):
                 if appurl and network.IsUrlReachable(appurl):
                     game_info[config.json_key_store_appurl] = applinks["product_card"]
 
+        # Augment by manifest
+        if self.manifest:
+            manifest_entry = self.manifest.find_entry_by_gogid(
+                gogid = identifier,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if manifest_entry:
+
+                # Get existing paths and keys
+                game_paths = set(game_info[config.json_key_store_paths])
+                game_keys = set(game_info[config.json_key_store_keys])
+
+                # Update paths and keys
+                game_paths = game_paths.union(manifest_entry.get_paths(config.token_game_install_dir))
+                game_keys = game_keys.union(manifest_entry.get_keys())
+
+                # Save paths and keys
+                game_info[config.json_key_store_paths] = system.SortStrings(game_paths)
+                game_info[config.json_key_store_keys] = system.SortStrings(game_keys)
+
         # Return game info
         return jsondata.JsonData(game_info, self.GetPlatform())
 

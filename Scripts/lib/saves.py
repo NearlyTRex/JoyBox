@@ -12,6 +12,7 @@ import archive
 import locker
 import gameinfo
 import jsondata
+import storebase
 
 # Can individual save be unpacked
 def CanSaveBeUnpacked(
@@ -313,6 +314,9 @@ def ImportSavePaths(
     if not store_key:
         return False
 
+    # Get store type
+    store_type = game_info.get_main_store_type()
+
     # Get current jsondata
     current_jsondata = game_info.read_wrapped_json_data(
         verbose = verbose,
@@ -326,17 +330,22 @@ def ImportSavePaths(
 
     # Read save files and add paths
     for archive_file in system.BuildFileList(input_save_dir):
-        new_paths = archive.ListArchive(
+        archive_paths = archive.ListArchive(
             archive_file = archive_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        new_paths = [path.replace(config.SaveType.GENERAL.val(), config.token_user_profile_dir) for path in new_paths]
+        new_paths = []
+        for archive_path in archive_paths:
+            new_path = storebase.ConvertToTokenizedPath(
+                path = archive_path,
+                store_type = store_type)
+            new_paths.append(new_path)
         save_paths += new_paths
 
     # Update current paths
     save_paths = list(set(save_paths))
-    save_paths = system.SortStrings(save_paths)
+    save_paths = system.PruneChildPaths(save_paths)
     current_jsondata.set_subvalue(store_key, config.json_key_store_paths, save_paths)
 
     # Write back changes

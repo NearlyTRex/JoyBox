@@ -430,7 +430,7 @@ class Steam(storebase.StoreBase):
                         json_platform = self.GetPlatform())
                     purchase.set_value(config.json_key_store_appid, line_appid)
                     purchase.set_value(config.json_key_store_appurl, self.GetLatestUrl(line_appid))
-                    purchase.set_value(config.json_key_store_name, line_title)
+                    purchase.set_value(config.json_key_store_name, line_title.strip())
                     purchase.set_value(config.json_key_store_branchid, config.SteamBranchType.PUBLIC.lower())
                     purchase.set_value(config.json_key_store_keys, line_keys)
                     purchase.set_value(config.json_key_store_paths, line_paths)
@@ -612,13 +612,13 @@ class Steam(storebase.StoreBase):
         metadata_entry = metadataentry.MetadataEntry()
 
         # Check for age gate
+        # Do not exit on failure to find the age gate
         element_age_gate = webpage.WaitForElement(
             driver = web_driver,
             locator = webpage.ElementLocator({"id": "app_agegate"}),
             wait_time = 5,
             verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            pretend_run = pretend_run)
         if element_age_gate:
 
             # Get age selectors

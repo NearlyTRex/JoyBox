@@ -368,7 +368,7 @@ class Epic(storebase.StoreBase):
                 game_info[config.json_key_store_paths] = []
                 if appgame["cloud_save_folder"]:
                     game_info[config.json_key_store_paths] += [
-                        storebase.TranslateStorePath(appgame["cloud_save_folder"].strip(), base_path)
+                        storebase.CreateTokenizedPath(appgame["cloud_save_folder"].strip(), base_path)
                     ]
 
         # Return game info

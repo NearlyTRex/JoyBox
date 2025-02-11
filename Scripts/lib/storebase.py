@@ -18,8 +18,8 @@ import metadataentry
 import metadatacollector
 import manifest
 
-# Translate store path
-def TranslateStorePath(path, base_path = None):
+# Create tokenized path
+def CreateTokenizedPath(path, base_path = None):
 
     # Replace tokens
     new_path = path
@@ -50,6 +50,44 @@ def TranslateStorePath(path, base_path = None):
 
     # Return path
     return system.NormalizeFilePath(new_path)
+
+# Convert to tokenized path
+def ConvertToTokenizedPath(
+    path,
+    store_type = None,
+    store_user_id = None):
+
+    # Replace tokens
+    path = path.replace(system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_gamedata), config.token_game_install_dir)
+    path = path.replace(system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_public), config.token_user_public_dir)
+    path = path.replace(system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_registry), config.token_user_registry_dir)
+    if store_type:
+        path = path.replace(system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_store, store_type), config.token_store_install_dir)
+    if store_user_id:
+        path = path.replace(store_user_id, config.token_store_user_id)
+    path = path.replace(config.SaveType.GENERAL.val(), config.token_user_profile_dir)
+
+    # Return path
+    return system.NormalizeFilePath(path)
+
+# Convert from tokenized path
+def ConvertFromTokenizedPath(
+    path,
+    store_type = None,
+    store_user_id = None):
+
+    # Replace tokens
+    path = path.replace(config.token_game_install_dir, system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_gamedata))
+    path = path.replace(config.token_user_public_dir, system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_public))
+    path = path.replace(config.token_user_registry_dir, system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_registry))
+    if store_type:
+        path = path.replace(config.token_store_install_dir, system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_store, store_type))
+    if store_user_id:
+        path = path.replace(config.token_store_user_id, store_user_id)
+    path = path.replace(config.token_user_profile_dir, config.SaveType.GENERAL.val())
+
+    # Return path
+    return system.NormalizeFilePath(path)
 
 # Base store
 class StoreBase:
@@ -873,46 +911,6 @@ class StoreBase:
     # Paths
     ############################################################
 
-    # Translate registered path to package path
-    def TranslateRegisteredPathToPackagePath(self, path, store_user_id = None):
-
-        # Get package paths
-        path_general = config.SaveType.GENERAL.val()
-        path_gamedata = system.JoinPaths(path_general, config.computer_folder_gamedata)
-        path_public = system.JoinPaths(path_general, config.computer_folder_public)
-        path_registry = system.JoinPaths(path_general, config.computer_folder_registry)
-        path_store = system.JoinPaths(path_general, config.computer_folder_store, self.GetType())
-
-        # Translate path
-        path = path.replace(config.token_game_install_dir, path_gamedata)
-        path = path.replace(config.token_user_public_dir, path_public)
-        path = path.replace(config.token_user_registry_dir, path_registry)
-        path = path.replace(config.token_store_install_dir, path_store)
-        if store_user_id:
-            path = path.replace(config.token_store_user_id, store_user_id)
-        path = path.replace(config.token_user_profile_dir, path_general)
-        return path
-
-    # Translate package path to registered path
-    def TranslatePackagePathToRegisteredPath(self, path, store_user_id = None):
-
-        # Get package paths
-        path_general = config.SaveType.GENERAL.val()
-        path_gamedata = system.JoinPaths(path_general, config.computer_folder_gamedata)
-        path_public = system.JoinPaths(path_general, config.computer_folder_public)
-        path_registry = system.JoinPaths(path_general, config.computer_folder_registry)
-        path_store = system.JoinPaths(path_general, config.computer_folder_store, self.GetType())
-
-        # Translate path
-        path = path.replace(path_gamedata, config.token_game_install_dir)
-        path = path.replace(path_public, config.token_user_public_dir)
-        path = path.replace(path_registry, config.token_user_registry_dir)
-        path = path.replace(path_store, config.token_store_install_dir)
-        if store_user_id:
-            path = path.replace(store_user_id, config.token_store_user_id)
-        path = path.replace(path_general, config.token_user_profile_dir)
-        return path
-
     # Build path translation map
     def BuildPathTranslationMap(self, game_info):
 
@@ -977,7 +975,9 @@ class StoreBase:
                 for key_replacement in translation_map[base_key]:
                     entry = {}
                     entry["full"] = path.replace(base_key, key_replacement)
-                    entry["relative"] = [self.TranslateRegisteredPathToPackagePath(path)]
+                    entry["relative"] = [ConvertFromTokenizedPath(
+                        path = path,
+                        store_type = self.GetType())]
                     translated_paths.append(entry)
         return translated_paths
 
