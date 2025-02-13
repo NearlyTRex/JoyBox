@@ -437,7 +437,7 @@ def TransformGameFile(
     # Get game info
     game_category = game_info.get_category()
     game_subcategory = game_info.get_subcategory()
-    game_name = game_info.get_game()
+    game_name = game_info.get_name()
     game_transform_file = system.JoinPaths(source_dir, game_info.get_transform_file())
     game_key_file = system.JoinPaths(source_dir, game_info.get_key_file())
 
