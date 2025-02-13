@@ -11,25 +11,26 @@ import environment
 import cryption
 import ini
 
-# Check if path is remote
-def IsRemotePath(path):
-    if system.DoesPathExist(path):
-        return False
-    if os.path.isabs(path):
-        return False
-    return True
-
 # Check if path is local
 def IsLocalPath(path):
-    return not IsRemotePath(path)
+    if path.startswith(environment.GetLockerRootDir(config.SourceType.LOCAL) + config.os_pathsep):
+        return True
+    if system.DoesPathExist(path):
+        return True
+    return False
+
+# Check if path is remote
+def IsRemotePath(path):
+    not IsLocalPath(path)
 
 # Convert to remote path
 def ConvertToRemotePath(path):
-    if IsRemotePath(path):
-        return path
+    old_base_path = environment.GetLockerRootDir(config.SourceType.REMOTE)
+    if IsLocalPath(path):
+        old_base_path = environment.GetLockerRootDir(config.SourceType.LOCAL)
     return system.RebaseFilePath(
         path = path,
-        old_base_path = environment.GetLockerRootDir(config.SourceType.LOCAL),
+        old_base_path = old_base_path,
         new_base_path = "")
 
 # Convert to local path
