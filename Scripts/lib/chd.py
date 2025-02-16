@@ -120,7 +120,6 @@ def ExtractDiscCHD(
 def ArchiveDiscCHD(
     chd_file,
     zip_file,
-    disc_type = None,
     delete_original = False,
     verbose = False,
     pretend_run = False,
@@ -137,7 +136,6 @@ def ArchiveDiscCHD(
     success = MountDiscCHD(
         chd_file = chd_file,
         mount_dir = tmp_dir_result,
-        disc_type = disc_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -208,7 +206,6 @@ def VerifyDiscCHD(
 def MountDiscCHD(
     chd_file,
     mount_dir,
-    disc_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -247,24 +244,15 @@ def MountDiscCHD(
         exit_on_failure = exit_on_failure)
 
     # Extract iso files to mount point
-    if disc_type == config.DiscType.MACWIN:
-        success = archive.ExtractArchive(
-            archive_file = temp_iso_file,
-            extract_dir = mount_dir,
-            delete_original = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    else:
-        success = iso.ExtractISO(
-            iso_file = temp_iso_file,
-            extract_dir = mount_dir,
-            delete_original = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
+    success = archive.ExtractArchive(
+        archive_file = temp_iso_file,
+        extract_dir = mount_dir,
+        delete_original = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Delete temporary directory
     system.RemoveDirectory(

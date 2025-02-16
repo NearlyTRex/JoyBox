@@ -46,7 +46,6 @@ def main():
         chd.ArchiveDiscCHD(
             chd_file = current_file,
             zip_file = output_zip,
-            disc_type = None,
             delete_original = args.delete_originals,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
