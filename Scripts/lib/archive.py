@@ -34,6 +34,8 @@ def IsArchive(archive_file):
         return True
     elif IsTarballArchive(archive_file):
         return True
+    elif IsDiscArchive(archive_file):
+        return True
     elif IsExeArchive(archive_file):
         return True
     elif IsAppImageArchive(archive_file):
@@ -67,6 +69,13 @@ def IsTarballArchive(archive_file):
         archive_file = archive_file,
         extensions = config.ArchiveTarballFileType.cvalues(),
         mime_types = config.mime_types_tarball)
+
+# Determine if file is a disc archive
+def IsDiscArchive(archive_file):
+    return IsKnownArchive(
+        archive_file = archive_file,
+        extensions = config.ArchiveDiscFileType.cvalues(),
+        mime_types = config.mime_types_disc)
 
 # Determine if file is an exe archive
 def IsExeArchive(archive_file):
@@ -105,6 +114,8 @@ def IsExtractableArchiveType(archive_type):
     if archive_type in config.Archive7zFileType.members():
         return True
     if archive_type in config.ArchiveTarballFileType.members():
+        return True
+    if archive_type in config.ArchiveDiscFileType.members():
         return True
     return False
 

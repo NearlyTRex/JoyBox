@@ -95,6 +95,7 @@ mime_types_zip = ["application/zip"]
 mime_types_7z = ["application/x-7z-compressed"]
 mime_types_rar = ["application/x-rar-compressed"]
 mime_types_tarball = ["application/x-gzip", "application/gzip"]
+mime_types_disc = ["application/x-iso9660-image"]
 mime_types_exe = ["application/x-dosexec"]
 mime_types_appimage = ["application/x-executable"]
 

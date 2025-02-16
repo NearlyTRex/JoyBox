@@ -70,6 +70,9 @@ class ArchiveFileType(types.EnumType):
     TAR_ZST                 = ("TAR_ZST", ".tar.zst")
     TZST                    = ("TZST", ".tzst")
 
+    # Disc
+    ISO                     = ("ISO", ".iso")
+
     # Executable
     EXE                     = ("EXE", ".exe")
 
@@ -126,6 +129,10 @@ class ArchiveTarballFileType(types.EnumType):
     # ZStd
     TAR_ZST                 = (ArchiveFileType.TAR_ZST.val(), ArchiveFileType.TAR_ZST.cval())
     TZST                    = (ArchiveFileType.TZST.val(), ArchiveFileType.TZST.cval())
+
+# Archive disc file types
+class ArchiveDiscFileType(types.EnumType):
+    ISO                     = (ArchiveFileType.ISO.val(), ArchiveFileType.ISO.cval())
 
 # Windows program file types
 class WindowsProgramFileType(types.EnumType):
