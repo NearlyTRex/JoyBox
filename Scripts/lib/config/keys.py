@@ -110,7 +110,6 @@ program_key_overrides = "overrides"
 program_key_desktop = "desktop"
 program_key_desktop_width = "desktop_width"
 program_key_desktop_height = "desktop_height"
-program_key_disc_type = "disc_type"
 program_key_installer_type = "installer_type"
 program_key_serial = "serial"
 program_key_is_shell = "is_shell"
@@ -141,6 +140,14 @@ program_key_stdout = "stdout"
 program_key_stderr = "stderr"
 program_key_include_stderr = "include_stderr"
 
+# Computer program step keys
+program_step_key_from = "from"
+program_step_key_to = "to"
+program_step_key_dir = "dir"
+program_step_key_type = "type"
+program_step_key_skip_existing = "skip_existing"
+program_step_key_skip_identical = "skip_identical"
+
 # Computer program key defaults
 program_key_defaults = []
 program_key_defaults.append({"key": program_key_cwd, "default": None})
@@ -152,7 +159,6 @@ program_key_defaults.append({"key": program_key_overrides, "default": []})
 program_key_defaults.append({"key": program_key_desktop, "default": None})
 program_key_defaults.append({"key": program_key_desktop_width, "default": None})
 program_key_defaults.append({"key": program_key_desktop_height, "default": None})
-program_key_defaults.append({"key": program_key_disc_type, "default": None})
 program_key_defaults.append({"key": program_key_installer_type, "default": None})
 program_key_defaults.append({"key": program_key_serial, "default": None})
 program_key_defaults.append({"key": program_key_is_shell, "default": False})
@@ -274,7 +280,7 @@ json_key_defaults.append({"key": json_key_launch_name, "default": None})
 json_key_defaults.append({"key": json_key_launch_file, "default": []})
 json_key_defaults.append({"key": json_key_launch_dir, "default": None})
 json_key_defaults.append({"key": json_key_transform_file, "default": []})
-json_key_defaults.append({"key": json_key_key_file, "default": []})
+json_key_defaults.append({"key": json_key_key_file, "default": None})
 json_key_defaults.append({"key": json_key_files, "default": []})
 json_key_defaults.append({"key": json_key_dlc, "default": []})
 json_key_defaults.append({"key": json_key_update, "default": []})
