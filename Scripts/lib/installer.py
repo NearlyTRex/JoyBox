@@ -67,76 +67,19 @@ def GetInstallerSetupCommand(
             installer_cmd += ["-d%s" % install_dir]
     return installer_cmd
 
-# Setup windows programs
-def SetupWindowsPrograms(
-    installer_programs,
-    installer_base_dir,
+# Run setup programs
+def RunSetupPrograms(
+    setup_programs,
+    setup_base_dir,
+    setup_discs,
+    token_map,
     options,
+    keep_discs = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Filter installers
-    for installer_program in installer_programs:
-        installer_wrapper = jsondata.JsonData(json_data = installer_program)
-        installer_exe = installer_wrapper.get_value(config.program_key_exe)
-        installer_cwd = installer_wrapper.get_value(config.program_key_cwd)
-        installer_type = installer_wrapper.get_value(config.program_key_installer_type)
-        installer_is_dos = installer_wrapper.get_value(config.program_key_is_dos, False)
-        installer_is_win31 = installer_wrapper.get_value(config.program_key_is_win31, False)
-        installer_is_scumm = installer_wrapper.get_value(config.program_key_is_scumm, False)
-        if not installer_exe or not installer_cwd or installer_is_dos or installer_is_win31 or installer_is_scumm:
-            continue
-
-        # Get windows program
-        windows_program = system.JoinPaths(installer_base_dir, installer_cwd, installer_exe)
-
-        # Get installer type
-        if not installer_type:
-            installer_type = GetInstallerType(windows_program)
-
-        # Get install name
-        install_name = gameinfo.DeriveRegularNameFromGameName(system.GetFilenameBasename(windows_program))
-
-        # Get setup command
-        program_setup_cmd = GetInstallerSetupCommand(
-            installer_file = windows_program,
-            installer_type = installer_type,
-            install_dir = ntpath.join(options.get_prefix_c_drive_virtual(), install_name))
-
-        # Get blocking processes
-        blocking_processes = sandbox.GetBlockingProcesses(
-            options = options,
-            initial_processes = [windows_program])
-
-        # Get setup options
-        program_setup_options = options.copy()
-        program_setup_options.set_cwd(os.path.expanduser("~"))
-        program_setup_options.set_is_prefix_mapped_cwd(True)
-        program_setup_options.set_blocking_processes(blocking_processes)
-
-        # Run program
-        command.RunBlockingCommand(
-            cmd = program_setup_cmd,
-            options = program_setup_options,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-# Setup dos programs
-def SetupDosPrograms(
-    installer_programs,
-    installer_base_dir,
-    installer_discs,
-    options,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Get dos emulator
-    dos_emulator = programs.GetEmulatorProgram("DosBoxX")
-
-    # Get dos drives
+    # Make dos drives
     system.MakeDirectory(
         dir = options.get_prefix_dos_c_drive(),
         verbose = verbose,
@@ -148,169 +91,170 @@ def SetupDosPrograms(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Copy installer discs
-    for installer_disc in installer_discs:
-        system.CopyFileOrDirectory(
-            src = installer_disc,
-            dest = options.get_prefix_dos_d_drive(),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    # Make scumm dir
+    system.MakeDirectory(
+        dir = options.get_prefix_scumm_dir(),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Keep discs
+    if keep_discs:
+        for setup_disc in setup_discs:
+            system.CopyFileOrDirectory(
+                src = setup_disc,
+                dest = options.get_prefix_dos_d_drive(),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
 
     # Filter installers
-    for installer_program in installer_programs:
-        installer_wrapper = jsondata.JsonData(json_data = installer_program)
-        installer_exe = installer_wrapper.get_value(config.program_key_exe)
-        installer_cwd = installer_wrapper.get_value(config.program_key_cwd)
-        installer_type = installer_wrapper.get_value(config.program_key_installer_type)
-        installer_is_dos = installer_wrapper.get_value(config.program_key_is_dos, False)
-        if not installer_exe or not installer_cwd or not installer_is_dos:
-            continue
+    for setup_program in setup_programs:
+        setup_program_exe = sandbox.ResolvePath(setup_program.get_exe(), token_map)
+        setup_program_cwd = sandbox.ResolvePath(setup_program.get_cwd(), token_map)
+        setup_program_type = setup_program.get_installer_type()
+        setup_program_is_dos = setup_program.is_dos()
+        setup_program_is_win31 = setup_program.is_win31()
+        setup_program_is_scumm = setup_program.is_scumm()
+        setup_program_is_windows = (
+            setup_program_exe and
+            not setup_program_is_dos and
+            not setup_program_is_win31 and
+            not setup_program_is_scumm)
 
-        # Get dos program
-        dos_program = system.JoinPaths(installer_base_dir, installer_cwd, installer_exe)
+        ##########################
+        # DOS installer
+        ##########################
+        if setup_program_is_dos:
 
-        # Get setup command
-        program_drive = system.GetFilenameDrive(dos_program)
-        program_dir = system.GetFilenameDirectory(dos_program)
-        program_file = system.GetFilenameFile(dos_program)
-        program_offset = system.GetFilenameDriveOffset(program_dir)
+            # Get dos emulator
+            dos_emulator = programs.GetEmulatorProgram("DosBoxX")
 
-        # Get setup command
-        program_setup_cmd = tools.GetComputerDosLaunchCommand(
-            options = options,
-            start_program = program_file,
-            start_letter = program_drive,
-            start_offset = program_offset)
+            # Get dos program
+            dos_program = system.JoinPaths(setup_base_dir, setup_program_cwd, setup_program_exe)
 
-        # Get setup options
-        program_setup_options = options.copy()
-        program_setup_options.set_is_wine_prefix(sandbox.ShouldBeRunViaWine(dos_emulator))
-        program_setup_options.set_is_sandboxie_prefix(sandbox.ShouldBeRunViaSandboxie(dos_emulator))
-        program_setup_options.set_blocking_processes([dos_emulator])
+            # Get setup command
+            program_drive = system.GetFilenameDrive(dos_program)
+            program_dir = system.GetFilenameDirectory(dos_program)
+            program_file = system.GetFilenameFile(dos_program)
+            program_offset = system.GetFilenameDriveOffset(program_dir)
 
-        # Run program
-        command.RunBlockingCommand(
-            cmd = program_setup_cmd,
-            options = program_setup_options,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            # Get setup command
+            program_setup_cmd = emulators.GetComputerDosLaunchCommand(
+                options = options,
+                start_program = program_file,
+                start_letter = program_drive,
+                start_offset = program_offset)
 
-# Setup win31 programs
-def SetupWin31Programs(
-    installer_programs,
-    installer_base_dir,
-    installer_discs,
-    options,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+            # Get setup options
+            program_setup_options = options.copy()
+            program_setup_options.set_is_wine_prefix(sandbox.ShouldBeRunViaWine(dos_emulator))
+            program_setup_options.set_is_sandboxie_prefix(sandbox.ShouldBeRunViaSandboxie(dos_emulator))
+            program_setup_options.set_blocking_processes([dos_emulator])
 
-    # Get dos drives
-    system.MakeDirectory(
-        dir = options.get_prefix_dos_c_drive(),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    system.MakeDirectory(
-        dir = options.get_prefix_dos_d_drive(),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+            # Run program
+            command.RunBlockingCommand(
+                cmd = program_setup_cmd,
+                options = program_setup_options,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
 
-    # Copy installer discs
-    for installer_disc in installer_discs:
-        system.CopyFileOrDirectory(
-            src = installer_disc,
-            dest = options.get_prefix_dos_d_drive(),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        ##########################
+        # Windows installer
+        ##########################
+        elif setup_program_is_windows:
 
-# Setup scumm programs
-def SetupScummPrograms(
-    installer_programs,
-    installer_base_dir,
-    installer_discs,
-    options,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+            # Get windows program
+            windows_program = system.JoinPaths(setup_base_dir, setup_program_cwd, setup_program_exe)
 
-    # Get scumm dir
-    scumm_dir = system.JoinPaths(options.get_prefix_c_drive_real(), config.computer_folder_scumm)
-    system.MakeDirectory(
-        dir = scumm_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+            # Get installer type
+            if not setup_program_type:
+                setup_program_type = GetInstallerType(windows_program)
+
+            # Get install name
+            install_name = gameinfo.DeriveRegularNameFromGameName(system.GetFilenameBasename(windows_program))
+
+            # Get setup command
+            program_setup_cmd = GetInstallerSetupCommand(
+                installer_file = windows_program,
+                installer_type = setup_program_type,
+                install_dir = ntpath.join(options.get_prefix_c_drive_virtual(), install_name))
+
+            # Get blocking processes
+            blocking_processes = sandbox.GetBlockingProcesses(
+                options = options,
+                initial_processes = [windows_program])
+
+            # Get setup options
+            program_setup_options = options.copy()
+            program_setup_options.set_cwd(os.path.expanduser("~"))
+            program_setup_options.set_is_prefix_mapped_cwd(True)
+            program_setup_options.set_blocking_processes(blocking_processes)
+
+            # Run program
+            command.RunBlockingCommand(
+                cmd = program_setup_cmd,
+                options = program_setup_options,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
 
 # Run setup steps
 def RunSetupSteps(
-    steps,
+    setup_steps,
     token_map,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Run steps
-    for step in steps:
-
-        # Get params
-        paths = {}
-        paths["from"] = step["from"] if "from" in step else ""
-        paths["to"] = step["to"] if "to" in step else ""
-        paths["dir"] = step["dir"] if "dir" in step else ""
-        step_type = step["type"] if "type" in step else None
-        skip_existing = step["skip_existing"] if "skip_existing" in step else False
-        skip_identical = step["skip_identical"] if "skip_identical" in step else False
-
-        # Resolve paths
-        for path_key, path_value in paths.items():
-            if len(path_value):
-                paths[path_key] = tools.ResolveComputerPath(
-                    path = path_value,
-                    token_map = token_map)
+    # Filter steps
+    for setup_step in setup_steps:
+        setup_step_from = sandbox.ResolvePath(setup_step.get_from(), token_map)
+        setup_step_to = sandbox.ResolvePath(setup_step.get_to(), token_map)
+        setup_step_dir = sandbox.ResolvePath(setup_step.get_dir(), token_map)
+        setup_step_type = setup_step.get_type()
+        setup_skip_existing = setup_step.skip_existing()
+        setup_skip_identical = setup_step.skip_identical()
 
         # Copy step
-        if step_type == "copy":
+        if setup_step_type == "copy":
             system.SmartCopy(
-                src = paths["from"],
-                dest = paths["to"],
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
+                src = setup_step_from,
+                dest = setup_step_to,
+                skip_existing = setup_skip_existing,
+                skip_identical = setup_skip_identical,
                 case_sensitive_paths = False,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
         # Move step
-        elif step_type == "move":
+        elif setup_step_type == "move":
             system.SmartMove(
-                src = paths["from"],
-                dest = paths["to"],
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
+                src = setup_step_from,
+                dest = setup_step_to,
+                skip_existing = setup_skip_existing,
+                skip_identical = setup_skip_identical,
                 case_sensitive_paths = False,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
         # Extract step
-        elif step_type == "extract":
+        elif setup_step_type == "extract":
             archive.ExtractArchive(
-                archive_file = paths["from"],
-                extract_dir = paths["to"],
-                skip_existing = skip_existing,
+                archive_file = setup_step_from,
+                extract_dir = setup_step_to,
+                skip_existing = setup_skip_existing,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
         # Lowercase step
-        elif step_type == "lowercase":
+        elif setup_step_type == "lowercase":
             system.LowercaseAllPaths(
-                dir = paths["dir"],
+                dir = setup_step_dir,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -330,8 +274,6 @@ def InstallComputerGame(
     game_category = game_info.get_category()
     game_subcategory = game_info.get_subcategory()
 
-
-
     # Get setup directory
     game_setup_dir = environment.GetCacheGamingSetupDir(game_category, game_subcategory, game_name)
     system.MakeDirectory(
@@ -342,17 +284,10 @@ def InstallComputerGame(
 
     # Get setup options
     game_setup_options = command.CreateCommandOptions(
-        is_dos = game_info.does_store_setup_have_dos_installers(),
-        is_win31 = game_info.does_store_setup_have_win31_installers(),
-        is_scumm = game_info.does_store_setup_have_scumm_installers(),
         is_wine_prefix = environment.IsWinePlatform(),
         is_sandboxie_prefix = environment.IsSandboxiePlatform(),
-        prefix_dir = sandbox.GetPrefix(
-            name = config.PrefixType.SETUP,
-            is_wine_prefix = environment.IsWinePlatform(),
-            is_sandboxie_prefix = environment.IsSandboxiePlatform()),
-        prefix_name = config.PrefixType.SETUP,
-        prefix_winver = game_info.get_winver())
+        prefix_name = config.PrefixType.SETUP)
+    game_setup_options.set_prefix_dir(sandbox.GetPrefix(game_setup_options))
 
     # Create setup prefix
     sandbox.CreateBasicPrefix(
@@ -374,18 +309,13 @@ def InstallComputerGame(
         new_base_path = system.GetFilenameDirectory(source_file))
 
     # Build token map
-    game_token_map = tools.BuildComputerTokenMap(
+    game_token_map = sandbox.BuildTokenMap(
         store_install_dir = game_info.get_main_store_install_dir(),
         setup_base_dir = game_setup_dir,
         hdd_base_dir = game_setup_options.get_prefix_c_drive_real(),
         disc_base_dir = game_setup_dir,
         disc_files = game_disc_files,
-        use_drive_letters = game_setup_options.is_dos() or game_setup_options.is_win31())
-
-    # Resolve installer paths
-    game_setup_install = tools.ResolveComputerProgramPaths(
-        paths = game_setup_install,
-        token_map = game_token_map)
+        use_drive_letters = game_info.does_store_setup_need_to_keep_discs())
 
     # Copy game files
     system.CopyContents(
@@ -401,7 +331,7 @@ def InstallComputerGame(
     game_disc_files = system.BuildFileListByExtensions(game_setup_dir, [".chd"])
 
     # Build token map again
-    game_token_map = tools.BuildComputerTokenMap(
+    game_token_map = sandbox.BuildTokenMap(
         store_install_dir = game_info.get_main_store_install_dir(),
         setup_base_dir = game_setup_dir,
         hdd_base_dir = game_setup_options.get_prefix_c_drive_real(),
@@ -414,7 +344,6 @@ def InstallComputerGame(
         chd.MountDiscCHD(
             chd_file = game_disc_file,
             mount_dir = mount_dir,
-            disc_type = game_disc_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -427,57 +356,27 @@ def InstallComputerGame(
 
     # Run pre-install steps
     RunSetupSteps(
-        steps = game_info.get_store_setup_preinstall(),
+        setup_steps = game_info.get_store_setup_preinstall_steps(),
         token_map = game_token_map,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Setup windows programs
-    SetupWindowsPrograms(
-        installer_programs = game_info.get_store_setup_install(),
-        installer_base_dir = game_setup_options.get_prefix_c_drive_real(),
+    # Run setup programs
+    RunSetupPrograms(
+        setup_programs = game_info.get_store_setup_install_programs(),
+        setup_base_dir = game_setup_options.get_prefix_c_drive_real(),
+        setup_discs = game_disc_files,
+        token_map = game_token_map,
         options = game_setup_options,
+        keep_discs = game_info.does_store_setup_need_to_keep_discs(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Setup dos programs
-    if game_setup_options.is_dos():
-        SetupDosPrograms(
-            installer_programs = game_info.get_store_setup_install(),
-            installer_base_dir = game_setup_options.get_prefix_c_drive_real(),
-            installer_discs = game_disc_files,
-            options = game_setup_options,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Setup win31 programs
-    if game_setup_options.is_win31():
-        SetupWin31Programs(
-            installer_programs = game_info.get_store_setup_install(),
-            installer_base_dir = game_setup_options.get_prefix_c_drive_real(),
-            installer_discs = game_disc_files,
-            options = game_setup_options,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Setup scumm programs
-    if game_setup_options.is_scumm():
-        SetupScummPrograms(
-            installer_programs = game_info.get_store_setup_install(),
-            installer_base_dir = game_setup_options.get_prefix_c_drive_real(),
-            installer_discs = game_disc_files,
-            options = game_setup_options,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
     # Run post-install steps
     RunSetupSteps(
-        steps = game_info.get_store_setup_postinstall(),
+        setup_steps = game_info.get_store_setup_postinstall_steps(),
         token_map = game_token_map,
         verbose = verbose,
         pretend_run = pretend_run,

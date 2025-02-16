@@ -14,7 +14,6 @@ import programs
 import registry
 import gui
 import ini
-import tools
 
 ###########################################################
 
@@ -415,6 +414,75 @@ def UnmountAllMountedDrives(
 
 ###########################################################
 
+# Build token map
+def BuildTokenMap(
+    store_install_dir = None,
+    game_install_dir = None,
+    setup_base_dir = None,
+    hdd_base_dir = None,
+    disc_base_dir = None,
+    disc_files = [],
+    use_drive_letters = False):
+
+    # Create token map
+    token_map = {}
+
+    # Add paths
+    if store_install_dir:
+        token_map[config.token_store_install_dir] = store_install_dir
+    if game_install_dir:
+        token_map[config.token_game_install_dir] = game_install_dir
+    if setup_base_dir:
+        token_map[config.token_setup_main_root] = setup_base_dir
+    if hdd_base_dir:
+        token_map[config.token_hdd_main_root] = hdd_base_dir
+        token_map[config.token_dos_main_root] = system.JoinPaths(hdd_base_dir, config.computer_folder_dos)
+        token_map[config.token_scumm_main_root] = system.JoinPaths(hdd_base_dir, config.computer_folder_scumm)
+
+    # Add discs
+    disc_letter_index = 0
+    for disc_file in disc_files:
+
+        # Get drive letter
+        disc_letter_drive = config.drives_regular[disc_letter_index]
+        disc_letter_index += 1
+
+        # Get file basename
+        disc_file_basename = system.GetFilenameBasename(disc_file)
+
+        # Find which token to use
+        disc_token_to_use = None
+        for disc_token, disc_name in config.token_disc_names.items():
+            if disc_name in disc_file:
+                disc_token_to_use = disc_token
+                break
+        else:
+            disc_token_to_use = config.token_disc_main_root
+
+        # Add entry
+        if disc_token_to_use:
+            if use_drive_letters:
+                token_map[disc_token_to_use] = "%s:/" % disc_letter_drive
+            else:
+                if disc_base_dir:
+                    token_map[disc_token_to_use] = system.JoinPaths(disc_base_dir, disc_file_basename)
+                else:
+                    token_map[disc_token_to_use] = disc_file_basename
+
+    # Return token map
+    return token_map
+
+# Resolve path
+def ResolvePath(
+    path,
+    token_map = {}):
+    for token, replacement in token_map.items():
+        if token in path:
+            path = path.replace(token, replacement)
+    return path
+
+###########################################################
+
 # Get prefix path info
 def GetPrefixPathInfo(
     path,
@@ -614,7 +682,7 @@ def SetupPrefixEnvironment(
 
         # Set prefix overrides
         wine_overrides = ["winemenubuilder.exe=d"]
-        wine_overrides += new_options.get_prefix_overrides()
+        wine_overrides += new_options.get_overrides()
         new_options.set_env_var("WINEDLLOVERRIDES", ";".join(wine_overrides))
 
         # Map the current working directory to the prefix
@@ -768,11 +836,12 @@ def CreateWinePrefix(
     # Initialize prefix
     cmds_to_run = []
     cmds_to_run.append([wine_boot_tool])
-    cmds_to_run.append(new_options.get_tricks())
+    if len(new_options.get_tricks()) > 0:
+        cmds_to_run.append(["winetricks " + trick for trick in new_options.get_tricks()])
     for cmd in cmds_to_run:
         new_options.set_blocking_processes([command.GetStarterCommand(cmd)])
         new_cmd, new_options = SetupPrefixEnvironment(
-            cmd = new_cmd,
+            cmd = cmd,
             options = new_options,
             verbose = verbose,
             pretend_run = pretend_run,

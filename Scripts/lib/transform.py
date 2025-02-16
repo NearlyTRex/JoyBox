@@ -437,9 +437,6 @@ def TransformGameFile(
     # Get game info
     game_category = game_info.get_category()
     game_subcategory = game_info.get_subcategory()
-    game_name = game_info.get_name()
-    game_transform_file = system.JoinPaths(source_dir, game_info.get_transform_file())
-    game_key_file = system.JoinPaths(source_dir, game_info.get_key_file())
 
     # Output dir doesn't exist
     if not system.IsPathDirectory(output_dir):
@@ -460,7 +457,7 @@ def TransformGameFile(
     if game_category == config.Category.COMPUTER:
         transform_success, transform_result = TransformComputerPrograms(
             game_info = game_info,
-            source_file = game_transform_file,
+            source_file = system.JoinPaths(source_dir, game_info.get_transform_file()),
             output_dir = tmp_dir_result,
             keep_setup_files = keep_setup_files,
             verbose = verbose,
@@ -472,7 +469,7 @@ def TransformGameFile(
     # Microsoft Xbox/Xbox 360
     elif game_subcategory in [config.Subcategory.MICROSOFT_XBOX, config.Subcategory.MICROSOFT_XBOX_360]:
         iso_success, iso_result = TransformDiscImage(
-            source_file = game_transform_file,
+            source_file = system.JoinPaths(source_dir, game_info.get_transform_file()),
             output_dir = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -491,7 +488,7 @@ def TransformGameFile(
     # Sony PlayStation 3
     elif game_subcategory == config.Subcategory.SONY_PLAYSTATION_3:
         iso_success, iso_result = TransformDiscImage(
-            source_file = game_transform_file,
+            source_file = system.JoinPaths(source_dir, game_info.get_transform_file()),
             output_dir = system.JoinPaths(tmp_dir_result, "iso"),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -500,7 +497,7 @@ def TransformGameFile(
             return (False, iso_result)
         transform_success, transform_result = TransformPS3DiscImage(
             source_file = iso_result,
-            source_file_dkey = game_key_file,
+            source_file_dkey = system.JoinPaths(source_dir, game_info.get_key_file()),
             output_dir = system.JoinPaths(tmp_dir_result, "output"),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -511,7 +508,7 @@ def TransformGameFile(
     # Sony PlayStation Network - PlayStation 3
     elif game_subcategory == config.Subcategory.SONY_PLAYSTATION_NETWORK_PS3:
         transform_success, transform_result = TransformPS3NetworkPackage(
-            source_file = game_transform_file,
+            source_file = system.JoinPaths(source_dir, game_info.get_transform_file()),
             output_dir = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -522,7 +519,7 @@ def TransformGameFile(
     # Sony PlayStation Network - PlayStation Vita
     elif game_subcategory == config.Subcategory.SONY_PLAYSTATION_NETWORK_PSV:
         transform_success, transform_result = TransformPSVNetworkPackage(
-            source_file = game_transform_file,
+            source_file = system.JoinPaths(source_dir, game_info.get_transform_file()),
             output_dir = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,

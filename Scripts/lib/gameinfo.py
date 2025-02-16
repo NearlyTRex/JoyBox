@@ -12,6 +12,7 @@ import metadata
 import metadataentry
 import platforms
 import jsondata
+import containers
 import stores
 
 ###########################################################
@@ -697,6 +698,8 @@ class GameInfo:
         if config.json_key_store_setup_install in store_setup:
             return store_setup[config.json_key_store_setup_install]
         return []
+    def get_store_setup_install_programs(self, store_key = None):
+        return [containers.Program(p) for p in self.get_store_setup_install(store_key)]
 
     # Get store setup preinstall
     def get_store_setup_preinstall(self, store_key = None):
@@ -706,6 +709,8 @@ class GameInfo:
         if config.json_key_store_setup_preinstall in store_setup:
             return store_setup[config.json_key_store_setup_preinstall]
         return []
+    def get_store_setup_preinstall_steps(self, store_key = None):
+        return [containers.ProgramStep(p) for p in self.get_store_setup_preinstall(store_key)]
 
     # Get store setup postinstall
     def get_store_setup_postinstall(self, store_key = None):
@@ -715,6 +720,8 @@ class GameInfo:
         if config.json_key_store_setup_postinstall in store_setup:
             return store_setup[config.json_key_store_setup_postinstall]
         return []
+    def get_store_setup_postinstall_steps(self, store_key = None):
+        return [containers.ProgramStep(p) for p in self.get_store_setup_postinstall(store_key)]
 
     # Find store setup matching installers
     def find_store_setup_matching_installers(self, store_key = None, store_subkey = None):
@@ -729,28 +736,36 @@ class GameInfo:
 
     # Determine if store setup has dos installers
     def does_store_setup_have_dos_installers(self, store_key = None):
-        matching_installers = self.find_store_setup_matching_installers(store_subkey = config.program_key_is_dos)
+        matching_installers = self.find_store_setup_matching_installers(store_key = store_key, store_subkey = config.program_key_is_dos)
         return len(matching_installers) > 0
 
     # Determine if store setup has win31 installers
     def does_store_setup_have_win31_installers(self, store_key = None):
-        matching_installers = self.find_store_setup_matching_installers(store_subkey = config.program_key_is_win31)
+        matching_installers = self.find_store_setup_matching_installers(store_key = store_key, store_subkey = config.program_key_is_win31)
         return len(matching_installers) > 0
 
     # Determine if store setup has scumm installers
     def does_store_setup_have_scumm_installers(self, store_key = None):
-        matching_installers = self.find_store_setup_matching_installers(store_subkey = config.program_key_is_scumm)
+        matching_installers = self.find_store_setup_matching_installers(store_key = store_key, store_subkey = config.program_key_is_scumm)
         return len(matching_installers) > 0
 
     # Determine if store setup has windows installers
     def does_store_setup_have_windows_installers(self, store_key = None):
-        if self.does_store_setup_have_dos_installers():
+        if self.does_store_setup_have_dos_installers(store_key):
             return False
-        if self.does_store_setup_have_win31_installers():
+        if self.does_store_setup_have_win31_installers(store_key):
             return False
-        if self.does_store_setup_have_scumm_installers():
+        if self.does_store_setup_have_scumm_installers(store_key):
             return False
         return True
+
+    # Determine if store setup needs to keep discs
+    def does_store_setup_need_to_keep_discs(self, store_key = None):
+        if self.does_store_setup_have_dos_installers(store_key):
+            return True
+        if self.does_store_setup_have_win31_installers(store_key):
+            return True
+        return False
 
 ###########################################################
 
