@@ -456,7 +456,7 @@ def GetBacktrace():
         lineno = frame_info.lineno
         name = frame_info.function
         backtrace.append(f"File: {filename}, Line: {lineno}, Function: {name}")
-    return "\n".join(backtrace)
+    return "\n" + "\n".join(backtrace)
 
 ###########################################################
 
