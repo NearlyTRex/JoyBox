@@ -12,6 +12,8 @@ import environment
 import command
 import programs
 import registry
+import archive
+import chd
 import gui
 import ini
 
@@ -362,6 +364,74 @@ def FindFirstAvailableRealDrivePath(options):
     # Nothing available
     return None
 
+# Mount disc image to available drive
+def MountDiscImageToAvailableDrive(
+    src,
+    mount_dir,
+    options,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check params
+    system.AssertPathExists(src, "src")
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
+    if not tmp_dir_success:
+        return False
+
+    # Get temporary files
+    temp_iso_file = system.JoinPaths(tmp_dir_result, system.GetFilenameBasename(src) + config.DiscImageFileType.ISO.cval())
+    temp_toc_file = system.JoinPaths(tmp_dir_result, system.GetFilenameBasename(src) + ".toc")
+
+    # Extract iso from chd
+    success = chd.ExtractDiscCHD(
+        chd_file = src,
+        binary_file = temp_iso_file,
+        toc_file = temp_toc_file,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Make mount directories
+    system.MakeDirectory(
+        dir = mount_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Extract iso files to mount point
+    success = archive.ExtractArchive(
+        archive_file = temp_iso_file,
+        extract_dir = mount_dir,
+        delete_original = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Delete temporary directory
+    system.RemoveDirectory(
+        dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Mount directory
+    success = MountDirectoryToAvailableDrive(
+        src = mount_dir,
+        options = options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
+
 # Mount directory to available drive
 def MountDirectoryToAvailableDrive(
     src,
@@ -371,7 +441,7 @@ def MountDirectoryToAvailableDrive(
     exit_on_failure = False):
 
     # Check params
-    system.AssertPathExists(src, "source_dir")
+    system.AssertPathExists(src, "src")
     system.AssertPathExists(options.get_prefix_dir(), "prefix_dir")
 
     # Get first available drive path
