@@ -112,6 +112,7 @@ def RunSetupPrograms(
     for setup_program in setup_programs:
         setup_program_exe = sandbox.ResolvePath(setup_program.get_exe(), token_map)
         setup_program_cwd = sandbox.ResolvePath(setup_program.get_cwd(), token_map)
+        setup_program_args = setup_program.get_args()
         setup_program_type = setup_program.get_installer_type()
         setup_program_is_dos = setup_program.is_dos()
         setup_program_is_win31 = setup_program.is_win31()
@@ -131,7 +132,7 @@ def RunSetupPrograms(
             dos_emulator = programs.GetEmulatorProgram("DosBoxX")
 
             # Get dos program
-            dos_program = system.JoinPaths(setup_base_dir, setup_program_cwd, setup_program_exe)
+            dos_program = system.JoinPaths(setup_program_cwd, setup_program_exe)
 
             # Get setup command
             program_drive = system.GetFilenameDrive(dos_program)
@@ -143,6 +144,7 @@ def RunSetupPrograms(
             program_setup_cmd = emulators.GetComputerDosLaunchCommand(
                 options = options,
                 start_program = program_file,
+                start_args = setup_program_args,
                 start_letter = program_drive,
                 start_offset = program_offset)
 
@@ -302,21 +304,6 @@ def InstallComputerGame(
     if not game_setup_options.has_existing_prefix_c_drive_real():
         return False
 
-    # Get game disc files
-    game_disc_files = system.RebaseFilePaths(
-        paths = game_info.get_files(extension = [".chd"]),
-        old_base_path = "",
-        new_base_path = system.GetFilenameDirectory(source_file))
-
-    # Build token map
-    game_token_map = sandbox.BuildTokenMap(
-        store_install_dir = game_info.get_main_store_install_dir(),
-        setup_base_dir = game_setup_dir,
-        hdd_base_dir = game_setup_options.get_prefix_c_drive_real(),
-        disc_base_dir = game_setup_dir,
-        disc_files = game_disc_files,
-        use_drive_letters = game_info.does_store_setup_need_to_keep_discs())
-
     # Copy game files
     system.CopyContents(
         src = system.GetFilenameDirectory(source_file),
@@ -327,32 +314,29 @@ def InstallComputerGame(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Get game disc files again
-    game_disc_files = system.BuildFileListByExtensions(game_setup_dir, [".chd"])
+    # Get game disc files
+    game_disc_files = system.BuildFileListByExtensions(game_setup_dir, extensions = [".chd"])
 
-    # Build token map again
+    # Build token map
     game_token_map = sandbox.BuildTokenMap(
         store_install_dir = game_info.get_main_store_install_dir(),
         setup_base_dir = game_setup_dir,
         hdd_base_dir = game_setup_options.get_prefix_c_drive_real(),
         disc_base_dir = game_setup_dir,
-        disc_files = game_disc_files)
+        disc_files = game_disc_files,
+        use_drive_letters = game_info.does_store_setup_need_to_keep_discs())
 
     # Mount discs
     for game_disc_file in game_disc_files:
-        mount_dir = system.JoinPaths(game_setup_dir, system.GetFilenameBasename(game_disc_file))
-        chd.MountDiscCHD(
-            chd_file = game_disc_file,
-            mount_dir = mount_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        sandbox.MountDirectoryToAvailableDrive(
-            src = mount_dir,
+        success = sandbox.MountDiscImageToAvailableDrive(
+            src = game_disc_file,
+            mount_dir = system.JoinPaths(game_setup_dir, system.GetFilenameBasename(game_disc_file)),
             options = game_setup_options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Run pre-install steps
     RunSetupSteps(
