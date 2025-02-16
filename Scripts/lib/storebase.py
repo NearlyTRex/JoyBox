@@ -498,9 +498,8 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        json_files = system.BuildFileListByExtensions(
-            root = environment.GetJsonMetadataDir(self.GetSupercategory(), self.GetCategory(), self.GetSubcategory()),
-            extensions = [".json"])
+        json_root = environment.GetJsonMetadataDir(self.GetSupercategory(), self.GetCategory(), self.GetSubcategory())
+        json_files = system.BuildFileListByExtensions(json_root, extensions = [".json"])
         for json_file in json_files:
             json_data = system.ReadJsonFile(
                 src = json_file,

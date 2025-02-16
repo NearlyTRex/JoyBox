@@ -70,9 +70,7 @@ def GeneratePlaylist(
     # Generate playlist contents
     playlist_contents = []
     if recursive:
-        for file in system.BuildFileListByExtensions(
-            root = source_dir,
-            extensions = extensions):
+        for file in system.BuildFileListByExtensions(source_dir, extensions = extensions):
             if only_keep_ends:
                 playlist_contents.append(system.GetFilenameFile(file))
             else:
