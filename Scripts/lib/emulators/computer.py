@@ -61,12 +61,13 @@ system_files = {}
 def GetDosLaunchCommand(
     options,
     start_program = None,
+    start_args = [],
     start_letter = "c",
     start_offset = None,
     fullscreen = False):
 
     # Search for disc images
-    disc_images = system.BuildFileListByExtensions(options.get_prefix_dos_d_drive(), [".chd"])
+    disc_images = system.BuildFileListByExtensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
 
     # Create launch command
     launch_cmd = [programs.GetEmulatorProgram("DosBoxX")]
@@ -97,7 +98,10 @@ def GetDosLaunchCommand(
     if system.IsPathValid(start_offset):
         launch_cmd += ["-c", "cd %s" % start_offset]
     if system.IsPathValid(start_program):
-        launch_cmd += ["-c", "%s" % system.GetFilenameFile(start_program)]
+        if isinstance(start_args, list) and len(start_args) > 0:
+            launch_cmd += ["-c", "%s %s" % (system.GetFilenameFile(start_program), " ".join(start_args))]
+        else:
+            launch_cmd += ["-c", "%s" % system.GetFilenameFile(start_program)]
 
     # Add other flags
     if fullscreen:
@@ -110,12 +114,13 @@ def GetDosLaunchCommand(
 def GetWin31LaunchCommand(
     options,
     start_program = None,
+    start_args = [],
     start_letter = "c",
     start_offset = None,
     fullscreen = False):
 
     # Search for disc images
-    disc_images = system.BuildFileListByExtensions(options.get_prefix_dos_d_drive(), [".chd"])
+    disc_images = system.BuildFileListByExtensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
 
     # Create launch command
     launch_cmd = [programs.GetEmulatorProgram("DosBoxX")]
@@ -148,7 +153,10 @@ def GetWin31LaunchCommand(
     if system.IsPathValid(start_offset):
         launch_cmd += ["-c", "cd %s" % start_offset]
     if system.IsPathValid(start_program):
-        launch_cmd += ["-c", "WIN RUNEXIT %s" % system.GetFilenameFile(start_program)]
+        if isinstance(start_args, list) and len(start_args) > 0:
+            launch_cmd += ["-c", "WIN RUNEXIT %s %s" % (system.GetFilenameFile(start_program), " ".join(start_args))]
+        else:
+            launch_cmd += ["-c", "WIN RUNEXIT %s" % system.GetFilenameFile(start_program)]
         launch_cmd += ["-c", "EXIT"]
 
     # Add other flags
