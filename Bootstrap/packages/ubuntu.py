@@ -87,6 +87,7 @@ apt_packages = [
     "apt-file",
     "blueman",
     "clamav",
+    "fuseiso",
     "jackd",
     "pulseaudio-utils",
     "qdirstat",
@@ -260,6 +261,7 @@ apt_packages = [
     "net-tools",
     "openssh-server",
     "openssl",
+    "winbind",
 
     # Sound
     "audacity",
