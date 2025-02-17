@@ -13,6 +13,7 @@ from .exiftool import ExifTool
 from .extractxiso import ExtractXIso
 from .ffmpeg import FFMpeg
 from .firefox import Firefox
+from .fuseiso import FuseISO
 from .geckodriver import GeckoDriver
 from .git import Git
 from .goldbergemu import GoldbergEmu
@@ -84,6 +85,7 @@ def GetToolMap():
     AddInstance(ExtractXIso)
     AddInstance(FFMpeg)
     AddInstance(Firefox)
+    AddInstance(FuseISO)
     AddInstance(GeckoDriver)
     AddInstance(Git)
     AddInstance(GoldbergEmu)
