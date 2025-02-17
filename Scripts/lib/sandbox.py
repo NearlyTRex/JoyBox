@@ -821,7 +821,7 @@ def SetupPrefixCommand(
     if new_options.is_wine_prefix():
 
         # Set desktop options
-        if new_options.is_prefix_using_virtual_desktop():
+        if new_options.use_virtual_desktop():
             new_cmd += ["explorer", "/desktop=" + new_options.get_desktop_dimensions()]
 
     # Adjust command based on executable type
@@ -916,12 +916,14 @@ def CreateWinePrefix(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        command.RunBlockingCommand(
+        code = command.RunBlockingCommand(
             cmd = new_cmd,
             options = new_options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if code != 0:
+            return False
 
     # Creation successful
     return True
