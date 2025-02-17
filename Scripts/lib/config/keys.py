@@ -148,47 +148,6 @@ program_step_key_type = "type"
 program_step_key_skip_existing = "skip_existing"
 program_step_key_skip_identical = "skip_identical"
 
-# Computer program key defaults
-program_key_defaults = []
-program_key_defaults.append({"key": program_key_cwd, "default": None})
-program_key_defaults.append({"key": program_key_env, "default": copy.deepcopy(os.environ)})
-program_key_defaults.append({"key": program_key_args, "default": []})
-program_key_defaults.append({"key": program_key_winver, "default": None})
-program_key_defaults.append({"key": program_key_tricks, "default": []})
-program_key_defaults.append({"key": program_key_overrides, "default": []})
-program_key_defaults.append({"key": program_key_desktop, "default": None})
-program_key_defaults.append({"key": program_key_desktop_width, "default": None})
-program_key_defaults.append({"key": program_key_desktop_height, "default": None})
-program_key_defaults.append({"key": program_key_installer_type, "default": None})
-program_key_defaults.append({"key": program_key_serial, "default": None})
-program_key_defaults.append({"key": program_key_is_shell, "default": False})
-program_key_defaults.append({"key": program_key_is_32_bit, "default": False})
-program_key_defaults.append({"key": program_key_is_dos, "default": False})
-program_key_defaults.append({"key": program_key_is_win31, "default": False})
-program_key_defaults.append({"key": program_key_is_scumm, "default": False})
-program_key_defaults.append({"key": program_key_allow_processing, "default": True})
-program_key_defaults.append({"key": program_key_force_powershell, "default": False})
-program_key_defaults.append({"key": program_key_force_appimage, "default": False})
-program_key_defaults.append({"key": program_key_use_virtual_desktop, "default": False})
-program_key_defaults.append({"key": program_key_force_prefix, "default": False})
-program_key_defaults.append({"key": program_key_is_wine_prefix, "default": False})
-program_key_defaults.append({"key": program_key_is_sandboxie_prefix, "default": False})
-program_key_defaults.append({"key": program_key_is_prefix_mapped_cwd, "default": False})
-program_key_defaults.append({"key": program_key_prefix_dir, "default": None})
-program_key_defaults.append({"key": program_key_general_prefix_dir, "default": None})
-program_key_defaults.append({"key": program_key_prefix_user_profile_dir, "default": None})
-program_key_defaults.append({"key": program_key_prefix_c_drive_virtual, "default": None})
-program_key_defaults.append({"key": program_key_prefix_c_drive_real, "default": None})
-program_key_defaults.append({"key": program_key_prefix_name, "default": None})
-program_key_defaults.append({"key": program_key_prefix_cwd, "default": None})
-program_key_defaults.append({"key": program_key_lnk_base_path, "default": None})
-program_key_defaults.append({"key": program_key_output_paths, "default": []})
-program_key_defaults.append({"key": program_key_blocking_processes, "default": []})
-program_key_defaults.append({"key": program_key_creationflags, "default": 0})
-program_key_defaults.append({"key": program_key_stdout, "default": None})
-program_key_defaults.append({"key": program_key_stderr, "default": None})
-program_key_defaults.append({"key": program_key_include_stderr, "default": False})
-
 # General json keys
 json_key_launch_name = "launch_name"
 json_key_launch_file = "launch_file"

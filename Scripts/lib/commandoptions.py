@@ -15,17 +15,8 @@ class CommandOptions:
     # Constructor
     def __init__(self, **kwargs):
         self.options = jsondata.JsonData()
-
-        # Set defaults
-        for program_key_default in config.program_key_defaults:
-            key = program_key_default["key"]
-            default = program_key_default["default"]
-            self.options.set_value(key, default)
-
-        # Override default values with kwargs
         for key, value in kwargs.items():
-            if self.options.has_key(key):
-                self.options.set_value(key, value)
+            self.options.set_value(key, value)
 
     # Copy method
     def copy(self):
@@ -45,17 +36,19 @@ class CommandOptions:
 
     # Environment variables
     def get_env(self):
-        return self.options.get_value(config.program_key_env)
+        return self.options.get_value(config.program_key_env, copy.deepcopy(os.environ))
     def set_env(self, value):
         self.options.set_value(config.program_key_env, value)
     def get_env_var(self, key):
         return self.options.get_subvalue(config.program_key_env, key)
     def set_env_var(self, key, value):
+        if not self.options.has_key(config.program_key_env):
+            self.options.set_value(config.program_key_env, {})
         self.options.set_subvalue(config.program_key_env, key, value)
 
     # Arguments
     def get_args(self):
-        return self.options.get_value(config.program_key_args)
+        return self.options.get_value(config.program_key_args, [])
     def set_args(self, value):
         self.options.set_value(config.program_key_args, value)
 
@@ -70,15 +63,14 @@ class CommandOptions:
         tricks = []
         if isinstance(self.options.get_value(config.program_key_winver), str):
             tricks += [self.options.get_value(config.program_key_winver)]
-        if isinstance(self.options.get_value(config.program_key_tricks), list):
-            tricks += self.options.get_value(config.program_key_tricks)
+        tricks += self.options.get_value(config.program_key_tricks, [])
         return tricks
     def set_tricks(self, value):
         self.options.set_value(config.program_key_tricks, value)
 
     # Overrides
     def get_overrides(self):
-        return self.options.get_value(config.program_key_overrides)
+        return self.options.get_value(config.program_key_overrides, [])
     def set_overrides(self, value):
         self.options.set_value(config.program_key_overrides, value)
 
@@ -118,55 +110,55 @@ class CommandOptions:
 
     # Shell execution
     def is_shell(self):
-        return self.options.get_value(config.program_key_is_shell)
+        return self.options.get_value(config.program_key_is_shell, False)
     def set_is_shell(self, value):
         self.options.set_value(config.program_key_is_shell, value)
 
     # 32-bit execution
     def is_32_bit(self):
-        return self.options.get_value(config.program_key_is_32_bit)
+        return self.options.get_value(config.program_key_is_32_bit, False)
     def set_is_32_bit(self, value):
         self.options.set_value(config.program_key_is_32_bit, value)
 
     # Dos execution
     def is_dos(self):
-        return self.options.get_value(config.program_key_is_dos)
+        return self.options.get_value(config.program_key_is_dos, False)
     def set_is_dos(self, value):
         self.options.set_value(config.program_key_is_dos, value)
 
     # Windows 3.1 execution
     def is_win31(self):
-        return self.options.get_value(config.program_key_is_win31)
+        return self.options.get_value(config.program_key_is_win31, False)
     def set_is_win31(self, value):
         self.options.set_value(config.program_key_is_win31, value)
 
     # Scumm execution
     def is_scumm(self):
-        return self.options.get_value(config.program_key_is_scumm)
+        return self.options.get_value(config.program_key_is_scumm, False)
     def set_is_scumm(self, value):
         self.options.set_value(config.program_key_is_scumm, value)
 
     # Allow processing
     def allow_processing(self):
-        return self.options.get_value(config.program_key_allow_processing)
+        return self.options.get_value(config.program_key_allow_processing, False)
     def set_allow_processing(self, value):
         self.options.set_value(config.program_key_allow_processing, value)
 
     # Force powershell
     def force_powershell(self):
-        return self.options.get_value(config.program_key_force_powershell)
+        return self.options.get_value(config.program_key_force_powershell, False)
     def set_force_powershell(self, value):
         self.options.set_value(config.program_key_force_powershell, value)
 
     # Force AppImage
     def force_appimage(self):
-        return self.options.get_value(config.program_key_force_appimage)
+        return self.options.get_value(config.program_key_force_appimage, False)
     def set_force_appimage(self, value):
         self.options.set_value(config.program_key_force_appimage, value)
 
     # Use virtual desktop
     def use_virtual_desktop(self):
-        return self.options.get_value(config.program_key_use_virtual_desktop)
+        return self.options.get_value(config.program_key_use_virtual_desktop, False)
     def set_use_virtual_desktop(self, value):
         self.options.set_value(config.program_key_use_virtual_desktop, value)
 
@@ -176,19 +168,19 @@ class CommandOptions:
 
     # Force prefix
     def force_prefix(self):
-        return self.options.get_value(config.program_key_force_prefix)
+        return self.options.get_value(config.program_key_force_prefix, False)
     def set_force_prefix(self, value):
         self.options.set_value(config.program_key_force_prefix, value)
 
     # Wine prefix
     def is_wine_prefix(self):
-        return self.options.get_value(config.program_key_is_wine_prefix)
+        return self.options.get_value(config.program_key_is_wine_prefix, False)
     def set_is_wine_prefix(self, value):
         self.options.set_value(config.program_key_is_wine_prefix, value)
 
     # Sandboxie prefix
     def is_sandboxie_prefix(self):
-        return self.options.get_value(config.program_key_is_sandboxie_prefix)
+        return self.options.get_value(config.program_key_is_sandboxie_prefix, False)
     def set_is_sandboxie_prefix(self, value):
         self.options.set_value(config.program_key_is_sandboxie_prefix, value)
 
@@ -198,7 +190,7 @@ class CommandOptions:
 
     # Prefix mapped current working directory
     def is_prefix_mapped_cwd(self):
-        return self.options.get_value(config.program_key_is_prefix_mapped_cwd)
+        return self.options.get_value(config.program_key_is_prefix_mapped_cwd, False)
     def set_is_prefix_mapped_cwd(self, value):
         self.options.set_value(config.program_key_is_prefix_mapped_cwd, value)
 
@@ -298,19 +290,19 @@ class CommandOptions:
 
     # Output paths
     def get_output_paths(self):
-        return self.options.get_value(config.program_key_output_paths)
+        return self.options.get_value(config.program_key_output_paths, [])
     def set_output_paths(self, value):
         self.options.set_value(config.program_key_output_paths, value)
 
     # Blocking processes
     def get_blocking_processes(self):
-        return self.options.get_value(config.program_key_blocking_processes)
+        return self.options.get_value(config.program_key_blocking_processes, [])
     def set_blocking_processes(self, value):
         self.options.set_value(config.program_key_blocking_processes, value)
 
     # Creation flags
     def get_creationflags(self):
-        return self.options.get_value(config.program_key_creationflags)
+        return self.options.get_value(config.program_key_creationflags, 0)
     def set_creationflags(self, value):
         self.options.set_value(config.program_key_creationflags, value)
 
@@ -328,6 +320,6 @@ class CommandOptions:
 
     # Include stderr in stdout
     def include_stderr(self):
-        return self.options.get_value(config.program_key_include_stderr)
+        return self.options.get_value(config.program_key_include_stderr, False)
     def set_include_stderr(self, value):
         self.options.set_value(config.program_key_include_stderr, value)
