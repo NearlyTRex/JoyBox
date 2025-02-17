@@ -183,13 +183,9 @@ def SetupPowershellCommand(
     verbose = False,
     exit_on_failure = False):
 
-    # Check if powershell command
-    if not IsPowershellCommand(cmd) and not options.force_powershell():
-        return (cmd, options)
-
     # Copy params
     new_cmd = cmd
-    new_options = copy.deepcopy(options)
+    new_options = options.copy()
 
     # Setup powershell command
     new_cmd = ["powershell", "-NoProfile", "-Command"]
@@ -203,13 +199,9 @@ def SetupAppImageCommand(
     verbose = False,
     exit_on_failure = False):
 
-    # Check if appimage command
-    if not IsAppImageCommand(cmd) and not options.force_appimage():
-        return (cmd, options)
-
     # Copy params
     new_cmd = cmd
-    new_options = copy.deepcopy(options)
+    new_options = options.copy()
 
     # Setup appimage command
     for cmd_segment in CreateCommandList(cmd):
@@ -231,13 +223,9 @@ def SetupPrefixCommand(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Check if prefix command
-    if not IsPrefixCommand(cmd) and not options.force_prefix():
-        return (cmd, options)
-
     # Copy params
     new_cmd = cmd
-    new_options = copy.deepcopy(options)
+    new_options = options.copy()
 
     # Get default prefix if not specified
     if not new_options.get_prefix_name() or not new_options.get_prefix_dir():
@@ -276,25 +264,28 @@ def PreprocessCommand(
     exit_on_failure = False):
 
     # Preprocess for powershell
-    cmd, options = SetupPowershellCommand(
-        cmd = cmd,
-        options = options,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+    if IsPowershellCommand(cmd) or options.force_powershell():
+        cmd, options = SetupPowershellCommand(
+            cmd = cmd,
+            options = options,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     # Preprocess for appimages
-    cmd, options = SetupAppImageCommand(
-        cmd = cmd,
-        options = options,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+    if IsAppImageCommand(cmd) or options.force_appimage():
+        cmd, options = SetupAppImageCommand(
+            cmd = cmd,
+            options = options,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     # Preprocess for prefix
-    cmd, options = SetupPrefixCommand(
-        cmd = cmd,
-        options = options,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+    if IsPrefixCommand(cmd) or options.force_prefix():
+        cmd, options = SetupPrefixCommand(
+            cmd = cmd,
+            options = options,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     # Return any changes
     return (cmd, options)
