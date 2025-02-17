@@ -16,7 +16,7 @@ import archive
 def IsISOMounted(iso_file, mount_dir):
     return (
         system.IsPathFile(iso_file) and
-        system.IsPathDirectory(mount_dir) and
+        system.DoesPathExist(GetActualMountPoint(iso_file, mount_dir)) and
         not system.IsDirectoryEmpty(mount_dir)
     )
 
@@ -57,7 +57,7 @@ def CreateISO(
         create_command += [source_dir]
 
     # Run create command
-    command.RunBlockingCommand(
+    code = command.RunBlockingCommand(
         cmd = create_command,
         options = command.CreateCommandOptions(
             output_paths = [iso_file],
@@ -65,6 +65,8 @@ def CreateISO(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if code != 0:
+        return False
 
     # Clean up
     if delete_original:
@@ -104,7 +106,7 @@ def ExtractISO(
     ]
 
     # Run extract command
-    command.RunBlockingCommand(
+    code = command.RunBlockingCommand(
         cmd = extract_cmd,
         options = command.CreateCommandOptions(
             output_paths = [extract_dir],
@@ -112,6 +114,8 @@ def ExtractISO(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if code != 0:
+        return False
 
     # Reset permissions on extracted files
     system.ChmodFileOrDirectory(
@@ -133,6 +137,51 @@ def ExtractISO(
     # Check result
     return os.path.exists(extract_dir)
 
+# Get actual mount point
+def GetActualMountPoint(
+    iso_file,
+    mount_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check if mounted
+    if not IsISOMounted(iso_file, mount_dir):
+        return None
+
+    # Windows
+    if environment.IsWindowsPlatform():
+
+        # Get drive command
+        drive_cmd = [
+            "powershell",
+            "-Command", "Get-DiskImage",
+            "-ImagePath", "\"" + iso_file + "\"",
+            "|", "Get-Volume",
+            "|", "Select-Object", "-ExpandProperty", "DriveLetter"
+        ]
+
+        # Run drive command
+        drive_output = command.RunOutputCommand(
+            cmd = drive_cmd,
+            options = command.CreateCommandOptions(
+                is_shell=True),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+        # Get drive letter
+        drive_text = drive_output
+        if isinstance(drive_output, bytes):
+            drive_text = drive_output.decode()
+        if drive_text:
+            return f"{drive_text}:\\"
+        else:
+            return None
+
+    # Mount point matches expectations
+    return mount_dir
+
 # Mount iso
 def MountISO(
     iso_file,
@@ -152,16 +201,53 @@ def MountISO(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Extract files to mount point
-    success = ExtractISO(
-        iso_file = iso_file,
-        extract_dir = mount_dir,
-        delete_original = False,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
+    # Windows
+    if environment.IsWindowsPlatform():
+
+        # Get mount command
+        mount_cmd = [
+            "powershell",
+            "-Command", "Mount-DiskImage",
+            "-ImagePath", "\"" + iso_file + "\""
+        ]
+
+        # Run mount command
+        code = command.RunBlockingCommand(
+            cmd = mount_cmd,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            return False
+
+    # Linux
+    elif environment.IsLinuxPlatform():
+
+        # Get tool
+        iso_tool = None
+        if programs.IsToolInstalled("FuseISO"):
+            iso_tool = programs.GetToolProgram("FuseISO")
+        if not iso_tool:
+            system.LogError("FuseISO was not found")
+            return False
+
+        # Get mount command
+        mount_cmd = [
+            iso_tool,
+            iso_file,
+            mount_dir
+        ]
+
+        # Run mount command
+        code = command.RunBlockingCommand(
+            cmd = mount_cmd,
+            options = command.CreateCommandOptions(
+                blocking_processes = [iso_tool]),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            return False
 
     # Check result
     return IsISOMounted(iso_file, mount_dir)
@@ -177,6 +263,53 @@ def UnmountISO(
     # Check if mounted
     if not IsISOMounted(iso_file, mount_dir):
         return True
+
+    # Windows
+    if environment.IsWindowsPlatform():
+
+        # Get unmount command
+        unmount_cmd = [
+            "powershell",
+            "-Command", "Dismount-DiskImage",
+            "-ImagePath", "\"" + iso_file + "\""
+        ]
+
+        # Run unmount command
+        code = command.RunBlockingCommand(
+            cmd = unmount_cmd,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            return False
+
+    # Linux
+    elif environment.IsLinuxPlatform():
+
+        # Get tool
+        iso_tool = None
+        if programs.IsToolInstalled("FUserMount"):
+            iso_tool = programs.GetToolProgram("FUserMount")
+        if not iso_tool:
+            system.LogError("FUserMount was not found")
+            return False
+
+        # Get unmount command
+        unmount_cmd = [
+            iso_tool,
+            "-u", mount_dir
+        ]
+
+        # Run unmount command
+        code = command.RunBlockingCommand(
+            cmd = unmount_cmd,
+            options = command.CreateCommandOptions(
+                blocking_processes = [iso_tool]),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            return False
 
     # Remove mount point
     system.RemoveDirectory(
