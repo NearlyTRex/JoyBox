@@ -188,7 +188,9 @@ def SetupPowershellCommand(
     new_options = options.copy()
 
     # Setup powershell command
-    new_cmd = ["powershell", "-NoProfile", "-Command"]
+    new_cmd = []
+    if not IsPowershellCommand(cmd):
+        new_cmd += ["powershell", "-NoProfile", "-Command"]
     new_cmd += CreateCommandList(cmd)
     return (new_cmd, new_options)
 
