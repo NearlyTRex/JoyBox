@@ -248,6 +248,14 @@ else:
     ini_defaults["Tools.Wine"]["wine_install_dir"] = "/usr/bin"
     ini_defaults["Tools.Wine"]["wine_sandbox_dir"] = "$HOME/Sandbox"
 
+# Tools.FuseISO
+if environment.IsLinuxPlatform():
+    ini_defaults["Tools.FuseISO"] = {}
+    ini_defaults["Tools.FuseISO"]["fuseiso_exe"] = "fuseiso"
+    ini_defaults["Tools.FuseISO"]["fuseiso_install_dir"] = "/usr/bin"
+    ini_defaults["Tools.FuseISO"]["fusermount_exe"] = "fusermount"
+    ini_defaults["Tools.FuseISO"]["fusermount_install_dir"] = "/usr/bin"
+
 # Tools.Curl
 ini_defaults["Tools.Curl"] = {}
 if environment.IsWindowsPlatform():
