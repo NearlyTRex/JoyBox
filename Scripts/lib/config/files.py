@@ -9,6 +9,7 @@ from . import types
 class DiscImageFileType(types.EnumType):
     ISO                     = ("ISO", ".iso")
     CUE                     = ("CUE", ".cue")
+    TOC                     = ("TOC", ".toc")
     GDI                     = ("GDI", ".gdi")
     CHD                     = ("CHD", ".chd")
 
