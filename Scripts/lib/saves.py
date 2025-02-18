@@ -47,7 +47,7 @@ def PackSave(
     # Get output save dir
     output_save_dir = environment.GetLockerGamingSaveDir(game_category, game_subcategory, game_name)
     system.MakeDirectory(
-        dir = output_save_dir,
+        src = output_save_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -106,7 +106,7 @@ def PackSave(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -134,7 +134,7 @@ def UnpackSave(
     # Get output save dir
     output_save_dir = environment.GetCacheGamingSaveDir(game_category, game_subcategory, game_name)
     system.MakeDirectory(
-        dir = output_save_dir,
+        src = output_save_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -179,7 +179,7 @@ def NormalizeSaveDir(
             user_path = system.JoinPaths(save_dir, config.SaveType.GENERAL, user_folder)
             if not os.path.exists(user_path):
                 success = system.MakeDirectory(
-                    dir = user_path,
+                    src = user_path,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
@@ -210,12 +210,12 @@ def NormalizeSaveArchive(
     tmp_dir_extract = system.JoinPaths(tmp_dir_result, "extract")
     tmp_dir_archive = system.JoinPaths(tmp_dir_result, "archive")
     system.MakeDirectory(
-        dir = tmp_dir_extract,
+        src = tmp_dir_extract,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.MakeDirectory(
-        dir = tmp_dir_archive,
+        src = tmp_dir_archive,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -264,7 +264,7 @@ def NormalizeSaveArchive(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

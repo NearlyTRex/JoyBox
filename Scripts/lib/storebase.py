@@ -1016,7 +1016,7 @@ class StoreBase:
                         at_least_one_copy = True
         if not at_least_one_copy:
             system.RemoveDirectory(
-                dir = tmp_dir_result,
+                src = tmp_dir_result,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -1036,7 +1036,7 @@ class StoreBase:
 
         # Delete temporary directory
         system.RemoveDirectory(
-            dir = tmp_dir_result,
+            src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -1092,7 +1092,7 @@ class StoreBase:
         # Clean output
         if clean_output:
             system.RemoveDirectoryContents(
-                dir = output_dir,
+                src = output_dir,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -1111,7 +1111,7 @@ class StoreBase:
 
         # Delete temporary directory
         system.RemoveDirectory(
-            dir = tmp_dir_result,
+            src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -1164,7 +1164,7 @@ class StoreBase:
 
         # Delete temporary directory
         system.RemoveDirectory(
-            dir = tmp_dir_result,
+            src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

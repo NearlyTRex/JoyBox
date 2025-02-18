@@ -652,7 +652,7 @@ class GOG(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             system.RemoveDirectory(
-                dir = tmp_dir_dlc_extra,
+                src = tmp_dir_dlc_extra,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -660,7 +660,7 @@ class GOG(storebase.StoreBase):
         # Clean output
         if clean_output:
             system.RemoveDirectoryContents(
-                dir = output_dir,
+                src = output_dir,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -675,7 +675,7 @@ class GOG(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         if not success:
             system.RemoveDirectory(
-                dir = tmp_dir_result,
+                src = tmp_dir_result,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -683,7 +683,7 @@ class GOG(storebase.StoreBase):
 
         # Delete temporary directory
         system.RemoveDirectory(
-            dir = tmp_dir_result,
+            src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

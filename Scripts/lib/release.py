@@ -105,7 +105,7 @@ def SetupGeneralRelease(
 
     # Create install dir if necessary
     success = system.MakeDirectory(
-        dir = install_dir,
+        src = install_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -275,7 +275,7 @@ def SetupGeneralRelease(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -341,7 +341,7 @@ def DownloadGeneralRelease(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -528,22 +528,22 @@ def BuildAppImageFromSource(
 
     # Make folders
     system.MakeDirectory(
-        dir = install_dir,
+        src = install_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.MakeDirectory(
-        dir = source_dir,
+        src = source_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.MakeDirectory(
-        dir = appimage_dir,
+        src = appimage_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.MakeDirectory(
-        dir = download_dir,
+        src = download_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -593,7 +593,7 @@ def BuildAppImageFromSource(
 
     # Make build folder
     success = system.MakeDirectory(
-        dir = source_build_dir,
+        src = source_build_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -711,7 +711,7 @@ def BuildAppImageFromSource(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

@@ -863,7 +863,7 @@ def MountFiles(
     # Create mount point
     if environment.IsUnixPlatform():
         system.MakeDirectory(
-            dir = mount_path,
+            src = mount_path,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not system.DoesPathExist(mount_path) or not system.IsDirectoryEmpty(mount_path):

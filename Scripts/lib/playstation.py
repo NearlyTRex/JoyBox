@@ -180,7 +180,7 @@ def ExtractPS3ISO(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            file = iso_file_dec,
+            src = iso_file_dec,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -214,12 +214,12 @@ def VerifyPS3CHD(
 
     # Make directories
     system.MakeDirectory(
-        dir = iso_tmp_dir,
+        src = iso_tmp_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.MakeDirectory(
-        dir = raw_tmp_dir,
+        src = raw_tmp_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -248,7 +248,7 @@ def VerifyPS3CHD(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -304,7 +304,7 @@ def ExtractPSNPKG(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            file = pkg_file,
+            src = pkg_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -355,7 +355,7 @@ def StripPSV(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            file = src_psv_file,
+            src = src_psv_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -404,7 +404,7 @@ def UnstripPSV(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            file = src_psv_file,
+            src = src_psv_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -460,7 +460,7 @@ def TrimPSV(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            file = src_psv_file,
+            src = src_psv_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -516,7 +516,7 @@ def UntrimPSV(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            file = src_psv_file,
+            src = src_psv_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

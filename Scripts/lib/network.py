@@ -146,7 +146,7 @@ def DownloadUrl(
     # Create output directory
     if output_dir:
         system.MakeDirectory(
-            dir = output_dir,
+            src = output_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -192,7 +192,7 @@ def DownloadGitUrl(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         system.RemoveDirectoryContents(
-            dir = output_dir,
+            src = output_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -492,12 +492,12 @@ def ArchiveGithubRepository(
     tmp_file_archive = system.JoinPaths(tmp_dir_archive, "tmp.zip")
     out_file_archive = system.JoinPaths(output_dir, github_repo + "_" + str(environment.GetCurrentTimestamp()) + config.ArchiveFileType.ZIP.cval())
     system.MakeDirectory(
-        dir = tmp_dir_download,
+        src = tmp_dir_download,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.MakeDirectory(
-        dir = tmp_dir_archive,
+        src = tmp_dir_archive,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -520,7 +520,7 @@ def ArchiveGithubRepository(
     # Remove git folder
     if clean:
         success = system.RemoveDirectory(
-            dir = system.JoinPaths(tmp_dir_download, ".git"),
+            src = system.JoinPaths(tmp_dir_download, ".git"),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -564,7 +564,7 @@ def ArchiveGithubRepository(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

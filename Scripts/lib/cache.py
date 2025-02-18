@@ -30,12 +30,12 @@ def RemoveGameFromCache(
 
     # Remove directories
     system.RemoveDirectory(
-        dir = game_info.get_local_cache_dir(),
+        src = game_info.get_local_cache_dir(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.RemoveDirectory(
-        dir = game_info.get_remote_cache_dir(),
+        src = game_info.get_remote_cache_dir(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -120,7 +120,7 @@ def InstallGameToCache(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -193,7 +193,7 @@ def AddTransformedGameToCache(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

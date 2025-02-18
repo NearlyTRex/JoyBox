@@ -61,7 +61,7 @@ def PackInstallImage(
         path_from = system.JoinPaths(input_dir, relative_path)
         path_to = system.JoinPaths(tmp_dir_result, relative_path)
         system.MakeDirectory(
-            dir = system.GetFilenameDirectory(path_to),
+            src = system.GetFilenameDirectory(path_to),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -88,13 +88,13 @@ def PackInstallImage(
 
     # Clean up
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if delete_original:
         system.RemoveDirectory(
-            dir = input_dir,
+            src = input_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

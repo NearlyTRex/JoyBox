@@ -893,7 +893,7 @@ class Steam(storebase.StoreBase):
 
         # Delete temporary directory
         system.RemoveDirectory(
-            dir = tmp_dir_result,
+            src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

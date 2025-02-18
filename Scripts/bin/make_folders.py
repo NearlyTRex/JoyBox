@@ -37,7 +37,7 @@ def main():
                 new_folder = system.JoinPaths(input_path, selected_file_basename)
                 new_file = system.JoinPaths(input_path, selected_file_basename, obj)
                 system.MakeDirectory(
-                    dir = new_folder,
+                    src = new_folder,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)

@@ -221,7 +221,7 @@ def Trim3DSCCI(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -291,7 +291,7 @@ def Untrim3DSCCI(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -371,7 +371,7 @@ def Extract3DSCIA(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -512,7 +512,7 @@ def DecryptWiiUNUSPackage(
             obj_ext = system.GetFilenameExtension(obj_path)
             if obj_ext in config.NintendoWiiUFileType.cvalues():
                 system.RemoveFile(
-                    file = obj_path,
+                    src = obj_path,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
@@ -551,7 +551,7 @@ def VerifyWiiUNUSPackage(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -618,7 +618,7 @@ def InstallWiiUNusPackage(
 
         # Make folder
         success = system.MakeDirectory(
-            dir = system.JoinPaths(tmp_dir_result, obj),
+            src = system.JoinPaths(tmp_dir_result, obj),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -637,7 +637,7 @@ def InstallWiiUNusPackage(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -818,12 +818,12 @@ def TrimSwitchXCI(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            file = src_xci_file,
+            src = src_xci_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -903,12 +903,12 @@ def UntrimSwitchXCI(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            file = src_xci_file,
+            src = src_xci_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -995,7 +995,7 @@ def InstallSwitchNSP(
 
         # Make NCA dir
         success = system.MakeDirectory(
-            dir = nca_output_dir,
+            src = nca_output_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -1015,7 +1015,7 @@ def InstallSwitchNSP(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

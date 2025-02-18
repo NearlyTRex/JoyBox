@@ -120,7 +120,7 @@ def ConvertToNativeSave(
     # Clean search path
     full_search_path = system.JoinPaths(save_dir, search_path)
     success = system.RemoveDirectory(
-        dir = full_search_path,
+        src = full_search_path,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -131,7 +131,7 @@ def ConvertToNativeSave(
     full_roaming_path = system.JoinPaths(save_dir, roaming_path)
     if not system.DoesDirectoryContainFiles(full_roaming_path):
         success = system.RemoveDirectory(
-            dir = full_roaming_path,
+            src = full_roaming_path,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

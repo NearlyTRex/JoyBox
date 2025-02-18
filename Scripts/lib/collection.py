@@ -233,7 +233,7 @@ def CreateGameJsonFile(
 
     # Create json directory
     success = system.MakeDirectory(
-        dir = system.GetFilenameDirectory(json_file_path),
+        src = system.GetFilenameDirectory(json_file_path),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -622,7 +622,7 @@ def DownloadMetadataAsset(
     tmp_asset_file_original = system.JoinPaths(tmp_dir_result, system.ReplaceInvalidPathCharacters(system.GetFilenameFile(asset_url)))
     tmp_asset_file_converted = tmp_asset_file_original + output_asset_ext
     system.MakeDirectory(
-        dir = output_asset_dir,
+        src = output_asset_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -677,7 +677,7 @@ def DownloadMetadataAsset(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

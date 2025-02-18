@@ -43,12 +43,12 @@ def TransformComputerPrograms(
 
     # Make directories
     system.MakeDirectory(
-        dir = output_dir,
+        src = output_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.MakeDirectory(
-        dir = cached_install_dir,
+        src = cached_install_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -138,7 +138,7 @@ def TransformDiscImage(
 
     # Make directories
     system.MakeDirectory(
-        dir = output_dir,
+        src = output_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -203,7 +203,7 @@ def TransformXboxDiscImage(
 
     # Make directories
     system.MakeDirectory(
-        dir = output_dir,
+        src = output_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -247,7 +247,7 @@ def TransformPS3DiscImage(
 
     # Make directories
     system.MakeDirectory(
-        dir = output_dir,
+        src = output_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -321,7 +321,7 @@ def TransformPS3NetworkPackage(
 
     # Make directories
     system.MakeDirectory(
-        dir = output_dir,
+        src = output_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -379,7 +379,7 @@ def TransformPSVNetworkPackage(
 
     # Make directories
     system.MakeDirectory(
-        dir = output_dir,
+        src = output_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -546,7 +546,7 @@ def TransformGameFile(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        dir = tmp_dir_result,
+        src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
