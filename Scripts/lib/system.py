@@ -812,10 +812,10 @@ def SortFileContents(src, verbose = False, pretend_run = False, exit_on_failure 
 ###########################################################
 
 # Remove empty directories
-def RemoveEmptyDirectories(dir, verbose = False, pretend_run = False, exit_on_failure = False):
-    for empty_dir in BuildEmptyDirectoryList(dir):
+def RemoveEmptyDirectories(src, verbose = False, pretend_run = False, exit_on_failure = False):
+    for empty_dir in BuildEmptyDirectoryList(src):
         success = RemoveDirectory(
-            dir = empty_dir,
+            src = empty_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -824,17 +824,17 @@ def RemoveEmptyDirectories(dir, verbose = False, pretend_run = False, exit_on_fa
     return True
 
 # Replace symlinked directories
-def ReplaceSymlinkedDirectories(dir, verbose = False, pretend_run = False, exit_on_failure = False):
-    for symlink_dir in BuildSymlinkDirectoryList(dir):
+def ReplaceSymlinkedDirectories(src, verbose = False, pretend_run = False, exit_on_failure = False):
+    for symlink_dir in BuildSymlinkDirectoryList(src):
         success = RemoveSymlink(
-            symlink = symlink_dir,
+            src = symlink_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
         success = MakeDirectory(
-            dir = symlink_dir,
+            src = symlink_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -843,10 +843,10 @@ def ReplaceSymlinkedDirectories(dir, verbose = False, pretend_run = False, exit_
     return True
 
 # Lowercase all paths
-def LowercaseAllPaths(dir, verbose = False, pretend_run = False, exit_on_failure = False):
+def LowercaseAllPaths(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Lowercasing all paths in directory %s" % dir)
+            LogInfo("Lowercasing all paths in directory %s" % src)
         def onFoundItems(root, items):
             for name in items:
                 if not pretend_run:
@@ -854,12 +854,12 @@ def LowercaseAllPaths(dir, verbose = False, pretend_run = False, exit_on_failure
                     after = os.path.join(root, name.lower())
                     if before != after:
                         os.rename(before, after)
-        for root, dirs, files in os.walk(dir, topdown = False):
+        for root, dirs, files in os.walk(src, topdown = False):
             onFoundItems(root, dirs)
             onFoundItems(root, files)
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to lowercase directory %s" % dir)
+            LogError("Unable to lowercase directory %s" % src)
             LogError(e)
             QuitProgram()
 
@@ -959,6 +959,22 @@ def CreateSymlink(src, dest, cwd = None, verbose = False, pretend_run = False, e
             LogError(e)
             QuitProgram()
         return False
+
+# Resolve symlink
+def ResolveSymlink(src, verbose = False, pretend_run = False, exit_on_failure = False):
+    try:
+        if verbose:
+            LogInfo("Resolving symlink %s" % src)
+        if not pretend_run:
+            if os.path.islink(src):
+                return os.path.realpath(src)
+        return None
+    except Exception as e:
+        if exit_on_failure:
+            LogError("Unable to resolve symlink %s" % src)
+            LogError(e)
+            QuitProgram()
+        return None
 
 # Copy file or directory
 def CopyFileOrDirectory(
@@ -1085,78 +1101,78 @@ def TransferFile(
         return False
 
 # Make directory
-def MakeDirectory(dir, verbose = False, pretend_run = False, exit_on_failure = False):
+def MakeDirectory(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
-        if not os.path.isdir(dir):
+        if not os.path.isdir(src):
             if verbose:
-                LogInfo("Making directory %s" % dir)
+                LogInfo("Making directory %s" % src)
             if not pretend_run:
-                os.makedirs(dir)
+                os.makedirs(src)
         return True
     except Exception as e:
-        if not os.path.isdir(dir):
+        if not os.path.isdir(src):
             if exit_on_failure:
-                LogError("Unable to make directory %s" % dir)
+                LogError("Unable to make directory %s" % src)
                 LogError(e)
                 QuitProgram()
             return False
         return True
 
 # Remove file
-def RemoveFile(file, verbose = False, pretend_run = False, exit_on_failure = False):
+def RemoveFile(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Removing file %s" % file)
+            LogInfo("Removing file %s" % src)
         if not pretend_run:
-            if os.path.isfile(file):
-                os.remove(file)
+            if os.path.isfile(src):
+                os.remove(src)
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to remove file %s" % file)
+            LogError("Unable to remove file %s" % src)
             LogError(e)
             QuitProgram()
         return False
 
 # Remove symlink
-def RemoveSymlink(symlink, verbose = False, pretend_run = False, exit_on_failure = False):
+def RemoveSymlink(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Removing symlink %s" % symlink)
+            LogInfo("Removing symlink %s" % src)
         if not pretend_run:
-            if os.path.islink(symlink):
-                os.unlink(symlink)
+            if os.path.islink(src):
+                os.unlink(src)
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to remove symlink %s" % symlink)
+            LogError("Unable to remove symlink %s" % src)
             LogError(e)
             QuitProgram()
         return False
 
 # Remove directory
-def RemoveDirectory(dir, verbose = False, pretend_run = False, exit_on_failure = False):
+def RemoveDirectory(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Removing directory %s" % dir)
+            LogInfo("Removing directory %s" % src)
         if not pretend_run:
-            if os.path.isdir(dir):
-                shutil.rmtree(dir)
+            if os.path.isdir(src):
+                shutil.rmtree(src)
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to remove directory %s" % dir)
+            LogError("Unable to remove directory %s" % src)
             LogError(e)
             QuitProgram()
         return False
 
 # Remove directory contents
-def RemoveDirectoryContents(dir, verbose = False, pretend_run = False, exit_on_failure = False):
+def RemoveDirectoryContents(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Removing contents of directory %s" % dir)
+            LogInfo("Removing contents of directory %s" % src)
         if not pretend_run:
-            for root, dirs, files in os.walk(dir):
+            for root, dirs, files in os.walk(src):
                 for f in files:
                     os.unlink(os.path.join(root, f))
                 for d in dirs:
@@ -1172,7 +1188,7 @@ def RemoveDirectoryContents(dir, verbose = False, pretend_run = False, exit_on_f
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to remove contents of directory %s" % dir)
+            LogError("Unable to remove contents of directory %s" % src)
             LogError(e)
             QuitProgram()
         return False
@@ -1206,7 +1222,7 @@ def CopyContents(
         output_file = os.path.join(dest, file)
         output_dir = os.path.dirname(output_file)
         success = MakeDirectory(
-            dir = output_dir,
+            src = output_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -1253,7 +1269,7 @@ def MoveContents(
         output_file = os.path.join(dest, file)
         output_dir = os.path.dirname(output_file)
         success = MakeDirectory(
-            dir = output_dir,
+            src = output_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -1291,7 +1307,7 @@ def CopyGlobbedFiles(
         base_dir = glob_source_dir)
     for glob_file in glob_files:
         success = MakeDirectory(
-            dir = os.path.join(dest_dir, GetFilenameDirectory(glob_file)),
+            src = os.path.join(dest_dir, GetFilenameDirectory(glob_file)),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -1328,7 +1344,7 @@ def MoveGlobbedFiles(
         base_dir = glob_source_dir)
     for glob_file in glob_files:
         success = MakeDirectory(
-            dir = os.path.join(dest_dir, GetFilenameDirectory(glob_file)),
+            src = os.path.join(dest_dir, GetFilenameDirectory(glob_file)),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -1363,7 +1379,7 @@ def SmartCopy(
     pretend_run = False,
     exit_on_failure = False):
     success = MakeDirectory(
-        dir = GetFilenameDirectory(dest),
+        src = GetFilenameDirectory(dest),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1421,7 +1437,7 @@ def SmartMove(
     pretend_run = False,
     exit_on_failure = False):
     success = MakeDirectory(
-        dir = GetFilenameDirectory(dest),
+        src = GetFilenameDirectory(dest),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1521,14 +1537,14 @@ def SyncContents(
             LogError("Source %s does not exist, cannot sync" % src)
             QuitProgram()
     success = MakeDirectory(
-        dir = dest,
+        src = dest,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
     success = RemoveDirectoryContents(
-        dir = dest,
+        src = dest,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1572,24 +1588,24 @@ def SyncData(data_src, data_dest, verbose = False, pretend_run = False, exit_on_
 def RemoveObject(obj, verbose = False, pretend_run = False, exit_on_failure = False):
     if os.path.isfile(obj):
         return RemoveFile(
-            file = obj,
+            src = obj,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     elif os.path.islink(obj):
         return RemoveSymlink(
-            symlink = obj,
+            src = obj,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     elif os.path.isdir(obj):
         success_contents = RemoveDirectoryContents(
-            dir = obj,
+            src = obj,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         success_dir = RemoveDirectory(
-            dir = obj,
+            src = obj,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
