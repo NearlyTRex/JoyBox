@@ -71,7 +71,7 @@ def CreateISO(
     # Clean up
     if delete_original:
         system.RemoveDirectory(
-            dir = source_dir,
+            src = source_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -87,6 +87,17 @@ def ExtractISO(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Try extracting as an archive first
+    success = archive.ExtractArchive(
+        archive_file = iso_file,
+        extract_dir = extract_dir,
+        delete_original = delete_original,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if success:
+        return True
 
     # Get tool
     iso_tool = None
@@ -129,7 +140,7 @@ def ExtractISO(
     # Clean up
     if delete_original:
         system.RemoveFile(
-            file = iso_file,
+            src = iso_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -144,10 +155,6 @@ def GetActualMountPoint(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Check if mounted
-    if not IsISOMounted(iso_file, mount_dir):
-        return None
 
     # Windows
     if environment.IsWindowsPlatform():
@@ -196,7 +203,7 @@ def MountISO(
 
     # Make mount directories
     system.MakeDirectory(
-        dir = mount_dir,
+        src = mount_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -241,8 +248,6 @@ def MountISO(
         # Run mount command
         code = command.RunBlockingCommand(
             cmd = mount_cmd,
-            options = command.CreateCommandOptions(
-                blocking_processes = [iso_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -313,7 +318,7 @@ def UnmountISO(
 
     # Remove mount point
     system.RemoveDirectory(
-        dir = mount_dir,
+        src = mount_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
