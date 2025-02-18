@@ -364,8 +364,29 @@ def FindFirstAvailableRealDrivePath(options):
     # Nothing available
     return None
 
-# Mount disc image to available drive
-def MountDiscImageToAvailableDrive(
+# Find first taken real drive path
+def FindFirstTakenRealDrivePath(src, options):
+
+    # Check params
+    system.AssertPathExists(src, "src")
+    system.AssertPathExists(options.get_prefix_dir(), "prefix_dir")
+
+    # Only go through potentially available drives
+    for letter in config.drives_regular:
+
+        # Get drive path and check if its available
+        drive_path = GetRealDrivePath(
+            options = options,
+            drive = letter)
+        if system.DoesPathExist(drive_path):
+            if src == system.ResolveSymlink(drive_path):
+                return drive_path
+
+    # Nothing found
+    return None
+
+# Mount disc image
+def MountDiscImage(
     src,
     mount_dir,
     options,
@@ -376,55 +397,18 @@ def MountDiscImageToAvailableDrive(
     # Check params
     system.AssertPathExists(src, "src")
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-
-    # Get temporary files
-    temp_iso_file = system.JoinPaths(tmp_dir_result, system.GetFilenameBasename(src) + config.DiscImageFileType.ISO.cval())
-    temp_toc_file = system.JoinPaths(tmp_dir_result, system.GetFilenameBasename(src) + ".toc")
-
-    # Extract iso from chd
-    success = chd.ExtractDiscCHD(
+    # Mount disc
+    success = chd.MountDiscCHD(
         chd_file = src,
-        binary_file = temp_iso_file,
-        toc_file = temp_toc_file,
+        mount_dir = mount_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
-
-    # Make mount directories
-    system.MakeDirectory(
-        dir = mount_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Extract iso files to mount point
-    success = archive.ExtractArchive(
-        archive_file = temp_iso_file,
-        extract_dir = mount_dir,
-        delete_original = True,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
-
-    # Delete temporary directory
-    system.RemoveDirectory(
-        dir = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
 
     # Mount directory
-    success = MountDirectoryToAvailableDrive(
+    success = MountDirectory(
         src = mount_dir,
         options = options,
         verbose = verbose,
@@ -432,8 +416,39 @@ def MountDiscImageToAvailableDrive(
         exit_on_failure = exit_on_failure)
     return success
 
-# Mount directory to available drive
-def MountDirectoryToAvailableDrive(
+# Unmount disc image
+def UnmountDiscImage(
+    src,
+    mount_dir,
+    options,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check params
+    system.AssertPathExists(src, "src")
+
+    # Unmount disc
+    success = chd.UnmountDiscCHD(
+        chd_file = src,
+        mount_dir = mount_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Unmount directory
+    success = UnmountDirectory(
+        src = mount_dir,
+        options = options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
+
+# Mount directory
+def MountDirectory(
     src,
     options,
     verbose = False,
@@ -453,6 +468,30 @@ def MountDirectoryToAvailableDrive(
     return system.CreateSymlink(
         src = src,
         dest = drive_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Unmount directory
+def UnmountDirectory(
+    src,
+    options,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check params
+    system.AssertPathExists(src, "src")
+    system.AssertPathExists(options.get_prefix_dir(), "prefix_dir")
+
+    # Get first taken drive path
+    drive_path = FindFirstTakenRealDrivePath(src, options)
+    if not system.IsPathValid(drive_path):
+        return False
+
+    # Create symlink
+    return system.RemoveSymlink(
+        src = src,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -477,10 +516,13 @@ def UnmountAllMountedDrives(
 
         # Remove symlink
         system.RemoveSymlink(
-            symlink = drive_path,
+            src = drive_path,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+
+    # Should be successful
+    return True
 
 ###########################################################
 
@@ -762,7 +804,7 @@ def SetupPrefixEnvironment(
                 drive = config.drive_prefix_cwd)
             if system.IsPathValid(cwd_drive):
                 system.RemoveSymlink(
-                    symlink = cwd_drive,
+                    src = cwd_drive,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
@@ -888,7 +930,7 @@ def CreateWinePrefix(
 
     # Make directory
     system.MakeDirectory(
-        dir = options.get_prefix_dir(),
+        src = options.get_prefix_dir(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -937,17 +979,17 @@ def CreateSandboxiePrefix(
 
     # Make directories
     system.MakeDirectory(
-        dir = options.get_prefix_dir(),
+        src = options.get_prefix_dir(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.MakeDirectory(
-        dir = GetSandboxieRealDrivePath(options.get_prefix_dir(), "C"),
+        src = GetSandboxieRealDrivePath(options.get_prefix_dir(), "C"),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.MakeDirectory(
-        dir = GetSandboxieUserProfilePath(options.get_prefix_dir()),
+        src = GetSandboxieUserProfilePath(options.get_prefix_dir()),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1025,7 +1067,7 @@ def CreateBasicPrefix(
 
         # Replace symlinked directories
         system.ReplaceSymlinkedDirectories(
-            dir = GetWineUserProfilePath(options),
+            src = GetWineUserProfilePath(options),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -1071,7 +1113,7 @@ def CreateLinkedPrefix(
     # Create general prefix subfolders
     for folder in config.computer_user_folders:
         system.MakeDirectory(
-            dir = system.JoinPaths(options.get_general_prefix_dir(), folder),
+            src = system.JoinPaths(options.get_general_prefix_dir(), folder),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

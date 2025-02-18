@@ -81,19 +81,19 @@ def RunSetupPrograms(
 
     # Make dos drives
     system.MakeDirectory(
-        dir = options.get_prefix_dos_c_drive(),
+        src = options.get_prefix_dos_c_drive(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     system.MakeDirectory(
-        dir = options.get_prefix_dos_d_drive(),
+        src = options.get_prefix_dos_d_drive(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Make scumm dir
     system.MakeDirectory(
-        dir = options.get_prefix_scumm_dir(),
+        src = options.get_prefix_scumm_dir(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -256,7 +256,7 @@ def RunSetupSteps(
         # Lowercase step
         elif setup_step_type == "lowercase":
             system.LowercaseAllPaths(
-                dir = setup_step_dir,
+                src = setup_step_dir,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -279,7 +279,7 @@ def InstallComputerGame(
     # Get setup directory
     game_setup_dir = environment.GetCacheGamingSetupDir(game_category, game_subcategory, game_name)
     system.MakeDirectory(
-        dir = game_setup_dir,
+        src = game_setup_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -328,7 +328,7 @@ def InstallComputerGame(
 
     # Mount discs
     for game_disc_file in game_disc_files:
-        success = sandbox.MountDiscImageToAvailableDrive(
+        success = sandbox.MountDiscImage(
             src = game_disc_file,
             mount_dir = system.JoinPaths(game_setup_dir, system.GetFilenameBasename(game_disc_file)),
             options = game_setup_options,
@@ -370,7 +370,7 @@ def InstallComputerGame(
     prefix_public_profile_path = sandbox.GetPublicProfilePath(game_setup_options)
     if os.path.exists(prefix_public_profile_path):
         system.MakeDirectory(
-            dir = system.JoinPaths(game_setup_options.get_prefix_c_drive_real(), "Public"),
+            src = system.JoinPaths(game_setup_options.get_prefix_c_drive_real(), "Public"),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -391,22 +391,27 @@ def InstallComputerGame(
     if not success:
         return False
 
-    # Unmount any mounted discs
-    sandbox.UnmountAllMountedDrives(
-        options = game_setup_options,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    # Unmount discs
+    for game_disc_file in game_disc_files:
+        success = sandbox.UnmountDiscImage(
+            src = game_disc_file,
+            mount_dir = system.JoinPaths(game_setup_dir, system.GetFilenameBasename(game_disc_file)),
+            options = game_setup_options,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Cleanup
     system.RemoveDirectory(
-        dir = game_setup_options.get_prefix_dir(),
+        src = game_setup_options.get_prefix_dir(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not keep_setup_files:
         system.RemoveDirectory(
-            dir = game_setup_dir,
+            src = game_setup_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
