@@ -43,7 +43,7 @@ class CommandOptions:
         return self.options.get_subvalue(config.program_key_env, key)
     def set_env_var(self, key, value):
         if not self.options.has_key(config.program_key_env):
-            self.options.set_value(config.program_key_env, {})
+            self.options.set_value(config.program_key_env, copy.deepcopy(os.environ))
         self.options.set_subvalue(config.program_key_env, key, value)
 
     # Arguments
@@ -140,7 +140,7 @@ class CommandOptions:
 
     # Allow processing
     def allow_processing(self):
-        return self.options.get_value(config.program_key_allow_processing, False)
+        return self.options.get_value(config.program_key_allow_processing, True)
     def set_allow_processing(self, value):
         self.options.set_value(config.program_key_allow_processing, value)
 
