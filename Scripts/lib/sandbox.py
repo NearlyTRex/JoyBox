@@ -846,7 +846,7 @@ def SetupPrefixCommand(
 
     # Copy params
     new_cmd = []
-    new_options = copy.deepcopy(options)
+    new_options = options.copy()
 
     # Create command
     if new_options.is_wine_prefix():
