@@ -429,9 +429,9 @@ def UnmountDiscImage(
     system.AssertPathExists(src, "src")
 
     # Unmount disc
-    success = chd.UnmountDiscCHD(
-        chd_file = src,
-        mount_dir = mount_dir,
+    success = UnmountDirectory(
+        src = mount_dir,
+        options = options,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -439,9 +439,9 @@ def UnmountDiscImage(
         return False
 
     # Unmount directory
-    success = UnmountDirectory(
-        src = mount_dir,
-        options = options,
+    success = chd.UnmountDiscCHD(
+        chd_file = src,
+        mount_dir = mount_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
