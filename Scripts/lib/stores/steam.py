@@ -52,6 +52,10 @@ def GetSteamTrailer(
             return asset_url
     return None
 
+# Get steam prefix dir
+def GetSteamPrefixDir(install_dir, appid):
+    return system.JoinPaths(install_dir, "steamapps", "compatdata", appid, "pfx")
+
 # Find steam appid matches
 def FindSteamAppIDMatches(
     search_name,
@@ -906,28 +910,22 @@ class Steam(storebase.StoreBase):
     ############################################################
 
     # Build path translation map
-    def BuildPathTranslationMap(self, game_info):
-
-        # Get game appid
-        game_appid = game_info.get_store_appid(self.GetKey())
-        if not game_appid:
-            return {}
-
-        # Get prefix path
-        prefix_path = system.JoinPaths(self.GetInstallDir(), "steamapps", "compatdata", game_appid, "pfx")
+    def BuildPathTranslationMap(self, appid = None, appname = None):
 
         # Build translation map
-        translation_map = super().BuildPathTranslationMap(game_info)
-        translation_map[config.token_user_registry_dir].append(prefix_path)
-        translation_map[config.token_user_public_dir].append(system.JoinPaths(prefix_path, "drive_c", "users", "Public"))
-        translation_map[config.token_user_profile_dir].append(system.JoinPaths(prefix_path, "drive_c", "users", "steamuser"))
+        translation_map = super().BuildPathTranslationMap()
+        if appid:
+            prefix_path = GetSteamPrefixDir(self.GetInstallDir(), appid)
+            translation_map[config.token_user_registry_dir].append(prefix_path)
+            translation_map[config.token_user_public_dir].append(system.JoinPaths(prefix_path, "drive_c", "users", "Public"))
+            translation_map[config.token_user_profile_dir].append(system.JoinPaths(prefix_path, "drive_c", "users", "steamuser"))
         return translation_map
 
     # Get registered paths
-    def GetRegisteredPaths(self, game_info):
+    def AddPathVariants(self, paths = []):
 
-        # Get paths
-        paths = super().GetRegisteredPaths(game_info)
+        # Add parent variants
+        paths = super().AddPathVariants(paths)
 
         # Get user info
         userid_64 = self.GetUserId(config.SteamIDFormatType.STEAMID_64)

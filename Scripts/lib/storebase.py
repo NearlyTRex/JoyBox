@@ -911,7 +911,7 @@ class StoreBase:
     ############################################################
 
     # Build path translation map
-    def BuildPathTranslationMap(self, game_info):
+    def BuildPathTranslationMap(self, appid = None, appname = None):
 
         # Build translation map
         translation_map = {}
@@ -935,11 +935,8 @@ class StoreBase:
         # Return translation map
         return translation_map
 
-    # Get registered paths
-    def GetRegisteredPaths(self, game_info):
-
-        # Get paths
-        paths = game_info.get_store_paths(self.GetKey())
+    # Add path variants
+    def AddPathVariants(self, paths = []):
 
         # Add AppData variants
         for path in sorted(paths):
@@ -962,10 +959,11 @@ class StoreBase:
         exit_on_failure = False):
 
         # Get paths
-        paths = self.GetRegisteredPaths()
+        paths = game_info.get_store_paths(self.GetKey())
+        paths = self.AddPathVariants(paths)
 
         # Get translation map
-        translation_map = self.BuildPathTranslationMap(game_info)
+        translation_map = self.BuildPathTranslationMap()
 
         # Translate paths
         translated_paths = []
