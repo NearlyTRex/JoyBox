@@ -159,6 +159,18 @@ json_key_dlc = "dlc"
 json_key_update = "update"
 json_key_extra = "extra"
 json_key_dependencies = "dependencies"
+json_keys_general = [
+    json_key_launch_name,
+    json_key_launch_file,
+    json_key_launch_dir,
+    json_key_transform_file,
+    json_key_key_file,
+    json_key_files,
+    json_key_dlc,
+    json_key_update,
+    json_key_extra,
+    json_key_dependencies
+]
 
 # Virtual json keys
 json_key_metadata = "metadata"
@@ -168,6 +180,15 @@ json_key_local_cache_dir = "local_cache_dir"
 json_key_remote_cache_dir = "remote_cache_dir"
 json_key_local_rom_dir = "local_rom_dir"
 json_key_remote_rom_dir = "remote_rom_dir"
+json_keys_virtual = [
+    json_key_metadata,
+    json_key_save_dir,
+    json_key_general_save_dir,
+    json_key_local_cache_dir,
+    json_key_remote_cache_dir,
+    json_key_local_rom_dir,
+    json_key_remote_rom_dir
+]
 
 # Computer json keys
 json_key_amazon = "amazon"
@@ -233,47 +254,7 @@ json_keys_store_subdata = [
     json_key_store_setup
 ]
 
-# Json key defaults
-json_key_defaults = []
-json_key_defaults.append({"key": json_key_launch_name, "default": None})
-json_key_defaults.append({"key": json_key_launch_file, "default": []})
-json_key_defaults.append({"key": json_key_launch_dir, "default": None})
-json_key_defaults.append({"key": json_key_transform_file, "default": []})
-json_key_defaults.append({"key": json_key_key_file, "default": None})
-json_key_defaults.append({"key": json_key_files, "default": []})
-json_key_defaults.append({"key": json_key_dlc, "default": []})
-json_key_defaults.append({"key": json_key_update, "default": []})
-json_key_defaults.append({"key": json_key_extra, "default": []})
-json_key_defaults.append({"key": json_key_dependencies, "default": []})
-json_key_defaults.append({"key": json_key_amazon, "default": {}})
-json_key_defaults.append({"key": json_key_disc, "default": {}})
-json_key_defaults.append({"key": json_key_epic, "default": {}})
-json_key_defaults.append({"key": json_key_gog, "default": {}})
-json_key_defaults.append({"key": json_key_humble, "default": {}})
-json_key_defaults.append({"key": json_key_itchio, "default": {}})
-json_key_defaults.append({"key": json_key_legacy, "default": {}})
-json_key_defaults.append({"key": json_key_puppetcombo, "default": {}})
-json_key_defaults.append({"key": json_key_redcandle, "default": {}})
-json_key_defaults.append({"key": json_key_squareenix, "default": {}})
-json_key_defaults.append({"key": json_key_steam, "default": {}})
-json_key_defaults.append({"key": json_key_zoom, "default": {}})
-for json_key in json_keys_store:
-    json_key_defaults.append({"key": (json_key, json_key_store_appid), "default": ""})
-    json_key_defaults.append({"key": (json_key, json_key_store_appname), "default": ""})
-    json_key_defaults.append({"key": (json_key, json_key_store_appurl), "default": ""})
-    json_key_defaults.append({"key": (json_key, json_key_store_branchid), "default": ""})
-    json_key_defaults.append({"key": (json_key, json_key_store_builddate), "default": ""})
-    json_key_defaults.append({"key": (json_key, json_key_store_buildid), "default": ""})
-    json_key_defaults.append({"key": (json_key, json_key_store_name), "default": ""})
-    json_key_defaults.append({"key": (json_key, json_key_store_controller_support), "default": ""})
-    json_key_defaults.append({"key": (json_key, json_key_store_installdir), "default": ""})
-    json_key_defaults.append({"key": (json_key, json_key_store_paths), "default": []})
-    json_key_defaults.append({"key": (json_key, json_key_store_keys), "default": []})
-    json_key_defaults.append({"key": (json_key, json_key_store_launch), "default": {}})
-    json_key_defaults.append({"key": (json_key, json_key_store_setup), "default": {}})
-
-# Filter keys
-filter_key_launchable_only = "launchable_only"
-keys_filter_keys = [
-    filter_key_launchable_only
-]
+# Persistent json keys
+persistent_json_keys = []
+persistent_json_keys += json_keys_general
+persistent_json_keys += json_keys_store

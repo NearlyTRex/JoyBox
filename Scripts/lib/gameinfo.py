@@ -29,7 +29,7 @@ class GameInfo:
         exit_on_failure = False):
 
         # Json info
-        self.json_data = {}
+        self.json_data = jsondata.JsonData()
         self.json_file = None
 
         # Metadata info
@@ -58,11 +58,11 @@ class GameInfo:
         exit_on_failure = False):
 
         # Read json data
-        self.json_data = system.ReadJsonFile(
+        self.json_data = jsondata.JsonData(system.ReadJsonFile(
             src = json_file,
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            exit_on_failure = exit_on_failure))
 
         # Save json file
         self.json_file = json_file
@@ -91,20 +91,6 @@ class GameInfo:
 
         # Set metadata
         self.set_metadata(metadata_entry)
-
-        ##############################
-        # Fill default info
-        ##############################
-
-        # Fill json keys defaults
-        for entry in config.json_key_defaults:
-            entry_key = entry["key"]
-            entry_default = entry["default"]
-            if isinstance(entry_key, str):
-                self.set_default_value(entry_key, entry_default)
-            elif isinstance(entry_key, tuple) or isinstance(entry_key, list):
-                if len(entry_key) == 2:
-                    self.set_default_subvalue(entry_key[0], entry_key[1], entry_default)
 
         ##############################
         # Fill path info
@@ -204,63 +190,59 @@ class GameInfo:
 
     ##############################
 
+    # Update json file
+    def update_json_file(
+        self,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        json_wrapper = self.read_wrapped_json_data(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        for key in config.persistent_json_keys:
+            value = self.get_value(key)
+            if value:
+                json_wrapper.set_value(key, value)
+        return self.write_wrapped_json_data(
+            json_wrapper = json_wrapper,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    ##############################
+
     # Check if key exists
     def has_key(self, key):
-        try:
-            return key in self.json_data
-        except:
-            return False
+        return self.json_data.has_key(key)
 
     # Check if subkey exists
     def has_subkey(self, key, subkey):
-        try:
-            return subkey in self.json_data[key]
-        except:
-            return False
+        return self.json_data.has_subkey(key, subkey)
 
     # Get value
     def get_value(self, key, default_value = None):
-        try:
-            return self.json_data[key]
-        except:
-            return default_value
+        return self.json_data.get_value(key, default_value)
 
     # Get sub-value
     def get_subvalue(self, key, subkey, default_value = None):
-        try:
-            return self.json_data[key][subkey]
-        except:
-            return default_value
+        return self.json_data.get_subvalue(key, subkey, default_value)
 
     # Get wrapped value
     def get_wrapped_value(self, key, default_value = None):
-        try:
-            return jsondata.JsonData(self.json_data[key])
-        except:
-            return default_value
+        return jsondata.JsonData(self.get_value(key, default_value))
 
     # Get wrapped sub-value
     def get_wrapped_subvalue(self, key, subkey, default_value = None):
-        try:
-            return jsondata.JsonData(self.json_data[key][subkey])
-        except:
-            return default_value
+        return jsondData.JsonData(self.get_subvalue(key, subkey, default_value))
 
     # Set value
     def set_value(self, key, value):
-        try:
-            self.json_data[key] = value
-            return True
-        except:
-            return False
+        return self.json_data.set_value(key, value)
 
     # Set sub-value
     def set_subvalue(self, key, subkey, value):
-        try:
-            self.json_data[key][subkey] = value
-            return True
-        except:
-            return False
+        return self.json_data.set_subvalue(key, subkey, value)
 
     # Set default value
     def set_default_value(self, key, value):
@@ -315,16 +297,6 @@ class GameInfo:
             metadata_obj.import_from_metadata_file(self.metadata_file)
             metadata_obj.set_game(self.get_platform(), self.get_name(), self.get_metadata())
             metadata_obj.export_to_metadata_file(self.metadata_file)
-
-    ##############################
-
-    # Upcast string to list
-    def upcast_str_to_list(self, key):
-        if key in self.json_data and isinstance(self.json_data[key], str):
-            if self.json_data[key]:
-                self.json_data[key] = [self.json_data[key]]
-            else:
-                self.json_data[key] = []
 
     ##############################
 
@@ -523,213 +495,108 @@ class GameInfo:
 
     # Get store appid
     def get_store_appid(self, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if not store_key:
-            return None
-        return self.get_subvalue(store_key, config.json_key_store_appid)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_appid)
     def set_store_appid(self, value, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if store_key:
-            self.set_subvalue(store_key, config.json_key_store_appid, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_appid, value)
 
     # Get store appname
     def get_store_appname(self, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if not store_key:
-            return None
-        return self.get_subvalue(store_key, config.json_key_store_appname)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_appname)
     def set_store_appname(self, value, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if store_key:
-            self.set_subvalue(store_key, config.json_key_store_appname, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_appname, value)
 
     # Get store appurl
     def get_store_appurl(self, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if not store_key:
-            return None
-        return self.get_subvalue(store_key, config.json_key_store_appurl)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_appurl)
     def set_store_appurl(self, value, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if store_key:
-            self.set_subvalue(store_key, config.json_key_store_appurl, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_appurl, value)
 
     # Get store branchid
     def get_store_branchid(self, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if not store_key:
-            return None
-        return self.get_subvalue(store_key, config.json_key_store_branchid)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_branchid)
     def set_store_branchid(self, value, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if store_key:
-            self.set_subvalue(store_key, config.json_key_store_branchid, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_branchid, value)
 
     # Get store builddate
     def get_store_builddate(self, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if not store_key:
-            return None
-        return self.get_subvalue(store_key, config.json_key_store_builddate)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_builddate)
     def set_store_builddate(self, value, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if store_key:
-            self.set_subvalue(store_key, config.json_key_store_builddate, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_builddate, value)
 
     # Get store buildid
     def get_store_buildid(self, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if not store_key:
-            return None
-        return self.get_subvalue(store_key, config.json_key_store_buildid)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_buildid)
     def set_store_buildid(self, value, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if store_key:
-            self.set_subvalue(store_key, config.json_key_store_buildid, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_buildid, value)
 
     # Get store name
     def get_store_name(self, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if not store_key:
-            return None
-        return self.get_subvalue(store_key, config.json_key_store_name)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_name)
     def set_store_name(self, value, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if store_key:
-            self.set_subvalue(store_key, config.json_key_store_name, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_name, value)
 
     # Get store controller support
     def get_store_controller_support(self, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if not store_key:
-            return None
-        return self.get_subvalue(store_key, config.json_key_store_controller_support)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_controller_support)
     def set_store_controller_support(self, value, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if store_key:
-            self.set_subvalue(store_key, config.json_key_store_controller_support, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_controller_support, value)
 
     # Get store installdir
     def get_store_installdir(self, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if not store_key:
-            return None
-        return self.get_subvalue(store_key, config.json_key_store_installdir)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_installdir)
     def set_store_installdir(self, value, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if store_key:
-            self.set_subvalue(store_key, config.json_key_store_installdir, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_installdir, value)
 
     # Get store paths
     def get_store_paths(self, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if not store_key:
-            return None
-        return self.get_subvalue(store_key, config.json_key_store_paths)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_paths, [])
     def set_store_paths(self, value, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if store_key:
-            self.set_subvalue(store_key, config.json_key_store_paths, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_paths, value)
 
     # Get store keys
     def get_store_keys(self, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if not store_key:
-            return None
-        return self.get_subvalue(store_key, config.json_key_store_keys)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_keys, [])
     def set_store_keys(self, value, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if store_key:
-            self.set_subvalue(store_key, config.json_key_store_keys, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_keys, value)
 
     # Get store launch
     def get_store_launch(self, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if not store_key:
-            return None
-        return self.get_subvalue(store_key, config.json_key_store_launch)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_launch, [])
+    def get_store_launch_programs(self, store_key = None):
+        return [containers.Program(p) for p in self.get_store_launch(store_key)]
     def set_store_launch(self, value, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if store_key:
-            self.set_subvalue(store_key, config.json_key_store_launch, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_launch, value)
+    def set_store_launch_programs(self, value, store_key = None):
+        self.set_store_launch([v.get_data() for v in value], store_key)
 
     # Get store setup
     def get_store_setup(self, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if not store_key:
-            return None
-        return self.get_subvalue(store_key, config.json_key_store_setup)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_setup, {})
     def set_store_setup(self, value, store_key = None):
-        if not store_key:
-            store_key = self.get_main_store_key()
-        if store_key:
-            self.set_subvalue(store_key, config.json_key_store_setup, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_setup, value)
 
     # Get store setup install
     def get_store_setup_install(self, store_key = None):
-        store_setup = self.get_store_setup(store_key)
-        if not store_setup:
-            return []
-        if config.json_key_store_setup_install in store_setup:
-            return store_setup[config.json_key_store_setup_install]
-        return []
+        return self.get_store_setup(store_key).get(config.json_key_store_setup_install, [])
     def get_store_setup_install_programs(self, store_key = None):
         return [containers.Program(p) for p in self.get_store_setup_install(store_key)]
 
     # Get store setup preinstall
     def get_store_setup_preinstall(self, store_key = None):
-        store_setup = self.get_store_setup(store_key)
-        if not store_setup:
-            return []
-        if config.json_key_store_setup_preinstall in store_setup:
-            return store_setup[config.json_key_store_setup_preinstall]
-        return []
+        return self.get_store_setup(store_key).get(config.json_key_store_setup_preinstall, [])
     def get_store_setup_preinstall_steps(self, store_key = None):
         return [containers.ProgramStep(p) for p in self.get_store_setup_preinstall(store_key)]
 
     # Get store setup postinstall
     def get_store_setup_postinstall(self, store_key = None):
-        store_setup = self.get_store_setup(store_key)
-        if not store_setup:
-            return []
-        if config.json_key_store_setup_postinstall in store_setup:
-            return store_setup[config.json_key_store_setup_postinstall]
-        return []
+        return self.get_store_setup(store_key).get(config.json_key_store_setup_postinstall, [])
     def get_store_setup_postinstall_steps(self, store_key = None):
         return [containers.ProgramStep(p) for p in self.get_store_setup_postinstall(store_key)]
 
     # Find store setup matching installers
     def find_store_setup_matching_installers(self, store_key = None, store_subkey = None):
-        store_setup = self.get_store_setup(store_key)
-        if not store_setup or config.json_key_store_setup_install not in store_setup:
-            return []
         matching_installers = []
-        for setup_install in store_setup[config.json_key_store_setup_install]:
+        for setup_install in self.get_store_setup_install(store_key):
             if store_subkey and store_subkey in setup_install:
                 matching_installers.append(setup_install)
         return matching_installers

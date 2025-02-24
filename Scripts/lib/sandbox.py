@@ -266,11 +266,6 @@ def RestoreRegistry(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get user profile
-    user_profile_dir = GetUserProfilePath(options)
-    if not user_profile_dir:
-        return False
-
     # Get registry dir
     registry_dir = system.JoinPaths(user_profile_dir, config.computer_folder_registry)
 
@@ -302,11 +297,6 @@ def BackupRegistry(
     # Ignore empty keys
     if len(registry_keys) == 0:
         return True
-
-    # Get user profile
-    user_profile_dir = GetUserProfilePath(options)
-    if not system.IsPathFile(user_profile_dir):
-        return False
 
     # Get registry dir
     registry_dir = system.JoinPaths(user_profile_dir, config.computer_folder_registry)
@@ -851,6 +841,8 @@ def SetupPrefixCommand(
     # Create command
     if new_options.is_wine_prefix():
         new_cmd = [GetWineCommand()]
+        if new_options.use_virtual_desktop():
+            new_cmd += ["explorer", "/desktop=" + new_options.get_desktop_dimensions()]
     elif new_options.is_sandboxie_prefix():
         new_cmd = [
             GetSandboxieCommand(),
@@ -858,13 +850,6 @@ def SetupPrefixCommand(
         ]
         if new_options.get_prefix_name() == config.PrefixType.TOOL:
             new_cmd += ["/hide_window"]
-
-    # Modify for wine
-    if new_options.is_wine_prefix():
-
-        # Set desktop options
-        if new_options.use_virtual_desktop():
-            new_cmd += ["explorer", "/desktop=" + new_options.get_desktop_dimensions()]
 
     # Adjust command based on executable type
     if orig_cmd_starter.endswith(".lnk"):
@@ -887,10 +872,8 @@ def SetupPrefixCommand(
     else:
         new_cmd += orig_cmd_list
 
-    # Override cwd if requested for this prefix
-    prefix_c_drive = GetRealCDrivePath(new_options)
-    if prefix_c_drive and new_options.get_prefix_cwd() and len(new_options.get_prefix_cwd()):
-        new_options.set_cwd(os.path.realpath(system.JoinPaths(prefix_c_drive, new_options.get_prefix_cwd())))
+    # Sync cwd to prefix cwd
+    new_options.sync_cwd_to_prefix_cwd()
 
     # Return results
     return (new_cmd, new_options)

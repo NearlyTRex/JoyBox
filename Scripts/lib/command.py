@@ -229,18 +229,14 @@ def SetupPrefixCommand(
     new_cmd = cmd
     new_options = options.copy()
 
-    # Get default prefix if not specified
-    if not new_options.get_prefix_name() or not new_options.get_prefix_dir():
-        new_options.set_is_wine_prefix(sandbox.ShouldBeRunViaWine(cmd))
-        new_options.set_is_sandboxie_prefix(sandbox.ShouldBeRunViaSandboxie(cmd))
-        new_options.set_prefix_name(config.PrefixType.DEFAULT)
-        new_options.set_prefix_dir(sandbox.GetPrefix(new_options))
-
-    # Create prefix dir if necessary
-    if new_options.has_valid_prefix_dir() and not new_options.has_existing_prefix_dir():
-        sandbox.CreateBasicPrefix(
-            options = new_options,
+    # Create prefix if necessary
+    if not new_options.has_ready_prefix():
+        new_options.create_prefix(
+            is_wine_prefix = sandbox.ShouldBeRunViaWine(cmd),
+            is_sandboxie_prefix = sandbox.ShouldBeRunViaSandboxie(cmd),
+            prefix_name = config.PrefixType.DEFAULT,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Setup prefix command

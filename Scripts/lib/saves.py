@@ -317,16 +317,8 @@ def ImportSavePaths(
     # Get store type
     store_type = game_info.get_main_store_type()
 
-    # Get current jsondata
-    current_jsondata = game_info.read_wrapped_json_data(
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not current_jsondata:
-        return False
-
     # Get current paths
-    save_paths = current_jsondata.get_subvalue(store_key, config.json_key_store_paths)
+    save_paths = game_info.get_store_paths()
 
     # Read save files and add paths
     for archive_file in system.BuildFileList(input_save_dir):
@@ -346,11 +338,10 @@ def ImportSavePaths(
     # Update current paths
     save_paths = list(set(save_paths))
     save_paths = system.PruneChildPaths(save_paths)
-    current_jsondata.set_subvalue(store_key, config.json_key_store_paths, save_paths)
+    game_info.set_store_paths(save_paths)
 
     # Write back changes
-    success = game_info.write_wrapped_json_data(
-        json_wrapper = current_jsondata,
+    success = game_info.update_json_file(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

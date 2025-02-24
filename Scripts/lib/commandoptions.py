@@ -8,6 +8,7 @@ import config
 import system
 import jsondata
 import ini
+import sandbox
 
 # Command options
 class CommandOptions:
@@ -271,12 +272,111 @@ class CommandOptions:
         return self.options.get_value(config.program_key_prefix_name)
     def set_prefix_name(self, value):
         self.options.set_value(config.program_key_prefix_name, value)
+    def has_prefix_name(self):
+        return isinstance(self.get_prefix_name(), str) and len(self.get_prefix_name()) > 0
 
     # Prefix working directory
     def get_prefix_cwd(self):
         return self.options.get_value(config.program_key_prefix_cwd)
     def set_prefix_cwd(self, value):
         self.options.set_value(config.program_key_prefix_cwd, value)
+    def has_valid_prefix_cwd(self):
+        return system.IsPathValid(self.get_prefix_cwd())
+    def sync_cwd_to_prefix_cwd(self):
+        if self.has_existing_prefix_c_drive_real() and self.has_valid_prefix_cwd():
+            self.set_cwd(os.path.realpath(system.JoinPaths(self.get_prefix_c_drive_real(), self.get_prefix_cwd)))
+
+    # Ready prefix
+    def has_ready_prefix(self):
+        if not self.is_prefix():
+            return False
+        if not self.has_prefix_name():
+            return False
+        if not self.has_existing_prefix_dir():
+            return False
+        return True
+
+    # Setup prefix
+    def setup_prefix(
+        self,
+        is_wine_prefix,
+        is_sandboxie_prefix,
+        prefix_name,
+        prefix_dir = None,
+        general_prefix_dir = None):
+
+        # Basic prefix info
+        self.set_is_wine_prefix(is_wine_prefix)
+        self.set_is_sandboxie_prefix(is_sandboxie_prefix)
+        self.set_prefix_name(prefix_name)
+
+        # Prefix dir
+        if not system.IsPathValid(prefix_dir):
+            prefix_dir = sandbox.GetPrefix(self)
+        if system.IsPathValid(prefix_dir):
+            self.set_prefix_dir(prefix_dir)
+
+        # General prefix dir
+        if system.IsPathValid(general_prefix_dir):
+            self.set_general_prefix_dir(general_prefix_dir)
+
+    # Create prefix
+    def create_prefix(
+        self,
+        is_wine_prefix,
+        is_sandboxie_prefix,
+        prefix_name,
+        prefix_dir = None,
+        general_prefix_dir = None,
+        linked_prefix = False,
+        other_links = [],
+        clean_existing = True,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Setup prefix
+        self.setup_prefix(
+            is_wine_prefix = is_wine_prefix,
+            is_sandboxie_prefix = is_sandboxie_prefix,
+            prefix_name = prefix_name,
+            prefix_dir = prefix_dir,
+            general_prefix_dir = general_prefix_dir)
+
+        # Create prefix
+        if linked_prefix:
+            success = sandbox.CreateLinkedPrefix(
+                options = self,
+                other_links = other_links,
+                clean_existing = clean_existing,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+        else:
+            success = sandbox.CreateBasicPrefix(
+                options = self,
+                clean_existing = clean_existing,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+        # Set prefix user profile dir
+        self.set_prefix_user_profile_dir(sandbox.GetUserProfilePath(self))
+        if not self.has_existing_prefix_user_profile_dir():
+            return False
+
+        # Set prefix C drive
+        self.set_prefix_c_drive_virtual(config.drive_root_windows)
+        self.set_prefix_c_drive_real(sandbox.GetRealCDrivePath(self))
+        if not self.has_existing_prefix_c_drive_real():
+            return False
+
+        # Should be successful
+        return True
 
     ###########################################################
     # Other

@@ -278,34 +278,30 @@ def InstallComputerGame(
 
     # Get setup directory
     game_setup_dir = environment.GetCacheGamingSetupDir(game_category, game_subcategory, game_name)
-    system.MakeDirectory(
+    success = system.MakeDirectory(
         src = game_setup_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Get setup options
-    game_setup_options = command.CreateCommandOptions(
+    game_setup_options = command.CreateCommandOptions()
+
+    # Create prefix
+    success = game_setup_options.create_prefix(
         is_wine_prefix = environment.IsWinePlatform(),
         is_sandboxie_prefix = environment.IsSandboxiePlatform(),
-        prefix_name = config.PrefixType.SETUP)
-    game_setup_options.set_prefix_dir(sandbox.GetPrefix(game_setup_options))
-
-    # Create setup prefix
-    sandbox.CreateBasicPrefix(
-        options = game_setup_options,
+        prefix_name = config.PrefixType.SETUP,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-
-    # Get prefix C drive
-    game_setup_options.set_prefix_c_drive_virtual(config.drive_root_windows)
-    game_setup_options.set_prefix_c_drive_real(sandbox.GetRealCDrivePath(game_setup_options))
-    if not game_setup_options.has_existing_prefix_c_drive_real():
+    if not success:
         return False
 
     # Copy game files
-    system.CopyContents(
+    success = system.CopyContents(
         src = system.GetFilenameDirectory(source_file),
         dest = game_setup_dir,
         show_progress = True,
@@ -313,6 +309,8 @@ def InstallComputerGame(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Get game disc files
     game_disc_files = system.BuildFileListByExtensions(game_setup_dir, extensions = [".chd"])

@@ -18,7 +18,7 @@ import ini
 import gui
 import gameinfo
 import emulatorbase
-import jsondata
+import containers
 
 # Config files
 config_files = {}
@@ -187,18 +187,18 @@ def GetScummLaunchCommand(
     return launch_cmd
 
 # Get selected launch info
-def GetSelectedLaunchInfo(
+def GetSelectedLaunchProgram(
     game_info,
     base_dir,
     default_cwd):
 
-    # Get list of launch objects from the json
-    launch_entries = game_info.get_store_launch()
-    if not launch_entries:
-        launch_entries = []
+    # Get list of launch programs from the json
+    launch_programs = game_info.get_store_launch_programs()
+    if not launch_programs:
+        launch_programs = []
 
     # No existing entries
-    if len(launch_entries) == 0:
+    if len(launch_programs) == 0:
 
         # Get the complete list of runnable files from the install
         runnable_files_all = system.BuildFileListByExtensions(
@@ -220,62 +220,49 @@ def GetSelectedLaunchInfo(
                 continue
             runnable_files_likely.append(path_to_add)
 
-        # Add to launch entries
+        # Add to launch programs
         for runnable_file_likely in runnable_files_likey:
-            runnable_entry = {}
-            runnable_entry[config.program_key_exe] = system.GetFilenameFile(runnable_file)
-            runnable_entry[config.program_key_cwd] = system.GetFilenameDirectory(runnable_file)
-            launch_entries.append(runnable_entry)
+            runnable_program = containers.Program()
+            runnable_program.set_exe(system.GetFilenameFile(runnable_file))
+            runnable_program.set_cwd(system.GetFilenameDirectory(runnable_file))
+            launch_programs.append(runnable_program)
 
         # Try to record these for later
-        json_wrapper = game_info.read_wrapped_json_data()
-        json_wrapper.set_store_launch(launch_entries)
-        game_info.write_wrapped_json_data(json_wrapper)
+        game_info.set_store_launch_programs(launch_programs)
+        game_info.update_json_file()
 
     # Get launch info
     def GetLaunchInfo(game_exe):
-        cmd = system.JoinPaths(base_dir, game_exe)
-        cwd = default_cwd
-        args = []
-        for launch_entry in launch_entries:
-            launch_exe = launch_entry[config.program_key_exe]
-            launch_cwd = launch_entry[config.program_key_cwd]
-            launch_args = launch_entry[config.program_key_args]
+        for launch_program in launch_programs:
+            launch_exe = launch_program.get_exe()
+            launch_cwd = launch_program.get_cwd()
             if system.JoinPaths(launch_cwd, launch_exe) in game_exe:
-                cwd = launch_cwd
-                args = launch_args
-                break
-        return [cmd, cwd, args]
+                return launch_program
+        return None
 
     # Check that we have something to run
-    if len(launch_entries) == 0:
+    if len(launch_programs) == 0:
         gui.DisplayErrorPopup(
             title_text = "No runnable files",
             message_text = "Computer install has no runnable files")
 
     # If we have exactly one choice, use that
-    if len(launch_entries) == 1:
-        launch_exe = launch_entries[0][config.program_key_exe]
-        launch_cwd = launch_entries[0][config.program_key_cwd]
-        return GetLaunchInfo(system.JoinPaths(launch_cwd, launch_exe))
+    if len(launch_programs) == 1:
+        return launch_programs[0]
 
-    # Create launch command
-    launch_cmd = None
-    launch_cwd = ""
-    launch_args = []
+    # Create launch program
+    launch_program = None
 
     # Handle game selection
     def HandleGameSelection(selected_file):
-        nonlocal launch_cmd
-        nonlocal launch_cwd
-        nonlocal launch_args
-        launch_cmd, launch_cwd, launch_args = GetLaunchInfo(selected_file)
+        nonlocal launch_program
+        launch_program = GetLaunchInfo(selected_file)
 
     # Build runnable choices list
     runnable_choices = []
-    for launch_entry in launch_entries:
-        launch_exe = launch_entry[config.program_key_exe]
-        launch_cwd = launch_entry[config.program_key_cwd]
+    for launch_program in launch_programs:
+        launch_exe = launch_program.get_exe()
+        launch_cwd = launch_program.get_cwd()
         runnable_choices.append(system.JoinPaths(launch_cwd, launch_exe))
 
     # Display list of runnable files and let user decide which to run
@@ -287,7 +274,7 @@ def GetSelectedLaunchInfo(
         run_func = HandleGameSelection)
 
     # Return launch info
-    return [launch_cmd, launch_cwd, launch_args]
+    return launch_program
 
 # Computer emulator
 class Computer(emulatorbase.EmulatorBase):
@@ -607,17 +594,7 @@ class Computer(emulatorbase.EmulatorBase):
         exit_on_failure = False):
 
         # Get launch options
-        launch_options = command.CreateCommandOptions(
-            is_32_bit = game_info.is_32_bit(),
-            is_dos = game_info.is_dos(),
-            is_win31 = game_info.is_win31(),
-            is_scumm = game_info.is_scumm(),
-            is_wine_prefix = environment.IsLinuxPlatform(),
-            is_sandboxie_prefix = environment.IsWindowsPlatform(),
-            prefix_dir = game_info.get_save_dir(),
-            general_prefix_dir = game_info.get_general_save_dir(),
-            prefix_name = config.PrefixType.GAME,
-            prefix_winver = game_info.get_winver())
+        launch_options = command.CreateCommandOptions()
 
         # Get mount links
         mount_links = []
@@ -629,8 +606,14 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Create linked prefix
         def CreateGamePrefix():
-            return sandbox.CreateLinkedPrefix(
-                options = launch_options,
+            nonlocal launch_options
+            return launch_options.create_prefix(
+                is_wine_prefix = environment.IsLinuxPlatform(),
+                is_sandboxie_prefix = environment.IsWindowsPlatform(),
+                prefix_name = config.PrefixType.GAME,
+                prefix_dir = game_info.get_save_dir(),
+                general_prefix_dir = game_info.get_general_save_dir(),
+                linked_prefix = True,
                 other_links = mount_links,
                 clean_existing = False,
                 verbose = verbose,
@@ -643,68 +626,57 @@ class Computer(emulatorbase.EmulatorBase):
             image_file = game_info.get_boxfront_asset(),
             run_func = CreateGamePrefix)
 
-        # Get prefix user profile dir
-        launch_options.set_prefix_user_profile_dir(sandbox.GetUserProfilePath(launch_options))
-        if not launch_options.has_existing_prefix_user_profile_dir():
-            return False
-
-        # Get prefix c drive
-        launch_options.set_prefix_c_drive_virtual(config.drive_root_windows)
-        launch_options.set_prefix_c_drive_real(sandbox.GetRealCDrivePath(launch_options))
-        if not launch_options.has_existing_prefix_c_drive_real():
-            return False
-
         # Get launch info
         launch_cmd = []
 
-        # Dos launcher
-        if launch_options.is_dos():
-            selected_cmd, selected_cwd, selected_args = GetSelectedLaunchInfo(
+        # Dos installers
+        if game_info.does_store_setup_have_dos_installers():
+            selected_program = GetSelectedLaunchProgram(
                 game_info = game_info,
                 base_dir = launch_options.get_prefix_dos_c_drive(),
                 default_cwd = launch_options.get_prefix_dos_c_drive())
-            if selected_cmd:
+            if selected_program:
                 launch_cmd = GetDosLaunchCommand(
                     options = launch_options,
-                    start_program = selected_cmd,
+                    start_program = selected_program.get_cmd(),
                     start_letter = "c",
-                    start_offset = selected_cwd,
+                    start_offset = selected_program.get_cwd(),
                     fullscreen = fullscreen)
 
-        # Win31 launcher
-        elif launch_options.is_win31():
-            selected_cmd, selected_cwd, selected_args = GetSelectedLaunchInfo(
+        # Win31 installers
+        elif game_info.does_store_setup_have_win31_installers():
+            selected_program = GetSelectedLaunchProgram(
                 game_info = game_info,
                 base_dir = launch_options.get_prefix_dos_c_drive(),
                 default_cwd = launch_options.get_prefix_dos_c_drive())
-            if selected_cmd:
+            if selected_program:
                 launch_cmd = GetWin31LaunchCommand(
                     options = launch_options,
-                    start_program = selected_cmd,
+                    start_program = selected_program.get_cmd(),
                     start_letter = "c",
-                    start_offset = selected_cwd,
+                    start_offset = selected_program.get_cwd(),
                     fullscreen = fullscreen)
 
-        # Scumm launcher
-        elif launch_options.is_scumm():
+        # Scumm installers
+        elif game_info.does_store_setup_have_scumm_installers():
             launch_cmd = GetScummLaunchCommand(
                 options = launch_options,
                 fullscreen = fullscreen)
 
-        # Regular launcher
+        # Regular installers
         else:
-            selected_cmd, selected_cwd, selected_args = GetSelectedLaunchInfo(
+            selected_program = GetSelectedLaunchProgram(
                 game_info = game_info,
                 base_dir = launch_options.get_prefix_c_drive_real(),
                 default_cwd = game_info.get_general_save_dir())
-            if selected_cmd:
-                launch_cmd = [selected_cmd] + selected_args
+            if selected_program:
+                launch_cmd = [selected_program.get_cmd()] + launch_program.get_args()
                 blocking_processes = sandbox.GetBlockingProcesses(
                     options = launch_options,
-                    initial_processes = [command.GetStarterCommand(selected_cmd)])
+                    initial_processes = [command.GetStarterCommand(selected_program.get_cmd())])
                 launch_options.set_force_prefix(True)
                 launch_options.set_cwd(os.path.expanduser("~"))
-                launch_options.set_prefix_cwd(selected_cwd)
+                launch_options.set_prefix_cwd(selected_program.get_cwd())
                 launch_options.set_lnk_base_path(game_info.get_local_cache_dir())
                 launch_options.set_blocking_processes(blocking_processes)
 
