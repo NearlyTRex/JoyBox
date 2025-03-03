@@ -399,6 +399,11 @@ class CommandOptions:
         return self.options.get_value(config.program_key_blocking_processes, [])
     def set_blocking_processes(self, value):
         self.options.set_value(config.program_key_blocking_processes, value)
+    def add_blocking_processes(self, value):
+        if isinstance(value, str):
+            self.set_blocking_processes(self.get_blocking_processes() + [value])
+        elif isinstance(value, list):
+            self.set_blocking_processes(self.get_blocking_processes() + value)
 
     # Creation flags
     def get_creationflags(self):
