@@ -608,7 +608,7 @@ def GetPrefixPathInfo(
 
     # Copy params
     new_path = copy.deepcopy(path)
-    new_options = copy.deepcopy(options)
+    new_options = options.copy()
 
     # Normalize paths
     new_path = system.NormalizeFilePath(new_path, separator = config.os_pathsep)
@@ -763,10 +763,13 @@ def SetupPrefixEnvironment(
 
     # Copy params
     new_cmd = copy.deepcopy(cmd)
-    new_options = copy.deepcopy(options)
+    new_options = options.copy()
 
     # Modify for wine
     if new_options.is_wine_prefix():
+
+        # Add blocking processes
+        new_options.add_blocking_processes(GetWineBlockingProcesses())
 
         # Improve performance by not showing everything
         # To show only errors, change to fixme-all
@@ -807,7 +810,9 @@ def SetupPrefixEnvironment(
 
     # Modify for sandboxie
     elif new_options.is_sandboxie_prefix():
-        pass
+
+        # Add blocking processes
+        new_options.add_blocking_processes(GetSandboxieBlockingProcesses())
 
     # Return results
     return (new_cmd, new_options)
@@ -925,7 +930,7 @@ def CreateWinePrefix(
     wine_tricks_tool = programs.GetToolProgram("WineTricks")
 
     # Copy params
-    new_options = copy.deepcopy(options)
+    new_options = options.copy()
     new_options.set_is_wine_prefix(True)
 
     # Initialize prefix
@@ -981,7 +986,7 @@ def CreateSandboxiePrefix(
     sandboxie_ini_tool = programs.GetToolProgram("SandboxieIni")
 
     # Copy params
-    new_options = copy.deepcopy(options)
+    new_options = options.copy()
     new_options.set_is_sandboxie_prefix(True)
     new_options.set_blocking_processes([sandboxie_ini_tool])
     new_options.set_shell(True)
@@ -1085,7 +1090,7 @@ def CreateLinkedPrefix(
     if not options.has_valid_general_prefix_dir():
         return False
 
-    # Create prefix
+    # Clean prefix
     if clean_existing:
         system.RemoveObject(
             obj = options.get_prefix_dir(),
@@ -1120,6 +1125,11 @@ def CreateLinkedPrefix(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        system.MakeDirectory(
+            src = system.GetDirectoryParent(GetWineUserProfilePath(options)),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         system.CreateSymlink(
             src = options.get_general_prefix_dir(),
             dest = GetWineUserProfilePath(options),
@@ -1145,6 +1155,11 @@ def CreateLinkedPrefix(
             continue
         system.RemoveObject(
             obj = path_to,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        system.MakeDirectory(
+            src = system.GetDirectoryParent(path_to),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
