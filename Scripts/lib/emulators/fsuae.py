@@ -202,7 +202,8 @@ class FSUAE(emulatorbase.EmulatorBase):
     def Launch(
         self,
         game_info,
-        capture_type,
+        capture_type = None,
+        capture_file = None,
         fullscreen = False,
         verbose = False,
         pretend_run = False,
@@ -223,6 +224,7 @@ class FSUAE(emulatorbase.EmulatorBase):
             game_info = game_info,
             launch_cmd = launch_cmd,
             capture_type = capture_type,
+            capture_file = capture_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

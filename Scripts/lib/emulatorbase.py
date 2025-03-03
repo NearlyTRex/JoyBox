@@ -106,7 +106,8 @@ class EmulatorBase:
     def Launch(
         self,
         game_info,
-        capture_type,
+        capture_type = None,
+        capture_file = None,
         fullscreen = False,
         verbose = False,
         pretend_run = False,

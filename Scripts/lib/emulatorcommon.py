@@ -17,6 +17,7 @@ def SimpleLaunch(
     launch_cmd,
     launch_options = None,
     capture_type = None,
+    capture_file = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
