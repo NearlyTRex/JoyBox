@@ -857,11 +857,13 @@ def LowercaseAllPaths(src, verbose = False, pretend_run = False, exit_on_failure
         for root, dirs, files in os.walk(src, topdown = False):
             onFoundItems(root, dirs)
             onFoundItems(root, files)
+        return True
     except Exception as e:
         if exit_on_failure:
             LogError("Unable to lowercase directory %s" % src)
             LogError(e)
             QuitProgram()
+        return False
 
 ###########################################################
 
