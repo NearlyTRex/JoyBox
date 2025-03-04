@@ -207,6 +207,7 @@ def LaunchCachedGame(
     launch_cmd,
     launch_options = None,
     capture_type = None,
+    capture_file = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -216,11 +217,11 @@ def LaunchCachedGame(
         return False
 
     # Launch game
-    return command.RunGameCommand(
-        game_info = game_info,
+    return command.RunCaptureCommand(
         cmd = launch_cmd,
         options = launch_options,
         capture_type = capture_type,
+        capture_file = capture_file,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

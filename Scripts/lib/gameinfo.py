@@ -12,8 +12,9 @@ import metadata
 import metadataentry
 import platforms
 import jsondata
-import containers
+import computer
 import stores
+import gui
 
 ###########################################################
 
@@ -563,7 +564,7 @@ class GameInfo:
     def get_store_launch(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_launch, [])
     def get_store_launch_programs(self, store_key = None):
-        return [containers.Program(p) for p in self.get_store_launch(store_key)]
+        return [computer.Program(p) for p in self.get_store_launch(store_key)]
     def set_store_launch(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_launch, value)
     def set_store_launch_programs(self, value, store_key = None):
@@ -579,58 +580,150 @@ class GameInfo:
     def get_store_setup_install(self, store_key = None):
         return self.get_store_setup(store_key).get(config.json_key_store_setup_install, [])
     def get_store_setup_install_programs(self, store_key = None):
-        return [containers.Program(p) for p in self.get_store_setup_install(store_key)]
+        return [computer.Program(p) for p in self.get_store_setup_install(store_key)]
 
     # Get store setup preinstall
     def get_store_setup_preinstall(self, store_key = None):
         return self.get_store_setup(store_key).get(config.json_key_store_setup_preinstall, [])
     def get_store_setup_preinstall_steps(self, store_key = None):
-        return [containers.ProgramStep(p) for p in self.get_store_setup_preinstall(store_key)]
+        return [computer.ProgramStep(p) for p in self.get_store_setup_preinstall(store_key)]
 
     # Get store setup postinstall
     def get_store_setup_postinstall(self, store_key = None):
         return self.get_store_setup(store_key).get(config.json_key_store_setup_postinstall, [])
     def get_store_setup_postinstall_steps(self, store_key = None):
-        return [containers.ProgramStep(p) for p in self.get_store_setup_postinstall(store_key)]
+        return [computer.ProgramStep(p) for p in self.get_store_setup_postinstall(store_key)]
 
-    # Find store setup matching installers
-    def find_store_setup_matching_installers(self, store_key = None, store_subkey = None):
-        matching_installers = []
-        for setup_install in self.get_store_setup_install(store_key):
-            if store_subkey and store_subkey in setup_install:
-                matching_installers.append(setup_install)
-        return matching_installers
+    ##############################
 
-    # Determine if store setup has dos installers
-    def does_store_setup_have_dos_installers(self, store_key = None):
-        matching_installers = self.find_store_setup_matching_installers(store_key = store_key, store_subkey = config.program_key_is_dos)
-        return len(matching_installers) > 0
+    # Select store launch program
+    def select_store_launch_program(self, base_dir, store_key = None):
 
-    # Determine if store setup has win31 installers
-    def does_store_setup_have_win31_installers(self, store_key = None):
-        matching_installers = self.find_store_setup_matching_installers(store_key = store_key, store_subkey = config.program_key_is_win31)
-        return len(matching_installers) > 0
+        # Get list of launch programs from the json
+        launch_programs = self.get_store_launch_programs(store_key)
+        if not launch_programs:
+            launch_programs = []
 
-    # Determine if store setup has scumm installers
-    def does_store_setup_have_scumm_installers(self, store_key = None):
-        matching_installers = self.find_store_setup_matching_installers(store_key = store_key, store_subkey = config.program_key_is_scumm)
-        return len(matching_installers) > 0
+        # No existing entries
+        if len(launch_programs) == 0:
 
-    # Determine if store setup has windows installers
-    def does_store_setup_have_windows_installers(self, store_key = None):
-        if self.does_store_setup_have_dos_installers(store_key):
+            # Get the complete list of runnable files from the install
+            runnable_files_all = system.BuildFileListByExtensions(
+                root = base_dir,
+                extensions = config.WindowsProgramFileType.cvalues(),
+                use_relative_paths = True,
+                follow_symlink_dirs = True)
+
+            # Parse down the complete list to the ones most likely to be games
+            runnable_files_likely = []
+            for relative_path in runnable_files_all:
+                path_to_add = system.NormalizeFilePath(relative_path, separator = config.os_pathsep)
+                should_ignore = False
+                for ignore_path in config.ignored_paths_install:
+                    if path_to_add.startswith(ignore_path):
+                        should_ignore = True
+                        break
+                if should_ignore:
+                    continue
+                runnable_files_likely.append(path_to_add)
+
+            # Add to launch programs
+            for runnable_file_likely in runnable_files_likey:
+                runnable_program = computer.Program()
+                runnable_program.set_exe(system.GetFilenameFile(runnable_file))
+                runnable_program.set_cwd(system.GetFilenameDirectory(runnable_file))
+                launch_programs.append(runnable_program)
+
+            # Try to record these for later
+            self.set_store_launch_programs(launch_programs, store_key)
+            self.update_json_file()
+
+        # Get launch info
+        def GetLaunchInfo(game_exe):
+            for launch_program in launch_programs:
+                launch_exe = launch_program.get_exe()
+                launch_cwd = launch_program.get_cwd()
+                if system.JoinPaths(launch_cwd, launch_exe) in game_exe:
+                    return launch_program
+            return None
+
+        # Check that we have something to run
+        if len(launch_programs) == 0:
+            gui.DisplayErrorPopup(
+                title_text = "No runnable files",
+                message_text = "Computer install has no runnable files")
+
+        # If we have exactly one choice, use that
+        if len(launch_programs) == 1:
+            return launch_programs[0]
+
+        # Create launch program
+        launch_program = None
+
+        # Handle game selection
+        def HandleGameSelection(selected_file):
+            nonlocal launch_program
+            launch_program = GetLaunchInfo(selected_file)
+
+        # Build runnable choices list
+        runnable_choices = []
+        for launch_program in launch_programs:
+            launch_exe = launch_program.get_exe()
+            launch_cwd = launch_program.get_cwd()
+            runnable_choices.append(system.JoinPaths(launch_cwd, launch_exe))
+
+        # Display list of runnable files and let user decide which to run
+        gui.DisplayChoicesWindow(
+            choice_list = runnable_choices,
+            title_text = "Select Program",
+            message_text = "Select program to run",
+            button_text = "Run program",
+            run_func = HandleGameSelection)
+
+        # Return launch info
+        return launch_program
+
+    # Find store matching programs
+    def find_store_matching_programs(self, store_key = None, store_subkey = None):
+        potential_programs = []
+        potential_programs += self.get_store_launch_programs(store_key)
+        potential_programs += self.get_store_setup_install_programs(store_key)
+        matching_programs = []
+        for program in potential_programs:
+            if program.has_subkey(store_key, store_subkey):
+                matching_programs.append(program)
+        return matching_programs
+
+    # Determine if store has dos programs
+    def does_store_have_dos_programs(self, store_key = None):
+        matching_programs = self.find_store_matching_programs(store_key = store_key, store_subkey = config.program_key_is_dos)
+        return len(matching_programs) > 0
+
+    # Determine if store has win31 programs
+    def does_store_have_win31_programs(self, store_key = None):
+        matching_programs = self.find_store_matching_programs(store_key = store_key, store_subkey = config.program_key_is_win31)
+        return len(matching_programs) > 0
+
+    # Determine if store has scumm programs
+    def does_store_have_scumm_programs(self, store_key = None):
+        matching_programs = self.find_store_matching_programs(store_key = store_key, store_subkey = config.program_key_is_scumm)
+        return len(matching_programs) > 0
+
+    # Determine if store has windows programs
+    def does_store_have_windows_programs(self, store_key = None):
+        if self.does_store_have_dos_programs(store_key):
             return False
-        if self.does_store_setup_have_win31_installers(store_key):
+        if self.does_store_have_win31_programs(store_key):
             return False
-        if self.does_store_setup_have_scumm_installers(store_key):
+        if self.does_store_have_scumm_programs(store_key):
             return False
         return True
 
-    # Determine if store setup needs to keep discs
-    def does_store_setup_need_to_keep_discs(self, store_key = None):
-        if self.does_store_setup_have_dos_installers(store_key):
+    # Determine if store needs to keep discs
+    def does_store_need_to_keep_discs(self, store_key = None):
+        if self.does_store_have_dos_programs(store_key):
             return True
-        if self.does_store_setup_have_win31_installers(store_key):
+        if self.does_store_have_win31_programs(store_key):
             return True
         return False
 

@@ -550,18 +550,18 @@ def RunBlockingCommand(
             system.LogError(e, quit_program = True)
         return 1
 
-# Run game command
-def RunGameCommand(
-    game_info,
+# Run capture command
+def RunCaptureCommand(
     cmd,
     options = CreateCommandOptions(),
     capture_type = None,
+    capture_file = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Blocking game start method
-    def run_game():
+    # Blocking start method
+    def run_start():
         code = RunBlockingCommand(
             cmd = cmd,
             options = options,
@@ -584,16 +584,13 @@ def RunGameCommand(
     # Screenshot capturing
     if capture_type == config.CaptureType.SCREENSHOT:
 
-        # Get output file
-        output_file = game_info.get_screenshot_asset()
-
-        # Run game while capturing screenshots
-        if os.path.exists(output_file) and not overwrite_screenshots:
-            return run_game()
+        # Run while capturing screenshots
+        if system.IsPathFile(capture_file) and not overwrite_screenshots:
+            return run_start()
         else:
             return capture.CaptureScreenshotWhileRunning(
-                run_func = run_game,
-                output_file = output_file,
+                run_func = run_start,
+                output_file = capture_file,
                 current_win = True,
                 capture_origin = (capture_origin_x, capture_origin_y),
                 capture_resolution = (capture_resolution_w, capture_resolution_h),
@@ -606,16 +603,13 @@ def RunGameCommand(
     # Video capturing
     elif capture_type == config.CaptureType.VIDEO:
 
-        # Get output file
-        output_file = game_info.get_video_asset()
-
-        # Run game while capturing video
-        if os.path.exists(output_file) and not overwrite_videos:
-            return run_game()
+        # Run while capturing video
+        if system.IsPathFile(capture_file) and not overwrite_videos:
+            return run_start()
         else:
             return capture.CaptureVideoWhileRunning(
-                run_func = run_game,
-                output_file = output_file,
+                run_func = run_start,
+                output_file = capture_file,
                 capture_origin = (capture_origin_x, capture_origin_y),
                 capture_resolution = (capture_resolution_w, capture_resolution_h),
                 capture_framerate = capture_framerate,
@@ -625,6 +619,179 @@ def RunGameCommand(
 
     # No capture
     else:
-        return run_game()
+        return run_start()
+
+###########################################################
+
+# Get installer type
+def GetInstallerType(installer_file):
+    with open(installer_file, "r", encoding="utf8", errors="ignore") as file:
+        while True:
+            file_contents = file.read(2048)
+            if not file_contents:
+                break
+            if "Inno Setup" in file_contents:
+                return config.InstallerType.INNO
+            if "Nullsoft.NSIS.exehead" in file_contents:
+                return config.InstallerType.NSIS
+            if "InstallShieldSetup" in file_contents:
+                return config.InstallerType.INS
+            if "7-Zip" in file_contents:
+                return config.InstallerType.SEVENZIP
+            if "WinRAR SFX" in file_contents:
+                return config.InstallerType.WINRAR
+    return config.InstallerType.UNKNOWN
+
+# Get installer setup command
+def GetInstallerSetupCommand(
+    installer_file,
+    installer_type,
+    install_dir = None,
+    silent_install = True):
+
+    # Create installer command
+    installer_cmd = [installer_file]
+    if installer_type == config.InstallerType.SEVENZIP:
+        if silent_install:
+            installer_cmd += ["-y"]
+        if install_dir:
+            installer_cmd += ["-o%s" % install_dir]
+    elif installer_type == config.InstallerType.WINRAR:
+        if silent_install:
+            installer_cmd += ["-s2"]
+        if install_dir:
+            installer_cmd += ["-d%s" % install_dir]
+    return installer_cmd
+
+###########################################################
+
+# Get dos launch command
+def GetDosLaunchCommand(
+    options,
+    start_program = None,
+    start_args = [],
+    start_letter = "c",
+    start_offset = None,
+    fullscreen = False):
+
+    # Search for disc images
+    disc_images = system.BuildFileListByExtensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
+
+    # Create launch command
+    launch_cmd = [programs.GetEmulatorProgram("DosBoxX")]
+
+    # Add config file
+    launch_cmd += [
+        "-conf",
+        programs.GetEmulatorPathConfigValue("DosBoxX", "config_file")
+    ]
+
+    # Add c drive mount
+    if options.has_valid_prefix_dos_c_drive():
+        launch_cmd += [
+            "-c", "mount c \"%s\"" % options.get_prefix_dos_c_drive()
+        ]
+
+    # Add disc drive mounts
+    if len(disc_images):
+        disc_index = 0
+        for disc_image in disc_images:
+            launch_cmd += [
+                "-c", "imgmount %s \"%s\" -t iso" % (config.drives_regular[disc_index], disc_image),
+            ]
+            disc_index += 1
+
+    # Add initial launch params
+    launch_cmd += ["-c", "%s:" % start_letter]
+    if system.IsPathValid(start_offset):
+        launch_cmd += ["-c", "cd %s" % start_offset]
+    if system.IsPathValid(start_program):
+        if isinstance(start_args, list) and len(start_args) > 0:
+            launch_cmd += ["-c", "%s %s" % (system.GetFilenameFile(start_program), " ".join(start_args))]
+        else:
+            launch_cmd += ["-c", "%s" % system.GetFilenameFile(start_program)]
+
+    # Add other flags
+    if fullscreen:
+        launch_cmd += ["-fullscreen"]
+
+    # Return launch command
+    return launch_cmd
+
+# Get win31 launch command
+def GetWin31LaunchCommand(
+    options,
+    start_program = None,
+    start_args = [],
+    start_letter = "c",
+    start_offset = None,
+    fullscreen = False):
+
+    # Search for disc images
+    disc_images = system.BuildFileListByExtensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
+
+    # Create launch command
+    launch_cmd = [programs.GetEmulatorProgram("DosBoxX")]
+
+    # Add config file
+    launch_cmd += [
+        "-conf",
+        programs.GetEmulatorPathConfigValue("DosBoxX", "config_file_win31")
+    ]
+
+    # Add c drive mount
+    if options.has_valid_prefix_dos_c_drive():
+        launch_cmd += [
+            "-c", "mount c \"%s\"" % options.get_prefix_dos_c_drive()
+        ]
+
+    # Add disc drive mounts
+    if len(disc_images):
+        disc_index = 0
+        for disc_image in disc_images:
+            launch_cmd += [
+                "-c", "imgmount %s \"%s\" -t iso" % (config.drives_regular[disc_index], disc_image),
+            ]
+            disc_index += 1
+
+    # Add initial launch params
+    launch_cmd += ["-c", "SET PATH=%PATH%;C:\WINDOWS;"]
+    launch_cmd += ["-c", "SET TEMP=C:\WINDOWS\TEMP"]
+    launch_cmd += ["-c", "%s:" % start_letter]
+    if system.IsPathValid(start_offset):
+        launch_cmd += ["-c", "cd %s" % start_offset]
+    if system.IsPathValid(start_program):
+        if isinstance(start_args, list) and len(start_args) > 0:
+            launch_cmd += ["-c", "WIN RUNEXIT %s %s" % (system.GetFilenameFile(start_program), " ".join(start_args))]
+        else:
+            launch_cmd += ["-c", "WIN RUNEXIT %s" % system.GetFilenameFile(start_program)]
+        launch_cmd += ["-c", "EXIT"]
+
+    # Add other flags
+    if fullscreen:
+        launch_cmd += ["-fullscreen"]
+
+    # Return launch command
+    return launch_cmd
+
+# Get scumm launch command
+def GetScummLaunchCommand(
+    options,
+    fullscreen = False):
+
+    # Create launch command
+    launch_cmd = [programs.GetEmulatorProgram("ScummVM")]
+    launch_cmd += [
+        "--path=%s" % system.JoinPaths(options.get_prefix_c_drive_real(), config.computer_folder_scumm)
+    ]
+    launch_cmd += ["--auto-detect"]
+    launch_cmd += [
+        "--savepath=%s" % system.JoinPaths(options.get_prefix_user_profile_dir(), config.computer_folder_gamedata)
+    ]
+    if fullscreen:
+        launch_cmd += ["--fullscreen"]
+
+    # Return launch command
+    return launch_cmd
 
 ###########################################################

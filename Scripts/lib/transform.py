@@ -9,7 +9,7 @@ import environment
 import platforms
 import gameinfo
 import install
-import installer
+import computer
 import archive
 import playlist
 import iso
@@ -81,7 +81,7 @@ def TransformComputerPrograms(
         if not system.DoesPathExist(cached_install_file):
 
             # Create install image
-            success = installer.InstallComputerGame(
+            success = computer.InstallComputerGame(
                 game_info = game_info,
                 source_file = source_file,
                 output_image = output_install_file,
