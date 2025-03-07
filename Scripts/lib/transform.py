@@ -81,7 +81,7 @@ def TransformComputerPrograms(
         if not system.DoesPathExist(cached_install_file):
 
             # Create install image
-            success = computer.InstallComputerGame(
+            success = computer.SetupComputerGame(
                 game_info = game_info,
                 source_file = source_file,
                 output_image = output_install_file,

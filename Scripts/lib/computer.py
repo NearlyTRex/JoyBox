@@ -123,7 +123,6 @@ class Program(jsondata.JsonData):
         self,
         options,
         token_map,
-        base_dir = None,
         capture_type = None,
         capture_file = None,
         fullscreen = False,
@@ -140,8 +139,10 @@ class Program(jsondata.JsonData):
         program_is_scumm = self.is_scumm()
         program_is_windows = program_exe and not program_is_dos and not program_is_win31 and not program_is_scumm
         program_path = system.JoinPaths(program_cwd, program_exe)
-        if base_dir:
-            program_path = system.JoinPaths(base_dir, program_cwd, program_exe)
+        if program_is_dos or program_is_win31:
+            program_path = system.JoinPaths(options.get_prefix_dos_c_drive(), program_cwd, program_exe)
+        if program_is_windows:
+            program_path = system.JoinPaths(options.get_prefix_c_drive_real(), program_cwd, program_exe)
         program_drive = system.GetFilenameDrive(program_path)
         program_dir = system.GetFilenameDirectory(program_path)
         program_file = system.GetFilenameFile(program_path)
@@ -332,8 +333,8 @@ class ProgramStep(jsondata.JsonData):
         # Should be successful
         return True
 
-# Install computer game
-def InstallComputerGame(
+# Setup computer game
+def SetupComputerGame(
     game_info,
     source_file,
     output_image,
@@ -453,7 +454,6 @@ def InstallComputerGame(
         setup_program.run(
             options = game_setup_options,
             token_map = game_token_map,
-            base_dir = game_setup_options.get_prefix_c_drive_real(),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -530,27 +530,27 @@ def LaunchComputerGame(
     exit_on_failure = False):
 
     # Get launch options
-    launch_options = command.CreateCommandOptions()
+    game_launch_options = command.CreateCommandOptions()
 
     # Get mount links
-    mount_links = []
+    game_mount_links = []
     for obj in system.GetDirectoryContents(game_info.get_local_cache_dir()):
-        mount_links.append({
+        game_mount_links.append({
             "from": system.JoinPaths(game_info.get_local_cache_dir(), obj),
             "to": obj
         })
 
     # Create game prefix
     def CreateGamePrefix():
-        nonlocal launch_options
-        return launch_options.create_prefix(
+        nonlocal game_launch_options
+        return game_launch_options.create_prefix(
             is_wine_prefix = environment.IsLinuxPlatform(),
             is_sandboxie_prefix = environment.IsWindowsPlatform(),
             prefix_name = config.PrefixType.GAME,
             prefix_dir = game_info.get_save_dir(),
             general_prefix_dir = game_info.get_general_save_dir(),
             linked_prefix = True,
-            other_links = mount_links,
+            other_links = game_mount_links,
             clean_existing = False,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -563,22 +563,30 @@ def LaunchComputerGame(
         run_func = CreateGamePrefix)
 
     # Build token map
-    launch_token_map = sandbox.BuildTokenMap(
-        hdd_base_dir = launch_options.get_prefix_c_drive_real())
+    game_token_map = sandbox.BuildTokenMap(
+        hdd_base_dir = game_launch_options.get_prefix_c_drive_real())
 
-    # Get base directory
-    launch_base_dir = None
+    # Get launch directory
+    game_launch_dir = None
     if game_info.does_store_have_dos_programs():
-        launch_base_dir = launch_options.get_prefix_dos_c_drive()
+        game_launch_dir = game_launch_options.get_prefix_dos_c_drive()
     elif game_info.does_store_have_win31_programs():
-        launch_base_dir = launch_options.get_prefix_dos_c_drive()
+        game_launch_dir = game_launch_options.get_prefix_dos_c_drive()
     else:
-        launch_base_dir = launch_options.get_prefix_c_drive_real()
-    if not launch_base_dir:
+        game_launch_dir = game_launch_options.get_prefix_c_drive_real()
+    if not game_launch_dir:
         return False
 
     # Get selected program
-    selected_program = game_info.select_store_launch_program(launch_base_dir)
+    game_selected_program = game_info.select_store_launch_program(game_launch_dir)
 
-    # Should be successful
-    return True
+    # Run program
+    return game_selected_program.run(
+        options = game_launch_options,
+        token_map = game_token_map,
+        capture_type = capture_type,
+        capture_file = capture_file,
+        fullscreen = fullscreen,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)

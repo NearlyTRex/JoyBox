@@ -12,13 +12,11 @@ import command
 import programs
 import release
 import sandbox
-import metadata
 import display
 import ini
 import gui
-import gameinfo
 import emulatorbase
-import containers
+import computer
 
 # Config files
 config_files = {}
@@ -375,109 +373,12 @@ class Computer(emulatorbase.EmulatorBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Get launch options
-        launch_options = command.CreateCommandOptions()
-
-        # Get mount links
-        mount_links = []
-        for obj in system.GetDirectoryContents(game_info.get_local_cache_dir()):
-            mount_links.append({
-                "from": system.JoinPaths(game_info.get_local_cache_dir(), obj),
-                "to": obj
-            })
-
-        # Create linked prefix
-        def CreateGamePrefix():
-            nonlocal launch_options
-            return launch_options.create_prefix(
-                is_wine_prefix = environment.IsLinuxPlatform(),
-                is_sandboxie_prefix = environment.IsWindowsPlatform(),
-                prefix_name = config.PrefixType.GAME,
-                prefix_dir = game_info.get_save_dir(),
-                general_prefix_dir = game_info.get_general_save_dir(),
-                linked_prefix = True,
-                other_links = mount_links,
-                clean_existing = False,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        gui.DisplayLoadingWindow(
-            title_text = "Creating game prefix",
-            message_text = "Creating game prefix\n%s\n%s" % (game_info.get_name(), game_info.get_platform()),
-            failure_text = "Unable to create game prefix",
-            image_file = game_info.get_boxfront_asset(),
-            run_func = CreateGamePrefix)
-
-        # Get launch info
-        launch_cmd = []
-
-        # Dos installers
-        if game_info.does_store_setup_have_dos_installers():
-            selected_program = GetSelectedLaunchProgram(
-                game_info = game_info,
-                base_dir = launch_options.get_prefix_dos_c_drive(),
-                default_cwd = launch_options.get_prefix_dos_c_drive())
-            if selected_program:
-                launch_cmd = GetDosLaunchCommand(
-                    options = launch_options,
-                    start_program = selected_program.get_cmd(),
-                    start_letter = "c",
-                    start_offset = selected_program.get_cwd(),
-                    fullscreen = fullscreen)
-
-        # Win31 installers
-        elif game_info.does_store_setup_have_win31_installers():
-            selected_program = GetSelectedLaunchProgram(
-                game_info = game_info,
-                base_dir = launch_options.get_prefix_dos_c_drive(),
-                default_cwd = launch_options.get_prefix_dos_c_drive())
-            if selected_program:
-                launch_cmd = GetWin31LaunchCommand(
-                    options = launch_options,
-                    start_program = selected_program.get_cmd(),
-                    start_letter = "c",
-                    start_offset = selected_program.get_cwd(),
-                    fullscreen = fullscreen)
-
-        # Scumm installers
-        elif game_info.does_store_setup_have_scumm_installers():
-            launch_cmd = GetScummLaunchCommand(
-                options = launch_options,
-                fullscreen = fullscreen)
-
-        # Regular installers
-        else:
-            selected_program = GetSelectedLaunchProgram(
-                game_info = game_info,
-                base_dir = launch_options.get_prefix_c_drive_real(),
-                default_cwd = game_info.get_general_save_dir())
-            if selected_program:
-                launch_cmd = [selected_program.get_cmd()] + launch_program.get_args()
-                blocking_processes = sandbox.GetBlockingProcesses(
-                    options = launch_options,
-                    initial_processes = [command.GetStarterCommand(selected_program.get_cmd())])
-                launch_options.set_force_prefix(True)
-                launch_options.set_cwd(os.path.expanduser("~"))
-                launch_options.set_prefix_cwd(selected_program.get_cwd())
-                launch_options.set_lnk_base_path(game_info.get_local_cache_dir())
-                launch_options.set_blocking_processes(blocking_processes)
-
-        # Check launch command
-        if len(launch_cmd):
-
-            # Launch game
-            command.RunGameCommand(
-                game_info = game_info,
-                cmd = launch_cmd,
-                options = launch_options,
-                capture_type = capture_type,
-                verbose = verbose)
-
-            # Restore default screen resolution
-            display.RestoreDefaultScreenResolution(
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Should be successful
-        return True
+        # Launch game
+        return computer.LaunchComputerGame(
+            game_info = game_info,
+            capture_type = capture_type,
+            capture_file = capture_file,
+            fullscreen = fullscreen,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
