@@ -936,23 +936,44 @@ def MarkAsExecutable(src, verbose = False, pretend_run = False, exit_on_failure 
 def CreateTemporaryDirectory(verbose = False, pretend_run = False):
     if verbose:
         LogInfo("Creating temporary directory")
-    dir = ""
+    temp_dir = ""
     if not pretend_run:
-        dir = os.path.realpath(tempfile.mkdtemp())
+        temp_dir = os.path.realpath(tempfile.mkdtemp())
         if verbose:
-            LogInfo("Created temporary directory %s" % dir)
-    if not os.path.isdir(dir):
+            LogInfo("Created temporary directory %s" % temp_dir)
+    if not os.path.isdir(temp_dir):
         return (False, "Unable to create temporary directory")
-    return (True, dir)
+    return (True, temp_dir)
 
 # Create symlink
-def CreateSymlink(src, dest, cwd = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def CreateSymlink(
+    src,
+    dest,
+    cwd = None,
+    overwrite = True,
+    make_parent = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     try:
         if verbose:
             LogInfo("Creating symlink from %s to %s" % (src, dest))
         if not pretend_run:
             if cwd:
                 os.chdir(cwd)
+            if make_parent:
+                if verbose:
+                    LogInfo("Making parent dir %s" % os.path.dirname(dest))
+                os.makedirs(os.path.dirname(dest), exist_ok = True)
+            if overwrite:
+                if verbose:
+                    LogInfo("Removing destination %s first" % dest)
+                if os.path.islink(dest):
+                    os.unlink(dest)
+                elif os.path.isfile(dest):
+                    os.remove(dest)
+                elif os.path.isdir(dest):
+                    shutil.rmtree(dest)
             os.symlink(src, dest, target_is_directory = os.path.isdir(src))
         return True
     except Exception as e:
@@ -1109,7 +1130,7 @@ def MakeDirectory(src, verbose = False, pretend_run = False, exit_on_failure = F
             if verbose:
                 LogInfo("Making directory %s" % src)
             if not pretend_run:
-                os.makedirs(src)
+                os.makedirs(src, exist_ok = True)
         return True
     except Exception as e:
         if not os.path.isdir(src):
