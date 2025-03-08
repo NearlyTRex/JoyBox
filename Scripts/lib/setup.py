@@ -104,27 +104,14 @@ def SetupAssets(verbose = False, pretend_run = False, exit_on_failure = False):
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
 
-                # Create dest parent dir if it doesn't exist
-                if not system.DoesPathExist(dest_parent_dir):
-                    system.MakeDirectory(
-                        src = dest_parent_dir,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-
-                # Remove existing symlink
-                system.RemoveSymlink(
-                    src = dest_dir,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-
                 # Make new symlink
-                system.CreateSymlink(
+                success = system.CreateSymlink(
                     src = source_dir,
                     dest = dest_dir,
                     cwd = dest_parent_dir,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
+                if not success:
+                    return False
     return True

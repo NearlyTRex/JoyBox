@@ -10,7 +10,6 @@ from .bsnes import BSnes
 from .cemu import Cemu
 from .citra import Citra
 from .computer import Computer
-from .computer import GetDosLaunchCommand as GetComputerDosLaunchCommand
 from .cxbxreloaded import CxBxReloaded
 from .demul import Demul
 from .dolphin import Dolphin

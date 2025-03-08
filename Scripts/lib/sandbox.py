@@ -796,11 +796,6 @@ def SetupPrefixEnvironment(
                 options = new_options,
                 drive = config.drive_prefix_cwd)
             if system.IsPathValid(cwd_drive):
-                system.RemoveSymlink(
-                    src = cwd_drive,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
                 system.CreateSymlink(
                     src = new_options.get_cwd(),
                     dest = cwd_drive,
@@ -1120,16 +1115,6 @@ def CreateLinkedPrefix(
             exit_on_failure = exit_on_failure)
 
         # Link prefix
-        system.RemoveObject(
-            obj = GetWineUserProfilePath(options),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        system.MakeDirectory(
-            src = system.GetDirectoryParent(GetWineUserProfilePath(options)),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
         system.CreateSymlink(
             src = options.get_general_prefix_dir(),
             dest = GetWineUserProfilePath(options),
@@ -1153,16 +1138,6 @@ def CreateLinkedPrefix(
         path_to = system.JoinPaths(prefix_c_drive, other_link["to"])
         if not system.DoesPathExist(path_from):
             continue
-        system.RemoveObject(
-            obj = path_to,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        system.MakeDirectory(
-            src = system.GetDirectoryParent(path_to),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
         system.CreateSymlink(
             src = path_from,
             dest = path_to,

@@ -14,6 +14,7 @@ import sandbox
 import archive
 import display
 import install
+import gui
 
 # Program
 class Program(jsondata.JsonData):
@@ -50,7 +51,7 @@ class Program(jsondata.JsonData):
     def set_args(self, value):
         self.set_value(config.program_key_args, value)
     def get_args(self):
-        return self.get_value(config.program_key_args)
+        return self.get_value(config.program_key_args, [])
 
     # Windows version
     def set_winver(self, value):
@@ -62,13 +63,13 @@ class Program(jsondata.JsonData):
     def set_tricks(self, value):
         self.set_value(config.program_key_tricks, value)
     def get_tricks(self):
-        return self.get_value(config.program_key_tricks)
+        return self.get_value(config.program_key_tricks, [])
 
     # Overrides
     def set_overrides(self, value):
         self.set_value(config.program_key_overrides, value)
     def get_overrides(self):
-        return self.get_value(config.program_key_overrides)
+        return self.get_value(config.program_key_overrides, [])
 
     # Desktop resolution
     def set_desktop(self, value):
@@ -450,7 +451,7 @@ def SetupComputerGame(
             exit_on_failure = exit_on_failure)
 
     # Run setup programs
-    for setup_program in setup_programs:
+    for setup_program in game_info.get_store_setup_install_programs():
         setup_program.run(
             options = game_setup_options,
             token_map = game_token_map,

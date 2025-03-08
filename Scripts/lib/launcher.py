@@ -73,20 +73,6 @@ def LaunchGame(
 
     # Setup launcher save directory
     if game_launcher_save_dir:
-        success = system.MakeDirectory(
-            src = system.GetFilenameDirectory(game_launcher_save_dir),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-        success = system.RemoveObject(
-            obj = game_launcher_save_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
         success = system.CreateSymlink(
             src = game_save_dir,
             dest = game_launcher_save_dir,
