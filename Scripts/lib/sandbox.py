@@ -267,7 +267,9 @@ def RestoreRegistry(
     exit_on_failure = False):
 
     # Get registry dir
-    registry_dir = system.JoinPaths(user_profile_dir, config.computer_folder_registry)
+    registry_dir = options.get_prefix_user_profile_registry_dir()
+    if not registry_dir:
+        return False
 
     # Get registry file
     registry_file = ""
@@ -299,7 +301,9 @@ def BackupRegistry(
         return True
 
     # Get registry dir
-    registry_dir = system.JoinPaths(user_profile_dir, config.computer_folder_registry)
+    registry_dir = options.get_prefix_user_profile_registry_dir()
+    if not registry_dir:
+        return False
 
     # Get registry file
     registry_file = ""

@@ -782,11 +782,11 @@ def GetScummLaunchCommand(
     # Create launch command
     launch_cmd = [programs.GetEmulatorProgram("ScummVM")]
     launch_cmd += [
-        "--path=%s" % system.JoinPaths(options.get_prefix_c_drive_real(), config.computer_folder_scumm)
+        "--path=%s" % options.get_prefix_scumm_dir()
     ]
     launch_cmd += ["--auto-detect"]
     launch_cmd += [
-        "--savepath=%s" % system.JoinPaths(options.get_prefix_user_profile_dir(), config.computer_folder_gamedata)
+        "--savepath=%s" % options.get_prefix_user_profile_gamedata_dir()
     ]
     if fullscreen:
         launch_cmd += ["--fullscreen"]

@@ -225,6 +225,18 @@ class CommandOptions:
     def has_existing_prefix_user_profile_dir(self):
         return system.DoesPathExist(self.options.get_value(config.program_key_prefix_user_profile_dir))
 
+    # Prefix user profile game data directory
+    def get_prefix_user_profile_gamedata_dir(self):
+        if self.has_valid_prefix_user_profile_dir():
+            return system.JoinPaths(self.get_prefix_user_profile_dir(), config.computer_folder_gamedata)
+        return None
+
+    # Prefix user profile registry directory
+    def get_prefix_user_profile_registry_dir(self):
+        if self.has_valid_prefix_user_profile_dir():
+            return system.JoinPaths(self.get_prefix_user_profile_dir(), config.computer_folder_registry)
+        return None
+
     # Prefix c drive virtual
     def get_prefix_c_drive_virtual(self):
         return self.options.get_value(config.program_key_prefix_c_drive_virtual)
