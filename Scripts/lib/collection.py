@@ -25,15 +25,15 @@ import metadataassetcollector
 # Determine if game json files are possible
 def AreGameJsonFilePossible(
     game_supercategory,
-    game_category,
-    game_subcategory):
+    game_category = None,
+    game_subcategory = None):
     return (game_supercategory == config.Supercategory.ROMS)
 
 # Determine if game metadata files are possible
 def AreGameMetadataFilePossible(
     game_supercategory,
-    game_category,
-    game_subcategory):
+    game_category = None,
+    game_subcategory = None):
     return (game_supercategory == config.Supercategory.ROMS)
 
 ###########################################################
@@ -456,12 +456,12 @@ def ScanForMetadataEntries(
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
     # Gather directories to scan
-    scan_directories = []
+    game_directories = []
     if platforms.IsLetterPlatform(game_platform):
         for obj in system.GetDirectoryContents(game_root):
-            scan_directories.append(system.JoinPaths(game_root, obj))
+            game_directories.append(system.JoinPaths(game_root, obj))
     else:
-        scan_directories.append(game_root)
+        game_directories.append(game_root)
 
     # Add metadata entries
     for game_directory in game_directories:
@@ -488,10 +488,6 @@ def PublishMetadataEntries(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Check categories
-    if not AreGameMetadataFilePossible(game_supercategory, game_category, game_subcategory):
-        return True
-
     # Set metadata counter so we can use alternating row templates
     metadata_counter = 1
 
@@ -500,6 +496,10 @@ def PublishMetadataEntries(
 
     # Iterate through each subcategory for the given category
     for game_subcategory in config.subcategory_map[game_category]:
+
+        # Check categories
+        if not AreGameMetadataFilePossible(game_supercategory, game_category, game_subcategory):
+            continue
 
         # Get metadata file
         metadata_file = environment.GetMetadataFile(game_category, game_subcategory)

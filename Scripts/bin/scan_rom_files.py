@@ -15,6 +15,7 @@ import collection
 import metadata
 import arguments
 import setup
+import ini
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Scan roms files.")
@@ -48,25 +49,33 @@ def main():
     for game_supercategory in config.Supercategory.members():
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
+                game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+                game_names = gameinfo.FindJsonGameNames(
+                    game_supercategory,
+                    game_category,
+                    game_subcategory)
+                for game_name in game_names:
 
-                # Get scan path
-                scan_game_path = environment.GetLockerGamingFilesDir(
-                    game_supercategory = game_supercategory,
-                    game_category = game_category,
-                    game_subcategory = game_subcategory,
-                    source_type = args.source_type)
-
-                # Build metadata
-                if system.IsPathDirectory(scan_game_path):
-                    system.LogInfo("Building metadata [Category: '%s', Subcategory: '%s'] ..." % (game_category, game_subcategory))
-                    collection.ScanForMetadataEntries(
+                    # Get scan path
+                    scan_game_path = environment.GetLockerGamingFilesDir(
                         game_supercategory = game_supercategory,
                         game_category = game_category,
                         game_subcategory = game_subcategory,
-                        game_root = scan_game_path,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
+                        game_name = game_name,
+                        source_type = args.source_type)
+
+                    # Build metadata
+                    if system.IsPathDirectory(scan_game_path):
+                        system.LogInfo("Building metadata [Category: '%s', Subcategory: '%s', Name: '%s'] ..." %
+                            (game_category, game_subcategory, game_name))
+                        collection.ScanForMetadataEntries(
+                            game_supercategory = game_supercategory,
+                            game_category = game_category,
+                            game_subcategory = game_subcategory,
+                            game_root = scan_game_path,
+                            verbose = args.verbose,
+                            pretend_run = args.pretend_run,
+                            exit_on_failure = args.exit_on_failure)
 
     # Build json files
     system.LogInfo("Building json files ...")
