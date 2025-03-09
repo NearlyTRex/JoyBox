@@ -534,7 +534,7 @@ class Steam(storebase.StoreBase):
             if "config" in appdata:
                 appconfig = appdata["config"]
                 if "installdir" in appconfig:
-                    game_info[config.json_key_store_installdir] = str(appconfig["installdir"])
+                    game_info[config.json_key_store_installdir] = "STORE_INSTALL_DIR/steamapps/common/%s" % str(appconfig["installdir"])
             if "depots" in appdata:
                 appdepots = appdata["depots"]
                 if "branches" in appdepots:
