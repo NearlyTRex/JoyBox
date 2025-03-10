@@ -210,12 +210,18 @@ def CreateGameJsonFile(
         json_platform = game_platform)
 
     # Set common keys
-    json_obj.fill_value(config.json_key_files, rebased_files)
-    json_obj.fill_value(config.json_key_dlc, all_dlc)
-    json_obj.fill_value(config.json_key_update, all_updates)
-    json_obj.fill_value(config.json_key_extra, all_extras)
-    json_obj.fill_value(config.json_key_dependencies, all_dependencies)
-    json_obj.fill_value(config.json_key_transform_file, best_game_file)
+    if isinstance(rebased_files, list) and len(rebased_files) > 0:
+        json_obj.fill_value(config.json_key_files, rebased_files)
+    if isinstance(all_dlc, list) and len(all_dlc) > 0:
+        json_obj.fill_value(config.json_key_dlc, all_dlc)
+    if isinstance(all_updates, list) and len(all_updates) > 0:
+        json_obj.fill_value(config.json_key_update, all_updates)
+    if isinstance(all_extras, list) and len(all_extras) > 0:
+        json_obj.fill_value(config.json_key_extra, all_extras)
+    if isinstance(all_dependencies, list) and len(all_dependencies) > 0:
+        json_obj.fill_value(config.json_key_dependencies, all_dependencies)
+    if isinstance(best_game_file, str) and len(best_game_file) > 0:
+        json_obj.fill_value(config.json_key_transform_file, best_game_file)
 
     # Set computer keys
     if game_category == config.Category.COMPUTER:
@@ -229,7 +235,8 @@ def CreateGameJsonFile(
 
     # Set other platform keys
     else:
-        json_obj.fill_value(config.json_key_launch_file, best_game_file)
+        if isinstance(best_game_file, str) and len(best_game_file) > 0:
+            json_obj.fill_value(config.json_key_launch_file, best_game_file)
 
     # Create json directory
     success = system.MakeDirectory(
@@ -456,15 +463,15 @@ def ScanForMetadataEntries(
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
     # Gather directories to scan
-    game_directories = []
+    game_directories = set()
     if platforms.IsLetterPlatform(game_platform):
         for obj in system.GetDirectoryContents(game_root):
-            game_directories.append(system.JoinPaths(game_root, obj))
+            game_directories.add(system.GetFilenameDirectory(system.JoinPaths(game_root, obj)))
     else:
-        game_directories.append(game_root)
+        game_directories.add(system.GetFilenameDirectory(game_root))
 
     # Add metadata entries
-    for game_directory in game_directories:
+    for game_directory in sorted(game_directories):
         if game_directory.endswith(")"):
             success = AddOrUpdateMetadataEntry(
                 game_supercategory = game_supercategory,
