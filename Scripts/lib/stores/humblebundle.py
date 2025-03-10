@@ -58,6 +58,10 @@ class HumbleBundle(storebase.StoreBase):
     def GetInstallDir(self):
         return self.install_dir
 
+    # Check if purchases can be imported
+    def CanImportPurchases(self):
+        return True
+
     ############################################################
     # Identifiers
     ############################################################
