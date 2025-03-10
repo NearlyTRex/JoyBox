@@ -148,6 +148,10 @@ class StoreBase:
     def GetInstallDir(self):
         return None
 
+    # Check if purchases can be imported
+    def CanImportPurchases(self):
+        return False
+
     ############################################################
     # Identifiers
     ############################################################
@@ -221,11 +225,14 @@ class StoreBase:
     ############################################################
 
     # Load manifest
-    def LoadManifest(self, verbose = False, pretend_run = False, exit_on_failure = False):
-        self.manifest.load(
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    def LoadManifest(self, manifest_data = None, verbose = False, pretend_run = False, exit_on_failure = False):
+        if manifest_data:
+            self.manifest = manifest.Manifest(manifest_data)
+        else:
+            self.manifest.load(
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
 
     ############################################################
     # Connection
@@ -375,7 +382,7 @@ class StoreBase:
                 continue
 
             # Check if json file already exists
-            found_file = self.FindPurchases(
+            found_file = self.FindMatchingJsonFiles(
                 identifiers = purchase_identifiers,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -491,30 +498,6 @@ class StoreBase:
         # Should be successful
         return True
 
-    # Find purchases
-    def FindPurchases(
-        self,
-        identifiers,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        json_root = environment.GetJsonMetadataDir(self.GetSupercategory(), self.GetCategory(), self.GetSubcategory())
-        json_files = system.BuildFileListByExtensions(json_root, extensions = [".json"])
-        for json_file in json_files:
-            json_data = system.ReadJsonFile(
-                src = json_file,
-                exit_on_failure = exit_on_failure)
-            if self.GetKey() not in json_data:
-                continue
-            json_store_data = json_data[self.GetKey()]
-            for appdata_key in config.json_keys_store_appdata:
-                if appdata_key not in json_store_data:
-                    continue
-                for identifier in identifiers:
-                    if identifier and identifier == json_store_data[appdata_key]:
-                        return json_file
-        return None
-
     ############################################################
     # Json
     ############################################################
@@ -612,6 +595,30 @@ class StoreBase:
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return success
+
+    # Find matching json files
+    def FindMatchingJsonFiles(
+        self,
+        identifiers,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        json_root = environment.GetJsonMetadataDir(self.GetSupercategory(), self.GetCategory(), self.GetSubcategory())
+        json_files = system.BuildFileListByExtensions(json_root, extensions = [".json"])
+        for json_file in json_files:
+            json_data = system.ReadJsonFile(
+                src = json_file,
+                exit_on_failure = exit_on_failure)
+            if self.GetKey() not in json_data:
+                continue
+            json_store_data = json_data[self.GetKey()]
+            for appdata_key in config.json_keys_store_appdata:
+                if appdata_key not in json_store_data:
+                    continue
+                for identifier in identifiers:
+                    if identifier and identifier == json_store_data[appdata_key]:
+                        return json_file
+        return None
 
     ############################################################
     # Metadata
