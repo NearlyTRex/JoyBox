@@ -55,8 +55,10 @@ class ManifestEntry:
 class Manifest:
 
     # Constructor
-    def __init__(self):
+    def __init__(self, manifest = None):
         self.manifest = {}
+        if manifest:
+            self.manifest = manifest
 
     # Load
     def load(self, verbose = False, pretend_run = False, exit_on_failure = False):
