@@ -14,6 +14,7 @@ import jsondata
 import webpage
 import storebase
 import metadataentry
+import manifest
 
 # GOG store
 class GOG(storebase.StoreBase):
@@ -75,6 +76,18 @@ class GOG(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_gog
 
+    # Get identifier keys
+    def GetIdentifierKeys():
+        return {
+            config.StoreIdentifierType.INFO: config.json_key_store_appid,
+            config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
+            config.StoreIdentifierType.LAUNCH: config.json_key_store_appname,
+            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appname,
+            config.StoreIdentifierType.ASSET: config.json_key_store_appurl,
+            config.StoreIdentifierType.METADATA: config.json_key_store_appurl,
+            config.StoreIdentifierType.PAGE: config.json_key_store_appname
+        }
+
     # Get preferred platform
     def GetPreferredPlatform(self):
         return self.platform
@@ -90,22 +103,6 @@ class GOG(storebase.StoreBase):
     # Check if purchases can be imported
     def CanImportPurchases(self):
         return True
-
-    ############################################################
-    # Identifiers
-    ############################################################
-
-    # Get identifier
-    def GetIdentifier(self, json_wrapper, identifier_type):
-        if identifier_type == config.StoreIdentifierType.INFO:
-            return json_wrapper.get_value(config.json_key_store_appid)
-        elif identifier_type == config.StoreIdentifierType.INSTALL:
-            return json_wrapper.get_value(config.json_key_store_appid)
-        elif identifier_type == config.StoreIdentifierType.ASSET:
-            return json_wrapper.get_value(config.json_key_store_appurl)
-        elif identifier_type == config.StoreIdentifierType.METADATA:
-            return json_wrapper.get_value(config.json_key_store_appurl)
-        return json_wrapper.get_value(config.json_key_store_appname)
 
     ############################################################
     # Connection
@@ -187,6 +184,10 @@ class GOG(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
+        # Check if already logged in
+        if self.IsLoggedIn():
+            return True
+
         # Login LGOGDownloader
         success = self.LoginLGOGDownloader(
             verbose = verbose,
@@ -200,7 +201,12 @@ class GOG(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return success
+        if not success:
+            return False
+
+        # Should be successful
+        self.SetLoggedIn(True)
+        return True
 
     ############################################################
     # Page
@@ -228,7 +234,7 @@ class GOG(storebase.StoreBase):
     ############################################################
 
     # Get purchases
-    def GetPurchases(
+    def GetLatestPurchases(
         self,
         verbose = False,
         pretend_run = False,
@@ -332,19 +338,19 @@ class GOG(storebase.StoreBase):
             system.LogError("Unable to find gog release information from '%s'" % gog_url)
             return None
 
-        # Build game info
-        game_info = {}
-        game_info[config.json_key_store_appid] = identifier
-        game_info[config.json_key_store_paths] = []
-        game_info[config.json_key_store_keys] = []
+        # Build jsondata
+        json_data = jsondata.JsonData({}, self.GetPlatform())
+        json_data.set_subvalue(self.GetKey(), config.json_key_store_appid, identifier)
+        json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, [])
+        json_data.set_subvalue(self.GetKey(), config.json_key_store_keys, [])
 
         # Augment by json
         if "slug" in gog_json:
             appslug = gog_json["slug"]
-            game_info[config.json_key_store_appname] = appslug
-            game_info[config.json_key_store_appurl] = self.GetLatestUrl(appslug)
+            json_data.set_subvalue(self.GetKey(), config.json_key_store_appname, appslug)
+            json_data.set_subvalue(self.GetKey(), config.json_key_store_appurl, self.GetLatestUrl(appslug))
         if "title" in gog_json:
-            game_info[config.json_key_store_name] = gog_json["title"].strip()
+            json_data.set_subvalue(self.GetKey(), config.json_key_store_name, gog_json["title"].strip())
         if "downloads" in gog_json:
             appdownloads = gog_json["downloads"]
             if "installers" in appdownloads:
@@ -352,39 +358,38 @@ class GOG(storebase.StoreBase):
                 for appinstaller in appinstallers:
                     if appinstaller["os"] == self.GetPreferredPlatform():
                         if appinstaller["version"]:
-                            game_info[config.json_key_store_buildid] = appinstaller["version"]
+                            json_data.set_subvalue(self.GetKey(), config.json_key_store_buildid, appinstaller["version"])
                         else:
-                            game_info[config.json_key_store_buildid] = "original_release"
+                            json_data.set_subvalue(self.GetKey(), config.json_key_store_buildid, "original_release")
         if "links" in gog_json:
             applinks = gog_json["links"]
             if "product_card" in applinks:
                 appurl = applinks["product_card"]
                 if appurl and network.IsUrlReachable(appurl):
-                    game_info[config.json_key_store_appurl] = applinks["product_card"]
+                    json_data.set_subvalue(self.GetKey(), config.json_key_store_appurl, applinks["product_card"])
 
         # Augment by manifest
-        if self.manifest:
-            manifest_entry = self.manifest.find_entry_by_gogid(
-                gogid = identifier,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if manifest_entry:
+        manifest_entry = manifest.GetManifestInstance().find_entry_by_gogid(
+            gogid = identifier,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if manifest_entry:
 
-                # Get existing paths and keys
-                game_paths = set(game_info[config.json_key_store_paths])
-                game_keys = set(game_info[config.json_key_store_keys])
+            # Get existing paths and keys
+            game_paths = set(json_data.get_subvalue(self.GetKey(), config.json_key_store_paths))
+            game_keys = set(json_data.get_subvalue(self.GetKey(), config.json_key_store_keys))
 
-                # Update paths and keys
-                game_paths = game_paths.union(manifest_entry.get_paths(config.token_game_install_dir))
-                game_keys = game_keys.union(manifest_entry.get_keys())
+            # Update paths and keys
+            game_paths = game_paths.union(manifest_entry.get_paths(config.token_game_install_dir))
+            game_keys = game_keys.union(manifest_entry.get_keys())
 
-                # Save paths and keys
-                game_info[config.json_key_store_paths] = system.SortStrings(game_paths)
-                game_info[config.json_key_store_keys] = system.SortStrings(game_keys)
+            # Save paths and keys
+            json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, system.SortStrings(game_paths))
+            json_data.set_subvalue(self.GetKey(), config.json_key_store_keys, system.SortStrings(game_keys))
 
-        # Return game info
-        return jsondata.JsonData(game_info, self.GetPlatform())
+        # Return jsondata
+        return json_data
 
     ############################################################
     # Metadata

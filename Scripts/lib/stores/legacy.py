@@ -65,6 +65,18 @@ class Legacy(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_legacy
 
+    # Get identifier keys
+    def GetIdentifierKeys():
+        return {
+            config.StoreIdentifierType.INFO: config.json_key_store_appid,
+            config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
+            config.StoreIdentifierType.LAUNCH: config.json_key_store_appid,
+            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appid,
+            config.StoreIdentifierType.ASSET: config.json_key_store_appurl,
+            config.StoreIdentifierType.METADATA: config.json_key_store_name,
+            config.StoreIdentifierType.PAGE: config.json_key_store_appid
+        }
+
     # Get user name
     def GetUserName(self):
         return self.username
@@ -78,18 +90,6 @@ class Legacy(storebase.StoreBase):
         return True
 
     ############################################################
-    # Identifiers
-    ############################################################
-
-    # Get identifier
-    def GetIdentifier(self, json_wrapper, identifier_type):
-        if identifier_type == config.StoreIdentifierType.METADATA:
-            return json_wrapper.get_value(config.json_key_store_name)
-        elif identifier_type == config.StoreIdentifierType.ASSET:
-            return json_wrapper.get_value(config.json_key_store_appurl)
-        return json_wrapper.get_value(config.json_key_store_appid)
-
-    ############################################################
     # Connection
     ############################################################
 
@@ -99,6 +99,10 @@ class Legacy(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+
+        # Check if already logged in
+        if self.IsLoggedIn():
+            return True
 
         # Get tool
         python_tool = None
@@ -143,7 +147,12 @@ class Legacy(storebase.StoreBase):
             cmd = refresh_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        return (code == 0)
+        if code != 0:
+            return False
+
+        # Should be successful
+        self.SetLoggedIn(True)
+        return True
 
     ############################################################
     # Page
@@ -238,7 +247,7 @@ class Legacy(storebase.StoreBase):
     ############################################################
 
     # Get purchases
-    def GetPurchases(
+    def GetLatestPurchases(
         self,
         verbose = False,
         pretend_run = False,
@@ -365,16 +374,16 @@ class Legacy(storebase.StoreBase):
             system.LogError("Received output:\n%s" % info_output)
             return None
 
-        # Build game info
-        game_info = {}
-        game_info[config.json_key_store_appid] = identifier
+        # Build jsondata
+        json_data = jsondata.JsonData({}, self.GetPlatform())
+        json_data.set_subvalue(self.GetKey(), config.json_key_store_appid, identifier)
 
         # Augment by json
         if "game_name" in legacy_json:
-            game_info[config.json_key_store_name] = legacy_json["game_name"].strip()
+            json_data.set_subvalue(self.GetKey(), config.json_key_store_name, legacy_json["game_name"].strip())
 
-        # Return game info
-        return jsondata.JsonData(game_info, self.GetPlatform())
+        # Return jsondata
+        return json_data
 
     ############################################################
     # Assets

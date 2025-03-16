@@ -64,6 +64,18 @@ class Epic(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_epic
 
+    # Get identifier keys
+    def GetIdentifierKeys():
+        return {
+            config.StoreIdentifierType.INFO: config.json_key_store_appname,
+            config.StoreIdentifierType.INSTALL: config.json_key_store_appname,
+            config.StoreIdentifierType.LAUNCH: config.json_key_store_appname,
+            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appname,
+            config.StoreIdentifierType.ASSET: config.json_key_store_appname,
+            config.StoreIdentifierType.METADATA: config.json_key_store_appurl,
+            config.StoreIdentifierType.PAGE: config.json_key_store_appname
+        }
+
     # Get user name
     def GetUserName(self):
         return self.username
@@ -77,16 +89,6 @@ class Epic(storebase.StoreBase):
         return True
 
     ############################################################
-    # Identifiers
-    ############################################################
-
-    # Get identifier
-    def GetIdentifier(self, json_wrapper, identifier_type):
-        if identifier_type == config.StoreIdentifierType.METADATA:
-            return json_wrapper.get_value(config.json_key_store_appurl)
-        return json_wrapper.get_value(config.json_key_store_appname)
-
-    ############################################################
     # Connection
     ############################################################
 
@@ -96,6 +98,10 @@ class Epic(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+
+        # Check if already logged in
+        if self.IsLoggedIn():
+            return True
 
         # Get tool
         python_tool = None
@@ -125,7 +131,12 @@ class Epic(storebase.StoreBase):
             cmd = login_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        return (code != 0)
+        if code != 0:
+            return False
+
+        # Should be successful
+        self.SetLoggedIn(True)
+        return True
 
     ############################################################
     # Page
@@ -221,7 +232,7 @@ class Epic(storebase.StoreBase):
     ############################################################
 
     # Get purchases
-    def GetPurchases(
+    def GetLatestPurchases(
         self,
         verbose = False,
         pretend_run = False,
@@ -352,31 +363,31 @@ class Epic(storebase.StoreBase):
             system.LogError("Received output:\n%s" % info_output)
             return None
 
-        # Build game info
-        game_info = {}
-        game_info[config.json_key_store_appname] = identifier
+        # Build jsondata
+        json_data = jsondata.JsonData({}, self.GetPlatform())
+        json_data.set_subvalue(self.GetKey(), config.json_key_store_appname, identifier)
 
         # Augment by json
         if "game" in epic_json:
             appgame = epic_json["game"]
             if "title" in appgame:
-                game_info[config.json_key_store_name] = appgame["title"].strip()
+                json_data.set_subvalue(self.GetKey(), config.json_key_store_name, appgame["title"].strip())
             if "version" in appgame:
-                game_info[config.json_key_store_buildid] = appgame["version"].strip()
+                json_data.set_subvalue(self.GetKey(), config.json_key_store_buildid, appgame["version"].strip())
             if "cloud_save_folder" in appgame:
                 base_path = None
-                if config.json_key_store_installdir in game_info:
+                if json_data.has_subkey(self.GetKey(), config.json_key_store_installdir):
                     base_path = system.JoinPaths(
                         config.token_game_install_dir,
-                        game_info[config.json_key_store_installdir])
-                game_info[config.json_key_store_paths] = []
+                        json_data.get_subkey(self.GetKey(), config.json_key_store_installdir))
+                json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, [])
                 if appgame["cloud_save_folder"]:
-                    game_info[config.json_key_store_paths] += [
+                    json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, [
                         storebase.CreateTokenizedPath(appgame["cloud_save_folder"].strip(), base_path)
-                    ]
+                    ])
 
-        # Return game info
-        return jsondata.JsonData(game_info, self.GetPlatform())
+        # Return jsondata
+        return json_data
 
     ############################################################
     # Metadata

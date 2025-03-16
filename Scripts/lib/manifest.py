@@ -103,3 +103,13 @@ class Manifest:
             if int(manifest_entry["gog"]["id"]) != int(gogid):
                 return ManifestEntry(manifest_entry)
         return None
+
+# Shared instance
+shared_manifest = None
+
+# Get manifest instance
+def GetManifestInstance():
+    global shared_manifest
+    if shared_manifest is None:
+        shared_manifest = Manifest()
+    return shared_manifest

@@ -54,6 +54,18 @@ class HumbleBundle(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_humble
 
+    # Get identifier keys
+    def GetIdentifierKeys():
+        return {
+            config.StoreIdentifierType.INFO: config.json_key_store_appname,
+            config.StoreIdentifierType.INSTALL: config.json_key_store_appname,
+            config.StoreIdentifierType.LAUNCH: config.json_key_store_appname,
+            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appname,
+            config.StoreIdentifierType.ASSET: config.json_key_store_name,
+            config.StoreIdentifierType.METADATA: config.json_key_store_name,
+            config.StoreIdentifierType.PAGE: config.json_key_store_appname
+        }
+
     # Get install dir
     def GetInstallDir(self):
         return self.install_dir
@@ -61,17 +73,5 @@ class HumbleBundle(storebase.StoreBase):
     # Check if purchases can be imported
     def CanImportPurchases(self):
         return True
-
-    ############################################################
-    # Identifiers
-    ############################################################
-
-    # Get identifier
-    def GetIdentifier(self, json_wrapper, identifier_type):
-        if identifier_type == config.StoreIdentifierType.ASSET:
-            return json_wrapper.get_value(config.json_key_store_name)
-        elif identifier_type == config.StoreIdentifierType.METADATA:
-            return json_wrapper.get_value(config.json_key_store_name)
-        return json_wrapper.get_value(config.json_key_store_appname)
 
     ############################################################

@@ -277,6 +277,41 @@ def ConvertUnknownDateString(string, new_format_code):
         return GetStringFromDatetime(date_time, new_format_code)
     return None
 
+# Get url scheme
+def GetUrlScheme(string):
+    return urllib.parse.urlparse(string).scheme
+
+# Get url netloc
+def GetUrlNetloc(string):
+    return urllib.parse.urlparse(string).netloc
+
+# Get url path
+def GetUrlPath(string):
+    return urllib.parse.urlparse(string).path
+
+# Get url params
+def GetUrlParams(string):
+    return urllib.parse.urlparse(string).params
+
+# Get url query
+def GetUrlQuery(string):
+    return urllib.parse.urlparse(string).query
+
+# Get url fragment
+def GetUrlFragment(string):
+    return urllib.parse.urlparse(string).fragment
+
+# Get URL components
+def GetUrlComponents(string):
+    return {
+        "scheme": GetUrlScheme(string),
+        "netloc": GetUrlNetloc(string),
+        "path": GetUrlPath(string),
+        "params": GetUrlParams(string),
+        "query": GetUrlQuery(string),
+        "fragment": GetUrlFragment(string)
+    }
+
 # Encode url string
 def EncodeUrlString(string, use_plus = False):
     if use_plus:
@@ -437,6 +472,22 @@ def IsIterableNonString(obj):
     if isinstance(obj, str):
         return False
     return IsIterableContainer(obj)
+
+# Search dictionary
+def SearchDictionary(data, search_value, search_keys = []):
+    matches = {}
+    def RecursiveSearch(d):
+        if isinstance(d, dict):
+            for key, value in d.items():
+                if key in search_keys and isinstance(value, str) and search_value in value:
+                    matches[key] = value
+                elif isinstance(value, (dict, list)):
+                    RecursiveSearch(value)
+        elif isinstance(d, list):
+            for item in d:
+                RecursiveSearch(item)
+    RecursiveSearch(data)
+    return matches
 
 ###########################################################
 
@@ -1712,6 +1763,22 @@ def CleanJsonFile(src, sort_keys = False, remove_empty_values = False, verbose =
             LogError(e)
             QuitProgram()
         return False
+
+# Search json files
+def SearchJsonFiles(src, search_values = [], search_keys = [], verbose = False, pretend_run = False, exit_on_failure = False):
+    json_files = BuildFileListByExtensions(src, extensions = [".json"])
+    for json_file in json_files:
+        json_data = ReadJsonFile(
+            src = json_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        for search_value in search_values:
+            json_matches = SearchDictionary(
+                data = json_data,
+                search_value = search_value,
+                search_keys = search_keys)
+    return json_matches
 
 ###########################################################
 

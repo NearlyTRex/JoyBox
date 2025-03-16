@@ -60,6 +60,18 @@ class Amazon(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_amazon
 
+    # Get identifier keys
+    def GetIdentifierKeys():
+        return {
+            config.StoreIdentifierType.INFO: config.json_key_store_appid,
+            config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
+            config.StoreIdentifierType.LAUNCH: config.json_key_store_appid,
+            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appid,
+            config.StoreIdentifierType.ASSET: config.json_key_store_appid,
+            config.StoreIdentifierType.METADATA: config.json_key_store_name,
+            config.StoreIdentifierType.PAGE: config.json_key_store_appid
+        }
+
     # Get install dir
     def GetInstallDir(self):
         return self.install_dir
@@ -67,16 +79,6 @@ class Amazon(storebase.StoreBase):
     # Check if purchases can be imported
     def CanImportPurchases(self):
         return True
-
-    ############################################################
-    # Identifiers
-    ############################################################
-
-    # Get identifier
-    def GetIdentifier(self, json_wrapper, identifier_type):
-        if identifier_type == config.StoreIdentifierType.METADATA:
-            return json_wrapper.get_value(config.json_key_store_name)
-        return json_wrapper.get_value(config.json_key_store_appid)
 
     ############################################################
     # Connection
@@ -88,6 +90,10 @@ class Amazon(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+
+        # Check if already logged in
+        if self.IsLoggedIn():
+            return True
 
         # Get tool
         python_tool = None
@@ -138,14 +144,19 @@ class Amazon(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return (code == 0)
+        if code != 0:
+            return False
+
+        # Should be successful
+        self.SetLoggedIn(True)
+        return True
 
     ############################################################
     # Purchases
     ############################################################
 
     # Get purchases
-    def GetPurchases(
+    def GetLatestPurchases(
         self,
         verbose = False,
         pretend_run = False,
@@ -310,21 +321,21 @@ class Amazon(storebase.StoreBase):
             system.LogError("Received output:\n%s" % info_output)
             return None
 
-        # Build game info
-        game_info = {}
-        game_info[config.json_key_store_appid] = identifier
-        game_info[config.json_key_store_buildid] = ""
+        # Build jsondata
+        json_data = jsondata.JsonData({}, self.GetPlatform())
+        json_data.set_subvalue(self.GetKey(), config.json_key_store_appid, identifier)
+        json_data.set_subvalue(self.GetKey(), config.json_key_store_buildid, "")
 
         # Augment by json
         if "version" in amazon_json:
-            game_info[config.json_key_store_buildid] = str(amazon_json["version"])
+            json_data.set_subvalue(self.GetKey(), config.json_key_store_buildid, str(amazon_json["version"]))
         if "product" in amazon_json:
             appdata = amazon_json["product"]
             if "title" in appdata:
-                game_info[config.json_key_store_name] = str(appdata["title"])
+                json_data.set_subvalue(self.GetKey(), config.json_key_store_name, str(appdata["title"]))
 
-        # Return game info
-        return jsondata.JsonData(game_info, self.GetPlatform())
+        # Return jsondata
+        return json_data
 
     ############################################################
     # Download

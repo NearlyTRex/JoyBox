@@ -44,22 +44,52 @@ def GetStoreList():
     return GetStoreMap().values()
 
 # Get store by name
-def GetStoreByName(store_name):
+def GetStoreByName(
+    store_name,
+    login = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     for instance in GetStoreList():
         if instance.GetName() == store_name:
+            if login:
+                instance.Login(
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
             return instance
     return None
 
 # Get store by type
-def GetStoreByType(store_type):
+def GetStoreByType(
+    store_type,
+    login = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     for instance in GetStoreList():
         if instance.GetType() == store_type:
+            if login:
+                instance.Login(
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
             return instance
     return None
 
 # Get store by platform
-def GetStoreByPlatform(store_platform):
+def GetStoreByPlatform(
+    store_platform,
+    login = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
     for instance in GetStoreList():
         if instance.GetPlatform() == store_platform:
+            if login:
+                instance.Login(
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
             return instance
     return None

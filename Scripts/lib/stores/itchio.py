@@ -62,6 +62,18 @@ class Itchio(storebase.StoreBase):
     def GetKey(self):
         return config.json_key_itchio
 
+    # Get identifier keys
+    def GetIdentifierKeys():
+        return {
+            config.StoreIdentifierType.INFO: config.json_key_store_appurl,
+            config.StoreIdentifierType.INSTALL: config.json_key_store_appurl,
+            config.StoreIdentifierType.LAUNCH: config.json_key_store_appurl,
+            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appurl,
+            config.StoreIdentifierType.ASSET: config.json_key_store_appurl,
+            config.StoreIdentifierType.METADATA: config.json_key_store_appurl,
+            config.StoreIdentifierType.PAGE: config.json_key_store_appurl
+        }
+
     # Get install dir
     def GetInstallDir(self):
         return self.install_dir
@@ -69,14 +81,6 @@ class Itchio(storebase.StoreBase):
     # Check if purchases can be imported
     def CanImportPurchases(self):
         return True
-
-    ############################################################
-    # Identifiers
-    ############################################################
-
-    # Get identifier
-    def GetIdentifier(self, json_wrapper, identifier_type):
-        return json_wrapper.get_value(config.json_key_store_appurl)
 
     ############################################################
     # Connection
@@ -88,6 +92,10 @@ class Itchio(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+
+        # Check if already logged in
+        if self.IsLoggedIn():
+            return True
 
         # Connect to web
         web_driver = self.WebConnect(
@@ -112,14 +120,19 @@ class Itchio(storebase.StoreBase):
             web_driver = web_driver,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        return success
+        if not success:
+            return False
+
+        # Should be successful
+        self.SetLoggedIn(True)
+        return True
 
     ############################################################
     # Purchases
     ############################################################
 
     # Get purchases
-    def GetPurchases(
+    def GetLatestPurchases(
         self,
         verbose = False,
         pretend_run = False,
@@ -307,30 +320,19 @@ class Itchio(storebase.StoreBase):
     # Assets
     ############################################################
 
-    # Download asset
-    def DownloadAsset(
+    # Get latest asset url
+    def GetLatestAssetUrl(
         self,
-        game_info,
+        identifier,
         asset_type,
-        force = False,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
 
-        # Check if asset exists
-        asset_exists = collection.DoesMetadataAssetExist(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name(),
-            asset_type = asset_type)
-
-        # Check if asset should be downloaded
-        should_download = False
-        if force or not asset_exists:
-            should_download = True
-        if not should_download:
-            return True
+        # Check identifier
+        if not self.IsValidAssetIdentifier(identifier):
+            system.LogWarning("Asset identifier '%s' was not valid" % identifier)
+            return None
 
         # Latest asset url
         latest_asset_url = None
@@ -344,10 +346,10 @@ class Itchio(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not web_driver:
-                return False
+                return None
 
             # Get search terms
-            search_terms = system.EncodeUrlString(game_info.get_store_name(self.GetKey()), use_plus = True)
+            search_terms = system.GetUrlPath(identifier).strip("/")
 
             # Load url
             success = webpage.LoadCookieWebsite(
@@ -358,7 +360,7 @@ class Itchio(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-                return False
+                return None
 
             # Find the root container element
             element_search_result = webpage.WaitForElement(
@@ -368,7 +370,7 @@ class Itchio(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not element_search_result:
-                return False
+                return None
 
             # Search through search results
             game_cells = webpage.GetElement(
@@ -389,7 +391,7 @@ class Itchio(storebase.StoreBase):
                     # Check for cover
                     line_appurl = webpage.GetElementAttribute(game_title, "href")
                     line_cover = webpage.GetElementAttribute(game_cover, "src")
-                    if line_appurl == game_info.get_store_appurl(self.GetKey()):
+                    if line_appurl == identifier:
                         latest_asset_url = line_cover
                         break
 
@@ -399,45 +401,19 @@ class Itchio(storebase.StoreBase):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
             if not success:
-                return False
+                return None
 
         # Video
-        if asset_type == config.AssetType.VIDEO:
+        elif asset_type == config.AssetType.VIDEO:
             latest_asset_url = webpage.GetMatchingUrl(
-                url = game_info.get_store_appurl(self.GetKey()),
+                url = identifier,
                 base_url = "https://www.youtube.com/embed",
                 starts_with = "https://www.youtube.com/embed",
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
-        # Check if asset url is valid
-        if not latest_asset_url:
-            return False
-
-        # Download metadata asset
-        success = collection.DownloadMetadataAsset(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name(),
-            asset_url = latest_asset_url,
-            asset_type = asset_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Update metadata entry
-        success = collection.AddOrUpdateMetadataEntry(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name(),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return success
+        # Return latest asset url
+        return latest_asset_url
 
     ############################################################

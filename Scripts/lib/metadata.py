@@ -38,6 +38,12 @@ class Metadata:
         # Add entry
         self.set_game(game_platform, game_name, game_entry)
 
+    # Check if game entry exists
+    def has_game(self, game_platform, game_name):
+        if game_platform not in self.game_database:
+            return False
+        return game_name in self.game_database[game_platform]
+
     # Get game entry
     def get_game(self, game_platform, game_name):
         if game_platform in self.game_database:
@@ -141,7 +147,7 @@ class Metadata:
                 # Check file paths
                 file_path_relative = game_entry.get_file()
                 file_path_real = system.JoinPaths(environment.GetJsonMetadataRootDir(), file_path_relative)
-                if not os.path.exists(file_path_real):
+                if not system.DoesPathExist(file_path_real):
                     system.LogError("File not found:\n%s" % file_path_relative)
                     system.LogError("Verification of '%s - %s' failed" % (game_platform, game_name), quit_program = True)
 
@@ -152,7 +158,7 @@ class Metadata:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        if os.path.exists(pegasus_file):
+        if system.DoesPathExist(pegasus_file):
             with open(pegasus_file, "r", encoding="utf8") as file:
                 data = file.read()
 
@@ -291,7 +297,12 @@ class Metadata:
         pretend_run = False,
         exit_on_failure = False):
         file_mode = "a" if append_existing else "w"
-        if not os.path.exists(pegasus_file):
+        if not system.DoesPathExist(pegasus_file):
+            system.MakeDirectory(
+                src = system.GetFilenameDirectory(pegasus_file),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
             system.TouchFile(
                 src = pegasus_file,
                 verbose = verbose,
