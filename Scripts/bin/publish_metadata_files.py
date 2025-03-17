@@ -25,16 +25,13 @@ def main():
     setup.CheckRequirements()
 
     # Build new published file for each category
-    for game_supercategory in config.Supercategory.members():
-        for game_category in config.Category.members():
-            success = collection.PublishMetadataEntries(
-                game_supercategory = game_supercategory,
-                game_category = game_category,
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
-            if not success:
-                system.LogError("Publish of category '%s' failed" % game_category, quit_program = True)
+    system.LogInfo("Publishing metadata files ...")
+    success = collection.PublishAllMetadataEntries(
+        verbose = args.verbose,
+        pretend_run = args.pretend_run,
+        exit_on_failure = args.exit_on_failure)
+    if not success:
+        system.LogError("Publishing metadata files failed", quit_program = True)
 
 # Start
 main()
