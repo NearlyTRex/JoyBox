@@ -69,12 +69,92 @@ def CopyFiles(
     # Should be successful
     return True
 
-# Archive files
-def ArchiveFiles(
+# Archive folder
+def ArchiveFolder(
+    input_path,
+    output_path,
+    output_name,
+    archive_type = None,
+    exclude_paths = [],
+    clean_output = False,
+    show_progress = False,
+    skip_existing = False,
+    skip_identical = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Select archive type
+    if not archive_type:
+        archive_type = config.ArchiveFileType.SEVENZIP
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        verbose = verbose,
+        pretend_run = pretend_run)
+    if not tmp_dir_success:
+        return False
+
+    # Get archive info
+    archive_basename = output_name
+    archive_ext = archive_type.cval()
+
+    # Get paths
+    tmp_archive_file = system.JoinPaths(tmp_dir_result, archive_basename + archive_ext)
+    out_archive_file = system.JoinPaths(output_base_path, base_obj, archive_basename + archive_ext)
+
+    # Archive files
+    success = archive.CreateArchiveFromFolder(
+        archive_file = tmp_archive_file,
+        source_dir = input_path,
+        excludes = exclude_paths,
+        volume_size = "4092m",
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        system.LogError("Unable to archive backup file from %s to %s" % (input_path, output_path))
+        return False
+
+    # Clean output
+    if clean_output:
+        system.RemoveDirectoryContents(
+            src = output_path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Move archive
+    success = system.SmartMove(
+        src = tmp_dir_archive,
+        dest = out_archive_file,
+        show_progress = show_progress,
+        skip_existing = skip_existing,
+        skip_identical = skip_identical,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        system.LogError("Unable to move archived backup file from %s to %s" % (input_path, output_path))
+        return False
+
+    # Delete temporary directory
+    system.RemoveDirectory(
+        src = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Check result
+    return system.DoesPathExist(out_archive_file)
+
+# Archive sub-folders
+def ArchiveSubFolders(
     input_base_path,
     output_base_path,
     archive_type = None,
     exclude_paths = [],
+    clean_output = False,
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
@@ -123,6 +203,14 @@ def ArchiveFiles(
                 if not success:
                     system.LogError("Unable to archive backup files from %s to %s" % (input_base_path, output_base_path))
                     return False
+
+                # Clean output
+                if clean_output:
+                    system.RemoveDirectoryContents(
+                        src = system.JoinPaths(output_base_path, base_obj),
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
 
                 # Move archive
                 success = system.SmartMove(
