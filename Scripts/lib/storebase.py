@@ -94,7 +94,7 @@ class StoreBase:
 
     # Constructor
     def __init__(self):
-        self.manifest = manifest.Manifest()
+        self.is_logged_in = False
 
     ############################################################
     # Store
@@ -128,6 +128,10 @@ class StoreBase:
     def GetKey(self):
         return ""
 
+    # Get identifier keys
+    def GetIdentifierKeys():
+        return {}
+
     # Get preferred platform
     def GetPreferredPlatform(self):
         return None
@@ -156,37 +160,37 @@ class StoreBase:
     # Identifiers
     ############################################################
 
-    # Get identifier
-    def GetIdentifier(self, json_wrapper, identifier_type):
-        return ""
+    # Get identifier key
+    def GetIdentifierKey(self, identifier_type):
+        return self.GetIdentifierKeys().get(identifier_type)
 
-    # Get info identifier
-    def GetInfoIdentifier(self, json_wrapper):
-        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.INFO)
+    # Get info identifier key
+    def GetInfoIdentifierKey(self):
+        return self.GetIdentifierKey(config.StoreIdentifierType.INFO)
 
-    # Get install identifier
-    def GetInstallIdentifier(self, json_wrapper):
-        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.INSTALL)
+    # Get install identifier key
+    def GetInstallIdentifierKey(self):
+        return self.GetIdentifierKey(config.StoreIdentifierType.INSTALL)
 
-    # Get launch identifier
-    def GetLaunchIdentifier(self, json_wrapper):
-        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.LAUNCH)
+    # Get launch identifier key
+    def GetLaunchIdentifierKey(self):
+        return self.GetIdentifierKey(config.StoreIdentifierType.LAUNCH)
 
-    # Get download identifier
-    def GetDownloadIdentifier(self, json_wrapper):
-        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.DOWNLOAD)
+    # Get download identifier key
+    def GetDownloadIdentifierKey(self):
+        return self.GetIdentifierKey(config.StoreIdentifierType.DOWNLOAD)
 
-    # Get asset identifier
-    def GetAssetIdentifier(self, json_wrapper):
-        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.ASSET)
+    # Get asset identifier key
+    def GetAssetIdentifierKey(self):
+        return self.GetIdentifierKey(config.StoreIdentifierType.ASSET)
 
-    # Get metadata identifier
-    def GetMetadataIdentifier(self, json_wrapper):
-        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.METADATA)
+    # Get metadata identifier key
+    def GetMetadataIdentifierKey(self):
+        return self.GetIdentifierKey(config.StoreIdentifierType.METADATA)
 
-    # Get page identifier
-    def GetPageIdentifier(self, json_wrapper):
-        return self.GetIdentifier(json_wrapper, config.StoreIdentifierType.PAGE)
+    # Get page identifier key
+    def GetPageIdentifierKey(self):
+        return self.GetIdentifierKey(config.StoreIdentifierType.PAGE)
 
     # Is valid identifier
     def IsValidIdentifier(self, identifier):
@@ -221,22 +225,16 @@ class StoreBase:
         return self.IsValidIdentifier(identifier)
 
     ############################################################
-    # Manifest
-    ############################################################
-
-    # Load manifest
-    def LoadManifest(self, manifest_data = None, verbose = False, pretend_run = False, exit_on_failure = False):
-        if manifest_data:
-            self.manifest = manifest.Manifest(manifest_data)
-        else:
-            self.manifest.load(
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-    ############################################################
     # Connection
     ############################################################
+
+    # Check if logged in
+    def IsLoggedIn(self):
+        return self.is_logged_in
+
+    # Set logged in
+    def SetLoggedIn(self, value):
+        self.is_logged_in = value
 
     # Login
     def Login(
@@ -284,28 +282,27 @@ class StoreBase:
     # Versions
     ############################################################
 
-    # Get versions
-    def GetVersions(
+    # Get latest version
+    def GetLatestVersion(
         self,
-        game_info,
+        identifier,
+        branch = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
 
         # Get latest jsondata
         latest_jsondata = self.GetLatestJsondata(
-            identifier = self.GetInfoIdentifier(game_info.get_wrapped_value(self.GetKey())),
-            branch = game_info.get_store_branchid(self.GetKey()),
+            identifier = identifier,
+            branch = branch,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not latest_jsondata:
-            return (None, None)
+            return None
 
-        # Return versions
-        local_version = game_info.get_store_buildid(self.GetKey())
-        remote_version = latest_jsondata.get_value(config.json_key_store_buildid)
-        return (local_version, remote_version)
+        # Return version
+        return latest_jsondata.get_value(config.json_key_store_buildid)
 
     ############################################################
     # Page
@@ -325,178 +322,12 @@ class StoreBase:
     ############################################################
 
     # Get purchases
-    def GetPurchases(
+    def GetLatestPurchases(
         self,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
         return []
-
-    # Display purchases
-    def DisplayPurchases(
-        self,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return False
-
-    # Import purchases
-    def ImportPurchases(
-        self,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get all purchases
-        purchases = self.GetPurchases(
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not purchases:
-            return False
-
-        # Get all ignores
-        ignores = collection.GetGameJsonIgnoreEntries(
-            game_supercategory = self.GetSupercategory(),
-            game_category = self.GetCategory(),
-            game_subcategory = self.GetSubcategory(),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-        # Import each purchase
-        for purchase in purchases:
-            purchase_appid = purchase.get_value(config.json_key_store_appid)
-            purchase_appname = purchase.get_value(config.json_key_store_appname)
-            purchase_appurl = purchase.get_value(config.json_key_store_appurl)
-            purchase_name = purchase.get_value(config.json_key_store_name)
-            purchase_identifiers = [
-                purchase_appid,
-                purchase_appname,
-                purchase_appurl
-            ]
-
-            # Get info identifier
-            info_identifier = self.GetInfoIdentifier(purchase)
-            if not info_identifier:
-                continue
-
-            # Check if json file already exists
-            found_file = self.FindMatchingJsonFiles(
-                identifiers = purchase_identifiers,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if found_file:
-                continue
-
-            # Check if this should be ignored
-            if info_identifier in ignores.keys():
-                continue
-
-            # Determine if this should be imported
-            system.LogInfo("Found new potential entry:")
-            if purchase_appid:
-                system.LogInfo(" - Appid:\t" + purchase_appid)
-            if purchase_appname:
-                system.LogInfo(" - Appname:\t" + purchase_appname)
-            if purchase_appurl:
-                system.LogInfo(" - Appurl:\t" + purchase_appurl)
-            if purchase_name:
-                system.LogInfo(" - Name:\t" + purchase_name)
-            should_import = system.PromptForValue("Import this? (n to skip, i to ignore)", default_value = "n")
-            if should_import.lower() == "n":
-                continue
-
-            # Add to ignore
-            if should_import.lower() == "i":
-                collection.AddGameJsonIgnoreEntry(
-                    game_supercategory = self.GetSupercategory(),
-                    game_category = self.GetCategory(),
-                    game_subcategory = self.GetSubcategory(),
-                    game_identifier = info_identifier,
-                    game_name = purchase_name,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                continue
-
-            # Prompt for entry name
-            default_name = gameinfo.DeriveGameNameFromRegularName(purchase_name)
-            entry_name = system.PromptForValue("Choose entry name", default_value = default_name)
-
-            # Get appurl if necessary
-            if not purchase_appurl and purchase_name:
-                purchase_appurl = self.GetLatestUrl(
-                    identifier = purchase_name,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                if purchase_appurl:
-                    purchase.set_value(config.json_key_store_appurl, purchase_appurl)
-
-            # Download assets
-            for asset_type in config.AssetMinType.members():
-                success = collection.DownloadMetadataAsset(
-                    game_supercategory = self.GetSupercategory(),
-                    game_category = self.GetCategory(),
-                    game_subcategory = self.GetSubcategory(),
-                    game_name = entry_name,
-                    asset_url = self.GetLatestAssetUrl(
-                        identifier = self.GetAssetIdentifier(purchase),
-                        asset_type = asset_type,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure),
-                    asset_type = asset_type,
-                    skip_existing = True,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                if not success:
-                    system.LogWarning("Unable to download asset %s for game '%s'" % (asset_type, entry_name))
-                    return False
-
-            # Create json file
-            success = collection.CreateGameJsonFile(
-                game_supercategory = self.GetSupercategory(),
-                game_category = self.GetCategory(),
-                game_subcategory = self.GetSubcategory(),
-                game_name = entry_name,
-                game_root = environment.GetLockerGamingFilesDir(
-                    game_supercategory = self.GetSupercategory(),
-                    game_category = self.GetCategory(),
-                    game_subcategory = self.GetSubcategory(),
-                    game_name = entry_name),
-                initial_data = {self.GetKey(): purchase.get_data_copy()},
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                system.LogError("Unable to create json file for game '%s'" % entry_name)
-                return False
-
-            # Add metadata entry
-            success = collection.AddOrUpdateMetadataEntry(
-                game_supercategory = self.GetSupercategory(),
-                game_category = self.GetCategory(),
-                game_subcategory = self.GetSubcategory(),
-                game_name = entry_name,
-                game_url = purchase_appurl,
-                initial_data = self.GetLatestMetadata(
-                    identifier = self.GetMetadataIdentifier(purchase),
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                system.LogError("Unable to add metadata entry for game '%s'" % entry_name)
-                return False
-
-        # Should be successful
-        return True
 
     ############################################################
     # Json
@@ -516,109 +347,41 @@ class StoreBase:
             system.LogWarning("Info identifier '%s' was not valid" % identifier)
             return None
 
-        # Build game info
-        game_info = {}
-        game_info[config.json_key_store_paths] = []
-        game_info[config.json_key_store_keys] = []
+        # Build jsondata
+        json_data = jsondata.JsonData({}, self.GetPlatform())
+        json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, [])
+        json_data.set_subvalue(self.GetKey(), config.json_key_store_keys, [])
 
         # Augment by manifest
-        if self.manifest:
-            manifest_entry = self.manifest.find_entry_by_name(
-                name = identifier,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if manifest_entry:
-
-                # Get existing paths and keys
-                game_paths = set(game_info[config.json_key_store_paths])
-                game_keys = set(game_info[config.json_key_store_keys])
-
-                # Get base path
-                base_path = config.token_game_install_dir
-
-                # Update paths and keys
-                game_paths = list(game_paths.union(manifest_entry.get_paths(base_path)))
-                game_keys = list(game_keys.union(manifest_entry.get_keys()))
-
-                # Remove invalid paths
-                game_paths = [item for item in game_paths if not item.startswith("C:")]
-                game_paths = [item for item in game_paths if not config.token_store_install_dir in item]
-                game_paths = [item for item in game_paths if not config.token_store_user_id in item]
-
-                # Save paths and keys
-                game_info[config.json_key_store_paths] = system.SortStrings(game_paths)
-                game_info[config.json_key_store_keys] = system.SortStrings(game_keys)
-
-        # Return game info
-        return jsondata.JsonData(game_info, self.GetPlatform())
-
-    # Update json
-    def UpdateJson(
-        self,
-        game_info,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get current jsondata
-        current_jsondata = game_info.read_wrapped_json_data(
+        manifest_entry = manifest.GetManifestInstance().find_entry_by_name(
+            name = identifier,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if not current_jsondata:
-            return False
+        if manifest_entry:
 
-        # Get latest jsondata
-        latest_jsondata = self.GetLatestJsondata(
-            identifier = self.GetInfoIdentifier(game_info.get_wrapped_value(self.GetKey())),
-            branch = game_info.get_store_branchid(self.GetKey()),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not latest_jsondata:
-            return False
+            # Get existing paths and keys
+            game_paths = set(json_data.get_subvalue(self.GetKey(), config.json_key_store_paths))
+            game_keys = set(json_data.set_subvalue(self.GetKey(), config.json_key_store_keys))
 
-        # Update current data
-        for store_key in config.json_keys_store_subdata:
-            if latest_jsondata.has_key(store_key):
-                current_jsondata.fill_subvalue(self.GetKey(), store_key, latest_jsondata.get_value(store_key))
-                if store_key == config.json_key_store_paths:
-                    paths = current_jsondata.get_subvalue(self.GetKey(), store_key, [])
-                    paths = system.PruneChildPaths(paths)
-                    current_jsondata.set_subvalue(self.GetKey(), store_key, paths)
+            # Get base path
+            base_path = config.token_game_install_dir
 
-        # Write back changes
-        success = game_info.write_wrapped_json_data(
-            json_wrapper = current_jsondata,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return success
+            # Update paths and keys
+            game_paths = list(game_paths.union(manifest_entry.get_paths(base_path)))
+            game_keys = list(game_keys.union(manifest_entry.get_keys()))
 
-    # Find matching json files
-    def FindMatchingJsonFiles(
-        self,
-        identifiers,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        json_root = environment.GetJsonMetadataDir(self.GetSupercategory(), self.GetCategory(), self.GetSubcategory())
-        json_files = system.BuildFileListByExtensions(json_root, extensions = [".json"])
-        for json_file in json_files:
-            json_data = system.ReadJsonFile(
-                src = json_file,
-                exit_on_failure = exit_on_failure)
-            if self.GetKey() not in json_data:
-                continue
-            json_store_data = json_data[self.GetKey()]
-            for appdata_key in config.json_keys_store_appdata:
-                if appdata_key not in json_store_data:
-                    continue
-                for identifier in identifiers:
-                    if identifier and identifier == json_store_data[appdata_key]:
-                        return json_file
-        return None
+            # Remove invalid paths
+            game_paths = [item for item in game_paths if not item.startswith("C:")]
+            game_paths = [item for item in game_paths if not config.token_store_install_dir in item]
+            game_paths = [item for item in game_paths if not config.token_store_user_id in item]
+
+            # Save paths and keys
+            json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, system.SortStrings(game_paths))
+            json_data.set_subvalue(self.GetKey(), config.json_key_store_keys, system.SortStrings(game_keys))
+
+        # Return jsondata
+        return json_data
 
     ############################################################
     # Metadata
@@ -646,54 +409,6 @@ class StoreBase:
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Update metadata
-    def UpdateMetadata(
-        self,
-        game_info,
-        keys = [],
-        force = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get current metadata
-        current_metadata = game_info.get_metadata()
-        if not current_metadata:
-            return False
-
-        # Determine if update is needed
-        should_update = False
-        if force:
-            should_update = True
-        else:
-            if isinstance(keys, list) and len(keys) > 0:
-                should_update = current_metadata.is_missing_data(keys)
-            else:
-                should_update = current_metadata.is_missing_data(config.metadata_keys_downloadable)
-        if not should_update:
-            return True
-
-        # Get latest metadata
-        latest_metadata = self.GetLatestMetadata(
-            identifier = self.GetMetadataIdentifier(game_info.get_wrapped_value(self.GetKey())),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not latest_metadata:
-            return False
-
-        # Update current data
-        if isinstance(latest_metadata, metadataentry.MetadataEntry):
-            current_metadata.merge(latest_metadata)
-
-        # Sync assets
-        current_metadata.sync_assets()
-
-        # Write back changes
-        game_info.set_metadata(current_metadata)
-        game_info.write_metadata()
-        return True
-
     ############################################################
     # Assets
     ############################################################
@@ -708,64 +423,6 @@ class StoreBase:
         exit_on_failure = False):
         return None
 
-    # Download asset
-    def DownloadAsset(
-        self,
-        game_info,
-        asset_type,
-        force = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Check if asset exists
-        asset_exists = collection.DoesMetadataAssetExist(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name(),
-            asset_type = asset_type)
-
-        # Check if asset should be downloaded
-        should_download = False
-        if force or not asset_exists:
-            should_download = True
-        if not should_download:
-            return True
-
-        # Get latest asset url
-        asset_url = self.GetLatestAssetUrl(
-            identifier = self.GetAssetIdentifier(game_info.get_wrapped_value(self.GetKey())),
-            asset_type = asset_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-        # Download metadata asset
-        success = collection.DownloadMetadataAsset(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name(),
-            asset_url = asset_url,
-            asset_type = asset_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Update metadata entry
-        success = collection.AddOrUpdateMetadataEntry(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name(),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return success
-
     ############################################################
     # Install
     ############################################################
@@ -779,21 +436,6 @@ class StoreBase:
         exit_on_failure = False):
         return False
 
-    # Install by game info
-    def InstallByGameInfo(
-        self,
-        game_info,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Install game
-        return self.InstallByIdentifier(
-            identifier = self.GetInstallIdentifier(game_info.get_wrapped_value(self.GetKey())),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
     ############################################################
     # Launch
     ############################################################
@@ -806,32 +448,6 @@ class StoreBase:
         pretend_run = False,
         exit_on_failure = False):
         return False
-
-    # Launch by game info
-    def LaunchByGameInfo(
-        self,
-        game_info,
-        source_type,
-        capture_type,
-        fullscreen,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Check ability to launch
-        if not game_info.is_playable():
-            return False
-
-        # Launch game
-        success = launcher.LaunchGame(
-            game_info = game_info,
-            source_type = source_type,
-            capture_type = capture_type,
-            fullscreen = fullscreen,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return success
 
     ############################################################
     # Download
@@ -849,69 +465,6 @@ class StoreBase:
         pretend_run = False,
         exit_on_failure = False):
         return False
-
-    # Download by game info
-    def DownloadByGameInfo(
-        self,
-        game_info,
-        output_dir = None,
-        skip_existing = False,
-        force = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get output dir
-        if output_dir:
-            output_offset = environment.GetLockerGamingFilesOffset(
-                game_supercategory = game_info.get_supercategory(),
-                game_category = game_info.get_category(),
-                game_subcategory = game_info.get_subcategory(),
-                game_name = game_info.get_name())
-            output_dir = system.JoinPaths(os.path.realpath(output_dir), output_offset)
-        else:
-            output_dir = environment.GetLockerGamingFilesDir(
-                game_supercategory = game_info.get_supercategory(),
-                game_category = game_info.get_category(),
-                game_subcategory = game_info.get_subcategory(),
-                game_name = game_info.get_name())
-        if skip_existing and system.DoesDirectoryContainFiles(output_dir):
-            return True
-
-        # Get versions
-        local_version, remote_version = self.GetVersions(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-        # Check if game should be downloaded
-        should_download = False
-        if force or local_version is None or remote_version is None:
-            should_download = True
-        elif len(local_version) == 0:
-            should_download = True
-        elif len(local_version) > 0 and len(remote_version) == 0:
-            should_download = True
-        else:
-            if remote_version.isnumeric() and local_version.isnumeric():
-                should_download = int(remote_version) > int(local_version)
-            else:
-                should_download = remote_version != local_version
-        if not should_download:
-            return True
-
-        # Download game
-        success = self.DownloadByIdentifier(
-            identifier = self.GetDownloadIdentifier(game_info.get_wrapped_value(self.GetKey())),
-            branch = game_info.get_store_branchid(self.GetKey()),
-            output_dir = output_dir,
-            output_name = "%s (%s)" % (game_info.get_name(), remote_version),
-            clean_output = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return success
 
     ############################################################
     # Paths
@@ -952,229 +505,5 @@ class StoreBase:
                     for appdata_variant in config.appdata_variants[appdata_base]:
                         paths.append(path.replace(appdata_base, appdata_variant))
         return paths
-
-    ############################################################
-    # Saves
-    ############################################################
-
-    # Get save paths
-    def GetSavePaths(
-        self,
-        game_info,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get paths
-        paths = game_info.get_store_paths(self.GetKey())
-        paths = self.AddPathVariants(paths)
-
-        # Get translation map
-        translation_map = self.BuildPathTranslationMap()
-
-        # Translate paths
-        translated_paths = []
-        for path in paths:
-            for base_key in translation_map.keys():
-                for key_replacement in translation_map[base_key]:
-                    entry = {}
-                    entry["full"] = path.replace(base_key, key_replacement)
-                    entry["relative"] = [ConvertFromTokenizedPath(
-                        path = path,
-                        store_type = self.GetType())]
-                    translated_paths.append(entry)
-        return translated_paths
-
-    # Export saves
-    def ExportSaves(
-        self,
-        game_info,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Create temporary directory
-        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
-        if not tmp_dir_success:
-            return False
-
-        # Copy save files
-        at_least_one_copy = False
-        for save_path_entry in self.GetSavePaths(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure):
-            path_full = save_path_entry["full"]
-            for path_relative in save_path_entry["relative"]:
-                if system.DoesDirectoryContainFiles(path_full):
-                    success = system.SmartCopy(
-                        src = path_full,
-                        dest = system.JoinPaths(tmp_dir_result, path_relative),
-                        show_progress = True,
-                        skip_existing = True,
-                        ignore_symlinks = True,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if success:
-                        at_least_one_copy = True
-        if not at_least_one_copy:
-            system.RemoveDirectory(
-                src = tmp_dir_result,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            return True
-
-        # Pack save
-        success = saves.PackSave(
-            save_category = game_info.get_category(),
-            save_subcategory = game_info.get_subcategory(),
-            save_name = game_info.get_name(),
-            save_dir = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Delete temporary directory
-        system.RemoveDirectory(
-            src = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return True
-
-    # Import saves
-    def ImportSaves(
-        self,
-        game_info,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return False
-
-    ############################################################
-    # Archive
-    ############################################################
-
-    # Archive
-    def Archive(
-        self,
-        source_dir,
-        output_dir,
-        output_name,
-        excludes = [],
-        clean_output = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Create temporary directory
-        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
-        if not tmp_dir_success:
-            return False
-
-        # Get file paths
-        archive_filename = output_name + config.ArchiveFileType.SEVENZIP.cval()
-        tmp_archive_file = system.JoinPaths(tmp_dir_result, archive_filename)
-        out_archive_file = system.JoinPaths(output_dir, archive_filename)
-
-        # Archive files
-        success = archive.CreateArchiveFromFolder(
-            archive_file = tmp_archive_file,
-            source_dir = source_dir,
-            excludes = excludes,
-            volume_size = "4092m",
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Clean output
-        if clean_output:
-            system.RemoveDirectoryContents(
-                src = output_dir,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Move archive
-        success = system.SmartMove(
-            src = tmp_dir_archive,
-            dest = out_archive_file,
-            show_progress = True,
-            skip_existing = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Delete temporary directory
-        system.RemoveDirectory(
-            src = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-        # Check result
-        return os.path.exists(out_archive_file)
-
-    ############################################################
-    # Backup
-    ############################################################
-
-    # Backup
-    def Backup(
-        self,
-        game_info,
-        passphrase,
-        excludes = [],
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Create temporary directory
-        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
-        if not tmp_dir_success:
-            return False
-
-        # Download files
-        success = self.DownloadByGameInfo(
-            game_info = game_info,
-            output_dir = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Upload files
-        success = collection.UploadGameFiles(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name(),
-            game_root = tmp_dir_result,
-            passphrase = passphrase,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Delete temporary directory
-        system.RemoveDirectory(
-            src = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-        # Should be successful
-        return True
 
     ############################################################
