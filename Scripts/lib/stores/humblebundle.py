@@ -55,7 +55,7 @@ class HumbleBundle(storebase.StoreBase):
         return config.json_key_humble
 
     # Get identifier keys
-    def GetIdentifierKeys():
+    def GetIdentifierKeys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_appname,
             config.StoreIdentifierType.INSTALL: config.json_key_store_appname,

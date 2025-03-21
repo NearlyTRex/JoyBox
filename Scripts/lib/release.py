@@ -9,7 +9,6 @@ import system
 import environment
 import archive
 import programs
-import installer
 import webpage
 import network
 import locker

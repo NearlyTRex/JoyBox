@@ -65,7 +65,7 @@ class Epic(storebase.StoreBase):
         return config.json_key_epic
 
     # Get identifier keys
-    def GetIdentifierKeys():
+    def GetIdentifierKeys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_appname,
             config.StoreIdentifierType.INSTALL: config.json_key_store_appname,
@@ -365,24 +365,24 @@ class Epic(storebase.StoreBase):
 
         # Build jsondata
         json_data = jsondata.JsonData({}, self.GetPlatform())
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_appname, identifier)
+        json_data.set_value(config.json_key_store_appname, identifier)
 
         # Augment by json
         if "game" in epic_json:
             appgame = epic_json["game"]
             if "title" in appgame:
-                json_data.set_subvalue(self.GetKey(), config.json_key_store_name, appgame["title"].strip())
+                json_data.set_value(config.json_key_store_name, appgame["title"].strip())
             if "version" in appgame:
-                json_data.set_subvalue(self.GetKey(), config.json_key_store_buildid, appgame["version"].strip())
+                json_data.set_value(set_valueconfig.json_key_store_buildid, appgame["version"].strip())
             if "cloud_save_folder" in appgame:
                 base_path = None
-                if json_data.has_subkey(self.GetKey(), config.json_key_store_installdir):
+                if json_data.has_key(config.json_key_store_installdir):
                     base_path = system.JoinPaths(
                         config.token_game_install_dir,
-                        json_data.get_subkey(self.GetKey(), config.json_key_store_installdir))
-                json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, [])
+                        json_data.get_key(config.json_key_store_installdir))
+                json_data.set_value(config.json_key_store_paths, [])
                 if appgame["cloud_save_folder"]:
-                    json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, [
+                    json_data.set_value(config.json_key_store_paths, [
                         storebase.CreateTokenizedPath(appgame["cloud_save_folder"].strip(), base_path)
                     ])
 

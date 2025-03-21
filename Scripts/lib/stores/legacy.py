@@ -66,7 +66,7 @@ class Legacy(storebase.StoreBase):
         return config.json_key_legacy
 
     # Get identifier keys
-    def GetIdentifierKeys():
+    def GetIdentifierKeys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_appid,
             config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
@@ -376,11 +376,11 @@ class Legacy(storebase.StoreBase):
 
         # Build jsondata
         json_data = jsondata.JsonData({}, self.GetPlatform())
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_appid, identifier)
+        json_data.set_value(config.json_key_store_appid, identifier)
 
         # Augment by json
         if "game_name" in legacy_json:
-            json_data.set_subvalue(self.GetKey(), config.json_key_store_name, legacy_json["game_name"].strip())
+            json_data.set_value(config.json_key_store_name, legacy_json["game_name"].strip())
 
         # Return jsondata
         return json_data

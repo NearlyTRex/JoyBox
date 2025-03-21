@@ -129,7 +129,7 @@ class StoreBase:
         return ""
 
     # Get identifier keys
-    def GetIdentifierKeys():
+    def GetIdentifierKeys(self):
         return {}
 
     # Get preferred platform

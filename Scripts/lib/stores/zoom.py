@@ -55,7 +55,7 @@ class Zoom(storebase.StoreBase):
         return config.json_key_zoom
 
     # Get identifier keys
-    def GetIdentifierKeys():
+    def GetIdentifierKeys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_name,
             config.StoreIdentifierType.INSTALL: config.json_key_store_name,

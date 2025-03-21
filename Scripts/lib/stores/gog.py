@@ -77,7 +77,7 @@ class GOG(storebase.StoreBase):
         return config.json_key_gog
 
     # Get identifier keys
-    def GetIdentifierKeys():
+    def GetIdentifierKeys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_appid,
             config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
@@ -340,17 +340,17 @@ class GOG(storebase.StoreBase):
 
         # Build jsondata
         json_data = jsondata.JsonData({}, self.GetPlatform())
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_appid, identifier)
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, [])
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_keys, [])
+        json_data.set_value(config.json_key_store_appid, identifier)
+        json_data.set_value(config.json_key_store_paths, [])
+        json_data.set_value(config.json_key_store_keys, [])
 
         # Augment by json
         if "slug" in gog_json:
             appslug = gog_json["slug"]
-            json_data.set_subvalue(self.GetKey(), config.json_key_store_appname, appslug)
-            json_data.set_subvalue(self.GetKey(), config.json_key_store_appurl, self.GetLatestUrl(appslug))
+            json_data.set_value(config.json_key_store_appname, appslug)
+            json_data.set_value(config.json_key_store_appurl, self.GetLatestUrl(appslug))
         if "title" in gog_json:
-            json_data.set_subvalue(self.GetKey(), config.json_key_store_name, gog_json["title"].strip())
+            json_data.set_value(config.json_key_store_name, gog_json["title"].strip())
         if "downloads" in gog_json:
             appdownloads = gog_json["downloads"]
             if "installers" in appdownloads:
@@ -358,15 +358,15 @@ class GOG(storebase.StoreBase):
                 for appinstaller in appinstallers:
                     if appinstaller["os"] == self.GetPreferredPlatform():
                         if appinstaller["version"]:
-                            json_data.set_subvalue(self.GetKey(), config.json_key_store_buildid, appinstaller["version"])
+                            json_data.set_value(config.json_key_store_buildid, appinstaller["version"])
                         else:
-                            json_data.set_subvalue(self.GetKey(), config.json_key_store_buildid, "original_release")
+                            json_data.set_value(config.json_key_store_buildid, "original_release")
         if "links" in gog_json:
             applinks = gog_json["links"]
             if "product_card" in applinks:
                 appurl = applinks["product_card"]
                 if appurl and network.IsUrlReachable(appurl):
-                    json_data.set_subvalue(self.GetKey(), config.json_key_store_appurl, applinks["product_card"])
+                    json_data.set_value(config.json_key_store_appurl, applinks["product_card"])
 
         # Augment by manifest
         manifest_entry = manifest.GetManifestInstance().find_entry_by_gogid(
@@ -377,16 +377,16 @@ class GOG(storebase.StoreBase):
         if manifest_entry:
 
             # Get existing paths and keys
-            game_paths = set(json_data.get_subvalue(self.GetKey(), config.json_key_store_paths))
-            game_keys = set(json_data.get_subvalue(self.GetKey(), config.json_key_store_keys))
+            game_paths = set(json_data.get_value(config.json_key_store_paths))
+            game_keys = set(json_data.get_value(config.json_key_store_keys))
 
             # Update paths and keys
             game_paths = game_paths.union(manifest_entry.get_paths(config.token_game_install_dir))
             game_keys = game_keys.union(manifest_entry.get_keys())
 
             # Save paths and keys
-            json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, system.SortStrings(game_paths))
-            json_data.set_subvalue(self.GetKey(), config.json_key_store_keys, system.SortStrings(game_keys))
+            json_data.set_value(config.json_key_store_paths, system.SortStrings(game_paths))
+            json_data.set_value(config.json_key_store_keys, system.SortStrings(game_keys))
 
         # Return jsondata
         return json_data

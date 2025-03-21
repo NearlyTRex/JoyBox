@@ -63,7 +63,7 @@ class Itchio(storebase.StoreBase):
         return config.json_key_itchio
 
     # Get identifier keys
-    def GetIdentifierKeys():
+    def GetIdentifierKeys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_appurl,
             config.StoreIdentifierType.INSTALL: config.json_key_store_appurl,

@@ -61,7 +61,7 @@ class Amazon(storebase.StoreBase):
         return config.json_key_amazon
 
     # Get identifier keys
-    def GetIdentifierKeys():
+    def GetIdentifierKeys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_appid,
             config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
@@ -323,16 +323,16 @@ class Amazon(storebase.StoreBase):
 
         # Build jsondata
         json_data = jsondata.JsonData({}, self.GetPlatform())
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_appid, identifier)
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_buildid, "")
+        json_data.set_value(config.json_key_store_appid, identifier)
+        json_data.set_value(config.json_key_store_buildid, "")
 
         # Augment by json
         if "version" in amazon_json:
-            json_data.set_subvalue(self.GetKey(), config.json_key_store_buildid, str(amazon_json["version"]))
+            json_data.set_value(config.json_key_store_buildid, str(amazon_json["version"]))
         if "product" in amazon_json:
             appdata = amazon_json["product"]
             if "title" in appdata:
-                json_data.set_subvalue(self.GetKey(), config.json_key_store_name, str(appdata["title"]))
+                json_data.set_value(config.json_key_store_name, str(appdata["title"]))
 
         # Return jsondata
         return json_data

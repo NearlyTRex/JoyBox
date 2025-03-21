@@ -275,7 +275,7 @@ class Steam(storebase.StoreBase):
         return config.json_key_steam
 
     # Get identifier keys
-    def GetIdentifierKeys():
+    def GetIdentifierKeys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_appid,
             config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
@@ -525,17 +525,17 @@ class Steam(storebase.StoreBase):
 
         # Build jsondata
         json_data = jsondata.JsonData({}, self.GetPlatform())
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_appid, identifier)
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_appurl, self.GetLatestUrl(identifier))
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, [])
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_keys, [])
+        json_data.set_value(config.json_key_store_appid, identifier)
+        json_data.set_value(config.json_key_store_appurl, self.GetLatestUrl(identifier))
+        json_data.set_value(config.json_key_store_paths, [])
+        json_data.set_value(config.json_key_store_keys, [])
         if isinstance(branch, str) and len(branch):
-            json_data.set_subvalue(self.GetKey(), config.json_key_store_branchid, branch)
+            json_data.set_value(config.json_key_store_branchid, branch)
         else:
-            json_data.set_subvalue(self.GetKey(), config.json_key_store_branchid, "public")
+            json_data.set_value(config.json_key_store_branchid, "public")
 
         # Add standard steam paths
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, [
+        json_data.set_value(config.json_key_store_paths, [
             system.JoinPaths(config.token_store_install_dir, "userdata", config.token_store_user_id, identifier)
         ])
 
@@ -545,13 +545,13 @@ class Steam(storebase.StoreBase):
             if "common" in appdata:
                 appcommon = appdata["common"]
                 if "name" in appcommon:
-                    json_data.set_subvalue(self.GetKey(), config.json_key_store_name, str(appcommon["name"]).strip())
+                    json_data.set_value(config.json_key_store_name, str(appcommon["name"]).strip())
                 if "controller_support" in appcommon:
-                    json_data.set_subvalue(self.GetKey(), config.json_key_store_controller_support, str(appcommon["controller_support"]))
+                    json_data.set_value(config.json_key_store_controller_support, str(appcommon["controller_support"]))
             if "config" in appdata:
                 appconfig = appdata["config"]
                 if "installdir" in appconfig:
-                    json_data.set_subvalue(self.GetKey(), config.json_key_store_installdir, "STORE_INSTALL_DIR/steamapps/common/%s" % str(appconfig["installdir"]))
+                    json_data.set_value(config.json_key_store_installdir, "STORE_INSTALL_DIR/steamapps/common/%s" % str(appconfig["installdir"]))
             if "depots" in appdata:
                 appdepots = appdata["depots"]
                 if "branches" in appdepots:
@@ -559,11 +559,11 @@ class Steam(storebase.StoreBase):
                     if isinstance(branch, str) and len(branch) and branch in appbranches:
                         appbranch = appbranches[branch]
                         if "buildid" in appbranch:
-                            json_data.set_subvalue(self.GetKey(), config.json_key_store_buildid, str(appbranch["buildid"]))
+                            json_data.set_value(config.json_key_store_buildid, str(appbranch["buildid"]))
                         else:
-                            json_data.set_subvalue(self.GetKey(), config.json_key_store_buildid, "unknown")
+                            json_data.set_value(config.json_key_store_buildid, "unknown")
                         if "timeupdated" in appbranch:
-                            json_data.set_subvalue(self.GetKey(), config.json_key_store_builddate, str(appbranch["timeupdated"]))
+                            json_data.set_value(config.json_key_store_builddate, str(appbranch["timeupdated"]))
 
         # Augment by manifest
         manifest_entry = manifest.GetManifestInstance().find_entry_by_steamid(
@@ -574,25 +574,25 @@ class Steam(storebase.StoreBase):
         if manifest_entry:
 
             # Get existing paths and keys
-            game_paths = set(json_data.get_subvalue(self.GetKey(), config.json_key_store_paths))
-            game_keys = set(json_data.get_subvalue(self.GetKey(), config.json_key_store_keys))
+            game_paths = set(json_data.get_value(config.json_key_store_paths))
+            game_keys = set(json_data.get_value(config.json_key_store_keys))
 
             # Get base path
             base_path = None
-            if json_data.has_subkey(self.GetKey(), config.json_key_store_installdir):
+            if json_data.has_key(config.json_key_store_installdir):
                 base_path = system.JoinPaths(
                     config.token_store_install_dir,
                     "steamapps",
                     "common",
-                    json_data.get_subkey(self.GetKey(), config.json_key_store_installdir))
+                    json_data.get_key(config.json_key_store_installdir))
 
             # Update paths and keys
             game_paths = game_paths.union(manifest_entry.get_paths(base_path))
             game_keys = game_keys.union(manifest_entry.get_keys())
 
             # Save paths and keys
-            json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, system.SortStrings(game_paths))
-            json_data.set_subvalue(self.GetKey(), config.json_key_store_keys, system.SortStrings(game_keys))
+            json_data.set_value(config.json_key_store_paths, system.SortStrings(game_paths))
+            json_data.set_value(config.json_key_store_keys, system.SortStrings(game_keys))
 
         # Return jsondata
         return json_data
