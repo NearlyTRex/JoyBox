@@ -1,10 +1,10 @@
 # Imports
-from .asset import *
-from .hashing import *
-from .jsondata import *
-from .metadata import *
-from .purchase import *
-from .uploading import *
+from collection.asset import *
+from collection.hashing import *
+from collection.jsondata import *
+from collection.metadata import *
+from collection.purchase import *
+from collection.uploading import *
 
 # Exports
 __all__ = [

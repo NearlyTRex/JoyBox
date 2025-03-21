@@ -8,8 +8,10 @@ import system
 import environment
 import gameinfo
 import stores
-from . import metadata
-from . import jsondata
+from .metadata import CreateMetadataEntry
+from .jsondata import GetGameJsonIgnoreEntries
+from .jsondata import AddGameJsonIgnoreEntry
+from .jsondata import CreateJsonFile
 
 ############################################################
 
@@ -44,7 +46,7 @@ def ImportStorePurchases(
             return False
 
         # Get all ignores
-        ignores = jsondata.GetGameJsonIgnoreEntries(
+        ignores = GetGameJsonIgnoreEntries(
             game_supercategory = store_obj.GetSupercategory(),
             game_category = store_obj.GetCategory(),
             game_subcategory = store_obj.GetSubcategory(),
@@ -65,7 +67,7 @@ def ImportStorePurchases(
             ]
 
             # Get info identifier
-            info_identifier = store_obj.GetInfoIdentifier(purchase)
+            info_identifier = purchase.get_value(store_obj.GetInfoIdentifierKey())
             if not info_identifier:
                 continue
             if info_identifier in ignores.keys():
@@ -101,7 +103,7 @@ def ImportStorePurchases(
 
             # Add to ignore
             if should_import.lower() == "i":
-                jsondata.AddGameJsonIgnoreEntry(
+                AddGameJsonIgnoreEntry(
                     game_supercategory = store_obj.GetSupercategory(),
                     game_category = store_obj.GetCategory(),
                     game_subcategory = store_obj.GetSubcategory(),
@@ -127,7 +129,7 @@ def ImportStorePurchases(
                     purchase.set_value(config.json_key_store_appurl, purchase_appurl)
 
             # Create json file
-            success = jsondata.CreateJsonFile(
+            success = CreateJsonFile(
                 game_supercategory = store_obj.GetSupercategory(),
                 game_category = store_obj.GetCategory(),
                 game_subcategory = store_obj.GetSubcategory(),
@@ -141,7 +143,7 @@ def ImportStorePurchases(
                 return False
 
             # Create metadata entry
-            success = metadata.CreateMetadataEntry(
+            success = CreateMetadataEntry(
                 game_supercategory = store_obj.GetSupercategory(),
                 game_category = store_obj.GetCategory(),
                 game_subcategory = store_obj.GetSubcategory(),

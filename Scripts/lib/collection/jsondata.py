@@ -211,13 +211,13 @@ def UpdateJsonFile(
 
     # Merge current data
     if latest_jsondata:
-        for store_key in config.json_keys_store_subdata:
-            if latest_jsondata.has_key(store_key):
-                json_obj.fill_subvalue(store_obj.GetKey(), store_key, latest_jsondata.get_value(store_key))
-                if store_key == config.json_key_store_paths:
-                    paths = json_obj.get_subvalue(store_obj.GetKey(), store_key, [])
+        for store_subdata_key in config.json_keys_store_subdata:
+            if latest_jsondata.has_key(store_subdata_key):
+                json_obj.fill_subvalue(store_obj.GetKey(), store_subdata_key, latest_jsondata.get_value(store_subdata_key))
+                if store_subdata_key == config.json_key_store_paths:
+                    paths = json_obj.get_subvalue(store_obj.GetKey(), store_subdata_key, [])
                     paths = system.PruneChildPaths(paths)
-                    json_obj.set_subvalue(store_obj.GetKey(), store_key, paths)
+                    json_obj.set_subvalue(store_obj.GetKey(), store_subdata_key, paths)
 
     # Write json file
     success = system.WriteJsonFile(
