@@ -891,7 +891,7 @@ def CleanupWine(cmd, options, verbose = False, pretend_run = False, exit_on_fail
     wine_server_tool = programs.GetToolProgram("WineServer")
 
     # Kill processes running under wine
-    command.RunBlockingCommand(
+    command.RunReturncodeCommand(
         cmd = [wine_server_tool, "-k"],
         options = command.CreateCommandOptions(
             shell = True),
@@ -945,7 +945,7 @@ def CreateWinePrefix(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = new_cmd,
             options = new_options,
             verbose = verbose,
@@ -999,7 +999,7 @@ def CreateSandboxiePrefix(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        command.RunBlockingCommand(
+        command.RunReturncodeCommand(
             cmd = new_cmd,
             options = new_options,
             verbose = verbose,

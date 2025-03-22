@@ -37,7 +37,7 @@ def SetScreenResolution(width, height, colors, verbose = False, pretend_run = Fa
     ]
 
     # Set resolution
-    command.RunBlockingCommand(
+    command.RunReturncodeCommand(
         cmd = resolution_cmd,
         options = command.CreateCommandOptions(
             shell = True),

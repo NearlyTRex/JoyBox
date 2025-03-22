@@ -61,9 +61,9 @@ def main():
     # Import store purchases
     system.LogInfo("Importing store purchases ...")
     success = collection.ImportStorePurchases(
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False)
+        verbose = args.verbose,
+        pretend_run = args.pretend_run,
+        exit_on_failure = args.exit_on_failure)
     if not success:
         system.LogError("Importing store purchases failed", quit_program = True)
 

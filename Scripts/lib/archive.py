@@ -257,7 +257,7 @@ def CreateArchiveFromFile(
     ]
 
     # Run create command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = create_command,
         options = command.CreateCommandOptions(
             cwd = system.GetFilenameDirectory(source_file),
@@ -343,7 +343,7 @@ def CreateArchiveFromFolder(
     create_command += objs_to_add
 
     # Run create command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = create_command,
         options = command.CreateCommandOptions(
             cwd = source_dir,
@@ -436,7 +436,7 @@ def ExtractArchive(
             extract_cmd += ["-aoa"]
 
     # Run extract command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = extract_cmd,
         options = command.CreateCommandOptions(
             output_paths = [extract_dir],
@@ -481,7 +481,7 @@ def TestArchive(
     ]
 
     # Run test command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = test_cmd,
         options = command.CreateCommandOptions(
             blocking_processes = [archive_tool]),

@@ -14,6 +14,7 @@ import jsondata
 import webpage
 import storebase
 import metadataentry
+import metadataassetcollector
 import manifest
 
 # GOG store
@@ -130,7 +131,7 @@ class GOG(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = login_cmd,
             options = command.CreateCommandOptions(
                 blocking_processes = [gog_tool]),
@@ -171,7 +172,7 @@ class GOG(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = login_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -499,8 +500,18 @@ class GOG(storebase.StoreBase):
         # Latest asset url
         latest_asset_url = None
 
+        # BoxFront
+        if asset_type == config.AssetType.BOXFRONT:
+            latest_asset_url = metadataassetcollector.FindMetadataAsset(
+                game_platform = self.GetPlatform(),
+                game_name = identifier,
+                asset_type = asset_type,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
         # Video
-        if asset_type == config.AssetType.VIDEO:
+        elif asset_type == config.AssetType.VIDEO:
             latest_asset_url = webpage.GetMatchingUrl(
                 url = identifier,
                 base_url = "https://www.youtube.com/embed",
@@ -560,7 +571,7 @@ class GOG(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = install_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -641,7 +652,7 @@ class GOG(storebase.StoreBase):
             ]
 
         # Run download command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = download_cmd,
             options = command.CreateCommandOptions(
                 blocking_processes = [gog_tool]),

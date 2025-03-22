@@ -366,7 +366,7 @@ class Steam(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunBlockingCommand(
+        code = command.RunInteractiveCommand(
             cmd = login_cmd,
             options = command.CreateCommandOptions(
                 blocking_processes = [steam_tool]),
@@ -787,7 +787,7 @@ class Steam(storebase.StoreBase):
         ]
 
         # Run install command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = install_cmd,
             options = command.CreateCommandOptions(
                 blocking_processes = [steam_tool]),
@@ -827,7 +827,7 @@ class Steam(storebase.StoreBase):
         ]
 
         # Run launch command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = launch_cmd,
             options = command.CreateCommandOptions(
                 blocking_processes = [steam_tool]),
@@ -888,7 +888,7 @@ class Steam(storebase.StoreBase):
             ]
 
         # Run download command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = download_cmd,
             options = command.CreateCommandOptions(
                 blocking_processes = [steamdepot_tool]),

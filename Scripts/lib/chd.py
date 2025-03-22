@@ -50,7 +50,7 @@ def CreateDiscCHD(
     ]
 
     # Run create command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = create_command,
         options = command.CreateCommandOptions(
             output_paths = [chd_file],
@@ -103,7 +103,7 @@ def ExtractDiscCHD(
         extract_cmd += ["--force"]
 
     # Run extract command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = extract_cmd,
         options = command.CreateCommandOptions(
             output_paths = [toc_file, binary_file],

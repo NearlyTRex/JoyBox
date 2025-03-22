@@ -1,10 +1,11 @@
 # Imports
-import os, os.path
+import os
 import sys
 import subprocess
 import getpass
 import shutil
 import copy
+import threading
 
 # Local imports
 import config
@@ -343,16 +344,24 @@ def RunOutputCommand(
         if not options:
             options = CreateCommandOptions()
         if not pretend_run:
+
+            # Pre-process command
             if options.allow_processing():
                 cmd, options = PreprocessCommand(
                     cmd = cmd,
                     options = options,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
+
+            # Log command
             if verbose:
                 PrintCommand(cmd)
+
+            # Handle shell commands
             if options.is_shell():
                 cmd = CreateCommandString(cmd)
+
+            # Run process
             output = ""
             if options.include_stderr():
                 output = subprocess.run(
@@ -371,8 +380,12 @@ def RunOutputCommand(
                     env = options.get_env(),
                     creationflags = options.get_creationflags(),
                     stdout = subprocess.PIPE).stdout
+
+            # Wait for any other blocking processes
             if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
                 environment.WaitForNamedProcesses(options.get_blocking_processes())
+
+            # Post-process command
             if options.allow_processing():
                 PostprocessCommand(
                     cmd = cmd,
@@ -408,43 +421,99 @@ def RunReturncodeCommand(
         if not options:
             options = CreateCommandOptions()
         if not pretend_run:
+
+            # Pre-process command
             if options.allow_processing():
                 cmd, options = PreprocessCommand(
                     cmd = cmd,
                     options = options,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
+
+            # Log command
             if verbose:
                 PrintCommand(cmd)
+
+            # Handle shell commands
             if options.is_shell():
                 cmd = CreateCommandString(cmd)
-            stdout = options.get_stdout()
-            stderr = options.get_stderr()
+
+            # Determine output file handling
+            stdout_target = None
+            stderr_target = None
             if system.IsPathValid(options.get_stdout()):
-                stdout = open(options.get_stdout(), "w")
+                stdout_target = open(options.get_stdout(), "w")
             if system.IsPathValid(options.get_stderr()):
-                stderr = open(options.get_stderr(), "w")
-            code = subprocess.call(
+                stderr_target = open(options.get_stderr(), "w")
+
+            # Open process
+            process = subprocess.Popen(
                 cmd,
                 shell = options.is_shell(),
                 cwd = options.get_cwd(),
                 env = options.get_env(),
                 creationflags = options.get_creationflags(),
-                stdout = stdout,
-                stderr = stderr)
+                stdin = subprocess.PIPE,
+                stdout = subprocess.PIPE,
+                stderr = subprocess.PIPE,
+                text = True,
+                bufsize = 1)
+
+            # Reads from process output and logs it while writing to a file if needed
+            def handle_output(pipe, log_func, file_target):
+                while True:
+                    line = pipe.readline()
+                    if not line and process.poll() is not None:
+                        break
+                    if line:
+                        log_func(line.strip())
+                        if file_target:
+                            file_target.write(line)
+                            file_target.flush()
+
+            # Reads user input and forwards it to the subprocess
+            def handle_input():
+                while process.poll() is None:
+                    try:
+                        user_input = sys.stdin.readline()
+                        if user_input:
+                            process.stdin.write(user_input)
+                            process.stdin.flush()
+                    except EOFError:
+                        break
+
+            # Create threads to handle real-time I/O
+            stdout_thread = threading.Thread(target = handle_output, args = (process.stdout, system.LogInfo, stdout_target))
+            stderr_thread = threading.Thread(target = handle_output, args = (process.stderr, system.LogError, stderr_target))
+            stdin_thread = threading.Thread(target = handle_input)
+            stdout_thread.start()
+            stderr_thread.start()
+            stdin_thread.start()
+
+            # Wait for process to complete
+            process.wait()
+            stdout_thread.join()
+            stderr_thread.join()
+            stdin_thread.join()
+
+            # Close file handles if used
+            if stdout_target:
+                stdout_target.close()
+            if stderr_target:
+                stderr_target.close()
+
+            # Wait for any other blocking processes
             if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
                 environment.WaitForNamedProcesses(options.get_blocking_processes())
-            if system.IsPathValid(options.get_stdout()):
-                stdout.close()
-            if system.IsPathValid(options.get_stderr()):
-                stderr.close()
+
+            # Post-process command
             if options.allow_processing():
                 PostprocessCommand(
                     cmd = cmd,
                     options = options,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
-            return code
+            return process.returncode
         return 0
     except subprocess.CalledProcessError as e:
         if verbose:
@@ -459,40 +528,8 @@ def RunReturncodeCommand(
             system.LogError(e, quit_program = True)
         return 1
 
-# Run checked command
-def RunCheckedCommand(
-    cmd,
-    options = CreateCommandOptions(),
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    code = RunReturncodeCommand(
-        cmd = cmd,
-        options = options,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        system.QuitProgram(code)
-
-# Run exception command
-def RunExceptionCommand(
-    cmd,
-    options = CreateCommandOptions(),
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    code = RunReturncodeCommand(
-        cmd = cmd,
-        options = options,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        raise ValueError("Unable to run command: %s" % cmd)
-
-# Run blocking command
-def RunBlockingCommand(
+# Run interactive command
+def RunInteractiveCommand(
     cmd,
     options = CreateCommandOptions(),
     verbose = False,
@@ -503,39 +540,112 @@ def RunBlockingCommand(
         if not options:
             options = CreateCommandOptions()
         if not pretend_run:
+
+            # Pre-process command
             if options.allow_processing():
                 cmd, options = PreprocessCommand(
                     cmd = cmd,
                     options = options,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
+
+            # Log command
             if verbose:
                 PrintCommand(cmd)
+
+            # Handle shell commands
             if options.is_shell():
                 cmd = CreateCommandString(cmd)
-            process = subprocess.Popen(
-                cmd,
-                shell = options.is_shell(),
-                cwd = options.get_cwd(),
-                env = options.get_env(),
-                creationflags = options.get_creationflags(),
-                stdout = subprocess.PIPE)
-            while True:
-                output = CleanCommandOutput(process.stdout.readline().rstrip())
-                if output == "" and process.poll() is not None:
-                    break
-                if output:
-                    system.LogInfo(output.strip())
-            code = process.poll()
+
+            # Create return code
+            returncode = 0
+
+            # Windows
+            if environment.IsWindowsPlatform():
+
+                # Open psuedo-terminal
+                import pywinpty
+                with pywinpty.PtyProcess.spawn(cmd) as process:
+
+                    # Reads from pseudo-terminal and displays it in real-time
+                    def read_output():
+                        while process.isalive():
+                            try:
+                                output = process.read(1024)
+                                if output:
+                                    sys.stdout.write(output)
+                                    sys.stdout.flush()
+                            except EOFError:
+                                break
+
+                    # Create thread to handle real-time I/O
+                    output_thread = threading.Thread(target = read_output, daemon = True)
+                    output_thread.start()
+
+                    # Wait for process to complete
+                    try:
+                        while process.isalive():
+                            user_input = sys.stdin.readline()
+                            if user_input:
+                                process.write(user_input)
+                    except KeyboardInterrupt:
+                        process.terminate()
+                    output_thread.join()
+                    returncode = process.exitstatus
+            else:
+
+                # Open pseudo-terminal
+                import pty
+                master_fd, slave_fd = pty.openpty()
+                process = subprocess.Popen(
+                    cmd,
+                    stdin = slave_fd,
+                    stdout = slave_fd,
+                    stderr = slave_fd,
+                    text = True,
+                    bufsize = 1,
+                    close_fds = True)
+                os.close(slave_fd)
+
+                # Reads from pseudo-terminal and displays it in real-time
+                def read_output():
+                    while True:
+                        try:
+                            output = os.read(master_fd, 1024).decode(errors="ignore")
+                            if not output:
+                                break
+                            sys.stdout.write(output)
+                            sys.stdout.flush()
+                        except OSError:
+                            break
+
+                # Create thread to handle real-time I/O
+                output_thread = threading.Thread(target=read_output, daemon=True)
+                output_thread.start()
+
+                # Wait for process to complete
+                try:
+                    while process.poll() is None:
+                        user_input = sys.stdin.readline()
+                        if user_input:
+                            os.write(master_fd, user_input.encode())
+                except KeyboardInterrupt:
+                    process.terminate()
+                output_thread.join()
+                returncode = process.returncode
+
+            # Wait for any other blocking processes
             if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
                 environment.WaitForNamedProcesses(options.get_blocking_processes())
+
+            # Post-process command
             if options.allow_processing():
                 PostprocessCommand(
                     cmd = cmd,
                     options = options,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
-            return code
+            return returncode
         return 0
     except subprocess.CalledProcessError as e:
         if verbose:
@@ -562,7 +672,7 @@ def RunCaptureCommand(
 
     # Blocking start method
     def run_start():
-        code = RunBlockingCommand(
+        code = RunReturncodeCommand(
             cmd = cmd,
             options = options,
             verbose = verbose,

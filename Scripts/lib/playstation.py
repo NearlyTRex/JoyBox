@@ -59,7 +59,7 @@ def EncryptPS3ISO(
     ]
 
     # Run encrypt command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = encrypt_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -106,7 +106,7 @@ def DecryptPS3ISO(
     ]
 
     # Run decrypt command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = decrypt_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -290,15 +290,13 @@ def ExtractPSNPKG(
     ]
 
     # Run extract command
-    try:
-        command.RunExceptionCommand(
-            cmd = extract_cmd,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    except:
-        if exit_on_failure:
-            system.LogError("Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir), quit_program = True)
+    code = command.RunReturncodeCommand(
+        cmd = extract_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        system.LogError("Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir), quit_program = True)
         return False
 
     # Clean up
@@ -342,7 +340,7 @@ def StripPSV(
     ]
 
     # Run strip command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = strip_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -391,7 +389,7 @@ def UnstripPSV(
     ]
 
     # Run unstrip command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = unstrip_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -447,7 +445,7 @@ def TrimPSV(
     ]
 
     # Run trim command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = trim_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -503,7 +501,7 @@ def UntrimPSV(
     ]
 
     # Run untrim command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = untrim_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -556,7 +554,7 @@ def VerifyPSV(
     ]
 
     # Run verify command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = verify_cmd,
         verbose = verbose,
         pretend_run = pretend_run,

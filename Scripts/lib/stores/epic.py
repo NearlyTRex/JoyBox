@@ -127,7 +127,7 @@ class Epic(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = login_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)

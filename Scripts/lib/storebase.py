@@ -16,6 +16,7 @@ import programs
 import webpage
 import metadataentry
 import metadatacollector
+import metadataassetcollector
 import manifest
 
 # Create tokenized path
@@ -421,7 +422,20 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        return None
+
+        # Check identifier
+        if not self.IsValidAssetIdentifier(identifier):
+            system.LogWarning("Asset identifier '%s' was not valid" % identifier)
+            return None
+
+        # Collect asset url
+        return metadataassetcollector.FindMetadataAsset(
+            game_platform = self.GetPlatform(),
+            game_name = identifier,
+            asset_type = asset_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     ############################################################
     # Install

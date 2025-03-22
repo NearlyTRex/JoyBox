@@ -242,7 +242,7 @@ def EncryptFile(
     ]
 
     # Run encrypt command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = encrypt_cmd,
         options = command.CreateCommandOptions(
             blocking_processes = [gpg_tool]),
@@ -326,7 +326,7 @@ def DecryptFile(
     ]
 
     # Run decrypt command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = decrypt_cmd,
         options = command.CreateCommandOptions(
             blocking_processes = [gpg_tool]),

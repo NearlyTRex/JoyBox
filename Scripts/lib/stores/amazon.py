@@ -121,7 +121,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = login_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -139,7 +139,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run refresh command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = refresh_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -188,7 +188,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run refresh command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = refresh_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -206,7 +206,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run sync command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = sync_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -391,7 +391,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run download command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = download_cmd,
             verbose = verbose,
             pretend_run = pretend_run,

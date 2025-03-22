@@ -155,7 +155,7 @@ def ExportRegistryFile(
     registry_options.set_blocking_processes(["reg"])
 
     # Run registry command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = registry_cmd,
         options = registry_options,
         verbose = verbose,
@@ -190,7 +190,7 @@ def ImportRegistryFile(
     registry_options.set_blocking_processes(["reg"])
 
     # Run registry command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = registry_cmd,
         options = registry_options,
         verbose = verbose,

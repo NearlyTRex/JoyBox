@@ -151,7 +151,7 @@ def DownloadUrl(
             exit_on_failure = exit_on_failure)
 
     # Run download command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = download_cmd,
         options = command.CreateCommandOptions(
             blocking_processes = [download_tool]),
@@ -221,7 +221,7 @@ def DownloadGitUrl(
     ]
 
     # Run download command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = download_cmd,
         options = command.CreateCommandOptions(
             cwd = os.path.expanduser("~"),
@@ -289,12 +289,12 @@ def MountNetworkShare(
         ]
 
         # Run mount command
-        command.RunCheckedCommand(
+        code = command.RunReturncodeCommand(
             cmd = mount_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return True
+        return (code == 0)
 
     # Linux
     elif environment.IsLinuxPlatform():
@@ -308,11 +308,13 @@ def MountNetworkShare(
         ]
 
         # Run mkdir command
-        command.RunCheckedCommand(
+        code = command.RunReturncodeCommand(
             cmd = mkdir_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if code != 0:
+            return False
 
         # Check if already mounted
         if not system.IsDirectoryEmpty(mount_dir):
@@ -329,12 +331,12 @@ def MountNetworkShare(
         ]
 
         # Run mount command
-        command.RunCheckedCommand(
+        code = command.RunReturncodeCommand(
             cmd = mount_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return True
+        return (code == 0)
 
     # Network share was not mounted
     return False

@@ -601,7 +601,7 @@ def BuildAppImageFromSource(
         return False
 
     # Build release
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = build_cmd,
         options = command.CreateCommandOptions(
             cwd = source_build_dir,
@@ -645,7 +645,7 @@ def BuildAppImageFromSource(
             return False
 
     # Build AppImage
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = [programs.GetToolProgram("AppImageTool"), appimage_dir],
         options = command.CreateCommandOptions(
             cwd = tmp_dir_result),

@@ -39,7 +39,7 @@ def EncryptNDSRom(
     encrypt_cmd += [nds_file]
 
     # Run encrypt command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = encrypt_cmd,
         options = command.CreateCommandOptions(
             blocking_processes = [encrypt_tool]),
@@ -72,7 +72,7 @@ def DecryptNDSRom(
     decrypt_cmd += [nds_file]
 
     # Run decrypt command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = decrypt_cmd,
         options = command.CreateCommandOptions(
             blocking_processes = [decrypt_tool]),
@@ -110,7 +110,7 @@ def Convert3DSCIAtoCCI(
     ]
 
     # Run convert command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = convert_cmd,
         options = command.CreateCommandOptions(
             blocking_processes = [convert_tool]),
@@ -148,7 +148,7 @@ def Convert3DSCCItoCIA(
     ]
 
     # Run convert command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = convert_cmd,
         options = command.CreateCommandOptions(
             blocking_processes = [convert_tool]),
@@ -201,7 +201,7 @@ def Trim3DSCCI(
     ]
 
     # Run trim command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = trim_cmd,
         options = command.CreateCommandOptions(
             blocking_processes = [trim_tool]),
@@ -271,7 +271,7 @@ def Untrim3DSCCI(
     ]
 
     # Run trim command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = trim_cmd,
         options = command.CreateCommandOptions(
             blocking_processes = [trim_tool]),
@@ -339,7 +339,7 @@ def Extract3DSCIA(
     ]
 
     # Run extract command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = extract_cmd,
         options = command.CreateCommandOptions(
             blocking_processes = [extract_tool]),
@@ -491,7 +491,7 @@ def DecryptWiiUNUSPackage(
     ]
 
     # Run decrypt command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = decrypt_cmd,
         options = command.CreateCommandOptions(
             cwd = nus_package_dir,
@@ -799,7 +799,7 @@ def TrimSwitchXCI(
     ]
 
     # Run trim command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = trim_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -884,7 +884,7 @@ def UntrimSwitchXCI(
     ]
 
     # Run untrim command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = untrim_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -942,7 +942,7 @@ def ExtractSwitchNSP(
     ]
 
     # Run extract command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = extract_cmd,
         options = command.CreateCommandOptions(
             output_paths = [extract_dir],

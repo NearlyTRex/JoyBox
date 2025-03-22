@@ -23,6 +23,7 @@ def ImportStorePurchases(
     for store_type in config.StoreType.members():
 
         # Get store obj
+        system.LogInfo("Getting store for %s" % store_type)
         store_obj = stores.GetStoreByType(store_type)
         if not store_obj:
             continue
@@ -32,12 +33,14 @@ def ImportStorePurchases(
             continue
 
         # Login
+        system.LogInfo("Logging into %s store" % store_type)
         store_obj.Login(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Get all purchases
+        system.LogInfo("Retrieving purchases for %s" % store_type)
         purchases = store_obj.GetLatestPurchases(
             verbose = verbose,
             pretend_run = pretend_run,
@@ -46,6 +49,7 @@ def ImportStorePurchases(
             return False
 
         # Get all ignores
+        system.LogInfo("Fetching ignore entries for %s" % store_type)
         ignores = GetGameJsonIgnoreEntries(
             game_supercategory = store_obj.GetSupercategory(),
             game_category = store_obj.GetCategory(),
@@ -55,6 +59,7 @@ def ImportStorePurchases(
             exit_on_failure = exit_on_failure)
 
         # Import each purchase
+        system.LogInfo("Starting to import purchases for %s" % store_type)
         for purchase in purchases:
             purchase_appid = purchase.get_value(config.json_key_store_appid)
             purchase_appname = purchase.get_value(config.json_key_store_appname)

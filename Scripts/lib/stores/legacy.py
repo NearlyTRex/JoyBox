@@ -15,6 +15,7 @@ import webpage
 import storebase
 import metadataentry
 import metadatacollector
+import metadataassetcollector
 
 # Legacy store
 class Legacy(storebase.StoreBase):
@@ -128,7 +129,7 @@ class Legacy(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = login_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -143,7 +144,7 @@ class Legacy(storebase.StoreBase):
         ]
 
         # Run refresh command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = refresh_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -406,8 +407,18 @@ class Legacy(storebase.StoreBase):
         # Latest asset url
         latest_asset_url = None
 
+        # BoxFront
+        if asset_type == config.AssetType.BOXFRONT:
+            latest_asset_url = metadataassetcollector.FindMetadataAsset(
+                game_platform = self.GetPlatform(),
+                game_name = identifier,
+                asset_type = asset_type,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
         # Video
-        if asset_type == config.AssetType.VIDEO:
+        elif asset_type == config.AssetType.VIDEO:
             latest_asset_url = webpage.GetMatchingUrl(
                 url = identifier,
                 base_url = "https://www.bigfishgames.com",

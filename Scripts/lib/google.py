@@ -207,7 +207,7 @@ def DownloadVideo(
     download_cmd += [video_url]
 
     # Run download command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = download_cmd,
         options = command.CreateCommandOptions(
             blocking_processes = [youtube_tool]),

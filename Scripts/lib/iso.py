@@ -57,7 +57,7 @@ def CreateISO(
         create_command += [source_dir]
 
     # Run create command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = create_command,
         options = command.CreateCommandOptions(
             output_paths = [iso_file],
@@ -117,7 +117,7 @@ def ExtractISO(
     ]
 
     # Run extract command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = extract_cmd,
         options = command.CreateCommandOptions(
             output_paths = [extract_dir],
@@ -219,7 +219,7 @@ def MountISO(
         ]
 
         # Run mount command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = mount_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -246,7 +246,7 @@ def MountISO(
         ]
 
         # Run mount command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = mount_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -280,7 +280,7 @@ def UnmountISO(
         ]
 
         # Run unmount command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = unmount_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -306,7 +306,7 @@ def UnmountISO(
         ]
 
         # Run unmount command
-        code = command.RunBlockingCommand(
+        code = command.RunReturncodeCommand(
             cmd = unmount_cmd,
             options = command.CreateCommandOptions(
                 blocking_processes = [iso_tool]),

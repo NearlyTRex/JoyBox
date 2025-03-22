@@ -184,7 +184,7 @@ def SetupAutoconnectRemote(
         create_cmd += ["--verbose"]
 
     # Run create command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = create_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -202,7 +202,7 @@ def SetupAutoconnectRemote(
         authorize_cmd += ["--verbose"]
 
     # Run authorize command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = authorize_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -240,7 +240,7 @@ def SetupManualRemote(
         create_cmd += ["--verbose"]
 
     # Run create command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = create_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -275,7 +275,7 @@ def SetupEncryptedRemote(
     ]
 
     # Run create command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = create_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -504,7 +504,7 @@ def DownloadFilesFromRemote(
         ]
 
     # Run copy command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = copy_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -554,7 +554,7 @@ def UploadFilesToRemote(
         ]
 
     # Run copy command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = copy_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -604,7 +604,7 @@ def PullFilesFromRemote(
         ]
 
     # Run sync command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = sync_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -654,7 +654,7 @@ def PushFilesToRemote(
         ]
 
     # Run sync command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = sync_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -708,7 +708,7 @@ def MergeFilesBothWays(
         ]
 
     # Run bisync command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = bisync_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -771,7 +771,7 @@ def DiffFiles(
         ]
 
     # Run check command
-    command.RunBlockingCommand(
+    command.RunReturncodeCommand(
         cmd = check_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -838,7 +838,7 @@ def ListFiles(
     ]
 
     # Run list command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = list_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -909,7 +909,7 @@ def MountFiles(
         mount_cmd += ["--verbose"]
 
     # Run mount command
-    code = command.RunBlockingCommand(
+    code = command.RunReturncodeCommand(
         cmd = mount_cmd,
         verbose = verbose,
         pretend_run = pretend_run,

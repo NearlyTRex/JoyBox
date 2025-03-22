@@ -142,7 +142,7 @@ def CaptureVideo(
     ]
 
     # Run capture command
-    command.RunBlockingCommand(
+    command.RunReturncodeCommand(
         cmd = capture_cmd,
         options = command.CreateCommandOptions(
             prefix_dir = prefix_dir,
