@@ -15,7 +15,7 @@ import arguments
 import setup
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Sort metadata files.")
+parser = arguments.ArgumentParser(description = "Clean metadata files.")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
