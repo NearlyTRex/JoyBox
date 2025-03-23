@@ -241,6 +241,59 @@ def UpdateJsonFile(
 
 ############################################################
 
+# Build json file
+def BuildJsonFile(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    game_name,
+    game_root = None,
+    passphrase = None,
+    source_type = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get game root
+    if not system.IsPathDirectory(game_root):
+        game_root = environment.GetLockerGamingFilesDir(
+            game_supercategory = game_supercategory,
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            game_name = game_name,
+            source_type = source_type)
+    if not system.IsPathDirectory(game_root):
+        return True
+
+    # Log categories
+    system.LogInfo("Building json [Category: '%s', Subcategory: '%s', Name: '%s'] ..." %
+        (game_category, game_subcategory, game_name))
+
+    # Create json file
+    success = CreateJsonFile(
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Update json file
+    success = UpdateJsonFile(
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        game_root = game_root,
+        passphrase = passphrase,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
+
 # Build game json files
 def BuildGameJsonFiles(
     passphrase = None,
@@ -258,41 +311,18 @@ def BuildGameJsonFiles(
                     game_subcategory,
                     source_type)
                 for game_name in game_names:
-
-                    # Get scan path
-                    scan_game_path = environment.GetLockerGamingFilesDir(
+                    success = BuildJsonFile(
                         game_supercategory = game_supercategory,
                         game_category = game_category,
                         game_subcategory = game_subcategory,
                         game_name = game_name,
-                        source_type = source_type)
-
-                    # Build json
-                    if system.IsPathDirectory(scan_game_path):
-                        system.LogInfo("Building json [Category: '%s', Subcategory: '%s', Name: '%s'] ..." %
-                            (game_category, game_subcategory, game_name))
-                        success = CreateJsonFile(
-                            game_supercategory = game_supercategory,
-                            game_category = game_category,
-                            game_subcategory = game_subcategory,
-                            game_name = game_name,
-                            verbose = verbose,
-                            pretend_run = pretend_run,
-                            exit_on_failure = exit_on_failure)
-                        if not success:
-                            return False
-                        success = UpdateJsonFile(
-                            game_supercategory = game_supercategory,
-                            game_category = game_category,
-                            game_subcategory = game_subcategory,
-                            game_name = game_name,
-                            game_root = scan_game_path,
-                            passphrase = passphrase,
-                            verbose = verbose,
-                            pretend_run = pretend_run,
-                            exit_on_failure = exit_on_failure)
-                        if not success:
-                            return False
+                        passphrase = passphrase,
+                        source_type = source_type,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
 
     # Should be successful
     return True

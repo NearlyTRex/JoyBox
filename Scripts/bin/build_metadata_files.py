@@ -15,6 +15,7 @@ import setup
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Build metadata files.")
+parser.add_input_path_argument()
 parser.add_game_supercategory_argument()
 parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
@@ -46,14 +47,24 @@ def main():
             system.LogError("Game subcategory is required for custom mode", quit_program = True)
         if not args.game_name:
             system.LogError("Game name is required for custom mode", quit_program = True)
-        collection.AddOrUpdateMetadataEntry(
+        success = collection.BuildMetadataEntry(
             game_supercategory = args.game_supercategory,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
             game_name = args.game_name,
+            game_root = parser.get_input_path(),
+            source_type = args.source_type,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
+        if not success:
+            system.LogError(
+                message = "Build of metadata file failed!",
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = game_name,
+                quit_program = True)
 
     # Automatic according to standard layout
     elif args.generation_mode == config.GenerationModeType.STANDARD:
@@ -66,11 +77,12 @@ def main():
                         game_subcategory,
                         args.source_type)
                     for game_name in game_names:
-                        success = collection.AddOrUpdateMetadataEntry(
+                        success = collection.BuildMetadataEntry(
                             game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,
                             game_name = game_name,
+                            source_type = args.source_type,
                             verbose = args.verbose,
                             pretend_run = args.pretend_run,
                             exit_on_failure = args.exit_on_failure)

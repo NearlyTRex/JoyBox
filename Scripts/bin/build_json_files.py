@@ -61,16 +61,25 @@ def main():
             system.LogError("Game subcategory is required for custom mode", quit_program = True)
         if not args.game_name:
             system.LogError("Game name is required for custom mode", quit_program = True)
-        collection.CreateGameJsonFile(
+        success = collection.BuildJsonFile(
             game_supercategory = args.game_supercategory,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
             game_name = args.game_name,
             game_root = parser.get_input_path(),
             passphrase = passphrase,
+            source_type = args.source_type,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
+        if not success:
+            system.LogError(
+                message = "Build of json file failed!",
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = game_name,
+                quit_program = True)
 
     # Automatic according to standard layout
     elif args.generation_mode == config.GenerationModeType.STANDARD:
@@ -83,19 +92,13 @@ def main():
                         game_subcategory,
                         args.source_type)
                     for game_name in game_names:
-                        game_root = environment.GetLockerGamingFilesDir(
-                            game_supercategory,
-                            game_category,
-                            game_subcategory,
-                            game_name,
-                            args.source_type)
-                        success = collection.CreateGameJsonFile(
+                        success = collection.BuildJsonFile(
                             game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,
                             game_name = game_name,
-                            game_root = game_root,
                             passphrase = passphrase,
+                            source_type = args.source_type,
                             verbose = args.verbose,
                             pretend_run = args.pretend_run,
                             exit_on_failure = args.exit_on_failure)

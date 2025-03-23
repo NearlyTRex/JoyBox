@@ -184,6 +184,78 @@ def UpdateMetadataEntry(
         exit_on_failure = exit_on_failure)
     return True
 
+############################################################
+
+# Build metadata entry
+def BuildMetadataEntry(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    game_name,
+    game_root = None,
+    keys = [],
+    force = False,
+    source_type = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get game root
+    if not system.IsPathDirectory(game_root):
+        game_root = environment.GetLockerGamingFilesDir(
+            game_supercategory = game_supercategory,
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            game_name = game_name,
+            source_type = source_type)
+    if not system.IsPathDirectory(game_root):
+        return True
+
+    # Log categories
+    system.LogInfo("Building metadata [Category: '%s', Subcategory: '%s', Name: '%s'] ..." %
+        (game_category, game_subcategory, game_name))
+
+    # Gather directories to scan
+    game_directories = set()
+    if platforms.IsLetterPlatform(game_platform):
+        for obj in system.GetDirectoryContents(game_root):
+            game_directories.add(system.GetFilenameDirectory(system.JoinPaths(game_root, obj)))
+    else:
+        game_directories.add(system.GetFilenameDirectory(game_root))
+
+    # Add metadata entries
+    for game_directory in sorted(game_directories):
+        if game_directory.endswith(")"):
+
+            # Create metadata entry
+            success = CreateMetadataEntry(
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = system.GetDirectoryName(game_directory),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+            # Update metadata entry
+            success = UpdateMetadataEntry(
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = system.GetDirectoryName(game_directory),
+                keys = keys,
+                force = force,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+    # Should be successful
+    return True
+
 # Build metadata entries
 def BuildMetadataEntries(
     keys = [],
@@ -202,53 +274,19 @@ def BuildMetadataEntries(
                     game_subcategory,
                     source_type)
                 for game_name in game_names:
-
-                    # Get scan path
-                    scan_game_path = environment.GetLockerGamingFilesDir(
+                    success = BuildMetadataEntry(
                         game_supercategory = game_supercategory,
                         game_category = game_category,
                         game_subcategory = game_subcategory,
                         game_name = game_name,
-                        source_type = source_type)
-
-                    # Build metadata
-                    if system.IsPathDirectory(scan_game_path):
-                        system.LogInfo("Building metadata [Category: '%s', Subcategory: '%s', Name: '%s'] ..." %
-                            (game_category, game_subcategory, game_name))
-
-                        # Gather directories to scan
-                        game_directories = set()
-                        if platforms.IsLetterPlatform(game_platform):
-                            for obj in system.GetDirectoryContents(scan_game_path):
-                                game_directories.add(system.GetFilenameDirectory(system.JoinPaths(scan_game_path, obj)))
-                        else:
-                            game_directories.add(system.GetFilenameDirectory(scan_game_path))
-
-                        # Add metadata entries
-                        for game_directory in sorted(game_directories):
-                            if game_directory.endswith(")"):
-                                success = CreateMetadataEntry(
-                                    game_supercategory = game_supercategory,
-                                    game_category = game_category,
-                                    game_subcategory = game_subcategory,
-                                    game_name = system.GetDirectoryName(game_directory),
-                                    verbose = verbose,
-                                    pretend_run = pretend_run,
-                                    exit_on_failure = exit_on_failure)
-                                if not success:
-                                    return False
-                                success = UpdateMetadataEntry(
-                                    game_supercategory = game_supercategory,
-                                    game_category = game_category,
-                                    game_subcategory = game_subcategory,
-                                    game_name = system.GetDirectoryName(game_directory),
-                                    keys = keys,
-                                    force = force,
-                                    verbose = verbose,
-                                    pretend_run = pretend_run,
-                                    exit_on_failure = exit_on_failure)
-                                if not success:
-                                    return False
+                        keys = keys,
+                        force = force,
+                        source_type = source_type,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
 
     # Should be successful
     return True
