@@ -8,7 +8,7 @@ import system
 import environment
 import cryption
 import locker
-from .hashing import HashGameFiles
+from .hashing import BuildHashFiles
 
 ############################################################
 
@@ -43,7 +43,7 @@ def UploadGameFiles(
         return False
 
     # Hash all files
-    success = HashGameFiles(
+    success = BuildHashFiles(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,

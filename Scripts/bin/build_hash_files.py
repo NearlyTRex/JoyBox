@@ -17,7 +17,7 @@ import arguments
 import setup
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Generate file hashes.")
+parser = arguments.ArgumentParser(description = "Build file hashes.")
 parser.add_input_path_argument()
 parser.add_game_supercategory_argument()
 parser.add_game_category_argument()
@@ -58,7 +58,7 @@ def main():
             system.LogError("Game category is required for custom mode", quit_program = True)
         if not args.game_subcategory:
             system.LogError("Game subcategory is required for custom mode", quit_program = True)
-        collection.HashGameFiles(
+        success = collection.BuildHashFiles(
             game_supercategory = args.game_supercategory,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
@@ -67,6 +67,14 @@ def main():
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
+        if not success:
+            system.LogError(
+                message = "Build of hash file failed!",
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = game_name,
+                quit_program = True)
 
     # Automatic according to standard layout
     elif args.generation_mode == config.GenerationModeType.STANDARD:
@@ -79,24 +87,19 @@ def main():
                         game_subcategory,
                         args.source_type)
                     for game_name in game_names:
-                        game_root = environment.GetLockerGamingFilesDir(
-                            game_supercategory,
-                            game_category,
-                            game_subcategory,
-                            game_name,
-                            args.source_type)
-                        success = collection.HashGameFiles(
+                        success = collection.BuildHashFiles(
                             game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,
                             game_root = game_root,
                             passphrase = passphrase,
+                            source_type = args.source_type,
                             verbose = args.verbose,
                             pretend_run = args.pretend_run,
                             exit_on_failure = args.exit_on_failure)
                         if not success:
                             system.LogError(
-                                message = "Generation of hash file failed!",
+                                message = "Build of hash file failed!",
                                 game_supercategory = game_supercategory,
                                 game_category = game_category,
                                 game_subcategory = game_subcategory,

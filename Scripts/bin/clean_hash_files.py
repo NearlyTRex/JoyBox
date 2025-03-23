@@ -24,5 +24,13 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Sort hash files
+    success = collection.SortHashFiles(
+        verbose = args.verbose,
+        pretend_run = args.pretend_run,
+        exit_on_failure = args.exit_on_failure)
+    if not success:
+        system.LogError("Sort of hash file failed!", quit_program = True)
+
 # Start
 main()

@@ -15,12 +15,14 @@ __all__ = [
     "DownloadAllMetadataAssets",
 
     # Hashing
-    "HashGameFiles",
+    "BuildHashFiles",
+    "SortHashFiles",
 
     # Jsondata
     "AreGameJsonFilePossible",
     "CreateJsonFile",
     "UpdateJsonFile",
+    "BuildJsonFile",
     "BuildGameJsonFiles",
     "GetGameJsonIgnoreEntries",
     "AddGameJsonIgnoreEntry",
@@ -29,6 +31,7 @@ __all__ = [
     "AreGameMetadataFilePossible",
     "CreateMetadataEntry",
     "UpdateMetadataEntry",
+    "BuildMetadataEntry",
     "BuildMetadataEntries",
     "PublishMetadataEntries",
     "PublishAllMetadataEntries",

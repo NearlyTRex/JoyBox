@@ -209,7 +209,7 @@ def BuildMetadataEntry(
             game_name = game_name,
             source_type = source_type)
     if not system.IsPathDirectory(game_root):
-        return True
+        return False
 
     # Log categories
     system.LogInfo("Building metadata [Category: '%s', Subcategory: '%s', Name: '%s'] ..." %
