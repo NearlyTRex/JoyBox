@@ -131,7 +131,7 @@ class GOG(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunReturncodeCommand(
+        code = command.RunInteractiveCommand(
             cmd = login_cmd,
             options = command.CreateCommandOptions(
                 blocking_processes = [gog_tool]),
@@ -172,9 +172,10 @@ class GOG(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunReturncodeCommand(
+        code = command.RunInteractiveCommand(
             cmd = login_cmd,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return (code != 0)
 

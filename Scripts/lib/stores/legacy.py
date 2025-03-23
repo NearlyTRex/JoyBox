@@ -129,9 +129,10 @@ class Legacy(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunReturncodeCommand(
+        code = command.RunInteractiveCommand(
             cmd = login_cmd,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if (code != 0):
             return False
@@ -144,9 +145,10 @@ class Legacy(storebase.StoreBase):
         ]
 
         # Run refresh command
-        code = command.RunReturncodeCommand(
+        code = command.RunInteractiveCommand(
             cmd = refresh_cmd,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if code != 0:
             return False

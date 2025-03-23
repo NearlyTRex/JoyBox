@@ -121,7 +121,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunReturncodeCommand(
+        code = command.RunInteractiveCommand(
             cmd = login_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -139,7 +139,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run refresh command
-        code = command.RunReturncodeCommand(
+        code = command.RunInteractiveCommand(
             cmd = refresh_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
