@@ -453,7 +453,6 @@ def RunReturncodeCommand(
                 cwd = options.get_cwd(),
                 env = options.get_env(),
                 creationflags = options.get_creationflags(),
-                stdin = subprocess.PIPE,
                 stdout = subprocess.PIPE,
                 stderr = subprocess.PIPE,
                 text = True,
@@ -484,17 +483,14 @@ def RunReturncodeCommand(
 
             # Create threads to handle real-time I/O
             stdout_thread = threading.Thread(target = handle_output, args = (process.stdout, system.LogInfo, stdout_target))
-            stderr_thread = threading.Thread(target = handle_output, args = (process.stderr, system.LogError, stderr_target))
-            stdin_thread = threading.Thread(target = handle_input)
+            stderr_thread = threading.Thread(target = handle_output, args = (process.stderr, system.LogInfo, stderr_target))
             stdout_thread.start()
             stderr_thread.start()
-            stdin_thread.start()
 
             # Wait for process to complete
             process.wait()
             stdout_thread.join()
             stderr_thread.join()
-            stdin_thread.join()
 
             # Close file handles if used
             if stdout_target:
@@ -596,6 +592,7 @@ def RunInteractiveCommand(
 
                 # Open pseudo-terminal
                 import pty
+                import select
                 master_fd, slave_fd = pty.openpty()
                 process = subprocess.Popen(
                     cmd,
@@ -611,24 +608,28 @@ def RunInteractiveCommand(
                 def read_output():
                     while True:
                         try:
-                            output = os.read(master_fd, 1024).decode(errors="ignore")
-                            if not output:
-                                break
-                            sys.stdout.write(output)
-                            sys.stdout.flush()
-                        except OSError:
+                            rlist, _, _ = select.select([master_fd], [], [], 0.1)
+                            if rlist and master_fd in rlist:
+                                output = os.read(master_fd, 1024).decode(errors = "ignore")
+                                if not output:
+                                    break
+                                sys.stdout.write(output)
+                                sys.stdout.flush()
+                        except (OSError, EOFError):
                             break
 
                 # Create thread to handle real-time I/O
-                output_thread = threading.Thread(target=read_output, daemon=True)
+                output_thread = threading.Thread(target = read_output, daemon = True)
                 output_thread.start()
 
                 # Wait for process to complete
                 try:
                     while process.poll() is None:
-                        user_input = sys.stdin.readline()
-                        if user_input:
-                            os.write(master_fd, user_input.encode())
+                        rlist, _, _ = select.select([sys.stdin], [], [], 0.1)
+                        if rlist and sys.stdin in rlist:
+                            user_input = sys.stdin.readline()
+                            if user_input:
+                                os.write(master_fd, user_input.encode())
                 except KeyboardInterrupt:
                     process.terminate()
                 output_thread.join()
