@@ -46,7 +46,7 @@ def ImportStorePurchases(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not purchases:
-            return False
+            return True
 
         # Get all ignores
         system.LogInfo("Fetching ignore entries for %s" % store_type)
@@ -86,7 +86,6 @@ def ImportStorePurchases(
                     game_subcategory = store_obj.GetSubcategory()),
                 search_values = purchase_identifiers,
                 search_keys = config.json_keys_store_appdata,
-                verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if len(json_matches):
