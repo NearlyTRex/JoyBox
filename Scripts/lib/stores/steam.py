@@ -57,6 +57,10 @@ def GetSteamTrailer(
 def GetSteamPrefixDir(install_dir, appid):
     return system.JoinPaths(install_dir, "steamapps", "compatdata", appid, "pfx")
 
+# Get steam manifest file
+def GetSteamManifestFile(install_dir, appid):
+    return system.JoinPaths(install_dir, "steamapps", f"appmanifest_{appid}.acf")
+
 # Find steam appid matches
 def FindSteamAppIDMatches(
     search_name,
@@ -756,8 +760,24 @@ class Steam(storebase.StoreBase):
     # Install
     ############################################################
 
-    # Install by identifier
-    def InstallByIdentifier(
+    # Check if installed
+    def IsInstalled(
+        self,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check identifier
+        if not self.IsValidInstallIdentifier(identifier):
+            system.LogWarning("Install identifier '%s' was not valid" % identifier)
+            return False
+
+        # Check for manifest
+        return system.IsPathFile(GetSteamManifestFile(self.GetInstallDir(), identifier))
+
+    # Install
+    def Install(
         self,
         identifier,
         verbose = False,
@@ -775,6 +795,7 @@ class Steam(storebase.StoreBase):
             steam_tool = programs.GetToolProgram("SteamCMD")
         if not steam_tool:
             system.LogError("SteamCMD was not found", quit_program = True)
+            return False
 
         # Get install command
         install_cmd = [
@@ -800,8 +821,8 @@ class Steam(storebase.StoreBase):
     # Launch
     ############################################################
 
-    # Launch by identifier
-    def LaunchByIdentifier(
+    # Launch
+    def Launch(
         self,
         identifier,
         verbose = False,
@@ -819,6 +840,7 @@ class Steam(storebase.StoreBase):
             steam_tool = programs.GetToolProgram("Steam")
         if not steam_tool:
             system.LogError("Steam was not found", quit_program = True)
+            return False
 
         # Get launch command
         launch_cmd = [
@@ -840,14 +862,17 @@ class Steam(storebase.StoreBase):
     # Download
     ############################################################
 
-    # Download by identifier
-    def DownloadByIdentifier(
+    # Download
+    def Download(
         self,
         identifier,
         output_dir,
         output_name = None,
         branch = None,
         clean_output = False,
+        show_progress = False,
+        skip_existing = False,
+        skip_identical = False,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
@@ -863,6 +888,7 @@ class Steam(storebase.StoreBase):
             steamdepot_tool = programs.GetToolProgram("SteamDepotDownloader")
         if not steamdepot_tool:
             system.LogError("SteamDepotDownloader was not found", quit_program = True)
+            return False
 
         # Create temporary directory
         tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
@@ -899,12 +925,15 @@ class Steam(storebase.StoreBase):
             return False
 
         # Archive downloaded files
-        success = self.Archive(
-            source_dir = tmp_dir_result,
-            output_dir = output_dir,
+        success = backup.ArchiveFolder(
+            input_path = tmp_dir_result,
+            output_path = output_dir,
             output_name = output_name,
             excludes = [".DepotDownloader"],
             clean_output = clean_output,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

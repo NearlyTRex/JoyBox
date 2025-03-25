@@ -529,8 +529,8 @@ class GOG(storebase.StoreBase):
     # Install
     ############################################################
 
-    # Install by identifier
-    def InstallByIdentifier(
+    # Install
+    def Install(
         self,
         identifier,
         verbose = False,
@@ -582,8 +582,8 @@ class GOG(storebase.StoreBase):
     # Launch
     ############################################################
 
-    # Launch by identifier
-    def LaunchByIdentifier(
+    # Launch
+    def Launch(
         self,
         identifier,
         verbose = False,
@@ -595,14 +595,17 @@ class GOG(storebase.StoreBase):
     # Download
     ############################################################
 
-    # Download by identifier
-    def DownloadByIdentifier(
+    # Download
+    def Download(
         self,
         identifier,
         output_dir,
         output_name = None,
         branch = None,
         clean_output = False,
+        show_progress = False,
+        skip_existing = False,
+        skip_identical = False,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):

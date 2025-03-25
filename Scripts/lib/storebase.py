@@ -441,8 +441,26 @@ class StoreBase:
     # Install
     ############################################################
 
-    # Install game by identifier
-    def InstallByIdentifier(
+    # Check if installed
+    def IsInstalled(
+        self,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        return False
+
+    # Install
+    def Install(
+        self,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        return False
+
+    # Uninstall
+    def Uninstall(
         self,
         identifier,
         verbose = False,
@@ -454,8 +472,8 @@ class StoreBase:
     # Launch
     ############################################################
 
-    # Launch by identifier
-    def LaunchByIdentifier(
+    # Launch
+    def Launch(
         self,
         identifier,
         verbose = False,
@@ -467,14 +485,17 @@ class StoreBase:
     # Download
     ############################################################
 
-    # Download by identifier
-    def DownloadByIdentifier(
+    # Download
+    def Download(
         self,
         identifier,
         output_dir,
         output_name = None,
         branch = None,
         clean_output = False,
+        show_progress = False,
+        skip_existing = False,
+        skip_identical = False,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):

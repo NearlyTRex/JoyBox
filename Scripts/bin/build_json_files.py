@@ -17,7 +17,7 @@ import setup
 import ini
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Create or update json files.")
+parser = arguments.ArgumentParser(description = "Build json files.")
 parser.add_input_path_argument()
 parser.add_game_supercategory_argument()
 parser.add_game_category_argument()

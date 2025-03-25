@@ -5,16 +5,13 @@ import json
 
 # Local imports
 import config
-import command
-import archive
-import programs
 import system
-import ini
+import command
+import backup
+import programs
 import jsondata
-import webpage
 import storebase
-import metadataentry
-import metadatacollector
+import ini
 
 # Amazon store
 class Amazon(storebase.StoreBase):
@@ -262,7 +259,7 @@ class Amazon(storebase.StoreBase):
     # Json
     ############################################################
 
-    # Get jsondata
+    # Get latest jsondata
     def GetLatestJsondata(
         self,
         identifier,
@@ -341,14 +338,17 @@ class Amazon(storebase.StoreBase):
     # Download
     ############################################################
 
-    # Download by identifier
-    def DownloadByIdentifier(
+    # Download
+    def Download(
         self,
         identifier,
         output_dir,
         output_name = None,
         branch = None,
         clean_output = False,
+        show_progress = False,
+        skip_existing = False,
+        skip_identical = False,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
@@ -400,11 +400,14 @@ class Amazon(storebase.StoreBase):
             return False
 
         # Archive downloaded files
-        success = self.Archive(
-            source_dir = tmp_dir_result,
-            output_dir = output_dir,
+        success = backup.ArchiveFolder(
+            input_path = tmp_dir_result,
+            output_path = output_dir,
             output_name = output_name,
             clean_output = clean_output,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
