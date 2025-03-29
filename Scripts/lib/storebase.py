@@ -5,16 +5,8 @@ import sys
 # Local imports
 import config
 import system
-import environment
-import saves
-import gameinfo
 import jsondata
-import network
-import launcher
-import collection
-import programs
 import webpage
-import metadataentry
 import metadatacollector
 import metadataassetcollector
 import manifest
@@ -152,6 +144,14 @@ class StoreBase:
     # Get install dir
     def GetInstallDir(self):
         return None
+
+    # Check if store can handle installing
+    def CanHandleInstalling(self):
+        return False
+
+    # Check if store can handle launching
+    def CanHandleLaunching(self):
+        return False
 
     # Check if purchases can be imported
     def CanImportPurchases(self):

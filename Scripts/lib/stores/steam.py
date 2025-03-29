@@ -335,6 +335,14 @@ class Steam(storebase.StoreBase):
     def GetInstallDir(self):
         return self.install_dir
 
+    # Check if store can handle installing
+    def CanHandleInstalling(self):
+        return True
+
+    # Check if store can handle launching
+    def CanHandleLaunching(self):
+        return True
+
     # Check if purchases can be imported
     def CanImportPurchases(self):
         return True

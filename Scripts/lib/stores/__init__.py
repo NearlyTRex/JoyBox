@@ -93,3 +93,28 @@ def GetStoreByPlatform(
                     exit_on_failure = exit_on_failure)
             return instance
     return None
+
+# Check if store platform
+def IsStorePlatform(store_platform):
+    return GetStoreByPlatform(store_platform) is not None
+
+# Check if store can handle installing
+def CanHandleInstalling(store_platform):
+    instance = GetStoreByPlatform(store_platform)
+    if instance:
+        return instance.CanHandleInstalling()
+    return False
+
+# Check if store can handle launching
+def CanHandleLaunching(store_platform):
+    instance = GetStoreByPlatform(store_platform)
+    if instance:
+        return instance.CanHandleLaunching()
+    return False
+
+# Check if purchases can be imported
+def CanImportPurchases(store_platform):
+    instance = GetStoreByPlatform(store_platform)
+    if instance:
+        return instance.CanImportPurchases()
+    return False
