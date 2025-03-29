@@ -14,14 +14,13 @@ import environment
 import platforms
 import launcher
 import metadata
-import cache
 import gameinfo
 import gui
 import arguments
 import setup
 
 # Setup argument parser
-parser = arguments.ArgumentParser(description = "Launch json game.")
+parser = arguments.ArgumentParser(description = "Launch json files.")
 parser.add_input_path_argument()
 parser.add_enum_argument(
     args = ("-l", "--source_type"),
@@ -37,7 +36,6 @@ parser.add_enum_argument(
     arg_type = config.CaptureType,
     description = "Capture type")
 parser.add_boolean_argument(args = ("-f", "--fullscreen"), description = "Enable fullscreen mode")
-parser.add_boolean_argument(args = ("--force_cache_refresh"), description = "Force refresh of cached files")
 parser.add_common_arguments()
 
 # Parse arguments
@@ -121,16 +119,8 @@ def main():
             title_text = "Json file not launchable",
             message_text = "Json file '%s' is not launchable" % system.GetFilenameFile(json_file))
 
-    # Force cache refresh
-    if args.force_cache_refresh:
-        cache.RemoveGameFromCache(
-            game_info = game_info,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
-
     # Launch game
-    launcher.LaunchGame(
+    success = launcher.LaunchGame(
         game_info = game_info,
         source_type = args.source_type,
         capture_type = args.capture_type,
@@ -138,6 +128,10 @@ def main():
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
+    if not success:
+        gui.DisplayErrorPopup(
+            title_text = "Json file failed to launch",
+            message_text = "Json file '%s' failed to launch" % system.GetFilenameFile(json_file))
 
 # Start
 main()

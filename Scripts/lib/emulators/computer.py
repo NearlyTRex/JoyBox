@@ -7,16 +7,14 @@ import sys
 import config
 import system
 import environment
-import cache
 import command
 import programs
 import release
 import sandbox
-import display
-import ini
-import gui
 import emulatorbase
 import computer
+import gui
+import ini
 
 # Config files
 config_files = {}

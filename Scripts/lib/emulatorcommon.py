@@ -4,7 +4,7 @@ import sys
 
 # Local imports
 import config
-import cache
+import command
 import system
 import metadata
 import environment
@@ -81,10 +81,9 @@ def SimpleLaunch(
         real_launch_cmd += [cmd_segment]
 
     # Launch game
-    return cache.LaunchCachedGame(
-        game_info = game_info,
-        launch_cmd = real_launch_cmd,
-        launch_options = launch_options,
+    return command.RunCaptureCommand(
+        cmd = real_launch_cmd,
+        options = launch_options,
         capture_type = capture_type,
         verbose = verbose,
         pretend_run = pretend_run,

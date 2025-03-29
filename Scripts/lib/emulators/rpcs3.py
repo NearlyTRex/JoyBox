@@ -5,7 +5,6 @@ import sys
 
 # Local imports
 import config
-import cache
 import environment
 import system
 import release

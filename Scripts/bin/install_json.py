@@ -10,12 +10,13 @@ sys.path.append(lib_folder)
 import config
 import system
 import gameinfo
-import cache
+import launcher
+import addon
 import arguments
 import setup
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Cache game files.")
+parser = arguments.ArgumentParser(description = "Install json files.")
 parser.add_input_path_argument()
 parser.add_enum_argument(
     args = ("-l", "--source_type"),
@@ -26,7 +27,7 @@ parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
 parser.add_game_name_argument()
 parser.add_boolean_argument(args = ("-k", "--keep_setup_files"), description = "Keep setup files")
-parser.add_boolean_argument(args = ("--force_cache_refresh"), description = "Force refresh of cached files")
+parser.add_boolean_argument(args = ("-a", "--install_addon_files"), description = "Install addon files")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -71,22 +72,30 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
 
-    # Force cache refresh
-    if args.force_cache_refresh:
-        cache.RemoveGameFromCache(
-            game_info = game_info,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
-
-    # Install game to cache
-    cache.InstallGameToCache(
+    # Install game
+    success = launcher.InstallGame(
         game_info = game_info,
         source_type = args.source_type,
         keep_setup_files = args.keep_setup_files,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
+    if not success:
+        gui.DisplayErrorPopup(
+            title_text = "Json file failed to install",
+            message_text = "Json file '%s' failed to install" % system.GetFilenameFile(json_file))
+
+    # Install addons
+    if install_addon_files:
+        success = addon.InstallAddons(
+            game_info = game_info,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
+        if not success:
+            gui.DisplayErrorPopup(
+                title_text = "Json file addons failed to install",
+                message_text = "Json file '%s' addons failed to install" % system.GetFilenameFile(json_file))
 
 # Start
 main()
