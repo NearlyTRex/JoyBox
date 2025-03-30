@@ -1,5 +1,5 @@
 # Imports
-import os, os.path
+import os
 import sys
 
 # Local imports
@@ -12,6 +12,7 @@ from .metadata import CreateMetadataEntry
 from .jsondata import GetGameJsonIgnoreEntries
 from .jsondata import AddGameJsonIgnoreEntry
 from .jsondata import CreateJsonFile
+from .uploading import UploadGameFiles
 
 ############################################################
 
@@ -159,6 +160,149 @@ def ImportStorePurchases(
             if not success:
                 system.LogError("Unable to add metadata entry for game '%s'" % entry_name)
                 return False
+
+    # Should be successful
+    return True
+
+############################################################
+
+# Download store purchase
+def DownloadStorePurchase(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    game_name,
+    output_dir = None,
+    skip_existing = False,
+    force = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get platform
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+
+    # Get store
+    store_obj = stores.GetStoreByPlatform(game_platform)
+    if not store_obj:
+        return False
+
+    # Check if downloads supported
+    if not store_obj.CanDownloadPurchases():
+        return True
+
+    # Get output dir
+    if output_dir:
+        output_offset = environment.GetLockerGamingFilesOffset(
+            game_supercategory = game_supercategory,
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            game_name = game_name)
+        output_dir = system.JoinPaths(os.path.realpath(output_dir), output_offset)
+    else:
+        output_dir = environment.GetLockerGamingFilesDir(
+            game_supercategory = game_supercategory,
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            game_name = game_name)
+    if skip_existing and system.DoesDirectoryContainFiles(output_dir):
+        return True
+
+    # Get json file path
+    json_file_path = environment.GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+    if not system.DoesPathExist(json_file_path):
+        return False
+
+    # Read json data
+    json_file_data = system.ReadJsonFile(
+        src = json_file_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Create json data object
+    json_obj = jsondata.JsonData(
+        json_data = json_file_data,
+        json_platform = game_platform)
+
+    # Get store info
+    store_info_identifier = json_obj.get_subvalue(store_obj.GetKey(), store_obj.GetInfoIdentifierKey())
+    store_download_identifier = json_obj.get_subvalue(store_obj.GetKey(), store_obj.GetDownloadIdentifierKey())
+    store_branch = json_obj.get_subvalue(store_obj.GetKey(), config.json_key_store_branchid)
+
+    # Get latest version
+    latest_version = store_obj.GetLatestVersion(
+        identifier = store_info_identifier,
+        branch = store_branch,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Download files
+    success = store_obj.Download(
+        identifier = store_download_identifier,
+        branch = store_branch,
+        output_dir = output_dir,
+        output_name = "%s (%s)" % (game_name, latest_version),
+        clean_output = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
+
+############################################################
+
+# Backup store purchase
+def BackupStorePurchase(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    game_name,
+    passphrase,
+    skip_existing = False,
+    force = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    if not tmp_dir_success:
+        return False
+
+    # Download files
+    success = DownloadStorePurchase(
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        output_dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Upload files
+    success = UploadGameFiles(
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        game_root = tmp_dir_result,
+        passphrase = passphrase,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Delete temporary directory
+    system.RemoveDirectory(
+        src = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Should be successful
     return True

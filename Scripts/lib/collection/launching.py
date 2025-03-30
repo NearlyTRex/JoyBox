@@ -1,0 +1,211 @@
+# Imports
+import os
+import sys
+
+# Local imports
+import config
+import system
+import programs
+import saves
+import transform
+import platforms
+import locker
+import stores
+import gui
+from .installing import InstallLocalGame
+
+###########################################################
+
+# Launch store game
+def LaunchStoreGame(
+    game_info,
+    source_type,
+    capture_type = None,
+    fullscreen = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check game info
+    if not game_info or not game_info.is_valid() or not game_info.is_playable():
+        return False
+
+    # Get store
+    store_obj = stores.GetStoreByPlatform(game_info.get_platform())
+    if not store_obj:
+        return False
+
+    # Launch game
+    store_key = game_info.get_main_store_key()
+    store_identifier_key = store_obj.GetInstallIdentifierKey()
+    store_identifier = game_info.get_subvalue(store_key, store_identifier_key)
+    return store_obj.Launch(
+        identifier = store_identifier,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+###########################################################
+
+# Launch local game
+def LaunchLocalGame(
+    game_info,
+    source_type,
+    capture_type = None,
+    fullscreen = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get game info
+    game_name = game_info.get_name()
+    game_category = game_info.get_category()
+    game_subcategory = game_info.get_subcategory()
+    game_platform = game_info.get_platform()
+    game_save_dir = game_info.get_save_dir()
+
+    # Install local game
+    success = InstallLocalGame(
+        game_info = game_info,
+        source_type = source_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Get launcher
+    game_launcher = None
+    for emulator in programs.GetEmulators():
+        if game_platform in emulator.GetPlatforms():
+            game_launcher = emulator
+            break
+
+    # Check game launcher
+    if not game_launcher:
+        gui.DisplayErrorPopup(
+            title_text = "Launcher not found",
+            message_text = "Launcher for game '%s' in platform '%s' could not be found" % (game_name, game_platform))
+        return False
+
+    # Get game launcher info
+    game_launcher_config_file = game_launcher.GetConfigFile()
+    game_launcher_save_dir = game_launcher.GetSaveDir(game_platform)
+    game_launcher_setup_dir = game_launcher.GetSetupDir()
+
+    # Unpack save if possible
+    if saves.CanSaveBeUnpacked(game_category, game_subcategory, game_name):
+        success = saves.UnpackSave(
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            game_name = game_name,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+    # Setup launcher save directory
+    if game_launcher_save_dir:
+        success = system.CreateSymlink(
+            src = game_save_dir,
+            dest = game_launcher_save_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+    # Setup launcher config file
+    if game_launcher_config_file:
+        system.ReplaceStringsInFile(
+            src = game_launcher_config_file,
+            replacements = [
+                {"from": config.token_emulator_setup_root, "to": game_launcher_setup_dir},
+                {"from": config.token_game_save_dir, "to": game_save_dir}
+            ],
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Launch game
+    success = game_launcher.Launch(
+        game_info = game_info,
+        capture_type = capture_type,
+        fullscreen = fullscreen,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Revert launcher config file
+    if game_launcher_config_file:
+        system.ReplaceStringsInFile(
+            src = game_launcher_config_file,
+            replacements = [
+                {"from": game_launcher_setup_dir, "to": config.token_emulator_setup_root},
+                {"from": game_save_dir, "to": config.token_game_save_dir}
+            ],
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Revert launcher save directory
+    if game_launcher_save_dir:
+        success = system.RemoveObject(
+            obj = game_launcher_save_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+        success = system.MakeDirectory(
+            src = game_launcher_save_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+    # Pack save
+    success = saves.PackSave(
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
+
+###########################################################
+
+# Launch local game
+def LaunchGame(
+    game_info,
+    source_type,
+    capture_type = None,
+    fullscreen = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if stores.CanHandleLaunching(game_info.get_platform()):
+        return LaunchStoreGame(
+            game_info = game_info,
+            source_type = source_type,
+            capture_type = capture_type,
+            fullscreen = fullscreen,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    else:
+        return LaunchLocalGame(
+            game_info = game_info,
+            source_type = source_type,
+            capture_type = capture_type,
+            fullscreen = fullscreen,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+###########################################################

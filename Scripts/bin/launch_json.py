@@ -12,12 +12,12 @@ import config
 import system
 import environment
 import platforms
-import launcher
+import collection
 import metadata
 import gameinfo
-import gui
 import arguments
 import setup
+import gui
 
 # Setup argument parser
 parser = arguments.ArgumentParser(description = "Launch json files.")
@@ -120,7 +120,7 @@ def main():
             message_text = "Json file '%s' is not launchable" % system.GetFilenameFile(json_file))
 
     # Launch game
-    success = launcher.LaunchGame(
+    success = collection.LaunchGame(
         game_info = game_info,
         source_type = args.source_type,
         capture_type = args.capture_type,

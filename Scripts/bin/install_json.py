@@ -9,11 +9,11 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import config
 import system
+import collection
 import gameinfo
-import launcher
-import addon
 import arguments
 import setup
+import gui
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Install json files.")
@@ -73,7 +73,7 @@ def main():
         exit_on_failure = args.exit_on_failure)
 
     # Install game
-    success = launcher.InstallGame(
+    success = collection.InstallGame(
         game_info = game_info,
         source_type = args.source_type,
         keep_setup_files = args.keep_setup_files,
@@ -85,9 +85,9 @@ def main():
             title_text = "Json file failed to install",
             message_text = "Json file '%s' failed to install" % system.GetFilenameFile(json_file))
 
-    # Install addons
+    # Install game addons
     if install_addon_files:
-        success = addon.InstallAddons(
+        success = collection.InstallGameAddons(
             game_info = game_info,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
