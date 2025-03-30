@@ -157,6 +157,10 @@ class StoreBase:
     def CanImportPurchases(self):
         return False
 
+    # Check if purchases can be downloaded
+    def CanDownloadPurchases(self):
+        return False
+
     ############################################################
     # Identifiers
     ############################################################

@@ -96,6 +96,10 @@ class Epic(storebase.StoreBase):
     def CanImportPurchases(self):
         return True
 
+    # Check if purchases can be downloaded
+    def CanDownloadPurchases(self):
+        return True
+
     ############################################################
     # Connection
     ############################################################
