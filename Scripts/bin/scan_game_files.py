@@ -60,7 +60,7 @@ def main():
 
     # Import store purchases
     system.LogInfo("Importing store purchases ...")
-    success = collection.ImportStorePurchases(
+    success = collection.ImportAllStorePurchases(
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
