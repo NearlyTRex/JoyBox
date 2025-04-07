@@ -22,6 +22,43 @@ def AreGameJsonFilePossible(
 
 ############################################################
 
+# Read json data
+def ReadJsonData(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    game_name,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check categories
+    if not AreGameJsonFilePossible(game_supercategory, game_category, game_subcategory):
+        return None
+
+    # Get json file path
+    json_file_path = environment.GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+    if not system.DoesPathExist(json_file_path):
+        return None
+
+    # Read json data
+    json_file_data = system.ReadJsonFile(
+        src = json_file_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Get platform
+    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+
+    # Return json data object
+    json_obj = jsondata.JsonData(
+        json_data = json_file_data,
+        json_platform = game_platform)
+    return json_obj
+
+############################################################
+
 # Create game json file
 def CreateJsonFile(
     game_supercategory,
