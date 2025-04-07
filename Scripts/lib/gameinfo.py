@@ -24,28 +24,40 @@ class GameInfo:
     # Constructor
     def __init__(
         self,
-        json_file,
+        json_file = None,
+        json_supercategory = None,
+        json_category = None,
+        json_subcategory = None,
+        json_name = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
 
         # Json info
         self.json_data = jsondata.JsonData()
-        self.json_file = None
+        self.json_file = json_file
+        if not system.IsPathFile(self.json_file):
+            self.json_file = environment.GetJsonMetadataFile(
+                game_supercategory = json_supercategory,
+                game_category = json_category,
+                game_subcategory = json_subcategory,
+                game_name = json_name)
+        if not system.IsPathFile(self.json_file):
+            raise Exception("Unable to find associated json file")
 
         # Metadata info
         self.metadata_file = None
 
         # Game info
-        self.game_supercategory = None
-        self.game_category = None
-        self.game_subcategory = None
-        self.game_name = None
+        self.game_supercategory = json_supercategory
+        self.game_category = json_category
+        self.game_subcategory = json_subcategory
+        self.game_name = json_name
         self.game_platform = None
 
         # Parse json file
         self.parse_json_file(
-            json_file = json_file,
+            json_file = self.json_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
