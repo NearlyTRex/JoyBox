@@ -119,6 +119,13 @@ def GetTools():
 def GetEmulators():
     return emulators.GetEmulatorList()
 
+# Get emulator by platform
+def GetEmulatorByPlatform(emulator_platform):
+    for emulator in GetEmulators():
+        if emulator_platform in emulator.GetPlatforms():
+            return emulator
+    return None
+
 # Get tool config
 def GetToolConfig():
     merged_config = {}
