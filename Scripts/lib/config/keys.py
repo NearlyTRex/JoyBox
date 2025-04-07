@@ -180,6 +180,8 @@ json_key_local_cache_dir = "local_cache_dir"
 json_key_remote_cache_dir = "remote_cache_dir"
 json_key_local_rom_dir = "local_rom_dir"
 json_key_remote_rom_dir = "remote_rom_dir"
+json_key_local_save_dir = "local_save_dir"
+json_key_remote_save_dir = "remote_save_dir"
 json_keys_virtual = [
     json_key_metadata,
     json_key_save_dir,
@@ -187,7 +189,9 @@ json_keys_virtual = [
     json_key_local_cache_dir,
     json_key_remote_cache_dir,
     json_key_local_rom_dir,
-    json_key_remote_rom_dir
+    json_key_remote_rom_dir,
+    json_key_local_save_dir,
+    json_key_remote_save_dir
 ]
 
 # Computer json keys

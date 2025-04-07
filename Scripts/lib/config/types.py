@@ -358,22 +358,6 @@ class StoreType(EnumType):
     STEAM                   = ("Steam")
     ZOOM                    = ("Zoom")
 
-# Store action types
-class StoreActionType(EnumType):
-    LOGIN                   = ("Login")
-    DISPLAY_PURCHASES       = ("DisplayPurchases")
-    IMPORT_PURCHASES        = ("ImportPurchases")
-    INSTALL_GAME            = ("InstallGame")
-    LAUNCH_GAME             = ("LaunchGame")
-    DOWNLOAD_GAME           = ("DownloadGame")
-    DOWNLOAD_ASSET          = ("DownloadAsset")
-    BACKUP_GAME             = ("BackupGame")
-    UPDATE_JSON             = ("UpdateJson")
-    UPDATE_METADATA         = ("UpdateMetadata")
-    CHECK_VERSIONS          = ("CheckVersions")
-    EXPORT_SAVES            = ("ExportSaves")
-    IMPORT_SAVES            = ("ImportSaves")
-
 # Store identifier types
 class StoreIdentifierType(EnumType):
     INFO                    = ("Info")

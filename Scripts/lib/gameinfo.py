@@ -117,8 +117,14 @@ class GameInfo:
             else:
                 save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.WINE)
         general_save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.GENERAL)
-        local_cache_dir = environment.GetCacheGamingRomDir(self.game_category, self.game_subcategory, self.game_name)
-        remote_cache_dir = environment.GetCacheGamingInstallDir(self.game_category, self.game_subcategory, self.game_name)
+        local_cache_dir = environment.GetCacheGamingRomDir(
+            self.game_category,
+            self.game_subcategory,
+            self.game_name)
+        remote_cache_dir = environment.GetCacheGamingInstallDir(
+            self.game_category,
+            self.game_subcategory,
+            self.game_name)
         local_rom_dir = environment.GetLockerGamingFilesDir(
             self.game_supercategory,
             self.game_category,
@@ -126,6 +132,18 @@ class GameInfo:
             self.game_name,
             config.SourceType.LOCAL)
         remote_rom_dir = environment.GetLockerGamingFilesDir(
+            self.game_supercategory,
+            self.game_category,
+            self.game_subcategory,
+            self.game_name,
+            config.SourceType.REMOTE)
+        local_save_dir = environment.GetLockerGamingSaveDir(
+            self.game_supercategory,
+            self.game_category,
+            self.game_subcategory,
+            self.game_name,
+            config.SourceType.LOCAL)
+        remote_save_dir = environment.GetLockerGamingSaveDir(
             self.game_supercategory,
             self.game_category,
             self.game_subcategory,
@@ -139,6 +157,8 @@ class GameInfo:
         self.set_value(config.json_key_remote_cache_dir, remote_cache_dir)
         self.set_value(config.json_key_local_rom_dir, local_rom_dir)
         self.set_value(config.json_key_remote_rom_dir, remote_rom_dir)
+        self.set_value(config.json_key_local_save_dir, local_save_dir)
+        self.set_value(config.json_key_remote_save_dir, remote_save_dir)
 
     # Get json file
     def get_json_file(self):
@@ -472,6 +492,14 @@ class GameInfo:
     # Get remote rom dir
     def get_remote_rom_dir(self):
         return self.get_value(config.json_key_remote_rom_dir)
+
+    # Get local save dir
+    def get_local_save_dir(self):
+        return self.get_value(config.json_key_local_save_dir)
+
+    # Get remote save dir
+    def get_remote_save_dir(self):
+        return self.get_value(config.json_key_remote_save_dir)
 
     # Get rom dir
     def get_rom_dir(self, source_type):
