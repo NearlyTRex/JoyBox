@@ -43,6 +43,20 @@ def GetStoreMap():
 def GetStoreList():
     return GetStoreMap().values()
 
+# Prepare store
+def PrepareStore(
+    instance,
+    login = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if instance and login:
+        instance.Login(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    return instance
+
 # Get store by name
 def GetStoreByName(
     store_name,
@@ -52,12 +66,7 @@ def GetStoreByName(
     exit_on_failure = False):
     for instance in GetStoreList():
         if instance.GetName() == store_name:
-            if login:
-                instance.Login(
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-            return instance
+            return PrepareStore(instance, login, verbose, pretend_run, exit_on_failure)
     return None
 
 # Get store by type
@@ -69,12 +78,7 @@ def GetStoreByType(
     exit_on_failure = False):
     for instance in GetStoreList():
         if instance.GetType() == store_type:
-            if login:
-                instance.Login(
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-            return instance
+            return PrepareStore(instance, login, verbose, pretend_run, exit_on_failure)
     return None
 
 # Get store by platform
@@ -86,12 +90,24 @@ def GetStoreByPlatform(
     exit_on_failure = False):
     for instance in GetStoreList():
         if instance.GetPlatform() == store_platform:
-            if login:
-                instance.Login(
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-            return instance
+            return PrepareStore(instance, login, verbose, pretend_run, exit_on_failure)
+    return None
+
+# Get store by categories
+def GetStoreByCategories(
+    store_supercategory,
+    store_category,
+    store_subcategory,
+    login = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for instance in GetStoreList():
+        same_supercategory = instance.GetSupercategory() == store_supercategory
+        same_category = instance.GetCategory() == store_category
+        same_subcategory = instance.GetSubcategory() == store_subcategory
+        if same_supercategory and same_category and same_subcategory:
+            return PrepareStore(instance, login, verbose, pretend_run, exit_on_failure)
     return None
 
 # Check if store platform
@@ -117,4 +133,11 @@ def CanImportPurchases(store_platform):
     instance = GetStoreByPlatform(store_platform)
     if instance:
         return instance.CanImportPurchases()
+    return False
+
+# Check if purchases can be downloaded
+def CanDownloadPurchases(store_platform):
+    instance = GetStoreByPlatform(store_platform)
+    if instance:
+        return instance.CanDownloadPurchases()
     return False
