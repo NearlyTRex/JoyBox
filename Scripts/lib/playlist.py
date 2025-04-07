@@ -153,5 +153,5 @@ def GenerateLocalPlaylists(
             if not success:
                 return False
 
-    # Must be successful
+    # Should be successful
     return True
