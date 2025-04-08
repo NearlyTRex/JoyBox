@@ -190,10 +190,7 @@ def ImportAllStorePurchases(
 
 # Download store purchase
 def DownloadStorePurchase(
-    game_supercategory,
-    game_category,
-    game_subcategory,
-    game_name,
+    game_info,
     output_dir = None,
     skip_existing = False,
     force = False,
@@ -202,7 +199,7 @@ def DownloadStorePurchase(
     exit_on_failure = False):
 
     # Get store
-    store_obj = stores.GetStoreByCategories(game_supercategory, game_category, game_subcategory)
+    store_obj = stores.GetStoreByPlatform(game_info.get_platform())
     if not store_obj:
         return False
 
@@ -213,34 +210,24 @@ def DownloadStorePurchase(
     # Get output dir
     if output_dir:
         output_offset = environment.GetLockerGamingFilesOffset(
-            game_supercategory = game_supercategory,
-            game_category = game_category,
-            game_subcategory = game_subcategory,
-            game_name = game_name)
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name())
         output_dir = system.JoinPaths(os.path.realpath(output_dir), output_offset)
     else:
         output_dir = environment.GetLockerGamingFilesDir(
-            game_supercategory = game_supercategory,
-            game_category = game_category,
-            game_subcategory = game_subcategory,
-            game_name = game_name)
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name())
     if skip_existing and system.DoesDirectoryContainFiles(output_dir):
         return True
 
-    # Get json data
-    json_obj = ReadJsonData(
-        game_supercategory = game_supercategory,
-        game_category = game_category,
-        game_subcategory = game_subcategory,
-        game_name = game_name,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
     # Get store info
-    store_info_identifier = json_obj.get_subvalue(store_obj.GetKey(), store_obj.GetInfoIdentifierKey())
-    store_download_identifier = json_obj.get_subvalue(store_obj.GetKey(), store_obj.GetDownloadIdentifierKey())
-    store_branchid = json_obj.get_subvalue(store_obj.GetKey(), config.json_key_store_branchid)
+    store_info_identifier = game_info.get_store_info_identifier()
+    store_download_identifier = game_info.get_store_download_identifier()
+    store_branchid = game_info.get_store_branchid()
 
     # Get latest version
     latest_version = store_obj.GetLatestVersion(
@@ -255,7 +242,7 @@ def DownloadStorePurchase(
         identifier = store_download_identifier,
         branch = store_branchid,
         output_dir = output_dir,
-        output_name = "%s (%s)" % (game_name, latest_version),
+        output_name = "%s (%s)" % (game_info.get_name(), latest_version),
         clean_output = True,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -270,15 +257,26 @@ def DownloadAllStorePurchases(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                success = DownloadStorePurchases(
-                    game_supercategory = game_supercategory,
-                    game_category = game_category,
-                    game_subcategory = game_subcategory,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                if not success:
-                    return False
+                game_names = gameinfo.FindJsonGameNames(
+                    game_supercategory,
+                    game_category,
+                    game_subcategory)
+                for game_name in game_names:
+                    game_info = gameinfo.GameInfo(
+                        game_supercategory = game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_name = game_name,
+                        verbose = args.verbose,
+                        pretend_run = args.pretend_run,
+                        exit_on_failure = args.exit_on_failure)
+                    success = DownloadStorePurchases(
+                        game_info = game_info,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
 
     # Should be successful
     return True

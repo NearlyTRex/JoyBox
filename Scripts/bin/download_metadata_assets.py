@@ -48,11 +48,16 @@ def main():
             system.LogError("Game subcategory is required for custom mode", quit_program = True)
         if not args.game_name:
             system.LogError("Game name is required for custom mode", quit_program = True)
-        collection.DownloadMetadataAsset(
+        game_info = gameinfo.GameInfo(
             game_supercategory = args.game_supercategory,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
             game_name = args.game_name,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
+        collection.DownloadMetadataAsset(
+            game_info = game_info,
             asset_url = None,
             asset_type = args.asset_type,
             skip_existing = args.skip_existing,
@@ -70,11 +75,16 @@ def main():
                         game_category,
                         game_subcategory)
                     for game_name in game_names:
-                        success = collection.DownloadMetadataAsset(
+                        game_info = gameinfo.GameInfo(
                             game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,
                             game_name = game_name,
+                            verbose = args.verbose,
+                            pretend_run = args.pretend_run,
+                            exit_on_failure = args.exit_on_failure)
+                        success = collection.DownloadMetadataAsset(
+                            game_info = game_info,
                             asset_url = None,
                             asset_type = args.asset_type,
                             skip_existing = args.skip_existing,

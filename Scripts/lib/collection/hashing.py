@@ -12,9 +12,7 @@ import hashing
 
 # Build hash files
 def BuildHashFiles(
-    game_supercategory,
-    game_category,
-    game_subcategory,
+    game_info,
     game_root = None,
     passphrase = None,
     source_type = None,
@@ -25,17 +23,17 @@ def BuildHashFiles(
     # Get game root
     if not system.IsPathDirectory(game_root):
         game_root = environment.GetLockerGamingFilesDir(
-            game_supercategory = game_supercategory,
-            game_category = game_category,
-            game_subcategory = game_subcategory,
-            game_name = game_name,
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            game_name = game_info.get_name(),
             source_type = source_type)
     if not system.IsPathDirectory(game_root):
         return False
 
     # Get hash info
-    hash_file = environment.GetHashesMetadataFile(game_supercategory, game_category, game_subcategory)
-    hash_offset = system.JoinPaths(game_supercategory, game_category, game_subcategory)
+    hash_file = environment.GetHashesMetadataFile(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
+    hash_offset = system.JoinPaths(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
 
     # Hash files
     success = hashing.HashFiles(

@@ -14,10 +14,7 @@ from .hashing import BuildHashFiles
 
 # Upload game files
 def UploadGameFiles(
-    game_supercategory,
-    game_category,
-    game_subcategory,
-    game_name,
+    game_info,
     game_root,
     passphrase = None,
     verbose = False,
@@ -44,9 +41,7 @@ def UploadGameFiles(
 
     # Hash all files
     success = BuildHashFiles(
-        game_supercategory = game_supercategory,
-        game_category = game_category,
-        game_subcategory = game_subcategory,
+        game_info = game_info,
         game_root = base_path,
         passphrase = passphrase,
         verbose = verbose,

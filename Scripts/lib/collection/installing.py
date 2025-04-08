@@ -7,7 +7,6 @@ import config
 import system
 import environment
 import programs
-import saves
 import transform
 import platforms
 import locker
@@ -26,6 +25,10 @@ def IsStoreGameInstalled(game_info):
     # Get store
     store_obj = stores.GetStoreByPlatform(game_info.get_platform())
     if not store_obj:
+        return False
+
+    # Check if store handles installing
+    if not store_obj.CanHandleInstalling():
         return False
 
     # Check store install
@@ -50,6 +53,10 @@ def InstallStoreGame(
     # Get store
     store_obj = stores.GetStoreByPlatform(game_info.get_platform())
     if not store_obj:
+        return False
+
+    # Check if store handles installing
+    if not store_obj.CanHandleInstalling():
         return False
 
     # Install game
@@ -87,6 +94,10 @@ def UninstallStoreGame(
     # Get store
     store_obj = stores.GetStoreByPlatform(game_info.get_platform())
     if not store_obj:
+        return False
+
+    # Check if store handles installing
+    if not store_obj.CanHandleInstalling():
         return False
 
     # Uninstall game
@@ -250,12 +261,14 @@ def InstallLocalTransformedGame(
         return False
 
     # Add to cache
-    InstallLocalUntransformedGame(
+    success = InstallLocalUntransformedGame(
         game_info = game_info,
         source_dir = system.GetFilenameDirectory(transform_result),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Delete temporary directory
     system.RemoveDirectory(
@@ -337,7 +350,7 @@ def UninstallLocalGame(
 
 # Check if game is installed
 def IsGameInstalled(game_info):
-    if stores.CanHandleInstalling(game_info.get_platform()):
+    if stores.IsStorePlatform(game_info.get_platform()):
         return IsStoreGameInstalled(game_info)
     else:
         return IsLocalGameInstalled(game_info)
@@ -350,7 +363,7 @@ def InstallGame(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if stores.CanHandleInstalling(game_info.get_platform()):
+    if stores.IsStorePlatform(game_info.get_platform()):
         return InstallStoreGame(
             game_info = game_info,
             source_type = source_type,
@@ -373,7 +386,7 @@ def InstallGameAddons(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if stores.CanHandleInstalling(game_info.get_platform()):
+    if stores.IsStorePlatform(game_info.get_platform()):
         return InstallStoreGameAddons(
             game_info = game_info,
             verbose = verbose,
@@ -393,7 +406,7 @@ def UninstallGame(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if stores.CanHandleInstalling(game_info.get_platform()):
+    if stores.IsStorePlatform(game_info.get_platform()):
         return UninstallStoreGame(
             game_info = game_info,
             source_type = source_type,

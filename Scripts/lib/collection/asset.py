@@ -10,23 +10,19 @@ import gameinfo
 import asset
 import network
 import locker
+import stores
 import metadataassetcollector
 
 ############################################################
 
 # Check if metadata asset exists
-def DoesMetadataAssetExist(
-    game_supercategory,
-    game_category,
-    game_subcategory,
-    game_name,
-    asset_type):
+def DoesMetadataAssetExist(game_info, asset_type):
 
     # Check if exists
     output_asset_file = environment.GetLockerGamingAssetFile(
-        game_category = game_category,
-        game_subcategory = game_subcategory,
-        game_name = game_name,
+        game_category = game_info.get_category(),
+        game_subcategory = game_info.get_subcategory(),
+        game_name = game_info.get_name(),
         asset_type = asset_type)
     return system.DoesPathExist(output_asset_file)
 
@@ -34,10 +30,7 @@ def DoesMetadataAssetExist(
 
 # Download metadata asset
 def DownloadMetadataAsset(
-    game_supercategory,
-    game_category,
-    game_subcategory,
-    game_name,
+    game_info,
     asset_type,
     skip_existing = False,
     verbose = False,
@@ -46,37 +39,21 @@ def DownloadMetadataAsset(
 
     # Check if asset exists
     asset_exists = DoesMetadataAssetExist(
-        game_supercategory = game_supercategory,
-        game_category = game_category,
-        game_subcategory = game_subcategory,
-        game_name = game_name,
+        game_info = game_info,
         asset_type = asset_type)
     if skip_existing and asset_exists:
         return True
 
-    # Get platform
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-
-    # Get json file path
-    json_file_path = environment.GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
-    if not system.DoesPathExist(json_file_path):
-        return False
-
-    # Read json data
-    json_file_data = system.ReadJsonFile(
-        src = json_file_path,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Create json data object
-    json_obj = jsondata.JsonData(
-        json_data = json_file_data,
-        json_platform = game_platform)
-
     # Get output asset
-    output_asset_dir = environment.GetLockerGamingAssetDir(game_category, game_subcategory, asset_type)
-    output_asset_file = environment.GetLockerGamingAssetFile(game_category, game_subcategory, game_name, asset_type)
+    output_asset_dir = environment.GetLockerGamingAssetDir(
+        game_info.get_category(),
+        game_info.get_subcategory(),
+        asset_type)
+    output_asset_file = environment.GetLockerGamingAssetFile(
+        game_info.get_category(),
+        game_info.get_subcategory(),
+        game_info.get_name(),
+        asset_type)
     output_asset_ext = system.GetFilenameExtension(output_asset_file)
 
     # Create temporary directory
@@ -86,7 +63,7 @@ def DownloadMetadataAsset(
 
     # Get store
     store_obj = stores.GetStoreByPlatform(
-        store_platform = game_platform,
+        store_platform = game_info.get_platform(),
         login = True,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -96,15 +73,15 @@ def DownloadMetadataAsset(
     latest_asset_url = None
     if store_obj:
         latest_asset_url = store_obj.GetLatestAssetUrl(
-            identifier = json_obj.get_subvalue(store_obj.GetKey(), store_obj.GetAssetIdentifierKey()),
+            identifier = game_info.get_store_asset_identifier(),
             asset_type = asset_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
         latest_asset_url = metadataassetcollector.FindMetadataAsset(
-            game_platform = game_platform,
-            game_name = game_name,
+            game_platform = game_info.get_platform(),
+            game_name = game_info.get_name(),
             asset_type = asset_type,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -113,7 +90,7 @@ def DownloadMetadataAsset(
         return False
 
     # Get temp asset
-    tmp_asset_file_original = system.JoinPaths(tmp_dir_result, system.ReplaceInvalidPathCharacters(system.GetFilenameFile(asset_url)))
+    tmp_asset_file_original = system.JoinPaths(tmp_dir_result, system.ReplaceInvalidPathCharacters(system.GetFilenameFile(latest_asset_url)))
     tmp_asset_file_converted = tmp_asset_file_original + output_asset_ext
     system.MakeDirectory(
         src = output_asset_dir,
@@ -123,14 +100,18 @@ def DownloadMetadataAsset(
 
     # Download asset
     success = asset.DownloadAsset(
-        asset_url = asset_url,
+        asset_url = latest_asset_url,
         asset_file = tmp_asset_file_original,
         asset_type = asset_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError("Download failed for asset %s of '%s' - '%s'" % (asset_type, game_platform, game_name))
+        system.LogError(
+            message = "Download failed for asset %s " % (asset_type),
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory())
         return False
 
     # Convert asset
@@ -142,7 +123,11 @@ def DownloadMetadataAsset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError("Convert failed for asset %s of '%s' - '%s'" % (asset_type, game_platform, game_name))
+        system.LogError(
+            message = "Convert failed for asset %s " % (asset_type),
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory())
         return False
 
     # Clean asset
@@ -153,7 +138,11 @@ def DownloadMetadataAsset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError("Clean failed for asset %s of '%s' - '%s'" % (asset_type, game_platform, game_name))
+        system.LogError(
+            message = "Clean failed for asset %s " % (asset_type),
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory())
         return False
 
     # Backup asset
@@ -166,7 +155,11 @@ def DownloadMetadataAsset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError("Backup failed for asset %s of '%s' - '%s'" % (asset_type, game_platform, game_name))
+        system.LogError(
+            message = "Backup failed for asset %s " % (asset_type),
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory())
         return False
 
     # Delete temporary directory
@@ -188,19 +181,22 @@ def DownloadAllMetadataAssets(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-                game_names = gameinfo.FindLockerGameNames(
+                game_names = gameinfo.FindJsonGameNames(
                     game_supercategory,
                     game_category,
-                    game_subcategory,
-                    source_type)
+                    game_subcategory)
                 for game_name in game_names:
+                    game_info = gameinfo.GameInfo(
+                        game_supercategory = game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_name = game_name,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
                     for asset_type in config.AssetMinType.members():
                         success = DownloadMetadataAsset(
-                            game_supercategory = game_supercategory,
-                            game_category = game_category,
-                            game_subcategory = game_subcategory,
-                            game_name = game_name,
+                            game_info = game_info,
                             asset_type = asset_type,
                             skip_existing = skip_existing,
                             verbose = verbose,

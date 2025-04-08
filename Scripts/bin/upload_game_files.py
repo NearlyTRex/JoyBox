@@ -61,11 +61,16 @@ def main():
             system.LogError("Game subcategory is required for custom mode", quit_program = True)
         if not args.game_name:
             system.LogError("Game name is required for custom mode", quit_program = True)
-        success = collection.UploadGameFiles(
+        game_info = gameinfo.GameInfo(
             game_supercategory = args.game_supercategory,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
             game_name = args.game_name,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
+        success = collection.UploadGameFiles(
+            game_info = game_info,
             game_root = parser.get_input_path(),
             passphrase = passphrase,
             verbose = args.verbose,
@@ -74,10 +79,10 @@ def main():
         if not success:
             system.LogError(
                 message = "Upload of game files failed!",
-                game_supercategory = game_supercategory,
-                game_category = game_category,
-                game_subcategory = game_subcategory,
-                game_name = game_name,
+                game_supercategory = args.game_supercategory,
+                game_category = args.game_category,
+                game_subcategory = args.game_subcategory,
+                game_name = args.game_name,
                 quit_program = True)
 
     # Automatic according to standard layout
@@ -97,11 +102,16 @@ def main():
                             game_subcategory,
                             game_name,
                             args.source_type)
-                        success = collection.UploadGameFiles(
+                        game_info = gameinfo.GameInfo(
                             game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,
                             game_name = game_name,
+                            verbose = args.verbose,
+                            pretend_run = args.pretend_run,
+                            exit_on_failure = args.exit_on_failure)
+                        success = collection.UploadGameFiles(
+                            game_info = game_info,
                             game_root = game_root,
                             passphrase = passphrase,
                             verbose = args.verbose,

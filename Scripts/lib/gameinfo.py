@@ -25,10 +25,10 @@ class GameInfo:
     def __init__(
         self,
         json_file = None,
-        json_supercategory = None,
-        json_category = None,
-        json_subcategory = None,
-        json_name = None,
+        game_supercategory = None,
+        game_category = None,
+        game_subcategory = None,
+        game_name = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
@@ -38,10 +38,10 @@ class GameInfo:
         self.json_file = json_file
         if not system.IsPathFile(self.json_file):
             self.json_file = environment.GetJsonMetadataFile(
-                game_supercategory = json_supercategory,
-                game_category = json_category,
-                game_subcategory = json_subcategory,
-                game_name = json_name)
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = game_name)
         if not system.IsPathFile(self.json_file):
             raise Exception("Unable to find associated json file")
 
@@ -49,10 +49,10 @@ class GameInfo:
         self.metadata_file = None
 
         # Game info
-        self.game_supercategory = json_supercategory
-        self.game_category = json_category
-        self.game_subcategory = json_subcategory
-        self.game_name = json_name
+        self.game_supercategory = game_supercategory
+        self.game_category = game_category
+        self.game_subcategory = game_subcategory
+        self.game_name = game_name
         self.game_platform = None
 
         # Parse json file
@@ -530,6 +530,57 @@ class GameInfo:
         store_obj = stores.GetStoreByPlatform(self.get_platform())
         if store_obj:
             return store_obj.GetInstallDir()
+        return None
+
+    ##############################
+
+    # Get store info identifier
+    def get_store_info_identifier(self):
+        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        if store_obj:
+            return self.get_subvalue(store_obj.GetKey(), store_obj.GetInfoIdentifierKey())
+        return None
+
+    # Get store install identifier
+    def get_store_install_identifier(self):
+        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        if store_obj:
+            return self.get_subvalue(store_obj.GetKey(), store_obj.GetInstallIdentifierKey())
+        return None
+
+    # Get store launch identifier
+    def get_store_launch_identifier(self):
+        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        if store_obj:
+            return self.get_subvalue(store_obj.GetKey(), store_obj.GetLaunchIdentifierKey())
+        return None
+
+    # Get store download identifier
+    def get_store_download_identifier(self):
+        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        if store_obj:
+            return self.get_subvalue(store_obj.GetKey(), store_obj.GetDownloadIdentifierKey())
+        return None
+
+    # Get store asset identifier
+    def get_store_asset_identifier(self):
+        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        if store_obj:
+            return self.get_subvalue(store_obj.GetKey(), store_obj.GetAssetIdentifierKey())
+        return None
+
+    # Get store metadata identifier
+    def get_store_metadata_identifier(self):
+        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        if store_obj:
+            return self.get_subvalue(store_obj.GetKey(), store_obj.GetMetadataIdentifierKey())
+        return None
+
+    # Get store page identifier
+    def get_store_page_identifier(self):
+        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        if store_obj:
+            return self.get_subvalue(store_obj.GetKey(), store_obj.GetPageIdentifierKey())
         return None
 
     ##############################

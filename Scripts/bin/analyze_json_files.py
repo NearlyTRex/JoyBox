@@ -47,10 +47,10 @@ def main():
 
                     # Get game info
                     game_info = gameinfo.GameInfo(
-                        json_supercategory = game_supercategory,
-                        json_category = game_category,
-                        json_subcategory = game_subcategory,
-                        json_name = game_name,
+                        game_supercategory = game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_name = game_name,
                         verbose = args.verbose,
                         pretend_run = args.pretend_run,
                         exit_on_failure = args.exit_on_failure)
