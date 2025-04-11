@@ -8,6 +8,7 @@ import system
 import environment
 import archive
 import locker
+import gameinfo
 import stores
 import storebase
 import saves
@@ -36,6 +37,8 @@ def CanSaveBeUnpacked(game_info):
     input_save_dir = game_info.get_remote_save_dir()
     output_save_dir = game_info.get_save_dir()
     return IsSaveDirUnpackable(input_save_dir, output_save_dir)
+
+############################################################
 
 # Pack save
 def PackSave(
@@ -134,7 +137,41 @@ def PackSave(
     # Check result
     return system.DoesPathExist(out_save_archive_file)
 
-# Unpack individual save
+# Pack all saves
+def PackAllSaves(
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for game_supercategory in [config.Supercategory.ROMS]:
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
+                game_names = gameinfo.FindJsonGameNames(
+                    game_supercategory,
+                    game_category,
+                    game_subcategory)
+                for game_name in game_names:
+                    game_info = gameinfo.GameInfo(
+                        game_supercategory = game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_name = game_name,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    success = PackSave(
+                        game_info = game_info,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
+
+    # Should be successful
+    return True
+
+############################################################
+
+# Unpack save
 def UnpackSave(
     game_info,
     save_dir = None,
@@ -189,52 +226,39 @@ def UnpackSave(
     # Check result
     return not system.IsDirectoryEmpty(output_save_dir)
 
-############################################################
-
-# Import store paths
-def ImportStorePaths(
-    game_info,
+# Unpack all saves
+def UnpackAllSaves(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    for game_supercategory in [config.Supercategory.ROMS]:
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
+                game_names = gameinfo.FindJsonGameNames(
+                    game_supercategory,
+                    game_category,
+                    game_subcategory)
+                for game_name in game_names:
+                    game_info = gameinfo.GameInfo(
+                        game_supercategory = game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_name = game_name,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    success = UnpackSave(
+                        game_info = game_info,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
 
-    # Get store
-    store_key = game_info.get_main_store_key()
-    if not store_key:
-        return False
+    # Should be successful
+    return True
 
-    # Get store type
-    store_type = game_info.get_main_store_type()
-
-    # Get current paths
-    save_paths = game_info.get_store_paths()
-
-    # Read save files and add paths
-    for archive_file in system.BuildFileList(game_info.get_save_dir()):
-        archive_paths = archive.ListArchive(
-            archive_file = archive_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        new_paths = []
-        for archive_path in archive_paths:
-            new_path = storebase.ConvertToTokenizedPath(
-                path = archive_path,
-                store_type = store_type)
-            new_paths.append(new_path)
-        save_paths += new_paths
-
-    # Update current paths
-    save_paths = list(set(save_paths))
-    save_paths = system.PruneChildPaths(save_paths)
-    game_info.set_store_paths(save_paths)
-
-    # Write back changes
-    success = game_info.update_json_file(
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    return success
+############################################################
 
 # Get store path entries
 def GetStorePathEntries(
@@ -265,6 +289,43 @@ def GetStorePathEntries(
                 entry["relative"] = storebase.ConvertFromTokenizedPath(path, store_type = store_obj.GetType())
                 translated_paths.append(entry)
     return translated_paths
+
+# Import store game save paths
+def ImportStoreGameSavePaths(
+    game_info,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get current paths
+    save_paths = game_info.get_store_paths()
+
+    # Read save files and add paths
+    for archive_file in system.BuildFileList(game_info.get_save_dir()):
+        archive_paths = archive.ListArchive(
+            archive_file = archive_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        new_paths = []
+        for archive_path in archive_paths:
+            new_path = storebase.ConvertToTokenizedPath(
+                path = archive_path,
+                store_type = game_info.get_main_store_type())
+            new_paths.append(new_path)
+        save_paths += new_paths
+
+    # Update current paths
+    save_paths = list(set(save_paths))
+    save_paths = system.PruneChildPaths(save_paths)
+    game_info.set_store_paths(save_paths)
+
+    # Write back changes
+    success = game_info.update_json_file(
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
 
 # Import store game save
 def ImportStoreGameSave(
@@ -340,6 +401,14 @@ def ExportStoreGameSave(
 
 ############################################################
 
+# Import local game save paths
+def ImportLocalGameSavePaths(
+    game_info,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    return False
+
 # Import local game save
 def ImportLocalGameSave(
     game_info,
@@ -376,6 +445,25 @@ def ExportLocalGameSave(
     return success
 
 ############################################################
+
+# Import game save paths
+def ImportGameSavePaths(
+    game_info,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if stores.IsStorePlatform(game_info.get_platform()):
+        return ImportStoreGameSavePaths(
+            game_info = game_info,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    else:
+        return ImportLocalGameSavePaths(
+            game_info = game_info,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
 # Import game save
 def ImportGameSave(

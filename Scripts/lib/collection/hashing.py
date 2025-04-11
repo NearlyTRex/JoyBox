@@ -46,10 +46,69 @@ def BuildHashFiles(
         exit_on_failure = exit_on_failure)
     return success
 
+# Build all hash files
+def BuildAllHashFiles(
+    passphrase = None,
+    source_type = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for game_supercategory in [config.Supercategory.ROMS]:
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
+                game_names = gameinfo.FindJsonGameNames(
+                    game_supercategory,
+                    game_category,
+                    game_subcategory)
+                for game_name in game_names:
+                    game_info = gameinfo.GameInfo(
+                        game_supercategory = game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_name = game_name,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    success = BuildHashFiles(
+                        game_info = game_info,
+                        passphrase = passphrase,
+                        source_type = source_type,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
+
+    # Should be successful
+    return True
+
 ############################################################
 
-# Sort hash files
-def SortHashFiles(
+# Sort hash file
+def SortHashFile(
+    game_info,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get hash file
+    hash_file = environment.GetHashesMetadataFile(
+        game_supercategory = game_info.get_supercategory(),
+        game_category = game_info.get_category(),
+        game_subcategory = game_info.get_subcategory())
+    if not system.IsPathFile(hash_file):
+        continue
+
+    # Sort hash file
+    success = hashing.SortHashFile(
+        src = hash_file,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
+
+# Sort all hash files
+def SortAllHashFiles(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):

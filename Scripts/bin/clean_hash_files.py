@@ -25,7 +25,7 @@ def main():
     setup.CheckRequirements()
 
     # Sort hash files
-    success = collection.SortHashFiles(
+    success = collection.SortAllHashFiles(
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)

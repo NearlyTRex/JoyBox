@@ -267,9 +267,9 @@ def DownloadAllStorePurchases(
                         game_category = game_category,
                         game_subcategory = game_subcategory,
                         game_name = game_name,
-                        verbose = args.verbose,
-                        pretend_run = args.pretend_run,
-                        exit_on_failure = args.exit_on_failure)
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
                     success = DownloadStorePurchases(
                         game_info = game_info,
                         verbose = verbose,
