@@ -51,6 +51,7 @@ packages = [
     "Unidecode",
     "vdf",
     "wheel",
+    "webdriver_manager",
     "xmltodict",
     "xxhash"
 ]

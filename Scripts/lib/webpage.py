@@ -59,7 +59,8 @@ def CreateChromeWebDriver(
             from selenium.webdriver.chrome.service import Service as ChromeService
             from selenium.webdriver.chrome.options import Options as ChromeOptions
             from selenium.webdriver import Chrome
-            service = ChromeService(webdriver_tool, log_path=os.path.devnull)
+            from webdriver_manager.chrome import ChromeDriverManager
+            service = ChromeService(executable_path=ChromeDriverManager().install(), log_path=os.path.devnull)
             options = ChromeOptions()
             options.add_argument("--start-maximized")
             options.add_argument("--no-sandbox")
@@ -110,7 +111,8 @@ def CreateFirefoxWebDriver(
             from selenium.webdriver.firefox.options import Options as FirefoxOptions
             from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
             from selenium.webdriver import Firefox
-            service = FirefoxService(webdriver_tool, log_path=os.path.devnull)
+            from webdriver_manager.firefox import GeckoDriverManager
+            service = FirefoxService(executable_path=GeckoDriverManager().install())
             options = FirefoxOptions()
             if system.IsPathValid(download_dir) and system.DoesPathExist(download_dir):
                 options.set_preference("browser.download.folderList", 2)
