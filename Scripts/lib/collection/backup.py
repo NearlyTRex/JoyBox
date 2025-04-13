@@ -160,4 +160,38 @@ def BackupGameFiles(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+# Backup all game files
+def BackupAllGameFiles(
+    passphrase,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for game_supercategory in [config.Supercategory.ROMS]:
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
+                game_names = gameinfo.FindJsonGameNames(
+                    game_supercategory,
+                    game_category,
+                    game_subcategory)
+                for game_name in game_names:
+                    game_info = gameinfo.GameInfo(
+                        game_supercategory = game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_name = game_name,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    success = BackupGameFiles(
+                        game_info = game_info,
+                        passphrase = passphrase,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
+
+    # Should be successful
+    return True
+
 ###########################################################

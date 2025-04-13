@@ -464,6 +464,38 @@ def ImportGameSavePaths(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+# Import all game save paths
+def ImportAllGameSavePaths(
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for game_supercategory in [config.Supercategory.ROMS]:
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
+                game_names = gameinfo.FindJsonGameNames(
+                    game_supercategory,
+                    game_category,
+                    game_subcategory)
+                for game_name in game_names:
+                    game_info = gameinfo.GameInfo(
+                        game_supercategory = game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_name = game_name,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    success = ImportGameSavePaths(
+                        game_info = game_info,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
+
+    # Should be successful
+    return True
+
 # Import game save
 def ImportGameSave(
     game_info,
@@ -483,6 +515,38 @@ def ImportGameSave(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+# Import all game save
+def ImportAllGameSaves(
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for game_supercategory in [config.Supercategory.ROMS]:
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
+                game_names = gameinfo.FindJsonGameNames(
+                    game_supercategory,
+                    game_category,
+                    game_subcategory)
+                for game_name in game_names:
+                    game_info = gameinfo.GameInfo(
+                        game_supercategory = game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_name = game_name,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    success = ImportGameSave(
+                        game_info = game_info,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
+
+    # Should be successful
+    return True
+
 # Export game save
 def ExportGameSave(
     game_info,
@@ -501,5 +565,37 @@ def ExportGameSave(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+
+# Export all game save
+def ExportAllGameSave(
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for game_supercategory in [config.Supercategory.ROMS]:
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
+                game_names = gameinfo.FindJsonGameNames(
+                    game_supercategory,
+                    game_category,
+                    game_subcategory)
+                for game_name in game_names:
+                    game_info = gameinfo.GameInfo(
+                        game_supercategory = game_supercategory,
+                        game_category = game_category,
+                        game_subcategory = game_subcategory,
+                        game_name = game_name,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    success = ExportGameSave(
+                        game_info = game_info,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
+
+    # Should be successful
+    return True
 
 ############################################################
