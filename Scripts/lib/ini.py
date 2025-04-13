@@ -39,31 +39,31 @@ def HasIniField(section, field):
         raise RuntimeError("Unable to check ini field [file=%s][section=%s][field=%s]" % (ini_file, section, field))
 
 # Get ini value
-def GetIniValue(section, field):
+def GetIniValue(section, field, default_value = None):
     try:
         ini_parser.read(ini_file)
-        return ini_parser[section][field]
+        return ini_parser.get(section, field, fallback = default_value)
     except:
         raise RuntimeError("Unable to get ini value [file=%s][section=%s][field=%s]" % (ini_file, section, field))
 
 # Get ini integer value
-def GetIniIntegerValue(section, field):
+def GetIniIntegerValue(section, field, default_value = None):
     try:
-        value = GetIniValue(section, field)
-        return int(value)
+        ini_parser.read(ini_file)
+        return ini_parser.getint(section, field, fallback = default_value)
     except:
         raise RuntimeError("Unable to get ini integer value [file=%s][section=%s][field=%s]" % (ini_file, section, field))
 
 # Get ini bool value
-def GetIniBoolValue(section, field):
+def GetIniBoolValue(section, field, default_value = None):
     try:
-        value = GetIniValue(section, field)
-        return value == "True"
+        ini_parser.read(ini_file)
+        return ini_parser.getboolean(section, field, fallback = default_value)
     except:
         raise RuntimeError("Unable to get ini boolean value [file=%s][section=%s][field=%s]" % (ini_file, section, field))
 
 # Get ini path value
-def GetIniPathValue(section, field):
+def GetIniPathValue(section, field, default_value = None):
     try:
         value = GetIniValue(section, field)
         return os.path.expandvars(value)
@@ -71,7 +71,7 @@ def GetIniPathValue(section, field):
         raise RuntimeError("Unable to get ini path value [file=%s][section=%s][field=%s]" % (ini_file, section, field))
 
 # Get ini list value
-def GetIniListValue(section, field, delimiter = ","):
+def GetIniListValue(section, field, delimiter = ",", default_value = None):
     try:
         value = GetIniValue(section, field)
         return value.split(delimiter)
