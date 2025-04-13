@@ -97,7 +97,7 @@ def SortHashFile(
         game_category = game_info.get_category(),
         game_subcategory = game_info.get_subcategory())
     if not system.IsPathFile(hash_file):
-        continue
+        return False
 
     # Sort hash file
     success = hashing.SortHashFile(

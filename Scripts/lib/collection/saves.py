@@ -11,7 +11,6 @@ import locker
 import gameinfo
 import stores
 import storebase
-import saves
 
 ############################################################
 
