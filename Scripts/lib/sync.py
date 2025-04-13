@@ -213,6 +213,7 @@ def SetupAutoconnectRemote(
 def SetupManualRemote(
     remote_name,
     remote_type,
+    remote_token = None,
     remote_config = None,
     verbose = False,
     pretend_run = False,
@@ -286,24 +287,30 @@ def SetupEncryptedRemote(
 def SetupRemote(
     remote_name,
     remote_type,
+    remote_token = None,
+    remote_config = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # B2 requires manual setting
-    if remote_type == config.RemoteType.B2:
-        return SetupManualRemote(
+    # Drive can use automatic setting
+    if remote_type == config.RemoteType.DRIVE:
+        return SetupAutoconnectRemote(
             remote_type = remote_type,
             remote_name = remote_name,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Others should use autoconnect
+    # Others should use manual
     else:
-        return SetupAutoconnectRemote(
+        if isinstance(remote_config, str):
+            remote_config = system.ParseJsonString(remote_config)
+        return SetupManualRemote(
             remote_type = remote_type,
             remote_name = remote_name,
+            remote_token = remote_token,
+            remote_config = remote_config,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

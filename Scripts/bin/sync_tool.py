@@ -44,6 +44,8 @@ def main():
     remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
     remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
     remote_path = ini.GetIniValue("UserData.Share", "locker_remote_path")
+    remote_token = ini.GetIniValue("UserData.Share", "locker_remote_token")
+    remote_config = ini.GetIniValue("UserData.Share", "locker_remote_config")
     local_path = ini.GetIniPathValue("UserData.Share", "locker_local_path")
     mount_path = ini.GetIniPathValue("UserData.Share", "locker_remote_mount_path")
     mount_flags = ini.GetIniValue("UserData.Share", "locker_remote_mount_flags").split(",")
@@ -53,6 +55,8 @@ def main():
         sync.SetupRemote(
             remote_name = remote_name,
             remote_type = remote_type,
+            remote_token = remote_token,
+            remote_config = remote_config,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

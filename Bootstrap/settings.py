@@ -40,13 +40,14 @@ ini_defaults["UserData.Share"]["locker_remote_type"] = ""
 ini_defaults["UserData.Share"]["locker_remote_name"] = ""
 ini_defaults["UserData.Share"]["locker_remote_path"] = "/"
 ini_defaults["UserData.Share"]["locker_remote_token"] = ""
-if environment.IsWindowsPlatform():
-    ini_defaults["UserData.Share"]["locker_local_path"] = "%USERPROFILE%\\Locker"
-    ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "%USERPROFILE%\\LockerRemote"
-else:
-    ini_defaults["UserData.Share"]["locker_local_path"] = "$HOME/Locker"
-    ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "$HOME/LockerRemote"
+ini_defaults["UserData.Share"]["locker_remote_config"] = ""
 ini_defaults["UserData.Share"]["locker_remote_mount_flags"] = "no_checksum,no_modtime"
+if environment.IsWindowsPlatform():
+    ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "%USERPROFILE%\\LockerRemote"
+    ini_defaults["UserData.Share"]["locker_local_path"] = "%USERPROFILE%\\Locker"
+else:
+    ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "$HOME/LockerRemote"
+    ini_defaults["UserData.Share"]["locker_local_path"] = "$HOME/Locker"
 
 # UserData.Scraping
 ini_defaults["UserData.Scraping"] = {}

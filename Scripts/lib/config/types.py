@@ -227,6 +227,7 @@ class SaveActionType(EnumType):
 class RemoteType(EnumType):
     DRIVE                   = ("Drive")
     B2                      = ("B2")
+    WEBDAV                  = ("WebDAV")
 
 # Remote action types
 class RemoteActionType(EnumType):
