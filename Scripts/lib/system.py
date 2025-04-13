@@ -1684,6 +1684,20 @@ def RemoveObject(obj, verbose = False, pretend_run = False, exit_on_failure = Fa
 
 ###########################################################
 
+# Parse json string
+def ParseJsonString(string, verbose = False, pretend_run = False, exit_on_failure = False):
+    try:
+        if verbose:
+            LogInfo("Parsing %s" % string)
+        json_data = json.loads(string)
+        return json_data
+    except Exception as e:
+        if exit_on_failure:
+            LogError("Unable to read %s" % string)
+            LogError(e)
+            QuitProgram()
+        return {}
+
 # Read json file
 def ReadJsonFile(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
