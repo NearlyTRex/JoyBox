@@ -115,6 +115,12 @@ class CommandOptions:
     def set_is_shell(self, value):
         self.options.set_value(config.program_key_is_shell, value)
 
+    # Daemon execution
+    def is_daemon(self):
+        return self.options.get_value(config.program_key_is_daemon, False)
+    def set_is_daemon(self, value):
+        self.options.set_value(config.program_key_is_daemon, value)
+
     # 32-bit execution
     def is_32_bit(self):
         return self.options.get_value(config.program_key_is_32_bit, False)

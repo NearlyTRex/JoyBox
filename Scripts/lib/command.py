@@ -452,45 +452,57 @@ def RunReturncodeCommand(
                 shell = options.is_shell(),
                 cwd = options.get_cwd(),
                 env = options.get_env(),
-                creationflags = options.get_creationflags(),
-                stdout = subprocess.PIPE,
-                stderr = subprocess.PIPE,
+                creationflags = options.get_creationflags() if not options.is_daemon() else (
+                    subprocess.DETACHED_PROCESS if os.name == 'nt' else 0
+                ),
+                stdout = subprocess.DEVNULL if options.is_daemon() else subprocess.PIPE,
+                stderr = subprocess.DEVNULL if options.is_daemon() else subprocess.PIPE,
+                stdin = subprocess.DEVNULL if options.is_daemon() else None,
+                preexec_fn = os.setsid if options.is_daemon() and os.name != 'nt' else None,
                 text = True,
                 bufsize = 1)
 
-            # Reads from process output and logs it while writing to a file if needed
-            def handle_output(pipe, log_func, file_target):
-                while True:
-                    line = pipe.readline()
-                    if not line and process.poll() is not None:
-                        break
-                    if line:
-                        log_func(line.strip())
-                        if file_target:
-                            file_target.write(line)
-                            file_target.flush()
+            # Skip I/O threads if running as daemon
+            if not options.is_daemon():
 
-            # Reads user input and forwards it to the subprocess
-            def handle_input():
-                while process.poll() is None:
-                    try:
-                        user_input = sys.stdin.readline()
-                        if user_input:
-                            process.stdin.write(user_input)
-                            process.stdin.flush()
-                    except EOFError:
-                        break
+                # Reads from process output and logs it while writing to a file if needed
+                def handle_output(pipe, log_func, file_target):
+                    while True:
+                        line = pipe.readline()
+                        if not line and process.poll() is not None:
+                            break
+                        if line:
+                            log_func(line.strip())
+                            if file_target:
+                                file_target.write(line)
+                                file_target.flush()
 
-            # Create threads to handle real-time I/O
-            stdout_thread = threading.Thread(target = handle_output, args = (process.stdout, system.LogInfo, stdout_target))
-            stderr_thread = threading.Thread(target = handle_output, args = (process.stderr, system.LogInfo, stderr_target))
-            stdout_thread.start()
-            stderr_thread.start()
+                # Reads user input and forwards it to the subprocess
+                def handle_input():
+                    while process.poll() is None:
+                        try:
+                            user_input = sys.stdin.readline()
+                            if user_input:
+                                process.stdin.write(user_input)
+                                process.stdin.flush()
+                        except EOFError:
+                            break
 
-            # Wait for process to complete
-            process.wait()
-            stdout_thread.join()
-            stderr_thread.join()
+                # Create threads to handle real-time I/O
+                stdout_thread = threading.Thread(target = handle_output, args = (process.stdout, system.LogInfo, stdout_target))
+                stderr_thread = threading.Thread(target = handle_output, args = (process.stderr, system.LogInfo, stderr_target))
+                stdout_thread.start()
+                stderr_thread.start()
+
+                # Wait for process to complete
+                process.wait()
+                stdout_thread.join()
+                stderr_thread.join()
+
+            else:
+
+                # Sleep a tiny bit to allow startup before moving on
+                system.SleepProgram(0.5)
 
             # Close file handles if used
             if stdout_target:
@@ -509,7 +521,7 @@ def RunReturncodeCommand(
                     options = options,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
-            return process.returncode
+            return 0 if options.is_daemon() else process.returncode
         return 0
     except subprocess.CalledProcessError as e:
         if verbose:

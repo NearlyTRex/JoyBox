@@ -867,6 +867,10 @@ def MountFiles(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Ignore already mounted
+    if system.DoesPathExist(mount_path) and not system.IsDirectoryEmpty(mount_path):
+        return True
+
     # Create mount point
     if environment.IsUnixPlatform():
         system.MakeDirectory(
@@ -913,11 +917,16 @@ def MountFiles(
     if read_only:
         mount_cmd += ["--read-only"]
     if verbose:
-        mount_cmd += ["--verbose"]
+        mount_cmd += [
+            "--log-file", "/tmp/rclone.log",
+            "--log-level", "INFO"
+        ]
 
     # Run mount command
     code = command.RunReturncodeCommand(
         cmd = mount_cmd,
+        options = command.CreateCommandOptions(
+            is_daemon = environment.IsUnixPlatform()),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

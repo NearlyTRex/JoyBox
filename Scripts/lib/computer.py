@@ -95,6 +95,12 @@ class Program(jsondata.JsonData):
     def is_shell(self):
         return self.get_value(config.program_key_is_shell, False)
 
+    # Is daemon program
+    def set_is_daemon(self, value):
+        self.set_value(config.program_key_is_daemon, value)
+    def is_daemon(self):
+        return self.get_value(config.program_key_is_daemon, False)
+
     # Is 32-bit program
     def set_is_32_bit(self, value):
         self.set_value(config.program_key_is_32_bit, value)
