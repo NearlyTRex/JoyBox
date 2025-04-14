@@ -64,9 +64,9 @@ class Amazon(storebase.StoreBase):
             config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
             config.StoreIdentifierType.LAUNCH: config.json_key_store_appid,
             config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appid,
-            config.StoreIdentifierType.ASSET: config.json_key_store_appid,
+            config.StoreIdentifierType.ASSET: config.json_key_store_name,
             config.StoreIdentifierType.METADATA: config.json_key_store_name,
-            config.StoreIdentifierType.PAGE: config.json_key_store_appid
+            config.StoreIdentifierType.PAGE: config.json_key_store_name
         }
 
     # Get install dir
