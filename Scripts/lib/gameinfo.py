@@ -342,23 +342,25 @@ class GameInfo:
 
     # Get name
     def get_name(self):
-        return self.get_metadata_value(config.metadata_key_game)
+        return self.game_name
 
     # Get supercategory
     def get_supercategory(self):
-        return self.get_metadata_value(config.metadata_key_supercategory)
+        return self.game_supercategory
 
     # Get category
     def get_category(self):
-        return self.get_metadata_value(config.metadata_key_category)
+        return self.game_category
 
     # Get subcategory
     def get_subcategory(self):
-        return self.get_metadata_value(config.metadata_key_subcategory)
+        return self.game_subcategory
 
     # Get platform
     def get_platform(self):
-        return self.get_metadata_value(config.metadata_key_platform)
+        return self.game_platform
+
+    ##############################
 
     # Check if coop
     def is_coop(self):
