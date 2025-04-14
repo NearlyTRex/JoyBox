@@ -9,9 +9,9 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import config
 import system
-import saves
 import arguments
 import setup
+import collection
 import gameinfo
 
 # Parse arguments
@@ -44,10 +44,16 @@ def main():
                         game_category,
                         game_subcategory)
                     for game_name in game_names:
-                        success = saves.PackSave(
+                        game_info = gameinfo.GameInfo(
+                            game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,
                             game_name = game_name,
+                            verbose = verbose,
+                            pretend_run = pretend_run,
+                            exit_on_failure = exit_on_failure)
+                        success = collection.PackSave(
+                            game_info = game_info,
                             verbose = args.verbose,
                             pretend_run = args.pretend_run,
                             exit_on_failure = args.exit_on_failure)
@@ -70,10 +76,16 @@ def main():
                         game_category,
                         game_subcategory)
                     for game_name in game_names:
-                        success = saves.UnpackSave(
+                        game_info = gameinfo.GameInfo(
+                            game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,
                             game_name = game_name,
+                            verbose = verbose,
+                            pretend_run = pretend_run,
+                            exit_on_failure = exit_on_failure)
+                        success = collection.UnpackSave(
+                            game_info = game_info,
                             verbose = args.verbose,
                             pretend_run = args.pretend_run,
                             exit_on_failure = args.exit_on_failure)
@@ -96,10 +108,16 @@ def main():
                         game_category,
                         game_subcategory)
                     for game_name in game_names:
-                        success = saves.ImportSavePaths(
+                        game_info = gameinfo.GameInfo(
+                            game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,
                             game_name = game_name,
+                            verbose = verbose,
+                            pretend_run = pretend_run,
+                            exit_on_failure = exit_on_failure)
+                        success = collection.ImportGameSavePaths(
+                            game_info = game_info,
                             verbose = args.verbose,
                             pretend_run = args.pretend_run,
                             exit_on_failure = args.exit_on_failure)
