@@ -311,7 +311,7 @@ def GetLockerGamingSavesRootDir(source_type = None):
         config.Supercategory.SAVES)
 
 # Get locker gaming save dir
-def GetLockerGamingSaveDir(game_category, game_subcategory, game_name, source_type = None):
+def GetLockerGamingSaveDir(game_supercategory, game_category, game_subcategory, game_name, source_type = None):
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
     game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
     return system.JoinPaths(
