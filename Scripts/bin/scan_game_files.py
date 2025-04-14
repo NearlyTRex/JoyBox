@@ -30,8 +30,6 @@ parser.add_enum_argument(
     args = ("-t", "--passphrase_type"),
     arg_type = config.PassphraseType,
     description = "Passphrase type")
-parser.add_boolean_argument(args = ("-s", "--skip_existing"), description = "Skip existing entries")
-parser.add_boolean_argument(args = ("-f", "--force"), description = "Always run action")
 parser.add_string_argument(args = ("-k", "--keys"), description = "Keys to use (comma delimited)")
 parser.add_boolean_argument(args = ("-m", "--load_manifest"), description = "Load manifest")
 parser.add_common_arguments()
@@ -81,8 +79,6 @@ def main():
     # Build metadata files
     system.LogInfo("Building metadata files ...")
     success = collection.BuildMetadataEntries(
-        keys = args.keys,
-        force = args.force,
         source_type = args.source_type,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
@@ -93,7 +89,7 @@ def main():
     # Download metadata assets
     system.LogInfo("Downloading metadata assets ...")
     success = collection.DownloadAllMetadataAssets(
-        skip_existing = args.skip_existing,
+        skip_existing = True,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
