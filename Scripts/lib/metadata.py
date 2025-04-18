@@ -329,69 +329,69 @@ class Metadata:
                 for game_entry in self.get_sorted_entries(game_platform):
 
                     # Game
-                    if game_entry.is_key_set(config.metadata_key_game):
+                    if game_entry.get_game():
                         file.write("game: " + game_entry.get_game() + "\n")
 
                     # File
-                    if game_entry.is_key_set(config.metadata_key_file):
+                    if game_entry.get_file():
                         file.write("file: " + game_entry.get_file() + "\n")
 
                     # Developer
-                    if game_entry.is_key_set(config.metadata_key_developer):
+                    if game_entry.get_developer():
                         file.write("developer: " + game_entry.get_developer() + "\n")
 
                     # Publisher
-                    if game_entry.is_key_set(config.metadata_key_publisher):
+                    if game_entry.get_publisher():
                         file.write("publisher: " + game_entry.get_publisher() + "\n")
 
                     # Genre
-                    if game_entry.is_key_set(config.metadata_key_genre):
+                    if game_entry.get_genre():
                         file.write("genre: " + game_entry.get_genre() + "\n")
 
                     # Description
-                    if game_entry.is_key_set(config.metadata_key_description):
+                    if game_entry.get_description():
                         file.write("description:\n")
                         for desc_line in game_entry.get_description():
                             file.write("  " + desc_line + "\n")
 
                     # Release
-                    if game_entry.is_key_set(config.metadata_key_release):
+                    if game_entry.get_release():
                         file.write("release: " + game_entry.get_release() + "\n")
 
                     # Players
-                    if game_entry.is_key_set(config.metadata_key_players):
+                    if game_entry.get_players():
                         file.write("players: " + game_entry.get_players() + "\n")
 
                     # Boxfront
-                    if game_entry.is_key_set(config.metadata_key_boxfront):
+                    if game_entry.get_boxfront():
                         file.write("assets.boxfront: " + game_entry.get_boxfront() + "\n")
 
                     # Boxback
-                    if game_entry.is_key_set(config.metadata_key_boxback):
+                    if game_entry.get_boxback():
                         file.write("assets.boxback: " + game_entry.get_boxback() + "\n")
 
                     # Background
-                    if game_entry.is_key_set(config.metadata_key_background):
+                    if game_entry.get_background():
                         file.write("assets.background: " + game_entry.get_background() + "\n")
 
                     # Screenshot
-                    if game_entry.is_key_set(config.metadata_key_screenshot):
+                    if game_entry.get_screenshot():
                         file.write("assets.screenshot: " + game_entry.get_screenshot() + "\n")
 
                     # Video
-                    if game_entry.is_key_set(config.metadata_key_video):
+                    if game_entry.get_video():
                         file.write("assets.video: " + game_entry.get_video() + "\n")
 
                     # Url
-                    if game_entry.is_key_set(config.metadata_key_url):
+                    if game_entry.get_url():
                         file.write("x-url: " + game_entry.get_url() + "\n")
 
                     # Co-op
-                    if game_entry.is_key_set(config.metadata_key_coop):
+                    if game_entry.get_coop():
                         file.write("x-co-op: " + game_entry.get_coop() + "\n")
 
                     # Playable
-                    if game_entry.is_key_set(config.metadata_key_playable):
+                    if game_entry.get_playable():
                         file.write("x-playable: " + game_entry.get_playable() + "\n")
 
                     # Divider
