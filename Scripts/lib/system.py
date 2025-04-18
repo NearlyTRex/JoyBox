@@ -17,6 +17,9 @@ import json
 import csv
 import time
 import datetime
+from datetime import datetime, timedelta
+from dateutil import parser as date_parser
+from dateutil.relativedelta import relativedelta
 import urllib.parse
 import collections.abc
 import uuid
@@ -249,15 +252,33 @@ def RemoveStringTagSequences(string):
 
 # Get datetime from string
 def GetDatetimeFromString(string, format_code):
-    return datetime.datetime.strptime(string, format_code)
+    return datetime.strptime(string, format_code)
 
 # Get datetime from unknown string
 def GetDatetimeFromUnknownString(string):
+
+    # Try using standard and fuzzy formats first
+    string = string.strip().lower()
     try:
-        import dateutil.parser
-        return dateutil.parser.parse(string)
+        return date_parser.parse(string, fuzzy = True)
     except:
-        return None
+        pass
+
+    # Handle other patterns
+    patterns = [
+        (r"(\d+)\s+days?\s+ago", lambda x: datetime.now() - timedelta(days=int(x))),
+        (r"(\d+)\s+weeks?\s+ago", lambda x: datetime.now() - timedelta(weeks=int(x))),
+        (r"(\d+)\s+months?\s+ago", lambda x: datetime.now() - relativedelta(months=int(x))),
+        (r"(\d+)\s+years?\s+ago", lambda x: datetime.now() - relativedelta(years=int(x))),
+        (r"yesterday", lambda _: datetime.now() - timedelta(days=1)),
+        (r"today", lambda _: datetime.now()),
+        (r"an hour ago", lambda _: datetime.now() - timedelta(hours=1)),
+    ]
+    for pattern, handler in patterns:
+        match = re.match(pattern, string)
+        if match:
+            return handler(match.group(1) if match.groups() else None)
+    return None
 
 # Convert datetime to string
 def GetStringFromDatetime(date_time, format_code):
@@ -265,10 +286,11 @@ def GetStringFromDatetime(date_time, format_code):
 
 # Convert datetime to string
 def ConvertDateString(string, old_format_code, new_format_code):
-    date_time = GetDatetimeFromString(string, old_format_code)
-    if date_time:
-        return GetStringFromDatetime(date_time, new_format_code)
-    return None
+    try:
+        date_time = GetDatetimeFromString(string, old_format_code)
+    except Exception:
+        date_time = GetDatetimeFromUnknownString(string)
+    return GetStringFromDatetime(date_time, new_format_code) if date_time else None
 
 # Convert unknown date string
 def ConvertUnknownDateString(string, new_format_code):
