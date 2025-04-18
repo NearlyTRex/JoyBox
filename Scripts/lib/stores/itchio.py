@@ -233,6 +233,7 @@ class Itchio(storebase.StoreBase):
 
         # Connect to web
         web_driver = self.WebConnect(
+            headless = True,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
