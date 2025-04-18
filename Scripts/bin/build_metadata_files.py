@@ -8,23 +8,19 @@ import sys
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import config
+import environment
 import system
+import gameinfo
 import collection
 import arguments
 import setup
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Build metadata files.")
-parser.add_input_path_argument()
 parser.add_game_supercategory_argument()
 parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
 parser.add_game_name_argument()
-parser.add_enum_argument(
-    args = ("-l", "--source_type"),
-    arg_type = config.SourceType,
-    default = config.SourceType.REMOTE,
-    description = "Source type")
 parser.add_enum_argument(
     args = ("-m", "--generation_mode"),
     arg_type = config.GenerationModeType,
@@ -52,8 +48,6 @@ def main():
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
             game_name = args.game_name,
-            game_root = parser.get_input_path(),
-            source_type = args.source_type,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
@@ -71,18 +65,16 @@ def main():
         for game_supercategory in parser.get_selected_supercategories():
             for game_category, game_subcategories in parser.get_selected_subcategories().items():
                 for game_subcategory in game_subcategories:
-                    game_names = gameinfo.FindLockerGameNames(
+                    game_names = gameinfo.FindJsonGameNames(
                         game_supercategory,
                         game_category,
-                        game_subcategory,
-                        args.source_type)
+                        game_subcategory)
                     for game_name in game_names:
                         success = collection.BuildMetadataEntry(
                             game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,
                             game_name = game_name,
-                            source_type = args.source_type,
                             verbose = args.verbose,
                             pretend_run = args.pretend_run,
                             exit_on_failure = args.exit_on_failure)

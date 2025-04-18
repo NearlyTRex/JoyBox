@@ -18,7 +18,6 @@ import setup
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Backup game files.")
-parser.add_input_path_argument()
 parser.add_game_supercategory_argument()
 parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
@@ -71,7 +70,6 @@ def main():
             exit_on_failure = args.exit_on_failure)
         success = collection.BackupGameFiles(
             game_info = game_info,
-            game_root = parser.get_input_path(),
             passphrase = passphrase,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -90,18 +88,11 @@ def main():
         for game_supercategory in parser.get_selected_supercategories():
             for game_category, game_subcategories in parser.get_selected_subcategories().items():
                 for game_subcategory in game_subcategories:
-                    game_names = gameinfo.FindLockerGameNames(
+                    game_names = gameinfo.FindJsonGameNames(
                         game_supercategory,
                         game_category,
-                        game_subcategory,
-                        args.source_type)
+                        game_subcategory)
                     for game_name in game_names:
-                        game_root = environment.GetLockerGamingFilesDir(
-                            game_supercategory,
-                            game_category,
-                            game_subcategory,
-                            game_name,
-                            args.source_type)
                         game_info = gameinfo.GameInfo(
                             game_supercategory = game_supercategory,
                             game_category = game_category,
@@ -112,7 +103,6 @@ def main():
                             exit_on_failure = args.exit_on_failure)
                         success = collection.BackupGameFiles(
                             game_info = game_info,
-                            game_root = game_root,
                             passphrase = passphrase,
                             verbose = args.verbose,
                             pretend_run = args.pretend_run,

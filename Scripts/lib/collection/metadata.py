@@ -10,6 +10,8 @@ import gameinfo
 import platforms
 import metadata
 import metadataentry
+import stores
+from .jsondata import ReadJsonData
 
 ############################################################
 
@@ -56,7 +58,7 @@ def CreateMetadataEntry(
         return True
 
     # Get json file path
-    json_file_path = environment.GetJsonMetadataFile(config.Supercategory.ROMS, game_category, game_subcategory, game_name)
+    json_file_path = environment.GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
     json_file_path = system.RebaseFilePath(
         path = json_file_path,
         old_base_path = environment.GetJsonMetadataRootDir(),
@@ -130,6 +132,16 @@ def UpdateMetadataEntry(
     if not metadata_obj.has_game(game_platform, game_name):
         return True
 
+    # Get json data
+    json_obj = ReadJsonData(
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
     # Get game entry
     game_entry = metadata_obj.get_game(game_platform, game_name)
 
@@ -145,7 +157,6 @@ def UpdateMetadataEntry(
     # Get store
     store_obj = stores.GetStoreByPlatform(
         store_platform = game_platform,
-        login = True,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -192,75 +203,45 @@ def BuildMetadataEntry(
     game_category,
     game_subcategory,
     game_name,
-    game_root = None,
     keys = [],
     force = False,
-    source_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get game root
-    if not system.IsPathDirectory(game_root):
-        game_root = environment.GetLockerGamingFilesDir(
-            game_supercategory = game_supercategory,
-            game_category = game_category,
-            game_subcategory = game_subcategory,
-            game_name = game_name,
-            source_type = source_type)
-    if not system.IsPathDirectory(game_root):
-        return False
 
     # Log categories
     system.LogInfo("Building metadata [Category: '%s', Subcategory: '%s', Name: '%s'] ..." %
         (game_category, game_subcategory, game_name))
 
-    # Gather directories to scan
-    game_directories = set()
-    if platforms.IsLetterPlatform(game_platform):
-        for obj in system.GetDirectoryContents(game_root):
-            game_directories.add(system.GetFilenameDirectory(system.JoinPaths(game_root, obj)))
-    else:
-        game_directories.add(system.GetFilenameDirectory(game_root))
+    # Create metadata entry
+    success = CreateMetadataEntry(
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
-    # Add metadata entries
-    for game_directory in sorted(game_directories):
-        if game_directory.endswith(")"):
-
-            # Create metadata entry
-            success = CreateMetadataEntry(
-                game_supercategory = game_supercategory,
-                game_category = game_category,
-                game_subcategory = game_subcategory,
-                game_name = system.GetDirectoryName(game_directory),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-
-            # Update metadata entry
-            success = UpdateMetadataEntry(
-                game_supercategory = game_supercategory,
-                game_category = game_category,
-                game_subcategory = game_subcategory,
-                game_name = system.GetDirectoryName(game_directory),
-                keys = keys,
-                force = force,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-
-    # Should be successful
-    return True
+    # Update metadata entry
+    success = UpdateMetadataEntry(
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        keys = keys,
+        force = force,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return success
 
 # Build metadata entries
 def BuildMetadataEntries(
     keys = [],
     force = False,
-    source_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -268,11 +249,10 @@ def BuildMetadataEntries(
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
                 game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-                game_names = gameinfo.FindLockerGameNames(
+                game_names = gameinfo.FindJsonGameNames(
                     game_supercategory,
                     game_category,
-                    game_subcategory,
-                    source_type)
+                    game_subcategory)
                 for game_name in game_names:
                     success = BuildMetadataEntry(
                         game_supercategory = game_supercategory,
@@ -281,7 +261,6 @@ def BuildMetadataEntries(
                         game_name = game_name,
                         keys = keys,
                         force = force,
-                        source_type = source_type,
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
