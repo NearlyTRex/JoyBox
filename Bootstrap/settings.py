@@ -104,6 +104,7 @@ else:
 # UserData.GOG
 ini_defaults["UserData.GOG"] = {}
 ini_defaults["UserData.GOG"]["gog_username"] = ""
+ini_defaults["UserData.GOG"]["gog_email"] = ""
 ini_defaults["UserData.GOG"]["gog_platform"] = "windows"
 ini_defaults["UserData.GOG"]["gog_includes"] = "i,e"
 ini_defaults["UserData.GOG"]["gog_excludes"] = ""
@@ -114,6 +115,9 @@ else:
 
 # UserData.HumbleBundle
 ini_defaults["UserData.HumbleBundle"] = {}
+ini_defaults["UserData.HumbleBundle"]["humblebundle_email"] = ""
+ini_defaults["UserData.HumbleBundle"]["humblebundle_platform"] = "windows"
+ini_defaults["UserData.HumbleBundle"]["humblebundle_auth_token"] = ""
 if environment.IsWindowsPlatform():
     ini_defaults["UserData.HumbleBundle"]["humblebundle_install_dir"] = "C:\\Program Files (x86)\\Humble Bundle"
 else:
