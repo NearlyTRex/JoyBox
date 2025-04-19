@@ -1798,9 +1798,8 @@ def CleanJsonFile(src, sort_keys = False, remove_empty_values = False, verbose =
 
 # Search json files
 def SearchJsonFiles(src, search_values = [], search_keys = [], verbose = False, pretend_run = False, exit_on_failure = False):
-    json_files = BuildFileListByExtensions(src, extensions = [".json"])
-    json_matches = []
-    for json_file in json_files:
+    found_files = []
+    for json_file in BuildFileListByExtensions(src, extensions = [".json"]):
         json_data = ReadJsonFile(
             src = json_file,
             verbose = verbose,
@@ -1808,11 +1807,13 @@ def SearchJsonFiles(src, search_values = [], search_keys = [], verbose = False, 
             exit_on_failure = exit_on_failure)
         for search_value in search_values:
             if search_value:
-                json_matches += SearchDictionary(
+                json_matches = SearchDictionary(
                     data = json_data,
                     search_value = search_value,
                     search_keys = search_keys)
-    return json_matches
+                if len(json_matches):
+                    found_files.append(json_file)
+    return found_files
 
 ###########################################################
 
