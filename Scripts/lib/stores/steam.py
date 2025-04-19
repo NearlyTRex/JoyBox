@@ -449,34 +449,71 @@ class Steam(storebase.StoreBase):
 
         # Parse json
         purchases = []
-        if "response" in steam_json:
-            if "games" in steam_json["response"]:
-                for entry in steam_json["response"]["games"]:
+        for entry in steam_json.get("response", {}).get("games", []):
 
-                    # Gather info
-                    line_appid = str(entry["appid"])
-                    line_title = entry["name"]
-                    line_keys = []
-                    line_paths = [
-                        system.JoinPaths(config.token_store_install_dir, "userdata", config.token_store_user_id, line_appid)
-                    ]
+            # Gather info
+            line_appid = str(entry.get("appid", ""))
+            line_title = str(entry.get("name", ""))
+            line_keys = []
+            line_paths = [
+                system.JoinPaths(config.token_store_install_dir, "userdata", config.token_store_user_id, line_appid)
+            ]
 
-                    # Create purchase
-                    purchase = jsondata.JsonData(
-                        json_data = {},
-                        json_platform = self.GetPlatform())
-                    purchase.set_value(config.json_key_store_appid, line_appid)
-                    purchase.set_value(config.json_key_store_appurl, self.GetLatestUrl(line_appid))
-                    purchase.set_value(config.json_key_store_name, line_title.strip())
-                    purchase.set_value(config.json_key_store_branchid, config.SteamBranchType.PUBLIC.lower())
-                    purchase.set_value(config.json_key_store_keys, line_keys)
-                    purchase.set_value(config.json_key_store_paths, line_paths)
-                    purchases.append(purchase)
+            # Create purchase
+            purchase = jsondata.JsonData(
+                json_data = {},
+                json_platform = self.GetPlatform())
+            purchase.set_value(config.json_key_store_appid, line_appid)
+            purchase.set_value(config.json_key_store_appurl, self.GetLatestUrl(line_appid))
+            purchase.set_value(config.json_key_store_name, line_title.strip())
+            purchase.set_value(config.json_key_store_branchid, config.SteamBranchType.PUBLIC.lower())
+            purchase.set_value(config.json_key_store_keys, line_keys)
+            purchase.set_value(config.json_key_store_paths, line_paths)
+            purchases.append(purchase)
         return purchases
 
     ############################################################
     # Json
     ############################################################
+
+    # Augment jsondata
+    def AugmentJsondata(
+        self,
+        json_data,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Augment by manifest
+        manifest_entry = manifest.GetManifestInstance().find_entry_by_steamid(
+            steamid = identifier,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if manifest_entry:
+
+            # Get existing paths and keys
+            game_paths = set(json_data.get_value(config.json_key_store_paths))
+            game_keys = set(json_data.get_value(config.json_key_store_keys))
+
+            # Get base path
+            base_path = None
+            if json_data.has_key(config.json_key_store_installdir):
+                base_path = system.JoinPaths(
+                    config.token_store_install_dir,
+                    "steamapps",
+                    "common",
+                    json_data.get_key(config.json_key_store_installdir))
+
+            # Update paths and keys
+            game_paths = game_paths.union(manifest_entry.get_paths(base_path))
+            game_keys = game_keys.union(manifest_entry.get_keys())
+
+            # Save paths and keys
+            json_data.set_value(config.json_key_store_paths, system.SortStrings(game_paths))
+            json_data.set_value(config.json_key_store_keys, system.SortStrings(game_keys))
+        return json_data
 
     # Get latest jsondata
     def GetLatestJsondata(
@@ -540,78 +577,35 @@ class Steam(storebase.StoreBase):
             return None
 
         # Build jsondata
-        json_data = jsondata.JsonData({}, self.GetPlatform())
+        json_data = self.CreateDefaultJsondata()
         json_data.set_value(config.json_key_store_appid, identifier)
         json_data.set_value(config.json_key_store_appurl, self.GetLatestUrl(identifier))
-        json_data.set_value(config.json_key_store_paths, [])
-        json_data.set_value(config.json_key_store_keys, [])
         if isinstance(branch, str) and len(branch):
             json_data.set_value(config.json_key_store_branchid, branch)
         else:
             json_data.set_value(config.json_key_store_branchid, "public")
-
-        # Add standard steam paths
         json_data.set_value(config.json_key_store_paths, [
             system.JoinPaths(config.token_store_install_dir, "userdata", config.token_store_user_id, identifier)
         ])
-
-        # Augment by json
         if identifier in steam_json:
-            appdata = steam_json[identifier]
-            if "common" in appdata:
-                appcommon = appdata["common"]
-                if "name" in appcommon:
-                    json_data.set_value(config.json_key_store_name, str(appcommon["name"]).strip())
-                if "controller_support" in appcommon:
-                    json_data.set_value(config.json_key_store_controller_support, str(appcommon["controller_support"]))
-            if "config" in appdata:
-                appconfig = appdata["config"]
-                if "installdir" in appconfig:
-                    json_data.set_value(config.json_key_store_installdir, "STORE_INSTALL_DIR/steamapps/common/%s" % str(appconfig["installdir"]))
-            if "depots" in appdata:
-                appdepots = appdata["depots"]
-                if "branches" in appdepots:
-                    appbranches = appdepots["branches"]
-                    if isinstance(branch, str) and len(branch) and branch in appbranches:
-                        appbranch = appbranches[branch]
-                        if "buildid" in appbranch:
-                            json_data.set_value(config.json_key_store_buildid, str(appbranch["buildid"]))
-                        else:
-                            json_data.set_value(config.json_key_store_buildid, "unknown")
-                        if "timeupdated" in appbranch:
-                            json_data.set_value(config.json_key_store_builddate, str(appbranch["timeupdated"]))
-
-        # Augment by manifest
-        manifest_entry = manifest.GetManifestInstance().find_entry_by_steamid(
-            steamid = identifier,
+            appdata = steam_json.get(identifier, {})
+            appcommon = appdata.get("common", {})
+            appconfig = appdata.get("config", {})
+            appdepots = appdata.get("depots", {}).get("branches", {}).get(branch, {})
+            json_data.set_value(config.json_key_store_name, appcommon.get("name", "").strip())
+            json_data.set_value(config.json_key_store_controller_support, appcommon.get("controller_support", ""))
+            json_data.set_value(
+                config.json_key_store_installdir,
+                f'STORE_INSTALL_DIR/steamapps/common/{appconfig.get("installdir", "")}'
+            )
+            json_data.set_value(config.json_key_store_buildid, str(appdepots.get("buildid", config.default_buildid)))
+            json_data.set_value(config.json_key_store_builddate, str(appdepots.get("timeupdated", "")))
+        return self.AugmentJsondata(
+            json_data = json_data,
+            identifier = identifier,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if manifest_entry:
-
-            # Get existing paths and keys
-            game_paths = set(json_data.get_value(config.json_key_store_paths))
-            game_keys = set(json_data.get_value(config.json_key_store_keys))
-
-            # Get base path
-            base_path = None
-            if json_data.has_key(config.json_key_store_installdir):
-                base_path = system.JoinPaths(
-                    config.token_store_install_dir,
-                    "steamapps",
-                    "common",
-                    json_data.get_key(config.json_key_store_installdir))
-
-            # Update paths and keys
-            game_paths = game_paths.union(manifest_entry.get_paths(base_path))
-            game_keys = game_keys.union(manifest_entry.get_keys())
-
-            # Save paths and keys
-            json_data.set_value(config.json_key_store_paths, system.SortStrings(game_paths))
-            json_data.set_value(config.json_key_store_keys, system.SortStrings(game_keys))
-
-        # Return jsondata
-        return json_data
 
     ############################################################
     # Metadata

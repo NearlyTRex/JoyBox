@@ -19,6 +19,7 @@ def CreateTokenizedPath(path, base_path = None):
     new_path = new_path.replace("{EpicID}", "<storeUserId>")
     new_path = new_path.replace("{EpicId}", "<storeUserId>")
     new_path = new_path.replace("{UserDir}", "<home>")
+    new_path = new_path.replace("{UserProfile}", "<home>")
     new_path = new_path.replace("{InstallDir}", "<base>")
     new_path = new_path.replace("{UserSavedGames}", "<home>/Saved Games")
     new_path = new_path.replace("{AppData}/../Roaming", "<winAppData>")
@@ -139,6 +140,10 @@ class StoreBase:
 
     # Get user name
     def GetUserName(self):
+        return None
+
+    # Get email
+    def GetEmail(self):
         return None
 
     # Get install dir
@@ -338,6 +343,52 @@ class StoreBase:
     # Json
     ############################################################
 
+    # Create default jsondata
+    def CreateDefaultJsondata(self):
+        json_data = jsondata.JsonData({}, self.GetPlatform())
+        json_data.set_value(config.json_key_store_paths, [])
+        json_data.set_value(config.json_key_store_keys, [])
+        json_data.set_value(config.json_key_store_buildid, config.default_buildid)
+        return json_data
+
+    # Augment jsondata
+    def AugmentJsondata(
+        self,
+        json_data,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Augment by manifest
+        manifest_entry = manifest.GetManifestInstance().find_entry_by_name(
+            name = identifier,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if manifest_entry:
+
+            # Get existing paths and keys
+            game_paths = set(json_data.get_value(config.json_key_store_paths))
+            game_keys = set(json_data.get_value(config.json_key_store_keys))
+
+            # Get base path
+            base_path = config.token_game_install_dir
+
+            # Update paths and keys
+            game_paths = list(game_paths.union(manifest_entry.get_paths(base_path)))
+            game_keys = list(game_keys.union(manifest_entry.get_keys()))
+
+            # Remove invalid paths
+            game_paths = [item for item in game_paths if not item.startswith("C:")]
+            game_paths = [item for item in game_paths if not config.token_store_install_dir in item]
+            game_paths = [item for item in game_paths if not config.token_store_user_id in item]
+
+            # Save paths and keys
+            json_data.set_value(config.json_key_store_paths, system.SortStrings(game_paths))
+            json_data.set_value(config.json_key_store_keys, system.SortStrings(game_keys))
+        return json_data
+
     # Get latest jsondata
     def GetLatestJsondata(
         self,
@@ -353,40 +404,12 @@ class StoreBase:
             return None
 
         # Build jsondata
-        json_data = jsondata.JsonData({}, self.GetPlatform())
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, [])
-        json_data.set_subvalue(self.GetKey(), config.json_key_store_keys, [])
-
-        # Augment by manifest
-        manifest_entry = manifest.GetManifestInstance().find_entry_by_name(
-            name = identifier,
+        return self.AugmentJsondata(
+            json_data = self.CreateDefaultJsondata(),
+            identifier = identifier,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if manifest_entry:
-
-            # Get existing paths and keys
-            game_paths = set(json_data.get_subvalue(self.GetKey(), config.json_key_store_paths))
-            game_keys = set(json_data.set_subvalue(self.GetKey(), config.json_key_store_keys))
-
-            # Get base path
-            base_path = config.token_game_install_dir
-
-            # Update paths and keys
-            game_paths = list(game_paths.union(manifest_entry.get_paths(base_path)))
-            game_keys = list(game_keys.union(manifest_entry.get_keys()))
-
-            # Remove invalid paths
-            game_paths = [item for item in game_paths if not item.startswith("C:")]
-            game_paths = [item for item in game_paths if not config.token_store_install_dir in item]
-            game_paths = [item for item in game_paths if not config.token_store_user_id in item]
-
-            # Save paths and keys
-            json_data.set_subvalue(self.GetKey(), config.json_key_store_paths, system.SortStrings(game_paths))
-            json_data.set_subvalue(self.GetKey(), config.json_key_store_keys, system.SortStrings(game_keys))
-
-        # Return jsondata
-        return json_data
 
     ############################################################
     # Metadata

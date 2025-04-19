@@ -29,6 +29,11 @@ class GOG(storebase.StoreBase):
         if not self.username:
             raise RuntimeError("Ini file does not have a valid username")
 
+        # Get email
+        self.email = ini.GetIniValue("UserData.GOG", "gog_email")
+        if not self.email:
+            raise RuntimeError("Ini file does not have a valid email")
+
         # Get platform
         self.platform = ini.GetIniValue("UserData.GOG", "gog_platform")
         if not self.platform:
@@ -96,6 +101,10 @@ class GOG(storebase.StoreBase):
     # Get user name
     def GetUserName(self):
         return self.username
+
+    # Get email
+    def GetEmail(self):
+        return self.email
 
     # Get install dir
     def GetInstallDir(self):
@@ -304,9 +313,9 @@ class GOG(storebase.StoreBase):
         for entry in gog_json:
 
             # Gather info
-            line_appname = entry["gamename"]
-            line_appid = entry["product_id"]
-            line_title = entry["title"]
+            line_appname = str(entry.get("gamename", ""))
+            line_appid = str(entry.get("product_id", ""))
+            line_title = str(entry.get("title", ""))
 
             # Create purchase
             purchase = jsondata.JsonData(
@@ -322,6 +331,36 @@ class GOG(storebase.StoreBase):
     ############################################################
     # Json
     ############################################################
+
+    # Augment jsondata
+    def AugmentJsondata(
+        self,
+        json_data,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Augment by manifest
+        manifest_entry = manifest.GetManifestInstance().find_entry_by_gogid(
+            gogid = identifier,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if manifest_entry:
+
+            # Get existing paths and keys
+            game_paths = set(json_data.get_value(config.json_key_store_paths))
+            game_keys = set(json_data.get_value(config.json_key_store_keys))
+
+            # Update paths and keys
+            game_paths = game_paths.union(manifest_entry.get_paths(config.token_game_install_dir))
+            game_keys = game_keys.union(manifest_entry.get_keys())
+
+            # Save paths and keys
+            json_data.set_value(config.json_key_store_paths, system.SortStrings(game_paths))
+            json_data.set_value(config.json_key_store_keys, system.SortStrings(game_keys))
+        return json_data
 
     # Get latest jsondata
     def GetLatestJsondata(
@@ -353,57 +392,25 @@ class GOG(storebase.StoreBase):
             return None
 
         # Build jsondata
-        json_data = jsondata.JsonData({}, self.GetPlatform())
+        json_data = self.CreateDefaultJsondata()
         json_data.set_value(config.json_key_store_appid, identifier)
-        json_data.set_value(config.json_key_store_paths, [])
-        json_data.set_value(config.json_key_store_keys, [])
-
-        # Augment by json
-        if "slug" in gog_json:
-            appslug = gog_json["slug"]
-            json_data.set_value(config.json_key_store_appname, appslug)
-            json_data.set_value(config.json_key_store_appurl, self.GetLatestUrl(appslug))
-        if "title" in gog_json:
-            json_data.set_value(config.json_key_store_name, gog_json["title"].strip())
-        if "downloads" in gog_json:
-            appdownloads = gog_json["downloads"]
-            if "installers" in appdownloads:
-                appinstallers = appdownloads["installers"]
-                for appinstaller in appinstallers:
-                    if appinstaller["os"] == self.GetPreferredPlatform():
-                        if appinstaller["version"]:
-                            json_data.set_value(config.json_key_store_buildid, appinstaller["version"])
-                        else:
-                            json_data.set_value(config.json_key_store_buildid, "original_release")
-        if "links" in gog_json:
-            applinks = gog_json["links"]
-            if "product_card" in applinks:
-                appurl = applinks["product_card"]
-                if appurl and network.IsUrlReachable(appurl):
-                    json_data.set_value(config.json_key_store_appurl, applinks["product_card"])
-
-        # Augment by manifest
-        manifest_entry = manifest.GetManifestInstance().find_entry_by_gogid(
-            gogid = identifier,
+        json_data.set_value(config.json_key_store_appname, str(gog_json.get("slug", "")))
+        json_data.set_value(config.json_key_store_name, str(gog_json.get("title", "")).strip())
+        for installer in gog_json.get("downloads", {}).get("installers", []):
+            if installer.get("os") == self.GetPreferredPlatform():
+                json_data.set_value(config.json_key_store_buildid, installer.get("version", config.default_buildid))
+                break
+        appurl = gog_json.get("links", {}).get("product_card", "")
+        if not network.IsUrlReachable(appurl):
+            appurl = self.GetLatestUrl(str(gog_json.get("slug", "")))
+        if network.IsUrlReachable(appurl):
+            json_data.set_value(config.json_key_store_appurl, appurl)
+        return self.AugmentJsondata(
+            json_data = json_data,
+            identifier = identifier,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if manifest_entry:
-
-            # Get existing paths and keys
-            game_paths = set(json_data.get_value(config.json_key_store_paths))
-            game_keys = set(json_data.get_value(config.json_key_store_keys))
-
-            # Update paths and keys
-            game_paths = game_paths.union(manifest_entry.get_paths(config.token_game_install_dir))
-            game_keys = game_keys.union(manifest_entry.get_keys())
-
-            # Save paths and keys
-            json_data.set_value(config.json_key_store_paths, system.SortStrings(game_paths))
-            json_data.set_value(config.json_key_store_keys, system.SortStrings(game_keys))
-
-        # Return jsondata
-        return json_data
 
     ############################################################
     # Metadata

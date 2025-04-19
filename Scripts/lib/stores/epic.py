@@ -302,16 +302,9 @@ class Epic(storebase.StoreBase):
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.GetPlatform())
-            if "app_name" in entry:
-                purchase.set_value(config.json_key_store_appname, entry["app_name"])
-            if "app_title" in entry:
-                purchase.set_value(config.json_key_store_name, entry["app_title"])
-            if "asset_infos" in entry:
-                appassets = entry["asset_infos"]
-                if "Windows" in appassets:
-                    appassetswindows = appassets["Windows"]
-                    if "build_version" in appassetswindows:
-                        purchase.set_value(config.json_key_store_buildid, appassetswindows["build_version"])
+            purchase.set_value(config.json_key_store_appname, str(entry.get("app_name", "")))
+            purchase.set_value(config.json_key_store_name, str(entry.get("app_title", "")))
+            purchase.set_value(config.json_key_store_buildid, str(entry.get("asset_infos", {}).get("Windows", {}).get("build_version", config.default_buildid)))
             purchases.append(purchase)
         return purchases
 
@@ -372,35 +365,32 @@ class Epic(storebase.StoreBase):
             epic_json = json.loads(info_output)
         except Exception as e:
             system.LogError(e)
-            system.LogError("Unable to parse epic game info")
+            system.LogError("Unable to parse epic game information for '%s'" % identifier)
             system.LogError("Received output:\n%s" % info_output)
             return None
 
         # Build jsondata
-        json_data = jsondata.JsonData({}, self.GetPlatform())
+        json_data = self.CreateDefaultJsondata()
         json_data.set_value(config.json_key_store_appname, identifier)
-
-        # Augment by json
-        if "game" in epic_json:
-            appgame = epic_json["game"]
-            if "title" in appgame:
-                json_data.set_value(config.json_key_store_name, appgame["title"].strip())
-            if "version" in appgame:
-                json_data.set_value(set_valueconfig.json_key_store_buildid, appgame["version"].strip())
-            if "cloud_save_folder" in appgame:
-                base_path = None
-                if json_data.has_key(config.json_key_store_installdir):
-                    base_path = system.JoinPaths(
-                        config.token_game_install_dir,
-                        json_data.get_key(config.json_key_store_installdir))
-                json_data.set_value(config.json_key_store_paths, [])
-                if appgame["cloud_save_folder"]:
-                    json_data.set_value(config.json_key_store_paths, [
-                        storebase.CreateTokenizedPath(appgame["cloud_save_folder"].strip(), base_path)
-                    ])
-
-        # Return jsondata
-        return json_data
+        json_data.set_value(config.json_key_store_name, epic_json.get("game", {}).get("title", "").strip())
+        json_data.set_value(config.json_key_store_buildid, epic_json.get("game", {}).get("version", config.default_buildid).strip())
+        cloud_save_folder = epic_json.get("game", {}).get("cloud_save_folder")
+        if cloud_save_folder:
+            base_path = None
+            if json_data.has_key(config.json_key_store_installdir):
+                base_path = system.JoinPaths(
+                    config.token_game_install_dir,
+                    json_data.get_key(config.json_key_store_installdir)
+                )
+            json_data.set_value(config.json_key_store_paths, [
+                storebase.CreateTokenizedPath(cloud_save_folder.strip(), base_path)
+            ])
+        return self.AugmentJsondata(
+            json_data = json_data,
+            identifier = identifier,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     ############################################################
     # Metadata

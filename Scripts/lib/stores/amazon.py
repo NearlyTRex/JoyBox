@@ -323,20 +323,16 @@ class Amazon(storebase.StoreBase):
             return None
 
         # Build jsondata
-        json_data = jsondata.JsonData({}, self.GetPlatform())
+        json_data = self.CreateDefaultJsondata()
         json_data.set_value(config.json_key_store_appid, identifier)
-        json_data.set_value(config.json_key_store_buildid, "")
-
-        # Augment by json
-        if "version" in amazon_json:
-            json_data.set_value(config.json_key_store_buildid, str(amazon_json["version"]))
-        if "product" in amazon_json:
-            appdata = amazon_json["product"]
-            if "title" in appdata:
-                json_data.set_value(config.json_key_store_name, str(appdata["title"]))
-
-        # Return jsondata
-        return json_data
+        json_data.set_value(config.json_key_store_buildid, amazon_json.get("version", config.default_buildid).strip())
+        json_data.set_value(config.json_key_store_name, amazon_json.get("product", {}).get("title", "").strip())
+        return self.AugmentJsondata(
+            json_data = json_data,
+            identifier = identifier,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     ############################################################
     # Download

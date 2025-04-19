@@ -312,10 +312,8 @@ class Legacy(storebase.StoreBase):
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.GetPlatform())
-            if "installer_uuid" in entry:
-                purchase.set_value(config.json_key_store_appid, entry["installer_uuid"].strip())
-            if "game_name" in entry:
-                purchase.set_value(config.json_key_store_name, entry["game_name"].strip())
+            purchase.set_value(config.json_key_store_appid, entry.get("installer_uuid", "").strip())
+            purchase.set_value(config.json_key_store_name, entry.get("game_name", "").strip())
             purchases.append(purchase)
         return purchases
 
@@ -377,20 +375,20 @@ class Legacy(storebase.StoreBase):
             legacy_json = json.loads(info_output)
         except Exception as e:
             system.LogError(e)
-            system.LogError("Unable to parse legacy game info")
+            system.LogError("Unable to parse legacy game information for '%s'" % identifier)
             system.LogError("Received output:\n%s" % info_output)
             return None
 
         # Build jsondata
-        json_data = jsondata.JsonData({}, self.GetPlatform())
+        json_data = self.CreateDefaultJsondata()
         json_data.set_value(config.json_key_store_appid, identifier)
-
-        # Augment by json
-        if "game_name" in legacy_json:
-            json_data.set_value(config.json_key_store_name, legacy_json["game_name"].strip())
-
-        # Return jsondata
-        return json_data
+        json_data.set_value(config.json_key_store_name, legacy_json.get("game_name", "").strip())
+        return self.AugmentJsondata(
+            json_data = json_data,
+            identifier = identifier,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     ############################################################
     # Assets
