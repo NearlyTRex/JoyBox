@@ -228,6 +228,7 @@ class RemoteType(EnumType):
     DRIVE                   = ("Drive")
     B2                      = ("B2")
     WEBDAV                  = ("WebDAV")
+    SFTP                    = ("SFTP")
 
 # Remote action types
 class RemoteActionType(EnumType):
