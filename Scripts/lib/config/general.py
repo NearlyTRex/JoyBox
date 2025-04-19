@@ -156,6 +156,9 @@ for code in range(ord(drive_available_start), ord(drive_available_end)):
 # Raw files index
 raw_files_index = "raw_files.index"
 
+# Default buildid
+default_buildid = "1.0"
+
 # File sizes
 bytes_per_kilobyte = 1024
 bytes_per_megabyte = bytes_per_kilobyte * 1024
