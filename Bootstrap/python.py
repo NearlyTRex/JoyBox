@@ -38,6 +38,7 @@ packages = [
     "python-dateutil",
     "python-Levenshtein",
     "python-magic",
+    "pyxdg",
     "requests",
     "rich",
     "ruamel.yaml",
@@ -50,8 +51,8 @@ packages = [
     "typer",
     "Unidecode",
     "vdf",
-    "wheel",
     "webdriver_manager",
+    "wheel",
     "xmltodict",
     "xxhash"
 ]
