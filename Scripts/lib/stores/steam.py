@@ -561,14 +561,10 @@ class Steam(storebase.StoreBase):
         steam_json = {}
         try:
             import vdf
-            vdf_text = ""
-            is_vdf_line = False
-            for line in info_output.split("\n"):
-                if is_vdf_line:
-                    vdf_text += line + "\n"
-                else:
-                    if line.startswith("AppID : %s" % identifier):
-                        is_vdf_line = True
+            vdf_start = info_output.find(f'"{identifier}"')
+            if vdf_start == -1:
+                raise ValueError("App VDF not found in output")
+            vdf_text = info_output[vdf_start:]
             steam_json = vdf.loads(vdf_text)
         except Exception as e:
             system.LogError(e)
@@ -593,13 +589,14 @@ class Steam(storebase.StoreBase):
             appconfig = appdata.get("config", {})
             appdepots = appdata.get("depots", {}).get("branches", {}).get(branch, {})
             json_data.set_value(config.json_key_store_name, appcommon.get("name", "").strip())
-            json_data.set_value(config.json_key_store_controller_support, appcommon.get("controller_support", ""))
-            json_data.set_value(
-                config.json_key_store_installdir,
-                f'STORE_INSTALL_DIR/steamapps/common/{appconfig.get("installdir", "")}'
-            )
+            json_data.set_value(config.json_key_store_controller_support, appcommon.get("controller_support", "unknown"))
+            if appconfig.get("installdir"):
+                json_data.set_value(
+                    config.json_key_store_installdir,
+                    f'STORE_INSTALL_DIR/steamapps/common/{appconfig.get("installdir")}'
+                )
             json_data.set_value(config.json_key_store_buildid, str(appdepots.get("buildid", config.default_buildid)))
-            json_data.set_value(config.json_key_store_builddate, str(appdepots.get("timeupdated", "")))
+            json_data.set_value(config.json_key_store_builddate, str(appdepots.get("timeupdated", "unknown")))
         return self.AugmentJsondata(
             json_data = json_data,
             identifier = identifier,
