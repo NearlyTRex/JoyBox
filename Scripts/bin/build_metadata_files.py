@@ -43,7 +43,7 @@ def main():
             system.LogError("Game subcategory is required for custom mode", quit_program = True)
         if not args.game_name:
             system.LogError("Game name is required for custom mode", quit_program = True)
-        success = collection.BuildMetadataEntry(
+        success = collection.BuildGameMetadataEntry(
             game_supercategory = args.game_supercategory,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,
@@ -54,10 +54,10 @@ def main():
         if not success:
             system.LogError(
                 message = "Build of metadata file failed!",
-                game_supercategory = game_supercategory,
-                game_category = game_category,
-                game_subcategory = game_subcategory,
-                game_name = game_name,
+                game_supercategory = args.game_supercategory,
+                game_category = args.game_category,
+                game_subcategory = args.game_subcategory,
+                game_name = args.game_name,
                 quit_program = True)
 
     # Automatic according to standard layout
@@ -70,7 +70,7 @@ def main():
                         game_category,
                         game_subcategory)
                     for game_name in game_names:
-                        success = collection.BuildMetadataEntry(
+                        success = collection.BuildGameMetadataEntry(
                             game_supercategory = game_supercategory,
                             game_category = game_category,
                             game_subcategory = game_subcategory,

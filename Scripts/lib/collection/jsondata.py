@@ -22,8 +22,8 @@ def AreGameJsonFilePossible(
 
 ############################################################
 
-# Read json data
-def ReadJsonData(
+# Read game json data
+def ReadGameJsonData(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -60,7 +60,7 @@ def ReadJsonData(
 ############################################################
 
 # Create game json file
-def CreateJsonFile(
+def CreateGameJsonFile(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -121,8 +121,8 @@ def CreateJsonFile(
 
 ############################################################
 
-# Update json file
-def UpdateJsonFile(
+# Update game json file
+def UpdateGameJsonFile(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -231,7 +231,6 @@ def UpdateJsonFile(
     # Get store
     store_obj = stores.GetStoreByPlatform(
         store_platform = game_platform,
-        login = True,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -278,8 +277,8 @@ def UpdateJsonFile(
 
 ############################################################
 
-# Build json file
-def BuildJsonFile(
+# Build game json file
+def BuildGameJsonFile(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -307,7 +306,7 @@ def BuildJsonFile(
         (game_category, game_subcategory, game_name))
 
     # Create json file
-    success = CreateJsonFile(
+    success = CreateGameJsonFile(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
@@ -319,7 +318,7 @@ def BuildJsonFile(
         return False
 
     # Update json file
-    success = UpdateJsonFile(
+    success = UpdateGameJsonFile(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
@@ -331,8 +330,8 @@ def BuildJsonFile(
         exit_on_failure = exit_on_failure)
     return success
 
-# Build game json files
-def BuildGameJsonFiles(
+# Build all game json files
+def BuildAllGameJsonFiles(
     passphrase = None,
     source_type = None,
     verbose = False,
@@ -348,7 +347,7 @@ def BuildGameJsonFiles(
                     game_subcategory,
                     source_type)
                 for game_name in game_names:
-                    success = BuildJsonFile(
+                    success = BuildGameJsonFile(
                         game_supercategory = game_supercategory,
                         game_category = game_category,
                         game_subcategory = game_subcategory,

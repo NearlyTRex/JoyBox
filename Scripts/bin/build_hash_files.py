@@ -75,7 +75,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
         if not success:
             system.LogError(
-                message = "Build of hash file failed!",
+                message = "Build of hash files failed!",
                 game_supercategory = args.game_supercategory,
                 game_category = args.game_category,
                 game_subcategory = args.game_subcategory,
@@ -111,7 +111,7 @@ def main():
                             exit_on_failure = args.exit_on_failure)
                         if not success:
                             system.LogError(
-                                message = "Build of hash file failed!",
+                                message = "Build of hash files failed!",
                                 game_supercategory = game_supercategory,
                                 game_category = game_category,
                                 game_subcategory = game_subcategory,

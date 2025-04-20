@@ -11,7 +11,7 @@ import platforms
 import metadata
 import metadataentry
 import stores
-from .jsondata import ReadJsonData
+from .jsondata import ReadGameJsonData
 
 ############################################################
 
@@ -24,8 +24,8 @@ def AreGameMetadataFilePossible(
 
 ############################################################
 
-# Create metadata entry
-def CreateMetadataEntry(
+# Create game metadata entry
+def CreateGameMetadataEntry(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -95,8 +95,8 @@ def CreateMetadataEntry(
         exit_on_failure = exit_on_failure)
     return True
 
-# Update metadata entry
-def UpdateMetadataEntry(
+# Update game metadata entry
+def UpdateGameMetadataEntry(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -133,7 +133,7 @@ def UpdateMetadataEntry(
         return True
 
     # Get json data
-    json_obj = ReadJsonData(
+    json_obj = ReadGameJsonData(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
@@ -197,8 +197,8 @@ def UpdateMetadataEntry(
 
 ############################################################
 
-# Build metadata entry
-def BuildMetadataEntry(
+# Build game metadata entry
+def BuildGameMetadataEntry(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -214,7 +214,7 @@ def BuildMetadataEntry(
         (game_category, game_subcategory, game_name))
 
     # Create metadata entry
-    success = CreateMetadataEntry(
+    success = CreateGameMetadataEntry(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
@@ -226,7 +226,7 @@ def BuildMetadataEntry(
         return False
 
     # Update metadata entry
-    success = UpdateMetadataEntry(
+    success = UpdateGameMetadataEntry(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
@@ -238,8 +238,8 @@ def BuildMetadataEntry(
         exit_on_failure = exit_on_failure)
     return success
 
-# Build metadata entries
-def BuildMetadataEntries(
+# Build all game metadata entries
+def BuildAllGameMetadataEntries(
     keys = [],
     force = False,
     verbose = False,
@@ -254,7 +254,7 @@ def BuildMetadataEntries(
                     game_category,
                     game_subcategory)
                 for game_name in game_names:
-                    success = BuildMetadataEntry(
+                    success = BuildGameMetadataEntry(
                         game_supercategory = game_supercategory,
                         game_category = game_category,
                         game_subcategory = game_subcategory,
@@ -272,8 +272,8 @@ def BuildMetadataEntries(
 
 ############################################################
 
-# Publish metadata entries
-def PublishMetadataEntries(
+# Publish game metadata entries
+def PublishGameMetadataEntries(
     game_supercategory,
     game_category,
     verbose = False,
@@ -344,8 +344,8 @@ def PublishMetadataEntries(
         exit_on_failure = exit_on_failure)
     return success
 
-# Publish all metadata entries
-def PublishAllMetadataEntries(
+# Publish all game metadata entries
+def PublishAllGameMetadataEntries(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -353,7 +353,7 @@ def PublishAllMetadataEntries(
         for game_category in config.Category.members():
 
             # Publish metadata
-            success = PublishMetadataEntries(
+            success = PublishGameMetadataEntries(
                 game_supercategory = game_supercategory,
                 game_category = game_category,
                 verbose = verbose,

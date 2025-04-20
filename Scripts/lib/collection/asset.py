@@ -64,7 +64,6 @@ def DownloadMetadataAsset(
     # Get store
     store_obj = stores.GetStoreByPlatform(
         store_platform = game_info.get_platform(),
-        login = True,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

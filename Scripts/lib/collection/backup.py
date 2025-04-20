@@ -8,7 +8,7 @@ import system
 import environment
 import gameinfo
 import stores
-from .purchase import DownloadStorePurchase
+from .purchase import DownloadGameStorePurchase
 from .uploading import UploadGameFiles
 
 ############################################################
@@ -68,7 +68,7 @@ def BackupStoreGameFiles(
         return False
 
     # Download files
-    success = DownloadStorePurchase(
+    success = DownloadGameStorePurchase(
         game_info = game_info,
         output_dir = tmp_dir_result,
         verbose = verbose,

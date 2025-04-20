@@ -56,18 +56,20 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
-    # Import store purchases
-    system.LogInfo("Importing store purchases ...")
-    success = collection.ImportAllStorePurchases(
+    # Build game store purchases
+    system.LogInfo("Building store purchases ...")
+    success = collection.BuildAllGameStorePurchases(
+        passphrase = passphrase,
+        source_type = args.source_type,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if not success:
-        system.LogError("Importing store purchases failed", quit_program = True)
+        system.LogError("Building store purchases failed", quit_program = True)
 
-    # Build json files
+    # Build game json files
     system.LogInfo("Building json files ...")
-    success = collection.BuildGameJsonFiles(
+    success = collection.BuildAllGameJsonFiles(
         passphrase = passphrase,
         source_type = args.source_type,
         verbose = args.verbose,
@@ -76,9 +78,9 @@ def main():
     if not success:
         system.LogError("Building json files failed", quit_program = True)
 
-    # Build metadata files
+    # Build game metadata files
     system.LogInfo("Building metadata files ...")
-    success = collection.BuildMetadataEntries(
+    success = collection.BuildAllGameMetadataEntries(
         source_type = args.source_type,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
@@ -86,7 +88,7 @@ def main():
     if not success:
         system.LogError("Building metadata files failed", quit_program = True)
 
-    # Download metadata assets
+    # Download game metadata assets
     system.LogInfo("Downloading metadata assets ...")
     success = collection.DownloadAllMetadataAssets(
         skip_existing = True,
@@ -96,9 +98,9 @@ def main():
     if not success:
         system.LogError("Downloading metadata assets failed", quit_program = True)
 
-    # Publish metadata files
+    # Publish game metadata files
     system.LogInfo("Publishing metadata files ...")
-    success = collection.PublishAllMetadataEntries(
+    success = collection.PublishAllGameMetadataEntries(
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)

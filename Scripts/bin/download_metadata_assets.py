@@ -56,7 +56,7 @@ def main():
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
-        collection.DownloadMetadataAsset(
+        success = collection.DownloadMetadataAsset(
             game_info = game_info,
             asset_url = None,
             asset_type = args.asset_type,
@@ -64,6 +64,14 @@ def main():
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
+        if not success:
+            system.LogError(
+                message = "Download of metadata assets failed!",
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = game_name,
+                quit_program = True)
 
     # Automatic according to standard layout
     elif args.generation_mode == config.GenerationModeType.STANDARD:
@@ -93,7 +101,7 @@ def main():
                             exit_on_failure = args.exit_on_failure)
                         if not success:
                             system.LogError(
-                                message = "Download of metadata asset failed!",
+                                message = "Download of metadata assets failed!",
                                 game_supercategory = game_supercategory,
                                 game_category = game_category,
                                 game_subcategory = game_subcategory,

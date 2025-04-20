@@ -24,9 +24,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Build new published file for each category
-    system.LogInfo("Publishing metadata files ...")
-    success = collection.PublishAllMetadataEntries(
+    # Publish game metadata files
+    system.LogInfo("Publishing game metadata files ...")
+    success = collection.PublishAllGameMetadataEntries(
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
