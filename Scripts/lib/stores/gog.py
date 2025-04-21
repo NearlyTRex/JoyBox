@@ -398,7 +398,10 @@ class GOG(storebase.StoreBase):
         json_data.set_value(config.json_key_store_name, str(gog_json.get("title", "")).strip())
         for installer in gog_json.get("downloads", {}).get("installers", []):
             if installer.get("os") == self.GetPreferredPlatform():
-                json_data.set_value(config.json_key_store_buildid, installer.get("version", config.default_buildid))
+                installer_version = installer.get("version", config.default_buildid)
+                if not installer_version:
+                    installer_version = config.default_buildid
+                json_data.set_value(config.json_key_store_buildid, installer_version)
                 break
         appurl = gog_json.get("links", {}).get("product_card", "")
         if not network.IsUrlReachable(appurl):
