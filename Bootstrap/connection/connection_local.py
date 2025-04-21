@@ -1,16 +1,19 @@
 import os
 import sys
 import copy
+import pwd
+import grp
 import subprocess
 import shutil
 import tempfile
 import urllib.request
 import zipfile
 import tarfile
+import json
 import util
 from . import connection
 
-class CommandLocal(connection.Command):
+class ConnectionLocal(connection.Connection):
     def __init__(
         self,
         flags = util.RunFlags(),
@@ -49,19 +52,19 @@ class CommandLocal(connection.Command):
             return ""
         except subprocess.CalledProcessError as e:
             if self.flags.verbose:
-                util.util.LogError(e)
+                util.LogError(e)
             elif self.flags.exit_on_failure:
-                util.util.LogError(e)
-                util.util.QuitProgram()
+                util.LogError(e)
+                util.QuitProgram()
             if self.options.include_stderr:
                 return e.output
             return ""
         except Exception as e:
             if self.flags.verbose:
-                util.util.LogError(e)
+                util.LogError(e)
             elif self.flags.exit_on_failure:
-                util.util.LogError(e)
-                util.util.QuitProgram()
+                util.LogError(e)
+                util.QuitProgram()
             return ""
 
     def RunReturncode(self, cmd):
@@ -94,17 +97,17 @@ class CommandLocal(connection.Command):
             return 0
         except subprocess.CalledProcessError as e:
             if self.flags.verbose:
-                util.util.LogError(e)
+                util.LogError(e)
             elif self.flags.exit_on_failure:
-                util.util.LogError(e)
-                util.util.QuitProgram()
+                util.LogError(e)
+                util.QuitProgram()
             return e.returncode
         except Exception as e:
             if self.flags.verbose:
-                util.util.LogError(e)
+                util.LogError(e)
             elif self.flags.exit_on_failure:
-                util.util.LogError(e)
-                util.util.QuitProgram()
+                util.LogError(e)
+                util.QuitProgram()
             return 1
 
     def RunBlocking(self, cmd):
@@ -130,23 +133,23 @@ class CommandLocal(connection.Command):
                     if output == "" and process.poll() is not None:
                         break
                     if output:
-                        util.util.LogInfo(output.strip())
+                        util.LogInfo(output.strip())
                 code = process.poll()
                 return code
             return 0
         except subprocess.CalledProcessError as e:
             if self.flags.verbose:
-                util.util.LogError(e)
+                util.LogError(e)
             elif self.flags.exit_on_failure:
-                util.util.LogError(e)
-                util.util.QuitProgram()
+                util.LogError(e)
+                util.QuitProgram()
             return e.returncode
         except Exception as e:
             if self.flags.verbose:
-                util.util.LogError(e)
+                util.LogError(e)
             elif self.flags.exit_on_failure:
-                util.util.LogError(e)
-                util.util.QuitProgram()
+                util.LogError(e)
+                util.QuitProgram()
             return 1
 
     def RunChecked(self, cmd, throw_exception = False):
@@ -155,7 +158,7 @@ class CommandLocal(connection.Command):
             if throw_exception:
                 raise ValueError("Unable to run command: %s" % cmd)
             else:
-                util.util.QuitProgram(code)
+                util.QuitProgram(code)
 
     def MakeTemporaryDirectory(self):
         try:
@@ -262,13 +265,10 @@ class CommandLocal(connection.Command):
             if self.flags.verbose:
                 util.LogInfo(f"Writing file to {src}")
             if not self.flags.pretend_run:
-                if cmd:
-                    return cmd.WriteFile(src, contents)
-                else:
-                    os.makedirs(os.path.dirname(src), exist_ok = True)
-                    with open(src, "w") as f:
-                        f.write(contents)
-                    return True
+                os.makedirs(os.path.dirname(src), exist_ok = True)
+                with open(src, "w") as f:
+                    f.write(contents)
+                return True
             return True
         except Exception as e:
             if self.flags.exit_on_failure:
@@ -318,6 +318,99 @@ class CommandLocal(connection.Command):
         except Exception as e:
             if self.flags.exit_on_failure:
                 util.LogError("Unable to extract ZIP archive %s" % src)
+                util.LogError(e)
+                util.QuitProgram()
+            return False
+
+    def ChangeOwner(self, src, owner):
+        try:
+            if self.flags.verbose:
+                util.LogInfo("Changing owner of %s to %s" % (src, owner))
+            if not self.flags.pretend_run:
+                if ":" in owner:
+                    user, group = owner.split(":", 1)
+                else:
+                    user, group = owner, None
+                uid = pwd.getpwnam(user).pw_uid
+                gid = grp.getgrnam(group).gr_gid if group else -1
+                os.chown(src, uid, gid)
+            return True
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError("Unable to change owner of %s to %s" % (src, owner))
+                util.LogError(e)
+                util.QuitProgram()
+            return False
+
+    def ChangePermission(self, src, permission):
+        try:
+            if self.flags.verbose:
+                util.LogInfo("Changing permissions of %s to %s" % (src, permission))
+            if not self.flags.pretend_run:
+                os.chmod(src, int(permission, 8))
+            return True
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError("Unable to change permission of %s to %s" % (src, permission))
+                util.LogError(e)
+                util.QuitProgram()
+            return False
+
+    def AddToPath(self, src):
+        try:
+            if self.flags.verbose:
+                util.LogInfo("Adding %s to system path" % src)
+            if not self.flags.pretend_run:
+
+                # Windows
+                if util.IsWindowsPlatform():
+
+                    # Winreg path functions
+                    import winreg
+                    def _get_env_path(scope):
+                        key = winreg.OpenKey(scope, r"Environment", 0, winreg.KEY_READ)
+                        value, _ = winreg.QueryValueEx(key, "Path")
+                        winreg.CloseKey(key)
+                        return value
+                    def _set_env_path(scope, new_path):
+                        key = winreg.OpenKey(scope, r"Environment", 0, winreg.KEY_SET_VALUE)
+                        winreg.SetValueEx(key, "Path", 0, winreg.REG_EXPAND_SZ, new_path)
+                        winreg.CloseKey(key)
+
+                    # First try user-level, fallback to system if admin
+                    try:
+                        path = _get_env_path(winreg.HKEY_CURRENT_USER)
+                        if src not in path.split(";"):
+                            new_path = f"{path};{src}"
+                            _set_env_path(winreg.HKEY_CURRENT_USER, new_path)
+                    except PermissionError:
+                        path = _get_env_path(winreg.HKEY_LOCAL_MACHINE)
+                        if src not in path.split(";"):
+                            new_path = f"{path};{src}"
+                            _set_env_path(winreg.HKEY_LOCAL_MACHINE, new_path)
+
+                # Unix
+                else:
+
+                    # Get profile
+                    shell_rc = os.path.expanduser("~/.bashrc")
+                    if os.environ.get("SHELL", "").endswith("zsh"):
+                        shell_rc = os.path.expanduser("~/.zshrc")
+
+                    # Read current profile
+                    contents = ""
+                    with open(shell_rc, "r") as f:
+                        contents = f.read()
+
+                    # Add to profile
+                    export_line = f'export PATH="{src}:$PATH"\n'
+                    if export_line not in contents:
+                        with open(shell_rc, "a") as f:
+                            f.write(export_line)
+            return True
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError("Unable to add %s to system path" % src)
                 util.LogError(e)
                 util.QuitProgram()
             return False
