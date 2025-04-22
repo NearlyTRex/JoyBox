@@ -1,6 +1,9 @@
+# Imports
 import os
 import sys
 import copy
+
+# Local imports
 import util
 
 class Connection:

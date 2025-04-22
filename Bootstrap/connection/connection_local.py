@@ -1,3 +1,4 @@
+# Imports
 import os
 import sys
 import copy
@@ -10,6 +11,8 @@ import urllib.request
 import zipfile
 import tarfile
 import json
+
+# Local imports
 import util
 from . import connection
 

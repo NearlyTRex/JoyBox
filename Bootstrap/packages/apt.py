@@ -1,85 +1,24 @@
 # Imports
 import os
 import sys
-import subprocess
 
 # Local imports
-import environment
+import constants
+import util
 
 ###########################################################
-# Preliminaries
+# Apt
 ###########################################################
-preliminaries = []
-
-# Wine
-if not os.path.isfile("/usr/bin/wine"):
-
-    # Setup architecture
-    preliminaries += [
-        "sudo dpkg --add-architecture i386"
-    ]
-
-    # Setup key
-    preliminaries += [
-        "sudo mkdir -pm755 /etc/apt/keyrings",
-        "sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key"
-    ]
-
-    # Setup sources
-    preliminaries += [
-        "sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/%s/winehq-%s.sources" % (
-            environment.GetUbuntuCodename(),
-            environment.GetUbuntuCodename()
-        )
-    ]
-
-# Brave
-if not os.path.isfile("/usr/bin/brave-browser"):
-
-    # Setup key
-    preliminaries += [
-        "sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg"
-    ]
-
-    # Setup sources
-    preliminaries += [
-        "echo 'deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main' | sudo tee /etc/apt/sources.list.d/brave-browser-release.list"
-    ]
-
-# Chrome
-if not os.path.isfile("/usr/bin/google-chrome"):
-
-    # Install deb
-    preliminaries += [
-        "wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb",
-        "sudo dpkg -i google-chrome-stable_current_amd64.deb"
-    ]
-
-# 1Password
-if not os.path.isfile("/usr/bin/1password"):
-
-    # Setup key
-    preliminaries += [
-        "curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg"
-    ]
-
-    # Setup sources
-    preliminaries += [
-        "echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | sudo tee /etc/apt/sources.list.d/1password.list"
-    ]
-
-    # Setup policy
-    preliminaries += [
-        "sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/",
-        "curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol",
-        "sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22",
-        "curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg"
-    ]
+apt = {}
+apt[constants.LOCAL_UBUNTU] = []
+apt[constants.LOCAL_WINDOWS] = []
+apt[constants.REMOTE_UBUNTU] = []
+apt[constants.REMOTE_WINDOWS] = []
 
 ###########################################################
-# Apt packages
+# Apt - Local Ubuntu
 ###########################################################
-apt_packages = [
+apt[constants.LOCAL_UBUNTU] += [
 
     # Admin
     "7zip",
@@ -299,55 +238,18 @@ apt_packages = [
 ]
 
 ###########################################################
-# Flatpak packages
+# Apt - Remote Ubuntu
 ###########################################################
-flatpak_packages = [
-
-    # Devel
-    ["flathub", "com.axosoft.GitKraken"],
-    ["flathub", "com.jetbrains.IntelliJ-IDEA-Community"],
-    ["flathub", "org.mapeditor.Tiled"],
-
-    # Text
-    ["flathub", "com.vscodium.codium"],
-
-    # Utils
-    ["flathub", "org.cryptomator.Cryptomator"],
-
-    # Web
-    ["flathub", "com.discordapp.Discord"],
-    ["flathub", "org.signal.Signal"],
-    ["flathub", "org.telegram.desktop"]
+apt[constants.REMOTE_UBUNTU] += [
+    "apache2-utils",
+    "apache2",
+    "certbot",
+    "curl",
+    "docker-compose",
+    "docker.io",
+    "git",
+    "nginx",
+    "python3-certbot-nginx",
+    "unzip",
+    "wget"
 ]
-
-###########################################################
-# Functions
-###########################################################
-
-# Setup
-def Setup(ini_values = {}):
-
-    # Get apt tool
-    apt_exe = ini_values["Tools.Apt"]["apt_exe"]
-    apt_install_dir = os.path.expandvars(ini_values["Tools.Apt"]["apt_install_dir"])
-    apt_tool = os.path.join(apt_install_dir, apt_exe)
-
-    # Get flatpak tool
-    flatpak_exe = ini_values["Tools.Flatpak"]["flatpak_exe"]
-    flatpak_install_dir = os.path.expandvars(ini_values["Tools.Flatpak"]["flatpak_install_dir"])
-    flatpak_tool = os.path.join(flatpak_install_dir, flatpak_exe)
-
-    # Run preliminaries
-    for preliminary in preliminaries:
-        subprocess.check_call(preliminary, shell=True)
-
-    # Install apt packages
-    subprocess.check_call(["sudo", apt_tool, "update"])
-    for package in apt_packages:
-        subprocess.check_call(["sudo", apt_tool, "-y", "install", "--install-recommends", package])
-
-    # Install flatpak packages
-    if os.path.isfile(flatpak_tool):
-        subprocess.check_call([flatpak_tool, "update", "--user", "-y"])
-        for package in flatpak_packages:
-            subprocess.check_call([flatpak_tool, "install", "--user", "-y"] + package)

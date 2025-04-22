@@ -4,15 +4,12 @@ import re
 import io
 import copy
 import errno
-import pathlib
 import time
-import logging
-import tempfile
 import json
+import pathlib
+import logging
 import configparser
 import urllib.request
-import zipfile
-import tarfile
 import traceback
 import paramiko
 import threading

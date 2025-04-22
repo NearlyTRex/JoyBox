@@ -3,7 +3,7 @@ import os
 import sys
 
 # Local imports
-import environment
+import util
 
 ###########################################################
 # Ini defaults
@@ -12,7 +12,7 @@ ini_defaults = {}
 
 # UserData.Dirs
 ini_defaults["UserData.Dirs"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.Dirs"]["tools_dir"] = "%USERPROFILE%\\Tools"
     ini_defaults["UserData.Dirs"]["emulators_dir"] = "%USERPROFILE%\\Emulators"
     ini_defaults["UserData.Dirs"]["local_locker_dir"] = "%USERPROFILE%\\Locker"
@@ -42,7 +42,7 @@ ini_defaults["UserData.Share"]["locker_remote_path"] = "/"
 ini_defaults["UserData.Share"]["locker_remote_token"] = ""
 ini_defaults["UserData.Share"]["locker_remote_config"] = ""
 ini_defaults["UserData.Share"]["locker_remote_mount_flags"] = "no_checksum,no_modtime"
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "%USERPROFILE%\\LockerRemote"
     ini_defaults["UserData.Share"]["locker_local_path"] = "%USERPROFILE%\\Locker"
 else:
@@ -81,14 +81,14 @@ ini_defaults["UserData.GitHub"]["github_access_token"] = ""
 
 # UserData.Amazon
 ini_defaults["UserData.Amazon"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.Amazon"]["amazon_install_dir"] = "C:\\Program Files (x86)\\Amazon Games"
 else:
     ini_defaults["UserData.Amazon"]["amazon_install_dir"] = "$HOME/Games/Amazon"
 
 # UserData.Disc
 ini_defaults["UserData.Disc"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.Disc"]["disc_install_dir"] = "C:\\Games\\Disc"
 else:
     ini_defaults["UserData.Disc"]["disc_install_dir"] = "$HOME/Games/Disc"
@@ -96,7 +96,7 @@ else:
 # UserData.Epic
 ini_defaults["UserData.Epic"] = {}
 ini_defaults["UserData.Epic"]["epic_username"] = ""
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.Epic"]["epic_install_dir"] = "C:\\Program Files\\Epic Games"
 else:
     ini_defaults["UserData.Epic"]["epic_install_dir"] = "$HOME/Games/Epic"
@@ -108,7 +108,7 @@ ini_defaults["UserData.GOG"]["gog_email"] = ""
 ini_defaults["UserData.GOG"]["gog_platform"] = "windows"
 ini_defaults["UserData.GOG"]["gog_includes"] = "i,e"
 ini_defaults["UserData.GOG"]["gog_excludes"] = ""
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.GOG"]["gog_install_dir"] = "C:\\GOG Games"
 else:
     ini_defaults["UserData.GOG"]["gog_install_dir"] = "$HOME/Games/GOG"
@@ -118,14 +118,14 @@ ini_defaults["UserData.HumbleBundle"] = {}
 ini_defaults["UserData.HumbleBundle"]["humblebundle_email"] = ""
 ini_defaults["UserData.HumbleBundle"]["humblebundle_platform"] = "windows"
 ini_defaults["UserData.HumbleBundle"]["humblebundle_auth_token"] = ""
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.HumbleBundle"]["humblebundle_install_dir"] = "C:\\Program Files (x86)\\Humble Bundle"
 else:
     ini_defaults["UserData.HumbleBundle"]["humblebundle_install_dir"] = "$HOME/Games/Humble"
 
 # UserData.Itchio
 ini_defaults["UserData.Itchio"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.Itchio"]["itchio_install_dir"] = "%USERPROFILE%\\AppData\\Local\\itch\\apps"
 else:
     ini_defaults["UserData.Itchio"]["itchio_install_dir"] = "$HOME/Games/Itchio"
@@ -133,28 +133,28 @@ else:
 # UserData.Legacy
 ini_defaults["UserData.Legacy"] = {}
 ini_defaults["UserData.Legacy"]["legacy_username"] = ""
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.Legacy"]["legacy_install_dir"] = "C:\\Program Files (x86)\\Legacy Games"
 else:
     ini_defaults["UserData.Legacy"]["legacy_install_dir"] = "$HOME/Games/Legacy"
 
 # UserData.PuppetCombo
 ini_defaults["UserData.PuppetCombo"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.PuppetCombo"]["puppetcombo_install_dir"] = "C:\\Games\\PuppetCombo"
 else:
     ini_defaults["UserData.PuppetCombo"]["puppetcombo_install_dir"] = "$HOME/Games/PuppetCombo"
 
 # UserData.RedCandle
 ini_defaults["UserData.RedCandle"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.RedCandle"]["redcandle_install_dir"] = "C:\Program Files (x86)\Red Candle Games"
 else:
     ini_defaults["UserData.RedCandle"]["redcandle_install_dir"] = "$HOME/Games/RedCandle"
 
 # UserData.SquareEnix
 ini_defaults["UserData.SquareEnix"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.SquareEnix"]["squareenix_install_dir"] = "C:\\Program Files (x86)\\Square Enix"
 else:
     ini_defaults["UserData.SquareEnix"]["squareenix_install_dir"] = "$HOME/Games/SquareEnix"
@@ -167,14 +167,14 @@ ini_defaults["UserData.Steam"]["steam_userid"] = ""
 ini_defaults["UserData.Steam"]["steam_web_api_key"] = ""
 ini_defaults["UserData.Steam"]["steam_platform"] = "windows"
 ini_defaults["UserData.Steam"]["steam_arch"] = "64"
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.Steam"]["steam_install_dir"] = "C:\\Program Files (x86)\\Steam"
 else:
     ini_defaults["UserData.Steam"]["steam_install_dir"] = "$HOME/.steam/steam"
 
 # UserData.Zoom
 ini_defaults["UserData.Zoom"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["UserData.Zoom"]["zoom_install_dir"] = "C:\\Program Files (x86)\\Zoom Platform"
 else:
     ini_defaults["UserData.Zoom"]["zoom_install_dir"] = "$HOME/Games/Zoom"
@@ -185,7 +185,7 @@ ini_defaults["UserData.Switch"]["profile_user_id"] = "F6F389D41D6BC0BDD6BD928C52
 ini_defaults["UserData.Switch"]["profile_account_name"] = "yuzu"
 
 # Tools.WinGet/Apt
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["Tools.WinGet"] = {}
     ini_defaults["Tools.WinGet"]["winget_exe"] = "winget.exe"
     ini_defaults["Tools.WinGet"]["winget_install_dir"] = "%USERPROFILE%\\AppData\\Local\\Microsoft\\WindowsApps"
@@ -202,7 +202,7 @@ else:
 
 # Tools.Python
 ini_defaults["Tools.Python"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["Tools.Python"]["python_exe"] = "python.exe"
     ini_defaults["Tools.Python"]["python_pip_exe"] = "pip.exe"
     ini_defaults["Tools.Python"]["python_install_dir"] = "C:\\Python311"
@@ -215,7 +215,7 @@ else:
 
 # Tools.Perl
 ini_defaults["Tools.Perl"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["Tools.Perl"]["perl_exe"] = "perl.exe"
     ini_defaults["Tools.Perl"]["perl_install_dir"] = "C:\\Strawberry\\perl\\bin"
 else:
@@ -224,7 +224,7 @@ else:
 
 # Tools.Steam
 ini_defaults["Tools.Steam"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["Tools.Steam"]["steam_exe"] = "steam.exe"
     ini_defaults["Tools.Steam"]["steam_install_dir"] = "C:\\Program Files (x86)\\Steam"
     ini_defaults["Tools.Steam"]["steamcmd_exe"] = "steamcmd.exe"
@@ -236,7 +236,7 @@ else:
     ini_defaults["Tools.Steam"]["steamcmd_install_dir"] = "/usr/games"
 
 # Tools.Sandboxie/Wine
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["Tools.Sandboxie"] = {}
     ini_defaults["Tools.Sandboxie"]["sandboxie_exe"] = "Start.exe"
     ini_defaults["Tools.Sandboxie"]["sandboxie_ini_exe"] = "SbieIni.exe"
@@ -254,7 +254,7 @@ else:
     ini_defaults["Tools.Wine"]["wine_sandbox_dir"] = "$HOME/Sandbox"
 
 # Tools.FuseISO
-if environment.IsLinuxPlatform():
+if util.IsLinuxPlatform():
     ini_defaults["Tools.FuseISO"] = {}
     ini_defaults["Tools.FuseISO"]["fuseiso_exe"] = "fuseiso"
     ini_defaults["Tools.FuseISO"]["fuseiso_install_dir"] = "/usr/bin"
@@ -263,7 +263,7 @@ if environment.IsLinuxPlatform():
 
 # Tools.Curl
 ini_defaults["Tools.Curl"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["Tools.Curl"]["curl_exe"] = "curl.exe"
     ini_defaults["Tools.Curl"]["curl_install_dir"] = "C:\\Windows\\System32"
 else:
@@ -272,7 +272,7 @@ else:
 
 # Tools.Tar
 ini_defaults["Tools.Tar"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["Tools.Tar"]["tar_exe"] = "tar.exe"
     ini_defaults["Tools.Tar"]["tar_install_dir"] = "C:\\Windows\\System32"
 else:
@@ -281,7 +281,7 @@ else:
 
 # Tools.Git
 ini_defaults["Tools.Git"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["Tools.Git"]["git_exe"] = "git.exe"
     ini_defaults["Tools.Git"]["git_install_dir"] = "%ProgramFiles%\\Git\\bin"
 else:
@@ -290,7 +290,7 @@ else:
 
 # Tools.Gpg
 ini_defaults["Tools.Gpg"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["Tools.Gpg"]["gpg_exe"] = "gpg.exe"
     ini_defaults["Tools.Gpg"]["gpg_install_dir"] = "%ProgramFiles(x86)%\\gnupg\\bin"
 else:
@@ -299,7 +299,7 @@ else:
 
 # Tools.7Zip
 ini_defaults["Tools.7Zip"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["Tools.7Zip"]["7z_exe"] = "7z.exe"
     ini_defaults["Tools.7Zip"]["7z_install_dir"] = "%ProgramFiles%\\7-Zip-Zstandard"
 else:
@@ -308,7 +308,7 @@ else:
 
 # Tools.Firefox
 ini_defaults["Tools.Firefox"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["Tools.Firefox"]["firefox_exe"] = "firefox.exe"
     ini_defaults["Tools.Firefox"]["firefox_install_dir"] = "%ProgramFiles%\\Mozilla Firefox"
     ini_defaults["Tools.Firefox"]["firefox_download_dir"] = "%USERPROFILE%\\Downloads"
@@ -320,7 +320,7 @@ ini_defaults["Tools.Firefox"]["firefox_profile_dir"] = ""
 
 # Tools.Chrome
 ini_defaults["Tools.Chrome"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["Tools.Chrome"]["chrome_exe"] = "chrome.exe"
     ini_defaults["Tools.Chrome"]["chrome_install_dir"] = "%ProgramFiles%\\Google\\Chrome\\Application"
     ini_defaults["Tools.Chrome"]["chrome_download_dir"] = "%USERPROFILE%\\Downloads"
@@ -331,7 +331,7 @@ else:
 
 # Tools.Brave
 ini_defaults["Tools.Brave"] = {}
-if environment.IsWindowsPlatform():
+if util.IsWindowsPlatform():
     ini_defaults["Tools.Brave"]["brave_exe"] = "brave.exe"
     ini_defaults["Tools.Brave"]["brave_install_dir"] = "%ProgramFiles%\\BraveSoftware\\Brave-Browser\\Application"
     ini_defaults["Tools.Brave"]["brave_download_dir"] = "%USERPROFILE%\\Downloads"

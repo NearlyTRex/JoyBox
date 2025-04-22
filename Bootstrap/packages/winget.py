@@ -1,20 +1,24 @@
 # Imports
 import os
 import sys
-import subprocess
 
 # Local imports
-import environment
+import constants
+import util
 
 ###########################################################
-# Preliminaries
+# WinGet
 ###########################################################
-preliminaries = []
+winget = {}
+winget[constants.LOCAL_UBUNTU] = []
+winget[constants.LOCAL_WINDOWS] = []
+winget[constants.REMOTE_UBUNTU] = []
+winget[constants.REMOTE_WINDOWS] = []
 
 ###########################################################
-# Packages
+# WinGet - Local Windows
 ###########################################################
-packages = [
+winget[constants.LOCAL_WINDOWS] += [
 
     # Devel
     "MHNexus.HxD",
@@ -77,23 +81,3 @@ packages = [
     "Telegram.TelegramDesktop",
     "StefansTools.grepWin"
 ]
-
-###########################################################
-# Functions
-###########################################################
-
-# Setup
-def Setup(ini_values = {}):
-
-    # Get winget tools
-    winget_exe = ini_values["Tools.WinGet"]["winget_exe"]
-    winget_install_dir = os.path.expandvars(ini_values["Tools.WinGet"]["winget_install_dir"])
-    winget_tool = os.path.join(winget_install_dir, winget_exe)
-
-    # Run preliminaries
-    for preliminary in preliminaries:
-        subprocess.check_call(preliminary, shell=True)
-
-    # Install packages
-    for package in packages:
-        subprocess.check_call([winget_tool, "install", "-e", "--id", package])

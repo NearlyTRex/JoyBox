@@ -1,8 +1,11 @@
+# Imports
 import os
 import sys
 import shlex
 import paramiko
 from io import StringIO
+
+# Local imports
 import util
 from . import connection
 
@@ -226,4 +229,7 @@ class ConnectionSSH(connection.Connection):
         return False
 
     def ChangePermission(self, src, permission):
+        return False
+
+    def AddToPath(self, src):
         return False
