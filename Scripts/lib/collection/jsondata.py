@@ -18,7 +18,7 @@ def AreGameJsonFilePossible(
     game_supercategory,
     game_category = None,
     game_subcategory = None):
-    return (game_supercategory == config.Supercategory.ROMS)
+    return game_supercategory in [config.Supercategory.ROMS, config.Supercategory.DLC, config.Supercategory.UPDATES]
 
 ############################################################
 
@@ -180,15 +180,18 @@ def UpdateGameJsonFile(
     all_extras = []
     all_dependencies = []
     for rebased_file in rebased_files:
-        rebased_subfile = system.GetFilenameFrontSlice(rebased_file)
-        if rebased_file.startswith(config.json_key_dlc):
-            all_dlc.append(rebased_subfile)
-        elif rebased_file.startswith(config.json_key_update):
-            all_updates.append(rebased_subfile)
-        elif rebased_file.startswith(config.json_key_extra):
-            all_extras.append(rebased_subfile)
-        elif rebased_file.startswith(config.json_key_dependencies):
-            all_dependencies.append(rebased_subfile)
+        if game_supercategory in [config.Supercategory.ROMS]:
+            rebased_subfile = system.GetFilenameFrontSlice(rebased_file)
+            if rebased_file.startswith(config.json_key_dlc):
+                all_dlc.append(rebased_subfile)
+            elif rebased_file.startswith(config.json_key_update):
+                all_updates.append(rebased_subfile)
+            elif rebased_file.startswith(config.json_key_extra):
+                all_extras.append(rebased_subfile)
+            elif rebased_file.startswith(config.json_key_dependencies):
+                all_dependencies.append(rebased_subfile)
+            else:
+                all_main.append(rebased_file)
         else:
             all_main.append(rebased_file)
 
@@ -196,8 +199,10 @@ def UpdateGameJsonFile(
     top_level_paths = system.ConvertToTopLevelPaths(rebased_files)
 
     # Get best game file
-    best_game_file = gameinfo.FindBestGameFile(top_level_paths)
-    best_game_file = system.GetFilenameFile(best_game_file)
+    best_game_file = None
+    if game_supercategory in [config.Supercategory.ROMS]:
+        best_game_file = gameinfo.FindBestGameFile(top_level_paths)
+        best_game_file = system.GetFilenameFile(best_game_file)
 
     # Set common keys
     if isinstance(rebased_files, list) and len(rebased_files) > 0:
@@ -213,47 +218,49 @@ def UpdateGameJsonFile(
     if isinstance(best_game_file, str) and len(best_game_file) > 0:
         json_obj.fill_value(config.json_key_transform_file, best_game_file)
 
-    # Set computer keys
-    if game_category == config.Category.COMPUTER:
-        store_obj = stores.GetStoreByPlatform(game_platform)
-        if store_obj:
-            json_obj.fill_value(store_obj.GetKey(), {})
-            if game_platform in config.manual_import_platforms:
-                json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_appid, system.GenerateUniqueID())
-                json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_appname, system.GetSlugString(game_regular_name))
-                json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_name, game_regular_name)
+    # Rom keys
+    if game_supercategory in [config.Supercategory.ROMS]:
 
-    # Set other platform keys
-    else:
-        if isinstance(best_game_file, str) and len(best_game_file) > 0:
-            json_obj.fill_value(config.json_key_launch_file, best_game_file)
-
-    # Get store
-    store_obj = stores.GetStoreByPlatform(
-        store_platform = game_platform,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Get latest jsondata
-    latest_jsondata = None
-    if store_obj:
-        latest_jsondata = store_obj.GetLatestJsondata(
-            identifier = json_obj.get_subvalue(store_obj.GetKey(), store_obj.GetInfoIdentifierKey()),
-            branch = json_obj.get_subvalue(store_obj.GetKey(), config.json_key_store_branchid),
+        # Get store
+        store_obj = stores.GetStoreByPlatform(
+            store_platform = game_platform,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Merge current data
-    if latest_jsondata:
-        for store_subdata_key in config.json_keys_store_subdata:
-            if latest_jsondata.has_key(store_subdata_key):
-                json_obj.fill_subvalue(store_obj.GetKey(), store_subdata_key, latest_jsondata.get_value(store_subdata_key))
-                if store_subdata_key == config.json_key_store_paths:
-                    paths = json_obj.get_subvalue(store_obj.GetKey(), store_subdata_key, [])
-                    paths = system.PruneChildPaths(paths)
-                    json_obj.set_subvalue(store_obj.GetKey(), store_subdata_key, paths)
+        # Set computer keys
+        if game_category == config.Category.COMPUTER:
+            if store_obj:
+                json_obj.fill_value(store_obj.GetKey(), {})
+                if game_platform in config.manual_import_platforms:
+                    json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_appid, system.GenerateUniqueID())
+                    json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_appname, system.GetSlugString(game_regular_name))
+                    json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_name, game_regular_name)
+
+        # Set other platform keys
+        else:
+            if isinstance(best_game_file, str) and len(best_game_file) > 0:
+                json_obj.fill_value(config.json_key_launch_file, best_game_file)
+
+        # Get latest jsondata
+        latest_jsondata = None
+        if store_obj:
+            latest_jsondata = store_obj.GetLatestJsondata(
+                identifier = json_obj.get_subvalue(store_obj.GetKey(), store_obj.GetInfoIdentifierKey()),
+                branch = json_obj.get_subvalue(store_obj.GetKey(), config.json_key_store_branchid),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
+        # Merge current data
+        if latest_jsondata:
+            for store_subdata_key in config.json_keys_store_subdata:
+                if latest_jsondata.has_key(store_subdata_key):
+                    json_obj.fill_subvalue(store_obj.GetKey(), store_subdata_key, latest_jsondata.get_value(store_subdata_key))
+                    if store_subdata_key == config.json_key_store_paths:
+                        paths = json_obj.get_subvalue(store_obj.GetKey(), store_subdata_key, [])
+                        paths = system.PruneChildPaths(paths)
+                        json_obj.set_subvalue(store_obj.GetKey(), store_subdata_key, paths)
 
     # Write json file
     success = system.WriteJsonFile(
