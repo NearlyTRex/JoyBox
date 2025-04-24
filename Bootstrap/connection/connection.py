@@ -14,6 +14,9 @@ class Connection:
         self.flags = flags
         self.options = options
 
+    def Copy(self):
+        return copy.deepcopy(self)
+
     def Setup(self):
         pass
 
@@ -34,6 +37,15 @@ class Connection:
 
     def SetFlags(self, flags):
         self.flags = flags
+
+    def GetFlags(self):
+        return self.flags
+
+    def SetOptions(self, options):
+        self.options = options
+
+    def GetOptions(self):
+        return self.options
 
     def CreateCommandString(self, cmd):
         if not cmd:
@@ -98,6 +110,9 @@ class Connection:
         return False
 
     def RemoveDirectory(self, src):
+        return False
+
+    def RemoveFile(self, src):
         return False
 
     def CopyFileOrDirectory(self, src, dest):

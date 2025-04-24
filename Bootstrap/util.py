@@ -30,22 +30,22 @@ class RunFlags:
         self.exit_on_failure = exit_on_failure
         self.skip_existing = skip_existing
 
-    def copy(self):
+    def Copy(self):
         return copy.deepcopy(self)
 
-    def set_verbose(self, verbose):
+    def SetVerbose(self, verbose):
         self.verbose = verbose
         return self
 
-    def set_pretend_run(self, pretend_run):
+    def SetPretendRun(self, pretend_run):
         self.pretend_run = pretend_run
         return self
 
-    def set_exit_on_failure(self, exit_on_failure):
+    def SetExitOnFailure(self, exit_on_failure):
         self.exit_on_failure = exit_on_failure
         return self
 
-    def set_skip_existing(self, skip_existing):
+    def SetSkipExisting(self, skip_existing):
         self.skip_existing = skip_existing
         return self
 
@@ -72,34 +72,34 @@ class RunOptions:
         self.stderr = stderr
         self.include_stderr = include_stderr
 
-    def copy(self):
+    def Copy(self):
         return copy.deepcopy(self)
 
-    def set_cwd(self, cwd):
+    def SetCurrentWorkingDirectory(self, cwd):
         self.cwd = cwd
         return self
 
-    def set_env(self, env):
+    def SetEnvironment(self, env):
         self.env = env
         return self
 
-    def set_shell(self, shell):
+    def SetShell(self, shell):
         self.shell = shell
         return self
 
-    def set_creationflags(self, creationflags):
+    def SetCreationFlags(self, creationflags):
         self.creationflags = creationflags
         return self
 
-    def set_stdout(self, stdout):
+    def SetStdout(self, stdout):
         self.stdout = stdout
         return self
 
-    def set_stderr(self, stderr):
+    def SetStderr(self, stderr):
         self.stderr = stderr
         return self
 
-    def set_include_stderr(self, include_stderr):
+    def SetIncludeStderr(self, include_stderr):
         self.include_stderr = include_stderr
         return self
 
