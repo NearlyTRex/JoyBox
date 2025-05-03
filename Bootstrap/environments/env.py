@@ -4,26 +4,20 @@ import sys
 
 # Local imports
 import util
-import connection
 
-# Installer
-class Installer:
+# Environment
+class Environment:
     def __init__(
         self,
         config,
-        connection,
         flags = util.RunFlags(),
         options = util.RunOptions()):
         self.config = config.Copy()
-        self.connection = connection.Copy()
         self.flags = flags.Copy()
         self.options = options.Copy()
 
-    def IsInstalled(self):
+    def Setup(self):
         return False
 
-    def Install(self):
-        return False
-
-    def Uninstall(self):
+    def Teardown(self):
         return False

@@ -4,20 +4,17 @@ import sys
 
 # Local imports
 import util
-import connection
+from . import installer
 
-# Installer
-class Installer:
+# Nextcloud
+class Nextcloud(installer.Installer):
     def __init__(
         self,
         config,
         connection,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        self.config = config.Copy()
-        self.connection = connection.Copy()
-        self.flags = flags.Copy()
-        self.options = options.Copy()
+        super.__init__(config, connection, flags, options)
 
     def IsInstalled(self):
         return False

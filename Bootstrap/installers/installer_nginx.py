@@ -29,21 +29,16 @@ server {
 class Nginx(installer.Installer):
     def __init__(
         self,
+        config,
         connection,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        super.__init__(connection, flags, options)
+        super.__init__(config, connection, flags, options)
 
     def IsInstalled(self):
         return self.connection.DoesFileOrDirectoryExist("/usr/sbin/nginx")
 
     def Install(self):
-
-        # Check for already installed
-        if self.IsInstalled():
-            return True
-
-        # Setup
         util.LogInfo("Installing nginx")
         self.connection.RunChecked("sudo apt update")
         self.connection.RunChecked("sudo apt install -y nginx")
@@ -55,4 +50,13 @@ class Nginx(installer.Installer):
         self.connection.RunChecked("sudo systemctl restart nginx")
         self.connection.RunChecked("sudo systemctl enable nginx")
         self.connection.RunChecked("sudo systemctl start nginx")
+        return True
+
+    def Uninstall(self):
+        util.LogInfo("Uninstalling nginx")
+        self.connection.RunChecked("sudo systemctl stop nginx")
+        self.connection.RunChecked("sudo systemctl disable nginx")
+        self.connection.RunChecked("sudo apt remove -y nginx nginx-common")
+        self.connection.Run("sudo rm -rf /etc/nginx")
+        self.connection.Run("sudo rm -rf /var/www/html")
         return True

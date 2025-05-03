@@ -7,18 +7,18 @@ import constants
 import util
 
 ###########################################################
-# Apt
+# AptGet
 ###########################################################
-apt = {}
-apt[constants.LOCAL_UBUNTU] = []
-apt[constants.LOCAL_WINDOWS] = []
-apt[constants.REMOTE_UBUNTU] = []
-apt[constants.REMOTE_WINDOWS] = []
+aptget = {}
+aptget[constants.LOCAL_UBUNTU] = []
+aptget[constants.LOCAL_WINDOWS] = []
+aptget[constants.REMOTE_UBUNTU] = []
+aptget[constants.REMOTE_WINDOWS] = []
 
 ###########################################################
-# Apt - Local Ubuntu
+# AptGet - Local Ubuntu
 ###########################################################
-apt[constants.LOCAL_UBUNTU] += [
+aptget[constants.LOCAL_UBUNTU] += [
 
     # Admin
     "7zip",
@@ -207,7 +207,6 @@ apt[constants.LOCAL_UBUNTU] += [
     "qmmp",
 
     # Utils
-    "1password",
     "gsmartcontrol",
     "hardinfo",
     "jstest-gtk",
@@ -224,13 +223,10 @@ apt[constants.LOCAL_UBUNTU] += [
     "qemu-utils",
     "virt-manager",
     "virtualbox",
-    "winehq-devel",
-    "winetricks",
     "xdg-desktop-portal",
 
     # Web
     "firefox",
-    "brave-browser",
     "uget",
 
     # X11
@@ -238,9 +234,9 @@ apt[constants.LOCAL_UBUNTU] += [
 ]
 
 ###########################################################
-# Apt - Remote Ubuntu
+# AptGet - Remote Ubuntu
 ###########################################################
-apt[constants.REMOTE_UBUNTU] += [
+aptget[constants.REMOTE_UBUNTU] += [
     "apache2-utils",
     "apache2",
     "certbot",
