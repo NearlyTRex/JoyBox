@@ -82,7 +82,7 @@ class Wordpress(installer.Installer):
         connection,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        super.__init__(config, connection, flags, options)
+        super().__init__(config, connection, flags, options)
         self.app_name = "wordpress"
         self.app_dir = f"/opt/apps/{self.app_name}"
         self.nginx_available_conf = f"/etc/nginx/sites-available/{self.app_name}.conf"

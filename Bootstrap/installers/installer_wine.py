@@ -14,7 +14,7 @@ class Wine(installer.Installer):
         connection,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        super.__init__(config, connection, flags, options)
+        super().__init__(config, connection, flags, options)
         self.codename = util.GetUbuntuCodename()
         self.url = "https://dl.winehq.org/wine-builds"
         self.archive_key = "winehq-archive.key"

@@ -1,6 +1,7 @@
 # Imports
 import os
 import sys
+import copy
 
 # Local imports
 import util
@@ -14,7 +15,7 @@ class Installer:
         connection,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        self.config = config.Copy()
+        self.config = copy.deepcopy(config)
         self.connection = connection.Copy()
         self.flags = flags.Copy()
         self.options = options.Copy()

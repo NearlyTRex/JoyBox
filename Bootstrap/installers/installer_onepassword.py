@@ -14,7 +14,7 @@ class OnePassword(installer.Installer):
         connection,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        super.__init__(config, connection, flags, options)
+        super().__init__(config, connection, flags, options)
         self.policy = "AC2D62742012EA22"
         self.url = f"https://downloads.1password.com"
         self.archive_key = "1password-archive-keyring.gpg"

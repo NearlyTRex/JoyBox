@@ -1,6 +1,7 @@
 # Imports
 import os
 import sys
+import copy
 
 # Local imports
 import util
@@ -12,7 +13,7 @@ class Environment:
         config,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        self.config = config.Copy()
+        self.config = copy.deepcopy(config)
         self.flags = flags.Copy()
         self.options = options.Copy()
 

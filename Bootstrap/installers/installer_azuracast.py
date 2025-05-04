@@ -14,7 +14,7 @@ class Azuracast(installer.Installer):
         connection,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        super.__init__(config, connection, flags, options)
+        super().__init__(config, connection, flags, options)
         self.app_name = "azuracast"
         self.app_dir = f"/var/{self.app_name}"
 

@@ -14,7 +14,7 @@ class Certbot(installer.Installer):
         connection,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        super.__init__(config, connection, flags, options)
+        super().__init__(config, connection, flags, options)
 
     def IsInstalled(self):
         return False

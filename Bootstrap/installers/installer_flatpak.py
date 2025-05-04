@@ -20,7 +20,7 @@ class Flatpak(installer.Installer):
         self.flatpak_packages = packages.flatpak.get(self.env, [])
         self.flatpak_exe = self.config["Tools.Flatpak"]["flatpak_exe"]
         self.flatpak_install_dir = os.path.expandvars(self.config["Tools.Flatpak"]["flatpak_install_dir"])
-        self.flatpak_tool = os.path.join(flatpak_install_dir, flatpak_exe)
+        self.flatpak_tool = os.path.join(self.flatpak_install_dir, self.flatpak_exe)
 
     def IsInstalled(self):
         for pkg in self.flatpak_packages:

@@ -14,7 +14,7 @@ class Chrome(installer.Installer):
         connection,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        super.__init__(config, connection, flags, options)
+        super().__init__(config, connection, flags, options)
         self.url = "https://dl.google.com/linux/direct"
         self.archive_key = "google-chrome.gpg"
         self.sources_list = "google-chrome.list"

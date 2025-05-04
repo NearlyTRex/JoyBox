@@ -15,7 +15,7 @@ class Python(installer.Installer):
         connection,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        super.__init__(config, connection, flags, options)
+        super().__init__(config, connection, flags, options)
         self.env = self.config.get("env")
         self.python_packages = packages.python.get(self.env, [])
         self.python_exe = self.config["Tools.Python"]["python_exe"]

@@ -14,7 +14,7 @@ class Brave(installer.Installer):
         connection,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        super.__init__(config, connection, flags, options)
+        super().__init__(config, connection, flags, options)
         self.url = "https://brave-browser-apt-release.s3.brave.com"
         self.archive_key = "brave-browser-archive-keyring.gpg"
         self.sources_list = "brave-browser-release.list"
