@@ -253,7 +253,11 @@ def LoadConfigFile(src):
         LogError(e)
         return None
 
-def InitializeConfigFile(src, default_config):
+def InitializeConfigFile(src, default_config = None):
+
+    # Check for default config
+    if not default_config:
+        default_config = {}
 
     # Load current config if it exists
     config_exists = os.path.isfile(src)
