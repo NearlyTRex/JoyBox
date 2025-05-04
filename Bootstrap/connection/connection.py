@@ -149,4 +149,80 @@ class Connection:
         return False
 
     def AddToPath(self, src):
-        return False
+        if util.IsWindowsPlatform():
+            return self.AddToWindowsPath(src)
+        else:
+            return self.AddToUnixPath(src)
+
+    def AddToWindowsPath(self, src):
+        try:
+            if self.flags.verbose:
+                util.LogInfo(f"Adding {src} to path")
+            if not self.flags.pretend_run:
+
+                # Get current path
+                current_path = self.RunOutput([
+                    "powershell",
+                    "-Command",
+                    '[Environment]::GetEnvironmentVariable("PATH", "User")'
+                ])
+                current_paths = current_path.split(";") if current_path else []
+                current_paths = [p.strip() for p in current_path.split(";") if p.strip()]
+                if src.strip() in current_paths:
+                    return True
+
+                # Append path
+                new_paths = ";".join(current_paths + [src])
+                new_paths_escaped = new_paths.replace('"', '`"')
+                code = self.RunReturncode([
+                    "powershell",
+                    "-Command",
+                    f'[Environment]::SetEnvironmentVariable("PATH", "{new_paths_escaped}", "User")'
+                ])
+                return code == 0
+            return True
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError(f"Unable to add {src} to path")
+                util.LogError(e)
+                util.QuitProgram()
+            return False
+
+    def AddToUnixPath(self, src):
+        try:
+            if self.flags.verbose:
+                util.LogInfo(f"Adding {src} to path")
+            if not self.flags.pretend_run:
+
+                # Get possible profiles
+                profile_candidates = [
+                    "~/.bash_profile",
+                    "~/.bashrc",
+                    "~/.zshrc",
+                    "~/.profile"
+                ]
+
+                # Get profile
+                profile_file = profile_candidates[0]
+                for candidate in profile_candidates:
+                    if self.DoesFileOrDirectoryExist(candidate):
+                        profile_file = candidate
+                        break
+
+                # Read current profile
+                existing_content = self.ReadFile(profile_file)
+                if not existing_content:
+                    existing_content = ""
+
+                # Add to profile
+                export_line = f'export PATH="{src}:$PATH"\n'
+                if export_line not in existing_content:
+                    new_content = existing_content + "\n" + export_line + "\n"
+                    return self.WriteFile(profile_file, new_content)
+            return True
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError(f"Unable to add {src} to path")
+                util.LogError(e)
+                util.QuitProgram()
+            return False
