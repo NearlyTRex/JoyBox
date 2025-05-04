@@ -17,6 +17,9 @@ class Environment:
         self.flags = flags.Copy()
         self.options = options.Copy()
 
+    def SetEnvironmentType(self, environment_type):
+        self.config["env"] = environment_type
+
     def Setup(self):
         return False
 

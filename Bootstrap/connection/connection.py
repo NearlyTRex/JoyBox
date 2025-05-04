@@ -124,6 +124,9 @@ class Connection:
     def DoesFileOrDirectoryExist(self, src):
         return False
 
+    def TransferFiles(self, src, dest, excludes = []):
+        return False
+
     def WriteFile(self, src, contents):
         return False
 

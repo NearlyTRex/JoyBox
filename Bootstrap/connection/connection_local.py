@@ -263,6 +263,9 @@ class ConnectionLocal(connection.Connection):
                 util.QuitProgram()
             return False
 
+    def TransferFiles(self, src, dest, excludes = []):
+        return False
+
     def WriteFile(self, src, contents):
         try:
             if self.flags.verbose:

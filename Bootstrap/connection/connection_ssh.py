@@ -194,6 +194,57 @@ class ConnectionSSH(connection.Connection):
     def DoesFileOrDirectoryExist(self, src):
         return False
 
+    def TransferFiles(self, src, dest, excludes = []):
+        try:
+            sftp = ConnectionSSH.ssh_client.open_sftp()
+            sftp_lock = threading.Lock()
+
+            # Gather all files and ensure remote dirs
+            file_tasks = []
+            for dirpath, dirnames, filenames in os.walk(local_path):
+                if IsExcludedPath(os.path.relpath(dirpath, local_path), excludes = excludes):
+                    continue
+
+                # Get remote directory
+                if dirpath == local_path:
+                    remote_dir = remote_path
+                else:
+                    remote_dir = os.path.join(remote_path, os.path.relpath(dirpath, local_path))
+
+                # Ensure the remote directory exists
+                util.LogInfo(f"Making remote directory: {remote_dir}")
+                try:
+                    sftp.stat(remote_dir)
+                except FileNotFoundError:
+                    sftp.mkdir(remote_dir)
+
+                # Collect files to copy
+                for filename in filenames:
+                    local_file_path = os.path.join(dirpath, filename)
+                    remote_file_path = os.path.join(remote_dir, filename)
+                    file_tasks.append((local_file_path, remote_file_path))
+
+            # Upload files in parallel
+            def upload_file(task):
+                local_file, remote_file = task
+                try:
+                    with sftp_lock:
+                        util.LogInfo(f"Transferring file: {local_file} to {remote_file}")
+                        sftp.put(local_file, remote_file)
+                except Exception as e:
+                    util.LogError(f"Failed to transer file {local_file} to {remote_file}: {e}")
+
+            # Start uploads
+            with concurrent.futures.ThreadPoolExecutor(max_workers = 8) as executor:
+                executor.map(upload_file, file_tasks)
+            sftp.close()
+            return True
+        except Exception as e:
+            util.LogError(f"Failed to transfer {local_path} to {remote_path}")
+            util.LogError(e)
+            util.LogError(traceback.format_exc())
+            return False
+
     def WriteFile(self, src, contents):
         try:
             if self.flags.verbose:

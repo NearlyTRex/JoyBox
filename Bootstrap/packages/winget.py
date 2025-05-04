@@ -10,15 +10,15 @@ import util
 # WinGet
 ###########################################################
 winget = {}
-winget[constants.LOCAL_UBUNTU] = []
-winget[constants.LOCAL_WINDOWS] = []
-winget[constants.REMOTE_UBUNTU] = []
-winget[constants.REMOTE_WINDOWS] = []
+winget[constants.EnvironmentType.LOCAL_UBUNTU] = []
+winget[constants.EnvironmentType.LOCAL_WINDOWS] = []
+winget[constants.EnvironmentType.REMOTE_UBUNTU] = []
+winget[constants.EnvironmentType.REMOTE_WINDOWS] = []
 
 ###########################################################
 # WinGet - Local Windows
 ###########################################################
-winget[constants.LOCAL_WINDOWS] += [
+winget[constants.EnvironmentType.LOCAL_WINDOWS] += [
 
     # Devel
     "MHNexus.HxD",

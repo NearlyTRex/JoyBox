@@ -11,7 +11,6 @@ import logging
 import configparser
 import urllib.request
 import traceback
-import paramiko
 import threading
 import concurrent.futures
 
@@ -300,68 +299,6 @@ def FetchJson(url, flags = RunFlags()):
             LogError(e)
             QuitProgram()
         return None
-
-def CopyFilesToRemoteHost(
-    hostname,
-    username,
-    private_key_str,
-    local_path,
-    remote_path,
-    excludes = []):
-    try:
-        # Connect to remote
-        transport = paramiko.Transport((hostname, 22))
-        private_key = paramiko.RSAKey.from_private_key(io.StringIO(private_key_str))
-        transport.connect(username = username, pkey = private_key)
-        sftp = paramiko.SFTPClient.from_transport(transport)
-        sftp_lock = threading.Lock()
-
-        # Gather all files and ensure remote dirs
-        file_tasks = []
-        for dirpath, dirnames, filenames in os.walk(local_path):
-            if IsExcludedPath(os.path.relpath(dirpath, local_path), excludes = excludes):
-                continue
-
-            # Get remote directory
-            if dirpath == local_path:
-                remote_dir = remote_path
-            else:
-                remote_dir = os.path.join(remote_path, os.path.relpath(dirpath, local_path))
-
-            # Ensure the remote directory exists
-            LogInfo(f"Making remote directory: {remote_dir}")
-            try:
-                sftp.stat(remote_dir)
-            except FileNotFoundError:
-                sftp.mkdir(remote_dir)
-
-            # Collect files to copy
-            for filename in filenames:
-                local_file_path = os.path.join(dirpath, filename)
-                remote_file_path = os.path.join(remote_dir, filename)
-                file_tasks.append((local_file_path, remote_file_path))
-
-        # Upload files in parallel
-        def upload_file(task):
-            local_file, remote_file = task
-            try:
-                with sftp_lock:
-                    LogInfo(f"Copying file to remote: {local_file} to {remote_file}")
-                    sftp.put(local_file, remote_file)
-            except Exception as e:
-                LogError(f"Failed to copy file {local_file} to {remote_file}: {e}")
-
-        # Start uploads
-        with concurrent.futures.ThreadPoolExecutor(max_workers = 8) as executor:
-            executor.map(upload_file, file_tasks)
-        sftp.close()
-        transport.close()
-        return True
-    except Exception as e:
-        LogError(f"Failed to copy {local_path} to {remote_path}")
-        LogError(e)
-        LogError(traceback.format_exc())
-        return False
 
 ###########################################################
 # Distro

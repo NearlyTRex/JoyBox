@@ -10,19 +10,18 @@ import util
 # AptGet
 ###########################################################
 aptget = {}
-aptget[constants.LOCAL_UBUNTU] = []
-aptget[constants.LOCAL_WINDOWS] = []
-aptget[constants.REMOTE_UBUNTU] = []
-aptget[constants.REMOTE_WINDOWS] = []
+aptget[constants.EnvironmentType.LOCAL_UBUNTU] = []
+aptget[constants.EnvironmentType.LOCAL_WINDOWS] = []
+aptget[constants.EnvironmentType.REMOTE_UBUNTU] = []
+aptget[constants.EnvironmentType.REMOTE_WINDOWS] = []
 
 ###########################################################
 # AptGet - Local Ubuntu
 ###########################################################
-aptget[constants.LOCAL_UBUNTU] += [
+aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
 
     # Admin
     "7zip",
-    "7zip-standalone",
     "apt-file",
     "blueman",
     "clamav",
@@ -236,7 +235,7 @@ aptget[constants.LOCAL_UBUNTU] += [
 ###########################################################
 # AptGet - Remote Ubuntu
 ###########################################################
-aptget[constants.REMOTE_UBUNTU] += [
+aptget[constants.EnvironmentType.REMOTE_UBUNTU] += [
     "apache2-utils",
     "apache2",
     "certbot",

@@ -31,10 +31,6 @@ class AptGet(installer.Installer):
         return True
 
     def Install(self):
-        util.LogInfo("Updating AptGet package lists")
-        if self.UpdatePackageLists():
-            util.LogError("Failed to update package list")
-            return False
         util.LogInfo("Installing AptGet packages")
         for pkg in self.aptget_packages:
             if not self.InstallPackage(pkg):
@@ -56,6 +52,10 @@ class AptGet(installer.Installer):
 
     def UpdatePackageLists(self):
         code = self.connection.RunReturncode(["sudo", self.aptget_tool, "update"])
+        return code == 0
+
+    def AutoRemovePackages(self):
+        code = self.connection.RunReturncode(["sudo", self.aptget_tool, "autoremove"])
         return code == 0
 
     def InstallPackage(self, package):

@@ -1,37 +1,79 @@
 #!/usr/bin/env python3
 
 # Imports
-import os, os.path
+import os
 import sys
+import argparse
 
 # Custom imports
 bootstrap_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "Bootstrap"))
 sys.path.append(bootstrap_folder)
-import system
-import environment
-import packages
-import python
-import ini
+import connection
+import constants
+import settings
+import environments
+import util
 
-# Paths
-ini_file = os.path.join(".", "JoyBox.ini")
-scripts_bin_dir = os.path.join(os.path.dirname(__file__), "Scripts", "bin")
-setup_tools_file = os.path.join(scripts_bin_dir, "setup_tools.py")
+# Set up arguments
+parser = argparse.ArgumentParser(description="Environment bootstrap script.")
+parser.add_argument(
+    "-a", "--action",
+    choices = ["setup", "teardown"],
+    required = True,
+    help = "Action to perform")
+parser.add_argument(
+    "-t", "--type",
+    type = constants.EnvironmentType,
+    choices = list(constants.EnvironmentType),
+    required = True,
+    help = "Environment type")
+parser.add_argument(
+    "-c", "--config_file",
+    default = os.path.join(".", constants.DEFAULT_CONFIG_FILE),
+    help = "Path to config file")
+parser.add_argument("-v", "--verbose", action = "store_true", help = "Enable verbose mode")
+parser.add_argument("-p", "--pretend_run", action = "store_true", help = "Enable pretend run mode")
+parser.add_argument("-x", "--exit_on_failure", action = "store_true", help = "Enable exit on failure mode")
+args, unknown = parser.parse_known_args()
 
-# Read ini values
-ini_values = ini.OpenIniFile(ini_file)
+# Main
+def main():
 
-# Setup packages
-packages.Setup(ini_values)
+    # Setup logging
+    util.SetupLogging()
 
-# Setup python
-python.Setup(ini_values)
-python.RunScript(setup_tools_file, ini_values)
+    # Get config file
+    config_file = os.path.realpath(args.config_file)
+    if not os.path.exists(config_file):
+        util.LogErrorAndQuit(f"Config file '{config_file}' does not exist")
 
-# Add to path
-should_add_path = system.PromptForValue("Would you like to add %s to your PATH? (y/N)" % scripts_bin_dir, "N")
-if should_add_path.lower() == "y":
-    environment.AddToPath(scripts_bin_dir)
+    # Load config file
+    config_contents = util.InitializeConfigFile(config_file)
+    if not isinstance(config_contents, dict):
+        util.LogErrorAndQuit(f"Unable to read config data from {config_file}")
 
-# Inform user
-system.Log("Bootstrap complete!")
+    # Create environment options
+    environment_options = {
+        "config": config_contents,
+        "flags": util.RunFlags(
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
+    }
+
+    # Create environment runner
+    environment_runner = None
+    if args.type == constants.EnvironmentType.LOCAL_UBUNTU:
+        environment_runner = environments.LocalUbuntu(**environment_options)
+    if not environment_runner:
+        raise ValueError("No environment runner could be found")
+
+    # Dispatch action
+    if args.action == "setup":
+        environment_runner.Setup()
+    elif args.action == "teardown":
+        environment_runner.Teardown()
+
+# Start
+if __name__ == "__main__":
+    main()

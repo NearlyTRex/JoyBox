@@ -10,29 +10,29 @@ import util
 # Flatpak
 ###########################################################
 flatpak = {}
-flatpak[constants.LOCAL_UBUNTU] = []
-flatpak[constants.LOCAL_WINDOWS] = []
-flatpak[constants.REMOTE_UBUNTU] = []
-flatpak[constants.REMOTE_WINDOWS] = []
+flatpak[constants.EnvironmentType.LOCAL_UBUNTU] = []
+flatpak[constants.EnvironmentType.LOCAL_WINDOWS] = []
+flatpak[constants.EnvironmentType.REMOTE_UBUNTU] = []
+flatpak[constants.EnvironmentType.REMOTE_WINDOWS] = []
 
 ###########################################################
 # Flatpak - Local Ubuntu
 ###########################################################
-flatpak[constants.LOCAL_UBUNTU] += [
+flatpak[constants.EnvironmentType.LOCAL_UBUNTU] += [
 
     # Devel
-    ["flathub", "com.axosoft.GitKraken"],
-    ["flathub", "com.jetbrains.IntelliJ-IDEA-Community"],
-    ["flathub", "org.mapeditor.Tiled"],
+    {"repository": "flathub", "name": "com.axosoft.GitKraken"},
+    {"repository": "flathub", "name": "com.jetbrains.IntelliJ-IDEA-Community"},
+    {"repository": "flathub", "name": "org.mapeditor.Tiled"},
 
     # Text
-    ["flathub", "com.vscodium.codium"],
+    {"repository": "flathub", "name": "com.vscodium.codium"},
 
     # Utils
-    ["flathub", "org.cryptomator.Cryptomator"],
+    {"repository": "flathub", "name": "org.cryptomator.Cryptomator"},
 
     # Web
-    ["flathub", "com.discordapp.Discord"],
-    ["flathub", "org.signal.Signal"],
-    ["flathub", "org.telegram.desktop"]
+    {"repository": "flathub", "name": "com.discordapp.Discord"},
+    {"repository": "flathub", "name": "org.signal.Signal"},
+    {"repository": "flathub", "name": "org.telegram.desktop"},
 ]
