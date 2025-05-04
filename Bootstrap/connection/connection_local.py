@@ -7,6 +7,7 @@ import grp
 import subprocess
 import shutil
 import tempfile
+import fnmatch
 import urllib.request
 import zipfile
 import tarfile
@@ -54,18 +55,14 @@ class ConnectionLocal(connection.Connection):
                 return self.CleanCommandOutput(output.strip())
             return ""
         except subprocess.CalledProcessError as e:
-            if self.flags.verbose:
-                util.LogError(e)
-            elif self.flags.exit_on_failure:
+            if self.flags.exit_on_failure:
                 util.LogError(e)
                 util.QuitProgram()
             if self.options.include_stderr:
                 return e.output
             return ""
         except Exception as e:
-            if self.flags.verbose:
-                util.LogError(e)
-            elif self.flags.exit_on_failure:
+            if self.flags.exit_on_failure:
                 util.LogError(e)
                 util.QuitProgram()
             return ""
@@ -99,16 +96,12 @@ class ConnectionLocal(connection.Connection):
                 return code
             return 0
         except subprocess.CalledProcessError as e:
-            if self.flags.verbose:
-                util.LogError(e)
-            elif self.flags.exit_on_failure:
+            if self.flags.exit_on_failure:
                 util.LogError(e)
                 util.QuitProgram()
             return e.returncode
         except Exception as e:
-            if self.flags.verbose:
-                util.LogError(e)
-            elif self.flags.exit_on_failure:
+            if self.flags.exit_on_failure:
                 util.LogError(e)
                 util.QuitProgram()
             return 1
@@ -141,16 +134,12 @@ class ConnectionLocal(connection.Connection):
                 return code
             return 0
         except subprocess.CalledProcessError as e:
-            if self.flags.verbose:
-                util.LogError(e)
-            elif self.flags.exit_on_failure:
+            if self.flags.exit_on_failure:
                 util.LogError(e)
                 util.QuitProgram()
             return e.returncode
         except Exception as e:
-            if self.flags.verbose:
-                util.LogError(e)
-            elif self.flags.exit_on_failure:
+            if self.flags.exit_on_failure:
                 util.LogError(e)
                 util.QuitProgram()
             return 1
@@ -264,7 +253,46 @@ class ConnectionLocal(connection.Connection):
             return False
 
     def TransferFiles(self, src, dest, excludes = []):
-        return False
+        try:
+            if self.flags.verbose:
+                util.LogInfo("Transferring files from %s to %s" % (src, dest))
+            if self.flags.skip_existing and os.path.exists(dest):
+                return True
+            if not self.flags.pretend_run:
+                if os.path.isdir(src):
+                    def ignore_patterns(_, names):
+                        ignored = set()
+                        for pattern in excludes:
+                            ignored.update(fnmatch.filter(names, pattern))
+                        return ignored
+                    shutil.copytree(src, dest, ignore = ignore_patterns if excludes else None, dirs_exist_ok=True)
+                else:
+                    if not any(fnmatch.fnmatch(os.path.basename(src), pattern) for pattern in excludes):
+                        shutil.copy(src, dest)
+            return True
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError(f"Unable to transfer files from {src} to {dest}")
+                util.LogError(e)
+                util.QuitProgram()
+            return False
+
+    def ReadFile(self, src):
+        try:
+            if self.flags.verbose:
+                util.LogInfo(f"Reading file {src}")
+            if not self.flags.pretend_run:
+                contents = ""
+                with open(src, "r") as f:
+                    contents = f.read()
+                return contents
+            return None
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError(f"Unable to write file to {src}")
+                util.LogError(e)
+                util.QuitProgram()
+            return None
 
     def WriteFile(self, src, contents):
         try:
@@ -398,21 +426,31 @@ class ConnectionLocal(connection.Connection):
                 # Unix
                 else:
 
+                    # Get possible profiles
+                    profile_candidates = [
+                        "~/.bash_profile",
+                        "~/.bashrc",
+                        "~/.zshrc",
+                        "~/.profile"
+                    ]
+
                     # Get profile
-                    shell_rc = os.path.expanduser("~/.bashrc")
-                    if os.environ.get("SHELL", "").endswith("zsh"):
-                        shell_rc = os.path.expanduser("~/.zshrc")
+                    profile_file = profile_candidates[0]
+                    for candidate in profile_candidates:
+                        if self.DoesFileOrDirectoryExist(candidate):
+                            profile_file = candidate
+                            break
 
                     # Read current profile
-                    contents = ""
-                    with open(shell_rc, "r") as f:
-                        contents = f.read()
+                    existing_content = self.ReadFile(profile_file)
+                    if not existing_content:
+                        existing_content = ""
 
                     # Add to profile
                     export_line = f'export PATH="{src}:$PATH"\n'
-                    if export_line not in contents:
-                        with open(shell_rc, "a") as f:
-                            f.write(export_line)
+                    if export_line not in existing_content:
+                        new_content = existing_content + "\n" + export_line + "\n"
+                        return self.WriteFile(profile_file, new_content)
             return True
         except Exception as e:
             if self.flags.exit_on_failure:

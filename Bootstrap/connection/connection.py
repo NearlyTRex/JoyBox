@@ -127,6 +127,9 @@ class Connection:
     def TransferFiles(self, src, dest, excludes = []):
         return False
 
+    def ReadFile(self, src):
+        return None
+
     def WriteFile(self, src, contents):
         return False
 

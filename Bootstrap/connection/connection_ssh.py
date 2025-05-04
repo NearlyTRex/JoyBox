@@ -3,6 +3,10 @@ import os
 import sys
 import shlex
 import paramiko
+import stat
+import traceback
+import threading
+import concurrent.futures
 from io import StringIO
 
 # Local imports
@@ -99,9 +103,7 @@ class ConnectionSSH(connection.Connection):
                     return output + "\n" + error
                 return output
         except Exception as e:
-            if self.flags.verbose:
-                util.LogError(e)
-            elif self.flags.exit_on_failure:
+            if self.flags.exit_on_failure:
                 util.LogError(e)
                 util.QuitProgram()
             return ""
@@ -119,9 +121,7 @@ class ConnectionSSH(connection.Connection):
                 exit_code = stdout.channel.recv_exit_status()
                 return exit_code
         except Exception as e:
-            if self.flags.verbose:
-                util.LogError(e)
-            elif self.flags.exit_on_failure:
+            if self.flags.exit_on_failure:
                 util.LogError(e)
                 util.QuitProgram()
             return 1
@@ -144,9 +144,7 @@ class ConnectionSSH(connection.Connection):
                 exit_code = stdout.channel.recv_exit_status()
                 return exit_code
         except Exception as e:
-            if self.flags.verbose:
-                util.LogError(e)
-            elif self.flags.exit_on_failure:
+            if self.flags.exit_on_failure:
                 util.LogError(e)
                 util.QuitProgram()
             return 1
@@ -160,7 +158,15 @@ class ConnectionSSH(connection.Connection):
                 util.QuitProgram(code)
 
     def MakeTemporaryDirectory(self):
-        return None
+        try:
+            temp_dir = self.RunOutput("mktemp -d").strip()
+            if self.flags.verbose:
+                util.LogInfo(f"Created temporary directory: {temp_dir}")
+            return temp_dir
+        except Exception as e:
+            util.LogError("Failed to create temporary directory")
+            util.LogError(e)
+            return None
 
     def MakeDirectory(self, src):
         try:
@@ -174,25 +180,56 @@ class ConnectionSSH(connection.Connection):
             sftp.close()
             return True
         except Exception as e:
-            if self.flags.verbose:
+            if self.flags.exit_on_failure:
                 util.LogError(f"Failed to make directory {src}")
-                util.LogError(e)
-            elif self.flags.exit_on_failure:
                 util.LogError(e)
                 util.QuitProgram()
             return False
 
     def RemoveDirectory(self, src):
-        return False
+        try:
+            if self.flags.verbose:
+                util.LogInfo(f"Removing remote directory {src}")
+            sftp = ConnectionSSH.ssh_client.open_sftp()
+            for file_attr in sftp.listdir_attr(src):
+                full_path = os.path.join(src, file_attr.filename)
+                if stat.S_ISDIR(file_attr.st_mode):
+                    self.RemoveDirectory(full_path)
+                else:
+                    sftp.remove(full_path)
+            sftp.rmdir(src)
+            sftp.close()
+            return True
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError(f"Failed to remove directory {src}")
+                util.LogError(e)
+                util.QuitProgram()
+            return False
 
     def CopyFileOrDirectory(self, src, dest):
-        return False
+        return self.RunBlocking(f"cp {src} {dest}")
 
     def MoveFileOrDirectory(self, src, dest):
-        return False
+        return self.RunBlocking(f"mv {src} {dest}")
 
     def DoesFileOrDirectoryExist(self, src):
-        return False
+        try:
+            if self.flags.verbose:
+                util.LogInfo(f"Checking existence of {src}")
+            if not self.flags.pretend_run:
+                sftp = ConnectionSSH.ssh_client.open_sftp()
+                sftp.stat(src)
+                sftp.close()
+            return True
+        except FileNotFoundError:
+            return False
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError(f"Error checking existence of {src}")
+                util.LogError(e)
+                util.QuitProgram()
+            return False
 
     def TransferFiles(self, src, dest, excludes = []):
         try:
@@ -201,15 +238,15 @@ class ConnectionSSH(connection.Connection):
 
             # Gather all files and ensure remote dirs
             file_tasks = []
-            for dirpath, dirnames, filenames in os.walk(local_path):
-                if IsExcludedPath(os.path.relpath(dirpath, local_path), excludes = excludes):
+            for dirpath, dirnames, filenames in os.walk(src):
+                if IsExcludedPath(os.path.relpath(dirpath, src), excludes = excludes):
                     continue
 
                 # Get remote directory
-                if dirpath == local_path:
-                    remote_dir = remote_path
+                if dirpath == src:
+                    remote_dir = dest
                 else:
-                    remote_dir = os.path.join(remote_path, os.path.relpath(dirpath, local_path))
+                    remote_dir = os.path.join(dest, os.path.relpath(dirpath, src))
 
                 # Ensure the remote directory exists
                 util.LogInfo(f"Making remote directory: {remote_dir}")
@@ -240,18 +277,36 @@ class ConnectionSSH(connection.Connection):
             sftp.close()
             return True
         except Exception as e:
-            util.LogError(f"Failed to transfer {local_path} to {remote_path}")
+            util.LogError(f"Failed to transfer {src} to {dest}")
             util.LogError(e)
             util.LogError(traceback.format_exc())
             return False
+
+    def ReadFile(self, src):
+        try:
+            if self.flags.verbose:
+                util.LogInfo(f"Reading remote file {src}")
+            if not self.flags.pretend_run:
+                sftp = ConnectionSSH.ssh_client.open_sftp()
+                with sftp.file(src, "r") as f:
+                    contents = f.read().decode()
+                sftp.close()
+                return contents
+            return None
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError(f"Unable to read file from {src}")
+                util.LogError(e)
+                util.QuitProgram()
+            return None
 
     def WriteFile(self, src, contents):
         try:
             if self.flags.verbose:
                 util.LogInfo(f"Writing remote file {src}")
-            sftp = ConnectionSSH.ssh_client.open_sftp()
             remote_dir = os.path.dirname(src)
             if self.MakeDirectory(remote_dir):
+                sftp = ConnectionSSH.ssh_client.open_sftp()
                 with sftp.file(src, "w") as remote_file:
                     remote_file.write(contents)
                     remote_file.flush()
@@ -259,28 +314,62 @@ class ConnectionSSH(connection.Connection):
                 return True
             return False
         except Exception as e:
-            if self.flags.verbose:
+            if self.flags.exit_on_failure:
                 util.LogError(f"Failed to write file {src}")
-                util.LogError(e)
-            elif self.flags.exit_on_failure:
                 util.LogError(e)
                 util.QuitProgram()
             return False
 
     def DownloadFile(self, url, dest):
-        return False
+        return self.RunBlocking(f"curl -L -o {dest} {url}")
 
     def ExtractTarArchive(self, src, dest):
-        return False
+        return self.RunBlocking(f"tar -xf {src} -C {dest}")
 
     def ExtractZipArchive(self, src, dest):
-        return False
+        return self.RunBlocking(f"unzip -o {src} -d {dest}")
 
     def ChangeOwner(self, src, owner):
-        return False
+        return self.RunBlocking(f"chown -R {owner} {src}")
 
     def ChangePermission(self, src, permission):
-        return False
+        return self.RunBlocking(f"chmod -R {permission} {src}")
 
     def AddToPath(self, src):
-        return False
+        try:
+            if self.flags.verbose:
+                util.LogInfo("Adding %s to system path" % src)
+            if not self.flags.pretend_run:
+
+                # Get possible profiles
+                profile_candidates = [
+                    "~/.bash_profile",
+                    "~/.bashrc",
+                    "~/.zshrc",
+                    "~/.profile"
+                ]
+
+                # Get profile
+                profile_file = profile_candidates[0]
+                for candidate in profile_candidates:
+                    if self.DoesFileOrDirectoryExist(candidate):
+                        profile_file = candidate
+                        break
+
+                # Read current profile
+                existing_content = self.ReadFile(profile_file)
+                if not existing_content:
+                    existing_content = ""
+
+                # Add to profile
+                export_line = f'export PATH="{src}:$PATH"\n'
+                if export_line not in existing_content:
+                    new_content = existing_content + "\n" + export_line + "\n"
+                    return self.WriteFile(profile_file, new_content)
+            return True
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError("Unable to add %s to system path" % src)
+                util.LogError(e)
+                util.QuitProgram()
+            return False
