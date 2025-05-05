@@ -15,8 +15,8 @@ server {
     server_name _;
 
     location / {
-        return 200 "OK";
-        add_header Content-Type text/plain;
+        root /var/www/html;
+        index index.html;
     }
 
     location /.well-known/acme-challenge/ {
