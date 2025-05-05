@@ -49,6 +49,22 @@ else:
     ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "$HOME/LockerRemote"
     ini_defaults["UserData.Share"]["locker_local_path"] = "$HOME/Locker"
 
+# UserData.Wordpress
+ini_defaults["UserData.Wordpress"] = {}
+ini_defaults["UserData.Wordpress"]["wordpress_subdomain"] = "www"
+ini_defaults["UserData.Wordpress"]["wordpress_db_user"] = "wpuser"
+ini_defaults["UserData.Wordpress"]["wordpress_db_pass"] = ""
+ini_defaults["UserData.Wordpress"]["wordpress_db_name"] = "wpdatabase"
+ini_defaults["UserData.Wordpress"]["wordpress_db_root_pass"] = ""
+
+# UserData.Servers
+ini_defaults["UserData.Servers"] = {}
+ini_defaults["UserData.Servers"]["domain_name"] = ""
+ini_defaults["UserData.Servers"]["server_0_host"] = ""
+ini_defaults["UserData.Servers"]["server_0_port"] = ""
+ini_defaults["UserData.Servers"]["server_0_user"] = ""
+ini_defaults["UserData.Servers"]["server_0_pass"] = ""
+
 # UserData.Scraping
 ini_defaults["UserData.Scraping"] = {}
 ini_defaults["UserData.Scraping"]["web_driver_type"] = "brave"
