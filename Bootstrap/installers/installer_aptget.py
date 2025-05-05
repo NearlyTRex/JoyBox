@@ -16,23 +16,19 @@ class AptGet(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
-        self.env = self.config.get("env")
-        self.aptget_packages = packages.aptget.get(self.env, [])
-        self.aptget_exe = self.config["Tools.Apt"]["apt_exe"]
-        self.dpkg_exe = self.config["Tools.Apt"]["dpkg_exe"]
-        self.aptget_install_dir = os.path.expandvars(self.config["Tools.Apt"]["apt_install_dir"])
-        self.aptget_tool = os.path.join(self.aptget_install_dir, self.aptget_exe)
-        self.dpkg_tool = os.path.join(self.aptget_install_dir, self.dpkg_exe)
+
+    def GetPackages(self):
+        return packages.aptget.get(self.GetEnvironmentType(), [])
 
     def IsInstalled(self):
-        for pkg in self.aptget_packages:
+        for pkg in self.GetPackages():
             if not self.IsPackageInstalled(pkg):
                 return False
         return True
 
     def Install(self):
         util.LogInfo("Installing AptGet packages")
-        for pkg in self.aptget_packages:
+        for pkg in self.GetPackages():
             if not self.InstallPackage(pkg):
                 util.LogError(f"Unable to install package {pkg}")
                 return False
@@ -40,28 +36,28 @@ class AptGet(installer.Installer):
 
     def Uninstall(self):
         util.LogInfo("Uninstalling AptGet packages")
-        for pkg in self.aptget_packages:
+        for pkg in self.GetPackages():
             if not self.UninstallPackage(pkg):
                 util.LogError(f"Unable to uninstall package {pkg}")
                 return False
         return True
 
     def IsPackageInstalled(self, package):
-        code = self.connection.RunReturncode([self.dpkg_tool, "-s", package])
-        return code == 0
+        output = self.connection.RunOutput([self.GetAptGetInstallTool(), "-s", package])
+        return "Status: install ok installed" in output
 
     def UpdatePackageLists(self):
-        code = self.connection.RunReturncode(["sudo", self.aptget_tool, "update"])
+        code = self.connection.RunBlocking(["sudo", self.GetAptGetTool(), "update"])
         return code == 0
 
     def AutoRemovePackages(self):
-        code = self.connection.RunReturncode(["sudo", self.aptget_tool, "autoremove"])
+        code = self.connection.RunBlocking(["sudo", self.GetAptGetTool(), "autoremove", "-y"])
         return code == 0
 
     def InstallPackage(self, package):
-        code = self.connection.RunReturncode(["sudo", self.aptget_tool, "install", "-y", package])
+        code = self.connection.RunBlocking(["sudo", self.GetAptGetTool(), "install", "-y", package])
         return code == 0
 
     def UninstallPackage(self, package):
-        code = self.connection.RunReturncode(["sudo", self.aptget_tool, "remove", "-y", package])
+        code = self.connection.RunBlocking(["sudo", self.GetAptGetTool(), "remove", "-y", package])
         return code == 0

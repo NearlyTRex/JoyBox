@@ -21,12 +21,17 @@ class LocalUbuntu(env.Environment):
         # Set environment type
         self.SetEnvironmentType(constants.EnvironmentType.LOCAL_UBUNTU)
 
+        # Create connection
+        self.connection = connection.ConnectionLocal(self.flags, self.options)
+        self.connection.Setup()
+
         # Create installer options
         self.installer_options = {
             "config": self.config,
-            "connection": connection.ConnectionLocal(self.flags, self.options),
+            "connection": self.connection,
             "flags": self.flags,
-            "options": self.options}
+            "options": self.options
+        }
 
         # Create installers
         self.installer_aptget = installers.AptGet(**self.installer_options)

@@ -6,6 +6,10 @@ import paramiko
 import stat
 import traceback
 import threading
+import select
+import termios
+import tty
+import time
 import concurrent.futures
 from io import StringIO
 
@@ -87,6 +91,8 @@ class ConnectionSSH(connection.Connection):
 
     def RunOutput(self, cmd):
         try:
+            if not ConnectionSSH.ssh_client:
+                raise RuntimeError("SSH client not initialized")
             cmd = self.CreateCommandString(cmd)
             if self.flags.verbose:
                 self.PrintCommand(cmd)
@@ -102,6 +108,7 @@ class ConnectionSSH(connection.Connection):
                 if self.options.include_stderr and error:
                     return output + "\n" + error
                 return output
+            return ""
         except Exception as e:
             if self.flags.exit_on_failure:
                 util.LogError(e)
@@ -110,6 +117,8 @@ class ConnectionSSH(connection.Connection):
 
     def RunReturncode(self, cmd):
         try:
+            if not ConnectionSSH.ssh_client:
+                raise RuntimeError("SSH client not initialized")
             cmd = self.CreateCommandString(cmd)
             if self.flags.verbose:
                 self.PrintCommand(cmd)
@@ -120,6 +129,7 @@ class ConnectionSSH(connection.Connection):
                     get_pty = self.options.shell)
                 exit_code = stdout.channel.recv_exit_status()
                 return exit_code
+            return 0
         except Exception as e:
             if self.flags.exit_on_failure:
                 util.LogError(e)
@@ -128,6 +138,8 @@ class ConnectionSSH(connection.Connection):
 
     def RunBlocking(self, cmd):
         try:
+            if not ConnectionSSH.ssh_client:
+                raise RuntimeError("SSH client not initialized")
             cmd = self.CreateCommandString(cmd)
             if self.flags.verbose:
                 self.PrintCommand(cmd)
@@ -143,6 +155,37 @@ class ConnectionSSH(connection.Connection):
                     util.LogInfo(self.CleanCommandOutput(output.strip()))
                 exit_code = stdout.channel.recv_exit_status()
                 return exit_code
+            return 0
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError(e)
+                util.QuitProgram()
+            return 1
+
+    def RunInteractive(self, cmd):
+        try:
+            if not ConnectionSSH.ssh_client:
+                raise RuntimeError("SSH client not initialized")
+            cmd = self.CreateCommandString(cmd)
+            if self.flags.verbose:
+                self.PrintCommand(cmd)
+            if not self.flags.pretend_run:
+                cmd = self.ProcessCommand(cmd)
+                channel = ConnectionSSH.ssh_client.invoke_shell()
+                channel.settimeout(5.0)
+                channel.send(cmd + "\n")
+                while True:
+                    if channel.recv_ready():
+                        data = channel.recv(1024).decode("utf-8", errors="ignore")
+                        if self.flags.verbose:
+                            util.LogInfo(data.strip())
+                    elif channel.exit_status_ready():
+                        break
+                    else:
+                        time.sleep(0.1)
+                exit_code = channel.recv_exit_status()
+                return exit_code
+            return 0
         except Exception as e:
             if self.flags.exit_on_failure:
                 util.LogError(e)

@@ -27,47 +27,54 @@ if ! id "$USERNAME" &>/dev/null; then
     exit 1
 fi
 
+# Define apt packages
+APT_PACKAGES=(
+    7zip
+    apache2-utils
+    apache2
+    apt-file
+    certbot
+    curl
+    docker-compose
+    docker.io
+    flatpak
+    git
+    nginx-common
+    nginx
+    python3-certbot-nginx
+    unzip
+    wget
+    zip
+)
+
 # Create sudoers file
 echo "Setting up sudoers config for user: $USERNAME"
 TEMP_FILE=$(mktemp)
-cat > "$TEMP_FILE" <<EOF
-Cmnd_Alias NGINX_CONF_MGMT = \\
-    /bin/mv /tmp/*.conf /etc/nginx/sites-available/, \\
-    /bin/ln -sf /etc/nginx/sites-available/*.conf /etc/nginx/sites-enabled/, \\
-    /bin/rm -f /etc/nginx/sites-available/*.conf, \\
-    /bin/rm -f /etc/nginx/sites-enabled/*.conf, \\
-    /bin/systemctl reload nginx
-
-Cmnd_Alias APT_MANAGE = \\
-    /usr/bin/apt-get update, \\
-    /usr/bin/apt-get install -y apache2-utils, \\
-    /usr/bin/apt-get install -y apache2, \\
-    /usr/bin/apt-get install -y certbot, \\
-    /usr/bin/apt-get install -y curl, \\
-    /usr/bin/apt-get install -y docker-compose, \\
-    /usr/bin/apt-get install -y docker.io, \\
-    /usr/bin/apt-get install -y git, \\
-    /usr/bin/apt-get install -y nginx, \\
-    /usr/bin/apt-get install -y nginx-common, \\
-    /usr/bin/apt-get install -y python3-certbot-nginx, \\
-    /usr/bin/apt-get install -y unzip, \\
-    /usr/bin/apt-get install -y wget, \\
-    /usr/bin/apt-get remove -y apache2-utils, \\
-    /usr/bin/apt-get remove -y apache2, \\
-    /usr/bin/apt-get remove -y certbot, \\
-    /usr/bin/apt-get remove -y curl, \\
-    /usr/bin/apt-get remove -y docker-compose, \\
-    /usr/bin/apt-get remove -y docker.io, \\
-    /usr/bin/apt-get remove -y git, \\
-    /usr/bin/apt-get remove -y nginx, \\
-    /usr/bin/apt-get remove -y nginx-common, \\
-    /usr/bin/apt-get remove -y python3-certbot-nginx, \\
-    /usr/bin/apt-get remove -y unzip, \\
-    /usr/bin/apt-get remove -y wget, \\
-    /usr/bin/apt-get autoremove -y
-
-$USERNAME ALL=(ALL) NOPASSWD: NGINX_CONF_MGMT, APT_MANAGE
-EOF
+{
+    echo "Cmnd_Alias NGINX_CONF_MGMT = \\"
+    echo "    /bin/mv /tmp/*.conf /etc/nginx/sites-available/*.conf, \\"
+    echo "    /bin/ln -sf /etc/nginx/sites-available/*.conf /etc/nginx/sites-enabled/*.conf, \\"
+    echo "    /bin/rm -f /etc/nginx/sites-available/*.conf, \\"
+    echo "    /bin/rm -f /etc/nginx/sites-enabled/*.conf, \\"
+    echo "    /bin/systemctl reload nginx"
+    echo ""
+    echo "Cmnd_Alias APT_MANAGE = \\"
+    echo "    /usr/bin/apt-get update, \\"
+    echo "    /usr/bin/apt-get autoremove -y, \\"
+    last_index=$((${#APT_PACKAGES[@]} - 1))
+    for i in "${!APT_PACKAGES[@]}"; do
+        pkg="${APT_PACKAGES[$i]}"
+        if [[ "$i" -eq "$last_index" ]]; then
+            echo "    /usr/bin/apt-get install -y $pkg, \\"
+            echo "    /usr/bin/apt-get remove -y $pkg"
+        else
+            echo "    /usr/bin/apt-get install -y $pkg, \\"
+            echo "    /usr/bin/apt-get remove -y $pkg, \\"
+        fi
+    done
+    echo ""
+    echo "$USERNAME ALL=(ALL) NOPASSWD: NGINX_CONF_MGMT, APT_MANAGE"
+} > "$TEMP_FILE"
 
 # Validate and install sudoers config
 if visudo -c -f "$TEMP_FILE"; then

@@ -100,6 +100,9 @@ class Connection:
     def RunBlocking(self, cmd):
         return 0
 
+    def RunInteractive(self, cmd):
+        return 0
+
     def RunChecked(self, cmd, throw_exception = False):
         return None
 

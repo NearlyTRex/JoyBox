@@ -144,6 +144,9 @@ class ConnectionLocal(connection.Connection):
                 util.QuitProgram()
             return 1
 
+    def RunInteractive(self, cmd):
+        return self.RunBlocking(cmd)
+
     def RunChecked(self, cmd, throw_exception = False):
         code = self.RunBlocking(cmd = cmd)
         if code != 0:

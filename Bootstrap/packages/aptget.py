@@ -30,6 +30,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "pulseaudio-utils",
     "qdirstat",
     "thunar",
+    "unzip",
     "zip",
 
     # Devel
@@ -236,15 +237,30 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
 # AptGet - Remote Ubuntu
 ###########################################################
 aptget[constants.EnvironmentType.REMOTE_UBUNTU] += [
+
+    # Admin
+    "7zip",
+    "apt-file",
+    "unzip",
+    "zip",
+
+    # Devel
+    "git",
+
+    # Server
     "apache2-utils",
     "apache2",
     "certbot",
+    "nginx",
+    "nginx-common",
+    "python3-certbot-nginx",
+
+    # Net
     "curl",
+    "wget",
+
+    # Virtualization
     "docker-compose",
     "docker.io",
-    "git",
-    "nginx",
-    "python3-certbot-nginx",
-    "unzip",
-    "wget"
+    "flatpak"
 ]

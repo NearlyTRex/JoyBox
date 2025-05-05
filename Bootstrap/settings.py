@@ -356,3 +356,12 @@ else:
     ini_defaults["Tools.Brave"]["brave_exe"] = "brave-browser"
     ini_defaults["Tools.Brave"]["brave_install_dir"] = "/usr/bin"
     ini_defaults["Tools.Brave"]["brave_download_dir"] = "$HOME/Downloads"
+
+# Tools.System
+ini_defaults["Tools.System"] = {}
+if util.IsLinuxPlatform():
+    ini_defaults["Tools.System"]["mv"] = "/bin/mv"
+    ini_defaults["Tools.System"]["rm"] = "/bin/rm"
+    ini_defaults["Tools.System"]["ln"] = "/bin/ln"
+    ini_defaults["Tools.System"]["mkdir"] = "/bin/mkdir"
+    ini_defaults["Tools.System"]["systemctl"] = "/bin/systemctl"

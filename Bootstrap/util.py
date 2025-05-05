@@ -231,58 +231,6 @@ def PromptForFile(description, default_value = None):
             LogWarning("Entered value '%s' was not a valid file, please try again" % value)
 
 ###########################################################
-# Configuration files
-###########################################################
-def LoadConfigFile(src):
-    try:
-        config = configparser.ConfigParser(interpolation = None)
-        config.read(src)
-        config_dict = {}
-        for section in config.sections():
-            section_dict = {}
-            for key, value in config.items(section):
-                if value.lower() in ["true", "false"]:
-                    section_dict[key] = config.getboolean(section, key)
-                else:
-                    section_dict[key] = value
-            config_dict[section] = section_dict
-        return config_dict
-    except Exception as e:
-        LogError("Error reading the config file '%s'" % src)
-        LogError(e)
-        return None
-
-def InitializeConfigFile(src, default_config = None):
-
-    # Check for default config
-    if not default_config:
-        default_config = {}
-
-    # Load current config if it exists
-    config_exists = os.path.isfile(src)
-    config_dict = LoadConfigFile(src) if config_exists else {}
-
-    # Add in the default config sections
-    updated = False
-    full_config = configparser.ConfigParser(interpolation = None)
-    for section, defaults in default_config.items():
-        if section not in config_dict:
-            config_dict[section] = {}
-        if not full_config.has_section(section):
-            full_config.add_section(section)
-        for key, default_value in defaults.items():
-            if key not in config_dict[section]:
-                config_dict[section][key] = PromptForValue(key, default_value)
-                updated = True
-            full_config.set(section, key, str(config_dict[section][key]))
-
-    # Write config back to file
-    if updated or not config_exists:
-        with open(ini_path, "w") as f:
-            full_config.write(f)
-    return config_dict
-
-###########################################################
 # Networking
 ###########################################################
 def FetchJson(url, flags = RunFlags()):
