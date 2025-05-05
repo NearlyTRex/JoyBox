@@ -1,24 +1,30 @@
 #!/bin/bash
 
+# Check if the script is being run with bash
+if [ -z "$BASH_VERSION" ]; then
+    echo "Error: This script must be run with bash"
+    exit 1
+fi
+
 # Define variables
-SUDOERS_FILE="/etc/sudoers.d/web-installer"
-USERNAME="ubuntu"  # Replace or override via command-line
+SUDOERS_FILE="/etc/sudoers.d/server-setup"
+USERNAME="ubuntu"
 
 # Only run as root
 if [ "$EUID" -ne 0 ]; then
-  echo "Please run this script as root (e.g., with sudo)"
-  exit 1
+    echo "Error: Please run this script as root (e.g., with sudo)"
+    exit 1
 fi
 
-# Optional: take username as an argument
+# Take username as an argument
 if [ -n "$1" ]; then
-  USERNAME="$1"
+    USERNAME="$1"
 fi
 
 # Check that user exists
 if ! id "$USERNAME" &>/dev/null; then
-  echo "Error: user '$USERNAME' does not exist."
-  exit 1
+    echo "Error: User '$USERNAME' does not exist."
+    exit 1
 fi
 
 # Create sudoers file
@@ -69,9 +75,15 @@ if visudo -c -f "$TEMP_FILE"; then
     chmod 0440 "$SUDOERS_FILE"
     echo "Sudoers configuration installed at $SUDOERS_FILE"
 else
-    echo "Error: invalid sudoers syntax. Aborting."
+    echo "Error: Invalid sudoers syntax. Aborting."
     rm -f "$TEMP_FILE"
     exit 1
+fi
+
+# Ensure the docker group exists
+if ! getent group docker > /dev/null 2>&1; then
+    echo "Docker group does not exist. Creating the docker group."
+    groupadd docker
 fi
 
 # Add user to docker group
