@@ -9,6 +9,8 @@ fi
 # Define variables
 SUDOERS_FILE="/etc/sudoers.d/server-setup"
 USERNAME="ubuntu"
+NGINX_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_nginx.sh"
+CERTBOT_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_certbot.sh"
 
 # Only run as root
 if [ "$EUID" -ne 0 ]; then
@@ -51,13 +53,6 @@ APT_PACKAGES=(
 echo "Setting up sudoers config for user: $USERNAME"
 TEMP_FILE=$(mktemp)
 {
-    echo "Cmnd_Alias NGINX_CONF_MGMT = \\"
-    echo "    /bin/mv /tmp/*.conf /etc/nginx/sites-available/*.conf, \\"
-    echo "    /bin/ln -sf /etc/nginx/sites-available/*.conf /etc/nginx/sites-enabled/*.conf, \\"
-    echo "    /bin/rm -f /etc/nginx/sites-available/*.conf, \\"
-    echo "    /bin/rm -f /etc/nginx/sites-enabled/*.conf, \\"
-    echo "    /bin/systemctl reload nginx"
-    echo ""
     echo "Cmnd_Alias APT_MANAGE = \\"
     echo "    /usr/bin/apt-get update, \\"
     echo "    /usr/bin/apt-get autoremove -y, \\"
@@ -73,7 +68,9 @@ TEMP_FILE=$(mktemp)
         fi
     done
     echo ""
-    echo "$USERNAME ALL=(ALL) NOPASSWD: NGINX_CONF_MGMT, APT_MANAGE"
+    echo "Cmnd_Alias MANAGER_NGINX = /usr/local/bin/manager_nginx.sh"
+    echo "Cmnd_Alias MANAGER_CERTBOT = /usr/local/bin/manager_certbot.sh"
+    echo "$USERNAME ALL=(ALL) NOPASSWD: APT_MANAGE, MANAGER_NGINX, MANAGER_CERTBOT"
 } > "$TEMP_FILE"
 
 # Validate and install sudoers config
@@ -99,4 +96,27 @@ if groups "$USERNAME" | grep -qw docker; then
 else
     usermod -aG docker "$USERNAME"
     echo "Added '$USERNAME' to the 'docker' group. You may need to re-login to apply group changes."
+fi
+
+# Ensure /usr/local/bin exists
+mkdir -p /usr/local/bin
+
+# Download and install nginx manager script
+echo "Downloading manager_nginx.sh..."
+if curl -fsSL -o /usr/local/bin/manager_nginx.sh "$NGINX_SCRIPT_URL"; then
+    chmod +x /usr/local/bin/manager_nginx.sh
+    echo "manager_nginx.sh installed to /usr/local/bin/"
+else
+    echo "Error: Failed to download manager_nginx.sh"
+    exit 1
+fi
+
+# Download and install certbot manager script
+echo "Downloading manager_certbot.sh..."
+if curl -fsSL -o /usr/local/bin/manager_certbot.sh "$CERTBOT_SCRIPT_URL"; then
+    chmod +x /usr/local/bin/manager_certbot.sh
+    echo "manager_certbot.sh installed to /usr/local/bin/"
+else
+    echo "Error: Failed to download manager_certbot.sh"
+    exit 1
 fi
