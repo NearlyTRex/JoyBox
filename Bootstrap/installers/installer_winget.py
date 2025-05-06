@@ -5,6 +5,7 @@ import sys
 # Local imports
 import util
 import packages
+import tools
 from . import installer
 
 # WinGet
@@ -16,6 +17,7 @@ class WinGet(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
+        self.winget_tool = tools.GetWinGetTool(self.config)
 
     def GetPackages(self):
         return packages.winget.get(self.GetEnvironmentType(), [])
@@ -43,13 +45,13 @@ class WinGet(installer.Installer):
         return True
 
     def IsPackageInstalled(self, package):
-        code = self.connection.RunBlocking([self.GetWinGetTool(), "list", "--name", package])
+        code = self.connection.RunBlocking([self.winget_tool, "list", "--name", package])
         return code == 0
 
     def InstallPackage(self, package):
-        code = self.connection.RunBlocking([self.GetWinGetTool(), "install", "--accept-package-agreements", "--accept-source-agreements", "--id", package, "-e", "-h"])
+        code = self.connection.RunBlocking([self.winget_tool, "install", "--accept-package-agreements", "--accept-source-agreements", "--id", package, "-e", "-h"])
         return code == 0
 
     def UninstallPackage(self, package):
-        code = self.connection.RunBlocking([self.GetWinGetTool(), "uninstall", "--id", package, "-e", "-h"])
+        code = self.connection.RunBlocking([self.winget_tool, "uninstall", "--id", package, "-e", "-h"])
         return code == 0

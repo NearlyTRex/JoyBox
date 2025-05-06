@@ -5,6 +5,7 @@ import sys
 # Local imports
 import util
 import packages
+import tools
 from . import installer
 
 # AptGet
@@ -16,6 +17,8 @@ class AptGet(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
+        self.aptget_tool = tools.GetAptGetTool(self.config)
+        self.aptgetinstall_tool = tools.GetAptGetInstallTool(self.config)
 
     def GetPackages(self):
         return packages.aptget.get(self.GetEnvironmentType(), [])
@@ -43,21 +46,21 @@ class AptGet(installer.Installer):
         return True
 
     def IsPackageInstalled(self, package):
-        output = self.connection.RunOutput([self.GetAptGetInstallTool(), "-s", package])
+        output = self.connection.RunOutput([self.aptgetinstall_tool, "-s", package])
         return "Status: install ok installed" in output
 
     def UpdatePackageLists(self):
-        code = self.connection.RunBlocking(["sudo", self.GetAptGetTool(), "update"])
+        code = self.connection.RunBlocking([self.aptget_tool, "update"], sudo = True)
         return code == 0
 
     def AutoRemovePackages(self):
-        code = self.connection.RunBlocking(["sudo", self.GetAptGetTool(), "autoremove", "-y"])
+        code = self.connection.RunBlocking([self.aptget_tool, "autoremove", "-y"], sudo = True)
         return code == 0
 
     def InstallPackage(self, package):
-        code = self.connection.RunBlocking(["sudo", self.GetAptGetTool(), "install", "-y", package])
+        code = self.connection.RunBlocking([self.aptget_tool, "install", "-y", package], sudo = True)
         return code == 0
 
     def UninstallPackage(self, package):
-        code = self.connection.RunBlocking(["sudo", self.GetAptGetTool(), "remove", "-y", package])
+        code = self.connection.RunBlocking([self.aptget_tool, "remove", "-y", package], sudo = True)
         return code == 0

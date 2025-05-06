@@ -20,15 +20,18 @@ from . import connection
 class ConnectionLocal(connection.Connection):
     def __init__(
         self,
+        config,
         flags = util.RunFlags(),
         options = util.RunOptions()):
         if options and not options.env:
             options.env = copy.deepcopy(os.environ)
-        super().__init__(flags, options)
+        super().__init__(config, flags, options)
 
-    def RunOutput(self, cmd):
+    def RunOutput(self, cmd, sudo = False):
         try:
             cmd = self.CreateCommandList(cmd)
+            if sudo:
+                cmd = self.MarkCommandAsSudo(cmd)
             if self.flags.verbose:
                 self.PrintCommand(cmd)
             if not self.flags.pretend_run:
@@ -67,9 +70,11 @@ class ConnectionLocal(connection.Connection):
                 util.QuitProgram()
             return ""
 
-    def RunReturncode(self, cmd):
+    def RunReturncode(self, cmd, sudo = False):
         try:
             cmd = self.CreateCommandList(cmd)
+            if sudo:
+                cmd = self.MarkCommandAsSudo(cmd)
             if self.flags.verbose:
                 self.PrintCommand(cmd)
             if not self.flags.pretend_run:
@@ -106,9 +111,11 @@ class ConnectionLocal(connection.Connection):
                 util.QuitProgram()
             return 1
 
-    def RunBlocking(self, cmd):
+    def RunBlocking(self, cmd, sudo = False):
         try:
             cmd = self.CreateCommandList(cmd)
+            if sudo:
+                cmd = self.MarkCommandAsSudo(cmd)
             if self.flags.verbose:
                 self.PrintCommand(cmd)
             if not self.flags.pretend_run:
@@ -144,11 +151,11 @@ class ConnectionLocal(connection.Connection):
                 util.QuitProgram()
             return 1
 
-    def RunInteractive(self, cmd):
-        return self.RunBlocking(cmd)
+    def RunInteractive(self, cmd, sudo = False):
+        return self.RunBlocking(cmd, sudo = sudo)
 
-    def RunChecked(self, cmd, throw_exception = False):
-        code = self.RunBlocking(cmd = cmd)
+    def RunChecked(self, cmd, sudo = False, throw_exception = False):
+        code = self.RunBlocking(cmd = cmd, sudo = sudo)
         if code != 0:
             if throw_exception:
                 raise ValueError("Unable to run command: %s" % cmd)
@@ -171,75 +178,6 @@ class ConnectionLocal(connection.Connection):
                 util.LogError(e)
                 util.QuitProgram()
             return None
-
-    def MakeDirectory(self, src):
-        try:
-            if not os.path.isdir(src):
-                if self.flags.verbose:
-                    util.LogInfo("Making directory %s" % src)
-                if not self.flags.pretend_run:
-                    os.makedirs(src, exist_ok = True)
-            return True
-        except Exception as e:
-            if not os.path.isdir(src):
-                if self.flags.exit_on_failure:
-                    util.LogError("Unable to make directory %s" % src)
-                    util.LogError(e)
-                    util.QuitProgram()
-                return False
-            return True
-
-    def RemoveDirectory(self, src):
-        try:
-            if self.flags.verbose:
-                util.LogInfo("Removing directory %s" % src)
-            if not self.flags.pretend_run:
-                if isinstance(src, tempfile.TemporaryDirectory):
-                    src.cleanup()
-                elif isinstance(src, str) and os.path.isdir(src):
-                    shutil.rmtree(src)
-            return True
-        except Exception as e:
-            if self.flags.exit_on_failure:
-                util.LogError("Unable to remove directory %s" % src)
-                util.LogError(e)
-                util.QuitProgram()
-            return False
-
-    def CopyFileOrDirectory(self, src, dest):
-        try:
-            if self.flags.skip_existing and os.path.exists(dest):
-                return True
-            if self.flags.verbose:
-                util.LogInfo("Copying %s to %s" % (src, dest))
-            if not self.flags.pretend_run:
-                if os.path.isdir(src):
-                    shutil.copytree(src, dest, dirs_exist_ok=True)
-                else:
-                    shutil.copy(src, dest)
-            return True
-        except Exception as e:
-            if self.flags.exit_on_failure:
-                util.LogError("Unable to copy %s to %s" % (src, dest))
-                util.LogError(e)
-                util.QuitProgram()
-            return False
-
-    def MoveFileOrDirectory(self, src, dest):
-        try:
-            if self.flags.skip_existing and os.path.exists(dest):
-                return True
-            if self.flags.verbose:
-                util.LogInfo("Moving %s to %s" % (src, dest))
-            if not self.flags.pretend_run:
-                shutil.move(src, dest)
-            return True
-        except Exception as e:
-            if self.flags.exit_on_failure:
-                util.LogError("Unable to move %s to %s" % (src, dest))
-                util.LogError(e)
-                util.QuitProgram()
-            return False
 
     def DoesFileOrDirectoryExist(self, src):
         try:
@@ -310,85 +248,6 @@ class ConnectionLocal(connection.Connection):
         except Exception as e:
             if self.flags.exit_on_failure:
                 util.LogError(f"Unable to write file to {src}")
-                util.LogError(e)
-                util.QuitProgram()
-            return False
-
-    def DownloadFile(self, url, dest):
-        try:
-            if self.flags.verbose:
-                util.LogInfo("Downloading from %s to %s" % (url, dest))
-            if not self.flags.pretend_run:
-                os.makedirs(os.path.dirname(dest), exist_ok = True)
-                urllib.request.urlretrieve(url, dest)
-            return True
-        except Exception as e:
-            if self.flags.exit_on_failure:
-                util.LogError("Unable to download from %s" % url)
-                util.LogError(e)
-                util.QuitProgram()
-            return True
-
-    def ExtractTarArchive(self, src, dest):
-        try:
-            if self.flags.verbose:
-                util.LogInfo("Extracting TAR archive %s to %s" % (src, dest))
-            if not self.flags.pretend_run:
-                with tarfile.open(src, "r:*") as archive:
-                    archive.extractall(dest)
-            return True
-        except Exception as e:
-            if self.flags.exit_on_failure:
-                util.LogError("Unable to extract TAR archive %s" % src)
-                util.LogError(e)
-                util.QuitProgram()
-            return False
-
-    def ExtractZipArchive(self, src, dest):
-        try:
-            if self.flags.verbose:
-                util.LogInfo("Extracting ZIP archive %s to %s" % (src, dest))
-            if not self.flags.pretend_run:
-                with zipfile.ZipFile(src, "r") as archive:
-                    archive.extractall(dest)
-            return True
-        except Exception as e:
-            if self.flags.exit_on_failure:
-                util.LogError("Unable to extract ZIP archive %s" % src)
-                util.LogError(e)
-                util.QuitProgram()
-            return False
-
-    def ChangeOwner(self, src, owner):
-        try:
-            if self.flags.verbose:
-                util.LogInfo("Changing owner of %s to %s" % (src, owner))
-            if not self.flags.pretend_run:
-                if ":" in owner:
-                    user, group = owner.split(":", 1)
-                else:
-                    user, group = owner, None
-                uid = pwd.getpwnam(user).pw_uid
-                gid = grp.getgrnam(group).gr_gid if group else -1
-                os.chown(src, uid, gid)
-            return True
-        except Exception as e:
-            if self.flags.exit_on_failure:
-                util.LogError("Unable to change owner of %s to %s" % (src, owner))
-                util.LogError(e)
-                util.QuitProgram()
-            return False
-
-    def ChangePermission(self, src, permission):
-        try:
-            if self.flags.verbose:
-                util.LogInfo("Changing permissions of %s to %s" % (src, permission))
-            if not self.flags.pretend_run:
-                os.chmod(src, int(permission, 8))
-            return True
-        except Exception as e:
-            if self.flags.exit_on_failure:
-                util.LogError("Unable to change permission of %s to %s" % (src, permission))
                 util.LogError(e)
                 util.QuitProgram()
             return False

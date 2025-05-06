@@ -231,24 +231,6 @@ def PromptForFile(description, default_value = None):
             LogWarning("Entered value '%s' was not a valid file, please try again" % value)
 
 ###########################################################
-# Networking
-###########################################################
-def FetchJson(url, flags = RunFlags()):
-    try:
-        if flags.verbose:
-            LogInfo("Fetching JSON from %s" % url)
-        with urllib.request.urlopen(url) as response:
-            data = response.read()
-            return json.loads(data)
-        return None
-    except Exception as e:
-        if flags.exit_on_failure:
-            LogError("Error fetching JSON from %s" % url)
-            LogError(e)
-            QuitProgram()
-        return None
-
-###########################################################
 # Distro
 ###########################################################
 def GetLinuxDistroValue(field):

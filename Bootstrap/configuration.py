@@ -76,11 +76,11 @@ class Configuration:
         return section in self.config
 
     def AddSection(self, section):
-        if self.has_section(section):
+        if self.HasSection(section):
             self.config[section] = {}
 
     def SetValue(self, section, key, value):
-        if self.has_section(section):
+        if self.HasSection(section):
             self.config[section][key] = value
 
     def GetValue(self, section, key, default_value = None):

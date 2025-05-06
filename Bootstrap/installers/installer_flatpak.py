@@ -5,6 +5,7 @@ import sys
 # Local imports
 import util
 import packages
+import tools
 from . import installer
 
 # Flatpak
@@ -16,6 +17,7 @@ class Flatpak(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
+        self.flatpak_tool = tools.GetFlatpakTool(self.config)
 
     def GetPackages(self):
         return packages.flatpak.get(self.GetEnvironmentType(), [])
@@ -48,17 +50,17 @@ class Flatpak(installer.Installer):
         return True
 
     def IsPackageInstalled(self, package):
-        code = self.connection.RunBlocking([self.GetFlatpakTool(), "info", "--user", package])
+        code = self.connection.RunBlocking([self.flatpak_tool, "info", "--user", package])
         return code == 0
 
     def UpdatePackages(self):
-        code = self.connection.RunBlocking([self.GetFlatpakTool(), "update", "--user", "-y"])
+        code = self.connection.RunBlocking([self.flatpak_tool, "update", "--user", "-y"])
         return code == 0
 
     def InstallPackage(self, repository, package):
-        code = self.connection.RunBlocking([self.GetFlatpakTool(), "install", "--user", "-y", repository, package])
+        code = self.connection.RunBlocking([self.flatpak_tool, "install", "--user", "-y", repository, package])
         return code == 0
 
     def UninstallPackage(self, package):
-        code = self.connection.RunBlocking([self.GetFlatpakTool(), "uninstall", "--user", "-y", package])
+        code = self.connection.RunBlocking([self.flatpak_tool, "uninstall", "--user", "-y", package])
         return code == 0

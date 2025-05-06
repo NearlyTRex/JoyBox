@@ -323,6 +323,17 @@ else:
     ini_defaults["Tools.7Zip"]["7z_exe"] = "7zz"
     ini_defaults["Tools.7Zip"]["7z_install_dir"] = "/usr/bin"
 
+# Tools.Docker
+ini_defaults["Tools.Docker"] = {}
+if util.IsWindowsPlatform():
+    ini_defaults["Tools.Docker"]["docker_exe"] = "docker.exe"
+    ini_defaults["Tools.Docker"]["docker_compose_exe"] = "docker-compose.exe"
+    ini_defaults["Tools.Docker"]["docker_install_dir"] = "%ProgramFiles%\\Docker\\Docker\\resources\\bin"
+else:
+    ini_defaults["Tools.Docker"]["docker_exe"] = "docker"
+    ini_defaults["Tools.Docker"]["docker_compose_exe"] = "docker-compose"
+    ini_defaults["Tools.Docker"]["docker_install_dir"] = "/usr/bin"
+
 # Tools.Firefox
 ini_defaults["Tools.Firefox"] = {}
 if util.IsWindowsPlatform():
@@ -360,8 +371,10 @@ else:
 # Tools.System
 ini_defaults["Tools.System"] = {}
 if util.IsLinuxPlatform():
+    ini_defaults["Tools.System"]["cp"] = "/bin/cp"
     ini_defaults["Tools.System"]["mv"] = "/bin/mv"
     ini_defaults["Tools.System"]["rm"] = "/bin/rm"
     ini_defaults["Tools.System"]["ln"] = "/bin/ln"
     ini_defaults["Tools.System"]["mkdir"] = "/bin/mkdir"
-    ini_defaults["Tools.System"]["systemctl"] = "/bin/systemctl"
+    ini_defaults["Tools.System"]["chown"] = "/bin/chown"
+    ini_defaults["Tools.System"]["chmod"] = "/bin/chmod"

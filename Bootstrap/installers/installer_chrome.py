@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import util
+import tools
 from . import installer
 
 # Chrome
@@ -18,20 +19,24 @@ class Chrome(installer.Installer):
         self.url = "https://dl.google.com/linux/direct"
         self.archive_key = "google-chrome.gpg"
         self.sources_list = "google-chrome.list"
+        self.archive_key_path = f"/etc/apt/trusted.gpg.d/{self.archive_key}"
+        self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
+        self.aptget_tool = tools.GetAptGetTool(self.config)
+        self.aptgetinstall_tool = tools.GetAptGetInstallTool(self.config)
 
     def IsInstalled(self):
         return self.connection.DoesFileOrDirectoryExist("/usr/bin/google-chrome")
 
     def Install(self):
         util.LogInfo("Installing Chrome")
-        self.connection.RunChecked(f"wget -c -O /tmp/google-chrome.deb {self.url}/google-chrome-stable_current_amd64.deb")
-        self.connection.RunChecked("sudo dpkg -i /tmp/google-chrome.deb")
-        self.connection.RunChecked("rm -rf /tmp/google-chrome.deb")
+        self.connection.DownloadFile(f"{self.url}/google-chrome-stable_current_amd64.deb", "/tmp/google-chrome.deb")
+        self.connection.RunChecked([self.aptgetinstall_tool, "-i", "/tmp/google-chrome.deb"], sudo = True)
+        self.connection.RemoveFileOrDirectory("/tmp/google-chrome.deb")
         return True
 
     def Uninstall(self):
         util.LogInfo("Uninstalling Chrome")
-        self.connection.RunChecked("sudo apt remove -y google-chrome-stable")
-        self.connection.RunChecked(f"sudo rm -f /etc/apt/sources.list.d/{self.sources_list}")
-        self.connection.RunChecked(f"sudo rm -f /etc/apt/trusted.gpg.d/{self.archive_key}")
+        self.connection.RunChecked([self.aptget_tool, "remove", "-y", "google-chrome-stable"], sudo = True)
+        self.connection.RemoveFileOrDirectory(self.sources_list_path, sudo = True)
+        self.connection.RemoveFileOrDirectory(self.archive_key_path, sudo = True)
         return False

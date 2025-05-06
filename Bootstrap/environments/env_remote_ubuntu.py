@@ -27,6 +27,7 @@ class RemoteUbuntu(env.Environment):
 
         # Create connection
         self.connection = connection.ConnectionSSH(
+            config = self.config,
             ssh_host = ssh_host,
             ssh_port = ssh_port,
             ssh_user = ssh_user,
@@ -46,6 +47,8 @@ class RemoteUbuntu(env.Environment):
         # Create installers
         self.installer_aptget = installers.AptGet(**self.installer_options)
         self.installer_flatpak = installers.Flatpak(**self.installer_options)
+        self.installer_nginx = installers.Nginx(**self.installer_options)
+        self.installer_certbot = installers.Certbot(**self.installer_options)
         self.installer_wordress = installers.Wordpress(**self.installer_options)
 
     def Setup(self):
@@ -62,6 +65,16 @@ class RemoteUbuntu(env.Environment):
         self.installer_flatpak.UpdatePackages()
         if not self.installer_flatpak.IsInstalled():
             if not self.installer_flatpak.Install():
+                return False
+
+        # Install Nginx
+        if not self.installer_nginx.IsInstalled():
+            if not self.installer_nginx.Install():
+                return False
+
+        # Install Certbot
+        if not self.installer_certbot.IsInstalled():
+            if not self.installer_certbot.Install():
                 return False
 
         # Install Wordpress

@@ -5,14 +5,17 @@ import copy
 
 # Local imports
 import util
+import tools
 
 class Connection:
     def __init__(
         self,
+        config,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        self.flags = flags
-        self.options = options
+        self.config = config.Copy()
+        self.flags = flags.Copy()
+        self.options = options.Copy()
 
     def Copy(self):
         return copy.deepcopy(self)
@@ -34,6 +37,12 @@ class Connection:
 
     def UnsetEnvironmentVar(self, var):
         del self.options.env[var]
+
+    def SetConfig(self, config):
+        self.config = config
+
+    def GetConfig(self):
+        return self.config
 
     def SetFlags(self, flags):
         self.flags = flags
@@ -82,47 +91,72 @@ class Connection:
         except:
             return output
 
+    def MarkCommandAsSudo(self, cmd):
+        if util.IsLinuxPlatform():
+            if isinstance(cmd, str):
+                return f"sudo {cmd}"
+            elif isinstance(cmd, list):
+                return ["sudo"] + cmd
+        return cmd
+
     def PrintCommand(self, cmd):
         if isinstance(cmd, str):
             util.LogInfo("Running \"%s\"" % cmd)
         if isinstance(cmd, list):
             util.LogInfo("Running \"%s\"" % " ".join(cmd))
 
-    def ProcessCommand(self, cmd):
-        return cmd
-
-    def RunOutput(self, cmd):
+    def RunOutput(self, cmd, sudo = False):
         return ""
 
-    def RunReturncode(self, cmd):
+    def RunReturncode(self, cmd, sudo = False):
         return 0
 
-    def RunBlocking(self, cmd):
+    def RunBlocking(self, cmd, sudo = False):
         return 0
 
-    def RunInteractive(self, cmd):
+    def RunInteractive(self, cmd, sudo = False):
         return 0
 
-    def RunChecked(self, cmd, throw_exception = False):
+    def RunChecked(self, cmd, sudo = False, throw_exception = False):
         return None
 
     def MakeTemporaryDirectory(self):
         return None
 
-    def MakeDirectory(self, src):
-        return False
+    def MakeDirectory(self, src, sudo = False):
+        self.RunChecked([
+            tools.GetMakeDirTool(self.config),
+            "-p",
+            src
+        ], sudo = sudo)
 
-    def RemoveDirectory(self, src):
-        return False
+    def RemoveFileOrDirectory(self, src, sudo = False):
+        self.RunChecked([
+            tools.GetRemoveTool(self.config),
+            "-rf",
+            src
+        ], sudo = sudo)
 
-    def RemoveFile(self, src):
-        return False
+    def CopyFileOrDirectory(self, src, dest, sudo = False):
+        self.RunChecked([
+            tools.GetCopyTool(self.config),
+            src,
+            dest
+        ], sudo = sudo)
 
-    def CopyFileOrDirectory(self, src, dest):
-        return False
+    def MoveFileOrDirectory(self, src, dest, sudo = False):
+        self.RunChecked([
+            tools.GetMoveTool(self.config),
+            src,
+            dest
+        ], sudo = sudo)
 
-    def MoveFileOrDirectory(self, src, dest):
-        return False
+    def LinkFileOrDirectory(self, src, dest, sudo = False):
+        self.RunChecked([
+            tools.GetLinkTool(self.config),
+            "-sf", src,
+            dest
+        ], sudo = sudo)
 
     def DoesFileOrDirectoryExist(self, src):
         return False
@@ -136,20 +170,82 @@ class Connection:
     def WriteFile(self, src, contents):
         return False
 
-    def DownloadFile(self, url, dest):
-        return False
+    def DownloadFile(self, url, dest, sudo = False):
+        self.RunChecked([
+            tools.GetCurlTool(self.config),
+            "-L",
+            "-o", dest,
+            url
+        ], sudo = sudo)
 
-    def ExtractTarArchive(self, src, dest):
-        return False
+    def ExtractTarArchive(self, src, dest, sudo = False):
+        self.RunChecked([
+            tools.GetTarTool(self.config),
+            "-xf", src,
+            "-C", dest
+        ], sudo = sudo)
 
-    def ExtractZipArchive(self, src, dest):
-        return False
+    def ChangeOwner(self, src, owner, sudo = False):
+        self.RunChecked([
+            tools.GetChangeOwnerTool(self.config),
+            "-R",
+            owner,
+            src
+        ], sudo = sudo)
 
-    def ChangeOwner(self, src, owner):
-        return False
+    def ChangePermission(self, src, permission, sudo = False):
+        self.RunChecked([
+            tools.GetChangePermissionTool(self.config),
+            "-R",
+            permission,
+            src
+        ], sudo = sudo)
 
-    def ChangePermission(self, src, permission):
-        return False
+    def AddToCronTab(self, pattern):
+        try:
+            if self.flags.verbose:
+                util.LogInfo(f"Adding to crontab: {pattern}")
+            if not self.flags.pretend_run:
+                output = self.RunOutput(["crontab", "-l"])
+                if output is None:
+                    output = ""
+                lines = output.splitlines()
+                if pattern.strip() not in [line.strip() for line in lines]:
+                    tmp_crontab = "/tmp/crontab_update"
+                    new_cron = output.strip() + "\n" + pattern.strip() + "\n" if output.strip() else pattern.strip() + "\n"
+                    self.WriteFile(tmp_crontab, new_cron)
+                    self.RunChecked(["crontab", tmp_crontab])
+                    self.RemoveFileOrDirectory(tmp_crontab)
+            return True
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError(f"Unable to add to crontab: {pattern}")
+                util.LogError(e)
+                util.QuitProgram()
+            return False
+
+    def RemoveFromCronTab(self, pattern):
+        try:
+            if self.flags.verbose:
+                util.LogInfo(f"Removing from crontab: {pattern}")
+            if not self.flags.pretend_run:
+                output = self.RunOutput(["crontab", "-l"])
+                lines = output.splitlines() if output else []
+                new_lines = [line for line in lines if line.strip() != pattern.strip()]
+                if lines == new_lines:
+                    return True
+                tmp_crontab = "/tmp/crontab_update"
+                new_cron = "\n".join(new_lines) + "\n"
+                self.WriteFile(tmp_crontab, new_cron)
+                self.RunChecked(["crontab", tmp_crontab])
+                self.RemoveFileOrDirectory(tmp_crontab)
+            return True
+        except Exception as e:
+            if self.flags.exit_on_failure:
+                util.LogError(f"Unable to remove from crontab: {pattern}")
+                util.LogError(e)
+                util.QuitProgram()
+            return False
 
     def AddToPath(self, src):
         if util.IsWindowsPlatform():

@@ -22,7 +22,7 @@ class LocalUbuntu(env.Environment):
         self.SetEnvironmentType(constants.EnvironmentType.LOCAL_UBUNTU)
 
         # Create connection
-        self.connection = connection.ConnectionLocal(self.flags, self.options)
+        self.connection = connection.ConnectionLocal(self.config, self.flags, self.options)
         self.connection.Setup()
 
         # Create installer options

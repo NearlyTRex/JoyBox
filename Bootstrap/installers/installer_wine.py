@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import util
+import tools
 from . import installer
 
 # Wine
@@ -19,24 +20,28 @@ class Wine(installer.Installer):
         self.url = "https://dl.winehq.org/wine-builds"
         self.archive_key = "winehq-archive.key"
         self.sources_list = f"winehq-{self.codename}.sources"
+        self.archive_key_path = f"/etc/apt/keyrings/{self.archive_key}"
+        self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
+        self.aptget_tool = tools.GetAptGetTool(self.config)
+        self.aptgetinstall_tool = tools.GetAptGetInstallTool(self.config)
 
     def IsInstalled(self):
         return self.connection.DoesFileOrDirectoryExist("/usr/bin/wine")
 
     def Install(self):
         util.LogInfo("Installing Wine")
-        self.connection.RunChecked("sudo dpkg --add-architecture i386")
-        self.connection.RunChecked("sudo mkdir -pm755 /etc/apt/keyrings")
-        self.connection.RunChecked(f"sudo wget -O /etc/apt/keyrings/{self.archive_key} {self.url}/winehq.key")
-        self.connection.RunChecked(f"sudo wget -NP /etc/apt/sources.list.d/ {self.url}/ubuntu/dists/{self.codename}/{self.sources_list}")
-        self.connection.RunChecked("sudo apt update")
-        self.connection.RunChecked("sudo apt install -y winehq-devel winetricks")
+        self.connection.RunChecked([self.aptgetinstall_tool, "--add-architecture", "i386"], sudo = True)
+        self.connection.DownloadFile(f"{self.url}/winehq.key", self.archive_key_path, sudo = True)
+        self.connection.DownloadFile(f"{self.url}/ubuntu/dists/{self.codename}/{self.sources_list}", self.sources_list_path, sudo = True)
+        self.connection.RunChecked([self.aptget_tool, "update"], sudo = True)
+        self.connection.RunChecked([self.aptget_tool, "install", "-y", "winehq-devel"], sudo = True)
+        self.connection.RunChecked([self.aptget_tool, "install", "-y", "winetricks"], sudo = True)
         return True
 
     def Uninstall(self):
         util.LogInfo("Uninstalling Wine")
-        self.connection.RunChecked("sudo apt remove -y winehq-devel winehq-stable wine-stable wine winetricks")
-        self.connection.RunChecked(f"sudo rm -f /etc/apt/sources.list.d/{self.sources_list}")
-        self.connection.RunChecked(f"sudo rm -f /etc/apt/keyrings/{self.archive_key}")
-        self.connection.RunChecked("rm -rf ~/.wine ~/.local/share/applications/wine")
+        self.connection.RunChecked([self.aptget_tool, "remove", "-y", "winehq-devel"], sudo = True)
+        self.connection.RunChecked([self.aptget_tool, "remove", "-y", "winetricks"], sudo = True)
+        self.connection.RemoveFileOrDirectory(self.sources_list_path, sudo = True)
+        self.connection.RemoveFileOrDirectory(self.archive_key_path, sudo = True)
         return True

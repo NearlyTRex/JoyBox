@@ -22,6 +22,7 @@ class ConnectionSSH(connection.Connection):
 
     def __init__(
         self,
+        config,
         ssh_host,
         ssh_port = 22,
         ssh_user = None,
@@ -30,7 +31,7 @@ class ConnectionSSH(connection.Connection):
         ssh_password = None,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        super().__init__(flags, options)
+        super().__init__(config, flags, options)
         self.ssh_host = ssh_host
         self.ssh_port = ssh_port
         self.ssh_user = ssh_user
@@ -89,11 +90,13 @@ class ConnectionSSH(connection.Connection):
             cmd = f"{env_vars} && {cmd}"
         return cmd
 
-    def RunOutput(self, cmd):
+    def RunOutput(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
             cmd = self.CreateCommandString(cmd)
+            if sudo:
+                cmd = self.MarkCommandAsSudo(cmd)
             if self.flags.verbose:
                 self.PrintCommand(cmd)
             if not self.flags.pretend_run:
@@ -115,11 +118,13 @@ class ConnectionSSH(connection.Connection):
                 util.QuitProgram()
             return ""
 
-    def RunReturncode(self, cmd):
+    def RunReturncode(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
             cmd = self.CreateCommandString(cmd)
+            if sudo:
+                cmd = self.MarkCommandAsSudo(cmd)
             if self.flags.verbose:
                 self.PrintCommand(cmd)
             if not self.flags.pretend_run:
@@ -136,11 +141,13 @@ class ConnectionSSH(connection.Connection):
                 util.QuitProgram()
             return 1
 
-    def RunBlocking(self, cmd):
+    def RunBlocking(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
             cmd = self.CreateCommandString(cmd)
+            if sudo:
+                cmd = self.MarkCommandAsSudo(cmd)
             if self.flags.verbose:
                 self.PrintCommand(cmd)
             if not self.flags.pretend_run:
@@ -162,11 +169,13 @@ class ConnectionSSH(connection.Connection):
                 util.QuitProgram()
             return 1
 
-    def RunInteractive(self, cmd):
+    def RunInteractive(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
             cmd = self.CreateCommandString(cmd)
+            if sudo:
+                cmd = self.MarkCommandAsSudo(cmd)
             if self.flags.verbose:
                 self.PrintCommand(cmd)
             if not self.flags.pretend_run:
@@ -192,8 +201,8 @@ class ConnectionSSH(connection.Connection):
                 util.QuitProgram()
             return 1
 
-    def RunChecked(self, cmd, throw_exception = False):
-        code = self.RunBlocking(cmd = cmd)
+    def RunChecked(self, cmd, sudo = False, throw_exception = False):
+        code = self.RunBlocking(cmd = cmd, sudo = sudo)
         if code != 0:
             if throw_exception:
                 raise ValueError("Unable to run command: %s" % cmd)
@@ -210,51 +219,6 @@ class ConnectionSSH(connection.Connection):
             util.LogError("Failed to create temporary directory")
             util.LogError(e)
             return None
-
-    def MakeDirectory(self, src):
-        try:
-            if self.flags.verbose:
-                util.LogInfo(f"Making remote directory {src}")
-            sftp = ConnectionSSH.ssh_client.open_sftp()
-            try:
-                sftp.stat(src)
-            except FileNotFoundError:
-                sftp.mkdir(src)
-            sftp.close()
-            return True
-        except Exception as e:
-            if self.flags.exit_on_failure:
-                util.LogError(f"Failed to make directory {src}")
-                util.LogError(e)
-                util.QuitProgram()
-            return False
-
-    def RemoveDirectory(self, src):
-        try:
-            if self.flags.verbose:
-                util.LogInfo(f"Removing remote directory {src}")
-            sftp = ConnectionSSH.ssh_client.open_sftp()
-            for file_attr in sftp.listdir_attr(src):
-                full_path = os.path.join(src, file_attr.filename)
-                if stat.S_ISDIR(file_attr.st_mode):
-                    self.RemoveDirectory(full_path)
-                else:
-                    sftp.remove(full_path)
-            sftp.rmdir(src)
-            sftp.close()
-            return True
-        except Exception as e:
-            if self.flags.exit_on_failure:
-                util.LogError(f"Failed to remove directory {src}")
-                util.LogError(e)
-                util.QuitProgram()
-            return False
-
-    def CopyFileOrDirectory(self, src, dest):
-        return self.RunBlocking(f"cp {src} {dest}")
-
-    def MoveFileOrDirectory(self, src, dest):
-        return self.RunBlocking(f"mv {src} {dest}")
 
     def DoesFileOrDirectoryExist(self, src):
         try:
@@ -362,18 +326,3 @@ class ConnectionSSH(connection.Connection):
                 util.LogError(e)
                 util.QuitProgram()
             return False
-
-    def DownloadFile(self, url, dest):
-        return self.RunBlocking(f"curl -L -o {dest} {url}")
-
-    def ExtractTarArchive(self, src, dest):
-        return self.RunBlocking(f"tar -xf {src} -C {dest}")
-
-    def ExtractZipArchive(self, src, dest):
-        return self.RunBlocking(f"unzip -o {src} -d {dest}")
-
-    def ChangeOwner(self, src, owner):
-        return self.RunBlocking(f"chown -R {owner} {src}")
-
-    def ChangePermission(self, src, permission):
-        return self.RunBlocking(f"chmod -R {permission} {src}")

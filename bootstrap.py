@@ -59,10 +59,12 @@ def main():
     if not os.path.exists(config_file):
         util.LogErrorAndQuit(f"Config file '{config_file}' does not exist")
 
+    # Get configuration
+    config = configuration.Configuration(src = config_file)
+
     # Create environment options
     environment_options = {
-        "config": configuration.Configuration(
-            src = config_file),
+        "config": config,
         "flags": util.RunFlags(
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -74,10 +76,10 @@ def main():
     if is_remote_ubuntu:
         environment_options["options"].SetShell(True)
         if is_server_index:
-            environment_options["ssh_host"] = config_contents.get("UserData.Servers", {}).get(f"server_{args.server_index}_host")
-            environment_options["ssh_port"] = config_contents.get("UserData.Servers", {}).get(f"server_{args.server_index}_port")
-            environment_options["ssh_user"] = config_contents.get("UserData.Servers", {}).get(f"server_{args.server_index}_user")
-            environment_options["ssh_password"] = config_contents.get("UserData.Servers", {}).get(f"server_{args.server_index}_pass")
+            environment_options["ssh_host"] = config.GetValue("UserData.Servers", f"server_{args.server_index}_host")
+            environment_options["ssh_port"] = config.GetValue("UserData.Servers", f"server_{args.server_index}_port")
+            environment_options["ssh_user"] = config.GetValue("UserData.Servers", f"server_{args.server_index}_user")
+            environment_options["ssh_password"] = config.GetValue("UserData.Servers", f"server_{args.server_index}_pass")
 
     # Create environment runner
     environment_runner = None
