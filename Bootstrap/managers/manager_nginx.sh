@@ -46,7 +46,7 @@ case "$1" in
         sanitize_path "$2"
         check_path "$2"
 
-        cp "$2" "$NGINX_SITES_AVAILABLE/"
+        cp -R "$2" "$NGINX_SITES_AVAILABLE/"
         echo "Configuration file installed in $NGINX_SITES_AVAILABLE."
         ;;
 
@@ -54,18 +54,18 @@ case "$1" in
         sanitize_path "$2"
         check_path "$2"
 
-        ln -s "$NGINX_SITES_AVAILABLE/$2" "$NGINX_SITES_ENABLED/"
+        BASENAME=$(basename "$2")
+        ln -sf "$NGINX_SITES_AVAILABLE/$BASENAME" "$NGINX_SITES_ENABLED/$BASENAME"
         echo "Configuration file linked from sites-available to sites-enabled."
         ;;
 
     remove_conf)
         sanitize_path "$2"
 
-        rm -f "$NGINX_SITES_ENABLED/$2"
-        echo "Configuration file removed from $NGINX_SITES_ENABLED."
-
-        rm -f "$NGINX_SITES_AVAILABLE/$2"
-        echo "Configuration file removed from $NGINX_SITES_AVAILABLE."
+        BASENAME=$(basename "$2")
+        rm -f "$NGINX_SITES_ENABLED/$BASENAME"
+        rm -f "$NGINX_SITES_AVAILABLE/$BASENAME"
+        echo "Configuration files removed from sites-available to sites-enabled."
         ;;
 
     copy_html)
@@ -83,7 +83,7 @@ case "$1" in
 
     systemctl)
         case "$2" in
-            reload|restart|status)
+            reload|restart|status|start|stop|enable|disable)
                 if ! systemctl "$2" nginx; then
                     echo "Error: Failed to execute systemctl $2 nginx."
                     exit 1
