@@ -207,12 +207,14 @@ class Connection:
                 util.LogInfo(f"Adding to crontab: {pattern}")
             if not self.flags.pretend_run:
                 output = self.RunOutput(["crontab", "-l"])
-                if output is None:
+                if output is None or "no crontab for" in output.lower():
                     output = ""
                 lines = output.splitlines()
-                if pattern.strip() not in [line.strip() for line in lines]:
+                pattern = pattern.strip()
+                if pattern not in [line.strip() for line in lines]:
                     tmp_crontab = "/tmp/crontab_update"
-                    new_cron = output.strip() + "\n" + pattern.strip() + "\n" if output.strip() else pattern.strip() + "\n"
+                    new_cron = f"{output.strip()}\n{pattern}" if output.strip() else pattern
+                    new_cron += "\n"
                     self.WriteFile(tmp_crontab, new_cron)
                     self.RunChecked(["crontab", tmp_crontab])
                     self.RemoveFileOrDirectory(tmp_crontab)
@@ -230,12 +232,15 @@ class Connection:
                 util.LogInfo(f"Removing from crontab: {pattern}")
             if not self.flags.pretend_run:
                 output = self.RunOutput(["crontab", "-l"])
+                if output is None or "no crontab for" in output.lower():
+                    output = ""
                 lines = output.splitlines() if output else []
                 new_lines = [line for line in lines if line.strip() != pattern.strip()]
                 if lines == new_lines:
                     return True
                 tmp_crontab = "/tmp/crontab_update"
-                new_cron = "\n".join(new_lines) + "\n"
+                new_cron = "\n".join(new_lines)
+                new_cron += "\n"
                 self.WriteFile(tmp_crontab, new_cron)
                 self.RunChecked(["crontab", tmp_crontab])
                 self.RemoveFileOrDirectory(tmp_crontab)
