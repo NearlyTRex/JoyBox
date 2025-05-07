@@ -11,6 +11,7 @@ SUDOERS_FILE="/etc/sudoers.d/server-setup"
 USERNAME="ubuntu"
 NGINX_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_nginx.sh"
 CERTBOT_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_certbot.sh"
+AZURACAST_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_azuracast.sh"
 
 # Only run as root
 if [ "$EUID" -ne 0 ]; then
@@ -70,7 +71,8 @@ TEMP_FILE=$(mktemp)
     echo ""
     echo "Cmnd_Alias MANAGER_NGINX = /usr/local/bin/manager_nginx.sh"
     echo "Cmnd_Alias MANAGER_CERTBOT = /usr/local/bin/manager_certbot.sh"
-    echo "$USERNAME ALL=(ALL) NOPASSWD: APT_MANAGE, MANAGER_NGINX, MANAGER_CERTBOT"
+    echo "Cmnd_Alias MANAGER_AZURACAST = /usr/local/bin/manager_azuracast.sh"
+    echo "$USERNAME ALL=(ALL) NOPASSWD: APT_MANAGE, MANAGER_NGINX, MANAGER_CERTBOT, MANAGER_AZURACAST"
 } > "$TEMP_FILE"
 
 # Validate and install sudoers config
@@ -118,5 +120,15 @@ if curl -fsSL -o /usr/local/bin/manager_certbot.sh "$CERTBOT_SCRIPT_URL"; then
     echo "manager_certbot.sh installed to /usr/local/bin/"
 else
     echo "Error: Failed to download manager_certbot.sh"
+    exit 1
+fi
+
+# Download and install azuracast manager script
+echo "Downloading manager_azuracast.sh..."
+if curl -fsSL -o /usr/local/bin/manager_azuracast.sh "$AZURACAST_SCRIPT_URL"; then
+    chmod +x /usr/local/bin/manager_azuracast.sh
+    echo "manager_azuracast.sh installed to /usr/local/bin/"
+else
+    echo "Error: Failed to download manager_azuracast.sh"
     exit 1
 fi
