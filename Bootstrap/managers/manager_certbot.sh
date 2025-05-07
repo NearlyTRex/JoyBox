@@ -11,7 +11,7 @@ register_cert() {
     DOMAINS=("$@")
 
     echo "Registering new SSL certificate for the following domains: ${DOMAINS[*]}..."
-    CMD=("certbot" "certonly" "--nginx" "--non-interactive" "--agree-tos" "--email" "$EMAIL")
+    CMD=("certbot" "certonly" "--webroot" "--non-interactive" "--agree-tos" "--email" "$EMAIL")
     for DOMAIN in "${DOMAINS[@]}"; do
         CMD+=("-d" "$DOMAIN")
     done

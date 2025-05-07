@@ -3,6 +3,7 @@
 NGINX_SITES_AVAILABLE="/etc/nginx/sites-available"
 NGINX_SITES_ENABLED="/etc/nginx/sites-enabled"
 HTML_DIR="/var/www/html"
+ACME_CHALLENGE_DIR="/var/www/html/.well-known/acme-challenge"
 
 print_usage() {
     echo "Usage:"
@@ -75,6 +76,11 @@ case "$1" in
         if [ ! -d "$HTML_DIR" ]; then
             mkdir -p "$HTML_DIR"
             echo "Created directory $HTML_DIR."
+        fi
+
+        if [ ! -d "$ACME_CHALLENGE_DIR" ]; then
+            mkdir -p "$ACME_CHALLENGE_DIR"
+            echo "Created directory $ACME_CHALLENGE_DIR."
         fi
 
         cp -R "$2" "$HTML_DIR/"

@@ -4,25 +4,21 @@ import sys
 
 # Local imports
 import util
+import tools
 from . import installer
 
-# Default config file
-default_config_file = """
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
+# Nginx config template
+nginx_config_template = """
+server {{
+    listen 80;
+    listen [::]:80;
 
-    server_name _;
+    server_name {domain};
 
-    location / {
+    location /.well-known/acme-challenge/ {{
         root /var/www/html;
-        index index.html;
-    }
-
-    location /.well-known/acme-challenge/ {
-        root /var/www/html;
-    }
-}
+    }}
+}}
 """
 
 # Nginx
@@ -34,29 +30,45 @@ class Nginx(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
+        self.nginx_config_values = {
+            "domain": self.config.GetValue("UserData.Servers", "domain_name")
+        }
+        self.aptget_tool = tools.GetAptGetTool(self.config)
+        self.nginx_manager_tool = "/usr/local/bin/manager_nginx.sh"
 
     def IsInstalled(self):
         return self.connection.DoesFileOrDirectoryExist("/usr/sbin/nginx")
 
     def Install(self):
+
+        # Install nginx
         util.LogInfo("Installing nginx")
-        self.connection.RunChecked("sudo apt update")
-        self.connection.RunChecked("sudo apt install -y nginx")
-        self.connection.WriteFile("/tmp/default.conf", default_config_file)
-        self.connection.RunChecked("sudo mv /tmp/default.conf /etc/nginx/sites-available/default")
-        self.connection.RunChecked("sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default")
-        self.connection.RunChecked("sudo mkdir -p /var/www/html")
-        self.connection.RunChecked("echo 'Welcome to nginx.' | sudo tee /var/www/html/index.html > /dev/null")
-        self.connection.RunChecked("sudo systemctl restart nginx")
-        self.connection.RunChecked("sudo systemctl enable nginx")
-        self.connection.RunChecked("sudo systemctl start nginx")
+        self.connection.RunChecked([self.aptget_tool, "update"], sudo = True)
+        self.connection.RunChecked([self.aptget_tool, "install", "-y", "nginx"], sudo = True)
+        self.connection.RunChecked([self.aptget_tool, "install", "-y", "nginx-common"], sudo = True)
+
+        # Create default entry
+        util.LogInfo("Creating default entry")
+        if self.connection.WriteFile("/tmp/default", nginx_config_template.format(**self.nginx_config_values)):
+            self.connection.RunChecked([self.nginx_manager_tool, "install_conf", "/tmp/default"], sudo = True)
+            self.connection.RunChecked([self.nginx_manager_tool, "link_conf", "/tmp/default"], sudo = True)
+            self.connection.RemoveFileOrDirectory("/tmp/default")
+
+        # Create default page
+        util.LogInfo("Creating default page")
+        if self.connection.WriteFile("/tmp/index.html", "Welcome to nginx"):
+            self.connection.RunChecked([self.nginx_manager_tool, "copy_html", "/tmp/index.html"], sudo = True)
+            self.connection.RemoveFileOrDirectory("/tmp/index.html")
+
+        # Restart nginx
+        util.LogInfo("Restarting nginx")
+        self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
         return True
 
     def Uninstall(self):
+
+        # Uninstall nginx
         util.LogInfo("Uninstalling nginx")
-        self.connection.RunChecked("sudo systemctl stop nginx")
-        self.connection.RunChecked("sudo systemctl disable nginx")
-        self.connection.RunChecked("sudo apt remove -y nginx nginx-common")
-        self.connection.Run("sudo rm -rf /etc/nginx")
-        self.connection.Run("sudo rm -rf /var/www/html")
+        self.connection.RunChecked([self.aptget_tool, "remove", "-y", "nginx"], sudo = True)
+        self.connection.RunChecked([self.aptget_tool, "remove", "-y", "nginx-common"], sudo = True)
         return True
