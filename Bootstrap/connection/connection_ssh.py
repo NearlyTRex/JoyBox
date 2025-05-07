@@ -85,10 +85,17 @@ class ConnectionSSH(connection.Connection):
             util.LogError(e)
 
     def ProcessCommand(self, cmd):
+        parts = []
         if self.options.env:
             env_vars = " ".join([f"export {key}={shlex.quote(value)}" for key, value in self.options.env.items()])
-            cmd = f"{env_vars} && {cmd}"
-        return cmd
+            parts.append(env_vars)
+        if self.options.cwd:
+            cwd = shlex.quote(self.options.cwd)
+            cwd = cwd.replace("~", f"/home/{self.ssh_user}")
+            cwd = cwd.replace("$HOME", f"/home/{self.ssh_user}")
+            parts.append(f"cd {cwd}")
+        parts.append(cmd)
+        return " && ".join(parts)
 
     def RunOutput(self, cmd, sudo = False):
         try:
@@ -311,8 +318,7 @@ class ConnectionSSH(connection.Connection):
         try:
             if self.flags.verbose:
                 util.LogInfo(f"Writing remote file {src}")
-            remote_dir = os.path.dirname(src)
-            if self.MakeDirectory(remote_dir):
+            if not self.flags.pretend_run:
                 sftp = ConnectionSSH.ssh_client.open_sftp()
                 with sftp.file(src, "w") as remote_file:
                     remote_file.write(contents)
