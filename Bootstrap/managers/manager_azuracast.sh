@@ -3,11 +3,12 @@
 install_azuracast() {
     AZURACAST_DIR="$1"
     ENV_FILE="$2"
-    COMPOSE_FILE="$3"
+    AZURACAST_ENV_FILE="$3"
+    COMPOSE_FILE="$4"
 
     if [ -z "$AZURACAST_DIR" ]; then
         echo "Error: Missing directory argument for install."
-        echo "Usage: $0 install <install_dir> [--env <env_file>] [--compose <docker_compose_file>]"
+        echo "Usage: $0 install <install_dir> [--env <env_file>] [--azuracast_env <azuracast_env_file>] [--compose <docker_compose_file>]"
         exit 1
     fi
 
@@ -18,6 +19,11 @@ install_azuracast() {
     if [ -n "$ENV_FILE" ]; then
         echo "Copying env file from $ENV_FILE"
         cp "$ENV_FILE" .env || { echo "Failed to copy env file"; exit 1; }
+    fi
+
+    if [ -n "$AZURACAST_ENV_FILE" ]; then
+        echo "Copying AzuraCast environment file from $AZURACAST_ENV_FILE"
+        cp "$AZURACAST_ENV_FILE" azuracast.env || { echo "Failed to copy AzuraCast env file"; exit 1; }
     fi
 
     if [ -n "$COMPOSE_FILE" ]; then
@@ -69,7 +75,7 @@ uninstall_azuracast() {
 
 print_usage() {
     echo "Usage:"
-    echo "  $0 install <install_dir> [--env <env_file>] [--compose <docker_compose_file>]"
+    echo "  $0 install <install_dir> [--env <env_file>] [--azuracast_env <azuracast_env_file>] [--compose <docker_compose_file>]"
     echo "  $0 uninstall <install_dir>"
     exit 1
 }
@@ -80,12 +86,17 @@ shift
 if [ "$COMMAND" == "install" ]; then
     INSTALL_DIR=""
     ENV_FILE=""
+    AZURACAST_ENV_FILE=""
     COMPOSE_FILE=""
 
     while [[ $# -gt 0 ]]; do
         case "$1" in
             --env)
                 ENV_FILE="$2"
+                shift 2
+                ;;
+            --azuracast_env)
+                AZURACAST_ENV_FILE="$2"
                 shift 2
                 ;;
             --compose)
@@ -104,7 +115,7 @@ if [ "$COMMAND" == "install" ]; then
         esac
     done
 
-    install_azuracast "$INSTALL_DIR" "$ENV_FILE" "$COMPOSE_FILE"
+    install_azuracast "$INSTALL_DIR" "$ENV_FILE" "$AZURACAST_ENV_FILE" "$COMPOSE_FILE"
 
 elif [ "$COMMAND" == "uninstall" ]; then
     if [ $# -ne 1 ]; then
