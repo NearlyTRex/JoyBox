@@ -222,6 +222,9 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "qemu-kvm",
     "qemu-utils",
     "virt-manager",
+    "virtualbox-guest-additions-iso",
+    "virtualbox-guest-utils",
+    "virtualbox-guest-x11",
     "virtualbox",
     "xdg-desktop-portal",
 
@@ -261,6 +264,7 @@ aptget[constants.EnvironmentType.REMOTE_UBUNTU] += [
 
     # Virtualization
     "docker-compose",
+    "docker-compose-v2",
     "docker.io",
     "flatpak"
 ]
