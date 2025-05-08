@@ -213,6 +213,7 @@ services:
             - 'geolite_install:/var/azuracast/storage/geoip'
             - 'sftpgo_data:/var/azuracast/storage/sftpgo'
             - 'acme:/var/azuracast/storage/acme'
+            - '${EXTERNAL_MEDIA_SOURCE:-/mnt/storage/Music}:${EXTERNAL_MEDIA_MOUNT:-/var/azuracast/storage/external}:ro'
         restart: unless-stopped
         ulimits:
             nofile:
@@ -258,6 +259,8 @@ AZURACAST_PUID=1000
 AZURACAST_PGID=1000
 AZURACAST_COMPOSE_PRIVILEGED=false
 NGINX_TIMEOUT=1800
+EXTERNAL_MEDIA_SOURCE={external_media_source}
+EXTERNAL_MEDIA_MOUNT={external_media_mount}
 """
 
 # AzuraCast Env template
@@ -315,7 +318,9 @@ class AzuraCast(installer.Installer):
         }
         self.env_values = {
             "port_http": self.config.GetValue("UserData.AzuraCast", "azuracast_port_http"),
-            "port_https": self.config.GetValue("UserData.AzuraCast", "azuracast_port_https")
+            "port_https": self.config.GetValue("UserData.AzuraCast", "azuracast_port_https"),
+            "external_media_source": self.config.GetValue("UserData.AzuraCast", "azuracast_external_media_source"),
+            "external_media_mount": self.config.GetValue("UserData.AzuraCast", "azuracast_external_media_mount")
         }
         self.azuracast_env_values = {
             "db_user": self.config.GetValue("UserData.AzuraCast", "azuracast_db_user"),
