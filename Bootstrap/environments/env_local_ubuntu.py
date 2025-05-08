@@ -44,6 +44,7 @@ class LocalUbuntu(env.Environment):
     def Setup(self):
 
         # Install AptGet packages
+        util.LogInfo("Installing AptGet packages")
         self.installer_aptget.UpdatePackageLists()
         if not self.installer_aptget.IsInstalled():
             if not self.installer_aptget.Install():
@@ -52,27 +53,32 @@ class LocalUbuntu(env.Environment):
             return False
 
         # Install Flatpak packages
+        util.LogInfo("Installing Flatpak packages")
         self.installer_flatpak.UpdatePackages()
         if not self.installer_flatpak.IsInstalled():
             if not self.installer_flatpak.Install():
                 return False
 
         # Install Chrome
+        util.LogInfo("Installing Chrome")
         if not self.installer_chrome.IsInstalled():
             if not self.installer_chrome.Install():
                 return False
 
         # Install Brave
+        util.LogInfo("Installing Brave")
         if not self.installer_brave.IsInstalled():
             if not self.installer_brave.Install():
                 return False
 
         # Install 1Password
+        util.LogInfo("Installing 1Password")
         if not self.installer_onepassword.IsInstalled():
             if not self.installer_onepassword.Install():
                 return False
 
         # Install Wine
+        util.LogInfo("Installing Wine")
         if not self.installer_wine.IsInstalled():
             if not self.installer_wine.Install():
                 return False
@@ -81,31 +87,37 @@ class LocalUbuntu(env.Environment):
     def Teardown(self):
 
         # Uninstall Wine
+        util.LogInfo("Uninstalling Wine")
         if self.installer_wine.IsInstalled():
             if not self.installer_wine.Uninstall():
                 return False
 
         # Uninstall 1Password
+        util.LogInfo("Uninstalling 1Password")
         if self.installer_onepassword.IsInstalled():
             if not self.installer_onepassword.Uninstall():
                 return False
 
         # Uninstall Brave
+        util.LogInfo("Uninstalling Brave")
         if self.installer_brave.IsInstalled():
             if not self.installer_brave.Uninstall():
                 return False
 
         # Uninstall Chrome
+        util.LogInfo("Uninstalling Chrome")
         if self.installer_chrome.IsInstalled():
             if not self.installer_chrome.Uninstall():
                 return False
 
         # Uninstall Flatpak packages
+        util.LogInfo("Uninstalling Flatpak packages")
         if self.installer_flatpak.IsInstalled():
             if not self.installer_flatpak.Uninstall():
                 return False
 
         # Uninstall AptGet packages
+        util.LogInfo("Uninstalling AptGet packages")
         if self.installer_aptget.IsInstalled():
             if not self.installer_aptget.Uninstall():
                 return False

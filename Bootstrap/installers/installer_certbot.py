@@ -58,7 +58,10 @@ class Certbot(installer.Installer):
         self.domain_name = self.config.GetValue("UserData.Servers", "domain_name")
         self.domain_contact = self.config.GetValue("UserData.Servers", "domain_contact")
         self.subdomains = [
-            self.config.GetValue("UserData.Wordpress", "wordpress_subdomain")
+            self.config.GetValue("UserData.Wordpress", "wordpress_subdomain"),
+            self.config.GetValue("UserData.AzuraCast", "azuracast_subdomain"),
+            self.config.GetValue("UserData.NextCloud", "nextcloud_subdomain"),
+            self.config.GetValue("UserData.ScriptServer", "scriptserver_subdomain")
         ]
         self.fully_qualified_domains = [self.domain_name] + [f"{sub}.{self.domain_name}" for sub in self.subdomains]
         self.aptget_tool = tools.GetAptGetTool(self.config)
@@ -91,7 +94,7 @@ class Certbot(installer.Installer):
         util.LogInfo("Creating default entry")
         if self.connection.WriteFile("/tmp/default", nginx_config_template.format(**self.nginx_config_values)):
             self.connection.RunChecked([self.nginx_manager_tool, "install_conf", "/tmp/default"], sudo = True)
-            self.connection.RunChecked([self.nginx_manager_tool, "link_conf", "/tmp/default"], sudo = True)
+            self.connection.RunChecked([self.nginx_manager_tool, "link_conf", "default"], sudo = True)
             self.connection.RemoveFileOrDirectory("/tmp/default")
 
         # Restart nginx

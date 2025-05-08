@@ -38,6 +38,14 @@ sanitize_path() {
     fi
 }
 
+check_directory_traversal() {
+    local filename="$1"
+    if [[ "$filename" == *".."* || "$filename" == */* ]]; then
+        echo "Error: Directory traversal or path separators are not allowed in filename."
+        exit 1
+    fi
+}
+
 if [ $# -lt 2 ]; then
     print_usage
 fi
@@ -52,37 +60,43 @@ case "$1" in
         ;;
 
     link_conf)
-        sanitize_path "$2"
-        check_path "$2"
+        check_directory_traversal "$2"
 
-        BASENAME=$(basename "$2")
-        ln -sf "$NGINX_SITES_AVAILABLE/$BASENAME" "$NGINX_SITES_ENABLED/$BASENAME"
+        local_path="$NGINX_SITES_AVAILABLE/$2"
+        if [ ! -e "$local_path" ]; then
+            echo "Error: Configuration file '$2' does not exist in $NGINX_SITES_AVAILABLE."
+            exit 1
+        fi
+
+        ln -sf "$local_path" "$NGINX_SITES_ENABLED/$2"
         echo "Configuration file linked from sites-available to sites-enabled."
         ;;
 
     remove_conf)
-        sanitize_path "$2"
+        check_directory_traversal "$2"
 
-        BASENAME=$(basename "$2")
-        rm -f "$NGINX_SITES_ENABLED/$BASENAME"
-        rm -f "$NGINX_SITES_AVAILABLE/$BASENAME"
-        echo "Configuration files removed from sites-available to sites-enabled."
+        local_path="$NGINX_SITES_ENABLED/$2"
+        if [ ! -e "$local_path" ]; then
+            echo "Error: Configuration file '$2' does not exist in $NGINX_SITES_ENABLED."
+            exit 1
+        fi
+        rm -f "$local_path"
+
+        local_path="$NGINX_SITES_AVAILABLE/$2"
+        if [ ! -e "$local_path" ]; then
+            echo "Error: Configuration file '$2' does not exist in $NGINX_SITES_AVAILABLE."
+            exit 1
+        fi
+        rm -f "$local_path"
+
+        echo "Configuration files removed from sites-available and sites-enabled."
         ;;
 
     copy_html)
         sanitize_path "$2"
         check_path "$2"
 
-        if [ ! -d "$HTML_DIR" ]; then
-            mkdir -p "$HTML_DIR"
-            echo "Created directory $HTML_DIR."
-        fi
-
-        if [ ! -d "$ACME_CHALLENGE_DIR" ]; then
-            mkdir -p "$ACME_CHALLENGE_DIR"
-            echo "Created directory $ACME_CHALLENGE_DIR."
-        fi
-
+        mkdir -p "$HTML_DIR" "$ACME_CHALLENGE_DIR"
         cp -R "$2" "$HTML_DIR/"
         echo "Files copied to $HTML_DIR."
         ;;

@@ -49,11 +49,15 @@ class RemoteUbuntu(env.Environment):
         self.installer_flatpak = installers.Flatpak(**self.installer_options)
         self.installer_nginx = installers.Nginx(**self.installer_options)
         self.installer_certbot = installers.Certbot(**self.installer_options)
-        self.installer_wordress = installers.Wordpress(**self.installer_options)
+        self.installer_wordpress = installers.Wordpress(**self.installer_options)
+        self.installer_azuracast = installers.AzuraCast(**self.installer_options)
+        self.installer_nextcloud = installers.NextCloud(**self.installer_options)
+        self.installer_scriptserver = installers.ScriptServer(**self.installer_options)
 
     def Setup(self):
 
         # Install AptGet packages
+        util.LogInfo("Installing AptGet packages")
         self.installer_aptget.UpdatePackageLists()
         if not self.installer_aptget.IsInstalled():
             if not self.installer_aptget.Install():
@@ -62,40 +66,95 @@ class RemoteUbuntu(env.Environment):
             return False
 
         # Install Flatpak packages
+        util.LogInfo("Installing Flatpak packages")
         self.installer_flatpak.UpdatePackages()
         if not self.installer_flatpak.IsInstalled():
             if not self.installer_flatpak.Install():
                 return False
 
         # Install Nginx
+        util.LogInfo("Installing Nginx")
         if not self.installer_nginx.IsInstalled():
             if not self.installer_nginx.Install():
                 return False
 
         # Install Certbot
+        util.LogInfo("Installing Certbot")
         if not self.installer_certbot.IsInstalled():
             if not self.installer_certbot.Install():
                 return False
 
         # Install Wordpress
-        if not self.installer_wordress.IsInstalled():
-            if not self.installer_wordress.Install():
+        util.LogInfo("Installing Wordpress")
+        if not self.installer_wordpress.IsInstalled():
+            if not self.installer_wordpress.Install():
+                return False
+
+        # Install AzuraCast
+        util.LogInfo("Installing AzuraCast")
+        if not self.installer_azuracast.IsInstalled():
+            if not self.installer_azuracast.Install():
+                return False
+
+        # Install NextCloud
+        util.LogInfo("Installing NextCloud")
+        if not self.installer_nextcloud.IsInstalled():
+            if not self.installer_nextcloud.Install():
+                return False
+
+        # Install ScriptServer
+        util.LogInfo("Installing ScriptServer")
+        if not self.installer_scriptserver.IsInstalled():
+            if not self.installer_scriptserver.Install():
                 return False
         return True
 
     def Teardown(self):
 
+        # Uninstall ScriptServer
+        util.LogInfo("Uninstalling ScriptServer")
+        if self.installer_scriptserver.IsInstalled():
+            if not self.installer_scriptserver.Uninstall():
+                return False
+
+        # Uninstall NextCloud
+        util.LogInfo("Uninstalling NextCloud")
+        if self.installer_nextcloud.IsInstalled():
+            if not self.installer_nextcloud.Uninstall():
+                return False
+
+        # Uninstall AzuraCast
+        util.LogInfo("Uninstalling AzuraCast")
+        if self.installer_azuracast.IsInstalled():
+            if not self.installer_azuracast.Uninstall():
+                return False
+
         # Uninstall Wordpress
-        if self.installer_wordress.IsInstalled():
-            if not self.installer_wordress.Uninstall():
+        util.LogInfo("Uninstalling Wordpress")
+        if self.installer_wordpress.IsInstalled():
+            if not self.installer_wordpress.Uninstall():
+                return False
+
+        # Uninstall Certbot
+        util.LogInfo("Uninstalling Certbot")
+        if self.installer_certbot.IsInstalled():
+            if not self.installer_certbot.Uninstall():
+                return False
+
+        # Uninstall Nginx
+        util.LogInfo("Uninstalling Nginx")
+        if self.installer_nginx.IsInstalled():
+            if not self.installer_nginx.Uninstall():
                 return False
 
         # Uninstall Flatpak packages
+        util.LogInfo("Uninstalling Flatpak packages")
         if self.installer_flatpak.IsInstalled():
             if not self.installer_flatpak.Uninstall():
                 return False
 
         # Uninstall AptGet packages
+        util.LogInfo("Uninstalling AptGet packages")
         if self.installer_aptget.IsInstalled():
             if not self.installer_aptget.Uninstall():
                 return False

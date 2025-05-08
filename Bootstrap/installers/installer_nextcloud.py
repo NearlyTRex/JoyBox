@@ -6,8 +6,8 @@ import sys
 import util
 from . import installer
 
-# Nextcloud
-class Nextcloud(installer.Installer):
+# NextCloud
+class NextCloud(installer.Installer):
     def __init__(
         self,
         config,

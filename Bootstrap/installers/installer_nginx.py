@@ -41,8 +41,8 @@ class Nginx(installer.Installer):
 
     def Install(self):
 
-        # Install nginx
-        util.LogInfo("Installing nginx")
+        # Install Nginx
+        util.LogInfo("Installing Nginx")
         self.connection.RunChecked([self.aptget_tool, "update"], sudo = True)
         self.connection.RunChecked([self.aptget_tool, "install", "-y", "nginx"], sudo = True)
         self.connection.RunChecked([self.aptget_tool, "install", "-y", "nginx-common"], sudo = True)
@@ -51,7 +51,7 @@ class Nginx(installer.Installer):
         util.LogInfo("Creating default entry")
         if self.connection.WriteFile("/tmp/default", nginx_config_template.format(**self.nginx_config_values)):
             self.connection.RunChecked([self.nginx_manager_tool, "install_conf", "/tmp/default"], sudo = True)
-            self.connection.RunChecked([self.nginx_manager_tool, "link_conf", "/tmp/default"], sudo = True)
+            self.connection.RunChecked([self.nginx_manager_tool, "link_conf", "default"], sudo = True)
             self.connection.RemoveFileOrDirectory("/tmp/default")
 
         # Create default page
@@ -60,15 +60,23 @@ class Nginx(installer.Installer):
             self.connection.RunChecked([self.nginx_manager_tool, "copy_html", "/tmp/index.html"], sudo = True)
             self.connection.RemoveFileOrDirectory("/tmp/index.html")
 
-        # Restart nginx
-        util.LogInfo("Restarting nginx")
+        # Restart Nginx
+        util.LogInfo("Restarting Nginx")
         self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
         return True
 
     def Uninstall(self):
 
-        # Uninstall nginx
-        util.LogInfo("Uninstalling nginx")
+        # Stop Nginx
+        util.LogInfo("Stopping Nginx")
+        self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "stop"], sudo = True)
+
+        # Remove default entry
+        util.LogInfo("Removing default entry")
+        self.connection.RunChecked([self.nginx_manager_tool, "remove_conf", "default"], sudo = True)
+
+        # Uninstall Nginx
+        util.LogInfo("Uninstalling Nginx")
         self.connection.RunChecked([self.aptget_tool, "remove", "-y", "nginx"], sudo = True)
         self.connection.RunChecked([self.aptget_tool, "remove", "-y", "nginx-common"], sudo = True)
         return True

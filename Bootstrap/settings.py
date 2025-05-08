@@ -52,10 +52,42 @@ else:
 # UserData.Wordpress
 ini_defaults["UserData.Wordpress"] = {}
 ini_defaults["UserData.Wordpress"]["wordpress_subdomain"] = "www"
+ini_defaults["UserData.Wordpress"]["wordpress_port_http"] = "8080"
+ini_defaults["UserData.Wordpress"]["wordpress_port_https"] = "8443"
 ini_defaults["UserData.Wordpress"]["wordpress_db_user"] = "wpuser"
 ini_defaults["UserData.Wordpress"]["wordpress_db_pass"] = ""
 ini_defaults["UserData.Wordpress"]["wordpress_db_name"] = "wpdatabase"
 ini_defaults["UserData.Wordpress"]["wordpress_db_root_pass"] = ""
+
+# UserData.AzuraCast
+ini_defaults["UserData.AzuraCast"] = {}
+ini_defaults["UserData.AzuraCast"]["azuracast_subdomain"] = "radio"
+ini_defaults["UserData.AzuraCast"]["azuracast_port_http"] = "8081"
+ini_defaults["UserData.AzuraCast"]["azuracast_port_https"] = "8444"
+ini_defaults["UserData.AzuraCast"]["azuracast_db_user"] = "azuracast"
+ini_defaults["UserData.AzuraCast"]["azuracast_db_pass"] = ""
+ini_defaults["UserData.AzuraCast"]["azuracast_db_name"] = "azuracast"
+ini_defaults["UserData.AzuraCast"]["azuracast_db_root_pass"] = ""
+
+# UserData.NextCloud
+ini_defaults["UserData.NextCloud"] = {}
+ini_defaults["UserData.NextCloud"]["nextcloud_subdomain"] = "cloud"
+ini_defaults["UserData.NextCloud"]["nextcloud_port_http"] = "8082"
+ini_defaults["UserData.NextCloud"]["nextcloud_port_https"] = "8445"
+ini_defaults["UserData.NextCloud"]["nextcloud_db_user"] = ""
+ini_defaults["UserData.NextCloud"]["nextcloud_db_pass"] = ""
+ini_defaults["UserData.NextCloud"]["nextcloud_db_name"] = ""
+ini_defaults["UserData.NextCloud"]["nextcloud_db_root_pass"] = ""
+
+# UserData.ScriptServer
+ini_defaults["UserData.ScriptServer"] = {}
+ini_defaults["UserData.ScriptServer"]["scriptserver_subdomain"] = "tools"
+ini_defaults["UserData.ScriptServer"]["scriptserver_port_http"] = "8083"
+ini_defaults["UserData.ScriptServer"]["scriptserver_port_https"] = "8446"
+ini_defaults["UserData.ScriptServer"]["scriptserver_db_user"] = ""
+ini_defaults["UserData.ScriptServer"]["scriptserver_db_pass"] = ""
+ini_defaults["UserData.ScriptServer"]["scriptserver_db_name"] = ""
+ini_defaults["UserData.ScriptServer"]["scriptserver_db_root_pass"] = ""
 
 # UserData.Servers
 ini_defaults["UserData.Servers"] = {}

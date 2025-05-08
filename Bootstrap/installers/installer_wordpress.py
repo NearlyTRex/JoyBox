@@ -18,7 +18,7 @@ server {{
     }}
 
     location / {{
-        return 301 https://$host$request_uri;
+        return 301 https://{subdomain}.{domain}$request_uri;
     }}
 }}
 
@@ -30,7 +30,7 @@ server {{
     ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
 
     location / {{
-        proxy_pass http://localhost:8080;
+        proxy_pass http://localhost:{port_http};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-Proto https;
@@ -46,7 +46,7 @@ services:
   wordpress:
     image: wordpress:latest
     ports:
-      - "8080:80"
+      - "${WORDPRESS_PORT_HTTP}:80"
     environment:
       WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
       WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
@@ -81,6 +81,8 @@ WORDPRESS_DB_USER={db_user}
 WORDPRESS_DB_PASSWORD={db_password}
 WORDPRESS_DB_NAME={db_name}
 WORDPRESS_DB_ROOT_PASSWORD={db_root_password}
+WORDPRESS_PORT_HTTP={port_http}
+WORDPRESS_PORT_HTTPS={port_https}
 """
 
 # Wordpress
@@ -94,59 +96,76 @@ class Wordpress(installer.Installer):
         super().__init__(config, connection, flags, options)
         self.app_name = "wordpress"
         self.app_dir = f"$HOME/apps/{self.app_name}"
-        self.nginx_available_conf = f"/etc/nginx/sites-available/{self.app_name}.conf"
-        self.nginx_enabled_conf = f"/etc/nginx/sites-enabled/{self.app_name}.conf"
         self.nginx_config_values = {
             "domain": self.config.GetValue("UserData.Servers", "domain_name"),
-            "subdomain": self.config.GetValue("UserData.Wordpress", "wordpress_subdomain")
+            "subdomain": self.config.GetValue("UserData.Wordpress", "wordpress_subdomain"),
+            "port_http": self.config.GetValue("UserData.Wordpress", "wordpress_port_http")
         }
         self.env_values = {
             "db_user": self.config.GetValue("UserData.Wordpress", "wordpress_db_user"),
             "db_password": self.config.GetValue("UserData.Wordpress", "wordpress_db_pass"),
             "db_name": self.config.GetValue("UserData.Wordpress", "wordpress_db_name"),
-            "db_root_password": self.config.GetValue("UserData.Wordpress", "wordpress_db_root_pass")
+            "db_root_password": self.config.GetValue("UserData.Wordpress", "wordpress_db_root_pass"),
+            "port_http": self.config.GetValue("UserData.Wordpress", "wordpress_port_http"),
+            "port_https": self.config.GetValue("UserData.Wordpress", "wordpress_port_https")
         }
         self.docker_tool = tools.GetDockerTool(self.config)
         self.docker_compose_tool = tools.GetDockerComposeTool(self.config)
         self.nginx_manager_tool = "/usr/local/bin/manager_nginx.sh"
 
     def IsInstalled(self):
-        containers = self.connection.RunOutput("docker ps --format '{{.Names}}'")
-        return any("wordpress" in name for name in containers.splitlines())
+        containers = self.connection.RunOutput("docker ps -a --format '{{.Names}}'")
+        return any(name == self.app_name for name in containers.splitlines())
 
     def Install(self):
 
-        # Create WordPress directory
-        util.LogInfo("Making WordPress directory")
+        # Create directory
+        util.LogInfo("Making directory")
         self.connection.MakeDirectory(self.app_dir)
 
-        # Write WordPress docker compose
-        util.LogInfo("Writing WordPress docker compose")
+        # Write docker compose
+        util.LogInfo("Writing docker compose")
         if self.connection.WriteFile(f"/tmp/docker-compose.yml", docker_compose_template):
             self.connection.MoveFileOrDirectory("/tmp/docker-compose.yml", f"{self.app_dir}/docker-compose.yml")
 
-        # Write WordPress docker env
-        util.LogInfo("Writing WordPress docker env")
+        # Write docker env
+        util.LogInfo("Writing docker env")
         if self.connection.WriteFile(f"/tmp/.env", env_template.format(**self.env_values)):
             self.connection.MoveFileOrDirectory("/tmp/.env", f"{self.app_dir}/.env")
 
-        # Create WordPress nginx entry
-        util.LogInfo("Creating WordPress nginx entry")
+        # Create Nginx entry
+        util.LogInfo("Creating Nginx entry")
         if self.connection.WriteFile(f"/tmp/{self.app_name}.conf", nginx_config_template.format(**self.nginx_config_values)):
             self.connection.RunChecked([self.nginx_manager_tool, "install_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
-            self.connection.RunChecked([self.nginx_manager_tool, "link_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
+            self.connection.RunChecked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
             self.connection.RemoveFileOrDirectory(f"/tmp/{self.app_name}.conf")
 
-        # Restart nginx
-        util.LogInfo("Restarting nginx")
+        # Restart Nginx
+        util.LogInfo("Restarting Nginx")
         self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
 
-        # Build WordPress docker
-        util.LogInfo("Building WordPress docker")
+        # Start docker
+        util.LogInfo("Starting docker")
         self.connection.GetOptions().SetCurrentWorkingDirectory(self.app_dir)
         self.connection.RunChecked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "up", "-d", "--build"])
         return True
 
     def Uninstall(self):
-        util.LogInfo("Uninstalling WordPress")
+
+        # Stop docker
+        util.LogInfo("Stopping docker")
+        self.connection.GetOptions().SetCurrentWorkingDirectory(self.app_dir)
+        self.connection.RunChecked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "down", "-v"])
+
+        # Remove directory
+        util.LogInfo("Removing directory")
+        self.connection.RemoveFileOrDirectory(self.app_dir)
+
+        # Remove Nginx configuration
+        util.LogInfo("Removing Nginx entry")
+        self.connection.RunChecked([self.nginx_manager_tool, "remove_conf", f"{self.app_name}.conf"], sudo = True)
+
+        # Restart Nginx
+        util.LogInfo("Restarting Nginx")
+        self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
         return True
