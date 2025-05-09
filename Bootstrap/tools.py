@@ -2,6 +2,9 @@
 import os
 import sys
 
+# Local imports
+import util
+
 ###########################################################
 ## AptGet
 ###########################################################
@@ -49,14 +52,14 @@ def GetPythonVenvDir(config):
 def GetPythonVenvPythonTool(config):
     python_exe = config.GetValue("Tools.Python", "python_exe")
     if util.IsWindowsPlatform():
-        return os.path.join(config.GetPythonVenvDir(), "Scripts", python_exe)
-    return os.path.join(config.GetPythonVenvDir(), "bin", python_exe)
+        return os.path.join(GetPythonVenvDir(config), "Scripts", python_exe)
+    return os.path.join(GetPythonVenvDir(config), "bin", python_exe)
 
 def GetPythonVenvPipTool(config):
     python_pip_exe = config.GetValue("Tools.Python", "python_pip_exe")
     if util.IsWindowsPlatform():
-        return os.path.join(config.GetPythonVenvDir(), "Scripts", python_pip_exe)
-    return os.path.join(config.GetPythonVenvDir(), "bin", python_pip_exe)
+        return os.path.join(GetPythonVenvDir(config), "Scripts", python_pip_exe)
+    return os.path.join(GetPythonVenvDir(config), "bin", python_pip_exe)
 
 ###########################################################
 ## Curl

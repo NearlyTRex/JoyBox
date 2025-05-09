@@ -4,7 +4,6 @@ import sys
 
 # Local imports
 import util
-import tools
 from . import installer
 
 # Chrome
@@ -21,8 +20,6 @@ class Chrome(installer.Installer):
         self.sources_list = "google-chrome.list"
         self.archive_key_path = f"/etc/apt/trusted.gpg.d/{self.archive_key}"
         self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
-        self.aptget_tool = tools.GetAptGetTool(self.config)
-        self.aptgetinstall_tool = tools.GetAptGetInstallTool(self.config)
 
     def IsInstalled(self):
         return self.connection.DoesFileOrDirectoryExist("/usr/bin/google-chrome")

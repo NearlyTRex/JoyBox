@@ -4,7 +4,6 @@ import sys
 
 # Local imports
 import util
-import tools
 from . import installer
 
 # Nginx config template
@@ -58,18 +57,16 @@ class Certbot(installer.Installer):
         self.domain_name = self.config.GetValue("UserData.Servers", "domain_name")
         self.domain_contact = self.config.GetValue("UserData.Servers", "domain_contact")
         self.subdomains = [
+            self.config.GetValue("UserData.Authelia", "authelia_subdomain"),
             self.config.GetValue("UserData.Wordpress", "wordpress_subdomain"),
             self.config.GetValue("UserData.AzuraCast", "azuracast_subdomain"),
             self.config.GetValue("UserData.NextCloud", "nextcloud_subdomain"),
             self.config.GetValue("UserData.ScriptServer", "scriptserver_subdomain")
         ]
         self.fully_qualified_domains = [self.domain_name] + [f"{sub}.{self.domain_name}" for sub in self.subdomains]
-        self.aptget_tool = tools.GetAptGetTool(self.config)
         self.nginx_config_values = {
             "domain": self.domain_name
         }
-        self.cert_manager_tool = "/usr/local/bin/manager_certbot.sh"
-        self.nginx_manager_tool = "/usr/local/bin/manager_nginx.sh"
 
     def IsInstalled(self):
         return self.connection.DoesFileOrDirectoryExist("/usr/bin/certbot")

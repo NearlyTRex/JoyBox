@@ -4,7 +4,6 @@ import sys
 
 # Local imports
 import util
-import tools
 from . import installer
 
 # Nginx config template
@@ -12,10 +11,6 @@ nginx_config_template = """
 server {{
     listen 80;
     server_name {subdomain}.{domain};
-
-    location /.well-known/acme-challenge/ {{
-        root /var/www/html;
-    }}
 
     location / {{
         return 301 https://{subdomain}.{domain}$request_uri;
@@ -34,7 +29,6 @@ server {{
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-Proto https;
-
     }}
 }}
 """
@@ -328,8 +322,6 @@ class AzuraCast(installer.Installer):
             "db_name": self.config.GetValue("UserData.AzuraCast", "azuracast_db_name"),
             "db_root_password": self.config.GetValue("UserData.AzuraCast", "azuracast_db_root_pass")
         }
-        self.nginx_manager_tool = "/usr/local/bin/manager_nginx.sh"
-        self.azuracast_manager_tool = "/usr/local/bin/manager_azuracast.sh"
 
     def IsInstalled(self):
         containers = self.connection.RunOutput("docker ps -a --format '{{.Names}}'")

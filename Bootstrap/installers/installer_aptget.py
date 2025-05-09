@@ -5,7 +5,6 @@ import sys
 # Local imports
 import util
 import packages
-import tools
 from . import installer
 
 # AptGet
@@ -17,8 +16,6 @@ class AptGet(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
-        self.aptget_tool = tools.GetAptGetTool(self.config)
-        self.aptgetinstall_tool = tools.GetAptGetInstallTool(self.config)
 
     def GetPackages(self):
         return packages.aptget.get(self.GetEnvironmentType(), [])

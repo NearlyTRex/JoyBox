@@ -4,7 +4,6 @@ import sys
 
 # Local imports
 import util
-import tools
 from . import installer
 
 # Nginx config template
@@ -33,8 +32,6 @@ class Nginx(installer.Installer):
         self.nginx_config_values = {
             "domain": self.config.GetValue("UserData.Servers", "domain_name")
         }
-        self.aptget_tool = tools.GetAptGetTool(self.config)
-        self.nginx_manager_tool = "/usr/local/bin/manager_nginx.sh"
 
     def IsInstalled(self):
         return self.connection.DoesFileOrDirectoryExist("/usr/sbin/nginx")

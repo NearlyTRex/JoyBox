@@ -4,7 +4,6 @@ import sys
 
 # Local imports
 import util
-import tools
 from . import installer
 
 # Nginx config template
@@ -12,10 +11,6 @@ nginx_config_template = """
 server {{
     listen 80;
     server_name {subdomain}.{domain};
-
-    location /.well-known/acme-challenge/ {{
-        root /var/www/html;
-    }}
 
     location / {{
         return 301 https://{subdomain}.{domain}$request_uri;
@@ -39,7 +34,7 @@ server {{
 }}
 """
 
-# Docker compose file
+# Docker compose template
 docker_compose_template = """
 version: '3.8'
 services:
@@ -109,18 +104,15 @@ class Wordpress(installer.Installer):
             "port_http": self.config.GetValue("UserData.Wordpress", "wordpress_port_http"),
             "port_https": self.config.GetValue("UserData.Wordpress", "wordpress_port_https")
         }
-        self.docker_tool = tools.GetDockerTool(self.config)
-        self.docker_compose_tool = tools.GetDockerComposeTool(self.config)
-        self.nginx_manager_tool = "/usr/local/bin/manager_nginx.sh"
 
     def IsInstalled(self):
         containers = self.connection.RunOutput("docker ps -a --format '{{.Names}}'")
-        return any(name == self.app_name for name in containers.splitlines())
+        return any(self.app_name in name for name in containers.splitlines())
 
     def Install(self):
 
         # Create directory
-        util.LogInfo("Making directory")
+        util.LogInfo("Creating directory")
         self.connection.MakeDirectory(self.app_dir)
 
         # Write docker compose
@@ -161,7 +153,7 @@ class Wordpress(installer.Installer):
         util.LogInfo("Removing directory")
         self.connection.RemoveFileOrDirectory(self.app_dir)
 
-        # Remove Nginx configuration
+        # Remove Nginx entry
         util.LogInfo("Removing Nginx entry")
         self.connection.RunChecked([self.nginx_manager_tool, "remove_conf", f"{self.app_name}.conf"], sudo = True)
 

@@ -5,7 +5,6 @@ import sys
 # Local imports
 import util
 import packages
-import tools
 from . import installer
 
 # WinGet
@@ -17,7 +16,6 @@ class WinGet(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
-        self.winget_tool = tools.GetWinGetTool(self.config)
 
     def GetPackages(self):
         return packages.winget.get(self.GetEnvironmentType(), [])

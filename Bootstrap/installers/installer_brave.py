@@ -4,7 +4,6 @@ import sys
 
 # Local imports
 import util
-import tools
 from . import installer
 
 # Brave
@@ -21,7 +20,6 @@ class Brave(installer.Installer):
         self.sources_list = "brave-browser-release.list"
         self.archive_key_path = f"/usr/share/keyrings/{self.archive_key}"
         self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
-        self.aptget_tool = tools.GetAptGetTool(self.config)
 
     def IsInstalled(self):
         return self.connection.DoesFileOrDirectoryExist("/usr/bin/brave-browser")

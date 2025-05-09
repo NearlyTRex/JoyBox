@@ -5,7 +5,6 @@ import sys
 # Local imports
 import util
 import packages
-import tools
 from . import installer
 
 # Python
@@ -17,8 +16,6 @@ class Python(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
-        self.python_tool = tools.GetPythonTool(self.config)
-        self.python_venv_pip_tool = tools.GetPythonVenvPipTool(self.config)
 
     def GetPackages(self):
         return packages.python.get(self.GetEnvironmentType(), [])

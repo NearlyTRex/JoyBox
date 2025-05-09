@@ -4,7 +4,6 @@ import sys
 
 # Local imports
 import util
-import tools
 from . import installer
 
 # OnePassword
@@ -24,8 +23,6 @@ class OnePassword(installer.Installer):
         self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
         self.policy_path = f"/etc/debsig/policies/{self.policy}/"
         self.policy_keyring_path = f"/usr/share/debsig/keyrings/{self.policy}"
-        self.aptget_tool = tools.GetAptGetTool(self.config)
-        self.gpg_tool = tools.GetGpgTool(self.config)
 
     def IsInstalled(self):
         return self.connection.DoesFileOrDirectoryExist("/usr/bin/1password")
