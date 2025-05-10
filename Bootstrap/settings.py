@@ -56,6 +56,9 @@ ini_defaults["UserData.Authelia"]["authelia_port_http"] = "9091"
 ini_defaults["UserData.Authelia"]["authelia_jwt_secret"] = ""
 ini_defaults["UserData.Authelia"]["authelia_session_secret"] = ""
 ini_defaults["UserData.Authelia"]["authelia_storage_encryption_key"] = ""
+ini_defaults["UserData.Authelia"]["authelia_admin_username"] = "admin"
+ini_defaults["UserData.Authelia"]["authelia_admin_displayname"] = "Administrator"
+ini_defaults["UserData.Authelia"]["authelia_admin_email"] = ""
 ini_defaults["UserData.Authelia"]["authelia_admin_password"] = ""
 
 # UserData.Wordpress

@@ -122,10 +122,10 @@ notifier:
 # Users database template
 users_database_template = """
 users:
-  admin:
-    displayname: "Administrator"
-    password: {password_hash}
-    email: admin@{domain}
+  {admin_username}:
+    displayname: "{admin_displayname}"
+    password: {admin_password_hash}
+    email: {admin_email}
     groups:
       - admins
 """
@@ -161,12 +161,13 @@ class Authelia(installer.Installer):
             "session_secret": self.config.GetValue("UserData.Authelia", "authelia_session_secret")
         }
         self.users_database_values = {
-            "domain": self.config.GetValue("UserData.Servers", "domain_name"),
-            "password_hash": self.GeneratePasswordHash(
+            "admin_username": self.config.GetValue("UserData.Authelia", "authelia_admin_username"),
+            "admin_displayname": self.config.GetValue("UserData.Authelia", "authelia_admin_displayname"),
+            "admin_email": self.config.GetValue("UserData.Authelia", "authelia_admin_email"),
+            "admin_password_hash": self.GeneratePasswordHash(
                 self.config.GetValue("UserData.Authelia", "authelia_admin_password"))
         }
-        print(self.users_database_values)
-        if not self.users_database_values.get("password_hash"):
+        if not self.users_database_values.get("admin_password_hash"):
             raise Exception("Unable to generate password hash")
 
     def IsInstalled(self):
