@@ -1,6 +1,7 @@
 # Imports
 import os
 import sys
+import re
 
 # Local imports
 import util
@@ -29,7 +30,6 @@ server {{
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-Proto https;
-
     }}
 }}
 """
@@ -38,49 +38,35 @@ server {{
 docker_compose_template = """
 version: '3.8'
 services:
-  wordpress:
-    image: wordpress:latest
+  filestash:
+    image: machines/filestash
+    container_name: filestash
+    restart: always
+    environment:
+      ADMIN_USERNAME: ${FILESTASH_ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${FILESTASH_ADMIN_PASSWORD}
+      APPLICATION_TITLE: ${FILESTASH_APPLICATION_TITLE}
+      APPLICATION_URL: ${FILESTASH_APPLICATION_URL}
     ports:
-      - "${WORDPRESS_PORT_HTTP}:80"
-    environment:
-      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
-      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    depends_on:
-      - db
-
-  db:
-    image: mysql:5.7
-    environment:
-      MYSQL_DATABASE: ${WORDPRESS_DB_NAME}
-      MYSQL_USER: ${WORDPRESS_DB_USER}
-      MYSQL_PASSWORD: ${WORDPRESS_DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${WORDPRESS_DB_ROOT_PASSWORD}
+      - "${FILESTASH_PORT_HTTP}:8334"
     volumes:
-      - db_data:/var/lib/mysql
+      - filestash:/app/data/state
 
 volumes:
-  db_data:
+  filestash: {}
 """
 
-# Env template
+# .env template
 env_template = """
-WORDPRESS_DB_HOST=db
-WORDPRESS_DB_USER={db_user}
-WORDPRESS_DB_PASSWORD={db_password}
-WORDPRESS_DB_NAME={db_name}
-WORDPRESS_DB_ROOT_PASSWORD={db_root_password}
-WORDPRESS_PORT_HTTP={port_http}
+FILESTASH_ADMIN_USERNAME={admin_username}
+FILESTASH_ADMIN_PASSWORD={admin_password_hash}
+FILESTASH_PORT_HTTP={port_http}
+FILESTASH_APPLICATION_TITLE=My Storage
+FILESTASH_APPLICATION_URL=
 """
 
-# Wordpress
-class Wordpress(installer.Installer):
+# Filestash Installer
+class Filestash(installer.Installer):
     def __init__(
         self,
         config,
@@ -88,20 +74,22 @@ class Wordpress(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
-        self.app_name = "wordpress"
+        self.app_name = "filestash"
         self.app_dir = f"$HOME/apps/{self.app_name}"
         self.nginx_config_values = {
             "domain": self.config.GetValue("UserData.Servers", "domain_name"),
-            "subdomain": self.config.GetValue("UserData.Wordpress", "wordpress_subdomain"),
-            "port_http": self.config.GetValue("UserData.Wordpress", "wordpress_port_http")
+            "subdomain": self.config.GetValue("UserData.Filestash", "filestash_subdomain"),
+            "port_http": self.config.GetValue("UserData.Filestash", "filestash_port_http")
         }
         self.env_values = {
-            "db_user": self.config.GetValue("UserData.Wordpress", "wordpress_db_user"),
-            "db_password": self.config.GetValue("UserData.Wordpress", "wordpress_db_pass"),
-            "db_name": self.config.GetValue("UserData.Wordpress", "wordpress_db_name"),
-            "db_root_password": self.config.GetValue("UserData.Wordpress", "wordpress_db_root_pass"),
-            "port_http": self.config.GetValue("UserData.Wordpress", "wordpress_port_http")
+            "admin_username": self.config.GetValue("UserData.Filestash", "filestash_admin_username"),
+            "admin_password_hash": self.GeneratePasswordHash(
+                self.config.GetValue("UserData.Filestash", "filestash_admin_username"),
+                self.config.GetValue("UserData.Filestash", "filestash_admin_password")),
+            "port_http": self.config.GetValue("UserData.Filestash", "filestash_port_http")
         }
+        if not self.env_values.get("admin_password_hash"):
+            raise Exception("Unable to generate password hash")
 
     def IsInstalled(self):
         containers = self.connection.RunOutput("docker ps -a --format '{{.Names}}'")
@@ -115,12 +103,12 @@ class Wordpress(installer.Installer):
 
         # Write docker compose
         util.LogInfo("Writing docker compose")
-        if self.connection.WriteFile(f"/tmp/docker-compose.yml", docker_compose_template):
+        if self.connection.WriteFile("/tmp/docker-compose.yml", docker_compose_template):
             self.connection.MoveFileOrDirectory("/tmp/docker-compose.yml", f"{self.app_dir}/docker-compose.yml")
 
         # Write docker env
         util.LogInfo("Writing docker env")
-        if self.connection.WriteFile(f"/tmp/.env", env_template.format(**self.env_values)):
+        if self.connection.WriteFile("/tmp/.env", env_template.format(**self.env_values)):
             self.connection.MoveFileOrDirectory("/tmp/.env", f"{self.app_dir}/.env")
 
         # Create Nginx entry
@@ -159,3 +147,22 @@ class Wordpress(installer.Installer):
         util.LogInfo("Restarting Nginx")
         self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
         return True
+
+    def GeneratePasswordHash(self, username, password):
+
+        # Generate password hash
+        result = self.connection.RunOutput([
+            self.docker_tool,
+            "run",
+            "--rm",
+            "httpd:alpine",
+            "htpasswd",
+            "-nbB", username,
+            password
+        ])
+
+        # Search for password hash
+        match = re.search(rf'^{re.escape(username)}:(.+)$', result.strip())
+        if match:
+            return match.group(1)
+        return None

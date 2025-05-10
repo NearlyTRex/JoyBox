@@ -33,7 +33,7 @@ server {{
 }}
 """
 
-# Docker compose file
+# Docker compose template
 docker_compose_template = """
 name: azuracast
 services:
@@ -44,7 +44,6 @@ services:
             - com.centurylinklabs.watchtower.scope=azuracast
         ports:
             - '${AZURACAST_HTTP_PORT:-80}:${AZURACAST_HTTP_PORT:-80}'
-            - '${AZURACAST_HTTPS_PORT:-443}:${AZURACAST_HTTPS_PORT:-443}'
             - '${AZURACAST_SFTP_PORT:-2022}:${AZURACAST_SFTP_PORT:-2022}'
             - '8000:8000'
             - '8005:8005'
@@ -246,7 +245,6 @@ COMPOSE_PROJECT_NAME=azuracast
 COMPOSE_HTTP_TIMEOUT=300
 AZURACAST_VERSION=latest
 AZURACAST_HTTP_PORT={port_http}
-AZURACAST_HTTPS_PORT={port_https}
 AZURACAST_SFTP_PORT=2022
 AZURACAST_STATION_PORTS=8000,8005,8006,8010,8015,8016,8020,8025,8026,8030,8035,8036,8040,8045,8046,8050,8055,8056,8060,8065,8066,8070,8075,8076,8090,8095,8096,8100,8105,8106,8110,8115,8116,8120,8125,8126,8130,8135,8136,8140,8145,8146,8150,8155,8156,8160,8165,8166,8170,8175,8176,8180,8185,8186,8190,8195,8196,8200,8205,8206,8210,8215,8216,8220,8225,8226,8230,8235,8236,8240,8245,8246,8250,8255,8256,8260,8265,8266,8270,8275,8276,8280,8285,8286,8290,8295,8296,8300,8305,8306,8310,8315,8316,8320,8325,8326,8330,8335,8336,8340,8345,8346,8350,8355,8356,8360,8365,8366,8370,8375,8376,8380,8385,8386,8390,8395,8396,8400,8405,8406,8410,8415,8416,8420,8425,8426,8430,8435,8436,8440,8445,8446,8450,8455,8456,8460,8465,8466,8470,8475,8476,8480,8485,8486,8490,8495,8496
 AZURACAST_PUID=1000
@@ -312,7 +310,6 @@ class AzuraCast(installer.Installer):
         }
         self.env_values = {
             "port_http": self.config.GetValue("UserData.AzuraCast", "azuracast_port_http"),
-            "port_https": self.config.GetValue("UserData.AzuraCast", "azuracast_port_https"),
             "external_media_source": self.config.GetValue("UserData.AzuraCast", "azuracast_external_media_source"),
             "external_media_mount": self.config.GetValue("UserData.AzuraCast", "azuracast_external_media_mount")
         }

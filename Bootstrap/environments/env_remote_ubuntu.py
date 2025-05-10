@@ -49,9 +49,10 @@ class RemoteUbuntu(env.Environment):
         self.installer_flatpak = installers.Flatpak(**self.installer_options)
         self.installer_nginx = installers.Nginx(**self.installer_options)
         self.installer_certbot = installers.Certbot(**self.installer_options)
+        self.installer_authelia = installers.Authelia(**self.installer_options)
         self.installer_wordpress = installers.Wordpress(**self.installer_options)
         self.installer_azuracast = installers.AzuraCast(**self.installer_options)
-        self.installer_nextcloud = installers.NextCloud(**self.installer_options)
+        self.installer_filestash = installers.Filestash(**self.installer_options)
         self.installer_scriptserver = installers.ScriptServer(**self.installer_options)
 
     def Setup(self):
@@ -84,6 +85,12 @@ class RemoteUbuntu(env.Environment):
             if not self.installer_certbot.Install():
                 return False
 
+        # Install Authelia
+        util.LogInfo("Installing Authelia")
+        if not self.installer_authelia.IsInstalled():
+            if not self.installer_authelia.Install():
+                return False
+
         # Install Wordpress
         util.LogInfo("Installing Wordpress")
         if not self.installer_wordpress.IsInstalled():
@@ -96,10 +103,10 @@ class RemoteUbuntu(env.Environment):
             if not self.installer_azuracast.Install():
                 return False
 
-        # Install NextCloud
-        util.LogInfo("Installing NextCloud")
-        if not self.installer_nextcloud.IsInstalled():
-            if not self.installer_nextcloud.Install():
+        # Install Filestash
+        util.LogInfo("Installing Filestash")
+        if not self.installer_filestash.IsInstalled():
+            if not self.installer_filestash.Install():
                 return False
 
         # Install ScriptServer
@@ -117,10 +124,10 @@ class RemoteUbuntu(env.Environment):
             if not self.installer_scriptserver.Uninstall():
                 return False
 
-        # Uninstall NextCloud
-        util.LogInfo("Uninstalling NextCloud")
-        if self.installer_nextcloud.IsInstalled():
-            if not self.installer_nextcloud.Uninstall():
+        # Uninstall Filestash
+        util.LogInfo("Uninstalling Filestash")
+        if self.installer_filestash.IsInstalled():
+            if not self.installer_filestash.Uninstall():
                 return False
 
         # Uninstall AzuraCast
@@ -133,6 +140,12 @@ class RemoteUbuntu(env.Environment):
         util.LogInfo("Uninstalling Wordpress")
         if self.installer_wordpress.IsInstalled():
             if not self.installer_wordpress.Uninstall():
+                return False
+
+        # Uninstall Authelia
+        util.LogInfo("Uninstalling Authelia")
+        if self.installer_authelia.IsInstalled():
+            if not self.installer_authelia.Uninstall():
                 return False
 
         # Uninstall Certbot

@@ -60,7 +60,7 @@ class Certbot(installer.Installer):
             self.config.GetValue("UserData.Authelia", "authelia_subdomain"),
             self.config.GetValue("UserData.Wordpress", "wordpress_subdomain"),
             self.config.GetValue("UserData.AzuraCast", "azuracast_subdomain"),
-            self.config.GetValue("UserData.NextCloud", "nextcloud_subdomain"),
+            self.config.GetValue("UserData.Filestash", "filestash_subdomain"),
             self.config.GetValue("UserData.ScriptServer", "scriptserver_subdomain")
         ]
         self.fully_qualified_domains = [self.domain_name] + [f"{sub}.{self.domain_name}" for sub in self.subdomains]

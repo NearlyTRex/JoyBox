@@ -5,8 +5,8 @@ from installers.installer_azuracast import *
 from installers.installer_brave import *
 from installers.installer_certbot import *
 from installers.installer_chrome import *
+from installers.installer_filestash import *
 from installers.installer_flatpak import *
-from installers.installer_nextcloud import *
 from installers.installer_nginx import *
 from installers.installer_onepassword import *
 from installers.installer_python import *
