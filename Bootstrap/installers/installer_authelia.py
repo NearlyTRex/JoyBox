@@ -29,25 +29,25 @@ server {{
 }}
 """
 
-# Nginx Authelia config template
-nginx_authelia_config_template = """
-auth_request_set $auth_status $upstream_status;
-auth_request /authelia;
-
-error_page 401 = @error401;
-
+# Nginx Authelia location config template
+nginx_auth_location_template = """
 location = /authelia {{
     internal;
-    proxy_pass http://authelia:{port_http}/api/verify;
+    proxy_pass http://localhost:{port_http}/api/verify;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header Authorization $http_authorization;
 }}
+"""
+
+# Nginx Authelia server config template
+nginx_auth_server_template = """
+error_page 401 = @error401;
 
 location @error401 {{
-    return 302 https://$host/login;
+    return 302 https://{subdomain}.{domain}/?rd=https://$host$request_uri;
 }}
 """
 
@@ -85,8 +85,7 @@ AUTHELIA_STORAGE_ENCRYPTION_KEY={storage_key}
 # Configuration template
 configuration_template = """
 server:
-  host: 0.0.0.0
-  port: {port_http}
+  address: tcp://0.0.0.0:{port_http}
 
 log:
   level: info
@@ -106,9 +105,13 @@ access_control:
 session:
   name: authelia_session
   secret: {session_secret}
-  expiration: 3600
-  inactivity: 300
-  domain: {domain}
+  expiration: 1h
+  inactivity: 5m
+  remember_me: 1M
+  same_site: lax
+  cookies:
+    - domain: {domain}
+      default_redirection_url: https://{subdomain}.{domain}
 
 storage:
   local:
@@ -117,7 +120,11 @@ storage:
 notifier:
   filesystem:
     filename: /config/notification.txt
-"""
+
+identity_validation:
+  reset_password:
+    jwt_secret: {jwt_secret}
+# """
 
 # Users database template
 users_database_template = """
@@ -146,8 +153,12 @@ class Authelia(installer.Installer):
             "subdomain": self.config.GetValue("UserData.Authelia", "authelia_subdomain"),
             "port_http": self.config.GetValue("UserData.Authelia", "authelia_port_http")
         }
-        self.nginx_authelia_config_values = {
+        self.nginx_authelia_location_config_values = {
             "port_http": self.config.GetValue("UserData.Authelia", "authelia_port_http")
+        }
+        self.nginx_authelia_server_config_values = {
+            "domain": self.config.GetValue("UserData.Servers", "domain_name"),
+            "subdomain": self.config.GetValue("UserData.Authelia", "authelia_subdomain")
         }
         self.env_values = {
             "port_http": self.config.GetValue("UserData.Authelia", "authelia_port_http"),
@@ -157,8 +168,10 @@ class Authelia(installer.Installer):
         }
         self.configuration_values = {
             "domain": self.config.GetValue("UserData.Servers", "domain_name"),
+            "subdomain": self.config.GetValue("UserData.Authelia", "authelia_subdomain"),
             "port_http": self.config.GetValue("UserData.Authelia", "authelia_port_http"),
-            "session_secret": self.config.GetValue("UserData.Authelia", "authelia_session_secret")
+            "session_secret": self.config.GetValue("UserData.Authelia", "authelia_session_secret"),
+            "jwt_secret": self.config.GetValue("UserData.Authelia", "authelia_jwt_secret")
         }
         self.users_database_values = {
             "admin_username": self.config.GetValue("UserData.Authelia", "authelia_admin_username"),
@@ -208,11 +221,17 @@ class Authelia(installer.Installer):
             self.connection.RunChecked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
             self.connection.RemoveFileOrDirectory(f"/tmp/{self.app_name}.conf")
 
-        # Create Nginx auth config
-        util.LogInfo("Creating Nginx auth config")
-        if self.connection.WriteFile(f"/tmp/auth.conf", nginx_authelia_config_template.format(**self.nginx_authelia_config_values)):
-            self.connection.RunChecked([self.nginx_manager_tool, "install_authelia_conf", f"/tmp/auth.conf"], sudo = True)
-            self.connection.RemoveFileOrDirectory(f"/tmp/auth.conf")
+        # Create Nginx auth location config
+        util.LogInfo("Creating Nginx auth location config")
+        if self.connection.WriteFile(f"/tmp/auth_location.conf", nginx_auth_location_template.format(**self.nginx_authelia_location_config_values)):
+            self.connection.RunChecked([self.nginx_manager_tool, "install_authelia_conf", f"/tmp/auth_location.conf"], sudo = True)
+            self.connection.RemoveFileOrDirectory(f"/tmp/auth_location.conf")
+
+        # Create Nginx auth server config
+        util.LogInfo("Creating Nginx auth server config")
+        if self.connection.WriteFile(f"/tmp/auth_server.conf", nginx_auth_server_template.format(**self.nginx_authelia_server_config_values)):
+            self.connection.RunChecked([self.nginx_manager_tool, "install_authelia_conf", f"/tmp/auth_server.conf"], sudo = True)
+            self.connection.RemoveFileOrDirectory(f"/tmp/auth_server.conf")
 
         # Restart Nginx
         util.LogInfo("Restarting Nginx")
@@ -235,9 +254,10 @@ class Authelia(installer.Installer):
         util.LogInfo("Removing directory")
         self.connection.RemoveFileOrDirectory(self.app_dir)
 
-        # Remove Nginx auth entry
-        util.LogInfo("Removing Nginx auth entry")
-        self.connection.RunChecked([self.nginx_manager_tool, "remove_authelia_conf", "auth.conf"], sudo = True)
+        # Remove Nginx auth entries
+        util.LogInfo("Removing Nginx auth entries")
+        self.connection.RunChecked([self.nginx_manager_tool, "remove_authelia_conf", "auth_location.conf"], sudo = True)
+        self.connection.RunChecked([self.nginx_manager_tool, "remove_authelia_conf", "auth_server.conf"], sudo = True)
 
         # Remove Nginx entry
         util.LogInfo("Removing Nginx entry")

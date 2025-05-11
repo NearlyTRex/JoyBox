@@ -24,12 +24,18 @@ server {{
 
     ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
+    include /etc/nginx/authelia/auth_server.conf;
 
     location / {{
+        auth_request /authelia;
+        error_page 401 = @error401;
+        include /etc/nginx/authelia/auth_location.conf;
+
         proxy_pass http://localhost:{port_http};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header Cookie $http_cookie;
     }}
 }}
 """
