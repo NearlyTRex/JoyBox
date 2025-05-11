@@ -27,10 +27,7 @@ server {{
     include /etc/nginx/authelia/auth_server.conf;
 
     location / {{
-        auth_request /authelia;
-        error_page 401 = @error401;
         include /etc/nginx/authelia/auth_location.conf;
-
         proxy_pass http://localhost:{port_http};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;

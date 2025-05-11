@@ -31,6 +31,9 @@ server {{
 
 # Nginx Authelia location config template
 nginx_auth_location_template = """
+auth_request /authelia;
+error_page 401 = @error401;
+
 location = /authelia {{
     internal;
     proxy_pass http://localhost:{port_http}/api/verify;
