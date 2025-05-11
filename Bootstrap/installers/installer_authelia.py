@@ -66,7 +66,6 @@ services:
     ports:
       - "${AUTHELIA_PORT_HTTP}:${AUTHELIA_PORT_HTTP}"
     environment:
-      AUTHELIA_JWT_SECRET: ${AUTHELIA_JWT_SECRET}
       AUTHELIA_SESSION_SECRET: ${AUTHELIA_SESSION_SECRET}
       AUTHELIA_STORAGE_ENCRYPTION_KEY: ${AUTHELIA_STORAGE_ENCRYPTION_KEY}
     healthcheck:
@@ -87,46 +86,72 @@ AUTHELIA_STORAGE_ENCRYPTION_KEY={storage_key}
 
 # Configuration template
 configuration_template = """
+identity_validation:
+  reset_password:
+    jwt_secret: {jwt_secret}
+
 server:
   address: tcp://0.0.0.0:{port_http}
 
 log:
   level: info
 
+totp:
+  issuer: {domain}
+  period: 30
+  skew: 1
+
 authentication_backend:
+  password_reset:
+    disable: false
+  refresh_interval: 5m
   file:
     path: /config/users_database.yml
+    password:
+      algorithm: argon2id
+      iterations: 1
+      key_length: 32
+      salt_length: 16
+      memory: 1024
+      parallelism: 8
 
 access_control:
   default_policy: deny
   rules:
-    - domain: "*.{domain}"
-      policy: two_factor
+    - domain:
+        - "{subdomain}.{domain}"
+      policy: bypass
+    - domain:
+        - "*.{domain}"
       subject:
-        - group:admins
+        - "group:admins"
+      policy: two_factor
 
 session:
   name: authelia_session
-  secret: {session_secret}
+  secret: "{session_secret}"
   expiration: 1h
   inactivity: 5m
   remember_me: 1M
   same_site: lax
   cookies:
     - domain: {domain}
-      default_redirection_url: https://{subdomain}.{domain}
+      authelia_url: https://{subdomain}.{domain}
+      default_redirection_url: https://{domain}
+
+regulation:
+  max_retries: 3
+  find_time: 10m
+  ban_time: 12h
 
 storage:
+  encryption_key: "{storage_key}"
   local:
     path: /config/db.sqlite3
 
 notifier:
   filesystem:
     filename: /config/notification.txt
-
-identity_validation:
-  reset_password:
-    jwt_secret: {jwt_secret}
 # """
 
 # Users database template
@@ -174,7 +199,8 @@ class Authelia(installer.Installer):
             "subdomain": self.config.GetValue("UserData.Authelia", "authelia_subdomain"),
             "port_http": self.config.GetValue("UserData.Authelia", "authelia_port_http"),
             "session_secret": self.config.GetValue("UserData.Authelia", "authelia_session_secret"),
-            "jwt_secret": self.config.GetValue("UserData.Authelia", "authelia_jwt_secret")
+            "jwt_secret": self.config.GetValue("UserData.Authelia", "authelia_jwt_secret"),
+            "storage_key": self.config.GetValue("UserData.Authelia", "authelia_storage_encryption_key")
         }
         self.users_database_values = {
             "admin_username": self.config.GetValue("UserData.Authelia", "authelia_admin_username"),
