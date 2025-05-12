@@ -48,10 +48,14 @@ services:
     volumes:
       - ${FILEBROWSER_ROOT}:/srv
       - ./config:/config
-    command: --database /config/filebrowser.db
-
-volumes:
-  filebrowser_data: {}
+    entrypoint: >
+      sh -c "
+        if [ ! -f /config/filebrowser.db ]; then
+          /filebrowser config init --database /config/filebrowser.db &&
+          /filebrowser users add $FILEBROWSER_ADMIN_USER $FILEBROWSER_ADMIN_PASS --perm.admin --database /config/filebrowser.db;
+        fi &&
+        /filebrowser --database /config/filebrowser.db
+      "
 """
 
 # .env template
@@ -60,6 +64,8 @@ FILEBROWSER_PORT_HTTP={port_http}
 FILEBROWSER_UID={user_uid}
 FILEBROWSER_GID={user_gid}
 FILEBROWSER_ROOT={user_root}
+FILEBROWSER_ADMIN_USER={admin_user}
+FILEBROWSER_ADMIN_PASS={admin_pass}
 """
 
 # FileBrowser Installer
@@ -82,7 +88,9 @@ class FileBrowser(installer.Installer):
             "port_http": self.config.GetValue("UserData.FileBrowser", "filebrowser_port_http"),
             "user_uid": self.config.GetValue("UserData.FileBrowser", "filebrowser_user_uid"),
             "user_gid": self.config.GetValue("UserData.FileBrowser", "filebrowser_user_gid"),
-            "user_root": self.config.GetValue("UserData.FileBrowser", "filebrowser_user_root")
+            "user_root": self.config.GetValue("UserData.FileBrowser", "filebrowser_user_root"),
+            "admin_user": self.config.GetValue("UserData.FileBrowser", "filebrowser_admin_user"),
+            "admin_pass": self.config.GetValue("UserData.FileBrowser", "filebrowser_admin_pass")
         }
 
     def IsInstalled(self):

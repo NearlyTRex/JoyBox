@@ -76,6 +76,8 @@ ini_defaults["UserData.FileBrowser"]["filebrowser_port_http"] = "8082"
 ini_defaults["UserData.FileBrowser"]["filebrowser_user_uid"] = "1000"
 ini_defaults["UserData.FileBrowser"]["filebrowser_user_gid"] = "1000"
 ini_defaults["UserData.FileBrowser"]["filebrowser_user_root"] = ""
+ini_defaults["UserData.FileBrowser"]["filebrowser_admin_user"] = "admin"
+ini_defaults["UserData.FileBrowser"]["filebrowser_admin_pass"] = ""
 
 # UserData.Jenkins
 ini_defaults["UserData.Jenkins"] = {}
