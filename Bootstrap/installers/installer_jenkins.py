@@ -1,7 +1,6 @@
 # Imports
 import os
 import sys
-import re
 
 # Local imports
 import util
@@ -24,10 +23,8 @@ server {{
 
     ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
-    include /etc/nginx/authelia/auth_server.conf;
 
     location / {{
-        include /etc/nginx/authelia/auth_location.conf;
         proxy_pass http://localhost:{port_http};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -41,28 +38,27 @@ server {{
 docker_compose_template = """
 version: '3.8'
 services:
-  scriptserver:
-    image: bugy/script-server
-    container_name: scriptserver
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
     restart: always
+    user: "${JENKINS_UID}:${JENKINS_GID}"
     ports:
-      - "${SCRIPT_SERVER_PORT_HTTP}:5000"
+      - "${JENKINS_PORT_HTTP}:8080"
+      - "${JENKINS_PORT_AGENT}:50000"
     volumes:
-      - scriptserver-config:/app/conf
-      - scriptserver-scripts:/app/scripts
-
-volumes:
-  scriptserver-config: {}
-  scriptserver-scripts: {}
+      - ./jenkins_home:/var/jenkins_home
 """
 
 # .env template
 env_template = """
-SCRIPT_SERVER_PORT_HTTP={port_http}
+JENKINS_PORT_HTTP={port_http}
+JENKINS_PORT_AGENT={port_agent}
+JENKINS_UID={user_uid}
+JENKINS_GID={user_gid}
 """
 
-# ScriptServer Installer
-class ScriptServer(installer.Installer):
+class Jenkins(installer.Installer):
     def __init__(
         self,
         config,
@@ -70,15 +66,18 @@ class ScriptServer(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
-        self.app_name = "scriptserver"
+        self.app_name = "jenkins"
         self.app_dir = f"$HOME/apps/{self.app_name}"
         self.nginx_config_values = {
             "domain": self.config.GetValue("UserData.Servers", "domain_name"),
-            "subdomain": self.config.GetValue("UserData.ScriptServer", "scriptserver_subdomain"),
-            "port_http": self.config.GetValue("UserData.ScriptServer", "scriptserver_port_http")
+            "subdomain": self.config.GetValue("UserData.Jenkins", "jenkins_subdomain"),
+            "port_http": self.config.GetValue("UserData.Jenkins", "jenkins_port_http"),
         }
         self.env_values = {
-            "port_http": self.config.GetValue("UserData.ScriptServer", "scriptserver_port_http")
+            "port_http": self.config.GetValue("UserData.Jenkins", "jenkins_port_http"),
+            "port_agent": self.config.GetValue("UserData.Jenkins", "jenkins_port_agent"),
+            "user_uid": self.config.GetValue("UserData.Jenkins", "jenkins_user_uid"),
+            "user_gid": self.config.GetValue("UserData.Jenkins", "jenkins_user_gid"),
         }
 
     def IsInstalled(self):
@@ -87,9 +86,10 @@ class ScriptServer(installer.Installer):
 
     def Install(self):
 
-        # Create directory
-        util.LogInfo("Creating directory")
+        # Create directories
+        util.LogInfo("Creating directories")
         self.connection.MakeDirectory(self.app_dir)
+        self.connection.MakeDirectory(f"{self.app_dir}/jenkins_home")
 
         # Write docker compose
         util.LogInfo("Writing docker compose")

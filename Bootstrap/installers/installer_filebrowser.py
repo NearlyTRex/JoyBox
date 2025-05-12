@@ -1,7 +1,6 @@
 # Imports
 import os
 import sys
-import re
 
 # Local imports
 import util
@@ -24,10 +23,8 @@ server {{
 
     ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
-    include /etc/nginx/authelia/auth_server.conf;
 
     location / {{
-        include /etc/nginx/authelia/auth_location.conf;
         proxy_pass http://localhost:{port_http};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -41,35 +38,32 @@ server {{
 docker_compose_template = """
 version: '3.8'
 services:
-  filestash:
-    image: machines/filestash
-    container_name: filestash
+  filebrowser:
+    image: filebrowser/filebrowser
+    container_name: filebrowser
     restart: always
-    environment:
-      ADMIN_USERNAME: ${FILESTASH_ADMIN_USERNAME}
-      ADMIN_PASSWORD: ${FILESTASH_ADMIN_PASSWORD}
-      APPLICATION_TITLE: ${FILESTASH_APPLICATION_TITLE}
-      APPLICATION_URL: ${FILESTASH_APPLICATION_URL}
+    user: "${FILEBROWSER_UID}:${FILEBROWSER_GID}"
     ports:
-      - "${FILESTASH_PORT_HTTP}:8334"
+      - "${FILEBROWSER_PORT_HTTP}:80"
     volumes:
-      - filestash:/app/data/state
+      - ${FILEBROWSER_ROOT}:/srv
+      - ./config:/config
+    command: --database /config/filebrowser.db
 
 volumes:
-  filestash: {}
+  filebrowser_data: {}
 """
 
 # .env template
 env_template = """
-FILESTASH_ADMIN_USERNAME={admin_username}
-FILESTASH_ADMIN_PASSWORD={admin_password_hash}
-FILESTASH_PORT_HTTP={port_http}
-FILESTASH_APPLICATION_TITLE=My Storage
-FILESTASH_APPLICATION_URL=
+FILEBROWSER_PORT_HTTP={port_http}
+FILEBROWSER_UID={user_uid}
+FILEBROWSER_GID={user_gid}
+FILEBROWSER_ROOT={user_root}
 """
 
-# Filestash Installer
-class Filestash(installer.Installer):
+# FileBrowser Installer
+class FileBrowser(installer.Installer):
     def __init__(
         self,
         config,
@@ -77,22 +71,19 @@ class Filestash(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
-        self.app_name = "filestash"
+        self.app_name = "filebrowser"
         self.app_dir = f"$HOME/apps/{self.app_name}"
         self.nginx_config_values = {
             "domain": self.config.GetValue("UserData.Servers", "domain_name"),
-            "subdomain": self.config.GetValue("UserData.Filestash", "filestash_subdomain"),
-            "port_http": self.config.GetValue("UserData.Filestash", "filestash_port_http")
+            "subdomain": self.config.GetValue("UserData.FileBrowser", "filebrowser_subdomain"),
+            "port_http": self.config.GetValue("UserData.FileBrowser", "filebrowser_port_http")
         }
         self.env_values = {
-            "admin_username": self.config.GetValue("UserData.Filestash", "filestash_admin_username"),
-            "admin_password_hash": self.GeneratePasswordHash(
-                self.config.GetValue("UserData.Filestash", "filestash_admin_username"),
-                self.config.GetValue("UserData.Filestash", "filestash_admin_password")),
-            "port_http": self.config.GetValue("UserData.Filestash", "filestash_port_http")
+            "port_http": self.config.GetValue("UserData.FileBrowser", "filebrowser_port_http"),
+            "user_uid": self.config.GetValue("UserData.FileBrowser", "filebrowser_user_uid"),
+            "user_gid": self.config.GetValue("UserData.FileBrowser", "filebrowser_user_gid"),
+            "user_root": self.config.GetValue("UserData.FileBrowser", "filebrowser_user_root")
         }
-        if not self.env_values.get("admin_password_hash"):
-            raise Exception("Unable to generate password hash")
 
     def IsInstalled(self):
         containers = self.connection.RunOutput("docker ps -a --format '{{.Names}}'")
@@ -100,9 +91,10 @@ class Filestash(installer.Installer):
 
     def Install(self):
 
-        # Create directory
-        util.LogInfo("Creating directory")
+        # Create directories
+        util.LogInfo("Creating directories")
         self.connection.MakeDirectory(self.app_dir)
+        self.connection.MakeDirectory(f"{self.app_dir}/config")
 
         # Write docker compose
         util.LogInfo("Writing docker compose")
@@ -150,22 +142,3 @@ class Filestash(installer.Installer):
         util.LogInfo("Restarting Nginx")
         self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
         return True
-
-    def GeneratePasswordHash(self, username, password):
-
-        # Generate password hash
-        result = self.connection.RunOutput([
-            self.docker_tool,
-            "run",
-            "--rm",
-            "httpd:alpine",
-            "htpasswd",
-            "-nbB", username,
-            password
-        ])
-
-        # Search for password hash
-        match = re.search(rf'^{re.escape(username)}:(.+)$', result.strip())
-        if match:
-            return match.group(1)
-        return None

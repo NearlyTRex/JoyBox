@@ -4,15 +4,12 @@ NGINX_SITES_AVAILABLE="/etc/nginx/sites-available"
 NGINX_SITES_ENABLED="/etc/nginx/sites-enabled"
 HTML_DIR="/var/www/html"
 ACME_CHALLENGE_DIR="/var/www/html/.well-known/acme-challenge"
-AUTHELIA_CONF_DIR="/etc/nginx/authelia"
 
 print_usage() {
     echo "Usage:"
     echo "  $0 install_conf <absolute_path_to_conf>"
     echo "  $0 link_conf <conf_filename>"
     echo "  $0 remove_conf <conf_filename>"
-    echo "  $0 install_authelia_conf <absolute_path_to_conf>"
-    echo "  $0 remove_authelia_conf <conf_filename>"
     echo "  $0 copy_html <absolute_path_to_html_files>"
     echo "  $0 systemctl <reload|restart|status>"
     exit 1
@@ -85,24 +82,6 @@ case "$1" in
         [ -e "$local_path" ] && rm -f "$local_path"
 
         echo "Configuration files removed from sites-available and sites-enabled."
-        ;;
-
-    install_authelia_conf)
-        sanitize_path "$2"
-        check_path "$2"
-
-        mkdir -p "$AUTHELIA_CONF_DIR"
-        cp -R "$2" "$AUTHELIA_CONF_DIR/"
-        echo "Authelia configuration file installed in $AUTHELIA_CONF_DIR."
-        ;;
-
-    remove_authelia_conf)
-        check_directory_traversal "$2"
-
-        local_path="$AUTHELIA_CONF_DIR/$2"
-        [ -e "$local_path" ] && rm -f "$local_path"
-
-        echo "Configuration files removed from $AUTHELIA_CONF_DIR."
         ;;
 
     copy_html)

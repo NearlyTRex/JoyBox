@@ -49,11 +49,10 @@ class RemoteUbuntu(env.Environment):
         self.installer_flatpak = installers.Flatpak(**self.installer_options)
         self.installer_nginx = installers.Nginx(**self.installer_options)
         self.installer_certbot = installers.Certbot(**self.installer_options)
-        self.installer_authelia = installers.Authelia(**self.installer_options)
         self.installer_wordpress = installers.Wordpress(**self.installer_options)
         self.installer_azuracast = installers.AzuraCast(**self.installer_options)
-        self.installer_filestash = installers.Filestash(**self.installer_options)
-        self.installer_scriptserver = installers.ScriptServer(**self.installer_options)
+        self.installer_filebrowser = installers.FileBrowser(**self.installer_options)
+        self.installer_jenkins = installers.Jenkins(**self.installer_options)
 
     def Setup(self):
 
@@ -85,12 +84,6 @@ class RemoteUbuntu(env.Environment):
             if not self.installer_certbot.Install():
                 return False
 
-        # Install Authelia
-        util.LogInfo("Installing Authelia")
-        if not self.installer_authelia.IsInstalled():
-            if not self.installer_authelia.Install():
-                return False
-
         # Install Wordpress
         util.LogInfo("Installing Wordpress")
         if not self.installer_wordpress.IsInstalled():
@@ -103,31 +96,31 @@ class RemoteUbuntu(env.Environment):
             if not self.installer_azuracast.Install():
                 return False
 
-        # Install Filestash
-        util.LogInfo("Installing Filestash")
-        if not self.installer_filestash.IsInstalled():
-            if not self.installer_filestash.Install():
+        # Install FileBrowser
+        util.LogInfo("Installing FileBrowser")
+        if not self.installer_filebrowser.IsInstalled():
+            if not self.installer_filebrowser.Install():
                 return False
 
-        # Install ScriptServer
-        util.LogInfo("Installing ScriptServer")
-        if not self.installer_scriptserver.IsInstalled():
-            if not self.installer_scriptserver.Install():
+        # Install Jenkins
+        util.LogInfo("Installing Jenkins")
+        if not self.installer_jenkins.IsInstalled():
+            if not self.installer_jenkins.Install():
                 return False
         return True
 
     def Teardown(self):
 
-        # Uninstall ScriptServer
-        util.LogInfo("Uninstalling ScriptServer")
-        if self.installer_scriptserver.IsInstalled():
-            if not self.installer_scriptserver.Uninstall():
+        # Uninstall Jenkins
+        util.LogInfo("Uninstalling Jenkins")
+        if self.installer_jenkins.IsInstalled():
+            if not self.installer_jenkins.Uninstall():
                 return False
 
-        # Uninstall Filestash
-        util.LogInfo("Uninstalling Filestash")
-        if self.installer_filestash.IsInstalled():
-            if not self.installer_filestash.Uninstall():
+        # Uninstall FileBrowser
+        util.LogInfo("Uninstalling FileBrowser")
+        if self.installer_filebrowser.IsInstalled():
+            if not self.installer_filebrowser.Uninstall():
                 return False
 
         # Uninstall AzuraCast
@@ -140,12 +133,6 @@ class RemoteUbuntu(env.Environment):
         util.LogInfo("Uninstalling Wordpress")
         if self.installer_wordpress.IsInstalled():
             if not self.installer_wordpress.Uninstall():
-                return False
-
-        # Uninstall Authelia
-        util.LogInfo("Uninstalling Authelia")
-        if self.installer_authelia.IsInstalled():
-            if not self.installer_authelia.Uninstall():
                 return False
 
         # Uninstall Certbot

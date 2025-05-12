@@ -49,18 +49,6 @@ else:
     ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "$HOME/LockerRemote"
     ini_defaults["UserData.Share"]["locker_local_path"] = "$HOME/Locker"
 
-# UserData.Authelia
-ini_defaults["UserData.Authelia"] = {}
-ini_defaults["UserData.Authelia"]["authelia_subdomain"] = "auth"
-ini_defaults["UserData.Authelia"]["authelia_port_http"] = "9091"
-ini_defaults["UserData.Authelia"]["authelia_jwt_secret"] = ""
-ini_defaults["UserData.Authelia"]["authelia_session_secret"] = ""
-ini_defaults["UserData.Authelia"]["authelia_storage_encryption_key"] = ""
-ini_defaults["UserData.Authelia"]["authelia_admin_username"] = "admin"
-ini_defaults["UserData.Authelia"]["authelia_admin_displayname"] = "Administrator"
-ini_defaults["UserData.Authelia"]["authelia_admin_email"] = ""
-ini_defaults["UserData.Authelia"]["authelia_admin_password"] = ""
-
 # UserData.Wordpress
 ini_defaults["UserData.Wordpress"] = {}
 ini_defaults["UserData.Wordpress"]["wordpress_subdomain"] = "www"
@@ -81,19 +69,21 @@ ini_defaults["UserData.AzuraCast"]["azuracast_db_root_pass"] = ""
 ini_defaults["UserData.AzuraCast"]["azuracast_external_media_source"] = "/mnt/storage/Music"
 ini_defaults["UserData.AzuraCast"]["azuracast_external_media_mount"] = "/var/azuracast/storage/external"
 
-# UserData.Filestash
-ini_defaults["UserData.Filestash"] = {}
-ini_defaults["UserData.Filestash"]["filestash_subdomain"] = "cloud"
-ini_defaults["UserData.Filestash"]["filestash_port_http"] = "8082"
-ini_defaults["UserData.Filestash"]["filestash_admin_username"] = "admin"
-ini_defaults["UserData.Filestash"]["filestash_admin_password"] = ""
+# UserData.FileBrowser
+ini_defaults["UserData.FileBrowser"] = {}
+ini_defaults["UserData.FileBrowser"]["filebrowser_subdomain"] = "cloud"
+ini_defaults["UserData.FileBrowser"]["filebrowser_port_http"] = "8082"
+ini_defaults["UserData.FileBrowser"]["filebrowser_user_uid"] = "1000"
+ini_defaults["UserData.FileBrowser"]["filebrowser_user_gid"] = "1000"
+ini_defaults["UserData.FileBrowser"]["filebrowser_user_root"] = ""
 
-# UserData.ScriptServer
-ini_defaults["UserData.ScriptServer"] = {}
-ini_defaults["UserData.ScriptServer"]["scriptserver_subdomain"] = "tools"
-ini_defaults["UserData.ScriptServer"]["scriptserver_port_http"] = "8083"
-ini_defaults["UserData.ScriptServer"]["scriptserver_admin_username"] = "admin"
-ini_defaults["UserData.ScriptServer"]["scriptserver_admin_password"] = ""
+# UserData.Jenkins
+ini_defaults["UserData.Jenkins"] = {}
+ini_defaults["UserData.Jenkins"]["jenkins_subdomain"] = "tools"
+ini_defaults["UserData.Jenkins"]["jenkins_port_http"] = "8083"
+ini_defaults["UserData.Jenkins"]["jenkins_port_agent"] = "50000"
+ini_defaults["UserData.Jenkins"]["jenkins_user_uid"] = "1000"
+ini_defaults["UserData.Jenkins"]["jenkins_user_gid"] = "1000"
 
 # UserData.Servers
 ini_defaults["UserData.Servers"] = {}
