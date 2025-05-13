@@ -15,6 +15,7 @@ from .ffmpeg import FFMpeg
 from .firefox import Firefox
 from .fuseiso import FuseISO
 from .geckodriver import GeckoDriver
+from .ghidra import Ghidra
 from .git import Git
 from .goldbergemu import GoldbergEmu
 from .gpg import Gpg
@@ -87,6 +88,7 @@ def GetToolMap():
     AddInstance(Firefox)
     AddInstance(FuseISO)
     AddInstance(GeckoDriver)
+    AddInstance(Ghidra)
     AddInstance(Git)
     AddInstance(GoldbergEmu)
     AddInstance(Gpg)
