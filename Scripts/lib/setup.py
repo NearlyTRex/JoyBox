@@ -49,7 +49,7 @@ def SetupTools(offline = False, configure = False, verbose = False, pretend_run 
                 exit_on_failure = exit_on_failure)
         if not success:
             return False
-        if not configure:
+        if configure:
             success = tool.Configure(
                 verbose = verbose,
                 pretend_run = pretend_run,
