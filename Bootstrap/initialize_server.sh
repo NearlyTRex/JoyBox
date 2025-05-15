@@ -9,8 +9,8 @@ fi
 # Define variables
 SUDOERS_FILE="/etc/sudoers.d/server-setup"
 NGINX_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_nginx.sh"
-COCKPIT_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_cockpit.sh"
 CERTBOT_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_certbot.sh"
+COCKPIT_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_cockpit.sh"
 AZURACAST_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_azuracast.sh"
 APT_PACKAGES=(
     7zip
@@ -75,10 +75,10 @@ TEMP_FILE=$(mktemp)
     done
     echo ""
     echo "Cmnd_Alias MANAGER_NGINX = /usr/local/bin/manager_nginx.sh"
-    echo "Cmnd_Alias MANAGER_COCKPIT = /usr/local/bin/manager_cockpit.sh"
     echo "Cmnd_Alias MANAGER_CERTBOT = /usr/local/bin/manager_certbot.sh"
+    echo "Cmnd_Alias MANAGER_COCKPIT = /usr/local/bin/manager_cockpit.sh"
     echo "Cmnd_Alias MANAGER_AZURACAST = /usr/local/bin/manager_azuracast.sh"
-    echo "$USERNAME ALL=(ALL) NOPASSWD: APT_MANAGE, MANAGER_NGINX, MANAGER_COCKPIT, MANAGER_CERTBOT, MANAGER_AZURACAST"
+    echo "$USERNAME ALL=(ALL) NOPASSWD: APT_MANAGE, MANAGER_NGINX, MANAGER_CERTBOT, MANAGER_COCKPIT, MANAGER_AZURACAST"
 } > "$TEMP_FILE"
 
 # Validate and install sudoers config

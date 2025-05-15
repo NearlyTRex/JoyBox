@@ -49,6 +49,7 @@ class RemoteUbuntu(env.Environment):
         self.installer_flatpak = installers.Flatpak(**self.installer_options)
         self.installer_nginx = installers.Nginx(**self.installer_options)
         self.installer_certbot = installers.Certbot(**self.installer_options)
+        self.installer_cockpit = installers.Cockpit(**self.installer_options)
         self.installer_wordpress = installers.Wordpress(**self.installer_options)
         self.installer_azuracast = installers.AzuraCast(**self.installer_options)
         self.installer_filebrowser = installers.FileBrowser(**self.installer_options)
@@ -82,6 +83,12 @@ class RemoteUbuntu(env.Environment):
         util.LogInfo("Installing Certbot")
         if not self.installer_certbot.IsInstalled():
             if not self.installer_certbot.Install():
+                return False
+
+        # Install Cockpit
+        util.LogInfo("Installing Cockpit")
+        if not self.installer_cockpit.IsInstalled():
+            if not self.installer_cockpit.Install():
                 return False
 
         # Install Wordpress
@@ -133,6 +140,12 @@ class RemoteUbuntu(env.Environment):
         util.LogInfo("Uninstalling Wordpress")
         if self.installer_wordpress.IsInstalled():
             if not self.installer_wordpress.Uninstall():
+                return False
+
+        # Uninstall Cockpit
+        util.LogInfo("Uninstalling Cockpit")
+        if self.installer_cockpit.IsInstalled():
+            if not self.installer_cockpit.Uninstall():
                 return False
 
         # Uninstall Certbot

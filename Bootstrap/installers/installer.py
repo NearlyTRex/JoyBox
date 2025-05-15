@@ -37,6 +37,7 @@ class Installer:
         self.docker_compose_tool = tools.GetDockerComposeTool(self.config)
         self.nginx_manager_tool = "/usr/local/bin/manager_nginx.sh"
         self.cert_manager_tool = "/usr/local/bin/manager_certbot.sh"
+        self.cockpit_manager_tool = "/usr/local/bin/manager_cockpit.sh"
         self.azuracast_manager_tool = "/usr/local/bin/manager_azuracast.sh"
 
     def SetEnvironmentType(self, environment_type):

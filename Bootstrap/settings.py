@@ -49,6 +49,10 @@ else:
     ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "$HOME/LockerRemote"
     ini_defaults["UserData.Share"]["locker_local_path"] = "$HOME/Locker"
 
+# UserData.Cockpit
+ini_defaults["UserData.Cockpit"] = {}
+ini_defaults["UserData.Cockpit"]["cockpit_subdomain"] = "admin"
+
 # UserData.Wordpress
 ini_defaults["UserData.Wordpress"] = {}
 ini_defaults["UserData.Wordpress"]["wordpress_subdomain"] = "www"
