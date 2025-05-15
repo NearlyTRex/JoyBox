@@ -9,6 +9,7 @@ fi
 # Define variables
 SUDOERS_FILE="/etc/sudoers.d/server-setup"
 NGINX_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_nginx.sh"
+COCKPIT_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_cockpit.sh"
 CERTBOT_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_certbot.sh"
 AZURACAST_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_azuracast.sh"
 APT_PACKAGES=(
@@ -17,6 +18,7 @@ APT_PACKAGES=(
     apache2
     apt-file
     certbot
+    cockpit
     curl
     docker-compose
     docker.io
@@ -73,9 +75,10 @@ TEMP_FILE=$(mktemp)
     done
     echo ""
     echo "Cmnd_Alias MANAGER_NGINX = /usr/local/bin/manager_nginx.sh"
+    echo "Cmnd_Alias MANAGER_COCKPIT = /usr/local/bin/manager_cockpit.sh"
     echo "Cmnd_Alias MANAGER_CERTBOT = /usr/local/bin/manager_certbot.sh"
     echo "Cmnd_Alias MANAGER_AZURACAST = /usr/local/bin/manager_azuracast.sh"
-    echo "$USERNAME ALL=(ALL) NOPASSWD: APT_MANAGE, MANAGER_NGINX, MANAGER_CERTBOT, MANAGER_AZURACAST"
+    echo "$USERNAME ALL=(ALL) NOPASSWD: APT_MANAGE, MANAGER_NGINX, MANAGER_COCKPIT, MANAGER_CERTBOT, MANAGER_AZURACAST"
 } > "$TEMP_FILE"
 
 # Validate and install sudoers config
@@ -108,7 +111,7 @@ mkdir -p /usr/local/bin
 
 # Download and install manager scripts
 echo "Downloading manager scripts..."
-for url in "$NGINX_SCRIPT_URL" "$CERTBOT_SCRIPT_URL" "$AZURACAST_SCRIPT_URL"; do
+for url in "$NGINX_SCRIPT_URL" "$COCKPIT_SCRIPT_URL" "$CERTBOT_SCRIPT_URL" "$AZURACAST_SCRIPT_URL"; do
     script_name="/usr/local/bin/$(basename "$url")"
     if curl -fsSL -o "$script_name" "$url"; then
         chmod +x "$script_name"
@@ -163,3 +166,17 @@ sudo -u "$USERNAME" "$SSHFS_BIN" \
     -o uid="$USER_UID" \
     -o gid="$USER_GID" \
     "$STORAGE_USER@$STORAGE_HOST:$STORAGE_REMOTE_PATH" "$STORAGE_LOCAL_MOUNT"
+
+# Make repositories folder
+REPO_DIR="/home/$USERNAME/Repositories"
+mkdir -p "$REPO_DIR"
+chown "$USERNAME":"$USERNAME" "$REPO_DIR"
+
+# Clone JoyBox repository
+REPO_JOYBOX_DIR="/home/$USERNAME/Repositories/JoyBox"
+if [ ! -d "$REPO_JOYBOX_DIR/.git" ]; then
+    echo "Cloning JoyBox repository into $REPO_JOYBOX_DIR..."
+    sudo -u "$USERNAME" git clone https://github.com/NearlyTRex/JoyBox "$REPO_JOYBOX_DIR"
+else
+    echo "JoyBox repository already cloned at $REPO_JOYBOX_DIR"
+fi
