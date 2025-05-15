@@ -3,6 +3,7 @@ from installers.installer_aptget import *
 from installers.installer_azuracast import *
 from installers.installer_brave import *
 from installers.installer_certbot import *
+from installers.installer_cockpit import *
 from installers.installer_chrome import *
 from installers.installer_filebrowser import *
 from installers.installer_flatpak import *

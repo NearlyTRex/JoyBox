@@ -71,13 +71,13 @@ class Jenkins(installer.Installer):
         self.nginx_config_values = {
             "domain": self.config.GetValue("UserData.Servers", "domain_name"),
             "subdomain": self.config.GetValue("UserData.Jenkins", "jenkins_subdomain"),
-            "port_http": self.config.GetValue("UserData.Jenkins", "jenkins_port_http"),
+            "port_http": self.config.GetValue("UserData.Jenkins", "jenkins_port_http")
         }
         self.env_values = {
             "port_http": self.config.GetValue("UserData.Jenkins", "jenkins_port_http"),
             "port_agent": self.config.GetValue("UserData.Jenkins", "jenkins_port_agent"),
             "user_uid": self.config.GetValue("UserData.Jenkins", "jenkins_user_uid"),
-            "user_gid": self.config.GetValue("UserData.Jenkins", "jenkins_user_gid"),
+            "user_gid": self.config.GetValue("UserData.Jenkins", "jenkins_user_gid")
         }
 
     def IsInstalled(self):

@@ -52,6 +52,7 @@ else:
 # UserData.Cockpit
 ini_defaults["UserData.Cockpit"] = {}
 ini_defaults["UserData.Cockpit"]["cockpit_subdomain"] = "admin"
+ini_defaults["UserData.Cockpit"]["cockpit_port_http"] = "9090"
 
 # UserData.Wordpress
 ini_defaults["UserData.Wordpress"] = {}

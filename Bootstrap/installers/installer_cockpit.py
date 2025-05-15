@@ -25,7 +25,7 @@ server {{
     ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
 
     location / {{
-        proxy_pass https://localhost:9090;
+        proxy_pass https://localhost:{port_http};
         proxy_ssl_verify off;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -47,6 +47,7 @@ class Cockpit(installer.Installer):
         self.nginx_config_values = {
             "domain": self.config.GetValue("UserData.Servers", "domain_name"),
             "subdomain": self.config.GetValue("UserData.Cockpit", "cockpit_subdomain"),
+            "port_http": self.config.GetValue("UserData.Cockpit", "cockpit_port_http")
         }
 
     def IsInstalled(self):
@@ -64,7 +65,7 @@ class Cockpit(installer.Installer):
         # Create Nginx config
         util.LogInfo("Creating Nginx config")
         if self.connection.WriteFile(f"/tmp/{self.app_name}.conf", nginx_config_template.format(**self.nginx_config_values)):
-            self.connection.RunChecked([self.nginx_manager_tool, "install_conf", f"{self.app_name}.conf"], sudo = True)
+            self.connection.RunChecked([self.nginx_manager_tool, "install_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
             self.connection.RunChecked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
             self.connection.RemoveFileOrDirectory(f"/tmp/{self.app_name}.conf")
 
