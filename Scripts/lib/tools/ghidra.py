@@ -59,15 +59,19 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.cspe
                 <pentry minsize="5" maxsize="8"><addr space="join" piece1="EDX" piece2="EAX" /></pentry>
             </output>
             <unaffected>
+                <register name="CS" />
+                <register name="DS" />
                 <register name="EAX" />
+                <register name="EBP" />
                 <register name="EBX" />
                 <register name="ECX" />
-                <register name="EDX" />
-                <register name="ESI" />
                 <register name="EDI" />
-                <register name="EBP" />
+                <register name="EDX" />
+                <register name="ES" />
+                <register name="ESI" />
                 <register name="ESP" />
-                <register name="CS" />
+                <register name="FS" />
+                <register name="GS" />
                 <register name="ST0" />
                 <register name="ST1" />
                 <register name="ST2" />
@@ -76,10 +80,6 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.cspe
                 <register name="ST5" />
                 <register name="ST6" />
                 <register name="ST7" />
-                <register name="DS" />
-                <register name="ES" />
-                <register name="FS" />
-                <register name="GS" />
             </unaffected>
         </prototype>
     </default_proto>
@@ -93,17 +93,17 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.cspe
             <pentry minsize="5" maxsize="8"><addr space="join" piece1="EDX" piece2="EAX" /></pentry>
         </output>
         <unaffected>
-            <varnode space="ram" offset="0" size="4" />
-            <register name="EBX" />
-            <register name="ESI" />
-            <register name="EDI" />
-            <register name="EBP" />
-            <register name="ESP" />
             <register name="CS" />
             <register name="DS" />
+            <register name="EBP" />
+            <register name="EBX" />
+            <register name="EDI" />
             <register name="ES" />
+            <register name="ESI" />
+            <register name="ESP" />
             <register name="FS" />
             <register name="GS" />
+            <varnode space="ram" offset="0" size="4" />
         </unaffected>
     </prototype>
     <prototype name="__stdcall" extrapop="unknown" stackshift="4">
@@ -115,18 +115,18 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.cspe
             <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
         </output>
         <unaffected>
-            <varnode space="ram" offset="0" size="4" />
-            <register name="ESP" />
-            <register name="EBP" />
-            <register name="ESI" />
-            <register name="EDI" />
-            <register name="EBX" />
             <register name="DF" />
+            <register name="EBP" />
+            <register name="EBX" />
+            <register name="EDI" />
+            <register name="ESI" />
+            <register name="ESP" />
+            <varnode space="ram" offset="0" size="4" />
         </unaffected>
         <killedbycall>
+            <register name="EAX" />
             <register name="ECX" />
             <register name="EDX" />
-            <register name="EAX" />
         </killedbycall>
     </prototype>
     <prototype name="__cdecl" extrapop="4" stackshift="4">
@@ -137,18 +137,18 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.cspe
             <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
         </output>
         <unaffected>
-            <varnode space="ram" offset="0" size="4" />
-            <register name="ESP" />
-            <register name="EBP" />
-            <register name="ESI" />
-            <register name="EDI" />
-            <register name="EBX" />
             <register name="DF" />
+            <register name="EBP" />
+            <register name="EBX" />
+            <register name="EDI" />
+            <register name="ESI" />
+            <register name="ESP" />
+            <varnode space="ram" offset="0" size="4" />
         </unaffected>
         <killedbycall>
+            <register name="EAX" />
             <register name="ECX" />
             <register name="EDX" />
-            <register name="EAX" />
         </killedbycall>
     </prototype>
     <prototype name="__syscall" extrapop="4" stackshift="4">
@@ -160,12 +160,12 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.cspe
             <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
         </output>
         <unaffected>
-            <register name="EBX" />
+            <register name="DF" />
             <register name="EBP" />
+            <register name="EBX" />
             <register name="EDI" />
             <register name="ESI" />
             <register name="ESP" />
-            <register name="DF" />
         </unaffected>
         <killedbycall>
             <register name="EAX" />
