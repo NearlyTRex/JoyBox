@@ -13,7 +13,7 @@ import toolbase
 
 # Config files
 config_files = {}
-config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.cspec"] = """
+config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86watcom.cspec"] = """
 <?xml version="1.0" encoding="UTF-8"?>
 <compiler_spec>
     <data_organization>
@@ -59,27 +59,10 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.cspe
                 <pentry minsize="5" maxsize="8"><addr space="join" piece1="EDX" piece2="EAX" /></pentry>
             </output>
             <unaffected>
-                <register name="CS" />
-                <register name="DS" />
-                <register name="EAX" />
-                <register name="EBP" />
                 <register name="EBX" />
-                <register name="ECX" />
-                <register name="EDI" />
-                <register name="EDX" />
-                <register name="ES" />
                 <register name="ESI" />
-                <register name="ESP" />
-                <register name="FS" />
-                <register name="GS" />
-                <register name="ST0" />
-                <register name="ST1" />
-                <register name="ST2" />
-                <register name="ST3" />
-                <register name="ST4" />
-                <register name="ST5" />
-                <register name="ST6" />
-                <register name="ST7" />
+                <register name="EDI" />
+                <register name="EBP" />
             </unaffected>
         </prototype>
     </default_proto>
@@ -87,41 +70,31 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.cspe
         <input>
             <pentry minsize="1" maxsize="500" align="4"><addr offset="4" space="stack" /></pentry>
         </input>
-        <output>
+        <output killedbycall="true">
             <pentry minsize="4" maxsize="10" metatype="float" extension="float"><register name="ST0" /></pentry>
             <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
             <pentry minsize="5" maxsize="8"><addr space="join" piece1="EDX" piece2="EAX" /></pentry>
         </output>
         <unaffected>
-            <register name="CS" />
-            <register name="DS" />
-            <register name="EBP" />
             <register name="EBX" />
-            <register name="EDI" />
-            <register name="ES" />
             <register name="ESI" />
-            <register name="ESP" />
-            <register name="FS" />
-            <register name="GS" />
-            <varnode space="ram" offset="0" size="4" />
+            <register name="EDI" />
+            <register name="EBP" />
         </unaffected>
     </prototype>
     <prototype name="__stdcall" extrapop="unknown" stackshift="4">
         <input>
             <pentry minsize="1" maxsize="500" align="4"><addr offset="4" space="stack" /></pentry>
         </input>
-        <output>
+        <output killedbycall="true">
             <pentry minsize="4" maxsize="10" metatype="float" extension="float"><register name="ST0" /></pentry>
             <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
         </output>
         <unaffected>
-            <register name="DF" />
-            <register name="EBP" />
             <register name="EBX" />
-            <register name="EDI" />
             <register name="ESI" />
-            <register name="ESP" />
-            <varnode space="ram" offset="0" size="4" />
+            <register name="EDI" />
+            <register name="EBP" />
         </unaffected>
         <killedbycall>
             <register name="EAX" />
@@ -129,7 +102,7 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.cspe
             <register name="EDX" />
         </killedbycall>
     </prototype>
-    <prototype name="__cdecl" extrapop="4" stackshift="4">
+    <prototype name="__cdecl" extrapop="unknown" stackshift="4">
         <input>
             <pentry minsize="1" maxsize="500" align="4"><addr offset="4" space="stack" /></pentry>
         </input>
@@ -137,13 +110,10 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.cspe
             <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
         </output>
         <unaffected>
-            <register name="DF" />
-            <register name="EBP" />
             <register name="EBX" />
-            <register name="EDI" />
             <register name="ESI" />
-            <register name="ESP" />
-            <varnode space="ram" offset="0" size="4" />
+            <register name="EDI" />
+            <register name="EBP" />
         </unaffected>
         <killedbycall>
             <register name="EAX" />
@@ -160,12 +130,10 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.cspe
             <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
         </output>
         <unaffected>
-            <register name="DF" />
-            <register name="EBP" />
             <register name="EBX" />
+            <register name="EBP" />
             <register name="EDI" />
             <register name="ESI" />
-            <register name="ESP" />
         </unaffected>
         <killedbycall>
             <register name="EAX" />
@@ -175,12 +143,12 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.cspe
     </prototype>
 </compiler_spec>
 """
-config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86openwatcom.ldefs"] = """
+config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86watcom.ldefs"] = """
 <?xml version="1.0" encoding="UTF-8"?>
 <language_definitions>
-    <language processor="x86" endian="little" size="32" variant="default" version="1.0" slafile="x86.sla" processorspec="x86.pspec" manualindexfile="../manuals/x86.idx" id="x86:LE:32:openwatcom">
+    <language processor="x86" endian="little" size="32" variant="default" version="1.0" slafile="x86.sla" processorspec="x86.pspec" manualindexfile="../manuals/x86.idx" id="x86:LE:32:watcom">
         <description>Intel/AMD 32-bit x86</description>
-        <compiler name="Open Watcom C++" spec="x86openwatcom.cspec" id="openwatcomcpp" />
+        <compiler name="Watcom C++" spec="x86watcom.cspec" id="watcomcpp" />
     </language>
 </language_definitions>
 """
@@ -199,8 +167,8 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/patterns/patternconstraints.
         <compiler id="gcc">
             <patternfile>x86gcc_patterns.xml</patternfile>
         </compiler>
-        <compiler id="openwatcomcpp">
-            <patternfile>x86openwatcomcpp_patterns.xml</patternfile>
+        <compiler id="watcomcpp">
+            <patternfile>x86watcomcpp_patterns.xml</patternfile>
         </compiler>
     </language>
     <language id="x86:LE:64:default">
@@ -223,7 +191,7 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/patterns/patternconstraints.
     </language>
 </patternconstraints>
 """
-config_files["Ghidra/lib/Ghidra/Processors/x86/data/patterns/x86openwatcomcpp_patterns.xml"] = """
+config_files["Ghidra/lib/Ghidra/Processors/x86/data/patterns/x86watcomcpp_patterns.xml"] = """
 <patternlist>
 </patternlist>
 """
