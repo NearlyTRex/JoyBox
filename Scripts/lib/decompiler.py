@@ -1,6 +1,7 @@
 # Imports
 import os
 import sys
+import re
 import json
 import time
 
@@ -85,6 +86,23 @@ class DecompilerProject:
     def __exit__(self, exc_type, exc_value, traceback):
         self._ctx.__exit__(exc_type, exc_value, traceback)
 
+    def FindMatchingStringLiteral(self, string_identifier, defined_data):
+
+        # Imports
+        from ghidra.program.model.data import StringDataType
+
+        # Find matching string
+        while defined_data.hasNext():
+            data = defined_data.next()
+            if isinstance(data.getDataType(), StringDataType):
+                string_addr = data.getAddress()
+                string_val = data.getValue()
+                if string_identifier.endswith(string_addr.toString()):
+                    return string_val
+
+        # No match
+        return None
+
     def GenerateAssemblyCode(self, func, symbol_table, reference_manager, program_listing):
 
         # Parse instructions
@@ -109,7 +127,7 @@ class DecompilerProject:
             asm_lines.append(line + "\n")
         return "".join(asm_lines)
 
-    def GenerateDecompilationCode(self, func, interface, symbol_table, timeout):
+    def GenerateDecompilationCode(self, func, interface, symbol_table, defined_data, timeout):
 
         # Imports
         from ghidra.program.model.symbol import SymbolType
@@ -132,6 +150,15 @@ class DecompilerProject:
             symbol_addr_str = str(symbol.getAddress())
             if symbol_addr_str in decompiled_code:
                 decompiled_code = decompiled_code.replace(symbol_addr_str, symbol_name)
+
+        # Replace string symbols with inline C-style strings
+        string_symbol_pattern = re.compile(r'\bs__\w+')
+        matches = set(string_symbol_pattern.findall(decompiled_code))
+        for string_symbol in matches:
+            string_literal = self.FindMatchingStringLiteral(string_symbol, defined_data)
+            if string_literal is not None:
+                escaped_literal = json.dumps(string_literal)[1:-1]
+                decompiled_code = decompiled_code.replace(string_symbol, f'"{escaped_literal}"')
         return decompiled_code
 
     def GenerateSourceFileName(self, func_name):
@@ -155,9 +182,10 @@ class DecompilerProject:
         interface.setOptions(DecompileOptions())
         interface.openProgram(self.api.currentProgram)
 
-        # Read functions
+        # Read program data
         function_manager = self.api.currentProgram.getFunctionManager()
         program_listing = self.api.currentProgram.getListing()
+        defined_data = program_listing.getDefinedData(True)
         reference_manager = self.api.currentProgram.getReferenceManager()
         symbol_table = self.api.currentProgram.getSymbolTable()
         for func in function_manager.getFunctions(True):
@@ -175,7 +203,7 @@ class DecompilerProject:
             func_asm_code = self.GenerateAssemblyCode(func, symbol_table, reference_manager, program_listing)
 
             # Generate decompilation code
-            func_decomp_code = self.GenerateDecompilationCode(func, interface, symbol_table, timeout)
+            func_decomp_code = self.GenerateDecompilationCode(func, interface, symbol_table, defined_data, timeout)
 
             # Prepare values for output
             function_code_values = {
