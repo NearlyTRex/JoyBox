@@ -39,6 +39,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "bison",
     "build-essential",
     "clang",
+    "clang-format",
     "cmake",
     "dos2unix",
     "flex",
