@@ -85,6 +85,58 @@ class DecompilerProject:
     def __exit__(self, exc_type, exc_value, traceback):
         self._ctx.__exit__(exc_type, exc_value, traceback)
 
+    def GenerateAssemblyCode(self, func, symbol_table, reference_manager, program_listing):
+
+        # Parse instructions
+        asm_lines = []
+        for instr in program_listing.getInstructions(func.getBody(), True):
+            addr = instr.getAddress()
+
+            # Basic instruction line
+            line = f"// {addr}: {instr}"
+
+            # Symbol label for this instruction address (if any and different than instr text)
+            symbol = symbol_table.getPrimarySymbol(addr)
+            if symbol and symbol.getName() != instr.toString():
+                line += f"\n//   Label: {symbol.getName()}"
+
+            # Add cross references for this instruction
+            refs_from = reference_manager.getReferencesFrom(addr)
+            for ref in refs_from:
+                ref_type = ref.getReferenceType()
+                if str(ref_type) in ("DATA", "READ", "WRITE", "CALL", "JUMP", "FALL_THROUGH"):
+                    line += f"\n//   XREF to: {ref.getToAddress()} ({ref_type})"
+            asm_lines.append(line + "\n")
+        return "".join(asm_lines)
+
+    def GenerateDecompilationCode(self, func, interface, symbol_table, timeout):
+
+        # Imports
+        from ghidra.program.model.symbol import SymbolType
+        from ghidra.util.task import ConsoleTaskMonitor
+
+        # Start decompilation
+        res = interface.decompileFunction(func, timeout, ConsoleTaskMonitor())
+        if not res.decompileCompleted():
+            return "// Decompilation failed\n"
+
+        # Get initial decompiled code
+        decompiled_code = res.getDecompiledFunction().getC()
+
+        # Replace raw addresses in decompiled C code with symbol names where possible
+        # We only replace addresses that match function symbols to keep it safe
+        for symbol in symbol_table.getAllSymbols(True):
+            if symbol.getSymbolType() != SymbolType.FUNCTION:
+                continue
+            symbol_name = symbol.getName()
+            symbol_addr_str = str(symbol.getAddress())
+            if symbol_addr_str in decompiled_code:
+                decompiled_code = decompiled_code.replace(symbol_addr_str, symbol_name)
+        return decompiled_code
+
+    def GenerateSourceFileName(self, func_name):
+        return f"{func_name}.cpp"
+
     def ExportFunctions(
         self,
         export_dir,
@@ -106,9 +158,11 @@ class DecompilerProject:
         # Read functions
         function_manager = self.api.currentProgram.getFunctionManager()
         program_listing = self.api.currentProgram.getListing()
+        reference_manager = self.api.currentProgram.getReferenceManager()
+        symbol_table = self.api.currentProgram.getSymbolTable()
         for func in function_manager.getFunctions(True):
 
-            # Get basic info
+            # Basic info
             func_name = func.getName()
             func_addr = str(func.getEntryPoint())
             func_addr_range = func.getBody()
@@ -117,21 +171,13 @@ class DecompilerProject:
             if func_convention and func_convention not in func_signature:
                 func_signature = func_signature.replace(func_name, f"{func_convention} {func_name}")
 
-            # Get assembly code
-            func_asm_code = ""
-            for instr in program_listing.getInstructions(func_addr_range, True):
-                func_asm_code += f"// {instr.getAddress()}: {instr}\n"
-            func_asm_code += "\n"
+            # Generate assembly code
+            func_asm_code = self.GenerateAssemblyCode(func, symbol_table, reference_manager, program_listing)
 
-            # Get decompiled code
-            func_decomp_code = ""
-            res = interface.decompileFunction(func, timeout, ConsoleTaskMonitor())
-            if res.decompileCompleted():
-                func_decomp_code = res.getDecompiledFunction().getC()
-            else:
-                func_decomp_code = "// Decompilation failed\n"
+            # Generate decompilation code
+            func_decomp_code = self.GenerateDecompilationCode(func, interface, symbol_table, timeout)
 
-            # Get function code values
+            # Prepare values for output
             function_code_values = {
                 "func_name": func_name,
                 "func_addr": func_addr,
@@ -142,12 +188,12 @@ class DecompilerProject:
                 "func_decomp_code": func_decomp_code
             }
 
+            # Write output file
             system.TouchFile(
-                src = os.path.join(export_dir, f"{func_name}.cpp"),
+                src = os.path.join(export_dir, self.GenerateSourceFileName(func_name)),
                 contents = function_code_template.format(**function_code_values),
                 contents_mode = "w",
                 encoding = None,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            break
