@@ -24,15 +24,45 @@ function_code_template = """
 {func_asm_code}
 """
 
-class ProgramDecompiler:
-    def __init__(self, program_exe):
-        self.program_exe = program_exe
-        self.pyghidra = None
-        self.flat_api = None
-        self.current_program = None
-        self._ctx = None
+class ProjectOptions:
+    def __init__(
+        self,
+        project_name,
+        project_dir,
+        project_language,
+        project_cspec,
+        program_name,
+        program_binary_file):
+        self.project_name = project_name
+        self.project_dir = project_dir
+        self.project_language = project_language
+        self.project_cspec = project_cspec
+        self.program_name = program_name
+        self.program_binary_file = program_binary_file
 
-    def __enter__(self):
+    def GetProjectName(self):
+        return self.project_name
+
+    def GetProjectLanguage(self):
+        return self.project_language
+
+    def GetProjectCompilerSpec(self):
+        return self.project_cspec
+
+    def GetProjectDir(self):
+        return os.path.abspath(self.project_dir)
+
+    def GetProgramName(self):
+        return self.program_name
+
+    def GetProgramBinaryFile(self):
+        return os.path.abspath(self.program_binary_file)
+
+class DecompilerProject:
+    def __init__(self, options):
+        self.options = options
+        self.api = None
+        self._ctx = None
 
         # Import pyghidra
         self.pyghidra = environment.ImportPythonModulePackage(
@@ -40,29 +70,22 @@ class ProgramDecompiler:
             module_name = programs.GetToolConfigValue("Ghidra", "package_name"))
         self.pyghidra.start(install_dir = programs.GetLibraryInstallDir("Ghidra", "lib"))
 
-        # Load program context
-        self._ctx = self.pyghidra.open_program(self.program_exe)
-        self.flat_api = self._ctx.__enter__()
-        self.current_program = self.flat_api.currentProgram
+    def __enter__(self):
+        self._ctx = self.pyghidra.open_program(
+            binary_path = self.options.GetProgramBinaryFile(),
+            project_location = self.options.GetProjectDir(),
+            project_name = self.options.GetProjectName(),
+            analyze = True,
+            language = self.options.GetProjectLanguage(),
+            compiler = self.options.GetProjectCompilerSpec(),
+            program_name = self.options.GetProgramName())
+        self.api = self._ctx.__enter__()
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
+        self._ctx.__exit__(exc_type, exc_value, traceback)
 
-        # Close program context
-        if self._ctx:
-            self._ctx.__exit__(exc_type, exc_value, traceback)
-            self._ctx = None
-
-    def get_name(self):
-        return self.current_program.getName()
-
-    def get_language(self):
-        return str(self.current_program.getLanguage().getLanguageID())
-
-    def get_file_format(self):
-        return str(self.current_program.getExecutableFormat())
-
-    def export_functions(
+    def ExportFunctions(
         self,
         export_dir,
         timeout = 60,
@@ -71,21 +94,19 @@ class ProgramDecompiler:
         exit_on_failure = False):
 
         # Imports
-        from ghidra.app.decompiler import DecompileOptions
         from ghidra.app.decompiler import DecompInterface
+        from ghidra.app.decompiler import DecompileOptions
         from ghidra.util.task import ConsoleTaskMonitor
 
-        # Initialize and open decompiler
-        options = DecompileOptions()
-        monitor = ConsoleTaskMonitor()
-        ifc = DecompInterface()
-        ifc.setOptions(options)
-        ifc.openProgram(self.current_program)
+        # Initialize decompiler
+        interface = DecompInterface()
+        interface.setOptions(DecompileOptions())
+        interface.openProgram(self.api.currentProgram)
 
         # Read functions
-        func_manager = self.current_program.getFunctionManager()
-        listing = self.current_program.getListing()
-        for func in func_manager.getFunctions(True):
+        function_manager = self.api.currentProgram.getFunctionManager()
+        program_listing = self.api.currentProgram.getListing()
+        for func in function_manager.getFunctions(True):
 
             # Get basic info
             func_name = func.getName()
@@ -98,13 +119,13 @@ class ProgramDecompiler:
 
             # Get assembly code
             func_asm_code = ""
-            for instr in listing.getInstructions(func_addr_range, True):
+            for instr in program_listing.getInstructions(func_addr_range, True):
                 func_asm_code += f"// {instr.getAddress()}: {instr}\n"
             func_asm_code += "\n"
 
             # Get decompiled code
             func_decomp_code = ""
-            res = ifc.decompileFunction(func, timeout, monitor)
+            res = interface.decompileFunction(func, timeout, ConsoleTaskMonitor())
             if res.decompileCompleted():
                 func_decomp_code = res.getDecompiledFunction().getC()
             else:
@@ -129,3 +150,4 @@ class ProgramDecompiler:
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
+            break
