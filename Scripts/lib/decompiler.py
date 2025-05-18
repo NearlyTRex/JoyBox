@@ -18,9 +18,7 @@ function_code_template = """
 // Address Range: {func_addr_range}
 // Convention: {func_convention}
 // Signature: {func_signature}
-
 {func_decomp_code}
-
 // Assembly code:
 {func_asm_code}
 """
@@ -86,22 +84,20 @@ class DecompilerProject:
     def __exit__(self, exc_type, exc_value, traceback):
         self._ctx.__exit__(exc_type, exc_value, traceback)
 
-    def FindMatchingStringLiteral(self, string_identifier, defined_data):
+    def BuildStringMap(self, defined_data):
 
         # Imports
         from ghidra.program.model.data import StringDataType
 
-        # Find matching string
+        # Build string map
+        string_map = {}
         while defined_data.hasNext():
             data = defined_data.next()
             if isinstance(data.getDataType(), StringDataType):
                 string_addr = data.getAddress()
                 string_val = data.getValue()
-                if string_identifier.endswith(string_addr.toString()):
-                    return string_val
-
-        # No match
-        return None
+                string_map[string_addr.toString()] = string_val
+        return string_map
 
     def GenerateAssemblyCode(self, func, symbol_table, reference_manager, program_listing):
 
@@ -127,7 +123,7 @@ class DecompilerProject:
             asm_lines.append(line + "\n")
         return "".join(asm_lines)
 
-    def GenerateDecompilationCode(self, func, interface, symbol_table, defined_data, timeout):
+    def GenerateDecompilationCode(self, func, interface, symbol_table, string_map, timeout):
 
         # Imports
         from ghidra.program.model.symbol import SymbolType
@@ -141,28 +137,38 @@ class DecompilerProject:
         # Get initial decompiled code
         decompiled_code = res.getDecompiledFunction().getC()
 
-        # Replace raw addresses in decompiled C code with symbol names where possible
-        # We only replace addresses that match function symbols to keep it safe
-        for symbol in symbol_table.getAllSymbols(True):
-            if symbol.getSymbolType() != SymbolType.FUNCTION:
-                continue
-            symbol_name = symbol.getName()
-            symbol_addr_str = str(symbol.getAddress())
-            if symbol_addr_str in decompiled_code:
-                decompiled_code = decompiled_code.replace(symbol_addr_str, symbol_name)
-
         # Replace string symbols with inline C-style strings
-        string_symbol_pattern = re.compile(r'\bs__\w+')
+        string_symbol_pattern = re.compile(r'\bs_+[\w]*[0-9A-Fa-f]{8,}\b')
         matches = set(string_symbol_pattern.findall(decompiled_code))
         for string_symbol in matches:
-            string_literal = self.FindMatchingStringLiteral(string_symbol, defined_data)
-            if string_literal is not None:
-                escaped_literal = json.dumps(string_literal)[1:-1]
-                decompiled_code = decompiled_code.replace(string_symbol, f'"{escaped_literal}"')
+            m = re.search(r'([0-9A-Fa-f]{8,})$', string_symbol)
+            if m:
+                string_addr = m.group(1).lower()
+                if string_addr in string_map:
+                    string_literal = string_map[string_addr]
+                    string_literal = string_literal.replace("\\", "\\\\")
+                    decompiled_code = decompiled_code.replace(string_symbol, f'"{string_literal}"')
         return decompiled_code
 
-    def GenerateSourceFileName(self, func_name):
-        return f"{func_name}.cpp"
+    def GenerateSourceFileName(self, func_name, func_decomp):
+
+        # Try to match the thunk case first
+        m = re.match(r"(.+)_thunk_FUN_[0-9A-Fa-f]+$", func_name)
+        if m:
+            path_part = m.group(1)
+            parts = path_part.split("_")
+            return os.path.join(*parts)
+
+        # Then match the normal function case
+        m = re.match(r"(.+)_FUN_[0-9A-Fa-f]+$", func_name)
+        if m:
+            path_part = m.group(1)
+            if "thunk" not in path_part:
+                parts = path_part.split("_")
+                return os.path.join(*parts)
+
+        # Fallback
+        return f"{func_name}.c"
 
     def ExportFunctions(
         self,
@@ -186,6 +192,7 @@ class DecompilerProject:
         function_manager = self.api.currentProgram.getFunctionManager()
         program_listing = self.api.currentProgram.getListing()
         defined_data = program_listing.getDefinedData(True)
+        string_map = self.BuildStringMap(defined_data)
         reference_manager = self.api.currentProgram.getReferenceManager()
         symbol_table = self.api.currentProgram.getSymbolTable()
         for func in function_manager.getFunctions(True):
@@ -203,7 +210,7 @@ class DecompilerProject:
             func_asm_code = self.GenerateAssemblyCode(func, symbol_table, reference_manager, program_listing)
 
             # Generate decompilation code
-            func_decomp_code = self.GenerateDecompilationCode(func, interface, symbol_table, defined_data, timeout)
+            func_decomp_code = self.GenerateDecompilationCode(func, interface, symbol_table, string_map, timeout)
 
             # Prepare values for output
             function_code_values = {
@@ -218,7 +225,7 @@ class DecompilerProject:
 
             # Write output file
             system.TouchFile(
-                src = os.path.join(export_dir, self.GenerateSourceFileName(func_name)),
+                src = os.path.join(export_dir, self.GenerateSourceFileName(func_name, func_decomp_code)),
                 contents = function_code_template.format(**function_code_values),
                 contents_mode = "w",
                 encoding = None,
