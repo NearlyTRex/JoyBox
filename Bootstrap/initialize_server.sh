@@ -14,8 +14,6 @@ COCKPIT_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Boo
 AZURACAST_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_azuracast.sh"
 APT_PACKAGES=(
     7zip
-    apache2-utils
-    apache2
     apt-file
     certbot
     cockpit
