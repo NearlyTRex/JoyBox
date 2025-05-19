@@ -40,6 +40,7 @@ version: '3.8'
 services:
   wordpress:
     image: wordpress:latest
+    restart: always
     ports:
       - "${WORDPRESS_PORT_HTTP}:80"
     environment:
