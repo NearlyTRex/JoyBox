@@ -101,15 +101,33 @@ class DecompilerProject:
 
     def GenerateAssemblyCode(self, func, symbol_table, reference_manager, program_listing):
 
+        # Imports
+        from ghidra.program.model.lang import OperandType
+
         # Parse instructions
         asm_lines = []
         for instr in program_listing.getInstructions(func.getBody(), True):
             addr = instr.getAddress()
+            instr_str = str(instr)
 
-            # Basic instruction line
-            line = f"// {addr}: {instr}"
+            # Default line
+            line = f"// {addr}: {instr_str}"
 
-            # Symbol label for this instruction address (if any and different than instr text)
+            # Adjust call target name
+            if instr.getMnemonicString() == "CALL":
+                for i in range(instr.getNumOperands()):
+                    operand_type = instr.getOperandType(i)
+                    if operand_type & OperandType.ADDRESS:
+                        target_addr = instr.getAddress(i)
+                        if target_addr:
+                            target_sym = symbol_table.getPrimarySymbol(target_addr)
+                            if target_sym:
+                                symbol_name = target_sym.getName()
+                                addr_str = f"0x{target_addr}"
+                                if addr_str in line:
+                                    line = line.replace(addr_str, symbol_name)
+
+            # Add symbol label for instruction if it has one
             symbol = symbol_table.getPrimarySymbol(addr)
             if symbol and symbol.getName() != instr.toString():
                 line += f"\n//   Label: {symbol.getName()}"
@@ -117,16 +135,13 @@ class DecompilerProject:
             # Add cross references for this instruction
             refs_from = reference_manager.getReferencesFrom(addr)
             for ref in refs_from:
-                ref_type = ref.getReferenceType()
-                if str(ref_type) in ("DATA", "READ", "WRITE", "CALL", "JUMP", "FALL_THROUGH"):
-                    line += f"\n//   XREF to: {ref.getToAddress()} ({ref_type})"
+                line += f"\n//   XREF to: {ref.getToAddress()} ({ref.getReferenceType()})"
             asm_lines.append(line + "\n")
         return "".join(asm_lines)
 
     def GenerateDecompilationCode(self, func, interface, symbol_table, string_map, timeout):
 
         # Imports
-        from ghidra.program.model.symbol import SymbolType
         from ghidra.util.task import ConsoleTaskMonitor
 
         # Start decompilation
