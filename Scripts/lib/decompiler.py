@@ -171,16 +171,14 @@ class DecompilerProject:
         decompiled_code = res.getDecompiledFunction().getC()
 
         # Replace string symbols with inline C-style strings
-        string_symbol_pattern = re.compile(r'\bs_+[\w]*[0-9A-Fa-f]{8,}\b')
-        matches = set(string_symbol_pattern.findall(decompiled_code))
-        for string_symbol in matches:
-            m = re.search(r'([0-9A-Fa-f]{8,})$', string_symbol)
-            if m:
-                string_addr = m.group(1).lower()
-                if string_addr in string_map:
-                    string_literal = string_map[string_addr]
-                    string_literal = string_literal.replace("\\", "\\\\")
-                    decompiled_code = decompiled_code.replace(string_symbol, f'"{string_literal}"')
+        def replace_symbol(match):
+            hex_addr = match.group(1).lower()
+            if hex_addr in string_map:
+                string_literal = string_map[hex_addr].replace("\\", "\\\\").replace('"', '\\"')
+                return f'"{string_literal}"'
+            return match.group(0)
+        pattern = re.compile(r'\bs_[^\s]*?_([0-9A-Fa-f]{8,})\b')
+        decompiled_code = pattern.sub(replace_symbol, decompiled_code)
         return decompiled_code
 
     def GenerateSourceFileName(self, func_name, func_decomp):
