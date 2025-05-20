@@ -152,23 +152,47 @@ class DecompilerProject:
 
     def GenerateSourceFileName(self, func_name, func_decomp):
 
-        # Try to match the thunk case first
-        m = re.match(r"(.+)_thunk_FUN_[0-9A-Fa-f]+$", func_name)
-        if m:
-            path_part = m.group(1)
-            parts = path_part.split("_")
-            return os.path.join(*parts)
+        # Initial guess for extension
+        file_extension = ".c"
+        if ".cpp" in func_name:
+            file_extension = ".cpp"
 
-        # Then match the normal function case
-        m = re.match(r"(.+)_FUN_[0-9A-Fa-f]+$", func_name)
-        if m:
-            path_part = m.group(1)
-            if "thunk" not in path_part:
-                parts = path_part.split("_")
-                return os.path.join(*parts)
+        # Completely custom path
+        if "FUN_" not in func_name:
+            for potential_type in [".c", ".cpp"]:
+                if potential_type in func_name:
+                    return func_name.replace("_", "/")
+
+        # Thunk hybrid path
+        if "_thunk_FUN_" in func_name:
+            func_parts = func_name.split("_thunk_FUN_")
+            path_dir = func_parts[0].replace("_", "/")
+            path_base = "_thunk_FUN_" + func_parts[1]
+            return os.path.join(path_dir, f"{path_base}{file_extension}")
+
+        # Regular hybrid path
+        if "_FUN_" in func_name and "thunk_" not in func_name:
+            func_parts = func_name.split("_FUN_")
+            path_dir = func_parts[0].replace("_", "/")
+            path_base = "_FUN_" + func_parts[1]
+            return os.path.join(path_dir, f"{path_base}{file_extension}")
+
+        # Decompilation guessed path
+        if "..\\" in func_decomp:
+            matches = re.finditer(r'"[^"]*(\.\.[\\/][^"]*)"', func_decomp)
+            for match in matches:
+                guessed_path = match.group(1)
+                if guessed_path.endswith(".txt"):
+                    continue
+                guessed_path = guessed_path.replace("..\\\\", "")
+                guessed_path = guessed_path.replace("\\", "/")
+                guessed_path = os.path.normpath(guessed_path)
+                if ".cpp" in guessed_path:
+                    file_extension = ".cpp"
+                return os.path.join(guessed_path, f"{func_name}{file_extension}")
 
         # Fallback
-        return f"{func_name}.c"
+        return f"{func_name}{file_extension}"
 
     def ExportFunctions(
         self,
@@ -223,12 +247,17 @@ class DecompilerProject:
                 "func_decomp_code": func_decomp_code
             }
 
+            # Get output file path
+            output_filename = self.GenerateSourceFileName(func_name, func_decomp_code)
+            output_filepath = os.path.join(export_dir, output_filename)
+
             # Write output file
-            system.TouchFile(
-                src = os.path.join(export_dir, self.GenerateSourceFileName(func_name, func_decomp_code)),
+            if not system.TouchFile(
+                src = output_filepath,
                 contents = function_code_template.format(**function_code_values),
                 contents_mode = "w",
                 encoding = None,
                 verbose = verbose,
                 pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                exit_on_failure = exit_on_failure):
+                return False
