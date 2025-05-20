@@ -28,7 +28,9 @@ def FormatCppFile(
         format_cmd += [f"-style=\"{style_inline}\""]
     elif style_file:
         format_cmd += ["-style", os.path.realpath(style_file)]
-    format_cmd += [src]
+    format_cmd += [
+        "-i", src
+    ]
 
     # Run format command
     code = command.RunReturncodeCommand(
