@@ -39,12 +39,12 @@ def main():
         project_language = args.project_language,
         project_cspec = args.project_cspec,
         program_name = args.program_name,
-        program_binary_file = args.program_binary_file)
+        program_binary_file = args.program_binary_file,
+        export_dir = args.export_dir)
 
     # Open project
     with decompiler.DecompilerProject(project_options) as project:
         project.ExportFunctions(
-            export_dir = args.export_dir,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

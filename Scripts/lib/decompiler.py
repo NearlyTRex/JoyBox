@@ -18,9 +18,22 @@ function_code_template = """
 // Address Range: {func_addr_range}
 // Convention: {func_convention}
 // Signature: {func_signature}
+
+#include "functions.h"
 {func_decomp_code}
 // Assembly code:
 {func_asm_code}
+"""
+
+# Function header template
+function_header_template = """
+#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
+
+// Auto-generated function prototypes
+{prototypes}
+
+#endif // FUNCTIONS_H
 """
 
 class ProjectOptions:
@@ -31,13 +44,15 @@ class ProjectOptions:
         project_language,
         project_cspec,
         program_name,
-        program_binary_file):
+        program_binary_file,
+        export_dir):
         self.project_name = project_name
         self.project_dir = project_dir
         self.project_language = project_language
         self.project_cspec = project_cspec
         self.program_name = program_name
         self.program_binary_file = program_binary_file
+        self.export_dir = export_dir
 
     def GetProjectName(self):
         return self.project_name
@@ -56,6 +71,9 @@ class ProjectOptions:
 
     def GetProgramBinaryFile(self):
         return os.path.abspath(self.program_binary_file)
+
+    def GetExportDir(self):
+        return os.path.abspath(self.export_dir)
 
 class DecompilerProject:
     def __init__(self, options):
@@ -211,7 +229,6 @@ class DecompilerProject:
 
     def ExportFunctions(
         self,
-        export_dir,
         timeout = 60,
         verbose = False,
         pretend_run = False,
@@ -226,6 +243,9 @@ class DecompilerProject:
         interface = DecompInterface()
         interface.setOptions(DecompileOptions())
         interface.openProgram(self.api.currentProgram)
+
+        # Keep track of function prototypes
+        function_prototypes = set()
 
         # Read program data
         function_manager = self.api.currentProgram.getFunctionManager()
@@ -245,13 +265,20 @@ class DecompilerProject:
             if func_convention and func_convention not in func_signature:
                 func_signature = func_signature.replace(func_name, f"{func_convention} {func_name}")
 
+            # Clean and store prototype
+            clean_signature = func_signature.strip()
+            if clean_signature.endswith(";"):
+                function_prototypes.add(clean_signature)
+            else:
+                function_prototypes.add(clean_signature + ";")
+
             # Generate assembly code
             func_asm_code = self.GenerateAssemblyCode(func, symbol_table, reference_manager, program_listing)
 
             # Generate decompilation code
             func_decomp_code = self.GenerateDecompilationCode(func, interface, symbol_table, string_map, timeout)
 
-            # Prepare values for output
+            # Prepare code output
             function_code_values = {
                 "func_name": func_name,
                 "func_addr": func_addr,
@@ -262,13 +289,9 @@ class DecompilerProject:
                 "func_decomp_code": func_decomp_code
             }
 
-            # Get output file path
-            output_filename = self.GenerateSourceFileName(func_name, func_decomp_code)
-            output_filepath = os.path.join(export_dir, output_filename)
-
             # Write output file
             if not system.TouchFile(
-                src = output_filepath,
+                src = os.path.join(self.options.GetExportDir(), self.GenerateSourceFileName(func_name, func_decomp_code)),
                 contents = function_code_template.format(**function_code_values),
                 contents_mode = "w",
                 encoding = None,
@@ -276,3 +299,19 @@ class DecompilerProject:
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure):
                 return False
+
+        # Prepare header output
+        function_header_values = {
+            "prototypes": "\n".join(sorted(function_prototypes))
+        }
+
+        # Write the header file
+        if not system.TouchFile(
+            src = os.path.join(self.options.GetExportDir(), "functions.h"),
+            contents = function_header_template.format(**function_header_values),
+            contents_mode = "w",
+            encoding = None,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure):
+            return False
