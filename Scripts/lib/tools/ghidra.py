@@ -207,6 +207,10 @@ class Ghidra(toolbase.ToolBase):
     def GetConfig(self):
         return {
             "Ghidra": {
+                "program": {
+                    "windows": "Ghidra/lib/ghidraRun.bat",
+                    "linux": "Ghidra/lib/ghidraRun"
+                },
                 "package_dir": "Ghidra/lib/Ghidra/Features/PyGhidra/pypkg/src",
                 "package_name": "pyghidra"
             }
