@@ -126,6 +126,108 @@ cleanup_sudoers() {
     fi
 }
 
+add_htpasswd_user() {
+    local username="$1"
+    local password="$2"
+    local htpasswd_file="/etc/nginx/.htpasswd"
+
+    if ! command -v htpasswd &>/dev/null; then
+        echo "Installing apache2-utils for htpasswd..."
+        apt-get update
+        apt-get install -y apache2-utils
+    fi
+
+    if [ ! -f "$htpasswd_file" ]; then
+        echo "Creating new htpasswd file at $htpasswd_file"
+        htpasswd -cbB "$htpasswd_file" "$username" "$password"
+        chmod 640 "$htpasswd_file"
+        chown root:www-data "$htpasswd_file"
+    else
+        echo "Adding/updating user '$username' in $htpasswd_file"
+        htpasswd -bB "$htpasswd_file" "$username" "$password"
+    fi
+}
+
+remove_htpasswd() {
+    local htpasswd_file="/etc/nginx/.htpasswd"
+
+    if [ -f "$htpasswd_file" ]; then
+        rm -f "$htpasswd_file"
+        echo "Removed htpasswd file at $htpasswd_file"
+    else
+        echo "No htpasswd file found at $htpasswd_file"
+    fi
+}
+
+configure_unattended_upgrades() {
+    apt-get update
+    apt-get install -y unattended-upgrades
+    dpkg-reconfigure -f noninteractive unattended-upgrades
+}
+
+configure_ufw_firewall() {
+    apt-get update
+    apt-get install -y ufw
+    ufw allow OpenSSH
+    ufw allow 'Nginx Full'
+    ufw --force enable
+}
+
+configure_fail2ban() {
+    apt-get update
+    apt-get install -y fail2ban
+    cat > /etc/fail2ban/jail.d/nginx-auth.conf <<EOF
+[nginx-http-auth]
+enabled  = true
+port     = http,https
+filter   = nginx-http-auth
+logpath  = /var/log/nginx/error.log
+maxretry = 3
+bantime  = 3600
+EOF
+    systemctl restart fail2ban
+}
+
+configure_security_headers() {
+    cat > /etc/nginx/snippets/ssl-params.conf <<EOF
+ssl_protocols TLSv1.2 TLSv1.3;
+ssl_prefer_server_ciphers on;
+ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+ssl_session_cache shared:SSL:10m;
+ssl_session_timeout 10m;
+add_header X-Content-Type-Options nosniff;
+add_header X-Frame-Options DENY;
+add_header X-XSS-Protection "1; mode=block";
+add_header Referrer-Policy "strict-origin-when-cross-origin";
+add_header Permissions-Policy "geolocation=(), microphone=()";
+add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+EOF
+}
+
+configure_rate_limit() {
+    cat > /etc/nginx/snippets/rate-limit.conf <<EOF
+limit_req_zone \$binary_remote_addr zone=mylimit:10m rate=5r/s;
+EOF
+}
+
+configure_modsecurity() {
+    local modsec_dir="/etc/nginx/modsec"
+
+    apt-get update
+    apt-get install -y libnginx-mod-security
+
+    mkdir -p "$modsec_dir"
+    cp /etc/modsecurity/modsecurity.conf-recommended "$modsec_dir/modsecurity.conf"
+    sed -i 's/SecRuleEngine DetectionOnly/SecRuleEngine On/' "$modsec_dir/modsecurity.conf"
+    git clone --depth 1 https://github.com/coreruleset/coreruleset "$modsec_dir/crs"
+    cp "$modsec_dir/crs/crs-setup.conf.example" "$modsec_dir/crs/crs-setup.conf"
+    cat > "$modsec_dir/main.conf" <<EOF
+include $modsec_dir/modsecurity.conf;
+include $modsec_dir/crs/crs-setup.conf;
+include $modsec_dir/crs/rules/*.conf;
+EOF
+}
+
 configure_docker_group() {
     local username="$1"
 
@@ -140,6 +242,21 @@ configure_docker_group() {
         usermod -aG docker "$username"
         echo "Added '$username' to the 'docker' group. You may need to re-login to apply group changes."
     fi
+}
+
+configure_docker_security() {
+    mkdir -p /etc/docker
+    cat > /etc/docker/daemon.json <<EOF
+{
+  "no-new-privileges": true,
+  "userns-remap": "default",
+  "log-driver": "journald",
+  "live-restore": true
+}
+EOF
+    iptables -C DOCKER-USER -i docker0 -d 169.254.169.254 -j DROP 2>/dev/null || \
+    iptables -I DOCKER-USER -i docker0 -d 169.254.169.254 -j DROP
+    systemctl restart docker
 }
 
 setup_storage_box() {
