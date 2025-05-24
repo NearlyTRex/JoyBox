@@ -1,0 +1,16 @@
+# Required packages
+7zip
+apt-file
+certbot
+cockpit
+curl
+docker-compose
+docker.io
+flatpak
+git
+nginx-common
+nginx
+python3-certbot-nginx
+unzip
+wget
+zip
