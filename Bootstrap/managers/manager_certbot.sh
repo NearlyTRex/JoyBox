@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 register_cert() {
     if [ "$#" -lt 2 ]; then
         echo "Usage: register_cert <contact_email> <domain1> [domain2 ... domainN]"

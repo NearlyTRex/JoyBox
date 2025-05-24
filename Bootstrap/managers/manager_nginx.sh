@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 NGINX_SITES_AVAILABLE="/etc/nginx/sites-available"
 NGINX_SITES_ENABLED="/etc/nginx/sites-enabled"
 HTML_DIR="/var/www/html"

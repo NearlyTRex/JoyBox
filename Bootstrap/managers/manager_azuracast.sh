@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 install_azuracast() {
     AZURACAST_DIR="$1"
     ENV_FILE="$2"

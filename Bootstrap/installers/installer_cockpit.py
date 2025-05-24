@@ -27,10 +27,12 @@ server {{
     location / {{
         proxy_pass https://localhost:{port_http};
         proxy_ssl_verify off;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
         proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-Proto https;
-        proxy_set_header Cookie $http_cookie;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }}
 }}
 """
@@ -58,9 +60,7 @@ class Cockpit(installer.Installer):
 
         # Install Cockpit
         util.LogInfo("Installing Cockpit")
-        self.connection.RunChecked([self.aptget_tool, "update"], sudo = True)
-        self.connection.RunChecked([self.aptget_tool, "install", "-y", "cockpit"], sudo = True)
-        self.connection.RunChecked([self.cockpit_manager_tool, "systemctl", "enable"], sudo = True)
+        self.connection.RunChecked([self.cockpit_manager_tool, "install"], sudo = True)
 
         # Create Nginx config
         util.LogInfo("Creating Nginx config")
@@ -86,6 +86,5 @@ class Cockpit(installer.Installer):
 
         # Uninstall Cockpit
         util.LogInfo("Uninstalling Cockpit")
-        self.connection.RunChecked([self.cockpit_manager_tool, "systemctl", "disable"], sudo = True)
-        self.connection.RunChecked([self.aptget_tool, "remove", "-y", "cockpit"], sudo = True)
+        self.connection.RunChecked([self.cockpit_manager_tool, "uninstall"], sudo = True)
         return True
