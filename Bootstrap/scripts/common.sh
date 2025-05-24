@@ -1,10 +1,5 @@
 #!/bin/bash
 
-NGINX_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_nginx.sh"
-CERTBOT_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_certbot.sh"
-COCKPIT_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_cockpit.sh"
-AZURACAST_SCRIPT_URL="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/manager_azuracast.sh"
-
 ensure_bash_shell() {
     if [ -z "$BASH_VERSION" ]; then
         echo "Error: This script must be run with bash"
@@ -44,6 +39,38 @@ load_packages() {
     fi
 }
 
+load_managers() {
+    local manager_file="$1"
+
+    if [[ ! -f "$manager_file" ]]; then
+        echo "Error: Manager list file '$manager_file' not found."
+        exit 1
+    fi
+
+    mapfile -t MANAGERS < <(grep -Ev '^\s*#|^\s*$' "$manager_file")
+
+    if [[ ${#MANAGERS[@]} -eq 0 ]]; then
+        echo "Error: No valid manager scripts found in '$manager_file'"
+        exit 1
+    fi
+}
+
+install_managers() {
+    mkdir -p /usr/local/bin
+
+    for script in "${MANAGERS[@]}"; do
+        local url="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/$script"
+        local script_path="/usr/local/bin/$script"
+        if curl -fsSL -o "$script_path" "$url"; then
+            chmod +x "$script_path"
+            echo "Installed $script"
+        else
+            echo "Error: Failed to download $url"
+            exit 1
+        fi
+    done
+}
+
 setup_sudoers() {
     local username="$1"
     local sudoers_file="$2"
@@ -65,11 +92,16 @@ setup_sudoers() {
             fi
         done
         echo ""
-        echo "Cmnd_Alias MANAGER_NGINX = /usr/local/bin/manager_nginx.sh"
-        echo "Cmnd_Alias MANAGER_CERTBOT = /usr/local/bin/manager_certbot.sh"
-        echo "Cmnd_Alias MANAGER_COCKPIT = /usr/local/bin/manager_cockpit.sh"
-        echo "Cmnd_Alias MANAGER_AZURACAST = /usr/local/bin/manager_azuracast.sh"
-        echo "$username ALL=(ALL) NOPASSWD: APT_MANAGE, MANAGER_NGINX, MANAGER_CERTBOT, MANAGER_COCKPIT, MANAGER_AZURACAST"
+
+        local aliases=()
+        for script in "${MANAGERS[@]}"; do
+            local name="${script%.sh}"
+            local alias_name="MANAGER_${name^^}"
+            echo "Cmnd_Alias $alias_name = /usr/local/bin/$script"
+            aliases+=("$alias_name")
+        done
+
+        echo "$username ALL=(ALL) NOPASSWD: APT_MANAGE, ${aliases[*]}"
     } > "$temp_file"
 
     if visudo -c -f "$temp_file"; then
@@ -110,20 +142,6 @@ configure_docker_group() {
     fi
 }
 
-install_manager_scripts() {
-    mkdir -p /usr/local/bin
-    for url in "$NGINX_SCRIPT_URL" "$COCKPIT_SCRIPT_URL" "$CERTBOT_SCRIPT_URL" "$AZURACAST_SCRIPT_URL"; do
-        script_name="/usr/local/bin/$(basename "$url")"
-        if curl -fsSL -o "$script_name" "$url"; then
-            chmod +x "$script_name"
-            echo "Installed $(basename "$url")"
-        else
-            echo "Error: Failed to download $url"
-            exit 1
-        fi
-    done
-}
-
 setup_storage_box() {
     local username="$1"
     local storage_user="$2"
@@ -148,7 +166,7 @@ setup_storage_box() {
     fi
 
     echo "Uploading SSH key..."
-    sudo -u "$username" "$ssh_copy_id_bin" -p 23 -s -i "$ssh_key.pub" "$STORAGE_USER@$storage_host"
+    sudo -u "$username" "$ssh_copy_id_bin" -p 23 -s -i "$ssh_key.pub" "$storage_user@$storage_host"
 
     if [ ! -d "$storage_local_mount" ]; then
         echo "Creating storage mount directory at $storage_local_mount..."

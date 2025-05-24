@@ -1,0 +1,4 @@
+manager_azuracast.sh
+manager_certbot.sh
+manager_cockpit.sh
+manager_nginx.sh
