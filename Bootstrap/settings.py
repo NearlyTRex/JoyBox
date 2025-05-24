@@ -108,10 +108,10 @@ ini_defaults["UserData.Jenkins"]["jenkins_port_agent"] = "50000"
 ini_defaults["UserData.Jenkins"]["jenkins_user_uid"] = "1000"
 ini_defaults["UserData.Jenkins"]["jenkins_user_gid"] = "1000"
 
-# UserData.Wekan
-ini_defaults["UserData.Wekan"] = {}
-ini_defaults["UserData.Wekan"]["wekan_subdomain"] = "tasks"
-ini_defaults["UserData.Wekan"]["wekan_port_http"] = "8086"
+# UserData.Kanboard
+ini_defaults["UserData.Kanboard"] = {}
+ini_defaults["UserData.Kanboard"]["kanboard_subdomain"] = "tasks"
+ini_defaults["UserData.Kanboard"]["kanboard_port_http"] = "8086"
 
 # UserData.Servers
 ini_defaults["UserData.Servers"] = {}

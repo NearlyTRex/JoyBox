@@ -56,7 +56,7 @@ class RemoteUbuntu(env.Environment):
         self.installer_filebrowser = installers.FileBrowser(**self.installer_options)
         self.installer_jenkins = installers.Jenkins(**self.installer_options)
         self.installer_navidrome = installers.Navidrome(**self.installer_options)
-        self.installer_wekan = installers.Wekan(**self.installer_options)
+        self.installer_kanboard = installers.Kanboard(**self.installer_options)
 
     def Setup(self):
 
@@ -130,19 +130,19 @@ class RemoteUbuntu(env.Environment):
             if not self.installer_jenkins.Install():
                 return False
 
-        # Install Wekan
-        util.LogInfo("Installing Wekan")
-        if not self.installer_wekan.IsInstalled():
-            if not self.installer_wekan.Install():
+        # Install Kanboard
+        util.LogInfo("Installing Kanboard")
+        if not self.installer_kanboard.IsInstalled():
+            if not self.installer_kanboard.Install():
                 return False
         return True
 
     def Teardown(self):
 
-        # Uninstall Wekan
-        util.LogInfo("Uninstalling Wekan")
-        if self.installer_wekan.IsInstalled():
-            if not self.installer_wekan.Uninstall():
+        # Uninstall Kanboard
+        util.LogInfo("Uninstalling Kanboard")
+        if self.installer_kanboard.IsInstalled():
+            if not self.installer_kanboard.Uninstall():
                 return False
 
         # Uninstall Jenkins

@@ -26,13 +26,10 @@ server {{
 
     location / {{
         proxy_pass http://localhost:{port_http};
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header Cookie $http_cookie;
     }}
 }}
 """
@@ -41,42 +38,25 @@ server {{
 docker_compose_template = """
 version: '3.8'
 services:
-  wekan:
-    image: wekan/wekan:latest
-    container_name: wekan
+  kanboard:
+    image: kanboard/kanboard:latest
+    container_name: kanboard
     restart: always
-    environment:
-      - ROOT_URL=https://{subdomain}.{domain}
-      - MONGO_URL=mongodb://mongo:27017/wekan
-      - MONGO_OPLOG_URL=mongodb://mongo:27017/local
     ports:
-      - "{port_http}:8080"
-    depends_on:
-      - mongo
+      - "${KANBOARD_PORT_HTTP}:80"
     volumes:
-      - wekan_data:/data
-
-  mongo:
-    image: mongo:5.0
-    container_name: wekan_mongo
-    restart: always
-    volumes:
-      - mongo_data:/data/db
-
-volumes:
-  wekan_data:
-  mongo_data:
+      - ./data:/var/www/app/data
+      - ./plugins:/var/www/app/plugins
+      - ./config:/var/www/app/config
 """
 
 # .env template
 env_template = """
-PORT_HTTP={port_http}
-SUBDOMAIN={subdomain}
-DOMAIN={domain}
+KANBOARD_PORT_HTTP={port_http}
 """
 
-# Wekan Installer
-class Wekan(installer.Installer):
+# Kanboard Installer
+class Kanboard(installer.Installer):
     def __init__(
         self,
         config,
@@ -84,17 +64,15 @@ class Wekan(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
-        self.app_name = "wekan"
+        self.app_name = "kanboard"
         self.app_dir = f"$HOME/apps/{self.app_name}"
         self.nginx_config_values = {
             "domain": self.config.GetValue("UserData.Servers", "domain_name"),
-            "subdomain": self.config.GetValue("UserData.Wekan", "wekan_subdomain"),
-            "port_http": self.config.GetValue("UserData.Wekan", "wekan_port_http")
+            "subdomain": self.config.GetValue("UserData.Kanboard", "kanboard_subdomain"),
+            "port_http": self.config.GetValue("UserData.Kanboard", "kanboard_port_http")
         }
         self.env_values = {
-            "domain": self.config.GetValue("UserData.Servers", "domain_name"),
-            "subdomain": self.config.GetValue("UserData.Wekan", "wekan_subdomain"),
-            "port_http": self.config.GetValue("UserData.Wekan", "wekan_port_http")
+            "port_http": self.config.GetValue("UserData.Kanboard", "kanboard_port_http")
         }
 
     def IsInstalled(self):
@@ -106,30 +84,30 @@ class Wekan(installer.Installer):
         # Create directories
         util.LogInfo("Creating directories")
         self.connection.MakeDirectory(self.app_dir)
+        self.connection.MakeDirectory(f"{self.app_dir}/data")
+        self.connection.MakeDirectory(f"{self.app_dir}/plugins")
+        self.connection.MakeDirectory(f"{self.app_dir}/config")
 
         # Write docker compose
         util.LogInfo("Writing docker compose")
-        docker_compose_content = docker_compose_template.format(**self.nginx_config_values, **self.env_values)
-        if self.connection.WriteFile("/tmp/docker-compose.yml", docker_compose_content):
+        if self.connection.WriteFile("/tmp/docker-compose.yml", docker_compose_template):
             self.connection.MoveFileOrDirectory("/tmp/docker-compose.yml", f"{self.app_dir}/docker-compose.yml")
 
         # Write docker env
         util.LogInfo("Writing docker env")
-        env_content = env_template.format(**self.env_values)
-        if self.connection.WriteFile("/tmp/.env", env_content):
+        if self.connection.WriteFile("/tmp/.env", env_template.format(**self.env_values)):
             self.connection.MoveFileOrDirectory("/tmp/.env", f"{self.app_dir}/.env")
 
         # Create Nginx entry
         util.LogInfo("Creating Nginx entry")
-        nginx_conf_content = nginx_config_template.format(**self.nginx_config_values)
-        if self.connection.WriteFile(f"/tmp/{self.app_name}.conf", nginx_conf_content):
-            self.connection.RunChecked([self.nginx_manager_tool, "install_conf", f"/tmp/{self.app_name}.conf"], sudo=True)
-            self.connection.RunChecked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo=True)
+        if self.connection.WriteFile(f"/tmp/{self.app_name}.conf", nginx_config_template.format(**self.nginx_config_values)):
+            self.connection.RunChecked([self.nginx_manager_tool, "install_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
+            self.connection.RunChecked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
             self.connection.RemoveFileOrDirectory(f"/tmp/{self.app_name}.conf")
 
         # Restart Nginx
         util.LogInfo("Restarting Nginx")
-        self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo=True)
+        self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
 
         # Start docker
         util.LogInfo("Starting docker")
@@ -151,9 +129,9 @@ class Wekan(installer.Installer):
 
         # Remove Nginx entry
         util.LogInfo("Removing Nginx entry")
-        self.connection.RunChecked([self.nginx_manager_tool, "remove_conf", f"{self.app_name}.conf"], sudo=True)
+        self.connection.RunChecked([self.nginx_manager_tool, "remove_conf", f"{self.app_name}.conf"], sudo = True)
 
         # Restart Nginx
         util.LogInfo("Restarting Nginx")
-        self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo=True)
+        self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
         return True
