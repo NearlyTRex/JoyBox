@@ -49,8 +49,6 @@ services:
       - ${NAVIDROME_MUSIC_DIR}:/music:ro
       - ./data:/data
     environment:
-      - ND_USERNAME=${NAVIDROME_ADMIN_USER}
-      - ND_PASSWORD=${NAVIDROME_ADMIN_PASS}
       - ND_HTTP_PORT=4533
       - ND_BASE_URL=
 """
@@ -61,8 +59,6 @@ NAVIDROME_PORT_HTTP={port_http}
 NAVIDROME_UID={user_uid}
 NAVIDROME_GID={user_gid}
 NAVIDROME_MUSIC_DIR={music_dir}
-NAVIDROME_ADMIN_USER={admin_user}
-NAVIDROME_ADMIN_PASS={admin_pass}
 """
 
 # Navidrome Installer
@@ -85,9 +81,7 @@ class Navidrome(installer.Installer):
             "port_http": self.config.GetValue("UserData.Navidrome", "navidrome_port_http"),
             "user_uid": self.config.GetValue("UserData.Navidrome", "navidrome_user_uid"),
             "user_gid": self.config.GetValue("UserData.Navidrome", "navidrome_user_gid"),
-            "music_dir": self.config.GetValue("UserData.Navidrome", "navidrome_music_dir"),
-            "admin_user": self.config.GetValue("UserData.Navidrome", "navidrome_admin_user"),
-            "admin_pass": self.config.GetValue("UserData.Navidrome", "navidrome_admin_pass")
+            "music_dir": self.config.GetValue("UserData.Navidrome", "navidrome_music_dir")
         }
 
     def IsInstalled(self):

@@ -106,18 +106,6 @@ class RemoteUbuntu(env.Environment):
             if not self.installer_azuracast.Install():
                 return False
 
-        # Install FileBrowser
-        util.LogInfo("Installing FileBrowser")
-        if not self.installer_filebrowser.IsInstalled():
-            if not self.installer_filebrowser.Install():
-                return False
-
-        # Install Jenkins
-        util.LogInfo("Installing Jenkins")
-        if not self.installer_jenkins.IsInstalled():
-            if not self.installer_jenkins.Install():
-                return False
-
         # Install Audiobookshelf
         util.LogInfo("Installing Audiobookshelf")
         if not self.installer_audiobookshelf.IsInstalled():
@@ -128,6 +116,18 @@ class RemoteUbuntu(env.Environment):
         util.LogInfo("Installing Navidrome")
         if not self.installer_navidrome.IsInstalled():
             if not self.installer_navidrome.Install():
+                return False
+
+        # Install FileBrowser
+        util.LogInfo("Installing FileBrowser")
+        if not self.installer_filebrowser.IsInstalled():
+            if not self.installer_filebrowser.Install():
+                return False
+
+        # Install Jenkins
+        util.LogInfo("Installing Jenkins")
+        if not self.installer_jenkins.IsInstalled():
+            if not self.installer_jenkins.Install():
                 return False
 
         # Install Wekan
@@ -145,18 +145,6 @@ class RemoteUbuntu(env.Environment):
             if not self.installer_wekan.Uninstall():
                 return False
 
-        # Uninstall Navidrome
-        util.LogInfo("Uninstalling Navidrome")
-        if self.installer_navidrome.IsInstalled():
-            if not self.installer_navidrome.Uninstall():
-                return False
-
-        # Uninstall Audiobookshelf
-        util.LogInfo("Uninstalling Audiobookshelf")
-        if self.installer_audiobookshelf.IsInstalled():
-            if not self.installer_audiobookshelf.Uninstall():
-                return False
-
         # Uninstall Jenkins
         util.LogInfo("Uninstalling Jenkins")
         if self.installer_jenkins.IsInstalled():
@@ -167,6 +155,18 @@ class RemoteUbuntu(env.Environment):
         util.LogInfo("Uninstalling FileBrowser")
         if self.installer_filebrowser.IsInstalled():
             if not self.installer_filebrowser.Uninstall():
+                return False
+
+        # Uninstall Navidrome
+        util.LogInfo("Uninstalling Navidrome")
+        if self.installer_navidrome.IsInstalled():
+            if not self.installer_navidrome.Uninstall():
+                return False
+
+        # Uninstall Audiobookshelf
+        util.LogInfo("Uninstalling Audiobookshelf")
+        if self.installer_audiobookshelf.IsInstalled():
+            if not self.installer_audiobookshelf.Uninstall():
                 return False
 
         # Uninstall AzuraCast
