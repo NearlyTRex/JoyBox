@@ -61,7 +61,10 @@ class Certbot(installer.Installer):
             self.config.GetValue("UserData.Wordpress", "wordpress_subdomain"),
             self.config.GetValue("UserData.AzuraCast", "azuracast_subdomain"),
             self.config.GetValue("UserData.FileBrowser", "filebrowser_subdomain"),
-            self.config.GetValue("UserData.Jenkins", "jenkins_subdomain")
+            self.config.GetValue("UserData.Jenkins", "jenkins_subdomain"),
+            self.config.GetValue("UserData.Audiobookshelf", "audiobookshelf_subdomain"),
+            self.config.GetValue("UserData.Navidrome", "navidrome_subdomain"),
+            self.config.GetValue("UserData.Wekan", "wekan_subdomain")
         ]
         self.fully_qualified_domains = [self.domain_name] + [f"{sub}.{self.domain_name}" for sub in self.subdomains]
         self.nginx_config_values = {

@@ -46,6 +46,7 @@ class RemoteUbuntu(env.Environment):
 
         # Create installers
         self.installer_aptget = installers.AptGet(**self.installer_options)
+        self.installer_audiobookshelf = installers.Audiobookshelf(**self.installer_options)
         self.installer_flatpak = installers.Flatpak(**self.installer_options)
         self.installer_nginx = installers.Nginx(**self.installer_options)
         self.installer_certbot = installers.Certbot(**self.installer_options)
@@ -54,6 +55,8 @@ class RemoteUbuntu(env.Environment):
         self.installer_azuracast = installers.AzuraCast(**self.installer_options)
         self.installer_filebrowser = installers.FileBrowser(**self.installer_options)
         self.installer_jenkins = installers.Jenkins(**self.installer_options)
+        self.installer_navidrome = installers.Navidrome(**self.installer_options)
+        self.installer_wekan = installers.Wekan(**self.installer_options)
 
     def Setup(self):
 
@@ -114,9 +117,45 @@ class RemoteUbuntu(env.Environment):
         if not self.installer_jenkins.IsInstalled():
             if not self.installer_jenkins.Install():
                 return False
+
+        # Install Audiobookshelf
+        util.LogInfo("Installing Audiobookshelf")
+        if not self.installer_audiobookshelf.IsInstalled():
+            if not self.installer_audiobookshelf.Install():
+                return False
+
+        # Install Navidrome
+        util.LogInfo("Installing Navidrome")
+        if not self.installer_navidrome.IsInstalled():
+            if not self.installer_navidrome.Install():
+                return False
+
+        # Install Wekan
+        util.LogInfo("Installing Wekan")
+        if not self.installer_wekan.IsInstalled():
+            if not self.installer_wekan.Install():
+                return False
         return True
 
     def Teardown(self):
+
+        # Uninstall Wekan
+        util.LogInfo("Uninstalling Wekan")
+        if self.installer_wekan.IsInstalled():
+            if not self.installer_wekan.Uninstall():
+                return False
+
+        # Uninstall Navidrome
+        util.LogInfo("Uninstalling Navidrome")
+        if self.installer_navidrome.IsInstalled():
+            if not self.installer_navidrome.Uninstall():
+                return False
+
+        # Uninstall Audiobookshelf
+        util.LogInfo("Uninstalling Audiobookshelf")
+        if self.installer_audiobookshelf.IsInstalled():
+            if not self.installer_audiobookshelf.Uninstall():
+                return False
 
         # Uninstall Jenkins
         util.LogInfo("Uninstalling Jenkins")

@@ -1,5 +1,6 @@
 # Imports
 from installers.installer_aptget import *
+from installers.installer_audiobookshelf import *
 from installers.installer_azuracast import *
 from installers.installer_brave import *
 from installers.installer_certbot import *
@@ -8,9 +9,11 @@ from installers.installer_chrome import *
 from installers.installer_filebrowser import *
 from installers.installer_flatpak import *
 from installers.installer_jenkins import *
+from installers.installer_navidrome import *
 from installers.installer_nginx import *
 from installers.installer_onepassword import *
 from installers.installer_python import *
+from installers.installer_wekan import *
 from installers.installer_wine import *
 from installers.installer_winget import *
 from installers.installer_wordpress import *
