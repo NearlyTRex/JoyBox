@@ -137,6 +137,7 @@ class FileBrowser(installer.Installer):
         util.LogInfo("Stopping docker")
         self.connection.GetOptions().SetCurrentWorkingDirectory(self.app_dir)
         self.connection.RunChecked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "down", "-v"])
+        self.connection.GetOptions().SetCurrentWorkingDirectory(None)
 
         # Remove directory
         util.LogInfo("Removing directory")

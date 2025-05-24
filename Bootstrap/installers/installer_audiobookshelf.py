@@ -26,6 +26,9 @@ server {{
 
     location / {{
         proxy_pass http://localhost:{port_http};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-Proto https;
@@ -44,14 +47,11 @@ services:
     restart: always
     user: "${AUDIOBOOKSHELF_UID}:${AUDIOBOOKSHELF_GID}"
     ports:
-      - "${AUDIOBOOKSHELF_PORT_HTTP}:13378"
+      - "${AUDIOBOOKSHELF_PORT_HTTP}:80"
     volumes:
       - ${AUDIOBOOKSHELF_AUDIO_DIR}:/audiobooks:ro
       - ./config:/config
-    environment:
-      - AUDIOBOOKSHELF_USERNAME=${AUDIOBOOKSHELF_ADMIN_USER}
-      - AUDIOBOOKSHELF_PASSWORD=${AUDIOBOOKSHELF_ADMIN_PASS}
-      - AUDIOBOOKSHELF_BIND=:13378
+      - ./metadata:/metadata
 """
 
 # .env template
@@ -60,8 +60,6 @@ AUDIOBOOKSHELF_PORT_HTTP={port_http}
 AUDIOBOOKSHELF_UID={user_uid}
 AUDIOBOOKSHELF_GID={user_gid}
 AUDIOBOOKSHELF_AUDIO_DIR={audio_dir}
-AUDIOBOOKSHELF_ADMIN_USER={admin_user}
-AUDIOBOOKSHELF_ADMIN_PASS={admin_pass}
 """
 
 # Audiobookshelf Installer
@@ -84,9 +82,7 @@ class Audiobookshelf(installer.Installer):
             "port_http": self.config.GetValue("UserData.Audiobookshelf", "audiobookshelf_port_http"),
             "user_uid": self.config.GetValue("UserData.Audiobookshelf", "audiobookshelf_user_uid"),
             "user_gid": self.config.GetValue("UserData.Audiobookshelf", "audiobookshelf_user_gid"),
-            "audio_dir": self.config.GetValue("UserData.Audiobookshelf", "audiobookshelf_audio_dir"),
-            "admin_user": self.config.GetValue("UserData.Audiobookshelf", "audiobookshelf_admin_user"),
-            "admin_pass": self.config.GetValue("UserData.Audiobookshelf", "audiobookshelf_admin_pass")
+            "audio_dir": self.config.GetValue("UserData.Audiobookshelf", "audiobookshelf_audio_dir")
         }
 
     def IsInstalled(self):
@@ -99,6 +95,7 @@ class Audiobookshelf(installer.Installer):
         util.LogInfo("Creating directories")
         self.connection.MakeDirectory(self.app_dir)
         self.connection.MakeDirectory(f"{self.app_dir}/config")
+        self.connection.MakeDirectory(f"{self.app_dir}/metadata")
 
         # Write docker compose
         util.LogInfo("Writing docker compose")
@@ -133,6 +130,7 @@ class Audiobookshelf(installer.Installer):
         util.LogInfo("Stopping docker")
         self.connection.GetOptions().SetCurrentWorkingDirectory(self.app_dir)
         self.connection.RunChecked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "down", "-v"])
+        self.connection.GetOptions().SetCurrentWorkingDirectory(None)
 
         # Remove directory
         util.LogInfo("Removing directory")

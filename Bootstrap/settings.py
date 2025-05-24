@@ -98,9 +98,7 @@ ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_subdomain"] = "audio"
 ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_port_http"] = "8084"
 ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_user_uid"] = "1000"
 ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_user_gid"] = "1000"
-ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_music_dir"] = "/mnt/storage/Music/Audiobook"
-ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_admin_user"] = "admin"
-ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_admin_pass"] = ""
+ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_audio_dir"] = "/mnt/storage/Music/Audiobook"
 
 # UserData.Navidrome
 ini_defaults["UserData.Navidrome"] = {}
