@@ -167,6 +167,7 @@ remove_htpasswd() {
         echo "Removed htpasswd file."
     else
         echo "No htpasswd file found."
+    fi
 }
 
 configure_unattended_upgrades() {
@@ -239,11 +240,15 @@ configure_modsecurity() {
     echo "Configuring ModSecurity..."
 
     apt-get update
-    apt-get install -y libnginx-mod-http-modsecurity
+    apt-get install -y libnginx-mod-http-modsecurity curl git
 
-    echo "Creating ModSecurity directory and copying configuration..."
+    echo "Creating ModSecurity directory..."
     mkdir -p "$modsec_dir"
-    cp /etc/modsecurity/modsecurity.conf-recommended "$modsec_dir/modsecurity.conf"
+
+    echo "Downloading modsecurity.conf-recommended..."
+    curl -fsSL -o "$modsec_dir/modsecurity.conf" https://raw.githubusercontent.com/SpiderLabs/ModSecurity/v3/master/modsecurity.conf-recommended
+
+    echo "Enabling ModSecurity..."
     sed -i 's/SecRuleEngine DetectionOnly/SecRuleEngine On/' "$modsec_dir/modsecurity.conf"
 
     echo "Cloning Core Rule Set (CRS)..."
