@@ -49,6 +49,7 @@ for share_type in ["gdrive", "hetzner"]:
     else:
         ini_defaults["UserData.Share"][f"locker_{share_type}_remote_mount_path"] = "$HOME/LockerRemote"
         ini_defaults["UserData.Share"][f"locker_{share_type}_local_path"] = "$HOME/Locker"
+    ini_defaults["UserData.Share"][f"locker_{share_type}_passphrase"] = ""
 
 # UserData.Cockpit
 ini_defaults["UserData.Cockpit"] = {}

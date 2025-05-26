@@ -23,7 +23,7 @@ class LockerInfo:
         self.remote_mount_path = ini.GetIniValue("UserData.Share", f"locker_{self.locker_type.lower()}_remote_mount_path")
         self.remote_mount_flags = ini.GetIniValue("UserData.Share", f"locker_{self.locker_type.lower()}_remote_mount_flags").split(",")
         self.local_path = ini.GetIniValue("UserData.Share", f"locker_{self.locker_type.lower()}_local_path")
-        self.passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
+        self.passphrase = ini.GetIniValue("UserData.Share", f"locker_{self.locker_type.lower()}_passphrase")
 
     def get_remote_type(self):
         return self.remote_type
