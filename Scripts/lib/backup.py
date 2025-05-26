@@ -26,7 +26,7 @@ def ResolvePath(
 
     # Augment with gaming categories
     if game_supercategory:
-        resolved_path = system.JoinPaths(resolved_path, config.LockerType.GAMING, game_supercategory)
+        resolved_path = system.JoinPaths(resolved_path, config.LockerFolderType.GAMING, game_supercategory)
         if game_category:
             resolved_path = system.JoinPaths(resolved_path, game_category)
             if game_subcategory:

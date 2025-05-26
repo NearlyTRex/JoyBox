@@ -8,6 +8,7 @@ import system
 import environment
 import cryption
 import locker
+import lockerinfo
 from .hashing import BuildHashFiles
 
 ############################################################
@@ -16,7 +17,7 @@ from .hashing import BuildHashFiles
 def UploadGameFiles(
     game_info,
     game_root = None,
-    passphrase = None,
+    locker_type = None,
     source_type = None,
     verbose = False,
     pretend_run = False,
@@ -33,10 +34,16 @@ def UploadGameFiles(
     if not system.IsPathDirectory(game_root):
         return False
 
+    # Get locker info
+    locker_info = lockerinfo.LockerInfo(locker_type)
+    if not locker_info:
+        system.LogError("Locker %s not found" % locker_type)
+        return False
+
     # Encrypt all files
     success = cryption.EncryptFiles(
         src = game_root,
-        passphrase = passphrase,
+        passphrase = locker_info.get_passphrase(),
         delete_original = True,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -48,7 +55,7 @@ def UploadGameFiles(
     success = BuildHashFiles(
         game_info = game_info,
         game_root = game_root,
-        passphrase = passphrase,
+        locker_type = locker_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -59,13 +66,14 @@ def UploadGameFiles(
     success = locker.UploadPath(
         src = game_root,
         verbose = verbose,
+        locker_type = locker_type,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return success
 
 # Upload all game files
 def UploadAllGameFiles(
-    passphrase = None,
+    locker_type = None,
     source_type = None,
     verbose = False,
     pretend_run = False,
@@ -88,7 +96,7 @@ def UploadAllGameFiles(
                         exit_on_failure = exit_on_failure)
                     success = UploadGameFiles(
                         game_info = game_info,
-                        passphrase = passphrase,
+                        locker_type = locker_type,
                         source_type = source_type,
                         verbose = verbose,
                         pretend_run = pretend_run,

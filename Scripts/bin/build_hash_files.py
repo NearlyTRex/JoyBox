@@ -12,7 +12,6 @@ import system
 import environment
 import collection
 import gameinfo
-import ini
 import arguments
 import setup
 
@@ -33,9 +32,9 @@ parser.add_enum_argument(
     default = config.GenerationModeType.STANDARD,
     description = "Generation mode")
 parser.add_enum_argument(
-    args = ("-t", "--passphrase_type"),
-    arg_type = config.PassphraseType,
-    description = "Passphrase type")
+    args = ("-t", "--locker_type"),
+    arg_type = config.LockerType,
+    description = "Locker type")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -44,13 +43,6 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get passphrase
-    passphrase = None
-    if args.passphrase_type == config.PassphraseType.GENERAL:
-        passphrase = ini.GetIniValue("UserData.Protection", "general_passphrase")
-    elif args.passphrase_type == config.PassphraseType.LOCKER:
-        passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
 
     # Manually specify all parameters
     if args.generation_mode == config.GenerationModeType.CUSTOM:
@@ -69,7 +61,7 @@ def main():
         success = collection.BuildHashFiles(
             game_info = game_info,
             game_root = parser.get_input_path(),
-            passphrase = passphrase,
+            locker_type = args.locker_type,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
@@ -104,7 +96,7 @@ def main():
                         success = collection.BuildHashFiles(
                             game_info = game_info,
                             game_root = game_root,
-                            passphrase = passphrase,
+                            locker_type = args.locker_type,
                             source_type = args.source_type,
                             verbose = args.verbose,
                             pretend_run = args.pretend_run,

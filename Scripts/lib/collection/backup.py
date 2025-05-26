@@ -48,7 +48,7 @@ def ShouldBackupStoreGameFiles(
 # Backup store game files
 def BackupStoreGameFiles(
     game_info,
-    passphrase,
+    locker_type,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -81,7 +81,7 @@ def BackupStoreGameFiles(
     success = UploadGameFiles(
         game_info = game_info,
         game_root = tmp_dir_result,
-        passphrase = passphrase,
+        locker_type = locker_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -111,7 +111,7 @@ def ShouldBackupLocalGameFiles(
 # Backup local game files
 def BackupLocalGameFiles(
     game_info,
-    passphrase,
+    locker_type,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -141,28 +141,28 @@ def ShouldBackupGameFiles(
 # Backup game files
 def BackupGameFiles(
     game_info,
-    passphrase,
+    locker_type,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     if stores.IsStorePlatform(game_info.get_platform()):
         return BackupStoreGameFiles(
             game_info = game_info,
-            passphrase = passphrase,
+            locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
         return BackupLocalGameFiles(
             game_info = game_info,
-            passphrase = passphrase,
+            locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
 # Backup all game files
 def BackupAllGameFiles(
-    passphrase,
+    locker_type,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -184,7 +184,7 @@ def BackupAllGameFiles(
                         exit_on_failure = exit_on_failure)
                     success = BackupGameFiles(
                         game_info = game_info,
-                        passphrase = passphrase,
+                        locker_type = locker_type,
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)

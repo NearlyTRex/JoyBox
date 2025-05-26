@@ -238,7 +238,7 @@ def GetLockerRootDir(source_type = None):
 def GetLockerDevelopmentRootDir(source_type = None):
     return system.JoinPaths(
         GetLockerRootDir(source_type),
-        config.LockerType.DEVELOPMENT)
+        config.LockerFolderType.DEVELOPMENT)
 
 # Get locker development archives root dir
 def GetLockerDevelopmentArchivesRootDir(source_type = None):
@@ -254,7 +254,7 @@ def GetLockerDevelopmentArchivesRootDir(source_type = None):
 def GetLockerGamingRootDir(source_type = None):
     return system.JoinPaths(
         GetLockerRootDir(source_type),
-        config.LockerType.GAMING)
+        config.LockerFolderType.GAMING)
 
 # Get locker gaming roms root dir
 def GetLockerGamingRomsRootDir(source_type = None):
@@ -381,7 +381,7 @@ def GetLockerGamingEmulatorSetupDir(emu_name, source_type = None):
 def GetLockerMusicRootDir(source_type = None):
     return system.JoinPaths(
         GetLockerRootDir(source_type),
-        config.LockerType.MUSIC)
+        config.LockerFolderType.MUSIC)
 
 ###########################################################
 # Locker - Photos
@@ -391,7 +391,7 @@ def GetLockerMusicRootDir(source_type = None):
 def GetLockerPhotosRootDir(source_type = None):
     return system.JoinPaths(
         GetLockerRootDir(source_type),
-        config.LockerType.PHOTOS)
+        config.LockerFolderType.PHOTOS)
 
 ###########################################################
 # Locker - Programs
@@ -401,7 +401,7 @@ def GetLockerPhotosRootDir(source_type = None):
 def GetLockerProgramsRootDir(source_type = None):
     return system.JoinPaths(
         GetLockerRootDir(source_type),
-        config.LockerType.PROGRAMS)
+        config.LockerFolderType.PROGRAMS)
 
 # Get locker programs tools root dir
 def GetLockerProgramsToolsRootDir(source_type = None):
@@ -554,7 +554,7 @@ def GetCacheRootDir():
 def GetCacheGamingRootDir():
     return system.JoinPaths(
         GetCacheRootDir(),
-        config.LockerType.GAMING)
+        config.LockerFolderType.GAMING)
 
 # Get cache gaming roms root dir
 def GetCacheGamingRomsRootDir():

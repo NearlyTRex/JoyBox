@@ -7,6 +7,7 @@ import config
 import system
 import environment
 import hashing
+import lockerinfo
 
 ###########################################################
 
@@ -14,7 +15,7 @@ import hashing
 def BuildHashFiles(
     game_info,
     game_root = None,
-    passphrase = None,
+    locker_type = None,
     source_type = None,
     verbose = False,
     pretend_run = False,
@@ -35,12 +36,18 @@ def BuildHashFiles(
     hash_file = environment.GetHashesMetadataFile(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
     hash_offset = system.JoinPaths(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
 
+    # Get locker info
+    locker_info = lockerinfo.LockerInfo(locker_type)
+    if not locker_info:
+        system.LogError("Locker %s not found" % locker_type)
+        return False
+
     # Hash files
     success = hashing.HashFiles(
         src = game_root,
         offset = hash_offset,
         output_file = hash_file,
-        passphrase = passphrase,
+        passphrase = locker_info.get_passphrase(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -48,7 +55,7 @@ def BuildHashFiles(
 
 # Build all hash files
 def BuildAllHashFiles(
-    passphrase = None,
+    locker_type = None,
     source_type = None,
     verbose = False,
     pretend_run = False,
@@ -71,7 +78,7 @@ def BuildAllHashFiles(
                         exit_on_failure = exit_on_failure)
                     success = BuildHashFiles(
                         game_info = game_info,
-                        passphrase = passphrase,
+                        locker_type = locker_type,
                         source_type = source_type,
                         verbose = verbose,
                         pretend_run = pretend_run,

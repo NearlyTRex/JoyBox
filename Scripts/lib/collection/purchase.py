@@ -204,7 +204,7 @@ def UpdateGameStorePurchases(
     game_supercategory,
     game_category,
     game_subcategory,
-    passphrase = None,
+    locker_type = None,
     source_type = None,
     keys = [],
     force = False,
@@ -294,7 +294,7 @@ def UpdateGameStorePurchases(
             game_subcategory = game_subcategory,
             game_name = game_name,
             game_root = game_root,
-            passphrase = passphrase,
+            locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -327,7 +327,7 @@ def BuildGameStorePurchases(
     game_supercategory,
     game_category,
     game_subcategory,
-    passphrase = None,
+    locker_type = None,
     source_type = None,
     keys = [],
     force = False,
@@ -355,7 +355,7 @@ def BuildGameStorePurchases(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
-        passphrase = passphrase,
+        locker_type = locker_type,
         source_type = source_type,
         keys = keys,
         force = force,
@@ -366,7 +366,7 @@ def BuildGameStorePurchases(
 
 # Build all game store purchases
 def BuildAllGameStorePurchases(
-    passphrase = None,
+    locker_type = None,
     source_type = None,
     keys = [],
     force = False,
@@ -380,7 +380,7 @@ def BuildAllGameStorePurchases(
                     game_supercategory = game_supercategory,
                     game_category = game_category,
                     game_subcategory = game_subcategory,
-                    passphrase = passphrase,
+                    locker_type = locker_type,
                     source_type = source_type,
                     keys = keys,
                     force = force,

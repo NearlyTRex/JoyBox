@@ -11,7 +11,7 @@ import config
 import environment
 import system
 import sync
-import ini
+import lockerinfo
 import arguments
 import setup
 
@@ -22,6 +22,10 @@ parser.add_enum_argument(
     arg_type = config.RemoteActionType,
     default = config.RemoteActionType.INIT,
     description = "Remote action type")
+parser.add_enum_argument(
+    args = ("-t", "--locker_type"),
+    arg_type = config.LockerType,
+    description = "Locker type")
 parser.add_string_argument(args = ("--excludes"), default = ",".join(config.excluded_sync_paths), description = "Excludes (comma delimited)")
 parser.add_string_argument(args = ("--diff_combined_path"), default = "diff_combined.txt", description = "Diff path (combined)")
 parser.add_string_argument(args = ("--diff_intersected_path"), default = "diff_intersected.txt", description = "Diff path (intersection)")
@@ -40,15 +44,20 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get locker info
+    locker_info = lockerinfo.LockerInfo(args.locker_type)
+    if not locker_info:
+        system.LogError("Invalid locker", quit_program = True)
+
     # Sync options
-    remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
-    remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
-    remote_path = ini.GetIniValue("UserData.Share", "locker_remote_path")
-    remote_token = ini.GetIniValue("UserData.Share", "locker_remote_token")
-    remote_config = ini.GetIniValue("UserData.Share", "locker_remote_config")
-    local_path = ini.GetIniPathValue("UserData.Share", "locker_local_path")
-    mount_path = ini.GetIniPathValue("UserData.Share", "locker_remote_mount_path")
-    mount_flags = ini.GetIniValue("UserData.Share", "locker_remote_mount_flags").split(",")
+    remote_type = locker_info.get_remote_type()
+    remote_name = locker_info.get_remote_name()
+    remote_path = locker_info.get_remote_path()
+    remote_token = locker_info.get_remote_token()
+    remote_config = locker_info.get_remote_config()
+    local_path = locker_info.get_local_path()
+    mount_path = locker_info.get_remote_mount_path()
+    mount_flags = locker_info.get_remote_mount_flags()
 
     # Init sync
     if args.action == config.RemoteActionType.INIT:

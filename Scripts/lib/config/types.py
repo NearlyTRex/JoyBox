@@ -123,6 +123,11 @@ class EnumType(enum.Enum):
 
 # Locker types
 class LockerType(EnumType):
+    HETZNER                 = ("Hetzner")
+    GDRIVE                  = ("Gdrive")
+
+# Locker folder types
+class LockerFolderType(EnumType):
     ARTWORK                 = ("Artwork")
     BOOKS                   = ("Books")
     DEVELOPMENT             = ("Development")

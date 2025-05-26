@@ -10,6 +10,7 @@ import gameinfo
 import cryption
 import stores
 import jsondata
+import lockerinfo
 
 ############################################################
 
@@ -128,7 +129,7 @@ def UpdateGameJsonFile(
     game_subcategory,
     game_name,
     game_root,
-    passphrase = None,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -160,12 +161,15 @@ def UpdateGameJsonFile(
         json_data = json_file_data,
         json_platform = game_platform)
 
+    # Get locker info
+    locker_info = lockerinfo.LockerInfo(locker_type)
+
     # Get all files
     all_files = system.BuildFileList(game_root)
-    if isinstance(passphrase, str) and len(passphrase) > 0:
+    if locker_info:
         all_files = cryption.GetRealFilePaths(
             src = all_files,
-            passphrase = passphrase,
+            passphrase = locker_info.get_passphrase(),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -291,7 +295,7 @@ def BuildGameJsonFile(
     game_subcategory,
     game_name,
     game_root = None,
-    passphrase = None,
+    locker_type = None,
     source_type = None,
     verbose = False,
     pretend_run = False,
@@ -331,7 +335,7 @@ def BuildGameJsonFile(
         game_subcategory = game_subcategory,
         game_name = game_name,
         game_root = game_root,
-        passphrase = passphrase,
+        locker_type = locker_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -339,7 +343,7 @@ def BuildGameJsonFile(
 
 # Build all game json files
 def BuildAllGameJsonFiles(
-    passphrase = None,
+    locker_type = None,
     source_type = None,
     verbose = False,
     pretend_run = False,
@@ -359,7 +363,7 @@ def BuildAllGameJsonFiles(
                         game_category = game_category,
                         game_subcategory = game_subcategory,
                         game_name = game_name,
-                        passphrase = passphrase,
+                        locker_type = locker_type,
                         source_type = source_type,
                         verbose = verbose,
                         pretend_run = pretend_run,

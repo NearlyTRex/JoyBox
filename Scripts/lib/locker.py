@@ -9,7 +9,7 @@ import sync
 import system
 import environment
 import cryption
-import ini
+import lockerinfo
 
 # Check if path is local
 def IsLocalPath(path):
@@ -43,30 +43,34 @@ def ConvertToLocalPath(path):
         new_base_path = environment.GetLockerRootDir(config.SourceType.LOCAL))
 
 # Check if path exists
-def DoesRemotePathExist(path):
+def DoesRemotePathExist(path, locker_type = None):
 
-    # Get options
-    locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
-    locker_remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
+    # Get locker info
+    locker_info = lockerinfo.LockerInfo(locker_type)
+    if not locker_info:
+        system.LogError("Locker %s not found" % locker_type)
+        return False
 
     # Check if path exists
     success = sync.DoesPathExist(
-        remote_name = locker_remote_name,
-        remote_type = locker_remote_type,
+        remote_name = locker_info.get_remote_name(),
+        remote_type = locker_info.get_remote_type(),
         remote_path = ConvertToRemotePath(path))
     return success
 
 # Check if path contains files
-def DoesRemotePathContainFiles(path):
+def DoesRemotePathContainFiles(path, locker_type = None):
 
-    # Get options
-    locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
-    locker_remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
+    # Get locker info
+    locker_info = lockerinfo.LockerInfo(locker_type)
+    if not locker_info:
+        system.LogError("Locker %s not found" % locker_type)
+        return False
 
     # Check if path contains files
     success = sync.DoesPathContainFiles(
-        remote_name = locker_remote_name,
-        remote_type = locker_remote_type,
+        remote_name = locker_info.get_remote_name(),
+        remote_type = locker_info.get_remote_type(),
         remote_path = ConvertToRemotePath(path))
     return success
 
@@ -74,13 +78,16 @@ def DoesRemotePathContainFiles(path):
 def DownloadPath(
     src,
     dest = None,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get options
-    locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
-    locker_remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
+    # Get locker info
+    locker_info = lockerinfo.LockerInfo(locker_type)
+    if not locker_info:
+        system.LogError("Locker %s not found" % locker_type)
+        return (False, "")
 
     # Get paths
     remote_path = ConvertToRemotePath(src)
@@ -90,8 +97,8 @@ def DownloadPath(
 
     # Download files
     success = sync.DownloadFilesFromRemote(
-        remote_name = locker_remote_name,
-        remote_type = locker_remote_type,
+        remote_name = locker_info.get_remote_name(),
+        remote_type = locker_info.get_remote_type(),
         remote_path = remote_path,
         local_path = local_path,
         verbose = verbose,
@@ -107,18 +114,21 @@ def DownloadPath(
 def UploadPath(
     src,
     dest = None,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Check path
-    if not system.DoesPathExist(src):
+    if not system.DoesPathExist(src, locker_type):
         system.LogError("Path '%s' does not exist" % src)
         return False
 
-    # Get options
-    locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
-    locker_remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
+    # Get locker info
+    locker_info = lockerinfo.LockerInfo(locker_type)
+    if not locker_info:
+        system.LogError("Locker %s not found" % locker_type)
+        return False
 
     # Get paths
     local_path = src
@@ -131,8 +141,8 @@ def UploadPath(
 
     # Upload files
     success = sync.UploadFilesToRemote(
-        remote_name = locker_remote_name,
-        remote_type = locker_remote_type,
+        remote_name = locker_info.get_remote_name(),
+        remote_type = locker_info.get_remote_type(),
         remote_path = remote_path,
         local_path = local_path,
         verbose = verbose,
@@ -144,12 +154,16 @@ def UploadPath(
 def DownloadAndDecryptPath(
     src,
     dest = None,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get options
-    locker_passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
+    # Get locker info
+    locker_info = lockerinfo.LockerInfo(locker_type)
+    if not locker_info:
+        system.LogError("Locker %s not found" % locker_type)
+        return (False, "")
 
     # Download files
     success, result = DownloadPath(
@@ -164,7 +178,7 @@ def DownloadAndDecryptPath(
     # Decrypt files
     output_files = cryption.DecryptFiles(
         src = result,
-        passphrase = locker_passphrase,
+        passphrase = locker_info.get_passphrase(),
         delete_original = True,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -181,17 +195,21 @@ def DownloadAndDecryptPath(
 def UploadAndEncryptPath(
     src,
     dest = None,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get options
-    locker_passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
+    # Get locker info
+    locker_info = lockerinfo.LockerInfo(locker_type)
+    if not locker_info:
+        system.LogError("Locker %s not found" % locker_type)
+        return False
 
     # Encrypt files
     output_files = cryption.EncryptFiles(
         src = src,
-        passphrase = locker_passphrase,
+        passphrase = locker_info.get_passphrase(),
         delete_original = True,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -212,6 +230,7 @@ def UploadAndEncryptPath(
 def BackupFiles(
     src,
     dest,
+    locker_type = None,
     delete_afterwards = False,
     show_progress = False,
     skip_existing = False,
@@ -222,9 +241,11 @@ def BackupFiles(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get options
-    locker_remote_name = ini.GetIniValue("UserData.Share", "locker_remote_name")
-    locker_remote_type = ini.GetIniValue("UserData.Share", "locker_remote_type")
+    # Get locker info
+    locker_info = lockerinfo.LockerInfo(locker_type)
+    if not locker_info:
+        system.LogError("Locker %s not found" % locker_type)
+        return False
 
     # Transfer files
     success = system.SmartTransfer(
@@ -246,8 +267,8 @@ def BackupFiles(
 
         # Check if remote configured
         if sync.IsRemoteConfigured(
-            remote_name = locker_remote_name,
-            remote_type = locker_remote_type):
+            remote_name = locker_info.get_remote_name(),
+            remote_type = locker_info.get_remote_type()):
 
             # Upload encryped files
             if upload_encrypted:

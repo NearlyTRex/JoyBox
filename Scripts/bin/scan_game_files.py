@@ -12,12 +12,11 @@ import system
 import environment
 import collection
 import gameinfo
-import arguments
 import metadata
 import stores
 import manifest
+import arguments
 import setup
-import ini
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Scan roms files.")
@@ -27,9 +26,9 @@ parser.add_enum_argument(
     default = config.SourceType.REMOTE,
     description = "Source type")
 parser.add_enum_argument(
-    args = ("-t", "--passphrase_type"),
-    arg_type = config.PassphraseType,
-    description = "Passphrase type")
+    args = ("-t", "--locker_type"),
+    arg_type = config.LockerType,
+    description = "Locker type")
 parser.add_string_argument(args = ("-k", "--keys"), description = "Keys to use (comma delimited)")
 parser.add_boolean_argument(args = ("-m", "--load_manifest"), description = "Load manifest")
 parser.add_common_arguments()
@@ -40,13 +39,6 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
-
-    # Get passphrase
-    passphrase = None
-    if args.passphrase_type == config.PassphraseType.GENERAL:
-        passphrase = ini.GetIniValue("UserData.Protection", "general_passphrase")
-    elif args.passphrase_type == config.PassphraseType.LOCKER:
-        passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
 
     # Load manifest
     if args.load_manifest:
@@ -59,7 +51,7 @@ def main():
     # Build game store purchases
     system.LogInfo("Building store purchases ...")
     success = collection.BuildAllGameStorePurchases(
-        passphrase = passphrase,
+        locker_type = args.locker_type,
         source_type = args.source_type,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
@@ -70,7 +62,7 @@ def main():
     # Build game json files
     system.LogInfo("Building json files ...")
     success = collection.BuildAllGameJsonFiles(
-        passphrase = passphrase,
+        locker_type = args.locker_type,
         source_type = args.source_type,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
