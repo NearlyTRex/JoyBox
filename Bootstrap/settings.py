@@ -36,18 +36,19 @@ ini_defaults["UserData.Protection"]["locker_passphrase"] = ""
 
 # UserData.Share
 ini_defaults["UserData.Share"] = {}
-ini_defaults["UserData.Share"]["locker_remote_type"] = ""
-ini_defaults["UserData.Share"]["locker_remote_name"] = ""
-ini_defaults["UserData.Share"]["locker_remote_path"] = "/"
-ini_defaults["UserData.Share"]["locker_remote_token"] = ""
-ini_defaults["UserData.Share"]["locker_remote_config"] = ""
-ini_defaults["UserData.Share"]["locker_remote_mount_flags"] = "no_checksum,no_modtime"
-if util.IsWindowsPlatform():
-    ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "%USERPROFILE%\\LockerRemote"
-    ini_defaults["UserData.Share"]["locker_local_path"] = "%USERPROFILE%\\Locker"
-else:
-    ini_defaults["UserData.Share"]["locker_remote_mount_path"] = "$HOME/LockerRemote"
-    ini_defaults["UserData.Share"]["locker_local_path"] = "$HOME/Locker"
+for share_type in ["gdrive", "hetzner"]:
+    ini_defaults["UserData.Share"][f"locker_{share_type}_remote_type"] = ""
+    ini_defaults["UserData.Share"][f"locker_{share_type}_remote_name"] = ""
+    ini_defaults["UserData.Share"][f"locker_{share_type}_remote_path"] = "/"
+    ini_defaults["UserData.Share"][f"locker_{share_type}_remote_token"] = ""
+    ini_defaults["UserData.Share"][f"locker_{share_type}_remote_config"] = ""
+    ini_defaults["UserData.Share"][f"locker_{share_type}_remote_mount_flags"] = "no_checksum,no_modtime"
+    if util.IsWindowsPlatform():
+        ini_defaults["UserData.Share"][f"locker_{share_type}_remote_mount_path"] = "%USERPROFILE%\\LockerRemote"
+        ini_defaults["UserData.Share"][f"locker_{share_type}_local_path"] = "%USERPROFILE%\\Locker"
+    else:
+        ini_defaults["UserData.Share"][f"locker_{share_type}_remote_mount_path"] = "$HOME/LockerRemote"
+        ini_defaults["UserData.Share"][f"locker_{share_type}_local_path"] = "$HOME/Locker"
 
 # UserData.Cockpit
 ini_defaults["UserData.Cockpit"] = {}
