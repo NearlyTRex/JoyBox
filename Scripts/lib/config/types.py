@@ -148,6 +148,16 @@ class BackupType(EnumType):
     COPY                    = ("Copy")
     ARCHIVE                 = ("Archive")
 
+# Decompiler action type
+class DecompilerActionType(EnumType):
+    LAUNCH_PROGRAM          = ("LaunchProgram")
+    EXPORT_FUNCTIONS        = ("ExportFunctions")
+    EXPORT_STRINGS          = ("ExportStrings")
+    EXPORT_STRUCTS          = ("ExportStructs")
+    EXPORT_UNIONS           = ("ExportUnions")
+    EXPORT_TYPEDEFS         = ("ExportTypedefs")
+    EXPORT_ENUMS            = ("ExportEnums")
+
 # Github action type
 class GithubActionType(EnumType):
     ARCHIVE                 = ("Archive")

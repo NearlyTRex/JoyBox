@@ -10,6 +10,7 @@ import config
 import system
 import environment
 import programs
+import command
 
 # Function code template
 function_code_template = """
@@ -53,6 +54,8 @@ class ProjectOptions:
         self.program_name = program_name
         self.program_binary_file = program_binary_file
         self.export_dir = export_dir
+        if not self.program_name and self.program_binary_file:
+            self.program_name = os.path.basename(self.program_binary_file)
 
     def GetProjectName(self):
         return self.project_name
@@ -313,3 +316,66 @@ class DecompilerProject:
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure):
             return False
+
+    def ExportStrings(
+        self,
+        timeout = 60,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        pass
+
+    def ExportStructs(
+        self,
+        timeout = 60,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        pass
+
+    def ExportUnions(
+        self,
+        timeout = 60,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        pass
+
+    def ExportTypedefs(
+        self,
+        timeout = 60,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        pass
+
+    def ExportEnums(
+        self,
+        timeout = 60,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        pass
+
+def LaunchProgram(verbose = False, pretend_run = False, exit_on_failure = False):
+
+    # Get tool
+    ghidra_tool = None
+    if programs.IsToolInstalled("Ghidra"):
+        ghidra_tool = programs.GetToolProgram("Ghidra")
+    if not ghidra_tool:
+        system.LogError("Ghidra was not found")
+        return False
+
+    # Get launch command
+    launch_cmd = [
+        ghidra_tool
+    ]
+
+    # Run launch command
+    code = command.RunReturncodeCommand(
+        cmd = launch_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return (code == 0)
