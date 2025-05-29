@@ -160,8 +160,10 @@ def FindVideos(
 # Download video
 def DownloadVideo(
     video_url,
+    audio_only = False,
     output_file = None,
     output_dir = None,
+    download_archive = None,
     cookie_source = None,
     sanitize_filenames = False,
     verbose = False,
@@ -180,30 +182,34 @@ def DownloadVideo(
     download_cmd = [
         youtube_tool,
         "--windows-filenames",
-        "--format-sort", "res,ext:mp4:m4a",
-        "--recode-video", "mp4"
+        "--format-sort", "res,ext:mp4:m4a"
     ]
-    if isinstance(cookie_source, str) and len(cookie_source) > 0:
-        if system.DoesPathExist(cookie_source):
-            download_cmd += ["--cookies", cookie_source]
-        else:
-            download_cmd += ["--cookies-from-browser", cookie_source]
+    if audio_only:
+        download_cmd += [
+            "--extract-audio",
+            "--audio-format", "mp3"
+        ]
+    else:
+        download_cmd += [
+            "--recode-video", "mp4"
+        ]
     if verbose:
         download_cmd += ["--progress"]
     if pretend_run:
         download_cmd += ["--simulate"]
     if system.IsPathValid(output_dir):
-        download_cmd += [
-            "-P", output_dir
-        ]
+        download_cmd += ["-P", output_dir]
     if system.IsPathValid(output_file):
-        download_cmd += [
-            "-o", output_file
-        ]
+        download_cmd += ["-o", output_file]
     else:
-        download_cmd += [
-            "-o", "%(title)s.%(ext)s"
-        ]
+        download_cmd += ["-o", "%(upload_date)s - %(title).200s.%(ext)s"]
+    if system.DoesPathExist(download_archive):
+        download_cmd += ["--download-archive", download_archive]
+    if isinstance(cookie_source, str) and len(cookie_source) > 0:
+        if system.DoesPathExist(cookie_source):
+            download_cmd += ["--cookies", cookie_source]
+        else:
+            download_cmd += ["--cookies-from-browser", cookie_source]
     download_cmd += [video_url]
 
     # Run download command
@@ -227,17 +233,16 @@ def DownloadVideo(
         elif system.IsPathDirectory(output_dir):
             sanitize_dir = output_dir
 
-        # Replace invalid path characters
-        for obj in system.GetDirectoryContents(sanitize_dir):
-            obj_path = system.JoinPaths(sanitize_dir, obj)
-            if system.IsPathFile(obj_path) and obj.endswith(".mp4"):
-                system.MoveFileOrDirectory(
-                    src = obj_path,
-                    dest = system.JoinPaths(sanitize_dir, system.ReplaceInvalidPathCharacters(obj)),
-                    skip_existing = True,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+        # Sanitize files in dir
+        if sanitize_dir:
+            success = system.SanitizeFilenames(
+                path = sanitize_dir,
+                extension = ".mp3" if audio_only else ".mp4",
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
 
     # Should be successful
     return True

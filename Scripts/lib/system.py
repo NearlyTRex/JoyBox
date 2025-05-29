@@ -785,6 +785,24 @@ def ReplaceInvalidPathCharacters(path):
     # Return new path
     return new_path
 
+# Sanitize filenames
+def SanitizeFilenames(path, extension = None, verbose = False, pretend_run = False, exit_on_failure = False):
+    for obj in GetDirectoryContents(path):
+        obj_path = JoinPaths(path, obj)
+        if IsPathFile(obj_path):
+            if extension and not obj.endswith(extension):
+                continue
+            success = MoveFileOrDirectory(
+                src = obj_path,
+                dest = JoinPaths(path, ReplaceInvalidPathCharacters(obj)),
+                skip_existing = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+    return True
+
 ###########################################################
 
 # Determine if file is correctly headered
