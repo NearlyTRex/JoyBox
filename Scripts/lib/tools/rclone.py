@@ -1,6 +1,7 @@
 # Imports
 import os, os.path
 import sys
+import json
 
 # Local imports
 import config
@@ -141,7 +142,7 @@ class RClone(toolbase.ToolBase):
         # Get hetzner options
         hetzner_remote_name = ini.GetIniValue("UserData.Share", "locker_hetzner_remote_name", throw_exception = False)
         hetzner_remote_type = ini.GetIniValue("UserData.Share", "locker_hetzner_remote_type", throw_exception = False)
-        hetzner_remote_config = json.load(ini.GetIniValue("UserData.Share", "locker_hetzner_remote_config"), throw_exception = False)
+        hetzner_remote_config = json.loads(ini.GetIniValue("UserData.Share", "locker_hetzner_remote_config", throw_exception = False))
         if not hetzner_remote_config:
             hetzner_remote_config = {}
         hetzner_remote_host = hetzner_remote_config.get("host")
