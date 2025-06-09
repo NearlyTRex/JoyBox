@@ -232,6 +232,19 @@ configure_rate_limit() {
     cat > /etc/nginx/snippets/rate-limit.conf <<EOF
 limit_req_zone \$binary_remote_addr zone=mylimit:10m rate=5r/s;
 EOF
+
+    if ! grep -q "include /etc/nginx/snippets/rate-limit.conf" /etc/nginx/nginx.conf; then
+        sed -i '/##[[:space:]]*# Basic Settings/,/##[[:space:]]*$/{
+            /##[[:space:]]*$/a\\n\t# Rate Limiting\n\tinclude /etc/nginx/snippets/rate-limit.conf;\n
+        }' /etc/nginx/nginx.conf
+
+        if ! grep -q "include /etc/nginx/snippets/rate-limit.conf" /etc/nginx/nginx.conf; then
+            sed -i '/default_type application\/octet-stream;/a\\n\t# Rate Limiting\n\tinclude /etc/nginx/snippets/rate-limit.conf;\n' /etc/nginx/nginx.conf
+        fi
+        echo "Rate limiting include added to nginx.conf"
+    else
+        echo "Rate limiting include already exists in nginx.conf"
+    fi
     echo "NGINX rate limiting configuration complete."
 }
 
@@ -246,14 +259,51 @@ configure_modsecurity() {
     mkdir -p "$modsec_dir"
 
     echo "Downloading modsecurity.conf-recommended..."
-    curl -fsSL -o "$modsec_dir/modsecurity.conf" https://raw.githubusercontent.com/SpiderLabs/ModSecurity/v3/master/modsecurity.conf-recommended
+    if [ ! -f "$modsec_dir/modsecurity.conf" ]; then
+        curl -fsSL -o "$modsec_dir/modsecurity.conf" https://raw.githubusercontent.com/SpiderLabs/ModSecurity/v3/master/modsecurity.conf-recommended
+        echo "Downloaded modsecurity.conf"
+    else
+        echo "modsecurity.conf already exists"
+    fi
 
     echo "Enabling ModSecurity..."
     sed -i 's/SecRuleEngine DetectionOnly/SecRuleEngine On/' "$modsec_dir/modsecurity.conf"
 
-    echo "Cloning Core Rule Set (CRS)..."
-    git clone --depth 1 https://github.com/coreruleset/coreruleset "$modsec_dir/crs"
-    cp "$modsec_dir/crs/crs-setup.conf.example" "$modsec_dir/crs/crs-setup.conf"
+    echo "Setting up Core Rule Set (CRS)..."
+    if [ ! -d "$modsec_dir/crs" ]; then
+        echo "Cloning Core Rule Set..."
+        git clone --depth 1 https://github.com/coreruleset/coreruleset "$modsec_dir/crs"
+        echo "CRS cloned successfully"
+    elif [ ! -d "$modsec_dir/crs/.git" ]; then
+        echo "CRS directory exists but is not a git repository. Removing and re-cloning..."
+        rm -rf "$modsec_dir/crs"
+        git clone --depth 1 https://github.com/coreruleset/coreruleset "$modsec_dir/crs"
+        echo "CRS re-cloned successfully"
+    else
+        echo "CRS directory already exists and appears to be a git repository"
+        echo "Updating existing CRS..."
+        cd "$modsec_dir/crs"
+        git pull origin v4.0/dev 2>/dev/null || git pull origin main 2>/dev/null || echo "Could not update CRS, using existing version"
+        cd - > /dev/null
+    fi
+
+    echo "Setting up CRS configuration..."
+    if [ ! -f "$modsec_dir/crs/crs-setup.conf" ]; then
+        if [ -f "$modsec_dir/crs/crs-setup.conf.example" ]; then
+            cp "$modsec_dir/crs/crs-setup.conf.example" "$modsec_dir/crs/crs-setup.conf"
+            echo "Created crs-setup.conf from example"
+        else
+            echo "Warning: crs-setup.conf.example not found, creating basic configuration"
+            cat > "$modsec_dir/crs/crs-setup.conf" <<EOF
+# Basic CRS setup configuration
+# Generated automatically by bootstrap script
+SecDefaultAction "phase:1,log,auditlog,deny,status:403"
+SecDefaultAction "phase:2,log,auditlog,deny,status:403"
+EOF
+        fi
+    else
+        echo "crs-setup.conf already exists"
+    fi
 
     echo "Creating main ModSecurity config include file..."
     cat > "$modsec_dir/main.conf" <<EOF
@@ -262,6 +312,15 @@ include $modsec_dir/crs/crs-setup.conf;
 include $modsec_dir/crs/rules/*.conf;
 EOF
 
+    echo "Verifying ModSecurity setup..."
+    if [ -f "$modsec_dir/main.conf" ] && [ -f "$modsec_dir/modsecurity.conf" ] && [ -d "$modsec_dir/crs/rules" ]; then
+        rule_count=$(find "$modsec_dir/crs/rules" -name "*.conf" | wc -l)
+        echo "ModSecurity configuration complete"
+        echo "Found $rule_count CRS rule files"
+    else
+        echo "Warning: ModSecurity setup may be incomplete"
+        echo "Please check the configuration manually"
+    fi
     echo "ModSecurity configuration complete."
 }
 
