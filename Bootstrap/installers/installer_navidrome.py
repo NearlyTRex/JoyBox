@@ -42,22 +42,21 @@ services:
     image: deluan/navidrome:latest
     container_name: navidrome
     restart: always
-    user: "${NAVIDROME_UID}:${NAVIDROME_GID}"
     ports:
       - "${NAVIDROME_PORT_HTTP}:4533"
     volumes:
       - ${NAVIDROME_MUSIC_DIR}:/music:ro
-      - ./data:/data
+      - config_data:/data
     environment:
       - ND_HTTP_PORT=4533
       - ND_BASE_URL=
+volumes:
+  config_data: {}
 """
 
 # .env template
 env_template = """
 NAVIDROME_PORT_HTTP={port_http}
-NAVIDROME_UID={user_uid}
-NAVIDROME_GID={user_gid}
 NAVIDROME_MUSIC_DIR={music_dir}
 """
 
@@ -79,8 +78,6 @@ class Navidrome(installer.Installer):
         }
         self.env_values = {
             "port_http": self.config.GetValue("UserData.Navidrome", "navidrome_port_http"),
-            "user_uid": self.config.GetValue("UserData.Navidrome", "navidrome_user_uid"),
-            "user_gid": self.config.GetValue("UserData.Navidrome", "navidrome_user_gid"),
             "music_dir": self.config.GetValue("UserData.Navidrome", "navidrome_music_dir")
         }
 
@@ -93,7 +90,6 @@ class Navidrome(installer.Installer):
         # Create directories
         util.LogInfo("Creating directories")
         self.connection.MakeDirectory(self.app_dir)
-        self.connection.MakeDirectory(f"{self.app_dir}/data")
 
         # Write docker compose
         util.LogInfo("Writing docker compose")

@@ -45,20 +45,20 @@ services:
     image: advplyr/audiobookshelf:latest
     container_name: audiobookshelf
     restart: always
-    user: "${AUDIOBOOKSHELF_UID}:${AUDIOBOOKSHELF_GID}"
     ports:
       - "${AUDIOBOOKSHELF_PORT_HTTP}:80"
     volumes:
       - ${AUDIOBOOKSHELF_AUDIO_DIR}:/audiobooks:ro
-      - ./config:/config
-      - ./metadata:/metadata
+      - config_data:/config
+      - metadata_data:/metadata
+volumes:
+  config_data: {}
+  metadata_data: {}
 """
 
 # .env template
 env_template = """
 AUDIOBOOKSHELF_PORT_HTTP={port_http}
-AUDIOBOOKSHELF_UID={user_uid}
-AUDIOBOOKSHELF_GID={user_gid}
 AUDIOBOOKSHELF_AUDIO_DIR={audio_dir}
 """
 
@@ -80,8 +80,6 @@ class Audiobookshelf(installer.Installer):
         }
         self.env_values = {
             "port_http": self.config.GetValue("UserData.Audiobookshelf", "audiobookshelf_port_http"),
-            "user_uid": self.config.GetValue("UserData.Audiobookshelf", "audiobookshelf_user_uid"),
-            "user_gid": self.config.GetValue("UserData.Audiobookshelf", "audiobookshelf_user_gid"),
             "audio_dir": self.config.GetValue("UserData.Audiobookshelf", "audiobookshelf_audio_dir")
         }
 
@@ -94,8 +92,6 @@ class Audiobookshelf(installer.Installer):
         # Create directories
         util.LogInfo("Creating directories")
         self.connection.MakeDirectory(self.app_dir)
-        self.connection.MakeDirectory(f"{self.app_dir}/config")
-        self.connection.MakeDirectory(f"{self.app_dir}/metadata")
 
         # Write docker compose
         util.LogInfo("Writing docker compose")

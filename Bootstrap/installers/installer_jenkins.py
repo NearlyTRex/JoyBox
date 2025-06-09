@@ -42,20 +42,19 @@ services:
     image: jenkins/jenkins:lts
     container_name: jenkins
     restart: always
-    user: "${JENKINS_UID}:${JENKINS_GID}"
     ports:
       - "${JENKINS_PORT_HTTP}:8080"
       - "${JENKINS_PORT_AGENT}:50000"
     volumes:
-      - ./jenkins_home:/var/jenkins_home
+      - jenkins_data:/var/jenkins_home
+volumes:
+  jenkins_data: {}
 """
 
 # .env template
 env_template = """
 JENKINS_PORT_HTTP={port_http}
 JENKINS_PORT_AGENT={port_agent}
-JENKINS_UID={user_uid}
-JENKINS_GID={user_gid}
 """
 
 class Jenkins(installer.Installer):
@@ -75,9 +74,7 @@ class Jenkins(installer.Installer):
         }
         self.env_values = {
             "port_http": self.config.GetValue("UserData.Jenkins", "jenkins_port_http"),
-            "port_agent": self.config.GetValue("UserData.Jenkins", "jenkins_port_agent"),
-            "user_uid": self.config.GetValue("UserData.Jenkins", "jenkins_user_uid"),
-            "user_gid": self.config.GetValue("UserData.Jenkins", "jenkins_user_gid")
+            "port_agent": self.config.GetValue("UserData.Jenkins", "jenkins_port_agent")
         }
 
     def IsInstalled(self):
@@ -89,7 +86,6 @@ class Jenkins(installer.Installer):
         # Create directories
         util.LogInfo("Creating directories")
         self.connection.MakeDirectory(self.app_dir)
-        self.connection.MakeDirectory(f"{self.app_dir}/jenkins_home")
 
         # Write docker compose
         util.LogInfo("Writing docker compose")

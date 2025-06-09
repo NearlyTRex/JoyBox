@@ -418,12 +418,16 @@ setup_storage_box() {
 
 setup_joybox_repo() {
     local username="$1"
-    local repo_dir="/home/$username/Repositories"
-    local repo_joybox_dir="$repo_dir/JoyBox"
+    local repo_dir="${2:-/mnt/repositories}"
+
+    if [ ! -d "$repo_dir" ]; then
+        echo "Creating repository directory at $repo_dir..."
+        mkdir -p "$repo_dir"
+        chown "$username":"$username" "$repo_dir"
+    fi
 
     echo "Setting up JoyBox repository..."
-    mkdir -p "$repo_dir"
-    chown "$username":"$username" "$repo_dir"
+    local repo_joybox_dir="$repo_dir/JoyBox"
     if [ ! -d "$repo_joybox_dir/.git" ]; then
         echo "Cloning into $repo_joybox_dir..."
         sudo -u "$username" git clone https://github.com/NearlyTRex/JoyBox "$repo_joybox_dir"
