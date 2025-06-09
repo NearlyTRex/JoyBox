@@ -80,24 +80,18 @@ ini_defaults["UserData.AzuraCast"]["azuracast_external_media_mount"] = "/var/azu
 ini_defaults["UserData.Audiobookshelf"] = {}
 ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_subdomain"] = "audio"
 ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_port_http"] = "8084"
-ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_user_uid"] = "1000"
-ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_user_gid"] = "1000"
 ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_audio_dir"] = "/mnt/storage/Music/Audiobook"
 
 # UserData.Navidrome
 ini_defaults["UserData.Navidrome"] = {}
 ini_defaults["UserData.Navidrome"]["navidrome_subdomain"] = "music"
 ini_defaults["UserData.Navidrome"]["navidrome_port_http"] = "8085"
-ini_defaults["UserData.Navidrome"]["navidrome_user_uid"] = "1000"
-ini_defaults["UserData.Navidrome"]["navidrome_user_gid"] = "1000"
 ini_defaults["UserData.Navidrome"]["navidrome_music_dir"] = "/mnt/storage/Music"
 
 # UserData.FileBrowser
 ini_defaults["UserData.FileBrowser"] = {}
 ini_defaults["UserData.FileBrowser"]["filebrowser_subdomain"] = "cloud"
 ini_defaults["UserData.FileBrowser"]["filebrowser_port_http"] = "8082"
-ini_defaults["UserData.FileBrowser"]["filebrowser_user_uid"] = "1000"
-ini_defaults["UserData.FileBrowser"]["filebrowser_user_gid"] = "1000"
 ini_defaults["UserData.FileBrowser"]["filebrowser_user_root"] = ""
 ini_defaults["UserData.FileBrowser"]["filebrowser_admin_user"] = "admin"
 ini_defaults["UserData.FileBrowser"]["filebrowser_admin_pass"] = ""
@@ -107,8 +101,6 @@ ini_defaults["UserData.Jenkins"] = {}
 ini_defaults["UserData.Jenkins"]["jenkins_subdomain"] = "tools"
 ini_defaults["UserData.Jenkins"]["jenkins_port_http"] = "8083"
 ini_defaults["UserData.Jenkins"]["jenkins_port_agent"] = "50000"
-ini_defaults["UserData.Jenkins"]["jenkins_user_uid"] = "1000"
-ini_defaults["UserData.Jenkins"]["jenkins_user_gid"] = "1000"
 
 # UserData.Kanboard
 ini_defaults["UserData.Kanboard"] = {}
