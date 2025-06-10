@@ -48,4 +48,4 @@ fi
 check_user_exists "$USERNAME"
 
 # Setup JoyBox
-clone_joybox_repo "$USERNAME"
+setup_joybox_repo "$USERNAME"
