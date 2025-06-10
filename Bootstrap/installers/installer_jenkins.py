@@ -46,15 +46,14 @@ services:
       - "${JENKINS_PORT_HTTP}:8080"
       - "${JENKINS_PORT_AGENT}:50000"
     volumes:
-      - jenkins_data:/var/jenkins_home
-volumes:
-  jenkins_data: {}
+      - ${JENKINS_HOME_DIR}:/var/jenkins_home
 """
 
 # .env template
 env_template = """
 JENKINS_PORT_HTTP={port_http}
 JENKINS_PORT_AGENT={port_agent}
+JENKINS_HOME_DIR={home_dir}
 """
 
 class Jenkins(installer.Installer):
@@ -74,7 +73,8 @@ class Jenkins(installer.Installer):
         }
         self.env_values = {
             "port_http": self.config.GetValue("UserData.Jenkins", "jenkins_port_http"),
-            "port_agent": self.config.GetValue("UserData.Jenkins", "jenkins_port_agent")
+            "port_agent": self.config.GetValue("UserData.Jenkins", "jenkins_port_agent"),
+            "home_dir": self.config.GetValue("UserData.Jenkins", "jenkins_home_dir")
         }
 
     def IsInstalled(self):
