@@ -65,17 +65,6 @@ ini_defaults["UserData.Wordpress"]["wordpress_db_pass"] = ""
 ini_defaults["UserData.Wordpress"]["wordpress_db_name"] = "wpdatabase"
 ini_defaults["UserData.Wordpress"]["wordpress_db_root_pass"] = ""
 
-# UserData.AzuraCast
-ini_defaults["UserData.AzuraCast"] = {}
-ini_defaults["UserData.AzuraCast"]["azuracast_subdomain"] = "radio"
-ini_defaults["UserData.AzuraCast"]["azuracast_port_http"] = "8081"
-ini_defaults["UserData.AzuraCast"]["azuracast_db_user"] = "azuracast"
-ini_defaults["UserData.AzuraCast"]["azuracast_db_pass"] = ""
-ini_defaults["UserData.AzuraCast"]["azuracast_db_name"] = "azuracast"
-ini_defaults["UserData.AzuraCast"]["azuracast_db_root_pass"] = ""
-ini_defaults["UserData.AzuraCast"]["azuracast_external_media_source"] = "/mnt/storage/Music"
-ini_defaults["UserData.AzuraCast"]["azuracast_external_media_mount"] = "/var/azuracast/storage/external"
-
 # UserData.Audiobookshelf
 ini_defaults["UserData.Audiobookshelf"] = {}
 ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_subdomain"] = "audio"
@@ -101,6 +90,7 @@ ini_defaults["UserData.Jenkins"] = {}
 ini_defaults["UserData.Jenkins"]["jenkins_subdomain"] = "tools"
 ini_defaults["UserData.Jenkins"]["jenkins_port_http"] = "8083"
 ini_defaults["UserData.Jenkins"]["jenkins_port_agent"] = "50000"
+ini_defaults["UserData.Jenkins"]["jenkins_home_dir"] = "/mnt/repositories"
 
 # UserData.Kanboard
 ini_defaults["UserData.Kanboard"] = {}

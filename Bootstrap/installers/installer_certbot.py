@@ -59,7 +59,6 @@ class Certbot(installer.Installer):
         self.subdomains = [
             self.config.GetValue("UserData.Cockpit", "cockpit_subdomain"),
             self.config.GetValue("UserData.Wordpress", "wordpress_subdomain"),
-            self.config.GetValue("UserData.AzuraCast", "azuracast_subdomain"),
             self.config.GetValue("UserData.FileBrowser", "filebrowser_subdomain"),
             self.config.GetValue("UserData.Jenkins", "jenkins_subdomain"),
             self.config.GetValue("UserData.Audiobookshelf", "audiobookshelf_subdomain"),
