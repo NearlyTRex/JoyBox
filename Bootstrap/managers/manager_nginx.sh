@@ -115,25 +115,26 @@ case "$1" in
     link_stream_conf)
         check_directory_traversal "$2"
 
-        local_path="$NGINX_STREAMS_AVAILABLE/$2"
-        if [ ! -e "$local_path" ]; then
+        stream_path="$NGINX_STREAMS_AVAILABLE/$2"
+        if [ ! -e "$stream_path" ]; then
             echo "Error: Stream configuration file '$2' does not exist in $NGINX_STREAMS_AVAILABLE."
             exit 1
         fi
 
         mkdir -p "$NGINX_STREAMS_ENABLED"
-        ln -sf "$local_path" "$NGINX_STREAMS_ENABLED/$2"
+
+        ln -sf "$stream_path" "$NGINX_STREAMS_ENABLED/$2"
         echo "Stream configuration file linked from streams-available to streams-enabled."
         ;;
 
     remove_stream_conf)
         check_directory_traversal "$2"
 
-        local_path="$NGINX_STREAMS_ENABLED/$2"
-        [ -e "$local_path" ] && rm -f "$local_path"
+        enabled_path="$NGINX_STREAMS_ENABLED/$2"
+        [ -e "$enabled_path" ] && rm -f "$enabled_path"
 
-        local_path="$NGINX_STREAMS_AVAILABLE/$2"
-        [ -e "$local_path" ] && rm -f "$local_path"
+        available_path="$NGINX_STREAMS_AVAILABLE/$2"
+        [ -e "$available_path" ] && rm -f "$available_path"
 
         echo "Stream configuration files removed from streams-available and streams-enabled."
         ;;
@@ -144,15 +145,15 @@ case "$1" in
             exit 1
         fi
 
-        local port="$2"
-        check_port_number "$port"
+        port_number="$2"
+        check_port_number "$port_number"
 
-        echo "Opening firewall port $port..."
+        echo "Opening firewall port $port_number..."
         if command -v ufw >/dev/null && ufw status | grep -q "Status: active"; then
-            if ufw allow "$port"; then
-                echo "Port $port opened successfully."
+            if ufw allow "$port_number"; then
+                echo "Port $port_number opened successfully."
             else
-                echo "Error: Failed to open port $port."
+                echo "Error: Failed to open port $port_number."
                 exit 1
             fi
         else
@@ -166,15 +167,15 @@ case "$1" in
             exit 1
         fi
 
-        local port="$2"
-        check_port_number "$port"
+        port_number="$2"
+        check_port_number "$port_number"
 
-        echo "Closing firewall port $port..."
+        echo "Closing firewall port $port_number..."
         if command -v ufw >/dev/null && ufw status | grep -q "Status: active"; then
-            if ufw delete allow "$port"; then
-                echo "Port $port closed successfully."
+            if ufw delete allow "$port_number"; then
+                echo "Port $port_number closed successfully."
             else
-                echo "Warning: Failed to close port $port. Rule may not exist."
+                echo "Warning: Failed to close port $port_number. Rule may not exist."
             fi
         else
             echo "UFW is not active or not installed. Skipping firewall configuration."
