@@ -21,3 +21,4 @@ configure_fail2ban
 configure_security_headers
 configure_rate_limit
 configure_modsecurity
+configure_nginx_stream_module

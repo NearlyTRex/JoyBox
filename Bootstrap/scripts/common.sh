@@ -324,6 +324,43 @@ EOF
     echo "ModSecurity configuration complete."
 }
 
+configure_nginx_stream_module() {
+    echo "Configuring NGINX stream module..."
+
+    if nginx -V 2>&1 | grep -q "with-stream"; then
+        echo "NGINX stream module already enabled"
+    else
+        echo "Installing NGINX stream module..."
+        apt-get update
+        apt-get install -y libnginx-mod-stream
+    fi
+
+    echo "Creating stream configuration directories..."
+    mkdir -p /etc/nginx/streams-available
+    mkdir -p /etc/nginx/streams-enabled
+
+    echo "Updating nginx.conf to include stream configuration..."
+    if ! grep -q "stream {" /etc/nginx/nginx.conf; then
+        cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+        sed -i '/^http {/i\\n# Stream module configuration\nstream {\n\tinclude /etc/nginx/streams-enabled/*;\n}' /etc/nginx/nginx.conf
+        echo "Stream block added to nginx.conf"
+    else
+        echo "Stream block already exists in nginx.conf"
+    fi
+
+    if nginx -t; then
+        echo "NGINX stream module configuration complete"
+        systemctl reload nginx
+    else
+        echo "Error: NGINX configuration test failed"
+        if [ -f /etc/nginx/nginx.conf.backup ]; then
+            mv /etc/nginx/nginx.conf.backup /etc/nginx/nginx.conf
+            echo "Restored nginx.conf from backup"
+        fi
+        exit 1
+    fi
+}
+
 configure_docker_group() {
     local username="$1"
     echo "Configuring Docker group access for $username..."

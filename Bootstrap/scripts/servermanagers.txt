@@ -1,3 +1,4 @@
 manager_certbot.sh
 manager_cockpit.sh
+manager_ghidra.sh
 manager_nginx.sh
