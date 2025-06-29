@@ -104,13 +104,14 @@ setup_sudoers() {
 
         local aliases=()
         for script in "${MANAGERS[@]}"; do
-            local name="${script%.sh}"
+            local name="${script#manager_}"
+            local name="${name%.sh}"
             local alias_name="MANAGER_${name^^}"
             echo "Cmnd_Alias $alias_name = /usr/local/bin/$script"
             aliases+=("$alias_name")
         done
 
-        echo "$username ALL=(ALL) NOPASSWD: APT_MANAGE, ${aliases[*]}"
+        (IFS=', '; echo "$username ALL=(ALL) NOPASSWD: APT_MANAGE, ${aliases[*]}")
     } > "$temp_file"
 
     if visudo -c -f "$temp_file"; then
