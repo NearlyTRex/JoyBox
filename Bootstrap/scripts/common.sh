@@ -327,21 +327,30 @@ EOF
 configure_nginx_stream_module() {
     echo "Configuring NGINX stream module..."
 
-    if nginx -V 2>&1 | grep -q "with-stream"; then
-        echo "NGINX stream module already enabled"
-    else
+    if ! dpkg -l | grep -q libnginx-mod-stream; then
         echo "Installing NGINX stream module..."
         apt-get update
         apt-get install -y libnginx-mod-stream
+    else
+        echo "NGINX stream module package already installed"
     fi
 
     echo "Creating stream configuration directories..."
     mkdir -p /etc/nginx/streams-available
     mkdir -p /etc/nginx/streams-enabled
 
+    echo "Ensuring stream module is loaded..."
+    if ! grep -q "load_module.*ngx_stream_module" /etc/nginx/nginx.conf; then
+        cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+        sed -i '1i load_module modules/ngx_stream_module.so;' /etc/nginx/nginx.conf
+        echo "Added stream module load directive"
+    else
+        echo "Stream module load directive already exists"
+    fi
+
     echo "Updating nginx.conf to include stream configuration..."
     if ! grep -q "stream {" /etc/nginx/nginx.conf; then
-        cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+        [ ! -f /etc/nginx/nginx.conf.backup ] && cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
         sed -i '/^http {/i\\n# Stream module configuration\nstream {\n\tinclude /etc/nginx/streams-enabled/*;\n}' /etc/nginx/nginx.conf
         echo "Stream block added to nginx.conf"
     else
