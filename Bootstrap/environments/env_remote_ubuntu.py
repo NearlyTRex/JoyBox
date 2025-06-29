@@ -52,7 +52,6 @@ class RemoteUbuntu(env.Environment):
         self.installer_certbot = installers.Certbot(**self.installer_options)
         self.installer_cockpit = installers.Cockpit(**self.installer_options)
         self.installer_wordpress = installers.Wordpress(**self.installer_options)
-        self.installer_azuracast = installers.AzuraCast(**self.installer_options)
         self.installer_filebrowser = installers.FileBrowser(**self.installer_options)
         self.installer_jenkins = installers.Jenkins(**self.installer_options)
         self.installer_navidrome = installers.Navidrome(**self.installer_options)
@@ -98,12 +97,6 @@ class RemoteUbuntu(env.Environment):
         util.LogInfo("Installing Wordpress")
         if not self.installer_wordpress.IsInstalled():
             if not self.installer_wordpress.Install():
-                return False
-
-        # Install AzuraCast
-        util.LogInfo("Installing AzuraCast")
-        if not self.installer_azuracast.IsInstalled():
-            if not self.installer_azuracast.Install():
                 return False
 
         # Install Audiobookshelf
@@ -167,12 +160,6 @@ class RemoteUbuntu(env.Environment):
         util.LogInfo("Uninstalling Audiobookshelf")
         if self.installer_audiobookshelf.IsInstalled():
             if not self.installer_audiobookshelf.Uninstall():
-                return False
-
-        # Uninstall AzuraCast
-        util.LogInfo("Uninstalling AzuraCast")
-        if self.installer_azuracast.IsInstalled():
-            if not self.installer_azuracast.Uninstall():
                 return False
 
         # Uninstall Wordpress
