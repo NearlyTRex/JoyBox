@@ -4,7 +4,7 @@ set -euo pipefail
 
 print_usage() {
     echo "Usage:"
-    echo "  $0 add_user <container_name> <username>"
+    echo "  $0 add_user <container_name> <username> [password]"
     echo "  $0 remove_user <container_name> <username>"
     echo "  $0 list_users <container_name>"
     echo "  $0 reset_password <container_name> <username>"
@@ -44,23 +44,34 @@ fi
 
 case "$1" in
     add_user)
-        if [ $# -ne 3 ]; then
-            echo "Usage: $0 add_user <container_name> <username>"
+        if [ $# -lt 3 ] || [ $# -gt 4 ]; then
+            echo "Usage: $0 add_user <container_name> <username> [password]"
             exit 1
         fi
 
         local container_name="$2"
         local username="$3"
+        local password="${4:-}"
 
         check_container_exists "$container_name"
         check_container_running "$container_name"
 
         echo "Adding Ghidra user '$username' to container '$container_name'..."
-        if docker exec "$container_name" /ghidra/server/svrAdmin -add "$username"; then
-            echo "User '$username' added successfully."
+
+        if [ -n "$password" ]; then
+            if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && echo '$password' | ./svrAdmin -add '$username'"; then
+                echo "User '$username' added successfully."
+            else
+                echo "Error: Failed to add user '$username'. User may already exist or password was rejected."
+                exit 1
+            fi
         else
-            echo "Error: Failed to add user '$username'. User may already exist."
-            exit 1
+            if docker exec -it "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -add '$username'"; then
+                echo "User '$username' added successfully."
+            else
+                echo "Error: Failed to add user '$username'. User may already exist."
+                exit 1
+            fi
         fi
         ;;
 
@@ -77,7 +88,7 @@ case "$1" in
         check_container_running "$container_name"
 
         echo "Removing Ghidra user '$username' from container '$container_name'..."
-        if docker exec "$container_name" /ghidra/server/svrAdmin -remove "$username"; then
+        if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -remove '$username'"; then
             echo "User '$username' removed successfully."
         else
             echo "Error: Failed to remove user '$username'. User may not exist."
@@ -97,7 +108,7 @@ case "$1" in
         check_container_running "$container_name"
 
         echo "Ghidra users in container '$container_name':"
-        docker exec "$container_name" /ghidra/server/svrAdmin -list || echo "Error: Failed to list users."
+        docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -list" || echo "Error: Failed to list users."
         ;;
 
     reset_password)
@@ -113,7 +124,7 @@ case "$1" in
         check_container_running "$container_name"
 
         echo "Resetting password for Ghidra user '$username' in container '$container_name'..."
-        if docker exec "$container_name" /ghidra/server/svrAdmin -reset "$username"; then
+        if docker exec -it "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -reset '$username'"; then
             echo "Password reset for user '$username' completed successfully."
         else
             echo "Error: Failed to reset password for user '$username'."
@@ -134,7 +145,7 @@ case "$1" in
         check_container_running "$container_name"
 
         echo "Creating Ghidra repository '$repo_name' in container '$container_name'..."
-        if docker exec "$container_name" /ghidra/server/svrAdmin -create "$repo_name"; then
+        if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -create '$repo_name'"; then
             echo "Repository '$repo_name' created successfully."
         else
             echo "Error: Failed to create repository '$repo_name'. Repository may already exist."
@@ -156,7 +167,7 @@ case "$1" in
 
         echo "Deleting Ghidra repository '$repo_name' from container '$container_name'..."
         echo "WARNING: This will permanently delete all data in the repository!"
-        if docker exec "$container_name" /ghidra/server/svrAdmin -delete "$repo_name"; then
+        if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -delete '$repo_name'"; then
             echo "Repository '$repo_name' deleted successfully."
         else
             echo "Error: Failed to delete repository '$repo_name'. Repository may not exist."
@@ -176,7 +187,7 @@ case "$1" in
         check_container_running "$container_name"
 
         echo "Ghidra repositories in container '$container_name':"
-        docker exec "$container_name" /ghidra/server/svrAdmin -list-repos || echo "Error: Failed to list repositories."
+        docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -list-repos" || echo "Error: Failed to list repositories."
         ;;
 
     *)
