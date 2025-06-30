@@ -38,6 +38,7 @@ class Installer:
         self.nginx_manager_tool = "/usr/local/bin/manager_nginx.sh"
         self.cert_manager_tool = "/usr/local/bin/manager_certbot.sh"
         self.cockpit_manager_tool = "/usr/local/bin/manager_cockpit.sh"
+        self.ghidra_manager_tool = "/usr/local/bin/manager_ghidra.sh"
 
     def SetEnvironmentType(self, environment_type):
         self.config.SetValue("UserData.General", "environment_type", environment_type)

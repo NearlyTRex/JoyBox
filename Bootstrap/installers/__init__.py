@@ -5,6 +5,7 @@ from installers.installer_brave import *
 from installers.installer_certbot import *
 from installers.installer_cockpit import *
 from installers.installer_chrome import *
+from installers.installer_ghidra import *
 from installers.installer_filebrowser import *
 from installers.installer_flatpak import *
 from installers.installer_jenkins import *

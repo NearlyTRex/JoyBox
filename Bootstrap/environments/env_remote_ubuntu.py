@@ -56,6 +56,7 @@ class RemoteUbuntu(env.Environment):
         self.installer_jenkins = installers.Jenkins(**self.installer_options)
         self.installer_navidrome = installers.Navidrome(**self.installer_options)
         self.installer_kanboard = installers.Kanboard(**self.installer_options)
+        self.installer_ghidra = installers.Ghidra(**self.installer_options)
 
     def Setup(self):
 
@@ -128,9 +129,21 @@ class RemoteUbuntu(env.Environment):
         if not self.installer_kanboard.IsInstalled():
             if not self.installer_kanboard.Install():
                 return False
+
+        # Install Ghidra
+        util.LogInfo("Installing Ghidra")
+        if not self.installer_ghidra.IsInstalled():
+            if not self.installer_ghidra.Install():
+                return False
         return True
 
     def Teardown(self):
+
+        # Uninstall Ghidra
+        util.LogInfo("Uninstalling Ghidra")
+        if self.installer_ghidra.IsInstalled():
+            if not self.installer_ghidra.Uninstall():
+                return False
 
         # Uninstall Kanboard
         util.LogInfo("Uninstalling Kanboard")
