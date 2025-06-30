@@ -2,10 +2,12 @@
 apt-file
 certbot
 curl
+docker-buildx
 docker-compose
 docker.io
 flatpak
 git
+jq
 nginx
 nginx-common
 python3-certbot-nginx
