@@ -49,9 +49,9 @@ case "$1" in
             exit 1
         fi
 
-        local container_name="$2"
-        local username="$3"
-        local password="${4:-}"
+        container_name="$2"
+        username="$3"
+        password="${4:-}"
 
         check_container_exists "$container_name"
         check_container_running "$container_name"
@@ -81,8 +81,8 @@ case "$1" in
             exit 1
         fi
 
-        local container_name="$2"
-        local username="$3"
+        container_name="$2"
+        username="$3"
 
         check_container_exists "$container_name"
         check_container_running "$container_name"
@@ -102,7 +102,7 @@ case "$1" in
             exit 1
         fi
 
-        local container_name="$2"
+        container_name="$2"
 
         check_container_exists "$container_name"
         check_container_running "$container_name"
@@ -117,8 +117,8 @@ case "$1" in
             exit 1
         fi
 
-        local container_name="$2"
-        local username="$3"
+        container_name="$2"
+        username="$3"
 
         check_container_exists "$container_name"
         check_container_running "$container_name"
@@ -138,8 +138,8 @@ case "$1" in
             exit 1
         fi
 
-        local container_name="$2"
-        local repo_name="$3"
+        container_name="$2"
+        repo_name="$3"
 
         check_container_exists "$container_name"
         check_container_running "$container_name"
@@ -159,8 +159,8 @@ case "$1" in
             exit 1
         fi
 
-        local container_name="$2"
-        local repo_name="$3"
+        container_name="$2"
+        repo_name="$3"
 
         check_container_exists "$container_name"
         check_container_running "$container_name"
@@ -181,7 +181,7 @@ case "$1" in
             exit 1
         fi
 
-        local container_name="$2"
+        container_name="$2"
 
         check_container_exists "$container_name"
         check_container_running "$container_name"
