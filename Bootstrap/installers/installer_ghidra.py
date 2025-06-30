@@ -26,23 +26,55 @@ docker_compose_template = """
 version: '3.8'
 services:
   ghidra-server:
-    image: blacktop/ghidra:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: ghidra-server
     restart: always
     ports:
       - "${GHIDRA_PORT}:13100"
     volumes:
       - ghidra_repos:/repos
-    command: ["ghidraRun", "/ghidra/server/ghidraSvr", "console"]
 volumes:
   ghidra_repos: {}
+"""
+
+# Dockerfile template
+dockerfile_template = """
+FROM openjdk:17-jdk-slim
+
+ENV GHIDRA_VERSION=11.0.1
+ENV GHIDRA_DATE=20240130
+
+# Install required packages
+RUN apt-get update && apt-get install -y \\
+    wget \\
+    unzip \\
+    && rm -rf /var/lib/apt/lists/*
+
+# Download and install Ghidra
+WORKDIR /tmp
+RUN wget -q https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_${GHIDRA_VERSION}_build/ghidra_${GHIDRA_VERSION}_PUBLIC_${GHIDRA_DATE}.zip \\
+    && unzip ghidra_*.zip \\
+    && mv ghidra_*_PUBLIC /ghidra \\
+    && rm -rf /tmp/*
+
+# Set up Ghidra server
+WORKDIR /ghidra/server
+RUN mkdir -p /repos
+
+# Set Java to headless mode and start server
+ENV JAVA_OPTS="-Djava.awt.headless=true"
+
+EXPOSE 13100
+
+WORKDIR /ghidra/server
+CMD ["./ghidraSvr", "console"]
 """
 
 # .env template
 env_template = """
 GHIDRA_PORT={port_http}
-GHIDRA_ADMIN_USER={admin_user}
-GHIDRA_ADMIN_PASS={admin_pass}
 """
 
 # Ghidra Installer
@@ -63,9 +95,7 @@ class Ghidra(installer.Installer):
             "port_http": self.config.GetValue("UserData.Ghidra", "ghidra_port")
         }
         self.env_values = {
-            "port_http": self.config.GetValue("UserData.Ghidra", "ghidra_port"),
-            "admin_user": self.config.GetValue("UserData.Ghidra", "ghidra_admin_user"),
-            "admin_pass": self.config.GetValue("UserData.Ghidra", "ghidra_admin_pass")
+            "port_http": self.config.GetValue("UserData.Ghidra", "ghidra_port")
         }
 
     def IsInstalled(self):
@@ -77,6 +107,11 @@ class Ghidra(installer.Installer):
         # Create directories
         util.LogInfo("Creating directories")
         self.connection.MakeDirectory(self.app_dir)
+
+        # Write Dockerfile
+        util.LogInfo("Writing Dockerfile")
+        if self.connection.WriteFile("/tmp/Dockerfile", dockerfile_template):
+            self.connection.MoveFileOrDirectory("/tmp/Dockerfile", f"{self.app_dir}/Dockerfile")
 
         # Write docker compose
         util.LogInfo("Writing docker compose")
@@ -102,7 +137,7 @@ class Ghidra(installer.Installer):
         # Start docker
         util.LogInfo("Starting docker")
         self.connection.SetCurrentWorkingDirectory(self.app_dir)
-        self.connection.RunChecked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "up", "-d"])
+        self.connection.RunChecked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "up", "-d", "--build"])
         return True
 
     def Uninstall(self):
