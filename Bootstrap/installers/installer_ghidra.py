@@ -25,11 +25,11 @@ server {{
 docker_compose_template = """
 version: '3.8'
 services:
-  ghidra-server:
+  ghidra_server:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ghidra-server
+    container_name: ghidra_server
     restart: always
     ports:
       - "${GHIDRA_PORT}:13100"
@@ -89,7 +89,7 @@ class Ghidra(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
-        self.app_name = "ghidra"
+        self.app_name = "ghidra_server"
         self.app_dir = f"$HOME/apps/{self.app_name}"
         self.app_port = self.config.GetValue("UserData.Ghidra", "ghidra_port")
         self.nginx_stream_config_values = {
