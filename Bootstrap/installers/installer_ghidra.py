@@ -41,21 +41,24 @@ volumes:
 
 # Dockerfile template
 dockerfile_template = """
-FROM openjdk:17-jdk-slim
-
-ENV GHIDRA_VERSION=11.0.1
-ENV GHIDRA_DATE=20240130
+FROM openjdk:21-jdk-slim
 
 # Install required packages
 RUN apt-get update && apt-get install -y \\
     wget \\
     unzip \\
+    curl \\
+    jq \\
     && rm -rf /var/lib/apt/lists/*
 
 # Download and install Ghidra
 WORKDIR /tmp
-RUN wget -q https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_${GHIDRA_VERSION}_build/ghidra_${GHIDRA_VERSION}_PUBLIC_${GHIDRA_DATE}.zip \\
-    && unzip ghidra_*.zip \\
+RUN echo "Fetching latest Ghidra release..." \\
+    && GHIDRA_URL=$(curl -s https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest | \\
+       jq -r '.assets[] | select(.name | test("ghidra_.*_PUBLIC_.*\\\\.zip$")) | .browser_download_url') \\
+    && echo "Downloading Ghidra from: $GHIDRA_URL" \\
+    && wget -q "$GHIDRA_URL" -O ghidra.zip \\
+    && unzip ghidra.zip \\
     && mv ghidra_*_PUBLIC /ghidra \\
     && rm -rf /tmp/*
 
@@ -137,6 +140,8 @@ class Ghidra(installer.Installer):
         # Start docker
         util.LogInfo("Starting docker")
         self.connection.SetCurrentWorkingDirectory(self.app_dir)
+        self.connection.SetEnvironmentVar("DOCKER_BUILDKIT", "1")
+        self.connection.SetEnvironmentVar("COMPOSE_DOCKER_CLI_BUILD", "1")
         self.connection.RunChecked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "up", "-d", "--build"])
         return True
 
