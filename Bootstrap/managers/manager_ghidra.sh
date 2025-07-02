@@ -2,18 +2,24 @@
 
 set -euo pipefail
 
+DEFAULT_BACKUP_DIR="/mnt/storage/Backups/Ghidra"
+BACKUP_DIR="$DEFAULT_BACKUP_DIR"
+
 print_usage() {
     echo "Usage:"
-    echo "  $0 add_user <container_name> <username> [password]"
-    echo "  $0 remove_user <container_name> <username>"
-    echo "  $0 list_users <container_name>"
-    echo "  $0 reset_password <container_name> <username>"
-    echo "  $0 create_repository <container_name> <repo_name>"
-    echo "  $0 delete_repository <container_name> <repo_name>"
-    echo "  $0 list_repositories <container_name>"
-    echo "  $0 backup_repositories <container_name>"
-    echo "  $0 restore_repositories <container_name> <repo_name> <backup_name>"
-    echo "  $0 export_program_gzf <container_name> <project_name> <program_name> [output_path]"
+    echo "  $0 [--backup-dir <path>] add_user <container_name> <username> [password]"
+    echo "  $0 [--backup-dir <path>] remove_user <container_name> <username>"
+    echo "  $0 [--backup-dir <path>] list_users <container_name>"
+    echo "  $0 [--backup-dir <path>] reset_password <container_name> <username>"
+    echo "  $0 [--backup-dir <path>] create_repository <container_name> <repo_name>"
+    echo "  $0 [--backup-dir <path>] delete_repository <container_name> <repo_name>"
+    echo "  $0 [--backup-dir <path>] list_repositories <container_name>"
+    echo "  $0 [--backup-dir <path>] backup_repositories <container_name>"
+    echo "  $0 [--backup-dir <path>] restore_repositories <container_name> <repo_name> <backup_name>"
+    echo "  $0 [--backup-dir <path>] export_program_gzf <container_name> <project_name> <program_name> [output_path]"
+    echo ""
+    echo "Options:"
+    echo "  --backup-dir <path>    Specify backup directory (default: $DEFAULT_BACKUP_DIR)"
     exit 1
 }
 
@@ -42,34 +48,138 @@ check_container_running() {
 }
 
 check_storage_mount() {
-    if ! mountpoint -q /mnt/storage; then
-        echo "Error: Storage box is not mounted at /mnt/storage."
-        exit 1
+    local storage_path="$(dirname "$BACKUP_DIR")"
+    if ! mountpoint -q "$storage_path" 2>/dev/null; then
+        echo "Warning: Storage path '$storage_path' may not be mounted."
     fi
 
-    if [ ! -w /mnt/storage ]; then
-        echo "Error: Storage box at /mnt/storage is not writable."
+    if [ ! -w "$(dirname "$BACKUP_DIR")" ]; then
+        echo "Error: Parent directory of backup path '$BACKUP_DIR' is not writable."
         exit 1
     fi
 }
 
 create_backup_directory() {
-    local backup_dir="/mnt/storage/Backups/Ghidra"
-
-    if [ ! -d "$backup_dir" ]; then
-        echo "Creating backup directory at $backup_dir..."
-        mkdir -p "$backup_dir"
+    if [ ! -d "$BACKUP_DIR" ]; then
+        echo "Creating backup directory at $BACKUP_DIR..."
+        mkdir -p "$BACKUP_DIR"
     fi
+    echo "$BACKUP_DIR"
+}
 
-    echo "$backup_dir"
+add_user() {
+    local container_name="$1"
+    local username="$2"
+    local password="${3:-}"
+
+    check_container_exists "$container_name"
+    check_container_running "$container_name"
+
+    echo "Adding Ghidra user '$username' to container '$container_name'..."
+
+    if [ -n "$password" ]; then
+        if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && echo '$password' | ./svrAdmin -add '$username'"; then
+            echo "User '$username' added successfully."
+        else
+            echo "Error: Failed to add user '$username'. User may already exist or password was rejected."
+            exit 1
+        fi
+    else
+        if docker exec -it "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -add '$username'"; then
+            echo "User '$username' added successfully."
+        else
+            echo "Error: Failed to add user '$username'. User may already exist."
+            exit 1
+        fi
+    fi
+}
+
+remove_user() {
+    local container_name="$1"
+    local username="$2"
+
+    check_container_exists "$container_name"
+    check_container_running "$container_name"
+
+    echo "Removing Ghidra user '$username' from container '$container_name'..."
+    if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -remove '$username'"; then
+        echo "User '$username' removed successfully."
+    else
+        echo "Error: Failed to remove user '$username'. User may not exist."
+        exit 1
+    fi
+}
+
+list_users() {
+    local container_name="$1"
+
+    check_container_exists "$container_name"
+    check_container_running "$container_name"
+
+    echo "Ghidra users in container '$container_name':"
+    docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -users" || echo "Error: Failed to list users."
+}
+
+reset_password() {
+    local container_name="$1"
+    local username="$2"
+
+    check_container_exists "$container_name"
+    check_container_running "$container_name"
+
+    echo "Resetting password for Ghidra user '$username' in container '$container_name'..."
+    if docker exec -it "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -reset '$username'"; then
+        echo "Password reset for user '$username' completed successfully."
+    else
+        echo "Error: Failed to reset password for user '$username'."
+        exit 1
+    fi
+}
+
+create_repository() {
+    local container_name="$1"
+    local repo_name="$2"
+
+    check_container_exists "$container_name"
+    check_container_running "$container_name"
+
+    echo "Creating Ghidra repository '$repo_name' in container '$container_name'..."
+    if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -create '$repo_name'"; then
+        echo "Repository '$repo_name' created successfully."
+    else
+        echo "Error: Failed to create repository '$repo_name'. Repository may already exist."
+        exit 1
+    fi
+}
+
+delete_repository() {
+    local container_name="$1"
+    local repo_name="$2"
+
+    check_container_exists "$container_name"
+    check_container_running "$container_name"
+
+    echo "Deleting Ghidra repository '$repo_name' from container '$container_name'..."
+    echo "WARNING: This will permanently delete all data in the repository!"
+    if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -delete '$repo_name'"; then
+        echo "Repository '$repo_name' deleted successfully."
+    else
+        echo "Error: Failed to delete repository '$repo_name'. Repository may not exist."
+        exit 1
+    fi
+}
+
+list_repositories() {
+    local container_name="$1"
+
+    check_container_exists "$container_name"
+    check_container_running "$container_name"
+
+    echo "Ghidra repositories in container '$container_name':"
+    docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -list" || echo "Error: Failed to list repositories."
 }
 
 backup_repositories() {
-    if [ $# -ne 1 ]; then
-        echo "Usage: $0 backup_repositories <container_name>"
-        exit 1
-    fi
-
     local container_name="$1"
     local timestamp=$(date +%Y%m%d_%H%M%S)
     local total_exported=0
@@ -110,7 +220,7 @@ backup_repositories() {
             echo "" >> "$backup_manifest"
 
             echo "Exporting programs from repository '$repo'..."
-            local temp_project_dir="/tmp/ghidra_backup_$"
+            local temp_project_dir="/tmp/ghidra_backup_$$"
             if docker exec "$container_name" /ghidra/support/analyzeHeadless \
                 "$temp_project_dir" "TempBackup_$repo" \
                 -connect "localhost:13100" \
@@ -158,15 +268,10 @@ backup_repositories() {
 }
 
 restore_repositories() {
-    if [ $# -ne 3 ]; then
-        echo "Usage: $0 restore_repositories <container_name> <repo_name> <backup_name>"
-        exit 1
-    fi
-
     local container_name="$1"
     local repo_name="$2"
     local backup_name="$3"
-    local backup_path="/mnt/storage/Backups/Ghidra/$repo_name/$backup_name"
+    local backup_path="$BACKUP_DIR/$repo_name/$backup_name"
 
     check_container_exists "$container_name"
     check_container_running "$container_name"
@@ -174,14 +279,14 @@ restore_repositories() {
     if [ ! -d "$backup_path" ]; then
         echo "Error: Backup '$backup_name' for repository '$repo_name' does not exist at $backup_path"
         echo "Available backups for repository '$repo_name':"
-        local repo_backup_dir="/mnt/storage/Backups/Ghidra/$repo_name"
+        local repo_backup_dir="$BACKUP_DIR/$repo_name"
         if [ -d "$repo_backup_dir" ]; then
             ls -la "$repo_backup_dir/" | grep "^d" | awk '{print $9}' | grep -v "^\.$" | grep -v "^\.\.$" || echo "  No backups found"
         else
             echo "Repository backup directory does not exist"
             echo "Available repositories:"
-            if [ -d "/mnt/storage/Backups/Ghidra" ]; then
-                ls -la /mnt/storage/Backups/Ghidra/ | grep "^d" | awk '{print $9}' | grep -v "^\.$" | grep -v "^\.\.$" || echo "  No repositories found"
+            if [ -d "$BACKUP_DIR" ]; then
+                ls -la "$BACKUP_DIR/" | grep "^d" | awk '{print $9}' | grep -v "^\.$" | grep -v "^\.\.$" || echo "  No repositories found"
             fi
         fi
         exit 1
@@ -230,7 +335,7 @@ restore_repositories() {
             local container_gzf="/tmp/restore_$(basename "$gzf_file")"
             if docker cp "$gzf_file" "$container_name:$container_gzf"; then
 
-                local temp_project_dir="/tmp/ghidra_restore_$"
+                local temp_project_dir="/tmp/ghidra_restore_$$"
                 if docker exec "$container_name" /ghidra/support/analyzeHeadless \
                     "$temp_project_dir" "TempRestore" \
                     -connect "localhost:13100" \
@@ -262,6 +367,51 @@ restore_repositories() {
     echo "Note: Users may need to reconnect to see newly imported programs."
 }
 
+export_program_gzf() {
+    local container_name="$1"
+    local project_name="$2"
+    local program_name="$3"
+    local output_path="${4:-/tmp/${program_name}.gzf}"
+
+    check_container_exists "$container_name"
+
+    echo "Running headless export..."
+    temp_project_dir="/tmp/ghidra_projects"
+    temp_output="/tmp/export_${program_name}_$(date +%s).gzf"
+    if docker exec "$container_name" /ghidra/support/analyzeHeadless \
+        "$temp_project_dir" "TempExport" \
+        -import "/repos/$project_name/$program_name" \
+        -scriptPath /ghidra/Ghidra/Features/Base/ghidra_scripts \
+        -postScript ExportToGzf.java "$temp_output" \
+        -deleteProject; then
+        if docker cp "$container_name:$temp_output" "$output_path"; then
+            echo "Program exported successfully to: $output_path"
+            docker exec "$container_name" rm -f "$temp_output" 2>/dev/null || true
+        else
+            echo "Error: Failed to copy exported file from container"
+            exit 1
+        fi
+    else
+        echo "Error: Headless export failed"
+        exit 1
+    fi
+}
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --backup-dir)
+            BACKUP_DIR="$2"
+            shift 2
+            ;;
+        --help)
+            print_usage
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
 if [ $# -lt 1 ]; then
     print_usage
 fi
@@ -272,31 +422,7 @@ case "$1" in
             echo "Usage: $0 add_user <container_name> <username> [password]"
             exit 1
         fi
-
-        container_name="$2"
-        username="$3"
-        password="${4:-}"
-
-        check_container_exists "$container_name"
-        check_container_running "$container_name"
-
-        echo "Adding Ghidra user '$username' to container '$container_name'..."
-
-        if [ -n "$password" ]; then
-            if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && echo '$password' | ./svrAdmin -add '$username'"; then
-                echo "User '$username' added successfully."
-            else
-                echo "Error: Failed to add user '$username'. User may already exist or password was rejected."
-                exit 1
-            fi
-        else
-            if docker exec -it "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -add '$username'"; then
-                echo "User '$username' added successfully."
-            else
-                echo "Error: Failed to add user '$username'. User may already exist."
-                exit 1
-            fi
-        fi
+        add_user "${@:2}"
         ;;
 
     remove_user)
@@ -304,20 +430,7 @@ case "$1" in
             echo "Usage: $0 remove_user <container_name> <username>"
             exit 1
         fi
-
-        container_name="$2"
-        username="$3"
-
-        check_container_exists "$container_name"
-        check_container_running "$container_name"
-
-        echo "Removing Ghidra user '$username' from container '$container_name'..."
-        if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -remove '$username'"; then
-            echo "User '$username' removed successfully."
-        else
-            echo "Error: Failed to remove user '$username'. User may not exist."
-            exit 1
-        fi
+        remove_user "${@:2}"
         ;;
 
     list_users)
@@ -325,14 +438,7 @@ case "$1" in
             echo "Usage: $0 list_users <container_name>"
             exit 1
         fi
-
-        container_name="$2"
-
-        check_container_exists "$container_name"
-        check_container_running "$container_name"
-
-        echo "Ghidra users in container '$container_name':"
-        docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -users" || echo "Error: Failed to list users."
+        list_users "${@:2}"
         ;;
 
     reset_password)
@@ -340,20 +446,7 @@ case "$1" in
             echo "Usage: $0 reset_password <container_name> <username>"
             exit 1
         fi
-
-        container_name="$2"
-        username="$3"
-
-        check_container_exists "$container_name"
-        check_container_running "$container_name"
-
-        echo "Resetting password for Ghidra user '$username' in container '$container_name'..."
-        if docker exec -it "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -reset '$username'"; then
-            echo "Password reset for user '$username' completed successfully."
-        else
-            echo "Error: Failed to reset password for user '$username'."
-            exit 1
-        fi
+        reset_password "${@:2}"
         ;;
 
     create_repository)
@@ -361,20 +454,7 @@ case "$1" in
             echo "Usage: $0 create_repository <container_name> <repo_name>"
             exit 1
         fi
-
-        container_name="$2"
-        repo_name="$3"
-
-        check_container_exists "$container_name"
-        check_container_running "$container_name"
-
-        echo "Creating Ghidra repository '$repo_name' in container '$container_name'..."
-        if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -create '$repo_name'"; then
-            echo "Repository '$repo_name' created successfully."
-        else
-            echo "Error: Failed to create repository '$repo_name'. Repository may already exist."
-            exit 1
-        fi
+        create_repository "${@:2}"
         ;;
 
     delete_repository)
@@ -382,21 +462,7 @@ case "$1" in
             echo "Usage: $0 delete_repository <container_name> <repo_name>"
             exit 1
         fi
-
-        container_name="$2"
-        repo_name="$3"
-
-        check_container_exists "$container_name"
-        check_container_running "$container_name"
-
-        echo "Deleting Ghidra repository '$repo_name' from container '$container_name'..."
-        echo "WARNING: This will permanently delete all data in the repository!"
-        if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -delete '$repo_name'"; then
-            echo "Repository '$repo_name' deleted successfully."
-        else
-            echo "Error: Failed to delete repository '$repo_name'. Repository may not exist."
-            exit 1
-        fi
+        delete_repository "${@:2}"
         ;;
 
     list_repositories)
@@ -404,57 +470,31 @@ case "$1" in
             echo "Usage: $0 list_repositories <container_name>"
             exit 1
         fi
-
-        container_name="$2"
-
-        check_container_exists "$container_name"
-        check_container_running "$container_name"
-
-        echo "Ghidra repositories in container '$container_name':"
-        docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -list" || echo "Error: Failed to list repositories."
+        list_repositories "${@:2}"
         ;;
 
     backup_repositories)
+        if [ $# -ne 2 ]; then
+            echo "Usage: $0 backup_repositories <container_name>"
+            exit 1
+        fi
         backup_repositories "${@:2}"
         ;;
 
     restore_repositories)
+        if [ $# -ne 4 ]; then
+            echo "Usage: $0 restore_repositories <container_name> <repo_name> <backup_name>"
+            exit 1
+        fi
         restore_repositories "${@:2}"
         ;;
 
     export_program_gzf)
-        if [ $# -lt 3 ] || [ $# -gt 4 ]; then
+        if [ $# -lt 4 ] || [ $# -gt 5 ]; then
             echo "Usage: $0 export_program_gzf <container_name> <project_name> <program_name> [output_path]"
             exit 1
         fi
-
-        container_name="$1"
-        project_name="$2"
-        program_name="$3"
-        output_path="${4:-/tmp/${program_name}.gzf}"
-
-        check_container_exists "$container_name"
-
-        echo "Running headless export..."
-        temp_project_dir="/tmp/ghidra_projects"
-        temp_output="/tmp/export_${program_name}_$(date +%s).gzf"
-        if docker exec "$container_name" /ghidra/support/analyzeHeadless \
-            "$temp_project_dir" "TempExport" \
-            -import "/repos/$project_name/$program_name" \
-            -scriptPath /ghidra/Ghidra/Features/Base/ghidra_scripts \
-            -postScript ExportToGzf.java "$temp_output" \
-            -deleteProject; then
-            if docker cp "$container_name:$temp_output" "$output_path"; then
-                echo "Program exported successfully to: $output_path"
-                docker exec "$container_name" rm -f "$temp_output" 2>/dev/null || true
-            else
-                echo "Error: Failed to copy exported file from container"
-                exit 1
-            fi
-        else
-            echo "Error: Headless export failed"
-            exit 1
-        fi
+        export_program_gzf "${@:2}"
         ;;
 
     *)
