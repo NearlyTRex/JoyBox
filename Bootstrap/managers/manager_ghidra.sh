@@ -11,6 +11,9 @@ print_usage() {
     echo "  $0 create_repository <container_name> <repo_name>"
     echo "  $0 delete_repository <container_name> <repo_name>"
     echo "  $0 list_repositories <container_name>"
+    echo "  $0 backup_repositories <container_name>"
+    echo "  $0 restore_repositories <container_name> <repo_name> <backup_name>"
+    echo "  $0 export_program_gzf <container_name> <project_name> <program_name> [output_path]"
     exit 1
 }
 
@@ -38,7 +41,228 @@ check_container_running() {
     fi
 }
 
-if [ $# -lt 2 ]; then
+check_storage_mount() {
+    if ! mountpoint -q /mnt/storage; then
+        echo "Error: Storage box is not mounted at /mnt/storage."
+        exit 1
+    fi
+
+    if [ ! -w /mnt/storage ]; then
+        echo "Error: Storage box at /mnt/storage is not writable."
+        exit 1
+    fi
+}
+
+create_backup_directory() {
+    local backup_dir="/mnt/storage/Backups/Ghidra"
+
+    if [ ! -d "$backup_dir" ]; then
+        echo "Creating backup directory at $backup_dir..."
+        mkdir -p "$backup_dir"
+    fi
+
+    echo "$backup_dir"
+}
+
+backup_repositories() {
+    if [ $# -ne 1 ]; then
+        echo "Usage: $0 backup_repositories <container_name>"
+        exit 1
+    fi
+
+    local container_name="$1"
+    local timestamp=$(date +%Y%m%d_%H%M%S)
+    local total_exported=0
+    local repo_count=0
+
+    check_container_exists "$container_name"
+    check_container_running "$container_name"
+    check_storage_mount
+
+    echo "Creating GZF backup for container '$container_name'..."
+    local backup_base_dir
+    backup_base_dir=$(create_backup_directory)
+
+    echo "Getting list of repositories..."
+    local repositories
+    repositories=$(docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -list" 2>/dev/null | grep -v "^$" | grep -v "Repositories:" || true)
+    if [ -z "$repositories" ]; then
+        echo "No repositories found to backup."
+        return 0
+    fi
+
+    echo "Found repositories: $repositories"
+    echo "Backup timestamp: $timestamp"
+    while IFS= read -r repo; do
+        if [ -n "$repo" ] && [ "$repo" != "Repositories:" ]; then
+            echo "Processing repository: $repo"
+            ((repo_count++))
+
+            local repo_backup_dir="$backup_base_dir/$repo/$timestamp"
+            mkdir -p "$repo_backup_dir"
+
+            local backup_manifest="$repo_backup_dir/backup_manifest.txt"
+            echo "# Ghidra GZF Backup Manifest" > "$backup_manifest"
+            echo "# Created: $(date)" >> "$backup_manifest"
+            echo "# Container: $container_name" >> "$backup_manifest"
+            echo "# Repository: $repo" >> "$backup_manifest"
+            echo "# Timestamp: $timestamp" >> "$backup_manifest"
+            echo "" >> "$backup_manifest"
+
+            echo "Exporting programs from repository '$repo'..."
+            local temp_project_dir="/tmp/ghidra_backup_$"
+            if docker exec "$container_name" /ghidra/support/analyzeHeadless \
+                "$temp_project_dir" "TempBackup_$repo" \
+                -connect "localhost:13100" \
+                -repository "$repo" \
+                -scriptPath /ghidra/Ghidra/Features/Base/ghidra_scripts \
+                -postScript ListAndExportRepository.java "/tmp/repo_$repo" \
+                -deleteProject 2>/dev/null; then
+
+                local container_export_dir="/tmp/repo_$repo"
+                docker exec "$container_name" test -d "$container_export_dir" || continue
+                if docker exec "$container_name" find "$container_export_dir" -name "*.gzf" -type f | grep -q .; then
+                    docker exec "$container_name" find "$container_export_dir" -name "*.gzf" -exec basename {} \; | while read -r gzf_file; do
+                        docker cp "$container_name:$container_export_dir/$gzf_file" "$repo_backup_dir/$gzf_file"
+                        echo "$gzf_file" >> "$backup_manifest"
+                    done
+
+                    local repo_exported
+                    repo_exported=$(docker exec "$container_name" find "$container_export_dir" -name "*.gzf" | wc -l)
+                    total_exported=$((total_exported + repo_exported))
+                    echo "Exported $repo_exported programs"
+                    echo "$repo_backup_dir"
+                else
+                    echo "No programs found in repository '$repo'"
+                    rmdir "$repo_backup_dir" 2>/dev/null || true
+                    rmdir "$backup_base_dir/$repo" 2>/dev/null || true
+                fi
+                docker exec "$container_name" rm -rf "$container_export_dir" 2>/dev/null || true
+            else
+                echo "Warning: Failed to process repository '$repo'"
+                rmdir "$repo_backup_dir" 2>/dev/null || true
+                rmdir "$backup_base_dir/$repo" 2>/dev/null || true
+            fi
+            docker exec "$container_name" rm -rf "$temp_project_dir" 2>/dev/null || true
+        fi
+    done <<< "$repositories"
+
+    echo "Backup completed successfully!"
+    echo "Programs exported: $total_exported"
+    echo "Repositories: $repo_count"
+    echo "Backup timestamp: $timestamp"
+    echo "Base location: $backup_base_dir"
+    if [ $total_exported -eq 0 ]; then
+        echo "Warning: No programs were exported. Check if repositories contain any programs."
+    fi
+}
+
+restore_repositories() {
+    if [ $# -ne 3 ]; then
+        echo "Usage: $0 restore_repositories <container_name> <repo_name> <backup_name>"
+        exit 1
+    fi
+
+    local container_name="$1"
+    local repo_name="$2"
+    local backup_name="$3"
+    local backup_path="/mnt/storage/Backups/Ghidra/$repo_name/$backup_name"
+
+    check_container_exists "$container_name"
+    check_container_running "$container_name"
+
+    if [ ! -d "$backup_path" ]; then
+        echo "Error: Backup '$backup_name' for repository '$repo_name' does not exist at $backup_path"
+        echo "Available backups for repository '$repo_name':"
+        local repo_backup_dir="/mnt/storage/Backups/Ghidra/$repo_name"
+        if [ -d "$repo_backup_dir" ]; then
+            ls -la "$repo_backup_dir/" | grep "^d" | awk '{print $9}' | grep -v "^\.$" | grep -v "^\.\.$" || echo "  No backups found"
+        else
+            echo "Repository backup directory does not exist"
+            echo "Available repositories:"
+            if [ -d "/mnt/storage/Backups/Ghidra" ]; then
+                ls -la /mnt/storage/Backups/Ghidra/ | grep "^d" | awk '{print $9}' | grep -v "^\.$" | grep -v "^\.\.$" || echo "  No repositories found"
+            fi
+        fi
+        exit 1
+    fi
+
+    echo "Restoring backup from: $backup_path"
+    echo "Target repository: $repo_name"
+    local backup_manifest="$backup_path/backup_manifest.txt"
+    if [ -f "$backup_manifest" ]; then
+        echo "Backup manifest found:"
+        head -10 "$backup_manifest"
+    fi
+
+    echo "WARNING: This will import programs into repository '$repo_name'."
+    echo "Existing programs with the same name may be overwritten."
+    read -p "Are you sure you want to continue? (yes/no): " confirm
+    if [ "$confirm" != "yes" ]; then
+        echo "Restore cancelled."
+        exit 0
+    fi
+
+    echo "Restoring backup..."
+    if ! docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -list" 2>/dev/null | grep -q "^$repo_name$"; then
+        echo "Creating repository '$repo_name'..."
+        if ! docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -create '$repo_name'" 2>/dev/null; then
+            echo "Error: Failed to create repository '$repo_name'"
+            exit 1
+        fi
+    else
+        echo "Repository '$repo_name' already exists"
+    fi
+
+    if ! ls "$backup_path"/*.gzf 1> /dev/null 2>&1; then
+        echo "No .gzf files found in backup directory."
+        exit 1
+    fi
+
+    local total_imported=0
+    local failed_imports=0
+    for gzf_file in "$backup_path"/*.gzf; do
+        if [ -f "$gzf_file" ]; then
+            local program_name
+            program_name=$(basename "$gzf_file" .gzf)
+
+            echo "Importing: $program_name into repository $repo_name"
+            local container_gzf="/tmp/restore_$(basename "$gzf_file")"
+            if docker cp "$gzf_file" "$container_name:$container_gzf"; then
+
+                local temp_project_dir="/tmp/ghidra_restore_$"
+                if docker exec "$container_name" /ghidra/support/analyzeHeadless \
+                    "$temp_project_dir" "TempRestore" \
+                    -connect "localhost:13100" \
+                    -repository "$repo_name" \
+                    -import "$container_gzf" \
+                    -deleteProject >/dev/null 2>&1; then
+                    echo "Successfully imported $program_name"
+                    ((total_imported++))
+                else
+                    echo "Failed to import $program_name"
+                    ((failed_imports++))
+                fi
+                docker exec "$container_name" rm -f "$container_gzf" 2>/dev/null || true
+                docker exec "$container_name" rm -rf "$temp_project_dir" 2>/dev/null || true
+            else
+                echo "Failed to copy $program_name to container"
+                ((failed_imports++))
+            fi
+        fi
+    done
+
+    echo "Restore completed!"
+    echo "Programs imported: $total_imported"
+    if [ $failed_imports -gt 0 ]; then
+        echo "Failed imports: $failed_imports"
+    fi
+    echo "Repository: $repo_name"
+    echo "Backup restored: $backup_name"
+    echo "Note: Users may need to reconnect to see newly imported programs."
+}
+
+if [ $# -lt 1 ]; then
     print_usage
 fi
 
@@ -108,7 +332,7 @@ case "$1" in
         check_container_running "$container_name"
 
         echo "Ghidra users in container '$container_name':"
-        docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -list" || echo "Error: Failed to list users."
+        docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -users" || echo "Error: Failed to list users."
         ;;
 
     reset_password)
@@ -187,7 +411,50 @@ case "$1" in
         check_container_running "$container_name"
 
         echo "Ghidra repositories in container '$container_name':"
-        docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -list-repos" || echo "Error: Failed to list repositories."
+        docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -list" || echo "Error: Failed to list repositories."
+        ;;
+
+    backup_repositories)
+        backup_repositories "${@:2}"
+        ;;
+
+    restore_repositories)
+        restore_repositories "${@:2}"
+        ;;
+
+    export_program_gzf)
+        if [ $# -lt 3 ] || [ $# -gt 4 ]; then
+            echo "Usage: $0 export_program_gzf <container_name> <project_name> <program_name> [output_path]"
+            exit 1
+        fi
+
+        container_name="$1"
+        project_name="$2"
+        program_name="$3"
+        output_path="${4:-/tmp/${program_name}.gzf}"
+
+        check_container_exists "$container_name"
+
+        echo "Running headless export..."
+        temp_project_dir="/tmp/ghidra_projects"
+        temp_output="/tmp/export_${program_name}_$(date +%s).gzf"
+        if docker exec "$container_name" /ghidra/support/analyzeHeadless \
+            "$temp_project_dir" "TempExport" \
+            -import "/repos/$project_name/$program_name" \
+            -scriptPath /ghidra/Ghidra/Features/Base/ghidra_scripts \
+            -postScript ExportToGzf.java "$temp_output" \
+            -deleteProject; then
+            if docker cp "$container_name:$temp_output" "$output_path"; then
+                echo "Program exported successfully to: $output_path"
+                docker exec "$container_name" rm -f "$temp_output" 2>/dev/null || true
+            else
+                echo "Error: Failed to copy exported file from container"
+                exit 1
+            fi
+        else
+            echo "Error: Headless export failed"
+            exit 1
+        fi
         ;;
 
     *)
