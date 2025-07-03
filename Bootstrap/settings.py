@@ -100,7 +100,7 @@ ini_defaults["UserData.Kanboard"]["kanboard_port_http"] = "8086"
 # UserData.Ghidra
 ini_defaults["UserData.Ghidra"] = {}
 ini_defaults["UserData.Ghidra"]["ghidra_subdomain"] = "ghidra"
-ini_defaults["UserData.Ghidra"]["ghidra_port"] = "13100"
+ini_defaults["UserData.Ghidra"]["ghidra_port"] = "13103"
 
 # UserData.Servers
 ini_defaults["UserData.Servers"] = {}

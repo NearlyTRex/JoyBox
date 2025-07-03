@@ -9,14 +9,15 @@ from . import installer
 # Nginx stream config template
 nginx_stream_config_template = """
 upstream ghidra_backend {{
-    server localhost:{port_http};
+    server 127.0.0.1:{port_http};
 }}
 
 server {{
-    listen {subdomain}.{domain}:13100;
+    listen 13100;
     proxy_pass ghidra_backend;
-    proxy_timeout 1s;
+    proxy_timeout 10s;
     proxy_responses 1;
+    proxy_connect_timeout 5s;
     error_log /var/log/nginx/ghidra_stream.log;
 }}
 """
@@ -32,9 +33,11 @@ services:
     container_name: ghidra_server
     restart: always
     ports:
-      - "${GHIDRA_PORT}:13100"
+      - "127.0.0.1:${GHIDRA_PORT}:13100"
     volumes:
       - ghidra_repos:/repos
+    environment:
+      - GHIDRA_INSTALL_DIR=/ghidra
 volumes:
   ghidra_repos: {}
 """
@@ -70,10 +73,13 @@ RUN mkdir -p /repos
 COPY ExportToGzf.java /ghidra/Ghidra/Features/Base/ghidra_scripts/ExportToGzf.java
 COPY ListAndExportRepository.java /ghidra/Ghidra/Features/Base/ghidra_scripts/ListAndExportRepository.java
 
-# Set Java to headless mode and start server
+# Initialize the repository and install the server service
+RUN ./svrInstall /repos
+
+# Set Java to headless mode
 ENV JAVA_OPTS="-Djava.awt.headless=true"
 
-EXPOSE 13100
+EXPOSE 13100 13101 13102
 WORKDIR /ghidra/server
 CMD ["./ghidraSvr", "console"]
 """
@@ -233,7 +239,6 @@ class Ghidra(installer.Installer):
         super().__init__(config, connection, flags, options)
         self.app_name = "ghidra_server"
         self.app_dir = f"$HOME/apps/{self.app_name}"
-        self.app_port = self.config.GetValue("UserData.Ghidra", "ghidra_port")
         self.nginx_stream_config_values = {
             "domain": self.config.GetValue("UserData.Servers", "domain_name"),
             "subdomain": self.config.GetValue("UserData.Ghidra", "ghidra_subdomain"),
@@ -284,7 +289,7 @@ class Ghidra(installer.Installer):
 
         # Open firewall port
         util.LogInfo("Opening firewall port")
-        self.connection.RunChecked([self.nginx_manager_tool, "open_port", self.app_port], sudo = True)
+        self.connection.RunChecked([self.nginx_manager_tool, "open_port", "13100"], sudo = True)
 
         # Start docker
         util.LogInfo("Starting docker")
@@ -312,5 +317,5 @@ class Ghidra(installer.Installer):
 
         # Close firewall port
         util.LogInfo("Closing firewall port")
-        self.connection.RunChecked([self.nginx_manager_tool, "close_port", self.app_port], sudo = True)
+        self.connection.RunChecked([self.nginx_manager_tool, "close_port", "13100"], sudo = True)
         return True
