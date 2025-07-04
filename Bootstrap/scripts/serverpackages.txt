@@ -1,16 +1,29 @@
+# Keep this in sync with packages/aptget.py
+
+# Admin
 7zip
 apt-file
-certbot
-curl
-docker-buildx
-docker-compose
-docker.io
-flatpak
+unzip
+zip
+
+# Devel
+default-jdk
 git
 jq
+
+# Server
+certbot
 nginx
 nginx-common
 python3-certbot-nginx
-unzip
+
+# Net
+curl
 wget
-zip
+
+# Virtualization
+docker-buildx
+docker-compose
+docker-compose-v2
+docker.io
+flatpak

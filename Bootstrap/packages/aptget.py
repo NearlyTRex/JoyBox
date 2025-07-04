@@ -249,11 +249,11 @@ aptget[constants.EnvironmentType.REMOTE_UBUNTU] += [
     "zip",
 
     # Devel
+    "default-jdk",
     "git",
+    "jq",
 
     # Server
-    "apache2-utils",
-    "apache2",
     "certbot",
     "nginx",
     "nginx-common",
@@ -264,6 +264,7 @@ aptget[constants.EnvironmentType.REMOTE_UBUNTU] += [
     "wget",
 
     # Virtualization
+    "docker-buildx",
     "docker-compose",
     "docker-compose-v2",
     "docker.io",
