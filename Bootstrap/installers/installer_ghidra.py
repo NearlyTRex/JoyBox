@@ -70,6 +70,8 @@ services:
     environment:
       - GHIDRA_INSTALL_DIR=/ghidra
       - GHIDRA_DOMAIN=${GHIDRA_DOMAIN}
+      - GHIDRA_KEYSTORE_PATH=/repos/ghidra.keystore
+      - GHIDRA_KEYSTORE_PASSWORD_FILE=/certs/keystore_password.txt
     healthcheck:
       test: ["CMD", "pgrep", "-f", "ghidraSvr"]
       interval: 30s
@@ -100,6 +102,7 @@ RUN apt-get update && apt-get install -y \\
     procps \\
     net-tools \\
     openssl \\
+    ca-certificates \\
     && rm -rf /var/lib/apt/lists/*
 
 # Download and install Ghidra
@@ -154,48 +157,89 @@ set -euo pipefail
 configure_ssl_keystore() {
     local domain="$1"
     echo "Configuring SSL keystore for domain: $domain"
-    local keystore_path="/certs/ghidra-keystore.p12"
+    local source_keystore="/certs/ghidra-keystore.p12"
+    local target_keystore="/repos/ghidra.keystore"
     local keystore_pass_file="/certs/keystore_password.txt"
-    if [ -f "$keystore_path" ] && [ -f "$keystore_pass_file" ]; then
-        echo "Found pre-exported keystore at $keystore_path"
+    if [ -f "$source_keystore" ] && [ -f "$keystore_pass_file" ]; then
+        echo "Found pre-exported keystore at $source_keystore"
         local keystore_pass=$(cat "$keystore_pass_file")
 
-        cp "$keystore_path" "/ghidra/server/ghidra-keystore.p12"
-        chmod 600 "/ghidra/server/ghidra-keystore.p12"
+        echo "Copying keystore to repository directory..."
+        cp "$source_keystore" "$target_keystore"
+        chmod 600 "$target_keystore"
 
-        if [ -f /repos/server.conf ]; then
-            echo "Updating existing server configuration..."
-            cp /repos/server.conf /repos/server.conf.backup
-
-            if grep -q "ghidra.server.ssl.keystore" /repos/server.conf; then
-                sed -i "s|ghidra.server.ssl.keystore=.*|ghidra.server.ssl.keystore=/ghidra/server/ghidra-keystore.p12|" /repos/server.conf
-            else
-                echo "ghidra.server.ssl.keystore=/ghidra/server/ghidra-keystore.p12" >> /repos/server.conf
-            fi
-
-            if grep -q "ghidra.server.ssl.keystore.password" /repos/server.conf; then
-                sed -i "s|ghidra.server.ssl.keystore.password=.*|ghidra.server.ssl.keystore.password=$keystore_pass|" /repos/server.conf
-            else
-                echo "ghidra.server.ssl.keystore.password=$keystore_pass" >> /repos/server.conf
-            fi
-        else
-            echo "Creating new server configuration..."
-            cat > /repos/server.conf <<EOF
+        echo "Configuring server.conf with SSL settings..."
+        cat > /repos/server.conf <<EOF
 # Ghidra Server Configuration
-ghidra.server.ssl.keystore=/ghidra/server/ghidra-keystore.p12
-ghidra.server.ssl.keystore.password=$keystore_pass
-ghidra.server.ssl.keystore.alias=ghidra
+# Repository directory
+ghidra.repositories.dir=/repos
+
+# SSL Configuration
+wrapper.java.additional.1=-Dghidra.server.ssl.keystore=$target_keystore
+wrapper.java.additional.2=-Dghidra.server.ssl.keystore.password=$keystore_pass
+wrapper.java.additional.3=-Dghidra.server.ssl.keystore.type=PKCS12
+wrapper.java.additional.4=-Dghidra.server.ssl.keystore.alias=ghidra
+
+# Server ports (internal container ports)
+ghidra.server.registry.port=13100
+ghidra.server.port=13101
+ghidra.server.block.stream.port=13102
+
+# Enable SSL
+wrapper.java.additional.5=-Dghidra.server.ssl.required=true
+
+# Additional SSL settings
+wrapper.java.additional.6=-Djava.security.properties=/ghidra/server/java.security
+wrapper.java.additional.7=-Djavax.net.ssl.trustStore=$target_keystore
+wrapper.java.additional.8=-Djavax.net.ssl.trustStorePassword=$keystore_pass
+wrapper.java.additional.9=-Djavax.net.ssl.keyStore=$target_keystore
+wrapper.java.additional.10=-Djavax.net.ssl.keyStorePassword=$keystore_pass
+
+# Logging
+wrapper.logfile=/repos/wrapper.log
+wrapper.logfile.maxsize=10m
+wrapper.logfile.maxfiles=5
 EOF
+
+        echo "Configuring java.security with SSL settings..."
+        cat > /ghidra/server/java.security <<EOF
+jdk.tls.disabledAlgorithms=
+jdk.certpath.disabledAlgorithms=
+jdk.jar.disabledAlgorithms=
+EOF
+
+        echo "Verifying keystore accessibility..."
+        if openssl pkcs12 -in "$target_keystore" -passin pass:"$keystore_pass" -noout -info; then
+            echo "Keystore verification successful"
+        else
+            echo "WARNING: Keystore verification failed"
         fi
+
         echo "SSL keystore configuration completed successfully"
+        echo "Keystore location: $target_keystore"
+        echo "Configuration file: /repos/server.conf"
         return 0
     else
         echo "Pre-exported keystore not found. SSL will use Ghidra's default configuration."
-        echo "Expected keystore: $keystore_path"
+        echo "Expected keystore: $source_keystore"
         echo "Expected password file: $keystore_pass_file"
+        cat > /repos/server.conf <<EOF
+# Ghidra Server Configuration (No SSL)
+ghidra.repositories.dir=/repos
+ghidra.server.registry.port=13100
+ghidra.server.port=13101
+ghidra.server.block.stream.port=13102
+wrapper.logfile=/repos/wrapper.log
+wrapper.logfile.maxsize=10m
+wrapper.logfile.maxfiles=5
+EOF
         return 1
     fi
 }
+
+sleep 2
+chmod 755 /repos
+chown -R root:root /repos
 
 echo "Starting Ghidra Server initialization..."
 if [ -n "${GHIDRA_DOMAIN:-}" ]; then
@@ -207,7 +251,26 @@ if [ -n "${GHIDRA_DOMAIN:-}" ]; then
     fi
 else
     echo "No GHIDRA_DOMAIN set, using default Ghidra SSL configuration"
+    cat > /repos/server.conf <<EOF
+# Ghidra Server Configuration (No Domain)
+ghidra.repositories.dir=/repos
+ghidra.server.registry.port=13100
+ghidra.server.port=13101
+ghidra.server.block.stream.port=13102
+wrapper.logfile=/repos/wrapper.log
+wrapper.logfile.maxsize=10m
+wrapper.logfile.maxfiles=5
+EOF
 fi
+
+echo "Repository directory contents:"
+ls -la /repos/
+
+echo "Certs directory contents:"
+ls -la /certs/ || echo "Certs directory not accessible"
+
+echo "Final server.conf:"
+cat /repos/server.conf
 
 echo "Starting Ghidra Server..."
 exec "$@"
