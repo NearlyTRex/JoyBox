@@ -154,23 +154,23 @@ set -euo pipefail
 configure_ssl_keystore() {
     local domain="$1"
     echo "Configuring SSL keystore for domain: $domain"
-    local keystore_path="/certs/ghidra-keystore.jks"
+    local keystore_path="/certs/ghidra-keystore.p12"
     local keystore_pass_file="/certs/keystore_password.txt"
     if [ -f "$keystore_path" ] && [ -f "$keystore_pass_file" ]; then
         echo "Found pre-exported keystore at $keystore_path"
         local keystore_pass=$(cat "$keystore_pass_file")
 
-        cp "$keystore_path" "/ghidra/server/ghidra-keystore.jks"
-        chmod 600 "/ghidra/server/ghidra-keystore.jks"
+        cp "$keystore_path" "/ghidra/server/ghidra-keystore.p12"
+        chmod 600 "/ghidra/server/ghidra-keystore.p12"
 
         if [ -f /repos/server.conf ]; then
             echo "Updating existing server configuration..."
             cp /repos/server.conf /repos/server.conf.backup
 
             if grep -q "ghidra.server.ssl.keystore" /repos/server.conf; then
-                sed -i "s|ghidra.server.ssl.keystore=.*|ghidra.server.ssl.keystore=/ghidra/server/ghidra-keystore.jks|" /repos/server.conf
+                sed -i "s|ghidra.server.ssl.keystore=.*|ghidra.server.ssl.keystore=/ghidra/server/ghidra-keystore.p12|" /repos/server.conf
             else
-                echo "ghidra.server.ssl.keystore=/ghidra/server/ghidra-keystore.jks" >> /repos/server.conf
+                echo "ghidra.server.ssl.keystore=/ghidra/server/ghidra-keystore.p12" >> /repos/server.conf
             fi
 
             if grep -q "ghidra.server.ssl.keystore.password" /repos/server.conf; then
@@ -182,8 +182,9 @@ configure_ssl_keystore() {
             echo "Creating new server configuration..."
             cat > /repos/server.conf <<EOF
 # Ghidra Server Configuration
-ghidra.server.ssl.keystore=/ghidra/server/ghidra-keystore.jks
+ghidra.server.ssl.keystore=/ghidra/server/ghidra-keystore.p12
 ghidra.server.ssl.keystore.password=$keystore_pass
+ghidra.server.ssl.keystore.alias=ghidra
 EOF
         fi
         echo "SSL keystore configuration completed successfully"
@@ -396,7 +397,7 @@ class Ghidra(installer.Installer):
         keystore_password_file = f"{self.app_dir}/certs/keystore_password.txt"
         if self.connection.WriteFile("/tmp/keystore_password.txt", keystore_password):
             self.connection.MoveFileOrDirectory("/tmp/keystore_password.txt", keystore_password_file)
-            self.connection.ChangePermission(keystore_password_file, "600")
+            self.connection.ChangePermission(keystore_password_file, "644")
 
         # Export SSL keystore from certbot
         util.LogInfo("Exporting SSL keystore from certbot")
@@ -404,10 +405,11 @@ class Ghidra(installer.Installer):
             self.cert_manager_tool,
             "export_keystore",
             self.app_domain,
-            f"{self.app_dir}/certs/ghidra-keystore.jks",
+            f"{self.app_dir}/certs/ghidra-keystore.p12",
             keystore_password,
             "ghidra",
-            "jks"
+            "p12",
+            "644"
         ], sudo = True)
 
         # Write entrypoint script
