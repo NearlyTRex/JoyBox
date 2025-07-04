@@ -8,17 +8,43 @@ from . import installer
 
 # Nginx stream config template
 nginx_stream_config_template = """
-upstream ghidra_backend {{
-    server 127.0.0.1:{port_http};
+upstream ghidra_rmi_registry {{
+    server 127.0.0.1:{port_rmi};
 }}
 
 server {{
     listen 13100;
-    proxy_pass ghidra_backend;
+    proxy_pass ghidra_rmi_registry;
     proxy_timeout 10s;
     proxy_responses 1;
     proxy_connect_timeout 5s;
-    error_log /var/log/nginx/ghidra_stream.log;
+    error_log /var/log/nginx/ghidra_rmi_registry.log;
+}}
+
+upstream ghidra_rmi_ssl {{
+    server 127.0.0.1:{port_ssl};
+}}
+
+server {{
+    listen 13101;
+    proxy_pass ghidra_rmi_ssl;
+    proxy_timeout 10s;
+    proxy_responses 1;
+    proxy_connect_timeout 5s;
+    error_log /var/log/nginx/ghidra_rmi_ssl.log;
+}}
+
+upstream ghidra_block_stream {{
+    server 127.0.0.1:{port_stream};
+}}
+
+server {{
+    listen 13102;
+    proxy_pass ghidra_block_stream;
+    proxy_timeout 10s;
+    proxy_responses 1;
+    proxy_connect_timeout 5s;
+    error_log /var/log/nginx/ghidra_block_stream.log;
 }}
 """
 
@@ -33,11 +59,26 @@ services:
     container_name: ghidra_server
     restart: always
     ports:
-      - "127.0.0.1:${GHIDRA_PORT}:13100"
+      - "127.0.0.1:${GHIDRA_PORT_RMI}:13100"
+      - "127.0.0.1:${GHIDRA_PORT_SSL}:13101"
+      - "127.0.0.1:${GHIDRA_PORT_STREAM}:13102"
     volumes:
       - ghidra_repos:/repos
     environment:
       - GHIDRA_INSTALL_DIR=/ghidra
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "ghidraSvr"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - ghidra_network
+
+networks:
+  ghidra_network:
+    driver: bridge
+
 volumes:
   ghidra_repos: {}
 """
@@ -52,6 +93,8 @@ RUN apt-get update && apt-get install -y \\
     unzip \\
     curl \\
     jq \\
+    procps \\
+    net-tools \\
     && rm -rf /var/lib/apt/lists/*
 
 # Download and install Ghidra
@@ -86,7 +129,11 @@ CMD ["./ghidraSvr", "console"]
 
 # .env template
 env_template = """
-GHIDRA_PORT={port_http}
+GHIDRA_PORT_RMI={port_rmi}
+GHIDRA_PORT_SSL={port_ssl}
+GHIDRA_PORT_STREAM={port_stream}
+GHIDRA_ADMIN_USER={admin_user}
+GHIDRA_ADMIN_PASS={admin_pass}
 """
 
 # Ghidra scripts
@@ -242,10 +289,16 @@ class Ghidra(installer.Installer):
         self.nginx_stream_config_values = {
             "domain": self.config.GetValue("UserData.Servers", "domain_name"),
             "subdomain": self.config.GetValue("UserData.Ghidra", "ghidra_subdomain"),
-            "port_http": self.config.GetValue("UserData.Ghidra", "ghidra_port")
+            "port_rmi": self.config.GetValue("UserData.Ghidra", "ghidra_port_rmi"),
+            "port_ssl": self.config.GetValue("UserData.Ghidra", "ghidra_port_ssl"),
+            "port_stream": self.config.GetValue("UserData.Ghidra", "ghidra_port_stream")
         }
         self.env_values = {
-            "port_http": self.config.GetValue("UserData.Ghidra", "ghidra_port")
+            "port_rmi": self.config.GetValue("UserData.Ghidra", "ghidra_port_rmi"),
+            "port_ssl": self.config.GetValue("UserData.Ghidra", "ghidra_port_ssl"),
+            "port_stream": self.config.GetValue("UserData.Ghidra", "ghidra_port_stream"),
+            "admin_user": self.config.GetValue("UserData.Ghidra", "ghidra_admin_user"),
+            "admin_pass": self.config.GetValue("UserData.Ghidra", "ghidra_admin_pass")
         }
 
     def IsInstalled(self):
@@ -287,9 +340,10 @@ class Ghidra(installer.Installer):
             self.connection.RunChecked([self.nginx_manager_tool, "link_stream_conf", f"{self.app_name}.conf"], sudo = True)
             self.connection.RemoveFileOrDirectory(f"/tmp/{self.app_name}.conf")
 
-        # Open firewall port
-        util.LogInfo("Opening firewall port")
-        self.connection.RunChecked([self.nginx_manager_tool, "open_port", "13100"], sudo = True)
+        # Open all three firewall ports
+        util.LogInfo("Opening firewall ports for Ghidra")
+        for port in ["13100", "13101", "13102"]:
+            self.connection.RunChecked([self.nginx_manager_tool, "open_port", port], sudo = True)
 
         # Start docker
         util.LogInfo("Starting docker")
@@ -315,7 +369,8 @@ class Ghidra(installer.Installer):
         util.LogInfo("Removing nginx stream entry")
         self.connection.RunChecked([self.nginx_manager_tool, "remove_stream_conf", f"{self.app_name}.conf"], sudo = True)
 
-        # Close firewall port
-        util.LogInfo("Closing firewall port")
-        self.connection.RunChecked([self.nginx_manager_tool, "close_port", "13100"], sudo = True)
+        # Close all firewall ports
+        util.LogInfo("Closing firewall ports")
+        for port in ["13100", "13101", "13102"]:
+            self.connection.RunChecked([self.nginx_manager_tool, "close_port", port], sudo = True)
         return True

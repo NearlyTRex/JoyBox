@@ -100,7 +100,11 @@ ini_defaults["UserData.Kanboard"]["kanboard_port_http"] = "8086"
 # UserData.Ghidra
 ini_defaults["UserData.Ghidra"] = {}
 ini_defaults["UserData.Ghidra"]["ghidra_subdomain"] = "ghidra"
-ini_defaults["UserData.Ghidra"]["ghidra_port"] = "13103"
+ini_defaults["UserData.Ghidra"]["ghidra_port_rmi"] = "13103"
+ini_defaults["UserData.Ghidra"]["ghidra_port_ssl"] = "13104"
+ini_defaults["UserData.Ghidra"]["ghidra_port_stream"] = "13105"
+ini_defaults["UserData.Ghidra"]["ghidra_admin_user"] = "admin"
+ini_defaults["UserData.Ghidra"]["ghidra_admin_pass"] = ""
 
 # UserData.Servers
 ini_defaults["UserData.Servers"] = {}
