@@ -64,8 +64,10 @@ services:
       - "127.0.0.1:${GHIDRA_PORT_STREAM}:13102"
     volumes:
       - ghidra_repos:/repos
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     environment:
       - GHIDRA_INSTALL_DIR=/ghidra
+      - GHIDRA_DOMAIN=${GHIDRA_DOMAIN}
     healthcheck:
       test: ["CMD", "pgrep", "-f", "ghidraSvr"]
       interval: 30s
@@ -95,6 +97,7 @@ RUN apt-get update && apt-get install -y \\
     jq \\
     procps \\
     net-tools \\
+    openssl \\
     && rm -rf /var/lib/apt/lists/*
 
 # Download and install Ghidra
@@ -116,6 +119,10 @@ RUN mkdir -p /repos
 COPY ExportToGzf.java /ghidra/Ghidra/Features/Base/ghidra_scripts/ExportToGzf.java
 COPY ListAndExportRepository.java /ghidra/Ghidra/Features/Base/ghidra_scripts/ListAndExportRepository.java
 
+# Copy the entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Initialize the repository and install the server service
 RUN ./svrInstall /repos
 
@@ -124,6 +131,7 @@ ENV JAVA_OPTS="-Djava.awt.headless=true"
 
 EXPOSE 13100 13101 13102
 WORKDIR /ghidra/server
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["./ghidraSvr", "console"]
 """
 
@@ -134,6 +142,92 @@ GHIDRA_PORT_SSL={port_ssl}
 GHIDRA_PORT_STREAM={port_stream}
 GHIDRA_ADMIN_USER={admin_user}
 GHIDRA_ADMIN_PASS={admin_pass}
+GHIDRA_DOMAIN={domain}
+"""
+
+# Entrypoint script
+entrypoint_script = """#!/bin/bash
+set -euo pipefail
+
+convert_letsencrypt_certs() {
+    local domain="$1"
+    echo "Converting Let's Encrypt certificate from $domain"
+    local cert_dir="/etc/letsencrypt/live/$domain"
+    local keystore_path="/ghidra/server/ghidra-keystore.jks"
+    local keystore_pass=$(openssl rand -base64 32 | tr -d '\\n')
+    local keystore_pass_file="/ghidra/server/.keystore_password"
+    echo "Generated random keystore password"
+
+    if [ -f "$cert_dir/fullchain.pem" ] && [ -f "$cert_dir/privkey.pem" ]; then
+        echo "Found Let's Encrypt certificates for $domain"
+        echo "Converting certificates to Java keystore..."
+        echo "$keystore_pass" > "$keystore_pass_file"
+        chmod 600 "$keystore_pass_file"
+        openssl pkcs12 -export \
+            -in "$cert_dir/fullchain.pem" \
+            -inkey "$cert_dir/privkey.pem" \
+            -out /tmp/ghidra-temp.p12 \
+            -name ghidra \
+            -passout pass:"$keystore_pass"
+        keytool -importkeystore \
+            -srckeystore /tmp/ghidra-temp.p12 \
+            -srcstoretype PKCS12 \
+            -srcstorepass "$keystore_pass" \
+            -destkeystore "$keystore_path" \
+            -deststoretype JKS \
+            -deststorepass "$keystore_pass" \
+            -alias ghidra \
+            -noprompt
+        rm -f /tmp/ghidra-temp.p12
+        echo "Successfully created Java keystore at $keystore_path"
+
+        if [ -f /repos/server.conf ]; then
+            echo "Updating server configuration to use custom keystore..."
+            cp /repos/server.conf /repos/server.conf.backup
+
+            if grep -q "ghidra.server.ssl.keystore" /repos/server.conf; then
+                sed -i "s|ghidra.server.ssl.keystore=.*|ghidra.server.ssl.keystore=$keystore_path|" /repos/server.conf
+            else
+                echo "ghidra.server.ssl.keystore=$keystore_path" >> /repos/server.conf
+            fi
+
+            if grep -q "ghidra.server.ssl.keystore.password" /repos/server.conf; then
+                sed -i "s|ghidra.server.ssl.keystore.password=.*|ghidra.server.ssl.keystore.password=$keystore_pass|" /repos/server.conf
+            else
+                echo "ghidra.server.ssl.keystore.password=$keystore_pass" >> /repos/server.conf
+            fi
+        else
+            echo "Creating server configuration..."
+            cat > /repos/server.conf <<EOF
+# Ghidra Server Configuration
+ghidra.server.ssl.keystore=$keystore_path
+ghidra.server.ssl.keystore.password=$keystore_pass
+EOF
+        fi
+        echo "Saving keystore password"
+        export GHIDRA_KEYSTORE_PASSWORD="$keystore_pass"
+        echo "Keystore password saved to $keystore_pass_file"
+        return 0
+    else
+        echo "Let's Encrypt certificates not found at $cert_dir"
+        return 1
+    fi
+}
+
+echo "Starting Ghidra Server initialization..."
+if [ -n "${GHIDRA_DOMAIN:-}" ]; then
+    echo "Attempting to use Let's Encrypt certificates for domain: $GHIDRA_DOMAIN"
+    if convert_letsencrypt_certs "$GHIDRA_DOMAIN"; then
+        echo "Successfully configured SSL with Let's Encrypt certificates"
+    else
+        echo "Failed to configure Let's Encrypt certificates, falling back to self-signed"
+    fi
+else
+    echo "No GHIDRA_DOMAIN set, using default Ghidra SSL configuration"
+fi
+
+echo "Starting Ghidra Server..."
+exec "$@"
 """
 
 # Ghidra scripts
@@ -294,6 +388,7 @@ class Ghidra(installer.Installer):
             "port_stream": self.config.GetValue("UserData.Ghidra", "ghidra_port_stream")
         }
         self.env_values = {
+            "domain": self.config.GetValue("UserData.Servers", "domain_name"),
             "port_rmi": self.config.GetValue("UserData.Ghidra", "ghidra_port_rmi"),
             "port_ssl": self.config.GetValue("UserData.Ghidra", "ghidra_port_ssl"),
             "port_stream": self.config.GetValue("UserData.Ghidra", "ghidra_port_stream"),
@@ -310,6 +405,11 @@ class Ghidra(installer.Installer):
         # Create directories
         util.LogInfo("Creating directories")
         self.connection.MakeDirectory(self.app_dir)
+
+        # Write entrypoint script
+        util.LogInfo("Writing entrypoint script")
+        if self.connection.WriteFile("/tmp/entrypoint.sh", entrypoint_script):
+            self.connection.MoveFileOrDirectory("/tmp/entrypoint.sh", f"{self.app_dir}/entrypoint.sh")
 
         # Write Ghidra scripts
         util.LogInfo("Writing Ghidra scripts")
