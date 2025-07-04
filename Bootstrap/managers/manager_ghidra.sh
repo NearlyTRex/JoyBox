@@ -87,28 +87,48 @@ check_server_status() {
         return 1
     fi
 
-    if docker exec "$container_name" netstat -tlnp 2>/dev/null | grep -q ":13100"; then
+    local netstat_output
+    netstat_output=$(docker exec "$container_name" netstat -tlnp 2>/dev/null)
+    if echo "$netstat_output" | grep -q "0\.0\.0\.0:13100.*LISTEN.*java"; then
         echo "Server is listening on port 13100 (RMI Registry)"
     else
         echo "Server is not listening on port 13100"
-        return 1
     fi
-
-    if docker exec "$container_name" netstat -tlnp 2>/dev/null | grep -q ":13101"; then
+    if echo "$netstat_output" | grep -q "0\.0\.0\.0:13101.*LISTEN.*java"; then
         echo "Server is listening on port 13101 (RMI SSL)"
     else
         echo "Server is not listening on port 13101"
-        return 1
     fi
-
-    if docker exec "$container_name" netstat -tlnp 2>/dev/null | grep -q ":13102"; then
+    if echo "$netstat_output" | grep -q "0\.0\.0\.0:13102.*LISTEN.*java"; then
         echo "Server is listening on port 13102 (Block Stream)"
     else
         echo "Server is not listening on port 13102"
-        return 1
     fi
 
-    echo "Ghidra server appears to be running correctly"
+    if docker exec "$container_name" timeout 3 bash -c 'echo > /dev/tcp/127.0.0.1/13100' 2>/dev/null; then
+        echo "Internal connectivity test passed"
+    else
+        echo "Internal connectivity test failed"
+    fi
+
+    if docker exec "$container_name" test -f /ghidra/repositories/server.log 2>/dev/null; then
+        local recent_entries
+        recent_entries=$(docker exec "$container_name" tail -10 /ghidra/repositories/server.log 2>/dev/null | grep -c "INFO" || echo "0")
+        echo "Server log file exists with recent activity ($recent_entries recent INFO entries)"
+    else
+        echo "Server log file not found"
+    fi
+
+    local external_port
+    external_port=$(docker port "$container_name" 13100 2>/dev/null | cut -d: -f2)
+    if [ -n "$external_port" ]; then
+        echo "Docker port mapping: 127.0.0.1:$external_port -> 13100"
+        if timeout 3 bash -c "echo >/dev/tcp/127.0.0.1/$external_port" 2>/dev/null; then
+            echo "External port $external_port is accessible"
+        else
+            echo "Cannot connect to external port $external_port"
+        fi
+    fi
     return 0
 }
 
