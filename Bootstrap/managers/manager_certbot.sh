@@ -86,8 +86,10 @@ copy_certs() {
 
 export_keystore() {
     if [ "$#" -lt 4 ]; then
-        echo "Usage: export_keystore <domain> <destination_path> <password> <alias> [format]"
+        echo "Usage: export_keystore <domain> <destination_path> <password> <alias> [format] [permissions] [owner]"
         echo "  format: p12 (default) or jks"
+        echo "  permissions: file permissions (default: 600)"
+        echo "  owner: file owner in format user:group (default: current user)"
         exit 1
     fi
 
@@ -96,6 +98,8 @@ export_keystore() {
     local PASSWORD="$3"
     local ALIAS="$4"
     local FORMAT="${5:-p12}"
+    local PERMISSIONS="${6:-600}"
+    local OWNER="${7:-}"
     local CERT_DIR="/etc/letsencrypt/live/$DOMAIN"
     local ARCHIVE_DIR="/etc/letsencrypt/archive/$DOMAIN"
 
@@ -103,6 +107,12 @@ export_keystore() {
     echo "Format: $FORMAT"
     echo "Alias: $ALIAS"
     echo "Destination: $DEST_PATH"
+    echo "Permissions: $PERMISSIONS"
+    if [ -n "$OWNER" ]; then
+        echo "Owner: $OWNER"
+    else
+        echo "Owner: (unchanged)"
+    fi
 
     if [ ! -d "$CERT_DIR" ]; then
         echo "Error: Certificate directory $CERT_DIR does not exist"
@@ -180,7 +190,14 @@ export_keystore() {
         fi
         rm -f "$TEMP_P12"
     fi
-    chmod 600 "$DEST_PATH"
+
+    echo "Setting permissions to $PERMISSIONS..."
+    chmod "$PERMISSIONS" "$DEST_PATH"
+
+    if [ -n "$OWNER" ]; then
+        echo "Setting owner to $OWNER..."
+        chown "$OWNER" "$DEST_PATH"
+    fi
 
     echo "Keystore exported successfully to: $DEST_PATH"
     echo "Keystore details:"
@@ -195,6 +212,7 @@ export_keystore() {
         fi
     fi
 
+    echo "File permissions: $(ls -la "$DEST_PATH" | awk '{print $1, $3, $4}')"
     echo "File size: $(ls -lh "$DEST_PATH" | awk '{print $5}')"
     echo "Remember to keep your keystore password secure!"
 }
@@ -245,20 +263,31 @@ print_usage() {
     echo "  $0 register <email> <domain1> [domain2 ...]"
     echo "  $0 renew"
     echo "  $0 copy_certs <domain> <destination_dir>"
-    echo "  $0 export_keystore <domain> <dest_path> <password> <alias> [format]"
+    echo "  $0 export_keystore <domain> <dest_path> <password> <alias> [format] [permissions] [owner]"
     echo "  $0 list"
     echo "  $0 check <domain>"
     echo ""
     echo "Examples:"
     echo "  $0 copy_certs squaredbinary.com /home/user/apps/ghidra_server/certs"
     echo "  $0 export_keystore squaredbinary.com /opt/app/keystore.p12 mypassword squaredbinary.com p12"
-    echo "  $0 export_keystore squaredbinary.com /opt/app/keystore.jks mypassword myapp jks"
+    echo "  $0 export_keystore squaredbinary.com /opt/app/keystore.jks mypassword myapp jks 600 100000:100000"
+    echo "  $0 export_keystore squaredbinary.com /opt/app/keystore.p12 mypassword myapp p12 644 www-data:www-data"
     echo "  $0 list"
     echo "  $0 check squaredbinary.com"
     echo ""
     echo "Keystore formats:"
     echo "  p12  - PKCS12 format (default, widely supported)"
     echo "  jks  - Java KeyStore format (requires keytool/Java JDK)"
+    echo ""
+    echo "Permission examples:"
+    echo "  600  - Read/write for owner only (default)"
+    echo "  644  - Read/write for owner, read for group and others"
+    echo "  640  - Read/write for owner, read for group"
+    echo ""
+    echo "Owner examples:"
+    echo "  100000:100000  - Docker namespace remapping"
+    echo "  www-data:www-data  - Web server user"
+    echo "  myuser:mygroup  - Custom user and group"
     exit 1
 }
 
@@ -289,7 +318,7 @@ case "$1" in
             echo "Error: export_keystore requires domain, destination path, password, and alias"
             print_usage
         fi
-        export_keystore "$2" "$3" "$4" "$5" "${6:-p12}"
+        export_keystore "$2" "$3" "$4" "$5" "${6:-p12}" "${7:-600}" "${8:-}"
         ;;
     list)
         list_certs
