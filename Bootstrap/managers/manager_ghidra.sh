@@ -11,15 +11,20 @@ print_usage() {
     echo "  $0 [--backup-dir <path>] remove_user <container_name> <username>"
     echo "  $0 [--backup-dir <path>] list_users <container_name>"
     echo "  $0 [--backup-dir <path>] reset_password <container_name> <username>"
-    echo "  $0 [--backup-dir <path>] create_repository <container_name> <repo_name>"
-    echo "  $0 [--backup-dir <path>] delete_repository <container_name> <repo_name>"
+    echo "  $0 [--backup-dir <path>] grant_repository_access <container_name> <username> <repository_name> [+r|+w|+a]"
+    echo "  $0 [--backup-dir <path>] revoke_repository_access <container_name> <username> <repository_name>"
     echo "  $0 [--backup-dir <path>] list_repositories <container_name>"
+    echo "  $0 [--backup-dir <path>] check_server_status <container_name>"
     echo "  $0 [--backup-dir <path>] backup_repositories <container_name>"
     echo "  $0 [--backup-dir <path>] restore_repositories <container_name> <repo_name> <backup_name>"
     echo "  $0 [--backup-dir <path>] export_program_gzf <container_name> <project_name> <program_name> [output_path]"
     echo ""
     echo "Options:"
     echo "  --backup-dir <path>    Specify backup directory (default: $DEFAULT_BACKUP_DIR)"
+    echo ""
+    echo "Notes:"
+    echo "  - Repositories are created by connecting with Ghidra GUI client, not via command line"
+    echo "  - Repository access permissions: +r (read), +w (write), +a (admin)"
     exit 1
 }
 
@@ -67,6 +72,46 @@ create_backup_directory() {
     echo "$BACKUP_DIR"
 }
 
+check_server_status() {
+    local container_name="$1"
+
+    check_container_exists "$container_name"
+    check_container_running "$container_name"
+
+    echo "Checking Ghidra server status in container '$container_name'..."
+
+    if docker exec "$container_name" pgrep -f "ghidraSvr" > /dev/null 2>&1; then
+        echo "Ghidra server process is running"
+    else
+        echo "Ghidra server process is not running"
+        return 1
+    fi
+
+    if docker exec "$container_name" netstat -tlnp 2>/dev/null | grep -q ":13100"; then
+        echo "Server is listening on port 13100 (RMI Registry)"
+    else
+        echo "Server is not listening on port 13100"
+        return 1
+    fi
+
+    if docker exec "$container_name" netstat -tlnp 2>/dev/null | grep -q ":13101"; then
+        echo "Server is listening on port 13101 (RMI SSL)"
+    else
+        echo "Server is not listening on port 13101"
+        return 1
+    fi
+
+    if docker exec "$container_name" netstat -tlnp 2>/dev/null | grep -q ":13102"; then
+        echo "Server is listening on port 13102 (Block Stream)"
+    else
+        echo "Server is not listening on port 13102"
+        return 1
+    fi
+
+    echo "Ghidra server appears to be running correctly"
+    return 0
+}
+
 add_user() {
     local container_name="$1"
     local username="$2"
@@ -85,7 +130,7 @@ add_user() {
             exit 1
         fi
     else
-        if docker exec -it "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -add '$username'"; then
+        if docker exec -it "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -add '$username' --p"; then
             echo "User '$username' added successfully."
         else
             echo "Error: Failed to add user '$username'. User may already exist."
@@ -128,7 +173,7 @@ reset_password() {
     check_container_running "$container_name"
 
     echo "Resetting password for Ghidra user '$username' in container '$container_name'..."
-    if docker exec -it "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -reset '$username'"; then
+    if docker exec -it "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -reset '$username' --p"; then
         echo "Password reset for user '$username' completed successfully."
     else
         echo "Error: Failed to reset password for user '$username'."
@@ -136,35 +181,37 @@ reset_password() {
     fi
 }
 
-create_repository() {
+grant_repository_access() {
     local container_name="$1"
-    local repo_name="$2"
+    local username="$2"
+    local repository_name="$3"
+    local permission="${4:-+w}"
 
     check_container_exists "$container_name"
     check_container_running "$container_name"
 
-    echo "Creating Ghidra repository '$repo_name' in container '$container_name'..."
-    if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -create '$repo_name'"; then
-        echo "Repository '$repo_name' created successfully."
+    echo "Granting '$permission' access to repository '$repository_name' for user '$username'..."
+    if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -grant '$username' '$permission' '$repository_name'"; then
+        echo "Access granted successfully."
     else
-        echo "Error: Failed to create repository '$repo_name'. Repository may already exist."
+        echo "Error: Failed to grant access. User or repository may not exist."
         exit 1
     fi
 }
 
-delete_repository() {
+revoke_repository_access() {
     local container_name="$1"
-    local repo_name="$2"
+    local username="$2"
+    local repository_name="$3"
 
     check_container_exists "$container_name"
     check_container_running "$container_name"
 
-    echo "Deleting Ghidra repository '$repo_name' from container '$container_name'..."
-    echo "WARNING: This will permanently delete all data in the repository!"
-    if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -delete '$repo_name'"; then
-        echo "Repository '$repo_name' deleted successfully."
+    echo "Revoking access to repository '$repository_name' for user '$username'..."
+    if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -revoke '$username' '$repository_name'"; then
+        echo "Access revoked successfully."
     else
-        echo "Error: Failed to delete repository '$repo_name'. Repository may not exist."
+        echo "Error: Failed to revoke access. User or repository may not exist."
         exit 1
     fi
 }
@@ -195,7 +242,7 @@ backup_repositories() {
 
     echo "Getting list of repositories..."
     local repositories
-    repositories=$(docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -list" 2>/dev/null | grep -v "^$" | grep -v "Repositories:" || true)
+    repositories=$(docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -list" 2>/dev/null | grep -v "^$" | grep -v "Repositories:" | grep -v "<No repositories" || true)
     if [ -z "$repositories" ]; then
         echo "No repositories found to backup."
         return 0
@@ -301,6 +348,7 @@ restore_repositories() {
     fi
 
     echo "WARNING: This will import programs into repository '$repo_name'."
+    echo "The repository must already exist and you must have access to it."
     echo "Existing programs with the same name may be overwritten."
     read -p "Are you sure you want to continue? (yes/no): " confirm
     if [ "$confirm" != "yes" ]; then
@@ -309,16 +357,6 @@ restore_repositories() {
     fi
 
     echo "Restoring backup..."
-    if ! docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -list" 2>/dev/null | grep -q "^$repo_name$"; then
-        echo "Creating repository '$repo_name'..."
-        if ! docker exec "$container_name" /bin/bash -c "cd /ghidra/server && ./svrAdmin -create '$repo_name'" 2>/dev/null; then
-            echo "Error: Failed to create repository '$repo_name'"
-            exit 1
-        fi
-    else
-        echo "Repository '$repo_name' already exists"
-    fi
-
     if ! ls "$backup_path"/*.gzf 1> /dev/null 2>&1; then
         echo "No .gzf files found in backup directory."
         exit 1
@@ -449,20 +487,20 @@ case "$1" in
         reset_password "${@:2}"
         ;;
 
-    create_repository)
-        if [ $# -ne 3 ]; then
-            echo "Usage: $0 create_repository <container_name> <repo_name>"
+    grant_repository_access)
+        if [ $# -lt 4 ] || [ $# -gt 5 ]; then
+            echo "Usage: $0 grant_repository_access <container_name> <username> <repository_name> [+r|+w|+a]"
             exit 1
         fi
-        create_repository "${@:2}"
+        grant_repository_access "${@:2}"
         ;;
 
-    delete_repository)
-        if [ $# -ne 3 ]; then
-            echo "Usage: $0 delete_repository <container_name> <repo_name>"
+    revoke_repository_access)
+        if [ $# -ne 4 ]; then
+            echo "Usage: $0 revoke_repository_access <container_name> <username> <repository_name>"
             exit 1
         fi
-        delete_repository "${@:2}"
+        revoke_repository_access "${@:2}"
         ;;
 
     list_repositories)
@@ -471,6 +509,14 @@ case "$1" in
             exit 1
         fi
         list_repositories "${@:2}"
+        ;;
+
+    check_server_status)
+        if [ $# -ne 2 ]; then
+            echo "Usage: $0 check_server_status <container_name>"
+            exit 1
+        fi
+        check_server_status "${@:2}"
         ;;
 
     backup_repositories)
