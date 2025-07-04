@@ -1,6 +1,8 @@
 # Imports
 import os
 import sys
+import secrets
+import string
 
 # Local imports
 import util
@@ -64,7 +66,7 @@ services:
       - "127.0.0.1:${GHIDRA_PORT_STREAM}:13102"
     volumes:
       - ghidra_repos:/repos
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./certs:/certs:ro
     environment:
       - GHIDRA_INSTALL_DIR=/ghidra
       - GHIDRA_DOMAIN=${GHIDRA_DOMAIN}
@@ -149,46 +151,26 @@ GHIDRA_DOMAIN={domain}
 entrypoint_script = """#!/bin/bash
 set -euo pipefail
 
-convert_letsencrypt_certs() {
+configure_ssl_keystore() {
     local domain="$1"
-    echo "Converting Let's Encrypt certificate from $domain"
-    local cert_dir="/etc/letsencrypt/live/$domain"
-    local keystore_path="/ghidra/server/ghidra-keystore.jks"
-    local keystore_pass=$(openssl rand -base64 32 | tr -d '\\n')
-    local keystore_pass_file="/ghidra/server/.keystore_password"
-    echo "Generated random keystore password"
+    echo "Configuring SSL keystore for domain: $domain"
+    local keystore_path="/certs/ghidra-keystore.jks"
+    local keystore_pass_file="/certs/keystore_password.txt"
+    if [ -f "$keystore_path" ] && [ -f "$keystore_pass_file" ]; then
+        echo "Found pre-exported keystore at $keystore_path"
+        local keystore_pass=$(cat "$keystore_pass_file")
 
-    if [ -f "$cert_dir/fullchain.pem" ] && [ -f "$cert_dir/privkey.pem" ]; then
-        echo "Found Let's Encrypt certificates for $domain"
-        echo "Converting certificates to Java keystore..."
-        echo "$keystore_pass" > "$keystore_pass_file"
-        chmod 600 "$keystore_pass_file"
-        openssl pkcs12 -export \
-            -in "$cert_dir/fullchain.pem" \
-            -inkey "$cert_dir/privkey.pem" \
-            -out /tmp/ghidra-temp.p12 \
-            -name ghidra \
-            -passout pass:"$keystore_pass"
-        keytool -importkeystore \
-            -srckeystore /tmp/ghidra-temp.p12 \
-            -srcstoretype PKCS12 \
-            -srcstorepass "$keystore_pass" \
-            -destkeystore "$keystore_path" \
-            -deststoretype JKS \
-            -deststorepass "$keystore_pass" \
-            -alias ghidra \
-            -noprompt
-        rm -f /tmp/ghidra-temp.p12
-        echo "Successfully created Java keystore at $keystore_path"
+        cp "$keystore_path" "/ghidra/server/ghidra-keystore.jks"
+        chmod 600 "/ghidra/server/ghidra-keystore.jks"
 
         if [ -f /repos/server.conf ]; then
-            echo "Updating server configuration to use custom keystore..."
+            echo "Updating existing server configuration..."
             cp /repos/server.conf /repos/server.conf.backup
 
             if grep -q "ghidra.server.ssl.keystore" /repos/server.conf; then
-                sed -i "s|ghidra.server.ssl.keystore=.*|ghidra.server.ssl.keystore=$keystore_path|" /repos/server.conf
+                sed -i "s|ghidra.server.ssl.keystore=.*|ghidra.server.ssl.keystore=/ghidra/server/ghidra-keystore.jks|" /repos/server.conf
             else
-                echo "ghidra.server.ssl.keystore=$keystore_path" >> /repos/server.conf
+                echo "ghidra.server.ssl.keystore=/ghidra/server/ghidra-keystore.jks" >> /repos/server.conf
             fi
 
             if grep -q "ghidra.server.ssl.keystore.password" /repos/server.conf; then
@@ -197,30 +179,30 @@ convert_letsencrypt_certs() {
                 echo "ghidra.server.ssl.keystore.password=$keystore_pass" >> /repos/server.conf
             fi
         else
-            echo "Creating server configuration..."
+            echo "Creating new server configuration..."
             cat > /repos/server.conf <<EOF
 # Ghidra Server Configuration
-ghidra.server.ssl.keystore=$keystore_path
+ghidra.server.ssl.keystore=/ghidra/server/ghidra-keystore.jks
 ghidra.server.ssl.keystore.password=$keystore_pass
 EOF
         fi
-        echo "Saving keystore password"
-        export GHIDRA_KEYSTORE_PASSWORD="$keystore_pass"
-        echo "Keystore password saved to $keystore_pass_file"
+        echo "SSL keystore configuration completed successfully"
         return 0
     else
-        echo "Let's Encrypt certificates not found at $cert_dir"
+        echo "Pre-exported keystore not found. SSL will use Ghidra's default configuration."
+        echo "Expected keystore: $keystore_path"
+        echo "Expected password file: $keystore_pass_file"
         return 1
     fi
 }
 
 echo "Starting Ghidra Server initialization..."
 if [ -n "${GHIDRA_DOMAIN:-}" ]; then
-    echo "Attempting to use Let's Encrypt certificates for domain: $GHIDRA_DOMAIN"
-    if convert_letsencrypt_certs "$GHIDRA_DOMAIN"; then
-        echo "Successfully configured SSL with Let's Encrypt certificates"
+    echo "Configuring SSL for domain: $GHIDRA_DOMAIN"
+    if configure_ssl_keystore "$GHIDRA_DOMAIN"; then
+        echo "SSL configuration completed successfully"
     else
-        echo "Failed to configure Let's Encrypt certificates, falling back to self-signed"
+        echo "SSL configuration failed, using default Ghidra SSL settings"
     fi
 else
     echo "No GHIDRA_DOMAIN set, using default Ghidra SSL configuration"
@@ -380,6 +362,7 @@ class Ghidra(installer.Installer):
         super().__init__(config, connection, flags, options)
         self.app_name = "ghidra_server"
         self.app_dir = f"$HOME/apps/{self.app_name}"
+        self.app_domain = self.config.GetValue("UserData.Servers", "domain_name")
         self.nginx_stream_config_values = {
             "domain": self.config.GetValue("UserData.Servers", "domain_name"),
             "subdomain": self.config.GetValue("UserData.Ghidra", "ghidra_subdomain"),
@@ -405,6 +388,27 @@ class Ghidra(installer.Installer):
         # Create directories
         util.LogInfo("Creating directories")
         self.connection.MakeDirectory(self.app_dir)
+        self.connection.MakeDirectory(f"{self.app_dir}/certs")
+
+        # Generate keystore password
+        util.LogInfo("Generate keystore password")
+        keystore_password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(32))
+        keystore_password_file = f"{self.app_dir}/certs/keystore_password.txt"
+        if self.connection.WriteFile("/tmp/keystore_password.txt", keystore_password):
+            self.connection.MoveFileOrDirectory("/tmp/keystore_password.txt", keystore_password_file)
+            self.connection.ChangePermission(keystore_password_file, "600")
+
+        # Export SSL keystore from certbot
+        util.LogInfo("Exporting SSL keystore from certbot")
+        self.connection.RunChecked([
+            self.cert_manager_tool,
+            "export_keystore",
+            self.app_domain,
+            f"{self.app_dir}/certs/ghidra-keystore.jks",
+            keystore_password,
+            "ghidra",
+            "jks"
+        ], sudo = True)
 
         # Write entrypoint script
         util.LogInfo("Writing entrypoint script")
