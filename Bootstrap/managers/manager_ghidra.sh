@@ -7,21 +7,22 @@ BACKUP_DIR="$DEFAULT_BACKUP_DIR"
 
 print_usage() {
     echo "Usage:"
-    echo "  $0 [--backup-dir <path>] add_user <container_name> <username> [password]"
-    echo "  $0 [--backup-dir <path>] remove_user <container_name> <username>"
-    echo "  $0 [--backup-dir <path>] list_users <container_name>"
-    echo "  $0 [--backup-dir <path>] reset_password <container_name> <username>"
-    echo "  $0 [--backup-dir <path>] grant_repository_access <container_name> <username> <repository_name> [+r|+w|+a]"
-    echo "  $0 [--backup-dir <path>] revoke_repository_access <container_name> <username> <repository_name>"
-    echo "  $0 [--backup-dir <path>] list_repositories <container_name>"
-    echo "  $0 [--backup-dir <path>] check_server_status <container_name>"
-    echo "  $0 [--backup-dir <path>] check_server_readiness <container_name>"
+    echo "  $0 add_user <container_name> <username> [password]"
+    echo "  $0 remove_user <container_name> <username>"
+    echo "  $0 list_users <container_name>"
+    echo "  $0 reset_password <container_name> <username>"
+    echo "  $0 grant_repository_access <container_name> <username> <repository_name> [+r|+w|+a]"
+    echo "  $0 revoke_repository_access <container_name> <username> <repository_name>"
+    echo "  $0 list_repositories <container_name>"
+    echo "  $0 check_server_status <container_name>"
+    echo "  $0 check_server_readiness <container_name>"
     echo "  $0 [--backup-dir <path>] backup_repositories <container_name>"
     echo "  $0 [--backup-dir <path>] restore_repositories <container_name> <repo_name> <backup_name>"
-    echo "  $0 [--backup-dir <path>] export_program_gzf <container_name> <project_name> <program_name> [output_path]"
+    echo "  $0 export_program_gzf <container_name> <project_name> <program_name> [output_path]"
     echo ""
     echo "Options:"
     echo "  --backup-dir <path>    Specify backup directory (default: $DEFAULT_BACKUP_DIR)"
+    echo "                         Only applicable to backup_repositories and restore_repositories commands"
     echo ""
     echo "Notes:"
     echo "  - Repositories are created by connecting with Ghidra GUI client, not via command line"
@@ -576,7 +577,7 @@ case "$1" in
 
     backup_repositories)
         if [ $# -ne 2 ]; then
-            echo "Usage: $0 backup_repositories <container_name>"
+            echo "Usage: $0 [--backup-dir <path>] backup_repositories <container_name>"
             exit 1
         fi
         backup_repositories "${@:2}"
@@ -584,7 +585,7 @@ case "$1" in
 
     restore_repositories)
         if [ $# -ne 4 ]; then
-            echo "Usage: $0 restore_repositories <container_name> <repo_name> <backup_name>"
+            echo "Usage: $0 [--backup-dir <path>] restore_repositories <container_name> <repo_name> <backup_name>"
             exit 1
         fi
         restore_repositories "${@:2}"
