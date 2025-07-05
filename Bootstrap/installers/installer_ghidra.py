@@ -189,6 +189,10 @@ configure_ssl_keystore() {
         local next_num=$((highest_additional + 1))
         echo "wrapper.java.additional.$next_num=-Djava.rmi.server.hostname=ghidra.$domain" >> "$server_conf"
 
+        echo "Enabling user ID prompting..."
+        sed -i '/wrapper\.app\.parameter\.2=/i\wrapper.app.parameter.2=-u' "$server_conf"
+        sed -i 's/wrapper\.app\.parameter\.2=${ghidra\.repositories\.dir}/wrapper.app.parameter.3=${ghidra.repositories.dir}/' "$server_conf"
+
         echo "Verifying keystore accessibility..."
         if keytool -list -keystore "$target_keystore" -storetype PKCS12 -storepass "$keystore_pass" > /dev/null 2>&1; then
             echo "Keystore verification successful"
@@ -199,6 +203,7 @@ configure_ssl_keystore() {
         echo "SSL keystore configuration completed successfully"
         echo "Keystore location: $target_keystore"
         echo "RMI hostname set to: ghidra.$domain"
+        echo "User prompting enabled: -u flag added"
         echo "Configuration file: $server_conf"
         return 0
     else
@@ -212,6 +217,9 @@ configure_ssl_keystore() {
         local highest_additional=$(grep -o "wrapper\.java\.additional\.[0-9]\+" "$server_conf" | sed 's/wrapper\.java\.additional\.//' | sort -n | tail -1)
         local next_num=$((highest_additional + 1))
         echo "wrapper.java.additional.$next_num=-Djava.rmi.server.hostname=ghidra.$domain" >> "$server_conf"
+        sed -i '/wrapper\.app\.parameter\.2=/i\wrapper.app.parameter.2=-u' "$server_conf"
+        sed -i 's/wrapper\.app\.parameter\.2=${ghidra\.repositories\.dir}/wrapper.app.parameter.3=${ghidra.repositories.dir}/' "$server_conf"
+
         echo "RMI hostname set to: ghidra.$domain (no SSL)"
         return 1
     fi
@@ -231,7 +239,11 @@ if [ -n "${GHIDRA_DOMAIN:-}" ]; then
     fi
 else
     echo "No GHIDRA_DOMAIN set, using default Ghidra configuration"
-    sed -i "s|^ghidra.repositories.dir=.*|ghidra.repositories.dir=/repos|" /ghidra/server/server.conf
+    local server_conf="/ghidra/server/server.conf"
+    sed -i "s|^ghidra.repositories.dir=.*|ghidra.repositories.dir=/repos|" "$server_conf"
+    sed -i '/wrapper\.app\.parameter\.2=/i\wrapper.app.parameter.2=-u' "$server_conf"
+    sed -i 's/wrapper\.app\.parameter\.2=${ghidra\.repositories\.dir}/wrapper.app.parameter.3=${ghidra.repositories.dir}/' "$server_conf"
+    echo "User prompting enabled: -u flag added"
 fi
 
 echo "Starting Ghidra Server..."
