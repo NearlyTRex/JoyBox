@@ -64,7 +64,7 @@ class Environment:
                         should_skip = True
                         skipped_count += 1
                 if not should_skip:
-                    util.log_info(f"{action_method_name.title()}ing {component_name}")
+                    util.log_info(f"Starting {action_method_name.title()} of {component_name}")
                     method = getattr(installer, action_method_name)
                     if not method():
                         return False
