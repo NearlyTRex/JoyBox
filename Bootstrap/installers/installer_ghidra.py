@@ -145,8 +145,6 @@ env_template = """
 GHIDRA_PORT_RMI={port_rmi}
 GHIDRA_PORT_SSL={port_ssl}
 GHIDRA_PORT_STREAM={port_stream}
-GHIDRA_ADMIN_USER={admin_user}
-GHIDRA_ADMIN_PASS={admin_pass}
 GHIDRA_DOMAIN={domain}
 """
 
@@ -401,6 +399,8 @@ class Ghidra(installer.Installer):
         self.app_name = "ghidra_server"
         self.app_dir = f"$HOME/apps/{self.app_name}"
         self.app_domain = self.config.get_value("UserData.Servers", "domain_name")
+        self.app_admin_user = self.config.get_value("UserData.Ghidra", "ghidra_admin_user")
+        self.app_admin_pass = self.config.get_value("UserData.Ghidra", "ghidra_admin_pass")
         self.nginx_stream_config_values = {
             "domain": self.config.get_value("UserData.Servers", "domain_name"),
             "subdomain": self.config.get_value("UserData.Ghidra", "ghidra_subdomain"),
@@ -412,9 +412,7 @@ class Ghidra(installer.Installer):
             "domain": self.config.get_value("UserData.Servers", "domain_name"),
             "port_rmi": self.config.get_value("UserData.Ghidra", "ghidra_port_rmi"),
             "port_ssl": self.config.get_value("UserData.Ghidra", "ghidra_port_ssl"),
-            "port_stream": self.config.get_value("UserData.Ghidra", "ghidra_port_stream"),
-            "admin_user": self.config.get_value("UserData.Ghidra", "ghidra_admin_user"),
-            "admin_pass": self.config.get_value("UserData.Ghidra", "ghidra_admin_pass")
+            "port_stream": self.config.get_value("UserData.Ghidra", "ghidra_port_stream")
         }
 
     def is_installed(self):
@@ -494,6 +492,17 @@ class Ghidra(installer.Installer):
         self.connection.set_environmentVar("DOCKER_BUILDKIT", "1")
         self.connection.set_environmentVar("COMPOSE_DOCKER_CLI_BUILD", "1")
         self.connection.run_checked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "up", "-d", "--build"])
+
+        # Wait for server to be ready for admin commands
+        util.log_info("Waiting for server readiness...")
+        readiness_code = self.connection.run_return_code([self.ghidra_manager_tool, "check_server_readiness", self.app_name], sudo = True)
+        if readiness_code != 0:
+            util.log_error("Server failed to become ready")
+            return False
+
+        # Adding admin user to server
+        util.log_info("Adding admin user to server")
+        self.connection.run_checked([self.ghidra_manager_tool, "add_user", self.app_name, self.app_admin_user, self.app_admin_pass], sudo = True)
         return True
 
     def uninstall(self):
