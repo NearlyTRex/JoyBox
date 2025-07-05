@@ -33,94 +33,47 @@ class LocalUbuntu(env.Environment):
             "options": self.options
         }
 
-        # Create installers
-        self.installer_aptget = installers.AptGet(**self.installer_options)
-        self.installer_flatpak = installers.Flatpak(**self.installer_options)
-        self.installer_chrome = installers.Chrome(**self.installer_options)
-        self.installer_brave = installers.Brave(**self.installer_options)
-        self.installer_onepassword = installers.OnePassword(**self.installer_options)
-        self.installer_wine = installers.Wine(**self.installer_options)
+        # Create components
+        self.available_components = {
+            "aptget": installers.AptGet(**self.installer_options),
+            "flatpak": installers.Flatpak(**self.installer_options),
+            "chrome": installers.Chrome(**self.installer_options),
+            "brave": installers.Brave(**self.installer_options),
+            "onepassword": installers.OnePassword(**self.installer_options),
+            "wine": installers.Wine(**self.installer_options)
+        }
+
+        # Get individual installers
+        self.installer_aptget = self.available_components["aptget"]
+        self.installer_flatpak = self.available_components["flatpak"]
+        self.installer_chrome = self.available_components["chrome"]
+        self.installer_brave = self.available_components["brave"]
+        self.installer_onepassword = self.available_components["onepassword"]
+        self.installer_wine = self.available_components["wine"]
 
     def Setup(self):
 
-        # Install AptGet packages
-        util.LogInfo("Installing AptGet packages")
-        self.installer_aptget.UpdatePackageLists()
-        if not self.installer_aptget.IsInstalled():
-            if not self.installer_aptget.Install():
-                return False
-        if not self.installer_aptget.AutoRemovePackages():
-            return False
+        # Update package lists
+        if self.ShouldProcessComponent("aptget"):
+            util.LogInfo("Updating package lists for AptGet")
+            self.installer_aptget.UpdatePackageLists()
 
-        # Install Flatpak packages
-        util.LogInfo("Installing Flatpak packages")
-        self.installer_flatpak.UpdatePackages()
-        if not self.installer_flatpak.IsInstalled():
-            if not self.installer_flatpak.Install():
-                return False
+        # Process all components
+        success = self.ProcessComponents("Install")
 
-        # Install Chrome
-        util.LogInfo("Installing Chrome")
-        if not self.installer_chrome.IsInstalled():
-            if not self.installer_chrome.Install():
+        # Autoremove packages
+        if self.ShouldProcessComponent("aptget") and success:
+            if not self.installer_aptget.AutoRemovePackages():
                 return False
-
-        # Install Brave
-        util.LogInfo("Installing Brave")
-        if not self.installer_brave.IsInstalled():
-            if not self.installer_brave.Install():
-                return False
-
-        # Install 1Password
-        util.LogInfo("Installing 1Password")
-        if not self.installer_onepassword.IsInstalled():
-            if not self.installer_onepassword.Install():
-                return False
-
-        # Install Wine
-        util.LogInfo("Installing Wine")
-        if not self.installer_wine.IsInstalled():
-            if not self.installer_wine.Install():
-                return False
-        return True
+        return success
 
     def Teardown(self):
 
-        # Uninstall Wine
-        util.LogInfo("Uninstalling Wine")
-        if self.installer_wine.IsInstalled():
-            if not self.installer_wine.Uninstall():
-                return False
+        # Process components in reverse order
+        success = self.ProcessComponents("Uninstall", reverse_order = True)
 
-        # Uninstall 1Password
-        util.LogInfo("Uninstalling 1Password")
-        if self.installer_onepassword.IsInstalled():
-            if not self.installer_onepassword.Uninstall():
+        # Autoremove packages
+        if self.ShouldProcessComponent("aptget") and success:
+            if not self.installer_aptget.AutoRemovePackages():
                 return False
-
-        # Uninstall Brave
-        util.LogInfo("Uninstalling Brave")
-        if self.installer_brave.IsInstalled():
-            if not self.installer_brave.Uninstall():
-                return False
-
-        # Uninstall Chrome
-        util.LogInfo("Uninstalling Chrome")
-        if self.installer_chrome.IsInstalled():
-            if not self.installer_chrome.Uninstall():
-                return False
-
-        # Uninstall Flatpak packages
-        util.LogInfo("Uninstalling Flatpak packages")
-        if self.installer_flatpak.IsInstalled():
-            if not self.installer_flatpak.Uninstall():
-                return False
-
-        # Uninstall AptGet packages
-        util.LogInfo("Uninstalling AptGet packages")
-        if self.installer_aptget.IsInstalled():
-            if not self.installer_aptget.Uninstall():
-                return False
-        if not self.installer_aptget.AutoRemovePackages():
-            return False
-        return True
+        return success

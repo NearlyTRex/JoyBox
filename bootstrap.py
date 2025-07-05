@@ -36,6 +36,14 @@ parser.add_argument(
     "-s", "--server_index",
     type = int,
     help = "Server index to use")
+parser.add_argument(
+    "--components",
+    nargs = "*",
+    help = "Specific components to setup/teardown (default: all)")
+parser.add_argument(
+    "--list-components",
+    action = "store_true",
+    help = "List available components for the specified environment type and exit")
 parser.add_argument("-v", "--verbose", action = "store_true", help = "Enable verbose mode")
 parser.add_argument("-p", "--pretend_run", action = "store_true", help = "Enable pretend run mode")
 parser.add_argument("-x", "--exit_on_failure", action = "store_true", help = "Enable exit on failure mode")
@@ -45,7 +53,7 @@ args, unknown = parser.parse_known_args()
 is_local_ubuntu = args.type == constants.EnvironmentType.LOCAL_UBUNTU
 is_remote_ubuntu = args.type == constants.EnvironmentType.REMOTE_UBUNTU
 is_server_index = isinstance(args.server_index, int) and args.server_index >= 0
-if is_remote_ubuntu and not is_server_index:
+if is_remote_ubuntu and not is_server_index and not args.list_components:
     util.LogErrorAndQuit("No server specified for remote machine")
 
 # Main
@@ -56,11 +64,11 @@ def main():
 
     # Get config file
     config_file = os.path.realpath(args.config_file)
-    if not os.path.exists(config_file):
+    if not os.path.exists(config_file) and not args.list_components:
         util.LogErrorAndQuit(f"Config file '{config_file}' does not exist")
 
     # Get configuration
-    config = configuration.Configuration(src = config_file)
+    config = configuration.Configuration(src = config_file) if os.path.exists(config_file) else None
 
     # Create environment options
     environment_options = {
@@ -89,6 +97,20 @@ def main():
         environment_runner = environments.RemoteUbuntu(**environment_options)
     if not environment_runner:
         raise Exception("No environment runner could be found")
+
+    # Handle list components request
+    if args.list_components:
+        components = environment_runner.GetAvailableComponents()
+        util.LogInfo(f"Available components for {args.type}:")
+        for component in sorted(components):
+            util.LogInfo(f"  - {component}")
+        return
+
+    # Set components to process
+    if args.components is not None:
+        if len(args.components) == 0:
+            util.LogErrorAndQuit("--components specified but no components listed. Use --list-components to see available components.")
+        environment_runner.SetComponentsToProcess(args.components)
 
     # Dispatch action
     if args.action == "setup":

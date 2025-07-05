@@ -44,172 +44,59 @@ class RemoteUbuntu(env.Environment):
             "options": self.options
         }
 
-        # Create installers
-        self.installer_aptget = installers.AptGet(**self.installer_options)
-        self.installer_audiobookshelf = installers.Audiobookshelf(**self.installer_options)
-        self.installer_flatpak = installers.Flatpak(**self.installer_options)
-        self.installer_nginx = installers.Nginx(**self.installer_options)
-        self.installer_certbot = installers.Certbot(**self.installer_options)
-        self.installer_cockpit = installers.Cockpit(**self.installer_options)
-        self.installer_wordpress = installers.Wordpress(**self.installer_options)
-        self.installer_filebrowser = installers.FileBrowser(**self.installer_options)
-        self.installer_jenkins = installers.Jenkins(**self.installer_options)
-        self.installer_navidrome = installers.Navidrome(**self.installer_options)
-        self.installer_kanboard = installers.Kanboard(**self.installer_options)
-        self.installer_ghidra = installers.Ghidra(**self.installer_options)
+        # Create components
+        self.available_components = {
+            "aptget": installers.AptGet(**self.installer_options),
+            "flatpak": installers.Flatpak(**self.installer_options),
+            "nginx": installers.Nginx(**self.installer_options),
+            "certbot": installers.Certbot(**self.installer_options),
+            "cockpit": installers.Cockpit(**self.installer_options),
+            "wordpress": installers.Wordpress(**self.installer_options),
+            "audiobookshelf": installers.Audiobookshelf(**self.installer_options),
+            "navidrome": installers.Navidrome(**self.installer_options),
+            "filebrowser": installers.FileBrowser(**self.installer_options),
+            "jenkins": installers.Jenkins(**self.installer_options),
+            "kanboard": installers.Kanboard(**self.installer_options),
+            "ghidra": installers.Ghidra(**self.installer_options)
+        }
+
+        # Get individual installers
+        self.installer_aptget = self.available_components["aptget"]
+        self.installer_audiobookshelf = self.available_components["audiobookshelf"]
+        self.installer_flatpak = self.available_components["flatpak"]
+        self.installer_nginx = self.available_components["nginx"]
+        self.installer_certbot = self.available_components["certbot"]
+        self.installer_cockpit = self.available_components["cockpit"]
+        self.installer_wordpress = self.available_components["wordpress"]
+        self.installer_filebrowser = self.available_components["filebrowser"]
+        self.installer_jenkins = self.available_components["jenkins"]
+        self.installer_navidrome = self.available_components["navidrome"]
+        self.installer_kanboard = self.available_components["kanboard"]
+        self.installer_ghidra = self.available_components["ghidra"]
 
     def Setup(self):
 
-        # Install AptGet packages
-        util.LogInfo("Installing AptGet packages")
-        self.installer_aptget.UpdatePackageLists()
-        if not self.installer_aptget.IsInstalled():
-            if not self.installer_aptget.Install():
-                return False
-        if not self.installer_aptget.AutoRemovePackages():
-            return False
+        # Update package lists
+        if self.ShouldProcessComponent("aptget"):
+            util.LogInfo("Updating package lists for AptGet")
+            self.installer_aptget.UpdatePackageLists()
 
-        # Install Flatpak packages
-        util.LogInfo("Installing Flatpak packages")
-        self.installer_flatpak.UpdatePackages()
-        if not self.installer_flatpak.IsInstalled():
-            if not self.installer_flatpak.Install():
-                return False
+        # Process all components
+        success = self.ProcessComponents("Install")
 
-        # Install Nginx
-        util.LogInfo("Installing Nginx")
-        if not self.installer_nginx.IsInstalled():
-            if not self.installer_nginx.Install():
+        # Autoremove packages
+        if self.ShouldProcessComponent("aptget") and success:
+            if not self.installer_aptget.AutoRemovePackages():
                 return False
-
-        # Install Certbot
-        util.LogInfo("Installing Certbot")
-        if not self.installer_certbot.IsInstalled():
-            if not self.installer_certbot.Install():
-                return False
-
-        # Install Cockpit
-        util.LogInfo("Installing Cockpit")
-        if not self.installer_cockpit.IsInstalled():
-            if not self.installer_cockpit.Install():
-                return False
-
-        # Install Wordpress
-        util.LogInfo("Installing Wordpress")
-        if not self.installer_wordpress.IsInstalled():
-            if not self.installer_wordpress.Install():
-                return False
-
-        # Install Audiobookshelf
-        util.LogInfo("Installing Audiobookshelf")
-        if not self.installer_audiobookshelf.IsInstalled():
-            if not self.installer_audiobookshelf.Install():
-                return False
-
-        # Install Navidrome
-        util.LogInfo("Installing Navidrome")
-        if not self.installer_navidrome.IsInstalled():
-            if not self.installer_navidrome.Install():
-                return False
-
-        # Install FileBrowser
-        util.LogInfo("Installing FileBrowser")
-        if not self.installer_filebrowser.IsInstalled():
-            if not self.installer_filebrowser.Install():
-                return False
-
-        # Install Jenkins
-        util.LogInfo("Installing Jenkins")
-        if not self.installer_jenkins.IsInstalled():
-            if not self.installer_jenkins.Install():
-                return False
-
-        # Install Kanboard
-        util.LogInfo("Installing Kanboard")
-        if not self.installer_kanboard.IsInstalled():
-            if not self.installer_kanboard.Install():
-                return False
-
-        # Install Ghidra
-        util.LogInfo("Installing Ghidra")
-        if not self.installer_ghidra.IsInstalled():
-            if not self.installer_ghidra.Install():
-                return False
-        return True
+        return success
 
     def Teardown(self):
 
-        # Uninstall Ghidra
-        util.LogInfo("Uninstalling Ghidra")
-        if self.installer_ghidra.IsInstalled():
-            if not self.installer_ghidra.Uninstall():
-                return False
+        # Process components in reverse order
+        success = self.ProcessComponents("Uninstall", reverse_order = True)
 
-        # Uninstall Kanboard
-        util.LogInfo("Uninstalling Kanboard")
-        if self.installer_kanboard.IsInstalled():
-            if not self.installer_kanboard.Uninstall():
+        # Autoremove packages
+        if self.ShouldProcessComponent("aptget") and success:
+            if not self.installer_aptget.AutoRemovePackages():
                 return False
-
-        # Uninstall Jenkins
-        util.LogInfo("Uninstalling Jenkins")
-        if self.installer_jenkins.IsInstalled():
-            if not self.installer_jenkins.Uninstall():
-                return False
-
-        # Uninstall FileBrowser
-        util.LogInfo("Uninstalling FileBrowser")
-        if self.installer_filebrowser.IsInstalled():
-            if not self.installer_filebrowser.Uninstall():
-                return False
-
-        # Uninstall Navidrome
-        util.LogInfo("Uninstalling Navidrome")
-        if self.installer_navidrome.IsInstalled():
-            if not self.installer_navidrome.Uninstall():
-                return False
-
-        # Uninstall Audiobookshelf
-        util.LogInfo("Uninstalling Audiobookshelf")
-        if self.installer_audiobookshelf.IsInstalled():
-            if not self.installer_audiobookshelf.Uninstall():
-                return False
-
-        # Uninstall Wordpress
-        util.LogInfo("Uninstalling Wordpress")
-        if self.installer_wordpress.IsInstalled():
-            if not self.installer_wordpress.Uninstall():
-                return False
-
-        # Uninstall Cockpit
-        util.LogInfo("Uninstalling Cockpit")
-        if self.installer_cockpit.IsInstalled():
-            if not self.installer_cockpit.Uninstall():
-                return False
-
-        # Uninstall Certbot
-        util.LogInfo("Uninstalling Certbot")
-        if self.installer_certbot.IsInstalled():
-            if not self.installer_certbot.Uninstall():
-                return False
-
-        # Uninstall Nginx
-        util.LogInfo("Uninstalling Nginx")
-        if self.installer_nginx.IsInstalled():
-            if not self.installer_nginx.Uninstall():
-                return False
-
-        # Uninstall Flatpak packages
-        util.LogInfo("Uninstalling Flatpak packages")
-        if self.installer_flatpak.IsInstalled():
-            if not self.installer_flatpak.Uninstall():
-                return False
-
-        # Uninstall AptGet packages
-        util.LogInfo("Uninstalling AptGet packages")
-        if self.installer_aptget.IsInstalled():
-            if not self.installer_aptget.Uninstall():
-                return False
-        if not self.installer_aptget.AutoRemovePackages():
-            return False
-        return True
+        return success
