@@ -15,6 +15,7 @@ print_usage() {
     echo "  $0 [--backup-dir <path>] revoke_repository_access <container_name> <username> <repository_name>"
     echo "  $0 [--backup-dir <path>] list_repositories <container_name>"
     echo "  $0 [--backup-dir <path>] check_server_status <container_name>"
+    echo "  $0 [--backup-dir <path>] check_server_readiness <container_name>"
     echo "  $0 [--backup-dir <path>] backup_repositories <container_name>"
     echo "  $0 [--backup-dir <path>] restore_repositories <container_name> <repo_name> <backup_name>"
     echo "  $0 [--backup-dir <path>] export_program_gzf <container_name> <project_name> <program_name> [output_path]"
@@ -130,6 +131,32 @@ check_server_status() {
         fi
     fi
     return 0
+}
+
+check_server_readiness() {
+    local container_name="$1"
+    local max_attempts=30
+    local attempt=1
+
+    check_container_exists "$container_name"
+    check_container_running "$container_name"
+
+    echo "Checking if Ghidra server is ready for administrative commands..."
+
+    while [ $attempt -le $max_attempts ]; do
+        echo "Attempt $attempt/$max_attempts: Testing server admin readiness..."
+        if docker exec "$container_name" /bin/bash -c "cd /ghidra/server && timeout 10 ./svrAdmin -users" >/dev/null 2>&1; then
+            echo "Ghidra server is ready for administrative commands"
+            return 0
+        fi
+
+        echo "Server not ready for admin commands yet, waiting 10 seconds..."
+        sleep 10
+        ((attempt++))
+    done
+
+    echo "Timeout: Server did not become ready for administrative commands"
+    return 1
 }
 
 add_user() {
@@ -537,6 +564,14 @@ case "$1" in
             exit 1
         fi
         check_server_status "${@:2}"
+        ;;
+
+    check_server_readiness)
+        if [ $# -ne 2 ]; then
+            echo "Usage: $0 check_server_readiness <container_name>"
+            exit 1
+        fi
+        check_server_readiness "${@:2}"
         ;;
 
     backup_repositories)
