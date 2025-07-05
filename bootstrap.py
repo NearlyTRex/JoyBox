@@ -47,6 +47,7 @@ parser.add_argument(
 parser.add_argument("-v", "--verbose", action = "store_true", help = "Enable verbose mode")
 parser.add_argument("-p", "--pretend_run", action = "store_true", help = "Enable pretend run mode")
 parser.add_argument("-x", "--exit_on_failure", action = "store_true", help = "Enable exit on failure mode")
+parser.add_argument("-f", "--force", action = "store_true", help = "Force operations even if component is already installed/uninstalled")
 args, unknown = parser.parse_known_args()
 
 # Check arguments
@@ -54,18 +55,18 @@ is_local_ubuntu = args.type == constants.EnvironmentType.LOCAL_UBUNTU
 is_remote_ubuntu = args.type == constants.EnvironmentType.REMOTE_UBUNTU
 is_server_index = isinstance(args.server_index, int) and args.server_index >= 0
 if is_remote_ubuntu and not is_server_index and not args.list_components:
-    util.LogErrorAndQuit("No server specified for remote machine")
+    util.log_error_and_quit("No server specified for remote machine")
 
 # Main
 def main():
 
     # Setup logging
-    util.SetupLogging()
+    util.setup_logging()
 
     # Get config file
     config_file = os.path.realpath(args.config_file)
     if not os.path.exists(config_file) and not args.list_components:
-        util.LogErrorAndQuit(f"Config file '{config_file}' does not exist")
+        util.log_error_and_quit(f"Config file '{config_file}' does not exist")
 
     # Get configuration
     config = configuration.Configuration(src = config_file) if os.path.exists(config_file) else None
@@ -82,12 +83,14 @@ def main():
 
     # Update environment options
     if is_remote_ubuntu:
-        environment_options["options"].SetShell(True)
+        environment_options["options"].set(shell = True)
         if is_server_index:
-            environment_options["ssh_host"] = config.GetValue("UserData.Servers", f"server_{args.server_index}_host")
-            environment_options["ssh_port"] = config.GetValue("UserData.Servers", f"server_{args.server_index}_port")
-            environment_options["ssh_user"] = config.GetValue("UserData.Servers", f"server_{args.server_index}_user")
-            environment_options["ssh_password"] = config.GetValue("UserData.Servers", f"server_{args.server_index}_pass")
+            environment_options["ssh_host"] = config.get_value("UserData.Servers", f"server_{args.server_index}_host")
+            environment_options["ssh_port"] = config.get_value("UserData.Servers", f"server_{args.server_index}_port")
+            environment_options["ssh_user"] = config.get_value("UserData.Servers", f"server_{args.server_index}_user")
+            environment_options["ssh_password"] = config.get_value("UserData.Servers", f"server_{args.server_index}_pass")
+    if args.force:
+        environment_options["flags"].set(force = args.force)
 
     # Create environment runner
     environment_runner = None
@@ -100,7 +103,7 @@ def main():
 
     # Handle list components request
     if args.list_components:
-        components = environment_runner.GetAvailableComponents()
+        components = environment_runner.get_available_components()
         util.LogInfo(f"Available components for {args.type}:")
         for component in sorted(components):
             util.LogInfo(f"  - {component}")
@@ -109,14 +112,14 @@ def main():
     # Set components to process
     if args.components is not None:
         if len(args.components) == 0:
-            util.LogErrorAndQuit("--components specified but no components listed. Use --list-components to see available components.")
-        environment_runner.SetComponentsToProcess(args.components)
+            util.log_error_and_quit("--components specified but no components listed. Use --list-components to see available components.")
+        environment_runner.set_components_to_process(args.components)
 
     # Dispatch action
     if args.action == "setup":
-        environment_runner.Setup()
+        environment_runner.setup()
     elif args.action == "teardown":
-        environment_runner.Teardown()
+        environment_runner.teardown()
 
 # Start
 if __name__ == "__main__":
