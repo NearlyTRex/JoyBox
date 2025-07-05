@@ -184,6 +184,11 @@ configure_ssl_keystore() {
         sed -i 's/^#wrapper\.java\.additional\.9=/wrapper.java.additional.9=/' "$server_conf"
         sed -i 's/^#wrapper\.java\.additional\.10=/wrapper.java.additional.10=/' "$server_conf"
 
+        echo "Setting RMI server hostname to: ghidra.$domain"
+        local highest_additional=$(grep -o "wrapper\.java\.additional\.[0-9]\+" "$server_conf" | sed 's/wrapper\.java\.additional\.//' | sort -n | tail -1)
+        local next_num=$((highest_additional + 1))
+        echo "wrapper.java.additional.$next_num=-Djava.rmi.server.hostname=ghidra.$domain" >> "$server_conf"
+
         echo "Verifying keystore accessibility..."
         if keytool -list -keystore "$target_keystore" -storetype PKCS12 -storepass "$keystore_pass" > /dev/null 2>&1; then
             echo "Keystore verification successful"
@@ -193,13 +198,21 @@ configure_ssl_keystore() {
 
         echo "SSL keystore configuration completed successfully"
         echo "Keystore location: $target_keystore"
+        echo "RMI hostname set to: ghidra.$domain"
         echo "Configuration file: $server_conf"
         return 0
     else
         echo "Pre-exported keystore not found. SSL will use Ghidra's default configuration."
         echo "Expected keystore: $source_keystore"
         echo "Expected password file: $keystore_pass_file"
-        sed -i "s|^ghidra.repositories.dir=.*|ghidra.repositories.dir=/repos|" /ghidra/server/server.conf
+
+        local server_conf="/ghidra/server/server.conf"
+        sed -i "s|^ghidra.repositories.dir=.*|ghidra.repositories.dir=/repos|" "$server_conf"
+
+        local highest_additional=$(grep -o "wrapper\.java\.additional\.[0-9]\+" "$server_conf" | sed 's/wrapper\.java\.additional\.//' | sort -n | tail -1)
+        local next_num=$((highest_additional + 1))
+        echo "wrapper.java.additional.$next_num=-Djava.rmi.server.hostname=ghidra.$domain" >> "$server_conf"
+        echo "RMI hostname set to: ghidra.$domain (no SSL)"
         return 1
     fi
 }
@@ -210,14 +223,14 @@ chown -R root:root /repos
 
 echo "Starting Ghidra Server initialization..."
 if [ -n "${GHIDRA_DOMAIN:-}" ]; then
-    echo "Configuring SSL for domain: $GHIDRA_DOMAIN"
+    echo "Configuring for domain: $GHIDRA_DOMAIN"
     if configure_ssl_keystore "$GHIDRA_DOMAIN"; then
         echo "SSL configuration completed successfully"
     else
         echo "SSL configuration failed, using default Ghidra SSL settings"
     fi
 else
-    echo "No GHIDRA_DOMAIN set, using default Ghidra SSL configuration"
+    echo "No GHIDRA_DOMAIN set, using default Ghidra configuration"
     sed -i "s|^ghidra.repositories.dir=.*|ghidra.repositories.dir=/repos|" /ghidra/server/server.conf
 fi
 
