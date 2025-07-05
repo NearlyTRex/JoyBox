@@ -18,39 +18,39 @@ class Installer:
         options = util.RunOptions()):
 
         # Copy inputs
-        self.config = config.Copy()
-        self.connection = connection.Copy()
-        self.flags = flags.Copy()
-        self.options = options.Copy()
+        self.config = config.copy()
+        self.connection = connection.copy()
+        self.flags = flags.copy()
+        self.options = options.copy()
 
         # Setup tools
-        if util.IsWindowsPlatform():
-            self.winget_tool = tools.GetWinGetTool(self.config)
+        if util.is_windows_platform():
+            self.winget_tool = tools.get_winget_tool(self.config)
         else:
-            self.aptget_tool = tools.GetAptGetTool(self.config)
-            self.aptgetinstall_tool = tools.GetAptGetInstallTool(self.config)
-            self.flatpak_tool = tools.GetFlatpakTool(self.config)
-        self.python_tool = tools.GetPythonTool(self.config)
-        self.python_venv_pip_tool = tools.GetPythonVenvPipTool(self.config)
-        self.gpg_tool = tools.GetGpgTool(self.config)
-        self.docker_tool = tools.GetDockerTool(self.config)
-        self.docker_compose_tool = tools.GetDockerComposeTool(self.config)
+            self.aptget_tool = tools.get_aptget_tool(self.config)
+            self.aptgetinstall_tool = tools.get_aptget_install_tool(self.config)
+            self.flatpak_tool = tools.get_flatpak_tool(self.config)
+        self.python_tool = tools.get_python_tool(self.config)
+        self.python_venv_pip_tool = tools.get_python_venv_pip_tool(self.config)
+        self.gpg_tool = tools.get_gpg_tool(self.config)
+        self.docker_tool = tools.get_docker_tool(self.config)
+        self.docker_compose_tool = tools.get_docker_compose_tool(self.config)
         self.nginx_manager_tool = "/usr/local/bin/manager_nginx.sh"
         self.cert_manager_tool = "/usr/local/bin/manager_certbot.sh"
         self.cockpit_manager_tool = "/usr/local/bin/manager_cockpit.sh"
         self.ghidra_manager_tool = "/usr/local/bin/manager_ghidra.sh"
 
-    def SetEnvironmentType(self, environment_type):
-        self.config.SetValue("UserData.General", "environment_type", environment_type)
+    def set_environment_type(self, environment_type):
+        self.config.set_value("UserData.General", "environment_type", environment_type)
 
-    def GetEnvironmentType(self):
-        return self.config.GetValue("UserData.General", "environment_type")
+    def get_environment_type(self):
+        return self.config.get_value("UserData.General", "environment_type")
 
-    def IsInstalled(self):
+    def is_installed(self):
         return False
 
-    def Install(self):
+    def install(self):
         return False
 
-    def Uninstall(self):
+    def uninstall(self):
         return False

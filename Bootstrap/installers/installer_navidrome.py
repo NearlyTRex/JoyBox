@@ -72,69 +72,69 @@ class Navidrome(installer.Installer):
         self.app_name = "navidrome"
         self.app_dir = f"$HOME/apps/{self.app_name}"
         self.nginx_config_values = {
-            "domain": self.config.GetValue("UserData.Servers", "domain_name"),
-            "subdomain": self.config.GetValue("UserData.Navidrome", "navidrome_subdomain"),
-            "port_http": self.config.GetValue("UserData.Navidrome", "navidrome_port_http")
+            "domain": self.config.get_value("UserData.Servers", "domain_name"),
+            "subdomain": self.config.get_value("UserData.Navidrome", "navidrome_subdomain"),
+            "port_http": self.config.get_value("UserData.Navidrome", "navidrome_port_http")
         }
         self.env_values = {
-            "port_http": self.config.GetValue("UserData.Navidrome", "navidrome_port_http"),
-            "music_dir": self.config.GetValue("UserData.Navidrome", "navidrome_music_dir")
+            "port_http": self.config.get_value("UserData.Navidrome", "navidrome_port_http"),
+            "music_dir": self.config.get_value("UserData.Navidrome", "navidrome_music_dir")
         }
 
-    def IsInstalled(self):
-        containers = self.connection.RunOutput("docker ps -a --format '{{.Names}}'")
+    def is_installed(self):
+        containers = self.connection.run_output("docker ps -a --format '{{.Names}}'")
         return any(self.app_name in name for name in containers.splitlines())
 
-    def Install(self):
+    def install(self):
 
         # Create directories
-        util.LogInfo("Creating directories")
-        self.connection.MakeDirectory(self.app_dir)
+        util.log_info("Creating directories")
+        self.connection.make_directory(self.app_dir)
 
         # Write docker compose
-        util.LogInfo("Writing docker compose")
-        if self.connection.WriteFile("/tmp/docker-compose.yml", docker_compose_template):
-            self.connection.MoveFileOrDirectory("/tmp/docker-compose.yml", f"{self.app_dir}/docker-compose.yml")
+        util.log_info("Writing docker compose")
+        if self.connection.write_file("/tmp/docker-compose.yml", docker_compose_template):
+            self.connection.move_file_or_directory("/tmp/docker-compose.yml", f"{self.app_dir}/docker-compose.yml")
 
         # Write docker env
-        util.LogInfo("Writing docker env")
-        if self.connection.WriteFile("/tmp/.env", env_template.format(**self.env_values)):
-            self.connection.MoveFileOrDirectory("/tmp/.env", f"{self.app_dir}/.env")
+        util.log_info("Writing docker env")
+        if self.connection.write_file("/tmp/.env", env_template.format(**self.env_values)):
+            self.connection.move_file_or_directory("/tmp/.env", f"{self.app_dir}/.env")
 
         # Create Nginx entry
-        util.LogInfo("Creating Nginx entry")
-        if self.connection.WriteFile(f"/tmp/{self.app_name}.conf", nginx_config_template.format(**self.nginx_config_values)):
-            self.connection.RunChecked([self.nginx_manager_tool, "install_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
-            self.connection.RunChecked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
-            self.connection.RemoveFileOrDirectory(f"/tmp/{self.app_name}.conf")
+        util.log_info("Creating Nginx entry")
+        if self.connection.write_file(f"/tmp/{self.app_name}.conf", nginx_config_template.format(**self.nginx_config_values)):
+            self.connection.run_checked([self.nginx_manager_tool, "install_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
+            self.connection.run_checked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
+            self.connection.remove_file_or_directory(f"/tmp/{self.app_name}.conf")
 
         # Restart Nginx
-        util.LogInfo("Restarting Nginx")
-        self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
+        util.log_info("Restarting Nginx")
+        self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
 
         # Start docker
-        util.LogInfo("Starting docker")
-        self.connection.GetOptions().SetCurrentWorkingDirectory(self.app_dir)
-        self.connection.RunChecked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "up", "-d", "--build"])
+        util.log_info("Starting docker")
+        self.connection.get_options().set_current_working_directory(self.app_dir)
+        self.connection.run_checked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "up", "-d", "--build"])
         return True
 
-    def Uninstall(self):
+    def uninstall(self):
 
         # Stop docker
-        util.LogInfo("Stopping docker")
-        self.connection.GetOptions().SetCurrentWorkingDirectory(self.app_dir)
-        self.connection.RunChecked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "down", "-v"])
-        self.connection.GetOptions().SetCurrentWorkingDirectory(None)
+        util.log_info("Stopping docker")
+        self.connection.get_options().set_current_working_directory(self.app_dir)
+        self.connection.run_checked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "down", "-v"])
+        self.connection.get_options().set_current_working_directory(None)
 
         # Remove directory
-        util.LogInfo("Removing directory")
-        self.connection.RemoveFileOrDirectory(self.app_dir)
+        util.log_info("Removing directory")
+        self.connection.remove_file_or_directory(self.app_dir)
 
         # Remove Nginx entry
-        util.LogInfo("Removing Nginx entry")
-        self.connection.RunChecked([self.nginx_manager_tool, "remove_conf", f"{self.app_name}.conf"], sudo = True)
+        util.log_info("Removing Nginx entry")
+        self.connection.run_checked([self.nginx_manager_tool, "remove_conf", f"{self.app_name}.conf"], sudo = True)
 
         # Restart Nginx
-        util.LogInfo("Restarting Nginx")
-        self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
+        util.log_info("Restarting Nginx")
+        self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
         return True

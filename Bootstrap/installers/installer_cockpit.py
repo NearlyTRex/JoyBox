@@ -47,44 +47,44 @@ class Cockpit(installer.Installer):
         super().__init__(config, connection, flags, options)
         self.app_name = "cockpit"
         self.nginx_config_values = {
-            "domain": self.config.GetValue("UserData.Servers", "domain_name"),
-            "subdomain": self.config.GetValue("UserData.Cockpit", "cockpit_subdomain"),
-            "port_http": self.config.GetValue("UserData.Cockpit", "cockpit_port_http")
+            "domain": self.config.get_value("UserData.Servers", "domain_name"),
+            "subdomain": self.config.get_value("UserData.Cockpit", "cockpit_subdomain"),
+            "port_http": self.config.get_value("UserData.Cockpit", "cockpit_port_http")
         }
 
-    def IsInstalled(self):
-        output = self.connection.RunOutput("systemctl is-enabled cockpit.socket")
+    def is_installed(self):
+        output = self.connection.run_output("systemctl is-enabled cockpit.socket")
         return "enabled" in output
 
-    def Install(self):
+    def install(self):
 
         # Install Cockpit
-        util.LogInfo("Installing Cockpit")
-        self.connection.RunChecked([self.cockpit_manager_tool, "install"], sudo = True)
+        util.log_info("Installing Cockpit")
+        self.connection.run_checked([self.cockpit_manager_tool, "install"], sudo = True)
 
         # Create Nginx config
-        util.LogInfo("Creating Nginx config")
-        if self.connection.WriteFile(f"/tmp/{self.app_name}.conf", nginx_config_template.format(**self.nginx_config_values)):
-            self.connection.RunChecked([self.nginx_manager_tool, "install_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
-            self.connection.RunChecked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
-            self.connection.RemoveFileOrDirectory(f"/tmp/{self.app_name}.conf")
+        util.log_info("Creating Nginx config")
+        if self.connection.write_file(f"/tmp/{self.app_name}.conf", nginx_config_template.format(**self.nginx_config_values)):
+            self.connection.run_checked([self.nginx_manager_tool, "install_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
+            self.connection.run_checked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
+            self.connection.remove_file_or_directory(f"/tmp/{self.app_name}.conf")
 
         # Restart Nginx
-        util.LogInfo("Restarting Nginx")
-        self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
+        util.log_info("Restarting Nginx")
+        self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
         return True
 
-    def Uninstall(self):
+    def uninstall(self):
 
         # Remove Nginx config
-        util.LogInfo("Removing Nginx config")
-        self.connection.RunChecked([self.nginx_manager_tool, "remove_conf", f"{self.app_name}.conf"], sudo = True)
+        util.log_info("Removing Nginx config")
+        self.connection.run_checked([self.nginx_manager_tool, "remove_conf", f"{self.app_name}.conf"], sudo = True)
 
         # Restart Nginx
-        util.LogInfo("Restarting Nginx")
-        self.connection.RunChecked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
+        util.log_info("Restarting Nginx")
+        self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
 
         # Uninstall Cockpit
-        util.LogInfo("Uninstalling Cockpit")
-        self.connection.RunChecked([self.cockpit_manager_tool, "uninstall"], sudo = True)
+        util.log_info("Uninstalling Cockpit")
+        self.connection.run_checked([self.cockpit_manager_tool, "uninstall"], sudo = True)
         return True

@@ -13,50 +13,50 @@ class Connection:
         config,
         flags = util.RunFlags(),
         options = util.RunOptions()):
-        self.config = config.Copy()
-        self.flags = flags.Copy()
-        self.options = options.Copy()
+        self.config = config.copy()
+        self.flags = flags.copy()
+        self.options = options.copy()
 
-    def Copy(self):
+    def copy(self):
         return copy.deepcopy(self)
 
-    def Setup(self):
+    def setup(self):
         pass
 
-    def TearDown(self):
+    def teardown(self):
         pass
 
-    def SetCurrentWorkingDirectory(self, cwd):
+    def set_current_working_directory(self, cwd):
         self.options.cwd = cwd
 
-    def SetEnvironment(self, env):
+    def set_environment(self, env):
         self.options.env = env
 
-    def SetEnvironmentVar(self, var, value):
+    def set_environmentVar(self, var, value):
         self.options.env[var] = value
 
-    def UnsetEnvironmentVar(self, var):
+    def unset_environment_var(self, var):
         del self.options.env[var]
 
-    def SetConfig(self, config):
+    def set_config(self, config):
         self.config = config
 
-    def GetConfig(self):
+    def get_config(self):
         return self.config
 
-    def SetFlags(self, flags):
+    def set_flags(self, flags):
         self.flags = flags
 
-    def GetFlags(self):
+    def get_flags(self):
         return self.flags
 
-    def SetOptions(self, options):
+    def set_options(self, options):
         self.options = options
 
-    def GetOptions(self):
+    def get_options(self):
         return self.options
 
-    def CreateCommandString(self, cmd):
+    def create_command_string(self, cmd):
         if not cmd:
             return ""
         if len(cmd) == 0:
@@ -74,7 +74,7 @@ class Connection:
             return cmd_str
         return ""
 
-    def CreateCommandList(self, cmd):
+    def create_command_list(self, cmd):
         if not cmd:
             return []
         if len(cmd) == 0:
@@ -85,128 +85,128 @@ class Connection:
             return cmd.split(" ")
         return []
 
-    def CleanCommandOutput(self, output):
+    def clean_command_output(self, output):
         try:
             return output.decode("utf-8", "ignore")
         except:
             return output
 
-    def MarkCommandAsSudo(self, cmd):
-        if util.IsLinuxPlatform():
+    def mark_command_as_sudo(self, cmd):
+        if util.is_linux_platform():
             if isinstance(cmd, str):
                 return f"sudo {cmd}"
             elif isinstance(cmd, list):
                 return ["sudo"] + cmd
         return cmd
 
-    def PrintCommand(self, cmd):
+    def print_command(self, cmd):
         if isinstance(cmd, str):
-            util.LogInfo("Running \"%s\"" % cmd)
+            util.log_info("Running \"%s\"" % cmd)
         if isinstance(cmd, list):
-            util.LogInfo("Running \"%s\"" % " ".join(cmd))
+            util.log_info("Running \"%s\"" % " ".join(cmd))
 
-    def RunOutput(self, cmd, sudo = False):
+    def run_output(self, cmd, sudo = False):
         return ""
 
-    def RunReturncode(self, cmd, sudo = False):
+    def run_return_code(self, cmd, sudo = False):
         return 0
 
-    def RunBlocking(self, cmd, sudo = False):
+    def run_blocking(self, cmd, sudo = False):
         return 0
 
-    def RunInteractive(self, cmd, sudo = False):
+    def run_interactive(self, cmd, sudo = False):
         return 0
 
-    def RunChecked(self, cmd, sudo = False, throw_exception = False):
+    def run_checked(self, cmd, sudo = False, throw_exception = False):
         return None
 
-    def MakeTemporaryDirectory(self):
+    def make_temporary_directory(self):
         return None
 
-    def MakeDirectory(self, src, sudo = False):
-        self.RunChecked([
-            tools.GetMakeDirTool(self.config),
+    def make_directory(self, src, sudo = False):
+        self.run_checked([
+            tools.get_make_dir_tool(self.config),
             "-p",
             src
         ], sudo = sudo)
 
-    def RemoveFileOrDirectory(self, src, sudo = False):
-        self.RunChecked([
-            tools.GetRemoveTool(self.config),
+    def remove_file_or_directory(self, src, sudo = False):
+        self.run_checked([
+            tools.get_remove_tool(self.config),
             "-rf",
             src
         ], sudo = sudo)
 
-    def CopyFileOrDirectory(self, src, dest, sudo = False):
-        self.RunChecked([
-            tools.GetCopyTool(self.config),
+    def copy_file_or_directory(self, src, dest, sudo = False):
+        self.run_checked([
+            tools.get_copy_tool(self.config),
             src,
             dest
         ], sudo = sudo)
 
-    def MoveFileOrDirectory(self, src, dest, sudo = False):
-        self.RunChecked([
-            tools.GetMoveTool(self.config),
+    def move_file_or_directory(self, src, dest, sudo = False):
+        self.run_checked([
+            tools.get_move_tool(self.config),
             src,
             dest
         ], sudo = sudo)
 
-    def LinkFileOrDirectory(self, src, dest, sudo = False):
-        self.RunChecked([
-            tools.GetLinkTool(self.config),
+    def link_file_or_directory(self, src, dest, sudo = False):
+        self.run_checked([
+            tools.get_link_tool(self.config),
             "-sf", src,
             dest
         ], sudo = sudo)
 
-    def DoesFileOrDirectoryExist(self, src):
+    def does_file_or_directory_exist(self, src):
         return False
 
-    def TransferFiles(self, src, dest, excludes = []):
+    def transfer_files(self, src, dest, excludes = []):
         return False
 
-    def ReadFile(self, src):
+    def read_file(self, src):
         return None
 
-    def WriteFile(self, src, contents):
+    def write_file(self, src, contents):
         return False
 
-    def DownloadFile(self, url, dest, sudo = False):
-        self.RunChecked([
-            tools.GetCurlTool(self.config),
+    def download_file(self, url, dest, sudo = False):
+        self.run_checked([
+            tools.get_curl_tool(self.config),
             "-L",
             "-o", dest,
             url
         ], sudo = sudo)
 
-    def ExtractTarArchive(self, src, dest, sudo = False):
-        self.RunChecked([
-            tools.GetTarTool(self.config),
+    def extract_tar_archive(self, src, dest, sudo = False):
+        self.run_checked([
+            tools.get_tar_tool(self.config),
             "-xf", src,
             "-C", dest
         ], sudo = sudo)
 
-    def ChangeOwner(self, src, owner, sudo = False):
-        self.RunChecked([
-            tools.GetChangeOwnerTool(self.config),
+    def change_owner(self, src, owner, sudo = False):
+        self.run_checked([
+            tools.get_change_owner_tool(self.config),
             "-R",
             owner,
             src
         ], sudo = sudo)
 
-    def ChangePermission(self, src, permission, sudo = False):
-        self.RunChecked([
-            tools.GetChangePermissionTool(self.config),
+    def change_permission(self, src, permission, sudo = False):
+        self.run_checked([
+            tools.get_change_permission_tool(self.config),
             "-R",
             permission,
             src
         ], sudo = sudo)
 
-    def AddToCronTab(self, pattern):
+    def add_to_crontab(self, pattern):
         try:
             if self.flags.verbose:
-                util.LogInfo(f"Adding to crontab: {pattern}")
+                util.log_info(f"Adding to crontab: {pattern}")
             if not self.flags.pretend_run:
-                output = self.RunOutput(["crontab", "-l"])
+                output = self.run_output(["crontab", "-l"])
                 if output is None or "no crontab for" in output.lower():
                     output = ""
                 lines = output.splitlines()
@@ -215,23 +215,23 @@ class Connection:
                     tmp_crontab = "/tmp/crontab_update"
                     new_cron = f"{output.strip()}\n{pattern}" if output.strip() else pattern
                     new_cron += "\n"
-                    self.WriteFile(tmp_crontab, new_cron)
-                    self.RunChecked(["crontab", tmp_crontab])
-                    self.RemoveFileOrDirectory(tmp_crontab)
+                    self.write_file(tmp_crontab, new_cron)
+                    self.run_checked(["crontab", tmp_crontab])
+                    self.remove_file_or_directory(tmp_crontab)
             return True
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(f"Unable to add to crontab: {pattern}")
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(f"Unable to add to crontab: {pattern}")
+                util.log_error(e)
+                util.quit_program()
             return False
 
-    def RemoveFromCronTab(self, pattern):
+    def remove_from_crontab(self, pattern):
         try:
             if self.flags.verbose:
-                util.LogInfo(f"Removing from crontab: {pattern}")
+                util.log_info(f"Removing from crontab: {pattern}")
             if not self.flags.pretend_run:
-                output = self.RunOutput(["crontab", "-l"])
+                output = self.run_output(["crontab", "-l"])
                 if output is None or "no crontab for" in output.lower():
                     output = ""
                 lines = output.splitlines() if output else []
@@ -241,31 +241,31 @@ class Connection:
                 tmp_crontab = "/tmp/crontab_update"
                 new_cron = "\n".join(new_lines)
                 new_cron += "\n"
-                self.WriteFile(tmp_crontab, new_cron)
-                self.RunChecked(["crontab", tmp_crontab])
-                self.RemoveFileOrDirectory(tmp_crontab)
+                self.write_file(tmp_crontab, new_cron)
+                self.run_checked(["crontab", tmp_crontab])
+                self.remove_file_or_directory(tmp_crontab)
             return True
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(f"Unable to remove from crontab: {pattern}")
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(f"Unable to remove from crontab: {pattern}")
+                util.log_error(e)
+                util.quit_program()
             return False
 
-    def AddToPath(self, src):
-        if util.IsWindowsPlatform():
-            return self.AddToWindowsPath(src)
+    def add_to_path(self, src):
+        if util.is_windows_platform():
+            return self.add_to_windows_path(src)
         else:
-            return self.AddToUnixPath(src)
+            return self.add_to_unix_path(src)
 
-    def AddToWindowsPath(self, src):
+    def add_to_windows_path(self, src):
         try:
             if self.flags.verbose:
-                util.LogInfo(f"Adding {src} to path")
+                util.log_info(f"Adding {src} to path")
             if not self.flags.pretend_run:
 
                 # Get current path
-                current_path = self.RunOutput([
+                current_path = self.run_output([
                     "powershell",
                     "-Command",
                     '[Environment]::GetEnvironmentVariable("PATH", "User")'
@@ -278,24 +278,24 @@ class Connection:
                 # Append path
                 new_paths = ";".join(current_paths + [src])
                 new_paths_escaped = new_paths.replace('"', '`"')
-                code = self.RunReturncode([
+                code = self.run_return_code([
                     "powershell",
                     "-Command",
-                    f'[Environment]::SetEnvironmentVariable("PATH", "{new_paths_escaped}", "User")'
+                    f'[Environment]::set_environmentVariable("PATH", "{new_paths_escaped}", "User")'
                 ])
                 return code == 0
             return True
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(f"Unable to add {src} to path")
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(f"Unable to add {src} to path")
+                util.log_error(e)
+                util.quit_program()
             return False
 
-    def AddToUnixPath(self, src):
+    def add_to_unix_path(self, src):
         try:
             if self.flags.verbose:
-                util.LogInfo(f"Adding {src} to path")
+                util.log_info(f"Adding {src} to path")
             if not self.flags.pretend_run:
 
                 # Get possible profiles
@@ -309,12 +309,12 @@ class Connection:
                 # Get profile
                 profile_file = profile_candidates[0]
                 for candidate in profile_candidates:
-                    if self.DoesFileOrDirectoryExist(candidate):
+                    if self.does_file_or_directory_exist(candidate):
                         profile_file = candidate
                         break
 
                 # Read current profile
-                existing_content = self.ReadFile(profile_file)
+                existing_content = self.read_file(profile_file)
                 if not existing_content:
                     existing_content = ""
 
@@ -322,11 +322,11 @@ class Connection:
                 export_line = f'export PATH="{src}:$PATH"\n'
                 if export_line not in existing_content:
                     new_content = existing_content + "\n" + export_line + "\n"
-                    return self.WriteFile(profile_file, new_content)
+                    return self.write_file(profile_file, new_content)
             return True
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(f"Unable to add {src} to path")
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(f"Unable to add {src} to path")
+                util.log_error(e)
+                util.quit_program()
             return False

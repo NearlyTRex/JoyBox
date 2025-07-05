@@ -27,16 +27,16 @@ class ConnectionLocal(connection.Connection):
             options.env = copy.deepcopy(os.environ)
         super().__init__(config, flags, options)
 
-    def RunOutput(self, cmd, sudo = False):
+    def run_output(self, cmd, sudo = False):
         try:
-            cmd = self.CreateCommandList(cmd)
+            cmd = self.create_command_list(cmd)
             if sudo:
-                cmd = self.MarkCommandAsSudo(cmd)
+                cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
-                self.PrintCommand(cmd)
+                self.print_command(cmd)
             if not self.flags.pretend_run:
                 if self.options.shell:
-                    cmd = self.CreateCommandString(cmd)
+                    cmd = self.create_command_string(cmd)
                 output = ""
                 if self.options.include_stderr:
                     output = subprocess.run(
@@ -55,36 +55,36 @@ class ConnectionLocal(connection.Connection):
                         env = self.options.env,
                         creationflags = self.options.creationflags,
                         stdout = subprocess.PIPE).stdout
-                return self.CleanCommandOutput(output.strip())
+                return self.clean_command_output(output.strip())
             return ""
         except subprocess.CalledProcessError as e:
             if self.flags.exit_on_failure:
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(e)
+                util.quit_program()
             if self.options.include_stderr:
                 return e.output
             return ""
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(e)
+                util.quit_program()
             return ""
 
-    def RunReturncode(self, cmd, sudo = False):
+    def run_return_code(self, cmd, sudo = False):
         try:
-            cmd = self.CreateCommandList(cmd)
+            cmd = self.create_command_list(cmd)
             if sudo:
-                cmd = self.MarkCommandAsSudo(cmd)
+                cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
-                self.PrintCommand(cmd)
+                self.print_command(cmd)
             if not self.flags.pretend_run:
                 if self.options.shell:
-                    cmd = self.CreateCommandString(cmd)
+                    cmd = self.create_command_string(cmd)
                 stdout = self.options.stdout
                 stderr = self.options.stderr
-                if util.IsPathValid(self.options.stdout):
+                if util.is_path_valid(self.options.stdout):
                     stdout = open(self.options.stdout, "w")
-                if util.IsPathValid(self.options.stderr):
+                if util.is_path_valid(self.options.stderr):
                     stderr = open(self.options.stderr, "w")
                 code = subprocess.call(
                     cmd,
@@ -94,33 +94,33 @@ class ConnectionLocal(connection.Connection):
                     creationflags = self.options.creationflags,
                     stdout = stdout,
                     stderr = stderr)
-                if util.IsPathValid(self.options.stdout):
+                if util.is_path_valid(self.options.stdout):
                     stdout.close()
-                if util.IsPathValid(self.options.stderr):
+                if util.is_path_valid(self.options.stderr):
                     stderr.close()
                 return code
             return 0
         except subprocess.CalledProcessError as e:
             if self.flags.exit_on_failure:
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(e)
+                util.quit_program()
             return e.returncode
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(e)
+                util.quit_program()
             return 1
 
-    def RunBlocking(self, cmd, sudo = False):
+    def run_blocking(self, cmd, sudo = False):
         try:
-            cmd = self.CreateCommandList(cmd)
+            cmd = self.create_command_list(cmd)
             if sudo:
-                cmd = self.MarkCommandAsSudo(cmd)
+                cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
-                self.PrintCommand(cmd)
+                self.print_command(cmd)
             if not self.flags.pretend_run:
                 if self.options.shell:
-                    cmd = self.CreateCommandString(cmd)
+                    cmd = self.create_command_string(cmd)
                 process = subprocess.Popen(
                     cmd,
                     shell = self.options.shell,
@@ -132,71 +132,71 @@ class ConnectionLocal(connection.Connection):
                     bufsize = 1,
                     text = True)
                 while True:
-                    output = self.CleanCommandOutput(process.stdout.readline().rstrip())
+                    output = self.clean_command_output(process.stdout.readline().rstrip())
                     if output == "" and process.poll() is not None:
                         break
                     if output:
-                        util.LogInfo(output.strip())
+                        util.log_info(output.strip())
                 code = process.poll()
                 return code
             return 0
         except subprocess.CalledProcessError as e:
             if self.flags.exit_on_failure:
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(e)
+                util.quit_program()
             return e.returncode
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(e)
+                util.quit_program()
             return 1
 
-    def RunInteractive(self, cmd, sudo = False):
-        return self.RunBlocking(cmd, sudo = sudo)
+    def run_interactive(self, cmd, sudo = False):
+        return self.run_blocking(cmd, sudo = sudo)
 
-    def RunChecked(self, cmd, sudo = False, throw_exception = False):
-        code = self.RunBlocking(cmd = cmd, sudo = sudo)
+    def run_checked(self, cmd, sudo = False, throw_exception = False):
+        code = self.run_blocking(cmd = cmd, sudo = sudo)
         if code != 0:
             if throw_exception:
                 raise ValueError("Unable to run command: %s" % cmd)
             else:
-                util.QuitProgram(code)
+                util.quit_program(code)
 
-    def MakeTemporaryDirectory(self):
+    def make_temporary_directory(self):
         try:
             if self.flags.verbose:
-                util.LogInfo("Making temporary directory")
+                util.log_info("Making temporary directory")
             if not self.flags.pretend_run:
                 temp_dir = os.path.realpath(tempfile.mkdtemp())
                 if self.flags.verbose:
-                    util.LogInfo("Created temporary directory %s" % temp_dir)
+                    util.log_info("Created temporary directory %s" % temp_dir)
                 return temp_dir
             return None
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError("Unable to make temporary directory")
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error("Unable to make temporary directory")
+                util.log_error(e)
+                util.quit_program()
             return None
 
-    def DoesFileOrDirectoryExist(self, src):
+    def does_file_or_directory_exist(self, src):
         try:
             if self.flags.verbose:
-                util.LogInfo("Checking existence of %s" % src)
+                util.log_info("Checking existence of %s" % src)
             if not self.flags.pretend_run:
                 return os.path.exists(src)
             return True
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError("Error checking existence of %s" % src)
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error("Error checking existence of %s" % src)
+                util.log_error(e)
+                util.quit_program()
             return False
 
-    def TransferFiles(self, src, dest, excludes = []):
+    def transfer_files(self, src, dest, excludes = []):
         try:
             if self.flags.verbose:
-                util.LogInfo("Transferring files from %s to %s" % (src, dest))
+                util.log_info("Transferring files from %s to %s" % (src, dest))
             if self.flags.skip_existing and os.path.exists(dest):
                 return True
             if not self.flags.pretend_run:
@@ -213,15 +213,15 @@ class ConnectionLocal(connection.Connection):
             return True
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(f"Unable to transfer files from {src} to {dest}")
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(f"Unable to transfer files from {src} to {dest}")
+                util.log_error(e)
+                util.quit_program()
             return False
 
-    def ReadFile(self, src):
+    def read_file(self, src):
         try:
             if self.flags.verbose:
-                util.LogInfo(f"Reading file {src}")
+                util.log_info(f"Reading file {src}")
             if not self.flags.pretend_run:
                 contents = ""
                 with open(src, "r") as f:
@@ -230,15 +230,15 @@ class ConnectionLocal(connection.Connection):
             return None
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(f"Unable to write file to {src}")
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(f"Unable to write file to {src}")
+                util.log_error(e)
+                util.quit_program()
             return None
 
-    def WriteFile(self, src, contents):
+    def write_file(self, src, contents):
         try:
             if self.flags.verbose:
-                util.LogInfo(f"Writing file to {src}")
+                util.log_info(f"Writing file to {src}")
             if not self.flags.pretend_run:
                 os.makedirs(os.path.dirname(src), exist_ok = True)
                 with open(src, "w") as f:
@@ -247,7 +247,7 @@ class ConnectionLocal(connection.Connection):
             return True
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(f"Unable to write file to {src}")
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(f"Unable to write file to {src}")
+                util.log_error(e)
+                util.quit_program()
             return False

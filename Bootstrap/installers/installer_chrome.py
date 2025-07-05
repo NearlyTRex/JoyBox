@@ -21,19 +21,19 @@ class Chrome(installer.Installer):
         self.archive_key_path = f"/etc/apt/trusted.gpg.d/{self.archive_key}"
         self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
 
-    def IsInstalled(self):
-        return self.connection.DoesFileOrDirectoryExist("/usr/bin/google-chrome")
+    def is_installed(self):
+        return self.connection.does_file_or_directory_exist("/usr/bin/google-chrome")
 
-    def Install(self):
-        util.LogInfo("Installing Chrome")
-        self.connection.DownloadFile(f"{self.url}/google-chrome-stable_current_amd64.deb", "/tmp/google-chrome.deb")
-        self.connection.RunChecked([self.aptgetinstall_tool, "-i", "/tmp/google-chrome.deb"], sudo = True)
-        self.connection.RemoveFileOrDirectory("/tmp/google-chrome.deb")
+    def install(self):
+        util.log_info("Installing Chrome")
+        self.connection.download_file(f"{self.url}/google-chrome-stable_current_amd64.deb", "/tmp/google-chrome.deb")
+        self.connection.run_checked([self.aptgetinstall_tool, "-i", "/tmp/google-chrome.deb"], sudo = True)
+        self.connection.remove_file_or_directory("/tmp/google-chrome.deb")
         return True
 
-    def Uninstall(self):
-        util.LogInfo("Uninstalling Chrome")
-        self.connection.RunChecked([self.aptget_tool, "remove", "-y", "google-chrome-stable"], sudo = True)
-        self.connection.RemoveFileOrDirectory(self.sources_list_path, sudo = True)
-        self.connection.RemoveFileOrDirectory(self.archive_key_path, sudo = True)
+    def uninstall(self):
+        util.log_info("Uninstalling Chrome")
+        self.connection.run_checked([self.aptget_tool, "remove", "-y", "google-chrome-stable"], sudo = True)
+        self.connection.remove_file_or_directory(self.sources_list_path, sudo = True)
+        self.connection.remove_file_or_directory(self.archive_key_path, sudo = True)
         return False

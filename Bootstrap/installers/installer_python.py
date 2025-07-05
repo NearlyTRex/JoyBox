@@ -18,42 +18,42 @@ class Python(installer.Installer):
         super().__init__(config, connection, flags, options)
 
     def GetPackages(self):
-        return packages.python.get(self.GetEnvironmentType(), [])
+        return packages.python.get(self.get_environment_type(), [])
 
-    def IsInstalled(self):
+    def is_installed(self):
         for pkg in self.GetPackages():
             if not self.IsPackageInstalled(pkg):
                 return False
         return True
 
-    def Install(self):
-        util.LogInfo("Installing Python packages")
+    def install(self):
+        util.log_info("Installing Python packages")
         for pkg in self.GetPackages():
             if not self.InstallPackage(pkg):
-                util.LogError(f"Unable to install package {pkg}")
+                util.log_error(f"Unable to install package {pkg}")
                 return False
         return True
 
-    def Uninstall(self):
-        util.LogInfo("Uninstalling Python packages")
+    def uninstall(self):
+        util.log_info("Uninstalling Python packages")
         for pkg in self.GetPackages():
             if not self.UninstallPackage(pkg):
-                util.LogError(f"Unable to uninstall package {pkg}")
+                util.log_error(f"Unable to uninstall package {pkg}")
                 return False
         return True
 
     def CreateVirtualEnvironment(self, venv_dir):
-        code = self.connection.RunBlocking([self.python_tool, "-m", "venv", venv_dir])
+        code = self.connection.run_blocking([self.python_tool, "-m", "venv", venv_dir])
         return code == 0
 
     def IsPackageInstalled(self, package):
-        code = self.connection.RunBlocking([self.python_venv_pip_tool, "show", package])
+        code = self.connection.run_blocking([self.python_venv_pip_tool, "show", package])
         return code == 0
 
     def InstallPackage(self, package):
-        code = self.connection.RunBlocking([self.python_venv_pip_tool, "install", "--upgrade", package])
+        code = self.connection.run_blocking([self.python_venv_pip_tool, "install", "--upgrade", package])
         return code == 0
 
     def UninstallPackage(self, package):
-        code = self.connection.RunBlocking([self.python_venv_pip_tool, "uninstall", "-y", package])
+        code = self.connection.run_blocking([self.python_venv_pip_tool, "uninstall", "-y", package])
         return code == 0

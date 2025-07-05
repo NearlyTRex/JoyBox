@@ -39,7 +39,7 @@ class ConnectionSSH(connection.Connection):
         self.ssh_key_str = ssh_key_str
         self.ssh_password = ssh_password
 
-    def Setup(self):
+    def setup(self):
         try:
             if not ConnectionSSH.ssh_client:
                 ConnectionSSH.ssh_client = paramiko.SSHClient()
@@ -71,18 +71,18 @@ class ConnectionSSH(connection.Connection):
                 else:
                     raise ValueError("Either ssh_key_str, ssh_key_filepath, or ssh_password must be provided.")
         except Exception as e:
-            util.LogError("SSH connection failed")
-            util.LogError(e)
+            util.log_error("SSH connection failed")
+            util.log_error(e)
             raise
 
-    def TearDown(self):
+    def teardown(self):
         try:
             if ConnectionSSH.ssh_client and ConnectionSSH.ssh_client.get_transport().is_active():
                 ConnectionSSH.ssh_client.close()
                 ConnectionSSH.ssh_client = None
         except Exception as e:
-            util.LogError("Failed to close SSH connection")
-            util.LogError(e)
+            util.log_error("Failed to close SSH connection")
+            util.log_error(e)
 
     def ProcessCommand(self, cmd):
         parts = []
@@ -97,15 +97,15 @@ class ConnectionSSH(connection.Connection):
         parts.append(cmd)
         return " && ".join(parts)
 
-    def RunOutput(self, cmd, sudo = False):
+    def run_output(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
-            cmd = self.CreateCommandString(cmd)
+            cmd = self.create_command_string(cmd)
             if sudo:
-                cmd = self.MarkCommandAsSudo(cmd)
+                cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
-                self.PrintCommand(cmd)
+                self.print_command(cmd)
             if not self.flags.pretend_run:
                 cmd = self.ProcessCommand(cmd)
                 stdin, stdout, stderr = ConnectionSSH.ssh_client.exec_command(
@@ -113,27 +113,27 @@ class ConnectionSSH(connection.Connection):
                     get_pty = self.options.shell)
                 output = stdout.read()
                 error = stderr.read()
-                output = self.CleanCommandOutput(output.strip())
-                error = self.CleanCommandOutput(error.strip())
+                output = self.clean_command_output(output.strip())
+                error = self.clean_command_output(error.strip())
                 if self.options.include_stderr and error:
                     return output + "\n" + error
                 return output
             return ""
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(e)
+                util.quit_program()
             return ""
 
-    def RunReturncode(self, cmd, sudo = False):
+    def run_return_code(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
-            cmd = self.CreateCommandString(cmd)
+            cmd = self.create_command_string(cmd)
             if sudo:
-                cmd = self.MarkCommandAsSudo(cmd)
+                cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
-                self.PrintCommand(cmd)
+                self.print_command(cmd)
             if not self.flags.pretend_run:
                 cmd = self.ProcessCommand(cmd)
                 stdin, stdout, stderr = ConnectionSSH.ssh_client.exec_command(
@@ -144,19 +144,19 @@ class ConnectionSSH(connection.Connection):
             return 0
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(e)
+                util.quit_program()
             return 1
 
-    def RunBlocking(self, cmd, sudo = False):
+    def run_blocking(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
-            cmd = self.CreateCommandString(cmd)
+            cmd = self.create_command_string(cmd)
             if sudo:
-                cmd = self.MarkCommandAsSudo(cmd)
+                cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
-                self.PrintCommand(cmd)
+                self.print_command(cmd)
             if not self.flags.pretend_run:
                 cmd = self.ProcessCommand(cmd)
                 stdin, stdout, stderr = ConnectionSSH.ssh_client.exec_command(
@@ -166,25 +166,25 @@ class ConnectionSSH(connection.Connection):
                     output = stdout.readline()
                     if not output:
                         break
-                    util.LogInfo(self.CleanCommandOutput(output.strip()))
+                    util.log_info(self.clean_command_output(output.strip()))
                 exit_code = stdout.channel.recv_exit_status()
                 return exit_code
             return 0
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(e)
+                util.quit_program()
             return 1
 
-    def RunInteractive(self, cmd, sudo = False):
+    def run_interactive(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
-            cmd = self.CreateCommandString(cmd)
+            cmd = self.create_command_string(cmd)
             if sudo:
-                cmd = self.MarkCommandAsSudo(cmd)
+                cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
-                self.PrintCommand(cmd)
+                self.print_command(cmd)
             if not self.flags.pretend_run:
                 cmd = self.ProcessCommand(cmd)
                 channel = ConnectionSSH.ssh_client.invoke_shell()
@@ -194,7 +194,7 @@ class ConnectionSSH(connection.Connection):
                     if channel.recv_ready():
                         data = channel.recv(1024).decode("utf-8", errors="ignore")
                         if self.flags.verbose:
-                            util.LogInfo(data.strip())
+                            util.log_info(data.strip())
                     elif channel.exit_status_ready():
                         break
                     else:
@@ -204,33 +204,33 @@ class ConnectionSSH(connection.Connection):
             return 0
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(e)
+                util.quit_program()
             return 1
 
-    def RunChecked(self, cmd, sudo = False, throw_exception = False):
-        code = self.RunBlocking(cmd = cmd, sudo = sudo)
+    def run_checked(self, cmd, sudo = False, throw_exception = False):
+        code = self.run_blocking(cmd = cmd, sudo = sudo)
         if code != 0:
             if throw_exception:
                 raise ValueError("Unable to run command: %s" % cmd)
             else:
-                util.QuitProgram(code)
+                util.quit_program(code)
 
-    def MakeTemporaryDirectory(self):
+    def make_temporary_directory(self):
         try:
-            temp_dir = self.RunOutput("mktemp -d").strip()
+            temp_dir = self.run_output("mktemp -d").strip()
             if self.flags.verbose:
-                util.LogInfo(f"Created temporary directory: {temp_dir}")
+                util.log_info(f"Created temporary directory: {temp_dir}")
             return temp_dir
         except Exception as e:
-            util.LogError("Failed to create temporary directory")
-            util.LogError(e)
+            util.log_error("Failed to create temporary directory")
+            util.log_error(e)
             return None
 
-    def DoesFileOrDirectoryExist(self, src):
+    def does_file_or_directory_exist(self, src):
         try:
             if self.flags.verbose:
-                util.LogInfo(f"Checking existence of {src}")
+                util.log_info(f"Checking existence of {src}")
             if not self.flags.pretend_run:
                 sftp = ConnectionSSH.ssh_client.open_sftp()
                 sftp.stat(src)
@@ -240,12 +240,12 @@ class ConnectionSSH(connection.Connection):
             return False
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(f"Error checking existence of {src}")
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(f"Error checking existence of {src}")
+                util.log_error(e)
+                util.quit_program()
             return False
 
-    def TransferFiles(self, src, dest, excludes = []):
+    def transfer_files(self, src, dest, excludes = []):
         try:
             sftp = ConnectionSSH.ssh_client.open_sftp()
             sftp_lock = threading.Lock()
@@ -253,7 +253,7 @@ class ConnectionSSH(connection.Connection):
             # Gather all files and ensure remote dirs
             file_tasks = []
             for dirpath, dirnames, filenames in os.walk(src):
-                if IsExcludedPath(os.path.relpath(dirpath, src), excludes = excludes):
+                if is_exclude_path(os.path.relpath(dirpath, src), excludes = excludes):
                     continue
 
                 # Get remote directory
@@ -263,7 +263,7 @@ class ConnectionSSH(connection.Connection):
                     remote_dir = os.path.join(dest, os.path.relpath(dirpath, src))
 
                 # Ensure the remote directory exists
-                util.LogInfo(f"Making remote directory: {remote_dir}")
+                util.log_info(f"Making remote directory: {remote_dir}")
                 try:
                     sftp.stat(remote_dir)
                 except FileNotFoundError:
@@ -280,10 +280,10 @@ class ConnectionSSH(connection.Connection):
                 local_file, remote_file = task
                 try:
                     with sftp_lock:
-                        util.LogInfo(f"Transferring file: {local_file} to {remote_file}")
+                        util.log_info(f"Transferring file: {local_file} to {remote_file}")
                         sftp.put(local_file, remote_file)
                 except Exception as e:
-                    util.LogError(f"Failed to transer file {local_file} to {remote_file}: {e}")
+                    util.log_error(f"Failed to transer file {local_file} to {remote_file}: {e}")
 
             # Start uploads
             with concurrent.futures.ThreadPoolExecutor(max_workers = 8) as executor:
@@ -291,15 +291,15 @@ class ConnectionSSH(connection.Connection):
             sftp.close()
             return True
         except Exception as e:
-            util.LogError(f"Failed to transfer {src} to {dest}")
-            util.LogError(e)
-            util.LogError(traceback.format_exc())
+            util.log_error(f"Failed to transfer {src} to {dest}")
+            util.log_error(e)
+            util.log_error(traceback.format_exc())
             return False
 
-    def ReadFile(self, src):
+    def read_file(self, src):
         try:
             if self.flags.verbose:
-                util.LogInfo(f"Reading remote file {src}")
+                util.log_info(f"Reading remote file {src}")
             if not self.flags.pretend_run:
                 sftp = ConnectionSSH.ssh_client.open_sftp()
                 with sftp.file(src, "r") as f:
@@ -309,15 +309,15 @@ class ConnectionSSH(connection.Connection):
             return None
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(f"Unable to read file from {src}")
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(f"Unable to read file from {src}")
+                util.log_error(e)
+                util.quit_program()
             return None
 
-    def WriteFile(self, src, contents):
+    def write_file(self, src, contents):
         try:
             if self.flags.verbose:
-                util.LogInfo(f"Writing remote file {src}")
+                util.log_info(f"Writing remote file {src}")
             if not self.flags.pretend_run:
                 sftp = ConnectionSSH.ssh_client.open_sftp()
                 with sftp.file(src, "w") as remote_file:
@@ -328,7 +328,7 @@ class ConnectionSSH(connection.Connection):
             return False
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.LogError(f"Failed to write file {src}")
-                util.LogError(e)
-                util.QuitProgram()
+                util.log_error(f"Failed to write file {src}")
+                util.log_error(e)
+                util.quit_program()
             return False

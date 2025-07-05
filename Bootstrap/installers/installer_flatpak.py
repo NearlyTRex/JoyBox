@@ -18,9 +18,9 @@ class Flatpak(installer.Installer):
         super().__init__(config, connection, flags, options)
 
     def GetPackages(self):
-        return packages.flatpak.get(self.GetEnvironmentType(), [])
+        return packages.flatpak.get(self.get_environment_type(), [])
 
-    def IsInstalled(self):
+    def is_installed(self):
         for pkg in self.GetPackages():
             pkg_repo = pkg.get("repository")
             pkg_name = pkg.get("name")
@@ -28,37 +28,37 @@ class Flatpak(installer.Installer):
                 return False
         return True
 
-    def Install(self):
-        util.LogInfo("Installing Flatpak packages")
+    def install(self):
+        util.log_info("Installing Flatpak packages")
         for pkg in self.GetPackages():
             pkg_repo = pkg.get("repository")
             pkg_name = pkg.get("name")
             if not self.InstallPackage(pkg_repo, pkg_name):
-                util.LogError(f"Unable to install package {pkg_name}")
+                util.log_error(f"Unable to install package {pkg_name}")
                 return False
         return True
 
-    def Uninstall(self):
-        util.LogInfo("Uninstalling Flatpak packages")
+    def uninstall(self):
+        util.log_info("Uninstalling Flatpak packages")
         for pkg in self.GetPackages():
             pkg_name = pkg.get("name")
             if not self.UninstallPackage(pkg_name):
-                util.LogError(f"Unable to uninstall package {pkg_name}")
+                util.log_error(f"Unable to uninstall package {pkg_name}")
                 return False
         return True
 
     def IsPackageInstalled(self, package):
-        code = self.connection.RunBlocking([self.flatpak_tool, "info", "--user", package])
+        code = self.connection.run_blocking([self.flatpak_tool, "info", "--user", package])
         return code == 0
 
     def UpdatePackages(self):
-        code = self.connection.RunBlocking([self.flatpak_tool, "update", "--user", "-y"])
+        code = self.connection.run_blocking([self.flatpak_tool, "update", "--user", "-y"])
         return code == 0
 
     def InstallPackage(self, repository, package):
-        code = self.connection.RunBlocking([self.flatpak_tool, "install", "--user", "-y", repository, package])
+        code = self.connection.run_blocking([self.flatpak_tool, "install", "--user", "-y", repository, package])
         return code == 0
 
     def UninstallPackage(self, package):
-        code = self.connection.RunBlocking([self.flatpak_tool, "uninstall", "--user", "-y", package])
+        code = self.connection.run_blocking([self.flatpak_tool, "uninstall", "--user", "-y", package])
         return code == 0

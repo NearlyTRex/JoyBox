@@ -21,31 +21,25 @@ class RunFlags:
     def __init__(
         self,
         verbose = True,
+        force = False,
         pretend_run = False,
         exit_on_failure = True,
         skip_existing = False):
         self.verbose = verbose
+        self.force = force
         self.pretend_run = pretend_run
         self.exit_on_failure = exit_on_failure
         self.skip_existing = skip_existing
 
-    def Copy(self):
+    def copy(self):
         return copy.deepcopy(self)
 
-    def SetVerbose(self, verbose):
-        self.verbose = verbose
-        return self
-
-    def SetPretendRun(self, pretend_run):
-        self.pretend_run = pretend_run
-        return self
-
-    def SetExitOnFailure(self, exit_on_failure):
-        self.exit_on_failure = exit_on_failure
-        return self
-
-    def SetSkipExisting(self, skip_existing):
-        self.skip_existing = skip_existing
+    def set(self, **kwargs):
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+            else:
+                raise AttributeError(f"RunFlags has no attribute '{key}'")
         return self
 
 ###########################################################
@@ -71,59 +65,39 @@ class RunOptions:
         self.stderr = stderr
         self.include_stderr = include_stderr
 
-    def Copy(self):
+    def copy(self):
         return copy.deepcopy(self)
 
-    def SetCurrentWorkingDirectory(self, cwd):
-        self.cwd = cwd
-        return self
-
-    def SetEnvironment(self, env):
-        self.env = env
-        return self
-
-    def SetShell(self, shell):
-        self.shell = shell
-        return self
-
-    def SetCreationFlags(self, creationflags):
-        self.creationflags = creationflags
-        return self
-
-    def SetStdout(self, stdout):
-        self.stdout = stdout
-        return self
-
-    def SetStderr(self, stderr):
-        self.stderr = stderr
-        return self
-
-    def SetIncludeStderr(self, include_stderr):
-        self.include_stderr = include_stderr
+    def set(self, **kwargs):
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+            else:
+                raise AttributeError(f"RunFlags has no attribute '{key}'")
         return self
 
 ###########################################################
 # System
 ###########################################################
-def IsWindowsPlatform():
+def is_windows_platform():
     return sys.platform.startswith("win32")
 
-def IsLinuxPlatform():
+def is_linux_platform():
     return sys.platform.startswith("linux")
 
-def QuitProgram(exit_code = -1):
+def quit_program(exit_code = -1):
     sys.exit(exit_code)
 
-def SleepProgram(seconds):
+def sleep_program(seconds):
     time.sleep(seconds)
 
-def GetCurrentTime():
+def get_current_time():
     return time.time()
 
 ###########################################################
 # Logging
 ###########################################################
-def SetupLogging(log_file = "output.log", log_format = "%(asctime)s - %(levelname)s - %(message)s", log_level = logging.DEBUG):
+def setup_logging(log_file = "output.log", log_format = "%(asctime)s - %(levelname)s - %(message)s", log_level = logging.DEBUG):
     logger = logging.getLogger(__name__)
     logger.setLevel(log_level)
     formatter = logging.Formatter(log_format)
@@ -136,26 +110,26 @@ def SetupLogging(log_file = "output.log", log_format = "%(asctime)s - %(levelnam
     logger.addHandler(file_logger)
     logger.addHandler(console_logger)
 
-def LogInfo(message):
+def log_info(message):
     logger = logging.getLogger(__name__)
     logger.info(message)
 
-def LogWarning(message):
+def log_warning(message):
     logger = logging.getLogger(__name__)
     logger.warning(message)
 
-def LogError(message):
+def log_error(message):
     logger = logging.getLogger(__name__)
     logger.error(message)
 
-def LogErrorAndQuit(message):
-    LogError(message)
-    QuitProgram()
+def log_error_and_quit(message):
+    log_error(message)
+    quit_program()
 
 ###########################################################
 # Paths
 ###########################################################
-def IsPathValid(path):
+def is_path_valid(path):
     try:
         if not isinstance(path, str) or not path or len(path) == 0:
             return False
@@ -182,7 +156,7 @@ def IsPathValid(path):
     else:
         return True
 
-def IsExcludedPath(path, excludes = []):
+def is_exclude_path(path, excludes = []):
     for exclude in excludes:
         if any(exclude in part for part in path.split(os.sep)):
             return True
@@ -191,7 +165,7 @@ def IsExcludedPath(path, excludes = []):
 ###########################################################
 # Input prompts
 ###########################################################
-def PromptForValue(description, default_value = None):
+def prompt_for_value(description, default_value = None):
     prompt = ">>> %s: " % (description)
     if default_value:
         prompt = ">>> %s [default: %s]: " % (description, default_value)
@@ -200,40 +174,40 @@ def PromptForValue(description, default_value = None):
         value = default_value
     return value
 
-def PromptForInt(description, default_value = None):
+def prompt_for_int(description, default_value = None):
     while True:
-        value = PromptForValue(description, default_value)
+        value = prompt_for_value(description, default_value)
         if not isinstance(value, str):
             continue
         if value.isdigit():
             return int(value)
         else:
-            LogWarning("Entered value '%s' was not a valid integer, please try again" % value)
+            log_warning("Entered value '%s' was not a valid integer, please try again" % value)
 
-def PromptForChoice(description, choices = [], default_value = None):
+def prompt_for_choice(description, choices = [], default_value = None):
     while True:
-        value = PromptForValue(description, default_value)
+        value = prompt_for_value(description, default_value)
         if not isinstance(value, str):
             continue
         if value.strip().lower() in choices:
             return value
         else:
-            LogWarning("Entered value '%s' was not a valid choice, please try again" % value)
+            log_warning("Entered value '%s' was not a valid choice, please try again" % value)
 
-def PromptForFile(description, default_value = None):
+def prompt_for_file(description, default_value = None):
     while True:
-        value = PromptForValue(description, default_value)
+        value = prompt_for_value(description, default_value)
         if not isinstance(value, str):
             continue
         if os.path.exists(os.path.realpath(value)):
             return value
         else:
-            LogWarning("Entered value '%s' was not a valid file, please try again" % value)
+            log_warning("Entered value '%s' was not a valid file, please try again" % value)
 
 ###########################################################
 # Distro
 ###########################################################
-def GetLinuxDistroValue(field):
+def get_linux_distro_value(field):
     if os.path.isfile("/etc/os-release"):
         with open("/etc/os-release", "r", encoding="utf-8") as f:
             for line in f.readlines():
@@ -245,26 +219,26 @@ def GetLinuxDistroValue(field):
                         return tokens[1].strip("\"")
     return ""
 
-def GetLinuxDistroName():
-    return GetLinuxDistroValue("NAME")
+def get_linux_distro_name():
+    return get_linux_distro_value("NAME")
 
-def GetLinuxDistroVersion():
-    return GetLinuxDistroValue("VERSION")
+def get_linux_distro_version():
+    return get_linux_distro_value("VERSION")
 
-def GetLinuxDistroId():
-    return GetLinuxDistroValue("ID")
+def get_linux_distro_id():
+    return get_linux_distro_value("ID")
 
-def GetLinuxDistroIdLike():
-    return GetLinuxDistroValue("ID_LIKE")
+def get_linux_distro_id_like():
+    return get_linux_distro_value("ID_LIKE")
 
-def IsUbuntuDistro():
-    if "ubuntu" in GetLinuxDistroName().lower():
+def is_ubuntu_distro():
+    if "ubuntu" in get_linux_distro_name().lower():
         return True
-    elif "ubuntu" in GetLinuxDistroId():
+    elif "ubuntu" in get_linux_distro_id():
         return True
-    elif "ubuntu" in GetLinuxDistroIdLike():
+    elif "ubuntu" in get_linux_distro_id_like():
         return True
     return False
 
-def GetUbuntuCodename():
-    return GetLinuxDistroValue("UBUNTU_CODENAME")
+def get_ubuntu_codename():
+    return get_linux_distro_value("UBUNTU_CODENAME")

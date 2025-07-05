@@ -23,7 +23,7 @@ class RemoteUbuntu(env.Environment):
         super().__init__(config, flags, options)
 
         # Set environment type
-        self.SetEnvironmentType(constants.EnvironmentType.REMOTE_UBUNTU)
+        self.set_environment_type(constants.EnvironmentType.REMOTE_UBUNTU)
 
         # Create connection
         self.connection = connection.ConnectionSSH(
@@ -34,7 +34,7 @@ class RemoteUbuntu(env.Environment):
             ssh_password = ssh_password,
             flags = self.flags,
             options = self.options)
-        self.connection.Setup()
+        self.connection.setup()
 
         # Create installer options
         self.installer_options = {
@@ -74,29 +74,29 @@ class RemoteUbuntu(env.Environment):
         self.installer_kanboard = self.available_components["kanboard"]
         self.installer_ghidra = self.available_components["ghidra"]
 
-    def Setup(self):
+    def setup(self):
 
         # Update package lists
-        if self.ShouldProcessComponent("aptget"):
-            util.LogInfo("Updating package lists for AptGet")
+        if self.should_process_component("aptget"):
+            util.log_info("Updating package lists for AptGet")
             self.installer_aptget.UpdatePackageLists()
 
         # Process all components
-        success = self.ProcessComponents("Install")
+        success = self.process_components("install")
 
         # Autoremove packages
-        if self.ShouldProcessComponent("aptget") and success:
+        if self.should_process_component("aptget") and success:
             if not self.installer_aptget.AutoRemovePackages():
                 return False
         return success
 
-    def Teardown(self):
+    def teardown(self):
 
         # Process components in reverse order
-        success = self.ProcessComponents("Uninstall", reverse_order = True)
+        success = self.process_components("uninstall", reverse_order = True)
 
         # Autoremove packages
-        if self.ShouldProcessComponent("aptget") and success:
+        if self.should_process_component("aptget") and success:
             if not self.installer_aptget.AutoRemovePackages():
                 return False
         return success

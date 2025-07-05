@@ -400,45 +400,45 @@ class Ghidra(installer.Installer):
         super().__init__(config, connection, flags, options)
         self.app_name = "ghidra_server"
         self.app_dir = f"$HOME/apps/{self.app_name}"
-        self.app_domain = self.config.GetValue("UserData.Servers", "domain_name")
+        self.app_domain = self.config.get_value("UserData.Servers", "domain_name")
         self.nginx_stream_config_values = {
-            "domain": self.config.GetValue("UserData.Servers", "domain_name"),
-            "subdomain": self.config.GetValue("UserData.Ghidra", "ghidra_subdomain"),
-            "port_rmi": self.config.GetValue("UserData.Ghidra", "ghidra_port_rmi"),
-            "port_ssl": self.config.GetValue("UserData.Ghidra", "ghidra_port_ssl"),
-            "port_stream": self.config.GetValue("UserData.Ghidra", "ghidra_port_stream")
+            "domain": self.config.get_value("UserData.Servers", "domain_name"),
+            "subdomain": self.config.get_value("UserData.Ghidra", "ghidra_subdomain"),
+            "port_rmi": self.config.get_value("UserData.Ghidra", "ghidra_port_rmi"),
+            "port_ssl": self.config.get_value("UserData.Ghidra", "ghidra_port_ssl"),
+            "port_stream": self.config.get_value("UserData.Ghidra", "ghidra_port_stream")
         }
         self.env_values = {
-            "domain": self.config.GetValue("UserData.Servers", "domain_name"),
-            "port_rmi": self.config.GetValue("UserData.Ghidra", "ghidra_port_rmi"),
-            "port_ssl": self.config.GetValue("UserData.Ghidra", "ghidra_port_ssl"),
-            "port_stream": self.config.GetValue("UserData.Ghidra", "ghidra_port_stream"),
-            "admin_user": self.config.GetValue("UserData.Ghidra", "ghidra_admin_user"),
-            "admin_pass": self.config.GetValue("UserData.Ghidra", "ghidra_admin_pass")
+            "domain": self.config.get_value("UserData.Servers", "domain_name"),
+            "port_rmi": self.config.get_value("UserData.Ghidra", "ghidra_port_rmi"),
+            "port_ssl": self.config.get_value("UserData.Ghidra", "ghidra_port_ssl"),
+            "port_stream": self.config.get_value("UserData.Ghidra", "ghidra_port_stream"),
+            "admin_user": self.config.get_value("UserData.Ghidra", "ghidra_admin_user"),
+            "admin_pass": self.config.get_value("UserData.Ghidra", "ghidra_admin_pass")
         }
 
-    def IsInstalled(self):
-        containers = self.connection.RunOutput("docker ps -a --format '{{.Names}}'")
+    def is_installed(self):
+        containers = self.connection.run_output("docker ps -a --format '{{.Names}}'")
         return any(self.app_name in name for name in containers.splitlines())
 
-    def Install(self):
+    def install(self):
 
         # Create directories
-        util.LogInfo("Creating directories")
-        self.connection.MakeDirectory(self.app_dir)
-        self.connection.MakeDirectory(f"{self.app_dir}/certs")
+        util.log_info("Creating directories")
+        self.connection.make_directory(self.app_dir)
+        self.connection.make_directory(f"{self.app_dir}/certs")
 
         # Generate keystore password
-        util.LogInfo("Generate keystore password")
+        util.log_info("Generate keystore password")
         keystore_password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(32))
         keystore_password_file = f"{self.app_dir}/certs/keystore_password.txt"
-        if self.connection.WriteFile("/tmp/keystore_password.txt", keystore_password):
-            self.connection.MoveFileOrDirectory("/tmp/keystore_password.txt", keystore_password_file)
-            self.connection.ChangePermission(keystore_password_file, "644")
+        if self.connection.write_file("/tmp/keystore_password.txt", keystore_password):
+            self.connection.move_file_or_directory("/tmp/keystore_password.txt", keystore_password_file)
+            self.connection.change_permission(keystore_password_file, "644")
 
         # Export SSL keystore from certbot
-        util.LogInfo("Exporting SSL keystore from certbot")
-        self.connection.RunChecked([
+        util.log_info("Exporting SSL keystore from certbot")
+        self.connection.run_checked([
             self.cert_manager_tool,
             "export_keystore",
             self.app_domain,
@@ -450,70 +450,70 @@ class Ghidra(installer.Installer):
         ], sudo = True)
 
         # Write entrypoint script
-        util.LogInfo("Writing entrypoint script")
-        if self.connection.WriteFile("/tmp/entrypoint.sh", entrypoint_script):
-            self.connection.MoveFileOrDirectory("/tmp/entrypoint.sh", f"{self.app_dir}/entrypoint.sh")
+        util.log_info("Writing entrypoint script")
+        if self.connection.write_file("/tmp/entrypoint.sh", entrypoint_script):
+            self.connection.move_file_or_directory("/tmp/entrypoint.sh", f"{self.app_dir}/entrypoint.sh")
 
         # Write Ghidra scripts
-        util.LogInfo("Writing Ghidra scripts")
-        if self.connection.WriteFile("/tmp/ExportToGzf.java", export_to_gzf_script):
-            self.connection.MoveFileOrDirectory("/tmp/ExportToGzf.java", f"{self.app_dir}/ExportToGzf.java")
-        if self.connection.WriteFile("/tmp/ListAndExportRepository.java", list_and_export_script):
-            self.connection.MoveFileOrDirectory("/tmp/ListAndExportRepository.java", f"{self.app_dir}/ListAndExportRepository.java")
+        util.log_info("Writing Ghidra scripts")
+        if self.connection.write_file("/tmp/ExportToGzf.java", export_to_gzf_script):
+            self.connection.move_file_or_directory("/tmp/ExportToGzf.java", f"{self.app_dir}/ExportToGzf.java")
+        if self.connection.write_file("/tmp/ListAndExportRepository.java", list_and_export_script):
+            self.connection.move_file_or_directory("/tmp/ListAndExportRepository.java", f"{self.app_dir}/ListAndExportRepository.java")
 
         # Write Dockerfile
-        util.LogInfo("Writing Dockerfile")
-        if self.connection.WriteFile("/tmp/Dockerfile", dockerfile_template):
-            self.connection.MoveFileOrDirectory("/tmp/Dockerfile", f"{self.app_dir}/Dockerfile")
+        util.log_info("Writing Dockerfile")
+        if self.connection.write_file("/tmp/Dockerfile", dockerfile_template):
+            self.connection.move_file_or_directory("/tmp/Dockerfile", f"{self.app_dir}/Dockerfile")
 
         # Write docker compose
-        util.LogInfo("Writing docker compose")
-        if self.connection.WriteFile("/tmp/docker-compose.yml", docker_compose_template):
-            self.connection.MoveFileOrDirectory("/tmp/docker-compose.yml", f"{self.app_dir}/docker-compose.yml")
+        util.log_info("Writing docker compose")
+        if self.connection.write_file("/tmp/docker-compose.yml", docker_compose_template):
+            self.connection.move_file_or_directory("/tmp/docker-compose.yml", f"{self.app_dir}/docker-compose.yml")
 
         # Write docker env
-        util.LogInfo("Writing docker env")
-        if self.connection.WriteFile("/tmp/.env", env_template.format(**self.env_values)):
-            self.connection.MoveFileOrDirectory("/tmp/.env", f"{self.app_dir}/.env")
+        util.log_info("Writing docker env")
+        if self.connection.write_file("/tmp/.env", env_template.format(**self.env_values)):
+            self.connection.move_file_or_directory("/tmp/.env", f"{self.app_dir}/.env")
 
         # Create nginx stream entry
-        util.LogInfo("Creating nginx stream entry")
-        if self.connection.WriteFile(f"/tmp/{self.app_name}.conf", nginx_stream_config_template.format(**self.nginx_stream_config_values)):
-            self.connection.RunChecked([self.nginx_manager_tool, "install_stream_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
-            self.connection.RunChecked([self.nginx_manager_tool, "link_stream_conf", f"{self.app_name}.conf"], sudo = True)
-            self.connection.RemoveFileOrDirectory(f"/tmp/{self.app_name}.conf")
+        util.log_info("Creating nginx stream entry")
+        if self.connection.write_file(f"/tmp/{self.app_name}.conf", nginx_stream_config_template.format(**self.nginx_stream_config_values)):
+            self.connection.run_checked([self.nginx_manager_tool, "install_stream_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
+            self.connection.run_checked([self.nginx_manager_tool, "link_stream_conf", f"{self.app_name}.conf"], sudo = True)
+            self.connection.remove_file_or_directory(f"/tmp/{self.app_name}.conf")
 
         # Open all three firewall ports
-        util.LogInfo("Opening firewall ports for Ghidra")
+        util.log_info("Opening firewall ports for Ghidra")
         for port in ["13100", "13101", "13102"]:
-            self.connection.RunChecked([self.nginx_manager_tool, "open_port", port], sudo = True)
+            self.connection.run_checked([self.nginx_manager_tool, "open_port", port], sudo = True)
 
         # Start docker
-        util.LogInfo("Starting docker")
-        self.connection.SetCurrentWorkingDirectory(self.app_dir)
-        self.connection.SetEnvironmentVar("DOCKER_BUILDKIT", "1")
-        self.connection.SetEnvironmentVar("COMPOSE_DOCKER_CLI_BUILD", "1")
-        self.connection.RunChecked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "up", "-d", "--build"])
+        util.log_info("Starting docker")
+        self.connection.set_current_working_directory(self.app_dir)
+        self.connection.set_environmentVar("DOCKER_BUILDKIT", "1")
+        self.connection.set_environmentVar("COMPOSE_DOCKER_CLI_BUILD", "1")
+        self.connection.run_checked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "up", "-d", "--build"])
         return True
 
-    def Uninstall(self):
+    def uninstall(self):
 
         # Stop docker
-        util.LogInfo("Stopping docker")
-        self.connection.SetCurrentWorkingDirectory(self.app_dir)
-        self.connection.RunChecked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "down", "-v"])
-        self.connection.SetCurrentWorkingDirectory(None)
+        util.log_info("Stopping docker")
+        self.connection.set_current_working_directory(self.app_dir)
+        self.connection.run_checked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "down", "-v"])
+        self.connection.set_current_working_directory(None)
 
         # Remove directory
-        util.LogInfo("Removing directory")
-        self.connection.RemoveFileOrDirectory(self.app_dir)
+        util.log_info("Removing directory")
+        self.connection.remove_file_or_directory(self.app_dir)
 
         # Remove nginx stream entry
-        util.LogInfo("Removing nginx stream entry")
-        self.connection.RunChecked([self.nginx_manager_tool, "remove_stream_conf", f"{self.app_name}.conf"], sudo = True)
+        util.log_info("Removing nginx stream entry")
+        self.connection.run_checked([self.nginx_manager_tool, "remove_stream_conf", f"{self.app_name}.conf"], sudo = True)
 
         # Close all firewall ports
-        util.LogInfo("Closing firewall ports")
+        util.log_info("Closing firewall ports")
         for port in ["13100", "13101", "13102"]:
-            self.connection.RunChecked([self.nginx_manager_tool, "close_port", port], sudo = True)
+            self.connection.run_checked([self.nginx_manager_tool, "close_port", port], sudo = True)
         return True

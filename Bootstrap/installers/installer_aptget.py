@@ -18,46 +18,46 @@ class AptGet(installer.Installer):
         super().__init__(config, connection, flags, options)
 
     def GetPackages(self):
-        return packages.aptget.get(self.GetEnvironmentType(), [])
+        return packages.aptget.get(self.get_environment_type(), [])
 
-    def IsInstalled(self):
+    def is_installed(self):
         for pkg in self.GetPackages():
             if not self.IsPackageInstalled(pkg):
                 return False
         return True
 
-    def Install(self):
-        util.LogInfo("Installing AptGet packages")
+    def install(self):
+        util.log_info("Installing AptGet packages")
         for pkg in self.GetPackages():
             if not self.InstallPackage(pkg):
-                util.LogError(f"Unable to install package {pkg}")
+                util.log_error(f"Unable to install package {pkg}")
                 return False
         return True
 
-    def Uninstall(self):
-        util.LogInfo("Uninstalling AptGet packages")
+    def uninstall(self):
+        util.log_info("Uninstalling AptGet packages")
         for pkg in self.GetPackages():
             if not self.UninstallPackage(pkg):
-                util.LogError(f"Unable to uninstall package {pkg}")
+                util.log_error(f"Unable to uninstall package {pkg}")
                 return False
         return True
 
     def IsPackageInstalled(self, package):
-        output = self.connection.RunOutput([self.aptgetinstall_tool, "-s", package])
+        output = self.connection.run_output([self.aptgetinstall_tool, "-s", package])
         return "Status: install ok installed" in output
 
     def UpdatePackageLists(self):
-        code = self.connection.RunBlocking([self.aptget_tool, "update"], sudo = True)
+        code = self.connection.run_blocking([self.aptget_tool, "update"], sudo = True)
         return code == 0
 
     def AutoRemovePackages(self):
-        code = self.connection.RunBlocking([self.aptget_tool, "autoremove", "-y"], sudo = True)
+        code = self.connection.run_blocking([self.aptget_tool, "autoremove", "-y"], sudo = True)
         return code == 0
 
     def InstallPackage(self, package):
-        code = self.connection.RunBlocking([self.aptget_tool, "install", "-y", package], sudo = True)
+        code = self.connection.run_blocking([self.aptget_tool, "install", "-y", package], sudo = True)
         return code == 0
 
     def UninstallPackage(self, package):
-        code = self.connection.RunBlocking([self.aptget_tool, "remove", "-y", package], sudo = True)
+        code = self.connection.run_blocking([self.aptget_tool, "remove", "-y", package], sudo = True)
         return code == 0

@@ -21,21 +21,21 @@ class Brave(installer.Installer):
         self.archive_key_path = f"/usr/share/keyrings/{self.archive_key}"
         self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
 
-    def IsInstalled(self):
-        return self.connection.DoesFileOrDirectoryExist("/usr/bin/brave-browser")
+    def is_installed(self):
+        return self.connection.does_file_or_directory_exist("/usr/bin/brave-browser")
 
-    def Install(self):
-        util.LogInfo("Installing Brave")
-        self.connection.DownloadFile(f"{self.url}/{self.archive_key}", self.archive_key_path, sudo = True)
-        self.connection.WriteFile(f"/tmp/{self.sources_list}", f"deb [signed-by={self.archive_key_path}] {self.url}/ stable main\n")
-        self.connection.MoveFileOrDirectory(f"/tmp/{self.sources_list}", self.sources_list_path, sudo = True)
-        self.connection.RunChecked([self.aptget_tool, "update"], sudo = True)
-        self.connection.RunChecked([self.aptget_tool, "install", "-y", "brave-browser"], sudo = True)
+    def install(self):
+        util.log_info("Installing Brave")
+        self.connection.download_file(f"{self.url}/{self.archive_key}", self.archive_key_path, sudo = True)
+        self.connection.write_file(f"/tmp/{self.sources_list}", f"deb [signed-by={self.archive_key_path}] {self.url}/ stable main\n")
+        self.connection.move_file_or_directory(f"/tmp/{self.sources_list}", self.sources_list_path, sudo = True)
+        self.connection.run_checked([self.aptget_tool, "update"], sudo = True)
+        self.connection.run_checked([self.aptget_tool, "install", "-y", "brave-browser"], sudo = True)
         return True
 
-    def Uninstall(self):
-        util.LogInfo("Uninstalling Brave")
-        self.connection.RunChecked([self.aptget_tool, "remove", "-y", "brave-browser"], sudo = True)
-        self.connection.RemoveFileOrDirectory(self.sources_list_path, sudo = True)
-        self.connection.RemoveFileOrDirectory(self.archive_key_path, sudo = True)
+    def uninstall(self):
+        util.log_info("Uninstalling Brave")
+        self.connection.run_checked([self.aptget_tool, "remove", "-y", "brave-browser"], sudo = True)
+        self.connection.remove_file_or_directory(self.sources_list_path, sudo = True)
+        self.connection.remove_file_or_directory(self.archive_key_path, sudo = True)
         return False
