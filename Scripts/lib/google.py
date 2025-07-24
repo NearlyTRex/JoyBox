@@ -203,7 +203,7 @@ def DownloadVideo(
         download_cmd += ["-o", output_file]
     else:
         download_cmd += ["-o", "%(upload_date)s - %(title).200s.%(ext)s"]
-    if system.DoesPathExist(download_archive):
+    if system.IsPathValid(download_archive):
         download_cmd += ["--download-archive", download_archive]
     if isinstance(cookie_source, str) and len(cookie_source) > 0:
         if system.DoesPathExist(cookie_source):
