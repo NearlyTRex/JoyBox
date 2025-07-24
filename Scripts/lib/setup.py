@@ -93,7 +93,7 @@ def SetupAssets(verbose = False, pretend_run = False, exit_on_failure = False):
 
                 # Get directories
                 source_dir = environment.GetLockerGamingAssetDir(game_category, game_subcategory, asset_type)
-                dest_dir = environment.GetPegasusMetadataAssetDir(game_category, game_subcategory, asset_type)
+                dest_dir = environment.GetGamePegasusMetadataAssetDir(game_category, game_subcategory, asset_type)
                 dest_parent_dir = system.GetDirectoryParent(dest_dir)
 
                 # Create source dir if it doesn't exist

@@ -422,79 +422,79 @@ def GetLockerProgramToolDir(tool_name, tool_platform = None, source_type = None)
             tool_name)
 
 ###########################################################
-# Metadata
+# Metadata - Games
 ###########################################################
 
-# Get metadata root dir
-def GetMetadataRootDir():
+# Get game metadata root dir
+def GetGameMetadataRootDir():
     return ini.GetIniPathValue("UserData.Dirs", "metadata_dir")
 
 # Get pegasus metadata root dir
-def GetPegasusMetadataRootDir():
-    return system.JoinPaths(GetMetadataRootDir(), "Pegasus")
+def GetGamePegasusMetadataRootDir():
+    return system.JoinPaths(GetGameMetadataRootDir(), "Pegasus")
 
 # Get pegasus metadata file
-def GetPegasusMetadataFile(game_category, game_subcategory):
+def GetGamePegasusMetadataFile(game_category, game_subcategory):
     return system.JoinPaths(
-        GetPegasusMetadataRootDir(),
+        GetGamePegasusMetadataRootDir(),
         config.Supercategory.ROMS,
         game_category,
         game_subcategory,
         "metadata.pegasus.txt")
 
 # Get pegasus metadata asset dir
-def GetPegasusMetadataAssetDir(game_category, game_subcategory, asset_type):
+def GetGamePegasusMetadataAssetDir(game_category, game_subcategory, asset_type):
     return system.JoinPaths(
-        GetPegasusMetadataRootDir(),
+        GetGamePegasusMetadataRootDir(),
         config.Supercategory.ROMS,
         game_category,
         game_subcategory,
         asset_type)
 
 # Get metadata file
-def GetMetadataFile(game_category, game_subcategory, metadata_format = config.MetadataFormatType.PEGASUS):
+def GetGameMetadataFile(game_category, game_subcategory, metadata_format = config.MetadataFormatType.PEGASUS):
     if metadata_format == config.MetadataFormatType.PEGASUS:
-        return GetPegasusMetadataFile(game_category, game_subcategory)
+        return GetGamePegasusMetadataFile(game_category, game_subcategory)
     return None
 
 # Check if file is a metadata file
-def IsMetadataFile(metadata_file):
+def IsGameMetadataFile(metadata_file):
     return metadata_file.endswith("metadata.pegasus.txt")
 
 # Get published metadata root dir
-def GetPublishedMetadataRootDir():
-    return system.JoinPaths(GetMetadataRootDir(), "Published")
+def GetGamePublishedMetadataRootDir():
+    return system.JoinPaths(GetGameMetadataRootDir(), "Published")
 
 # Get misc metadata root dir
-def GetMiscMetadataRootDir():
-    return system.JoinPaths(GetMetadataRootDir(), "Misc")
+def GetGameMiscMetadataRootDir():
+    return system.JoinPaths(GetGameMetadataRootDir(), "Misc")
 
 # Get hashes metadata root dir
-def GetHashesMetadataRootDir():
-    return system.JoinPaths(GetMetadataRootDir(), "Hashes")
+def GetGameHashesMetadataRootDir():
+    return system.JoinPaths(GetGameMetadataRootDir(), "Hashes")
 
 # Get hashes metadata file
-def GetHashesMetadataFile(game_supercategory, game_category, game_subcategory):
+def GetGameHashesMetadataFile(game_supercategory, game_category, game_subcategory):
     return system.JoinPaths(
-        GetHashesMetadataRootDir(),
+        GetGameHashesMetadataRootDir(),
         game_supercategory,
         game_category,
         game_subcategory.val() + ".json")
 
 # Get json metadata root dir
-def GetJsonMetadataRootDir():
-    return system.JoinPaths(GetMetadataRootDir(), "Json")
+def GetGameJsonMetadataRootDir():
+    return system.JoinPaths(GetGameMetadataRootDir(), "Json")
 
 # Get json rom metadata dir
 def GetJsonMetadataDir(game_supercategory, game_category, game_subcategory):
     return system.JoinPaths(
-        GetJsonMetadataRootDir(),
+        GetGameJsonMetadataRootDir(),
         game_supercategory,
         game_category,
         game_subcategory)
 
 # Get json metadata file
-def GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name):
+def GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name):
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
     game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
     return system.JoinPaths(
@@ -503,7 +503,7 @@ def GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, gam
         game_name + ".json")
 
 # Get json metadata ignore file
-def GetJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcategory):
+def GetGameJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcategory):
     return system.JoinPaths(
         GetJsonMetadataDir(game_supercategory, game_category, game_subcategory),
         "ignores.json")

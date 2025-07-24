@@ -146,7 +146,7 @@ class Metadata:
 
                 # Check file paths
                 file_path_relative = game_entry.get_file()
-                file_path_real = system.JoinPaths(environment.GetJsonMetadataRootDir(), file_path_relative)
+                file_path_real = system.JoinPaths(environment.GetGameJsonMetadataRootDir(), file_path_relative)
                 if not system.DoesPathExist(file_path_real):
                     system.LogError("File not found:\n%s" % file_path_relative)
                     system.LogError("Verification of '%s - %s' failed" % (game_platform, game_name), quit_program = True)

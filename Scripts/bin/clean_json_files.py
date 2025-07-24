@@ -37,7 +37,7 @@ def main():
                 for game_name in game_names:
 
                     # Get json file
-                    json_file = environment.GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+                    json_file = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
                     if not system.IsPathFile(json_file):
                         continue
 

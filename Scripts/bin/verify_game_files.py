@@ -28,7 +28,7 @@ def main():
     setup.CheckRequirements()
 
     # Find extra json files
-    for json_file in system.BuildFileListByExtensions(environment.GetJsonMetadataRootDir(), extensions = [".json"]):
+    for json_file in system.BuildFileListByExtensions(environment.GetGameJsonMetadataRootDir(), extensions = [".json"]):
 
         # Check if json file matches up to a real game path
         system.LogInfo("Checking if game matching '%s' exists ..." % json_file)
@@ -41,7 +41,7 @@ def main():
     # Verify metadata files
     for game_category in config.Category.members():
         for game_subcategory in config.subcategory_map[game_category]:
-            metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
+            metadata_file = environment.GetGameMetadataFile(game_category, game_subcategory)
             if system.IsPathFile(metadata_file):
                 metadata_obj = metadata.Metadata()
                 metadata_obj.import_from_metadata_file(metadata_file)
@@ -59,7 +59,7 @@ def main():
                 for game_name in game_names:
 
                     # Get json file
-                    json_file = environment.GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+                    json_file = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
                     if not system.IsPathFile(json_file):
                         continue
 
@@ -99,7 +99,7 @@ def main():
             for game_subcategory in config.subcategory_map[game_category]:
 
                 # Get hash file path
-                hash_file_path = environment.GetHashesMetadataFile(game_supercategory, game_category, game_subcategory)
+                hash_file_path = environment.GetGameHashesMetadataFile(game_supercategory, game_category, game_subcategory)
                 if not os.path.exists(hash_file_path):
                     continue
 

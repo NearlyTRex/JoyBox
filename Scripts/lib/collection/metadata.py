@@ -44,7 +44,7 @@ def CreateGameMetadataEntry(
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
     # Get metadata file path
-    metadata_file_path = environment.GetMetadataFile(game_category, game_subcategory)
+    metadata_file_path = environment.GetGameMetadataFile(game_category, game_subcategory)
 
     # Load metadata file
     metadata_obj = metadata.Metadata()
@@ -58,10 +58,10 @@ def CreateGameMetadataEntry(
         return True
 
     # Get json file path
-    json_file_path = environment.GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+    json_file_path = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
     json_file_path = system.RebaseFilePath(
         path = json_file_path,
-        old_base_path = environment.GetJsonMetadataRootDir(),
+        old_base_path = environment.GetGameJsonMetadataRootDir(),
         new_base_path = "")
 
     # Create game entry
@@ -119,7 +119,7 @@ def UpdateGameMetadataEntry(
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
     # Get metadata file path
-    metadata_file_path = environment.GetMetadataFile(game_category, game_subcategory)
+    metadata_file_path = environment.GetGameMetadataFile(game_category, game_subcategory)
 
     # Load metadata file
     metadata_obj = metadata.Metadata()
@@ -294,7 +294,7 @@ def PublishGameMetadataEntries(
             continue
 
         # Get metadata file
-        metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
+        metadata_file = environment.GetGameMetadataFile(game_category, game_subcategory)
         if not system.IsPathFile(metadata_file):
             continue
 
@@ -336,7 +336,7 @@ def PublishGameMetadataEntries(
 
     # Write publish file
     success = system.TouchFile(
-        src = system.JoinPaths(environment.GetPublishedMetadataRootDir(), game_category + ".html"),
+        src = system.JoinPaths(environment.GetGamePublishedMetadataRootDir(), game_category + ".html"),
         contents = publish_contents,
         encoding = None,
         verbose = verbose,

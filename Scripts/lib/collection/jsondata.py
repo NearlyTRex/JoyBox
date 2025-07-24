@@ -38,7 +38,7 @@ def ReadGameJsonData(
         return None
 
     # Get json file path
-    json_file_path = environment.GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+    json_file_path = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
     if not system.DoesPathExist(json_file_path):
         return None
 
@@ -76,7 +76,7 @@ def CreateGameJsonFile(
         return True
 
     # Get json file path
-    json_file_path = environment.GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+    json_file_path = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
     if system.DoesPathExist(json_file_path):
         return True
 
@@ -145,7 +145,7 @@ def UpdateGameJsonFile(
     game_regular_name = gameinfo.DeriveRegularNameFromGameName(game_name)
 
     # Get json file path
-    json_file_path = environment.GetJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+    json_file_path = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
     if not system.DoesPathExist(json_file_path):
         return False
 
@@ -390,7 +390,7 @@ def GetGameJsonIgnoreEntries(
         return {}
 
     # Get json file path
-    json_file_path = environment.GetJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcategory)
+    json_file_path = environment.GetGameJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcategory)
 
     # Create file if necessary
     if not system.DoesPathExist(json_file_path):
@@ -428,7 +428,7 @@ def AddGameJsonIgnoreEntry(
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
     # Get json file path
-    json_file_path = environment.GetJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcategory)
+    json_file_path = environment.GetGameJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcategory)
 
     # Create file if necessary
     if not system.DoesPathExist(json_file_path):

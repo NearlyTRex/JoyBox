@@ -30,7 +30,7 @@ def main():
         for game_subcategory in config.subcategory_map[game_category]:
 
             # Get metadata file
-            metadata_file = environment.GetMetadataFile(game_category, game_subcategory)
+            metadata_file = environment.GetGameMetadataFile(game_category, game_subcategory)
             if not system.IsPathFile(metadata_file):
                 continue
 

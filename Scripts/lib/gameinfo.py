@@ -37,7 +37,7 @@ class GameInfo:
         self.json_data = jsondata.JsonData()
         self.json_file = json_file
         if not system.IsPathFile(self.json_file):
-            self.json_file = environment.GetJsonMetadataFile(
+            self.json_file = environment.GetGameJsonMetadataFile(
                 game_supercategory = game_supercategory,
                 game_category = game_category,
                 game_subcategory = game_subcategory,
@@ -95,7 +95,7 @@ class GameInfo:
         system.AssertIsNotNone(self.game_name, "game_name")
 
         # Save metadata file
-        self.metadata_file = environment.GetMetadataFile(self.game_category, self.game_subcategory)
+        self.metadata_file = environment.GetGameMetadataFile(self.game_category, self.game_subcategory)
 
         # Get metadata
         metadata_obj = metadata.Metadata()
@@ -867,7 +867,7 @@ def FindAllGameNames(base_dir, game_supercategory, game_category, game_subcatego
 
 # Find json game names
 def FindJsonGameNames(game_supercategory, game_category, game_subcategory):
-    base_dir = environment.GetJsonMetadataRootDir()
+    base_dir = environment.GetGameJsonMetadataRootDir()
     return FindAllGameNames(base_dir, game_supercategory, game_category, game_subcategory)
 
 # Find locker game names
@@ -986,7 +986,7 @@ def DeriveGameCategoriesFromFile(game_file):
     root_dirs = [
         system.NormalizeFilePath(environment.GetLockerGamingRootDir()),
         system.NormalizeFilePath(environment.GetCacheGamingRootDir()),
-        system.NormalizeFilePath(environment.GetJsonMetadataRootDir())
+        system.NormalizeFilePath(environment.GetGameJsonMetadataRootDir())
     ]
 
     # Get relative source directory

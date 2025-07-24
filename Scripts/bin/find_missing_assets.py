@@ -28,7 +28,7 @@ def main():
 
     # Get search info
     assets_dir = environment.GetLockerGamingAssetsRootDir()
-    metadata_dir = environment.GetPegasusMetadataRootDir()
+    metadata_dir = environment.GetGamePegasusMetadataRootDir()
 
     # Find all possible assets
     all_assets = set()
@@ -39,7 +39,7 @@ def main():
     found_assets = set()
     missing_assets = dict()
     for filename in system.BuildFileList(metadata_dir):
-        if environment.IsMetadataFile(filename):
+        if environment.IsGameMetadataFile(filename):
 
             # Load metadata
             metadata_obj = metadata.Metadata()

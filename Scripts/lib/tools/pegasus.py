@@ -176,7 +176,7 @@ class Pegasus(toolbase.ToolBase):
 
         # Generate game dirs
         game_dirs = []
-        for pegasus_file in system.BuildFileListByExtensions(environment.GetPegasusMetadataRootDir(), extensions = [".txt"]):
+        for pegasus_file in system.BuildFileListByExtensions(environment.GetGamePegasusMetadataRootDir(), extensions = [".txt"]):
             if pegasus_file.endswith("metadata.pegasus.txt"):
                 game_dirs.append(system.GetFilenameDirectory(pegasus_file))
 

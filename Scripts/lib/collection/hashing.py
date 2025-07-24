@@ -33,7 +33,7 @@ def BuildHashFiles(
         return False
 
     # Get hash info
-    hash_file = environment.GetHashesMetadataFile(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
+    hash_file = environment.GetGameHashesMetadataFile(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
     hash_offset = system.JoinPaths(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
 
     # Get locker info
@@ -99,7 +99,7 @@ def SortHashFile(
     exit_on_failure = False):
 
     # Get hash file
-    hash_file = environment.GetHashesMetadataFile(
+    hash_file = environment.GetGameHashesMetadataFile(
         game_supercategory = game_info.get_supercategory(),
         game_category = game_info.get_category(),
         game_subcategory = game_info.get_subcategory())
@@ -126,7 +126,7 @@ def SortAllHashFiles(
             for game_subcategory in config.subcategory_map[game_category]:
 
                 # Get hash file
-                hash_file = environment.GetHashesMetadataFile(
+                hash_file = environment.GetGameHashesMetadataFile(
                     game_supercategory = game_supercategory,
                     game_category = game_category,
                     game_subcategory = game_subcategory)
