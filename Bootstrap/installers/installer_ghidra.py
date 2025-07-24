@@ -61,9 +61,9 @@ services:
     container_name: ghidra_server
     restart: always
     ports:
-      - "127.0.0.1:${GHIDRA_PORT_RMI}:13100"
-      - "127.0.0.1:${GHIDRA_PORT_SSL}:13101"
-      - "127.0.0.1:${GHIDRA_PORT_STREAM}:13102"
+      - "${GHIDRA_PORT_RMI}:13100"
+      - "${GHIDRA_PORT_SSL}:13101"
+      - "${GHIDRA_PORT_STREAM}:13102"
     volumes:
       - ghidra_repos:/repos
       - ./certs:/certs:ro
