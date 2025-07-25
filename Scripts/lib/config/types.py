@@ -413,3 +413,21 @@ class SizeType(EnumType):
 class ContentDeliveryNetworkType(EnumType):
     CLOUDFLARE              = ("Cloudflare")
     FASTLY                  = ("Fastly")
+
+# Audio metadata types
+class AudioMetadataType(EnumType):
+    ARCHIVE                 = ("Archive")
+    HASH                    = ("Hash")
+    TAG                     = ("Tag")
+
+# Audio genre types
+class AudioGenreType(EnumType):
+    ASMR                    = ("ASMR")
+    AUDIOBOOK               = ("Audiobook")
+    CLASSICAL               = ("Classical")
+    GAME                    = ("Game")
+    RADIO                   = ("Radio")
+    REGULAR                 = ("Regular")
+    SOUNDTRACK              = ("Soundtrack")
+    STORY                   = ("Story")
+    THERAPY                 = ("Therapy")

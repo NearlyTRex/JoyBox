@@ -18,7 +18,7 @@ if util.is_windows_platform():
     ini_defaults["UserData.Dirs"]["local_locker_dir"] = "%USERPROFILE%\\Locker"
     ini_defaults["UserData.Dirs"]["remote_locker_dir"] = "%USERPROFILE%\\LockerRemote"
     ini_defaults["UserData.Dirs"]["cache_dir"] = "%USERPROFILE%\\Cache"
-    ini_defaults["UserData.Dirs"]["metadata_dir"] = "C:\\Repositories\\GameMetadata"
+    ini_defaults["UserData.Dirs"]["game_metadata_dir"] = "C:\\Repositories\\GameMetadata"
     ini_defaults["UserData.Dirs"]["scripts_dir"] = "C:\\Repositories\\JoyBox\\Scripts"
 else:
     ini_defaults["UserData.Dirs"]["tools_dir"] = "$HOME/Tools"
@@ -26,7 +26,7 @@ else:
     ini_defaults["UserData.Dirs"]["local_locker_dir"] = "$HOME/Locker"
     ini_defaults["UserData.Dirs"]["remote_locker_dir"] = "$HOME/LockerRemote"
     ini_defaults["UserData.Dirs"]["cache_dir"] = "$HOME/Cache"
-    ini_defaults["UserData.Dirs"]["metadata_dir"] = "$HOME/Repositories/GameMetadata"
+    ini_defaults["UserData.Dirs"]["game_metadata_dir"] = "$HOME/Repositories/GameMetadata"
     ini_defaults["UserData.Dirs"]["scripts_dir"] = "$HOME/Repositories/JoyBox/Scripts"
 
 # UserData.Protection

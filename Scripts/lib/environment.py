@@ -378,10 +378,10 @@ def GetLockerGamingEmulatorSetupDir(emu_name, source_type = None):
 ###########################################################
 
 # Get locker music root dir
-def GetLockerMusicRootDir(source_type = None):
-    return system.JoinPaths(
-        GetLockerRootDir(source_type),
-        config.LockerFolderType.MUSIC)
+def GetLockerMusicRootDir(source_type = None, genre_type = None):
+    if genre_type:
+        return system.JoinPaths(GetLockerRootDir(source_type), config.LockerFolderType.MUSIC, genre_type)
+    return system.JoinPaths(GetLockerRootDir(source_type), config.LockerFolderType.MUSIC)
 
 ###########################################################
 # Locker - Photos
@@ -427,7 +427,7 @@ def GetLockerProgramToolDir(tool_name, tool_platform = None, source_type = None)
 
 # Get game metadata root dir
 def GetGameMetadataRootDir():
-    return ini.GetIniPathValue("UserData.Dirs", "metadata_dir")
+    return ini.GetIniPathValue("UserData.Dirs", "game_metadata_dir")
 
 # Get pegasus metadata root dir
 def GetGamePegasusMetadataRootDir():
@@ -507,6 +507,18 @@ def GetGameJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcat
     return system.JoinPaths(
         GetJsonMetadataDir(game_supercategory, game_category, game_subcategory),
         "ignores.json")
+
+###########################################################
+# Metadata - Files
+###########################################################
+
+# Get file metadata root dir
+def GetFileMetadataRootDir():
+    return ini.GetIniPathValue("UserData.Dirs", "file_metadata_dir")
+
+# Get audio metadata root dir
+def GetFileAudioMetadataRootDir(metadata_type, genre_type):
+    return system.JoinPaths(GetFileMetadataRootDir(), "Audio", metadata_type, genre_type)
 
 ###########################################################
 # Scripts
