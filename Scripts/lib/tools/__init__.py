@@ -32,6 +32,7 @@ from .ludusavi import Ludusavi
 from .ludusavimanifest import LudusaviManifest
 from .mametools import MameTools
 from .moonlight import Moonlight
+from .mutagen import Mutagen
 from .ndecrypt import NDecrypt
 from .nile import Nile
 from .nircmd import NirCmd
@@ -105,6 +106,7 @@ def GetToolMap():
     AddInstance(LudusaviManifest)
     AddInstance(MameTools)
     AddInstance(Moonlight)
+    AddInstance(Mutagen)
     AddInstance(NDecrypt)
     AddInstance(NirCmd)
     AddInstance(Nile)
