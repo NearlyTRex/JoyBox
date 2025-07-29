@@ -141,6 +141,34 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86watcom.cspec"] 
             <register name="EDX" />
         </killedbycall>
     </prototype>
+    <prototype name="__fpustack" extrapop="4" stackshift="0">
+        <input>
+            <pentry minsize="10" maxsize="10" metatype="float"><addr offset="4" space="stack" /></pentry>
+            <pentry minsize="10" maxsize="10" metatype="float"><addr offset="14" space="stack" /></pentry>
+        </input>
+        <output killedbycall="true">
+            <pentry minsize="10" maxsize="10" metatype="float" extension="float"><register name="ST0" /></pentry>
+        </output>
+        <unaffected>
+            <register name="EBX" />
+            <register name="ESI" />
+            <register name="EDI" />
+            <register name="EBP" />
+        </unaffected>
+        <killedbycall>
+            <register name="EAX" />
+            <register name="ECX" />
+            <register name="EDX" />
+            <register name="ST0" />
+            <register name="ST1" />
+            <register name="ST2" />
+            <register name="ST3" />
+            <register name="ST4" />
+            <register name="ST5" />
+            <register name="ST6" />
+            <register name="ST7" />
+        </killedbycall>
+    </prototype>
 </compiler_spec>
 """
 config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86watcom.ldefs"] = """
