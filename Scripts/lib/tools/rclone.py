@@ -167,9 +167,9 @@ class RClone(toolbase.ToolBase):
             if hetzner_remote_type:
                 config_contents = config_contents.replace(config.token_hetzner_type, hetzner_remote_type)
             if hetzner_remote_host:
-                config_contents = config_contents.replace(config.token_hetzner_user, hetzner_remote_host)
+                config_contents = config_contents.replace(config.token_hetzner_host, hetzner_remote_host)
             if hetzner_remote_user:
-                config_contents = config_contents.replace(config.token_hetzner_pass, hetzner_remote_user)
+                config_contents = config_contents.replace(config.token_hetzner_user, hetzner_remote_user)
             if hetzner_remote_pass:
                 config_contents = config_contents.replace(config.token_hetzner_pass, hetzner_remote_pass)
 
