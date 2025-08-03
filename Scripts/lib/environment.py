@@ -383,6 +383,12 @@ def GetLockerMusicRootDir(source_type = None, genre_type = None):
         return system.JoinPaths(GetLockerRootDir(source_type), config.LockerFolderType.MUSIC, genre_type)
     return system.JoinPaths(GetLockerRootDir(source_type), config.LockerFolderType.MUSIC)
 
+# Get locker music album dir
+def GetLockerMusicAlbumDir(album_name, artist_name = None, source_type = None, genre_type = None):
+    if artist_name:
+        return system.JoinPaths(GetLockerMusicRootDir(), artist_name, album_name)
+    return system.JoinPaths(GetLockerMusicRootDir(), album_name)
+
 ###########################################################
 # Locker - Photos
 ###########################################################
@@ -519,6 +525,10 @@ def GetFileMetadataRootDir():
 # Get audio metadata root dir
 def GetFileAudioMetadataRootDir(metadata_type, genre_type):
     return system.JoinPaths(GetFileMetadataRootDir(), "Audio", metadata_type, genre_type)
+
+# Get audio metadata archive file
+def GetFileAudioMetadataArchiveFile(genre_type, album_name):
+    return system.JoinPaths(GetFileAudioMetadataRootDir(config.AudioMetadataType.ARCHIVE, genre_type), album_name + ".txt")
 
 ###########################################################
 # Scripts
