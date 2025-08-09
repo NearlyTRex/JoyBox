@@ -169,6 +169,28 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86watcom.cspec"] 
             <register name="ST7" />
         </killedbycall>
     </prototype>
+    <prototype name="__mathinternal" extrapop="0" stackshift="4">
+        <input>
+            <!-- No parameters -->
+        </input>
+        <output killedbycall="true">
+            <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
+            <pentry minsize="5" maxsize="8">
+                <addr space="join" piece1="EDX" piece2="EAX" />
+            </pentry>
+        </output>
+        <unaffected>
+            <register name="EBX" />
+            <register name="ESI" />
+            <register name="EDI" />
+            <register name="EBP" />
+        </unaffected>
+        <killedbycall>
+            <register name="EAX" />
+            <register name="ECX" />
+            <register name="EDX" />
+        </killedbycall>
+    </prototype>
 </compiler_spec>
 """
 config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86watcom.ldefs"] = """
