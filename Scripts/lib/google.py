@@ -187,7 +187,10 @@ def DownloadVideo(
     if audio_only:
         download_cmd += [
             "--extract-audio",
-            "--audio-format", "mp3"
+            "--audio-format", "mp3",
+            "--embed-thumbnail",
+            "--embed-metadata",
+            "--format", "bestaudio"
         ]
     else:
         download_cmd += [

@@ -386,8 +386,8 @@ def GetLockerMusicRootDir(source_type = None, genre_type = None):
 # Get locker music album dir
 def GetLockerMusicAlbumDir(album_name, artist_name = None, source_type = None, genre_type = None):
     if artist_name:
-        return system.JoinPaths(GetLockerMusicRootDir(), artist_name, album_name)
-    return system.JoinPaths(GetLockerMusicRootDir(), album_name)
+        return system.JoinPaths(GetLockerMusicRootDir(), genre_type, artist_name, album_name)
+    return system.JoinPaths(GetLockerMusicRootDir(), genre_type, album_name)
 
 ###########################################################
 # Locker - Photos
