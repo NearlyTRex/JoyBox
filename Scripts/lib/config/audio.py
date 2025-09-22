@@ -8,6 +8,10 @@ story_channels = [
     {
         "name": "Unit 522",
         "url": "https://www.youtube.com/@UNIT522/videos"
+    },
+    {
+        "name": "Mr Nightmare",
+        "url": "https://www.youtube.com/@mrnightmare/videos"
     }
 ]
 
