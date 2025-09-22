@@ -1,6 +1,7 @@
 # Imports
 import os
 import sys
+import base64
 
 # Local imports
 import config
@@ -118,3 +119,44 @@ def ConvertImageToPNG(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+
+# Convert image data to format and return base64 string
+def ConvertImageDataToFormat(
+    image_data,
+    target_format,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Create temporary files for conversion
+    temp_input = system.CreateTemporaryFile(suffix=".tmp")
+    temp_output = system.CreateTemporaryFile(suffix=target_format.cval())
+
+    # Write original image data to temp file
+    with open(temp_input, "wb") as f:
+        f.write(image_data)
+
+    # Convert to target format
+    if ConvertImage(
+        image_src = temp_input,
+        image_dest = temp_output,
+        image_format = target_format,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure):
+
+        # Read converted image data
+        with open(temp_output, "rb") as f:
+            converted_data = f.read()
+
+        # Clean up temp files
+        system.RemoveFile(temp_input)
+        system.RemoveFile(temp_output)
+
+        # Return base64 encoded data
+        return base64.b64encode(converted_data).decode("utf-8")
+
+    # Clean up temp files on failure
+    system.RemoveFile(temp_input)
+    system.RemoveFile(temp_output)
+    return None

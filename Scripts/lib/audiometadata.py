@@ -3,6 +3,7 @@ import os
 import sys
 import base64
 import re
+import tempfile
 
 # Local imports
 import config
@@ -11,6 +12,7 @@ import programs
 import system
 import environment
 import hashing
+import image
 
 # Audio metadata class
 class AudioMetadata:
@@ -90,8 +92,13 @@ class AudioMetadata:
         self,
         audio_file,
         include_artwork = True,
+        artwork_format = None,
         verbose = False,
         exit_on_failure = False):
+
+        # Default artwork format to JPEG
+        if artwork_format is None:
+            artwork_format = config.ImageFileType.JPEG
 
         # Check file exists
         if not system.IsPathFile(audio_file):
@@ -129,12 +136,36 @@ class AudioMetadata:
             artwork = []
             for frame in audio.tags.values():
                 if isinstance(frame, self.artwork_class):
-                    artwork_data = {
-                        "type": frame.type,
-                        "desc": frame.desc,
-                        "mime": frame.mime,
-                        "data": base64.b64encode(frame.data).decode("utf-8")
-                    }
+                    image_data = frame.data
+                    mime_type = frame.mime
+
+                    # Check if image needs conversion
+                    target_mime = f"image/{artwork_format.val().lower()}"
+                    if mime_type != target_mime:
+                        converted_b64_data = image.ConvertImageDataToFormat(
+                            image_data = image_data,
+                            target_format = artwork_format)
+                        if converted_b64_data:
+                            artwork_data = {
+                                "type": frame.type,
+                                "desc": frame.desc,
+                                "mime": target_mime,
+                                "data": converted_b64_data
+                            }
+                        else:
+                            artwork_data = {
+                                "type": frame.type,
+                                "desc": frame.desc,
+                                "mime": mime_type,
+                                "data": base64.b64encode(image_data).decode("utf-8")
+                            }
+                    else:
+                        artwork_data = {
+                            "type": frame.type,
+                            "desc": frame.desc,
+                            "mime": mime_type,
+                            "data": base64.b64encode(image_data).decode("utf-8")
+                        }
                     artwork.append(artwork_data)
             if artwork:
                 tags["artwork"] = artwork

@@ -1032,6 +1032,18 @@ def CreateTemporaryDirectory(verbose = False, pretend_run = False):
         return (False, "Unable to create temporary directory")
     return (True, temp_dir)
 
+# Create temporary file
+def CreateTemporaryFile(suffix = "", verbose = False, pretend_run = False):
+    if verbose:
+        LogInfo("Creating temporary file")
+    temp_file = ""
+    if not pretend_run:
+        with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tf:
+            temp_file = tf.name
+        if verbose:
+            LogInfo("Created temporary file %s" % temp_file)
+    return temp_file
+
 # Create symlink
 def CreateSymlink(
     src,
