@@ -23,7 +23,16 @@ class Mutagen(toolbase.ToolBase):
     def GetConfig(self):
         return {
             "Mutagen": {
-                "program": "Mutagen/lib/mutagen/__init__.py"
+                "package_dir": "Mutagen/lib",
+                "package_name": "mutagen"
+            },
+            "MutagenMP3": {
+                "package_dir": "Mutagen/lib",
+                "package_name": "mutagen.mp3"
+            },
+            "MutagenID3": {
+                "package_dir": "Mutagen/lib",
+                "package_name": "mutagen.id3"
             }
         }
 

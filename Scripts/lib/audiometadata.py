@@ -10,6 +10,7 @@ import command
 import programs
 import system
 import environment
+import hashing
 
 # Audio metadata class
 class AudioMetadata:
@@ -17,32 +18,38 @@ class AudioMetadata:
     # Constructor
     def __init__(self):
 
-        # Import main mutagen module
-        self.mutagen = environment.ImportPythonModuleFile(
-            module_path = programs.GetToolProgram("Mutagen"),
-            module_name = "mutagen")
-        if self.mutagen is None:
-            raise ImportError("Failed to import mutagen module")
+        # Import mutagen modules
+        self.mutagen = environment.ImportPythonModulePackage(
+            module_path = programs.GetToolPathConfigValue("Mutagen", "package_dir"),
+            module_name = programs.GetToolConfigValue("Mutagen", "package_name"))
+        self.mutagen_mp3 = environment.ImportPythonModulePackage(
+            module_path = programs.GetToolPathConfigValue("MutagenMP3", "package_dir"),
+            module_name = programs.GetToolConfigValue("MutagenMP3", "package_name"))
+        self.mutagen_id3 = environment.ImportPythonModulePackage(
+            module_path = programs.GetToolPathConfigValue("MutagenID3", "package_dir"),
+            module_name = programs.GetToolConfigValue("MutagenID3", "package_name"))
+        if self.mutagen is None or self.mutagen_mp3 is None or self.mutagen_id3 is None:
+            raise ImportError("Failed to import mutagen modules")
 
         # Store MP3 and ID3 classes
-        self.mp3_class = self.mutagen.mp3.MP3
-        self.id3_class = self.mutagen.id3.ID3
+        self.mp3_class = self.mutagen_mp3.MP3
+        self.id3_class = self.mutagen_id3.ID3
 
         # Store frame classes by code
         self.id3_frame_classes = {
-            "APIC": self.mutagen.id3.APIC,
-            "TIT2": self.mutagen.id3.TIT2,
-            "TPE1": self.mutagen.id3.TPE1,
-            "TALB": self.mutagen.id3.TALB,
-            "TDRC": self.mutagen.id3.TDRC,
-            "TCON": self.mutagen.id3.TCON,
-            "TPE2": self.mutagen.id3.TPE2,
-            "TRCK": self.mutagen.id3.TRCK,
-            "TPOS": self.mutagen.id3.TPOS,
-            "TBPM": self.mutagen.id3.TBPM,
-            "TKEY": self.mutagen.id3.TKEY,
-            "TPE3": self.mutagen.id3.TPE3,
-            "COMM": self.mutagen.id3.COMM
+            "APIC": self.mutagen_id3.APIC,
+            "TIT2": self.mutagen_id3.TIT2,
+            "TPE1": self.mutagen_id3.TPE1,
+            "TALB": self.mutagen_id3.TALB,
+            "TDRC": self.mutagen_id3.TDRC,
+            "TCON": self.mutagen_id3.TCON,
+            "TPE2": self.mutagen_id3.TPE2,
+            "TRCK": self.mutagen_id3.TRCK,
+            "TPOS": self.mutagen_id3.TPOS,
+            "TBPM": self.mutagen_id3.TBPM,
+            "TKEY": self.mutagen_id3.TKEY,
+            "TPE3": self.mutagen_id3.TPE3,
+            "COMM": self.mutagen_id3.COMM
         }
 
         # Store frame classes by key
@@ -96,11 +103,11 @@ class AudioMetadata:
         audio = self.mp3_class(audio_file, ID3 = self.id3_class)
         if audio.tags is None:
             system.LogError(f"Failed to load audio file")
-            return None
+            return {}
 
         # Extract text frames
         tags = {}
-        for frame_id, tag_name in text_mappings.items():
+        for frame_id, tag_name in self.text_mappings.items():
             if frame_id in audio.tags:
                 tags[tag_name] = str(audio.tags[frame_id])
 
@@ -167,7 +174,7 @@ class AudioMetadata:
         # Set comments
         if "comments" in tags:
             for comment in tags["comments"]:
-                audio.tags[f"COMM:{comment.get("desc", "")}"] = self.comment_class(
+                audio.tags[f"COMM:{comment.get('desc', '')}"] = self.comment_class(
                     encoding = 3,
                     lang = comment.get("lang", "eng"),
                     desc = comment.get("desc", ""),
@@ -177,7 +184,7 @@ class AudioMetadata:
         if "artwork" in tags:
             for artwork in tags["artwork"]:
                 image_data = base64.b64decode(artwork["data"])
-                audio.tags[f"APIC:{artwork["desc"]}"] = self.artwork_class(
+                audio.tags[f"APIC:{artwork['desc']}"] = self.artwork_class(
                     encoding = 3,
                     mime = artwork["mime"],
                     type = artwork["type"],
@@ -258,3 +265,163 @@ class AudioMetadata:
             "has_tags": audio.tags is not None
         }
         return file_info
+
+    def get_album_tags(self, album_dir, verbose = False, exit_on_failure = False):
+
+        # Check album exists
+        if not system.IsPathDirectory(album_dir):
+            system.LogError(f"Album directory not found: {album_dir}")
+            return None
+
+        # Get all MP3 files
+        mp3_files = system.BuildFileListByExtensions(album_dir, extensions=['.mp3'])
+        if not mp3_files:
+            system.LogWarning(f"No MP3 files found in {album_dir}")
+            return None
+
+        # Sort files by name
+        mp3_files.sort()
+
+        # Extract tags from all tracks
+        tracks = []
+        album_info = {}
+        album_artwork = None
+        album_artwork_hash = None
+        for mp3_file in mp3_files:
+            tags = self.get_id3_tags(
+                mp3_file,
+                include_artwork = True,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if tags is not None:
+
+                # Handle artwork
+                track_artwork = None
+                if "artwork" in tags and tags["artwork"]:
+                    track_artwork_data = tags["artwork"][0]["data"]
+                    track_artwork_hash = hashing.CalculateStringSHA256(track_artwork_data)
+
+                    # Set album artwork from first track if not set
+                    if album_artwork is None:
+                        album_artwork = tags["artwork"][0]
+                        album_artwork_hash = track_artwork_hash
+
+                    # Only store track artwork if different from album artwork
+                    if track_artwork_hash != album_artwork_hash:
+                        track_artwork = tags["artwork"][0]
+
+                # Remove artwork from track tags (will be stored separately)
+                track_tags = tags.copy()
+                if "artwork" in track_tags:
+                    del track_tags["artwork"]
+
+                # Store track info
+                track_info = {
+                    "filename": system.GetFilenameFile(mp3_file),
+                    "tags": track_tags
+                }
+
+                # Add track-specific artwork if different
+                if track_artwork:
+                    track_info["artwork"] = track_artwork
+                tracks.append(track_info)
+
+                # Collect album-level info from first track
+                if not album_info:
+                    album_info = {
+                        "album": tags.get("album", ""),
+                        "album_artist": tags.get("album_artist", ""),
+                        "artist": tags.get("artist", ""),
+                        "year": tags.get("year", ""),
+                        "genre": tags.get("genre", "")
+                    }
+
+        # Build result
+        result = {
+            "album_info": album_info,
+            "tracks": tracks,
+            "album_path": system.GetFilenameFile(album_dir),
+            "total_tracks": len(tracks)
+        }
+
+        # Add album artwork if found
+        if album_artwork:
+            result["album_artwork"] = album_artwork
+        return result
+
+    def set_album_tags(
+        self,
+        album_dir,
+        album_metadata,
+        clear_existing = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check album exists
+        if not system.IsPathDirectory(album_dir):
+            system.LogError(f"Album directory not found: {album_dir}")
+            return False
+
+        # Check tracks
+        if "tracks" not in album_metadata:
+            system.LogError("No tracks found in album metadata")
+            return False
+
+        # Get album artwork if available
+        album_artwork = album_metadata.get("album_artwork")
+
+        # Apply tags
+        for track in album_metadata["tracks"]:
+            mp3_file = system.JoinPaths(album_dir, track["filename"])
+            if system.IsPathFile(mp3_file):
+
+                # Prepare tags for this track
+                track_tags = track["tags"].copy()
+
+                # Add artwork (track-specific or album artwork)
+                if "artwork" in track:
+                    track_tags["artwork"] = [track["artwork"]]
+                elif album_artwork:
+                    track_tags["artwork"] = [album_artwork]
+
+                # Set ID3 tags
+                if not self.set_id3_tags(
+                    mp3_file,
+                    track_tags,
+                    clear_existing = clear_existing,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure):
+                    return False
+            else:
+                system.LogError(f"Track file not found: {mp3_file}")
+                return False
+        return True
+
+    def clear_album_tags(
+        self,
+        album_dir,
+        preserve_artwork = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check album exists
+        if not system.IsPathDirectory(album_dir):
+            system.LogError(f"Album directory not found: {album_dir}")
+            return False
+
+        # Get all MP3 files
+        mp3_files = system.BuildFileListByExtensions(album_dir, extensions=['.mp3'])
+
+        # Remove ID3 tags
+        for mp3_file in mp3_files:
+            if not self.remove_id3_tags(
+                mp3_file,
+                preserve_artwork = preserve_artwork,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure):
+                return False
+        return True

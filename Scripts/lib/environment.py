@@ -383,11 +383,18 @@ def GetLockerMusicRootDir(source_type = None, genre_type = None):
         return system.JoinPaths(GetLockerRootDir(source_type), config.LockerFolderType.MUSIC, genre_type)
     return system.JoinPaths(GetLockerRootDir(source_type), config.LockerFolderType.MUSIC)
 
+# Get locker music dir with genre type handling
+def GetLockerMusicDir(genre_type = None):
+    if genre_type:
+        return GetLockerMusicRootDir(genre_type = genre_type)
+    else:
+        return GetLockerMusicRootDir()
+
 # Get locker music album dir
 def GetLockerMusicAlbumDir(album_name, artist_name = None, source_type = None, genre_type = None):
     if artist_name:
-        return system.JoinPaths(GetLockerMusicRootDir(), genre_type, artist_name, album_name)
-    return system.JoinPaths(GetLockerMusicRootDir(), genre_type, album_name)
+        return system.JoinPaths(GetLockerMusicRootDir(source_type, genre_type), artist_name, album_name)
+    return system.JoinPaths(GetLockerMusicRootDir(source_type, genre_type), album_name)
 
 ###########################################################
 # Locker - Photos
@@ -526,9 +533,28 @@ def GetFileMetadataRootDir():
 def GetFileAudioMetadataRootDir(metadata_type, genre_type):
     return system.JoinPaths(GetFileMetadataRootDir(), "Audio", metadata_type, genre_type)
 
+# Get audio metadata dir (with optional artist support)
+def GetFileAudioMetadataDir(metadata_type, genre_type, artist_name = None):
+    if artist_name:
+        return system.JoinPaths(GetFileMetadataRootDir(), "Audio", metadata_type, genre_type, artist_name)
+    return system.JoinPaths(GetFileMetadataRootDir(), "Audio", metadata_type, genre_type)
+
 # Get audio metadata archive file
 def GetFileAudioMetadataArchiveFile(genre_type, album_name):
     return system.JoinPaths(GetFileAudioMetadataRootDir(config.AudioMetadataType.ARCHIVE, genre_type), album_name + ".txt")
+
+# Get audio metadata album dir
+def GetFileAudioMetadataAlbumDir(metadata_type, genre_type, album_name, artist_name = None):
+    if genre_type:
+        output_dir = GetFileAudioMetadataDir(metadata_type, genre_type, artist_name)
+        return system.JoinPaths(output_dir, album_name)
+    else:
+        return system.JoinPaths(GetFileMetadataRootDir(), album_name)
+
+# Get audio metadata file
+def GetFileAudioMetadataFile(metadata_type, genre_type, album_name, artist_name = None):
+    album_output_dir = GetFileAudioMetadataAlbumDir(metadata_type, genre_type, album_name, artist_name)
+    return system.JoinPaths(album_output_dir, f"{album_name}.json")
 
 ###########################################################
 # Scripts

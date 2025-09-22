@@ -420,6 +420,12 @@ class AudioMetadataType(EnumType):
     HASH                    = ("Hash")
     TAG                     = ("Tag")
 
+# Audio metadata action types
+class AudioMetadataAction(EnumType):
+    TAG                     = ("Tag")
+    CLEAR                   = ("Clear")
+    APPLY                   = ("Apply")
+
 # Audio genre types
 class AudioGenreType(EnumType):
     ASMR                    = ("ASMR")
