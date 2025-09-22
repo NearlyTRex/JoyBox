@@ -553,8 +553,11 @@ def GetFileAudioMetadataAlbumDir(metadata_type, genre_type, album_name, artist_n
 
 # Get audio metadata file
 def GetFileAudioMetadataFile(metadata_type, genre_type, album_name, artist_name = None):
-    album_output_dir = GetFileAudioMetadataAlbumDir(metadata_type, genre_type, album_name, artist_name)
-    return system.JoinPaths(album_output_dir, f"{album_name}.json")
+    if genre_type:
+        output_dir = GetFileAudioMetadataDir(metadata_type, genre_type, artist_name)
+    else:
+        output_dir = GetFileMetadataRootDir()
+    return system.JoinPaths(output_dir, f"{album_name}.json")
 
 ###########################################################
 # Scripts
