@@ -135,7 +135,7 @@ def ImportGameStorePurchases(
             system.LogInfo(" - Appurl:\t" + purchase_appurl)
         if purchase_name:
             system.LogInfo(" - Name:\t" + purchase_name)
-        should_import = system.PromptForValue("Import this? (n to skip, i to ignore)", default_value = "n")
+        should_import = system.PromptForValue("Import this? (n to skip, i to ignore)", default_value = "y")
         if should_import.lower() == "n":
             continue
 
