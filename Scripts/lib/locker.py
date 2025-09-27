@@ -248,6 +248,10 @@ def BackupFiles(
         return False
 
     # Transfer files
+    system.LogInfo(f"Starting file transfer from {src} to {dest}")
+    if system.IsPathDirectory(src):
+        src_files = system.GetDirectoryContents(src)
+        system.LogInfo(f"Source directory contains {len(src_files)} items")
     success = system.SmartTransfer(
         src = src,
         dest = dest,
@@ -260,7 +264,9 @@ def BackupFiles(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
+        system.LogError(f"File transfer failed from {src} to {dest}")
         return False
+    system.LogInfo("File transfer completed successfully")
 
     # Upload files
     if sync.IsToolInstalled():

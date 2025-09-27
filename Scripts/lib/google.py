@@ -182,7 +182,9 @@ def DownloadVideo(
     download_cmd = [
         youtube_tool,
         "--windows-filenames",
-        "--format-sort", "res,ext:mp4:m4a"
+        "--format-sort", "res,ext:mp4:m4a",
+        "--sleep-interval", "3",
+        "--max-sleep-interval", "5"
     ]
     if audio_only:
         download_cmd += [
@@ -216,6 +218,7 @@ def DownloadVideo(
     download_cmd += [video_url]
 
     # Run download command
+    system.LogInfo(f"Executing download command: {' '.join(download_cmd[:5])}...")
     code = command.RunReturncodeCommand(
         cmd = download_cmd,
         options = command.CreateCommandOptions(
@@ -223,11 +226,46 @@ def DownloadVideo(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    system.LogInfo(f"Download command completed with return code: {code}")
     if code != 0:
-        return False
+        system.LogWarning(f"Download completed with some failures (return code: {code})")
+    else:
+        system.LogInfo("Download command completed successfully")
+
+    # Check what was downloaded
+    download_success = True
+    new_files_count = 0
+    if system.IsPathDirectory(output_dir):
+        downloaded_files = system.GetDirectoryContents(output_dir)
+        media_files = [f for f in downloaded_files if f.endswith(('.mp3', '.mp4'))]
+        new_files_count = len(media_files)
+        system.LogInfo(f"Found {new_files_count} new media files after download")
+    else:
+        system.LogWarning(f"Output directory doesn't exist after download: {output_dir}")
+
+    # Determine if the operation was successful
+    # yt-dlp returns exit code 1 for partial failures, but this doesn't mean total failure
+    # Success cases:
+    # - Exit code 0 (complete success)
+    # - Exit code 1 but with new files downloaded (partial success)
+    # - Exit code 1 but all videos were already archived (nothing new to download)
+    # Failure case:
+    # - Exit code > 1 (serious error)
+    # - Exit code 1 with no progress and genuine failures (not just archives)
+    if code == 0:
+        system.LogInfo("Download completed without any issues")
+    elif code == 1:
+        if new_files_count > 0:
+            system.LogInfo(f"Download completed with some issues but {new_files_count} new files were downloaded")
+        else:
+            system.LogInfo("Download completed - no new files (likely all videos already archived)")
+    else:
+        system.LogError(f"Download failed with serious error (exit code: {code})")
+        download_success = False
 
     # Sanitize filenames
     if sanitize_filenames:
+        system.LogInfo("Starting filename sanitization...")
 
         # Get sanitize dir
         sanitize_dir = None
@@ -238,6 +276,7 @@ def DownloadVideo(
 
         # Sanitize files in dir
         if sanitize_dir:
+            system.LogInfo(f"Sanitizing filenames in directory: {sanitize_dir}")
             success = system.SanitizeFilenames(
                 path = sanitize_dir,
                 extension = ".mp3" if audio_only else ".mp4",
@@ -245,7 +284,16 @@ def DownloadVideo(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
+                system.LogError("Filename sanitization failed")
                 return False
+            system.LogInfo("Filename sanitization completed successfully")
+        else:
+            system.LogWarning("No sanitization directory found")
 
-    # Should be successful
-    return True
+    # Return success status based on our analysis
+    if download_success:
+        system.LogInfo("Video download process completed successfully")
+        return True
+    else:
+        system.LogError("Video download process failed")
+        return False

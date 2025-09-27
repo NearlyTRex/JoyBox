@@ -47,50 +47,99 @@ def GetAlbumDirectories(genre_type = None, album_name = None, artist_name = None
     return album_dirs
 
 # Download channel audio files
-def DownloadChannelAudioFiles(channels, genre_type, verbose = False, pretend_run = False, exit_on_failure = False):
+def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Download channels
-    for channel in channels:
+    system.LogInfo(f"Starting audio download process for genre: {genre_type}")
+    system.LogInfo(f"Processing {len(channels)} channels")
+    for i, channel in enumerate(channels, 1):
+        channel_name = channel.get("name")
+        channel_url = channel.get("url")
+        system.LogInfo(f"[{i}/{len(channels)}] Processing channel: {channel_name}")
+        system.LogInfo(f"Channel URL: {channel_url}")
 
         # Create temporary directory
+        system.LogInfo("Creating temporary directory...")
         tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
             verbose = verbose,
             pretend_run = pretend_run)
         if not tmp_dir_success:
+            system.LogError(f"Failed to create temporary directory for channel: {channel_name}")
             return False
+        system.LogInfo(f"Created temporary directory: {tmp_dir_result}")
 
         # Get channel info
-        channel_name = channel.get("name")
-        channel_url = channel.get("url")
         channel_archive_file = environment.GetFileAudioMetadataArchiveFile(genre_type, channel_name)
         channel_music_dir = environment.GetLockerMusicAlbumDir(
             album_name = channel_name,
             source_type = config.SourceType.LOCAL,
             genre_type = genre_type)
+        system.LogInfo(f"Archive file: {channel_archive_file}")
+        system.LogInfo(f"Target music directory: {channel_music_dir}")
 
         # Download channel
+        system.LogInfo("Starting video download...")
         success = google.DownloadVideo(
             video_url = channel_url,
             audio_only = True,
             output_dir = tmp_dir_result,
             download_archive = channel_archive_file,
+            cookie_source = cookie_source,
             sanitize_filenames = True,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
+            system.LogError(f"Failed to download videos for channel: {channel_name}")
             return False
 
+        # Check what was downloaded
+        if system.IsPathDirectory(tmp_dir_result):
+            downloaded_files = system.GetDirectoryContents(tmp_dir_result)
+            audio_files = [f for f in downloaded_files if f.endswith('.mp3')]
+            system.LogInfo(f"Downloaded {len(audio_files)} audio files")
+            if len(audio_files) > 0:
+                system.LogInfo(f"First few files: {audio_files[:3]}")
+        else:
+            system.LogWarning(f"Temporary directory doesn't exist after download: {tmp_dir_result}")
+
         # Make music dir
+        system.LogInfo(f"Creating target music directory: {channel_music_dir}")
         system.MakeDirectory(
             src = channel_music_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+        # Backup audio files only (filter out thumbnails and other non-audio files)
+        system.LogInfo(f"Starting backup from {tmp_dir_result} to {channel_music_dir}")
+
+        # Create a subdirectory for audio files only
+        audio_only_dir = system.JoinPaths(tmp_dir_result, "audio_only")
+        system.MakeDirectory(
+            src = audio_only_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+        # Move only audio files to the audio-only subdirectory
+        if system.IsPathDirectory(tmp_dir_result):
+            downloaded_files = system.GetDirectoryContents(tmp_dir_result)
+            for file_name in downloaded_files:
+                if file_name.lower().endswith(('.mp3', '.m4a', '.wav', '.flac', '.ogg')):
+                    src_file = system.JoinPaths(tmp_dir_result, file_name)
+                    dest_file = system.JoinPaths(audio_only_dir, file_name)
+                    if system.IsPathFile(src_file):
+                        system.MoveFile(
+                            src = src_file,
+                            dest = dest_file,
+                            verbose = verbose,
+                            pretend_run = pretend_run,
+                            exit_on_failure = exit_on_failure)
+
         # Backup audio files
-        locker.BackupFiles(
-            src = tmp_dir_result,
+        backup_success = locker.BackupFiles(
+            src = audio_only_dir,
             dest = channel_music_dir,
             show_progress = True,
             skip_existing = True,
@@ -98,29 +147,43 @@ def DownloadChannelAudioFiles(channels, genre_type, verbose = False, pretend_run
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if backup_success:
+            system.LogInfo("Backup completed successfully")
+        else:
+            system.LogError("Backup process failed")
+            return False
 
         # Delete temporary directory
-        system.RemoveDirectory(
+        system.LogInfo(f"Cleaning up temporary directory: {tmp_dir_result}")
+        cleanup_success = system.RemoveDirectory(
             src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if cleanup_success:
+            system.LogInfo("Temporary directory cleanup completed")
+        else:
+            system.LogWarning("Failed to clean up temporary directory")
+        system.LogInfo(f"[{i}/{len(channels)}] Completed processing channel: {channel_name}")
+    system.LogInfo("Audio download process completed successfully")
     return True
 
 # Download story audio files
-def DownloadStoryAudioFiles(verbose = False, pretend_run = False, exit_on_failure = False):
+def DownloadStoryAudioFiles(cookie_source = None, verbose = False, pretend_run = False, exit_on_failure = False):
     return DownloadChannelAudioFiles(
         channels = config.story_channels,
         genre_type = config.AudioGenreType.STORY,
+        cookie_source = cookie_source,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Download asmr audio files
-def DownloadASMRAudioFiles(verbose = False, pretend_run = False, exit_on_failure = False):
+def DownloadASMRAudioFiles(cookie_source = None, verbose = False, pretend_run = False, exit_on_failure = False):
     return DownloadChannelAudioFiles(
         channels = config.asmr_channels,
         genre_type = config.AudioGenreType.ASMR,
+        cookie_source = cookie_source,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

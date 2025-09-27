@@ -19,6 +19,7 @@ parser.add_enum_argument(
     args = ("-g", "--genre_type"),
     arg_type = config.AudioGenreType,
     description = "Genre type")
+parser.add_string_argument(args = ("-c", "--cookie_source"), default = "firefox", description = "Cookie source")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -30,17 +31,25 @@ def main():
 
     # Story
     if args.genre_type == config.AudioGenreType.STORY:
-        audio.DownloadStoryAudioFiles(
+        success = audio.DownloadStoryAudioFiles(
+            cookie_source = args.cookie_source,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
+        if not success:
+            system.LogError("Story audio download failed")
+            sys.exit(1)
 
     # ASMR
     elif args.genre_type == config.AudioGenreType.ASMR:
-        audio.DownloadASMRAudioFiles(
+        success = audio.DownloadASMRAudioFiles(
+            cookie_source = args.cookie_source,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
+        if not success:
+            system.LogError("ASMR audio download failed")
+            sys.exit(1)
 
 # Start
 main()
