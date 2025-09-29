@@ -427,6 +427,39 @@ class Steam(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
+        # Get cache file path
+        cache_dir = environment.GetCacheRootDir()
+        cache_file_purchases = system.JoinPaths(cache_dir, "steam_purchases_cache.json")
+
+        # Check if cache exists and is recent (less than 24 hours old)
+        use_cache = False
+        if system.DoesPathExist(cache_file_purchases):
+            cache_age_hours = system.GetFileAgeInHours(cache_file_purchases)
+            if cache_age_hours < 24:
+                use_cache = True
+                if verbose:
+                    system.LogInfo("Using cached Steam purchases data (%.1f hours old)" % cache_age_hours)
+
+        # Load from cache if available
+        if use_cache:
+            cached_data = system.ReadJsonFile(
+                src = cache_file_purchases,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if cached_data and isinstance(cached_data, list):
+                cached_purchases = []
+                for purchase_data in cached_data:
+                    purchase = jsondata.JsonData(
+                        json_data = purchase_data,
+                        json_platform = self.GetPlatform())
+                    cached_purchases.append(purchase)
+                return cached_purchases
+            else:
+                if verbose:
+                    system.LogWarning("Failed to load Steam cache, will fetch fresh data")
+                use_cache = False
+
         # Get steam url
         steam_url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/"
         steam_url += "?key=%s" % self.GetWebApiKey()
@@ -449,6 +482,7 @@ class Steam(storebase.StoreBase):
 
         # Parse json
         purchases = []
+        purchases_data = []
         for entry in steam_json.get("response", {}).get("games", []):
 
             # Gather info
@@ -470,6 +504,29 @@ class Steam(storebase.StoreBase):
             purchase.set_value(config.json_key_store_keys, line_keys)
             purchase.set_value(config.json_key_store_paths, line_paths)
             purchases.append(purchase)
+
+            # Store data for caching
+            purchases_data.append({
+                config.json_key_store_appid: line_appid,
+                config.json_key_store_appurl: self.GetLatestUrl(line_appid),
+                config.json_key_store_name: line_title.strip(),
+                config.json_key_store_branchid: config.SteamBranchType.PUBLIC.lower(),
+                config.json_key_store_keys: line_keys,
+                config.json_key_store_paths: line_paths
+            })
+
+        # Save to cache
+        system.MakeDirectory(cache_dir, verbose = verbose, pretend_run = pretend_run)
+        success = system.WriteJsonFile(
+            src = cache_file_purchases,
+            json_data = purchases_data,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if success and verbose:
+            system.LogInfo("Saved Steam purchases data to cache")
+        elif not success and verbose:
+            system.LogWarning("Failed to save Steam cache")
         return purchases
 
     ############################################################

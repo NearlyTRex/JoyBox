@@ -129,6 +129,39 @@ class HumbleBundle(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
+        # Get cache file path
+        cache_dir = environment.GetCacheRootDir()
+        cache_file_purchases = system.JoinPaths(cache_dir, "humble_purchases_cache.json")
+
+        # Check if cache exists and is recent (less than 24 hours old)
+        use_cache = False
+        if system.DoesPathExist(cache_file_purchases):
+            cache_age_hours = system.GetFileAgeInHours(cache_file_purchases)
+            if cache_age_hours < 24:
+                use_cache = True
+                if verbose:
+                    system.LogInfo("Using cached Humble Bundle purchases data (%.1f hours old)" % cache_age_hours)
+
+        # Load from cache if available
+        if use_cache:
+            cached_data = system.ReadJsonFile(
+                src = cache_file_purchases,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if cached_data and isinstance(cached_data, list):
+                cached_purchases = []
+                for purchase_data in cached_data:
+                    purchase = jsondata.JsonData(
+                        json_data = purchase_data,
+                        json_platform = self.GetPlatform())
+                    cached_purchases.append(purchase)
+                return cached_purchases
+            else:
+                if verbose:
+                    system.LogWarning("Failed to load Humble Bundle cache, will fetch fresh data")
+                use_cache = False
+
         # Get tool
         python_tool = None
         if programs.IsToolInstalled("PythonVenvPython"):
@@ -167,6 +200,7 @@ class HumbleBundle(storebase.StoreBase):
 
         # Parse output
         purchases = []
+        purchases_data = []
         for line in list_output.split("\n"):
 
             # Gather info
@@ -205,12 +239,36 @@ class HumbleBundle(storebase.StoreBase):
                 system.LogError("Received output:\n%s" % info_output)
                 return None
 
+            # Gather info
+            line_appid = system.GenerateUniqueID()
+            line_name = humble_json.get("human_name", "")
+
             # Create purchase
             purchase = jsondata.JsonData(json_data = {}, json_platform = self.GetPlatform())
-            purchase.set_value(config.json_key_store_appid, system.GenerateUniqueID())
+            purchase.set_value(config.json_key_store_appid, line_appid)
             purchase.set_value(config.json_key_store_appname, line_appname)
-            purchase.set_value(config.json_key_store_name, humble_json.get("human_name"))
+            purchase.set_value(config.json_key_store_name, line_name)
             purchases.append(purchase)
+
+            # Store data for caching
+            purchases_data.append({
+                config.json_key_store_appid: line_appid,
+                config.json_key_store_appname: line_appname,
+                config.json_key_store_name: line_name
+            })
+
+        # Save to cache
+        system.MakeDirectory(cache_dir, verbose = verbose, pretend_run = pretend_run)
+        success = system.WriteJsonFile(
+            src = cache_file_purchases,
+            json_data = purchases_data,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if success and verbose:
+            system.LogInfo("Saved Humble Bundle purchases data to cache")
+        elif not success and verbose:
+            system.LogWarning("Failed to save Humble Bundle cache")
         return purchases
 
     ############################################################

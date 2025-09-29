@@ -9,6 +9,7 @@ import command
 import archive
 import programs
 import system
+import environment
 import ini
 import jsondata
 import webpage
@@ -251,6 +252,39 @@ class Epic(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
+        # Get cache file path
+        cache_dir = environment.GetCacheRootDir()
+        cache_file_purchases = system.JoinPaths(cache_dir, "epic_purchases_cache.json")
+
+        # Check if cache exists and is recent (less than 24 hours old)
+        use_cache = False
+        if system.DoesPathExist(cache_file_purchases):
+            cache_age_hours = system.GetFileAgeInHours(cache_file_purchases)
+            if cache_age_hours < 24:
+                use_cache = True
+                if verbose:
+                    system.LogInfo("Using cached Epic purchases data (%.1f hours old)" % cache_age_hours)
+
+        # Load from cache if available
+        if use_cache:
+            cached_data = system.ReadJsonFile(
+                src = cache_file_purchases,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if cached_data and isinstance(cached_data, list):
+                cached_purchases = []
+                for purchase_data in cached_data:
+                    purchase = jsondata.JsonData(
+                        json_data = purchase_data,
+                        json_platform = self.GetPlatform())
+                    cached_purchases.append(purchase)
+                return cached_purchases
+            else:
+                if verbose:
+                    system.LogWarning("Failed to load Epic cache, will fetch fresh data")
+                use_cache = False
+
         # Get tool
         python_tool = None
         if programs.IsToolInstalled("PythonVenvPython"):
@@ -291,21 +325,47 @@ class Epic(storebase.StoreBase):
         except Exception as e:
             system.LogError(e)
             system.LogError("Unable to parse epic game list")
-            system.LogError("Received output:\n%s" % info_output)
+            system.LogError("Received output:\n%s" % list_output)
             return None
 
         # Parse output
         purchases = []
+        purchases_data = []
         for entry in epic_json:
+
+            # Gather info
+            line_appname = str(entry.get("app_name", ""))
+            line_title = str(entry.get("app_title", ""))
+            line_buildid = str(entry.get("asset_infos", {}).get("Windows", {}).get("build_version", config.default_buildid))
 
             # Create purchase
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.GetPlatform())
-            purchase.set_value(config.json_key_store_appname, str(entry.get("app_name", "")))
-            purchase.set_value(config.json_key_store_name, str(entry.get("app_title", "")))
-            purchase.set_value(config.json_key_store_buildid, str(entry.get("asset_infos", {}).get("Windows", {}).get("build_version", config.default_buildid)))
+            purchase.set_value(config.json_key_store_appname, line_appname)
+            purchase.set_value(config.json_key_store_name, line_title)
+            purchase.set_value(config.json_key_store_buildid, line_buildid)
             purchases.append(purchase)
+
+            # Store data for caching
+            purchases_data.append({
+                config.json_key_store_appname: line_appname,
+                config.json_key_store_name: line_title,
+                config.json_key_store_buildid: line_buildid
+            })
+
+        # Save to cache
+        system.MakeDirectory(cache_dir, verbose = verbose, pretend_run = pretend_run)
+        success = system.WriteJsonFile(
+            src = cache_file_purchases,
+            json_data = purchases_data,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if success and verbose:
+            system.LogInfo("Saved Epic purchases data to cache")
+        elif not success and verbose:
+            system.LogWarning("Failed to save Epic cache")
         return purchases
 
     ############################################################
