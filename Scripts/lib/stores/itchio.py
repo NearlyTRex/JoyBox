@@ -142,6 +142,39 @@ class Itchio(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
+        # Get cache file path
+        cache_dir = environment.GetCacheRootDir()
+        cache_file_purchases = system.JoinPaths(cache_dir, "itchio_purchases_cache.json")
+
+        # Check if cache exists and is recent (less than 24 hours old)
+        use_cache = False
+        if system.DoesPathExist(cache_file_purchases):
+            cache_age_hours = system.GetFileAgeInHours(cache_file_purchases)
+            if cache_age_hours < 24:
+                use_cache = True
+                if verbose:
+                    system.LogInfo("Using cached itch.io purchases data (%.1f hours old)" % cache_age_hours)
+
+        # Load from cache if available
+        if use_cache:
+            cached_data = system.ReadJsonFile(
+                src = cache_file_purchases,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if cached_data and isinstance(cached_data, list):
+                cached_purchases = []
+                for purchase_data in cached_data:
+                    purchase = jsondata.JsonData(
+                        json_data = purchase_data,
+                        json_platform = self.GetPlatform())
+                    cached_purchases.append(purchase)
+                return cached_purchases
+            else:
+                if verbose:
+                    system.LogWarning("Failed to load itch.io cache, will fetch fresh data")
+                use_cache = False
+
         # Connect to web
         web_driver = self.WebConnect(
             headless = True,
@@ -173,6 +206,7 @@ class Itchio(storebase.StoreBase):
 
         # Parse game cells
         purchases = []
+        purchases_data = []
         game_cells = webpage.GetElement(
             parent = web_driver,
             locator = webpage.ElementLocator({"class": "game_cell"}),
@@ -204,6 +238,13 @@ class Itchio(storebase.StoreBase):
                 purchase.set_value(config.json_key_store_name, line_title)
                 purchases.append(purchase)
 
+                # Store data for caching
+                purchases_data.append({
+                    config.json_key_store_appid: line_appid,
+                    config.json_key_store_appurl: line_appurl,
+                    config.json_key_store_name: line_title
+                })
+
         # Disconnect from web
         success = self.WebDisconnect(
             web_driver = web_driver,
@@ -211,6 +252,19 @@ class Itchio(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         if not success:
             return None
+
+        # Save to cache
+        system.MakeDirectory(cache_dir, verbose = verbose, pretend_run = pretend_run)
+        success = system.WriteJsonFile(
+            src = cache_file_purchases,
+            json_data = purchases_data,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if success and verbose:
+            system.LogInfo("Saved itch.io purchases data to cache")
+        elif not success and verbose:
+            system.LogWarning("Failed to save itch.io cache")
 
         # Return purchases
         return purchases
@@ -232,95 +286,121 @@ class Itchio(storebase.StoreBase):
             system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
-        # Connect to web
-        web_driver = self.WebConnect(
-            headless = True,
+        # Store web driver for cleanup
+        web_driver = None
+
+        # Cleanup function
+        def cleanup_driver():
+            if web_driver:
+                self.WebDisconnect(
+                    web_driver = web_driver,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+
+        # Fetch function
+        def attempt_metadata_fetch():
+            nonlocal web_driver
+
+            # Connect to web
+            web_driver = self.WebConnect(
+                headless = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if not web_driver:
+                raise Exception("Failed to connect to web driver")
+
+            # Load url with cookie
+            success = webpage.LoadCookieWebsite(
+                driver = web_driver,
+                url = identifier,
+                cookie = self.GetCookieFile(),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if not success:
+                raise Exception("Failed to load URL: %s" % identifier)
+
+            # Create metadata entry
+            metadata_entry = metadataentry.MetadataEntry()
+
+            # Load more information if necessary
+            element_more_information = webpage.WaitForElement(
+                driver = web_driver,
+                locator = webpage.ElementLocator({"xpath": "//div[@class='toggle_row']//a[contains(text(), 'More information')]"}),
+                wait_time = 15,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if element_more_information:
+                webpage.ClickElement(element_more_information)
+                system.SleepProgram(3)
+
+            # Look for game description
+            element_game_description = webpage.WaitForElement(
+                driver = web_driver,
+                locator = webpage.ElementLocator({"class": "formatted_description"}),
+                wait_time = 15,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if element_game_description:
+                raw_game_description = webpage.GetElementText(element_game_description)
+                if raw_game_description:
+                    metadata_entry.set_description(raw_game_description)
+
+            # Look for game details
+            element_game_details = webpage.GetElement(
+                parent = web_driver,
+                locator = webpage.ElementLocator({"class": "game_info_panel_widget"}),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if element_game_details:
+                raw_game_details = webpage.GetElementText(element_game_details)
+                if raw_game_details:
+                    for game_detail_line in raw_game_details.split("\n"):
+
+                        # Release
+                        if system.DoesStringStartWithSubstring(game_detail_line, "Release date"):
+                            release_text = system.TrimSubstringFromStart(game_detail_line, "Release date").strip()
+                            release_text = system.ConvertDateString(release_text, "%b %d, %Y", "%Y-%m-%d")
+                            metadata_entry.set_release(release_text)
+                        elif system.DoesStringStartWithSubstring(game_detail_line, "Published"):
+                            release_text = system.TrimSubstringFromStart(game_detail_line, "Published").strip()
+                            release_text = system.ConvertDateString(release_text, "%b %d, %Y", "%Y-%m-%d")
+                            metadata_entry.set_release(release_text)
+
+                        # Developer/publisher
+                        elif system.DoesStringStartWithSubstring(game_detail_line, "Authors"):
+                            author_text = system.TrimSubstringFromStart(game_detail_line, "Authors").strip()
+                            metadata_entry.set_developer(author_text)
+                            metadata_entry.set_publisher(author_text)
+                        elif system.DoesStringStartWithSubstring(game_detail_line, "Author"):
+                            author_text = system.TrimSubstringFromStart(game_detail_line, "Author").strip()
+                            metadata_entry.set_developer(author_text)
+                            metadata_entry.set_publisher(author_text)
+
+                        # Genre
+                        elif system.DoesStringStartWithSubstring(game_detail_line, "Genre"):
+                            genre_text = system.TrimSubstringFromStart(game_detail_line, "Genre").strip().replace(", ", ";")
+                            metadata_entry.set_genre(genre_text)
+            return metadata_entry
+
+        # Use retry function with cleanup
+        result = system.RetryWithBackoff(
+            func = attempt_metadata_fetch,
+            cleanup_func = cleanup_driver,
+            max_retries = 3,
+            initial_delay = 2,
+            backoff_factor = 2,
             verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not web_driver:
-            return None
+            operation_name = "Itch.io metadata fetch for '%s'" % identifier)
 
-        # Load url
-        success = webpage.LoadCookieWebsite(
-            driver = web_driver,
-            url = identifier,
-            cookie = self.GetCookieFile(),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return None
-
-        # Create metadata entry
-        metadata_entry = metadataentry.MetadataEntry()
-
-        # Load more information if necessary
-        element_more_information = webpage.WaitForElement(
-            driver = web_driver,
-            locator = webpage.ElementLocator({"xpath": "//div[@class='toggle_row']//a[contains(text(), 'More information')]"}),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if element_more_information:
-            webpage.ClickElement(element_more_information)
-            system.SleepProgram(3)
-
-        # Look for game description
-        element_game_description = webpage.WaitForElement(
-            driver = web_driver,
-            locator = webpage.ElementLocator({"class": "formatted_description"}),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if element_game_description:
-            raw_game_description = webpage.GetElementText(element_game_description)
-            if raw_game_description:
-                metadata_entry.set_description(raw_game_description)
-
-        # Look for game details
-        element_game_details = webpage.GetElement(
-            parent = web_driver,
-            locator = webpage.ElementLocator({"class": "game_info_panel_widget"}))
-        if element_game_details:
-            raw_game_details = webpage.GetElementText(element_game_details)
-            for game_detail_line in raw_game_details.split("\n"):
-
-                # Release
-                if system.DoesStringStartWithSubstring(game_detail_line, "Release date"):
-                    release_text = system.TrimSubstringFromStart(game_detail_line, "Release date").strip()
-                    release_text = system.ConvertDateString(release_text, "%b %d, %Y", "%Y-%m-%d")
-                    metadata_entry.set_release(release_text)
-                if system.DoesStringStartWithSubstring(game_detail_line, "Published"):
-                    release_text = system.TrimSubstringFromStart(game_detail_line, "Published").strip()
-                    release_text = system.ConvertDateString(release_text, "%b %d, %Y", "%Y-%m-%d")
-                    metadata_entry.set_release(release_text)
-
-                # Developer/publisher
-                elif system.DoesStringStartWithSubstring(game_detail_line, "Authors"):
-                    author_text = system.TrimSubstringFromStart(game_detail_line, "Authors").strip()
-                    metadata_entry.set_developer(author_text)
-                    metadata_entry.set_publisher(author_text)
-                elif system.DoesStringStartWithSubstring(game_detail_line, "Author"):
-                    author_text = system.TrimSubstringFromStart(game_detail_line, "Author").strip()
-                    metadata_entry.set_developer(author_text)
-                    metadata_entry.set_publisher(author_text)
-
-                # Genre
-                elif system.DoesStringStartWithSubstring(game_detail_line, "Genre"):
-                    genre_text = system.TrimSubstringFromStart(game_detail_line, "Genre").strip().replace(", ", ";")
-                    metadata_entry.set_genre(genre_text)
-
-        # Disconnect from web
-        success = self.WebDisconnect(
-            web_driver = web_driver,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return None
-
-        # Return metadata entry
-        return metadata_entry
+        # Final cleanup
+        cleanup_driver()
+        return result
 
     ############################################################
     # Assets

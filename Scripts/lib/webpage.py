@@ -204,12 +204,20 @@ def LoadUrl(
     pretend_run = False,
     exit_on_failure = False):
     try:
+        if not IsSessionValid(driver, verbose):
+            return False
+        if not url or not isinstance(url, str):
+            if verbose:
+                system.LogWarning("LoadUrl: Invalid URL provided")
+            return False
         if verbose:
             system.LogInfo("Loading url %s" % url)
         if not pretend_run:
             driver.get(url)
         return True
     except Exception as e:
+        if verbose:
+            system.LogWarning("LoadUrl: Failed to load URL '%s': %s" % (url, str(e)))
         if exit_on_failure:
             system.LogError("Unable to load url %s" % url)
             system.LogError(e)
@@ -217,18 +225,33 @@ def LoadUrl(
     return False
 
 # Get current page url
-def GetCurrentPageUrl(driver):
-    if driver:
+def GetCurrentPageUrl(driver, verbose = False):
+    try:
+        if not IsSessionValid(driver, verbose):
+            return None
         return driver.current_url
-    return None
+    except Exception as e:
+        if verbose:
+            system.LogWarning("GetCurrentPageUrl: Failed to get current URL: %s" % str(e))
+        return None
 
 # Check if page url is loaded
-def IsUrlLoaded(driver, url):
-    if driver:
-        current_url = GetCurrentPageUrl(driver)
+def IsUrlLoaded(driver, url, verbose = False):
+    try:
+        if not IsSessionValid(driver, verbose):
+            return False
+        if not url or not isinstance(url, str):
+            if verbose:
+                system.LogWarning("IsUrlLoaded: Invalid URL provided")
+            return False
+        current_url = GetCurrentPageUrl(driver, verbose)
         if current_url:
             return current_url.startswith(url)
-    return False
+        return False
+    except Exception as e:
+        if verbose:
+            system.LogWarning("IsUrlLoaded: Failed to check if URL is loaded: %s" % str(e))
+        return False
 
 ###########################################################
 
@@ -306,25 +329,53 @@ def WaitForAnyElement(
             system.QuitProgram()
     return None
 
+# Check if session is valid for driver or element
+def IsSessionValid(
+    obj,
+    verbose = False):
+    try:
+        if not obj:
+            if verbose:
+                system.LogWarning("Object session is None")
+            return False
+        if hasattr(obj, 'current_url'):
+            obj.current_url
+        return True
+    except Exception:
+        if verbose:
+            system.LogWarning("Object session invalid")
+        return False
+
 # Wait for element
 def WaitForElement(
     driver,
     locator,
-    wait_time = 1000,
+    wait_time = 15,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC
-        return WebDriverWait(driver, wait_time).until(
-            EC.presence_of_element_located(locator.Get())
-        )
+        from selenium.common.exceptions import TimeoutException, WebDriverException
+        if not IsSessionValid(driver, verbose):
+            return None
+        return WebDriverWait(driver, wait_time).until(EC.presence_of_element_located(locator.Get()))
+    except TimeoutException:
+        if verbose:
+            system.LogWarning("WaitForElement: Timeout waiting for element after %d seconds" % wait_time)
+        return None
+    except WebDriverException as e:
+        if verbose:
+            system.LogWarning("WaitForElement: WebDriver error: %s" % str(e))
+        return None
     except Exception as e:
+        if verbose:
+            system.LogWarning("WaitForElement: Unexpected error: %s" % str(e))
         if exit_on_failure:
             system.LogError(e)
             system.QuitProgram()
-    return None
+        return None
 
 # Get element
 def GetElement(
@@ -335,47 +386,90 @@ def GetElement(
     pretend_run = False,
     exit_on_failure = False):
     try:
+        from selenium.common.exceptions import NoSuchElementException, WebDriverException
+        if not IsSessionValid(parent, verbose):
+            return None
         if all_elements:
             return parent.find_elements(*locator.Get())
         else:
             return parent.find_element(*locator.Get())
+    except NoSuchElementException:
+        if verbose:
+            system.LogWarning("GetElement: Element not found")
+        return None
+    except WebDriverException as e:
+        if verbose:
+            system.LogWarning("GetElement: WebDriver error: %s" % str(e))
+        return None
     except Exception as e:
+        if verbose:
+            system.LogWarning("GetElement: Unexpected error: %s" % str(e))
         if exit_on_failure:
             system.LogError(e)
             system.QuitProgram()
-    return None
+        return None
 
 # Get element text
-def GetElementText(element):
+def GetElementText(element, verbose = False):
     try:
-        if element:
-            return element.text
-    except:
-        pass
-    return None
+        if not element:
+            if verbose:
+                system.LogWarning("GetElementText: Element is None")
+            return None
+        return element.text
+    except Exception as e:
+        if verbose:
+            system.LogWarning("GetElementText: Failed to get element text: %s" % str(e))
+        return None
 
 # Get element attribute
-def GetElementAttribute(element, attribute_name):
+def GetElementAttribute(element, attribute_name, verbose = False):
     try:
-        if element:
-            return element.get_attribute(attribute_name)
-    except:
-        pass
-    return None
+        if not element:
+            if verbose:
+                system.LogWarning("GetElementAttribute: Element is None")
+            return None
+        if not attribute_name or not isinstance(attribute_name, str):
+            if verbose:
+                system.LogWarning("GetElementAttribute: Invalid attribute name")
+            return None
+        return element.get_attribute(attribute_name)
+    except Exception as e:
+        if verbose:
+            system.LogWarning("GetElementAttribute: Failed to get attribute '%s': %s" % (attribute_name, str(e)))
+        return None
 
 # Get element children text
-def GetElementChildrenText(element):
-    attribute = GetElementAttribute(element, "innerHTML")
-    if attribute:
-        return system.ExtractWebText(attribute)
-    return None
+def GetElementChildrenText(element, verbose = False):
+    try:
+        if not element:
+            if verbose:
+                system.LogWarning("GetElementChildrenText: Element is None")
+            return None
+        attribute = GetElementAttribute(element, "innerHTML", verbose)
+        if attribute:
+            return system.ExtractWebText(attribute)
+        return None
+    except Exception as e:
+        if verbose:
+            system.LogWarning("GetElementChildrenText: Failed to get element children text: %s" % str(e))
+        return None
 
 # Get element link url
-def GetElementLinkUrl(element):
-    element = GetElement(parent = element, locator = ElementLocator({"tag": "a"}))
-    if element:
-        return GetElementAttribute(element, "href")
-    return None
+def GetElementLinkUrl(element, verbose = False):
+    try:
+        if not element:
+            if verbose:
+                system.LogWarning("GetElementLinkUrl: Element is None")
+            return None
+        link_element = GetElement(parent = element, locator = ElementLocator({"tag": "a"}), verbose = verbose)
+        if link_element:
+            return GetElementAttribute(link_element, "href", verbose)
+        return None
+    except Exception as e:
+        if verbose:
+            system.LogWarning("GetElementLinkUrl: Failed to get element link URL: %s" % str(e))
+        return None
 
 # Click element
 def ClickElement(
@@ -384,12 +478,23 @@ def ClickElement(
     pretend_run = False,
     exit_on_failure = False):
     try:
-        if element:
+        if not element:
+            if verbose:
+                system.LogWarning("ClickElement: Element is None")
+            return False
+        if verbose:
+            system.LogInfo("Clicking element")
+        if not pretend_run:
             element.click()
+        return True
     except Exception as e:
+        if verbose:
+            system.LogWarning("ClickElement: Failed to click element: %s" % str(e))
         if exit_on_failure:
+            system.LogError("Unable to click element")
             system.LogError(e)
             system.QuitProgram()
+        return False
 
 # Send keys to element
 def SendKeysToElement(
@@ -399,12 +504,27 @@ def SendKeysToElement(
     pretend_run = False,
     exit_on_failure = False):
     try:
-        if element:
+        if not element:
+            if verbose:
+                system.LogWarning("SendKeysToElement: Element is None")
+            return False
+        if keys is None:
+            if verbose:
+                system.LogWarning("SendKeysToElement: Keys is None")
+            return False
+        if verbose:
+            system.LogInfo("Sending keys to element")
+        if not pretend_run:
             element.send_keys(keys)
+        return True
     except Exception as e:
+        if verbose:
+            system.LogWarning("SendKeysToElement: Failed to send keys: %s" % str(e))
         if exit_on_failure:
+            system.LogError("Unable to send keys to element")
             system.LogError(e)
             system.QuitProgram()
+        return False
 
 # Scroll to end of page
 def ScrollToEndOfPage(
@@ -413,11 +533,21 @@ def ScrollToEndOfPage(
     pretend_run = False,
     exit_on_failure = False):
     try:
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+        if not IsSessionValid(driver, verbose):
+            return False
+        if verbose:
+            system.LogInfo("Scrolling to end of page")
+        if not pretend_run:
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+        return True
     except Exception as e:
+        if verbose:
+            system.LogWarning("ScrollToEndOfPage: Failed to scroll: %s" % str(e))
         if exit_on_failure:
+            system.LogError("Unable to scroll to end of page")
             system.LogError(e)
             system.QuitProgram()
+        return False
 
 # Get page source
 def GetPageSource(
@@ -427,14 +557,29 @@ def GetPageSource(
     pretend_run = False,
     exit_on_failure = False):
     try:
+        if not IsSessionValid(driver, verbose):
+            return None
         if url:
-            driver.get(url)
-        return str(driver.page_source)
+            if not isinstance(url, str):
+                if verbose:
+                    system.LogWarning("GetPageSource: Invalid URL provided")
+                return None
+            success = LoadUrl(driver, url, verbose, pretend_run, exit_on_failure)
+            if not success:
+                return None
+        if verbose:
+            system.LogInfo("Getting page source")
+        if not pretend_run:
+            return str(driver.page_source)
+        return ""
     except Exception as e:
+        if verbose:
+            system.LogWarning("GetPageSource: Failed to get page source: %s" % str(e))
         if exit_on_failure:
+            system.LogError("Unable to get page source")
             system.LogError(e)
             system.QuitProgram()
-    return None
+        return None
 
 ###########################################################
 
@@ -445,24 +590,46 @@ def SaveCookie(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if not system.IsPathValid(path):
+    try:
+        if not IsSessionValid(driver, verbose):
+            return False
+        if not system.IsPathValid(path):
+            if verbose:
+                system.LogWarning("SaveCookie: Invalid path provided")
+            return False
+        cookies = driver.get_cookies()
+        if not cookies:
+            if verbose:
+                system.LogWarning("SaveCookie: No cookies to save")
+            return False
+        if verbose:
+            system.LogInfo("Saving cookies to %s" % path)
+        success = system.MakeDirectory(
+            src = system.GetFilenameDirectory(path),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            if verbose:
+                system.LogWarning("SaveCookie: Failed to create cookie directory")
+            return False
+        success = system.TouchFile(
+            src = path,
+            contents = json.dumps(cookies),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if success and verbose:
+            system.LogInfo("Successfully saved cookies")
+        return success
+    except Exception as e:
+        if verbose:
+            system.LogWarning("SaveCookie: Failed to save cookies: %s" % str(e))
+        if exit_on_failure:
+            system.LogError("Unable to save cookies")
+            system.LogError(e)
+            system.QuitProgram()
         return False
-    if not driver.get_cookies():
-        return False
-    success = system.MakeDirectory(
-        src = system.GetFilenameDirectory(path),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
-    success = system.TouchFile(
-        src = path,
-        contents = json.dumps(driver.get_cookies()),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    return success
 
 # Load cookie
 def LoadCookie(
@@ -471,18 +638,44 @@ def LoadCookie(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if not system.DoesPathExist(path):
-        return False
-    cookie_list = system.ReadJsonFile(
-        src = path,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if isinstance(cookie_list, list):
-        for cookie in cookie_list:
-            driver.add_cookie(cookie)
+    try:
+        if not IsSessionValid(driver, verbose):
+            return False
+        if not system.DoesPathExist(path):
+            if verbose:
+                system.LogWarning("LoadCookie: Cookie file does not exist: %s" % path)
+            return False
+        if verbose:
+            system.LogInfo("Loading cookies from %s" % path)
+        cookie_list = system.ReadJsonFile(
+            src = path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not isinstance(cookie_list, list):
+            if verbose:
+                system.LogWarning("LoadCookie: Cookie file does not contain valid cookie list")
+            return False
+        if not pretend_run:
+            cookies_loaded = 0
+            for cookie in cookie_list:
+                try:
+                    driver.add_cookie(cookie)
+                    cookies_loaded += 1
+                except Exception as cookie_error:
+                    if verbose:
+                        system.LogWarning("LoadCookie: Failed to add cookie: %s" % str(cookie_error))
+            if verbose:
+                system.LogInfo("Successfully loaded %d cookies" % cookies_loaded)
         return True
-    return False
+    except Exception as e:
+        if verbose:
+            system.LogWarning("LoadCookie: Failed to load cookies: %s" % str(e))
+        if exit_on_failure:
+            system.LogError("Unable to load cookies")
+            system.LogError(e)
+            system.QuitProgram()
+        return False
 
 # Get cookie file
 def GetCookieFile(base_name):

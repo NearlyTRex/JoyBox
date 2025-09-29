@@ -409,90 +409,122 @@ class Epic(storebase.StoreBase):
             system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
-        # Connect to web
-        web_driver = self.WebConnect(
-            headless = True,
+        # Store web driver for cleanup
+        web_driver = None
+
+        # Cleanup function
+        def cleanup_driver():
+            if web_driver:
+                self.WebDisconnect(
+                    web_driver = web_driver,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+
+        # Fetch function
+        def attempt_metadata_fetch():
+            nonlocal web_driver
+
+            # Connect to web
+            web_driver = self.WebConnect(
+                headless = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if not web_driver:
+                raise Exception("Failed to connect to web driver")
+
+            # Load url
+            success = webpage.LoadUrl(web_driver, identifier)
+            if not success:
+                raise Exception("Failed to load URL: %s" % identifier)
+
+            # Create metadata entry
+            metadata_entry = metadataentry.MetadataEntry()
+
+            # Look for game description
+            element_game_description = webpage.WaitForElement(
+                driver = web_driver,
+                locator = webpage.ElementLocator({"id": "about-long-description"}),
+                wait_time = 15,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if element_game_description:
+                raw_game_description = webpage.GetElementChildrenText(element_game_description)
+                if raw_game_description:
+                    metadata_entry.set_description(raw_game_description)
+
+            # Look for game genres
+            elements_potential_genres = webpage.GetElement(
+                parent = web_driver,
+                locator = webpage.ElementLocator({"class": "css-8f0505"}),
+                all_elements = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if elements_potential_genres:
+                for element_potential_genre in elements_potential_genres:
+                    potential_text = webpage.GetElementChildrenText(element_potential_genre)
+                    if potential_text and "Genres" in potential_text:
+                        element_game_genres = webpage.GetElement(
+                            parent = element_potential_genre,
+                            locator = webpage.ElementLocator({"class": "css-cyjj8t"}),
+                            all_elements = True,
+                            verbose = verbose,
+                            pretend_run = pretend_run,
+                            exit_on_failure = False)
+                        if element_game_genres:
+                            game_genres = []
+                            for element_game_genre in element_game_genres:
+                                game_genre_text = webpage.GetElementChildrenText(element_game_genre)
+                                if game_genre_text:
+                                    game_genres.append(game_genre_text)
+                            if game_genres:
+                                metadata_entry.set_genre(";".join(game_genres))
+
+            # Look for game details
+            elements_details = webpage.GetElement(
+                parent = web_driver,
+                locator = webpage.ElementLocator({"class": "css-s97i32"}),
+                all_elements = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if elements_details:
+                for elements_detail in elements_details:
+                    element_detail_text = webpage.GetElementChildrenText(elements_detail)
+                    if element_detail_text:
+
+                        # Developer
+                        if system.DoesStringStartWithSubstring(element_detail_text, "Developer"):
+                            developer_text = system.TrimSubstringFromStart(element_detail_text, "Developer").strip()
+                            metadata_entry.set_developer(developer_text)
+
+                        # Publisher
+                        elif system.DoesStringStartWithSubstring(element_detail_text, "Publisher"):
+                            published_text = system.TrimSubstringFromStart(element_detail_text, "Publisher").strip()
+                            metadata_entry.set_publisher(published_text)
+
+                        # Release
+                        elif system.DoesStringStartWithSubstring(element_detail_text, "Release Date"):
+                            release_text = system.TrimSubstringFromStart(element_detail_text, "Release Date").strip()
+                            release_text = system.ConvertDateString(release_text, "%m/%d/%y", "%Y-%m-%d")
+                            metadata_entry.set_release(release_text)
+            return metadata_entry
+
+        # Use retry function with cleanup
+        result = system.RetryWithBackoff(
+            func = attempt_metadata_fetch,
+            cleanup_func = cleanup_driver,
+            max_retries = 3,
+            initial_delay = 2,
+            backoff_factor = 2,
             verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not web_driver:
-            return None
+            operation_name = "Epic metadata fetch for '%s'" % identifier)
 
-        # Load url
-        success = webpage.LoadUrl(web_driver, identifier)
-        if not success:
-            return None
-
-        # Create metadata entry
-        metadata_entry = metadataentry.MetadataEntry()
-
-        # Look for game description
-        element_game_description = webpage.WaitForElement(
-            driver = web_driver,
-            locator = webpage.ElementLocator({"id": "about-long-description"}),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if element_game_description:
-            raw_game_description = webpage.GetElementChildrenText(element_game_description)
-            if raw_game_description:
-                metadata_entry.set_description(raw_game_description)
-
-        # Look for game genres
-        elements_potential_genres = webpage.GetElement(
-            parent = web_driver,
-            locator = webpage.ElementLocator({"class": "css-8f0505"}),
-            all_elements = True)
-        if elements_potential_genres:
-            for element_potential_genre in elements_potential_genres:
-                potential_text = webpage.GetElementChildrenText(element_potential_genre)
-                if "Genres" in potential_text:
-                    element_game_genres = webpage.GetElement(
-                        parent = element_potential_genre,
-                        locator = webpage.ElementLocator({"class": "css-cyjj8t"}),
-                        all_elements = True)
-                    if element_game_genres:
-                        game_genres = []
-                        for element_game_genre in element_game_genres:
-                            game_genre_text = webpage.GetElementChildrenText(element_game_genre)
-                            if game_genre_text:
-                                game_genres.append(game_genre_text)
-                        metadata_entry.set_genre(";".join(game_genres))
-
-        # Look for game details
-        elements_details = webpage.GetElement(
-            parent = web_driver,
-            locator = webpage.ElementLocator({"class": "css-s97i32"}),
-            all_elements = True)
-        if elements_details:
-            for elements_detail in elements_details:
-                element_detail_text = webpage.GetElementChildrenText(elements_detail)
-
-                # Developer
-                if system.DoesStringStartWithSubstring(element_detail_text, "Developer"):
-                    developer_text = system.TrimSubstringFromStart(element_detail_text, "Developer").strip()
-                    metadata_entry.set_developer(developer_text)
-
-                # Publisher
-                elif system.DoesStringStartWithSubstring(element_detail_text, "Publisher"):
-                    published_text = system.TrimSubstringFromStart(element_detail_text, "Publisher").strip()
-                    metadata_entry.set_publisher(published_text)
-
-                # Release
-                elif system.DoesStringStartWithSubstring(element_detail_text, "Release Date"):
-                    release_text = system.TrimSubstringFromStart(element_detail_text, "Release Date").strip()
-                    release_text = system.ConvertDateString(release_text, "%m/%d/%y", "%Y-%m-%d")
-                    metadata_entry.set_release(release_text)
-
-        # Disconnect from web
-        success = self.WebDisconnect(
-            web_driver = web_driver,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return None
-
-        # Return metadata entry
-        return metadata_entry
+        # Final cleanup
+        cleanup_driver()
+        return result
 
     ############################################################

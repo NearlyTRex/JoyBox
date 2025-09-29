@@ -564,7 +564,19 @@ class Steam(storebase.StoreBase):
             vdf_start = info_output.find(f'"{identifier}"')
             if vdf_start == -1:
                 raise ValueError("App VDF not found in output")
-            vdf_text = info_output[vdf_start:]
+            vdf_end = info_output.find("Unloading Steam API", vdf_start)
+            if vdf_end == -1:
+                brace_count = 0
+                vdf_end = len(info_output)
+                for i in range(vdf_start, len(info_output)):
+                    if info_output[i] == '{':
+                        brace_count += 1
+                    elif info_output[i] == '}':
+                        brace_count -= 1
+                        if brace_count == 0:
+                            vdf_end = i + 1
+                            break
+            vdf_text = info_output[vdf_start:vdf_end].strip()
             steam_json = vdf.loads(vdf_text)
         except Exception as e:
             system.LogError(e)
@@ -621,107 +633,151 @@ class Steam(storebase.StoreBase):
             system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
-        # Connect to web
-        web_driver = self.WebConnect(
-            headless = True,
+        # Store web driver for cleanup
+        web_driver = None
+
+        # Cleanup function
+        def cleanup_driver():
+            if web_driver:
+                self.WebDisconnect(
+                    web_driver = web_driver,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+
+        # Fetch function
+        def attempt_metadata_fetch():
+            nonlocal web_driver
+
+            # Connect to web
+            web_driver = self.WebConnect(
+                headless = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if not web_driver:
+                raise Exception("Failed to connect to web driver")
+
+            # Load url
+            success = webpage.LoadUrl(web_driver, identifier)
+            if not success:
+                raise Exception("Failed to load URL: %s" % identifier)
+
+            # Create metadata entry
+            metadata_entry = metadataentry.MetadataEntry()
+
+            # Check for age gate (don't exit on failure to find the age gate)
+            element_age_gate = webpage.WaitForElement(
+                driver = web_driver,
+                locator = webpage.ElementLocator({"id": "app_agegate"}),
+                wait_time = 5,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if element_age_gate:
+
+                # Get age selectors
+                day_selector = webpage.GetElement(
+                    parent = element_age_gate,
+                    locator = webpage.ElementLocator({"id": "ageDay"}),
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+                month_selector = webpage.GetElement(
+                    parent = element_age_gate,
+                    locator = webpage.ElementLocator({"id": "ageMonth"}),
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+                year_selector = webpage.GetElement(
+                    parent = element_age_gate,
+                    locator = webpage.ElementLocator({"id": "ageYear"}),
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+
+                # Select date
+                if day_selector and month_selector and year_selector:
+                    webpage.SendKeysToElement(day_selector, "1")
+                    webpage.SendKeysToElement(month_selector, "January")
+                    webpage.SendKeysToElement(year_selector, "1980")
+
+                    # Click confirm button
+                    confirm_button = webpage.GetElement(
+                        parent = element_age_gate,
+                        locator = webpage.ElementLocator({"id": "view_product_page_btn"}),
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = False)
+                    if confirm_button:
+                        webpage.ClickElement(confirm_button)
+
+            # Look for game description
+            element_game_description = webpage.WaitForElement(
+                driver = web_driver,
+                locator = webpage.ElementLocator({"id": "aboutThisGame"}),
+                wait_time = 15,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if element_game_description:
+                raw_game_description = webpage.GetElementChildrenText(element_game_description)
+                if raw_game_description:
+                    description_text = raw_game_description
+                    description_text = system.TrimSubstringFromStart(description_text, "About This Game")
+                    description_text = system.TrimSubstringFromStart(description_text, "About This Software")
+                    description_text = system.TrimSubstringFromStart(description_text, "About This Demo")
+                    metadata_entry.set_description(description_text)
+
+            # Look for game details
+            element_game_details = webpage.GetElement(
+                parent = web_driver,
+                locator = webpage.ElementLocator({"id": "genresAndManufacturer"}),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if element_game_details:
+
+                # Grab the information text
+                raw_game_details = webpage.GetElementText(element_game_details)
+                if raw_game_details:
+                    for game_detail_line in raw_game_details.split("\n"):
+
+                        # Release
+                        if system.DoesStringStartWithSubstring(game_detail_line, "Release Date:"):
+                            release_text = system.TrimSubstringFromStart(game_detail_line, "Release Date:").strip()
+                            release_text = system.ConvertDateString(release_text, "%b %d, %Y", "%Y-%m-%d")
+                            metadata_entry.set_release(release_text)
+
+                        # Developer
+                        elif system.DoesStringStartWithSubstring(game_detail_line, "Developer:"):
+                            developer_text = system.TrimSubstringFromStart(game_detail_line, "Developer:").strip()
+                            metadata_entry.set_developer(developer_text)
+
+                        # Publisher
+                        elif system.DoesStringStartWithSubstring(game_detail_line, "Publisher:"):
+                            publisher_text = system.TrimSubstringFromStart(game_detail_line, "Publisher:").strip()
+                            metadata_entry.set_publisher(publisher_text)
+
+                        # Genre
+                        elif system.DoesStringStartWithSubstring(game_detail_line, "Genre:"):
+                            genre_text = system.TrimSubstringFromStart(game_detail_line, "Genre:").strip().replace(", ", ";")
+                            metadata_entry.set_genre(genre_text)
+            return metadata_entry
+
+        # Use retry function with cleanup
+        result = system.RetryWithBackoff(
+            func = attempt_metadata_fetch,
+            cleanup_func = cleanup_driver,
+            max_retries = 3,
+            initial_delay = 2,
+            backoff_factor = 2,
             verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not web_driver:
-            return None
+            operation_name = "Steam metadata fetch for '%s'" % identifier)
 
-        # Load url
-        success = webpage.LoadUrl(web_driver, identifier)
-        if not success:
-            return None
-
-        # Create metadata entry
-        metadata_entry = metadataentry.MetadataEntry()
-
-        # Check for age gate
-        # Do not exit on failure to find the age gate
-        element_age_gate = webpage.WaitForElement(
-            driver = web_driver,
-            locator = webpage.ElementLocator({"id": "app_agegate"}),
-            wait_time = 5,
-            verbose = verbose,
-            pretend_run = pretend_run)
-        if element_age_gate:
-
-            # Get age selectors
-            day_selector = webpage.GetElement(parent = element_age_gate, locator = webpage.ElementLocator({"id": "ageDay"}))
-            month_selector = webpage.GetElement(parent = element_age_gate, locator = webpage.ElementLocator({"id": "ageMonth"}))
-            year_selector = webpage.GetElement(parent = element_age_gate, locator = webpage.ElementLocator({"id": "ageYear"}))
-
-            # Select date
-            webpage.SendKeysToElement(day_selector, "1")
-            webpage.SendKeysToElement(month_selector, "January")
-            webpage.SendKeysToElement(year_selector, "1980")
-
-            # Click confirm button
-            confirm_button = webpage.GetElement(
-                parent = element_age_gate,
-                locator = webpage.ElementLocator({"id": "view_product_page_btn"}))
-            webpage.ClickElement(confirm_button)
-
-        # Look for game description
-        element_game_description = webpage.WaitForElement(
-            driver = web_driver,
-            locator = webpage.ElementLocator({"id": "aboutThisGame"}),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if element_game_description:
-            raw_game_description = webpage.GetElementChildrenText(element_game_description)
-            if raw_game_description:
-                description_text = raw_game_description
-                description_text = system.TrimSubstringFromStart(description_text, "About This Game")
-                description_text = system.TrimSubstringFromStart(description_text, "About This Software")
-                description_text = system.TrimSubstringFromStart(description_text, "About This Demo")
-                metadata_entry.set_description(description_text)
-
-        # Look for game details
-        element_game_details = webpage.GetElement(
-            parent = web_driver,
-            locator = webpage.ElementLocator({"id": "genresAndManufacturer"}))
-        if element_game_details:
-
-            # Grab the information text
-            raw_game_details = webpage.GetElementText(element_game_details)
-            for game_detail_line in raw_game_details.split("\n"):
-
-                # Release
-                if system.DoesStringStartWithSubstring(game_detail_line, "Release Date:"):
-                    release_text = system.TrimSubstringFromStart(game_detail_line, "Release Date:").strip()
-                    release_text = system.ConvertDateString(release_text, "%b %d, %Y", "%Y-%m-%d")
-                    metadata_entry.set_release(release_text)
-
-                # Developer
-                elif system.DoesStringStartWithSubstring(game_detail_line, "Developer:"):
-                    developer_text = system.TrimSubstringFromStart(game_detail_line, "Developer:").strip()
-                    metadata_entry.set_developer(developer_text)
-
-                # Publisher
-                elif system.DoesStringStartWithSubstring(game_detail_line, "Publisher:"):
-                    publisher_text = system.TrimSubstringFromStart(game_detail_line, "Publisher:").strip()
-                    metadata_entry.set_publisher(publisher_text)
-
-                # Genre
-                elif system.DoesStringStartWithSubstring(game_detail_line, "Genre:"):
-                    genre_text = system.TrimSubstringFromStart(game_detail_line, "Genre:").strip().replace(", ", ";")
-                    metadata_entry.set_genre(genre_text)
-
-        # Disconnect from web
-        success = self.WebDisconnect(
-            web_driver = web_driver,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return None
-
-        # Return metadata entry
-        return metadata_entry
+        # Final cleanup
+        cleanup_driver()
+        return result
 
     ############################################################
     # Assets

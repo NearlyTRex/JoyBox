@@ -23,130 +23,165 @@ def CollectMetadataFromTGDB(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Create web driver
-    web_driver = webpage.CreateWebDriver(make_headless = True)
+    # Store web driver for cleanup
+    web_driver = None
 
-    # Get search terms
-    search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
+    # Cleanup function
+    def cleanup_driver():
+        if web_driver:
+            webpage.DestroyWebDriver(web_driver)
 
-    # Metadata result
-    metadata_result = metadataentry.MetadataEntry()
+    # Fetch function
+    def attempt_metadata_fetch():
+        nonlocal web_driver
 
-    # Load url
-    success = webpage.LoadUrl(web_driver, "https://thegamesdb.net/search.php?name=" + search_terms)
-    if not success:
-        return None
+        # Create web driver
+        web_driver = webpage.CreateWebDriver(make_headless = True)
+        if not web_driver:
+            raise Exception("Failed to create web driver")
 
-    # Get natural name
-    natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
+        # Get search terms
+        search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
 
-    # Find the root container element
-    element_search_result = webpage.WaitForElement(
-        driver = web_driver,
-        locator = webpage.ElementLocator({"class": "container-fluid"}),
+        # Metadata result
+        metadata_result = metadataentry.MetadataEntry()
+
+        # Load url
+        success = webpage.LoadUrl(web_driver, "https://thegamesdb.net/search.php?name=" + search_terms)
+        if not success:
+            raise Exception("Failed to load TheGamesDB search page")
+
+        # Get natural name
+        natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
+
+        # Find the root container element
+        element_search_result = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "container-fluid"}),
+            wait_time = 15,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if not element_search_result:
+            return None  # No search results found, not an error
+
+        # Score each potential title compared to the original title
+        scores_list = []
+        game_cells = webpage.GetElement(
+            parent = element_search_result,
+            locator = webpage.ElementLocator({"class": "card-footer"}),
+            all_elements = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if game_cells:
+            for game_cell in game_cells:
+
+                # Get possible title
+                game_cell_text = webpage.GetElementText(game_cell)
+                potential_title = ""
+                if game_cell_text:
+                    for game_cell_text_token in game_cell_text.split("\n"):
+                        potential_title = game_cell_text_token
+                        break
+
+                # Add comparison score
+                if potential_title:
+                    score_entry = {}
+                    score_entry["element"] = game_cell
+                    score_entry["ratio"] = system.GetStringSimilarityRatio(natural_name, potential_title)
+                    scores_list.append(score_entry)
+
+        # Click on the highest score element
+        if scores_list:
+            for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
+                webpage.ClickElement(score_entry["element"])
+                break
+
+            # Check if the url has changed
+            if webpage.IsUrlLoaded(web_driver, "https://thegamesdb.net/search.php?name="):
+                return None  # Still on search page, no valid result found
+
+        # Look for game description
+        element_game_description = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "game-overview"}),
+            wait_time = 15,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if element_game_description:
+            raw_game_description = webpage.GetElementText(element_game_description)
+            if raw_game_description and raw_game_description.strip():
+                metadata_result.set_description(raw_game_description)
+
+        # Look for game details
+        element_game_details_list = webpage.GetElement(
+            parent = web_driver,
+            locator = webpage.ElementLocator({"class": "card-body"}),
+            all_elements = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if element_game_details_list:
+            for element_game_details in element_game_details_list:
+                element_paragraphs = webpage.GetElement(
+                    parent = element_game_details,
+                    locator = webpage.ElementLocator({"tag": "p"}),
+                    all_elements = True,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+                if element_paragraphs:
+                    for element_paragraph in element_paragraphs:
+                        element_text = webpage.GetElementText(element_paragraph)
+                        if not element_text:
+                            continue
+
+                        # Genre
+                        if system.DoesStringStartWithSubstring(element_text, "Genre(s):"):
+                            genre_text = system.TrimSubstringFromStart(element_text, "Genre(s):").replace(" | ", ";").strip()
+                            metadata_result.set_genre(genre_text)
+
+                        # Co-op
+                        elif system.DoesStringStartWithSubstring(element_text, "Co-op:"):
+                            coop_text = system.TrimSubstringFromStart(element_text, "Co-op:").strip()
+                            metadata_result.set_coop(coop_text)
+
+                        # Developer
+                        elif system.DoesStringStartWithSubstring(element_text, "Developer(s):"):
+                            developer_text = system.TrimSubstringFromStart(element_text, "Developer(s):").strip()
+                            metadata_result.set_developer(developer_text)
+
+                        # Publisher
+                        elif system.DoesStringStartWithSubstring(element_text, "Publishers(s):"):
+                            publisher_text = system.TrimSubstringFromStart(element_text, "Publishers(s):").strip()
+                            metadata_result.set_publisher(publisher_text)
+
+                        # Players
+                        elif system.DoesStringStartWithSubstring(element_text, "Players:"):
+                            players_text = system.TrimSubstringFromStart(element_text, "Players:").strip()
+                            metadata_result.set_players(players_text)
+
+                        # Release
+                        elif system.DoesStringStartWithSubstring(element_text, "ReleaseDate:"):
+                            release_text = system.TrimSubstringFromStart(element_text, "ReleaseDate:").strip()
+                            metadata_result.set_release(release_text)
+        return metadata_result
+
+    # Use retry function with cleanup
+    result = system.RetryWithBackoff(
+        func = attempt_metadata_fetch,
+        cleanup_func = cleanup_driver,
+        max_retries = 3,
+        initial_delay = 2,
+        backoff_factor = 2,
         verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not element_search_result:
-        return None
+        operation_name = "TheGamesDB metadata fetch for '%s' (%s)" % (game_name, game_platform))
 
-    # Score each potential title compared to the original title
-    scores_list = []
-    game_cells = webpage.GetElement(
-        parent = element_search_result,
-        locator = webpage.ElementLocator({"class": "card-footer"}),
-        all_elements = True)
-    if game_cells:
-        for game_cell in game_cells:
-
-            # Get possible title
-            game_cell_text = webpage.GetElementText(game_cell)
-            potential_title = ""
-            if game_cell_text:
-                for game_cell_text_token in game_cell_text.split("\n"):
-                    potential_title = game_cell_text_token
-                    break
-
-            # Add comparison score
-            score_entry = {}
-            score_entry["element"] = game_cell
-            score_entry["ratio"] = system.GetStringSimilarityRatio(natural_name, potential_title)
-            scores_list.append(score_entry)
-
-    # Click on the highest score element
-    for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
-        webpage.ClickElement(score_entry["element"])
-        break
-
-    # Check if the url has changed
-    if webpage.IsUrlLoaded(web_driver, "https://thegamesdb.net/search.php?name="):
-        return None
-
-    # Look for game description
-    element_game_description = webpage.WaitForElement(
-        driver = web_driver,
-        locator = webpage.ElementLocator({"class": "game-overview"}),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not element_game_description:
-        return None
-
-    # Grab the description text
-    raw_game_description = webpage.GetElementText(element_game_description)
-
-    # Convert description to metadata format
-    if raw_game_description:
-        metadata_result.set_description(raw_game_description)
-
-    # Look for game details
-    for element_game_details in webpage.GetElement(
-        parent = web_driver,
-        locator = webpage.ElementLocator({"class": "card-body"}),
-        all_elements = True):
-        for element_paragraph in webpage.GetElement(
-            parent = element_game_details,
-            locator = webpage.ElementLocator({"tag": "p"}),
-            all_elements = True):
-            element_text = webpage.GetElementText(element_paragraph)
-            if not element_text:
-                continue
-
-            # Genre
-            if system.DoesStringStartWithSubstring(element_text, "Genre(s):"):
-                genre_text = system.TrimSubstringFromStart(element_text, "Genre(s):").replace(" | ", ";").strip()
-                metadata_result.set_genre(genre_text)
-
-            # Co-op
-            if system.DoesStringStartWithSubstring(element_text, "Co-op:"):
-                coop_text = system.TrimSubstringFromStart(element_text, "Co-op:").strip()
-                metadata_result.set_coop(coop_text)
-
-            # Developer
-            if system.DoesStringStartWithSubstring(element_text, "Developer(s):"):
-                developer_text = system.TrimSubstringFromStart(element_text, "Developer(s):").strip()
-                metadata_result.set_developer(developer_text)
-
-            # Publisher
-            if system.DoesStringStartWithSubstring(element_text, "Publishers(s):"):
-                publisher_text = system.TrimSubstringFromStart(element_text, "Publishers(s):").strip()
-                metadata_result.set_publisher(publisher_text)
-
-            # Players
-            if system.DoesStringStartWithSubstring(element_text, "Players:"):
-                players_text = system.TrimSubstringFromStart(element_text, "Players:").strip()
-                metadata_result.set_players(players_text)
-
-            # Release
-            if system.DoesStringStartWithSubstring(element_text, "ReleaseDate:"):
-                release_text = system.TrimSubstringFromStart(element_text, "ReleaseDate:").strip()
-                metadata_result.set_release(release_text)
-
-    # Cleanup web driver
-    webpage.DestroyWebDriver(web_driver)
-
-    # Return metadata
-    return metadata_result
+    # Final cleanup
+    cleanup_driver()
+    return result
 
 ############################################################
 
@@ -158,151 +193,192 @@ def CollectMetadataFromGameFAQS(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Create web driver
-    web_driver = webpage.CreateWebDriver(make_headless = True)
+    # Store web driver for cleanup
+    web_driver = None
 
-    # Get search terms
-    search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
+    # Cleanup function
+    def cleanup_driver():
+        if web_driver:
+            webpage.DestroyWebDriver(web_driver)
 
-    # Metadata result
-    metadata_result = metadataentry.MetadataEntry()
+    # Fetch function
+    def attempt_metadata_fetch():
+        nonlocal web_driver
 
-    # Load homepage
-    success = webpage.LoadUrl(web_driver, "https://gamefaqs.gamespot.com")
-    if not success:
-        return None
+        # Create web driver
+        web_driver = webpage.CreateWebDriver(make_headless = True)
+        if not web_driver:
+            raise Exception("Failed to create web driver")
 
-    # Look for homepage marker
-    element_homepage_marker = webpage.WaitForElement(
-        driver = web_driver,
-        locator = webpage.ElementLocator({"class": "home_jbi_ft"}),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not element_homepage_marker:
-        return None
+        # Get search terms
+        search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
 
-    # Load url
-    success = webpage.LoadUrl(web_driver, "https://gamefaqs.gamespot.com/search_advanced?game=" + search_terms)
-    if not success:
-        return None
+        # Metadata result
+        metadata_result = metadataentry.MetadataEntry()
 
-    # Look for search results
-    element_search_result = webpage.WaitForElement(
-        driver = web_driver,
-        locator = webpage.ElementLocator({"class": "span12"}),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not element_search_result:
-        return None
+        # Load homepage
+        success = webpage.LoadUrl(web_driver, "https://gamefaqs.gamespot.com")
+        if not success:
+            raise Exception("Failed to load GameFAQs homepage")
 
-    # Look for search table
-    elements_search_table = webpage.GetElement(
-        parent = element_search_result,
-        locator = webpage.ElementLocator({"tag": "tbody"}))
-    if elements_search_table:
+        # Look for homepage marker
+        element_homepage_marker = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "home_jbi_ft"}),
+            wait_time = 15,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if not element_homepage_marker:
+            raise Exception("GameFAQs homepage marker not found")
 
-        # Look for search rows
-        elements_search_rows = webpage.GetElement(
-            parent = elements_search_table,
-            locator = webpage.ElementLocator({"tag": "tr"}),
-            all_elements = True)
-        if elements_search_rows:
-            for elements_search_row in elements_search_rows:
+        # Load search URL
+        success = webpage.LoadUrl(web_driver, "https://gamefaqs.gamespot.com/search_advanced?game=" + search_terms)
+        if not success:
+            raise Exception("Failed to load GameFAQs search page")
 
-                # Examine columns
-                elements_search_cols = webpage.GetElement(
-                    parent = elements_search_row,
-                    locator = webpage.ElementLocator({"tag": "td"}),
-                    all_elements = True)
-                if elements_search_cols and len(elements_search_cols) >= 4:
-                    search_platform = elements_search_cols[0]
-                    search_game = elements_search_cols[1]
-                    search_game_platform = webpage.GetElementChildrenText(search_platform)
-                    search_game_name = webpage.GetElementChildrenText(search_game)
-                    search_game_link = webpage.GetElementLinkUrl(search_game)
-                    if not search_game_platform or not search_game_name or not search_game_link:
-                        continue
+        # Look for search results
+        element_search_result = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "span12"}),
+            wait_time = 15,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if not element_search_result:
+            return None  # No search results found, not an error
 
-                    # Navigate to the entry if this matches the search terms
-                    if search_game_platform == config.gamefaqs_platforms[game_platform][0]:
-                        webpage.LoadUrl(web_driver, search_game_link)
-                        break
+        # Look for search table
+        elements_search_table = webpage.GetElement(
+            parent = element_search_result,
+            locator = webpage.ElementLocator({"tag": "tbody"}),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if elements_search_table:
 
-    # Look for game description
-    element_game_description = webpage.WaitForElement(
-        driver = web_driver,
-        locator = webpage.ElementLocator({"class": "game_desc"}),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not element_game_description:
-        return None
+            # Look for search rows
+            elements_search_rows = webpage.GetElement(
+                parent = elements_search_table,
+                locator = webpage.ElementLocator({"tag": "tr"}),
+                all_elements = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if elements_search_rows:
+                for elements_search_row in elements_search_rows:
 
-    # Grab the description text
-    raw_game_description = webpage.GetElementText(element_game_description)
+                    # Examine columns
+                    elements_search_cols = webpage.GetElement(
+                        parent = elements_search_row,
+                        locator = webpage.ElementLocator({"tag": "td"}),
+                        all_elements = True,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = False)
+                    if elements_search_cols and len(elements_search_cols) >= 4:
+                        search_platform = elements_search_cols[0]
+                        search_game = elements_search_cols[1]
+                        search_game_platform = webpage.GetElementChildrenText(search_platform)
+                        search_game_name = webpage.GetElementChildrenText(search_game)
+                        search_game_link = webpage.GetElementLinkUrl(search_game)
+                        if not search_game_platform or not search_game_name or not search_game_link:
+                            continue
 
-    # Click the "more" button if it's present
-    if "more »" in raw_game_description:
-        element_game_description_more = webpage.GetElement(
+                        # Navigate to the entry if this matches the search terms
+                        if search_game_platform == config.gamefaqs_platforms[game_platform][0]:
+                            success = webpage.LoadUrl(web_driver, search_game_link)
+                            if success:
+                                break
+
+        # Look for game description
+        element_game_description = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "game_desc"}),
+            wait_time = 15,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if element_game_description:
+
+            # Grab the description text
+            raw_game_description = webpage.GetElementText(element_game_description)
+
+            # Click the "more" button if it's present
+            if raw_game_description and "more »" in raw_game_description:
+                element_game_description_more = webpage.GetElement(
+                    parent = web_driver,
+                    locator = webpage.ElementLocator({"link_text": "more »"}),
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+                if element_game_description_more:
+                    webpage.ClickElement(element_game_description_more)
+                    raw_game_description = webpage.GetElementText(element_game_description)
+
+            # Convert description to metadata format
+            if isinstance(raw_game_description, str) and raw_game_description.strip():
+                metadata_result.set_description(raw_game_description)
+
+        # Look for game details
+        element_game_details_list = webpage.GetElement(
             parent = web_driver,
-            locator = webpage.ElementLocator({"link_text": "more »"}))
-        if element_game_description_more:
-            webpage.ClickElement(element_game_description_more)
+            locator = webpage.ElementLocator({"class": "content"}),
+            all_elements = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if element_game_details_list:
+            for element_game_details in element_game_details_list:
+                element_text = webpage.GetElementText(element_game_details)
+                if not element_text:
+                    continue
 
-    # Re-grab the description text
-    raw_game_description = webpage.GetElementText(element_game_description)
+                # Genre
+                if system.DoesStringStartWithSubstring(element_text, "Genre:"):
+                    genre_text = system.TrimSubstringFromStart(element_text, "Genre:").replace(" » ", ";").strip()
+                    metadata_result.set_genre(genre_text)
 
-    # Convert description to metadata format
-    if isinstance(raw_game_description, str):
-        metadata_result.set_description(raw_game_description)
+                # Developer
+                elif system.DoesStringStartWithSubstring(element_text, "Developer:"):
+                    developer_text = system.TrimSubstringFromStart(element_text, "Developer:").strip()
+                    metadata_result.set_developer(developer_text)
 
-    # Look for game details
-    for element_game_details in webpage.GetElement(
-        parent = web_driver,
-        locator = webpage.ElementLocator({"class": "content"}),
-        all_elements = True):
-        element_text = webpage.GetElementText(element_game_details)
-        if not element_text:
-            continue
+                # Publisher
+                elif system.DoesStringStartWithSubstring(element_text, "Publisher:"):
+                    publisher_text = system.TrimSubstringFromStart(element_text, "Publisher:").strip()
+                    metadata_result.set_publisher(publisher_text)
 
-        # Genre
-        if system.DoesStringStartWithSubstring(element_text, "Genre:"):
-            genre_text = system.TrimSubstringFromStart(element_text, "Genre:").replace(" » ", ";").strip()
-            metadata_result.set_genre(genre_text)
+                # Developer/Publisher
+                elif system.DoesStringStartWithSubstring(element_text, "Developer/Publisher:"):
+                    devpub_text = system.TrimSubstringFromStart(element_text, "Developer/Publisher:").strip()
+                    metadata_result.set_developer(devpub_text)
+                    metadata_result.set_publisher(devpub_text)
 
-        # Developer
-        elif system.DoesStringStartWithSubstring(element_text, "Developer:"):
-            developer_text = system.TrimSubstringFromStart(element_text, "Developer:").strip()
-            metadata_result.set_developer(developer_text)
+                # Release/First Released
+                elif system.DoesStringStartWithSubstring(element_text, "Release:") or system.DoesStringStartWithSubstring(element_text, "First Released:"):
+                    release_text = ""
+                    if system.DoesStringStartWithSubstring(element_text, "Release:"):
+                        release_text = system.TrimSubstringFromStart(element_text, "Release:").strip()
+                    elif system.DoesStringStartWithSubstring(element_text, "First Released:"):
+                        release_text = system.TrimSubstringFromStart(element_text, "First Released:").strip()
+                    release_text = system.ConvertUnknownDateString(release_text, "%Y-%m-%d")
+                    metadata_result.set_release(release_text)
+        return metadata_result
 
-        # Publisher
-        elif system.DoesStringStartWithSubstring(element_text, "Publisher:"):
-            publisher_text = system.TrimSubstringFromStart(element_text, "Publisher:").strip()
-            metadata_result.set_publisher(publisher_text)
+    # Use retry function with cleanup
+    result = system.RetryWithBackoff(
+        func = attempt_metadata_fetch,
+        cleanup_func = cleanup_driver,
+        max_retries = 3,
+        initial_delay = 2,
+        backoff_factor = 2,
+        verbose = verbose,
+        operation_name = "GameFAQs metadata fetch for '%s' (%s)" % (game_name, game_platform))
 
-        # Developer/Publisher
-        elif system.DoesStringStartWithSubstring(element_text, "Developer/Publisher:"):
-            devpub_text = system.TrimSubstringFromStart(element_text, "Developer/Publisher:").strip()
-            metadata_result.set_developer(devpub_text)
-            metadata_result.set_publisher(devpub_text)
-
-        # Release/First Released
-        elif system.DoesStringStartWithSubstring(element_text, "Release:") or system.DoesStringStartWithSubstring(element_text, "First Released:"):
-            release_text = ""
-            if system.DoesStringStartWithSubstring(element_text, "Release:"):
-                release_text = system.TrimSubstringFromStart(element_text, "Release:").strip()
-            elif system.DoesStringStartWithSubstring(element_text, "First Released:"):
-                release_text = system.TrimSubstringFromStart(element_text, "First Released:").strip()
-            release_text = system.ConvertUnknownDateString(release_text, "%Y-%m-%d")
-            metadata_result.set_release(release_text)
-
-    # Cleanup web driver
-    webpage.DestroyWebDriver(web_driver)
-
-    # Return metadata
-    return metadata_result
+    # Final cleanup
+    cleanup_driver()
+    return result
 
 ############################################################
 
@@ -314,55 +390,85 @@ def CollectMetadataFromBigFishGames(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Create web driver
-    web_driver = webpage.CreateWebDriver(make_headless = True)
+    # Store web driver for cleanup
+    web_driver = None
 
-    # Get search terms
-    search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
+    # Cleanup function
+    def cleanup_driver():
+        if web_driver:
+            webpage.DestroyWebDriver(web_driver)
 
-    # Metadata result
-    metadata_result = metadataentry.MetadataEntry()
+    # Fetch function
+    def attempt_metadata_fetch():
+        nonlocal web_driver
 
-    # Load url
-    success = webpage.LoadUrl(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + search_terms)
-    if not success:
-        return None
+        # Create web driver
+        web_driver = webpage.CreateWebDriver(make_headless = True)
+        if not web_driver:
+            raise Exception("Failed to create web driver")
 
-    # Look for game description
-    element_game_description = webpage.WaitForElement(
-        driver = web_driver,
-        locator = webpage.ElementLocator({"class": "productFullDetail__descriptionContent"}),
+        # Get search terms
+        search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
+
+        # Metadata result
+        metadata_result = metadataentry.MetadataEntry()
+
+        # Load url
+        success = webpage.LoadUrl(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + search_terms)
+        if not success:
+            raise Exception("Failed to load BigFishGames search page")
+
+        # Look for game description
+        element_game_description = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "productFullDetail__descriptionContent"}),
+            wait_time = 15,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if not element_game_description:
+            return None  # No description found, might be no results
+
+        # Look for game bullets
+        element_game_bullets = webpage.WaitForElement(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "productFullDetail__bullets"}),
+            wait_time = 15,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+
+        # Grab the description text
+        raw_game_description = webpage.GetElementText(element_game_description)
+
+        # Grab the bullets text (if available)
+        raw_game_bullets = ""
+        if element_game_bullets:
+            raw_game_bullets = webpage.GetElementText(element_game_bullets)
+
+        # Convert to metadata format
+        description_parts = []
+        if isinstance(raw_game_description, str) and raw_game_description.strip():
+            description_parts.append(raw_game_description.strip())
+        if isinstance(raw_game_bullets, str) and raw_game_bullets.strip():
+            description_parts.append(raw_game_bullets.strip())
+        if description_parts:
+            metadata_result.set_description("\n".join(description_parts))
+        return metadata_result
+
+    # Use retry function with cleanup
+    result = system.RetryWithBackoff(
+        func = attempt_metadata_fetch,
+        cleanup_func = cleanup_driver,
+        max_retries = 3,
+        initial_delay = 2,
+        backoff_factor = 2,
         verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not element_game_description:
-        return None
+        operation_name = "BigFishGames metadata fetch for '%s' (%s)" % (game_name, game_platform))
 
-    # Look for game bullets
-    element_game_bullets = webpage.WaitForElement(
-        driver = web_driver,
-        locator = webpage.ElementLocator({"class": "productFullDetail__bullets"}),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not element_game_bullets:
-        return None
-
-    # Grab the description text
-    raw_game_description = webpage.GetElementText(element_game_description)
-
-    # Grab the bullets text
-    raw_game_bullets = webpage.GetElementText(element_game_bullets)
-
-    # Convert both to metadata format
-    if isinstance(raw_game_description, str) and isinstance(raw_game_bullets, str):
-        metadata_result.set_description(raw_game_description + "\n" + raw_game_bullets)
-
-    # Cleanup web driver
-    webpage.DestroyWebDriver(web_driver)
-
-    # Return metadata
-    return metadata_result
+    # Final cleanup
+    cleanup_driver()
+    return result
 
 ############################################################
 

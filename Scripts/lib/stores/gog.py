@@ -8,6 +8,7 @@ import config
 import command
 import programs
 import system
+import environment
 import network
 import ini
 import jsondata
@@ -263,50 +264,89 @@ class GOG(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Get tool
-        gog_tool = None
-        if programs.IsToolInstalled("LGOGDownloader"):
-            gog_tool = programs.GetToolProgram("LGOGDownloader")
-        if not gog_tool:
-            system.LogError("LGOGDownloader was not found")
-            return None
+        # Get cache file path
+        cache_dir = environment.GetCacheRootDir()
+        cache_file_manifest = system.JoinPaths(cache_dir, "gog_purchases_cache.json")
 
-        # Create temporary directory
-        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
-        if not tmp_dir_success:
-            return None
+        # Check if cache exists and is recent (less than 24 hours old)
+        use_cache = False
+        if system.DoesPathExist(cache_file_manifest):
+            cache_age_hours = system.GetFileAgeInHours(cache_file_manifest)
+            if cache_age_hours < 24:
+                use_cache = True
+                if verbose:
+                    system.LogInfo("Using cached GOG purchases data (%.1f hours old)" % cache_age_hours)
 
-        # Get temporary paths
-        tmp_file_manifest = system.JoinPaths(tmp_dir_result, "manifest.json")
+        # Load from cache if available
+        if use_cache:
+            gog_json = system.ReadJsonFile(
+                src = cache_file_manifest,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if not gog_json:
+                if verbose:
+                    system.LogWarning("Failed to load GOG cache, will fetch fresh data")
+                use_cache = False
 
-        # Get list command
-        list_cmd = [
-            gog_tool,
-            "--list", "j"
-        ]
+        # Fetch fresh data if not using cache
+        if not use_cache:
+            # Get tool
+            gog_tool = None
+            if programs.IsToolInstalled("LGOGDownloader"):
+                gog_tool = programs.GetToolProgram("LGOGDownloader")
+            if not gog_tool:
+                system.LogError("LGOGDownloader was not found")
+                return None
 
-        # Run list command
-        code = command.RunReturncodeCommand(
-            cmd = list_cmd,
-            options = command.CreateCommandOptions(
-                stdout = tmp_file_manifest),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if code != 0:
-            system.LogError("Unable to find gog purchases")
-            return False
+            # Create temporary directory
+            tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+            if not tmp_dir_success:
+                return None
 
-        # Get gog json
-        gog_json = {}
-        try:
-            if os.path.exists(tmp_file_manifest):
-                with open(tmp_file_manifest, "r") as manifest_file:
-                    gog_json = json.load(manifest_file)
-        except Exception as e:
-            system.LogError(e)
-            system.LogError("Unable to parse gog game list")
-            return None
+            # Get temporary paths
+            tmp_file_manifest = system.JoinPaths(tmp_dir_result, "manifest.json")
+
+            # Get list command
+            list_cmd = [
+                gog_tool,
+                "--list", "j"
+            ]
+
+            # Run list command
+            code = command.RunReturncodeCommand(
+                cmd = list_cmd,
+                options = command.CreateCommandOptions(
+                    stdout = tmp_file_manifest),
+                verbose = False,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if code != 0:
+                system.LogError("Unable to find gog purchases")
+                return False
+
+            # Get gog json
+            gog_json = system.ReadJsonFile(
+                src = tmp_file_manifest,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if not gog_json:
+                system.LogError("Unable to parse gog game list")
+                return None
+
+            # Save to cache
+            system.MakeDirectory(cache_dir, verbose = verbose, pretend_run = pretend_run)
+            success = system.WriteJsonFile(
+                src = cache_file_manifest,
+                json_data = gog_json,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if success and verbose:
+                system.LogInfo("Saved GOG purchases data to cache")
+            elif not success and verbose:
+                system.LogWarning("Failed to save GOG cache")
 
         # Parse json
         purchases = []
@@ -432,75 +472,100 @@ class GOG(storebase.StoreBase):
             system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
-        # Connect to web
-        web_driver = self.WebConnect(
-            headless = True,
+        # Store web driver for cleanup
+        web_driver = None
+
+        # Cleanup function
+        def cleanup_driver():
+            if web_driver:
+                self.WebDisconnect(
+                    web_driver = web_driver,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+
+        # Fetch function
+        def attempt_metadata_fetch():
+            nonlocal web_driver
+
+            # Connect to web
+            web_driver = self.WebConnect(
+                headless = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if not web_driver:
+                raise Exception("Failed to connect to web driver")
+
+            # Load url
+            success = webpage.LoadUrl(web_driver, identifier)
+            if not success:
+                raise Exception("Failed to load URL: %s" % identifier)
+
+            # Create metadata entry
+            metadata_entry = metadataentry.MetadataEntry()
+
+            # Look for game description (now with improved error handling in webpage module)
+            element_game_description = webpage.WaitForElement(
+                driver = web_driver,
+                locator = webpage.ElementLocator({"class": "description"}),
+                wait_time = 15,  # 15 second timeout
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if element_game_description:
+                raw_game_description = webpage.GetElementChildrenText(element_game_description)
+                if raw_game_description:
+                    metadata_entry.set_description(raw_game_description)
+
+            # Look for game details (now with improved error handling in webpage module)
+            elements_details = webpage.GetElement(
+                parent = web_driver,
+                locator = webpage.ElementLocator({"class": "details__row"}),
+                all_elements = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if elements_details:
+                for elements_detail in elements_details:
+                    element_detail_text = webpage.GetElementChildrenText(elements_detail)
+                    if element_detail_text:
+                        element_detail_text = element_detail_text.strip()
+
+                        # Developer/Publisher
+                        if system.DoesStringStartWithSubstring(element_detail_text, "Company:"):
+                            company_text = system.TrimSubstringFromStart(element_detail_text, "Company:").strip()
+                            for index, company_part in enumerate(company_text.split("/")):
+                                if index == 0:
+                                    metadata_entry.set_developer(company_part.strip())
+                                elif index == 1:
+                                    metadata_entry.set_publisher(company_part.strip())
+
+                        # Release
+                        elif system.DoesStringStartWithSubstring(element_detail_text, "Release date:"):
+                            release_text = system.TrimSubstringFromStart(element_detail_text, "Release date:").strip()
+                            release_text = system.ConvertDateString(release_text, "%B %d, %Y", "%Y-%m-%d")
+                            metadata_entry.set_release(release_text)
+
+                        # Genre
+                        elif system.DoesStringStartWithSubstring(element_detail_text, "Genre:"):
+                            genre_text = system.TrimSubstringFromStart(element_detail_text, "Genre:").strip().replace(" - ", ";")
+                            metadata_entry.set_genre(genre_text)
+            return metadata_entry
+
+        # Use retry function with cleanup
+        result = system.RetryWithBackoff(
+            func = attempt_metadata_fetch,
+            cleanup_func = cleanup_driver,
+            max_retries = 3,
+            initial_delay = 2,
+            backoff_factor = 2,
             verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not web_driver:
-            return None
+            operation_name = "GOG metadata fetch for '%s'" % identifier)
 
-        # Load url
-        success = webpage.LoadUrl(web_driver, identifier)
-        if not success:
-            return None
-
-        # Create metadata entry
-        metadata_entry = metadataentry.MetadataEntry()
-
-        # Look for game description
-        element_game_description = webpage.WaitForElement(
-            driver = web_driver,
-            locator = webpage.ElementLocator({"class": "description"}),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if element_game_description:
-            raw_game_description = webpage.GetElementChildrenText(element_game_description)
-            if raw_game_description:
-                metadata_entry.set_description(raw_game_description)
-
-        # Look for game details
-        elements_details = webpage.GetElement(
-            parent = web_driver,
-            locator = webpage.ElementLocator({"class": "details__row"}),
-            all_elements = True)
-        if elements_details:
-            for elements_detail in elements_details:
-                element_detail_text = webpage.GetElementChildrenText(elements_detail).strip()
-
-                # Developer/Publisher
-                if system.DoesStringStartWithSubstring(element_detail_text, "Company:"):
-                    company_text = system.TrimSubstringFromStart(element_detail_text, "Company:").strip()
-                    for index, company_part in enumerate(company_text.split("/")):
-                        if index == 0:
-                            metadata_entry.set_developer(company_part.strip())
-                        elif index == 1:
-                            metadata_entry.set_publisher(company_part.strip())
-
-                # Release
-                elif system.DoesStringStartWithSubstring(element_detail_text, "Release date:"):
-                    release_text = system.TrimSubstringFromStart(element_detail_text, "Release date:").strip()
-                    release_text = system.ConvertDateString(release_text, "%B %d, %Y", "%Y-%m-%d")
-                    metadata_entry.set_release(release_text)
-
-                # Genre
-                elif system.DoesStringStartWithSubstring(element_detail_text, "Genre:"):
-                    genre_text = system.TrimSubstringFromStart(element_detail_text, "Genre:").strip().replace(" - ", ";")
-                    metadata_entry.set_genre(genre_text)
-
-        # Disconnect from web
-        success = self.WebDisconnect(
-            web_driver = web_driver,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return None
-
-        # Return metadata entry
-        return metadata_entry
+        # Final cleanup
+        cleanup_driver()
+        return result
 
     ############################################################
     # Assets

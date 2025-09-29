@@ -509,6 +509,45 @@ def SearchDictionary(data, search_value, search_keys = []):
 
 ###########################################################
 
+# Retry function with exponential backoff and cleanup
+def RetryWithBackoff(
+    func,
+    cleanup_func = None,
+    max_retries = 3,
+    initial_delay = 1,
+    backoff_factor = 2,
+    verbose = False,
+    operation_name = None):
+    for attempt in range(max_retries):
+        try:
+            result = func()
+            if result is not None or attempt == 0:
+                return result
+        except Exception as e:
+            if verbose and operation_name:
+                LogWarning("%s failed (attempt %d/%d): %s" % (operation_name, attempt + 1, max_retries, str(e)))
+            elif verbose:
+                LogWarning("Operation failed (attempt %d/%d): %s" % (attempt + 1, max_retries, str(e)))
+            if cleanup_func:
+                try:
+                    cleanup_func()
+                except Exception as cleanup_error:
+                    if verbose:
+                        LogWarning("Cleanup failed: %s" % str(cleanup_error))
+            if attempt == max_retries - 1:
+                if verbose and operation_name:
+                    LogError("%s failed after %d attempts" % (operation_name, max_retries))
+                elif verbose:
+                    LogError("Operation failed after %d attempts" % max_retries)
+                return None
+            delay = initial_delay * (backoff_factor ** attempt)
+            if verbose:
+                LogInfo("Retrying in %.1f seconds..." % delay)
+            time.sleep(delay)
+    return None
+
+###########################################################
+
 # Get source info
 def GetSourceInfo():
     frame = inspect.currentframe().f_back
@@ -2265,6 +2304,16 @@ def GetFileMimeType(path):
     except:
         pass
     return ""
+
+# Get file age in hours
+def GetFileAgeInHours(path):
+    try:
+        file_mtime = os.path.getmtime(path)
+        current_time = time.time()
+        age_seconds = current_time - file_mtime
+        return age_seconds / 3600.0  # Convert to hours
+    except:
+        return float('inf')  # Return infinite age if file doesn't exist or error
 
 # Get filename info
 def GetFilenameInfo(path):

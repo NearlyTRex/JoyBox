@@ -178,76 +178,106 @@ class Legacy(storebase.StoreBase):
             system.LogWarning("Page identifier '%s' was not valid" % identifier)
             return None
 
-        # Connect to web
-        web_driver = self.WebConnect(
-            headless = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not web_driver:
-            return None
+        # Store web driver for cleanup
+        web_driver = None
 
-        # Get search terms
-        search_terms = system.EncodeUrlString(identifier.strip(), use_plus = True)
+        # Cleanup function
+        def cleanup_driver():
+            if web_driver:
+                self.WebDisconnect(
+                    web_driver = web_driver,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
 
-        # Load url
-        success = webpage.LoadUrl(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + search_terms)
-        if not success:
-            return None
+        # Search function
+        def attempt_url_search():
+            nonlocal web_driver
 
-        # Find the root container element
-        element_search_result = webpage.WaitForElement(
-            driver = web_driver,
-            locator = webpage.ElementLocator({"class": "productcollection__root"}),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not element_search_result:
-            return None
+            # Connect to web
+            web_driver = self.WebConnect(
+                headless = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if not web_driver:
+                raise Exception("Failed to connect to web driver")
 
-        # Score each potential title compared to the original title
-        scores_list = []
-        game_cells = webpage.GetElement(
-            parent = element_search_result,
-            locator = webpage.ElementLocator({"class": "productcollection__items"}),
-            all_elements = True)
-        if game_cells:
-            for game_cell in game_cells:
-                game_title_element = webpage.GetElement(
+            # Get search terms
+            search_terms = system.EncodeUrlString(identifier.strip(), use_plus = True)
+
+            # Load url
+            success = webpage.LoadUrl(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + search_terms)
+            if not success:
+                raise Exception("Failed to load search URL")
+
+            # Find the root container element
+            element_search_result = webpage.WaitForElement(
+                driver = web_driver,
+                locator = webpage.ElementLocator({"class": "productcollection__root"}),
+                wait_time = 15,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if not element_search_result:
+                return None  # No search results found, not an error
+
+            # Score each potential title compared to the original title
+            scores_list = []
+            game_cells = webpage.GetElement(
+                parent = element_search_result,
+                locator = webpage.ElementLocator({"class": "productcollection__items"}),
+                all_elements = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if game_cells:
+                for game_cell in game_cells:
+                    game_title_element = webpage.GetElement(
+                        parent = game_cell,
+                        locator = webpage.ElementLocator({"class": "productcollection__item-title"}),
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = False)
+                    if game_title_element:
+                        game_cell_text = webpage.GetElementChildrenText(game_title_element)
+                        if game_cell_text:
+                            # Add comparison score
+                            score_entry = {}
+                            score_entry["element"] = game_cell
+                            score_entry["ratio"] = system.GetStringSimilarityRatio(identifier, game_cell_text)
+                            scores_list.append(score_entry)
+
+            # Get the best url match
+            appurl = None
+            for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
+                game_cell = score_entry["element"]
+                game_link_element = webpage.GetElement(
                     parent = game_cell,
-                    locator = webpage.ElementLocator({"class": "productcollection__item-title"}),
-                    verbose = verbose)
-                game_cell_text = webpage.GetElementChildrenText(game_title_element)
+                    locator = webpage.ElementLocator({"tag": "a"}),
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+                if game_link_element:
+                    appurl = webpage.GetElementAttribute(game_link_element, "href")
+                    if appurl:
+                        appurl = system.StripStringQueryParams(appurl)
+                        break
+            return appurl
 
-                # Add comparison score
-                score_entry = {}
-                score_entry["element"] = game_cell
-                score_entry["ratio"] = system.GetStringSimilarityRatio(identifier, game_cell_text)
-                scores_list.append(score_entry)
-
-        # Get the best url match
-        appurl = None
-        for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
-            game_cell = score_entry["element"]
-            game_link_element = webpage.GetElement(
-                parent = game_cell,
-                locator = webpage.ElementLocator({"tag": "a"}),
-                verbose = verbose)
-            if game_link_element:
-                appurl = webpage.GetElementAttribute(game_link_element, "href")
-                appurl = system.StripStringQueryParams(appurl)
-                break
-
-        # Disconnect from web
-        success = self.WebDisconnect(
-            web_driver = web_driver,
+        # Use retry function with cleanup
+        result = system.RetryWithBackoff(
+            func = attempt_url_search,
+            cleanup_func = cleanup_driver,
+            max_retries = 3,
+            initial_delay = 2,
+            backoff_factor = 2,
             verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return None
+            operation_name = "Legacy store URL search for '%s'" % identifier)
 
-        # Return appurl
-        return appurl
+        # Final cleanup
+        cleanup_driver()
+        return result
 
     ############################################################
     # Purchases
