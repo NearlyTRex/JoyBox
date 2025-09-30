@@ -67,7 +67,7 @@ def ImportGameStorePurchases(
     # Get store
     store_obj = stores.GetStoreByCategories(game_supercategory, game_category, game_subcategory)
     if not store_obj:
-        return False
+        return True
 
     # Check if purchases can be imported
     if not store_obj.CanImportPurchases():
@@ -215,7 +215,7 @@ def UpdateGameStorePurchases(
     # Get store
     store_obj = stores.GetStoreByCategories(game_supercategory, game_category, game_subcategory)
     if not store_obj:
-        return False
+        return True
 
     # Check if purchases can be imported
     if not store_obj.CanImportPurchases():

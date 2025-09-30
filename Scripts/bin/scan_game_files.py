@@ -73,7 +73,6 @@ def main():
     # Build game metadata files
     system.LogInfo("Building metadata files ...")
     success = collection.BuildAllGameMetadataEntries(
-        source_type = args.source_type,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
