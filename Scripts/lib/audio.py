@@ -226,18 +226,6 @@ def BuildAudioMetadataFiles(
             system.LogError(f"Failed to extract metadata from album: {album_name}")
             return False
 
-        # Create output directory structure
-        album_output_dir = environment.GetFileAudioMetadataAlbumDir(
-            config.AudioMetadataType.TAG.value,
-            genre_type.value if genre_type else None,
-            album_name,
-            detected_artist_name)
-        system.MakeDirectory(
-            src = album_output_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
         # Write album metadata JSON
         json_file = environment.GetFileAudioMetadataFile(
             config.AudioMetadataType.TAG.value,

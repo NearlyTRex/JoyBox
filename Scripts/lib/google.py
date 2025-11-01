@@ -192,7 +192,7 @@ def DownloadVideo(
             "--audio-format", "mp3",
             "--embed-thumbnail",
             "--embed-metadata",
-            "--format", "bestaudio"
+            "--format", "bestaudio/best"
         ]
     else:
         download_cmd += [
