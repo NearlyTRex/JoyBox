@@ -37,6 +37,12 @@ parser.add_boolean_argument(
 parser.add_boolean_argument(
     args = ("--clear_existing",),
     description = "Clear existing tags before applying new ones")
+parser.add_boolean_argument(
+    args = ("--exclude_comments",),
+    description = "Exclude comments from tag extraction")
+parser.add_boolean_argument(
+    args = ("--use_index_for_track_number",),
+    description = "Override track numbers with file index")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -52,6 +58,8 @@ def main():
             genre_type = args.genre,
             album_name = args.album,
             artist_name = args.artist,
+            exclude_comments = args.exclude_comments,
+            use_index_for_track_number = args.use_index_for_track_number,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

@@ -1816,6 +1816,9 @@ def WriteJsonFile(src, json_data, sort_keys = False, verbose = False, pretend_ru
         if verbose:
             LogInfo("Writing %s" % src)
         if not pretend_run:
+            parent_dir = os.path.dirname(src)
+            if parent_dir and not os.path.exists(parent_dir):
+                os.makedirs(parent_dir)
             with open(src, "w", newline='\n') as output_file:
                 json_string = json.dumps(json_data, indent = 4, sort_keys = sort_keys)
                 output_file.write(json_string)

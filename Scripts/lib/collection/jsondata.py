@@ -260,6 +260,11 @@ def UpdateGameJsonFile(
         if latest_jsondata:
             for store_subdata_key in config.json_keys_store_subdata:
                 if latest_jsondata.has_key(store_subdata_key):
+                    if store_subdata_key == config.json_key_store_buildid:
+                        existing_buildid = json_obj.get_subvalue(store_obj.GetKey(), config.json_key_store_buildid)
+                        new_buildid = latest_jsondata.get_value(store_subdata_key)
+                        if existing_buildid and existing_buildid != config.default_buildid and new_buildid == config.default_buildid:
+                            continue
                     json_obj.fill_subvalue(store_obj.GetKey(), store_subdata_key, latest_jsondata.get_value(store_subdata_key))
                     if store_subdata_key == config.json_key_store_paths:
                         paths = json_obj.get_subvalue(store_obj.GetKey(), store_subdata_key, [])

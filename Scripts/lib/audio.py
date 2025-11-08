@@ -130,7 +130,7 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, verbos
                     src_file = system.JoinPaths(tmp_dir_result, file_name)
                     dest_file = system.JoinPaths(audio_only_dir, file_name)
                     if system.IsPathFile(src_file):
-                        system.MoveFile(
+                        system.MoveFileOrDirectory(
                             src = src_file,
                             dest = dest_file,
                             verbose = verbose,
@@ -193,6 +193,9 @@ def BuildAudioMetadataFiles(
     genre_type = None,
     album_name = None,
     artist_name = None,
+    store_individual_artwork = False,
+    exclude_comments = False,
+    use_index_for_track_number = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -220,6 +223,10 @@ def BuildAudioMetadataFiles(
         # Extract album metadata
         album_data = audio_metadata.get_album_tags(
             album_dir = album_dir,
+            genre_type = genre_type,
+            store_individual_artwork = store_individual_artwork,
+            exclude_comments = exclude_comments,
+            use_index_for_track_number = use_index_for_track_number,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not album_data:
