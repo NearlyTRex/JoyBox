@@ -86,6 +86,26 @@ class EnumType(enum.Enum):
         return None
 
     @classmethod
+    def from_list(cls, values):
+        if not values:
+            return None
+        if isinstance(values, str):
+            values = [v.strip() for v in values.split(",")]
+        if isinstance(values, list):
+            enum_list = []
+            for value in values:
+                if isinstance(value, str):
+                    enum_value = cls.from_string(value)
+                    if enum_value:
+                        enum_list.append(enum_value)
+                elif isinstance(value, cls):
+                    enum_list.append(value)
+            return enum_list if enum_list else None
+        if isinstance(values, cls):
+            return [values]
+        return None
+
+    @classmethod
     def to_string(cls, value):
         if isinstance(value, cls):
             return value.value

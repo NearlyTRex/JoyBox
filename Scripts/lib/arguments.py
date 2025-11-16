@@ -125,6 +125,20 @@ class ArgumentParser:
                 help = f"{description}.\nAllowed values are [{', '.join(quoted_enum_values)}]",
                 metavar = "")
 
+    # Add enum list argument
+    def add_enum_list_argument(
+        self,
+        args,
+        arg_type = None,
+        description = None):
+        enum_values = arg_type.values()
+        quoted_enum_values = [f"'{value}'" for value in enum_values]
+        self.parser.add_argument(
+            *args if isinstance(args, tuple) else (args,),
+            default = None,
+            type = str,
+            help = f"{description} (comma delimited).\nAllowed values are [{', '.join(quoted_enum_values)}]")
+
     #################################################
 
     # Add input path argument
