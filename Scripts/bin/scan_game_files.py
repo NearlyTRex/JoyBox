@@ -30,6 +30,8 @@ parser.add_enum_argument(
     arg_type = config.LockerType,
     description = "Locker type")
 parser.add_string_argument(args = ("-k", "--keys"), description = "Keys to use (comma delimited)")
+parser.add_enum_list_argument(args = ("-c", "--categories"), arg_type = config.Category, description = "Categories to process")
+parser.add_enum_list_argument(args = ("-s", "--subcategories"), arg_type = config.Subcategory, description = "Subcategories to process")
 parser.add_boolean_argument(args = ("-m", "--load_manifest"), description = "Load manifest")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
@@ -39,6 +41,13 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Log filtering if specified
+    if args.categories:
+        category_names = [c for c in args.categories.split(",")]
+        system.LogInfo(f"Filtering to categories: {args.categories}")
+    if args.subcategories:
+        system.LogInfo(f"Filtering to subcategories: {args.subcategories}")
 
     # Load manifest
     if args.load_manifest:
@@ -53,6 +62,8 @@ def main():
     success = collection.BuildAllGameStorePurchases(
         locker_type = args.locker_type,
         source_type = args.source_type,
+        categories = args.categories,
+        subcategories = args.subcategories,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
@@ -64,6 +75,8 @@ def main():
     success = collection.BuildAllGameJsonFiles(
         locker_type = args.locker_type,
         source_type = args.source_type,
+        categories = args.categories,
+        subcategories = args.subcategories,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
@@ -99,4 +112,5 @@ def main():
         system.LogError("Publishing metadata files failed", quit_program = True)
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)

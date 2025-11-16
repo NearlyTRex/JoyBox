@@ -369,13 +369,20 @@ def BuildAllGameStorePurchases(
     locker_type = None,
     source_type = None,
     keys = [],
+    categories = None,
+    subcategories = None,
     force = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    selected_categories = config.Category.from_list(categories) if categories else config.Category.members()
+    selected_subcategories = config.Subcategory.from_list(subcategories) if subcategories else None
     for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
+        for game_category in selected_categories:
+            category_subcategories = config.subcategory_map[game_category]
+            if selected_subcategories:
+                category_subcategories = [sc for sc in category_subcategories if sc in selected_subcategories]
+            for game_subcategory in category_subcategories:
                 success = BuildGameStorePurchases(
                     game_supercategory = game_supercategory,
                     game_category = game_category,
