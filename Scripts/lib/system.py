@@ -45,6 +45,23 @@ def QuitProgram(exit_code = -1):
 def SleepProgram(seconds):
     time.sleep(seconds)
 
+# Run main function
+def RunMain(main_func):
+    try:
+        success = main_func()
+        if success is not None:
+            if success:
+                LogInfo("Script completed successfully")
+            else:
+                LogError("Script completed with errors")
+                sys.exit(1)
+    except KeyboardInterrupt:
+        LogWarning("\nOperation cancelled by user")
+        sys.exit(130)
+    except Exception as e:
+        LogError(f"Script failed with exception: {e}")
+        sys.exit(1)
+
 ###########################################################
 
 # Generate unique ID

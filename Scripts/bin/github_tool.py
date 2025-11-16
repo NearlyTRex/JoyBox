@@ -107,4 +107,5 @@ def main():
                     system.LogWarning("Unable to update repository %s" % github_repository.name)
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)

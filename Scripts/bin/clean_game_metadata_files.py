@@ -41,4 +41,5 @@ def main():
             metadata_obj.export_to_metadata_file(metadata_file)
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)

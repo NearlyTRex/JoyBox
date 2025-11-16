@@ -87,16 +87,4 @@ def main():
 
 # Main
 if __name__ == "__main__":
-    try:
-        success = main()
-        if success:
-            system.LogInfo("Script completed successfully")
-        else:
-            system.LogError("Script completed with errors")
-            sys.exit(1)
-    except KeyboardInterrupt:
-        system.LogInfo("Script interrupted")
-        sys.exit(1)
-    except Exception as e:
-        system.LogError(f"Script failed with exception: {e}")
-        sys.exit(1)
+    system.RunMain(main)

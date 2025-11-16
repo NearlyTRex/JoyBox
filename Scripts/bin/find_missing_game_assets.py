@@ -82,4 +82,5 @@ def main():
             file.write("%s\n" % extra_asset)
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)

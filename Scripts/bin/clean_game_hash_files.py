@@ -33,4 +33,5 @@ def main():
         system.LogError("Sort of hash file failed!", quit_program = True)
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)

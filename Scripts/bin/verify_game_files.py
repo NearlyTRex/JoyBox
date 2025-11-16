@@ -114,4 +114,5 @@ def main():
                         system.LogError("File '%s' referenced in hash file not found" % stored_file, quit_program = True)
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)

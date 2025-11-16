@@ -79,4 +79,5 @@ def main():
                 system.LogInfo(json_file)
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)

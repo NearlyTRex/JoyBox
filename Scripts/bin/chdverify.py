@@ -40,4 +40,5 @@ def main():
             system.LogError("Verification failed!", quit_program = True)
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)

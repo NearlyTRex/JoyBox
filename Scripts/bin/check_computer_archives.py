@@ -36,4 +36,5 @@ def main():
             system.LogError("Executable '%s' is larger than 4092 MB" % file, quit_program = True)
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)

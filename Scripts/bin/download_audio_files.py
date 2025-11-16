@@ -52,4 +52,5 @@ def main():
             sys.exit(1)
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)

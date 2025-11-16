@@ -98,4 +98,5 @@ def main():
                 message_text = "Json file '%s' addons failed to install" % system.GetFilenameFile(json_file))
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)

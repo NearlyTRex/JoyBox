@@ -34,4 +34,5 @@ def main():
         system.LogError("Publishing metadata files failed", quit_program = True)
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)

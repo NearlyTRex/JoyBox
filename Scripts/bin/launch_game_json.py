@@ -134,4 +134,5 @@ def main():
             message_text = "Json file '%s' failed to launch" % system.GetFilenameFile(json_file))
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)

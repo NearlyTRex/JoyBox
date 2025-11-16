@@ -70,4 +70,5 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
 # Start
-main()
+if __name__ == "__main__":
+    system.RunMain(main)
