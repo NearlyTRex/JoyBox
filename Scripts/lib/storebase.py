@@ -20,6 +20,8 @@ def CreateTokenizedPath(path, base_path = None):
     new_path = new_path.replace("{EpicId}", "<storeUserId>")
     new_path = new_path.replace("{UserDir}", "<home>")
     new_path = new_path.replace("{UserProfile}", "<home>")
+    new_path = new_path.replace("%USERPROFILE%", "<home>")
+    new_path = new_path.replace("%userprofile%", "<home>")
     new_path = new_path.replace("{InstallDir}", "<base>")
     new_path = new_path.replace("{UserSavedGames}", "<home>/Saved Games")
     new_path = new_path.replace("{AppData}/../Roaming", "<winAppData>")
@@ -29,12 +31,12 @@ def CreateTokenizedPath(path, base_path = None):
     new_path = new_path.replace("{AppData}", "<winLocalAppData>")
     new_path = new_path.replace("<storeUserId>", config.token_store_user_id)
     new_path = new_path.replace("<winPublic>", config.token_user_public_dir)
-    new_path = new_path.replace("<winDir>", "%s/AppData/Local/VirtualStore" % config.token_user_profile_dir)
-    new_path = new_path.replace("<winAppData>", "%s/AppData/Roaming" % config.token_user_profile_dir)
-    new_path = new_path.replace("<winAppDataLocalLow>", "%s/AppData/LocalLow" % config.token_user_profile_dir)
-    new_path = new_path.replace("<winLocalAppData>", "%s/AppData/Local" % config.token_user_profile_dir)
-    new_path = new_path.replace("<winProgramData>", "%s/AppData/Local/VirtualStore" % config.token_user_profile_dir)
-    new_path = new_path.replace("<winDocuments>", "%s/Documents" % config.token_user_profile_dir)
+    new_path = new_path.replace("<winDir>", config.token_user_profile_dir + "/AppData/Local/VirtualStore")
+    new_path = new_path.replace("<winAppData>", config.token_user_profile_dir + "/AppData/Roaming")
+    new_path = new_path.replace("<winAppDataLocalLow>", config.token_user_profile_dir + "/AppData/LocalLow")
+    new_path = new_path.replace("<winLocalAppData>", config.token_user_profile_dir + "/AppData/Local")
+    new_path = new_path.replace("<winProgramData>", config.token_user_profile_dir + "/AppData/Local/VirtualStore")
+    new_path = new_path.replace("<winDocuments>", config.token_user_profile_dir + "/Documents")
     new_path = new_path.replace("<home>", config.token_user_profile_dir)
     new_path = new_path.replace("<root>", config.token_store_install_dir)
     if system.IsPathValid(base_path):
@@ -446,6 +448,7 @@ class StoreBase:
         self,
         identifier,
         asset_type,
+        game_name = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
@@ -458,7 +461,7 @@ class StoreBase:
         # Collect asset url
         return metadataassetcollector.FindMetadataAsset(
             game_platform = self.GetPlatform(),
-            game_name = identifier,
+            game_name = game_name if game_name else identifier,
             asset_type = asset_type,
             verbose = verbose,
             pretend_run = pretend_run,
