@@ -32,6 +32,7 @@ parser.add_enum_argument(
 parser.add_string_argument(args = ("-k", "--keys"), description = "Keys to use (comma delimited)")
 parser.add_enum_list_argument(args = ("-c", "--categories"), arg_type = config.Category, description = "Categories to process")
 parser.add_enum_list_argument(args = ("-s", "--subcategories"), arg_type = config.Subcategory, description = "Subcategories to process")
+parser.add_boolean_argument(args = ("-a", "--download_assets"), description = "Download assets")
 parser.add_boolean_argument(args = ("-m", "--load_manifest"), description = "Load manifest")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
@@ -86,6 +87,8 @@ def main():
     # Build game metadata files
     system.LogInfo("Building metadata files ...")
     success = collection.BuildAllGameMetadataEntries(
+        categories = args.categories,
+        subcategories = args.subcategories,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
@@ -93,18 +96,23 @@ def main():
         system.LogError("Building metadata files failed", quit_program = True)
 
     # Download game metadata assets
-    system.LogInfo("Downloading metadata assets ...")
-    success = collection.DownloadAllMetadataAssets(
-        skip_existing = True,
-        verbose = args.verbose,
-        pretend_run = args.pretend_run,
-        exit_on_failure = args.exit_on_failure)
-    if not success:
-        system.LogError("Downloading metadata assets failed", quit_program = True)
+    if args.download_assets:
+        system.LogInfo("Downloading metadata assets ...")
+        success = collection.DownloadAllMetadataAssets(
+            categories = args.categories,
+            subcategories = args.subcategories,
+            skip_existing = True,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
+        if not success:
+            system.LogError("Downloading metadata assets failed", quit_program = True)
 
     # Publish game metadata files
     system.LogInfo("Publishing metadata files ...")
     success = collection.PublishAllGameMetadataEntries(
+        categories = args.categories,
+        subcategories = args.subcategories,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)

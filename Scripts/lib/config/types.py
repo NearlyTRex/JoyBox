@@ -21,6 +21,16 @@ class EnumType(enum.Enum):
     def __str__(self):
         return self.value
 
+    def __add__(self, other):
+        if isinstance(other, str):
+            return self.value + other
+        return NotImplemented
+
+    def __radd__(self, other):
+        if isinstance(other, str):
+            return other + self.value
+        return NotImplemented
+
     def __hash__(self):
         return hash(self.value)
 

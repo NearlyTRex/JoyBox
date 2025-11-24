@@ -74,6 +74,7 @@ def DownloadMetadataAsset(
         latest_asset_url = store_obj.GetLatestAssetUrl(
             identifier = game_info.get_store_asset_identifier(),
             asset_type = asset_type,
+            game_name = game_info.get_name(),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -173,13 +174,20 @@ def DownloadMetadataAsset(
 
 # Download all metadata assets
 def DownloadAllMetadataAssets(
+    categories = None,
+    subcategories = None,
     skip_existing = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    selected_categories = config.Category.from_list(categories) if categories else config.Category.members()
+    selected_subcategories = config.Subcategory.from_list(subcategories) if subcategories else None
     for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
+        for game_category in selected_categories:
+            category_subcategories = config.subcategory_map[game_category]
+            if selected_subcategories:
+                category_subcategories = [sc for sc in category_subcategories if sc in selected_subcategories]
+            for game_subcategory in category_subcategories:
                 game_names = gameinfo.FindJsonGameNames(
                     game_supercategory,
                     game_category,

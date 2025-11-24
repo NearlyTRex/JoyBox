@@ -315,8 +315,8 @@ class Metadata:
                 # Get launch command
                 launch_cmd = [
                     "{env.JOYBOX_LAUNCH_JSON}",
-                    "-c", "\"" + game_category.val() + "\"",
-                    "-s", "\"" + game_subcategory.val() + "\"",
+                    "-c", "\"" + game_category + "\"",
+                    "-s", "\"" + game_subcategory + "\"",
                     "-n", "{file.basename}"
                 ]
 

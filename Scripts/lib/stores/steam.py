@@ -845,6 +845,7 @@ class Steam(storebase.StoreBase):
         self,
         identifier,
         asset_type,
+        game_name = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):

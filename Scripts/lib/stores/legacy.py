@@ -429,6 +429,7 @@ class Legacy(storebase.StoreBase):
         self,
         identifier,
         asset_type,
+        game_name = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
@@ -445,7 +446,7 @@ class Legacy(storebase.StoreBase):
         if asset_type == config.AssetType.BOXFRONT:
             latest_asset_url = metadataassetcollector.FindMetadataAsset(
                 game_platform = self.GetPlatform(),
-                game_name = identifier,
+                game_name = game_name if game_name else identifier,
                 asset_type = asset_type,
                 verbose = verbose,
                 pretend_run = pretend_run,

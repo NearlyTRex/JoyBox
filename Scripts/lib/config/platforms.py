@@ -11,18 +11,18 @@ from . import types
 class Platform(types.EnumType):
 
     # Computer
-    COMPUTER_AMAZON_GAMES               = (categories.Category.COMPUTER.val() + " - " + categories.Subcategory.COMPUTER_AMAZON_GAMES.val())
-    COMPUTER_DISC                       = (categories.Category.COMPUTER.val() + " - " + categories.Subcategory.COMPUTER_DISC.val())
-    COMPUTER_EPIC_GAMES                 = (categories.Category.COMPUTER.val() + " - " + categories.Subcategory.COMPUTER_EPIC_GAMES.val())
-    COMPUTER_GOG                        = (categories.Category.COMPUTER.val() + " - " + categories.Subcategory.COMPUTER_GOG.val())
-    COMPUTER_HUMBLE_BUNDLE              = (categories.Category.COMPUTER.val() + " - " + categories.Subcategory.COMPUTER_HUMBLE_BUNDLE.val())
-    COMPUTER_ITCHIO                     = (categories.Category.COMPUTER.val() + " - " + categories.Subcategory.COMPUTER_ITCHIO.val())
-    COMPUTER_LEGACY_GAMES               = (categories.Category.COMPUTER.val() + " - " + categories.Subcategory.COMPUTER_LEGACY_GAMES.val())
-    COMPUTER_PUPPET_COMBO               = (categories.Category.COMPUTER.val() + " - " + categories.Subcategory.COMPUTER_PUPPET_COMBO.val())
-    COMPUTER_RED_CANDLE                 = (categories.Category.COMPUTER.val() + " - " + categories.Subcategory.COMPUTER_RED_CANDLE.val())
-    COMPUTER_SQUARE_ENIX                = (categories.Category.COMPUTER.val() + " - " + categories.Subcategory.COMPUTER_SQUARE_ENIX.val())
-    COMPUTER_STEAM                      = (categories.Category.COMPUTER.val() + " - " + categories.Subcategory.COMPUTER_STEAM.val())
-    COMPUTER_ZOOM                       = (categories.Category.COMPUTER.val() + " - " + categories.Subcategory.COMPUTER_ZOOM.val())
+    COMPUTER_AMAZON_GAMES               = (categories.Category.COMPUTER + " - " + categories.Subcategory.COMPUTER_AMAZON_GAMES)
+    COMPUTER_DISC                       = (categories.Category.COMPUTER + " - " + categories.Subcategory.COMPUTER_DISC)
+    COMPUTER_EPIC_GAMES                 = (categories.Category.COMPUTER + " - " + categories.Subcategory.COMPUTER_EPIC_GAMES)
+    COMPUTER_GOG                        = (categories.Category.COMPUTER + " - " + categories.Subcategory.COMPUTER_GOG)
+    COMPUTER_HUMBLE_BUNDLE              = (categories.Category.COMPUTER + " - " + categories.Subcategory.COMPUTER_HUMBLE_BUNDLE)
+    COMPUTER_ITCHIO                     = (categories.Category.COMPUTER + " - " + categories.Subcategory.COMPUTER_ITCHIO)
+    COMPUTER_LEGACY_GAMES               = (categories.Category.COMPUTER + " - " + categories.Subcategory.COMPUTER_LEGACY_GAMES)
+    COMPUTER_PUPPET_COMBO               = (categories.Category.COMPUTER + " - " + categories.Subcategory.COMPUTER_PUPPET_COMBO)
+    COMPUTER_RED_CANDLE                 = (categories.Category.COMPUTER + " - " + categories.Subcategory.COMPUTER_RED_CANDLE)
+    COMPUTER_SQUARE_ENIX                = (categories.Category.COMPUTER + " - " + categories.Subcategory.COMPUTER_SQUARE_ENIX)
+    COMPUTER_STEAM                      = (categories.Category.COMPUTER + " - " + categories.Subcategory.COMPUTER_STEAM)
+    COMPUTER_ZOOM                       = (categories.Category.COMPUTER + " - " + categories.Subcategory.COMPUTER_ZOOM)
 
     # Microsoft
     MICROSOFT_MSX                       = (categories.Subcategory.MICROSOFT_MSX.val())
