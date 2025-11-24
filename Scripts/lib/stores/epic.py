@@ -224,7 +224,7 @@ class Epic(storebase.StoreBase):
             game_cell = score_entry["element"]
             game_link_element = webpage.GetElement(
                 parent = game_cell,
-                locator = webpage.ElementLocator({"class": "css-g3jcms"}),
+                locator = webpage.ElementLocator({"class": "css-1k3j1r9"}),
                 verbose = verbose)
             if game_link_element:
                 appurl = webpage.GetElementAttribute(game_link_element, "href")
@@ -343,6 +343,7 @@ class Epic(storebase.StoreBase):
                 json_data = {},
                 json_platform = self.GetPlatform())
             purchase.set_value(config.json_key_store_appname, line_appname)
+            purchase.set_value(config.json_key_store_appurl, "")
             purchase.set_value(config.json_key_store_name, line_title)
             purchase.set_value(config.json_key_store_buildid, line_buildid)
             purchases.append(purchase)
@@ -350,6 +351,7 @@ class Epic(storebase.StoreBase):
             # Store data for caching
             purchases_data.append({
                 config.json_key_store_appname: line_appname,
+                config.json_key_store_appurl: "",
                 config.json_key_store_name: line_title,
                 config.json_key_store_buildid: line_buildid
             })
