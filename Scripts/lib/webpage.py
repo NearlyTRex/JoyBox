@@ -210,8 +210,7 @@ def LoadUrl(
             if verbose:
                 system.LogWarning("LoadUrl: Invalid URL provided")
             return False
-        if verbose:
-            system.LogInfo("Loading url %s" % url)
+        system.LogInfo("Loading url %s" % url)
         if not pretend_run:
             driver.get(url)
         return True
@@ -298,11 +297,20 @@ def WaitForAllElements(
     try:
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC
+        if verbose:
+            system.LogInfo("WaitForAllElements: Waiting for all %d element(s) (timeout: %d seconds)" % (len(locators), wait_time))
+            for i, locator in enumerate(locators):
+                system.LogInfo("  Locator %d: %s" % (i + 1, str(locator.Get())))
         conditions = [EC.presence_of_element_located(locator.Get()) for locator in locators]
-        return WebDriverWait(driver, wait_time).until(
+        result = WebDriverWait(driver, wait_time).until(
             EC.all_of(*conditions)
         )
+        if verbose:
+            system.LogInfo("WaitForAllElements: All elements found successfully")
+        return result
     except Exception as e:
+        if verbose:
+            system.LogWarning("WaitForAllElements: Failed to find all elements: %s" % str(e))
         if exit_on_failure:
             system.LogError(e)
             system.QuitProgram()
@@ -319,11 +327,20 @@ def WaitForAnyElement(
     try:
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC
+        if verbose:
+            system.LogInfo("WaitForAnyElement: Waiting for any of %d element(s) (timeout: %d seconds)" % (len(locators), wait_time))
+            for i, locator in enumerate(locators):
+                system.LogInfo("  Locator %d: %s" % (i + 1, str(locator.Get())))
         conditions = [EC.presence_of_element_located(locator.Get()) for locator in locators]
-        return WebDriverWait(driver, wait_time).until(
+        result = WebDriverWait(driver, wait_time).until(
             EC.any_of(*conditions)
         )
+        if verbose:
+            system.LogInfo("WaitForAnyElement: Found at least one element")
+        return result
     except Exception as e:
+        if verbose:
+            system.LogWarning("WaitForAnyElement: Failed to find any elements: %s" % str(e))
         if exit_on_failure:
             system.LogError(e)
             system.QuitProgram()
@@ -358,12 +375,19 @@ def WaitForElement(
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC
         from selenium.common.exceptions import TimeoutException, WebDriverException
+        if verbose:
+            system.LogInfo("WaitForElement: Waiting for element (timeout: %d seconds)" % wait_time)
+            system.LogInfo("  Locator: %s" % str(locator.Get()))
         if not IsSessionValid(driver, verbose):
             return None
-        return WebDriverWait(driver, wait_time).until(EC.presence_of_element_located(locator.Get()))
+        element = WebDriverWait(driver, wait_time).until(EC.presence_of_element_located(locator.Get()))
+        if verbose:
+            system.LogInfo("WaitForElement: Element found successfully")
+        return element
     except TimeoutException:
         if verbose:
             system.LogWarning("WaitForElement: Timeout waiting for element after %d seconds" % wait_time)
+            system.LogWarning("  Locator: %s" % str(locator.Get()))
         return None
     except WebDriverException as e:
         if verbose:
@@ -387,15 +411,25 @@ def GetElement(
     exit_on_failure = False):
     try:
         from selenium.common.exceptions import NoSuchElementException, WebDriverException
+        if verbose:
+            system.LogInfo("GetElement: Searching for element%s" % (" (all instances)" if all_elements else ""))
+            system.LogInfo("  Locator: %s" % str(locator.Get()))
         if not IsSessionValid(parent, verbose):
             return None
         if all_elements:
-            return parent.find_elements(*locator.Get())
+            elements = parent.find_elements(*locator.Get())
+            if verbose:
+                system.LogInfo("GetElement: Found %d element(s)" % len(elements))
+            return elements
         else:
-            return parent.find_element(*locator.Get())
+            element = parent.find_element(*locator.Get())
+            if verbose:
+                system.LogInfo("GetElement: Element found successfully")
+            return element
     except NoSuchElementException:
         if verbose:
             system.LogWarning("GetElement: Element not found")
+            system.LogWarning("  Locator: %s" % str(locator.Get()))
         return None
     except WebDriverException as e:
         if verbose:
@@ -483,9 +517,11 @@ def ClickElement(
                 system.LogWarning("ClickElement: Element is None")
             return False
         if verbose:
-            system.LogInfo("Clicking element")
+            system.LogInfo("ClickElement: Attempting to click element")
         if not pretend_run:
             element.click()
+        if verbose:
+            system.LogInfo("ClickElement: Successfully clicked element")
         return True
     except Exception as e:
         if verbose:
@@ -513,9 +549,11 @@ def SendKeysToElement(
                 system.LogWarning("SendKeysToElement: Keys is None")
             return False
         if verbose:
-            system.LogInfo("Sending keys to element")
+            system.LogInfo("SendKeysToElement: Attempting to send keys to element (%d characters)" % len(str(keys)))
         if not pretend_run:
             element.send_keys(keys)
+        if verbose:
+            system.LogInfo("SendKeysToElement: Successfully sent keys to element")
         return True
     except Exception as e:
         if verbose:
@@ -774,13 +812,23 @@ def GetWebsiteText(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Log attempt
+    if verbose:
+        system.LogInfo("GetWebsiteText: Fetching content from URL: %s" % url)
+        if params:
+            system.LogInfo("  Params: %s" % params)
+
     # First, try webdriver
+    if verbose:
+        system.LogInfo("GetWebsiteText: Attempting to fetch using web driver")
     driver = CreateWebDriver(
         make_headless = True,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if driver:
+        if verbose:
+            system.LogInfo("GetWebsiteText: Web driver created successfully")
         page_text = GetPageSource(
             driver = driver,
             url = url,
@@ -792,17 +840,30 @@ def GetWebsiteText(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return page_text
+        if page_text:
+            if verbose:
+                system.LogInfo("GetWebsiteText: Successfully fetched content using web driver (%d chars)" % len(page_text))
+            return page_text
+        else:
+            if verbose:
+                system.LogWarning("GetWebsiteText: Web driver returned empty content")
 
     # Next, try requests
+    if verbose:
+        system.LogInfo("GetWebsiteText: Attempting to fetch using requests library")
     try:
         import requests
         reqs = requests.get(url, params=params)
+        if verbose:
+            system.LogInfo("GetWebsiteText: Successfully fetched content using requests (%d chars)" % len(reqs.text))
         return reqs.text
     except Exception as e:
-        pass
+        if verbose:
+            system.LogWarning("GetWebsiteText: Requests library failed: %s" % str(e))
 
     # No results
+    if verbose:
+        system.LogWarning("GetWebsiteText: All fetch methods failed, returning empty string")
     return ""
 
 # Get all matching urls
@@ -816,6 +877,13 @@ def GetMatchingUrls(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Log attempt
+    if verbose:
+        system.LogInfo("GetMatchingUrls: Starting URL discovery")
+        system.LogInfo("  URL: %s" % url)
+        system.LogInfo("  Base URL: %s" % base_url)
+        system.LogInfo("  Pattern: starts_with='%s', ends_with='%s'" % (starts_with, ends_with))
+
     # Get page text
     page_text = GetWebsiteText(
         url = url,
@@ -823,11 +891,19 @@ def GetMatchingUrls(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if not page_text:
+        if verbose:
+            system.LogWarning("GetMatchingUrls: Failed to fetch page content")
+        return []
+    if verbose:
+        system.LogInfo("GetMatchingUrls: Successfully fetched page content (%d chars)" % len(page_text))
 
     # Parse the HTML page
     matching_urls = []
     parser = ParseHtmlPageSource(page_text)
     if parser:
+        if verbose:
+            system.LogInfo("GetMatchingUrls: Parsing HTML content for URLs")
 
         # List to store potential URLs
         potential_urls = []
@@ -864,9 +940,19 @@ def GetMatchingUrls(
             potential_urls.append(system.StripStringQueryParams(value))
 
         # Filter URLs that match the starts_with and ends_with patterns
+        if verbose:
+            system.LogInfo("GetMatchingUrls: Found %d potential URLs, filtering by pattern" % len(potential_urls))
         for potential_url in potential_urls:
             if re.match("^%s.*%s$" % (starts_with, ends_with), potential_url):
                 matching_urls.append(potential_url)
+                if verbose:
+                    system.LogInfo("  Matched: %s" % potential_url)
+    else:
+        if verbose:
+            system.LogWarning("GetMatchingUrls: Failed to parse HTML page")
+
+    if verbose:
+        system.LogInfo("GetMatchingUrls: Returning %d matching URL(s)" % len(matching_urls))
     return matching_urls
 
 # Get matching url
@@ -881,6 +967,17 @@ def GetMatchingUrl(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Log attempt
+    if verbose:
+        system.LogInfo("GetMatchingUrl: Searching for matching URL")
+        system.LogInfo("  URL: %s" % url)
+        system.LogInfo("  Base URL: %s" % base_url)
+        system.LogInfo("  Starts with: '%s'" % starts_with)
+        system.LogInfo("  Ends with: '%s'" % ends_with)
+        system.LogInfo("  Get latest: %s" % get_latest)
+        if params:
+            system.LogInfo("  Params: %s" % params)
+
     # Find potential matching archive urls
     potential_urls = GetMatchingUrls(
         url = url,
@@ -894,7 +991,11 @@ def GetMatchingUrl(
 
     # Did not find any matching release
     if len(potential_urls) == 0:
+        if verbose:
+            system.LogWarning("GetMatchingUrl: No matching URLs found")
         return None
+    if verbose:
+        system.LogInfo("GetMatchingUrl: Found %d potential URL(s)" % len(potential_urls))
 
     # Select final url
     matching_url = None
@@ -904,11 +1005,19 @@ def GetMatchingUrl(
             url_tokens = potential_url.split("/")
             if len(url_tokens) > 0:
                 potential_map[url_tokens[-1]] = potential_url
+        if verbose:
+            system.LogInfo("GetMatchingUrl: Sorting %d URLs to find latest" % len(potential_map))
         for potential_key in sorted(potential_map.keys(), reverse = True):
             matching_url = potential_map[potential_key]
+            if verbose:
+                system.LogInfo("GetMatchingUrl: Selected latest URL key: %s" % potential_key)
             break
     else:
         matching_url = potential_urls[0]
+        if verbose:
+            system.LogInfo("GetMatchingUrl: Selected first URL from list")
+    if verbose:
+        system.LogInfo("GetMatchingUrl: Final result: %s" % matching_url)
     return matching_url
 
 ###########################################################
