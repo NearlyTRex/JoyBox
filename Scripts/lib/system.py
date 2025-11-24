@@ -1969,8 +1969,16 @@ def PrunePaths(paths, excludes = []):
 
 # Prune child paths
 def PruneChildPaths(paths):
+    filtered_paths = list(paths)
+    if config.token_game_install_dir in filtered_paths:
+        has_specific_install_paths = any(
+            path.startswith(config.token_game_install_dir + "/")
+            for path in filtered_paths
+        )
+        if has_specific_install_paths:
+            filtered_paths = [p for p in filtered_paths if p != config.token_game_install_dir]
     new_paths = set()
-    for path in SortStrings(paths):
+    for path in SortStrings(filtered_paths):
         if not any(IsParentPath(added_path, path) for added_path in new_paths):
             new_paths.add(path)
     return SortStrings(new_paths)
