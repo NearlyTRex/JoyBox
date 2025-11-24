@@ -381,6 +381,10 @@ class GOG(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
+        # Get existing paths and keys
+        game_paths = list(json_data.get_value(config.json_key_store_paths))
+        game_keys = list(json_data.get_value(config.json_key_store_keys))
+
         # Augment by manifest
         manifest_entry = manifest.GetManifestInstance().find_entry_by_gogid(
             gogid = identifier,
@@ -388,19 +392,19 @@ class GOG(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if manifest_entry:
+            manifest_paths = manifest_entry.get_paths(config.token_game_install_dir)
+            game_paths = list(set(game_paths).union(manifest_paths))
+            game_keys = list(set(game_keys).union(manifest_entry.get_keys()))
 
-            # Get existing paths and keys
-            game_paths = set(json_data.get_value(config.json_key_store_paths))
-            game_keys = set(json_data.get_value(config.json_key_store_keys))
-
-            # Update paths and keys
-            game_paths = game_paths.union(manifest_entry.get_paths(config.token_game_install_dir))
-            game_keys = game_keys.union(manifest_entry.get_keys())
-
-            # Save paths and keys
-            json_data.set_value(config.json_key_store_paths, system.SortStrings(game_paths))
-            json_data.set_value(config.json_key_store_keys, system.SortStrings(game_keys))
-        return json_data
+        # Apply base path cleaning logic
+        json_data.set_value(config.json_key_store_paths, game_paths)
+        json_data.set_value(config.json_key_store_keys, game_keys)
+        return super().AugmentJsondata(
+            json_data = json_data,
+            identifier = identifier,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Get latest jsondata
     def GetLatestJsondata(
