@@ -21,9 +21,7 @@ parser.add_enum_argument(
     default = config.AudioConversionAction.AAX_TO_M4A,
     description = "Conversion action to perform")
 parser.add_input_path_argument(required = True)
-parser.add_string_argument(
-    args = ("-o", "--output_path"),
-    description = "Output file or directory path")
+parser.add_output_path_argument()
 parser.add_string_argument(
     args = ("-k", "--activation_bytes"),
     description = "Audible activation bytes (8 hex characters)")
@@ -45,14 +43,20 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Get input path
+    input_path = parser.get_input_path()
+
+    # Get output path (optional, don't validate existence)
+    output_path = args.output_path
+
     # Execute action
     if args.action == config.AudioConversionAction.AAX_TO_M4A:
 
         # Check if input is a directory or file
-        if system.IsPathDirectory(args.input_path):
+        if system.IsPathDirectory(input_path):
             return audible.DecryptAAXDirectory(
-                input_dir = args.input_path,
-                output_dir = args.output_path,
+                input_dir = input_path,
+                output_dir = output_path,
                 activation_bytes = args.activation_bytes,
                 authcode_file = args.authcode_file,
                 recursive = args.recursive,
@@ -60,19 +64,16 @@ def main():
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
-        elif system.IsPathFile(args.input_path):
+        elif system.IsPathFile(input_path):
             return audible.DecryptAAXToM4A(
-                input_file = args.input_path,
-                output_file = args.output_path,
+                input_file = input_path,
+                output_file = output_path,
                 activation_bytes = args.activation_bytes,
                 authcode_file = args.authcode_file,
                 overwrite = args.overwrite,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
-        else:
-            system.LogError(f"Input path does not exist: {args.input_path}")
-            return False
     else:
         system.LogError(f"Unknown action: {args.action}")
         return False
