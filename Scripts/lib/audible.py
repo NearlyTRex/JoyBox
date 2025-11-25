@@ -11,6 +11,7 @@ import system
 import environment
 import command
 import programs
+import ini
 
 # Extract activation bytes from text (finds 8 hex character sequence)
 def ExtractActivationBytes(text):
@@ -21,10 +22,17 @@ def ExtractActivationBytes(text):
         return match.group(1)
     return None
 
-# Get activation bytes from authcode file or environment
+# Get activation bytes
 def GetActivationBytes(authcode_file = None, verbose = False, exit_on_failure = False):
 
-    # Check authcode file first
+    # Check ini file first
+    authcode = ini.GetIniValue("UserData.Audible", "audible_activation_bytes")
+    if authcode:
+        extracted = ExtractActivationBytes(authcode)
+        if extracted:
+            return extracted
+
+    # Check authcode file
     if authcode_file and system.IsPathFile(authcode_file):
         authcode = system.ReadTextFile(
             src = authcode_file,
