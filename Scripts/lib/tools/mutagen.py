@@ -33,6 +33,10 @@ class Mutagen(toolbase.ToolBase):
             "MutagenID3": {
                 "package_dir": "Mutagen/lib",
                 "package_name": "mutagen.id3"
+            },
+            "MutagenMP4": {
+                "package_dir": "Mutagen/lib",
+                "package_name": "mutagen.mp4"
             }
         }
 
