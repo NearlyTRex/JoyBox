@@ -1792,6 +1792,41 @@ def RemoveObject(obj, verbose = False, pretend_run = False, exit_on_failure = Fa
 
 ###########################################################
 
+# Read text file
+def ReadTextFile(src, verbose = False, exit_on_failure = False):
+    try:
+        if verbose:
+            LogInfo("Reading %s" % src)
+        with open(src, "r", encoding="utf-8") as input_file:
+            return input_file.read()
+    except Exception as e:
+        if exit_on_failure:
+            LogError("Unable to read %s" % src)
+            LogError(e)
+            QuitProgram()
+        return None
+
+# Write text file
+def WriteTextFile(src, contents, verbose = False, pretend_run = False, exit_on_failure = False):
+    try:
+        if verbose:
+            LogInfo("Writing %s" % src)
+        if not pretend_run:
+            parent_dir = os.path.dirname(src)
+            if parent_dir and not os.path.exists(parent_dir):
+                os.makedirs(parent_dir)
+            with open(src, "w", encoding="utf-8", newline='\n') as output_file:
+                output_file.write(contents)
+        return True
+    except Exception as e:
+        if exit_on_failure:
+            LogError("Unable to write %s" % src)
+            LogError(e)
+            QuitProgram()
+        return False
+
+###########################################################
+
 # Parse json string
 def ParseJsonString(string, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
@@ -2319,6 +2354,14 @@ def GetFilenameFrontSlice(path):
 # Get filename file
 def GetFilenameFile(path):
     return GetFilenameBasename(path) + GetFilenameExtension(path)
+
+# Change filename extension
+def ChangeFilenameExtension(path, new_extension):
+    directory = GetFilenameDirectory(path)
+    basename = GetFilenameBasename(path)
+    if directory:
+        return JoinPaths(directory, basename + new_extension)
+    return basename + new_extension
 
 # Get file size
 def GetFileSize(path):

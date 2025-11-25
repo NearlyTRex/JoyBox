@@ -456,6 +456,10 @@ class AudioMetadataAction(EnumType):
     CLEAR                   = ("Clear")
     APPLY                   = ("Apply")
 
+# Audio conversion action types
+class AudioConversionAction(EnumType):
+    AAX_TO_M4A              = ("AaxToM4a")
+
 # Audio genre types
 class AudioGenreType(EnumType):
     ASMR                    = ("ASMR")

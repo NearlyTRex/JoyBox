@@ -74,10 +74,12 @@ class ArgumentParser:
         self,
         args,
         default = None,
+        required = False,
         description = None):
         self.parser.add_argument(
             *args if isinstance(args, tuple) else (args,),
             default = default,
+            required = required,
             type = str,
             help = description)
 
@@ -142,15 +144,19 @@ class ArgumentParser:
     #################################################
 
     # Add input path argument
-    def add_input_path_argument(self, args = ("-i", "--input_path"), default = None, description = "Input path"):
+    def add_input_path_argument(self, args = ("-i", "--input_path"), default = None, required = False, description = "Input path"):
         self.add_string_argument(
             args = args,
+            default = default,
+            required = required,
             description = description)
 
     # Add output path argument
-    def add_output_path_argument(self, args = ("-o", "--output_path"), default = None, description = "Output path"):
+    def add_output_path_argument(self, args = ("-o", "--output_path"), default = None, required = False, description = "Output path"):
         self.add_string_argument(
             args = args,
+            default = default,
+            required = required,
             description = description)
 
     # Get input path
