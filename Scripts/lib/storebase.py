@@ -362,6 +362,10 @@ class StoreBase:
         pretend_run = False,
         exit_on_failure = False):
 
+        # Get existing paths and keys
+        game_paths = list(json_data.get_value(config.json_key_store_paths))
+        game_keys = list(json_data.get_value(config.json_key_store_keys))
+
         # Augment by manifest
         manifest_entry = manifest.GetManifestInstance().find_entry_by_name(
             name = identifier,
@@ -369,26 +373,45 @@ class StoreBase:
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if manifest_entry:
-
-            # Get existing paths and keys
-            game_paths = set(json_data.get_value(config.json_key_store_paths))
-            game_keys = set(json_data.get_value(config.json_key_store_keys))
-
-            # Get base path
             base_path = config.token_game_install_dir
+            manifest_paths = manifest_entry.get_paths(base_path)
+            game_paths = list(set(game_paths).union(manifest_paths))
+            game_keys = list(set(game_keys).union(manifest_entry.get_keys()))
 
-            # Update paths and keys
-            game_paths = list(game_paths.union(manifest_entry.get_paths(base_path)))
-            game_keys = list(game_keys.union(manifest_entry.get_keys()))
+        # Fix malformed paths with duplicate segments
+        cleaned_paths = []
+        for path in game_paths:
+            parts = path.split('/')
+            cleaned_parts = []
+            i = 0
+            while i < len(parts):
+                found_repeat = False
+                for seq_len in range(1, (len(parts) - i) // 2 + 1):
+                    sequence = parts[i:i+seq_len]
+                    next_sequence = parts[i+seq_len:i+seq_len*2]
+                    if sequence == next_sequence and len(sequence) > 0:
+                        cleaned_parts.extend(sequence)
+                        i += seq_len * 2
+                        found_repeat = True
+                        break
+                if not found_repeat:
+                    cleaned_parts.append(parts[i])
+                    i += 1
+            cleaned_path = '/'.join(cleaned_parts)
+            cleaned_paths.append(cleaned_path)
+        game_paths = cleaned_paths
 
-            # Remove invalid paths
-            game_paths = [item for item in game_paths if not item.startswith("C:")]
-            game_paths = [item for item in game_paths if not config.token_store_install_dir in item]
-            game_paths = [item for item in game_paths if not config.token_store_user_id in item]
+        # Remove invalid paths
+        game_paths = [item for item in game_paths if not item.startswith("C:")]
+        game_paths = [item for item in game_paths if config.token_store_install_dir not in item]
+        game_paths = [item for item in game_paths if config.token_store_user_id not in item]
 
-            # Save paths and keys
-            json_data.set_value(config.json_key_store_paths, system.SortStrings(game_paths))
-            json_data.set_value(config.json_key_store_keys, system.SortStrings(game_keys))
+        # Remove duplicate paths
+        game_paths = list(dict.fromkeys(game_paths))
+
+        # Save paths and keys
+        json_data.set_value(config.json_key_store_paths, system.SortStrings(game_paths))
+        json_data.set_value(config.json_key_store_keys, system.SortStrings(game_keys))
         return json_data
 
     # Get latest jsondata
