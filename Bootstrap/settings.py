@@ -144,6 +144,10 @@ ini_defaults["UserData.GitHub"] = {}
 ini_defaults["UserData.GitHub"]["github_username"] = ""
 ini_defaults["UserData.GitHub"]["github_access_token"] = ""
 
+# UserData.Audible
+ini_defaults["UserData.Audible"] = {}
+ini_defaults["UserData.Audible"]["audible_activation_bytes"] = ""
+
 # UserData.Amazon
 ini_defaults["UserData.Amazon"] = {}
 if util.is_windows_platform():
