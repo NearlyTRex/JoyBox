@@ -30,12 +30,18 @@ class AudioMetadata:
         self.mutagen_id3 = environment.ImportPythonModulePackage(
             module_path = programs.GetToolPathConfigValue("MutagenID3", "package_dir"),
             module_name = programs.GetToolConfigValue("MutagenID3", "package_name"))
-        if self.mutagen is None or self.mutagen_mp3 is None or self.mutagen_id3 is None:
+        self.mutagen_mp4 = environment.ImportPythonModulePackage(
+            module_path = programs.GetToolPathConfigValue("MutagenMP4", "package_dir"),
+            module_name = programs.GetToolConfigValue("MutagenMP4", "package_name"))
+        if self.mutagen is None or self.mutagen_mp3 is None or self.mutagen_id3 is None or self.mutagen_mp4 is None:
             raise ImportError("Failed to import mutagen modules")
 
         # Store MP3 and ID3 classes
         self.mp3_class = self.mutagen_mp3.MP3
         self.id3_class = self.mutagen_id3.ID3
+
+        # Store MP4 class
+        self.mp4_class = self.mutagen_mp4.MP4
 
         # Store frame classes by code
         self.id3_frame_classes = {
@@ -73,7 +79,7 @@ class AudioMetadata:
         self.comment_class = self.id3_frame_classes["COMM"]
         self.artwork_class = self.id3_frame_classes["APIC"]
 
-        # Text frame mappings
+        # Text frame mappings for ID3 (MP3)
         self.text_mappings = {
             "TIT2": "title",
             "TPE1": "artist",
@@ -87,6 +93,32 @@ class AudioMetadata:
             "TKEY": "key",
             "TPE3": "conductor"
         }
+
+        # MP4 tag mappings (iTunes-style tags)
+        self.mp4_tag_mappings = {
+            "\xa9nam": "title",
+            "\xa9ART": "artist",
+            "\xa9alb": "album",
+            "\xa9day": "year",
+            "\xa9gen": "genre",
+            "aART": "album_artist",
+            "trkn": "track_number",
+            "disk": "disc_number",
+            "tmpo": "bpm",
+            "\xa9wrt": "composer",
+            "\xa9cmt": "comment",
+            "\xa9too": "encoder",
+            "cprt": "copyright",
+            "desc": "description",
+            "\xa9lyr": "lyrics",
+            "purd": "purchase_date",
+            "soar": "sort_artist",
+            "soal": "sort_album",
+            "sonm": "sort_title"
+        }
+
+        # Reverse mapping for setting MP4 tags
+        self.mp4_key_to_tag = {v: k for k, v in self.mp4_tag_mappings.items()}
 
     def get_id3_tags(
         self,
@@ -279,6 +311,346 @@ class AudioMetadata:
         audio = self.mp3_class(audio_file, ID3 = self.id3_class)
         return audio.tags is not None and len(audio.tags) > 0
 
+    ###########################################################
+    # MP4/M4A Tag Methods
+    ###########################################################
+
+    def get_mp4_tags(
+        self,
+        audio_file,
+        include_artwork = True,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Check file exists
+        if not system.IsPathFile(audio_file):
+            system.LogError(f"Audio file not found: {audio_file}")
+            return None
+
+        # Read tags from audio file
+        system.LogInfo(f"Reading MP4 tags from {audio_file}")
+        try:
+            audio = self.mp4_class(audio_file)
+        except Exception as e:
+            system.LogError(f"Failed to load MP4 file: {e}")
+            return None
+        if audio.tags is None:
+            return {}
+
+        # Extract text tags
+        tags = {}
+        for mp4_key, tag_name in self.mp4_tag_mappings.items():
+            if mp4_key in audio.tags:
+                value = audio.tags[mp4_key]
+                if isinstance(value, list) and len(value) > 0:
+                    if isinstance(value[0], tuple):
+                        num, total = value[0]
+                        tags[tag_name] = f"{num}/{total}" if total else str(num)
+                    else:
+                        tags[tag_name] = str(value[0])
+
+        # Extract artwork
+        if include_artwork and "covr" in audio.tags:
+            artwork = []
+            for cover in audio.tags["covr"]:
+                if hasattr(cover, "imageformat"):
+                    if cover.imageformat == self.mutagen_mp4.MP4Cover.FORMAT_JPEG:
+                        mime_type = "image/jpeg"
+                    elif cover.imageformat == self.mutagen_mp4.MP4Cover.FORMAT_PNG:
+                        mime_type = "image/png"
+                    else:
+                        mime_type = "image/jpeg"
+                else:
+                    mime_type = "image/jpeg"
+                artwork_data = {
+                    "type": 3,  # Front cover
+                    "desc": "",
+                    "mime": mime_type,
+                    "data": base64.b64encode(bytes(cover)).decode("utf-8")
+                }
+                artwork.append(artwork_data)
+            if artwork:
+                tags["artwork"] = artwork
+        return tags
+
+    def set_mp4_tags(
+        self,
+        audio_file,
+        tags,
+        clear_existing = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check file exists
+        if not system.IsPathFile(audio_file):
+            system.LogError(f"Audio file not found: {audio_file}")
+            return False
+
+        # Load audio file
+        system.LogInfo(f"Setting MP4 tags on {audio_file}")
+        try:
+            audio = self.mp4_class(audio_file)
+        except Exception as e:
+            system.LogError(f"Failed to load MP4 file: {e}")
+            return False
+
+        # Add tags if they don't exist
+        if audio.tags is None:
+            audio.add_tags()
+
+        # Clear existing tags if requested
+        if clear_existing:
+            audio.tags.clear()
+
+        # Set text tags
+        for tag_name, mp4_key in self.mp4_key_to_tag.items():
+            if tag_name in tags:
+                value = tags[tag_name]
+                if tag_name in ["track_number", "disc_number"]:
+                    if "/" in str(value):
+                        num, total = str(value).split("/", 1)
+                        audio.tags[mp4_key] = [(int(num), int(total))]
+                    else:
+                        audio.tags[mp4_key] = [(int(value), 0)]
+                elif tag_name == "bpm":
+                    audio.tags[mp4_key] = [int(value)]
+                else:
+                    audio.tags[mp4_key] = [str(value)]
+
+        # Set artwork
+        if "artwork" in tags:
+            covers = []
+            for artwork in tags["artwork"]:
+                image_data = base64.b64decode(artwork["data"])
+                mime_type = artwork.get("mime", "image/jpeg")
+                if "png" in mime_type.lower():
+                    img_format = self.mutagen_mp4.MP4Cover.FORMAT_PNG
+                else:
+                    img_format = self.mutagen_mp4.MP4Cover.FORMAT_JPEG
+                covers.append(self.mutagen_mp4.MP4Cover(image_data, imageformat = img_format))
+            if covers:
+                audio.tags["covr"] = covers
+
+        # Save changes
+        if not pretend_run:
+            audio.save()
+        return True
+
+    def remove_mp4_tags(
+        self,
+        audio_file,
+        preserve_artwork = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check file exists
+        if not system.IsPathFile(audio_file):
+            system.LogError(f"Audio file not found: {audio_file}")
+            return False
+
+        # Load audio file
+        system.LogInfo(f"Removing MP4 tags from {audio_file}")
+        try:
+            audio = self.mp4_class(audio_file)
+        except Exception as e:
+            system.LogError(f"Failed to load MP4 file: {e}")
+            return False
+
+        # No tags to remove
+        if audio.tags is None:
+            return True
+
+        # Preserve artwork if requested
+        preserved_covers = None
+        if preserve_artwork and "covr" in audio.tags:
+            preserved_covers = audio.tags["covr"]
+
+        # Delete all tags
+        audio.delete()
+
+        # Restore artwork if preserved
+        if preserve_artwork and preserved_covers:
+            audio.add_tags()
+            audio.tags["covr"] = preserved_covers
+
+        # Save changes
+        if not pretend_run:
+            audio.save()
+        return True
+
+    def has_mp4_tags(self, audio_file):
+
+        # Check file exists
+        if not system.IsPathFile(audio_file):
+            return False
+
+        # Load and check tags
+        try:
+            audio = self.mp4_class(audio_file)
+            return audio.tags is not None and len(audio.tags) > 0
+        except:
+            return False
+
+    def get_mp4_file_info(self, audio_file, verbose = False, exit_on_failure = False):
+
+        # Check file exists
+        if not system.IsPathFile(audio_file):
+            system.LogError(f"Audio file not found: {audio_file}")
+            return None
+
+        # Get audio info
+        try:
+            audio = self.mp4_class(audio_file)
+            file_info = {
+                "path": audio_file,
+                "size": os.path.getsize(audio_file),
+                "bitrate": getattr(audio.info, "bitrate", 0),
+                "length": getattr(audio.info, "length", 0),
+                "sample_rate": getattr(audio.info, "sample_rate", 0),
+                "channels": getattr(audio.info, "channels", 0),
+                "has_tags": audio.tags is not None,
+                "codec": getattr(audio.info, "codec", None)
+            }
+            return file_info
+        except Exception as e:
+            system.LogError(f"Failed to get MP4 file info: {e}")
+            return None
+
+    ###########################################################
+    # Generic Methods (auto-detect format)
+    ###########################################################
+
+    def get_tags(
+        self,
+        audio_file,
+        include_artwork = True,
+        exclude_comments = False,
+        verbose = False,
+        exit_on_failure = False):
+
+        # Check file exists
+        if not system.IsPathFile(audio_file):
+            system.LogError(f"Audio file not found: {audio_file}")
+            return None
+
+        # Detect format by extension
+        ext = system.GetFilenameExtension(audio_file).lower()
+        if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
+            return self.get_mp4_tags(
+                audio_file = audio_file,
+                include_artwork = include_artwork,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+        else:
+            return self.get_id3_tags(
+                audio_file = audio_file,
+                include_artwork = include_artwork,
+                exclude_comments = exclude_comments,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+    def set_tags(
+        self,
+        audio_file,
+        tags,
+        clear_existing = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check file exists
+        if not system.IsPathFile(audio_file):
+            system.LogError(f"Audio file not found: {audio_file}")
+            return False
+
+        # Detect format by extension
+        ext = system.GetFilenameExtension(audio_file).lower()
+        if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
+            return self.set_mp4_tags(
+                audio_file = audio_file,
+                tags = tags,
+                clear_existing = clear_existing,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        else:
+            return self.set_id3_tags(
+                audio_file = audio_file,
+                tags = tags,
+                clear_existing = clear_existing,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
+    def remove_tags(
+        self,
+        audio_file,
+        preserve_artwork = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Check file exists
+        if not system.IsPathFile(audio_file):
+            system.LogError(f"Audio file not found: {audio_file}")
+            return False
+
+        # Detect format by extension
+        ext = system.GetFilenameExtension(audio_file).lower()
+        if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
+            return self.remove_mp4_tags(
+                audio_file = audio_file,
+                preserve_artwork = preserve_artwork,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        else:
+            return self.remove_id3_tags(
+                audio_file = audio_file,
+                preserve_artwork = preserve_artwork,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
+    def has_tags(self, audio_file):
+
+        # Check file exists
+        if not system.IsPathFile(audio_file):
+            return False
+
+        # Detect format by extension
+        ext = system.GetFilenameExtension(audio_file).lower()
+        if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
+            return self.has_mp4_tags(audio_file)
+        else:
+            return self.has_id3_tags(audio_file)
+
+    def get_file_info(self, audio_file, verbose = False, exit_on_failure = False):
+
+        # Check file exists
+        if not system.IsPathFile(audio_file):
+            system.LogError(f"Audio file not found: {audio_file}")
+            return None
+
+        # Detect format by extension
+        ext = system.GetFilenameExtension(audio_file).lower()
+        if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
+            return self.get_mp4_file_info(
+                audio_file = audio_file,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+        else:
+            return self.get_audio_file_info(
+                audio_file = audio_file,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+    ###########################################################
+    # Album-level Methods
+    ###########################################################
+
     def get_audio_file_info(self, audio_file, verbose = False, exit_on_failure = False):
 
         # Check file exists
@@ -314,23 +686,23 @@ class AudioMetadata:
             system.LogError(f"Album directory not found: {album_dir}")
             return None
 
-        # Get all MP3 files
-        mp3_files = system.BuildFileListByExtensions(album_dir, extensions=['.mp3'])
-        if not mp3_files:
-            system.LogWarning(f"No MP3 files found in {album_dir}")
+        # Get all audio files (MP3 and M4A/M4B)
+        audio_files = system.BuildFileListByExtensions(album_dir, extensions=['.mp3', '.m4a', '.m4b', '.mp4', '.aac'])
+        if not audio_files:
+            system.LogWarning(f"No audio files found in {album_dir}")
             return None
 
         # Sort files by name
-        mp3_files.sort()
+        audio_files.sort()
 
         # Extract tags from all tracks
         tracks = []
         album_info = {}
         album_artwork = None
         album_artwork_hash = None
-        for track_index, mp3_file in enumerate(mp3_files, 1):
-            tags = self.get_id3_tags(
-                mp3_file,
+        for track_index, audio_file in enumerate(audio_files, 1):
+            tags = self.get_tags(
+                audio_file,
                 include_artwork = True,
                 exclude_comments = exclude_comments,
                 verbose = verbose,
@@ -365,7 +737,7 @@ class AudioMetadata:
 
                 # Store track info
                 track_info = {
-                    "filename": system.GetFilenameFile(mp3_file),
+                    "filename": system.GetFilenameFile(audio_file),
                     "tags": track_tags
                 }
 
@@ -421,8 +793,8 @@ class AudioMetadata:
 
         # Apply tags
         for track in album_metadata["tracks"]:
-            mp3_file = system.JoinPaths(album_dir, track["filename"])
-            if system.IsPathFile(mp3_file):
+            audio_file = system.JoinPaths(album_dir, track["filename"])
+            if system.IsPathFile(audio_file):
 
                 # Prepare tags for this track
                 track_tags = track["tags"].copy()
@@ -433,9 +805,9 @@ class AudioMetadata:
                 elif album_artwork:
                     track_tags["artwork"] = [album_artwork]
 
-                # Set ID3 tags
-                if not self.set_id3_tags(
-                    mp3_file,
+                # Set tags (auto-detects format)
+                if not self.set_tags(
+                    audio_file,
                     track_tags,
                     clear_existing = clear_existing,
                     verbose = verbose,
@@ -443,7 +815,7 @@ class AudioMetadata:
                     exit_on_failure = exit_on_failure):
                     return False
             else:
-                system.LogError(f"Track file not found: {mp3_file}")
+                system.LogError(f"Track file not found: {audio_file}")
                 return False
         return True
 
@@ -460,13 +832,13 @@ class AudioMetadata:
             system.LogError(f"Album directory not found: {album_dir}")
             return False
 
-        # Get all MP3 files
-        mp3_files = system.BuildFileListByExtensions(album_dir, extensions=['.mp3'])
+        # Get all audio files (MP3 and M4A/M4B)
+        audio_files = system.BuildFileListByExtensions(album_dir, extensions=['.mp3', '.m4a', '.m4b', '.mp4', '.aac'])
 
-        # Remove ID3 tags
-        for mp3_file in mp3_files:
-            if not self.remove_id3_tags(
-                mp3_file,
+        # Remove tags (auto-detects format)
+        for audio_file in audio_files:
+            if not self.remove_tags(
+                audio_file,
                 preserve_artwork = preserve_artwork,
                 verbose = verbose,
                 pretend_run = pretend_run,
