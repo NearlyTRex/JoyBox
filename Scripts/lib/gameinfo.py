@@ -1025,3 +1025,104 @@ def DeriveGameCategoriesFromFile(game_file):
     return (derived_supercategory, derived_category, derived_subcategory)
 
 ###########################################################
+
+# Iterate selected game categories
+def IterateSelectedGameCategories(
+    parser,
+    generation_mode = None,
+    game_supercategories = None,
+    game_subcategory_map = None):
+
+    # Determine generation mode
+    args, unknown = parser.parse_known_args()
+    if generation_mode is None:
+        generation_mode = getattr(args, "generation_mode", config.GenerationModeType.STANDARD)
+
+    # Custom mode - yield single category tuple from explicit args
+    if generation_mode == config.GenerationModeType.CUSTOM:
+        if not args.game_category:
+            raise ValueError("Game category is required for custom mode")
+        if not args.game_subcategory:
+            raise ValueError("Game subcategory is required for custom mode")
+        yield (args.game_supercategory, args.game_category, args.game_subcategory)
+        return
+
+    # Standard mode - iterate filesystem
+    if game_supercategories is None:
+        game_supercategories = parser.get_selected_supercategories()
+    if game_subcategory_map is None:
+        game_subcategory_map = parser.get_selected_subcategories()
+    for game_supercategory in game_supercategories:
+        for game_category, game_subcategories in game_subcategory_map.items():
+            for game_subcategory in game_subcategories:
+                yield (game_supercategory, game_category, game_subcategory)
+
+###########################################################
+
+# Iterate selected game infos
+def IterateSelectedGameInfos(
+    parser,
+    generation_mode = None,
+    source_type = None,
+    game_supercategories = None,
+    game_subcategory_map = None,
+    game_name_filter = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Determine generation mode
+    args, unknown = parser.parse_known_args()
+    if generation_mode is None:
+        generation_mode = getattr(args, "generation_mode", config.GenerationModeType.STANDARD)
+
+    # Custom mode - yield single GameInfo from explicit args
+    if generation_mode == config.GenerationModeType.CUSTOM:
+        if not args.game_category:
+            raise ValueError("Game category is required for custom mode")
+        if not args.game_subcategory:
+            raise ValueError("Game subcategory is required for custom mode")
+        if not args.game_name:
+            raise ValueError("Game name is required for custom mode")
+        yield GameInfo(
+            game_supercategory = args.game_supercategory,
+            game_category = args.game_category,
+            game_subcategory = args.game_subcategory,
+            game_name = args.game_name,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return
+
+    # Standard mode - iterate filesystem
+    if game_name_filter is None:
+        game_name_filter = getattr(args, "game_name", None)
+    for game_supercategory, game_category, game_subcategory in IterateSelectedGameCategories(
+        parser = parser,
+        generation_mode = generation_mode,
+        game_supercategories = game_supercategories,
+        game_subcategory_map = game_subcategory_map):
+        if source_type is not None:
+            game_names = FindLockerGameNames(
+                game_supercategory,
+                game_category,
+                game_subcategory,
+                source_type)
+        else:
+            game_names = FindJsonGameNames(
+                game_supercategory,
+                game_category,
+                game_subcategory)
+        if game_name_filter:
+            game_names = [g for g in game_names if g == game_name_filter]
+        for game_name in game_names:
+            yield GameInfo(
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = game_name,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
+###########################################################
