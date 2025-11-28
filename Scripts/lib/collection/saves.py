@@ -309,7 +309,9 @@ def GetStorePathEntries(
     paths = store_obj.AddPathVariants(paths)
 
     # Get translation map
-    translation_map = store_obj.BuildPathTranslationMap()
+    translation_map = store_obj.BuildPathTranslationMap(
+        appid = game_info.get_store_appid(),
+        appname = game_info.get_store_name())
 
     # Translate paths
     translated_paths = []
