@@ -76,12 +76,22 @@ class ArgumentParser:
         default = None,
         required = False,
         description = None):
-        self.parser.add_argument(
-            *args if isinstance(args, tuple) else (args,),
-            default = default,
-            required = required,
-            type = str,
-            help = description)
+        arg_names = args if isinstance(args, tuple) else (args,)
+        is_positional = not arg_names[0].startswith("-")
+        if is_positional:
+            self.parser.add_argument(
+                *arg_names,
+                default = default,
+                nargs = "?" if default is not None else None,
+                type = str,
+                help = description)
+        else:
+            self.parser.add_argument(
+                *arg_names,
+                default = default,
+                required = required,
+                type = str,
+                help = description)
 
     # Add boolean argument
     def add_boolean_argument(
