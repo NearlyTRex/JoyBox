@@ -3,6 +3,7 @@ import os
 import os.path
 import sys
 import re
+import datetime
 
 # Local imports
 import config
@@ -359,6 +360,56 @@ def GetPathMD5(
         return md5sum_parts[0]
     return None
 
+# Get path modification time as timestamp
+def GetPathModTime(
+    remote_name,
+    remote_type,
+    remote_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get rclone tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
+        return None
+
+    # Get lsl command (outputs: size modtime filename)
+    lsl_cmd = [
+        rclone_tool,
+        "lsl",
+        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+    ]
+
+    # Run lsl command
+    lsl_output = command.RunOutputCommand(
+        cmd = lsl_cmd,
+        options = command.CreateCommandOptions(
+            blocking_processes = [rclone_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Parse output (format: "  size YYYY-MM-DD HH:MM:SS.nnnnnnnnn filename")
+    lsl_text = lsl_output
+    if isinstance(lsl_output, bytes):
+        lsl_text = lsl_output.decode()
+    if "error" in lsl_text.lower() or "not found" in lsl_text.lower():
+        return None
+
+    # Extract timestamp from lsl output
+    match = re.search(r'(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})', lsl_text)
+    if match:
+        try:
+            dt = datetime.datetime.strptime(match.group(1), "%Y-%m-%d %H:%M:%S")
+            return dt.timestamp()
+        except:
+            return None
+    return None
+
 # Check if path matches md5
 def DoesPathMatchMD5(
     remote_name,
@@ -475,6 +526,7 @@ def DownloadFilesFromRemote(
     remote_path,
     local_path,
     excludes = None,
+    files_from = None,
     interactive = False,
     verbose = False,
     pretend_run = False,
@@ -500,6 +552,8 @@ def DownloadFilesFromRemote(
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.DOWNLOAD)
     copy_cmd += GetExcludeFlags(excludes)
+    if files_from and system.IsPathFile(files_from):
+        copy_cmd += ["--files-from", files_from]
     if pretend_run:
         copy_cmd += ["--dry-run"]
     if interactive:
@@ -525,6 +579,7 @@ def UploadFilesToRemote(
     remote_path,
     local_path,
     excludes = None,
+    files_from = None,
     interactive = False,
     verbose = False,
     pretend_run = False,
@@ -550,6 +605,8 @@ def UploadFilesToRemote(
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.UPLOAD)
     copy_cmd += GetExcludeFlags(excludes)
+    if files_from and system.IsPathFile(files_from):
+        copy_cmd += ["--files-from", files_from]
     if pretend_run:
         copy_cmd += ["--dry-run"]
     if interactive:
@@ -808,6 +865,157 @@ def DiffFiles(
         system.LogInfo("Number of files only on %s%s: %d" % (GetRemoteRawType(remote_type), remote_path, count_only_dest))
         system.LogInfo("Number of files only on %s: %d" % (local_path, count_only_src))
         system.LogInfo("Number of error files: %d" % count_error)
+
+# Diff sync files
+def DiffSyncFiles(
+    remote_name,
+    remote_type,
+    remote_path,
+    local_path,
+    excludes = None,
+    diff_dir = None,
+    sync_changed = True,
+    quick = False,
+    interactive = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Setup diff directory
+    if not diff_dir:
+        diff_dir = os.path.join(environment.GetCacheDir(), "diffsync", remote_name)
+    system.MakeDirectory(
+        src = diff_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Setup diff file paths
+    diff_missing_src_path = os.path.join(diff_dir, "diff_missing_src.txt")
+    diff_missing_dest_path = os.path.join(diff_dir, "diff_missing_dest.txt")
+    diff_intersected_path = os.path.join(diff_dir, "diff_intersected.txt")
+    diff_combined_path = os.path.join(diff_dir, "diff_combined.txt")
+
+    # Run diff to get missing files
+    system.LogInfo("Running diff to identify file differences...")
+    DiffFiles(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = remote_path,
+        local_path = local_path,
+        excludes = excludes,
+        diff_combined_path = diff_combined_path,
+        diff_intersected_path = diff_intersected_path,
+        diff_missing_src_path = diff_missing_src_path,
+        diff_missing_dest_path = diff_missing_dest_path,
+        quick = quick,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Read files missing on dest (need to upload from local)
+    files_to_upload = []
+    if os.path.exists(diff_missing_dest_path):
+        with open(diff_missing_dest_path, "r", encoding="utf8") as f:
+            files_to_upload = [line.strip() for line in f.readlines() if line.strip()]
+
+    # Read files missing on src (need to download from remote)
+    files_to_download = []
+    if os.path.exists(diff_missing_src_path):
+        with open(diff_missing_src_path, "r", encoding="utf8") as f:
+            files_to_download = [line.strip() for line in f.readlines() if line.strip()]
+
+    # Read changed files (exist on both but differ)
+    changed_files = []
+    if sync_changed and os.path.exists(diff_intersected_path):
+        with open(diff_intersected_path, "r", encoding="utf8") as f:
+            changed_files = [line.strip() for line in f.readlines() if line.strip()]
+
+    # Log file change
+    system.LogInfo("Files to upload (missing on remote): %d" % len(files_to_upload))
+    system.LogInfo("Files to download (missing on local): %d" % len(files_to_download))
+    system.LogInfo("Files changed (differ on both): %d" % len(changed_files))
+
+    # Handle changed files by comparing modification times
+    if changed_files:
+        system.LogInfo("Comparing modification times for changed files...")
+        changed_to_upload = []
+        changed_to_download = []
+        for file_path in changed_files:
+            local_file = os.path.join(local_path, file_path)
+            remote_file_path = os.path.join(remote_path, file_path).replace("\\", "/")
+
+            # Get local modtime
+            local_mtime = system.GetFileModTime(local_file)
+
+            # Get remote modtime
+            remote_mtime = GetPathModTime(
+                remote_name = remote_name,
+                remote_type = remote_type,
+                remote_path = remote_file_path,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if local_mtime is None or remote_mtime is None:
+                if verbose:
+                    system.LogWarning("Could not get modtime for: %s" % file_path)
+                continue
+
+            # Add to changes lists
+            if local_mtime > remote_mtime:
+                if verbose:
+                    system.LogInfo("Local is newer: %s" % file_path)
+                changed_to_upload.append(file_path)
+            elif remote_mtime > local_mtime:
+                if verbose:
+                    system.LogInfo("Remote is newer: %s" % file_path)
+                changed_to_download.append(file_path)
+
+        # Add changed files to upload/download lists
+        system.LogInfo("Changed files to upload (local newer): %d" % len(changed_to_upload))
+        system.LogInfo("Changed files to download (remote newer): %d" % len(changed_to_download))
+        files_to_upload.extend(changed_to_upload)
+        files_to_download.extend(changed_to_download)
+
+    # Upload files
+    if files_to_upload:
+        final_upload_path = os.path.join(diff_dir, "final_upload.txt")
+        with open(final_upload_path, "w", encoding="utf8") as f:
+            f.write("\n".join(files_to_upload))
+        system.LogInfo("Uploading %d files to remote..." % len(files_to_upload))
+        if not UploadFilesToRemote(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_path = remote_path,
+            local_path = local_path,
+            files_from = final_upload_path,
+            interactive = interactive,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure):
+            return False
+
+    # Download files
+    if files_to_download:
+        final_download_path = os.path.join(diff_dir, "final_download.txt")
+        with open(final_download_path, "w", encoding="utf8") as f:
+            f.write("\n".join(files_to_download))
+        system.LogInfo("Downloading %d files from remote..." % len(files_to_download))
+        if not DownloadFilesFromRemote(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_path = remote_path,
+            local_path = local_path,
+            files_from = final_download_path,
+            interactive = interactive,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure):
+            return False
+
+    # Done
+    system.LogInfo("DiffSync complete!")
+    return True
 
 # List files
 def ListFiles(
