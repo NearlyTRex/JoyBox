@@ -857,11 +857,11 @@ def FindAllGameNames(base_dir, game_supercategory, game_category, game_subcatego
     # Collect game names
     game_names = []
     if platforms.IsLetterPlatform(game_platform):
-        for game_letter in system.GetDirectoryContents(base_path):
-            for game_name in system.GetDirectoryContents(system.JoinPaths(base_path, game_letter)):
+        for game_letter in sorted(system.GetDirectoryContents(base_path)):
+            for game_name in sorted(system.GetDirectoryContents(system.JoinPaths(base_path, game_letter))):
                 game_names.append(game_name)
     else:
-        for game_name in system.GetDirectoryContents(base_path):
+        for game_name in sorted(system.GetDirectoryContents(base_path)):
             game_names.append(game_name)
     return game_names
 
@@ -1052,9 +1052,9 @@ def IterateSelectedGameCategories(
         game_supercategories = parser.get_selected_supercategories()
     if game_subcategory_map is None:
         game_subcategory_map = parser.get_selected_subcategories()
-    for game_supercategory in game_supercategories:
-        for game_category, game_subcategories in game_subcategory_map.items():
-            for game_subcategory in game_subcategories:
+    for game_supercategory in sorted(game_supercategories):
+        for game_category, game_subcategories in sorted(game_subcategory_map.items()):
+            for game_subcategory in sorted(game_subcategories):
                 yield (game_supercategory, game_category, game_subcategory)
 
 ###########################################################
