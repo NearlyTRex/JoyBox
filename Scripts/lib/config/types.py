@@ -266,6 +266,8 @@ class SaveType(EnumType):
 class SaveActionType(EnumType):
     PACK                    = ("Pack")
     UNPACK                  = ("Unpack")
+    IMPORT                  = ("Import")
+    EXPORT                  = ("Export")
     IMPORT_SAVE_PATHS       = ("ImportSavePaths")
 
 # Remote types
@@ -284,6 +286,7 @@ class RemoteActionType(EnumType):
     PUSH                    = ("Push")
     MERGE                   = ("Merge")
     DIFF                    = ("Diff")
+    DIFFSYNC                = ("DiffSync")
     LIST                    = ("List")
     MOUNT                   = ("Mount")
 
