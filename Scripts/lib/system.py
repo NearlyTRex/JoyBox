@@ -2386,6 +2386,13 @@ def GetFileAgeInHours(path):
     except:
         return float('inf')  # Return infinite age if file doesn't exist or error
 
+# Get file modification time as timestamp
+def GetFileModTime(path):
+    try:
+        return os.path.getmtime(path)
+    except:
+        return None
+
 # Get filename info
 def GetFilenameInfo(path):
     info = {}
