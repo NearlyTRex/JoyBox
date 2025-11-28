@@ -89,7 +89,7 @@ class Manifest:
                 continue
             if "id" not in manifest_entry["steam"]:
                 continue
-            if int(manifest_entry["steam"]["id"]) != int(steamid):
+            if int(manifest_entry["steam"]["id"]) == int(steamid):
                 return ManifestEntry(manifest_entry)
         return None
 
@@ -100,7 +100,7 @@ class Manifest:
                 continue
             if "id" not in manifest_entry["gog"]:
                 continue
-            if int(manifest_entry["gog"]["id"]) != int(gogid):
+            if int(manifest_entry["gog"]["id"]) == int(gogid):
                 return ManifestEntry(manifest_entry)
         return None
 

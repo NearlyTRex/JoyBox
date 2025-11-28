@@ -559,7 +559,7 @@ class Steam(storebase.StoreBase):
                     config.token_store_install_dir,
                     "steamapps",
                     "common",
-                    json_data.get_key(config.json_key_store_installdir))
+                    json_data.get_value(config.json_key_store_installdir))
             manifest_paths = manifest_entry.get_paths(base_path)
             game_paths = list(set(game_paths).union(manifest_paths))
             game_keys = list(set(game_keys).union(manifest_entry.get_keys()))

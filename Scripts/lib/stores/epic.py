@@ -442,7 +442,7 @@ class Epic(storebase.StoreBase):
             if json_data.has_key(config.json_key_store_installdir):
                 base_path = system.JoinPaths(
                     config.token_game_install_dir,
-                    json_data.get_key(config.json_key_store_installdir)
+                    json_data.get_value(config.json_key_store_installdir)
                 )
             json_data.set_value(config.json_key_store_paths, [
                 storebase.CreateTokenizedPath(cloud_save_folder.strip(), base_path)
