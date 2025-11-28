@@ -41,6 +41,34 @@ class EnumType(enum.Enum):
             return self.val() == other
         return False
 
+    def __lt__(self, other):
+        if isinstance(other, EnumType):
+            return self.val() < other.val()
+        if isinstance(other, str):
+            return self.val() < other
+        return NotImplemented
+
+    def __le__(self, other):
+        if isinstance(other, EnumType):
+            return self.val() <= other.val()
+        if isinstance(other, str):
+            return self.val() <= other
+        return NotImplemented
+
+    def __gt__(self, other):
+        if isinstance(other, EnumType):
+            return self.val() > other.val()
+        if isinstance(other, str):
+            return self.val() > other
+        return NotImplemented
+
+    def __ge__(self, other):
+        if isinstance(other, EnumType):
+            return self.val() >= other.val()
+        if isinstance(other, str):
+            return self.val() >= other
+        return NotImplemented
+
     def __contains__(cls, other):
         if isinstance(other, cls):
             return other in cls.members()
