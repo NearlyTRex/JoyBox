@@ -11,6 +11,7 @@ import locker
 import gameinfo
 import stores
 import storebase
+import hashing
 
 ############################################################
 
@@ -33,7 +34,7 @@ def CanSaveBePacked(game_info):
 
 # Can save be unpacked
 def CanSaveBeUnpacked(game_info):
-    input_save_dir = game_info.get_remote_save_dir()
+    input_save_dir = game_info.get_local_save_dir()
     output_save_dir = game_info.get_save_dir()
     return IsSaveDirUnpackable(input_save_dir, output_save_dir)
 
@@ -51,9 +52,14 @@ def PackSave(
     input_save_dir = save_dir
     if not input_save_dir:
         input_save_dir = game_info.get_save_dir()
-    output_save_dir = game_info.get_remote_save_dir()
+    output_save_dir = game_info.get_local_save_dir()
     if not IsSaveDirPackable(input_save_dir, output_save_dir):
+        if verbose:
+            system.LogInfo(f"No save data found for {game_info.get_name()}")
         return False
+
+    # Log packing
+    system.LogInfo(f"Packing save for {game_info.get_name()}")
 
     # Make output save dir
     system.MakeDirectory(
@@ -108,7 +114,24 @@ def PackSave(
             game_subcategory = game_info.get_subcategory())
         return False
 
+    # Check if already archived
+    found_files = hashing.FindDuplicateArchives(
+        filename = tmp_save_archive_file,
+        directory = output_save_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if len(found_files) > 0:
+        system.LogInfo("Save is already packed, skipping")
+        system.RemoveDirectory(
+            src = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return True
+
     # Backup archive
+    system.LogInfo(f"Backing up save to {output_save_dir}")
     success = locker.BackupFiles(
         src = tmp_save_archive_file,
         dest = out_save_archive_file,
@@ -132,6 +155,9 @@ def PackSave(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+
+    # Log success
+    system.LogInfo("Save packed successfully")
 
     # Check result
     return system.DoesPathExist(out_save_archive_file)
@@ -181,10 +207,15 @@ def UnpackSave(
     # Get save dirs
     input_save_dir = save_dir
     if not input_save_dir:
-        input_save_dir = game_info.get_remote_save_dir()
+        input_save_dir = game_info.get_local_save_dir()
     output_save_dir = game_info.get_save_dir()
     if not IsSaveDirUnpackable(input_save_dir, output_save_dir):
+        if verbose:
+            system.LogInfo(f"No packed save found for {game_info.get_name()}")
         return False
+
+    # Log unpacking
+    system.LogInfo(f"Unpacking save for {game_info.get_name()}")
 
     # Make output save dir
     system.MakeDirectory(
@@ -193,21 +224,20 @@ def UnpackSave(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not system.IsDirectoryEmpty(output_save_dir):
-        if verbose:
-            system.LogInfo(
-                message = "Save already unpacked",
-                game_supercategory = game_info.get_supercategory(),
-                game_category = game_info.get_category(),
-                game_subcategory = game_info.get_subcategory())
+        system.LogInfo("Save already unpacked, skipping")
         return True
 
     # Get latest save archive
     archived_save_files = system.BuildFileList(input_save_dir)
     latest_save_archive = archived_save_files[-1] if archived_save_files else None
     if not latest_save_archive:
+        if verbose:
+            system.LogInfo("No archived saves found")
         return False
 
     # Unpack save archive
+    if verbose:
+        system.LogInfo(f"Extracting from {latest_save_archive}")
     success = archive.ExtractArchive(
         archive_file = latest_save_archive,
         extract_dir = output_save_dir,
@@ -221,6 +251,9 @@ def UnpackSave(
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory())
         return False
+
+    # Log success
+    system.LogInfo("Save unpacked successfully")
 
     # Check result
     return not system.IsDirectoryEmpty(output_save_dir)
@@ -358,6 +391,8 @@ def ExportStoreGameSave(
     for store_path_entry in store_path_entries:
         path_full = store_path_entry.get("full")
         path_relative = store_path_entry.get("relative")
+        if verbose:
+            system.LogInfo(f"Checking path: {path_full}")
         if system.DoesDirectoryContainFiles(path_full):
             success = system.SmartCopy(
                 src = path_full,
