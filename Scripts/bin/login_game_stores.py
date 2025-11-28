@@ -34,46 +34,24 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Manually specify all parameters
-    if args.generation_mode == config.GenerationModeType.CUSTOM:
-        if not args.game_category:
-            system.LogError("Game category is required for custom mode", quit_program = True)
-        if not args.game_subcategory:
-            system.LogError("Game subcategory is required for custom mode", quit_program = True)
+    # Login game stores
+    for game_supercategory, game_category, game_subcategory in gameinfo.IterateSelectedGameCategories(
+        parser = parser,
+        generation_mode = args.generation_mode):
         success = collection.LoginGameStore(
-            game_supercategory = args.game_supercategory,
-            game_category = args.game_category,
-            game_subcategory = args.game_subcategory,
+            game_supercategory = game_supercategory,
+            game_category = game_category,
+            game_subcategory = game_subcategory,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
             system.LogError(
                 message = "Login of store failed!",
-                game_supercategory = args.game_supercategory,
-                game_category = args.game_category,
-                game_subcategory = args.game_subcategory,
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
                 quit_program = True)
-
-    # Automatic according to standard layout
-    elif args.generation_mode == config.GenerationModeType.STANDARD:
-        for game_supercategory in parser.get_selected_supercategories():
-            for game_category, game_subcategories in parser.get_selected_subcategories().items():
-                for game_subcategory in game_subcategories:
-                        success = collection.LoginGameStore(
-                            game_supercategory = game_supercategory,
-                            game_category = game_category,
-                            game_subcategory = game_subcategory,
-                            verbose = args.verbose,
-                            pretend_run = args.pretend_run,
-                            exit_on_failure = args.exit_on_failure)
-                        if not success:
-                            system.LogError(
-                                message = "Login of store failed!",
-                                game_supercategory = game_supercategory,
-                                game_category = game_category,
-                                game_subcategory = game_subcategory,
-                                quit_program = True)
 
 # Start
 if __name__ == "__main__":

@@ -44,71 +44,36 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Manually specify all parameters
-    if args.generation_mode == config.GenerationModeType.CUSTOM:
-        if not args.game_category:
-            system.LogError("Game category is required for custom mode", quit_program = True)
-        if not args.game_subcategory:
-            system.LogError("Game subcategory is required for custom mode", quit_program = True)
-        game_info = gameinfo.GameInfo(
-            game_supercategory = args.game_supercategory,
-            game_category = args.game_category,
-            game_subcategory = args.game_subcategory,
-            game_name = args.game_name,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
+    # Build hash files
+    for game_info in gameinfo.IterateSelectedGameInfos(
+        parser = parser,
+        generation_mode = args.generation_mode,
+        source_type = args.source_type,
+        verbose = args.verbose,
+        pretend_run = args.pretend_run,
+        exit_on_failure = args.exit_on_failure):
+        game_root = parser.get_input_path() or environment.GetLockerGamingFilesDir(
+            game_info.get_supercategory(),
+            game_info.get_category(),
+            game_info.get_subcategory(),
+            game_info.get_name(),
+            args.source_type)
         success = collection.BuildHashFiles(
             game_info = game_info,
-            game_root = parser.get_input_path(),
+            game_root = game_root,
             locker_type = args.locker_type,
+            source_type = args.source_type,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
             system.LogError(
                 message = "Build of hash files failed!",
-                game_supercategory = args.game_supercategory,
-                game_category = args.game_category,
-                game_subcategory = args.game_subcategory,
-                game_name = args.game_name,
+                game_supercategory = game_info.get_supercategory(),
+                game_category = game_info.get_category(),
+                game_subcategory = game_info.get_subcategory(),
+                game_name = game_info.get_name(),
                 quit_program = True)
-
-    # Automatic according to standard layout
-    elif args.generation_mode == config.GenerationModeType.STANDARD:
-        for game_supercategory in parser.get_selected_supercategories():
-            for game_category, game_subcategories in parser.get_selected_subcategories().items():
-                for game_subcategory in game_subcategories:
-                    game_names = gameinfo.FindLockerGameNames(
-                        game_supercategory,
-                        game_category,
-                        game_subcategory,
-                        args.source_type)
-                    for game_name in game_names:
-                        game_info = gameinfo.GameInfo(
-                            game_supercategory = game_supercategory,
-                            game_category = game_category,
-                            game_subcategory = game_subcategory,
-                            game_name = game_name,
-                            verbose = args.verbose,
-                            pretend_run = args.pretend_run,
-                            exit_on_failure = args.exit_on_failure)
-                        success = collection.BuildHashFiles(
-                            game_info = game_info,
-                            game_root = game_root,
-                            locker_type = args.locker_type,
-                            source_type = args.source_type,
-                            verbose = args.verbose,
-                            pretend_run = args.pretend_run,
-                            exit_on_failure = args.exit_on_failure)
-                        if not success:
-                            system.LogError(
-                                message = "Build of hash files failed!",
-                                game_supercategory = game_supercategory,
-                                game_category = game_category,
-                                game_subcategory = game_subcategory,
-                                game_name = game_name,
-                                quit_program = True)
 
 # Start
 if __name__ == "__main__":

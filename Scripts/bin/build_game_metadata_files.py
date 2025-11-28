@@ -35,57 +35,33 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Manually specify all parameters
-    if args.generation_mode == config.GenerationModeType.CUSTOM:
-        if not args.game_category:
-            system.LogError("Game category is required for custom mode", quit_program = True)
-        if not args.game_subcategory:
-            system.LogError("Game subcategory is required for custom mode", quit_program = True)
-        if not args.game_name:
-            system.LogError("Game name is required for custom mode", quit_program = True)
-        success = collection.BuildGameMetadataEntry(
-            game_supercategory = args.game_supercategory,
-            game_category = args.game_category,
-            game_subcategory = args.game_subcategory,
-            game_name = args.game_name,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
-        if not success:
-            system.LogError(
-                message = "Build of metadata file failed!",
-                game_supercategory = args.game_supercategory,
-                game_category = args.game_category,
-                game_subcategory = args.game_subcategory,
-                game_name = args.game_name,
-                quit_program = True)
-
-    # Automatic according to standard layout
-    elif args.generation_mode == config.GenerationModeType.STANDARD:
-        for game_supercategory in parser.get_selected_supercategories():
-            for game_category, game_subcategories in parser.get_selected_subcategories().items():
-                for game_subcategory in game_subcategories:
-                    game_names = gameinfo.FindJsonGameNames(
-                        game_supercategory,
-                        game_category,
-                        game_subcategory)
-                    for game_name in game_names:
-                        success = collection.BuildGameMetadataEntry(
-                            game_supercategory = game_supercategory,
-                            game_category = game_category,
-                            game_subcategory = game_subcategory,
-                            game_name = game_name,
-                            verbose = args.verbose,
-                            pretend_run = args.pretend_run,
-                            exit_on_failure = args.exit_on_failure)
-                        if not success:
-                            system.LogError(
-                                message = "Build of metadata file failed!",
-                                game_supercategory = game_supercategory,
-                                game_category = game_category,
-                                game_subcategory = game_subcategory,
-                                game_name = game_name,
-                                quit_program = True)
+    # Build metadata files
+    for game_supercategory, game_category, game_subcategory in gameinfo.IterateSelectedGameCategories(
+        parser = parser,
+        generation_mode = args.generation_mode):
+        game_names = gameinfo.FindJsonGameNames(
+            game_supercategory,
+            game_category,
+            game_subcategory)
+        if args.game_name:
+            game_names = [g for g in game_names if g == args.game_name]
+        for game_name in game_names:
+            success = collection.BuildGameMetadataEntry(
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = game_name,
+                verbose = args.verbose,
+                pretend_run = args.pretend_run,
+                exit_on_failure = args.exit_on_failure)
+            if not success:
+                system.LogError(
+                    message = "Build of metadata file failed!",
+                    game_supercategory = game_supercategory,
+                    game_category = game_category,
+                    game_subcategory = game_subcategory,
+                    game_name = game_name,
+                    quit_program = True)
 
 # Start
 if __name__ == "__main__":

@@ -154,6 +154,20 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
+    # Diff sync files
+    elif args.action == config.RemoteActionType.DIFFSYNC:
+        sync.DiffSyncFiles(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_path = remote_path,
+            local_path = local_path,
+            excludes = args.excludes.split(","),
+            quick = args.quick,
+            interactive = args.interactive,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
+
     # List files
     elif args.action == config.RemoteActionType.LIST:
         sync.ListFiles(
