@@ -20,7 +20,7 @@ parser = arguments.ArgumentParser(description = "Github tool.")
 parser.add_enum_argument(
     args = ("-a", "--action"),
     arg_type = config.GithubActionType,
-    default = config.GithubActionType.TREE,
+    default = config.GithubActionType.ARCHIVE,
     description = "Github action type")
 parser.add_string_argument(args = ("-u", "--github_username"), description = "Github username")
 parser.add_string_argument(args = ("-t", "--github_access_token"), description = "Github access token")

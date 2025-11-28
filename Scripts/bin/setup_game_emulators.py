@@ -8,6 +8,7 @@ import sys
 lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
 sys.path.append(lib_folder)
 import arguments
+import system
 import setup
 
 # Parse arguments

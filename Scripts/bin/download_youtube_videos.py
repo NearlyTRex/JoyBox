@@ -16,7 +16,7 @@ import setup
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Download youtube videos.")
-parser.add_input_path_argument(args = ("youtube_url"), description = "YouTube url")
+parser.add_string_argument(args = "youtube_url", description = "YouTube url")
 parser.add_boolean_argument(args = ("-a", "--audio_only"), description = "Audio only")
 parser.add_output_path_argument(args = ("-o", "--output_file"), description = "Output file")
 parser.add_output_path_argument(args = ("-d", "--output_dir"), default = os.path.realpath("."), description = "Output dir")

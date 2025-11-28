@@ -10,6 +10,7 @@ sys.path.append(lib_folder)
 import config
 import system
 import environment
+import collection
 import arguments
 import setup
 
