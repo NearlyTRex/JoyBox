@@ -172,6 +172,30 @@ def PromptForUrl(description, default_value = None):
             return value
         LogWarning("That was not a valid url, please try again")
 
+# Prompt for confirmation (y/n)
+def PromptForConfirmation(description, default_yes = False):
+    prompt_suffix = "[Y/n]" if default_yes else "[y/N]"
+    while True:
+        value = input(">>> %s %s: " % (description, prompt_suffix)).strip().lower()
+        if value == "":
+            return default_yes
+        if value in ("y", "yes"):
+            return True
+        if value in ("n", "no"):
+            return False
+        LogWarning("Please enter 'y' or 'n'")
+
+# Show preview and prompt for confirmation
+def PromptForPreview(operation, details = [], default_yes = True):
+    LogInfo("=" * 60)
+    LogInfo("Operation: %s" % operation)
+    if details:
+        LogInfo("-" * 60)
+        for detail in details:
+            LogInfo("  %s" % detail)
+    LogInfo("=" * 60)
+    return PromptForConfirmation("Proceed?", default_yes = default_yes)
+
 ###########################################################
 
 # Get enclosed substrings

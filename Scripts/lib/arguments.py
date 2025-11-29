@@ -265,5 +265,8 @@ class ArgumentParser:
         self.add_boolean_argument(
             args = ("-x", "--exit_on_failure"),
             description = "Enable exit on failure mode")
+        self.add_boolean_argument(
+            args = ("--no-preview",),
+            description = "Skip the preview confirmation prompt")
 
     #################################################
