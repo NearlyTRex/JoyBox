@@ -30,6 +30,20 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Determine action
+    action = "Trim" if args.trim else "Untrim" if args.untrim else None
+
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Path: %s" % input_path,
+            "Action: %s" % action,
+            "Delete originals: %s" % args.delete_originals
+        ]
+        if not system.PromptForPreview("Switch ROM tool", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Find xci files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".xci"]):
         current_file = file

@@ -73,6 +73,17 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
 
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "JSON file: %s" % json_file,
+            "Game: %s" % game_info.get_name(),
+            "Source: %s" % args.source_type
+        ]
+        if not system.PromptForPreview("Install game", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Install game
     success = collection.InstallGame(
         game_info = game_info,

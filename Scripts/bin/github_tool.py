@@ -75,6 +75,19 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
 
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Action: %s" % args.action,
+            "User: %s" % github_username,
+            "Repositories: %d" % len(github_repositories)
+        ]
+        if args.action == config.GithubActionType.ARCHIVE:
+            details.append("Archive dir: %s" % archive_base_dir)
+        if not system.PromptForPreview("GitHub %s" % args.action, details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Archive repositories
     if args.action == config.GithubActionType.ARCHIVE:
         for github_repository in github_repositories:

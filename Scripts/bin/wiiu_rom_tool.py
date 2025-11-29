@@ -30,6 +30,21 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Determine action
+    action = "Decrypt NUS" if args.decrypt_nus else "Verify NUS" if args.verify_nus else None
+
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Path: %s" % input_path,
+            "Action: %s" % action
+        ]
+        if args.delete_originals:
+            details.append("Delete originals: %s" % args.delete_originals)
+        if not system.PromptForPreview("Wii U ROM tool", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Find rom files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".tik"]):
         if file.endswith("title.tik"):

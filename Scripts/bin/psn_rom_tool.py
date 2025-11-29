@@ -28,6 +28,16 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Path: %s" % input_path,
+            "Action: Rename PSN files"
+        ]
+        if not system.PromptForPreview("PSN ROM tool", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Rename psn files
     if args.rename:
         for rap_file in system.BuildFileListByExtensions(input_path, extensions = [".rap"]):

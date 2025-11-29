@@ -48,12 +48,24 @@ def main():
     if not handler:
         system.LogError("Unknown action", quit_program = True)
 
-    # Process games
+    # Collect games to process
+    games_to_process = []
     for game_info in gameinfo.IterateSelectedGameInfos(
         parser = parser,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure):
+        games_to_process.append(game_info)
+
+    # Show preview
+    if not args.no_preview:
+        details = ["%s/%s/%s" % (g.get_category(), g.get_subcategory(), g.get_name()) for g in games_to_process]
+        if not system.PromptForPreview("Save game %s" % args.action, details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
+    # Process games
+    for game_info in games_to_process:
         success = handler(
             game_info = game_info,
             verbose = args.verbose,

@@ -33,6 +33,31 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Determine action
+    action = None
+    if args.cia_to_cci:
+        action = "Convert CIA to 3DS(CCI)"
+    elif args.cci_to_cia:
+        action = "Convert 3DS(CCI) to CIA"
+    elif args.trim_cci:
+        action = "Trim 3DS(CCI)"
+    elif args.untrim_cci:
+        action = "Untrim 3DS(CCI)"
+    elif args.extract_cia:
+        action = "Extract CIA"
+    elif args.info:
+        action = "Print info"
+
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Path: %s" % input_path,
+            "Action: %s" % action
+        ]
+        if not system.PromptForPreview("3DS ROM tool", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Find rom files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".cia", ".3ds"]):
         current_file = file

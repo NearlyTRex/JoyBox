@@ -35,6 +35,17 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Path: %s" % input_path,
+            "Disc image types: %s" % [t.cval() for t in args.disc_image_types],
+            "Delete originals: %s" % args.delete_originals
+        ]
+        if not system.PromptForPreview("Convert to CHD", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Convert disc image files
     disc_image_extensions = [disc_image_type.cval() for disc_image_type in args.disc_image_types]
     for file in system.BuildFileListByExtensions(input_path, extensions = disc_image_extensions):

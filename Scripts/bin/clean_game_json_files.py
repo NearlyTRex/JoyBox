@@ -25,7 +25,8 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Clean json files
+    # Collect json files to process
+    json_files_to_process = []
     for game_supercategory in config.Supercategory.members():
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
@@ -40,15 +41,23 @@ def main():
                     json_file = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
                     if not system.IsPathFile(json_file):
                         continue
+                    json_files_to_process.append(json_file)
 
-                    # Clean json file
-                    system.CleanJsonFile(
-                        src = json_file,
-                        sort_keys = True,
-                        remove_empty_values = True,
-                        verbose = args.verbose,
-                        pretend_run = args.pretend_run,
-                        exit_on_failure = args.exit_on_failure)
+    # Show preview
+    if not args.no_preview:
+        if not system.PromptForPreview("Clean game JSON files (sort keys, remove empty values)", json_files_to_process):
+            system.LogWarning("Operation cancelled by user")
+            return
+
+    # Clean json files
+    for json_file in json_files_to_process:
+        system.CleanJsonFile(
+            src = json_file,
+            sort_keys = True,
+            remove_empty_values = True,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
 
 # Start
 if __name__ == "__main__":

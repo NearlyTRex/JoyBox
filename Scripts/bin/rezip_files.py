@@ -27,6 +27,13 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Show preview
+    if not args.no_preview:
+        details = ["Path: %s" % input_path]
+        if not system.PromptForPreview("Rezip files deterministically", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Rezip zip files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".zip"]):
         current_file = file

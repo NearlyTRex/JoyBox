@@ -28,6 +28,16 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Path: %s" % input_path,
+            "Action: Verify CHD"
+        ]
+        if not system.PromptForPreview("PS3 ROM tool", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Find rom files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".chd"]):
 

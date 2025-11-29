@@ -43,10 +43,22 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Build store purchases
+    # Collect categories to process
+    categories_to_process = []
     for game_supercategory, game_category, game_subcategory in gameinfo.IterateSelectedGameCategories(
         parser = parser,
         generation_mode = args.generation_mode):
+        categories_to_process.append((game_supercategory, game_category, game_subcategory))
+
+    # Show preview
+    if not args.no_preview:
+        details = ["%s/%s/%s" % (sc, c, sub) for sc, c, sub in categories_to_process]
+        if not system.PromptForPreview("Build game store purchases (source: %s)" % args.source_type, details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
+    # Build store purchases
+    for game_supercategory, game_category, game_subcategory in categories_to_process:
         success = collection.BuildGameStorePurchases(
             game_supercategory = game_supercategory,
             game_category = game_category,

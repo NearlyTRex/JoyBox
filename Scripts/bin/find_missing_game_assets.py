@@ -30,6 +30,16 @@ def main():
     assets_dir = environment.GetLockerGamingAssetsRootDir()
     metadata_dir = environment.GetGamePegasusMetadataRootDir()
 
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Assets dir: %s" % assets_dir,
+            "Metadata dir: %s" % metadata_dir
+        ]
+        if not system.PromptForPreview("Find missing game assets (writes Missing_*.txt and Extras.txt)", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Find all possible assets
     all_assets = set()
     for filename in system.BuildFileList(assets_dir):

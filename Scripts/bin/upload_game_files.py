@@ -45,7 +45,11 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Upload game files
+    # Get custom input path if provided
+    custom_input_path = parser.get_path("input_path")
+
+    # Collect games to process
+    games_to_process = []
     for game_info in gameinfo.IterateSelectedGameInfos(
         parser = parser,
         generation_mode = args.generation_mode,
@@ -53,12 +57,23 @@ def main():
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure):
-        game_root = parser.get_input_path() or environment.GetLockerGamingFilesDir(
+        game_root = custom_input_path or environment.GetLockerGamingFilesDir(
             game_info.get_supercategory(),
             game_info.get_category(),
             game_info.get_subcategory(),
             game_info.get_name(),
             args.source_type)
+        games_to_process.append((game_info, game_root))
+
+    # Show preview
+    if not args.no_preview:
+        details = [game_root for _, game_root in games_to_process]
+        if not system.PromptForPreview("Upload game files (encrypt and upload to %s)" % args.locker_type, details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
+    # Upload game files
+    for game_info, game_root in games_to_process:
         success = collection.UploadGameFiles(
             game_info = game_info,
             game_root = game_root,

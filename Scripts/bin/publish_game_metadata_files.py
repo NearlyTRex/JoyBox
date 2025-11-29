@@ -9,6 +9,7 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import config
 import system
+import environment
 import collection
 import arguments
 import setup
@@ -23,6 +24,13 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Show preview
+    if not args.no_preview:
+        publish_dir = environment.GetGamePublishedMetadataRootDir()
+        if not system.PromptForPreview("Publish game metadata files to HTML", [publish_dir]):
+            system.LogWarning("Operation cancelled by user")
+            return
 
     # Publish game metadata files
     system.LogInfo("Publishing game metadata files ...")

@@ -42,6 +42,17 @@ def main():
     if args.dat_cachefile:
         dat_cachefile = os.path.realpath(args.dat_cachefile)
 
+    # Show preview
+    if not args.no_preview:
+        details = ["Input path: %s" % input_path]
+        if dat_directory:
+            details.append("DAT directory: %s" % dat_directory)
+        if dat_cachefile:
+            details.append("DAT cachefile: %s" % dat_cachefile)
+        if not system.PromptForPreview("Rename files using DAT", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Load game dat(s)
     game_dat = dat.Dat()
     if system.IsPathDirectory(dat_directory):

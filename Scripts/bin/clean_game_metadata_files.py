@@ -25,7 +25,8 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Sort metadata files
+    # Collect metadata files to process
+    metadata_files_to_process = []
     for game_category in config.Category.members():
         for game_subcategory in config.subcategory_map[game_category]:
 
@@ -33,12 +34,21 @@ def main():
             metadata_file = environment.GetGameMetadataFile(game_category, game_subcategory)
             if not system.IsPathFile(metadata_file):
                 continue
+            metadata_files_to_process.append((game_category, game_subcategory, metadata_file))
 
-            # Sort metadata
-            system.LogInfo("Sorting metadata files for %s - %s..." % (game_category, game_subcategory))
-            metadata_obj = metadata.Metadata()
-            metadata_obj.import_from_metadata_file(metadata_file)
-            metadata_obj.export_to_metadata_file(metadata_file)
+    # Show preview
+    if not args.no_preview:
+        details = [metadata_file for _, _, metadata_file in metadata_files_to_process]
+        if not system.PromptForPreview("Clean game metadata files (sort entries)", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
+    # Sort metadata files
+    for game_category, game_subcategory, metadata_file in metadata_files_to_process:
+        system.LogInfo("Sorting metadata files for %s - %s..." % (game_category, game_subcategory))
+        metadata_obj = metadata.Metadata()
+        metadata_obj.import_from_metadata_file(metadata_file)
+        metadata_obj.export_to_metadata_file(metadata_file)
 
 # Start
 if __name__ == "__main__":

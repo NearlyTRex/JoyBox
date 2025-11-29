@@ -40,13 +40,26 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Download metadata assets
+    # Collect games to process
+    games_to_process = []
     for game_info in gameinfo.IterateSelectedGameInfos(
         parser = parser,
         generation_mode = args.generation_mode,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure):
+        games_to_process.append(game_info)
+
+    # Show preview
+    if not args.no_preview:
+        details = [environment.GetLockerGamingAssetsRootDir()]
+        asset_desc = args.asset_type if args.asset_type else "all types"
+        if not system.PromptForPreview("Download metadata assets (%s)" % asset_desc, details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
+    # Download metadata assets
+    for game_info in games_to_process:
         success = collection.DownloadMetadataAsset(
             game_info = game_info,
             asset_url = None,

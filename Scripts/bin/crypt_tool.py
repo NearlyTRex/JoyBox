@@ -45,6 +45,18 @@ def main():
     if not passphrase:
         system.LogError("No passphrase set", quit_program = True)
 
+    # Show preview
+    if not args.no_preview:
+        action = "Encrypt" if args.encrypt else "Decrypt" if args.decrypt else "Unknown"
+        details = [
+            "Path: %s" % input_path,
+            "Action: %s" % action,
+            "Keep originals: %s" % args.keep_originals
+        ]
+        if not system.PromptForPreview("%s files" % action, details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Encrypt file
     if args.encrypt:
         for file in system.BuildFileList(input_path):

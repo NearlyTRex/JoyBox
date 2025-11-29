@@ -31,6 +31,17 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Path: %s" % input_path,
+            "Output: %s + %s" % (args.toc_ext, args.bin_ext),
+            "Delete originals: %s" % args.delete_originals
+        ]
+        if not system.PromptForPreview("Extract CHD", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Convert disc image files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".chd"]):
 

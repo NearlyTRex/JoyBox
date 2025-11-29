@@ -70,6 +70,17 @@ def main():
     if not system.IsPathDirectory(dest_file_root):
         system.LogError("Could not resolve destination path", quit_program = True)
 
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Source: %s" % source_file_root,
+            "Destination: %s" % dest_file_root,
+            "Type: %s" % args.backup_type
+        ]
+        if not system.PromptForPreview("Backup files", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Copy files
     if args.backup_type == config.BackupType.COPY:
         backup.CopyFiles(

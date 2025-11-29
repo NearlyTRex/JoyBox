@@ -25,6 +25,13 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Show preview
+    if not args.no_preview:
+        details = [environment.GetGameHashesMetadataRootDir()]
+        if not system.PromptForPreview("Clean game hash files (sort entries)", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Sort hash files
     success = collection.SortAllHashFiles(
         verbose = args.verbose,

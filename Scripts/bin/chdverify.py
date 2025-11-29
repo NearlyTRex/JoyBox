@@ -28,6 +28,13 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Show preview
+    if not args.no_preview:
+        details = ["Path: %s" % input_path]
+        if not system.PromptForPreview("Verify CHD", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Convert disc image files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".chd"]):
 

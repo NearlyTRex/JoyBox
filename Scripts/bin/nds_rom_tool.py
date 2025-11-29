@@ -30,6 +30,19 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Determine action
+    action = "Decrypt" if args.decrypt else "Encrypt" if args.encrypt else None
+
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Path: %s" % input_path,
+            "Action: %s" % action
+        ]
+        if not system.PromptForPreview("NDS ROM tool", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Find rom files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".nds"]):
         current_file = file

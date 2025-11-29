@@ -27,6 +27,17 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "JSON dir: %s" % environment.GetGameJsonMetadataRootDir(),
+            "Metadata dir: %s" % environment.GetGameMetadataRootDir(),
+            "Hashes dir: %s" % environment.GetGameHashesMetadataRootDir()
+        ]
+        if not system.PromptForPreview("Verify game files (check JSON, metadata, and hash files)", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Find extra json files
     for json_file in system.BuildFileListByExtensions(environment.GetGameJsonMetadataRootDir(), extensions = [".json"]):
 

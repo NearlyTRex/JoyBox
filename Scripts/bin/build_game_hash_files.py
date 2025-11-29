@@ -44,7 +44,8 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Build hash files
+    # Collect games to process
+    games_to_process = []
     for game_info in gameinfo.IterateSelectedGameInfos(
         parser = parser,
         generation_mode = args.generation_mode,
@@ -58,6 +59,17 @@ def main():
             game_info.get_subcategory(),
             game_info.get_name(),
             args.source_type)
+        games_to_process.append((game_info, game_root))
+
+    # Show preview
+    if not args.no_preview:
+        details = [game_root for _, game_root in games_to_process]
+        if not system.PromptForPreview("Build game hash files", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
+    # Build hash files
+    for game_info, game_root in games_to_process:
         success = collection.BuildHashFiles(
             game_info = game_info,
             game_root = game_root,

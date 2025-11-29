@@ -44,13 +44,31 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
-    # Backup game files
+    # Collect games to process
+    games_to_process = []
     for game_info in gameinfo.IterateSelectedGameInfos(
         parser = parser,
         generation_mode = args.generation_mode,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure):
+        game_path = environment.GetLockerGamingFilesDir(
+            game_info.get_supercategory(),
+            game_info.get_category(),
+            game_info.get_subcategory(),
+            game_info.get_name(),
+            args.source_type)
+        games_to_process.append((game_info, game_path))
+
+    # Show preview
+    if not args.no_preview:
+        details = [game_path for _, game_path in games_to_process]
+        if not system.PromptForPreview("Backup game files (download from %s)" % args.locker_type, details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
+    # Backup game files
+    for game_info, _ in games_to_process:
         success = collection.BackupGameFiles(
             game_info = game_info,
             locker_type = args.locker_type,

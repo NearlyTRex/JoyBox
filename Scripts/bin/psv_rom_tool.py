@@ -33,6 +33,31 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Determine action
+    action = None
+    if args.strip:
+        action = "Strip"
+    elif args.unstrip:
+        action = "Unstrip"
+    elif args.trim:
+        action = "Trim"
+    elif args.untrim:
+        action = "Untrim"
+    elif args.verify:
+        action = "Verify"
+
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Path: %s" % input_path,
+            "Action: %s" % action
+        ]
+        if args.delete_originals:
+            details.append("Delete originals: %s" % args.delete_originals)
+        if not system.PromptForPreview("PSV ROM tool", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Find psv files
     for file in system.BuildFileListByExtensions(input_path, extensions = [".psv"]):
         current_file = file

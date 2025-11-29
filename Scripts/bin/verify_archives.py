@@ -34,6 +34,16 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Path: %s" % input_path,
+            "Archive types: %s" % [t.cval() for t in args.archive_types]
+        ]
+        if not system.PromptForPreview("Verify archives", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Verify archives
     archive_extensions = [archive_type.cval() for archive_type in args.archive_types]
     for file in system.BuildFileListByExtensions(input_path, extensions = archive_extensions):

@@ -50,6 +50,17 @@ def main():
     if args.subcategories:
         system.LogInfo(f"Filtering to subcategories: {args.subcategories}")
 
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "JSON dir: %s" % environment.GetGameJsonMetadataRootDir(),
+            "Metadata dir: %s" % environment.GetGameMetadataRootDir(),
+            "Published dir: %s" % environment.GetGamePublishedMetadataRootDir()
+        ]
+        if not system.PromptForPreview("Scan game files (build store purchases, JSON, metadata, publish)", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Load manifest
     if args.load_manifest:
         system.LogInfo("Loading manifest ...")

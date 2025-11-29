@@ -59,6 +59,19 @@ def main():
     mount_path = locker_info.get_remote_mount_path()
     mount_flags = locker_info.get_remote_mount_flags()
 
+    # Show preview
+    if not args.no_preview:
+        details = []
+        if local_path:
+            details.append("Local: %s" % local_path)
+        if remote_path:
+            details.append("Remote: %s:%s" % (remote_name, remote_path))
+        if mount_path:
+            details.append("Mount: %s" % mount_path)
+        if not system.PromptForPreview("Sync %s (%s)" % (args.action, args.locker_type), details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Init sync
     if args.action == config.RemoteActionType.INIT:
         sync.SetupRemote(

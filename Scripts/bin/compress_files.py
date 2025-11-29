@@ -37,6 +37,18 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Path: %s" % input_path,
+            "Archive type: %s" % args.archive_type,
+            "File types: %s" % args.file_types,
+            "Delete originals: %s" % args.delete_originals
+        ]
+        if not system.PromptForPreview("Compress files", details):
+            system.LogWarning("Operation cancelled by user")
+            return
+
     # Compress files
     for obj in system.GetDirectoryContents(input_path):
         obj_path = system.JoinPaths(input_path, obj)
