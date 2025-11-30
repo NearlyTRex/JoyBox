@@ -32,6 +32,7 @@ parser.add_string_argument(args = ("--diff_intersected_path"), default = "diff_i
 parser.add_string_argument(args = ("--diff_missing_src_path"), default = "diff_missing_src.txt", description = "Diff path (missing src)")
 parser.add_string_argument(args = ("--diff_missing_dest_path"), default = "diff_missing_dest.txt", description = "Diff path (missing dest)")
 parser.add_string_argument(args = ("--diff_error_path"), default = "diff_errors.txt", description = "Diff path (errors)")
+parser.add_string_argument(args = ("--diff_dir"), description = "Directory containing diff files (for DiffSync)")
 parser.add_boolean_argument(args = ("-e", "--resync"), description = "Enable resync mode")
 parser.add_boolean_argument(args = ("-i", "--interactive"), description = "Enable interactive mode")
 parser.add_boolean_argument(args = ("-q", "--quick"), description = "Enable quick mode")
@@ -175,6 +176,7 @@ def main():
             remote_path = remote_path,
             local_path = local_path,
             excludes = args.excludes.split(","),
+            diff_dir = args.diff_dir,
             quick = args.quick,
             interactive = args.interactive,
             verbose = args.verbose,

@@ -387,8 +387,6 @@ def GetPathModTime(
     # Run lsl command
     lsl_output = command.RunOutputCommand(
         cmd = lsl_cmd,
-        options = command.CreateCommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -866,6 +864,15 @@ def DiffFiles(
         system.LogInfo("Number of files only on %s: %d" % (local_path, count_only_src))
         system.LogInfo("Number of error files: %d" % count_error)
 
+    # Sort diff files
+    for diff_path in [diff_combined_path, diff_intersected_path, diff_missing_src_path, diff_missing_dest_path, diff_error_path]:
+        if diff_path and os.path.exists(diff_path):
+            system.SortFileContents(
+                src = diff_path,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
 # Diff sync files
 def DiffSyncFiles(
     remote_name,
@@ -881,37 +888,39 @@ def DiffSyncFiles(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Setup diff directory
+    # Determine if generating diffs
+    generate_diffs = diff_dir is None
+
+    # Get diff directory
     if not diff_dir:
-        diff_dir = os.path.join(environment.GetCacheDir(), "diffsync", remote_name)
-    system.MakeDirectory(
-        src = diff_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        diff_dir = system.CreateTempDirectory()
+    if not system.DoesPathExist(diff_dir):
+        system.LogError("Diff directory was invalid")
+        return False
 
     # Setup diff file paths
+    diff_combined_path = os.path.join(diff_dir, "diff_combined.txt")
+    diff_intersected_path = os.path.join(diff_dir, "diff_intersected.txt")
     diff_missing_src_path = os.path.join(diff_dir, "diff_missing_src.txt")
     diff_missing_dest_path = os.path.join(diff_dir, "diff_missing_dest.txt")
-    diff_intersected_path = os.path.join(diff_dir, "diff_intersected.txt")
-    diff_combined_path = os.path.join(diff_dir, "diff_combined.txt")
 
-    # Run diff to get missing files
-    system.LogInfo("Running diff to identify file differences...")
-    DiffFiles(
-        remote_name = remote_name,
-        remote_type = remote_type,
-        remote_path = remote_path,
-        local_path = local_path,
-        excludes = excludes,
-        diff_combined_path = diff_combined_path,
-        diff_intersected_path = diff_intersected_path,
-        diff_missing_src_path = diff_missing_src_path,
-        diff_missing_dest_path = diff_missing_dest_path,
-        quick = quick,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    # Diff files if necessary
+    if generate_diffs:
+        system.LogInfo("Running diff to identify file differences...")
+        DiffFiles(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_path = remote_path,
+            local_path = local_path,
+            excludes = excludes,
+            diff_combined_path = diff_combined_path,
+            diff_intersected_path = diff_intersected_path,
+            diff_missing_src_path = diff_missing_src_path,
+            diff_missing_dest_path = diff_missing_dest_path,
+            quick = quick,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Read files missing on dest (need to upload from local)
     files_to_upload = []
