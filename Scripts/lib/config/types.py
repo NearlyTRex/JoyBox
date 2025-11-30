@@ -315,6 +315,7 @@ class RemoteActionType(EnumType):
     MERGE                   = ("Merge")
     DIFF                    = ("Diff")
     DIFFSYNC                = ("DiffSync")
+    EMPTYRECYCLE            = ("EmptyRecycle")
     LIST                    = ("List")
     MOUNT                   = ("Mount")
 

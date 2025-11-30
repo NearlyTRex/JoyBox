@@ -32,10 +32,12 @@ parser.add_string_argument(args = ("--diff_intersected_path"), default = "diff_i
 parser.add_string_argument(args = ("--diff_missing_src_path"), default = "diff_missing_src.txt", description = "Diff path (missing src)")
 parser.add_string_argument(args = ("--diff_missing_dest_path"), default = "diff_missing_dest.txt", description = "Diff path (missing dest)")
 parser.add_string_argument(args = ("--diff_error_path"), default = "diff_errors.txt", description = "Diff path (errors)")
-parser.add_string_argument(args = ("--diff_dir"), description = "Directory containing diff files (for DiffSync)")
+parser.add_string_argument(args = ("--diff_dir"), description = "Directory containing diff files")
 parser.add_boolean_argument(args = ("-e", "--resync"), description = "Enable resync mode")
 parser.add_boolean_argument(args = ("-i", "--interactive"), description = "Enable interactive mode")
 parser.add_boolean_argument(args = ("-q", "--quick"), description = "Enable quick mode")
+parser.add_boolean_argument(args = ("-r", "--recycle_missing"), description = "Move remote-only files to recycle bin instead of downloading")
+parser.add_string_argument(args = ("--recycle_folder"), default = ".recycle_bin", description = "Folder name for recycled files on remote")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -152,12 +154,15 @@ def main():
 
     # Diff files
     elif args.action == config.RemoteActionType.DIFF:
+        diff_excludes = args.excludes.split(",")
+        if args.recycle_folder:
+            diff_excludes.append(args.recycle_folder + "/**")
         sync.DiffFiles(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
-            excludes = args.excludes.split(","),
+            excludes = diff_excludes,
             diff_combined_path = args.diff_combined_path,
             diff_intersected_path = args.diff_intersected_path,
             diff_missing_src_path = args.diff_missing_src_path,
@@ -170,15 +175,35 @@ def main():
 
     # Diff sync files
     elif args.action == config.RemoteActionType.DIFFSYNC:
+        diffsync_excludes = args.excludes.split(",")
+        if args.recycle_folder:
+            diffsync_excludes.append(args.recycle_folder + "/**")
         sync.DiffSyncFiles(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
-            excludes = args.excludes.split(","),
+            excludes = diffsync_excludes,
             diff_dir = args.diff_dir,
+            diff_combined_file = args.diff_combined_path,
+            diff_intersected_file = args.diff_intersected_path,
+            diff_missing_src_file = args.diff_missing_src_path,
+            diff_missing_dest_file = args.diff_missing_dest_path,
+            recycle_missing = args.recycle_missing,
+            recycle_folder = args.recycle_folder,
             quick = args.quick,
             interactive = args.interactive,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
+
+    # Empty recycle bin
+    elif args.action == config.RemoteActionType.EMPTYRECYCLE:
+        sync.EmptyRecycleBin(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_path = remote_path,
+            recycle_folder = args.recycle_folder,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

@@ -623,6 +623,143 @@ def UploadFilesToRemote(
         exit_on_failure = exit_on_failure)
     return code == 0
 
+# Move files on remote
+def MoveFilesOnRemote(
+    remote_name,
+    remote_type,
+    src_path,
+    dest_path,
+    files_from = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
+        return False
+
+    # Build full remote paths
+    src_full = GetRemoteConnectionPath(remote_name, remote_type, src_path)
+    dest_full = GetRemoteConnectionPath(remote_name, remote_type, dest_path)
+
+    # Build move command
+    move_cmd = [
+        rclone_tool,
+        "move",
+        src_full,
+        dest_full
+    ]
+    if files_from and system.IsPathFile(files_from):
+        move_cmd += ["--files-from", files_from]
+    if pretend_run:
+        move_cmd += ["--dry-run"]
+    if verbose:
+        move_cmd += [
+            "--verbose",
+            "--progress"
+        ]
+
+    # Run move command
+    code = command.RunReturncodeCommand(
+        cmd = move_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
+# Purge path on remote
+def PurgePathOnRemote(
+    remote_name,
+    remote_type,
+    remote_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.IsToolInstalled("RClone"):
+        rclone_tool = programs.GetToolProgram("RClone")
+    if not rclone_tool:
+        system.LogError("RClone was not found")
+        return False
+
+    # Build full remote path
+    remote_full = GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+
+    # Build purge command
+    purge_cmd = [
+        rclone_tool,
+        "purge",
+        remote_full
+    ]
+    if pretend_run:
+        purge_cmd += ["--dry-run"]
+    if verbose:
+        purge_cmd += [
+            "--verbose",
+            "--progress"
+        ]
+
+    # Run purge command
+    code = command.RunReturncodeCommand(
+        cmd = purge_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
+# Move files to recycle bin on remote
+def RecycleFilesOnRemote(
+    remote_name,
+    remote_type,
+    remote_path,
+    files_from,
+    recycle_folder = ".recycle_bin",
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get recycle bin path on remote
+    recycle_bin_path = os.path.join(remote_path, recycle_folder).replace("\\", "/")
+
+    # Move files to recycle bin
+    return MoveFilesOnRemote(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        src_path = remote_path,
+        dest_path = recycle_bin_path,
+        files_from = files_from,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Empty recycle bin on remote
+def EmptyRecycleBin(
+    remote_name,
+    remote_type,
+    remote_path,
+    recycle_folder = ".recycle_bin",
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get recycle bin path on remote
+    recycle_bin_path = os.path.join(remote_path, recycle_folder).replace("\\", "/")
+
+    # Purge recycle bin
+    return PurgePathOnRemote(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = recycle_bin_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
 # Pull files from remote
 def PullFilesFromRemote(
     remote_name,
@@ -881,7 +1018,13 @@ def DiffSyncFiles(
     local_path,
     excludes = None,
     diff_dir = None,
+    diff_combined_file = "diff_combined.txt",
+    diff_intersected_file = "diff_intersected.txt",
+    diff_missing_src_file = "diff_missing_src.txt",
+    diff_missing_dest_file = "diff_missing_dest.txt",
     sync_changed = True,
+    recycle_missing = False,
+    recycle_folder = ".recycle_bin",
     quick = False,
     interactive = False,
     verbose = False,
@@ -898,11 +1041,22 @@ def DiffSyncFiles(
         system.LogError("Diff directory was invalid")
         return False
 
+    # Exclude recycle folder from diff operations
+    if recycle_folder:
+        recycle_bin_exclude = recycle_folder + "/**"
+        if excludes is None:
+            excludes = [recycle_bin_exclude]
+        elif isinstance(excludes, list):
+            if recycle_bin_exclude not in excludes:
+                excludes = excludes + [recycle_bin_exclude]
+        elif isinstance(excludes, str):
+            excludes = [excludes, recycle_bin_exclude]
+
     # Setup diff file paths
-    diff_combined_path = os.path.join(diff_dir, "diff_combined.txt")
-    diff_intersected_path = os.path.join(diff_dir, "diff_intersected.txt")
-    diff_missing_src_path = os.path.join(diff_dir, "diff_missing_src.txt")
-    diff_missing_dest_path = os.path.join(diff_dir, "diff_missing_dest.txt")
+    diff_combined_path = os.path.join(diff_dir, diff_combined_file)
+    diff_intersected_path = os.path.join(diff_dir, diff_intersected_file)
+    diff_missing_src_path = os.path.join(diff_dir, diff_missing_src_file)
+    diff_missing_dest_path = os.path.join(diff_dir, diff_missing_dest_file)
 
     # Diff files if necessary
     if generate_diffs:
@@ -988,9 +1142,8 @@ def DiffSyncFiles(
 
     # Upload files
     if files_to_upload:
-        final_upload_path = os.path.join(diff_dir, "final_upload.txt")
-        with open(final_upload_path, "w", encoding="utf8") as f:
-            f.write("\n".join(files_to_upload))
+        final_upload_path = system.CreateTemporaryFile(suffix = ".txt")
+        system.WriteTextFile(final_upload_path, "\n".join(files_to_upload))
         system.LogInfo("Uploading %d files to remote..." % len(files_to_upload))
         if not UploadFilesToRemote(
             remote_name = remote_name,
@@ -1004,23 +1157,37 @@ def DiffSyncFiles(
             exit_on_failure = exit_on_failure):
             return False
 
-    # Download files
+    # Download or recycle files
     if files_to_download:
-        final_download_path = os.path.join(diff_dir, "final_download.txt")
-        with open(final_download_path, "w", encoding="utf8") as f:
-            f.write("\n".join(files_to_download))
-        system.LogInfo("Downloading %d files from remote..." % len(files_to_download))
-        if not DownloadFilesFromRemote(
-            remote_name = remote_name,
-            remote_type = remote_type,
-            remote_path = remote_path,
-            local_path = local_path,
-            files_from = final_download_path,
-            interactive = interactive,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure):
-            return False
+        if recycle_missing:
+            final_recycle_path = system.CreateTemporaryFile(suffix = ".txt")
+            system.WriteTextFile(final_recycle_path, "\n".join(files_to_download))
+            system.LogInfo("Recycling %d files on remote (moving to %s)..." % (len(files_to_download), recycle_folder))
+            if not RecycleFilesOnRemote(
+                remote_name = remote_name,
+                remote_type = remote_type,
+                remote_path = remote_path,
+                files_from = final_recycle_path,
+                recycle_folder = recycle_folder,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure):
+                return False
+        else:
+            final_download_path = system.CreateTemporaryFile(suffix = ".txt")
+            system.WriteTextFile(final_download_path, "\n".join(files_to_download))
+            system.LogInfo("Downloading %d files from remote..." % len(files_to_download))
+            if not DownloadFilesFromRemote(
+                remote_name = remote_name,
+                remote_type = remote_type,
+                remote_path = remote_path,
+                local_path = local_path,
+                files_from = final_download_path,
+                interactive = interactive,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure):
+                return False
 
     # Done
     system.LogInfo("DiffSync complete!")
