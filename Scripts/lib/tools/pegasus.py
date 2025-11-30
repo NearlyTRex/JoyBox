@@ -38,9 +38,8 @@ keys.accept: Return,Enter,GamepadA
 config_files["Pegasus/windows/portable.txt"] = ""
 config_files["Pegasus/windows/config/game_dirs.txt"] = ""
 config_files["Pegasus/windows/config/settings.txt"] = config_file_general
-config_files["Pegasus/linux/portable.txt"] = ""
-config_files["Pegasus/linux/config/game_dirs.txt"] = ""
-config_files["Pegasus/linux/config/settings.txt"] = config_file_general
+config_files["Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/game_dirs.txt"] = ""
+config_files["Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/settings.txt"] = config_file_general
 
 # Pegasus tool
 class Pegasus(toolbase.ToolBase):
@@ -55,11 +54,11 @@ class Pegasus(toolbase.ToolBase):
             "Pegasus": {
                 "program": {
                     "windows": "Pegasus/windows/pegasus-fe.exe",
-                    "linux": "Pegasus/linux/pegasus-fe"
+                    "linux": "Pegasus/linux/Pegasus.AppImage"
                 },
                 "themes_dir": {
                     "windows": "Pegasus/windows/config/themes",
-                    "linux": "Pegasus/linux/config/themes"
+                    "linux": "Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/themes"
                 },
                 "run_sandboxed": {
                     "windows": False,
@@ -102,25 +101,28 @@ class Pegasus(toolbase.ToolBase):
                 system.LogError("Could not setup Pegasus theme")
                 return False
 
-        # Download linux program
+        # Build linux program
         if programs.ShouldProgramBeInstalled("Pegasus", "linux"):
-            success = release.DownloadGithubRelease(
-                github_user = "mmatyas",
-                github_repo = "pegasus-frontend",
-                starts_with = "pegasus-fe",
-                ends_with = "x11-static.zip",
-                search_file = "pegasus-fe",
+            success = release.BuildAppImageFromSource(
+                release_url = "https://github.com/NearlyTRex/Pegasus.git",
+                output_file = "App-x86_64.AppImage",
                 install_name = "Pegasus",
                 install_dir = programs.GetProgramInstallDir("Pegasus", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Pegasus", "linux"),
-                install_files = ["pegasus-fe"],
-                chmod_files = [
-                    {
-                        "file": "pegasus-fe",
-                        "perms": 755
-                    }
+                build_cmd = [
+                    "qmake", "..", "CONFIG+=release", "USE_SDL_GAMEPAD=1",
+                    "&&",
+                    "make", "-j", "4"
                 ],
-                get_latest = True,
+                build_dir = "Build",
+                internal_copies = [
+                    {"from": "Source/Build/src/app/pegasus-fe", "to": "AppImage/usr/bin/pegasus-fe"},
+                    {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
+                    {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
+                ],
+                internal_symlinks = [
+                    {"from": "usr/bin/pegasus-fe", "to": "AppRun"}
+                ],
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -182,7 +184,7 @@ class Pegasus(toolbase.ToolBase):
 
         # Update game dir files
         config_files["Pegasus/windows/config/game_dirs.txt"] = "\n".join(game_dirs)
-        config_files["Pegasus/linux/config/game_dirs.txt"] = "\n".join(game_dirs)
+        config_files["Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/game_dirs.txt"] = "\n".join(game_dirs)
 
         # Create config files
         for config_filename, config_contents in config_files.items():

@@ -605,7 +605,7 @@ def BuildAppImageFromSource(
         cmd = build_cmd,
         options = command.CreateCommandOptions(
             cwd = source_build_dir,
-            shell = True),
+            is_shell = True),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

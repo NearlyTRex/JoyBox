@@ -45,11 +45,13 @@ def main():
     ]
 
     # Run list command
-    command.RunCheckedCommand(
+    code = command.RunReturncodeCommand(
         cmd = list_cmd,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
+    if code != 0:
+        system.LogError("List command failed with code %d" % code)
 
 # Start
 if __name__ == "__main__":

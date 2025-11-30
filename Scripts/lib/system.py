@@ -1141,9 +1141,11 @@ def CreateSymlink(
             if cwd:
                 os.chdir(cwd)
             if make_parent:
-                if verbose:
-                    LogInfo("Making parent dir %s" % os.path.dirname(dest))
-                os.makedirs(os.path.dirname(dest), exist_ok = True)
+                parent_dir = os.path.dirname(dest)
+                if parent_dir:
+                    if verbose:
+                        LogInfo("Making parent dir %s" % parent_dir)
+                    os.makedirs(parent_dir, exist_ok = True)
             if overwrite:
                 if verbose:
                     LogInfo("Removing destination %s first" % dest)

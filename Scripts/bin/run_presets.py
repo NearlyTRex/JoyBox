@@ -98,11 +98,13 @@ def main():
 
     # Run commands
     for preset_cmd in preset_cmds:
-        command.RunCheckedCommand(
+        code = command.RunReturncodeCommand(
             cmd = preset_cmd,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
+        if code != 0:
+            system.LogError("Preset command failed with code %d" % code)
 
 # Start
 if __name__ == "__main__":

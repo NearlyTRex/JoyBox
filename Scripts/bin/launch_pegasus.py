@@ -45,12 +45,14 @@ def main():
     launch_options.set_env_var("JOYBOX_LAUNCH_JSON", system.JoinPaths(environment.GetScriptsBinDir(), "launch_json" + environment.GetScriptsCommandExtension()))
 
     # Run launch command
-    command.RunCheckedCommand(
+    code = command.RunReturncodeCommand(
         cmd = launch_cmd,
         options = launch_options,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
+    if code != 0:
+        system.LogError("Launch command failed with code %d" % code)
 
 # Start
 if __name__ == "__main__":
