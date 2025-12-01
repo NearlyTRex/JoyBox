@@ -184,12 +184,19 @@ def InterruptActiveNamedProcesses(process_names = []):
         system.LogError(e)
 
 # Wait for processes
-def WaitForNamedProcesses(process_names = []):
+def WaitForNamedProcesses(process_names = [], timeout = 1200):
     import psutil
     try:
+        start_time = time.time()
         for proc in FindActiveNamedProcesses(process_names):
+            system.LogInfo("Waiting for process %s (pid=%d)..." % (proc.name(), proc.pid))
             while True:
                 if not proc.is_running():
+                    system.LogInfo("Process %s (pid=%d) finished" % (proc.name(), proc.pid))
+                    break
+                elapsed = time.time() - start_time
+                if timeout and elapsed > timeout:
+                    system.LogWarning("Timeout after %d seconds waiting for %s (pid=%d)" % (timeout, proc.name(), proc.pid))
                     break
                 system.SleepProgram(1)
     except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
