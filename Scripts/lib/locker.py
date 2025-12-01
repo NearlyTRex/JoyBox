@@ -269,32 +269,46 @@ def BackupFiles(
     system.LogInfo("File transfer completed successfully")
 
     # Upload files
+    system.LogInfo("Checking if sync tool is installed...")
     if sync.IsToolInstalled():
+        system.LogInfo("Sync tool is installed, checking remote configuration...")
 
         # Check if remote configured
         if sync.IsRemoteConfigured(
             remote_name = locker_info.get_remote_name(),
             remote_type = locker_info.get_remote_type()):
+            system.LogInfo("Remote is configured, starting upload...")
 
             # Upload encryped files
             if upload_encrypted:
+                system.LogInfo("Uploading encrypted files...")
                 success = UploadAndEncryptPath(
                     src = dest,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if not success:
+                    system.LogError("Encrypted upload failed")
                     return False
+                system.LogInfo("Encrypted upload completed")
 
             # Upload plain files
             else:
+                system.LogInfo("Uploading plain files to remote...")
                 success = UploadPath(
                     src = dest,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if not success:
+                    system.LogError("Plain upload failed")
                     return False
+                system.LogInfo("Plain upload completed")
+        else:
+            system.LogInfo("Remote not configured, skipping upload")
+    else:
+        system.LogInfo("Sync tool not installed, skipping upload")
 
     # Should be successful
+    system.LogInfo("BackupFiles completed successfully")
     return True
