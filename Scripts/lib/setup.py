@@ -33,7 +33,20 @@ def CheckRequirements():
         system.LogError("Ini file not found, please run setup first", quit_program = True)
 
 # Setup tools
-def SetupTools(offline = False, configure = False, verbose = False, pretend_run = False, exit_on_failure = False):
+def SetupTools(offline = False, configure = False, clean = False, verbose = False, pretend_run = False, exit_on_failure = False):
+
+    # Clean tools directory
+    if clean:
+        tools_dir = environment.GetToolsRootDir()
+        if system.DoesPathExist(tools_dir):
+            system.LogInfo("Cleaning tools directory %s ..." % tools_dir)
+            system.RemoveDirectory(
+                src = tools_dir,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
+    # Install tools
     for tool in programs.GetTools():
         system.LogInfo("Installing tool %s ..." % tool.GetName())
         success = False
@@ -59,7 +72,20 @@ def SetupTools(offline = False, configure = False, verbose = False, pretend_run 
     return True
 
 # Setup emulators
-def SetupEmulators(offline = False, configure = False, verbose = False, pretend_run = False, exit_on_failure = False):
+def SetupEmulators(offline = False, configure = False, clean = False, verbose = False, pretend_run = False, exit_on_failure = False):
+
+    # Clean emulators directory
+    if clean:
+        emulators_dir = environment.GetEmulatorsRootDir()
+        if system.DoesPathExist(emulators_dir):
+            system.LogInfo("Cleaning emulators directory %s ..." % emulators_dir)
+            system.RemoveDirectory(
+                src = emulators_dir,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
+    # Install emulators
     for emulator in programs.GetEmulators():
         system.LogInfo("Installing emulator %s ..." % emulator.GetName())
         success = False
