@@ -98,8 +98,6 @@ def GetConfiguredRemotes(
     # Run list command
     list_output = command.RunOutputCommand(
         cmd = list_cmd,
-        options = command.CreateCommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -119,7 +117,11 @@ def IsRemoteConfigured(
     exit_on_failure = False):
 
     # Check if the remote name exists in the list of remotes
-    if not any(remote.startswith(remote_name) for remote in GetConfiguredRemotes()):
+    system.LogInfo("Checking if remote '%s' exists..." % remote_name)
+    configured_remotes = GetConfiguredRemotes()
+    system.LogInfo("Found %d configured remotes" % len(configured_remotes))
+    if not any(remote.startswith(remote_name) for remote in configured_remotes):
+        system.LogInfo("Remote '%s' not in configured remotes" % remote_name)
         return False
 
     # Get tool
@@ -140,8 +142,6 @@ def IsRemoteConfigured(
     # Run show command
     show_output = command.RunOutputCommand(
         cmd = show_cmd,
-        options = command.CreateCommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -151,11 +151,14 @@ def IsRemoteConfigured(
     if isinstance(show_output, bytes):
         show_text = show_output.decode()
     if "couldn't find type of fs for" in show_text:
+        system.LogInfo("Remote type not found")
         return False
 
     # Check if the remote type matches
     match = re.search(r"type\s*=\s*(\S+)", show_text)
-    return match and (match.group(1) == GetRemoteRawType(remote_type))
+    result = match and (match.group(1) == GetRemoteRawType(remote_type))
+    system.LogInfo("Remote type match result: %s" % result)
+    return result
 
 # Setup autoconnect remote
 def SetupAutoconnectRemote(
@@ -343,8 +346,6 @@ def GetPathMD5(
     # Run md5sum command
     md5sum_output = command.RunOutputCommand(
         cmd = md5sum_cmd,
-        options = command.CreateCommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -459,8 +460,6 @@ def DoesPathExist(
     # Run list command
     list_output = command.RunOutputCommand(
         cmd = list_cmd,
-        options = command.CreateCommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -505,8 +504,6 @@ def DoesPathContainFiles(
     # Run list command
     list_output = command.RunOutputCommand(
         cmd = list_cmd,
-        options = command.CreateCommandOptions(
-            blocking_processes = [rclone_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
