@@ -928,6 +928,16 @@ def DiffFiles(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Exclude hidden files/folders (starting with .) from diff operations
+    dotfile_exclude = ".*/**"
+    if excludes is None:
+        excludes = [dotfile_exclude]
+    elif isinstance(excludes, list):
+        if dotfile_exclude not in excludes:
+            excludes = excludes + [dotfile_exclude]
+    elif isinstance(excludes, str):
+        excludes = [excludes, dotfile_exclude]
+
     # Get tool
     rclone_tool = None
     if programs.IsToolInstalled("RClone"):
@@ -1038,16 +1048,21 @@ def DiffSyncFiles(
         system.LogError("Diff directory was invalid")
         return False
 
+    # Exclude hidden files/folders (starting with .) from diff operations
+    dotfile_exclude = ".*/**"
+    if excludes is None:
+        excludes = [dotfile_exclude]
+    elif isinstance(excludes, list):
+        if dotfile_exclude not in excludes:
+            excludes = excludes + [dotfile_exclude]
+    elif isinstance(excludes, str):
+        excludes = [excludes, dotfile_exclude]
+
     # Exclude recycle folder from diff operations
     if recycle_folder:
         recycle_bin_exclude = recycle_folder + "/**"
-        if excludes is None:
-            excludes = [recycle_bin_exclude]
-        elif isinstance(excludes, list):
-            if recycle_bin_exclude not in excludes:
-                excludes = excludes + [recycle_bin_exclude]
-        elif isinstance(excludes, str):
-            excludes = [excludes, recycle_bin_exclude]
+        if recycle_bin_exclude not in excludes:
+            excludes = excludes + [recycle_bin_exclude]
 
     # Setup diff file paths
     diff_combined_path = os.path.join(diff_dir, diff_combined_file)
