@@ -25,6 +25,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "apt-file",
     "blueman",
     "clamav",
+    "file-roller",
     "fuseiso",
     "jackd",
     "pulseaudio-utils",
@@ -32,16 +33,21 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "thunar",
     "unzip",
     "zip",
+    "zsh",
 
     # Devel
     "autoconf",
     "automake",
+    "awscli",
     "bison",
     "build-essential",
     "clang",
     "clang-format",
     "cmake",
+    "dkms",
     "dos2unix",
+    "dotnet-sdk-8.0",
+    "fd-find",
     "flex",
     "g++",
     "gcc",
@@ -52,12 +58,14 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "glslang-tools",
     "golang",
     "help2man",
+    "jq",
     "libtool-bin",
     "lld",
     "make",
     "maven",
     "nasm",
     "ninja-build",
+    "nodejs",
     "npm",
     "perl-base",
     "pkg-config",
@@ -75,11 +83,13 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "xa65",
 
     # Games
+    "dxvk",
     "steam",
     "steamcmd",
 
     # Gnome
     "brasero",
+    "gedit",
     "ghex",
     "gnome-screenshot",
 
@@ -211,13 +221,21 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
 
     # Sound
     "audacity",
+    "easytag",
+    "fluidsynth",
     "qmmp",
 
     # Utils
     "gsmartcontrol",
     "hardinfo",
     "jstest-gtk",
+    "kdeconnect",
+    "kdiff3",
     "meld",
+    "okular",
+    "remmina",
+    "thunderbird",
+    "wireshark",
 
     # Video
     "shotcut",
