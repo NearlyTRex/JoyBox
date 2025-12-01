@@ -12,9 +12,8 @@ import programs
 import toolbase
 import ini
 
-# Config files
-config_files = {}
-config_file_general = """
+# Config file templates
+config_template_gdrive = """
 [GDRIVE_NAME]
 type = GDRIVE_TYPE
 client_id =
@@ -23,7 +22,8 @@ scope = drive
 token = GDRIVE_TOKEN
 team_drive =
 root_folder_id =
-
+"""
+config_template_hetzner = """
 [HETZNER_NAME]
 type = HETZNER_TYPE
 host = HETZNER_HOST
@@ -33,8 +33,6 @@ shell_type = unix
 md5sum_command = none
 sha1sum_command = none
 """
-config_files["RClone/windows/rclone.conf"] = config_file_general
-config_files["RClone/linux/rclone.conf"] = config_file_general
 
 # RClone tool
 class RClone(toolbase.ToolBase):
@@ -142,41 +140,47 @@ class RClone(toolbase.ToolBase):
         # Get hetzner options
         hetzner_remote_name = ini.GetIniValue("UserData.Share", "locker_hetzner_remote_name", throw_exception = False)
         hetzner_remote_type = ini.GetIniValue("UserData.Share", "locker_hetzner_remote_type", throw_exception = False)
-        hetzner_remote_config = json.loads(ini.GetIniValue("UserData.Share", "locker_hetzner_remote_config", throw_exception = False))
-        if not hetzner_remote_config:
-            hetzner_remote_config = {}
+        hetzner_remote_config_str = ini.GetIniValue("UserData.Share", "locker_hetzner_remote_config", throw_exception = False)
+        hetzner_remote_config = {}
+        if hetzner_remote_config_str:
+            try:
+                hetzner_remote_config = json.loads(hetzner_remote_config_str)
+            except:
+                pass
         hetzner_remote_host = hetzner_remote_config.get("host")
         hetzner_remote_user = hetzner_remote_config.get("user")
         hetzner_remote_pass = hetzner_remote_config.get("pass")
 
-        # Create config files
-        for config_filename, config_contents in config_files.items():
-            config_contents = config_contents.strip()
+        # Build config contents - only include sections with valid credentials
+        config_contents = ""
 
-            # Replace gdrive tokens
-            if gdrive_remote_name:
-                config_contents = config_contents.replace(config.token_gdrive_name, gdrive_remote_name)
-            if gdrive_remote_type:
-                config_contents = config_contents.replace(config.token_gdrive_type, gdrive_remote_type)
-            if gdrive_remote_token:
-                config_contents = config_contents.replace(config.token_gdrive_token, gdrive_remote_token)
+        # Add gdrive section only if we have the required credentials
+        if gdrive_remote_name and gdrive_remote_type and gdrive_remote_token:
+            gdrive_section = config_template_gdrive.strip()
+            gdrive_section = gdrive_section.replace(config.token_gdrive_name, gdrive_remote_name)
+            gdrive_section = gdrive_section.replace(config.token_gdrive_type, gdrive_remote_type)
+            gdrive_section = gdrive_section.replace(config.token_gdrive_token, gdrive_remote_token)
+            config_contents += gdrive_section + "\n\n"
 
-            # Replace hetzner tokens
-            if hetzner_remote_name:
-                config_contents = config_contents.replace(config.token_hetzner_name, hetzner_remote_name)
-            if hetzner_remote_type:
-                config_contents = config_contents.replace(config.token_hetzner_type, hetzner_remote_type)
-            if hetzner_remote_host:
-                config_contents = config_contents.replace(config.token_hetzner_host, hetzner_remote_host)
-            if hetzner_remote_user:
-                config_contents = config_contents.replace(config.token_hetzner_user, hetzner_remote_user)
-            if hetzner_remote_pass:
-                config_contents = config_contents.replace(config.token_hetzner_pass, hetzner_remote_pass)
+        # Add hetzner section only if we have the required credentials
+        if hetzner_remote_name and hetzner_remote_type and hetzner_remote_host and hetzner_remote_user and hetzner_remote_pass:
+            hetzner_section = config_template_hetzner.strip()
+            hetzner_section = hetzner_section.replace(config.token_hetzner_name, hetzner_remote_name)
+            hetzner_section = hetzner_section.replace(config.token_hetzner_type, hetzner_remote_type)
+            hetzner_section = hetzner_section.replace(config.token_hetzner_host, hetzner_remote_host)
+            hetzner_section = hetzner_section.replace(config.token_hetzner_user, hetzner_remote_user)
+            hetzner_section = hetzner_section.replace(config.token_hetzner_pass, hetzner_remote_pass)
+            config_contents += hetzner_section + "\n"
 
-            # Write config file
+        # Write config files for each platform
+        config_files = [
+            "RClone/windows/rclone.conf",
+            "RClone/linux/rclone.conf"
+        ]
+        for config_filename in config_files:
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
-                contents = config_contents,
+                contents = config_contents.strip(),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
