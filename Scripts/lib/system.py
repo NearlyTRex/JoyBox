@@ -186,13 +186,24 @@ def PromptForConfirmation(description, default_yes = False):
         LogWarning("Please enter 'y' or 'n'")
 
 # Show preview and prompt for confirmation
-def PromptForPreview(operation, details = [], default_yes = True):
+def PromptForPreview(operation, details = [], default_yes = True, max_details = 20):
     LogInfo("=" * 60)
     LogInfo("Operation: %s" % operation)
     if details:
         LogInfo("-" * 60)
-        for detail in details:
-            LogInfo("  %s" % detail)
+        total_count = len(details)
+        if total_count <= max_details:
+            for detail in details:
+                LogInfo("  %s" % detail)
+        else:
+            show_count = max_details // 2
+            for detail in details[:show_count]:
+                LogInfo("  %s" % detail)
+            LogInfo("  ... (%d more items) ..." % (total_count - max_details))
+            for detail in details[-show_count:]:
+                LogInfo("  %s" % detail)
+        LogInfo("-" * 60)
+        LogInfo("Total items: %d" % total_count)
     LogInfo("=" * 60)
     return PromptForConfirmation("Proceed?", default_yes = default_yes)
 
