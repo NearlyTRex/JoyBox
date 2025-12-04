@@ -199,8 +199,10 @@ def WaitForNamedProcesses(process_names = [], timeout = 1200):
                     system.LogWarning("Timeout after %d seconds waiting for %s (pid=%d)" % (timeout, proc.name(), proc.pid))
                     break
                 system.SleepProgram(1)
-    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
-        system.LogError(e)
+    except (psutil.NoSuchProcess, psutil.ZombieProcess):
+        pass  # Process already finished, which is fine
+    except psutil.AccessDenied as e:
+        system.LogWarning("Access denied while waiting for process: %s" % e)
 
 ###########################################################
 # Tools
